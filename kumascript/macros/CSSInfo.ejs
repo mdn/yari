@@ -6,12 +6,14 @@
   $1 - @-rule - defaults to the @-rule within the URL
 */
 
+const data = require('mdn-data/css');
+const localStrings = require('mdn-data/l10n/css');
+
 let slug = env.slug;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() :
     "preview-wiki-content");
 let atRule = $1;
 
-var data = require('mdn-data/css');
 let formattedError = "<span style=\"color:red;\">$1$</span>";
 let locale = env.locale;
 let localize = mdn.getLocalString;
@@ -21,7 +23,6 @@ let localWiki = wiki;
 let currentPage = page;
 
 let cssLocalStrings = web.getJSONData("L10n-CSS");
-let localStrings = require('mdn-data/l10n/css');
 
 /*
   Creates a link to another API, e.g. a CSS property or SVG element

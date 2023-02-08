@@ -1,4 +1,8 @@
+import { createRequire } from "node:module";
 import { handler } from "../index.js";
+
+const require = createRequire(import.meta.url);
+
 jest.mock("../plans-stage-lookup.json", () => {
   return require("./__mocks__/plans-stage-lookup-test.json");
 });

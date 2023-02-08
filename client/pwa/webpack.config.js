@@ -1,20 +1,17 @@
-const path = require("path");
-const commitHash = require("child_process")
-  .execSync("git rev-parse --short HEAD")
-  .toString()
-  .trim();
-const webpack = require("webpack");
+import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
+import webpack from "webpack";
 
-const dirname = __dirname;
+const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
-module.exports = {
+const config = {
   entry: {
-    bundle: path.join(dirname, "./src/service-worker.ts"),
+    bundle: "./src/service-worker.ts",
   },
 
   output: {
     filename: "service-worker.js",
-    path: path.join(dirname, "../public/"),
+    path: fileURLToPath(new URL("../public/", import.meta.url)),
   },
 
   mode: "development",
@@ -32,6 +29,9 @@ module.exports = {
 
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
+    extensionAlias: {
+      ".js": [".ts", ".js"],
+    },
     plugins: [],
   },
   //  plugins: [new webpack.optimize.ModuleConcatenationPlugin()],
@@ -44,3 +44,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;

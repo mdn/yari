@@ -1,4 +1,4 @@
-import { findMatchesInText } from "../matches";
+import { findMatchesInText } from "../matches.js";
 
 // You're not allowed to have `<a>` elements inside `<h2>` or `<h3>` elements
 // because those will be rendered out as "links to themselves".

@@ -134,7 +134,7 @@ for(let page of HTMLDocPages) {
                                    template("HTMLelement", ['h6'])
                                ])).join(', ')),
             summary      : (p?.summary?.()) || "",
-            deprecated   : hasCommonTag(tags, ['deprecated', 'obsolete']),
+            deprecated   : hasCommonTag(tags, ['deprecated']),
             experimental : hasCommonTag(tags, ['experimental']),
             html5        : hasCommonTag(tags, ['html5']),
             component    : hasCommonTag(tags, ['html components'])

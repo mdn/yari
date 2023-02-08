@@ -1,6 +1,7 @@
 <%
+import bcd from '@mdn/browser-compat-data' assert { type: "json" };
+
 var queryString = $0;
-var bcd = require('@mdn/browser-compat-data');
 
 function getData() {
   return queryString.split('.').reduce(function(prev, curr) {

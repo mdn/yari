@@ -25,11 +25,12 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import ejs from "ejs";
 
-const dirname = __dirname;
-
-const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
+const DEFAULT_MACROS_DIRECTORY = path.normalize(
+  fileURLToPath(new URL("../macros", import.meta.url))
+);
 
 export default class Templates {
   private macroDirectory: string;
@@ -103,7 +104,7 @@ export default class Templates {
     try {
       const rendered = await ejs.renderFile(path, args, {
         async: true,
-        cache: process.env.NODE_ENV === "production",
+        cache: args.cache || process.env.NODE_ENV === "production",
       });
       return rendered.trim();
     } catch (error) {
