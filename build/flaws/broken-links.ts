@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import { Document, Redirect, Image } from "../../content/index.js";
 import { findMatchesInText, findMatchesInMarkdown } from "../matches.js";
