@@ -108,7 +108,7 @@
     "rehype-stringify": "^8.0.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^10.0.1",
-    "remark-rehype": "^8.1.0",
+    "remark-rehype": "^10.1.0",
     "sanitize-filename": "^1.6.3",
     "send": "^0.18.0",
     "source-map-support": "^0.5.21",
