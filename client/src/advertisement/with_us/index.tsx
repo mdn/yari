@@ -4,8 +4,8 @@ import "./index.scss";
 const STATS = [
   { id: 1, number: "17M", legend: "unique monthly users" },
   { id: 2, number: ">80M", legend: "page views per month" },
-  { id: 3, number: "17years", legend: "trusted for over" },
-  { id: 4, number: "Worldwide", legend: "distribution" },
+  { id: 3, number: "17", legend: "years of trust" },
+  { id: 4, number: "🗺️", legend: "worldwide distribution" },
 ];
 
 export function AdvertiseWithUs() {
