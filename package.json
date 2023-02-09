@@ -103,7 +103,7 @@
     "prismjs": "^1.29.0",
     "react-modal": "^3.16.1",
     "read-chunk": "^4.0.3",
-    "rehype-format": "^3.1.0",
+    "rehype-format": "^4.0.1",
     "rehype-raw": "^5.1.0",
     "rehype-stringify": "^8.0.0",
     "remark-gfm": "^1.0.0",
