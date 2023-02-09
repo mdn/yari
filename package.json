@@ -104,7 +104,7 @@
     "react-modal": "^3.16.1",
     "read-chunk": "^4.0.3",
     "rehype-format": "^4.0.1",
-    "rehype-raw": "^5.1.0",
+    "rehype-raw": "^6.1.1",
     "rehype-stringify": "^8.0.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^10.0.1",
