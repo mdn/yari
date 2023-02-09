@@ -16,7 +16,7 @@ Next go into `client/src/banners/index.tsx` and update `currentBannerId`:
 const currentBannerId: BannerId | null = BannerId.REDESIGN_ANNOUNCEMENT;
 ```
 
-To adjust the the number of days to embargo the banner, update `daysToEmbargo`:
+To adjust the number of days to embargo the banner, update `daysToEmbargo`:
 
 ```js
 const daysToEmbargo = 14;

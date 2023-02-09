@@ -1,18 +1,17 @@
 /* eslint no-restricted-globals: ["off", "location"] */
 /// <reference lib="WebWorker" />
 
-import { cacheName, contentCache, openCache } from "./caches";
-import { respond } from "./fetcher";
-import { unpackAndCache } from "./unpack-cache";
+import { cacheName, contentCache, openCache } from "./caches.js";
+import { respond } from "./fetcher.js";
+import { unpackAndCache } from "./unpack-cache.js";
 import {
   ContentStatusPhase,
   getContentStatus,
-  offlineDb,
   patchContentStatus,
   RemoteContentStatus,
   SwType,
-} from "./db";
-import { fetchWithExampleOverride } from "./fetcher";
+} from "./db.js";
+import { fetchWithExampleOverride } from "./fetcher.js";
 
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
@@ -27,7 +26,8 @@ const UPDATES_BASE_URL = `https://updates.${
 }`;
 
 const SW_TYPE: SwType =
-  SwType[new URLSearchParams(location.search).get("type")] || SwType.ApiOnly;
+  SwType[new URLSearchParams(location.search).get("type")] ||
+  SwType.PreferOnline;
 
 // export empty type because of tsc --isolatedModules flag
 export type {};
@@ -36,45 +36,37 @@ declare const self: ServiceWorkerGlobalScope;
 var unpacking = Promise.resolve();
 
 self.addEventListener("install", (e) => {
-  synchronizeDb();
   e.waitUntil(
-    SW_TYPE === SwType.ApiOnly
-      ? self.skipWaiting()
-      : (async () => {
-          const cache = await openCache();
-          const { files = {} }: { files: object } =
-            (await (await fetch("/asset-manifest.json")).json()) || {};
-          const assets = [...Object.values(files)].filter(
-            (asset) => !(asset as string).endsWith(".map")
-          );
-          let keys = new Set(
-            (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
-          );
-          const toCache = assets.filter((file) => !keys.has(file));
-          await cache.addAll(toCache as string[]);
-        })().then(() => self.skipWaiting())
+    (async () => {
+      const cache = await openCache();
+      const { files = {} }: { files: object } =
+        (await (
+          await fetch("/asset-manifest.json", { cache: "no-cache" })
+        ).json()) || {};
+      const assets = [...Object.values(files)].filter(
+        (asset) => !(asset as string).endsWith(".map")
+      );
+      let keys = new Set(
+        (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
+      );
+      const toCache = assets.filter((file) => !keys.has(file));
+      await cache.addAll(toCache as string[]);
+    })().then(() => self.skipWaiting())
   );
 
   initOncePerRun(self);
 });
 
-async function syncDbAndMessage(e) {
-  if (e.request.method !== "GET") {
-    await synchronizeDb();
-    messageAllClients(self, { type: "mutate" });
-  }
-}
-
 self.addEventListener("fetch", async (e) => {
+  const url = new URL(e.request.url);
   if (
-    (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
-    !e.request.url.includes("/api/v1/") &&
-    !e.request.url.includes("/users/fxa/")
+    SW_TYPE === SwType.PreferOnline &&
+    !url.pathname.startsWith("/api/") &&
+    !url.pathname.startsWith("/users/fxa/")
   ) {
     e.respondWith(
       (async () => {
         const res = await fetchWithExampleOverride(e.request);
-        syncDbAndMessage(e);
         if (res.ok) {
           return res;
         }
@@ -82,12 +74,7 @@ self.addEventListener("fetch", async (e) => {
       })()
     );
   } else {
-    e.respondWith(
-      respond(e).then((r) => {
-        syncDbAndMessage(e);
-        return r;
-      })
-    );
+    e.respondWith(respond(e));
   }
 });
 
@@ -265,9 +252,6 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
       progress: null,
     });
 
-    console.log(`[update] synchronizing`);
-    await synchronizeDb();
-
     console.log(`[update] done`);
   } catch (e) {
     console.error(`[update] failed`, e);
@@ -310,65 +294,4 @@ async function deleteContentCache() {
     local: null,
   });
   return await caches.delete(contentCache);
-}
-
-async function synchronizeDb() {
-  const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
-  const WATCHED_BASE_PATH = "/api/v1/plus/watching";
-  const PATH_COLLECTIONS = "/api/v1/plus/collection";
-
-  fetchAllLimitOffset(NOTIFICATIONS_BASE_PATH)
-    .then(async (update) => {
-      await offlineDb.notifications.clear();
-      await offlineDb.notifications.bulkPut(update);
-    })
-    .catch((err) => console.log(`Offline, skip sync`));
-
-  fetchAllLimitOffset(WATCHED_BASE_PATH)
-    .then(async (update) => {
-      await offlineDb.watched.clear();
-      await offlineDb.watched.bulkPut(update);
-    })
-    .catch((err) => console.log(`Offline, skip sync`));
-
-  fetchAllPaged(PATH_COLLECTIONS)
-    .then(async (update) => {
-      await offlineDb.collections.clear();
-      await offlineDb.collections.bulkPut(update);
-    })
-    .catch((err) => console.log(`Offline, skip sync`));
-}
-
-async function fetchAllLimitOffset(path: string) {
-  let offset = 0;
-  let limit = 50;
-  let items = 50;
-  let update = [];
-  while (items === limit) {
-    const res = await fetch(`${path}/?limit=${limit}&offset=${offset}`);
-    const body = await res.json();
-    items = body.items?.length;
-    offset += body.items?.length;
-    if (items) {
-      update = [...update, ...body.items];
-    }
-  }
-  return update;
-}
-
-async function fetchAllPaged(path: string) {
-  const limit = 50;
-  let page = 1;
-  let items = 50;
-  let update = [];
-  while (items === limit) {
-    const res = await fetch(`${path}/?limit=${limit}&page=${page}`);
-    const body = await res.json();
-    items = body.items?.length;
-    page += 1;
-    if (items) {
-      update = [...update, ...body.items];
-    }
-  }
-  return update;
 }

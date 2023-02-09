@@ -1,13 +1,12 @@
-/* eslint-disable node/no-missing-require */
-const { CSP_VALUE } = require("@yari-internal/constants");
+import { CSP_VALUE } from "@yari-internal/constants";
 
-exports.handler = async (event) => {
+export async function handler(event) {
   /*
    * This Lambda@Edge function is designed to handle origin-response
    * events, so for example we can modify the response before it's
    * cached by CloudFront. More specifically, when serving content
    * from S3, only a small set of common headers, like Cache-Control
-   * and Content-Type, can be be associated and served with the content.
+   * and Content-Type, can be associated and served with the content.
    * The other headers are added to the response here.
    */
   const request = event.Records[0].cf.request;
@@ -69,4 +68,4 @@ exports.handler = async (event) => {
   }
 
   return response;
-};
+}

@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const chalk = require("react-dev-utils/chalk");
-const paths = require("./paths");
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import chalk from "react-dev-utils/chalk.js";
+import paths from "./paths.js";
 
 // Ensure the certificate and key provided are valid and if not
 // throw an easy to debug error
@@ -61,4 +61,4 @@ function getHttpsConfig() {
   return isHttps;
 }
 
-module.exports = getHttpsConfig;
+export default getHttpsConfig;

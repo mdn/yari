@@ -8,43 +8,6 @@ import Dexie from "dexie";
 export enum SwType {
   PreferOnline = "PreferOnline",
   PreferOffline = "PreferOffline",
-  ApiOnly = "ApiOnly",
-}
-
-export type Item = {
-  url: string;
-  title: string;
-};
-
-export interface Watched {
-  url: string;
-  title: string;
-  path: string;
-  status: string;
-}
-
-export interface Notifications {
-  id: number;
-  title: string;
-  text: string;
-  url: string;
-  created: Date;
-  read: boolean;
-  starred: boolean;
-}
-
-interface Parent {
-  uri: string;
-  title: string;
-}
-
-export interface Collections {
-  id?: number;
-  url: string;
-  title: string;
-  parents?: Array<Parent>[];
-  notes?: string;
-  created: Date;
 }
 
 export interface PlusSettings {
@@ -94,9 +57,6 @@ export class MDNOfflineDB extends Dexie {
   // (just to inform Typescript. Instanciated by Dexie in stores() method)
   whoami!: Dexie.Table<Whoami, number>; // number = type of the primkey
   contentStatusHistory!: Dexie.Table<ContentStatus, number>;
-  collections!: Dexie.Table<Collections, string>;
-  watched!: Dexie.Table<Watched, String>;
-  notifications!: Dexie.Table<Notifications, number>;
 
   constructor() {
     super("MDNOfflineDB");
@@ -114,19 +74,20 @@ export class MDNOfflineDB extends Dexie {
       whoami:
         "++, username, is_authenticated, email, avatar_url, is_subscriber, settings",
     });
+    // We can drop the tables only after we stop using thing in the sw
+    /*
+    this.version(4).stores({
+      collections: null,
+      watched: null,
+      notifications: null,
+    });
+    */
   }
 }
 
-const offlineDb = new MDNOfflineDB();
+export const offlineDb = new MDNOfflineDB();
 
-async function getCollection(): Promise<Item[]> {
-  const all = await offlineDb.collections.toArray();
-  return all.map((val) => {
-    return { title: val.title, url: val.url };
-  });
-}
-
-async function getContentStatus(): Promise<ContentStatus> {
+export async function getContentStatus(): Promise<ContentStatus> {
   const current = await offlineDb.contentStatusHistory.toCollection().last();
 
   return (
@@ -140,7 +101,7 @@ async function getContentStatus(): Promise<ContentStatus> {
   );
 }
 
-async function patchContentStatus(
+export async function patchContentStatus(
   changes: Omit<Partial<ContentStatus>, "id" | "timestamp">
 ) {
   const db = offlineDb;
@@ -168,5 +129,3 @@ async function patchContentStatus(
     }
   });
 }
-
-export { offlineDb, getContentStatus, patchContentStatus, getCollection };

@@ -1,15 +1,15 @@
 @use "../../vars" as *;
 
 .top-navigation {
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border-primary);
   position: relative;
   width: 100%;
-  background-color: var(--background-primary);
   z-index: $bottom-layer;
-  border-bottom: 1px solid var(--border-primary);
 
   .container {
-    background-color: var(--background-primary);
     align-items: center;
+    background-color: var(--background-primary);
     display: flex;
     flex-flow: row wrap;
     gap: var(--gutter);
@@ -25,15 +25,15 @@
 
   /* Wrapper strictly used for containing the logo and menu toggle */
   .top-navigation-wrap {
-    flex: 1;
-    display: flex;
     align-items: center;
-    justify-content: space-between;
+    display: flex;
+    flex: 1;
     height: var(--top-nav-height);
+    justify-content: space-between;
   }
 
   &.show-nav {
-    box-shadow: 0 0 10px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     z-index: var(--z-index-top);
 
     .container {

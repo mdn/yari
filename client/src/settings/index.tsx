@@ -1,26 +1,25 @@
 import React from "react";
+import { NEWSLETTER_ENABLED } from "../env";
 
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
-import { PageContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
 import { Manage } from "./manage";
+import Newsletter from "./newsletter";
 
 const OfflineSettings = React.lazy(() => import("./offline-settings"));
-const FeaturePreview = React.lazy(() => import("./feature-preview"));
 
 export function Settings() {
   const pageTitle = "My Settings";
-
   return (
     <>
       <OfflineStatusBar />
-      <PageContentContainer extraClasses="settings">
+      <article className="settings">
         <h1 className="slab-highlight _ify">{pageTitle} </h1>
+        {NEWSLETTER_ENABLED && <Newsletter />}
         <Manage />
-        <FeaturePreview />
         <OfflineSettings />
-      </PageContentContainer>
+      </article>
     </>
   );
 }

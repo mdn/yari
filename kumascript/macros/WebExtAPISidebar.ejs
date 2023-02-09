@@ -8,7 +8,7 @@ var locale = env.locale;
 var baseURL = "/" + locale + "/docs/";
 var baseAPIPage = baseURL + "Mozilla/Add-ons/WebExtensions/API";
 
-var htmlEscape = kuma.htmlEscape;
+var htmlEscape = mdn.htmlEscape;
 var rtlLocales = ['ar', 'he', 'fa'];
 
 let commonl10n = web.getJSONData('L10n-Common');
@@ -22,14 +22,7 @@ let text = {
     'Events': mdn.getLocalString(commonl10n, 'Events'),
 };
 
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-  ObsoleteBadge : await template("ObsoleteBadge"),
-}
-
-function buildSublist(pages, title, ignoreBadges) {
+async function buildSublist(pages, title, ignoreBadges) {
   var result = '<li data-default-state="open"><a href="#"><strong>' + title + '</strong></a><ol>';
 
   for (var i in pages) {
@@ -54,24 +47,9 @@ function buildSublist(pages, title, ignoreBadges) {
 
     result += '<li>';
 
+    let pageBadges = '';
     if (!ignoreBadges) {
-
-        if (hasTag(aPage, 'Experimental')) {
-            result += badges.ExperimentalBadge;
-        }
-
-        if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
-            result += badges.NonStandardBadge;
-        }
-
-        if (hasTag(aPage, 'Deprecated')) {
-            result += badges.DeprecatedBadge;
-        }
-
-        if (hasTag(aPage, 'Obsolete')) {
-            result += badges.ObsoleteBadge;
-            result += '<s class="obsoleteElement">';
-        }
+        pageBadges = (await page.badges(aPage)).join("");
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
@@ -79,17 +57,13 @@ function buildSublist(pages, title, ignoreBadges) {
     }
 
     if (slug == aPage.slug) {
-        result += '<em><code>' + apiComponentName + '</code></em>'
+        result += `<em><code>${apiComponentName}</code> ${pageBadges}</em>`;
     } else {
-        result += '<a href="' + url + '"><code>' + apiComponentName + '</code></a>';
+        result += `<a href="${url}"><code>${apiComponentName}</code></a>${pageBadges}`;
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
         result += '</bdi>';
-    }
-
-    if (hasTag(aPage, 'Obsolete')) {
-        result += '</s>';
     }
 
     result += '</li>';
@@ -134,16 +108,16 @@ async function buildSidebarForSingleAPI(apiPath) {
   var pageCollection = classifyPages(subpages);
 
   if (pageCollection.methods.length > 0) {
-    output += buildSublist(pageCollection.methods, text["Methods"], true);
+    output += await buildSublist(pageCollection.methods, text["Methods"], true);
   }
   if (pageCollection.properties.length > 0) {
-    output += buildSublist(pageCollection.properties, text["Properties"], true);
+    output += await buildSublist(pageCollection.properties, text["Properties"], true);
   }
   if (pageCollection.types.length > 0) {
-    output += buildSublist(pageCollection.types, text["Types"], true);
+    output += await buildSublist(pageCollection.types, text["Types"], true);
   }
   if (pageCollection.events.length > 0) {
-    output += buildSublist(pageCollection.events, text["Events"], true);
+    output += await buildSublist(pageCollection.events, text["Events"], true);
   }
 
 output += '</ol>';

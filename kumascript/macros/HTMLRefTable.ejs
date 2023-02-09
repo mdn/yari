@@ -14,50 +14,50 @@
 
 let l10n = {
     element : mdn.localString({
-        "de"   : "Element",
         "en-US": "Element",
         "fr"   : "Élément",
-        "zh-CN": "元素",
-        "ru"   : "Элемент"
+        "ko"   : "요소",
+        "ru"   : "Элемент",
+        "zh-CN": "元素"
     }),
 
     description : mdn.localString({
-        "de"   : "Beschreibung",
         "en-US": "Description",
-        "zh-CN": "描述",
-        "ru"   : "Описание"
+        "ko"   : "설명",
+        "ru"   : "Описание",
+        "zh-CN": "描述"
     }),
 
     deprecated : mdn.localString({
-        "de"   : "Dieses Element ist veraltet.",
         "en-US": "This element is deprecated.",
         "fr"   : "Cet élément est obsolète.",
-        "zh-CN": "该元素已被废弃",
-        "ru"   : "Этот элемент устарел."
+        "ko"   : "이 요소는 더 이상 사용되지 않습니다.",
+        "ru"   : "Этот элемент устарел.",
+        "zh-CN": "该元素已被废弃"
     }),
 
     experimental : mdn.localString({
-        "de"   : "Dieses Element wird als experimentell erachtet.",
         "en-US": "This element is considered experimental.",
         "fr"   : "Cet élément est considéré comme experimental.",
-        "zh-CN": "该元素仍处于试验阶段",
-        "ru"   : "Этот элемент считается экспериментальным."
+        "ko"   : "실험적인 요소입니다.",
+        "ru"   : "Этот элемент считается экспериментальным.",
+        "zh-CN": "该元素仍处于试验阶段"
     }),
 
     html5 : mdn.localString({
-        "de"   : "Dieses Element wurde mit HTML5 eingeführt.",
         "en-US": "This element has been introduced with HTML5.",
         "fr"   : "Cet élément a été ajouté avec HTML5.",
-        "zh-CN": "该元素于 HTML5 规范中引入",
-        "ru"   : "Этот элемент не был представлен в HTML5."
+        "ko"   : "이 요소는 HTML5에서 처음 소개되었습니다.",
+        "ru"   : "Этот элемент не был представлен в HTML5.",
+        "zh-CN": "该元素于 HTML5 规范中引入"
     }),
 
     components : mdn.localString({
-        "de"   : "Dieses Element wurde mit den Web Components Spezifikationen eingeführt.",
         "en-US": "This element has been introduced with the Web Components specifications.",
         "fr"   : "Cet élément a été introduit par les spécifications sur les Web Components.",
-        "zh-CN": "该元素于 Web 组建规范中引入",
-        "ru"   : "Этот элемент представлен в спецификации Веб компонентов."
+        "ko"   : "이 요소는 웹 컴포넌트 명세에서 처음 소개되었습니다.",
+        "ru"   : "Этот элемент представлен в спецификации Веб компонентов.",
+        "zh-CN": "该元素于 Web 组建规范中引入"
     })
 };
 
@@ -65,8 +65,8 @@ let l10n = {
 // UTILS
 // -----
 
-// Simple function to turn a string into lower case. This especialy made to work
-// as a walking function for Array.prototypt.map
+// Simple function to turn a string into lower case. This is especially made to work
+// as a walking function for Array.prototype.map
 function lowerMe(S) {
     return S.toLowerCase();
 }
@@ -133,8 +133,8 @@ for(let page of HTMLDocPages) {
                                    template("HTMLelement", ['h5']),
                                    template("HTMLelement", ['h6'])
                                ])).join(', ')),
-            summary      : (p && p.summary) || "",
-            deprecated   : hasCommonTag(tags, ['deprecated', 'obsolete']),
+            summary      : (p?.summary?.()) || "",
+            deprecated   : hasCommonTag(tags, ['deprecated']),
             experimental : hasCommonTag(tags, ['experimental']),
             html5        : hasCommonTag(tags, ['html5']),
             component    : hasCommonTag(tags, ['html components'])

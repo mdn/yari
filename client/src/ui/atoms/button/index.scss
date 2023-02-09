@@ -7,6 +7,8 @@ button,
 
 .button {
   --button-bg: var(--button-primary-default);
+  --button-bg-hover: var(--button-primary-hover);
+  --button-bg-active: var(--button-primary-active);
   --button-border-color: var(--button-primary-default);
   --button-focus-effect: var(--focus-effect);
   --button-height: var(--form-elem-height, 2rem);
@@ -14,19 +16,19 @@ button,
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
   --button-radius: var(--elem-radius, 0.25rem);
+  border-radius: var(--button-radius);
 
   cursor: pointer;
   display: inline-block;
   padding: 0;
   text-decoration: none;
-  border-radius: var(--button-radius);
 }
 
 .button-wrap {
   align-items: center;
   background-color: var(--button-bg);
-  border-radius: var(--button-radius);
   border: 1px solid var(--button-border-color);
+  border-radius: var(--button-radius);
   color: var(--button-color);
   display: flex;
   font: var(--button-font);
@@ -48,13 +50,18 @@ button,
 .button:hover,
 .button.hover {
   // In most cases, we want the border to be the same color as the background.
-  --button-bg: var(--button-primary-hover);
-  --button-border-color: var(--button-bg);
+  --button-border-color: var(--button-bg-hover, var(--button-bg));
+
+  .button-wrap {
+    background-color: var(--button-bg-hover, var(--button-bg));
+  }
 }
 
 .button:active,
 .button.active {
-  --button-bg: var(--button-primary-active);
+  .button-wrap {
+    background-color: var(--button-bg-active, var(--button-bg));
+  }
 }
 
 .button:focus,
@@ -62,19 +69,22 @@ button,
   outline: none;
 
   .button-wrap {
-    box-shadow: var(--button-focus-effect);
     border: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--button-focus-effect);
   }
 }
 
 .button.button[disabled],
 .button.button.inactive {
-  opacity: 0.65;
   cursor: default;
+  opacity: 0.65;
 
   &:hover {
-    --button-bg: inherit;
-    --button-border-color: transparent;
+    --button-bg-hover: unset;
+  }
+
+  &:active {
+    --button-bg-active: unset;
   }
 }
 
@@ -92,14 +102,8 @@ button,
   --button-bg: var(--button-secondary-default);
   --button-border-color: var(--border-primary);
   --button-color: var(--text-secondary);
-
-  &:hover {
-    --button-bg: var(--button-secondary-hover);
-  }
-
-  &:active {
-    --button-bg: var(--button-secondary-active);
-  }
+  --button-bg-hover: var(--button-secondary-hover);
+  --button-bg-active: var(--button-secondary-active);
 
   &:focus {
     --button-border-color: var(--button-secondary-border-focus);
@@ -113,18 +117,12 @@ button,
   --button-border-color: var(--button-bg);
   --button-color: var(--text-secondary);
   --button-font: var(--type-label-s);
+  --button-bg-hover: var(--button-secondary-hover);
+  --button-bg-active: var(--button-secondary-active);
 
   &.has-icon {
     --button-font: var(--type-emphasis-m);
     text-transform: initial;
-  }
-
-  &:hover {
-    --button-bg: var(--button-secondary-hover);
-  }
-
-  &:active {
-    --button-bg: var(--button-secondary-active);
   }
 
   &:focus {
@@ -132,7 +130,7 @@ button,
   }
 
   .button-wrap {
-    text-transform: uppercase;
+    text-transform: var(--button-action-transform, uppercase);
   }
 
   &.highlight {
@@ -142,7 +140,9 @@ button,
 
 /* Select Version */
 .button.select {
-  --button-bg: var(--background-primary);
+  --button-bg: var(--button-secondary-default);
+  --button-bg-hover: var(--button-secondary-hover);
+  --button-bg-active: var(--button-secondary-active);
   --button-border-color: var(--border-primary);
   --button-color: var(--text-secondary);
   appearance: none;
@@ -152,22 +152,46 @@ button,
   text-decoration: none;
 
   .button-wrap {
-    position: relative;
-    padding-right: 26px;
     box-shadow: var(--shadow-01);
+    padding-right: 26px;
+    position: relative;
   }
 
   .button-wrap::after {
-    position: absolute;
-    top: calc(50% - 0.5rem);
-    right: 0.5rem;
-    display: block;
-    width: 16px;
-    height: 16px;
     background-color: var(--icon-primary);
+    content: "";
+    display: block;
+    height: 16px;
     mask-image: url("../../../assets/icons/small-arrow.svg");
     mask-size: cover;
-    content: "";
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 0.5rem);
+    width: 16px;
+  }
+}
+
+.button.link {
+  --button-bg: none;
+  --button-bg-hover: none;
+  --button-bg-active: none;
+  --button-border-color: none;
+  --button-focus-effect: none;
+  --button-secondary-border-focus: none;
+  --button-height: auto;
+  --button-font: unset;
+  --button-padding: 0;
+  --button-radius: 0;
+
+  --button-color: var(--text-link);
+  appearance: none;
+  display: inline;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline-color: var(--accent-primary);
+    outline-offset: 1px;
+    outline-style: auto;
   }
 }
 

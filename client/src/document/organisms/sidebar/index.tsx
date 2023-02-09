@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
@@ -7,23 +7,15 @@ import { useUIStatus } from "../../../ui-context";
 import "./index.scss";
 import { TOC } from "../toc";
 
-function _setScrollLock(isSidebarOpen) {
-  const mainContentElement = document.querySelector("main");
-
-  if (isSidebarOpen) {
-    document.body.style.overflow = "hidden";
-    if (mainContentElement) {
-      mainContentElement.style.overflow = "hidden";
-    }
-  } else {
-    document.body.style.overflow = "";
-    if (mainContentElement) {
-      mainContentElement.style.overflow = "";
-    }
-  }
-}
-
-export function SidebarContainer({ doc, children }) {
+export function SidebarContainer({
+  doc,
+  label,
+  children,
+}: {
+  doc: any;
+  label?: string;
+  children: React.ReactNode;
+}) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
 
@@ -39,28 +31,39 @@ export function SidebarContainer({ doc, children }) {
       }, 300);
     }
 
-    _setScrollLock(isSidebarOpen);
-
     if (timeoutID) {
       return () => clearTimeout(timeoutID);
     }
   }, [isSidebarOpen]);
 
+  useEffect(() => {
+    const sidebar = document.querySelector("#sidebar-quicklinks");
+    const currentSidebarItem = sidebar?.querySelector("em");
+    if (sidebar && currentSidebarItem) {
+      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach((n) =>
+        n?.scrollTo({
+          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+        })
+      );
+    }
+  }, []);
+
   return (
     <>
-      <nav id="sidebar-quicklinks" className={classes}>
+      <aside id="sidebar-quicklinks" className={classes}>
         <Button
           extraClasses="backdrop"
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label="Collapse sidebar"
         />
-        <div className="sidebar-inner">
+        <nav aria-label={label} className="sidebar-inner">
           <div className="in-nav-toc">
             {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           </div>
           {children}
-        </div>
-      </nav>
+        </nav>
+      </aside>
     </>
   );
 }
@@ -68,10 +71,9 @@ export function SidebarContainer({ doc, children }) {
 export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
     return (
-      <SidebarContainer doc={doc}>
+      <SidebarContainer doc={doc} label="Related Topics">
         {doc.sidebarHTML && (
           <>
-            <h4 className="sidebar-heading">Related Topics</h4>
             <div
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,

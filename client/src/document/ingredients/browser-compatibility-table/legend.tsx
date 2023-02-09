@@ -2,9 +2,11 @@ import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
+import { HIDDEN_BROWSERS } from "./index";
 import {
   asList,
   getFirst,
+  hasMore,
   hasNoteworthyNotes,
   listFeatures,
   versionIsPreview,
@@ -24,6 +26,7 @@ export const LEGEND_KEYS = [
   "disabled",
   "altname",
   "prefix",
+  "more",
 ];
 
 function getActiveLegendItems(
@@ -51,6 +54,9 @@ function getActiveLegendItems(
     for (const [browser, browserSupport] of Object.entries(
       feature.compat.support
     )) {
+      if (HIDDEN_BROWSERS.includes(browser)) {
+        continue;
+      }
       if (!browserSupport) {
         legendItems.add("no");
         continue;
@@ -90,6 +96,10 @@ function getActiveLegendItems(
           legendItems.add("disabled");
         }
       }
+
+      if (hasMore(browserSupport)) {
+        legendItems.add("more");
+      }
     }
   }
   return LEGEND_KEYS.filter((key) => legendItems.has(key));
@@ -114,6 +124,9 @@ export function Legend({
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>
+      <p className="bc-legend-tip">
+        Tip: you can click/tap on a cell for more information.
+      </p>
       <dl className="bc-legend-items-container">
         {getActiveLegendItems(compat, name, browserInfo).map((key) => {
           const label = t(`compatLabels.${key}.title`);

@@ -13,8 +13,7 @@
     "debug": "If you're curious, this was the error:",
     "unhandledError": "Unfortunately, this table has encountered an unhandled error and the content cannot be shown.",
     "emptyData": "BrowserCompatibilityTable component called with empty data",
-    "missingBrowserInfo": "Missing browser info",
-    "mdnUrlInvalid": "[[mdnUrl]] does not exist"
+    "missingBrowserInfo": "Missing browser info"
   },
   "reportIssue": {
     "title": "Report an issue with this compatibility data",
@@ -52,6 +51,10 @@
     "prefix": {
       "title": "Requires a vendor prefix or different name for use.",
       "description": "Implemented with the vendor prefix: [[prefix]]"
+    },
+    "more": {
+      "title": "Has more compatibility info.",
+      "description": "Has more compatibility info."
     }
   },
   "flagNotes": {

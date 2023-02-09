@@ -1,15 +1,17 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import cheerio from "cheerio";
-import sizeOf from "image-size";
+import imagesize from "image-size";
+
+const { default: sizeOf } = imagesize;
 
 import type {
   BCDSection,
   Doc,
   ProseSection,
   SpecificationsSection,
-} from "../../client/src/document/types";
+} from "../../libs/types/document.js";
 
 const buildRoot = path.join("client", "build");
 
@@ -19,9 +21,9 @@ test("all favicons on the home page", () => {
   const htmlFile = path.join(buildRoot, "en-us", "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="icon"]').length).toBe(1);
-  expect($('link[rel="apple-touch-icon"]').length).toBe(1);
-  expect($('meta[property="og:image"]').length).toBe(1);
+  expect($('link[rel="icon"]')).toHaveLength(1);
+  expect($('link[rel="apple-touch-icon"]')).toHaveLength(1);
+  expect($('meta[property="og:image"]')).toHaveLength(1);
 
   // Check that every favicon works and resolves
   $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
@@ -75,92 +77,17 @@ test("content built foo page", () => {
   expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
-  expect(doc.flaws.macros.length).toBe(6);
-  expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[0].line).toBe(8);
-  expect(doc.flaws.macros[0].column).toBe(7);
-  expect(doc.flaws.macros[0].sourceContext).toEqual(
-    expect.stringContaining("<li>{{CSSxRef('dumber')}}</li>")
-  );
-  expect(doc.flaws.macros[0].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[0].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[0].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[1].macroSource).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
-  expect(doc.flaws.macros[1].line).toBe(9);
-  expect(doc.flaws.macros[1].column).toBe(7);
-  expect(doc.flaws.macros[1].sourceContext).toEqual(
-    expect.stringContaining('<li>{{htmlattrxref("href", "anchor")}}</li>')
-  );
-  expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
-  expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("a");
-  expect(doc.flaws.macros[1].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[2].macroSource).toBe(
-    '{{CSSxRef("will-never-be-fixable")}}'
-  );
-  expect(doc.flaws.macros[2].line).toBe(10);
-  expect(doc.flaws.macros[2].column).toBe(7);
-  expect(doc.flaws.macros[2].sourceContext).toEqual(
-    expect.stringContaining('<li>{{CSSxRef("will-never-be-fixable")}}</li>')
-  );
-  expect(doc.flaws.macros[2].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[3].line).toBe(11);
-  expect(doc.flaws.macros[3].column).toBe(7);
-  expect(doc.flaws.macros[3].sourceContext).toEqual(
-    expect.stringContaining("<li>{{CSSxRef('dumber')}} second time!</li>")
-  );
-  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[3].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[4].errorStack).toEqual(
-    expect.stringContaining(
-      '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
-    )
-  );
-  expect(doc.flaws.macros[4].line).toBe(10);
-  expect(doc.flaws.macros[4].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[4].sourceContext).toEqual(
-    expect.stringContaining('<div>{{page("does-not-exist")}}</div>')
-  );
-  expect(doc.flaws.macros[4].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
-  expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[5].errorStack).toEqual(
-    expect.stringContaining(
-      "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
-    )
-  );
-  expect(doc.flaws.macros[5].line).toBe(11);
-  expect(doc.flaws.macros[5].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[5].sourceContext).toEqual(
-    expect.stringContaining(
-      `<div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
-    )
-  );
-  expect(doc.flaws.macros[5].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
+  expect(doc.flaws.macros).toHaveLength(1);
+  expect(doc.flaws.macros[0]).toMatchObject({
+    column: 4,
+    errorStack: expect.stringContaining("pages is not iterable"),
+    filepath: expect.stringContaining(
+      "testing/content/files/en-us/web/foo/index.html"
+    ),
+    line: 8,
+    macroName: "HTMLSidebar",
+    name: "MacroExecutionError",
+  });
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
@@ -174,11 +101,11 @@ test("content built foo page", () => {
   );
 
   // Before testing the `<img>` tags, assert that there's only 1 image in total.
-  expect($("img").length).toBe(1);
+  expect($("img")).toHaveLength(1);
 
   // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
   // attribute.
-  expect($('img[loading="lazy"]').length).toBe(1);
+  expect($('img[loading="lazy"]')).toHaveLength(1);
 
   // The source didn't set the `width="..." height="..."` it gets set in build-time.
   // You need to be familiar with the 'screenshot.png' file in the fixtures to
@@ -195,14 +122,14 @@ test("content built foo page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 
   // The HTML should contain the Google Analytics snippet.
-  // The ID should match what's set in `testing/.env`.
-  expect($('script[src="/static/js/ga.js"]').length).toBe(1);
+  // The ID should match what's set in `.env.testing`.
+  expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]').length).toBe(3);
-  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
-  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
-  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
+  expect($('link[rel="alternate"]')).toHaveLength(3);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
@@ -248,10 +175,10 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]').length).toBe(3);
-  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
-  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
-  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
+  expect($('link[rel="alternate"]')).toHaveLength(3);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: Une page de test | MDN"
@@ -290,8 +217,8 @@ test("content built zh-TW page with en-US fallback image", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(Object.keys(doc.flaws).length).toBe(1);
-  expect(doc.flaws.translation_differences.length).toBe(1);
+  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(doc.flaws.translation_differences).toHaveLength(1);
   expect(doc.title).toBe("<foo>: 測試網頁");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
@@ -301,10 +228,10 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]').length).toBe(3);
-  expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
-  expect($('link[rel="alternate"][hreflang="fr"]').length).toBe(1);
-  expect($('link[rel="alternate"][hreflang="zh"]').length).toBe(1);
+  expect($('link[rel="alternate"]')).toHaveLength(3);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
@@ -320,7 +247,7 @@ test("content built French Embeddable page", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.translation_differences.length).toBe(1);
+  expect(doc.flaws.translation_differences).toHaveLength(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
     "Differences in the important macros (0 in common of 4 possible)"
@@ -489,7 +416,7 @@ test("content built bar page", () => {
   // expect(doc.popularity).toBe(0.51);
   // expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  expect(doc.flaws.macros.length).toBe(12);
+  expect(doc.flaws.macros).toHaveLength(12);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
   expect(doc.flaws.macros[0].line).toBe(9);
@@ -661,7 +588,7 @@ test("broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(12);
+  expect(flaws.broken_links).toHaveLength(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -720,7 +647,7 @@ test("broken links markdown flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(12);
+  expect(flaws.broken_links).toHaveLength(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
@@ -780,7 +707,7 @@ test("repeated broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(3);
+  expect(flaws.broken_links).toHaveLength(3);
 
   // Map them by 'id'
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
@@ -804,7 +731,7 @@ test("broken http:// link that is not a valid URL", () => {
     doc: Doc;
   };
   const { flaws } = doc;
-  expect(flaws.broken_links.length).toBe(1);
+  expect(flaws.broken_links).toHaveLength(1);
 
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
   expect(map.size).toBe(1);
@@ -827,7 +754,7 @@ test("broken links that are links to the current page", () => {
     doc: Doc;
   };
   const { flaws } = doc;
-  expect(flaws.broken_links.length).toBe(4);
+  expect(flaws.broken_links).toHaveLength(4);
 
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
   expect(map.size).toBe(4);
@@ -852,8 +779,8 @@ test("broken links that are links to the current page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
-  expect($("#content a.page-not-created").length).toBe(0);
-  expect($('#content a[aria-current="page"]').length).toBe(4);
+  expect($("#content a.page-not-created")).toHaveLength(0);
+  expect($('#content a[aria-current="page"]')).toHaveLength(4);
 });
 
 test("without locale prefix broken links flaws", () => {
@@ -873,7 +800,7 @@ test("without locale prefix broken links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(3);
+  expect(flaws.broken_links).toHaveLength(3);
 
   // Map them by 'id'
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
@@ -898,7 +825,7 @@ test("broken anchor links flaws", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.broken_links.length).toBe(3);
+  expect(flaws.broken_links).toHaveLength(3);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("#Heading1").suggestion).toBe("#heading1");
@@ -965,7 +892,7 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros.length).toBe(2);
+  expect(doc.flaws).toEqual({});
 });
 
 test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
@@ -986,7 +913,7 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page",
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   // The css_layout/introduction/flex page has 2 iframes
-  expect($('iframe[loading="lazy"]').length).toBe(2);
+  expect($('iframe[loading="lazy"]')).toHaveLength(2);
 });
 
 test("detect bad_bcd_queries flaws", () => {
@@ -1002,39 +929,14 @@ test("detect bad_bcd_queries flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.bad_bcd_queries.length).toBe(1);
+  expect(doc.flaws.bad_bcd_queries).toHaveLength(1);
   // If the flaw is there, it's always an array because a document could
   // potentially have multiple bad BCD queries.
-  expect(doc.flaws.bad_bcd_queries.length).toBe(1);
+  expect(doc.flaws.bad_bcd_queries).toHaveLength(1);
   expect(doc.flaws.bad_bcd_queries[0].explanation).toBe(
     "No BCD data for query: api.Does.Not.exist"
   );
   expect(doc.flaws.bad_bcd_queries[0].suggestion).toBeNull();
-});
-
-test("detect bad_bcd_links flaws from", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "api",
-    "page_visibility_api"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.bad_bcd_links.length).toBe(1);
-  // The reasons it's a bad link is because the @mdn/browser-compat-data,
-  // for the query `api.Document.visibilityState` refers to a page
-  // with mdn_url `/en-US/docs/Web/API/Document/visibilityState` which we
-  // don't have. At least not in the testing content :)
-  const flaw = doc.flaws.bad_bcd_links[0];
-  expect(flaw.slug).toBe("/en-US/docs/Web/API/Document/visibilityState");
-  expect(flaw.suggestion).toBeNull();
-  expect(flaw.query).toBe("api.Document.visibilityState");
 });
 
 test("detect bad_pre_tags flaws", () => {
@@ -1050,7 +952,7 @@ test("detect bad_pre_tags flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.bad_pre_tags.length).toBe(1);
+  expect(doc.flaws.bad_pre_tags).toHaveLength(1);
   const flaw = doc.flaws.bad_pre_tags[0];
   expect(flaw.explanation).toBe("<pre><code>CODE can be just <pre>CODE");
   expect(flaw.id).toBeTruthy();
@@ -1070,7 +972,7 @@ test("image flaws kitchen sink", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.images.length).toBe(8);
+  expect(flaws.images).toHaveLength(8);
   const map = new Map(flaws.images.map((x) => [x.src, x]));
 
   let flaw = map.get(
@@ -1162,7 +1064,7 @@ test("image flaws with bad images", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.images.length).toBe(4);
+  expect(flaws.images).toHaveLength(4);
   expect(
     flaws.images.filter(
       (flaw) =>
@@ -1216,7 +1118,7 @@ test("image flaws with repeated external images", () => {
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
-  expect(flaws.images.length).toBe(3);
+  expect(flaws.images).toHaveLength(3);
 
   const flaw1 = flaws.images[0];
   const flaw2 = flaws.images[1];
@@ -1239,27 +1141,6 @@ test("images that are in the folder but not in <img> tags", () => {
   );
   expect(fs.existsSync(path.join(builtFolder, "pic.gif")));
   expect(fs.existsSync(path.join(builtFolder, "image.png")));
-});
-
-test("chicken_and_egg page should build with flaws", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.macros.length).toBe(1);
-  // The filepath will be that of the "egg" or the "chicken" page.
-  // Let's not try to predict which one exactly, because that'd mean this
-  // test would need to use the exact same sort order as the glob used
-  // when we ran "yarn build" to set up the build fixtures.
-  const flaw = doc.flaws.macros[0];
-  expect(flaw.name).toBe("MacroExecutionError");
-  expect(
-    flaw.errorStack.includes(
-      "documents form a circular dependency when rendering"
-    )
-  ).toBeTruthy();
 });
 
 test("404 page", () => {
@@ -1371,7 +1252,7 @@ test("img tags with an empty 'src' should be a flaw", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.images.length).toBe(2);
+  expect(doc.flaws.images).toHaveLength(2);
   expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
   expect(doc.flaws.images[0].fixable).toBeFalsy();
   expect(doc.flaws.images[0].externalImage).toBeFalsy();
@@ -1399,7 +1280,7 @@ test("img with the image_widths flaw", () => {
     doc: Doc;
   };
 
-  expect(doc.flaws.image_widths.length).toBe(3);
+  expect(doc.flaws.image_widths).toHaveLength(3);
   const flaw1 = doc.flaws.image_widths[0];
   expect(flaw1.explanation).toBe(
     "'width' and 'height' set in 'style' attribute on <img> tag."
@@ -1439,7 +1320,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
   // There are 5 images, so can expect there 2 be 5x2 checks in the loop...
   // But we have to account for ALL expect() calls too.
   expect.assertions(5 * 2 + 1);
-  expect($("img").length).toBe(5);
+  expect($("img")).toHaveLength(5);
   $("img").each((i, img) => {
     const $img = $(img);
     if ($img.attr("src").endsWith("florian.png")) {
@@ -1481,7 +1362,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("iframe").length).toBe(3);
+  expect($("iframe")).toHaveLength(3);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
@@ -1552,12 +1433,12 @@ test("deprecated macros are fixable", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros.length).toBe(2);
+  expect(doc.flaws.macros).toHaveLength(1);
   // All fixable and all a suggestion of ''
-  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(2);
-  expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
-    2
-  );
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(1);
+  expect(
+    doc.flaws.macros.filter((flaw) => flaw.suggestion === "")
+  ).toHaveLength(1);
 });
 
 test("external links always get the right attributes", () => {
@@ -1574,16 +1455,11 @@ test("external links always get the right attributes", () => {
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
   expect.assertions(4 * 2 + 1);
-  expect($("article > section div a").length).toBe(4); // sanity check
+  expect($("article > section div a")).toHaveLength(4); // sanity check
   $("article > section div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
-    expect(
-      $a
-        .attr("rel")
-        .split(" ")
-        .filter((rel) => rel === "noopener").length
-    ).toBe(1);
+    expect($a.attr("target")).toBe("_blank");
   });
 });
 
@@ -1610,7 +1486,7 @@ test("headings with links in them are flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.heading_links.length).toBe(2);
+  expect(doc.flaws.heading_links).toHaveLength(2);
   const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
   expect(map.get("heading_links1").explanation).toBe(
     "h2 heading contains an <a> tag"
@@ -1662,26 +1538,26 @@ test("basic markdown rendering", () => {
   // Following elements do not test TOC rendering
   $("article > .metadata").remove();
 
-  expect($("article h2[id]").length).toBe(2);
-  expect($("article h3[id]").length).toBe(3);
-  expect($("article p code").length).toBe(2);
-  expect($("article strong").length).toBe(2);
-  expect($("article em").length).toBe(1);
-  expect($("article ul li").length).toBe(6);
-  expect($('article a[href^="/"]').length).toBe(2);
-  expect($('article a[href^="#"]').length).toBe(5);
-  expect($("article pre").length).toBe(4);
-  expect($("article pre.notranslate").length).toBe(4);
+  expect($("article h2[id]")).toHaveLength(2);
+  expect($("article h3[id]")).toHaveLength(3);
+  expect($("article p code")).toHaveLength(2);
+  expect($("article strong")).toHaveLength(2);
+  expect($("article em")).toHaveLength(1);
+  expect($("article ul li")).toHaveLength(6);
+  expect($('article a[href^="/"]')).toHaveLength(2);
+  expect($('article a[href^="#"]')).toHaveLength(5);
+  expect($("article pre")).toHaveLength(4);
+  expect($("article pre.notranslate")).toHaveLength(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
   expect($("article pre.javascript").hasClass("brush:")).toBe(true);
-  expect($("article .fancy strong").length).toBe(1);
+  expect($("article .fancy strong")).toHaveLength(1);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(Object.keys(doc.flaws).length).toBe(1);
-  expect(doc.flaws.bad_pre_tags.length).toBe(1);
+  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(doc.flaws.bad_pre_tags).toHaveLength(1);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
@@ -1697,12 +1573,12 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.unsafe_html.length).toBe(7);
+  expect(doc.flaws.unsafe_html).toHaveLength(7);
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("code.unsafe-html").length).toBe(7);
+  expect($("code.unsafe-html")).toHaveLength(7);
 });
 
 test("translated content broken links can fall back to en-us", () => {
@@ -1724,10 +1600,10 @@ test("translated content broken links can fall back to en-us", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('article a[href="/fr/docs/Web/CSS/dumber"]').length).toBe(0);
-  expect($('article a[href="/fr/docs/Web/CSS/number"]').length).toBe(0);
-  expect($('article a[href="/en-US/docs/Web/CSS/number"]').length).toBe(2);
-  expect($("article a.only-in-en-us").length).toBe(2);
+  expect($('article a[href="/fr/docs/Web/CSS/dumber"]')).toHaveLength(0);
+  expect($('article a[href="/fr/docs/Web/CSS/number"]')).toHaveLength(0);
+  expect($('article a[href="/en-US/docs/Web/CSS/number"]')).toHaveLength(2);
+  expect($("article a.only-in-en-us")).toHaveLength(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
     "Currently only available in English (US)"
   );
@@ -1755,7 +1631,7 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
-  expect($("div.notecard h4").length).toBe(0);
+  expect($("div.notecard h4")).toHaveLength(0);
   expect($("div.notecard.note").html()).toBe(
     "<p><strong>Some heading:</strong> No paragraph here.</p><p>Paragraph 2</p>"
   );
@@ -1779,7 +1655,7 @@ test("homepage links and flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.broken_links.length).toBe(4);
+  expect(doc.flaws.broken_links).toHaveLength(4);
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/ru").suggestion).toBe("/ru/");
   expect(map.get("/JA/").suggestion).toBe("/ja/");

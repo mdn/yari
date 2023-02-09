@@ -1,6 +1,4 @@
-/* eslint-disable node/no-unpublished-require */
-/* eslint-disable node/no-missing-require */
-const got = require("got");
+import got from "got";
 
 const BASE_URL = process.env.SERVER_BASE_URL || "http://localhost:7000";
 

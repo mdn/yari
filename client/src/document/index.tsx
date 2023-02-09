@@ -6,12 +6,8 @@ import { CRUD_MODE } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
-import {
-  useDocumentURL,
-  useCopyExamplesToClipboard,
-  usePersistFrequentlyViewed,
-} from "./hooks";
-import { Doc } from "./types";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
@@ -29,6 +25,7 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
+import { PageNotFound } from "../page-not-found";
 
 import "./index.scss";
 
@@ -40,11 +37,24 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
+import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
+
+class HTTPError extends Error {
+  public readonly status: number;
+  public readonly url: string;
+  public readonly text: string;
+  constructor(status: number, url: string, text: string) {
+    super(`${status} on ${url}: ${text}`);
+    this.status = status;
+    this.url = url;
+    this.text = text;
+  }
+}
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
@@ -73,7 +83,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       if (!response.ok) {
         switch (response.status) {
           case 404:
-            throw new Error(`${response.status} on ${url}: Page not found`);
+            throw new HTTPError(response.status, url, "Page not found");
 
           case 504:
             if (previousDoc.current) {
@@ -82,7 +92,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         }
 
         const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
+        throw new HTTPError(response.status, url, text);
       }
 
       const { doc } = await response.json();
@@ -101,7 +111,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
-  usePersistFrequentlyViewed(doc);
+  useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
@@ -167,12 +177,27 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   if (error) {
-    return <LoadingError error={error} />;
+    return (
+      <>
+        <div className="main-document-header-container">
+          <TopNavigation />
+        </div>
+        <MainContentContainer>
+          {error instanceof HTTPError && error.status === 404 ? (
+            <PageNotFound />
+          ) : (
+            <LoadingError error={error} />
+          )}
+        </MainContentContainer>
+      </>
+    );
   }
 
   if (!doc) {
     return null;
   }
+
+  const retiredLocale = searchParams.get("retiredLocale");
 
   return (
     <>
@@ -187,18 +212,18 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
         </div>
       ) : (
-        searchParams.get("retiredLocale") && (
+        retiredLocale && (
           <div className="container">
-            <RetiredLocaleNote />
+            <RetiredLocaleNote locale={retiredLocale} />
           </div>
         )
       )}
       <div className="main-wrapper">
         <RenderSideBar doc={doc} />
 
-        <div className="toc">
-          {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-        </div>
+        <aside className="toc">
+          <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+        </aside>
 
         <MainContentContainer>
           {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
@@ -253,8 +278,8 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="standard-page">
-      <div id="content" className="page-content-container loading-error">
+    <div className="main-wrapper">
+      <div id="content" className="main-content loading-error">
         <h3>Loading Error</h3>
         {error instanceof window.Response ? (
           <p>
@@ -264,7 +289,7 @@ function LoadingError({ error }) {
           </p>
         ) : (
           <p>
-            <code>{error.toString()}</code>
+            <pre>{error.toString()}</pre>
           </p>
         )}
         <p>

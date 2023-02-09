@@ -2,8 +2,8 @@ import React from "react";
 import { useOnlineStatus } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
-import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
-import { docCategory } from "../../utils";
+import { Checkbox } from "../../ui/atoms/checkbox";
+import { getCategoryByPathname } from "../../utils";
 import { _getIconLabel } from "../common";
 import "./index.scss";
 
@@ -15,7 +15,7 @@ export default function WatchedCardListItem({
   const [show, setShow] = React.useState(false);
   const { isOnline } = useOnlineStatus();
 
-  const iconClass = docCategory({ pathname: item.url })?.split("-")[1];
+  const iconClass = getCategoryByPathname(item.url);
   const iconLabel = _getIconLabel(item.url);
 
   return (
@@ -50,9 +50,9 @@ export default function WatchedCardListItem({
             <Button
               type="action"
               icon="ellipses"
-              ariaControls="watch-card-dropdown"
-              ariaHasPopup={"menu"}
-              ariaExpanded={show || undefined}
+              aria-controls="watch-card-dropdown"
+              aria-haspopup={"menu"}
+              aria-expanded={show || undefined}
               onClickHandler={() => {
                 setShow(!show);
               }}

@@ -1,7 +1,15 @@
-import bcd from "@mdn/browser-compat-data";
+import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserName } from "./browser-info";
 
-function PlatformHeaders({ platforms, browsers }) {
+function PlatformHeaders({
+  platforms,
+  browsers,
+  browserInfo,
+}: {
+  platforms: string[];
+  browsers: BCD.BrowserName[];
+  browserInfo: BCD.Browsers;
+}) {
   return (
     <tr className="bc-platforms">
       <td />
@@ -9,7 +17,7 @@ function PlatformHeaders({ platforms, browsers }) {
         // Get the intersection of browsers in the `browsers` array and the
         // `PLATFORM_BROWSERS[platform]`.
         const browsersInPlatform = browsers.filter(
-          (browser) => bcd.browsers[browser].type === platform
+          (browser) => browserInfo[browser].type === platform
         );
         const browserCount = browsersInPlatform.length;
         return (
@@ -28,21 +36,20 @@ function PlatformHeaders({ platforms, browsers }) {
   );
 }
 
-function BrowserHeaders({ browsers }: { browsers }) {
+function BrowserHeaders({ browsers }: { browsers: BCD.BrowserName[] }) {
   return (
     <tr className="bc-browsers">
       <td />
       {browsers.map((browser) => {
-        const browserStart = browser.split("_")[0];
-        const browserIcon =
-          browserStart === "firefox" ? "simple-firefox" : browserStart;
         return (
           <th key={browser} className={`bc-browser bc-browser-${browser}`}>
             <div className={`bc-head-txt-label bc-head-icon-${browser}`}>
               <BrowserName id={browser} />
             </div>
             <div
-              className={`bc-head-icon-symbol icon icon-${browserIcon}`}
+              className={`bc-head-icon-symbol icon icon-${browserToIconName(
+                browser
+              )}`}
             ></div>
           </th>
         );
@@ -51,10 +58,27 @@ function BrowserHeaders({ browsers }: { browsers }) {
   );
 }
 
-export function Headers({ platforms, browsers }) {
+export function browserToIconName(browser: string) {
+  const browserStart = browser.split("_")[0];
+  return browserStart === "firefox" ? "simple-firefox" : browserStart;
+}
+
+export function Headers({
+  platforms,
+  browsers,
+  browserInfo,
+}: {
+  platforms: string[];
+  browsers: BCD.BrowserName[];
+  browserInfo: BCD.Browsers;
+}) {
   return (
     <thead>
-      <PlatformHeaders platforms={platforms} browsers={browsers} />
+      <PlatformHeaders
+        platforms={platforms}
+        browsers={browsers}
+        browserInfo={browserInfo}
+      />
       <BrowserHeaders browsers={browsers} />
     </thead>
   );

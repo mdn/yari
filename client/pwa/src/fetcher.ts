@@ -1,22 +1,16 @@
 /* eslint no-restricted-globals: ["off", "self"] */
 import {
-  NotificationsInterceptor,
-  CollectionsInterceptor,
-  WatchedInterceptor,
   WhoamiInterceptor,
   DefaultApiInterceptor,
-} from "./fetch-interceptors";
-import { offlineDb } from "./db";
-import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
-import { USER_CONTENT_URL } from "./service-worker";
-import { openCache } from "./caches";
+} from "./fetch-interceptors.js";
+import { offlineDb } from "./db.js";
+import {
+  INTERACTIVE_EXAMPLES_URL,
+  USER_CONTENT_URL,
+} from "./service-worker.js";
+import { openCache } from "./caches.js";
 
-let interceptors = [
-  new WhoamiInterceptor(offlineDb),
-  new NotificationsInterceptor(offlineDb),
-  new CollectionsInterceptor(offlineDb),
-  new WatchedInterceptor(offlineDb),
-];
+let interceptors = [new WhoamiInterceptor(offlineDb)];
 
 let defaultInterceptor = new DefaultApiInterceptor(offlineDb);
 
@@ -73,6 +67,8 @@ export async function respond(e): Promise<Response> {
       } else {
         return response;
       }
+    } else if (url.pathname.startsWith("/bcd/")) {
+      url.pathname = url.pathname.replace(/api\/v[0-9]\/[^/]+\//, "");
     } else if (url.pathname.startsWith("/examples/") && url.search) {
       url.search = "";
     } else if (!url.pathname.split("/").pop().includes(".")) {

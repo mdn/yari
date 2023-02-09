@@ -8,9 +8,11 @@ const DropdownMenuContext = React.createContext<{
   isOpen: boolean;
   close: (event?: Event) => void;
   wrapperRef?: React.Ref<HTMLDivElement>;
+  disableAutoClose: boolean;
 }>({
   isOpen: false,
   close: () => {},
+  disableAutoClose: false,
 });
 
 export function DropdownMenuWrapper({
@@ -19,6 +21,7 @@ export function DropdownMenuWrapper({
   isOpen,
   setIsOpen,
   useLIs = false,
+  disableAutoClose = false,
 }) {
   const wrapperRef = useRef(null);
   const close = (event) => setIsOpen(false, event);
@@ -27,6 +30,7 @@ export function DropdownMenuWrapper({
     close,
     wrapperRef,
     isOpen,
+    disableAutoClose,
   };
 
   if (useLIs) {
@@ -55,7 +59,8 @@ export function DropdownMenu({
   children: React.ReactNode;
   onClose?: (event?: Event) => void;
 }) {
-  const { isOpen, wrapperRef, close } = useContext(DropdownMenuContext);
+  const { isOpen, wrapperRef, close, disableAutoClose } =
+    useContext(DropdownMenuContext);
 
   React.useEffect(() => {
     const closeOnEsc = (event) => {
@@ -72,7 +77,7 @@ export function DropdownMenu({
   }, [isOpen, close, onClose]);
 
   useOnClickOutside(wrapperRef, (event) => {
-    if (isOpen) {
+    if (isOpen && !disableAutoClose) {
       close(event);
       onClose(event);
     }

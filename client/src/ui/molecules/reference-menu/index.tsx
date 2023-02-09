@@ -60,6 +60,14 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         url: `/${locale}/docs/Web/API`,
       },
       {
+        description: "Developing extensions for web browsers",
+        extraClasses: "apis-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Web Extensions",
+        url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
+      },
+      {
         description: "Web technology reference for developers",
         extraClasses: "apis-link-container desktop-only",
         hasIcon: true,

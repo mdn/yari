@@ -13,9 +13,8 @@ var text = mdn.localStringMap({
       'Text_format' : 'Understanding WebAssembly text format',
       'Text_format_to_wasm' : 'Converting WebAssembly text format to wasm',
       'Loading_and_running' : 'Loading and running WebAssembly code',
-      'Caching_modules' : 'Caching compiled WebAssembly modules',
       'Exported_functions' : 'Exported WebAssembly functions',
-    'Object_reference' : 'Object reference'
+    'JavaScript_interface' : 'JavaScript interface'
   },
   'fr': {
     'WebAssembly_home_page' : "Page d'accueil WebAssembly",
@@ -27,9 +26,21 @@ var text = mdn.localStringMap({
       'Text_format' : "Comprendre le format texte WebAssembly",
       'Text_format_to_wasm' : "Convertir du format texte WebAssembly en wasm",
       'Loading_and_running' : "Chargement et exécution de code WebAssembly",
-      'Caching_modules' : "Mise en cache des modules WebAssembly compilés",
       'Exported_functions' : "Fonctions WebAssembly exportées",
-    'Object_reference' : "Référence objet"
+    'JavaScript_interface' : "JavaScript interface"
+  },
+  'ko': {
+    'WebAssembly_home_page' : '웹어셈블리 홈페이지',
+    'Tutorials' : '자습서',
+      'WebAssembly_concepts' : '웹어셈블리의 개념',
+      'Compiling_to_wasm' : 'C/C++ 모듈을 웹어셈블리로 컴파일하기',
+      'Compiling_rust_to_wasm' : 'Rust를 웹어셈블리로 컴파일하기',
+      'JavaScript_API' : '웹어셈블리 JavaScript API 사용하기',
+      'Text_format' : '웹어셈블리 텍스트 형식 이해하기',
+      'Text_format_to_wasm' : '웹어셈블리 기반 텍스트를 wasm 형식으로 변환하기',
+      'Loading_and_running' : '웹어셈블리 코드 로딩하고 실행하기',
+      'Exported_functions' : '내보낸 웹어셈블리(Exported WebAssembly) 함수',
+    'JavaScript_interface' : 'JavaScript 인터페이스'
   },
   'ru': {
     'WebAssembly_home_page' : 'WebAssembly',
@@ -41,9 +52,8 @@ var text = mdn.localStringMap({
       'Text_format' : 'Описание текстового формата WebAssembly',
       'Text_format_to_wasm' : 'Перевод из текстового формата WebAssembly в wasm',
       'Loading_and_running' : 'Загрузка и запуск кода WebAssembly',
-      'Caching_modules' : 'Кеширование скомпилированных модулей WebAssembly',
       'Exported_functions' : 'Экспортируемые функции WebAssembly',
-    'Object_reference' : 'Ссылки на API'
+    'JavaScript_interface' : 'JavaScript interface'
   }
 });
 %>
@@ -63,24 +73,25 @@ var text = mdn.localStringMap({
         <li><a href="<%=baseURL%>/Understanding_the_text_format"><%=text['Text_format']%></a></li>
         <li><a href="<%=baseURL%>/Text_format_to_wasm"><%=text['Text_format_to_wasm']%></a></li>
         <li><a href="<%=baseURL%>/Loading_and_running"><%=text['Loading_and_running']%></a></li>
-        <li><a href="<%=baseURL%>/Caching_modules"><%=text['Caching_modules']%></a></li>
         <li><a href="<%=baseURL%>/Exported_functions"><%=text['Exported_functions']%></a></li>
       </ol>
     </details>
   </li>
   <li class="toggle">
     <details open>
-      <summary><%=text['Object_reference']%></summary>
+      <summary><%=text['JavaScript_interface']%></summary>
       <ol>
-        <li><%- await template("jsxref", ["WebAssembly"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Module"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Global"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Instance"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Memory"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Table"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.CompileError"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.LinkError"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.RuntimeError"]) %></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface"><code>WebAssembly</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Module"><code>WebAssembly.Module</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Global"><code>WebAssembly.Global</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Instance"><code>WebAssembly.Instance</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Memory"><code>WebAssembly.Memory</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Table"><code>WebAssembly.Table</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Tag"><code>WebAssembly.Tag</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Exception"><code>WebAssembly.Exception</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/CompileError"><code>WebAssembly.CompileError</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/LinkError"><code>WebAssembly.LinkError</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/RuntimeError"><code>WebAssembly.RuntimeError</code></a></li>
       </ol>
     </details>
   </li>

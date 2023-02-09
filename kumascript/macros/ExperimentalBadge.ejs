@@ -2,16 +2,32 @@
 //
 // Inserts a badge indicating that a term or API is experimental.
 //
-// Parameters:
-//  $0  If specified and non-zero, a "small" version of the badge is displayed.
+// Parameters: none
 
-var titleAttrValue = mdn.localString({
-    "ja": "これは実験段階の API です。製品内のコードで使用しないようご注意ください。",
-    "ru": "Это экспериментальное API, которое не должно использоваться в рабочем коде.",
-    "zh-CN": "这是一个实验性的 API，请尽量不要在生产环境中使用它。",
-    "en-US": "This is an experimental API that should not be used in production code."
+const title = mdn.localString({
+    "en-US": "Experimental. Expect behavior to change in the future.",
+    "es": "Experimental. Espere que el comportamiento cambie en el futuro.",
+    "fr": "Expérimental. Le comportement attendu pourrait évoluer à l'avenir.",
+    "ja": "Experimental. Expect behavior to change in the future.",
+    "ko": "Experimental. 예상되는 동작은 향후 변경될 수 있습니다.",
+    "pt-BR": "Experimental. Expect behavior to change in the future.",
+    "ru": "Экспериментальная возможность. Её поведение в будущем может измениться",
+    "zh-CN": "实验性。预期行为可能会在未来发生变更。",
+    "zh-TW": "實驗性質。行為可能會在未來發生變動。"
+});
+
+const abbreviation = mdn.localString({
+    "en-US": "Experimental",
+    "es": "Experimental",
+    "fr": "Expérimental",
+    "ja": "Experimental",
+    "ko": "Experimental",
+    "pt-BR": "Experimental",
+    "ru": "Экспериментальная возможность",
+    "zh-CN": "实验性",
+    "zh-TW": "實驗性質"
 });
 %>
-<abbr class="icon icon-experimental" title="Experimental. Expect behavior to change in the future.">
-    <span class="visually-hidden">Experimental</span>
+<abbr class="icon icon-experimental" title="<%= title %>">
+    <span class="visually-hidden"><%= abbreviation %></span>
 </abbr>

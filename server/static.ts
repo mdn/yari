@@ -1,12 +1,12 @@
-import path from "path";
+import path from "node:path";
 
 import express from "express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 
-import { staticMiddlewares } from "./middlewares";
-import { resolveFundamental } from "../content";
-import { STATIC_ROOT } from "../libs/env";
+import { staticMiddlewares } from "./middlewares.js";
+import { resolveFundamental } from "../content/index.js";
+import { STATIC_ROOT } from "../libs/env/index.js";
 
 const app = express();
 app.use(express.json());
@@ -112,7 +112,7 @@ app.get("/api/v1/whoami", async (req, res) => {
 const mockSettingsDatabase = new Map();
 
 app.get("/api/v1/settings/", async (req, res) => {
-  const defaultContext = { locale: "en-US", csrfmiddlewaretoken: "xyz123" };
+  const defaultContext = { locale: "en-US" };
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
@@ -189,7 +189,6 @@ app.get("/api/v1/plus/collection/", async (req, res) => {
         (bookmark) => bookmark.url === req.query.url
       );
       res.json({
-        csrfmiddlewaretoken: "xyz123",
         bookmarked: found
           ? { id: found.id, created: found.created.toISOString() }
           : null,
@@ -198,8 +197,8 @@ app.get("/api/v1/plus/collection/", async (req, res) => {
       // Return all (paginated)
       const page = parseInt((req.query.page as string) || "1", 10);
       const pageSize = 5;
-      let m = 0;
-      let n = pageSize;
+      const m = 0;
+      const n = pageSize;
       res.json({
         items: bookmarks.slice(m, n).map((bookmark) => {
           return {

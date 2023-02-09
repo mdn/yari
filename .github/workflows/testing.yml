@@ -10,7 +10,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,20 +20,33 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+            client/pwa/yarn.lock
+            deployer/aws-lambda/content-origin-request/yarn.lock
+            deployer/aws-lambda/content-origin-response/yarn.lock
+            deployer/aws-lambda/tests/yarn.lock
+            libs/**/*.js
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
+      - name: Install all yarn packages (ROOT)
+        run: yarn --frozen-lockfile
 
-      - name: Install all yarn packages
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        run: |
-          yarn --frozen-lockfile
+      - name: Install all yarn packages (pwa)
+        working-directory: client/pwa
+        run: yarn --frozen-lockfile
+
+      - name: Install all yarn packages (aws-lambda/content-origin-request)
+        working-directory: deployer/aws-lambda/content-origin-request
+        run: yarn --frozen-lockfile
+
+      - name: Install all yarn packages (aws-lambda/content-origin-response)
+        working-directory: deployer/aws-lambda/content-origin-response
+        run: yarn --frozen-lockfile
+
+      - name: Install all yarn packages (aws-lambda/tests)
+        working-directory: deployer/aws-lambda/tests
+        run: yarn --frozen-lockfile
 
       - name: Lint prettier
         run: yarn prettier-check
@@ -41,23 +54,35 @@ jobs:
       - name: Lint ESLint
         run: yarn eslint
 
+      - name: Lint stylelint
+        run: yarn stylelint
+
+      - name: Check TypeScript
+        run: yarn check:tsc
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
+
       - name: Unit testing client
         run: yarn test:client
 
       - name: Build and start server
         id: server
         env:
-          ENV_FILE: testing/.env
+          ENV_FILE: .env.testing
         run: |
-
-          # because `yarn build:prepare` is a wrapper for `yarn build:client` and
-          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
-          # because it has to build from the `./client/` directory, we have to
-          # manually copy the `testing/.env` file into `client/` so that when
-          # `yarn build:client` runs, it gets the same environment variables
-          # as you'd get when doing `yarn build:ssr`.
-          cp testing/.env client/
-
           yarn build:prepare
           yarn build
 
@@ -70,14 +95,12 @@ jobs:
           yarn test:testing
           yarn test:headless
 
-      - name: Basic m2h/h2m tool testing
+      - name: Basic m2h tool testing
         env:
-          ENV_FILE: testing/.env
+          ENV_FILE: .env.testing
         run: |
-          yarn md m2h markdown/tool/m2h --locale en-US
+          yarn m2h markdown/tool/m2h --locale en-US
           diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
-          yarn md h2m markdown/tool/h2m --locale en-US
-          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure() && steps.server.outcome != 'skipped'

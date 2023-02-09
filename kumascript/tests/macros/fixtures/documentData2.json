@@ -215,18 +215,18 @@
       "troubleshooting"
     ]
   },
-  "/en-us/docs/web/http/headers/feature-policy": {
-    "url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy",
-    "title": "Feature-Policy",
+  "/en-us/docs/web/http/headers/permissions-policy": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Permissions-Policy",
+    "title": "Permissions-Policy",
     "locale": "en-US",
-    "summary": "The HTTP Feature-Policy header provides a mechanism to allow and deny the use of browser features in its own frame, and in content within any iframe elements in the document.",
-    "slug": "Web/HTTP/Headers/Feature-Policy",
+    "summary": "The HTTP Permissions-Policy header provides a mechanism to allow and deny the use of browser features in its own frame, and in content within any iframe elements in the document.",
+    "slug": "Web/HTTP/Headers/Permissions-Policy",
     "modified": "2020-01-16T07:19:25.222Z",
     "tags": [
       "Authorization",
       "Experimental",
       "Feature Policy",
-      "Feature-Policy",
+      "Permissions-Policy",
       "HTTP",
       "Permissions",
       "Reference",
@@ -235,12 +235,12 @@
       "header"
     ]
   },
-  "/en-us/docs/web/http/headers/feature-policy/accelerometer": {
-    "url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy/accelerometer",
-    "title": "Feature-Policy: accelerometer",
+  "/en-us/docs/web/http/headers/permissions-policy/accelerometer": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Permissions-Policy/accelerometer",
+    "title": "Permissions-Policy: accelerometer",
     "locale": "en-US",
-    "summary": "The HTTP Feature-Policy header accelerometer directive controls whether the current document is allowed to gather information about the acceleration of the device through the Accelerometer interface.",
-    "slug": "Web/HTTP/Headers/Feature-Policy/accelerometer",
+    "summary": "The HTTP Permissions-Policy header accelerometer directive controls whether the current document is allowed to gather information about the acceleration of the device through the Accelerometer interface.",
+    "slug": "Web/HTTP/Headers/Permissions-Policy/accelerometer",
     "modified": "2020-01-10T03:46:36.491Z",
     "tags": [
       "Accelerometer",
@@ -250,12 +250,12 @@
       "Reference"
     ]
   },
-  "/en-us/docs/web/http/headers/feature-policy/ambient-light-sensor": {
-    "url": "/en-US/docs/Web/HTTP/Headers/Feature-Policy/ambient-light-sensor",
-    "title": "Feature-Policy: ambient-light-sensor",
+  "/en-us/docs/web/http/headers/permissions-policy/ambient-light-sensor": {
+    "url": "/en-US/docs/Web/HTTP/Headers/Permissions-Policy/ambient-light-sensor",
+    "title": "Permissions-Policy: ambient-light-sensor",
     "locale": "en-US",
-    "summary": "The HTTP Feature-Policy header ambient-light-sensor directive controls whether the current document is allowed to gather information about the amount of light in the environment around the device through the AmbientLightSensor interface.",
-    "slug": "Web/HTTP/Headers/Feature-Policy/ambient-light-sensor",
+    "summary": "The HTTP Permissions-Policy header ambient-light-sensor directive controls whether the current document is allowed to gather information about the amount of light in the environment around the device through the AmbientLightSensor interface.",
+    "slug": "Web/HTTP/Headers/Permissions-Policy/ambient-light-sensor",
     "modified": "2020-01-10T03:46:37.902Z",
     "tags": ["Ambient Light Sensor", "Feature Policy", "HTTP"]
   }

@@ -1,28 +1,27 @@
 .all-flaws {
   .search-error {
+    background-color: rgb(252, 159, 159);
+
     h3,
     h4 {
       margin-top: 0;
     }
 
     h3 span.page {
-      margin-left: 10px;
       color: #666;
+      margin-left: 10px;
     }
   }
 
   td a .url-prefix,
   td .document-title-preview {
     color: rgb(159, 159, 159);
-    margin-right: 2px;
     font-size: 80%;
-  }
-  td .document-title-preview {
-    margin-left: 10px;
+    margin-right: 2px;
   }
 
-  .search-error {
-    background-color: rgb(252, 159, 159);
+  td .document-title-preview {
+    margin-left: 10px;
   }
 
   .document-warnings {
@@ -31,17 +30,20 @@
 
   .search-times {
     margin-top: 60px;
+
     p {
       font-size: 70%;
     }
   }
 
   .pagination {
-    text-align: center;
     margin: 20px;
+    text-align: center;
+
     a.disabled {
       color: rgb(159, 159, 159);
     }
+
     a {
       padding: 10px;
     }
@@ -60,11 +62,13 @@
 
       ul.search-flaws-rows {
         padding-left: 0;
+
         li {
           list-style: none;
         }
       }
     }
+
     .documents {
       margin-left: 300px;
 

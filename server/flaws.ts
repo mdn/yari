@@ -1,16 +1,14 @@
-import { Doc } from "../client/src/document/types";
-import { FlawFilters } from "./types";
-
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
 
-import { getPopularities } from "../content";
-import { options as buildOptions } from "../build";
-
-import { FLAW_LEVELS } from "../libs/constants";
-import { BUILD_OUT_ROOT } from "../libs/env";
+import { Doc } from "../libs/types/document.js";
+import { FlawFilters } from "./types.js";
+import { getPopularities } from "../content/index.js";
+import buildOptions from "../build/build-options.js";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
+import { BUILD_OUT_ROOT } from "../libs/env/index.js";
 
 // Module-level cache
 const allPopularityValues = [];

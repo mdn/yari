@@ -7,124 +7,96 @@
 //  $0 - The path of the page whose subpages should be listed.
 //  $1 - If true, do not put the text in <code></code>.
 //  $2 - If true, do add the parent page to the list
-//  $3 - Open delimiter: only text after this in the title will be used
-//  $4 - Close delimiter: only text before this is used
+//  $3 - Open delimiter: only text after (including) this in the title will be used
+//  $4 - Close delimiter: only text before (including) this is used
 //
 // Examples:
 //
 // {{ListSubpagesForSidebar("/en-US/docs/Web/API/WebRTC_API", 1)}}
 // {{ListSubpagesForSidebar("/en-US/docs/Web/HTML/Element", 0, 0, "<", ">")}}
 
-var path = $0;
-var locale = env.locale;
-var parent = $2 ? 1 : 0;
-var startDelim = $3;
-var endDelim = $4;
-
 // If the path ends with a slash, remove it.
-if (path.substr(-1, 1) === '/') {
-    path = path.slice(0, -1);
+const path = $0.replace(/\/$/, '');
+const locale = env.locale;
+const wrapInCode = !$1;
+const includeParent = $2 ? true : false;
+const startDelim = $3;
+const endDelim = $4;
+
+const overview = mdn.localString({
+    'en-US': 'Overview',
+    'es': 'Generalidades',
+    'fr': 'Aperçu',
+    'ja': 'の概要',
+    'ko': '개요',
+    'ru': 'Обзор',
+    'zh-CN': '概述',
+    'zh-TW': '概述'
+});
+
+const parent = await wiki.getPage(path);
+const pages = parent.subpages;
+
+// Trim english title for sorting.
+for (const page of pages) {
+    page.title = trimTitle(page.title);
+}
+// sorted by english title for subpages
+pages.sort((a, b) => a.title.localeCompare(b.title));
+
+// always keep the parent page on top, so insert it after sorting
+if (includeParent) {
+    pages.unshift({
+        ...parent,
+        title: overview
+    });
 }
 
-var pages = await page.subpagesExpand(path, -1, parent);
-var containsTag = page.hasTag;
-var htmlEscape = kuma.htmlEscape;
-
-var output = '';
-var openTag = '<ol>';
-var closeTag = '</ol>';
-var code    = !$1 ? '<code>'  : '';
-var endcode = !$1 ? '</code>' : '';
-
-// Strings
-var commonl10n = web.getJSONData('L10n-Common');
-var text = {
-    'translate': mdn.getLocalString(commonl10n, '[Translate]'),
-    'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
-};
-
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-  ObsoleteBadge : await template("ObsoleteBadge"),
-}
+const containsTag = page.hasTag;
+const htmlEscape = mdn.htmlEscape;
 
 // Trims the title, returning only the text
 // between the start and end delimiter characters.
 // Does nothing if both are null or empty.
 function trimTitle(title) {
-    var startIndex;
-    var endIndex;
+    const startIndex = startDelim ? Math.max(title.indexOf(startDelim), 0) : 0;
 
-    startIndex = 0;
-    if (startDelim) {
-        startIndex = title.indexOf(startDelim);
-        if (startIndex) {
-            startIndex += 1;
-        }
-    }
-
-    endIndex = 0;
-    if (endDelim) {
-        endIndex = title.indexOf(endDelim)+1;
-    }
-    if (!endIndex) {
-        endIndex = title.length;
-    }
+    // if endIndex is 0 (not found), then use title.length
+    const endIndex = (endDelim ? title.indexOf(endDelim) + 1 : title.length) ||
+        title.length;
 
     return title.substring(startIndex, endIndex);
 }
 
-function createLink(item) {
-    var result = '';
-    if (!item.url) {
-        return '';
-    }
+async function createLink(aPage) {
+    const url = aPage.url.replace('en-US', locale);
+    let title = htmlEscape(aPage.title);
 
-    var url = item.url.replace('en-US', locale);
-    var title = htmlEscape(trimTitle(item.title));
-
-    if (locale != 'en-US') {
-        item.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                url = translation.url;
+    if (locale !== 'en-US') {
+        for (const translation of aPage.translations) {
+            if (translation.locale === locale) {
                 title = htmlEscape(trimTitle(translation.title));
             }
-        });
+        }
     }
 
-    result += '<li>';
-
-    if (containsTag(item, 'Experimental')) {
-        result += badges.ExperimentalBadge;
+    let linkContent = title;
+    if (wrapInCode) {
+      linkContent = `<code>${linkContent}</code>`;
     }
+    
+    const pageBadges = (await page.badges(aPage)).join("");
 
-    if (containsTag(item, 'Non-standard') || containsTag(item, 'Non Standard')) {
-        result += badges.NonStandardBadge;
-    }
-
-    if (containsTag(item, 'Deprecated')) {
-        result += badges.DeprecatedBadge;
-    }
-
-    if (containsTag(item, 'Obsolete')) {
-        result += badges.ObsoleteBadge;
-    }
-
-    result += '<a href="' + url + '">' + code + title + endcode + '</a></li>';
+    const result = `<li><a href="${url}">${linkContent}</a>${pageBadges}</li>`;
     return result;
 }
 
-if (pages.length) {
-    output += openTag;
-
-    pages.forEach(function(item) {
-        if (!item) { return; }
-        output += createLink(item);
-    });
-
-    output += closeTag;
+let output = ''
+if(pages.length) {
+    const linkArray = await Promise.all(pages.map(createLink));
+    const links = linkArray.join('');
+    output = `<ol>${links}</ol>`;
 }
+
 %>
 <%- output %>

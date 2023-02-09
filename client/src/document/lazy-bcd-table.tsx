@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import useSWR from "swr";
 import { useTranslation, Trans } from "react-i18next";
 
@@ -14,6 +14,13 @@ import { Loading } from "../ui/atoms/loading";
 import "./ingredients/browser-compatibility-table/index.scss";
 import { useIsServer } from "../hooks";
 import NoteCard from "../ui/molecules/notecards";
+import type BCD from "@mdn/browser-compat-data/types";
+
+interface QueryJson {
+  query: string;
+  data: BCD.Identifier;
+  browsers: BCD.Browsers;
+}
 
 const BrowserCompatibilityTable = lazy(
   () =>
@@ -27,61 +34,36 @@ export function LazyBrowserCompatibilityTable({
   title,
   isH3,
   query,
-  dataURL,
 }: {
   id: string;
   title: string;
   isH3: boolean;
   query: string;
-  dataURL: string | null;
 }) {
-  const { t } = useTranslation("bcd");
   return (
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
-      {dataURL ? (
-        <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
-      ) : (
-        <NoteCard type="warning">
-          <p>
-            <Trans t={t} i18nKey="noData" values={{ query }}>
-              No compatibility data found for <code>[[query]]</code>
-              .<br />
-              <a href="#on-github">Check for problems with this page</a> or
-              contribute missing data to{" "}
-              <a href="https://github.com/mdn/browser-compat-data">
-                mdn/browser-compat-data
-              </a>
-              .
-            </Trans>
-          </p>
-        </NoteCard>
-      )}
+      <LazyBrowserCompatibilityTableInner query={query} />
     </>
   );
 }
 
-function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
+function LazyBrowserCompatibilityTableInner({ query }: { query: string }) {
   const { t } = useTranslation("bcd");
-  const [bcdDataURL, setBCDDataURL] = useState("");
   const isServer = useIsServer();
 
   const { error, data } = useSWR(
-    bcdDataURL ? bcdDataURL : null,
-    async (url) => {
-      const response = await fetch(url);
+    query,
+    async (query) => {
+      const response = await fetch(`/bcd/api/v0/current/${query}.json`);
       if (!response.ok) {
-        throw new Error(await response.text());
+        throw new Error(response.status.toString());
       }
-      return await response.json();
+      return (await response.json()) as QueryJson;
     },
     { revalidateOnFocus: false }
   );
-
-  useEffect(() => {
-    setBCDDataURL(dataURL);
-  }, [dataURL]);
 
   if (isServer) {
     return (
@@ -96,11 +78,29 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
       </p>
     );
   }
-  if (!data && !error) {
-    return <Loading />;
-  }
   if (error) {
+    if (error.message === "404") {
+      return (
+        <NoteCard type="warning">
+          <p>
+            <Trans t={t} i18nKey="noData" values={{ query }}>
+              No compatibility data found for <code>[[query]]</code>
+              .<br />
+              <a href="#on-github">Check for problems with this page</a> or
+              contribute missing data to{" "}
+              <a href="https://github.com/mdn/browser-compat-data">
+                mdn/browser-compat-data
+              </a>
+              .
+            </Trans>
+          </p>
+        </NoteCard>
+      );
+    }
     return <p>{t("error.simple")}</p>;
+  }
+  if (!data) {
+    return <Loading />;
   }
 
   return (

@@ -6,6 +6,9 @@ interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
   // Known for some support statements where the browser *version* is known,
   // as opposed to just "true" and if the version release date is known.
   release_date?: string;
+  // The version before the version_removed if the *version* removed is known,
+  // as opposed to just "true". Otherwise the version_removed.
+  version_last?: BCD.VersionValue;
 }
 
 export type SupportStatementExtended =
@@ -31,11 +34,32 @@ interface Feature {
   depth: number;
 }
 
+function findFirstCompatDepth(identifier: BCD.Identifier) {
+  const entries = [["", identifier]];
+
+  while (entries.length) {
+    const [path, value] = entries.shift() as [string, BCD.Identifier];
+    if (value.__compat) {
+      // Following entries have at least this depth.
+      return path.split(".").length;
+    }
+
+    for (const key of Object.keys(value)) {
+      const subpath = path ? `${path}.${key}` : key;
+      entries.push([subpath, value[key]]);
+    }
+  }
+
+  // Fallback.
+  return 0;
+}
+
 export function listFeatures(
   identifier: BCD.Identifier,
   parentName: string = "",
   rootName: string = "",
-  depth: number = 0
+  depth: number = 0,
+  firstCompatDepth: number = 0
 ): Feature[] {
   const features: Feature[] = [];
   if (rootName && identifier.__compat) {
@@ -45,20 +69,32 @@ export function listFeatures(
       depth,
     });
   }
-
-  for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat" && (subIdentifier as BCD.Identifier).__compat) {
+  if (rootName) {
+    firstCompatDepth = findFirstCompatDepth(identifier);
+  }
+  for (const subName of Object.keys(identifier)) {
+    if (subName === "__compat") {
+      continue;
+    }
+    const subIdentifier = identifier[subName];
+    if (subIdentifier.__compat) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
-        compat: (subIdentifier as BCD.Identifier).__compat!,
+        compat: subIdentifier.__compat,
         depth: depth + 1,
       });
+    }
+    if (subIdentifier.__compat || depth + 1 < firstCompatDepth) {
       features.push(
-        ...listFeatures(subIdentifier as BCD.Identifier, subName, "", depth + 1)
+        ...listFeatures(subIdentifier, subName, "", depth + 1, firstCompatDepth)
       );
     }
   }
   return features;
+}
+
+export function hasMore(support: BCD.SupportStatement | undefined) {
+  return Array.isArray(support) && support.length > 1;
 }
 
 export function versionIsPreview(
@@ -99,37 +135,6 @@ function hasMajorLimitation(support: BCD.SimpleSupportStatement) {
     support.version_removed
   );
 }
-
-export function isOnlySupportedWithAltName(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).alternative_name &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithPrefix(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).prefix &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithFlags(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).flags &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
 export function isFullySupportedWithoutLimitation(
   support: BCD.SimpleSupportStatement
 ) {

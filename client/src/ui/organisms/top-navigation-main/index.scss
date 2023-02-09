@@ -14,21 +14,22 @@
   .auth-container {
     order: 0;
   }
+
   .header-search {
     order: 1;
   }
+
   .main-nav {
     order: 2;
   }
-  .notifications-menu {
-    order: 3;
-  }
+
   .user-menu {
-    order: 4;
+    order: 3;
   }
 
   .top-level-entry-container {
     position: relative;
+
     .submenu {
       z-index: var(--z-index-nav-menu);
     }
@@ -65,11 +66,11 @@
   }
 
   .top-level-entry {
-    display: block;
     background: none;
     border-top: 1px solid var(--border-secondary);
     color: var(--text-secondary);
     cursor: pointer;
+    display: block;
     padding: 1rem 0.5rem;
     text-align: left;
     width: 100%;
@@ -80,8 +81,8 @@
     }
 
     &.menu-toggle {
-      padding: 0.5rem;
       min-height: 53px;
+      padding: 0.5rem;
     }
 
     @media screen and (max-width: $screen-lg) {
@@ -106,8 +107,8 @@
     }
 
     @media screen and (min-width: $screen-lg) {
-      border-top: none;
       border-radius: var(--elem-radius);
+      border-top: none;
       padding: 0.5rem;
 
       &:hover,
@@ -131,14 +132,14 @@
   }
 
   .menu-toggle:after {
-    content: "";
-    width: var(--icon-size);
-    height: var(--icon-size);
     background-color: var(--icon-primary);
-    margin-top: 0.2em;
+    content: "";
+    height: var(--icon-size);
     margin-left: 0.2em;
+    margin-top: 0.2em;
 
     mask-image: url("../../../assets/icons/chevron.svg");
+    width: var(--icon-size);
   }
 
   .menu-toggle[aria-expanded="true"]::after {
@@ -166,24 +167,21 @@
     }
 
     .main-nav {
+      margin-right: auto;
       order: 0;
+      width: max-content;
     }
+
     .header-search {
       order: 1;
     }
-    .notifications-menu {
+
+    .auth-container {
       order: 2;
     }
-    .auth-container {
-      order: 3;
-    }
-    .user-menu {
-      order: 4;
-    }
 
-    .main-nav {
-      margin-right: auto;
-      width: max-content;
+    .user-menu {
+      order: 3;
     }
 
     .menu-toggle + .top-level-entry {

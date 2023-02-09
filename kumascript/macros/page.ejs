@@ -14,6 +14,10 @@
 //  $4 - (optional) the heading level to use as the top heading level; others
 //       are adjusted to match.
 
+// Throw a MacroDeprecatedError flaw
+// Can be removed when its usage translated-content is down to 0
+mdn.deprecated();
+
 var url = web.spacesToUnderscores($0);
 
 if ($1) {

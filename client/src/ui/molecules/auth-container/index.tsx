@@ -3,14 +3,17 @@ import { SubscribeLink } from "../../atoms/subscribe-link";
 
 import "./index.scss";
 
-export const AuthContainer = () => {
+export const AuthContainer = ({
+  signInGleanContext,
+  subscribeGleanContext,
+}) => {
   return (
     <ul className="auth-container">
       <li>
-        <SignInLink />
+        <SignInLink gleanContext={signInGleanContext} />
       </li>
       <li>
-        <SubscribeLink />
+        <SubscribeLink gleanContext={subscribeGleanContext} />
       </li>
     </ul>
   );

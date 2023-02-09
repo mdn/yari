@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { setEmbargoed, isEmbargoed } from "./banner-utils";
-import { CRUD_MODE } from "../env";
+import { CRUD_MODE, NEWSLETTER_ENABLED } from "../env";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -11,13 +11,21 @@ import { CRUD_MODE } from "../env";
 import "./banner.scss";
 
 import { BannerId } from "./ids";
+import { useUserData } from "../user-context";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
-const currentBannerId: BannerId | null = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
 const daysToEmbargo = 30;
 
 export function Banner() {
+  const userData = useUserData();
+  const currentBannerId: BannerId | null = userData?.isAuthenticated
+    ? NEWSLETTER_ENABLED &&
+      userData?.isSubscriber &&
+      !userData?.settings?.mdnplusNewsletter
+      ? BannerId.NEWSLETTER_ANNOUNCEMENT
+      : BannerId.MULTIPLE_COLLECTIONS
+    : BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
       <React.Suspense fallback={null}>

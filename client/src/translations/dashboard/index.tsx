@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import useSWR from "swr";
 
-import { PageContentContainer } from "../../ui/atoms/page-content";
+import { MainContentContainer } from "../../ui/atoms/page-content";
 
 interface Data {
   l10nKPIs: L10nKPIs;
@@ -213,7 +213,7 @@ export function TranslationDashboard() {
       )}
     </Container>
   );
-  /* 
+  /*
      );
     }
  */
@@ -222,7 +222,7 @@ export function TranslationDashboard() {
 function Container({ children }: { children: React.ReactNode }) {
   return (
     <div className="dashboard-section-translations">
-      <PageContentContainer>{children}</PageContentContainer>
+      <MainContentContainer standalone={true}>{children}</MainContentContainer>
     </div>
   );
 }

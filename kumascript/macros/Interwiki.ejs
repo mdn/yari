@@ -6,6 +6,9 @@
 //  $1  Path to page on the destination wiki
 //  $2  Alternate link text to use instead of $1
 
+// Throw a MacroDeprecatedError flaw
+mdn.deprecated()
+
 var path = $1;
 var title = $2 || path;
 

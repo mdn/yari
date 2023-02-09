@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 import { Search } from "../ui/molecules/search";
 import { useIsServer, useLocale } from "../hooks";
 import "./index.scss";
@@ -13,7 +13,7 @@ export default function WritersHomepage() {
   const locale = useLocale();
 
   return (
-    <PageContentContainer>
+    <MainContentContainer>
       <div className="container" id="writers-homepage">
         <h2>Writer's home page</h2>
 
@@ -105,6 +105,6 @@ export default function WritersHomepage() {
           </li>
         </ul>
       </div>
-    </PageContentContainer>
+    </MainContentContainer>
   );
 }

@@ -90,26 +90,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          cache: yarn
 
       - name: Install all yarn packages
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v4.2.0
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.3
+        uses: snok/install-poetry@v1
 
       - name: Install deployer
         run: |
@@ -156,9 +148,6 @@ jobs:
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
 
-          # This disables the Plus geo-fencing.
-          REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE: true
-
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
 
@@ -173,15 +162,19 @@ jobs:
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
-          REACT_APP_ENABLE_PLUS_EU: true
 
-          # Document survey (https://github.com/mdn/yari/pull/6371).
-          REACT_APP_SURVEY_START_CSS_CASCADE_2022: 1654336800000 # (new Date("2022-06-04 12:00:00")).getTime()
-          REACT_APP_SURVEY_END_CSS_CASCADE_2022: 1655546400000 # (new Date("2022-06-18 12:00:00")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_CSS_CASCADE_2022_A: 0.0 # 25 %
-          REACT_APP_SURVEY_RATE_TILL_CSS_CASCADE_2022_A: 0.25 # 25 %
-          REACT_APP_SURVEY_RATE_FROM_CSS_CASCADE_2022_B: 0.25 # 25 %
-          REACT_APP_SURVEY_RATE_TILL_CSS_CASCADE_2022_B: 0.5 # 25 %
+          # Surveys.
+          REACT_APP_SURVEY_START_FIREFOX_WEB_COMPAT_2023: 0 # stage
+          REACT_APP_SURVEY_END_FIREFOX_WEB_COMPAT_2023: 1675944000000 # (new Date("2023-02-09 12:00:00Z")).getTime()
+          REACT_APP_SURVEY_RATE_FROM_FIREFOX_WEB_COMPAT_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_FIREFOX_WEB_COMPAT_2023: 0.10 # 10%
+
+          # Telemetry.
+          REACT_APP_GLEAN_CHANNEL: stage
+          REACT_APP_GLEAN_ENABLED: true
+
+          # Newsletter
+          REACT_APP_NEWSLETTER_ENABLED: true
 
         run: |
 
@@ -215,6 +208,9 @@ jobs:
 
           du -sh client/build
 
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
       - name: Deploy with deployer
         env:
           GITHUB_SHA: ${{ env.GITHUB_SHA }}
@@ -232,6 +228,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
+
+          DEPLOYER_LAMBDA_PREFIX: stage-
 
         run: |
 
@@ -252,7 +250,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}

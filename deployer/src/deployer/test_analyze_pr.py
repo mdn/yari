@@ -37,8 +37,27 @@ def test_analyze_pr_prefix():
     doc = {"doc": {"mdn_url": "/en-US/docs/Foo"}}
     with mock_build_directory(doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
-        assert "## Preview URLs" in comment
-        assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
+        assert "<b>Preview URLs</b>" in comment
+        assert (
+            "- [/en-US/docs/Foo](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
+            in comment
+        )
+
+
+def test_analyze_pr_preview_urls():
+    doc1 = {"doc": {"mdn_url": "/en-US/docs/Foo1"}}
+    doc2 = {"doc": {"mdn_url": "/en-US/docs/Foo2"}}
+    doc3 = {"doc": {"mdn_url": "/en-US/docs/Foo3"}}
+    doc4 = {"doc": {"mdn_url": "/en-US/docs/Foo4"}}
+    doc5 = {"doc": {"mdn_url": "/en-US/docs/Foo5"}}
+    doc6 = {"doc": {"mdn_url": "/en-US/docs/Foo6"}}
+    with mock_build_directory(doc1, doc2, doc3, doc4, doc5, doc6) as build_directory:
+        comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
+        assert "<details><summary><b>Preview URLs</b> (6 pages)</summary>" in comment
+        assert (
+            "- [/en-US/docs/Foo6](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo6)\n\n</details>"
+            in comment
+        )
 
 
 def test_analyze_pr_flaws():
@@ -65,7 +84,7 @@ def test_analyze_pr_flaws():
     }
     with mock_build_directory(no_flaws_doc, doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, analyze_flaws=True))
-        assert "## Flaws" in comment
+        assert "<details><summary><b>Flaws</b> (2)</summary>" in comment
         assert "1 document with no flaws that don't need to be listed" in comment
         assert "Flaw count: 2" in comment
         assert len(comment.split("\n---\n")) == 1
@@ -99,7 +118,7 @@ def test_analyze_pr_dangerous_content():
         comment = analyze_pr(
             build_directory, dict(DEFAULT_CONFIG, analyze_dangerous_content=True)
         )
-        assert "## External URLs" in comment
+        assert "<details><summary><b>External URLs</b> (1)</summary>" in comment
         assert "  - <https://www.peterbe.com> (1 time)" in comment
 
 
@@ -137,7 +156,7 @@ def test_analyze_pr_dangerous_content_with_diff_file_matched():
                 diff_file=diff_file,
             ),
         )
-        assert "## External URLs" in comment
+        assert "<details><summary><b>External URLs</b> (1)</summary>" in comment
         assert "  - <https://www.peterbe.com> (1 time)" in comment
 
 
@@ -175,9 +194,7 @@ def test_analyze_pr_dangerous_content_with_diff_file_not_matched():
                 diff_file=diff_file,
             ),
         )
-        assert "## External URLs" in comment
-        assert "No *new* external URLs" in comment
-        assert "https://www.mozilla.org" not in comment
+        assert not comment
 
 
 @patch("deployer.analyze_pr.Github")
@@ -188,8 +205,11 @@ def test_analyze_pr_prefix_and_postcomment(mocked_github):
             build_directory,
             dict(DEFAULT_CONFIG, prefix="pr007", pr_number=123, github_token="abc123"),
         )
-        assert "## Preview URLs" in comment
-        assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
+        assert "<b>Preview URLs</b>" in comment
+        assert (
+            "- [/en-US/docs/Foo](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
+            in comment
+        )
 
     mocked_github().get_repo().get_issue().create_comment.assert_called()
 

@@ -1,5 +1,5 @@
-const { test, expect } = require("@playwright/test");
-const got = require("got");
+import { test, expect } from "@playwright/test";
+import got from "got";
 
 export {};
 
@@ -38,6 +38,9 @@ test.describe("Testing the kitchensink page", () => {
     expect(
       await page.isVisible("text=The MDN Content Kitchensink")
     ).toBeTruthy();
+
+    // Toolbar.
+    await page.waitForSelector("#_flaws");
     expect(
       await page.isVisible("text=No known flaws at the moment")
     ).toBeTruthy();
@@ -69,7 +72,7 @@ test.describe("Testing the kitchensink page", () => {
     // Loading the index.json doesn't require a headless browser
     const { doc } = await got(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
-    ).json();
+    ).json<any>();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
     expect(doc.flaws).toEqual({});

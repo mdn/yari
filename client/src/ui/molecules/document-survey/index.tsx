@@ -1,5 +1,5 @@
 import React from "react";
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./utils";
@@ -106,7 +106,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
     const listener = (event: MessageEvent) => {
       if (
-        event.origin === "https://www.surveygizmo.com" &&
+        event.origin === "https://survey.alchemer.com" &&
         event.data === "submit"
       ) {
         submitted();

@@ -1,5 +1,5 @@
 /*
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 function testURL(pathname = "/") {
   const PORT = parseInt(process.env.SERVER_PORT || "5000");

@@ -15,6 +15,8 @@
 // {{SectionOnPage("/en-US/docs/Web/API/RTCPeerConnection",
 //                 "RTCSignalingState enum", "code")}}
 
+mdn.deprecated();
+
 let allowedWrappers = [
     "code",
     "kbd",
@@ -24,7 +26,7 @@ let section = $1;
 let lang = env.locale;
 let text = "";
 let page = await wiki.getPage($0);
-let title = kuma.htmlEscape(page.title);
+let title = mdn.htmlEscape(page.title);
 
 let commonLocalStrings = web.getJSONData("L10n-Common");
 let localize = mdn.getLocalString;
@@ -49,8 +51,17 @@ url = Web.spacesToUnderscores(url);
 url = url.replace(":", "");             // Remove colons
 
 switch(lang) {
+    case "ja":
+        text = `<a href="${url}">${section}</a>（<a href="${$0}">${title}</a> 内）`;
+        break;
     case "ru":
         text = `<a href="${url}">${section}</a> в <a href="${$0}">${title}</a>`;
+        break;
+    case "zh-CN":
+        text = `<a href="${$0}">${title}</a> 中的 <a href="${url}">${section}</a>`;
+        break;
+    case "zh-TW":
+        text = `<a href="${$0}">${title}</a> 中的 <a href="${url}">${section}</a>`;
         break;
     default:
         text = `<a href="${url}">${section}</a> in <a href="${$0}">${title}</a>`;

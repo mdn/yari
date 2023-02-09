@@ -22,7 +22,7 @@ const subPath = `Element/${term}`;
 const baseURL = `/${env.locale}/docs/Web/SVG`;
 const url = `${baseURL}/${subPath}`;
 const title = `<${term}>`;
-const link = web.smartLink(url, null, `<code>${kuma.htmlEscape(title)}</code>`, subPath, baseURL, ignoreFlawMacro);
+const link = web.smartLink(url, null, `<code>${mdn.htmlEscape(title)}</code>`, subPath, baseURL, ignoreFlawMacro);
 
 %>
 <%- link %>

@@ -1,12 +1,15 @@
-import { WebpackConfiguration } from "webpack-dev-server";
+import type { WebpackConfiguration } from "webpack-dev-server";
 
 export const devMiddlewares = [];
 
 if (process.env.NODE_ENV === "development") {
-  /* eslint-disable node/no-unpublished-require */
-  const webpack = require("webpack");
-  const webpackDevMiddleware = require("webpack-dev-middleware");
-  const webpackHotMiddleware = require("webpack-hot-middleware");
+  const [webpack, webpackDevMiddleware, webpackHotMiddleware] = (
+    await Promise.all([
+      import("webpack"),
+      import("webpack-dev-middleware"),
+      import("webpack-hot-middleware"),
+    ])
+  ).map((p) => p.default);
 
   const webpackConfig: WebpackConfiguration = {
     entry: {
@@ -23,7 +26,6 @@ if (process.env.NODE_ENV === "development") {
 
   devMiddlewares.push(
     webpackDevMiddleware(compiler, {
-      noInfo: true,
       publicPath: webpackConfig.output.publicPath,
     })
   );

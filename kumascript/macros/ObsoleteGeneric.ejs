@@ -57,10 +57,6 @@ if ($1) {
 if (link.length) { ver = web.link(link, ver); }
 
 switch(lang) {
-    case 'de':
-        str = "Veraltet";
-        if (ver.length) { str = str + " seit " + ver; }
-        break;
     case 'es':
         str = "Obsoleto";
         if (ver.length) { str = str + " " + ver; }
@@ -73,11 +69,7 @@ switch(lang) {
         str = "廃止"; if (ver.length) { str = ver + " で" + str; }
         break;
     case 'ko':
-        str = "안씀";
-        if (ver.length) { str = str + " " + ver; }
-        break;
-    case 'pl':
-        str = "Przestarzały";
+        str = "폐기됨";
         if (ver.length) { str = str + " " + ver; }
         break;
     case 'ru':
@@ -100,10 +92,10 @@ switch(lang) {
 
 var str_desc = mdn.localString({
   "en-US": "This feature is obsolete. Although it may still work in some browsers, its use is discouraged since it could be removed at any time. Try to avoid using it.",
-  "de":    "Dieses Feature ist veraltet. Obwohl es in manchen Browsern immer noch funktioniert, wird von seiner Benutzung abgeraten, da es jederzeit entfernt werden kann. Es sollte daher nicht mehr verwendet werden.",
   "fr":    "Cette fonctionnalité est obsolète. Bien qu'encore supportée par des navigateurs, son utilisation est découragée pour tout nouveau projet. Évitez de l'utiliser.",
   "es":    "Esta funcionalidad es obsoleta. Aunque puede aún funcionar en algunos navegadores, se desalienta su uso ya que puede ser removida en cualquier momento. Evite usarla.",
   "ja":    "この機能は廃止されました。まだいくつかのブラウザーで動作するかもしれませんが、いつ削除されてもおかしくないので、使わないようにしましょう。",
+  "ko":    "이 기능은 폐기되었습니다. 몇몇 브라우저에서 여전히 동작 할 수 있지만, 언제 삭제되어도 이상하지 않으니 사용하지 마세요.",
   "ru":    "Эта возможность вышла из употребления. Хотя она может продолжать работать в некоторых браузерах, её использование не рекомендуется, поскольку она может быть удалена в любое время. Старайтесь избегать её использования."
 });
 

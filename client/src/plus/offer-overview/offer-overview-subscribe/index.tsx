@@ -1,6 +1,5 @@
 import "./index.scss";
 import {
-  ENABLE_PLUS_EU,
   FXA_SIGNIN_URL,
   MDN_PLUS_SUBSCRIBE_10M_URL,
   MDN_PLUS_SUBSCRIBE_10Y_URL,
@@ -13,6 +12,8 @@ import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
 import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
 
 export enum Period {
   Month,
@@ -20,7 +21,7 @@ export enum Period {
 }
 
 const SUBSCRIPTIONS = {
-  [SubscriptionType.MDN_CORE]: { order: 0 },
+  [SubscriptionType.MDN_CORE]: { order: 0, period: Period.Month },
   [SubscriptionType.MDN_PLUS_5M]: {
     order: 1,
     period: Period.Month,
@@ -69,7 +70,7 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
-  ["notifications", "Page notifications"],
+  ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
 ];
@@ -78,8 +79,8 @@ const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
-    ["notifications", "Notifications for up to 3 pages"],
-    ["collections", "Up to 5 saved articles"],
+    ["updates", "Filter and sort updates"],
+    ["collections", "Up to 3 collections"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -152,6 +153,7 @@ function OfferDetails({
   const userData = useUserData();
   const current = isCurrent(userData, subscriptionType);
   const upgrade = canUpgrade(userData, subscriptionType);
+  const gleanClick = useGleanClick();
   const displayMonthlyPrice =
     monthlyPrice &&
     new Intl.NumberFormat(undefined, {
@@ -180,7 +182,13 @@ function OfferDetails({
         )}
         {(current && <span className="sub-link current">Current plan</span>) ||
           (upgrade === null && (
-            <a href={ctaLink} className="sub-link">
+            <a
+              href={ctaLink}
+              className="sub-link"
+              onClick={() =>
+                gleanClick(`${OFFER_OVERVIEW_CLICK}: ${offerDetails.id}`)
+              }
+            >
               {offerDetails.cta}
             </a>
           )) ||
@@ -286,7 +294,7 @@ function OfferOverviewSubscribe() {
 
   useEffect(() => {
     (async () => {
-      if (ENABLE_PLUS_EU && isOnline) {
+      if (isOnline) {
         try {
           const plans: StripePlans = await getStripePlans();
           setOfferDetails(getLocalizedPlans(plans));

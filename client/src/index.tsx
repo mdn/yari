@@ -6,6 +6,7 @@ import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
+import { GleanProvider } from "./telemetry/glean-context";
 
 // Enable localization for Yari components
 import "./i18n";
@@ -27,15 +28,17 @@ const appData = hydrationElement
 
 const app = (
   <React.StrictMode>
-    <GAProvider>
-      <UserDataProvider>
-        <UIProvider>
-          <Router>
-            <App {...appData} />
-          </Router>
-        </UIProvider>
-      </UserDataProvider>
-    </GAProvider>
+    <GleanProvider>
+      <GAProvider>
+        <UserDataProvider>
+          <UIProvider>
+            <Router>
+              <App {...appData} />
+            </Router>
+          </UIProvider>
+        </UserDataProvider>
+      </GAProvider>
+    </GleanProvider>
   </React.StrictMode>
 );
 

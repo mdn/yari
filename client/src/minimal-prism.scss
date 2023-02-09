@@ -28,7 +28,7 @@ don't use any of that, we can safely ignore it.
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: palette.var(--icon-critical);
+  color: var(--icon-critical);
 }
 
 .token.selector,

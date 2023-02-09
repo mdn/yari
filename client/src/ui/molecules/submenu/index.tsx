@@ -1,7 +1,6 @@
 import "./index.scss";
-import React from "react";
 
-type SubmenuItem = {
+export type SubmenuItem = {
   component?: () => JSX.Element;
   description?: string;
   extraClasses?: string | null;
@@ -39,7 +38,6 @@ export const Submenu = ({
       className={`${isDropdown ? "dropdown-list" : "submenu"} ${menuEntry.id} ${
         defaultHidden ? "hidden" : ""
       } ${extraClasses || ""}`}
-      role="menu"
       aria-labelledby={`${menuEntry.id}-button`}
     >
       {menuEntry.items &&
@@ -48,7 +46,6 @@ export const Submenu = ({
           return (
             <li
               key={key}
-              role="menuitem"
               className={`${item.extraClasses || ""} ${
                 isDropdown ? "dropdown-item" : ""
               }`}
@@ -61,7 +58,6 @@ export const Submenu = ({
                   className={`submenu-item ${
                     item.url.startsWith("https://") ? "external" : ""
                   }`}
-                  role="menuitem"
                 >
                   {item.hasIcon && <div className={item.iconClasses} />}
                   {item.dot && (

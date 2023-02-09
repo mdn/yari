@@ -27,10 +27,11 @@ export const KUMA_HOST =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 
 export const PLUS_IS_ENABLED = Boolean(
-  process.env.REACT_APP_ENABLE_PLUS || "false"
+  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
 );
-export const PLUS_IS_AVAILABLE_OVERRIDE = JSON.parse(
-  process.env.REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE || "null"
+
+export const NEWSLETTER_ENABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_NEWSLETTER_ENABLED || "false")
 );
 
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
@@ -50,16 +51,6 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
-export const ENABLE_PLUS_EU = Boolean(
-  JSON.parse(process.env.REACT_APP_ENABLE_PLUS_EU || "false")
-);
-
-export const PLUS_ENABLED_COUNTRIES =
-  process.env.REACT_APP_PLUS_ENABLED_COUNTRIES?.split(",") || [
-    "United States",
-    "Canada",
-  ];
-
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
@@ -68,7 +59,14 @@ export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||
   "https://updates.developer.allizom.org";
 
-// TODO Inline after 2022-07-01.
+export const GLEAN_CHANNEL = process.env.REACT_APP_GLEAN_CHANNEL || "dev";
+export const GLEAN_DEBUG = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_DEBUG || "false")
+);
+export const GLEAN_ENABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
+);
+
 export function survey_duration(surveyBucket: string): {
   start: number;
   end: number;
