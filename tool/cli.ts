@@ -142,7 +142,7 @@ interface GatherGitHistoryActionParameters extends ActionParameters {
 
 interface SyncTranslatedContentActionParameters extends ActionParameters {
   args: {
-    locale: string[];
+    locales: string[];
   };
   options: {
     verbose: boolean;
@@ -654,14 +654,14 @@ program
     "sync-translated-content",
     "Sync translated content (sync with en-US slugs) for a locale"
   )
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
     tryOrExit(
       async ({ args, options }: SyncTranslatedContentActionParameters) => {
-        const { locale: locales } = args;
+        const { locales } = args;
         const { verbose } = options;
         if (verbose) {
           log.setDefaultLevel(log.levels.DEBUG);

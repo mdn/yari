@@ -119,8 +119,6 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
 
   const rawDoc = fs.readFileSync(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
-  const extension = path.extname(fileName);
-  const bareFileName = path.basename(inFilePath, extension);
   const { attributes: oldMetadata, body: rawBody } = fm<DocFrontmatter>(rawDoc);
   const resolvedSlug = resolve(oldMetadata.slug);
   const metadata = {
@@ -173,11 +171,7 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
   let filePath = getFilePath();
 
   status.orphaned = !mdOrHtmlExists(
-    path.join(
-      CONTENT_ROOT,
-      DEFAULT_LOCALE_LC,
-      slugToFolder(metadata.slug)
-    )
+    path.join(CONTENT_ROOT, DEFAULT_LOCALE_LC, slugToFolder(metadata.slug))
   );
 
   if (!status.renamed && !status.orphaned) {
@@ -220,24 +214,39 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     metadata.slug
   );
   if (status.moved) {
-    fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    execGit(["mv", inFilePath, filePath], { cwd: CONTENT_TRANSLATED_ROOT });
-
+    moveContent(path.dirname(inFilePath), path.dirname(filePath));
     metadata.original_slug = oldMetadata.slug;
   }
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
 
-  if (status.moved) {
+  return status;
+}
+
+// Move all regular files (excluding subdirectories) from one directory to another,
+// and delete the source directory if it's empty.
+function moveContent(inFileDir: string, outFileDir: string) {
+  const files = fs.readdirSync(inFileDir, {
+    encoding: "utf-8",
+    withFileTypes: true,
+  });
+  fs.mkdirSync(outFileDir, { recursive: true });
+  const regularFiles = files
+    .filter((file) => file.isFile())
+    .map((file) => file.name);
+  for (const filename of regularFiles) {
+    const source = path.join(inFileDir, filename);
+    execGit(["mv", source, outFileDir], { cwd: CONTENT_TRANSLATED_ROOT });
+  }
+  // assuming that the source directory is empty
+  if (files.length === regularFiles.length) {
     try {
-      fs.rmdirSync(path.dirname(inFilePath));
+      fs.rmdirSync(inFileDir);
     } catch (e: any) {
       if (e.code !== "ENOTEMPTY") {
         throw e;
       }
     }
   }
-
-  return status;
 }
 
 export function syncTranslatedContentForAllLocales() {
