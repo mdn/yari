@@ -107,7 +107,7 @@
     "rehype-format": "^4.0.1",
     "rehype-raw": "^6.1.1",
     "rehype-stringify": "^9.0.3",
-    "remark-gfm": "^1.0.0",
+    "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
     "sanitize-filename": "^1.6.3",
