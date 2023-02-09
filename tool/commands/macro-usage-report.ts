@@ -9,7 +9,7 @@ import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../../libs/constants/index.js";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../../libs/env/index.js";
 import { tryOrExit } from "../util.js";
 
-const YARI_URL = new URL("..", import.meta.url);
+const YARI_URL = new URL("../..", import.meta.url);
 const MACROS_URL = new URL("kumascript/macros", YARI_URL);
 const YARI_PATH = fileURLToPath(YARI_URL);
 const MACROS_PATH = fileURLToPath(MACROS_URL);

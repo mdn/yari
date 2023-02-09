@@ -44,7 +44,9 @@ export function popularitiesCommand(program: Program) {
       "Convert an AWS Athena log aggregation CSV into a popularities.json file"
     )
     .option("--outfile <path>", "output file", {
-      default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
+      default: fileURLToPath(
+        new URL("../../popularities.json", import.meta.url)
+      ),
     })
     .option("--max-uris <number>", "limit to top <number> entries", {
       default: MAX_GOOGLE_ANALYTICS_URIS,
