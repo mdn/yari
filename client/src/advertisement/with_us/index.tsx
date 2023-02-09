@@ -14,7 +14,7 @@ export function AdvertiseWithUs() {
   }, []);
 
   return (
-    <main className="contribute">
+    <main className="advertise-with-us">
       <div className="stats-container dark">
         <section className="stats-header">
           <h1>Tell it better</h1>

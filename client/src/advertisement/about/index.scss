@@ -1,6 +1,6 @@
 @use "../../ui/vars" as *;
 
-.about {
+.ads-about {
   width: 100%;
 
   .about-container {
@@ -54,6 +54,10 @@
       font-size: 1rem;
       font-weight: 350;
       line-height: 175%;
+
+      &.cta {
+        font-weight: bold;
+      }
     }
 
     h2 {

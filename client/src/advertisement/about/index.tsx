@@ -7,11 +7,12 @@ export function About() {
   }, []);
 
   return (
-    <div className="about">
+    <div className="ads-about">
       <div className="about-container">
         <h1 className="mify">
           Finding the Right Mix: <span>Balancing Relevance and Respect</span>
         </h1>
+        <h2>About</h2>
         <p>
           MDN has been a valuable resource for web developers since 2005,
           consistently supported and improved by Mozilla and its community.
@@ -41,6 +42,7 @@ export function About() {
           we will be running a 6-week trial in the US, Canada, and selected
           European markets.
         </p>
+        <h2>Focusing on the right answer</h2>
         <p>
           Advertisers rely on attribution to measure the effectiveness of their
           advertising campaigns. Attribution provides metrics that give
@@ -106,6 +108,7 @@ export function About() {
           </a>
           .
         </p>
+        <h2>We want to hear from you</h2>
         <p>
           We have a{" "}
           <a
@@ -126,7 +129,7 @@ export function About() {
           for what's to come. We are excited to continue working towards a
           better future together.
         </p>
-        <p>
+        <p className="cta">
           Interested to be part of this journey? Check out our{" "}
           <a href="/en-US/advertisement/with_us">Advertise with us</a> page and
           get in contact with us.
