@@ -8,7 +8,7 @@ repository = "https://github.com/mdn/yari"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.10"
 pytest = "^7.2.1"
 pytest-base-url = "^2.0.0"
 pytest-rerunfailures = "^11.0"

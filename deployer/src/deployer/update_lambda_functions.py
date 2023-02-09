@@ -164,7 +164,7 @@ def deploy(updated_functions: list, distribution_id, dry_run=False):
 
         if arn.endswith(version):
             # update_function_code() returns FunctionArn with version.
-            prefix = arn.replace(version, "")
+            prefix = arn.removesuffix(version)
         else:
             # get_function() returns FunctionArn without version.
             prefix = arn + ":"
