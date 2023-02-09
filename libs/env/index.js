@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
+// Spread into two lines to get the ROOT path,
+// to prevent WebPack from treating 'new URL("../..", import.meta.url)' as an import.
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.join(currentDir, "..", "..");
 
