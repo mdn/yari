@@ -1,12 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
-import { cwd } from "node:process";
+import { fileURLToPath } from "node:url";
 
 import dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
-export const ROOT = path.join(cwd(), ".");
+// Spread into two lines to get the ROOT path,
+// to prevent Webpack from treating 'new URL("../..", import.meta.url)' as an import.
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
+export const ROOT = path.join(currentDir, "..", "..");
 
 dotenv.config({
   path: path.join(ROOT, process.env.ENV_FILE || ".env"),
