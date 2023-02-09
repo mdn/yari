@@ -98,7 +98,7 @@
     "mdast-util-from-markdown": "^0.8.5",
     "mdast-util-phrasing": "^3.0.1",
     "mdn-data": "^2.0.31",
-    "open": "^8.4.0",
+    "open": "^8.4.1",
     "open-editor": "^4.0.0",
     "prismjs": "^1.29.0",
     "react-modal": "^3.16.1",
