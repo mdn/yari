@@ -1,46 +1,46 @@
+import fs from "node:fs";
+
 import { JSDOM } from "jsdom";
+import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
-
-const dirname = __dirname;
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
-import fs from "node:fs";
-import path from "node:path";
-const subpagesFixturePath = path.resolve(
-  dirname,
-  "fixtures/apiref/subpages.json"
+
+const subpagesFixturePath = new URL(
+  "./fixtures/apiref/subpages.json",
+  import.meta.url
 );
 const subpagesFixture = JSON.parse(
   fs.readFileSync(subpagesFixturePath, "utf-8")
 );
-const commonl10nFixturePath = path.resolve(
-  dirname,
-  "fixtures/apiref/commonl10n.json"
+const commonl10nFixturePath = new URL(
+  "./fixtures/apiref/commonl10n.json",
+  import.meta.url
 );
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf-8")
 );
-const groupDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/apiref/groupdata.json"
+const groupDataFixturePath = new URL(
+  "./fixtures/apiref/groupdata.json",
+  import.meta.url
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf-8")
 );
-const interfaceDataNoEntriesFixturePath = path.resolve(
-  dirname,
-  "fixtures/apiref/interfacedata_no_entries.json"
+const interfaceDataNoEntriesFixturePath = new URL(
+  "./fixtures/apiref/interfacedata_no_entries.json",
+  import.meta.url
 );
 const interfaceDataNoEntriesFixture = fs.readFileSync(
   interfaceDataNoEntriesFixturePath,
   "utf-8"
 );
-const interfaceDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/apiref/interfacedata.json"
+const interfaceDataFixturePath = new URL(
+  "./fixtures/apiref/interfacedata.json",
+  import.meta.url
 );
 const interfaceDataFixture = JSON.parse(
   fs.readFileSync(interfaceDataFixturePath, "utf-8")
@@ -137,12 +137,7 @@ const expectedStaticMethods = {
         "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestStaticMethod3",
       target: "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
@@ -165,12 +160,7 @@ const expectedStaticMethods = {
         "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestStaticMethod3",
       target: "/fr/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
@@ -193,12 +183,7 @@ const expectedStaticMethods = {
         "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestStaticMethod3",
       target: "/ja/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
@@ -224,12 +209,7 @@ const expectedInstanceMethods = {
         "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestInstanceMethod3",
       target: "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod3",
       title:
@@ -252,12 +232,7 @@ const expectedInstanceMethods = {
         "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestInstanceMethod3",
       target: "/fr/docs/Web/API/TestInterface/MyTestInstanceMethod3",
       title:
@@ -280,12 +255,7 @@ const expectedInstanceMethods = {
         "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestInstanceMethod3",
       target: "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod3",
       title:

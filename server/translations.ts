@@ -1,21 +1,21 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import express from "express";
 import { fdir } from "fdir";
 
-import express from "express";
-export const router = express.Router();
-
-import { getPopularities, Document, Translation } from "../content";
+import { getPopularities, Document, Translation } from "../content/index.js";
 import {
   VALID_LOCALES,
   ACTIVE_LOCALES,
   DEFAULT_LOCALE,
-} from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { getLastCommitURL } from "../build";
-import LANGUAGES_RAW from "../libs/languages";
-import { isValidLocale } from "../libs/locale-utils";
+} from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { getLastCommitURL } from "../build/index.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+
+export const router = express.Router();
 
 // Module-level cache
 const allPopularityValues = [];
@@ -60,7 +60,7 @@ function packageTranslationDifferences(translationDifferences) {
 }
 
 const _foundDocumentsCache = new Map();
-function findDocuments({ locale }) {
+export function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,

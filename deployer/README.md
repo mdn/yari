@@ -316,5 +316,5 @@ And to format all files with `black` run:
 
 ```sh
 cd deployer
-poetry run black deployer
+poetry run black .
 ```

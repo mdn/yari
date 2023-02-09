@@ -1,5 +1,3 @@
-import * as BCD from "@mdn/browser-compat-data/types";
-
 export interface Source {
   folder: string;
   github_url: string;
@@ -206,4 +204,15 @@ export interface BCDSection {
     isH3: boolean;
     query: string;
   };
+}
+
+export interface NewsItem {
+  url: string;
+  title: string;
+  author?: string;
+  source: {
+    name: string;
+    url: string;
+  };
+  published_at: string;
 }

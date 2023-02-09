@@ -13,14 +13,14 @@ import {
   slugToFolder,
   Document,
   Redirect,
-} from "../content";
+} from "../content/index.js";
 import {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { DocFrontmatter } from "../libs/types/document";
+} from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { DocFrontmatter } from "../libs/types/document.js";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
