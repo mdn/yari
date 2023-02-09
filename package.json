@@ -113,7 +113,7 @@
     "send": "^0.18.0",
     "source-map-support": "^0.5.21",
     "tempy": "^3.0.0",
-    "unified": "^9.2.1",
+    "unified": "^10.1.2",
     "unist-builder": "^3.0.1",
     "unist-util-visit": "^4.1.2",
     "web-specs": "^2.47.0"
