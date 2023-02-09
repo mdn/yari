@@ -69,7 +69,7 @@
     border: 1px solid var(--border-primary);
     box-sizing: content-box;
     margin: 0 0 0.125rem;
-    max-width: 8.125rem;
+    max-width: 12rem;
     padding: 0;
 
     .pong {
@@ -78,8 +78,8 @@
       flex-direction: column;
 
       img {
-        max-height: 6.25rem;
-        max-width: 8.125rem;
+        max-height: 10rem;
+        width: 12rem;
       }
 
       span {
