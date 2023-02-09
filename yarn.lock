@@ -13126,10 +13126,10 @@ web-namespaces@^1.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-1.1.4.tgz#bc98a3de60dadd7faefc403d1076d529f5e030ec"
   integrity sha512-wYxSGajtmoP4WxfejAPIr4l0fVh+jeMXZb08wNc0tMg6xsfZXj3cECqIK0G7ZAqUq0PP8WlMDtaOGVBTAWztNw==
 
-web-specs@^2.46.0:
-  version "2.46.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.46.0.tgz#db10a0bba2546a434cb45356512bf1d5440c591a"
-  integrity sha512-JLNjCl1778GLCTmsJefPlVpLkF1FowITbw3Ql9hyc2FtfeVWMvZwsU0BNw8aN5JMk9PzklRpxgoiRY91UN/BhA==
+web-specs@^2.47.0:
+  version "2.47.0"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.47.0.tgz#ca70988d55e75c42940573c4eabc9b2466d32357"
+  integrity sha512-Ed5s3EBF/AWwTZUPODn1GlFczcCOkXnYFFeabQktCKVcjPvZUcc8lF9l/1M/w+sWj/T+NMnt+bzjhAFlI41p9Q==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
