@@ -18,10 +18,8 @@ export function Manage() {
           user?.subscriptionType !== SubscriptionType.MDN_CORE ? (
             <>
               <span>
-                Activating this switch allows you to turn off advertising on
-                MDN.
-                <br />
-                Read more about <a href="/en-US/advertisement">ads on MDN</a>
+                Turn off advertising on MDN. Read more about{" "}
+                <a href="/en-US/advertisement">ads on MDN</a>
               </span>
               {saving ? (
                 <Spinner extraClasses="loading" />

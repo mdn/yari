@@ -10,7 +10,7 @@ export function About() {
     <div className="about">
       <div className="about-container">
         <h1 className="mify">
-          Finding the Right Mix: Balancing Relevance and Respect
+          Finding the Right Mix: <span>Balancing Relevance and Respect</span>
         </h1>
         <p>
           MDN has been a valuable resource for web developers since 2005,
