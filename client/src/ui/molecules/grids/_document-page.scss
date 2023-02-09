@@ -62,11 +62,10 @@
 
     .toc {
       --offset: var(--main-document-header-height);
-      --max-height: calc(100vh - var(--offset));
 
       display: block;
       grid-area: toc;
-      max-height: var(--max-height);
+      height: fit-content;
       overflow: auto;
       position: sticky;
       top: var(--offset);

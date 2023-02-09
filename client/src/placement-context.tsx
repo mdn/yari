@@ -24,12 +24,9 @@ export const PlacementContext = React.createContext<
 >(undefined);
 
 export function PlacementProvider(props: { children: React.ReactNode }) {
-  if (!PLACEMENT_ENABLED) {
-    <>{props.children}</>;
-  }
   const user = useUserData();
   const { data: pong } = useSWR<PlacementStatus>(
-    user?.settings?.noAds ? null : "/pong/get",
+    !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
     async (url) => {
       const response = await fetch(url, {
         method: "POST",
