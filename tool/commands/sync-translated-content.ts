@@ -2,30 +2,83 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import path from "node:path";
 
+import type { ActionParameters, Program } from "@caporal/core";
 import chalk from "chalk";
 import fm from "front-matter";
-import log from "loglevel";
 import { fdir } from "fdir";
+import log from "loglevel";
 
+import { tryOrExit } from "../util.js";
 import {
   buildURL,
   execGit,
   slugToFolder,
   Document,
   Redirect,
-} from "../content/index.js";
+} from "../../content/index.js";
 import {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} from "../libs/constants/index.js";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
-import { DocFrontmatter } from "../libs/types/document.js";
+} from "../../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../../libs/env/index.js";
+import { DocFrontmatter } from "../../libs/types/document.js";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
 
-export function syncAllTranslatedContent(locale) {
+interface SyncTranslatedContentActionParameters extends ActionParameters {
+  args: {
+    locale: string[];
+  };
+  options: {
+    verbose: boolean;
+  };
+}
+
+export function syncTranslatedContentCommand(program: Program) {
+  return program
+    .command(
+      "sync-translated-content",
+      "Sync translated content (sync with en-US slugs) for a locale"
+    )
+    .argument("<locale...>", "Locale", {
+      default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
+      validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
+    })
+    .action(
+      tryOrExit(
+        async ({ args, options }: SyncTranslatedContentActionParameters) => {
+          const { locale } = args;
+          const { verbose } = options;
+          if (verbose) {
+            log.setDefaultLevel(log.levels.DEBUG);
+          }
+          for (const l of locale) {
+            const {
+              movedDocs,
+              conflictingDocs,
+              orphanedDocs,
+              redirectedDocs,
+              totalDocs,
+            } = syncAllTranslatedContent(l);
+            console.log(chalk.green(`Syncing ${l}:`));
+            console.log(chalk.green(`Total of ${totalDocs} documents`));
+            console.log(chalk.green(`Moved ${movedDocs} documents`));
+            console.log(
+              chalk.green(`Conflicting ${conflictingDocs} documents.`)
+            );
+            console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+            console.log(
+              chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
+            );
+          }
+        }
+      )
+    );
+}
+
+function syncAllTranslatedContent(locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -104,7 +157,7 @@ function mdOrHtmlExists(filePath) {
   );
 }
 
-export function syncTranslatedContent(inFilePath, locale) {
+function syncTranslatedContent(inFilePath, locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"

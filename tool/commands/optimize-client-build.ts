@@ -6,10 +6,57 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import type { ActionParameters, Program } from "@caporal/core";
+import chalk from "chalk";
 import cheerio from "cheerio";
 import md5File from "md5-file";
 
-export async function runOptimizeClientBuild(buildRoot) {
+import { tryOrExit } from "../util.js";
+
+interface OptimizeClientBuildActionParameters extends ActionParameters {
+  args: {
+    buildroot: string;
+  };
+}
+
+export function optimizeClientBuildCommand(program: Program) {
+  return program
+    .command(
+      "optimize-client-build",
+      "After the client code has been built there are things to do that react-scripts can't."
+    )
+    .argument("<buildroot>", "directory where react-scripts built", {
+      default: path.join("client", "build"),
+    })
+    .action(
+      tryOrExit(
+        async ({
+          args,
+          options,
+          logger,
+        }: OptimizeClientBuildActionParameters) => {
+          const { buildroot } = args;
+          const { results } = await runOptimizeClientBuild(buildroot);
+          if (options.verbose) {
+            for (const result of results) {
+              logger.info(`${result.filePath} -> ${result.hashedHref}`);
+            }
+          } else {
+            logger.info(
+              chalk.green(
+                `Hashed ${results.length} files in ${path.join(
+                  buildroot,
+                  "index.html"
+                )}`
+              )
+            );
+          }
+        }
+      )
+    );
+}
+
+async function runOptimizeClientBuild(buildRoot) {
   const indexHtmlFilePath = path.join(buildRoot, "index.html");
   const indexHtml = fs.readFileSync(indexHtmlFilePath, "utf-8");
 

@@ -3,13 +3,44 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
-import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants/index.js";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import type { ActionParameters, Program } from "@caporal/core";
+
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../../libs/env/index.js";
+import { tryOrExit } from "../util.js";
 
 const YARI_URL = new URL("..", import.meta.url);
 const MACROS_URL = new URL("kumascript/macros", YARI_URL);
 const YARI_PATH = fileURLToPath(YARI_URL);
 const MACROS_PATH = fileURLToPath(MACROS_URL);
+
+interface MacroUsageReportActionParameters extends ActionParameters {
+  options: {
+    deprecatedOnly: boolean;
+    format: "md-table" | "json";
+    unusedOnly: boolean;
+  };
+}
+
+export function macroUsageReportCommand(program: Program) {
+  return program
+    .command(
+      "macro-usage-report",
+      "Counts occurrences of each macro and prints it as a table."
+    )
+    .option("--deprecated-only", "Only reports deprecated macros.")
+    .option("--format <type>", "Format of the report.", {
+      default: "md-table",
+      validator: ["json", "md-table"],
+    })
+    .option("--unused-only", "Only reports unused macros.")
+    .action(
+      tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
+        const { deprecatedOnly, format, unusedOnly } = options;
+        return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+      })
+    );
+}
 
 async function getMacros(): Promise<string[]> {
   const macroFilenames = await fs.readdir(MACROS_PATH);
@@ -209,7 +240,7 @@ function writeJson(
   process.stdout.write(json);
 }
 
-export async function macroUsageReport({
+async function macroUsageReport({
   deprecatedOnly,
   format,
   unusedOnly,
