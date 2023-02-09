@@ -1,5 +1,6 @@
 import React from "react";
 import useSWR from "swr";
+import { PLACEMENT_ENABLED } from "./env";
 import { useUserData } from "./user-context";
 
 interface Fallback {
@@ -23,6 +24,9 @@ export const PlacementContext = React.createContext<
 >(undefined);
 
 export function PlacementProvider(props: { children: React.ReactNode }) {
+  if (!PLACEMENT_ENABLED) {
+    <>{props.children}</>;
+  }
   const user = useUserData();
   const { data: pong } = useSWR<PlacementStatus>(
     user?.settings?.noAds ? null : "/pong/get",
