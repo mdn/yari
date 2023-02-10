@@ -17,10 +17,10 @@ const PREFERRED_LOCALE = {
 // We should use the language tag (e.g. "zh-Hans") instead of the locale.
 // This is a map of locale => language tag.
 // See https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
-const LANGUAGE_TAGS = new Map([
-  ["zh-CN", "zh-Hans"],
-  ["zh-TW", "zh-Hant"],
-]);
+const LANGUAGE_TAGS = Object.freeze({
+  "zh-CN": "zh-Hans-CN",
+  "zh-TW": "zh-Hant-TW",
+});
 
 function htmlEscape(s: string) {
   if (!s) {
@@ -53,7 +53,7 @@ function getHrefLang(locale: string, allLocales: Array<string>) {
       // e.g. `locale===zh-TW`
       if (allLocales.includes(preferred)) {
         // If the more preferred one was there, use the locale + region format.
-        return LANGUAGE_TAGS.get(locale) || locale;
+        return LANGUAGE_TAGS[locale] ?? locale;
       }
     }
   }
