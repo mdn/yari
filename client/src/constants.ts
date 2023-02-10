@@ -1,5 +1,6 @@
 // Constants that are used outside of the client.
-export { MDN_PLUS_TITLE, VALID_LOCALES } from "../../libs/constants";
+import { MDN_PLUS_TITLE, VALID_LOCALES } from "../../libs/constants";
+export { MDN_PLUS_TITLE, VALID_LOCALES };
 
 // Constants that are NOT used outside of the client.
 export enum FeatureId {
