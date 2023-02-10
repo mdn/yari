@@ -11,6 +11,12 @@
     "yari-server": "server/index.js",
     "yari-tool": "tool/cli.js"
   },
+  "workspaces": [
+    "./client",
+    "./client/pwa",
+    "./deployer/aws-lambda/*",
+    "./libs/*"
+  ],
   "scripts": {
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
@@ -23,16 +29,16 @@
     "build:sw": "cd client/pwa && npm install && npm run build:prod",
     "build:sw-dev": "cd client/pwa && npm install && npm run build",
     "check:tsc": "find . -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P 2 -0 sh -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
-    "ci:all": "find . -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'cd $(dirname $0) && npm ci --ignore-scripts'",
+    "ci:all": "npm ci && npm ci -ws",
     "dev": "npm run build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "ts-node filecheck/cli.ts",
-    "install:all": "find . -mindepth 2 -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'cd $(dirname $0) && npm install'",
+    "install:all": "npm i && npm i -ws",
     "install:all:npm": "find . -mindepth 2 -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'npm --prefix $(dirname $0) install'",
     "jest": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "m2h": "ts-node markdown/m2h/cli.ts",
     "prepack": "npm run build:dist",
-    "prepare": "husky install && npm run install:all && yarn install:all:npm",
+    "prepare": "husky install",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "start": "(test -f client/build/index.html || npm run build:client) && (test -f ssr/dist/main.js || npm run build:ssr) && (test -d client/build/en-us/_spas || npm run tool spas) && nf -j Procfile.start start",
