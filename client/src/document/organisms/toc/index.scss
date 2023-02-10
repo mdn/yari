@@ -66,17 +66,17 @@
   min-height: 20rem;
 
   .pong-box {
+    background-color: var(--background-secondary);
     border: 1px solid var(--border-primary);
     margin: 0 0 0.125rem;
+    padding: 0;
     width: 10rem;
-    padding: 0.825rem;
-    background-color: var(--background-secondary);
-    padding-bottom: 0.25rem;
 
     .pong {
       align-items: center;
       display: flex;
       flex-direction: column;
+      padding: 0.825rem;
 
       img {
         max-height: 6.25rem;
