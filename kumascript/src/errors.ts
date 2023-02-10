@@ -2,7 +2,7 @@
  * Error classes that can be thrown when trying to render the macros on a page.
  */
 
-import { RedirectInfo } from "../../libs/types/document";
+import { RedirectInfo } from "../../libs/types/document.js";
 
 /**
  * This is the common superclass of the other error classes here.

@@ -1,7 +1,6 @@
 {
   "summary": {
     "en-US": "The documentation about this has not yet been written; please consider contributing!",
-    "ca": "Aquesta pàgina encara no ha estat traduïda. Si us plau considera contribuir-hi!",
     "es": "La documentación acerca de este tema no ha sido escrita todavía . ¡Por favor  considera contribuir !",
     "fr": "Cette documentation n'a pas encore été rédigée, vous pouvez aider en contribuant&nbsp;!",
     "pt-BR": "A documentação sobre isto ainda não foi escrita; por favor considere contribuir!",
@@ -13,12 +12,10 @@
   "Methods": {
     "en-US": "Methods",
     "fr": "Méthodes",
-    "it": "Metodi",
     "es": "Métodos",
     "pt-BR": "Métodos",
     "ru": "Методы",
     "zh-CN": "方法",
-    "ca": "Mètodes",
     "ja": "メソッド"
   },
 
@@ -29,8 +26,6 @@
     "pt-BR": "Propriedades",
     "ru": "Свойства",
     "zh-CN": "属性",
-    "it": "Proprietà",
-    "ca": "Propietats",
     "ja": "プロパティ"
   },
 
@@ -50,8 +45,6 @@
     "es": "Constructor",
     "pt-BR": "Construtor",
     "fr": "Constructeur",
-    "it": "Costruttore",
-    "ca": "Constructor",
     "ja": "コンストラクター",
     "ru": "Конструктор"
   },
@@ -63,7 +56,6 @@
     "fr": "Héritage&nbsp;:",
     "ru": "Наследование:",
     "zh-CN": "继承",
-    "ca": "Herència",
     "ja": "継承"
   },
 
@@ -72,9 +64,7 @@
     "es": "Implementado por:",
     "pt-BR": "Implementado por:",
     "fr": "Implémenté par&nbsp;:",
-    "it": "Implementato da:",
     "ja": "実装先:",
-    "ca": "Implementat per",
     "ru": "Выполняется:"
   },
 
@@ -83,8 +73,6 @@
     "es": "Páginas relacionadas a $1",
     "pt-BR": "Páginas relacionadas a $1",
     "fr": "Pages liées à $1",
-    "it": "Pagine correlate du $1",
-    "ca": "Pàgines similars a $1",
     "ru": "Похожие страницы для $1",
     "ja": "$1 に関連するページ"
   },
@@ -94,8 +82,6 @@
     "es": "Páginas relacionadas:",
     "pt-BR": "Páginas relacionadas:",
     "fr": "Pages similaires&nbsp;:",
-    "it": "Pagine correlate:",
-    "ca": "Pàgines similars",
     "ru": "Похожие страницы:",
     "ja": "関連するページ"
   },
@@ -107,7 +93,6 @@
     "ja": "リファレンス",
     "pt-BR": "Referência",
     "zh-CN": "参考",
-    "ca": "Referència",
     "ru": "Руководство"
   },
 
@@ -125,7 +110,6 @@
     "fr": "[Traduire]",
     "pt-BR": "[Traduzir]",
     "zh-CN": "[我来译!]",
-    "ca": "[Traduir]",
     "ru": "[Перевести]",
     "ja": "[翻訳する]"
   },
@@ -136,7 +120,6 @@
     "fr": "Nos volontaires n'ont pas encore traduit cet article en français. Rejoignez-nous et aidez-nous à le faire&nbsp;!",
     "pt-BR": "Nossos voluntários ainda não traduziram este artigo para sua linguagem. Junte-se a nós e nos ajude a traduzir!",
     "zh-CN": "此页面仍未被本地化，期待你的翻译！",
-    "ca": "Els nostres voluntaris encara no han traduït aquest article al Català. Uneix-te a nosaltres i ajuda-ns a acabar la feina!",
     "ru": "Наши волонтёры ещё не перевели данную статью на Русский. Присоединяйтесь к нам и помогите закончить эту работу!",
     "ja": "まだボランティアによって日本語に翻訳されていない記事です。MDNに参加して、翻訳してみませんか？"
   },

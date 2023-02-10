@@ -1,5 +1,3 @@
-import * as BCD from "@mdn/browser-compat-data/types";
-
 export interface Source {
   folder: string;
   github_url: string;
@@ -21,12 +19,6 @@ export interface BrokenLink extends GenericFlaw {
   href: string;
   line: number;
   column: number;
-}
-
-export interface BadBCDLinkFlaw extends GenericFlaw {
-  slug: string;
-  query: string | null;
-  key: string;
 }
 
 export interface ImageReferenceFlaw extends GenericFlaw {
@@ -105,7 +97,6 @@ export type Flaws = Partial<{
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: BadBCDQueryFlaw[];
-  bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
   bad_pre_tags: BadPreTagFlaw[];
   sectioning: SectioningFlaw[];
@@ -210,20 +201,17 @@ export interface BCDSection {
     id: string;
     title: string;
     isH3: boolean;
-    data?: BCD.Identifier | null;
-    dataURL?: string;
     query: string;
-    browsers?: BCD.Browsers | null;
   };
 }
 
-// Yari builder will attach extra keys from the compat data
-// it gets from @mdn/browser-compat-data. These are "Yari'esque"
-// extras that helps us avoiding to have a separate data structure.
-export interface CompatStatementExtended extends BCD.CompatStatement {
-  // When a compat statement has a .mdn_url but it's actually not a good
-  // one, the Yari builder will attach an extra boolean that indicates
-  // that it's not a valid link.
-  // Note, it's only 'true' if it's present, hence this interface definition.
-  bad_url?: true;
+export interface NewsItem {
+  url: string;
+  title: string;
+  author?: string;
+  source: {
+    name: string;
+    url: string;
+  };
+  published_at: string;
 }

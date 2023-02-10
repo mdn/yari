@@ -4,83 +4,52 @@
 // Generates a list of each group (API) from the GroupData JSON and
 // returns it. This can be used to create an index of APIs.
 
-let locale = env.locale;
-let APIHref = '/' + locale + '/docs/Web/API';
-let output = '';
+const locale = env.locale;
+const APIHref = `/${locale}/docs/Web/API/`;
+const defaultAPIHref = "/en-US/docs/Web/API/";
 
 // Conveniences to shorten names of some functions
 
-let htmlEscape = mdn.htmlEscape;
-let spacesToUnderscores = web.spacesToUnderscores;
+const htmlEscape = mdn.htmlEscape;
+const spacesToUnderscores = web.spacesToUnderscores;
 
 // Get the GroupData database
 
-let groupData = web.getJSONData("GroupData")[0];
-let groupNames = Object.keys(groupData);
+const groupData = web.getJSONData("GroupData")[0];
+const groupNames = Object.keys(groupData);
 groupNames.sort();
-
-function containsTag(tagList, tag) {
-  let ret = false;
-
-  if (!tagList || tagList == undefined) {
-    return 0;
-  }
-  tag = tag.toLowerCase();
-  tagList.forEach(function(t) {
-    if (t.toLowerCase() === tag) {
-      ret = true;
-    }
-  });
-  return ret;
-}
 
 // Start building the lists for each letter
 
-let outputByLetter = [];
+const outputByLetter = {};
 
-for(let name of groupNames) {
-  let groupObj = groupData[name];
-  let firstLetter = name[0];
-  let groupOutput = '';
-  let badge = "";
+for(const name of groupNames) {
+  const groupObj = groupData[name];
+  const firstLetter = name[0];
 
-  if (groupObj.overview === undefined) {
+  if (!groupObj.overview) {
     continue;
   }
-  let overviewName = groupObj.overview;
-  let groupUrl = APIHref + "/" + spacesToUnderscores(htmlEscape(overviewName));
-  let page = await wiki.getPage(groupUrl);
+  const overviewName = groupObj.overview;
+  const subPath = spacesToUnderscores(htmlEscape(overviewName));
+  const defaultGroupUrl = defaultAPIHref + subPath;
+  const groupUrl = APIHref + subPath;
+  // Get page info from default locale
+  // as some pages are not localized yet
+  const aPage = await wiki.getPage(defaultGroupUrl);
 
-  // Go through the tags and build badges if there are any to add
+  let pageBadges = (await page.badges(aPage)).join(" ");
 
-  if (page && page != undefined) {
-    let tags = page.tags;
-
-    if (tags) {
-      if (containsTag(tags, "Non-standard") || containsTag(tags, "Non standard")) {
-        badge = " " + await template("NonStandardBadge", ["1"]);
-      }
-
-      if (containsTag(tags, "Obsolete")) {
-        badge += " " + await template("ObsoleteBadge", [1]);
-      } else if (containsTag(tags, "Deprecated")) {
-        badge += " " + await template("DeprecatedBadge", [1]);
-      }
-
-      if (containsTag(tags, "Experimental")) {
-        badge += " " + await template("ExperimentalBadge", [1]);
-      }
-
-      if (badge.length) {
-        badge = "<span class='indexListBadges'>" + badge + "</span>";
-      }
-    }
+  if (pageBadges.length) {
+    pageBadges = `<span class='indexListBadges'> ${pageBadges}</span>`;
   }
 
   // Finish constructing the HTML and then append it to the text for the corresponding
   // letter group.
 
-  groupOutput = "<li><a href='" + groupUrl + "'>" + name + "</a>" + badge + "</li>";
+  const link = web.smartLink(groupUrl, null, name, null, APIHref, "ListGroups");
+
+  const groupOutput = `<li>${link}${pageBadges}</li>`;
 
   if (!outputByLetter[firstLetter]) {
     outputByLetter[firstLetter] = groupOutput;
@@ -91,12 +60,10 @@ for(let name of groupNames) {
 
 // Now output the whole thing
 
-let keys = Object.keys(outputByLetter);
+const keys = Object.keys(outputByLetter);
 
-keys.forEach(function(letter) {
-  output += `<h3>${letter}</h3>
-  <ul>${outputByLetter[letter]}</ul>`;
-});
+const output = keys.map(letter => `<h3>${letter}</h3>
+  <ul>${outputByLetter[letter]}</ul>`).join("\n");
 
 %><div class="index">
   <%-output%>

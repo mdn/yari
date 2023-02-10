@@ -1,4 +1,4 @@
-import { assert, itMacro, describeMacro, lintHTML } from "./utils";
+import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
 
 import { JSDOM } from "jsdom";
 

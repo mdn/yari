@@ -1,4 +1,4 @@
-import Parser from "../src/parser.js";
+import * as Parser from "../src/parser.js";
 
 describe("Parser", function () {
   it("input with no macros", () => {

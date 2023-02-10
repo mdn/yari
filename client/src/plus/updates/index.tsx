@@ -12,7 +12,6 @@ import { Loading } from "../../ui/atoms/loading";
 import Mandala from "../../ui/molecules/mandala";
 import { Paginator } from "../../ui/molecules/paginator";
 import BookmarkMenu from "../../ui/organisms/article-actions/bookmark-menu";
-import { NotificationsWatchMenu } from "../../ui/organisms/article-actions/notifications-watch-menu";
 import { useUserData } from "../../user-context";
 import { camelWrap, range } from "../../utils";
 import { Event, Group, useBCD, useUpdates } from "./api";
@@ -21,7 +20,7 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { LoginBanner } from "./login-banner";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
@@ -118,33 +117,34 @@ export default function Updates() {
 }
 
 const useFilters = (canFilter: boolean) => {
-  const filters = useRef(FILTERS);
+  const [filters, setFilters] = useState(FILTERS);
   const { data, isLoading, error } = useCollections();
   useEffect(() => {
     if (!isLoading && data?.length && !error) {
-      let updated: AnyFilter[] = filters.current.map((val) => {
-        if (val.key === "collections") {
-          return {
-            ...val,
-            options: data
-              ?.filter((collection) => collection.article_count > 0)
-              .map((info) => {
-                const label =
-                  info.name === "Default" ? "Saved Articles" : info.name;
-                return {
-                  label,
-                  value: info.id,
-                };
-              }),
-          };
-        } else {
-          return val;
-        }
-      });
-      filters.current = updated;
+      setFilters((old) =>
+        old.map((val) => {
+          if (val.key === "collections") {
+            return {
+              ...val,
+              options: data
+                ?.filter((collection) => collection.article_count > 0)
+                .map((info) => {
+                  const label =
+                    info.name === "Default" ? "Saved Articles" : info.name;
+                  return {
+                    label,
+                    value: info.id,
+                  };
+                }),
+            };
+          } else {
+            return val;
+          }
+        })
+      );
     }
-  }, [isLoading, canFilter, filters, data, error]);
-  return filters.current;
+  }, [isLoading, canFilter, data, error]);
+  return filters;
 };
 
 function UpdatesLayout() {
@@ -402,7 +402,6 @@ function ArticleActions({ path, mdn_url }: { path: string; mdn_url?: string }) {
       </Button>
       {url && (
         <>
-          <NotificationsWatchMenu doc={doc} />
           <BookmarkMenu doc={doc} />
         </>
       )}

@@ -15,28 +15,31 @@ import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} from "../build";
-import { findDocumentTranslations } from "../content/translations";
-import { Document, Redirect, Image } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants";
+} from "../build/index.js";
+import { findDocumentTranslations } from "../content/translations.js";
+import { Document, Redirect, Image } from "../content/index.js";
+import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} from "../libs/env";
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+} from "../libs/env/index.js";
 
-import documentRouter from "./document";
-import fakeV1APIRouter from "./fake-v1-api";
-import { searchIndexRoute } from "./search-index";
-import flawsRoute from "./flaws";
-import { router as translationsRouter } from "./translations";
-import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
-import { getRoot } from "../content/utils";
+import documentRouter from "./document.js";
+import fakeV1APIRouter from "./fake-v1-api.js";
+import { searchIndexRoute } from "./search-index.js";
+import flawsRoute from "./flaws.js";
+import { router as translationsRouter } from "./translations.js";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
+import { getRoot } from "../content/utils.js";
 
-import { renderHTML } from "../ssr/dist/main";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -260,10 +263,8 @@ app.get("/*", async (req, res, ...args) => {
 
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
-  let bcdDataURL = "";
   let isMetadata = false;
   let isDocument = false;
-  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.path.endsWith("index.json")) {
     // It's a bit special then.
@@ -279,21 +280,16 @@ app.get("/*", async (req, res, ...args) => {
     isMetadata = true;
     extraSuffix = "/metadata.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.path)) {
-    bcdDataURL = req.path;
-    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
-  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
     const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
-      bcdData = built.bcdData;
     } else if (
       lookupURL.split("/")[1] &&
       lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
@@ -322,12 +318,6 @@ app.get("/*", async (req, res, ...args) => {
     return res
       .status(404)
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (bcdDataURL) {
-    return res.json(
-      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
-    );
   }
 
   if (isDocument) {

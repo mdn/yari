@@ -22,6 +22,9 @@
  * from the rest of the file which is well tested.
  */
 
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+
 // The properties of this object will be globals in the macro
 // execution environment.
 const globalsPrototype = {
@@ -35,12 +38,12 @@ const globalsPrototype = {
   require,
 };
 
-import mdnPrototype from "./api/mdn";
-import wikiPrototype from "./api/wiki";
-import webPrototype from "./api/web";
-import pagePrototype from "./api/page";
-import info from "./info";
-import Templates from "./templates";
+import mdnPrototype from "./api/mdn.js";
+import wikiPrototype from "./api/wiki.js";
+import webPrototype from "./api/web.js";
+import pagePrototype from "./api/page.js";
+import info from "./info.js";
+import Templates from "./templates.js";
 
 export interface KumaThis {
   mdn: typeof mdnPrototype;
@@ -50,7 +53,7 @@ export interface KumaThis {
   env: typeof Environment & PerPageContext;
   info: typeof info;
   renderPrerequisiteFromURL: (path: string) => unknown;
-  template: (name: string, args: any) => unknown;
+  template: (name: string, args?: any[]) => unknown;
 }
 
 type PerPageContext = Partial<{
@@ -168,13 +171,13 @@ export default class Environment {
   // A templating function that we define in the global environment
   // so that templates can invoke other templates. This is not part
   // of the public API of the class; it is for use by other templates
-  async _renderTemplate(name, args) {
+  async _renderTemplate(name, args?) {
     return await this.templates.render(name, this.getExecutionContext(args));
   }
 
   // Get a customized environment object that is specific to a single
   // macro on a page by including the arguments to be passed to that macro.
-  getExecutionContext(args, token = null) {
+  getExecutionContext(args?, token = null) {
     const context = Object.create(this.prototypeEnvironment);
 
     // Make a defensive copy of the arguments so that macros can't

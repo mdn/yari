@@ -20,7 +20,7 @@ export default function Newsletter() {
     })();
   }, []);
   const { isViewed, setViewed } = useViewedState();
-  if (isViewed) {
+  if (!isViewed(FeatureId.PLUS_NEWSLETTER)) {
     setViewed(FeatureId.PLUS_NEWSLETTER);
   }
 
@@ -33,7 +33,9 @@ export default function Newsletter() {
           <li>
             <h3>Receive updates from MDN Plus</h3>
             <span>
-              This will keep you up to date on what's happening with MDN Plus.
+              Activating this switch will allow us to email you product updates,
+              news about our latest features, tips to get the most out of MDN
+              Plus, and more.
             </span>
             {loading ? (
               <Spinner extraClasses="loading" />

@@ -70,7 +70,7 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
-  ["notifications", "Page notifications"],
+  ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
 ];
@@ -79,7 +79,7 @@ const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
-    ["notifications", "Notifications for up to 3 pages"],
+    ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
   ],
   includes: "Includes:",
