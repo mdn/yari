@@ -1,4 +1,4 @@
-import { assert, itMacro, describeMacro } from "./utils";
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 describeMacro("SVGAttr", () => {
   for (const locale of ["en-US", "fr"]) {

@@ -2,6 +2,7 @@
   "name": "client",
   "private": false,
   "license": "MPL-2.0",
+  "type": "module",
   "babel": {
     "presets": [
       "react-app"

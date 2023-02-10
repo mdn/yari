@@ -1,9 +1,9 @@
-const {
+import {
   DEFAULT_LOCALE,
   VALID_LOCALES,
   LOCALE_ALIASES,
   RETIRED_LOCALES,
-} = require("../constants");
+} from "../constants/index.js";
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
@@ -1262,7 +1262,7 @@ const REDIRECT_PATTERNS = [].concat(
 const STARTING_SLASH = /^\//;
 const ABSOLUTE_URL = /^https?:\/\/.*/;
 
-function resolveFundamental(path) {
+export function resolveFundamental(path) {
   if (ABSOLUTE_URL.exec(path)) {
     return {};
   }
@@ -1275,7 +1275,3 @@ function resolveFundamental(path) {
   }
   return {};
 }
-
-module.exports = {
-  resolveFundamental,
-};

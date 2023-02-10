@@ -6,21 +6,23 @@ import { eachLimit } from "async";
 import cliProgress from "cli-progress";
 import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
-import tempy from "tempy";
+import { temporaryDirectory } from "tempy";
 import * as cheerio from "cheerio";
-import FileType from "file-type";
+import { fileTypeFromFile } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquant from "imagemin-pngquant";
+import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import isSvg from "is-svg";
 
-import { MAX_FILE_SIZE } from "../libs/env";
+import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} from "../libs/constants";
+} from "../libs/constants/index.js";
+
+const { default: imageminPngquant } = imageminPngquantPkg;
 
 function formatSize(bytes: number): string {
   if (bytes > 1024 * 1024) {
@@ -104,7 +106,7 @@ export async function checkFile(
     });
   } else {
     // Check that the file extension matches the file header.
-    const fileType = await FileType.fromFile(filePath);
+    const fileType = await fileTypeFromFile(filePath);
     if (!fileType) {
       // This can easily happen if the .png (for example) file is actually just
       // a text file and not a binary.
@@ -175,7 +177,7 @@ export async function checkFile(
     );
   }
 
-  const tempdir = tempy.directory();
+  const tempdir = temporaryDirectory();
   const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];

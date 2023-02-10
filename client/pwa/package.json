@@ -4,6 +4,7 @@
   "description": "MDN Offline service worker",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
+  "type": "module",
   "main": "service-worker.ts",
   "scripts": {
     "build": "webpack",
@@ -11,7 +12,7 @@
     "dev": "webpack-cli --watch"
   },
   "dependencies": {
-    "@zip.js/zip.js": "2.6.62",
+    "@zip.js/zip.js": "2.6.63",
     "dexie": "3.2.3"
   },
   "devDependencies": {

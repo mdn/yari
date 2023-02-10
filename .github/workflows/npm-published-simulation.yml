@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: "yarn"
 
       - name: Install all yarn packages
@@ -57,7 +57,9 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
+          yarn cache clean --all
           yarn add file:$TARBALL
+          yarn install
 
       - name: (mdn/content) yarn yari-build --help
         working-directory: mdn/content
