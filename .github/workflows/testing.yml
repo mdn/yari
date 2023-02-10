@@ -21,17 +21,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            client/pwa/package-lock.json
-            libs/**/*.js
+          cache-dependency-path: '**/package-lock.json'
 
-      - name: Install all npm packages (ROOT)
-        run: npm ci
-
-      - name: Install all npm packages (pwa)
-        working-directory: client/pwa
-        run: npm ci
+      - name: Install all npm packages
+        run: npm run ci:all
 
       - name: Lint prettier
         run: npm run prettier-check
@@ -56,6 +49,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Install all npm packages
         run: npm ci

@@ -107,18 +107,11 @@ jobs:
         with:
           node-version: 18
           cache: npm
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install all npm packages
         if: ${{ ! vars.SKIP_BUILD }}
-        run: npm ci
+        run: npm run ci:all
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}

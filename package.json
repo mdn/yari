@@ -23,7 +23,7 @@
     "build:sw": "cd client/pwa && npm install && npm run build:prod",
     "build:sw-dev": "cd client/pwa && npm install && npm run build",
     "check:tsc": "find . -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P 2 -0 sh -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
-    "clean-install:all": "find . -mindepth 2 -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'cd $(dirname $0) && npm ci'",
+    "ci:all": "find . -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'cd $(dirname $0) && npm ci --ignore-scripts'",
     "dev": "npm run build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "ts-node filecheck/cli.ts",

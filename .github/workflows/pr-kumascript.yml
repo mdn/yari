@@ -28,19 +28,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/pr-kumascript.yml') }}
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install all npm packages
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        run: |
-          npm ci
+        run: npm run ci:all
 
       - name: Unit testing kumascript
         env:

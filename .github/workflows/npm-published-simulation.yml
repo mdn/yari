@@ -25,19 +25,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/npm-published-simulation.yml') }}
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install all npm packages
-        run: |
-          npm clean-install
-          npm run clean-install:all
+        run: npm run ci:all
 
       - name: Setup kernel for react native, increase watchers
         run: |
