@@ -243,7 +243,7 @@ for (object in result) {
     output += `<li><strong>${link}</strong></li>`;
 
     if (resultConstructors) {
-        output += buildSublist(resultConstructors, text['Constructor'], resultOpen);
+        output += await buildSublist(resultConstructors, text['Constructor'], resultOpen);
     }
     if (resultProperties.length > 0) {
         output += await buildSublist(resultProperties, text['Properties'], resultOpen);
