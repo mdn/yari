@@ -13,7 +13,7 @@ export function Manage() {
       <h2>Manage account</h2>
       <ul>
         <li>
-          <h3>Go Ads free</h3>
+          <h3>Go ads free</h3>
           {user?.subscriptionType &&
           user?.subscriptionType !== SubscriptionType.MDN_CORE ? (
             <>
