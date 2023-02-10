@@ -239,6 +239,6 @@
     "workbox-webpack-plugin": "^6.5.4"
   },
   "engines": {
-    "node": "^16.17.0 || >=18.0.0"
+    "node": ">=18.0.0"
   }
 }
