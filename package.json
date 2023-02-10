@@ -214,7 +214,7 @@
     "source-map-loader": "^4.0.1",
     "style-dictionary": "^3.7.2",
     "style-loader": "^3.3.1",
-    "stylelint": "^14.16.1",
+    "stylelint": "^15.0.0",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-recommended": "^9.0.0",
