@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
 
       - name: Install all npm packages
-        run: npm run ci:all
+        run: npm ci
 
       - name: Setup kernel for react native, increase watchers
         run: |

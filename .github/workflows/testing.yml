@@ -21,10 +21,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: '**/package-lock.json'
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Install all npm packages
-        run: npm run ci:all
+        run: npm ci
 
       - name: Lint prettier
         run: npm run prettier-check

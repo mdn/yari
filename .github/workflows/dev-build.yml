@@ -68,10 +68,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: '**/package-lock.json'
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Install all npm packages
-        run: npm rum ci:all
+        run: npm ci
 
       - name: Install Python
         uses: actions/setup-python@v4
