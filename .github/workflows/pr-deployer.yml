@@ -24,12 +24,6 @@ jobs:
           cache: poetry
           cache-dependency-path: deployer/poetry.lock
 
-      - name: Load cached .local
-        uses: actions/cache@v3
-        with:
-          path: ~/.local
-          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}-${{ steps.setup-python.outputs.python-version }}
-
       - name: Install Python poetry
         uses: snok/install-poetry@v1
         with:
@@ -43,7 +37,6 @@ jobs:
 
       - name: Lint Python code
         run: |
-          source deployer/.venv/bin/activate
           flake8 deployer/src
           black --check deployer/src
 
