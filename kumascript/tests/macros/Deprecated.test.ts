@@ -6,7 +6,7 @@ describeMacro("Deprecated_Inline", function () {
     return assert.eventually.equal(
       macro.call(),
       `<abbr class="icon icon-deprecated" title="Deprecated. Not for use in new websites.">
-    <span class="visually-hidden">Deprecated</span>
+  <span class="visually-hidden">Deprecated</span>
 </abbr>`
     );
   });
