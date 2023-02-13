@@ -12,8 +12,8 @@ import { ArticleActionsContainer } from "../ui/organisms/article-actions-contain
 import { DocParent } from "../../../libs/types/document";
 
 import "./index.scss";
+import OfferOverview from "./offer-overview";
 
-const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
 const Updates = React.lazy(() => import("./updates"));
 
@@ -70,7 +70,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="/"
         element={
-          <Layout>
+          <Layout withSSR={true}>
             <OfferOverview />
           </Layout>
         }
