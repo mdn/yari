@@ -14,35 +14,59 @@ export function About() {
         </h1>
         <h2>About</h2>
         <p>
-          MDN has been a valuable resource for web developers since 2005,
-          consistently supported and improved by Mozilla and its community.
-          <br />
+          <a href="/">MDN</a> has been a valuable resource for web developers
+          since 2005, consistently supported and improved by Mozilla and its
+          community.
+        </p>
+        <p>
           With over 17 million unique monthly users, it is widely used and also
           integrated into other solutions. Running such a large project requires
           a significant amount of resources, including dedicated writing,
           engineering, and infrastructure.
         </p>
         <p>
-          In 2022, we{" "}
+          In 2022, we launched{" "}
           <a
             href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own/"
             target="_blank"
             rel="noreferrer"
             className="external"
           >
-            launched MDN Plus
+            MDN Plus
           </a>
           , a premium offering to provide a personalized and more powerful
           experience while continuing to invest in our always free and open
           webdocs. MDN Plus has shown promising results so far, reflecting the
-          trust developers have in both the product and the brand. However,
-          additional investment is needed to sustain the running of the project.
-          In response, we have decided to experiment with partnerships and
-          contextual advertising on MDN. Between February 15th and March 30th,
-          we will be running a 6-week trial in the US, Canada, and selected
+          trust developers have in both the product and the brand.
+        </p>
+        <p>
+          However, additional investment is needed to sustain the running of the
+          project. In response, we have decided to experiment with partnerships
+          and contextual advertising on MDN. Between February 15th and March
+          30th, we will be running a 6-week trial in the US, Canada and selected
           European markets.
         </p>
         <h2>Focusing on the right answer</h2>
+        <p>
+          Our commitment to user privacy and data protection remains a top
+          priority, and we stand by{" "}
+          <a
+            href="https://www.mozilla.org/privacy/ad-targeting-guidelines/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Mozilla's Ad targeting guidelines
+          </a>
+          . For this trial, MDN's ads will be strictly context-based and will
+          not include tracking pixels or personal data sharing.
+        </p>
+        <p>
+          During the experiment, we will work with three carefully chosen and
+          vetted advertisers who align with our vision for web development. To
+          minimize disruption, we will display only one static ad per page. MDN
+          Plus subscribers will have the option to turn off ads through their
+          account settings.
+        </p>
         <p>
           Advertisers rely on attribution to measure the effectiveness of their
           advertising campaigns. Attribution provides metrics that give
@@ -65,36 +89,19 @@ export function About() {
           >
             this blogpost
           </a>
-          .
-        </p>
-        <p>
-          Our commitment to user privacy and data protection remains a top
-          priority, and we stand by{" "}
-          <a
-            href="https://www.mozilla.org/privacy/ad-targeting-guidelines/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Mozilla's Ad targeting guidelines
-          </a>
-          . For this trial, MDN's ads will be strictly context-based and will
-          not include tracking pixels or personal data sharing. Our goal though
-          is to advance the Interoperable Private Attribution work in the months
-          to come and strike a balance between providing relevant ads and
-          respecting our users' privacy.
-        </p>
-        <p>
-          During the experiment, we will work with three carefully chosen and
-          vetted advertisers who align with our vision for web development. To
-          minimize disruption, we will display only one static ad per page. MDN
-          Plus subscribers will have the option to turn off ads through their
-          account settings.
+          . Mozilla’s and MDN’s goal is to advance the Interoperable Private
+          Attribution work in the months to come and strike a balance between
+          providing relevant ads and respecting our users' privacy.
         </p>
         <p>
           We believe this change will make MDN even more resilient and capable
           of offering free and accessible resources to developers around the
           world. We have a newly created, publicly available roadmap,{" "}
-          <a href="/TODO" target="_blank" rel="noreferrer">
+          <a
+            href="https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/"
+            target="_blank"
+            rel="noreferrer"
+          >
             developed in collaboration
           </a>{" "}
           with our partners from W3C, Microsoft, Google, and Open Web Docs. You

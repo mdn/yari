@@ -74,7 +74,7 @@ const PLUS_FEATURES = [
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
-  [null, "Ads free", "new"],
+  ["ads-free", "Ads free", "new"],
 ];
 
 const CORE: OfferDetailsProps = {
@@ -211,10 +211,11 @@ function OfferDetails({
           {offerDetails.features.map(([href, text, sup], index) => (
             <li key={index}>
               {(href && (
-                <a href={`#${href}`}>
-                  {text}
+                <>
+                  {" "}
+                  <a href={`#${href}`}>{text}</a>
                   {sup && <sup>{sup}</sup>}
-                </a>
+                </>
               )) || (
                 <>
                   {text}

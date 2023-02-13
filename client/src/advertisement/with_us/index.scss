@@ -85,6 +85,10 @@ main.advertise-with-us {
 
         .number {
           font-size: 3rem;
+
+          svg {
+            transform: translateY(0.125em);
+          }
         }
 
         .legend {
