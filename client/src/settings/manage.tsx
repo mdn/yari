@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FXA_MANAGE_SUBSCRIPTIONS_URL, FXA_SETTINGS_URL } from "../env";
 import { toggleNoAds } from "../plus/common/api";
+import {
+  TOGGLE_PLUS_ADS_FREE_DISABLED,
+  TOGGLE_PLUS_ADS_FREE_ENABLED,
+} from "../telemetry/constants";
+import { useGleanClick } from "../telemetry/glean-context";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
 import { SubscriptionType, useUserData } from "../user-context";
@@ -8,6 +13,8 @@ import { SubscriptionType, useUserData } from "../user-context";
 export function Manage() {
   const [saving, setSaving] = useState<boolean>(false);
   const user = useUserData();
+  const gleanClick = useGleanClick();
+
   return (
     <section className="field-group">
       <h2>Manage account</h2>
@@ -25,11 +32,18 @@ export function Manage() {
                 <Spinner extraClasses="loading" />
               ) : (
                 <Switch
-                  name="col_in_search"
+                  name="no_ads"
                   checked={Boolean(user?.settings?.noAds)}
                   toggle={async (e) => {
                     setSaving(true);
+                    const source = e.target.checked
+                      ? TOGGLE_PLUS_ADS_FREE_DISABLED
+                      : TOGGLE_PLUS_ADS_FREE_ENABLED;
+                    gleanClick(source);
                     await toggleNoAds(Boolean(e.target.checked));
+                    if (user.settings) {
+                      user.settings.noAds = Boolean(e.target.checked);
+                    }
                     user?.mutate();
                     setSaving(false);
                   }}
