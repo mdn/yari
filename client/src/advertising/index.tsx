@@ -48,7 +48,7 @@ function Layout({
     </>
   );
 }
-export function Advertisement({ pageTitle, ...props }: { pageTitle?: string }) {
+export function Advertising({ pageTitle, ...props }: { pageTitle?: string }) {
   return (
     <Routes>
       <Route

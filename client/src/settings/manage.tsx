@@ -26,7 +26,7 @@ export function Manage() {
             <>
               <span>
                 Turn off advertising on MDN. Read more about{" "}
-                <a href="/en-US/advertisement">ads on MDN</a>
+                <a href="/en-US/advertising">ads on MDN</a>
               </span>
               {saving ? (
                 <Spinner extraClasses="loading" />

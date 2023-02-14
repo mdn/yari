@@ -24,7 +24,7 @@ import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
-import { Advertisement } from "./advertisement";
+import { Advertising } from "./advertising";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -244,10 +244,10 @@ export function App(appProps) {
             )}
             {PLACEMENT_ENABLED && (
               <Route
-                path="/advertisement/*"
+                path="/advertising/*"
                 element={
                   <StandardLayout>
-                    <Advertisement {...appProps} />
+                    <Advertising {...appProps} />
                   </StandardLayout>
                 }
               />

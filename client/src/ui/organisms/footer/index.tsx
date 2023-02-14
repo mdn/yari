@@ -71,7 +71,7 @@ export function Footer() {
               </a>
             </li>
             <li className="footer-nav-item">
-              <a href={`/en-US/advertisement/with_us`}>Advertise with us</a>
+              <a href={`/en-US/advertising/with_us`}>Advertise with us</a>
             </li>
           </ul>
         </div>

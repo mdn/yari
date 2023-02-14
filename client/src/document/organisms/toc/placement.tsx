@@ -119,7 +119,7 @@ export function Placement() {
                 <span>{pong?.copy}</span>
               </a>
               <a
-                href={pong?.fallback?.by || "/en-US/advertisement"}
+                href={pong?.fallback?.by || "/en-US/advertising"}
                 className="pong-note"
                 target="_blank"
                 rel="noreferrer"

@@ -138,7 +138,7 @@ export function About() {
         </p>
         <p className="cta">
           Interested to be part of this journey? Check out our{" "}
-          <a href="/en-US/advertisement/with_us">Advertise with us</a> page and
+          <a href="/en-US/advertising/with_us">Advertise with us</a> page and
           get in contact with us.
         </p>
       </div>
