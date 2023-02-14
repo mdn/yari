@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useIsServer } from "../../../hooks";
+import { useIsServer, usePageVisibility } from "../../../hooks";
 import {
   PlacementStatus,
   usePlacementStatus,
 } from "../../../placement-context";
 import { useUserData } from "../../../user-context";
-import { usePageVisibility } from "../../../writers-homepage/hooks";
 
 interface Timer {
   timeout: number | null;
