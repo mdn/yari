@@ -1,34 +1,77 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useIsServer } from "../../../hooks";
-import { usePlacementStatus } from "../../../placement-context";
+import {
+  PlacementStatus,
+  usePlacementStatus,
+} from "../../../placement-context";
 import { useUserData } from "../../../user-context";
+import { usePageVisibility } from "../../../writers-homepage/hooks";
+
+interface Timer {
+  timeout: number | null;
+  start: number | null;
+  notVisible?: boolean;
+}
+
+function viewed(
+  pong: PlacementStatus,
+  observer: IntersectionObserver | null = null
+) {
+  navigator?.sendBeacon(
+    `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
+      pong?.fallback
+        ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
+        : ""
+    }`
+  );
+  observer?.disconnect();
+}
 
 export function Placement() {
   const isServer = useIsServer();
   const user = useUserData();
   const pong = usePlacementStatus();
+  const isVisible = usePageVisibility();
 
   const observer = useRef<IntersectionObserver | null>(null);
+  const timer = useRef<Timer>({ timeout: null, start: null });
+
   const place = useCallback(
     (node) => {
       if (pong && node !== null && !observer.current) {
         const observerOptions = {
           root: null,
           rootMargin: "0px",
-          threshold: [1],
+          threshold: [0.5],
         };
         const intersectionObserver = new IntersectionObserver((entries) => {
-          const [{ isIntersecting = false } = {}] = entries;
-          if (isIntersecting && typeof navigator !== "undefined") {
-            navigator?.sendBeacon(
-              `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
-                pong?.fallback
-                  ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
-                  : ""
-              }`
-            );
-            observer.current?.disconnect();
+          console.log(entries);
+          const [{ isIntersecting = false, intersectionRatio = 0 } = {}] =
+            entries;
+          if (
+            isIntersecting &&
+            intersectionRatio >= 0.5 &&
+            typeof navigator !== "undefined" &&
+            typeof window !== "undefined"
+          ) {
+            if (timer.current.timeout === null) {
+              timer.current = {
+                timeout: window.setTimeout(
+                  () => viewed(pong, observer?.current),
+                  1000
+                ),
+                start: new Date().valueOf(),
+              };
+            }
+          } else if (
+            !isIntersecting &&
+            intersectionRatio <= 0.5 &&
+            timer.current.timeout !== null
+          ) {
+            clearTimeout(timer.current.timeout);
+            timer.current = { timeout: null, start: null };
           }
+          console.log(isIntersecting, intersectionRatio, timer.current);
         }, observerOptions);
         observer.current = intersectionObserver;
         intersectionObserver.observe(node);
@@ -41,6 +84,24 @@ export function Placement() {
   useEffect(() => {
     return () => observer.current?.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!isVisible && timer.current.timeout !== null) {
+      clearTimeout(timer.current.timeout);
+      timer.current = { timeout: null, start: null, notVisible: true };
+    } else if (
+      isVisible &&
+      pong &&
+      timer.current.notVisible &&
+      timer.current.timeout === null &&
+      typeof window !== "undefined"
+    ) {
+      timer.current = {
+        timeout: window.setTimeout(() => viewed(pong, observer?.current), 1000),
+        start: new Date().valueOf(),
+      };
+    }
+  }, [isVisible]);
 
   return (
     <>

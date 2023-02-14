@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { PLACEMENT_ENABLED } from "./env";
 import { useUserData } from "./user-context";
 
-interface Fallback {
+export interface Fallback {
   copy: string;
   click: string;
   view: string;
@@ -11,7 +11,7 @@ interface Fallback {
   by: string;
 }
 
-interface PlacementStatus {
+export interface PlacementStatus {
   copy: string;
   click: string;
   view: string;
