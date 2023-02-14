@@ -91,11 +91,19 @@ function glean(): GleanAnalytics {
   };
   window?.addEventListener("click", (ev) => {
     const anchor = ev?.target as Element;
-    if (anchor?.nodeName === "A" && anchor?.classList.contains("external")) {
-      gleanContext.click({
-        source: `external-link: ${anchor.getAttribute("href") || ""}`,
-        subscriptionType: "",
-      });
+    if (anchor?.nodeName === "A") {
+      if (anchor?.classList.contains("external")) {
+        gleanContext.click({
+          source: `external-link: ${anchor.getAttribute("href") || ""}`,
+          subscriptionType: "",
+        });
+      }
+      if (anchor?.hasAttribute?.("data-pong")) {
+        gleanContext.click({
+          source: `pong: ${anchor.getAttribute("data-pong") || ""}`,
+          subscriptionType: "",
+        });
+      }
     }
   });
 

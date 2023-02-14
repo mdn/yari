@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { useUserData } from "../../../user-context";
 
 import "./placement.scss";
+import { useGleanClick } from "../../../telemetry/glean-context";
 
 interface Timer {
   timeout: number | null;
@@ -81,6 +82,7 @@ export function PlacementInner({ pong }) {
   const isServer = useIsServer();
   const user = useUserData();
   const isVisible = usePageVisibility();
+  const gleanClick = useGleanClick();
 
   const observer = useRef<IntersectionObserver | null>(null);
   const timer = useRef<Timer>({ timeout: null, start: null });
@@ -103,10 +105,10 @@ export function PlacementInner({ pong }) {
           ) {
             if (timer.current.timeout === null) {
               timer.current = {
-                timeout: window.setTimeout(
-                  () => viewed(pong, observer?.current),
-                  1000
-                ),
+                timeout: window.setTimeout(() => {
+                  viewed(pong, observer?.current);
+                  gleanClick("pong: pong->viewed");
+                }, 1000),
                 start: Date.now(),
               };
             }
@@ -157,6 +159,7 @@ export function PlacementInner({ pong }) {
             <p className="pong-box">
               <a
                 className="pong"
+                data-pong="pong->click"
                 href={`/pong/click?code=${encodeURIComponent(click)}`}
                 target="_blank"
                 rel="noreferrer"
@@ -171,6 +174,7 @@ export function PlacementInner({ pong }) {
               <a
                 href={pong?.fallback?.by || "/en-US/advertising"}
                 className="pong-note"
+                data-pong="pong->about"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -180,6 +184,7 @@ export function PlacementInner({ pong }) {
 
             <a
               className="no-pong"
+              data-pong={user?.isSubscriber ? "pong->settings" : "pong->plus"}
               href={
                 user?.isSubscriber
                   ? "/en-US/plus/settings?ref=nope"
