@@ -6,6 +6,8 @@ import {
 } from "../../../placement-context";
 import { useUserData } from "../../../user-context";
 
+import "./placement.scss";
+
 interface Timer {
   timeout: number | null;
   start: number | null;
@@ -16,7 +18,7 @@ function viewed(
   pong: PlacementStatus,
   observer: IntersectionObserver | null = null
 ) {
-  navigator?.sendBeacon(
+  navigator?.sendBeacon?.(
     `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
       pong?.fallback
         ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
@@ -114,7 +116,8 @@ export function Placement() {
               >
                 <img
                   src={`/pimg/${encodeURIComponent(image || "")}`}
-                  alt="an ad"
+                  aria-hidden="true"
+                  alt=""
                 ></img>
                 <span>{pong?.copy}</span>
               </a>

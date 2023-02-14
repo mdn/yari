@@ -3,7 +3,7 @@ import "./index.scss";
 
 export function About() {
   React.useEffect(() => {
-    document.title = "Finding the Right Mix";
+    document.title = "Finding the Right Mix | MDN";
   }, []);
 
   return (
@@ -101,6 +101,7 @@ export function About() {
             href="https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/"
             target="_blank"
             rel="noreferrer"
+            className="external"
           >
             developed in collaboration
           </a>{" "}
@@ -110,6 +111,7 @@ export function About() {
             href="https://github.com/orgs/mdn/projects/26/views/7"
             target="_blank"
             rel="noreferrer"
+            className="external"
           >
             here
           </a>
@@ -119,9 +121,10 @@ export function About() {
         <p>
           We have a{" "}
           <a
-            href="https://github.com/orgs/mdn/discussions/categories/project"
+            href="https://github.com/orgs/mdn/discussions"
             target="_blank"
             rel="noreferrer"
+            className="external"
           >
             Github discussion forum
           </a>{" "}

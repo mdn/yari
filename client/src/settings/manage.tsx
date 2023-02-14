@@ -8,7 +8,8 @@ import {
 import { useGleanClick } from "../telemetry/glean-context";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
-import { SubscriptionType, useUserData } from "../user-context";
+import { useUserData } from "../user-context";
+import { isPlusSubscriber } from "../utils";
 
 export function Manage() {
   const [saving, setSaving] = useState<boolean>(false);
@@ -21,8 +22,7 @@ export function Manage() {
       <ul>
         <li>
           <h3>Go ads free</h3>
-          {user?.subscriptionType &&
-          user?.subscriptionType !== SubscriptionType.MDN_CORE ? (
+          {isPlusSubscriber(user) ? (
             <>
               <span>
                 Turn off advertising on MDN. Read more about{" "}
@@ -41,7 +41,7 @@ export function Manage() {
                       : TOGGLE_PLUS_ADS_FREE_ENABLED;
                     gleanClick(source);
                     await toggleNoAds(Boolean(e.target.checked));
-                    if (user.settings) {
+                    if (user?.settings) {
                       user.settings.noAds = Boolean(e.target.checked);
                     }
                     user?.mutate();

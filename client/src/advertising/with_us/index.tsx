@@ -29,7 +29,7 @@ const STATS = [
 
 export function AdvertiseWithUs() {
   React.useEffect(() => {
-    document.title = "Advertise with us";
+    document.title = "Advertise with us | MDN";
   }, []);
 
   return (
@@ -58,16 +58,16 @@ export function AdvertiseWithUs() {
           <a href="/en-US/docs/Web/JavaScript">JavaScript</a>, and{" "}
           <a href="/en-US/docs/Web/API/">Web APIs</a>. We also provide an
           extensive set of <a href="/en-US/docs/Learn">learning resources</a>{" "}
-          for beginning developers and students, accounting for approximately
-          10% of our audience. More than 17 million web developers visit our
-          website every month, and we pride ourselves with a customer
-          satisfaction of over 90%.
+          for new developers and students, accounting for approximately 10% of
+          our audience. More than 17 million web developers visit our website
+          every month, and we pride ourselves with a customer satisfaction of
+          over 90%.
         </p>
         <h2>Our offer</h2>
         <p>
-          We are currently experimenting with the first ads campaigns on MDN.
-          You can check this page for more information about the 'Why' and the
-          'How' of the experiments.
+          We are currently experimenting with the first advertising campaigns on
+          MDN. You can check this page for more information about the 'Why' and
+          the 'How' of the experiments.
         </p>
         <p>
           If you are interested in advertising with us, please fill out{" "}
@@ -75,6 +75,7 @@ export function AdvertiseWithUs() {
             href="https://survey.alchemer.com/s3/7212589/MDN-Advertise-with-us"
             target="_blank"
             rel="noreferrer"
+            className="external"
           >
             this form
           </a>{" "}
@@ -84,6 +85,7 @@ export function AdvertiseWithUs() {
             href="https://www.mozilla.org/en-US/privacy/ad-targeting-guidelines/"
             target="_blank"
             rel="noreferrer"
+            className="external"
           >
             here
           </a>
