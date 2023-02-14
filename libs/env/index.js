@@ -6,10 +6,11 @@ import dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
-const CWD = path.join(cwd(), ".");
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+const ROOT = path.join(dirname, "..", "..");
 
 dotenv.config({
-  path: path.join(CWD, process.env.ENV_FILE || ".env"),
+  path: path.join(cwd(), process.env.ENV_FILE || ".env"),
 });
 
 // -----
@@ -17,7 +18,7 @@ dotenv.config({
 // -----
 
 export const BUILD_OUT_ROOT =
-  process.env.BUILD_OUT_ROOT || path.join(CWD, "client", "build");
+  process.env.BUILD_OUT_ROOT || path.join(ROOT, "client", "build");
 
 // TODO (far future): Switch to "error" when number of flaws drops.
 export const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
@@ -142,7 +143,7 @@ export const INTERACTIVE_EXAMPLES_BASE_URL =
 // ------
 
 export const STATIC_ROOT =
-  process.env.SERVER_STATIC_ROOT || path.join(CWD, "client", "build");
+  process.env.SERVER_STATIC_ROOT || path.join(ROOT, "client", "build");
 export const PROXY_HOSTNAME =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
