@@ -1,10 +1,13 @@
 import React from "react";
+import { useUserData } from "../../user-context";
+import { isPlusSubscriber } from "../../utils";
 import "./index.scss";
 
 export function About() {
   React.useEffect(() => {
     document.title = "Finding the Right Mix | MDN";
   }, []);
+  const user = useUserData();
 
   return (
     <div className="ads-about">
@@ -44,7 +47,7 @@ export function About() {
           project. In response, we have decided to experiment with partnerships
           and contextual advertising on MDN. Between February 15th and March
           30th, we will be running a 6-week trial in the US, Canada and selected
-          European markets.
+          European countries.
         </p>
         <h2>Focusing on the right answer</h2>
         <p>
@@ -63,9 +66,14 @@ export function About() {
         <p>
           During the experiment, we will work with three carefully chosen and
           vetted advertisers who align with our vision for web development. To
-          minimize disruption, we will display only one static ad per page. MDN
-          Plus subscribers will have the option to turn off ads through their
-          account settings.
+          minimize disruption, we will display only one static ad per page.{" "}
+          <a href="/en-US/plus">MDN Plus subscribers</a> will have the option to{" "}
+          {isPlusSubscriber(user) ? (
+            <a href="/en-US/plus/settings">turn off</a>
+          ) : (
+            "turn off"
+          )}{" "}
+          ads through their account settings.
         </p>
         <p>
           Advertisers rely on attribution to measure the effectiveness of their
@@ -89,7 +97,7 @@ export function About() {
           >
             this blogpost
           </a>
-          . Mozilla’s and MDN’s goal is to advance the Interoperable Private
+          . Mozilla's and MDN's goal is to advance the Interoperable Private
           Attribution work in the months to come and strike a balance between
           providing relevant ads and respecting our users' privacy.
         </p>
@@ -126,7 +134,7 @@ export function About() {
             rel="noreferrer"
             className="external"
           >
-            Github discussion forum
+            GitHub discussion forum
           </a>{" "}
           that is thriving, many of our active community members are there, and
           we invite you to reach out with feedback and questions.

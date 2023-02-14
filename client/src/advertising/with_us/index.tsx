@@ -66,8 +66,8 @@ export function AdvertiseWithUs() {
         <h2>Our offer</h2>
         <p>
           We are currently experimenting with the first advertising campaigns on
-          MDN. You can check this page for more information about the 'Why' and
-          the 'How' of the experiments.
+          MDN. You can check <a href="/en-US/advertising">his page</a> for more
+          information about the 'Why' and the 'How' of the experiments.
         </p>
         <p>
           If you are interested in advertising with us, please fill out{" "}
