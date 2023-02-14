@@ -125,7 +125,7 @@ export function PlacementInner({ pong }) {
         intersectionObserver.observe(node);
       }
     },
-    [pong]
+    [pong, gleanClick]
   );
 
   const { click, image, copy } = pong?.fallback || pong || {};
