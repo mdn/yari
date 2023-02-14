@@ -45,7 +45,6 @@ export function Placement() {
           threshold: [0.5],
         };
         const intersectionObserver = new IntersectionObserver((entries) => {
-          console.log(entries);
           const [{ isIntersecting = false, intersectionRatio = 0 } = {}] =
             entries;
           if (
@@ -60,7 +59,7 @@ export function Placement() {
                   () => viewed(pong, observer?.current),
                   1000
                 ),
-                start: new Date().valueOf(),
+                start: Date.now(),
               };
             }
           } else if (
@@ -71,7 +70,6 @@ export function Placement() {
             clearTimeout(timer.current.timeout);
             timer.current = { timeout: null, start: null };
           }
-          console.log(isIntersecting, intersectionRatio, timer.current);
         }, observerOptions);
         observer.current = intersectionObserver;
         intersectionObserver.observe(node);
@@ -98,10 +96,10 @@ export function Placement() {
     ) {
       timer.current = {
         timeout: window.setTimeout(() => viewed(pong, observer?.current), 1000),
-        start: new Date().valueOf(),
+        start: Date.now(),
       };
     }
-  }, [isVisible]);
+  }, [isVisible, pong]);
 
   return (
     <>

@@ -52,17 +52,16 @@ export function AdvertiseWithUs() {
         <p>
           MDN is an open source documentation resource for web developers. It
           primarily consists of reference and educational documentation on a
-          wide variety of subjects, including
-          <a href="/en-US/docs/Web/CSS"> CSS</a>,
-          <a href="/en-US/docs/Web/HTML"> HTML</a>,
-          <a href="/en-US/docs/Web/JavaScript"> JavaScript</a>, and
-          <a href="/en-US/docs/Web/API/"> Web APIs</a>. We also provide an
-          extensive set of
-          <a href="/en-US/docs/Learn"> learning resources</a> for beginning
-          developers and students, accounting for approximately 10% of our
-          audience. More than 17 million web developers visit our website every
-          month, and we pride ourselves with a customer satisfaction of over
-          90%.
+          wide variety of subjects, including{" "}
+          <a href="/en-US/docs/Web/CSS">CSS</a>,{" "}
+          <a href="/en-US/docs/Web/HTML">HTML</a>,{" "}
+          <a href="/en-US/docs/Web/JavaScript">JavaScript</a>, and{" "}
+          <a href="/en-US/docs/Web/API/">Web APIs</a>. We also provide an
+          extensive set of <a href="/en-US/docs/Learn">learning resources</a>{" "}
+          for beginning developers and students, accounting for approximately
+          10% of our audience. More than 17 million web developers visit our
+          website every month, and we pride ourselves with a customer
+          satisfaction of over 90%.
         </p>
         <h2>Our offer</h2>
         <p>
