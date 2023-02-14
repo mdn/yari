@@ -77,9 +77,9 @@ export default function OfferOverviewFeatures() {
           </Button>
         </section>
       </OfferOverviewFeature>
-      <OfferOverviewFeature id="ads-free" img="/assets/ads-free.png" imgAlt="">
-        <section aria-labelledby="ads-free-section-title">
-          <h2 id="ads-free-section-title">Go ads free</h2>
+      <OfferOverviewFeature id="afree" img="/assets/afree.png" imgAlt="">
+        <section aria-labelledby="afree-section-title">
+          <h2 id="afree-section-title">Go ads free</h2>
           <h3>Enjoy MDN ads-free with an MDN Plus subscription.</h3>
           <p>
             Support MDN and enjoy a focused, ad-free experience alongside other
