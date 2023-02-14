@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
-export const ROOT = path.join(cwd(), ".");
+const ROOT = path.join(cwd(), ".");
 
 dotenv.config({
   path: path.join(ROOT, process.env.ENV_FILE || ".env"),
