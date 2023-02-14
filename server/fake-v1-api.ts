@@ -5,8 +5,8 @@
  * You can read more about it in the docs/proxying.md document.
  */
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import express from "express";
 

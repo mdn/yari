@@ -18,7 +18,6 @@ export function MainContentContainer({
       // uses anchor links to focus in on the content.
       id="content"
       className={`main-content ${className} ${standalone ? "standalone" : ""}`}
-      role="main"
     >
       {children}
     </main>

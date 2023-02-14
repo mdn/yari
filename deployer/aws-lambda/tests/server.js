@@ -1,10 +1,8 @@
-/* eslint-disable n/no-unpublished-require */
-/* eslint-disable n/no-missing-require */
-const polka = require("polka");
-const kleur = require("kleur");
+import polka from "polka";
+import kleur from "kleur";
 
-const requestHandler = require("../content-origin-request").handler;
-const responseHandler = require("../content-origin-response").handler;
+import { handler as requestHandler } from "@yari-internal/content-origin-request";
+import { handler as responseHandler } from "@yari-internal/content-origin-response";
 
 const PORT = parseInt(process.env.PORT || "7000");
 
@@ -107,7 +105,7 @@ async function catchall(req, res) {
         } '${handle.body.trim()}'`
       );
     } else {
-      console.log(`${kleur.gree(handle.status)} '${handle.body.trim()}'`);
+      console.log(`${kleur.green(handle.status)} '${handle.body.trim()}'`);
     }
     res.statusCode = handle.status;
     res.end(handle.body || "");

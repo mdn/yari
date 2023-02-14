@@ -1,0 +1,13 @@
+.top-level-entry-container {
+  .top-level-entry-dot ~ .top-level-entry::after {
+    background: var(--text-primary-blue);
+    border: 1px solid var(--background-primary);
+    border-radius: 2rem;
+    content: "";
+    height: 0.5rem;
+    position: absolute;
+    right: 0;
+    top: 0.5rem;
+    width: 0.5rem;
+  }
+}

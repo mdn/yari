@@ -177,7 +177,7 @@
     }
 
     p {
-      margin: 0 0 1rem 0;
+      margin: 0 0 1rem;
     }
   }
 
@@ -419,7 +419,8 @@ pre,
 code,
 .code-example {
   border-radius: var(--elem-radius);
-  font-size: var(--type-base-font-size-rem);
+  font-family: var(--font-code);
+  font-size: var(--type-smaller-font-size);
 }
 
 code {
@@ -431,7 +432,7 @@ code {
 pre {
   background-color: var(--code-background-block);
   border: 1px solid transparent;
-  margin: 1rem 0 2rem 0;
+  margin: 1rem 0 2rem;
   padding: 1rem 2.5rem 1rem 1rem;
 
   code {
@@ -496,7 +497,7 @@ pre {
     }
 
     li {
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.5rem;
     }
   }
 
@@ -585,6 +586,7 @@ a.page-not-created {
 
   &:link,
   &:hover,
+  &:visited,
   &:not([href]),
   &:focus {
     color: var(--icon-critical);
@@ -609,4 +611,9 @@ kbd {
   color: var(--text-secondary);
   font-size: 0.825rem;
   padding: 0.25rem;
+}
+
+.loading-error pre {
+  overflow-y: scroll;
+  white-space: pre;
 }

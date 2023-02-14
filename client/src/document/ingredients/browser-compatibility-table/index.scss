@@ -29,7 +29,9 @@
   }
 
   th {
+    background: var(--background-tertiary);
     padding: 0.4rem;
+    vertical-align: bottom;
   }
 
   // these props allow us to add border-radius to the table.
@@ -91,11 +93,6 @@
     }
   }
 
-  th {
-    background: var(--background-tertiary);
-    vertical-align: bottom;
-  }
-
   .bc-supports {
     margin-bottom: 1rem;
 
@@ -136,6 +133,10 @@
 
   .bc-feature-depth-2 {
     border-left-width: 8px;
+  }
+
+  .bc-feature-depth-3 {
+    border-left-width: 16px;
   }
 }
 
@@ -217,7 +218,7 @@
   }
 
   td {
-    border-width: 0 0 1px 0;
+    border-width: 0 0 1px;
   }
 }
 
@@ -388,12 +389,19 @@ dl.bc-notes-list {
 
 .bcd-cell-text-wrapper {
   display: flex;
+  flex-direction: row;
   gap: 0.5rem;
 
   @media screen and (min-width: $screen-md) {
     align-items: center;
     flex-direction: column;
   }
+}
+
+.bcd-timeline-cell-text-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
 }
 
 .bcd-cell-text-copy {
@@ -426,12 +434,6 @@ dl.bc-notes-list {
 
   @media screen and (min-width: $screen-md) {
     display: block;
-  }
-}
-
-.bc-notes-wrapper {
-  .bcd-cell-text-wrapper {
-    flex-direction: row;
   }
 }
 

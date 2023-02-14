@@ -2,14 +2,15 @@
 // Or, something. Checking for flaws should be very different from checking
 // for images.
 
-import path from "path";
+import path from "node:path";
 
-import sizeOf from "image-size";
+import imagesize from "image-size";
 
-import { Document, Image } from "../content";
-import { FLAW_LEVELS } from "../libs/constants";
-import { findMatchesInText } from "./matches-in-text";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import { Document, Image } from "../content/index.js";
+import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { findMatchesInText } from "./matches-in-text.js";
+
+const { default: sizeOf } = imagesize;
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,
@@ -119,7 +120,7 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
         } else {
-          let suggestion = null;
+          const suggestion = null;
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
@@ -138,7 +139,7 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
 
       // What follows uses the same algorithm as Image.findByURLWithFallback
       // but only adds a filePath if it exists for the DEFAULT_LOCALE
-      let filePath = Image.findByURL(finalSrc);
+      const filePath = Image.findByURL(finalSrc);
       let enUSFallback = false;
       if (
         !filePath &&

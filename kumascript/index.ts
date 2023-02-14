@@ -1,29 +1,39 @@
 import LRU from "lru-cache";
+import * as cheerio from "cheerio";
 
-import { Document } from "../content";
-import { m2h } from "../markdown";
+import { Document } from "../content/index.js";
+import { m2h } from "../markdown/index.js";
 
-import info from "./src/info";
-import { render as renderMacros } from "./src/render";
-export { buildLiveSamplePages } from "./src/live-sample";
-import { HTMLTool } from "./src/api/util";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import info from "./src/info.js";
+import { render as renderMacros } from "./src/render.js";
+export { buildLiveSamplePages } from "./src/live-sample.js";
+import { HTMLTool } from "./src/api/util.js";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} from "../libs/env";
-import { SourceCodeError } from "./src/errors";
-import { CheerioAPI, load } from "cheerio";
+} from "../libs/env/index.js";
+import { SourceCodeError } from "./src/errors.js";
 
 const DEPENDENCY_LOOP_INTRO =
-  'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
+  'The following documents form a circular dependency when rendering (via the "page" macros):';
 
 export const renderCache = new LRU<string, unknown>({ max: 2000 });
 
+interface RenderOptions {
+  urlsSeen?: Set<string>;
+  selective_mode?: [string, string[]] | false;
+  invalidateCache?: boolean;
+}
+
 export async function render(
   url: string,
-  { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
-): Promise<[CheerioAPI, SourceCodeError[]]> {
+  {
+    urlsSeen = null,
+    selective_mode = false,
+    invalidateCache = false,
+  }: RenderOptions = {}
+): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
@@ -31,7 +41,7 @@ export async function render(
     } else {
       const [renderedHtml, errors]: [string, SourceCodeError[]] =
         renderCache.get(urlLC);
-      return [load(renderedHtml), errors];
+      return [cheerio.load(renderedHtml), errors];
     }
   }
 

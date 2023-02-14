@@ -1,8 +1,8 @@
 import cheerio from "cheerio";
 import ejs from "ejs";
 
-import { MacroLiveSampleError } from "./errors";
-import { HTMLTool, KumascriptError, slugify } from "./api/util";
+import { MacroLiveSampleError } from "./errors.js";
+import { HTMLTool, KumascriptError, slugify } from "./api/util.js";
 
 const LIVE_SAMPLE_HTML = `
 <!DOCTYPE html>
@@ -48,6 +48,10 @@ const LIVE_SAMPLE_HTML = `
         </style>
         <% } %>
         <title><%= sampleTitle %></title>
+        <% if (hasMathML) { %>
+          <link rel="stylesheet" href="https://fred-wang.github.io/MathFonts/STIX/mathfonts.css" />
+          <script src="https://fred-wang.github.io/mathml.css/mspace.js"></script>
+        <% } %>
     </head>
     <body>
         <% if (html) { %>

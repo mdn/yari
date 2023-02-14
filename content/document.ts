@@ -1,18 +1,27 @@
-import fs from "fs";
-import path from "path";
-import util from "util";
+import fs from "node:fs";
+import path from "node:path";
+import util from "node:util";
 
 import fm from "front-matter";
 import yaml from "js-yaml";
 import { fdir, PathsOutput } from "fdir";
 
-import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
-import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
-import { ACTIVE_LOCALES, VALID_LOCALES } from "../libs/constants";
-import { getPopularities } from "./popularities";
-import { getWikiHistories } from "./wikihistories";
-import { getGitHistories } from "./githistories";
-import { childrenFoldersForPath } from "./document-paths";
+import {
+  CONTENT_TRANSLATED_ROOT,
+  CONTENT_ROOT,
+  ROOTS,
+} from "../libs/env/index.js";
+import {
+  ACTIVE_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
+  VALID_LOCALES,
+} from "../libs/constants/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import { getPopularities } from "./popularities.js";
+import { getWikiHistories } from "./wikihistories.js";
+import { getGitHistories } from "./githistories.js";
+import { childrenFoldersForPath } from "./document-paths.js";
 
 import {
   buildURL,
@@ -22,10 +31,12 @@ import {
   execGit,
   urlToFolderPath,
   toPrettyJSON,
-} from "./utils";
-export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
-import * as Redirect from "./redirect";
-import { DocFrontmatter } from "../build/spas";
+  MEMOIZE_INVALIDATE,
+} from "./utils.js";
+import * as Redirect from "./redirect.js";
+import { DocFrontmatter } from "../libs/types/document.js";
+
+export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
 
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -236,14 +247,14 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     locale = extractLocale(folder);
   }
 
-  if (filePath.includes(" ")) {
+  if (folder.includes(" ")) {
     throw new Error(
       `Folder contains whitespace which is not allowed (${util.inspect(
         filePath
       )})`
     );
   }
-  if (filePath.includes("\u200b")) {
+  if (folder.includes("\u200b")) {
     throw new Error(
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );
@@ -418,7 +429,10 @@ export function update(url: string, rawBody: string, metadata) {
   }
 }
 
-export function findByURL(url: string, ...args: (string | Symbol)[]) {
+export function findByURL(
+  url: string,
+  ...args: (string | typeof MEMOIZE_INVALIDATE)[]
+) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;
@@ -443,8 +457,8 @@ export function findAll({
   }
   const folderSearchRegExp = folderSearch ? new RegExp(folderSearch) : null;
 
-  const filePaths = [];
-  const roots = [];
+  const filePaths: string[] = [];
+  const roots: string[] = [];
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
@@ -465,7 +479,7 @@ export function findAll({
         }
 
         const locale = filePath.replace(root, "").split(path.sep)[1];
-        if (!VALID_LOCALES.has(locale)) {
+        if (!isValidLocale(locale)) {
           return false;
         }
         if (locales.size) {
@@ -505,9 +519,14 @@ export function findAll({
   }
   return {
     count: filePaths.length,
-    *iter({ pathOnly = false } = {}) {
+    *iterPaths() {
       for (const filePath of filePaths) {
-        yield pathOnly ? filePath : read(filePath);
+        yield filePath;
+      }
+    },
+    *iterDocs() {
+      for (const filePath of filePaths) {
+        yield read(filePath);
       }
     },
   };

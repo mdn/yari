@@ -1,12 +1,11 @@
-/* eslint-disable n/no-unpublished-require */
-/* eslint-disable n/no-missing-require */
-const { VALID_LOCALES } = require("@yari-internal/constants");
-const fs = require("fs");
-const path = require("path");
+import { VALID_LOCALES } from "@yari-internal/constants";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const dotenv = require("dotenv");
 const root = path.join(dirname, "..", "..", "..");
 dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),

@@ -1,17 +1,19 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import * as cheerio from "cheerio";
 import got from "got";
-import FileType from "file-type";
+import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquant from "imagemin-pngquant";
+import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../libs/constants";
+import { VALID_MIME_TYPES } from "../libs/constants/index.js";
+
+const { default: imageminPngquant } = imageminPngquantPkg;
 
 export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
@@ -47,11 +49,11 @@ export function forceExternalURL(url) {
 export async function downloadAndResizeImage(src, out, basePath) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
-    timeout: 10000,
-    retry: 3,
+    timeout: { request: 10000 },
+    retry: { limit: 3 },
   });
   const imageBuffer = imageResponse.body;
-  let fileType = await FileType.fromBuffer(imageBuffer);
+  let fileType = await fileTypeFromBuffer(imageBuffer);
   if (
     !fileType &&
     src.toLowerCase().endsWith(".svg") &&
@@ -146,8 +148,8 @@ export function splitSections(rawHTML) {
 
   const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
   let c = 0;
-  iterable.forEach((child: cheerio.Element) => {
-    if (child.tagName === "h2") {
+  iterable.forEach((child) => {
+    if ("tagName" in child && child.tagName === "h2") {
       if (c) {
         blocks.push(section.clone());
         section.empty();

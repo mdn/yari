@@ -23,12 +23,8 @@
     order: 2;
   }
 
-  .notifications-menu {
-    order: 3;
-  }
-
   .user-menu {
-    order: 4;
+    order: 3;
   }
 
   .top-level-entry-container {
@@ -171,28 +167,21 @@
     }
 
     .main-nav {
+      margin-right: auto;
       order: 0;
+      width: max-content;
     }
 
     .header-search {
       order: 1;
     }
 
-    .notifications-menu {
+    .auth-container {
       order: 2;
     }
 
-    .auth-container {
-      order: 3;
-    }
-
     .user-menu {
-      order: 4;
-    }
-
-    .main-nav {
-      margin-right: auto;
-      width: max-content;
+      order: 3;
     }
 
     .menu-toggle + .top-level-entry {

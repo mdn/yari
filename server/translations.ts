@@ -1,20 +1,21 @@
-import fs from "fs";
-import path from "path";
-
-import { fdir } from "fdir";
+import fs from "node:fs";
+import path from "node:path";
 
 import express from "express";
-export const router = express.Router();
+import { fdir } from "fdir";
 
-import { getPopularities, Document, Translation } from "../content";
+import { getPopularities, Document, Translation } from "../content/index.js";
 import {
   VALID_LOCALES,
   ACTIVE_LOCALES,
   DEFAULT_LOCALE,
-} from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { getLastCommitURL } from "../build";
-import LANGUAGES_RAW from "../libs/languages";
+} from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { getLastCommitURL } from "../build/index.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+
+export const router = express.Router();
 
 // Module-level cache
 const allPopularityValues = [];
@@ -28,10 +29,10 @@ function getAllPopularityValues() {
   return allPopularityValues;
 }
 
-function replaceSepPerOS(slug) {
+function replaceSepPerOS(slug: string) {
   if (path.sep !== "/") {
     // In other words, we're on Windows
-    return slug.replaceAll("/", "\\\\");
+    return slug.replace(/\//g, "\\\\");
   } else {
     return slug;
   }
@@ -59,7 +60,7 @@ function packageTranslationDifferences(translationDifferences) {
 }
 
 const _foundDocumentsCache = new Map();
-function findDocuments({ locale }) {
+export function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,
@@ -85,7 +86,7 @@ function findDocuments({ locale }) {
   }
   const cache = _foundDocumentsCache.get(locale);
 
-  for (const filePath of documentsFound.iter({ pathOnly: true })) {
+  for (const filePath of documentsFound.iterPaths()) {
     const mtime = fs.statSync(filePath).mtime;
 
     if (!cache.has(filePath) || cache.get(filePath).mtime < mtime) {
@@ -277,7 +278,7 @@ function gatherL10NstatsSection({
   });
 
   const translatedFolderNames = new Set();
-  for (const filePath of foundTranslations.iter({ pathOnly: true })) {
+  for (const filePath of foundTranslations.iterPaths()) {
     const asFolder = path.relative(
       CONTENT_TRANSLATED_ROOT,
       path.dirname(filePath)
@@ -299,7 +300,7 @@ function gatherL10NstatsSection({
     folderSearch: folderSearchDefaultLocale,
   });
 
-  for (const filePath of foundDefaultLocale.iter({ pathOnly: true })) {
+  for (const filePath of foundDefaultLocale.iterPaths()) {
     const asFolder = path.relative(CONTENT_ROOT, path.dirname(filePath));
     const asFolderWithoutLocale = asFolder
       .split(path.sep)
@@ -403,7 +404,13 @@ function gatherL10NstatsSection({
 
 const _detailsSectionCache = new Map();
 
-function buildL10nDashboard({ locale, section }) {
+function buildL10nDashboard({
+  locale,
+  section,
+}: {
+  locale: string;
+  section: string;
+}) {
   if (locale === DEFAULT_LOCALE) {
     throw new Error("Can't run this for the default locale");
   }
@@ -416,7 +423,7 @@ function buildL10nDashboard({ locale, section }) {
     ...Document.findAll({
       locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
       folderSearch: DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
-    }).iter({ pathOnly: false }),
+    }).iterDocs(),
   ];
 
   const subSectionsStartingWith = defaultLocaleDocs
@@ -463,7 +470,7 @@ function buildL10nDashboard({ locale, section }) {
     upToDate: l10nStatsSection.counts.upToDate,
   };
 
-  function filterChildrenDocs(url, section) {
+  function filterChildrenDocs(url: string, section: string) {
     return (
       (section.length === 1 && url.split("/").length > 4) ||
       url.split("/").length > section.split("/").length + 3
@@ -580,7 +587,7 @@ router.get("/differences", async (req, res) => {
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {
@@ -602,7 +609,7 @@ router.get("/missing", async (req, res) => {
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {
@@ -620,12 +627,12 @@ router.get("/dashboard", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
-  const locale = (req.query.locale as string)?.toLowerCase();
-  const section = req.query.section || "/";
+  const locale = String(req.query.locale || "").toLowerCase();
+  const section = String(req.query.section || "/");
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {

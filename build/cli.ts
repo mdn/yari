@@ -1,31 +1,42 @@
 #!/usr/bin/env node
-import fs from "fs";
-import path from "path";
-import zlib from "zlib";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-const program = require("@caporal/core").default;
-import { prompt } from "inquirer";
+import caporal from "@caporal/core";
+import inquirer from "inquirer";
 
-import { Document, slugToFolder, translationsOf } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { VALID_LOCALES } from "../libs/constants";
-// eslint-disable-next-line n/no-missing-require
-import { renderHTML } from "../ssr/dist/main";
-import options from "./build-options";
-import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { Flaws } from "../libs/types";
-import * as bcd from "@mdn/browser-compat-data/types";
-import SearchIndex from "./search-index";
-import { BUILD_OUT_ROOT } from "../libs/env";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps";
-import { humanFileSize } from "./utils";
+import { Document, slugToFolder, translationsOf } from "../content/index.js";
+import {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  BUILD_OUT_ROOT,
+} from "../libs/env/index.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
+import options from "./build-options.js";
+import {
+  buildDocument,
+  BuiltDocument,
+  renderContributorsTxt,
+} from "./index.js";
+import { DocMetadata, Flaws } from "../libs/types/document.js";
+import SearchIndex from "./search-index.js";
+import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { humanFileSize } from "./utils.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
 export interface SkippedDocumentBuild {
-  doc: {};
+  doc: Record<string, never>;
   skip: true;
 }
 
@@ -33,6 +44,10 @@ export interface InteractiveDocumentBuild {
   document: any;
   doc: BuiltDocument;
   skip: false;
+}
+
+interface GlobalMetadata {
+  [locale: string]: Array<DocMetadata>;
 }
 
 async function buildDocumentInteractive(
@@ -116,6 +131,8 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
+  const metadata: GlobalMetadata = {};
+
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -145,12 +162,10 @@ async function buildDocuments(
   }
 
   if (!options.noProgressbar) {
-    progressBar.start(documents.count);
+    progressBar.start(documents.count, 0);
   }
 
-  for (const documentPath of documents.iter({
-    pathOnly: true,
-  }) as Iterable<string>) {
+  for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
     const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
@@ -161,7 +176,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
+      doc: { doc: builtDocument, liveSamples, fileAttachments },
       document,
     } = result;
 
@@ -179,12 +194,10 @@ async function buildDocuments(
       );
     }
 
-    fs.writeFileSync(
-      path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderHTML has the side-effect of
-      // mutating the built document which makes this not great and refactor-worthy.
-      JSON.stringify({ doc: builtDocument })
-    );
+    // This is exploiting the fact that renderHTML has the side-effect of
+    // mutating the built document which makes this not great and refactor-worthy.
+    const docString = JSON.stringify({ doc: builtDocument });
+    fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
       renderContributorsTxt(
@@ -192,27 +205,6 @@ async function buildDocuments(
         builtDocument.source.github_url.replace("/blob/", "/commits/")
       )
     );
-    for (const { url, data } of bcdData) {
-      fs.writeFileSync(
-        path.join(outPath, path.basename(url)),
-        JSON.stringify(data, (key, value) => {
-          // The BCD data object contains a bunch of data we don't need in the
-          // React component that loads the `bcd.json` file and displays it.
-          // The `.releases` block contains information about browsers (e.g
-          // release dates) and that part has already been extracted and put
-          // next to each version number where appropriate.
-          // Therefore, we strip out all "retired" releases.
-          if (key === "releases") {
-            return Object.fromEntries(
-              Object.entries(value as bcd.ReleaseStatement).filter(
-                ([, v]) => v.status !== "retired"
-              )
-            );
-          }
-          return value;
-        })
-      );
-    }
 
     for (const { id, html } of liveSamples) {
       const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
@@ -240,6 +232,25 @@ async function buildDocuments(
       searchIndex.add(document);
     }
 
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const {
+      body: _,
+      toc: __,
+      sidebarHTML: ___,
+      ...builtMetadata
+    } = builtDocument;
+    builtMetadata.hash = hash;
+
+    fs.writeFileSync(
+      path.join(outPath, "metadata.json"),
+      JSON.stringify(builtMetadata)
+    );
+    if (metadata[document.metadata.locale]) {
+      metadata[document.metadata.locale].push(builtMetadata);
+    } else {
+      metadata[document.metadata.locale] = [builtMetadata];
+    }
+
     if (!options.noProgressbar) {
       progressBar.increment();
     } else if (!quiet) {
@@ -255,7 +266,6 @@ async function buildDocuments(
     progressBar.stop();
   }
 
-  const sitemapsBuilt: string[] = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
@@ -277,6 +287,25 @@ async function buildDocuments(
       JSON.stringify(items)
     );
   }
+
+  for (const [locale, meta] of Object.entries(metadata)) {
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
+      JSON.stringify(meta)
+    );
+  }
+
+  const allBrowserCompat = new Set<string>();
+  Object.values(metadata).forEach((localeMeta) =>
+    localeMeta.forEach((doc) =>
+      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    )
+  );
+  fs.writeFileSync(
+    path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
+    [...allBrowserCompat].join(" ")
+  );
+
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
@@ -295,6 +324,20 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   }
   out.push("\n");
   return out.join("\n");
+}
+
+interface BuildArgsAndOptions {
+  args: {
+    files?: string[];
+  };
+  options: {
+    quiet?: boolean;
+    interactive?: boolean;
+    nohtml?: boolean;
+    locale?: string[];
+    notLocale?: string[];
+    sitemapIndex?: boolean;
+  };
 }
 
 program
@@ -317,7 +360,7 @@ program
     default: false,
   })
   .argument("[files...]", "specific files to build")
-  .action(async ({ args, options }) => {
+  .action(async ({ args, options }: BuildArgsAndOptions) => {
     try {
       if (!options.quiet) {
         const roots = [

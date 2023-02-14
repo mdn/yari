@@ -1,4 +1,8 @@
-const handler = require("../index");
+import { createRequire } from "node:module";
+import { handler } from "../index.js";
+
+const require = createRequire(import.meta.url);
+
 jest.mock("../plans-stage-lookup.json", () => {
   return require("./__mocks__/plans-stage-lookup-test.json");
 });
@@ -8,7 +12,7 @@ jest.mock("../plans-prod-lookup.json", () => {
 
 test("Returns Italian language with Euro price_id for Italian in Germany", async () => {
   const event = getEventForAcceptHeaderAndCountry("it;q=0.7,en;q=0.3", "DE");
-  const res = await handler.handler(event);
+  const res = await handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
     "ITALIAN_1",
@@ -28,7 +32,7 @@ test("(PROD) Returns Italian language with Euro price_id for Italian in Germany"
     "DE",
     "prod"
   );
-  const res = await handler.handler(event);
+  const res = await handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
     "PROD_ITALIAN_1",
@@ -45,7 +49,7 @@ test("(PROD) Returns Italian language with Euro price_id for Italian in Germany"
 test("Returns French language with CHF price_id for Swiss person in Switzerland", async () => {
   //French dialect in Switzerland
   const event = getEventForAcceptHeaderAndCountry("fr-CA;q=0.7,en;q=0.3", "CH");
-  const res = await handler.handler(event);
+  const res = await handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
     "SWISS_FRENCH_1",
@@ -62,7 +66,7 @@ test("Returns French language with CHF price_id for Swiss person in Switzerland"
 test("Returns English (default) language with USD price_id for German person in USA", async () => {
   //French dialect in Switzerland
   const event = getEventForAcceptHeaderAndCountry("de;q=1.0", "US");
-  const res = await handler.handler(event);
+  const res = await handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
     "USD_ENGLISH_1",
@@ -79,7 +83,7 @@ test("Returns English (default) language with USD price_id for German person in 
 test("Returns 404 for unsupported country", async () => {
   //British user in the Falklands
   const event = getEventForAcceptHeaderAndCountry("en-GB;q=1", "FK");
-  const res = await handler.handler(event);
+  const res = await handler(event);
   expect(res.status).toEqual(404);
 });
 

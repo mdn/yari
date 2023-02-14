@@ -1,37 +1,46 @@
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenu } from "./notifications-watch-menu";
 import { LanguageMenu } from "./language-menu";
 
 import { useIsServer } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 
-import { Doc } from "../../../../../libs/types/document";
+import { Doc, DocMetadata } from "../../../../../libs/types/document";
 
 import "./index.scss";
 
 import BookmarkMenu from "./bookmark-menu";
-import { useUIStatus } from "../../../ui-context";
+import { Overlay, useUIStatus } from "../../../ui-context";
+import { useEffect, useState } from "react";
+import { KeyedMutator } from "swr";
+import { Item } from "../../../plus/collections/api";
 
 export const ArticleActions = ({
   doc,
-  showArticleActionsMenu,
-  setShowArticleActionsMenu,
+  showTranslations = true,
+  item,
+  scopedMutator,
 }: {
-  doc: Doc;
-  showArticleActionsMenu: boolean;
-  setShowArticleActionsMenu: (show: boolean) => void;
+  doc?: Doc | DocMetadata;
+  showTranslations?: boolean;
+  item?: Item;
+  scopedMutator?: KeyedMutator<Item[][]>;
 }) => {
+  const [showArticleActionsMenu, setShowArticleActionsMenu] = useState(false);
   const userData = useUserData();
   const isServer = useIsServer();
-  const { fullScreenOverlay, setFullScreenOverlay } = useUIStatus();
+  const { toggleMobileOverlay } = useUIStatus();
   const isAuthenticated = userData && userData.isAuthenticated;
-  const translations = doc.other_translations || [];
-  const { native } = doc;
+  const translations = doc?.other_translations || [];
+  const native = doc?.native;
 
   function toggleArticleActionsMenu() {
     setShowArticleActionsMenu(!showArticleActionsMenu);
-    setFullScreenOverlay(!fullScreenOverlay);
   }
+
+  useEffect(
+    () => toggleMobileOverlay(Overlay.ArticleActions, showArticleActionsMenu),
+    [showArticleActionsMenu, toggleMobileOverlay]
+  );
 
   // @TODO we will need the following when including the language drop-down
   // const translations = doc.other_translations || [];
@@ -47,6 +56,7 @@ export const ArticleActions = ({
         >
           <Button
             type="action"
+            aria-label="Article actions"
             extraClasses="article-actions-toggle"
             onClickHandler={toggleArticleActionsMenu}
             icon={showArticleActionsMenu ? "cancel" : "ellipses"}
@@ -59,25 +69,27 @@ export const ArticleActions = ({
             <>
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
-                  <NotificationsWatchMenu doc={doc} />
-                </li>
-              )}
-              {!isServer && isAuthenticated && (
-                <li className="article-actions-entry">
-                  <BookmarkMenu doc={doc} />
-                </li>
-              )}
-              {translations && !!translations.length && (
-                <li className="article-actions-entry">
-                  <LanguageMenu
-                    onClose={() =>
-                      showArticleActionsMenu && toggleArticleActionsMenu()
-                    }
-                    translations={translations}
-                    native={native}
+                  <BookmarkMenu
+                    doc={doc}
+                    item={item}
+                    scopedMutator={scopedMutator}
                   />
                 </li>
               )}
+              {showTranslations &&
+                translations &&
+                !!translations.length &&
+                native && (
+                  <li className="article-actions-entry">
+                    <LanguageMenu
+                      onClose={() =>
+                        showArticleActionsMenu && toggleArticleActionsMenu()
+                      }
+                      translations={translations}
+                      native={native}
+                    />
+                  </li>
+                )}
             </>
           </ul>
         </div>

@@ -1,5 +1,5 @@
-import InternalLink from "../../atoms/internal-link";
 import { MenuEntry, Submenu } from "../submenu";
+import "./index.scss";
 
 interface MenuProps {
   menu: MenuEntry;
@@ -11,8 +11,13 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
   const buttonId = `${menu.id}-button`;
   const submenuId = `${menu.id}-menu`;
 
+  const hasAnyDot = menu.items.some((item) => item.dot);
+
   return (
     <li key={menu.id} className="top-level-entry-container">
+      {hasAnyDot && (
+        <span className="visually-hidden top-level-entry-dot"></span>
+      )}
       <button
         type="button"
         id={buttonId}
@@ -27,14 +32,14 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
       </button>
 
       {menu.to && (
-        <InternalLink
-          to={menu.to}
+        <a
+          href={menu.to}
           className="top-level-entry"
           // @ts-ignore
           onClick={() => document?.activeElement?.blur()}
         >
           {menu.label}
-        </InternalLink>
+        </a>
       )}
 
       <Submenu

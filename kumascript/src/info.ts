@@ -1,9 +1,9 @@
 import cheerio from "cheerio";
 
-import Parser from "./parser.js";
-import { Document, Redirect } from "../../content";
-import { VALID_LOCALES } from "../../libs/constants";
-import { m2hSync } from "../../markdown";
+import * as Parser from "./parser.js";
+import { Document, Redirect } from "../../content/index.js";
+import { isValidLocale } from "../../libs/locale-utils/index.js";
+import { m2hSync } from "../../markdown/index.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -13,9 +13,7 @@ const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
   "compat",
   "index",
   "page",
-  "gecko_minversion_inline",
   "obsolete_header",
-  "gecko_minversion_header",
   "deprecated_header",
   "previous",
   "previousmenu",
@@ -42,7 +40,7 @@ function repairURL(url) {
   url = url.replace(/\/{2,}/g, "/");
   // Ensure the URI starts with a valid locale.
   const maybeLocale = url.split("/")[1];
-  if (!VALID_LOCALES.has(maybeLocale)) {
+  if (!isValidLocale(maybeLocale)) {
     if (maybeLocale === "en") {
       // Converts URI's like "/en/..." to "/en-us/...".
       url = url.replace(`/${maybeLocale}`, "/en-us");
@@ -61,7 +59,7 @@ function repairURL(url) {
   return url;
 }
 
-const info = {
+export const info = {
   getPathname(url) {
     // This function returns just the pathname of the given "url", removing
     // any trailing "/".
@@ -191,13 +189,14 @@ const info = {
       return this.getPageByURL(document);
     }
 
-    const { locale, slug, title, tags } = document.metadata;
+    const { locale, slug, title, status, tags } = document.metadata;
     const { rawBody, isMarkdown } = document;
     return {
       url: document.url,
       locale,
       slug,
       title,
+      status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
       translations: [], // TODO Object.freeze(buildTranslationObjects(data)),

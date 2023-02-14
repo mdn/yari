@@ -1,4 +1,5 @@
-import * as util from "./util";
+import { KumaThis } from "../environment.js";
+import * as util from "./util.js";
 
 const wiki = {
   //
@@ -12,7 +13,7 @@ const wiki = {
   //
   // Doesn't support the revision parameter offered by DekiScript
   //
-  async page(path, section, revision, show, heading) {
+  async page(this: KumaThis, path, section, revision, show, heading) {
     // Adjusts the visibility and heading levels of the specified HTML.
     //
     // The show parameter indicates whether or not the top level
@@ -57,7 +58,7 @@ const wiki = {
     }
 
     let result = await this.renderPrerequisiteFromURL(
-      this.wiki.ensureExistence(path)
+      (this.wiki as any).ensureExistence(path)
     );
     const pathDescription = this.info.getDescription(path);
 
@@ -77,18 +78,27 @@ const wiki = {
     return adjustHeadings(result, section, show || 0, heading);
   },
 
-  // Returns the page object for the specified page.
-  getPage(path) {
+  // Returns all page objects for the specified page paths.
+  async getPages(this: KumaThis, ...paths: string[]) {
+    const pages = await Promise.all(
+      paths.map((path) => (this.wiki as any).getPage(path))
+    );
+
+    return pages.filter((page) => page && page.url);
+  },
+
+  // Returns the page object for the specified page path.
+  getPage(this: KumaThis, path) {
     return this.info.getPageByURL(path || this.env.url);
   },
 
-  hasPage(path) {
+  hasPage(this: KumaThis, path) {
     const page = this.info.getPageByURL(path || this.env.url);
 
     return Boolean(page.slug);
   },
 
-  ensureExistence(path) {
+  ensureExistence(this: KumaThis, path) {
     if (!this.info.hasPage(path)) {
       throw new Error(
         `${this.env.url.toLowerCase()} references ${this.info.getDescription(
@@ -99,15 +109,6 @@ const wiki = {
     return path;
   },
 
-  // Build the URI of a given wiki page.
-  uri(path, query) {
-    let out = util.preparePath(path);
-    if (query) {
-      out += `?${query}`;
-    }
-    return out;
-  },
-
   // Inserts a pages sub tree
   // if reverse is non-zero, the sort is backward
   // if ordered is true, the output is an <ol> instead of <ul>
@@ -115,13 +116,13 @@ const wiki = {
   // Special note: If ordered is true, pages whose locale differ from
   // the current page's locale are omitted, to work around misplaced
   // localizations showing up in navigation.
-  tree(path, depth, self, reverse, ordered) {
+  tree(this: KumaThis, path, depth, self, reverse, ordered) {
     // If the path ends with a slash, remove it.
     if (path.substr(-1, 1) === "/") {
       path = path.slice(0, -1);
     }
 
-    const pages = this.page.subpages(path, depth, self);
+    const pages = (this.page as any).subpagesExpand(path, depth, self);
 
     if (reverse == 0) {
       pages.sort(alphanumForward);

@@ -130,7 +130,7 @@ button,
   }
 
   .button-wrap {
-    text-transform: uppercase;
+    text-transform: var(--button-action-transform, uppercase);
   }
 
   &.highlight {
@@ -140,7 +140,9 @@ button,
 
 /* Select Version */
 .button.select {
-  --button-bg: var(--background-primary);
+  --button-bg: var(--button-secondary-default);
+  --button-bg-hover: var(--button-secondary-hover);
+  --button-bg-active: var(--button-secondary-active);
   --button-border-color: var(--border-primary);
   --button-color: var(--text-secondary);
   appearance: none;
@@ -166,6 +168,30 @@ button,
     right: 0.5rem;
     top: calc(50% - 0.5rem);
     width: 16px;
+  }
+}
+
+.button.link {
+  --button-bg: none;
+  --button-bg-hover: none;
+  --button-bg-active: none;
+  --button-border-color: none;
+  --button-focus-effect: none;
+  --button-secondary-border-focus: none;
+  --button-height: auto;
+  --button-font: unset;
+  --button-padding: 0;
+  --button-radius: 0;
+
+  --button-color: var(--text-link);
+  appearance: none;
+  display: inline;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline-color: var(--accent-primary);
+    outline-offset: 1px;
+    outline-style: auto;
   }
 }
 

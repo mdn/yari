@@ -17,8 +17,6 @@ export const ArticleActionsContainer = ({
   doc?: Doc;
   parents?: DocParent[];
 }) => {
-  const [showArticleActionsMenu, setShowArticleActionsMenu] =
-    React.useState(false);
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
 
   return (
@@ -28,19 +26,16 @@ export const ArticleActionsContainer = ({
           extraClasses="sidebar-button"
           icon="sidebar"
           type="action"
+          aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          aria-expanded={isSidebarOpen}
+          aria-controls="sidebar-quicklinks"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
         />
 
         {/* if we have breadcrumbs for the current page, continue rendering the section */}
         {parents && <Breadcrumbs parents={parents} />}
 
-        {doc && (
-          <ArticleActions
-            doc={doc}
-            showArticleActionsMenu={showArticleActionsMenu}
-            setShowArticleActionsMenu={setShowArticleActionsMenu}
-          />
-        )}
+        {doc && <ArticleActions doc={doc} />}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@
 "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
 
-"@yari-internal/get-locale@file:../../../libs/get-locale":
+"@yari-internal/locale-utils@file:../../../libs/locale-utils":
   version "0.0.1"
 
 "@yari-internal/slug-utils@file:../../../libs/slug-utils":

@@ -38,9 +38,9 @@
  *   - the environment object that defines per-page values such as
  *     locale, title and slug.
  */
-import Parser from "./parser.js";
-import Templates from "./templates";
-import Environment from "./environment";
+import * as Parser from "./parser.js";
+import Templates from "./templates.js";
+import Environment from "./environment.js";
 import {
   MacroInvocationError,
   MacroNotFoundError,
@@ -51,8 +51,8 @@ import {
   MacroWrongXRefError,
   MacroDeprecatedError,
   MacroPagesError,
-} from "./errors";
-import { RedirectInfo } from "../../libs/types/document";
+} from "./errors.js";
+import { RedirectInfo } from "../../libs/types/document.js";
 
 const defaultTemplates = new Templates();
 
@@ -243,7 +243,7 @@ export async function render(
         ) {
           // The named macro does not exist
           macroError = new MacroNotFoundError(e, source, token);
-        } else if (e.name === "SyntaxError") {
+        } else if (e instanceof Error && e.name == "SyntaxError") {
           // There was a syntax error compiling the macro
           macroError = new MacroCompilationError(e, source, token);
         } else {

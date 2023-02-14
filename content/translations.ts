@@ -1,6 +1,6 @@
-import * as Document from "./document";
-import { VALID_LOCALES } from "../libs/constants";
-import LANGUAGES_RAW from "../libs/languages";
+import * as Document from "./document.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -11,7 +11,7 @@ const LANGUAGES = new Map(
 const TRANSLATIONS_OF = new Map();
 
 function gatherTranslations() {
-  const iter = Document.findAll().iter();
+  const iter = Document.findAll().iterDocs();
   for (const {
     metadata: { slug, locale, title },
   } of iter) {
