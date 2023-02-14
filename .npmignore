@@ -16,6 +16,7 @@ server/node_modules/
 # This won't be relevant or needed once the content is gone.
 /content/files/en-us/
 
+/client/venv/
 /deployer
 kumascript/tests
 testing/
