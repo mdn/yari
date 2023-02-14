@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
+import { PLACEMENT_ENABLED } from "../../../env";
 import { useIsServer, usePageVisibility } from "../../../hooks";
-import {
-  PlacementStatus,
-  usePlacementStatus,
-} from "../../../placement-context";
+import useSWR from "swr";
 import { useUserData } from "../../../user-context";
 
 import "./placement.scss";
@@ -12,6 +10,22 @@ interface Timer {
   timeout: number | null;
   start: number | null;
   notVisible?: boolean;
+}
+
+export interface Fallback {
+  copy: string;
+  click: string;
+  view: string;
+  image: string;
+  by: string;
+}
+
+export interface PlacementStatus {
+  copy: string;
+  click: string;
+  view: string;
+  fallback?: Fallback;
+  image: string;
 }
 
 function viewed(
@@ -29,14 +43,47 @@ function viewed(
 }
 
 export function Placement() {
+  const user = useUserData();
+  const {
+    data: pong,
+    isLoading,
+    isValidating,
+  } = useSWR<PlacementStatus>(
+    !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
+    async (url) => {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ keywords: [] }),
+      });
+
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      return (await response.json()) as PlacementStatus;
+    },
+    {
+      revalidateIfStale: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
+  return isLoading || isValidating ? null : (
+    <PlacementInner pong={pong}></PlacementInner>
+  );
+}
+
+export function PlacementInner({ pong }) {
   const isServer = useIsServer();
   const user = useUserData();
-  const pong = usePlacementStatus();
   const isVisible = usePageVisibility();
 
   const observer = useRef<IntersectionObserver | null>(null);
   const timer = useRef<Timer>({ timeout: null, start: null });
-
   const place = useCallback(
     (node) => {
       if (pong && node !== null && !observer.current) {
