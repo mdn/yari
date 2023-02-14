@@ -98,8 +98,8 @@ export function About() {
             this blogpost
           </a>
           . Mozilla's and MDN's goal is to advance the Interoperable Private
-          Attribution work in the months to come and strike a balance between
-          providing relevant ads and respecting our users' privacy.
+          Attribution work in the months to come and find the best solution to
+          provide relevant ads while also fully respecting our users' privacy.
         </p>
         <p>
           We believe this change will make MDN even more resilient and capable
