@@ -44,3 +44,6 @@ jest.config.js
 *.test.js
 .storybook/
 .nvmrc
+
+# Don't pack the build.
+mdn-yari-*.tgz
