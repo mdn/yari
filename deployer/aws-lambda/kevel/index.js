@@ -8,7 +8,6 @@ import {
   SIGN_SECRET,
   CARBON_ZONE_KEY,
   FALLBACK_ENABLED,
-  // eslint-disable-next-line n/no-missing-import
 } from "./env.js";
 import cc2ip from "./cc2ip.js";
 
@@ -77,8 +76,8 @@ export async function handler(event) {
     const { decisions: { div0 } = {} } = decisionRes;
     if (div0 === null || div0?.[0] === null) {
       return {
-        status: 404,
-        statusDescription: "NOT_FOUND",
+        status: 204,
+        statusDescription: "NO_CONTENT",
       };
     }
 
@@ -236,7 +235,7 @@ export async function handler(event) {
     };
   }
   return {
-    status: 404,
-    statusDescription: "NOT_FOUND",
+    status: 204,
+    statusDescription: "NO_CONTENT",
   };
 }
