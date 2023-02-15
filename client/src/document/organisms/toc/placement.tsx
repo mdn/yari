@@ -14,19 +14,19 @@ interface Timer {
 }
 
 export interface Fallback {
-  copy: string;
   click: string;
   view: string;
+  copy: string;
   image: string;
   by: string;
 }
 
 export interface PlacementStatus {
-  copy: string;
   click: string;
   view: string;
+  copy?: string;
+  image?: string;
   fallback?: Fallback;
-  image: string;
 }
 
 function viewed(
@@ -45,6 +45,7 @@ function viewed(
 
 export function Placement() {
   const user = useUserData();
+  const gleanClick = useGleanClick();
   const {
     data: pong,
     isLoading,
@@ -59,6 +60,7 @@ export function Placement() {
         },
         body: JSON.stringify({ keywords: [] }),
       });
+      gleanClick("pong: pong->fetched");
 
       if (!response.ok) {
         throw Error(response.statusText);
@@ -97,17 +99,13 @@ export function PlacementInner({ pong }) {
         const intersectionObserver = new IntersectionObserver((entries) => {
           const [{ isIntersecting = false, intersectionRatio = 0 } = {}] =
             entries;
-          if (
-            isIntersecting &&
-            intersectionRatio >= 0.5 &&
-            typeof navigator !== "undefined" &&
-            typeof window !== "undefined"
-          ) {
+          if (isIntersecting && intersectionRatio >= 0.5) {
             if (timer.current.timeout === null) {
               timer.current = {
-                timeout: window.setTimeout(() => {
+                timeout: window?.setTimeout?.(() => {
                   viewed(pong, observer?.current);
                   gleanClick("pong: pong->viewed");
+                  timer.current = { timeout: -1, start: -1 };
                 }, 1000),
                 start: Date.now(),
               };
@@ -128,26 +126,32 @@ export function PlacementInner({ pong }) {
     [pong, gleanClick]
   );
 
-  const { click, image, copy } = pong?.fallback || pong || {};
+  const { image, copy } = pong?.fallback || pong || {};
+  const { click } = pong || {};
   useEffect(() => {
     return () => observer.current?.disconnect();
   }, []);
 
   useEffect(() => {
-    if (!isVisible && timer.current.timeout !== null) {
-      clearTimeout(timer.current.timeout);
-      timer.current = { timeout: null, start: null, notVisible: true };
-    } else if (
-      isVisible &&
-      pong &&
-      timer.current.notVisible &&
-      timer.current.timeout === null &&
-      typeof window !== "undefined"
-    ) {
-      timer.current = {
-        timeout: window.setTimeout(() => viewed(pong, observer?.current), 1000),
-        start: Date.now(),
-      };
+    if (timer.current.timeout !== -1) {
+      // timeout !== -1 means the viewed has been sent
+      if (!isVisible && timer.current.timeout !== null) {
+        clearTimeout(timer.current.timeout);
+        timer.current = { timeout: null, start: null, notVisible: true };
+      } else if (
+        isVisible &&
+        pong &&
+        timer.current.notVisible &&
+        timer.current.timeout === null
+      ) {
+        timer.current = {
+          timeout: window?.setTimeout?.(
+            () => viewed(pong, observer?.current),
+            1000
+          ),
+          start: Date.now(),
+        };
+      }
     }
   }, [isVisible, pong]);
 
@@ -160,7 +164,11 @@ export function PlacementInner({ pong }) {
               <a
                 className="pong"
                 data-pong="pong->click"
-                href={`/pong/click?code=${encodeURIComponent(click)}`}
+                href={`/pong/click?code=${encodeURIComponent(click)}${
+                  pong?.fallback
+                    ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
+                    : ""
+                }`}
                 target="_blank"
                 rel="noreferrer"
               >

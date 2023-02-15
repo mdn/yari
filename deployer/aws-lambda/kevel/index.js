@@ -40,6 +40,7 @@ function decodeAndVerify(tuple = "") {
   const hmac = createHmac("sha256", SIGN_SECRET);
   hmac.update(s);
   if (hmac.digest("base64") == digest) {
+    // === won't work...
     return s;
   }
   return null;
@@ -54,8 +55,6 @@ export async function handler(event) {
 
   const userAgentHeader = request.headers["user-agent"];
   const userAgent = userAgentHeader ? userAgentHeader[0].value : null;
-
-  let payload = {};
 
   if (request.uri === "/pong/get") {
     if (request.method !== "POST") {
@@ -83,10 +82,13 @@ export async function handler(event) {
       };
     }
 
+    let payload = {};
+
     const [{ contents, clickUrl, impressionUrl }] = div0;
     if (
       FALLBACK_ENABLED &&
       CARBON_ZONE_KEY &&
+      CARBON_ZONE_KEY !== "undefined" &&
       contents?.[0]?.data?.customData?.fallback
     ) {
       // fall back to carbon
@@ -97,13 +99,12 @@ export async function handler(event) {
           ] = [],
         } = await (
           await fetch(
-            `https://srv.buysellads.com/ads/${CARBON_ZONE_KEY}.json?forwaredip=${encodeURIComponent(
+            `https://srv.buysellads.com/ads/${CARBON_ZONE_KEY}.json?forwardedip=${encodeURIComponent(
               anonymousIp
             )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
           )
         ).json();
         payload = {
-          contents,
           click: encodeAndSign(clickUrl),
           view: encodeAndSign(impressionUrl),
           fallback: {
@@ -123,7 +124,7 @@ export async function handler(event) {
       }
     } else {
       payload = {
-        copy: contents?.[0]?.data?.title || "🦖",
+        copy: contents?.[0]?.data?.title || "This is an ad without copy?!",
         image: encodeAndSign(contents[0]?.data?.imageUrl),
         click: encodeAndSign(clickUrl),
         view: encodeAndSign(impressionUrl),
@@ -136,7 +137,7 @@ export async function handler(event) {
         "cache-control": [
           {
             key: "Cache-Control",
-            value: "max-age=86400",
+            value: "no-store",
           },
         ],
         "content-type": [
@@ -202,14 +203,16 @@ export async function handler(event) {
       fallback && (await fetch(`https:${fallback}`, { redirect: "manual" }));
       await fetch(view, { redirect: "manual" });
       return {
-        status: 200,
-        statusDescription: "OK",
+        status: 201,
+        statusDescription: "CREATED",
       };
     } catch (e) {
       console.error(e);
     }
   } else if (request.uri.startsWith("/pimg/")) {
-    const src = decodeAndVerify(decodeURIComponent(request.uri.substring(6)));
+    const src = decodeAndVerify(
+      decodeURIComponent(request.uri.substring("/pimg/"))
+    );
     const { buf, contentType } = await fetchImage(src);
     return {
       status: 200,

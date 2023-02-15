@@ -1,28 +1,31 @@
 import React from "react";
 import "./index.scss";
 
+const GLOBE = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 420 420"
+    stroke="#000"
+    fill="none"
+    role="img"
+  >
+    <title>a globe</title>
+    <path stroke-width="26" d="M209,15a195,195 0 1,0 2,0z" />
+    <path
+      stroke-width="18"
+      d="m210,15v390m195-195H15M59,90a260,260 0 0,0 302,0 m0,240 a260,260 0 0,0-302,0M195,20a250,250 0 0,0 0,382 m30,0 a250,250 0 0,0 0-382"
+    />
+  </svg>
+);
 const STATS = [
   { id: 1, number: "17M", legend: "unique monthly users" },
   { id: 2, number: ">80M", legend: "page views per month" },
   { id: 3, number: "17", legend: "years of trust" },
   {
     id: 4,
-    number: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1em"
-        height="1em"
-        viewBox="0 0 420 420"
-        stroke="#000"
-        fill="none"
-      >
-        <path stroke-width="26" d="M209,15a195,195 0 1,0 2,0z" />
-        <path
-          stroke-width="18"
-          d="m210,15v390m195-195H15M59,90a260,260 0 0,0 302,0 m0,240 a260,260 0 0,0-302,0M195,20a250,250 0 0,0 0,382 m30,0 a250,250 0 0,0 0-382"
-        />
-      </svg>
-    ),
+    number: GLOBE,
     legend: "worldwide distribution",
   },
 ];
