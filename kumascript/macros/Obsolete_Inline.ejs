@@ -4,57 +4,28 @@
 // NOTE: "Obsolete" means that the indicated item NO LONGER FUNCTIONS. If
 //       the item still works, but should no longer be used, it's "deprecated".
 //
-// Parameters:
-//
-//  $0  Version of obsolescence
-//
-// The version should be prepended with "html", "js", "css", or "gecko"
-// to indicate which technology the version number refers to. For backward
-// compatibility, unprefixed versions are assumed to refer to Gecko, but
-// you shouldn't rely on this.
 
 // Throw a MacroDeprecatedError flaw
 // Condition for removal: no more use in translated-content (May 2022: 1824 occurrences)
 // 0 occurrences left in en-US
 mdn.deprecated();
 
-var str = "";
-var type = 0;   // assume we want the text badge
-
-if ($0) {
-  if (/^\d/.test($0)) {
-    str = "gecko" + $0;
-  } else {
-    str = $0
-  }
-} else {
-  type = 1; // switch to the icon if no version specified
-}
-
-// If a version was specified, we need to use the older badge type
-
-if (str.length) {
-    %><%- await template('obsoleteGeneric', ["inline",str]) %><%
-} else {
-  var titleAttrValue = mdn.localString({
-    "en-US": "This is an obsolete API and is no longer guaranteed to work.",
-    "es": "This is an obsolete API and is no longer guaranteed to work.",
-    "fr": "This is an obsolete API and is no longer guaranteed to work.",
-    "ja": "これは廃止された API であり、動作は保証されていません。",
-    "ko": "폐기된 API입니다. API의 동작이 보장 되지 않습니다. ",
-    "pt-BR": "This is an obsolete API and is no longer guaranteed to work.",
-    "ru": "Этот API вышел из употребления и его работа больше не гарантируется.",
-    "zh-CN": "This is an obsolete API and is no longer guaranteed to work.",
-    "zh-TW": "This is an obsolete API and is no longer guaranteed to work."
-
-  });
-  %>
-  <svg class="icon obsolete" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
-      role="img">
-      <title><%=titleAttrValue%></title>
-      <path
-          d="M38.75 78.13V36.88A1.85 1.85 0 0036.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0033.13 80h3.75a1.85 1.85 0 001.87-1.87zm15 0V36.88A1.85 1.85 0 0051.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0048.13 80h3.75a1.85 1.85 0 001.87-1.87zm15 0V36.88A1.85 1.85 0 0066.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0063.13 80h3.75a1.85 1.85 0 001.87-1.87zM36.88 20h26.25l-2.82-6.85a2.35 2.35 0 00-1-.65H40.74a2 2 0 00-1 .65zm54.37 1.88v3.75a1.85 1.85 0 01-1.87 1.87h-5.63v55.55c0 6.44-4.22 12-9.37 12H25.63c-5.16 0-9.38-5.27-9.38-11.72V27.5h-5.62a1.85 1.85 0 01-1.88-1.83v-3.8A1.85 1.85 0 0110.63 20h18.1l4.1-9.78A9.12 9.12 0 0140.63 5h18.75a9.1 9.1 0 017.79 5.22l4.1 9.78h18.11a1.85 1.85 0 011.87 1.87z" />
-  </svg>
-  <%
-}
+var titleAttrValue = mdn.localString({
+  "en-US": "This is an obsolete API and is no longer guaranteed to work.",
+  "es": "This is an obsolete API and is no longer guaranteed to work.",
+  "fr": "This is an obsolete API and is no longer guaranteed to work.",
+  "ja": "これは廃止された API であり、動作は保証されていません。",
+  "ko": "폐기된 API입니다. API의 동작이 보장 되지 않습니다. ",
+  "pt-BR": "This is an obsolete API and is no longer guaranteed to work.",
+  "ru": "Этот API вышел из употребления и его работа больше не гарантируется.",
+  "zh-CN": "This is an obsolete API and is no longer guaranteed to work.",
+  "zh-TW": "This is an obsolete API and is no longer guaranteed to work."
+});
 %>
+
+<svg class="icon obsolete" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+    role="img">
+    <title><%=titleAttrValue%></title>
+    <path
+        d="M38.75 78.13V36.88A1.85 1.85 0 0036.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0033.13 80h3.75a1.85 1.85 0 001.87-1.87zm15 0V36.88A1.85 1.85 0 0051.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0048.13 80h3.75a1.85 1.85 0 001.87-1.87zm15 0V36.88A1.85 1.85 0 0066.88 35h-3.75a1.85 1.85 0 00-1.88 1.88v41.25A1.85 1.85 0 0063.13 80h3.75a1.85 1.85 0 001.87-1.87zM36.88 20h26.25l-2.82-6.85a2.35 2.35 0 00-1-.65H40.74a2 2 0 00-1 .65zm54.37 1.88v3.75a1.85 1.85 0 01-1.87 1.87h-5.63v55.55c0 6.44-4.22 12-9.37 12H25.63c-5.16 0-9.38-5.27-9.38-11.72V27.5h-5.62a1.85 1.85 0 01-1.88-1.83v-3.8A1.85 1.85 0 0110.63 20h18.1l4.1-9.78A9.12 9.12 0 0140.63 5h18.75a9.1 9.1 0 017.79 5.22l4.1 9.78h18.11a1.85 1.85 0 011.87 1.87z" />
+</svg>
