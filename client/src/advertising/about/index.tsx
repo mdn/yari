@@ -19,37 +19,15 @@ export function About() {
         <p>
           <a href="/">MDN</a> has been a valuable resource for web developers
           since 2005, consistently supported and improved by Mozilla and its
-          community.
+          community. With over 17 million unique monthly users, it is widely
+          used and also integrated into other solutions.
         </p>
         <p>
-          With over 17 million unique monthly users, it is widely used and also
-          integrated into other solutions. Running such a large project requires
-          a significant amount of resources, including dedicated writing,
-          engineering, and infrastructure.
+          Starting February 15th and for the next six weeks, we will experiment
+          with partnerships and contextual advertising on MDN in the US, Canada,
+          Australia, New Zealand and selected European countries.
         </p>
-        <p>
-          In 2022, we launched{" "}
-          <a
-            href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own/"
-            target="_blank"
-            rel="noreferrer"
-            className="external"
-          >
-            MDN Plus
-          </a>
-          , a premium offering to provide a personalized and more powerful
-          experience while continuing to invest in our always free and open
-          webdocs. MDN Plus has shown promising results so far, reflecting the
-          trust developers have in both the product and the brand.
-        </p>
-        <p>
-          However, additional investment is needed to sustain the running of the
-          project. In response, we have decided to experiment with partnerships
-          and contextual advertising on MDN. Between February 15th and March
-          30th, we will be running a 6-week trial in the US, Canada and selected
-          European countries.
-        </p>
-        <h2>Focusing on the right answer</h2>
+        <h2>Privacy first</h2>
         <p>
           Our commitment to user privacy and data protection remains a top
           priority, and we stand by{" "}
@@ -60,13 +38,13 @@ export function About() {
           >
             Mozilla's Ad targeting guidelines
           </a>
-          . For this trial, MDN's ads will be strictly context-based and will
-          not include tracking pixels or personal data sharing.
+          . MDN's ads will be strictly context-based and will not include
+          tracking pixels or personal data sharing.
         </p>
         <p>
-          During the experiment, we will work with three carefully chosen and
-          vetted advertisers who align with our vision for web development. To
-          minimize disruption, we will display only one static ad per page.{" "}
+          For this experiment, we will work with carefully chosen and vetted
+          advertisers who align with our vision for web development and we will
+          display at most one static ad per page.{" "}
           <a href="/en-US/plus">MDN Plus subscribers</a> will have the option to{" "}
           {isPlusSubscriber(user) ? (
             <a href="/en-US/plus/settings">turn off</a>
@@ -81,11 +59,13 @@ export function About() {
           advertisers insights into their campaign performance, while also
           helping publishers understand their role in supporting advertisers.
           Despite its significance, current attribution methods have many
-          privacy concerns. In line with Mozilla's vision of protecting user
-          privacy and personal data, over the past year, Mozilla has been a part
-          of a working group developing a new proposal called Interoperable
-          Private Attribution (IPA) to enable conversion measurement
-          (attribution) for advertising while maintaining strong privacy
+          privacy concerns.
+        </p>
+        <p>
+          In line with Mozilla's vision of protecting user privacy and personal
+          data, over the past year, Mozilla has been a part of a working group
+          developing a new proposal called Interoperable Private Attribution
+          (IPA) to enable attribution while maintaining strong privacy
           protection. IPA provides advertisers with the ability to measure the
           effectiveness of their campaigns while ensuring user privacy. You can
           find additional information on the topic in{" "}
@@ -97,9 +77,14 @@ export function About() {
           >
             this blogpost
           </a>
-          . Mozilla's and MDN's goal is to advance the Interoperable Private
-          Attribution work in the months to come and find the best solution to
-          provide relevant ads while also fully respecting our users' privacy.
+          . Mozilla’s and MDN’s goal is to advance the Interoperable Private
+          Attribution work in the months to come.
+        </p>
+        <p>
+          We are working with advertising partners who are supportive of our
+          privacy goals. For now, that means working without attribution. Our
+          eventual goal is to enable attribution without tracking, which will
+          improve the quality and value of the ads we show.
         </p>
         <p>
           We believe this change will make MDN even more resilient and capable
