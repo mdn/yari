@@ -235,7 +235,6 @@ jobs:
           KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_NETWORK_ID }}
           SIGN_SECRET: ${{ secrets.DEPLOYER_PROD_SIGN_SECRET }}
 
-
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
