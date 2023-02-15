@@ -5,16 +5,14 @@ import "./index.scss";
 
 export function About() {
   React.useEffect(() => {
-    document.title = "Finding the Right Mix | MDN";
+    document.title = "Experimenting with advertising on MDN | MDN";
   }, []);
   const user = useUserData();
 
   return (
     <div className="ads-about">
       <div className="about-container">
-        <h1 className="mify">
-          Finding the Right Mix: <span>Balancing Relevance and Respect</span>
-        </h1>
+        <h1 className="mify">Experimenting with advertising on MDN</h1>
         <h2>About</h2>
         <p>
           <a href="/">MDN</a> has been a valuable resource for web developers
@@ -26,6 +24,33 @@ export function About() {
           Starting February 15th and for the next six weeks, we will experiment
           with partnerships and contextual advertising on MDN in the US, Canada,
           Australia, New Zealand and selected European countries.
+        </p>
+        <p>
+          We believe this addition will make MDN even more resilient and capable
+          of offering free and accessible resources to developers around the
+          world.
+        </p>
+        <p>
+          We have a newly created, publicly available roadmap,{" "}
+          <a
+            href="https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/"
+            target="_blank"
+            rel="noreferrer"
+            className="external"
+          >
+            developed in collaboration
+          </a>{" "}
+          with our partners from W3C, Microsoft, Google, and Open Web Docs. You
+          are welcome to check it out{" "}
+          <a
+            href="https://github.com/orgs/mdn/projects/26/views/7"
+            target="_blank"
+            rel="noreferrer"
+            className="external"
+          >
+            here
+          </a>
+          .
         </p>
         <h2>Privacy first</h2>
         <p>
@@ -85,30 +110,6 @@ export function About() {
           privacy goals. For now, that means working without attribution. Our
           eventual goal is to enable attribution without tracking, which will
           improve the quality and value of the ads we show.
-        </p>
-        <p>
-          We believe this change will make MDN even more resilient and capable
-          of offering free and accessible resources to developers around the
-          world. We have a newly created, publicly available roadmap,{" "}
-          <a
-            href="https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/"
-            target="_blank"
-            rel="noreferrer"
-            className="external"
-          >
-            developed in collaboration
-          </a>{" "}
-          with our partners from W3C, Microsoft, Google, and Open Web Docs. You
-          are welcome to check it out{" "}
-          <a
-            href="https://github.com/orgs/mdn/projects/26/views/7"
-            target="_blank"
-            rel="noreferrer"
-            className="external"
-          >
-            here
-          </a>
-          .
         </p>
         <h2>We want to hear from you</h2>
         <p>

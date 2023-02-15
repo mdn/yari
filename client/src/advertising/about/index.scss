@@ -9,21 +9,12 @@
     padding: 0 1rem 2rem;
 
     h1 {
-      display: grid;
-      grid-template-columns: 4rem max-content 2rem;
-      margin-top: 3rem;
+      margin-left: 1.143em;
+      margin-top: 0.857em;
 
       &::before {
-        transform: translate(-0.2em, 0);
-      }
-
-      &::after {
-        transform: translateY(-1rem);
-      }
-
-      span {
-        font-size: 2.5rem;
-        grid-column: 2/3;
+        margin-left: -1.143em;
+        transform: translate(-0.2em, 0.06em);
       }
     }
 

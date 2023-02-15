@@ -140,7 +140,10 @@ export async function buildSPAs(options) {
         },
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
-        { prefix: "advertising", pageTitle: "Finding the Right Mix" },
+        {
+          prefix: "advertising",
+          pageTitle: "Experimenting with advertising on MDN",
+        },
         { prefix: "advertising/with_us", pageTitle: "Advertise with us" },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
@@ -358,6 +361,29 @@ async function fetchLatestNews() {
   const $ = cheerio.load(xml, { xmlMode: true });
 
   const items: NewsItem[] = [];
+
+  items.push(
+    {
+      title: "Experimenting with advertising on MDN",
+      url: "/en-US/advertising",
+      author: "Mozilla",
+      published_at: new Date("2023-02-15 15:00Z").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: "/",
+      },
+    },
+    {
+      title: "A shared and open roadmap for MDN",
+      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
+      author: "Mozilla",
+      published_at: new Date("2023-02-08").toString(),
+      source: {
+        name: "blog.mozilla.org",
+        url: "https://blog.mozilla.org/",
+      },
+    }
+  );
 
   $("item").each((i, item) => {
     const $item = $(item);
