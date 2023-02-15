@@ -22,6 +22,7 @@ export enum SubscriptionType {
 export type UserPlusSettings = {
   collectionLastModified: Date | null;
   mdnplusNewsletter: boolean | null;
+  noAds: boolean | null;
 };
 
 export class OfflineSettingsData {
@@ -173,6 +174,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
             mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
+            noAds: data?.settings?.no_ads || null,
           }
         : null;
 

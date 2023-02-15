@@ -26,7 +26,7 @@ test.describe("Bookmarking pages", () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
 
     // Sign in
-    await page.click("text='Already a subscriber?'");
+    await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
     await page.goto(testURL("/en-US/docs/Web/Foo"));
@@ -59,7 +59,7 @@ test.describe("Bookmarking pages", () => {
     await page.waitForSelector("text=You have not signed in");
 
     // Sign in
-    await page.click("text='Already a subscriber?'");
+    await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
     await page.goto(testURL("/en-US/plus/collections"));
