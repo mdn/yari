@@ -8,6 +8,7 @@ import {
   SIGN_SECRET,
   CARBON_ZONE_KEY,
   FALLBACK_ENABLED,
+  // eslint-disable-next-line n/no-missing-import
 } from "./env.js";
 import cc2ip from "./cc2ip.js";
 
