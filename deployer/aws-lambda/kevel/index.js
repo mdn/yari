@@ -211,7 +211,7 @@ export async function handler(event) {
     }
   } else if (request.uri.startsWith("/pimg/")) {
     const src = decodeAndVerify(
-      decodeURIComponent(request.uri.substring("/pimg/"))
+      decodeURIComponent(request.uri.substring("/pimg/".length))
     );
     const { buf, contentType } = await fetchImage(src);
     return {
