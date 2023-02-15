@@ -9,12 +9,11 @@
     padding: 0 1rem 2rem;
 
     h1 {
-      margin-left: 1.143em;
-      margin-top: 0.857em;
+      margin-left: 1.5em;
+      margin-top: 1em;
 
       &::before {
-        margin-left: -1.143em;
-        transform: translate(-0.2em, 0.06em);
+        margin-left: -1.25em;
       }
     }
 
