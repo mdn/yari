@@ -20,8 +20,8 @@ const PREFERRED_LOCALE = {
 // This is a map of locale => language tag.
 // See https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
 const LANGUAGE_TAGS = Object.freeze({
-  "zh-CN": "zh-Hans-CN",
-  "zh-TW": "zh-Hant-TW",
+  "zh-CN": "zh-Hans",
+  "zh-TW": "zh-Hant",
 });
 
 function htmlEscape(s: string) {
