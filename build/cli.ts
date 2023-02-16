@@ -6,20 +6,32 @@ import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-import { program } from "@caporal/core";
-import { prompt } from "inquirer";
+import caporal from "@caporal/core";
+import inquirer from "inquirer";
 
-import { Document, slugToFolder, translationsOf } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { VALID_LOCALES } from "../libs/constants";
-import { renderHTML } from "../ssr/dist/main";
-import options from "./build-options";
-import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { DocMetadata, Flaws } from "../libs/types";
-import SearchIndex from "./search-index";
-import { BUILD_OUT_ROOT } from "../libs/env";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps";
-import { humanFileSize } from "./utils";
+import { Document, slugToFolder, translationsOf } from "../content/index.js";
+import {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  BUILD_OUT_ROOT,
+} from "../libs/env/index.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
+import options from "./build-options.js";
+import {
+  buildDocument,
+  BuiltDocument,
+  renderContributorsTxt,
+} from "./index.js";
+import { DocMetadata, Flaws } from "../libs/types/document.js";
+import SearchIndex from "./search-index.js";
+import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { humanFileSize } from "./utils.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 

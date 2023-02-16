@@ -1,4 +1,3 @@
-import { Doc } from "../libs/types";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -7,29 +6,34 @@ import {
   MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
-} from "../kumascript/src/errors";
+} from "../kumascript/src/errors.js";
 
-import { Document, Image, execGit, slugToFolder } from "../content";
-import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
-import * as kumascript from "../kumascript";
+import { Doc } from "../libs/types/document.js";
+import { Document, Image, execGit, slugToFolder } from "../content/index.js";
+import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
+import * as kumascript from "../kumascript/index.js";
 
-import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants";
-import { extractSections } from "./extract-sections";
-import { extractSidebar } from "./extract-sidebar";
-import { extractSummary } from "./extract-summary";
-export { default as SearchIndex } from "./search-index";
-import { addBreadcrumbData } from "./document-utils";
-import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
-import { checkImageReferences, checkImageWidths } from "./check-images";
-import { getPageTitle } from "./page-title";
-import { syntaxHighlight } from "./syntax-highlight";
-import { formatNotecards } from "./format-notecards";
-import buildOptions from "./build-options";
-export { gather as gatherGitHistory } from "./git-history";
-export { buildSPAs } from "./spas";
-import LANGUAGES_RAW from "../libs/languages";
-import { safeDecodeURIComponent } from "../kumascript/src/api/util";
-import { wrapTables } from "./wrap-tables";
+import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants/index.js";
+import { extractSections } from "./extract-sections.js";
+import { extractSidebar } from "./extract-sidebar.js";
+import { extractSummary } from "./extract-summary.js";
+export { default as SearchIndex } from "./search-index.js";
+import { addBreadcrumbData } from "./document-utils.js";
+import {
+  fixFixableFlaws,
+  injectFlaws,
+  injectSectionFlaws,
+} from "./flaws/index.js";
+import { checkImageReferences, checkImageWidths } from "./check-images.js";
+import { getPageTitle } from "./page-title.js";
+import { syntaxHighlight } from "./syntax-highlight.js";
+import { formatNotecards } from "./format-notecards.js";
+import buildOptions from "./build-options.js";
+export { gather as gatherGitHistory } from "./git-history.js";
+export { buildSPAs } from "./spas.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
+import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
+import { wrapTables } from "./wrap-tables.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {

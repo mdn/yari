@@ -231,10 +231,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.6.62":
-  version "2.6.62"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.62.tgz#f4a6adad7099c7d92b0577e7bcefaacca42679fc"
-  integrity sha512-wpMgpdtGuWLAmJIcbEv2L5kAqV8JP8ICrLbmxGNERNerVkkVe4+pTzf8TkhU8HxnYfsXqWTBI1wzD409LhdVYw==
+"@zip.js/zip.js@2.6.65":
+  version "2.6.65"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.65.tgz#24f44c621282307c3d5c09fe188a917435eb17da"
+  integrity sha512-iFIjI0GiCQtOQBcQgy4PCN4BRfCqbRuh5WMYpkywJyqx6objIMl82StCP6asczdOAyoAVwP4gs2aWNEi8RqcZw==
 
 acorn-import-assertions@^1.7.6:
   version "1.8.0"
@@ -354,10 +354,10 @@ cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-dexie@*, dexie@3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.2.tgz#fa6f2a3c0d6ed0766f8d97a03720056f88fe0e01"
-  integrity sha512-q5dC3HPmir2DERlX+toCBbHQXW5MsyrFqPFcovkH9N2S/UW/H3H5AWAB6iEOExeraAu+j+zRDG+zg/D7YhH0qg==
+dexie@*, dexie@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.3.tgz#f35c91ca797599df8e771b998e9ae9669c877f8c"
+  integrity sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==
 
 electron-to-chromium@^1.4.76:
   version "1.4.80"
@@ -819,10 +819,10 @@ ts-loader@^9.4.2:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-typescript@^4.9.4:
-  version "4.9.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
-  integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
+typescript@^4.9.5:
+  version "4.9.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
+  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
 
 uri-js@^4.2.2:
   version "4.4.1"

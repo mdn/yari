@@ -206,7 +206,11 @@ const CellText = React.memo(
     }
 
     return (
-      <div className="bcd-cell-text-wrapper">
+      <div
+        className={
+          timeline ? "bcd-timeline-cell-text-wrapper" : "bcd-cell-text-wrapper"
+        }
+      >
         <div className="bcd-cell-icons">
           <span className="icon-wrap">
             <abbr
@@ -225,10 +229,15 @@ const CellText = React.memo(
           <span
             className="bc-version-label"
             title={
-              browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+              browserReleaseDate && !timeline
+                ? `Released ${browserReleaseDate}`
+                : undefined
             }
           >
             {label}
+            {browserReleaseDate && timeline
+              ? ` (Released ${browserReleaseDate})`
+              : ""}
           </span>
         </div>
         <CellIcons support={support} />

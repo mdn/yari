@@ -19,7 +19,7 @@ attachments generated from that build.
 To run these tests, first run:
 
 ```sh
-export ENV_FILE=testing/.env
+export ENV_FILE=.env.testing
 yarn build:prepare
 yarn build
 yarn start:static-server
@@ -49,7 +49,7 @@ Headless tests are all about using a headless browser to browse the built HTML
 files with `playwright`. It's based on the same steps as above, so first:
 
 ```sh
-export ENV_FILE=testing/.env
+export ENV_FILE=.env.testing
 yarn test:prepare
 ```
 

@@ -1,28 +1,29 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
+import got from "got";
 
-import { m2h } from "../markdown";
+import { m2h } from "../markdown/index.js";
 
-import { VALID_LOCALES, MDN_PLUS_TITLE } from "../libs/constants";
+import { VALID_LOCALES, MDN_PLUS_TITLE } from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
-} from "../libs/env";
-import { isValidLocale } from "../libs/locale-utils";
-import { DocFrontmatter } from "../libs/types/document";
-import { renderHTML } from "../ssr/dist/main";
-import got from "got";
-import { splitSections } from "./utils";
-import cheerio from "cheerio";
-import { findByURL } from "../content/document";
-import { buildDocument } from ".";
-import { NewsItem } from "../client/src/homepage/latest-news";
-
-const dirname = __dirname;
+} from "../libs/env/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
+import { splitSections } from "./utils.js";
+import { findByURL } from "../content/document.js";
+import { buildDocument } from "./index.js";
 
 const FEATURED_ARTICLES = [
   "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
@@ -128,21 +129,6 @@ export async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/notifications",
-          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/notifications/starred",
-          pageTitle: `Starred | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/notifications/watched",
-          pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
           prefix: "plus/updates",
           pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
@@ -154,6 +140,11 @@ export async function buildSPAs(options) {
         },
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
+        {
+          prefix: "advertising",
+          pageTitle: "Experimenting with advertising on MDN",
+        },
+        { prefix: "advertising/with_us", pageTitle: "Advertise with us" },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
@@ -237,7 +228,7 @@ export async function buildSPAs(options) {
   }
 
   await buildStaticPages(
-    path.join(dirname, "../copy/plus/"),
+    fileURLToPath(new URL("../copy/plus/", import.meta.url)),
     "plus/docs",
     "MDN Plus"
   );
@@ -370,6 +361,29 @@ async function fetchLatestNews() {
   const $ = cheerio.load(xml, { xmlMode: true });
 
   const items: NewsItem[] = [];
+
+  items.push(
+    {
+      title: "Experimenting with advertising on MDN",
+      url: "/en-US/advertising",
+      author: "Mozilla",
+      published_at: new Date("2023-02-15 15:00Z").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: "/",
+      },
+    },
+    {
+      title: "A shared and open roadmap for MDN",
+      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
+      author: "Mozilla",
+      published_at: new Date("2023-02-08").toString(),
+      source: {
+        name: "blog.mozilla.org",
+        url: "https://blog.mozilla.org/",
+      },
+    }
+  );
 
   $("item").each((i, item) => {
     const $item = $(item);

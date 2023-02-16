@@ -1,6 +1,6 @@
-import * as Document from "./document";
-import { VALID_LOCALES } from "../libs/constants";
-import LANGUAGES_RAW from "../libs/languages";
+import * as Document from "./document.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {

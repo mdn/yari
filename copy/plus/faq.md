@@ -8,8 +8,7 @@ title: FAQ
 
 MDN Plus is a premium subscription service launched in March 2022 by Mozilla.
 The service allows users to customize their MDN Web Docs experience through
-premium features such as
-[Notifications](/en-US/plus/docs/features/notifications),
+premium features such as [Updates](/en-US/plus/docs/features/updates),
 [Collections](/en-US/plus/docs/features/collections) and
 [MDN Offline](/en-US/plus/docs/features/offline).
 
@@ -56,7 +55,7 @@ as the overall user experience on the website.
 
 MDN content is made available under a CC BY-SA 2.5 license. That license doesn't
 preclude Mozilla (or other users of MDN content) from having a paid product. MDN
-Plus adds premium features like notifications and collections on top of the free
+Plus adds premium features like updates and collections on top of the free
 content. Regular users can still access and reuse MDN content under the Creative
 Commons license.
 

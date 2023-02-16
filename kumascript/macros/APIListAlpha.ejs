@@ -64,9 +64,10 @@ for (var i = 0; i < numLetters; i++) {
 
     if (p < numPages) {
         do {
-            var tags = pages[p].tags;
-            var url = pages[p].url;
-            var title = pages[p].title;
+            const aPage = pages[p];
+            var tags = aPage.tags;
+            var url = aPage.url;
+            var title = aPage.title;
 
             // Build the formatted title string; skip this page if it's not
             // an interface.
@@ -77,27 +78,12 @@ for (var i = 0; i < numLetters; i++) {
                 continue;
             }
 
-            var badge = "";
-
-            // add badges if needed
-
-            if (containsTag(tags, "Non-standard") || containsTag(tags, "Non standard")) {
-                badge = " " + await template("NonStandardBadge", ["1"]);
-            }
-
-            if (containsTag(tags, "Obsolete")) {
-                badge += " " + await template("ObsoleteBadge", [1]);
-            } else if (containsTag(tags, "Deprecated")) {
-                badge += " " + await template("DeprecatedBadge", [1]);
-            }
-
-            if (containsTag(tags, "Experimental")) {
-                badge += " " + await template("ExperimentalBadge", ["1"]);
-            }
+            let pageBadges = (await page.badges(aPage)).join(" ");
 
             // Wrap the badges in another span
 
-            if (badge.length) badge = '<span class="indexListBadges">' + badge + "</span>";
+            if (pageBadges.length)
+                pageBadges = `<span class="indexListBadges"> ${pageBadges}</span>`;
 
             if (title[0].toUpperCase() == curLetter) {
                 if (!containsTag(tags, "junk")) {
@@ -105,7 +91,7 @@ for (var i = 0; i < numLetters; i++) {
                         html += "<h3>" + curLetter + "</h3><ul>";
                         insertedHeading = true;
                     }
-                    html += '\n<li><span class="indexListRow"><span class="indexListTerm"><a href="' + url.replace("en-US", locale) + '">' + builtTitle + '</a></span>' + badge + '</span></li>';
+                    html += `\n<li><span class="indexListRow"><span class="indexListTerm"><a href="${url.replace("en-US", locale)}">${builtTitle}</a></span>${pageBadges}</span></li>`;
                 }
                 p++;
             } else {

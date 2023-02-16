@@ -197,7 +197,6 @@ class UploadFileTask(UploadTask):
 
     @property
     def cache_control(self):
-
         if self.file_path.name == "service-worker.js":
             return NO_CACHE_VALUE
 

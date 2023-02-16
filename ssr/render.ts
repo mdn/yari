@@ -1,11 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { renderToString } from "react-dom/server";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -14,7 +16,15 @@ const PREFERRED_LOCALE = {
   zh: "zh-CN",
 };
 
-function htmlEscape(s) {
+// We should use the language tag (e.g. "zh-Hans") instead of the locale.
+// This is a map of locale => language tag.
+// See https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+const LANGUAGE_TAGS = Object.freeze({
+  "zh-CN": "zh-Hans",
+  "zh-TW": "zh-Hant",
+});
+
+function htmlEscape(s: string) {
   if (!s) {
     return s;
   }
@@ -26,7 +36,7 @@ function htmlEscape(s) {
     .replace(/'/gim, "&apos;");
 }
 
-function getHrefLang(locale, otherLocales) {
+function getHrefLang(locale: string, allLocales: Array<string>) {
   // In most cases, just return the language code, removing the country
   // code if present (so, for example, 'en-US' becomes 'en').
   const hreflang = locale.split("-")[0];
@@ -35,7 +45,7 @@ function getHrefLang(locale, otherLocales) {
   // a preferred one. For example, if the document is available in 'zh-CN' and
   // in 'zh-TW', we need to output something like this:
   //   <link rel=alternate hreflang=zh href=...>
-  //   <link rel=alternate hreflang=zh-TW href=...>
+  //   <link rel=alternate hreflang=zh-Hant href=...>
   //
   // But other bother if both ambigious locale-to-hreflang are present.
   const preferred = PREFERRED_LOCALE[hreflang];
@@ -43,9 +53,9 @@ function getHrefLang(locale, otherLocales) {
     // e.g. `preferred===zh-CN` if hreflang was `zh`
     if (locale !== preferred) {
       // e.g. `locale===zh-TW`
-      if (otherLocales.includes(preferred)) {
+      if (allLocales.includes(preferred)) {
         // If the more preferred one was there, use the locale + region format.
-        return locale;
+        return LANGUAGE_TAGS[locale] ?? locale;
       }
     }
   }
@@ -63,6 +73,7 @@ const lazy = (creator) => {
   };
 };
 
+// Path strings are preferred over URLs here to mitigate Webpack resolution
 const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
@@ -183,7 +194,6 @@ export default function render(
     hydrationData.doc = doc;
 
     if (doc.other_translations) {
-      const allOtherLocales = doc.other_translations.map((t) => t.locale);
       // Note, we also always include "self" as a locale. That's why we concat
       // this doc's locale plus doc.other_translations.
       const thisLocale = {
@@ -191,20 +201,24 @@ export default function render(
         title: doc.title,
         url: doc.mdn_url,
       };
-      for (const translation of [...doc.other_translations, thisLocale]) {
+
+      const allTranslations = [...doc.other_translations, thisLocale];
+      const allLocales = allTranslations.map((t) => t.locale);
+
+      for (const translation of allTranslations) {
         const translationURL = doc.mdn_url.replace(
           `/${doc.locale}/`,
           () => `/${translation.locale}/`
         );
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
-        // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
+        // See https://developers.google.com/search/docs/specialty/international/localized-versions#language-codes
         translations.push(
           `<link rel="alternate" title="${htmlEscape(
             translation.title
           )}" href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
             translation.locale,
-            allOtherLocales
+            allLocales
           )}"/>`
         );
       }

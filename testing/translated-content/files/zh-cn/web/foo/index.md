@@ -4,7 +4,5 @@ slug: Web/Foo
 translation_of: Web/Foo
 ---
 
-This is a test page for copying all the images from the default locale to the
-translated locale.
-
-We should not reference the images in the default locale.
+This is a test page for hreflang tag testing. When zh-TW locale is also
+available, this page should not have duplicate hreflang tags.

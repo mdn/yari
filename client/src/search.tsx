@@ -19,8 +19,10 @@ type Item = {
   title: string;
 };
 
+type FlexItem = [index: number, title: string, slugTail: string];
+
 type SearchIndex = {
-  flex: any;
+  flex: FlexItem[];
   items: null | Item[];
 };
 
@@ -32,6 +34,14 @@ type ResultItem = {
 
 function quicksearchPing(input) {
   return `quick-search: ${input}`;
+}
+
+function splitQuery(term: string): string[] {
+  return term
+    .trim()
+    .toLowerCase()
+    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
+    .split(/[ ,]+/);
 }
 
 function useSearchIndex(): readonly [
@@ -63,7 +73,13 @@ function useSearchIndex(): readonly [
       return;
     }
     const gather = async () => {
-      const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
+      const flex = data.map(
+        ({ title, url }, i): FlexItem => [
+          i,
+          title.toLowerCase(),
+          (url.split("/").pop() as string).toLowerCase(),
+        ]
+      );
 
       setSearchIndex({
         flex,
@@ -81,7 +97,7 @@ function useSearchIndex(): readonly [
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
   // Split on highlight term and include term into parts, ignore case.
-  const words = q.trim().toLowerCase().split(/[ ,]+/);
+  const words = splitQuery(q);
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const regex = regexWords.map((word) => `(${word})`).join("|");
@@ -205,14 +221,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    const q: string[] = inputValue
-      .toLowerCase()
-      .split(" ")
-      .map((s) => s.trim());
-    const indexResults: number[] = searchIndex.flex
+    const inputValueLC = inputValue.toLowerCase().trim();
+    const q = splitQuery(inputValue);
+    const indexResults = searchIndex.flex
       .filter(([_, title]) => q.every((q) => title.includes(q)))
-      .map(([i]) => i)
+      .map(([index, title, slugTail]) => {
+        const exact = Number([title, slugTail].includes(inputValueLC));
+        return [exact, index];
+      })
+      .sort(([aExact], [bExact]) => bExact - aExact) // Boost exact matches.
+      .map(([_, i]) => i)
       .slice(0, limit);
+
     return indexResults.map(
       (index: number) => (searchIndex.items || [])[index] as ResultItem
     );

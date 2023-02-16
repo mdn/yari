@@ -1,4 +1,4 @@
-import { Document } from "../content";
+import { Document } from "../content/index.js";
 
 const TRANSFORM_STRINGS = new Map(
   Object.entries({
@@ -8,7 +8,8 @@ const TRANSFORM_STRINGS = new Map(
     "CSS: Cascading Style Sheets": "CSS",
     "Graphics on the Web": "Graphics",
     "HTML elements reference": "Elements",
-    "JavaScript reference": "JavaScript",
+    "JavaScript reference": "Reference",
+    "JavaScript Guide": "Guide",
     "Structuring the web with HTML": "HTML",
     "Learn to style HTML using CSS": "CSS",
     "Web forms — Working with user data": "Forms",

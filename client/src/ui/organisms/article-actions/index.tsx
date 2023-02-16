@@ -1,5 +1,4 @@
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenu } from "./notifications-watch-menu";
 import { LanguageMenu } from "./language-menu";
 
 import { useIsServer } from "../../../hooks";
@@ -68,11 +67,6 @@ export const ArticleActions = ({
           </Button>
           <ul className="article-actions-entries">
             <>
-              {!isServer && isAuthenticated && (
-                <li className="article-actions-entry">
-                  <NotificationsWatchMenu doc={doc} />
-                </li>
-              )}
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
                   <BookmarkMenu
