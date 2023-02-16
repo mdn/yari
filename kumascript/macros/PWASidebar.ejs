@@ -1,0 +1,117 @@
+<%
+
+const sections = [
+  {
+    name: "Guides",
+    contents: [
+      "Guides/What_is_a_PWA",
+      "Guides/Benefits_of_PWAs",
+      {
+        name: "Guides/Main_features_of_PWAs",
+        contents: [
+          "Guides/Main_features_of_PWAs/Installability",
+          "Guides/Main_features_of_PWAs/Offline_operation",
+        ],
+      },
+    ],
+  },
+  {
+    name: "Tutorials",
+    contents: [
+      {
+        name: "Tutorials/Your_first_PWA",
+        contents: [
+          "Tutorials/Your_first_PWA/First_step",
+          "Tutorials/Your_first_PWA/Next_step",
+        ],
+      },
+      {
+        name: "Tutorials/Your_second_PWA",
+        contents: [
+          "Tutorials/Your_second_PWA/First_step",
+          "Tutorials/Your_second_PWA/Next_step",
+        ],
+      },
+    ],
+  },
+  {
+    name: "How-to",
+    contents: [
+      "How-to/Handle_app_updates",
+      "How-to/Implement_a_custom_install_flow",
+    ],
+  },
+  {
+    name: "Reference",
+    contents: [],
+  },
+];
+
+const sidebarURL = `/docs/Web/Progressive_Web_Apps/`;
+const baseURL = `/${env.locale}${sidebarURL}`;
+
+async function getTitle(pageSlug) {
+  let page = await wiki.getPage(`${baseURL}${pageSlug}`);
+  if (!page.title) {
+    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
+  }
+  return page.title;
+}
+
+async function renderSubsection(subsection) {
+  let output = `<li><details><summary>${await getTitle(
+    subsection.name
+  )}</summary><ol>`;
+
+  for (const item of subsection.contents) {
+    output += await renderItem(item);
+  }
+  output += "</ol></details></li>";
+
+  return output;
+}
+
+async function renderItem(item) {
+  let output = "";
+  if (typeof item === "string") {
+    output += `<li><a href="${baseURL}${item}">${await getTitle(
+      item
+    )}</a></li>`;
+  } else {
+    output += `<li><ol>${await renderSubsection(item)}</ol></li>`;
+  }
+  return output;
+}
+
+async function renderSection(section) {
+  let output = `<li><a href="${baseURL}${
+    section.name
+  }"><strong>${await getTitle(section.name)}</strong></a></li>`;
+
+  for (const item of section.contents) {
+    output += await renderItem(item);
+  }
+
+  return output;
+}
+
+async function renderSidebar() {
+  let output = '<section id="Quick_links"><ol>';
+
+  output += `<li><a href="${baseURL}"><strong>${await getTitle(
+    ""
+  )}</strong></a></li>`;
+
+  for (const section of sections) {
+    output += await renderSection(section);
+  }
+  output += "</ol></section>";
+
+  return output;
+}
+
+const output = await renderSidebar();
+
+%>
+
+<%-output%>
