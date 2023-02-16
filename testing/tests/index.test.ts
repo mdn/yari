@@ -130,7 +130,7 @@ test("content built foo page", () => {
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  expect($('link[rel="alternate"][hreflang="zh-Hant-TW"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
@@ -180,7 +180,7 @@ test("content built French foo page", () => {
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  expect($('link[rel="alternate"][hreflang="zh-Hant-TW"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: Une page de test | MDN"
@@ -236,7 +236,7 @@ test("content built zh-CN page for hreflang tag testing", () => {
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  expect($('link[rel="alternate"][hreflang="zh-Hant-TW"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("zh-CN");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 测试网页 | MDN"
