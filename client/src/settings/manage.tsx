@@ -43,8 +43,8 @@ export function Manage() {
                       setSaving(true);
                       const checked = Boolean(e.target.checked);
                       const source = checked
-                        ? TOGGLE_PLUS_ADS_FREE_DISABLED
-                        : TOGGLE_PLUS_ADS_FREE_ENABLED;
+                        ? TOGGLE_PLUS_ADS_FREE_ENABLED
+                        : TOGGLE_PLUS_ADS_FREE_DISABLED;
                       gleanClick(source);
                       await toggleNoAds(checked);
                       if (user?.settings) {
