@@ -2095,10 +2095,10 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.2.tgz#ed4e0ad92306a704f9fb132a0cfcf77486dbe2bc"
   integrity sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==
 
-"@types/async@^3.2.17":
-  version "3.2.17"
-  resolved "https://registry.yarnpkg.com/@types/async/-/async-3.2.17.tgz#9b7855120bd77d5f2fcba656b8cb30e16ff4baac"
-  integrity sha512-H5duW9q5mLXTCneXi8qRPa7hgF4y8pclK+mxnUkarBTKitV0JMOl0klHTf28fQW5M9pRCdBR7h50I4x3ouzD4Q==
+"@types/async@^3.2.18":
+  version "3.2.18"
+  resolved "https://registry.yarnpkg.com/@types/async/-/async-3.2.18.tgz#3d93dde6eab654f7bc23e549d9af5d3fa4a5bdc5"
+  integrity sha512-/IsuXp3B9R//uRLi40VlIYoMp7OzhkunPe2fDu7jGfQXI9y3CDCx6FC4juRLSqrpmLst3vgsiK536AAGJFl4Ww==
 
 "@types/babel__core@^7.1.14":
   version "7.1.19"
