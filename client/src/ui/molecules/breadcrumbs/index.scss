@@ -4,6 +4,8 @@
   align-items: center;
   display: flex;
   margin-right: auto;
+  padding-top: 0.5rem;
+  padding-bottom: 0.25rem;
 
   ol {
     line-height: 1.2;
@@ -11,6 +13,7 @@
 
   li {
     display: none;
+    padding-bottom: 0.25rem;
     hyphens: auto;
 
     // only show first and last on mobile
