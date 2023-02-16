@@ -265,7 +265,7 @@ test("content built zh-TW page with en-US fallback image", () => {
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  expect($('link[rel="alternate"][hreflang="zh-Hant-TW"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
