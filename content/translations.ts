@@ -7,7 +7,13 @@ const LANGUAGES = new Map(
   })
 );
 
-const TRANSLATIONS_OF = new Map();
+type Translation = {
+  title: string;
+  locale: string;
+  native: string;
+};
+
+const TRANSLATIONS_OF = new Map<string, Array<Translation>>();
 
 function gatherTranslations() {
   const iter = Document.findAll().iterDocs();
