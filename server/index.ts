@@ -51,7 +51,7 @@ async function buildDocumentFromURL(url) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
     // the phase that happens when you do a regular `yarn build`.
-    document.translationsOf = translationsOf({
+    document.translations = translationsOf({
       slug: document.metadata.slug,
       locale: document.metadata.locale,
     });
