@@ -52,26 +52,3 @@ export function translationsOf({ slug, locale: currentLocale }) {
   }
   return translations;
 }
-
-export function findDocumentTranslations(document) {
-  const translations = [];
-
-  for (const locale of VALID_LOCALES.values()) {
-    if (document.metadata.locale === locale) {
-      continue;
-    }
-    const translatedDocumentURL = document.url.replace(
-      `/${document.metadata.locale}/`,
-      `/${locale}/`
-    );
-    const translatedDocument = Document.findByURL(translatedDocumentURL);
-    if (translatedDocument) {
-      translations.push({
-        locale,
-        title: translatedDocument.metadata.title,
-        native: LANGUAGES.get(locale.toLowerCase()).native,
-      });
-    }
-  }
-  return translations;
-}
