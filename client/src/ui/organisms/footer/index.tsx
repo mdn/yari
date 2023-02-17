@@ -70,6 +70,9 @@ export function Footer() {
                 Careers
               </a>
             </li>
+            <li className="footer-nav-item">
+              <a href={`/en-US/advertising/with_us`}>Advertise with us</a>
+            </li>
           </ul>
         </div>
 
