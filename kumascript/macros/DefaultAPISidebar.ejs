@@ -49,10 +49,9 @@ function buildSublist(pages, title) {
     var url = aPage.url.replace('en-US', locale);
     var title = htmlEscape(aPage.title);
 
-    if (locale != 'en-US' && aPage.translations) {
+    if (locale !== 'en-US') {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
-                url = translation.url;
                 title = htmlEscape(translation.title);
             }
         });

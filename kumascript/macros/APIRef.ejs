@@ -162,10 +162,9 @@ async function buildSublist(pages, title) {
     var title = titleSplit[titleSplit.length - 1];       // "WebGLRenderingContext.activeTexture()" and "activeTexture()" should both become "activeTexture()"
 
     var translated = false;
-    if (locale != 'en-US') {
+    if (locale !== 'en-US') {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
-                url = translation.url;
                 titleSplit = htmlEscape(translation.title).split('.');
                 title = titleSplit[titleSplit.length - 1];
                 translated = true;
