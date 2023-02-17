@@ -119,6 +119,9 @@ jobs:
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
 
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
       - name: Build everything
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
