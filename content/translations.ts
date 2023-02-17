@@ -1,5 +1,4 @@
 import * as Document from "./document.js";
-import { VALID_LOCALES } from "../libs/constants/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 
 const LANGUAGES = new Map(
