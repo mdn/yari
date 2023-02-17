@@ -2,7 +2,6 @@
 
 var output = "";
 var pageModule = page;
-var hasTag = page.hasTag;
 var slug = env.slug;
 var locale = env.locale;
 var baseURL = "/" + locale + "/docs/";
@@ -78,27 +77,29 @@ async function buildSublist(pages, title, ignoreBadges) {
 }
 
 function classifyPages(subpages) {
-  var collection = {
+  const collection = {
     properties: [],
     methods: [],
     events: [],
     types: [],
   };
 
-  subpages.forEach(function (subpage) {
-    if (hasTag(subpage, "Property")) {
-      collection.properties.push(subpage);
+  for (const subpage of subpages) {
+    switch (subpage.pageType) {
+      case "webextension-api-property":
+        collection.properties.push(subpage);
+        break;
+      case "webextension-api-function":
+        collection.methods.push(subpage);
+        break;
+      case "webextension-api-type":
+        collection.types.push(subpage);
+        break;
+      case "webextension-api-event":
+        collection.events.push(subpage);
+        break;
     }
-    if (hasTag(subpage, "Method")) {
-      collection.methods.push(subpage);
-    }
-    if (hasTag(subpage, "Type")) {
-      collection.types.push(subpage);
-    }
-    if (hasTag(subpage, "Event")) {
-      collection.events.push(subpage);
-    }
-  });
+  }
 
   return collection;
 }
