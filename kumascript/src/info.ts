@@ -2,6 +2,7 @@ import cheerio from "cheerio";
 
 import * as Parser from "./parser.js";
 import { Document, Redirect } from "../../content/index.js";
+import { translationsOf } from "../../content/translations.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import { m2hSync } from "../../markdown/index.js";
 
@@ -199,7 +200,15 @@ export const info = {
       status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
-      translations: [], // TODO Object.freeze(buildTranslationObjects(data)),
+      // Let translations be lazy loaded.
+      get translations() {
+        return (
+          translationsOf({
+            slug: document.metadata.slug,
+            locale: document.metadata.locale,
+          }) ?? []
+        );
+      },
       summary() {
         // Back in the old Kuma days we used to store the summary as another piece
         // of metadata on each document. It was always available, with any kumascript
