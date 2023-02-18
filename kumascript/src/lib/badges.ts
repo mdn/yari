@@ -47,7 +47,6 @@ async function assertTemplatesLoaded(kuma: KumaThis, locale: string) {
     await loadBadgeTemplates(kuma, locale);
     loadedLocales.add(locale);
   }
-  return badges;
 }
 
 async function loadBadgeTemplates(kuma: KumaThis, locale: string) {
