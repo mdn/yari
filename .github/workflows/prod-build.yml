@@ -119,6 +119,9 @@ jobs:
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
 
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
       - name: Build everything
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
@@ -179,6 +182,9 @@ jobs:
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: true
 
+          # Placement
+          REACT_APP_PLACEMENT_ENABLED: true
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
@@ -230,6 +236,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
+
+          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_SITE_ID }}
+          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_NETWORK_ID }}
+          SIGN_SECRET: ${{ secrets.DEPLOYER_PROD_SIGN_SECRET }}
 
         run: |
 

@@ -8,8 +8,10 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 
 export default function SignInLink({
   gleanContext,
+  cta = "Log in",
 }: {
   gleanContext?: string;
+  cta?: string;
 }) {
   const locale = useLocale();
   const gleanClick = useGleanClick();
@@ -37,7 +39,7 @@ export default function SignInLink({
       rel="nofollow"
       onClick={() => gleanContext && gleanClick(gleanContext)}
     >
-      Already a subscriber?
+      {cta}
     </a>
   );
 }

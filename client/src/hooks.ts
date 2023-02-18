@@ -171,3 +171,25 @@ export function usePing() {
     }
   }, [isOnline, user]);
 }
+
+function getIsDocumentHidden() {
+  if (typeof document !== "undefined") {
+    return !document.hidden;
+  }
+  return false;
+}
+
+export function usePageVisibility() {
+  const [isVisible, setIsVisible] = React.useState(getIsDocumentHidden());
+  const onVisibilityChange = () => setIsVisible(getIsDocumentHidden());
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const visibilityChange = "visibilitychange";
+      document.addEventListener(visibilityChange, onVisibilityChange, false);
+      return () => {
+        document.removeEventListener(visibilityChange, onVisibilityChange);
+      };
+    }
+  });
+  return isVisible;
+}

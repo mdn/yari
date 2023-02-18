@@ -13,8 +13,13 @@ const text = mdn.localStringMap({
        'Assessment_Styling_a_biography_page': 'Assessment: Styling a biography page',
      'CSS_building_blocks': 'CSS building blocks',
        'CSS_building_blocks_overview': 'CSS building blocks overview',
-       'Cascade_and_inheritance': 'Cascade and inheritance',
        'CSS_selectors': 'CSS selectors',
+       'Type_Class_and_ID_Selectors': 'Type, class, and ID selectors',
+       'Attribute_selectors': 'Attribute selectors',
+       'Pseudo-classes_and_pseudo-elements': 'Pseudo-classes and pseudo-elements',
+       'Combinators': 'Combinators',
+       'Cascade_and_inheritance': 'Cascade, specificity, and inheritance',
+       'Cascade_layers': 'Cascade layers',
        'The_box_model': 'The box model',
        'Backgrounds_and_borders': 'Backgrounds and borders',
        'Handling_different_text_directions': 'Handling different text directions',
@@ -1101,8 +1106,13 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['CSS_building_blocks']%></summary>
           <ol>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks`, null, text['CSS_building_blocks_overview'], learnURL)%></li>
-            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors`, null, text['CSS_selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors`, null, text['Type_Class_and_ID_Selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Attribute_selectors`, null, text['Attribute_selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements`, null, text['Pseudo-classes_and_pseudo-elements'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Combinators`, null, text['Combinators'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_layers`, null, text['Cascade_layers'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/The_box_model`, null, text['The_box_model'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Backgrounds_and_borders`, null, text['Backgrounds_and_borders'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Handling_different_text_directions`, null, text['Handling_different_text_directions'], learnURL)%></li>
@@ -1116,6 +1126,7 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Fundamental_CSS_comprehension`, null, text['Assessment_Fundamental_CSS_comprehension'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Creating_fancy_letterheaded_paper`, null, text['Assessment_Creating_fancy_letterheaded_paper'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/A_cool_looking_box`, null, text['Assessment_A_cool_looking_box'], learnURL)%></li>
+          </ol>
       </details>
   </li>
   <li class="toggle">

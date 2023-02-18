@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLUS_IS_ENABLED } from "./env";
+import { CRUD_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -24,6 +24,7 @@ import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
+import { Advertising } from "./advertising";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -237,6 +238,16 @@ export function App(appProps) {
                 element={
                   <StandardLayout extraClasses="plus">
                     <Plus {...appProps} />
+                  </StandardLayout>
+                }
+              />
+            )}
+            {PLACEMENT_ENABLED && (
+              <Route
+                path="/advertising/*"
+                element={
+                  <StandardLayout>
+                    <Advertising {...appProps} />
                   </StandardLayout>
                 }
               />
