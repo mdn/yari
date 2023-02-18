@@ -33,9 +33,14 @@ export interface Flaw {
   difference?: any;
 }
 
-type GetFlawsFunction = (doc: any, $: any, document: any, level: any) => Flaw[];
+type GetFlawsFunction = (
+  doc: any,
+  $: any,
+  document: any,
+  level: any
+) => Promise<Flaw[]>;
 
-export function injectFlaws(doc, $, options, document) {
+export async function injectFlaws(doc, $, options, document) {
   const flawChecks: Array<[string, GetFlawsFunction, boolean]> = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
@@ -68,7 +73,7 @@ export function injectFlaws(doc, $, options, document) {
     }
 
     // The flaw injection function will mutate the `doc.flaws` object.
-    const flaws = func(doc, $, document, level);
+    const flaws = await func(doc, $, document, level);
     if (flaws.length > 0) {
       doc.flaws[flawName] = flaws;
     }

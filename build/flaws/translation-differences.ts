@@ -3,7 +3,11 @@ import { Flaw } from "./index.js";
 import { Document, Translation } from "../../content/index.js";
 import { DEFAULT_LOCALE } from "../../libs/constants/index.js";
 
-export function injectTranslationDifferences(doc, $, document): Flaw[] {
+export async function injectTranslationDifferences(
+  doc,
+  $,
+  document
+): Promise<Flaw[]> {
   const flaws = [];
 
   const englishDocument = Document.read(

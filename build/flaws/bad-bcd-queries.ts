@@ -6,7 +6,7 @@ import { packageBCD } from "../resolve-bcd.js";
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
 
-export function getBadBCDQueriesFlaws(doc, $) {
+export async function getBadBCDQueriesFlaws(doc, $) {
   return $("div.bc-data")
     .map((i, element) => {
       const $element = $(element);

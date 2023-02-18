@@ -23,7 +23,7 @@ if (INTERACTIVE_EXAMPLES_BASE_URL) {
   safeIFrameSrcs.push(INTERACTIVE_EXAMPLES_BASE_URL.toLowerCase());
 }
 
-function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
+export async function getUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   const flaws = [];
 
   function addFlaw(element, explanation) {
@@ -108,5 +108,3 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
 
   return flaws;
 }
-
-export const getUnsafeHTMLFlaws = getAndMarkupUnsafeHTMLFlaws;
