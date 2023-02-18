@@ -61,6 +61,8 @@ export interface UnsafeHTMLFlaw extends GenericFlaw {
   column: number | null;
 }
 
+export interface WrongLanguageFlaw extends GenericFlaw {}
+
 export interface RedirectInfo {
   current: string;
   suggested: string;
@@ -104,6 +106,7 @@ export type Flaws = Partial<{
   heading_links: HeadingLinksFlaw[];
   translation_differences: TranslationDifferenceFlaw[];
   unsafe_html: UnsafeHTMLFlaw[];
+  wrong_language: WrongLanguageFlaw[];
 }>;
 
 export type Translation = {

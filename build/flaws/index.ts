@@ -19,6 +19,7 @@ import { getHeadingLinksFlaws } from "./heading-links.js";
 import { getPreTagFlaws } from "./pre-tags.js";
 export { injectSectionFlaws } from "./sections.js";
 import { getUnsafeHTMLFlaws } from "./unsafe-html.js";
+import { getDocumentLanguageFlaws } from "./wrong-language.js";
 import { injectTranslationDifferences } from "./translation-differences.js";
 
 export interface Flaw {
@@ -47,6 +48,7 @@ export async function injectFlaws(doc, $, options, document) {
     ["bad_bcd_queries", getBadBCDQueriesFlaws, false],
     ["bad_pre_tags", getPreTagFlaws, false],
     ["heading_links", getHeadingLinksFlaws, false],
+    ["wrong_language", getDocumentLanguageFlaws, false],
   ];
   if (doc.locale !== DEFAULT_LOCALE && doc.isActive) {
     flawChecks.push([

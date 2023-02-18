@@ -182,6 +182,7 @@ export const VALID_FLAW_CHECKS = new Set([
   "heading_links",
   "translation_differences",
   "unsafe_html",
+  "wrong_language",
 ]);
 
 // ------

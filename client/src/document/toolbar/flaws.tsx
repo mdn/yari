@@ -20,6 +20,7 @@ import {
   HeadingLinksFlaw,
   TranslationDifferenceFlaw,
   UnsafeHTMLFlaw,
+  WrongLanguageFlaw,
 } from "../../../../libs/types/document";
 import "./flaws.scss";
 
@@ -330,6 +331,13 @@ function Flaws({
                 flaws={doc.flaws.sectioning as SectioningFlaw[]}
               />
             );
+          case "wrong_language":
+            return (
+              <WrongLanguage
+                key="wrong_language"
+                flaws={doc.flaws.wrong_language as WrongLanguageFlaw[]}
+              />
+            );
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }
@@ -560,6 +568,23 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
               it hard to split up the rendered HTML. Perhaps delete unnecessary
               empty divs.
             </small>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function WrongLanguage({ flaws }: { flaws: WrongLanguageFlaw[] }) {
+  return (
+    <div className="flaw flaw__wrong_language">
+      <h3>{humanizeFlawName("wrong_language")}</h3>
+      <ul>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            <code>{flaw.explanation}</code>
+            <br />
+            <small>{flaw.suggestion}</small>
           </li>
         ))}
       </ul>

@@ -66,6 +66,7 @@
     "async": "^3.2.4",
     "chalk": "^5.2.0",
     "cheerio": "^1.0.0-rc.12",
+    "cld": "^2.8.4",
     "cli-progress": "^3.11.2",
     "compression": "^1.7.4",
     "cookie": "^0.5.0",
