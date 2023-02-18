@@ -219,8 +219,9 @@ test("content built zh-CN page for hreflang tag testing", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(Object.keys(doc.flaws)).toHaveLength(2);
   expect(doc.flaws.translation_differences).toHaveLength(1);
+  expect(doc.flaws.wrong_language).toHaveLength(1);
   expect(doc.title).toBe("<foo>: 测试网页");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
@@ -250,8 +251,9 @@ test("content built zh-TW page with en-US fallback image", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(Object.keys(doc.flaws)).toHaveLength(2);
   expect(doc.flaws.translation_differences).toHaveLength(1);
+  expect(doc.flaws.wrong_language).toHaveLength(1);
   expect(doc.title).toBe("<foo>: 測試網頁");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
