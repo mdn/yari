@@ -5,7 +5,7 @@ import { findMatchesInText } from "../matches-in-text.js";
 // I.e. a source of `<h2 id="foo">Foo</h2>` renders out as:
 // `<h2 id="foo"><a href="#foo">Foo</a></h2>` in the final HTML. That makes
 // it easy to (perma)link to specific headings in the document.
-export function getHeadingLinksFlaws(doc, $, { rawContent }) {
+export async function getHeadingLinksFlaws(doc, $, { rawContent }) {
   const flaws = [];
 
   $("h2 a, h3 a").each((i, element) => {

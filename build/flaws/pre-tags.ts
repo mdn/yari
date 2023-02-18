@@ -8,7 +8,7 @@ const escapeHTML = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-export function getPreTagFlaws(doc, $, { rawContent }) {
+export async function getPreTagFlaws(doc, $, { rawContent }) {
   const flaws = [];
 
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags

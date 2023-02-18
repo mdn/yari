@@ -1,6 +1,6 @@
 import { FLAW_LEVELS } from "../../libs/constants/index.js";
 
-export function injectSectionFlaws(doc, flaws, options) {
+export async function injectSectionFlaws(doc, flaws, options) {
   if (!flaws.length) {
     return;
   }

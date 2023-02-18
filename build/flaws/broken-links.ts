@@ -77,7 +77,7 @@ function mutateLink(
 
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
-export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
+export async function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   const flaws = [];
 
   // This is needed because the same href can occur multiple time.

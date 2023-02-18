@@ -510,7 +510,7 @@ export async function buildDocument(
 
   // With the sidebar out of the way, go ahead and check the rest
   try {
-    injectFlaws(doc, $, options, document);
+    await injectFlaws(doc, $, options, document);
   } catch (error) {
     console.warn(
       `Injecting flaws into ${document.fileInfo.path} (${document.url}) failed.`
