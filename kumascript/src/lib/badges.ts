@@ -32,7 +32,7 @@ const badges: Array<Badge> = [
 const loadedLocales = new Set<string>();
 
 export async function getBadgeTemplates(kuma: KumaThis, aPage: any) {
-  const locale = kuma.env.locale;
+  const locale = kuma.env.locale.toLocaleLowerCase();
   await assertTemplatesLoaded(kuma, locale);
   return badges
     .filter(
