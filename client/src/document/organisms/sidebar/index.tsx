@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
+import { useGleanClick } from "../../../telemetry/glean-context";
 
 export function SidebarContainer({
   doc,
@@ -68,13 +69,147 @@ export function SidebarContainer({
   );
 }
 
+function getLineDistance(a: HTMLElement | null, b: HTMLElement | null): number {
+  if (!a || !b) {
+    return -1;
+  }
+
+  const { top: aTop, bottom: aBottom } = a.getBoundingClientRect();
+  const { top: bTop, bottom: bBottom } = b.getBoundingClientRect();
+
+  const px = aTop < bTop ? bBottom - aTop : aBottom - bTop;
+  const rem = px / 16;
+
+  return Math.round(rem);
+}
+
+function getTreePath(
+  element: HTMLElement,
+  { boundary, selector }: { boundary: HTMLElement; selector: string }
+): HTMLElement[] {
+  const path: HTMLElement[] = [];
+
+  let current: HTMLElement | null = element;
+  while (current && boundary.contains(current)) {
+    path.push(current);
+    current = (current.parentNode as HTMLElement)?.closest(selector);
+  }
+
+  return path.reverse();
+}
+
+function getTreeDistance(
+  a: HTMLElement | null,
+  b: HTMLElement | null,
+  { boundary, selector }: { boundary: HTMLElement; selector: string }
+): number {
+  if (!a || !b) {
+    return -1;
+  }
+  if (a === b) {
+    return 0;
+  }
+
+  const aPath = getTreePath(a, { boundary, selector });
+  const bPath = getTreePath(b, { boundary, selector });
+
+  while (aPath.length && bPath.length && aPath[0] === bPath[0]) {
+    // Remove common ancestors.
+    aPath.shift();
+    bPath.shift();
+  }
+
+  // Remove one edge.
+  aPath.pop() || bPath.pop();
+
+  return aPath.length + bPath.length;
+}
+
+function getSlugPath(slug: string): string[] {
+  return slug.split("/");
+}
+
+function getSlugDistance(a: string | null, b: string | null) {
+  if (!a || !b) {
+    return -1;
+  } else if (a === b) {
+    return 0;
+  }
+
+  const aPath = getSlugPath(a);
+  const bPath = getSlugPath(b);
+
+  while (aPath.length && bPath.length && aPath[0] === bPath[0]) {
+    // Remove common ancestors.
+    aPath.shift();
+    bPath.shift();
+  }
+
+  // Remove one edge.
+  aPath.pop() || bPath.pop();
+
+  return aPath.length + bPath.length;
+}
+
 export function RenderSideBar({ doc }) {
+  const gleanClick = useGleanClick();
+
+  const cleanup = useRef<unknown>(null);
+  const sidebarRef = useCallback(
+    (wrapper: HTMLDivElement) => {
+      cleanup.current instanceof Function && cleanup.current();
+
+      if (!wrapper) {
+        return;
+      }
+
+      const clickListener = (event) => {
+        const { target = null, currentTarget = null } = event;
+        const anchor = (target as HTMLElement)?.closest("a");
+        const currentPage = currentTarget.querySelector("a[aria-current=page]");
+        if (
+          currentTarget instanceof HTMLElement &&
+          anchor instanceof HTMLAnchorElement
+        ) {
+          const macro = currentTarget.getAttribute("data-macro");
+          const from = currentPage?.getAttribute("href");
+          const to = anchor?.getAttribute("href");
+
+          const lineDistance = getLineDistance(currentPage, anchor);
+          const linkDistance = getSlugDistance(from, to);
+          const treeDistance = getTreeDistance(currentPage, anchor, {
+            boundary: currentTarget,
+            selector: "details",
+          });
+
+          const payload = JSON.stringify({
+            line_dist: lineDistance,
+            link_dist: linkDistance,
+            tree_dist: treeDistance,
+            macro,
+            from,
+            to,
+          });
+          const key = `sidebar-click: ${payload}`;
+          gleanClick(key);
+        }
+      };
+
+      wrapper.addEventListener("click", clickListener);
+
+      cleanup.current = () =>
+        wrapper.removeEventListener("click", clickListener);
+    },
+    [gleanClick]
+  );
+
   if (!doc.related_content) {
     return (
       <SidebarContainer doc={doc} label="Related Topics">
         {doc.sidebarHTML && (
           <>
             <div
+              ref={sidebarRef}
               data-macro={doc.sidebarMacro}
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
