@@ -3929,10 +3929,10 @@ cli-cursor@^4.0.0:
   dependencies:
     restore-cursor "^4.0.0"
 
-cli-progress@^3.11.2:
-  version "3.11.2"
-  resolved "https://registry.yarnpkg.com/cli-progress/-/cli-progress-3.11.2.tgz#f8c89bd157e74f3f2c43bcfb3505670b4d48fc77"
-  integrity sha512-lCPoS6ncgX4+rJu5bS3F/iCz17kZ9MPZ6dpuTtI0KXKABkhyXIdYB3Inby1OpaGti3YlI3EeEkM9AuWpelJrVA==
+cli-progress@^3.12.0:
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/cli-progress/-/cli-progress-3.12.0.tgz#807ee14b66bcc086258e444ad0f19e7d42577942"
+  integrity sha512-tRkV3HJ1ASwm19THiiLIXLO7Im7wlTuKnvkYaTkyoAPefqjNg7W7DHKUlGRxy9vxDvbyCYQkQozvptuMkGCg8A==
   dependencies:
     string-width "^4.2.3"
 
@@ -5911,10 +5911,10 @@ file-type@^16.5.3:
     strtok3 "^6.2.4"
     token-types "^4.1.1"
 
-file-type@^18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-18.2.0.tgz#c2abec00d1af0f09151e1549e3588aab0bac5001"
-  integrity sha512-M3RQMWY3F2ykyWZ+IHwNCjpnUmukYhtdkGGC1ZVEUb0ve5REGF7NNJ4Q9ehCUabtQKtSVFOMbFTXgJlFb0DQIg==
+file-type@^18.2.1:
+  version "18.2.1"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-18.2.1.tgz#6d8f1fa3b079606f6ecf89483346f55fcd2c671b"
+  integrity sha512-Yw5MtnMv7vgD2/6Bjmmuegc8bQEVA9GmAyaR18bMYWKqsWDG9wgYZ1j4I6gNMF5Y5JBDcUcjRQqNQx7Y8uotcg==
   dependencies:
     readable-web-to-node-stream "^3.0.2"
     strtok3 "^7.0.0"
@@ -11512,10 +11512,10 @@ sass-loader@^13.2.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.58.2:
-  version "1.58.2"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.58.2.tgz#ef3c5098a02dd006f09a2350b114f1ac445e38ce"
-  integrity sha512-2mbyOWOv/lhEXD6nVrQZQ4KT2DlwcODbTskM42EyqBAFUWOhiiYtAXZqjZz1ygzapYf+N+2GwfIH9M5FM4GUMg==
+sass@^1.58.3:
+  version "1.58.3"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.58.3.tgz#2348cc052061ba4f00243a208b09c40e031f270d"
+  integrity sha512-Q7RaEtYf6BflYrQ+buPudKR26/lH+10EmO9bBqbmPh/KeLqv8bjpTNqxe71ocONqXq+jYiCbpPUmQMS+JJPk4A==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -13320,10 +13320,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^2.48.0:
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.48.0.tgz#b2b32547ad475701fa6b8b86a924ad0d32755e44"
-  integrity sha512-LdCheCyBs6J4MI8YJPTjbg47b84XoX67S/D0kzj1ddFIukQWqYWfwBQNob8O/cOn2H1KVxNmSfMkC24IteevkQ==
+web-specs@^2.49.0:
+  version "2.49.0"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.49.0.tgz#7ab8a3e1a5ac5c5a983cb8c2c3ece13dd6142287"
+  integrity sha512-FbgiLujLY+hjWL2yW2mxUDM7yZaBrNJtSmprPzvjsRHRFvgsWy2DEosJyz23PpeT+zlCNBhn6w48AHDkYDJkqA==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
