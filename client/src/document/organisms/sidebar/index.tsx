@@ -75,6 +75,7 @@ export function RenderSideBar({ doc }) {
         {doc.sidebarHTML && (
           <>
             <div
+              data-macro={doc.sidebarMacro}
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}
