@@ -18,7 +18,6 @@ var text = {
     'Constructor': mdn.getLocalString(commonl10n, 'Constructor'),
     'Properties': mdn.getLocalString(commonl10n, 'Properties'),
     'Methods': mdn.getLocalString(commonl10n, 'Methods'),
-    'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
     'Related': mdn.getLocalString(commonl10n, 'Related_pages_wo_group'),
 };
 
@@ -33,25 +32,6 @@ var locale = env.locale;
 var rtlLocales = ['ar', 'he', 'fa'];
 var slug_stdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
 var mainObj = slug.replace('Web/JavaScript/Reference/Global_Objects/', '').split('/')[0];
-
-// Data for inheritance chain
-var inheritance = ["Object", "Function"];
-var inheritanceData = {
-    "Math": ["Object"],
-    "Date": ["Object"],
-    "Function": ["Object"],
-    "Object": [],
-    "JSON": ["Object"],
-    "Intl": ["Object"],
-    "arguments": [],
-    "Reflect": ["Object"],
-    "Proxy": [],
-    "Atomics": ["Object"],
-    "WebAssembly": ["Object"],
-};
-if (typeof inheritanceData[mainObj] != 'undefined') {
-    inheritance = inheritanceData[mainObj];
-}
 
 // Data for related pages
 var groupData = {
@@ -84,12 +64,6 @@ for(g in groupData) {
 // Collect pages
 var source = {};
 source[mainObj] = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + mainObj);
-if  (inheritance.indexOf("Function") > -1) {
-    source["iFunction"] = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function');
-}
-if  (inheritance.indexOf("Object") > -1) {
-    source["iObject"] = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object');
-}
 
 var result = {};
 result[mainObj] = {
@@ -99,24 +73,6 @@ result[mainObj] = {
     properties: [],
     defaultOpened: true
 };
-if  (inheritance.indexOf("Function") > -1) {
-result['iFunction'] = {
-    title: 'Function',
-    constructors: [],
-    methods: [],
-    properties: [],
-    defaultOpened: false
-};
-}
-if  (inheritance.indexOf("Object") > -1) {
-result['iObject'] = {
-    title: 'Object',
-    constructors: [],
-    methods: [],
-    properties: [],
-    defaultOpened: false
-};
-}
 
 var pageList;
 
@@ -234,10 +190,6 @@ for (object in result) {
     resultProperties   = result[object].properties || '';
     resultMethods      = result[object].methods || '';
     resultOpen         = result[object].defaultOpened || '';
-
-    if (len == 2) {
-        output += '<li><strong>'+text['Inheritance']+'</strong></li>';
-    }
 
     const link = web.smartLink(`${slug_stdlib}/${resultTitle}`, null, `<code>${resultTitle}</code>`, null, slug_stdlib, "JSRef");
     output += `<li><strong>${link}</strong></li>`;

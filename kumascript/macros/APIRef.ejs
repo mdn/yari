@@ -41,7 +41,6 @@ var text = {
     'Static methods': mdn.getLocalString(commonl10n, 'Static_methods'),
     'Instance methods': mdn.getLocalString(commonl10n, 'Instance_methods'),
     'Constructor': mdn.getLocalString(commonl10n, 'Constructor'),
-    'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
     'Implemented_by': mdn.getLocalString(commonl10n, 'Implemented_by'),
     'Related': mdn.getLocalString(commonl10n, 'Related_pages').replace('$1', group),
     'translate': mdn.getLocalString(commonl10n, '[Translate]'),
@@ -73,7 +72,6 @@ var staticMethods = [];
 var instanceMethods = [];
 var ctors = [];
 var events = [];
-var inheritedIF = [];
 var implementedBy = [];
 
 function collect(pageList) {
@@ -126,17 +124,6 @@ staticMethods.sort(APISort);
 instanceMethods.sort(APISort);
 ctors.sort(APISort);
 events.sort(APISort);
-
-function getInheritance(inh) {
-  if (inh.length > 0) {
-    inheritedIF.push(inh);
-    if (Object.prototype.hasOwnProperty.call(webAPIData[0], inh)) {
-        var inh = webAPIData[0][inh].inh;
-        getInheritance(inh);
-    }
-  }
-}
-getInheritance(inh);
 
 function getImplementedBy(data) {
   for (var key in data) {
@@ -249,9 +236,6 @@ if (instanceMethods.length > 0) {
 }
 if (events.length > 0) {
   output += await buildSublist(events, text['Events']);
-}
-if (inh.length > 0) {
-  output += buildIFList(inheritedIF, text['Inheritance']);
 }
 if (implementedBy.length > 0) {
   output += buildIFList(implementedBy, text['Implemented_by']);
