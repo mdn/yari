@@ -50,7 +50,7 @@ async function assertTemplatesLoaded(kuma: KumaThis, locale: string) {
 }
 
 async function loadBadgeTemplates(kuma: KumaThis, locale: string) {
-  async function loadBadge(badge: (typeof badges)[0]) {
+  async function loadBadge(badge: Badge) {
     badge.template.set(locale, (await kuma.template(badge.macro)) as string);
   }
 
