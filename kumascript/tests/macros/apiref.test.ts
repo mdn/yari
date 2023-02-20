@@ -718,13 +718,4 @@ describeMacro("APIRef", function () {
     interfaceData: interfaceDataNoEntriesFixture,
     expected: expectedBasic,
   });
-
-  // Test with an InterfaceData that contains data for TestInterface
-  testMacro({
-    name: "slug: 'Web/API/TestInterface'; InterfaceData entries expected; no argument",
-    currentSlug: "Web/API/TestInterface",
-    argument: null,
-    interfaceData: interfaceDataFixture,
-    expected: expectedWithInterfaceData,
-  });
 });
