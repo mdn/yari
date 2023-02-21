@@ -111,8 +111,14 @@ export function range(start: number, stop: number) {
 }
 
 function getBaseFontSize(): number {
-  // This is the default that applies to most users.
-  return 16;
+  return (
+    Number(
+      window
+        ?.getComputedStyle(document.body)
+        .getPropertyValue("font-size")
+        .match(/\d+/)
+    ) || 16
+  );
 }
 
 export function getLineDistance(
