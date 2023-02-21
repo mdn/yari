@@ -72,7 +72,6 @@ function getClickPayload(event: MouseEvent) {
       tree_dist: treeDistance,
       current,
       macro,
-      from,
       to,
     };
   } else {
