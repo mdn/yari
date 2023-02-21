@@ -110,6 +110,11 @@ export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
 }
 
+function getBaseFontSize(): number {
+  // This is the default that applies to most users.
+  return 16;
+}
+
 export function getLineDistance(
   a: HTMLElement | null,
   b: HTMLElement | null
@@ -122,7 +127,7 @@ export function getLineDistance(
   const { top: bTop, bottom: bBottom } = b.getBoundingClientRect();
 
   const px = aTop < bTop ? bBottom - aTop : aBottom - bTop;
-  const rem = px / 16;
+  const rem = px / getBaseFontSize();
 
   return Math.round(rem);
 }
