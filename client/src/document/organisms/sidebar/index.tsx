@@ -104,7 +104,7 @@ function useSidebarMetricsCallback() {
           const to = anchor?.getAttribute("href");
 
           const lineDistance = getLineDistance(currentPage, anchor);
-          const linkDistance = getSlugDistance(from, to);
+          const slugDistance = getSlugDistance(from, to);
           const treeDistance = getTreeDistance(currentPage, anchor, {
             boundary: currentTarget,
             selector: "details",
@@ -113,7 +113,7 @@ function useSidebarMetricsCallback() {
 
           const payload = JSON.stringify({
             line_dist: lineDistance,
-            link_dist: linkDistance,
+            slug_dist: slugDistance,
             tree_dist: treeDistance,
             current_visible: Number(isCurrentVisible),
             macro,
