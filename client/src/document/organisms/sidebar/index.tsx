@@ -115,14 +115,13 @@ export function RenderSideBar({ doc }) {
             line_dist: lineDistance,
             link_dist: linkDistance,
             tree_dist: treeDistance,
-            current_visible: isCurrentVisible,
+            current_visible: Number(isCurrentVisible),
             macro,
             from,
             to,
           });
           const key = `${SIDEBAR_CLICK}: ${payload}`;
           gleanClick(key);
-          console.log(key);
         }
       };
 
