@@ -120,8 +120,7 @@ function useSidebarMetricsCallback() {
             from,
             to,
           });
-          const key = `${SIDEBAR_CLICK}: ${payload}`;
-          gleanClick(key);
+          gleanClick(`${SIDEBAR_CLICK}: ${payload}`);
         }
       };
 
