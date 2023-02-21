@@ -51,7 +51,7 @@ function getClickPayload(event: MouseEvent) {
     anchor instanceof HTMLAnchorElement
   ) {
     const macro = currentTarget.getAttribute("data-macro");
-    const from = currentPage?.getAttribute("href") ?? null;
+    const from = currentPage?.getAttribute("href") ?? window.location.pathname;
     const to = anchor?.getAttribute("href") ?? null;
 
     const lineDistance = getLineDistance(currentPage, anchor);
