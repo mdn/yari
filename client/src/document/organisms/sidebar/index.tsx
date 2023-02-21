@@ -98,6 +98,19 @@ function getTreePath(
   return path.reverse();
 }
 
+function getPathDistance<T>(a: T[], b: T[]): number {
+  while (a.length && b.length && a[0] === b[0]) {
+    // Remove common ancestors.
+    a.shift();
+    b.shift();
+  }
+
+  // Remove one edge.
+  a.pop() || b.pop();
+
+  return a.length + b.length;
+}
+
 function getTreeDistance(
   a: HTMLElement | null,
   b: HTMLElement | null,
@@ -113,16 +126,7 @@ function getTreeDistance(
   const aPath = getTreePath(a, { boundary, selector });
   const bPath = getTreePath(b, { boundary, selector });
 
-  while (aPath.length && bPath.length && aPath[0] === bPath[0]) {
-    // Remove common ancestors.
-    aPath.shift();
-    bPath.shift();
-  }
-
-  // Remove one edge.
-  aPath.pop() || bPath.pop();
-
-  return aPath.length + bPath.length;
+  return getPathDistance(aPath, bPath);
 }
 
 function getSlugPath(slug: string): string[] {
@@ -139,16 +143,7 @@ function getSlugDistance(a: string | null, b: string | null) {
   const aPath = getSlugPath(a);
   const bPath = getSlugPath(b);
 
-  while (aPath.length && bPath.length && aPath[0] === bPath[0]) {
-    // Remove common ancestors.
-    aPath.shift();
-    bPath.shift();
-  }
-
-  // Remove one edge.
-  aPath.pop() || bPath.pop();
-
-  return aPath.length + bPath.length;
+  return getPathDistance(aPath, bPath);
 }
 
 export function RenderSideBar({ doc }) {
