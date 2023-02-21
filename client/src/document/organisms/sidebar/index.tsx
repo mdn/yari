@@ -77,10 +77,13 @@ export function SidebarContainer({
 export function RenderSideBar({ doc }) {
   const gleanClick = useGleanClick();
 
-  const cleanup = useRef<unknown>(null);
+  const removeEventListener = useRef<Function | null>(null);
   const sidebarRef = useCallback(
     (wrapper: HTMLDivElement) => {
-      cleanup.current instanceof Function && cleanup.current();
+      if (removeEventListener.current) {
+        removeEventListener.current();
+        removeEventListener.current = null;
+      }
 
       if (!wrapper) {
         return;
@@ -120,7 +123,7 @@ export function RenderSideBar({ doc }) {
 
       wrapper.addEventListener("click", clickListener);
 
-      cleanup.current = () =>
+      removeEventListener.current = () =>
         wrapper.removeEventListener("click", clickListener);
     },
     [gleanClick]
