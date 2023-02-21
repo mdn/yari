@@ -122,7 +122,6 @@ function useSidebarMetricsCallback() {
           });
           const key = `${SIDEBAR_CLICK}: ${payload}`;
           gleanClick(key);
-          console.log(key);
         }
       };
 
