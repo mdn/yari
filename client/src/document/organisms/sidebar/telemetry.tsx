@@ -26,17 +26,19 @@ function registerSidebarMetricsListener(
   ref: HTMLElement,
   gleanClick: ReturnType<typeof useGleanClick>
 ): Function | null {
-  const clickListener = (event) => {
+  const clickListener = (event: MouseEvent) => {
     const { target = null, currentTarget = null } = event;
     const anchor = (target as HTMLElement)?.closest("a");
-    const currentPage = currentTarget.querySelector("a[aria-current=page]");
+    const currentPage = (currentTarget as HTMLElement)?.querySelector(
+      "a[aria-current=page]"
+    ) as HTMLElement | null;
     if (
       currentTarget instanceof HTMLElement &&
       anchor instanceof HTMLAnchorElement
     ) {
       const macro = currentTarget.getAttribute("data-macro");
-      const from = currentPage?.getAttribute("href");
-      const to = anchor?.getAttribute("href");
+      const from = currentPage?.getAttribute("href") ?? null;
+      const to = anchor?.getAttribute("href") ?? null;
 
       const lineDistance = getLineDistance(currentPage, anchor);
       const slugDistance = getSlugDistance(from, to);
@@ -44,7 +46,7 @@ function registerSidebarMetricsListener(
         boundary: currentTarget,
         selector: "details",
       });
-      const isCurrentVisible = isElementInViewport(currentPage);
+      const isCurrentVisible = currentPage && isElementInViewport(currentPage);
 
       const payload = JSON.stringify({
         line_dist: lineDistance,
