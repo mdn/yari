@@ -11,6 +11,7 @@ import {
   getLineDistance,
   getSlugDistance,
   getTreeDistance,
+  isElementInViewport,
 } from "../../../utils";
 
 export function SidebarContainer({
@@ -107,17 +108,20 @@ export function RenderSideBar({ doc }) {
             boundary: currentTarget,
             selector: "details",
           });
+          const isCurrentVisible = isElementInViewport(currentPage);
 
           const payload = JSON.stringify({
             line_dist: lineDistance,
             link_dist: linkDistance,
             tree_dist: treeDistance,
+            current_visible: isCurrentVisible,
             macro,
             from,
             to,
           });
           const key = `sidebar-click: ${payload}`;
           gleanClick(key);
+          console.log(key);
         }
       };
 
