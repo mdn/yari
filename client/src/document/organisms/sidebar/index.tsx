@@ -13,6 +13,7 @@ import {
   getTreeDistance,
   isElementInViewport,
 } from "../../../utils";
+import { SIDEBAR_CLICK } from "../../../telemetry/constants";
 
 export function SidebarContainer({
   doc,
@@ -119,7 +120,7 @@ export function RenderSideBar({ doc }) {
             from,
             to,
           });
-          const key = `sidebar-click: ${payload}`;
+          const key = `${SIDEBAR_CLICK}: ${payload}`;
           gleanClick(key);
           console.log(key);
         }
