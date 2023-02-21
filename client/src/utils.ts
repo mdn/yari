@@ -160,10 +160,14 @@ function getPathDistance<T>(a: T[], b: T[]): number {
     b.shift();
   }
 
-  // Remove one edge.
-  a.pop() || b.pop();
+  let distance = a.length + b.length;
 
-  return a.length + b.length;
+  if (a.length && b.length) {
+    // No parent-child relationship, so remove one edge to get the path length.
+    distance--;
+  }
+
+  return distance;
 }
 
 export function getTreeDistance(
