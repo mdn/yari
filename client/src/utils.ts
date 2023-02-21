@@ -109,3 +109,83 @@ export function charSlice(string: string, start?: number, end?: number) {
 export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
 }
+
+export function getLineDistance(
+  a: HTMLElement | null,
+  b: HTMLElement | null
+): number {
+  if (!a || !b) {
+    return -1;
+  }
+
+  const { top: aTop, bottom: aBottom } = a.getBoundingClientRect();
+  const { top: bTop, bottom: bBottom } = b.getBoundingClientRect();
+
+  const px = aTop < bTop ? bBottom - aTop : aBottom - bTop;
+  const rem = px / 16;
+
+  return Math.round(rem);
+}
+
+function getTreePath(
+  element: HTMLElement,
+  { boundary, selector }: { boundary: HTMLElement; selector: string }
+): HTMLElement[] {
+  const path: HTMLElement[] = [];
+
+  let current: HTMLElement | null = element;
+  while (current && boundary.contains(current)) {
+    path.push(current);
+    current = (current.parentNode as HTMLElement)?.closest(selector);
+  }
+
+  return path.reverse();
+}
+
+function getPathDistance<T>(a: T[], b: T[]): number {
+  while (a.length && b.length && a[0] === b[0]) {
+    // Remove common ancestors.
+    a.shift();
+    b.shift();
+  }
+
+  // Remove one edge.
+  a.pop() || b.pop();
+
+  return a.length + b.length;
+}
+
+export function getTreeDistance(
+  a: HTMLElement | null,
+  b: HTMLElement | null,
+  { boundary, selector }: { boundary: HTMLElement; selector: string }
+): number {
+  if (!a || !b) {
+    return -1;
+  }
+  if (a === b) {
+    return 0;
+  }
+
+  const aPath = getTreePath(a, { boundary, selector });
+  const bPath = getTreePath(b, { boundary, selector });
+
+  return getPathDistance(aPath, bPath);
+}
+
+function getSlugPath(slug: string): string[] {
+  return slug.split("/");
+}
+
+export function getSlugDistance(a: string | null, b: string | null) {
+  if (!a || !b) {
+    return -1;
+  } else if (a === b) {
+    return 0;
+  }
+
+  const aPath = getSlugPath(a);
+  const bPath = getSlugPath(b);
+
+  return getPathDistance(aPath, bPath);
+}
