@@ -8,17 +8,14 @@ export function useSidebarMetricsCallback() {
   const cleanupFunc = useRef<Function | null>(null);
 
   return useCallback(
-    (wrapper: HTMLDivElement) => {
+    (ref: HTMLElement | null) => {
       if (cleanupFunc.current) {
         cleanupFunc.current();
         cleanupFunc.current = null;
       }
 
-      if (wrapper) {
-        cleanupFunc.current = registerSidebarMetricsListener(
-          wrapper,
-          gleanClick
-        );
+      if (ref) {
+        cleanupFunc.current = registerSidebarMetricsListener(ref, gleanClick);
       }
     },
     [gleanClick]
@@ -26,7 +23,7 @@ export function useSidebarMetricsCallback() {
 }
 
 function registerSidebarMetricsListener(
-  wrapper: HTMLElement,
+  ref: HTMLElement,
   gleanClick: ReturnType<typeof useGleanClick>
 ): Function | null {
   const clickListener = (event) => {
@@ -63,9 +60,9 @@ function registerSidebarMetricsListener(
     }
   };
 
-  wrapper.addEventListener("click", clickListener);
+  ref.addEventListener("click", clickListener);
 
-  return () => wrapper.removeEventListener("click", clickListener);
+  return () => ref.removeEventListener("click", clickListener);
 }
 
 function getBaseFontSize(): number {

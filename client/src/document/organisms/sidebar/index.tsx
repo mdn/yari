@@ -70,7 +70,7 @@ export function SidebarContainer({
 }
 
 export function RenderSideBar({ doc }) {
-  const sidebarRef = useSidebarMetricsCallback();
+  const ref = useSidebarMetricsCallback();
 
   if (!doc.related_content) {
     return (
@@ -78,7 +78,7 @@ export function RenderSideBar({ doc }) {
         {doc.sidebarHTML && (
           <>
             <div
-              ref={sidebarRef}
+              ref={ref}
               data-macro={doc.sidebarMacro}
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
