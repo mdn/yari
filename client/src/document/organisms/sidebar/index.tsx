@@ -76,6 +76,48 @@ export function SidebarContainer({
   );
 }
 
+function registerSidebarMetricsListener(
+  wrapper: HTMLElement,
+  gleanClick: ReturnType<typeof useGleanClick>
+): Function | null {
+  const clickListener = (event) => {
+    const { target = null, currentTarget = null } = event;
+    const anchor = (target as HTMLElement)?.closest("a");
+    const currentPage = currentTarget.querySelector("a[aria-current=page]");
+    if (
+      currentTarget instanceof HTMLElement &&
+      anchor instanceof HTMLAnchorElement
+    ) {
+      const macro = currentTarget.getAttribute("data-macro");
+      const from = currentPage?.getAttribute("href");
+      const to = anchor?.getAttribute("href");
+
+      const lineDistance = getLineDistance(currentPage, anchor);
+      const slugDistance = getSlugDistance(from, to);
+      const treeDistance = getTreeDistance(currentPage, anchor, {
+        boundary: currentTarget,
+        selector: "details",
+      });
+      const isCurrentVisible = isElementInViewport(currentPage);
+
+      const payload = JSON.stringify({
+        line_dist: lineDistance,
+        slug_dist: slugDistance,
+        tree_dist: treeDistance,
+        current_visible: Number(isCurrentVisible),
+        macro,
+        from,
+        to,
+      });
+      gleanClick(`${SIDEBAR_CLICK}: ${payload}`);
+    }
+  };
+
+  wrapper.addEventListener("click", clickListener);
+
+  return () => wrapper.removeEventListener("click", clickListener);
+}
+
 function useSidebarMetricsCallback() {
   const gleanClick = useGleanClick();
   const cleanupFunc = useRef<Function | null>(null);
@@ -87,47 +129,12 @@ function useSidebarMetricsCallback() {
         cleanupFunc.current = null;
       }
 
-      if (!wrapper) {
-        return;
+      if (wrapper) {
+        cleanupFunc.current = registerSidebarMetricsListener(
+          wrapper,
+          gleanClick
+        );
       }
-
-      const clickListener = (event) => {
-        const { target = null, currentTarget = null } = event;
-        const anchor = (target as HTMLElement)?.closest("a");
-        const currentPage = currentTarget.querySelector("a[aria-current=page]");
-        if (
-          currentTarget instanceof HTMLElement &&
-          anchor instanceof HTMLAnchorElement
-        ) {
-          const macro = currentTarget.getAttribute("data-macro");
-          const from = currentPage?.getAttribute("href");
-          const to = anchor?.getAttribute("href");
-
-          const lineDistance = getLineDistance(currentPage, anchor);
-          const slugDistance = getSlugDistance(from, to);
-          const treeDistance = getTreeDistance(currentPage, anchor, {
-            boundary: currentTarget,
-            selector: "details",
-          });
-          const isCurrentVisible = isElementInViewport(currentPage);
-
-          const payload = JSON.stringify({
-            line_dist: lineDistance,
-            slug_dist: slugDistance,
-            tree_dist: treeDistance,
-            current_visible: Number(isCurrentVisible),
-            macro,
-            from,
-            to,
-          });
-          gleanClick(`${SIDEBAR_CLICK}: ${payload}`);
-        }
-      };
-
-      wrapper.addEventListener("click", clickListener);
-
-      cleanupFunc.current = () =>
-        wrapper.removeEventListener("click", clickListener);
     },
     [gleanClick]
   );
