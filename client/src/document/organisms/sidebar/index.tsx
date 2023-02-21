@@ -1,19 +1,12 @@
 import { Link } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
-import { useGleanClick } from "../../../telemetry/glean-context";
-import {
-  getLineDistance,
-  getSlugDistance,
-  getTreeDistance,
-  isElementInViewport,
-} from "../../../utils";
-import { SIDEBAR_CLICK } from "../../../telemetry/constants";
+import { useSidebarMetricsCallback } from "./telemetry";
 
 export function SidebarContainer({
   doc,
@@ -73,70 +66,6 @@ export function SidebarContainer({
         </nav>
       </aside>
     </>
-  );
-}
-
-function registerSidebarMetricsListener(
-  wrapper: HTMLElement,
-  gleanClick: ReturnType<typeof useGleanClick>
-): Function | null {
-  const clickListener = (event) => {
-    const { target = null, currentTarget = null } = event;
-    const anchor = (target as HTMLElement)?.closest("a");
-    const currentPage = currentTarget.querySelector("a[aria-current=page]");
-    if (
-      currentTarget instanceof HTMLElement &&
-      anchor instanceof HTMLAnchorElement
-    ) {
-      const macro = currentTarget.getAttribute("data-macro");
-      const from = currentPage?.getAttribute("href");
-      const to = anchor?.getAttribute("href");
-
-      const lineDistance = getLineDistance(currentPage, anchor);
-      const slugDistance = getSlugDistance(from, to);
-      const treeDistance = getTreeDistance(currentPage, anchor, {
-        boundary: currentTarget,
-        selector: "details",
-      });
-      const isCurrentVisible = isElementInViewport(currentPage);
-
-      const payload = JSON.stringify({
-        line_dist: lineDistance,
-        slug_dist: slugDistance,
-        tree_dist: treeDistance,
-        current_visible: Number(isCurrentVisible),
-        macro,
-        from,
-        to,
-      });
-      gleanClick(`${SIDEBAR_CLICK}: ${payload}`);
-    }
-  };
-
-  wrapper.addEventListener("click", clickListener);
-
-  return () => wrapper.removeEventListener("click", clickListener);
-}
-
-function useSidebarMetricsCallback() {
-  const gleanClick = useGleanClick();
-  const cleanupFunc = useRef<Function | null>(null);
-
-  return useCallback(
-    (wrapper: HTMLDivElement) => {
-      if (cleanupFunc.current) {
-        cleanupFunc.current();
-        cleanupFunc.current = null;
-      }
-
-      if (wrapper) {
-        cleanupFunc.current = registerSidebarMetricsListener(
-          wrapper,
-          gleanClick
-        );
-      }
-    },
-    [gleanClick]
   );
 }
 
