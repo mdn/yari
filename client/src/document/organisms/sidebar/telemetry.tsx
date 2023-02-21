@@ -60,13 +60,17 @@ function getClickPayload(event: MouseEvent) {
       boundary: currentTarget,
       selector: "details",
     });
-    const isCurrentVisible = currentPage && isElementInViewport(currentPage);
+    const current = currentPage
+      ? isElementInViewport(currentPage)
+        ? 1
+        : 0
+      : -1;
 
     return {
       line_dist: lineDistance,
       slug_dist: slugDistance,
       tree_dist: treeDistance,
-      current_visible: Number(isCurrentVisible),
+      current,
       macro,
       from,
       to,
