@@ -76,11 +76,11 @@ export function SidebarContainer({
   );
 }
 
-export function RenderSideBar({ doc }) {
+function useSidebarMetricsCallback() {
   const gleanClick = useGleanClick();
-
   const removeEventListener = useRef<Function | null>(null);
-  const sidebarRef = useCallback(
+
+  return useCallback(
     (wrapper: HTMLDivElement) => {
       if (removeEventListener.current) {
         removeEventListener.current();
@@ -122,6 +122,7 @@ export function RenderSideBar({ doc }) {
           });
           const key = `${SIDEBAR_CLICK}: ${payload}`;
           gleanClick(key);
+          console.log(key);
         }
       };
 
@@ -132,6 +133,10 @@ export function RenderSideBar({ doc }) {
     },
     [gleanClick]
   );
+}
+
+export function RenderSideBar({ doc }) {
+  const sidebarRef = useSidebarMetricsCallback();
 
   if (!doc.related_content) {
     return (
