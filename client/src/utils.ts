@@ -188,8 +188,12 @@ export function getTreeDistance(
   return getPathDistance(aPath, bPath);
 }
 
+function getCanonicalSlug(url: string) {
+  return url.replace(/.*\/docs\//, "");
+}
+
 function getSlugPath(slug: string): string[] {
-  return slug.split("/");
+  return getCanonicalSlug(slug).split("/");
 }
 
 export function getSlugDistance(a: string | null, b: string | null) {
