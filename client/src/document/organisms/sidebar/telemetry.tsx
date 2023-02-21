@@ -27,44 +27,53 @@ function registerSidebarMetricsListener(
   gleanClick: ReturnType<typeof useGleanClick>
 ): Function | null {
   const clickListener = (event: MouseEvent) => {
-    const { target = null, currentTarget = null } = event;
-    const anchor = (target as HTMLElement)?.closest("a");
-    const currentPage = (currentTarget as HTMLElement)?.querySelector(
-      "a[aria-current=page]"
-    ) as HTMLElement | null;
-    if (
-      currentTarget instanceof HTMLElement &&
-      anchor instanceof HTMLAnchorElement
-    ) {
-      const macro = currentTarget.getAttribute("data-macro");
-      const from = currentPage?.getAttribute("href") ?? null;
-      const to = anchor?.getAttribute("href") ?? null;
-
-      const lineDistance = getLineDistance(currentPage, anchor);
-      const slugDistance = getSlugDistance(from, to);
-      const treeDistance = getTreeDistance(currentPage, anchor, {
-        boundary: currentTarget,
-        selector: "details",
-      });
-      const isCurrentVisible = currentPage && isElementInViewport(currentPage);
-
-      const payload = JSON.stringify({
-        line_dist: lineDistance,
-        slug_dist: slugDistance,
-        tree_dist: treeDistance,
-        current_visible: Number(isCurrentVisible),
-        macro,
-        from,
-        to,
-      });
-      gleanClick(`${SIDEBAR_CLICK}: ${payload}`);
-      console.log(payload);
+    const payload = getClickPayload(event);
+    if (payload) {
+      gleanClick(`${SIDEBAR_CLICK}: ${JSON.stringify(payload)}`);
+      console.log(SIDEBAR_CLICK, payload);
     }
   };
 
   ref.addEventListener("click", clickListener);
 
   return () => ref.removeEventListener("click", clickListener);
+}
+
+function getClickPayload(event: MouseEvent) {
+  const { target = null, currentTarget = null } = event;
+  const anchor = (target as HTMLElement)?.closest("a");
+  const currentPage = (currentTarget as HTMLElement)?.querySelector(
+    "a[aria-current=page]"
+  ) as HTMLElement | null;
+
+  if (
+    currentTarget instanceof HTMLElement &&
+    anchor instanceof HTMLAnchorElement
+  ) {
+    const macro = currentTarget.getAttribute("data-macro");
+    const from = currentPage?.getAttribute("href") ?? null;
+    const to = anchor?.getAttribute("href") ?? null;
+
+    const lineDistance = getLineDistance(currentPage, anchor);
+    const slugDistance = getSlugDistance(from, to);
+    const treeDistance = getTreeDistance(currentPage, anchor, {
+      boundary: currentTarget,
+      selector: "details",
+    });
+    const isCurrentVisible = currentPage && isElementInViewport(currentPage);
+
+    return {
+      line_dist: lineDistance,
+      slug_dist: slugDistance,
+      tree_dist: treeDistance,
+      current_visible: Number(isCurrentVisible),
+      macro,
+      from,
+      to,
+    };
+  } else {
+    return null;
+  }
 }
 
 function getBaseFontSize(): number {
