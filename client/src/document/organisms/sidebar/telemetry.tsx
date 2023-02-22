@@ -50,9 +50,9 @@ function getClickPayload(event: MouseEvent) {
     currentTarget instanceof HTMLElement &&
     anchor instanceof HTMLAnchorElement
   ) {
-    const macro = currentTarget.getAttribute("data-macro");
+    const macro = currentTarget.getAttribute("data-macro") ?? "?";
     const from = currentPage?.getAttribute("href") ?? window.location.pathname;
-    const to = anchor?.getAttribute("href") ?? null;
+    const to = anchor?.getAttribute("href") ?? "?";
 
     const lineDistance = getLineDistance(currentPage, anchor);
     const slugDistance = getSlugDistance(from, to);
