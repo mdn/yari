@@ -1,7 +1,6 @@
 import { DocParent } from "../../../../../libs/types/document";
 import { PreloadingDocumentLink } from "../../../document/preloading";
-import { BREADCRUMB_CLICK } from "../../../telemetry/constants";
-import { useGleanClick } from "../../../telemetry/glean-context";
+import { useGlean } from "../../../telemetry/glean-context";
 
 import "./index.scss";
 
@@ -10,7 +9,7 @@ export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
     throw new Error("Empty parents array");
   }
 
-  const gleanClick = useGleanClick();
+  const glean = useGlean();
 
   return (
     <nav className="breadcrumbs-container" aria-label="Breadcrumb">
@@ -32,11 +31,11 @@ export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
                 typeof="WebPage"
                 // 1/* => current, 2/* = parent, ..., n/n = top-level.
                 onClick={() =>
-                  gleanClick(
-                    `${BREADCRUMB_CLICK}: ${parents.length - i}/${
-                      parents.length
-                    }`
-                  )
+                  glean.navigation({
+                    component: "breadcrumbs",
+                    relation: `${parents.length - i}/${parents.length}`,
+                    to: parent.uri,
+                  })
                 }
               >
                 <span property="name">{parent.title}</span>
