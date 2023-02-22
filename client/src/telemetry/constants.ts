@@ -37,3 +37,5 @@ export const PLUS_UPDATES = Object.freeze({
   MDN_PLUS: "plus_updates_mdn_plus",
   PAGE_CHANGE: "plus_updates_page_change",
 });
+
+export const BREADCRUMB_CLICK = "breadcrumb_click";
