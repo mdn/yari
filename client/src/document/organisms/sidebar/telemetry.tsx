@@ -29,8 +29,9 @@ function registerSidebarMetricsListener(
   const clickListener = (event: MouseEvent) => {
     const payload = getClickPayload(event);
     if (payload) {
-      gleanClick(`${SIDEBAR_CLICK}: ${JSON.stringify(payload)}`);
-      console.log(SIDEBAR_CLICK, payload);
+      const key = `${SIDEBAR_CLICK}: ${JSON.stringify(payload)}`;
+      gleanClick(key);
+      console.log({ key, length: key.length });
     }
   };
 
@@ -157,7 +158,7 @@ export function getTreeDistance(
   return getPathDistance(aPath, bPath);
 }
 
-function getCanonicalSlug(url: string) {
+export function getCanonicalSlug(url: string) {
   return url.replace(/.*\/docs\//, "");
 }
 
