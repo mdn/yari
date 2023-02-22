@@ -9,12 +9,7 @@ export function handleSidebarClick(
     record({
       component: "sidebar",
       id: payload.macro,
-      relation: JSON.stringify({
-        current: payload.current,
-        line: payload.line_dist,
-        tree: payload.tree_dist,
-        slug: payload.slug_dist,
-      }),
+      relation: `current=${payload.current} line=${payload.line_dist} tree=${payload.tree_dist} slug=${payload.slug_dist}`,
       from: payload.from,
       to: payload.to,
     });
