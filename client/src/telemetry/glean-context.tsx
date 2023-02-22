@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
+import { handleSidebarClick } from "../document/organisms/sidebar/telemetry";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -97,6 +98,7 @@ function glean(): GleanAnalytics {
   };
   window?.addEventListener("click", (ev) => {
     handleLinkClick(ev, gleanClick);
+    handleSidebarClick(ev, gleanClick);
   });
 
   return gleanContext;

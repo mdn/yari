@@ -6,7 +6,6 @@ import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
-import { useSidebarMetricsCallback } from "./telemetry";
 
 export function SidebarContainer({
   doc,
@@ -74,15 +73,12 @@ export function SidebarContainer({
 }
 
 export function RenderSideBar({ doc }) {
-  const ref = useSidebarMetricsCallback();
-
   if (!doc.related_content) {
     return (
       <SidebarContainer doc={doc} label="Related Topics">
         {doc.sidebarHTML && (
           <>
             <div
-              ref={ref}
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}

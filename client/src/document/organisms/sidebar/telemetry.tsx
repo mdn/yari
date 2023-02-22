@@ -1,41 +1,6 @@
-import { useCallback, useRef } from "react";
-
 import { SIDEBAR_CLICK } from "../../../telemetry/constants";
-import { useGleanClick } from "../../../telemetry/glean-context";
 
-export function useSidebarMetricsCallback() {
-  const gleanClick = useGleanClick();
-  const cleanupFunc = useRef<Function | null>(null);
-
-  return useCallback(
-    (ref: HTMLElement | null) => {
-      if (cleanupFunc.current) {
-        cleanupFunc.current();
-        cleanupFunc.current = null;
-      }
-
-      if (ref) {
-        cleanupFunc.current = registerSidebarMetricsListener(ref, gleanClick);
-      }
-    },
-    [gleanClick]
-  );
-}
-
-function registerSidebarMetricsListener(
-  ref: HTMLElement,
-  gleanClick: ReturnType<typeof useGleanClick>
-): Function | null {
-  const clickListener = (event: MouseEvent) => {
-    handleSidebarClick(event, gleanClick);
-  };
-
-  ref.addEventListener("click", clickListener);
-
-  return () => ref.removeEventListener("click", clickListener);
-}
-
-function handleSidebarClick(
+export function handleSidebarClick(
   event: MouseEvent,
   gleanClick: (source: string) => void
 ) {
