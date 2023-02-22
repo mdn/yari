@@ -119,3 +119,44 @@ element:
           The subscription type of the user. can be one of
           'core','mdn_plus_5m','mdn_plus_5y','mdn_plus_10m','mdn_plus_10y'
         type: string
+
+  navigation:
+    type: event
+    lifetime: ping
+    send_in_pings:
+      - action
+    description: |
+      MDN Page element interaction (e.g. click) that triggers a navigation.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - TODO
+    data_reviews:
+      - TODO
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-02-22
+    extra_keys:
+      component:
+        description: |
+          Type of element (e.g. "breadcrumbs", "sidebar")
+          that triggered the navigation.
+        type: string
+      id:
+        description: |
+          Identifies the element (e.g. "current", "root", "1/6")
+          that triggered the navigation.
+        type: string
+      relation:
+        description: |
+          Describes the relationship between the current and target page
+          (e.g. "sibling", "200px [apart]").
+        type: string
+      from:
+        description: |
+          URL of the current page from which the user navigates away.
+        type: string
+      to:
+        description: |
+          URL of the next page to which the user is navigating.
+        type: string

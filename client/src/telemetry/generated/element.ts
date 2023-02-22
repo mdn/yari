@@ -24,3 +24,25 @@ export const clicked = new EventMetricType<{
   },
   ["source", "subscription_type"]
 );
+
+/**
+ * MDN Page element interaction (e.g. click) that triggers a navigation.
+ *
+ * Generated from `element.navigation`.
+ */
+export const navigation = new EventMetricType<{
+  component?: string;
+  from?: string;
+  id?: string;
+  relation?: string;
+  to?: string;
+}>(
+  {
+    category: "element",
+    name: "navigation",
+    sendInPings: ["action"],
+    lifetime: "ping",
+    disabled: false,
+  },
+  ["component", "from", "id", "relation", "to"]
+);
