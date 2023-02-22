@@ -22,7 +22,10 @@ function getClickPayload(event: MouseEvent) {
       "a[aria-current=page]"
     ) as HTMLElement | null;
 
-    const macro = sidebar.getAttribute("data-macro") ?? "?";
+    const macro = (sidebar.getAttribute("data-macro") ?? "?").replace(
+      "Sidebar",
+      ""
+    );
     const from = currentPage?.getAttribute("href") ?? window.location.pathname;
     const to = getCanonicalSlug(anchor?.getAttribute("href") ?? "?");
 
