@@ -51,7 +51,11 @@ export function SidebarContainer({
 
   return (
     <>
-      <aside id="sidebar-quicklinks" className={classes}>
+      <aside
+        id="sidebar-quicklinks"
+        className={classes}
+        data-macro={doc.sidebarMacro}
+      >
         <Button
           extraClasses="backdrop"
           type="action"
@@ -79,7 +83,6 @@ export function RenderSideBar({ doc }) {
           <>
             <div
               ref={ref}
-              data-macro={doc.sidebarMacro}
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}

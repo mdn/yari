@@ -48,24 +48,23 @@ function handleSidebarClick(
 }
 
 function getClickPayload(event: MouseEvent) {
-  const { target = null, currentTarget = null } = event;
+  const { target = null } = event;
   const anchor = (target as HTMLElement)?.closest("a");
-  const currentPage = (currentTarget as HTMLElement)?.querySelector(
-    "a[aria-current=page]"
-  ) as HTMLElement | null;
+  const sidebar = document.getElementById("sidebar-quicklinks");
 
-  if (
-    currentTarget instanceof HTMLElement &&
-    anchor instanceof HTMLAnchorElement
-  ) {
-    const macro = currentTarget.getAttribute("data-macro") ?? "?";
+  if (sidebar && anchor && sidebar.contains(anchor)) {
+    const currentPage = sidebar.querySelector(
+      "a[aria-current=page]"
+    ) as HTMLElement | null;
+
+    const macro = sidebar.getAttribute("data-macro") ?? "?";
     const from = currentPage?.getAttribute("href") ?? window.location.pathname;
     const to = getCanonicalSlug(anchor?.getAttribute("href") ?? "?");
 
     const lineDistance = getLineDistance(currentPage, anchor);
     const slugDistance = getSlugDistance(from, to);
     const treeDistance = getTreeDistance(currentPage, anchor, {
-      boundary: currentTarget,
+      boundary: sidebar,
       selector: "details",
     });
     const current = currentPage
