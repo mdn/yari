@@ -27,17 +27,24 @@ function registerSidebarMetricsListener(
   gleanClick: ReturnType<typeof useGleanClick>
 ): Function | null {
   const clickListener = (event: MouseEvent) => {
-    const payload = getClickPayload(event);
-    if (payload) {
-      const key = `${SIDEBAR_CLICK}: ${JSON.stringify(payload)}`;
-      gleanClick(key);
-      console.log({ key, length: key.length });
-    }
+    handleSidebarClick(event, gleanClick);
   };
 
   ref.addEventListener("click", clickListener);
 
   return () => ref.removeEventListener("click", clickListener);
+}
+
+function handleSidebarClick(
+  event: MouseEvent,
+  gleanClick: (source: string) => void
+) {
+  const payload = getClickPayload(event);
+  if (payload) {
+    const key = `${SIDEBAR_CLICK}: ${JSON.stringify(payload)}`;
+    gleanClick(key);
+    console.log({ key, length: key.length });
+  }
 }
 
 function getClickPayload(event: MouseEvent) {
