@@ -33,7 +33,7 @@ export const clicked = new EventMetricType<{
 export const navigation = new EventMetricType<{
   component?: string;
   from?: string;
-  id?: string;
+  label?: string;
   relation?: string;
   to?: string;
 }>(
@@ -44,5 +44,5 @@ export const navigation = new EventMetricType<{
     lifetime: "ping",
     disabled: false,
   },
-  ["component", "from", "id", "relation", "to"]
+  ["component", "from", "label", "relation", "to"]
 );

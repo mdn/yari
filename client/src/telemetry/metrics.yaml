@@ -142,10 +142,10 @@ element:
           Type of element (e.g. "breadcrumbs", "sidebar")
           that triggered the navigation.
         type: string
-      id:
+      label:
         description: |
-          Identifies the element (e.g. "current", "root", "1/6")
-          that triggered the navigation.
+          Identifies the element (e.g. "current", "root", "1/6") among
+          others of the same type, or a part of it.
         type: string
       relation:
         description: |

@@ -32,7 +32,7 @@ export type ElementClickedProps = {
 export type ElementNavigationProps = {
   component?: string;
   from?: string;
-  id?: string;
+  label?: string;
   relation?: string;
   to?: string;
 };

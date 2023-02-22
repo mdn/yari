@@ -8,7 +8,7 @@ export function handleSidebarClick(
   if (payload) {
     record({
       component: "sidebar",
-      id: payload.macro,
+      label: payload.macro,
       relation: `current=${payload.current} line=${payload.line_dist} tree=${payload.tree_dist} slug=${payload.slug_dist}`,
       from: payload.from,
       to: payload.to,
