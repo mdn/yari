@@ -1,13 +1,18 @@
-import { SIDEBAR_CLICK } from "./constants";
+import { ElementNavigationProps } from "./glean-context";
 
 export function handleSidebarClick(
   event: MouseEvent,
-  gleanClick: (source: string) => void
+  record: (event: ElementNavigationProps) => void
 ) {
   const payload = getClickPayload(event);
   if (payload) {
-    const key = `${SIDEBAR_CLICK}: ${payload.macro} [${payload.current}/${payload.line_dist}/${payload.tree_dist}/${payload.slug_dist}] ${payload.to}`;
-    gleanClick(key);
+    record({
+      component: "sidebar",
+      id: payload.macro,
+      relation: `${payload.current}/${payload.line_dist}/${payload.tree_dist}/${payload.slug_dist}`,
+      from: payload.from,
+      to: payload.to,
+    });
   }
 }
 
@@ -25,7 +30,9 @@ function getClickPayload(event: MouseEvent) {
       "Sidebar",
       ""
     );
-    const from = currentPage?.getAttribute("href") ?? window.location.pathname;
+    const from = getCanonicalSlug(
+      currentPage?.getAttribute("href") ?? window.location.pathname
+    );
     const to = getCanonicalSlug(anchor?.getAttribute("href") ?? "?");
 
     const lineDistance = getLineDistance(currentPage, anchor);
@@ -46,6 +53,7 @@ function getClickPayload(event: MouseEvent) {
       tree_dist: treeDistance,
       current,
       macro,
+      from,
       to,
     };
   } else {

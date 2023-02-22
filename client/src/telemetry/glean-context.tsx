@@ -29,9 +29,18 @@ export type ElementClickedProps = {
   subscriptionType: string;
 };
 
+export type ElementNavigationProps = {
+  component?: string;
+  from?: string;
+  id?: string;
+  relation?: string;
+  to?: string;
+};
+
 export type GleanAnalytics = {
   page: (arg: PageProps) => void;
   click: (arg: ElementClickedProps) => void;
+  navigation: (event: ElementNavigationProps) => void;
 };
 
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
@@ -43,6 +52,7 @@ function glean(): GleanAnalytics {
     return {
       page: (page: PageProps) => {},
       click: (element: ElementClickedProps) => {},
+      navigation: (event: ElementNavigationProps) => {},
     };
   }
   const userIsOptedOut = document.cookie
@@ -89,6 +99,13 @@ function glean(): GleanAnalytics {
       });
       pings.action.submit();
     },
+    navigation: (event: ElementNavigationProps) => {
+      elementMetric.navigation.record({
+        from: window.location.pathname,
+        ...event,
+      });
+      pings.action.submit();
+    },
   };
   const gleanClick = (source: string) => {
     gleanContext.click({
@@ -98,7 +115,7 @@ function glean(): GleanAnalytics {
   };
   window?.addEventListener("click", (ev) => {
     handleLinkClick(ev, gleanClick);
-    handleSidebarClick(ev, gleanClick);
+    handleSidebarClick(ev, gleanContext.navigation);
   });
 
   return gleanContext;
