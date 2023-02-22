@@ -6,7 +6,7 @@ export function handleSidebarClick(
 ) {
   const payload = getClickPayload(event);
   if (payload) {
-    const key = `${SIDEBAR_CLICK}: ${JSON.stringify(payload)}`;
+    const key = `${SIDEBAR_CLICK}@${payload.macro}: ${payload.current}/${payload.line_dist}/${payload.tree_dist}/${payload.slug_dist}->${payload.to}`;
     gleanClick(key);
     console.log({ key, length: key.length });
   }
