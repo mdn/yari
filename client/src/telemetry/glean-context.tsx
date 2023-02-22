@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
-import { handleSidebarClick } from "../document/organisms/sidebar/telemetry";
+import { handleSidebarClick } from "./sidebar-click";
 
 export type PageProps = {
   referrer: string | undefined;

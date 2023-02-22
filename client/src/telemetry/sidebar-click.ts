@@ -1,4 +1,4 @@
-import { SIDEBAR_CLICK } from "../../../telemetry/constants";
+import { SIDEBAR_CLICK } from "./constants";
 
 export function handleSidebarClick(
   event: MouseEvent,
