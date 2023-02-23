@@ -29,7 +29,7 @@ export type ElementClickedProps = {
 };
 
 export type GleanAnalytics = {
-  page: (arg: PageProps) => void;
+  page: (arg: PageProps) => () => void;
   click: (arg: ElementClickedProps) => void;
 };
 
@@ -40,7 +40,7 @@ function glean(): GleanAnalytics {
   if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
     return {
-      page: (page: PageProps) => {},
+      page: (page: PageProps) => () => {},
       click: (element: ElementClickedProps) => {},
     };
   }
@@ -78,7 +78,7 @@ function glean(): GleanAnalytics {
         navigatorMetric.userAgent.set(page.userAgent);
       }
       navigatorMetric.subscriptionType.set(page.subscriptionType);
-      pings.page.submit();
+      return () => pings.page.submit();
     },
     click: (event: ElementClickedProps) => {
       const { source, subscriptionType: subscription_type } = event;
@@ -132,15 +132,18 @@ export function useGleanPage() {
   const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    if (!isServer && userData && path.current !== loc.pathname) {
+    if (!isServer) {
       path.current = loc.pathname;
-      gleanAnalytics.page({
+      const submit = gleanAnalytics.page({
         path: window?.location.toString(),
         referrer: document?.referrer,
         userAgent: navigator?.userAgent,
         geo: userData?.geo?.country,
         subscriptionType: userData?.subscriptionType || "anonymous",
       });
+      if (userData && path.current !== loc.pathname) {
+        submit();
+      }
     }
   }, [loc.pathname, isServer, userData]);
 }
