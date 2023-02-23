@@ -3,5 +3,13 @@
   "compilerOptions": {
     "noEmit": false
   },
-  "include": ["build", "content", "filecheck", "markdown", "server", "tool"]
+  "include": [
+    "build",
+    "content",
+    "filecheck",
+    "markdown",
+    "server",
+    "tool",
+    "fmlint"
+  ]
 }

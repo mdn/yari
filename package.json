@@ -26,6 +26,7 @@
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "ts-node filecheck/cli.ts",
+    "fmlint": "ts-node fmlint/cli.ts",
     "install:all": "find . -mindepth 2 -name 'yarn.lock' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'yarn --cwd $(dirname $0) install'",
     "jest": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "m2h": "ts-node markdown/m2h/cli.ts",
@@ -55,6 +56,7 @@
     "lodash": ">=4.17.15"
   },
   "dependencies": {
+    "@apideck/better-ajv-errors": "^0.3.6",
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
     "@mdn/bcd-utils-api": "^0.0.4",
@@ -63,6 +65,8 @@
     "@use-it/interval": "^1.0.0",
     "@webref/css": "^5.4.4",
     "accept-language-parser": "^1.5.0",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
     "async": "^3.2.4",
     "chalk": "^5.2.0",
     "cheerio": "^1.0.0-rc.12",

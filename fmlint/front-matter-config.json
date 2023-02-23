@@ -1,0 +1,127 @@
+{
+  "lineWidth": 80,
+  "schema": {
+    "title": "Front matter schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["title", "slug"],
+    "properties": {
+      "title": {
+        "title": "Title",
+        "description": "Rendered page title and for SEO",
+        "type": "string",
+        "maxLength": 150
+      },
+      "slug": {
+        "title": "slug",
+        "description": "URL path of the page",
+        "type": "string"
+      },
+      "page-type": {
+        "title": "Page Type",
+        "type": "string"
+      },
+      "status": {
+        "title": "Status",
+        "description": "Browser compatibility status",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "enum": ["experimental", "non-standard", "deprecated"]
+        }
+      },
+      "browser-compat": {
+        "title": "Browser Compatibility",
+        "description": "Browser compatibility location",
+        "type": ["array", "string"]
+      },
+      "spec-urls": {
+        "title": "Specification URLs",
+        "description": "Specification locations",
+        "type": ["array", "string"],
+        "format": "uri",
+        "items": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  },
+  "allowedPageTypes": {
+    "Glossary": ["glossary-definition", "glossary-disambiguation"],
+    "MDN/": ["landing-page", "mdn-community-guide", "mdn-writing-guide"],
+    "Web/SVG/": ["guide", "landing-page", "svg-attribute", "svg-element"],
+    "Web/HTML/": [
+      "guide",
+      "landing-page",
+      "html-attribute",
+      "html-attribute-value",
+      "html-element"
+    ],
+    "Mozilla/Add-ons/WebExtensions/": [
+      "guide",
+      "landing-page",
+      "webextension-api-function",
+      "webextension-api",
+      "webextension-api-event",
+      "webextension-api-property",
+      "webextension-api-type",
+      "webextension-manifest-key"
+    ],
+    "Web/API/": [
+      "guide",
+      "landing-page",
+      "web-api-overview",
+      "web-api-global-function",
+      "web-api-global-property",
+      "web-api-interface",
+      "web-api-constructor",
+      "web-api-instance-method",
+      "web-api-instance-property",
+      "web-api-instance-event",
+      "web-api-static-method",
+      "web-api-static-property",
+      "web-api-event",
+      "webgl-extension",
+      "webgl-extension-method"
+    ],
+    "Web/CSS/": [
+      "guide",
+      "landing-page",
+      "css-at-rule",
+      "css-at-rule-descriptor",
+      "css-combinator",
+      "css-function",
+      "css-keyword",
+      "css-media-feature",
+      "css-module",
+      "css-property",
+      "css-pseudo-class",
+      "css-pseudo-element",
+      "css-selector",
+      "css-shorthand-property",
+      "css-type"
+    ],
+    "Web/JavaScript/": [
+      "guide",
+      "landing-page",
+      "javascript-class",
+      "javascript-constructor",
+      "javascript-error",
+      "javascript-function",
+      "javascript-global-property",
+      "javascript-instance-accessor-property",
+      "javascript-instance-data-property",
+      "javascript-instance-method",
+      "javascript-language-feature",
+      "javascript-namespace",
+      "javascript-operator",
+      "javascript-statement",
+      "javascript-static-accessor-property",
+      "javascript-static-data-property",
+      "javascript-static-method"
+    ],
+    "global": ["guide", "landing-page"]
+  }
+}
