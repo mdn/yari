@@ -41,6 +41,8 @@ import {
   MacroInvocationError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
+import { FMLintArgsAndOptions } from "../fmlint/types.js";
+import { lintFrontMatter } from "../fmlint/linter.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -1219,6 +1221,36 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
       const { deprecatedOnly, format, unusedOnly } = options;
       return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
+  )
+
+  .command("fmlint", "Validate and prettify front matter.")
+  .option("--cwd <path>", "Explicit current-working-directory", {
+    validator: program.STRING,
+    default: process.cwd(),
+  })
+  .option("--config <path>", "Front matter config file location", {
+    validator: program.STRING,
+    default: fileURLToPath(
+      new URL("../fmlint/front-matter-config.json", import.meta.url)
+    ),
+  })
+  .option("--fix", "Save formatted/corrected output", {
+    validator: program.BOOLEAN,
+    default: false,
+  })
+  .argument("[files...]", "list of files and/or directories to check", {
+    default: [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT].filter(Boolean),
+  })
+  .action(
+    tryOrExit(({ args, options, logger }: FMLintArgsAndOptions) => {
+      const cwd = options.cwd || process.cwd();
+      const files = (args.files || []).map((f) => path.resolve(cwd, f));
+      if (!files.length) {
+        logger.info("No files to lint.");
+        return;
+      }
+      return lintFrontMatter(files, options);
     })
   );
 

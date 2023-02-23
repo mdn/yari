@@ -1,6 +1,6 @@
 import { ActionParameters } from "@caporal/core";
 
-export interface CliArgsAndOptions extends ActionParameters {
+export interface FMLintArgsAndOptions extends ActionParameters {
   args: {
     files?: string[];
   };

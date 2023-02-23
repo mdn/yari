@@ -182,7 +182,7 @@ function compileValidators(config: FMConfig) {
 }
 
 // lint front matter
-export async function runLinter(
+export async function lintFrontMatter(
   filesAndDirectories: string[],
   options: LinterOptions
 ) {
