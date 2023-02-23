@@ -1,7 +1,7 @@
 import { assert, itMacro, describeMacro } from "./utils.js";
 
 const expected = `\
-<section id="Quick_links">
+<section id="Quick_links" data-macro="WebAssemblySidebar">
 
 <ol>
   <li data-default-state="open"><a href="/en-US/docs/WebAssembly"><strong>WebAssembly home page</strong></a>
