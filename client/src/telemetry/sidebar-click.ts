@@ -6,7 +6,7 @@ export function handleSidebarClick(
 ) {
   const payload = getClickPayload(event);
   if (payload) {
-    record(`${SIDEBAR_CLICK}: ${payload.macro}`);
+    record(`${SIDEBAR_CLICK}: ${payload.macro} ${payload.href}`);
   }
 }
 
@@ -17,9 +17,11 @@ function getClickPayload(event: MouseEvent) {
 
   if (sidebar && anchor && sidebar.contains(anchor)) {
     const macro = sidebar.getAttribute("data-macro") ?? "?";
+    const href = anchor.getAttribute("href") ?? "?";
 
     return {
       macro,
+      href,
     };
   } else {
     return null;
