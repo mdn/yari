@@ -92,8 +92,8 @@ export async function getDocumentLanguageFlaws(doc, $, document) {
         .map(
           (l) =>
             `${l.name} (${l.percent}%${
-              IGNORED_LANGUAGES.includes(l.name) ? ", ignored" : ""
-            })`
+              l.percent < THRESHOLD ? ", below threshold" : ""
+            }${IGNORED_LANGUAGES.includes(l.name) ? ", ignored" : ""})`
         )
         .join(", ")}`,
       suggestion:
