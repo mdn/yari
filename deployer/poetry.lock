@@ -618,14 +618,14 @@ files = [
 
 [[package]]
 name = "pygithub"
-version = "1.57"
+version = "1.58.0"
 description = "Use the full Github API v3"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "PyGithub-1.57-py3-none-any.whl", hash = "sha256:5822febeac2391f1306c55a99af2bc8f86c8bf82ded000030cd02c18f31b731f"},
-    {file = "PyGithub-1.57.tar.gz", hash = "sha256:c273f252b278fb81f1769505cc6921bdb6791e1cebd6ac850cc97dad13c31ff3"},
+    {file = "PyGithub-1.58.0-py3-none-any.whl", hash = "sha256:b7bac601492a2b6c876ef326e4ffa3c1923e32707e415da76bfb8307ee8ffb7e"},
+    {file = "PyGithub-1.58.0.tar.gz", hash = "sha256:e325f5ca2c111d19dea2796c8f1e7ae11da77287007736582196341390d31d35"},
 ]
 
 [package.dependencies]
@@ -973,4 +973,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c15e93ef146cdf877ce5e9d2b1c28079c6856da7d32ecb4c33ef0d3a4cf95216"
+content-hash = "b8c311c0363a23e350646298d80b3539f2b1658b58505ef56f833abca01c1473"
