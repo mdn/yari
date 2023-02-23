@@ -6,23 +6,23 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
       <h3>Found a content problem with this page?</h3>
       <ul>
         <li>
-          Edit the page <EditOnGitHubLink doc={doc} />.
+          <EditOnGitHubLink doc={doc} />.
         </li>
         <li>
-          Report the <NewIssueOnGitHubLink doc={doc} />.
+          <NewIssueOnGitHubLink doc={doc} />.
         </li>
         <li>
-          View the source <SourceOnGitHubLink doc={doc} />.
+          <SourceOnGitHubLink doc={doc} />.
         </li>
       </ul>
-      Want to get more involved? Learn{" "}
+      Want to get more involved?{" "}
       <a
         href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
         title={`This will take you to our contribution guidelines on GitHub.`}
         target="_blank"
         rel="noopener noreferrer"
       >
-        how to contribute
+        Learn how to contribute
       </a>
       .
     </div>
@@ -38,7 +38,7 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      on GitHub
+      Edit the page on GitHub
     </a>
   );
 }
@@ -98,7 +98,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      content issue
+      Report the content issue
     </a>
   );
 }
@@ -112,7 +112,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      on GitHub
+      View the source on GitHub
     </a>
   );
 }
