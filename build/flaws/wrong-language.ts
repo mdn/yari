@@ -17,6 +17,10 @@ const IGNORE_BLOCK_STRINGS = [
   "<!-- lang-detect ignore-end -->",
 ];
 
+const IGNORED_LANGUAGES = [
+  "LATIN", // Commonly used as example text
+];
+
 function getKeyByValue(object, value) {
   return Object.keys(object).find((key) => object[key] === value);
 }
@@ -68,9 +72,9 @@ export async function getDocumentLanguageFlaws(doc, $, document) {
     throw e;
   }
 
-  const detectedLocales = detection.languages.filter(
-    (l) => l.percent > THRESHOLD
-  );
+  const detectedLocales = detection.languages
+    .filter((l) => !IGNORED_LANGUAGES.includes(l.name))
+    .filter((l) => l.percent > THRESHOLD);
 
   if (
     detectedLocales.length === 1 &&
@@ -85,7 +89,12 @@ export async function getDocumentLanguageFlaws(doc, $, document) {
     {
       id: "wrong_language",
       explanation: `Expected only ${expectedLocale}, but found: ${detection.languages
-        .map((l) => `${l.name} (${l.percent}%)`)
+        .map(
+          (l) =>
+            `${l.name} (${l.percent}%${
+              IGNORED_LANGUAGES.includes(l.name) ? ", ignored" : ""
+            })`
+        )
         .join(", ")}`,
       suggestion:
         (expectedLocale === "ENGLISH"
