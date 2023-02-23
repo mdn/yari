@@ -125,6 +125,7 @@ export type Toc = {
 
 export interface DocMetadata {
   title: string;
+  shortTitle: string;
   locale: string;
   native: string;
   pageTitle: string;
