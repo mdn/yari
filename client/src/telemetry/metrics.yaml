@@ -130,7 +130,7 @@ element:
     data_sensitivity:
       - web_activity
     bugs:
-      - TODO
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1818372
     data_reviews:
       - TODO
     notification_emails:
