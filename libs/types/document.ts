@@ -151,6 +151,7 @@ export interface DocMetadata {
 
 export interface Doc extends DocMetadata {
   sidebarHTML: string;
+  sidebarMacro?: string;
   toc: Toc[];
   body: Section[];
 }

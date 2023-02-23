@@ -225,7 +225,7 @@ function buildIFList(interfaces, title) {
 }
 
 // output
-output = '<section id="Quick_links"><ol>';
+output = '<section id="Quick_links" data-macro="APIRef"><ol>';
 if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
   output += `<li><strong>${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref, null, "APIRef")}</strong></li>`;
 }
