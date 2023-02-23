@@ -6,13 +6,20 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
       <h3>Found a content problem with this page?</h3>
       <ul>
         <li>
-          <EditOnGitHubLink doc={doc} />.
+          <EditOnGitHubLink doc={doc}>Edit the page on GitHub</EditOnGitHubLink>
+          .
         </li>
         <li>
-          <NewIssueOnGitHubLink doc={doc} />.
+          <NewIssueOnGitHubLink doc={doc}>
+            Report the content issue
+          </NewIssueOnGitHubLink>
+          .
         </li>
         <li>
-          <SourceOnGitHubLink doc={doc} />.
+          <SourceOnGitHubLink doc={doc}>
+            View the source on GitHub
+          </SourceOnGitHubLink>
+          .
         </li>
       </ul>
       Want to get more involved?{" "}
@@ -29,7 +36,13 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
   );
 }
 
-function EditOnGitHubLink({ doc }: { doc: Doc }) {
+function EditOnGitHubLink({
+  doc,
+  children,
+}: {
+  doc: Doc;
+  children: React.ReactNode;
+}) {
   const { github_url } = doc.source;
   return (
     <a
@@ -38,7 +51,7 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Edit the page on GitHub
+      {children}
     </a>
   );
 }
@@ -71,7 +84,13 @@ function fillMetadata(string, doc) {
     .trim();
 }
 
-function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
+function NewIssueOnGitHubLink({
+  doc,
+  children,
+}: {
+  doc: Doc;
+  children: React.ReactNode;
+}) {
   const { locale } = doc;
   const url = new URL("https://github.com/");
   const sp = new URLSearchParams();
@@ -98,12 +117,18 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Report the content issue
+      {children}
     </a>
   );
 }
 
-function SourceOnGitHubLink({ doc }: { doc: Doc }) {
+function SourceOnGitHubLink({
+  doc,
+  children,
+}: {
+  doc: Doc;
+  children: React.ReactNode;
+}) {
   const { github_url, folder } = doc.source;
   return (
     <a
@@ -112,7 +137,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      View the source on GitHub
+      {children}
     </a>
   );
 }
