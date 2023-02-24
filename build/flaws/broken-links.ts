@@ -1,5 +1,4 @@
-import fs from "node:fs";
-
+import fse from "fs-extra";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
@@ -27,11 +26,9 @@ const _safeToHttpsDomains = new Map();
 
 function getSafeToHttpDomains() {
   if (!_safeToHttpsDomains.size) {
-    const fileParsed = JSON.parse(
-      fs.readFileSync(
-        new URL("safe-to-https-domains.json", import.meta.url),
-        "utf-8"
-      )
+    const fileParsed = await fse.readJson(
+      new URL("safe-to-https-domains.json", import.meta.url),
+      "utf-8"
     );
     Object.entries(fileParsed).forEach(([key, value]) =>
       _safeToHttpsDomains.set(key, value)
