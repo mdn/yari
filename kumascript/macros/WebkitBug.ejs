@@ -1,9 +1,7 @@
 <%
-// This macro is a simple link wrapper and should be replaced with
-// `[WebKit bug <bug_id>](https://webkit.org/b/<bug_id>)`
 // Condition for removal: no more use in any content (Feb 2023: 18 occurrences)
 // 4 occurrences left in en-US
-mdn.deprecated();
+mdn.deprecated("This macro is deprecated; replace with `[WebKit bug <bug_id>](https://webkit.org/b/<bug_id>)`.");
 
 var bugPageURL = 'https://bugs.webkit.org/show_bug.cgi?id=' + $0;
 var s = "";
