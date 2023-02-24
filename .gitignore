@@ -30,27 +30,31 @@ yarn-error.log*
 /kumascript/coverage/
 /kumascript/node_modules/
 /testing/node_modules/
-/build/*.js
-/build/*.js.map
+/build/**/*.js
+/build/**/*.js.map
 /client/build
 /client/src/**/*.js
 /client/src/**/*.js.map
-/content/*.js
-/content/*.js.map
-/filecheck/*.js
-/filecheck/*.js.map
-/kumascript/*.js
-/kumascript/*.js.map
-/markdown/*.js
-/markdown/*.js.map
-/server/*.js
-/server/*.js.map
+/content/**/*.js
+/content/**/*.js.map
+/filecheck/**/*.js
+/filecheck/**/*.js.map
+/kumascript/**/*.js
+/kumascript/**/*.js.map
+/libs/types/**/*.js
+/libs/types/**/*.js.map
+/markdown/**/*.js
+/markdown/**/*.js.map
+/server/**/*.js
+/server/**/*.js.map
 /ssr/dist/
-/ssr/*.js
+/ssr/**/*.js
 !/ssr/webpack.config.js
-/ssr/*.js.map
-/tool/*.js
-/tool/*.js.map
+/ssr/**/*.js.map
+/tool/**/*.js
+/tool/**/*.js.map
+/type-fixes/**/*.js
+/type-fixes/**/*.js.map
 
 # These are an effect of the dumper still producing all locales
 # We haven't decided what to do with them but for now we're *not*
