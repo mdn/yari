@@ -12,9 +12,11 @@
  * https://wiki.mozilla.org/Bugzilla:REST_API
  */
 
+// This macro is a simple link wrapper and should be replaced with
+// `[Firefox bug <bug_id>](https://bugzil.la/<bug_id>)`
 // Condition for removal: no more use in any content (Feb 2023: 7477 occurrences)
 // 224 occurrences left in en-US
-mdn.deprecated("This macro is deprecated; replace with `[Firefox bug <bug_id>](https://bugzil.la/<bug_id>)`.");
+mdn.deprecated();
 
 var type = $1 || 'bug';
 var bugNumber = $0;
