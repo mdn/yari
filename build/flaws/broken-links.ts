@@ -22,9 +22,8 @@ function findMatchesInMarkdown(rawContent, href) {
   return matches;
 }
 
-const _safeToHttpsDomains = new Map();
-
-function getSafeToHttpDomains() {
+async function getSafeToHttpsDomains() {
+  const _safeToHttpsDomains = new Map();
   if (!_safeToHttpsDomains.size) {
     const fileParsed = await fse.readJson(
       new URL("safe-to-https-domains.json", import.meta.url),
@@ -36,6 +35,8 @@ function getSafeToHttpDomains() {
   }
   return _safeToHttpsDomains;
 }
+
+const safeToHttpsDomains = await getSafeToHttpsDomains();
 
 function isHomepageURL(url) {
   // Return true if the URL is something like `/` or `/en-US` or `/fr/`
@@ -204,7 +205,7 @@ export async function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       // Using `.get(domain)` is smart because if the domain isn't known you
       // get `undefined` otherwise you get `true` or `false`. And we're only
       // interested in the `true`.
-      if (getSafeToHttpDomains().get(domain)) {
+      if (safeToHttpsDomains.get(domain)) {
         addBrokenLink(
           a,
           checked.get(href),
