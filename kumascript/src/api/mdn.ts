@@ -1,7 +1,7 @@
 import got from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
-import { INTERACTIVE_EXAMPLES_BASE_URL } from "../../../libs/env.js";
+import { INTERACTIVE_EXAMPLES_BASE_URL } from "../../../libs/env/index.js";
 import {
   InteractiveEditorHeights,
   InteractiveExamplesHeightData,
@@ -180,8 +180,8 @@ const mdn = {
         interactiveExampleHeightData = await got<InteractiveExamplesHeightData>(
           INTERACTIVE_EXAMPLES_BASE_URL + "/height-data.json",
           {
-            timeout: 1000,
-            retry: 5,
+            timeout: { request: 1000 },
+            retry: { limit: 1 },
           }
         ).json();
       } catch (error) {

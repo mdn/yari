@@ -8,7 +8,7 @@
 //
 
 const url = (new URL($0, env.interactive_examples.base_url)).toString();
-const heights = await mdn.getInteractiveExampleHeight(url);
+const heights = await mdn.getInteractiveExampleHeight($0);
 
 // We convert the heights to a string, so we can place it in the data-heights attribute, which is used by interactive-example.tsx
 const heightsStr = JSON.stringify(heights || "", null, "");
