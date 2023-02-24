@@ -18,7 +18,9 @@ import { SourceCodeError } from "./src/errors.js";
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" macros):';
 
-export const renderCache = new LRU<string, unknown>({ max: 2000 });
+export const renderCache = new LRU<string, [string, SourceCodeError[]]>({
+  max: 2000,
+});
 
 interface RenderOptions {
   urlsSeen?: Set<string>;
@@ -39,8 +41,7 @@ export async function render(
     if (invalidateCache) {
       renderCache.delete(urlLC);
     } else {
-      const [renderedHtml, errors]: [string, SourceCodeError[]] =
-        renderCache.get(urlLC);
+      const [renderedHtml, errors] = renderCache.get(urlLC);
       return [cheerio.load(renderedHtml), errors];
     }
   }
