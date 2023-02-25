@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import fromMarkdown from "mdast-util-from-markdown";
+import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
 import { Document, Redirect, Image } from "../../content/index.js";

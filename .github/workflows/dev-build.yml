@@ -66,7 +66,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: yarn
 
       - name: Install all yarn packages
@@ -75,7 +75,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.10"
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1
@@ -95,6 +95,9 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
+
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
 
       - name: Build everything
         env:

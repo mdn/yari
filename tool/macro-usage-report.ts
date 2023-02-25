@@ -199,7 +199,7 @@ function writeJson(
         file
           .replace(CONTENT_ROOT, "content")
           .replace(CONTENT_TRANSLATED_ROOT, "translated-content")
-          .replace(YARI_PATH, "yari")
+          .replace(YARI_PATH, "yari/")
       ),
     };
   }

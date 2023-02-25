@@ -1,15 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
 import { cwd } from "node:process";
+import { fileURLToPath } from "node:url";
 
 import dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
-export const ROOT = path.join(cwd(), ".");
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+const ROOT = path.join(dirname, "..", "..");
 
 dotenv.config({
-  path: path.join(ROOT, process.env.ENV_FILE || ".env"),
+  path: path.join(cwd(), process.env.ENV_FILE || ".env"),
 });
 
 // -----

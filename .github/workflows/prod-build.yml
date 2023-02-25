@@ -89,7 +89,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: yarn
 
       - name: Install all yarn packages
@@ -98,7 +98,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.10"
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1
@@ -118,6 +118,9 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
+
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
 
       - name: Build everything
         env:
@@ -179,6 +182,9 @@ jobs:
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: true
 
+          # Placement
+          REACT_APP_PLACEMENT_ENABLED: true
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
@@ -230,6 +236,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
+
+          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_SITE_ID }}
+          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_NETWORK_ID }}
+          SIGN_SECRET: ${{ secrets.DEPLOYER_PROD_SIGN_SECRET }}
 
         run: |
 

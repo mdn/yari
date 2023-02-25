@@ -1,5 +1,6 @@
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
+import "prism-svelte";
 
 const lazy = (creator) => {
   let res;
@@ -43,6 +44,7 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
+    "svelte",
     "sql",
     "toml",
     "tsx",

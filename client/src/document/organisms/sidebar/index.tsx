@@ -50,7 +50,11 @@ export function SidebarContainer({
 
   return (
     <>
-      <aside id="sidebar-quicklinks" className={classes}>
+      <aside
+        id="sidebar-quicklinks"
+        className={classes}
+        data-macro={doc.sidebarMacro}
+      >
         <Button
           extraClasses="backdrop"
           type="action"
