@@ -1,7 +1,8 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import cheerio from "cheerio";
+import fse from "fs-extra";
 import imagesize from "image-size";
 
 const { default: sizeOf } = imagesize;
@@ -15,25 +16,26 @@ import type {
 
 const buildRoot = path.join("client", "build");
 
-test("all favicons on the home page", () => {
+test("all favicons on the home page", async () => {
   // The home page SPA is built, in terms of the index.html template,
   // the same as for all document pages.
   const htmlFile = path.join(buildRoot, "en-us", "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('link[rel="icon"]')).toHaveLength(1);
   expect($('link[rel="apple-touch-icon"]')).toHaveLength(1);
   expect($('meta[property="og:image"]')).toHaveLength(1);
 
   // Check that every favicon works and resolves
-  $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
+  const favicons = $('link[rel="icon"], link[rel="apple-touch-icon"]');
+  for (const element of favicons) {
     const href = $(element).attr("href");
     // There should always be a 8 character hash in the href
     expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
     // The favicon href is a URL so to check that it exists on disk we need to
     // strip the leading / and join that with the root of the build.
     const file = path.join(buildRoot, href.slice(1));
-    expect(fs.existsSync(file)).toBeTruthy();
+    expect(await fse.pathExists(file)).toBeTruthy();
 
     if ($(element).attr("sizes")) {
       const [expectWidth, expectHeight] = $(element)
@@ -44,30 +46,32 @@ test("all favicons on the home page", () => {
       expect(dimensions.width).toBe(expectWidth);
       expect(dimensions.height).toBe(expectHeight);
     }
-  });
+  }
 
   // Check that the og:image resolves
-  $('meta[property="og:image"]').each((i, element) => {
-    const url = $(element).attr("content");
+  const els = $('meta[property="og:image"]').toArray();
+
+  for (const el of els) {
+    const url = $(el).attr("content");
     const href = new URL(url).pathname;
     // There should always be a 8 character hash in the href
     expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
     const file = path.join(buildRoot, href.slice(1));
-    expect(fs.existsSync(file)).toBeTruthy();
-  });
+    expect(await fse.pathExists(file)).toBeTruthy();
+  }
 });
 
-test("content built foo page", () => {
-  expect(fs.existsSync(buildRoot)).toBeTruthy();
+test("content built foo page", async () => {
+  expect(await fse.pathExists(buildRoot)).toBeTruthy();
 
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.title).toBe("<foo>: A test tag");
@@ -90,7 +94,7 @@ test("content built foo page", () => {
   });
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
   expect($('meta[name="description"]').attr("content")).toBe(
@@ -143,28 +147,29 @@ test("content built foo page", () => {
   expect($("main h4").attr("id")).toBe($("main h4").attr("id").toLowerCase());
 });
 
-test("icons mentioned in <head> should resolve", () => {
+test("icons mentioned in <head> should resolve", async () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  $('head link[rel="apple-touch-icon-precomposed"]').each((i, link) => {
+  const els = $('head link[rel="apple-touch-icon-precomposed"]').toArray();
+  for (const link of els) {
     const expectedFilepath = path.join(buildRoot, $(link).attr("href"));
-    expect(fs.existsSync(expectedFilepath)).toBeTruthy();
-  });
+    expect(await fse.pathExists(expectedFilepath)).toBeTruthy();
+  }
 });
 
-test("content built French foo page", () => {
-  expect(fs.existsSync(buildRoot)).toBeTruthy();
+test("content built French foo page", async () => {
+  expect(await fse.pathExists(buildRoot)).toBeTruthy();
 
   const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.title).toBe("<foo>: Une page de test");
@@ -174,7 +179,7 @@ test("content built French foo page", () => {
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('link[rel="alternate"]')).toHaveLength(4);
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
@@ -187,7 +192,7 @@ test("content built French foo page", () => {
   );
 });
 
-test("French translation using English front-matter bits", () => {
+test("French translation using English front-matter bits", async () => {
   const builtFolder = path.join(
     buildRoot,
     "fr",
@@ -196,7 +201,7 @@ test("French translation using English front-matter bits", () => {
     "spec_section_extraction"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.title).toBe("Extraction de sections de spécifications");
@@ -212,11 +217,11 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
-test("content built zh-CN page for hreflang tag testing", () => {
+test("content built zh-CN page for hreflang tag testing", async () => {
   const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(Object.keys(doc.flaws)).toHaveLength(1);
@@ -228,7 +233,7 @@ test("content built zh-CN page for hreflang tag testing", () => {
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   // The built page should not have duplicate hreflang tags,
   // when zh-TW translation is also available.
@@ -243,11 +248,11 @@ test("content built zh-CN page for hreflang tag testing", () => {
   );
 });
 
-test("content built zh-TW page with en-US fallback image", () => {
+test("content built zh-TW page with en-US fallback image", async () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(Object.keys(doc.flaws)).toHaveLength(1);
@@ -259,7 +264,7 @@ test("content built zh-TW page with en-US fallback image", () => {
   expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('link[rel="alternate"]')).toHaveLength(4);
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
@@ -275,10 +280,10 @@ test("content built zh-TW page with en-US fallback image", () => {
   );
 });
 
-test("content built French Embeddable page", () => {
+test("content built French Embeddable page", async () => {
   const builtFolder = path.join(buildRoot, "fr", "docs", "web", "embeddable");
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.translation_differences).toHaveLength(1);
@@ -291,7 +296,7 @@ test("content built French Embeddable page", () => {
   expect(flaw.difference.type).toBe("macro");
 });
 
-test("wrong xref macro errors", () => {
+test("wrong xref macro errors", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -300,7 +305,7 @@ test("wrong xref macro errors", () => {
     "wrong_xref_macro"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   // Expect the first flaw to be that we're using the wrong xref macro.
@@ -313,7 +318,7 @@ test("wrong xref macro errors", () => {
   );
 });
 
-test("summary extracted correctly by span class", () => {
+test("summary extracted correctly by span class", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -321,19 +326,19 @@ test("summary extracted correctly by span class", () => {
     "web",
     "seo_summarized"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.summary).toBe("This is going to be the summary.");
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
   expect($('meta[name="description"]').attr("content")).toBe(
@@ -341,32 +346,30 @@ test("summary extracted correctly by span class", () => {
   );
 });
 
-test("pageTitle on deeper docs within 'Web'", () => {
-  const { doc: parentDoc } = JSON.parse(
-    fs.readFileSync(
-      path.join(buildRoot, "en-us", "docs", "web", "api", "index.json"),
-      "utf-8"
+test("pageTitle on deeper docs within 'Web'", async () => {
+  const { doc: parentDoc } = (await fse.readJson(
+    path.join(buildRoot, "en-us", "docs", "web", "api", "index.json")
+  )) as {
+    doc: Doc;
+  };
+  const { doc } = (await fse.readJson(
+    path.join(
+      buildRoot,
+      "en-us",
+      "docs",
+      "web",
+      "api",
+      "page_visibility_api",
+      "index.json"
     )
-  );
-  const { doc } = JSON.parse(
-    fs.readFileSync(
-      path.join(
-        buildRoot,
-        "en-us",
-        "docs",
-        "web",
-        "api",
-        "page_visibility_api",
-        "index.json"
-      ),
-      "utf-8"
-    )
-  ) as { doc: Doc };
+  )) as {
+    doc: Doc;
+  };
   expect(doc.pageTitle).toBe(`${doc.title} - ${parentDoc.title} | MDN`);
 });
 
-test("content built interactiveexample page", () => {
-  expect(fs.existsSync(buildRoot)).toBeTruthy();
+test("content built interactiveexample page", async () => {
+  expect(await fse.pathExists(buildRoot)).toBeTruthy();
 
   const builtFolder = path.join(
     buildRoot,
@@ -375,16 +378,16 @@ test("content built interactiveexample page", () => {
     "web",
     "interactiveexample"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("p").text()).toMatch(/Below is a sample interactive example/);
   expect($("iframe").length).toEqual(1);
 });
 
-test("the 'notranslate' class is correctly inserted", () => {
+test("the 'notranslate' class is correctly inserted", async () => {
   const folder = path.join(
     buildRoot,
     "en-us",
@@ -393,12 +396,12 @@ test("the 'notranslate' class is correctly inserted", () => {
     "donttranslatethese"
   );
   const htmlFile = path.join(folder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("pre.notranslate").length).toEqual($("pre").length);
 });
 
-test("the 'notecard' class is correctly inserted", () => {
+test("the 'notecard' class is correctly inserted", async () => {
   const folder = path.join(
     buildRoot,
     "en-us",
@@ -407,12 +410,12 @@ test("the 'notecard' class is correctly inserted", () => {
     "donttranslatethese"
   );
   const htmlFile = path.join(folder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("div.warning.notecard").length).toEqual($("div.warning").length);
 });
 
-test("content with non-ascii characters in the slug", () => {
+test("content with non-ascii characters in the slug", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -420,28 +423,28 @@ test("content with non-ascii characters in the slug", () => {
     "glossary",
     "bézier_curve"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.title).toBe("Bézier curve");
   expect(doc.mdn_url).toBe("/en-US/docs/Glossary/Bézier_curve");
 });
 
-test("content built bar page", () => {
-  expect(fs.existsSync(buildRoot)).toBeTruthy();
+test("content built bar page", async () => {
+  expect(await fse.pathExists(buildRoot)).toBeTruthy();
 
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "bar");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.title).toBe("bar: A collection of xref macro calls");
@@ -529,8 +532,8 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[11].redirectInfo.suggested).toBe("Boolean");
 
   const htmlFile = path.join(builtFolder, "index.html");
-  expect(fs.existsSync(htmlFile)).toBeTruthy();
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  expect(await fse.pathExists(htmlFile)).toBeTruthy();
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("a[data-flaw-src]").length).toEqual(12);
 
@@ -607,7 +610,7 @@ test("content built bar page", () => {
   expect(booleanLinks.eq(5).data("flaw-src")).toBeFalsy();
 });
 
-test("broken links flaws", () => {
+test("broken links flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -616,7 +619,7 @@ test("broken links flaws", () => {
     "brokenlinks"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -666,7 +669,7 @@ test("broken links flaws", () => {
   expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
-test("broken links markdown flaws", () => {
+test("broken links markdown flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -675,7 +678,7 @@ test("broken links markdown flaws", () => {
     "brokenlinks_markdown"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -725,7 +728,7 @@ test("broken links markdown flaws", () => {
   expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
-test("repeated broken links flaws", () => {
+test("repeated broken links flaws", async () => {
   // This fixture has the same broken link, that redirects, 3 times.
   const builtFolder = path.join(
     buildRoot,
@@ -735,7 +738,7 @@ test("repeated broken links flaws", () => {
     "brokenlinks_repeats"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -751,7 +754,7 @@ test("repeated broken links flaws", () => {
   expect(map.get("link3").suggestion).toBe("/en-US/docs/Web/CSS/number");
 });
 
-test("broken http:// link that is not a valid URL", () => {
+test("broken http:// link that is not a valid URL", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -761,7 +764,7 @@ test("broken http:// link that is not a valid URL", () => {
     "broken_http_link"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -774,7 +777,7 @@ test("broken http:// link that is not a valid URL", () => {
   expect(map.get("link1").fixable).toBeFalsy();
 });
 
-test("broken links that are links to the current page", () => {
+test("broken links that are links to the current page", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -784,7 +787,7 @@ test("broken links that are links to the current page", () => {
     "self_links"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -810,14 +813,14 @@ test("broken links that are links to the current page", () => {
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
   expect($("#content a.page-not-created")).toHaveLength(0);
   expect($('#content a[aria-current="page"]')).toHaveLength(4);
 });
 
-test("without locale prefix broken links flaws", () => {
+test("without locale prefix broken links flaws", async () => {
   // This fixture has the same broken link, that redirects, 3 times.
   const builtFolder = path.join(
     buildRoot,
@@ -828,7 +831,7 @@ test("without locale prefix broken links flaws", () => {
     "without_locale_prefix"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -844,7 +847,7 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link3").suggestion).toBeNull();
 });
 
-test("broken anchor links flaws", () => {
+test("broken anchor links flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -853,7 +856,7 @@ test("broken anchor links flaws", () => {
     "not_lowercase_anchors"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -889,7 +892,7 @@ test("broken anchor links flaws", () => {
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").column).toBe(16);
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
   // In the loop we expect exactly 3 assertions,
@@ -905,8 +908,8 @@ test("broken anchor links flaws", () => {
   });
 });
 
-test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", () => {
-  expect(fs.existsSync(buildRoot)).toBeTruthy();
+test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page", async () => {
+  expect(await fse.pathExists(buildRoot)).toBeTruthy();
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -917,20 +920,20 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
     "introduction",
     "grid"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const jsonFile = path.join(builtFolder, "index.json");
-  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  expect(await fse.pathExists(jsonFile)).toBeTruthy();
 
   // Let's make sure there are only 2 "macros" flaws.
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws).toEqual({});
 });
 
-test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
-  expect(fs.existsSync(buildRoot)).toBeTruthy();
+test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", async () => {
+  expect(await fse.pathExists(buildRoot)).toBeTruthy();
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -941,16 +944,16 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page",
     "introduction",
     "flex"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   // The css_layout/introduction/flex page has 2 iframes
   expect($('iframe[loading="lazy"]')).toHaveLength(2);
 });
 
-test("detect bad_bcd_queries flaws", () => {
+test("detect bad_bcd_queries flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -958,9 +961,9 @@ test("detect bad_bcd_queries flaws", () => {
     "web",
     "badbcdqueries"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.bad_bcd_queries).toHaveLength(1);
@@ -973,7 +976,7 @@ test("detect bad_bcd_queries flaws", () => {
   expect(doc.flaws.bad_bcd_queries[0].suggestion).toBeNull();
 });
 
-test("detect bad_pre_tags flaws", () => {
+test("detect bad_pre_tags flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -981,9 +984,9 @@ test("detect bad_pre_tags flaws", () => {
     "learn",
     "some_code"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.bad_pre_tags).toHaveLength(1);
@@ -997,10 +1000,10 @@ test("detect bad_pre_tags flaws", () => {
   expect(flaw.column).toBe(50);
 });
 
-test("image flaws kitchen sink", () => {
+test("image flaws kitchen sink", async () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "images");
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -1068,7 +1071,7 @@ test("image flaws kitchen sink", () => {
   expect(flaw.column).toBe(13);
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   $("#content img[src]").each((i, element) => {
     const img = $(element);
@@ -1082,7 +1085,7 @@ test("image flaws kitchen sink", () => {
   });
 });
 
-test("image flaws with bad images", () => {
+test("image flaws with bad images", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1092,7 +1095,7 @@ test("image flaws with bad images", () => {
     "bad_src"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -1108,7 +1111,7 @@ test("image flaws with bad images", () => {
   ).toBe(4);
 });
 
-test("linked to local files", () => {
+test("linked to local files", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1118,7 +1121,7 @@ test("linked to local files", () => {
     "linked_to"
   );
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect.assertions(1);
   $('a[href*="dino.svg"]').each((i, element) => {
@@ -1133,7 +1136,7 @@ test("linked to local files", () => {
   });
 });
 
-test("image flaws with repeated external images", () => {
+test("image flaws with repeated external images", async () => {
   // This test exists because of https://github.com/mdn/yari/issues/2247
   // which showed that if a document has an external URL repeated more than
   // once, our flaw detection only found it once.
@@ -1146,7 +1149,7 @@ test("image flaws with repeated external images", () => {
     "repeated_external_images"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const { flaws } = doc;
@@ -1164,7 +1167,7 @@ test("image flaws with repeated external images", () => {
   expect(flaw3.line).toBe(18);
 });
 
-test("images that are in the folder but not in <img> tags", () => {
+test("images that are in the folder but not in <img> tags", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1173,15 +1176,15 @@ test("images that are in the folder but not in <img> tags", () => {
     "images",
     "images_in_samples"
   );
-  expect(fs.existsSync(path.join(builtFolder, "pic.gif")));
-  expect(fs.existsSync(path.join(builtFolder, "image.png")));
+  expect(await fse.pathExists(path.join(builtFolder, "pic.gif")));
+  expect(await fse.pathExists(path.join(builtFolder, "image.png")));
 });
 
-test("404 page", () => {
+test("404 page", async () => {
   const builtFolder = path.join(buildRoot, "en-us", "_spas");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "404.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
@@ -1189,27 +1192,27 @@ test("404 page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
-test("plus page", () => {
+test("plus page", async () => {
   const builtFolder = path.join(buildRoot, "en-us", "plus");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 });
 
-test("plus collections page", () => {
+test("plus collections page", async () => {
   const builtFolder = path.join(buildRoot, "en-us", "plus", "collections");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toMatch(/Collection/);
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
-test("bcd table extraction followed by h3", () => {
+test("bcd table extraction followed by h3", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1217,9 +1220,9 @@ test("bcd table extraction followed by h3", () => {
     "web",
     "bcd_table_extraction"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.body[0].type).toBe("prose");
@@ -1231,7 +1234,7 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[4].value.isH3).toBeTruthy();
 });
 
-test("specifications and bcd extraction", () => {
+test("specifications and bcd extraction", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1239,9 +1242,9 @@ test("specifications and bcd extraction", () => {
     "web",
     "spec_section_extraction"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.body[0].type).toBe("prose");
@@ -1255,7 +1258,7 @@ test("specifications and bcd extraction", () => {
   expect(doc.body[4].type).toBe("prose");
 });
 
-test("headers within non-root elements is a 'sectioning' flaw", () => {
+test("headers within non-root elements is a 'sectioning' flaw", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1263,9 +1266,9 @@ test("headers within non-root elements is a 'sectioning' flaw", () => {
     "web",
     "sectioning_headers"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.sectioning[0].explanation).toBe(
@@ -1273,7 +1276,7 @@ test("headers within non-root elements is a 'sectioning' flaw", () => {
   );
 });
 
-test("img tags with an empty 'src' should be a flaw", () => {
+test("img tags with an empty 'src' should be a flaw", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1281,9 +1284,9 @@ test("img tags with an empty 'src' should be a flaw", () => {
     "web",
     "empty_image"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.images).toHaveLength(2);
@@ -1299,7 +1302,7 @@ test("img tags with an empty 'src' should be a flaw", () => {
   expect(doc.flaws.images[1].column).toBe(11);
 });
 
-test("img with the image_widths flaw", () => {
+test("img with the image_widths flaw", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1308,9 +1311,9 @@ test("img with the image_widths flaw", () => {
     "images",
     "styled"
   );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  expect(await fse.pathExists(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
 
@@ -1339,7 +1342,7 @@ test("img with the image_widths flaw", () => {
   expect(flaw3.column).toBe(12);
 });
 
-test("img tags should always have their 'width' and 'height' set", () => {
+test("img tags should always have their 'width' and 'height' set", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1349,7 +1352,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
     "styled"
   );
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   // There are 5 images, so can expect there 2 be 5x2 checks in the loop...
   // But we have to account for ALL expect() calls too.
@@ -1369,7 +1372,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
   });
 });
 
-test("img tags without 'src' should not crash", () => {
+test("img tags without 'src' should not crash", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1379,13 +1382,13 @@ test("img tags without 'src' should not crash", () => {
     "srcless"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws).toEqual({});
 });
 
-test("/Web/Embeddable should have 3 valid live samples", () => {
+test("/Web/Embeddable should have 3 valid live samples", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1394,17 +1397,17 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
     "embeddable"
   );
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("iframe")).toHaveLength(3);
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws).toEqual({});
 
-  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  const builtFiles = await fs.readdir(path.join(builtFolder));
   expect(
     builtFiles
       .filter((f) => f.includes("_sample_."))
@@ -1415,7 +1418,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
 });
 
-test("headings with HTML should be rendered as HTML", () => {
+test("headings with HTML should be rendered as HTML", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1424,7 +1427,7 @@ test("headings with HTML should be rendered as HTML", () => {
     "html_headings"
   );
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
   // The page only has 1 h2, and its content should be HTML.
@@ -1438,7 +1441,7 @@ test("headings with HTML should be rendered as HTML", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const [section1, section2] = doc.body as ProseSection[];
@@ -1453,7 +1456,7 @@ test("headings with HTML should be rendered as HTML", () => {
   );
 });
 
-test("deprecated macros are fixable", () => {
+test("deprecated macros are fixable", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1464,7 +1467,7 @@ test("deprecated macros are fixable", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.macros).toHaveLength(1);
@@ -1475,7 +1478,7 @@ test("deprecated macros are fixable", () => {
   ).toHaveLength(1);
 });
 
-test("external links always get the right attributes", () => {
+test("external links always get the right attributes", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1484,7 +1487,7 @@ test("external links always get the right attributes", () => {
     "externallinks"
   );
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
@@ -1497,17 +1500,17 @@ test("external links always get the right attributes", () => {
   });
 });
 
-test("home page should have a /index.json file with pullRequestsData", () => {
+test("home page should have a /index.json file with pullRequestsData", async () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { hyData: { recentContributions = {} } = {} } = JSON.parse(
-    fs.readFileSync(jsonFile, "utf-8")
+  const { hyData: { recentContributions = {} } = {} } = await fse.readJson(
+    jsonFile
   );
   expect(recentContributions.items.length).toBeGreaterThan(0);
 });
 
-test("headings with links in them are flaws", () => {
+test("headings with links in them are flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1517,7 +1520,7 @@ test("headings with links in them are flaws", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.heading_links).toHaveLength(2);
@@ -1548,26 +1551,26 @@ test("headings with links in them are flaws", () => {
   );
 });
 
-test("'lang' attribute should match the article", () => {
+test("'lang' attribute should match the article", async () => {
   let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
   let htmlFile = path.join(builtFolder, "index.html");
-  let html = fs.readFileSync(htmlFile, "utf-8");
+  let html = await fs.readFile(htmlFile, "utf-8");
   let $ = cheerio.load(html);
   expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("fr");
 
   builtFolder = path.join(buildRoot, "en-us", "docs", "web", "foo");
   htmlFile = path.join(builtFolder, "index.html");
-  html = fs.readFileSync(htmlFile, "utf-8");
+  html = await fs.readFile(htmlFile, "utf-8");
   $ = cheerio.load(html);
   expect($("html").attr("lang")).toBe("en-US");
   expect($("article").attr("lang")).toBe("en-US");
 });
 
-test("basic markdown rendering", () => {
+test("basic markdown rendering", async () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "markdown");
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   // Following elements do not test TOC rendering
   $("article > .metadata").remove();
@@ -1587,14 +1590,14 @@ test("basic markdown rendering", () => {
   expect($("article .fancy strong")).toHaveLength(1);
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(Object.keys(doc.flaws)).toHaveLength(1);
   expect(doc.flaws.bad_pre_tags).toHaveLength(1);
 });
 
-test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
+test("unsafe HTML gets flagged as flaws and replace with its raw HTML", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1604,23 +1607,23 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.unsafe_html).toHaveLength(7);
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("code.unsafe-html")).toHaveLength(7);
 });
 
-test("translated content broken links can fall back to en-us", () => {
+test("translated content broken links can fall back to en-us", async () => {
   const builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
@@ -1632,7 +1635,7 @@ test("translated content broken links can fall back to en-us", () => {
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('article a[href="/fr/docs/Web/CSS/dumber"]')).toHaveLength(0);
   expect($('article a[href="/fr/docs/Web/CSS/number"]')).toHaveLength(0);
@@ -1643,7 +1646,7 @@ test("translated content broken links can fall back to en-us", () => {
   );
 });
 
-test("notecards are correctly transformed by the formatNotecards utility", () => {
+test("notecards are correctly transformed by the formatNotecards utility", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1653,7 +1656,7 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws).toStrictEqual({});
@@ -1662,7 +1665,7 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
   expect($("div.notecard h4")).toHaveLength(0);
@@ -1677,7 +1680,7 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
   );
 });
 
-test("homepage links and flaws", () => {
+test("homepage links and flaws", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1686,7 +1689,7 @@ test("homepage links and flaws", () => {
     "homepage_links"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   expect(doc.flaws.broken_links).toHaveLength(4);
@@ -1697,16 +1700,16 @@ test("homepage links and flaws", () => {
   expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });
 
-test("built search-index.json (en-US)", () => {
+test("built search-index.json (en-US)", async () => {
   const searchIndexFile = path.join(buildRoot, "en-us", "search-index.json");
-  const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile, "utf-8"));
+  const searchIndex = JSON.parse(await fs.readFile(searchIndexFile, "utf-8"));
   const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
   expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
 });
 
-test("the robots.txt file was created", () => {
+test("the robots.txt file was created", async () => {
   const filePath = path.join(buildRoot, "robots.txt");
-  const text = fs.readFileSync(filePath, "utf-8");
+  const text = await fs.readFile(filePath, "utf-8");
   // The content of robots file when it's in production mode is
   // to ONLY say `Disallow: /api/`.
   // When the robots file is for disallowing everything it
@@ -1715,7 +1718,7 @@ test("the robots.txt file was created", () => {
   expect(text).not.toContain("Disallow: /\n");
 });
 
-test("duplicate IDs are de-duplicated", () => {
+test("duplicate IDs are de-duplicated", async () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1724,7 +1727,7 @@ test("duplicate IDs are de-duplicated", () => {
     "duplicate_ids"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+  const { doc } = (await fse.readJson(jsonFile)) as {
     doc: Doc;
   };
   const sectionIDs = doc.body.map((section) => section.value.id);
@@ -1735,7 +1738,7 @@ test("duplicate IDs are de-duplicated", () => {
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = await fs.readFile(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   const h2IDs = [];
   $("#content main h2").each((i, element) => {

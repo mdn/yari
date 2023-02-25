@@ -1,10 +1,10 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants/index.js";
 
 describe("Content-Security-Policy", () => {
-  test('All inline <script> tags must have a corresponding "script-src" CSP entry.', () => {
+  test('All inline <script> tags must have a corresponding "script-src" CSP entry.', async () => {
     function cspValueOf(content: string) {
       const algo = "sha256";
       const hash = crypto.createHash(algo).update(content).digest("base64");
@@ -12,7 +12,7 @@ describe("Content-Security-Policy", () => {
     }
 
     const indexHtmlPath = path.join("client", "build", "index.html");
-    const indexHtmlContent = fs.readFileSync(indexHtmlPath).toString();
+    const indexHtmlContent = (await fs.readFile(indexHtmlPath)).toString();
 
     const inlineScriptMatches = [
       ...indexHtmlContent.matchAll(/(<script.*?>)(.*?)(<\/script>)/gi),
