@@ -3,7 +3,7 @@
  * process.env.BUILD_ALWAYS_ALLOW_ROBOTS.
  *
  */
-import fs from "node:fs";
+import fs from "node:fs/promises";
 
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import { ALWAYS_ALLOW_ROBOTS } from "../libs/env/index.js";
@@ -31,5 +31,5 @@ export async function runBuildRobotsTxt(outfile: string) {
       content += `Disallow: /${locale}/search\n`;
     }
   }
-  fs.writeFileSync(outfile, `${content.trim()}\n`, "utf-8");
+  await fs.writeFile(outfile, `${content.trim()}\n`, "utf-8");
 }

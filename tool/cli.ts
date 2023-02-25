@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import fse from "fs-extra";
 import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import caporal from "@caporal/core";
@@ -445,7 +446,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(({ args }: CreateActionParameters) => {
+    tryOrExit(async ({ args }: CreateActionParameters) => {
       const { slug, locale } = args;
       const parentSlug = Document.parentSlug(slug);
       if (!Document.exists(parentSlug, locale)) {
@@ -455,7 +456,7 @@ program
         throw new Error(`${slug} already exists for ${locale}`);
       }
       const filePath = Document.fileForSlug(slug, locale);
-      fs.mkdirSync(path.basename(filePath), { recursive: true });
+      await fs.mkdir(path.basename(filePath), { recursive: true });
       openEditor([filePath]);
     })
   )
@@ -514,11 +515,11 @@ program
       let url: string;
       // Perhaps they typed in a path relative to the content root
       if (
-        (slug.startsWith("files") || fs.existsSync(slug)) &&
+        (slug.startsWith("files") || (await fse.pathExists(slug))) &&
         (slug.endsWith("index.html") || slug.endsWith("index.md"))
       ) {
         if (
-          fs.existsSync(slug) &&
+          (await fse.pathExists(slug)) &&
           slug.includes("translated-content") &&
           !CONTENT_TRANSLATED_ROOT
         ) {
@@ -546,13 +547,14 @@ program
         }
       } else if (
         slug.includes(BUILD_OUT_ROOT) &&
-        fs.existsSync(slug) &&
-        fs.existsSync(path.join(slug, "index.json"))
+        (await fse.pathExists(slug)) &&
+        (await fse.pathExists(path.join(slug, "index.json")))
       ) {
         // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
         // it spits out from its CLI.
-        const { doc } = JSON.parse(
-          fs.readFileSync(path.join(slug, "index.json"), "utf-8")
+        const { doc } = await fse.readJson(
+          path.join(slug, "index.json"),
+          "utf-8"
         );
         if (doc) {
           url = doc.mdn_url;
@@ -587,7 +589,7 @@ program
     tryOrExit(async ({ options }: GatherGitHistoryActionParameters) => {
       const { saveHistory, loadHistory, verbose } = options;
       if (loadHistory) {
-        if (fs.existsSync(loadHistory)) {
+        if (await fse.pathExists(loadHistory)) {
           console.log(
             chalk.yellow(`Reusing existing history from ${loadHistory}`)
           );
@@ -597,9 +599,9 @@ program
       if (CONTENT_TRANSLATED_ROOT) {
         roots.push(CONTENT_TRANSLATED_ROOT);
       }
-      const map = gatherGitHistory(
+      const map = await gatherGitHistory(
         roots,
-        loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
+        loadHistory && (await fse.pathExists(loadHistory)) ? loadHistory : null
       );
       const historyPerLocale = {};
 
@@ -620,7 +622,7 @@ program
       for (const [locale, history] of Object.entries(historyPerLocale)) {
         const root = getRoot(locale);
         const outputFile = path.join(root, locale, "_githistory.json");
-        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        await fse.writeJson(outputFile, { spaces: 2 });
         filesWritten += 1;
         if (verbose) {
           console.log(
@@ -634,11 +636,7 @@ program
       }
       console.log(chalk.green(`Wrote ${filesWritten} _githistory.json files`));
       if (saveHistory) {
-        fs.writeFileSync(
-          saveHistory,
-          JSON.stringify(allHistory, null, 2),
-          "utf-8"
-        );
+        await fse.writeJson(saveHistory, { spaces: 2 });
         console.log(
           chalk.green(
             `Saved ${Object.keys(
@@ -674,7 +672,7 @@ program
             redirectedDocs,
             renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(locale);
+          } = await syncAllTranslatedContent(locale);
           console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -768,7 +766,7 @@ program
       if (!CONTENT_TRANSLATED_ROOT) {
         throw new Error("CONTENT_TRANSLATED_ROOT not set");
       }
-      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+      if (!(await fse.pathExists(CONTENT_TRANSLATED_ROOT))) {
         throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
       }
       const documents = Document.findAll();
@@ -839,8 +837,8 @@ program
   .action(
     tryOrExit(async ({ options, logger }: PopularitiesActionParameters) => {
       const { refresh, outfile } = options;
-      if (!refresh && fs.existsSync(outfile)) {
-        const stat = fs.statSync(outfile);
+      if (!refresh && (await fse.pathExists(outfile))) {
+        const stat = await fs.stat(outfile);
         logger.info(
           chalk.yellow(
             `Reusing exising ${outfile} (${stat.mtime}) for popularities.`
@@ -869,11 +867,8 @@ program
       function fmtBytes(bytes) {
         return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
       }
-      logger.info(
-        chalk.green(
-          `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
-        )
-      );
+      const stat = await fs.stat(options.outfile);
+      logger.info(chalk.green(`${options.outfile} is ${fmtBytes(stat.size)}`));
     })
   )
 
@@ -903,12 +898,12 @@ program
       async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
         const { outfile, debug, account } = options;
         if (account) {
-          const dntHelperCode = fs
-            .readFileSync(
+          const dntHelperCode = (
+            await fs.readFile(
               new URL("mozilla.dnthelper.min.js", import.meta.url),
               "utf-8"
             )
-            .trim();
+          ).trim();
 
           const gaScriptURL = `https://www.google-analytics.com/${
             debug ? "analytics_debug" : "analytics"
@@ -928,7 +923,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     gaScript.async = 1; gaScript.src = '${gaScriptURL}';
     document.head.appendChild(gaScript);
 }`.trim();
-          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
+          await fs.writeFile(outfile, `${code}\n`, "utf-8");
           logger.info(
             chalk.green(
               `Generated ${outfile} for SSR rendering using ${account}${
@@ -1128,15 +1123,17 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         .crawl(CONTENT_ROOT);
       const paths = (await crawler.withPromise()) as PathsOutput;
 
-      const inventory = paths.map((path) => {
-        const fileContents = fs.readFileSync(path, "utf-8");
-        const parsed = frontmatter(fileContents);
+      const inventory = await Promise.all(
+        paths.map(async (path) => {
+          const fileContents = await fs.readFile(path, "utf-8");
+          const parsed = frontmatter(fileContents);
 
-        return {
-          path: path.substring(path.indexOf("/files")),
-          frontmatter: parsed.attributes,
-        };
-      });
+          return {
+            path: path.substring(path.indexOf("/files")),
+            frontmatter: parsed.attributes,
+          };
+        })
+      );
 
       process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
@@ -1157,7 +1154,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         logger,
       }: OptimizeClientBuildActionParameters) => {
         const { buildroot } = args;
-        const { results } = await runOptimizeClientBuild(buildroot);
+        const results = await runOptimizeClientBuild(buildroot);
         if (options.verbose) {
           for (const result of results) {
             logger.info(`${result.filePath} -> ${result.hashedHref}`);

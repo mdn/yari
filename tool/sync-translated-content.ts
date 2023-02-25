@@ -1,9 +1,10 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import path from "node:path";
 
 import chalk from "chalk";
 import fm from "front-matter";
+import fse from "fs-extra";
 import log from "loglevel";
 import { fdir } from "fdir";
 
@@ -28,7 +29,7 @@ const ORPHANED = "orphaned";
 
 const DEFAULT_LOCALE_LC = DEFAULT_LOCALE.toLowerCase();
 
-export function syncAllTranslatedContent(locale: string) {
+export async function syncAllTranslatedContent(locale: string) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -44,7 +45,7 @@ export function syncAllTranslatedContent(locale: string) {
       );
     })
     .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
-  const files = [...(api.sync() as any)];
+  const files = await api.withPromise();
   const stats = {
     conflictingDocs: 0,
     movedDocs: 0,
@@ -56,7 +57,7 @@ export function syncAllTranslatedContent(locale: string) {
 
   for (const f of files) {
     const { conflicting, moved, followed, orphaned, redirect, renamed } =
-      syncTranslatedContent(f, locale);
+      await syncTranslatedContent(f, locale);
     if (conflicting) {
       stats.conflictingDocs += 1;
     }
@@ -94,15 +95,18 @@ function resolve(slug: string) {
   return doc?.metadata.slug ?? slug;
 }
 
-function mdOrHtmlExists(filePath: string) {
+async function mdOrHtmlExists(filePath: string) {
   const dir = path.dirname(filePath);
   return (
-    fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
-    fs.existsSync(path.join(dir, HTML_FILENAME))
+    (await fse.pathExists(path.join(dir, MARKDOWN_FILENAME))) ||
+    (await fse.pathExists(path.join(dir, HTML_FILENAME)))
   );
 }
 
-export function syncTranslatedContent(inFilePath: string, locale: string) {
+export async function syncTranslatedContent(
+  inFilePath: string,
+  locale: string
+) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -117,7 +121,7 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     renamed: false,
   };
 
-  const rawDoc = fs.readFileSync(inFilePath, "utf-8");
+  const rawDoc = await fs.readFile(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
   const { attributes: oldMetadata, body: rawBody } = fm<DocFrontmatter>(rawDoc);
   const resolvedSlug = resolve(oldMetadata.slug);
@@ -170,9 +174,9 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
   dehash();
   let filePath = getFilePath();
 
-  status.orphaned = !mdOrHtmlExists(
+  status.orphaned = !(await mdOrHtmlExists(
     path.join(CONTENT_ROOT, DEFAULT_LOCALE_LC, slugToFolder(metadata.slug))
-  );
+  ));
 
   if (!status.renamed && !status.orphaned) {
     return status;
@@ -184,16 +188,16 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     metadata.slug = `${ORPHANED}/${metadata.slug}`;
     status.moved = true;
     filePath = getFilePath();
-    if (mdOrHtmlExists(filePath)) {
+    if (await mdOrHtmlExists(filePath)) {
       log.log(`${inFilePath} → ${filePath}`);
       throw new Error(`file: ${filePath} already exists!`);
     }
-  } else if (status.moved && mdOrHtmlExists(filePath)) {
+  } else if (status.moved && (await mdOrHtmlExists(filePath))) {
     console.log(`unrooting ${inFilePath} (conflicting translation)`);
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
     filePath = getFilePath();
-    if (mdOrHtmlExists(filePath)) {
+    if (await mdOrHtmlExists(filePath)) {
       metadata.slug = `${metadata.slug}_${crypto
         .createHash("md5")
         .update(oldMetadata.slug)
@@ -214,7 +218,7 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     metadata.slug
   );
   if (status.moved) {
-    moveContent(path.dirname(inFilePath), path.dirname(filePath));
+    await moveContent(path.dirname(inFilePath), path.dirname(filePath));
     metadata.original_slug = oldMetadata.slug;
   }
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
@@ -224,12 +228,12 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
 
 // Move all regular files (excluding subdirectories) from one directory to another,
 // and delete the source directory if it's empty.
-function moveContent(inFileDir: string, outFileDir: string) {
-  const files = fs.readdirSync(inFileDir, {
+async function moveContent(inFileDir: string, outFileDir: string) {
+  const files = await fs.readdir(inFileDir, {
     encoding: "utf-8",
     withFileTypes: true,
   });
-  fs.mkdirSync(outFileDir, { recursive: true });
+  await fs.mkdir(outFileDir, { recursive: true });
   const regularFiles = files
     .filter((file) => file.isFile())
     .map((file) => file.name);
@@ -239,23 +243,17 @@ function moveContent(inFileDir: string, outFileDir: string) {
   }
   // assuming that the source directory is empty
   if (files.length === regularFiles.length) {
-    try {
-      fs.rmdirSync(inFileDir);
-    } catch (e: any) {
-      if (e.code !== "ENOTEMPTY") {
-        throw e;
-      }
-    }
+    await fse.remove(inFileDir);
   }
 }
 
-export function syncTranslatedContentForAllLocales() {
+export async function syncTranslatedContentForAllLocales() {
   let moved = 0;
   for (const locale of VALID_LOCALES.keys()) {
     if (locale === DEFAULT_LOCALE_LC) {
       continue;
     }
-    const { movedDocs } = syncAllTranslatedContent(locale);
+    const { movedDocs } = await syncAllTranslatedContent(locale);
     moved += movedDocs;
   }
   return moved;

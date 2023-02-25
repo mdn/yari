@@ -9,9 +9,9 @@
  * dynamically on every single production build.
  *
  */
-import fs from "node:fs";
 
 import * as csv from "@fast-csv/parse";
+import fse from "fs-extra";
 import got from "got";
 
 const CURRENT_URL =
@@ -67,7 +67,7 @@ export async function runMakePopularitiesFile({
           pageviews.push([uri, count / biggestCount]);
         }
       })
-      .on("end", (rowCount: number) => {
+      .on("end", async (rowCount: number) => {
         if (!pageviews.length) {
           return reject(new Error("No pageviews found!"));
         }
@@ -75,7 +75,7 @@ export async function runMakePopularitiesFile({
         pageviews.slice(0, maxUris).forEach(([uri, popularity]) => {
           popularities[uri] = parseFloat(popularity.toFixed(5));
         });
-        fs.writeFileSync(outfile, JSON.stringify(popularities, null, 2));
+        await fse.writeJson(outfile, popularities, { spaces: 2 });
         resolve({ rowCount, popularities, pageviews });
       });
   });

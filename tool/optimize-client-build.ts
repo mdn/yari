@@ -3,28 +3,31 @@
  * (react-scripts) can't do.
  *
  */
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import cheerio from "cheerio";
+import fse from "fs-extra";
 import md5File from "md5-file";
 
 export async function runOptimizeClientBuild(buildRoot) {
   const indexHtmlFilePath = path.join(buildRoot, "index.html");
-  const indexHtml = fs.readFileSync(indexHtmlFilePath, "utf-8");
+  const indexHtml = await fs.readFile(indexHtmlFilePath, "utf-8");
 
   const results = [];
 
   // For every favicon referred there, change it to a file URL that
   // has a hash in it.
   const $ = cheerio.load(indexHtml);
-  $('link[rel], meta[property="og:image"]').each((i, element) => {
+  const els = $('link[rel], meta[property="og:image"]').toArray();
+
+  for (const element of els) {
     let href;
     let attributeKey;
     let hrefPrefix = "";
     if (element.tagName === "meta") {
       if (element.attribs.property !== "og:image") {
-        return;
+        continue;
       }
       href = element.attribs.content;
       attributeKey = "content";
@@ -40,7 +43,7 @@ export async function runOptimizeClientBuild(buildRoot) {
     } else {
       href = element.attribs.href;
       if (!href) {
-        return;
+        continue;
       }
       const rel = element.attribs.rel;
       if (
@@ -52,7 +55,7 @@ export async function runOptimizeClientBuild(buildRoot) {
           "manifest",
         ].includes(rel)
       ) {
-        return;
+        continue;
       }
       attributeKey = "href";
     }
@@ -61,20 +64,21 @@ export async function runOptimizeClientBuild(buildRoot) {
     // bail if it looks like the href already is hashed.
     if (/\.[a-f0-9]{8}\./.test(href)) {
       console.warn(`Looks like ${href} is already hashed`);
-      return;
+      continue;
     }
     const filePath = hrefToFilePath(buildRoot, href);
-    if (!filePath || !fs.existsSync(filePath)) {
+    if (!filePath || !(await fse.pathExists(filePath))) {
       console.warn(`Unable to turn '${href}' into a valid file path`);
-      return;
+      continue;
     }
     // 8 because that's what react-scripts (which uses webpack somehow)
     // uses to create those `build/static/**/*` files it builds.
-    const hash = md5File.sync(filePath).slice(0, 8);
+    const fullHash = await md5File(filePath);
+    const hash = fullHash.slice(0, 8);
     const extName = path.extname(filePath);
     const splitName = filePath.split(extName);
     const hashedFilePath = `${splitName[0]}.${hash}${extName}`;
-    fs.copyFileSync(filePath, hashedFilePath);
+    await fs.copyFile(filePath, hashedFilePath);
     const hashedHref = filePathToHref(buildRoot, hashedFilePath);
     results.push({
       filePath,
@@ -83,7 +87,7 @@ export async function runOptimizeClientBuild(buildRoot) {
       hashedFilePath,
       attributeKey,
     });
-  });
+  }
 
   if (results.length > 0) {
     // It clearly hashed some files. Let's update the HTML!
@@ -94,10 +98,10 @@ export async function runOptimizeClientBuild(buildRoot) {
         `${attributeKey}="${url}"`
       );
     }
-    fs.writeFileSync(indexHtmlFilePath, newIndexHtml, "utf-8");
+    await fs.writeFile(indexHtmlFilePath, newIndexHtml, "utf-8");
   }
 
-  return { results };
+  return results;
 }
 
 // Turn 'C:\Path\to\client\build\favicon.ico' to '/favicon.ico'
