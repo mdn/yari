@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import * as cheerio from "cheerio";
@@ -112,10 +112,10 @@ export async function downloadAndResizeImage(src, out, basePath) {
         imageBuffer.length
       )} Compressed: ${humanFileSize(compressedImageBuffer.length)}`
     );
-    fs.writeFileSync(destination, compressedImageBuffer);
+    await fs.writeFile(destination, compressedImageBuffer);
   } else {
     console.log(`Raw image size: ${humanFileSize(imageBuffer.length)}`);
-    fs.writeFileSync(destination, imageBuffer);
+    await fs.writeFile(destination, imageBuffer);
   }
   return destination;
 }

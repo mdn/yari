@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import crypto from "node:crypto";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import caporal from "@caporal/core";
+import fse from "fs-extra";
 import inquirer from "inquirer";
 
 import { Document, slugToFolder, translationsOf } from "../content/index.js";
@@ -181,24 +182,24 @@ async function buildDocuments(
     } = result;
 
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
-    fs.mkdirSync(outPath, { recursive: true });
+    await fs.mkdir(outPath, { recursive: true });
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
     }
 
     if (!noHTML) {
-      fs.writeFileSync(
+      await fs.writeFile(
         path.join(outPath, "index.html"),
-        renderHTML(document.url, { doc: builtDocument })
+        await renderHTML(document.url, { doc: builtDocument })
       );
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
     // mutating the built document which makes this not great and refactor-worthy.
     const docString = JSON.stringify({ doc: builtDocument });
-    fs.writeFileSync(path.join(outPath, "index.json"), docString);
-    fs.writeFileSync(
+    await fs.writeFile(path.join(outPath, "index.json"), docString);
+    await fs.writeFile(
       path.join(outPath, "contributors.txt"),
       renderContributorsTxt(
         document.metadata.contributors,
@@ -208,13 +209,13 @@ async function buildDocuments(
 
     for (const { id, html } of liveSamples) {
       const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
-      fs.writeFileSync(liveSamplePath, html);
+      await fs.writeFile(liveSamplePath, html);
     }
 
     for (const filePath of fileAttachments) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      await fs.copyFile(filePath, path.join(outPath, path.basename(filePath)));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -242,10 +243,7 @@ async function buildDocuments(
     } = builtDocument;
     builtMetadata.hash = hash;
 
-    fs.writeFileSync(
-      path.join(outPath, "metadata.json"),
-      JSON.stringify(builtMetadata)
-    );
+    await fse.writeJson(path.join(outPath, "metadata.json"), builtMetadata);
     if (metadata[document.metadata.locale]) {
       metadata[document.metadata.locale].push(builtMetadata);
     } else {
@@ -273,9 +271,9 @@ async function buildDocuments(
       "sitemaps",
       locale.toLowerCase()
     );
-    fs.mkdirSync(sitemapDir, { recursive: true });
+    await fs.mkdir(sitemapDir, { recursive: true });
     const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-    fs.writeFileSync(
+    await fs.writeFile(
       sitemapFilePath,
       zlib.gzipSync(makeSitemapXML(locale, docs))
     );
@@ -283,16 +281,16 @@ async function buildDocuments(
 
   searchIndex.sort();
   for (const [locale, items] of Object.entries(searchIndex.getItems())) {
-    fs.writeFileSync(
+    await fse.writeJson(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
-      JSON.stringify(items)
+      items
     );
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
-    fs.writeFileSync(
+    await fse.writeJson(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
-      JSON.stringify(meta)
+      meta
     );
   }
 
@@ -302,7 +300,7 @@ async function buildDocuments(
       doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
     )
   );
-  fs.writeFileSync(
+  await fs.writeFile(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
     [...allBrowserCompat].join(" ")
   );
@@ -390,14 +388,14 @@ program
             locale,
             "sitemap.xml.gz"
           );
-          if (fs.existsSync(sitemapFilePath)) {
+          if (await fse.pathExists(sitemapFilePath)) {
             sitemapsBuilt.push(sitemapFilePath);
             locales.push(locale);
           }
         }
 
         const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-        fs.writeFileSync(
+        await fs.writeFile(
           sitemapIndexFilePath,
           makeSitemapIndexXML(
             sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))

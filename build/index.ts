@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import chalk from "chalk";
@@ -263,8 +263,8 @@ function makeTOC(doc) {
  *
  * @param {Document} document
  */
-function getAdjacentImages(documentDirectory) {
-  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
+async function getAdjacentImages(documentDirectory) {
+  const dirents = await fs.readdir(documentDirectory, { withFileTypes: true });
   return dirents
     .filter((dirent) => {
       // This needs to match what we do in filecheck/checker.py
@@ -501,9 +501,10 @@ export async function buildDocument(
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
-  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+  const adjacentImages = await getAdjacentImages(
+    path.dirname(document.fileInfo.path)
   );
+  adjacentImages.forEach((fp) => fileAttachments.add(fp));
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);

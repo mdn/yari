@@ -1,15 +1,17 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
+
+import fse from "fs-extra";
 
 import { execGit } from "../content/index.js";
 import { CONTENT_ROOT } from "../libs/env/index.js";
 
-function getFromGit(contentRoot = CONTENT_ROOT) {
+async function getFromGit(contentRoot = CONTENT_ROOT) {
   // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it
   // impossible to compute the relative path for files within when we get
   // output back from `git log ...`.
   // So, always normalize to the real path.
-  const realContentRoot = fs.realpathSync(contentRoot);
+  const realContentRoot = await fs.realpath(contentRoot);
 
   const repoRoot = execGit(["rev-parse", "--show-toplevel"], {
     cwd: realContentRoot,
@@ -64,17 +66,17 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   return [map, parents];
 }
 
-export function gather(contentRoots, previousFile = null) {
+export async function gather(contentRoots, previousFile = null) {
   const map = new Map();
   if (previousFile) {
-    const previous = JSON.parse(fs.readFileSync(previousFile, "utf-8"));
+    const previous = await fse.readJson(previousFile, "utf-8");
     for (const [key, value] of Object.entries(previous)) {
       map.set(key, value);
     }
   }
   // Every key in this map is a path, relative to root.
   for (const contentRoot of contentRoots) {
-    const [commits, parents] = getFromGit(contentRoot);
+    const [commits, parents] = await getFromGit(contentRoot);
     for (const [key, value] of commits) {
       // Because CONTENT_*_ROOT isn't necessarily the same as the path relative to
       // the git root. For example "../README.md" and since those aren't documents

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -38,8 +38,8 @@ async function buildContributorSpotlight(locale, options) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
-  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
-    const markdown = fs.readFileSync(
+  for (const contributor of await fs.readdir(contributorSpotlightRoot)) {
+    const markdown = await fs.readFile(
       `${contributorSpotlightRoot}/${contributor}/index.md`,
       "utf-8"
     );
@@ -75,10 +75,10 @@ async function buildContributorSpotlight(locale, options) {
     const imgFileDestPath = path.join(outPath, profileImg);
     const jsonFilePath = path.join(outPath, "index.json");
 
-    fs.mkdirSync(outPath, { recursive: true });
-    fs.writeFileSync(filePath, html);
-    fs.copyFileSync(imgFilePath, imgFileDestPath);
-    fs.writeFileSync(jsonFilePath, JSON.stringify(context));
+    await fs.mkdir(outPath, { recursive: true });
+    await fs.writeFile(filePath, html);
+    await fs.copyFile(imgFilePath, imgFileDestPath);
+    await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
       console.log("Wrote", filePath);
@@ -100,8 +100,8 @@ export async function buildSPAs(options) {
   const url = "/en-US/404.html";
   const html = await renderHTML(url, { pageNotFound: true });
   const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
-  fs.mkdirSync(outPath, { recursive: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+  await fs.mkdir(outPath, { recursive: true });
+  await fs.writeFile(path.join(outPath, path.basename(url)), html);
   buildCount++;
   if (options.verbose) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
@@ -113,8 +113,8 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const pathLocale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, pathLocale)).isDirectory()) {
+    for (const pathLocale of await fs.readdir(root)) {
+      if (!(await fs.stat(path.join(root, pathLocale))).isDirectory()) {
         continue;
       }
 
@@ -160,9 +160,9 @@ export async function buildSPAs(options) {
 
         const html = await renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
-        fs.mkdirSync(outPath, { recursive: true });
+        await fs.mkdir(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
-        fs.writeFileSync(filePath, html);
+        await fs.writeFile(filePath, html);
         buildCount++;
         if (options.verbose) {
           console.log("Wrote", filePath);
@@ -185,14 +185,14 @@ export async function buildSPAs(options) {
       .withErrors()
       .filter((path) => path.endsWith(".md"))
       .crawl(dirpath);
-    const filepaths = [...(crawler.sync() as PathsOutput)];
+    const filepaths: PathsOutput = await crawler.withPromise();
 
     for (const filepath of filepaths) {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
       const locale = "en-us";
-      const markdown = fs.readFileSync(filepath, "utf-8");
+      const markdown = await fs.readFile(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
       const rawHTML = await m2h(frontMatter.body, { locale });
@@ -218,15 +218,15 @@ export async function buildSPAs(options) {
         ...slug.split("/"),
         page
       );
-      fs.mkdirSync(outPath, { recursive: true });
+      await fs.mkdir(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
+      await fs.writeFile(filePath, html);
       buildCount++;
       if (options.verbose) {
         console.log("Wrote", filePath);
       }
       const filePathContext = path.join(outPath, "index.json");
-      fs.writeFileSync(filePathContext, JSON.stringify(context));
+      await fs.writeFile(filePathContext, JSON.stringify(context));
     }
   }
 
@@ -247,11 +247,11 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const locale of fs.readdirSync(root)) {
+    for (const locale of await fs.readdir(root)) {
       if (!isValidLocale(locale)) {
         continue;
       }
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+      if (!(await fs.stat(path.join(root, locale))).isDirectory()) {
         continue;
       }
 
@@ -290,9 +290,9 @@ export async function buildSPAs(options) {
       const context = { hyData };
       const html = await renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);
-      fs.mkdirSync(outPath, { recursive: true });
+      await fs.mkdir(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
+      await fs.writeFile(filePath, html);
       buildCount++;
       if (options.verbose) {
         console.log("Wrote", filePath);
@@ -301,7 +301,7 @@ export async function buildSPAs(options) {
       // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
       const filePathContext = path.join(outPath, "index.json");
-      fs.writeFileSync(filePathContext, JSON.stringify(context));
+      await fs.writeFile(filePathContext, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
         console.log("Wrote", filePathContext);
