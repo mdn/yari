@@ -25,7 +25,7 @@ function getClickPayload(event: MouseEvent) {
 
   const sidebar = document.getElementById("sidebar-quicklinks");
 
-  if (!sidebar) {
+  if (!sidebar || !sidebar.contains(anchor)) {
     return null;
   }
 
