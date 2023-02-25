@@ -1,7 +1,8 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import express, { Request } from "express";
+import fse from "fs-extra";
 
 import { Document, slugToFolder } from "../content/index.js";
 import { buildDocument } from "../build/index.js";
@@ -55,11 +56,11 @@ router.put(
     // fly and if it's already present on disk it won't refresh from the
     // server dynamically. So, delete any possible copies of this from disk.
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(req.document.url));
-    if (fs.existsSync(path.join(outPath, "index.html"))) {
-      fs.unlinkSync(path.join(outPath, "index.html"));
+    if (await fse.pathExists(path.join(outPath, "index.html"))) {
+      await fs.unlink(path.join(outPath, "index.html"));
     }
-    if (fs.existsSync(path.join(outPath, "index.json"))) {
-      fs.unlinkSync(path.join(outPath, "index.json"));
+    if (await fse.pathExists(path.join(outPath, "index.json"))) {
+      await fs.unlink(path.join(outPath, "index.json"));
     }
 
     res.sendStatus(200);

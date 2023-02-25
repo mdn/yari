@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import express from "express";
@@ -60,7 +60,7 @@ function packageTranslationDifferences(translationDifferences) {
 }
 
 const _foundDocumentsCache = new Map();
-export function findDocuments({ locale }) {
+export async function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,
@@ -87,7 +87,7 @@ export function findDocuments({ locale }) {
   const cache = _foundDocumentsCache.get(locale);
 
   for (const filePath of documentsFound.iterPaths()) {
-    const mtime = fs.statSync(filePath).mtime;
+    const mtime = (await fs.stat(filePath)).mtime;
 
     if (!cache.has(filePath) || cache.get(filePath).mtime < mtime) {
       counts.cacheMisses++;
@@ -196,7 +196,7 @@ function getDocument(filePath) {
 
 const _defaultLocaleDocumentsCache = new Map();
 
-function gatherL10NstatsSection({
+async function gatherL10NstatsSection({
   locale,
   mdnSection = "/",
   subSections = [],
@@ -308,7 +308,7 @@ function gatherL10NstatsSection({
       .join(path.sep);
 
     counts.total++;
-    const mtime = fs.statSync(filePath).mtime;
+    const mtime = (await fs.stat(filePath)).mtime;
     if (
       !_defaultLocaleDocumentsCache.has(filePath) ||
       _defaultLocaleDocumentsCache.get(filePath).mtime < mtime

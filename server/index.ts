@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import crypto from "node:crypto";
-import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
 import express from "express";
+import fse from "fs-extra";
 import send from "send";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
@@ -149,7 +149,7 @@ app.post(
 
 app.use("/_document", documentRouter);
 
-app.get("/_open", (req, res) => {
+app.get("/_open", async (req, res) => {
   const { line, column, filepath, url } = req.query as {
     line: string;
     column: string;
@@ -164,7 +164,7 @@ app.get("/_open", (req, res) => {
   // to the main builder source.
   let absoluteFilepath;
   if (filepath) {
-    if (fs.existsSync(filepath)) {
+    if (await fse.pathExists(filepath)) {
       absoluteFilepath = filepath;
     } else {
       const [locale] = filepath.split(path.sep);
@@ -182,7 +182,7 @@ app.get("/_open", (req, res) => {
   }
 
   // Double-check that the file can be found.
-  if (!fs.existsSync(absoluteFilepath)) {
+  if (!(await fse.pathExists(absoluteFilepath))) {
     return res.status(400).send(`${absoluteFilepath} does not exist on disk.`);
   }
 
@@ -351,7 +351,7 @@ app.get("/*", async (req, res, ...args) => {
   }
 });
 
-if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
+if (!(await fse.pathExists(path.resolve(CONTENT_ROOT)))) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
 }
 

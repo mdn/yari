@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
@@ -14,18 +14,18 @@ interface DocAttributes {
   slug: string;
 }
 
-function populateSearchIndex(searchIndex, localeLC) {
+async function populateSearchIndex(searchIndex, localeLC) {
   const root = path.join(
     localeLC === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT,
     localeLC
   );
   const locale = VALID_LOCALES.get(localeLC);
   const api = new fdir().withFullPaths().withErrors().crawl(root);
-  for (const filePath of api.sync() as PathsOutput) {
+  for (const filePath of (await api.withPromise()) as PathsOutput) {
     if (!(filePath.endsWith("index.html") || filePath.endsWith("index.md"))) {
       continue;
     }
-    const rawContent = fs.readFileSync(filePath, "utf-8");
+    const rawContent = await fs.readFile(filePath, "utf-8");
     const { attributes: metadata } = fm<DocAttributes>(rawContent);
     metadata.locale = locale;
 
@@ -63,7 +63,7 @@ export async function searchIndexRoute(req, res) {
 
   const label = "Populate search-index";
   console.time(label);
-  populateSearchIndex(searchIndex, locale);
+  await populateSearchIndex(searchIndex, locale);
   searchIndex.sort();
   console.timeEnd(label);
   res.json(searchIndex.getItems()[locale]);

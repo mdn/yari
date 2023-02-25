@@ -1,7 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
+import fse from "fs-extra";
 
 import { Doc } from "../libs/types/document.js";
 import { FlawFilters } from "./types.js";
@@ -135,7 +135,7 @@ function strMapToObject(map) {
   return obj;
 }
 
-export default (req, res) => {
+export default async (req, res) => {
   const locale = req.query.locale.toLowerCase();
   if (!locale) {
     return res.status(400).send("'locale' is always required");
@@ -221,8 +221,8 @@ export default (req, res) => {
       return filePath.endsWith("index.json");
     })
     .crawl(path.join(BUILD_OUT_ROOT, locale));
-  for (const filePath of api.sync() as PathsOutput) {
-    const { doc } = JSON.parse(fs.readFileSync(filePath, "utf-8")) as {
+  for (const filePath of (await api.withPromise()) as PathsOutput) {
+    const { doc } = (await fse.readJson(filePath)) as {
       doc: Doc;
     };
 
