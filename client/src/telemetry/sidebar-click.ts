@@ -13,17 +13,26 @@ export function handleSidebarClick(
 function getClickPayload(event: MouseEvent) {
   const { target = null } = event;
   const anchor = (target as HTMLElement)?.closest("a");
-  const sidebar = document.getElementById("sidebar-quicklinks");
 
-  if (sidebar && anchor && sidebar.contains(anchor)) {
-    const macro = sidebar.getAttribute("data-macro") ?? "?";
-    const href = anchor.getAttribute("href") ?? "?";
-
-    return {
-      macro,
-      href,
-    };
-  } else {
+  if (!anchor) {
     return null;
   }
+
+  if (anchor.closest(".document-toc")) {
+    return null;
+  }
+
+  const sidebar = document.getElementById("sidebar-quicklinks");
+
+  if (!sidebar) {
+    return null;
+  }
+
+  const macro = sidebar.getAttribute("data-macro") ?? "?";
+  const href = anchor.getAttribute("href") ?? "?";
+
+  return {
+    macro,
+    href,
+  };
 }
