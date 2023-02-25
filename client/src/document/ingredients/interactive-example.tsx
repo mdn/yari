@@ -38,7 +38,7 @@ export function InteractiveExample({
       observer.observe(iframe);
       return () => (iframe ? observer.unobserve(iframe) : undefined);
     }
-  }, [ref.current, heights]);
+  }, [heights]);
 
   return (
     <iframe

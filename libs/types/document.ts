@@ -1,4 +1,4 @@
-import { InteractiveEditorHeights } from "../../client/src/document/ingredients/interactive-example";
+import { InteractiveEditorHeights } from "../../client/src/document/ingredients/interactive-example.js";
 
 export interface Source {
   folder: string;
