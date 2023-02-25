@@ -19,6 +19,7 @@ function getClickPayload(event: MouseEvent) {
   }
 
   if (anchor.closest(".document-toc")) {
+    // Click in the mobile TOC, not the actual sidebar.
     return null;
   }
 
