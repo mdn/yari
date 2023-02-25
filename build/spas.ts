@@ -61,7 +61,10 @@ async function buildContributorSpotlight(locale, options) {
     };
     const context = { hyData };
 
-    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
+    const html = await renderHTML(
+      `/${locale}/${prefix}/${contributor}`,
+      context
+    );
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale,
@@ -95,7 +98,7 @@ export async function buildSPAs(options) {
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const url = "/en-US/404.html";
-  const html = renderHTML(url, { pageNotFound: true });
+  const html = await renderHTML(url, { pageNotFound: true });
   const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
@@ -155,7 +158,7 @@ export async function buildSPAs(options) {
           noIndexing,
         };
 
-        const html = renderHTML(url, context);
+        const html = await renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
@@ -208,7 +211,7 @@ export async function buildSPAs(options) {
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
       };
 
-      const html = renderHTML(url, context);
+      const html = await renderHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
         locale,
@@ -285,7 +288,7 @@ export async function buildSPAs(options) {
         featuredArticles,
       };
       const context = { hyData };
-      const html = renderHTML(url, context);
+      const html = await renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");

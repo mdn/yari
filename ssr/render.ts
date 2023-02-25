@@ -1,7 +1,8 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import fse from "fs-extra";
 import { renderToString } from "react-dom/server";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
@@ -76,15 +77,18 @@ const lazy = (creator) => {
 // Path strings are preferred over URLs here to mitigate Webpack resolution
 const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
-const readBuildHTML = lazy(() => {
-  let html = fs.readFileSync(path.join(clientBuildRoot, "index.html"), "utf-8");
+const readBuildHTML = lazy(async () => {
+  let html = await fs.readFile(
+    path.join(clientBuildRoot, "index.html"),
+    "utf-8"
+  );
   if (!html.includes('<div id="root"></div>')) {
     throw new Error(
       'The render depends on being able to inject into <div id="root"></div>'
     );
   }
   const scripts: string[] = [];
-  const gaScriptPathName = getGAScriptPathName();
+  const gaScriptPathName = await getGAScriptPathName();
   if (gaScriptPathName) {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
   }
@@ -93,34 +97,35 @@ const readBuildHTML = lazy(() => {
   return html;
 });
 
-const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
+const getGAScriptPathName = lazy(async (relPath = "/static/js/ga.js") => {
   // Return the relative path if there exists a `BUILD_ROOT/static/js/ga.js`.
   // If the file doesn't exist, return falsy.
   // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
   // based on `dirname` but that's wrong when compared as a source and as
   // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
   let root = BUILD_OUT_ROOT;
-  if (!fs.existsSync(root)) {
+  if (!(await fse.pathExists(root))) {
     root = root
       .split(path.sep)
       .filter((x) => x !== "ssr")
       .join(path.sep);
   }
   const filePath = relPath.split("/").slice(1).join(path.sep);
-  if (fs.existsSync(path.join(root, filePath))) {
+  if (await fse.pathExists(path.join(root, filePath))) {
     return relPath;
   }
   return null;
 });
 
-const extractWebFontURLs = lazy(() => {
+const extractWebFontURLs = lazy(async () => {
   const urls: string[] = [];
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
+  const manifest = await fse.readJson(
+    path.join(clientBuildRoot, "asset-manifest.json"),
+    "utf-8"
   );
   for (const entrypoint of manifest.entrypoints) {
     if (!entrypoint.endsWith(".css")) continue;
-    const css = fs.readFileSync(
+    const css = await fs.readFile(
       path.join(clientBuildRoot, entrypoint),
       "utf-8"
     );
@@ -152,7 +157,7 @@ interface HydrationData {
   noIndexing?: any;
 }
 
-export default function render(
+export default async function render(
   renderApp,
   {
     doc = null,
@@ -164,8 +169,8 @@ export default function render(
     noIndexing = null,
   }: HydrationData = {}
 ) {
-  const buildHtml = readBuildHTML();
-  const webfontURLs = extractWebFontURLs();
+  const buildHtml = await readBuildHTML();
+  const webfontURLs = await extractWebFontURLs();
   const rendered = renderToString(renderApp);
 
   let canonicalURL = "https://developer.mozilla.org";
