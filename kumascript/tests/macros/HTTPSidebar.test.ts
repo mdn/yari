@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fse from "fs-extra";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 import * as Content from "../../../content/index.js";
@@ -50,12 +50,9 @@ const { assert, itMacro, beforeEachMacro, describeMacro, lintHTML } =
   await import("./utils.js");
 
 // Load fixture data.
-const fixtureData = JSON.parse(
-  fs.readFileSync(
-    new URL("./fixtures/documentData2.json", import.meta.url),
-    "utf-8"
-  )
-) as any;
+const fixtureData = (await fse.readJson(
+  new URL("./fixtures/documentData2.json", import.meta.url)
+)) as any;
 
 const locales = {
   "en-US": {

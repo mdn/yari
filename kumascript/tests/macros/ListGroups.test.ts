@@ -1,5 +1,4 @@
-import fs from "node:fs";
-
+import fse from "fs-extra";
 import { jest } from "@jest/globals";
 import { JSDOM } from "jsdom";
 
@@ -9,12 +8,8 @@ import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
  * Load all the fixtures.
  */
 
-const groupDataFixturePath = new URL(
-  "./fixtures/listgroups/groupdata.json",
-  import.meta.url
-);
-const groupDataFixture = JSON.parse(
-  fs.readFileSync(groupDataFixturePath, "utf-8")
+const groupDataFixture = await fse.readJson(
+  new URL("./fixtures/listgroups/groupdata.json", import.meta.url)
 );
 
 /**

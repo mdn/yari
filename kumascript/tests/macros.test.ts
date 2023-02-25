@@ -1,7 +1,7 @@
 /**
  * Verify that all of the macros in ../macros/ compile without errors
  */
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 import ejs from "ejs";
@@ -15,9 +15,9 @@ describe("macros/ directory", () => {
     const templateMap = templates.getTemplateMap();
     const macroNames = Array.from(templateMap.keys());
 
-    it.each(macroNames)("%s", (macro) => {
+    it.each(macroNames)("%s", async (macro) => {
       const filename = templateMap.get(macro);
-      const source = fs.readFileSync(filename, "utf-8");
+      const source = await fs.readFile(filename, "utf-8");
       ejs.compile(source, { async: true });
     });
   });

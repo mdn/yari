@@ -1,5 +1,4 @@
-import fs from "node:fs";
-
+import fse from "fs-extra";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
@@ -9,41 +8,20 @@ import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
  * Load all the fixtures.
  */
 
-const subpagesFixturePath = new URL(
-  "./fixtures/apiref/subpages.json",
-  import.meta.url
+const subpagesFixture = await fse.readJson(
+  new URL("./fixtures/apiref/subpages.json", import.meta.url)
 );
-const subpagesFixture = JSON.parse(
-  fs.readFileSync(subpagesFixturePath, "utf-8")
+const commonl10nFixture = await fse.readJson(
+  new URL("./fixtures/apiref/commonl10n.json", import.meta.url)
 );
-const commonl10nFixturePath = new URL(
-  "./fixtures/apiref/commonl10n.json",
-  import.meta.url
+const groupDataFixture = await fse.readJson(
+  new URL("./fixtures/apiref/groupdata.json", import.meta.url)
 );
-const commonl10nFixture = JSON.parse(
-  fs.readFileSync(commonl10nFixturePath, "utf-8")
+const interfaceDataNoEntriesFixture = await fse.readJson(
+  new URL("./fixtures/apiref/interfacedata_no_entries.json", import.meta.url)
 );
-const groupDataFixturePath = new URL(
-  "./fixtures/apiref/groupdata.json",
-  import.meta.url
-);
-const groupDataFixture = JSON.parse(
-  fs.readFileSync(groupDataFixturePath, "utf-8")
-);
-const interfaceDataNoEntriesFixturePath = new URL(
-  "./fixtures/apiref/interfacedata_no_entries.json",
-  import.meta.url
-);
-const interfaceDataNoEntriesFixture = fs.readFileSync(
-  interfaceDataNoEntriesFixturePath,
-  "utf-8"
-);
-const interfaceDataFixturePath = new URL(
-  "./fixtures/apiref/interfacedata.json",
-  import.meta.url
-);
-const interfaceDataFixture = JSON.parse(
-  fs.readFileSync(interfaceDataFixturePath, "utf-8")
+const interfaceDataFixture = await fse.readJson(
+  new URL("./fixtures/apiref/interfacedata.json", import.meta.url)
 );
 
 /**

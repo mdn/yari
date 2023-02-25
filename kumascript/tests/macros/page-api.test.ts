@@ -2,7 +2,7 @@
 // tested its main functions. The features of that macro are now
 // part of ../../src/environment.js, but we're still testing them here.
 
-import fs from "node:fs";
+import fse from "fs-extra";
 import { jest } from "@jest/globals";
 
 import * as Content from "../../../content/index.js";
@@ -56,11 +56,8 @@ const { assert, itMacro, describeMacro, beforeEachMacro } = await import(
 );
 
 // Load fixture data.
-const fixtureData = JSON.parse(
-  fs.readFileSync(
-    new URL("./fixtures/documentData1.json", import.meta.url),
-    "utf-8"
-  )
+const fixtureData = await fse.readJson(
+  new URL("./fixtures/documentData1.json", import.meta.url)
 );
 const fix_url = "/en-US/docs/Web/HTTP/Basics_of_HTTP";
 const titles = [

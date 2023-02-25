@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fse from "fs-extra";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
@@ -8,28 +8,18 @@ import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
  * Load all the fixtures.
  */
 
-const pagesFixturePath = new URL(
-  "./fixtures/defaultapisidebar/pages.json",
-  import.meta.url
+const pagesJSON = await fse.readJson(
+  new URL("./fixtures/defaultapisidebar/pages.json", import.meta.url)
 );
-const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf-8"));
 const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"],
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
 ];
-const commonl10nFixturePath = new URL(
-  "./fixtures/defaultapisidebar/commonl10n.json",
-  import.meta.url
+const commonl10nFixture = await fse.readJson(
+  new URL("./fixtures/defaultapisidebar/commonl10n.json", import.meta.url)
 );
-const commonl10nFixture = JSON.parse(
-  fs.readFileSync(commonl10nFixturePath, "utf-8")
-);
-const groupDataFixturePath = new URL(
-  "./fixtures/defaultapisidebar/groupdata.json",
-  import.meta.url
-);
-const groupDataFixture = JSON.parse(
-  fs.readFileSync(groupDataFixturePath, "utf-8")
+const groupDataFixture = await fse.readJson(
+  new URL("./fixtures/defaultapisidebar/groupdata.json", import.meta.url)
 );
 
 /**

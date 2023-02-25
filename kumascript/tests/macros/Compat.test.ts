@@ -1,19 +1,20 @@
-import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
-
-import fs from "node:fs";
+import fs from "node:fs/promises";
+import fse from "fs-extra";
 import { JSDOM } from "jsdom";
 import extend from "extend";
+
+import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
 
 const fixture_dir = new URL("./fixtures/compat/", import.meta.url);
 
 let fixtureCompatData = {};
-fs.readdirSync(fixture_dir).forEach(function (fn) {
+for (const fn of await fs.readdir(fixture_dir)) {
   fixtureCompatData = extend(
     true,
     fixtureCompatData,
-    JSON.parse(fs.readFileSync(new URL(fn, fixture_dir), "utf-8"))
+    await fse.readJson(new URL(fn, fixture_dir))
   );
-});
+}
 
 describeMacro("Compat", function () {
   itMacro("Outputs a simple div tag", async (macro) => {
