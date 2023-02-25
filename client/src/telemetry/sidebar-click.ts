@@ -18,14 +18,14 @@ function getClickPayload(event: MouseEvent) {
     return null;
   }
 
-  if (anchor.closest(".document-toc")) {
-    // Click in the mobile TOC, not the actual sidebar.
-    return null;
-  }
-
   const sidebar = document.getElementById("sidebar-quicklinks");
 
   if (!sidebar || !sidebar.contains(anchor)) {
+    return null;
+  }
+
+  if (anchor.closest(".document-toc")) {
+    // Click in the mobile TOC, not the actual sidebar.
     return null;
   }
 
