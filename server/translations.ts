@@ -404,7 +404,7 @@ async function gatherL10NstatsSection({
 
 const _detailsSectionCache = new Map();
 
-function buildL10nDashboard({
+async function buildL10nDashboard({
   locale,
   section,
 }: {
@@ -449,7 +449,7 @@ function buildL10nDashboard({
     })
     .map((s) => "/" + s);
 
-  const l10nStatsSection = gatherL10NstatsSection({
+  const l10nStatsSection = await gatherL10NstatsSection({
     locale,
     mdnSection: section,
     subSections,
@@ -618,7 +618,7 @@ router.get("/missing", async (req, res) => {
 
   const label = `Find all missing translations (${locale})`;
   console.time(label);
-  const found = gatherL10NstatsSection({ locale });
+  const found = await gatherL10NstatsSection({ locale });
   console.timeEnd(label);
   res.json(found);
 });
@@ -641,7 +641,7 @@ router.get("/dashboard", async (req, res) => {
 
   const label = `Gather stat for ${locale} and section ${section}`;
   console.time(label);
-  const data = buildL10nDashboard({ locale, section });
+  const data = await buildL10nDashboard({ locale, section });
   console.timeEnd(label);
   res.json(data);
 });
