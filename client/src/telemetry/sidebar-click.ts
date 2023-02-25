@@ -24,7 +24,7 @@ function getClickPayload(event: MouseEvent) {
     return null;
   }
 
-  if (anchor.closest(".document-toc")) {
+  if (anchor.closest(".in-nav-toc")) {
     // Click in the mobile TOC, not the actual sidebar.
     return null;
   }
