@@ -206,11 +206,12 @@ app.use("/_translations", translationsRouter);
 app.get("/:locale/_yari/:namespace", async (req, res) => {
   // Grab the i18next file for the Yari platform localization
   const { locale, namespace } = req.params;
-  const fileroot =
+  const filepath = new URL(
     locale === "en-us"
-      ? path.join(__dirname, "..", "client", "i18n")
-      : path.join(getRoot(locale), locale, "_yari");
-  const filepath = path.join(fileroot, namespace);
+      ? `../client/i18n/${namespace}`
+      : `./${locale}/_yari/${namespace}`,
+    import.meta.url
+  );
 
   if (!fs.existsSync(filepath)) {
     res.status(404).send(`Locale file for ${locale}:${namespace} not found`);
