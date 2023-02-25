@@ -14,7 +14,7 @@ dotenv.config({
   path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
-export function renderHTML(url, context) {
+export async function renderHTML(url, context) {
   return render(
     React.createElement(
       StaticRouter,
