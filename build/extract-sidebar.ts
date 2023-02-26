@@ -39,5 +39,6 @@ export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
   });
 
   doc.sidebarHTML = search.html();
+  doc.sidebarMacro = search.attr("data-macro");
   search.remove();
 }

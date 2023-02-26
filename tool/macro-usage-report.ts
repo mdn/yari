@@ -121,7 +121,7 @@ async function isMacroDeprecated(macro: string) {
   const file = path.join(MACROS_PATH, `${macro}.ejs`);
   const content = await fs.readFile(file, "utf-8");
 
-  return content.includes("mdn.deprecated()");
+  return content.includes("mdn.deprecated(");
 }
 
 function formatCell(files: string[]): string {
