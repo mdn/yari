@@ -203,7 +203,7 @@ async function buildSublist(pages, title, opened) {
 // Output
 
 async function renderOutput() {
-  let output = '<section class="Quick_links" id="Quick_links"><ol>';
+  let output = '<section class="Quick_links" id="Quick_links" data-macro="JSRef"><ol>';
   const link = web.smartLink(slugStdlib, null, text.stdlib, slugStdlib, slugStdlib, "JSRef");
   output += `<li><strong>${link}</strong></li>`;
 

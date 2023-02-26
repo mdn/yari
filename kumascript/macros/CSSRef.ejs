@@ -13,8 +13,13 @@ const text = mdn.localStringMap({
        'Assessment_Styling_a_biography_page': 'Assessment: Styling a biography page',
      'CSS_building_blocks': 'CSS building blocks',
        'CSS_building_blocks_overview': 'CSS building blocks overview',
-       'Cascade_and_inheritance': 'Cascade and inheritance',
        'CSS_selectors': 'CSS selectors',
+       'Type_Class_and_ID_Selectors': 'Type, class, and ID selectors',
+       'Attribute_selectors': 'Attribute selectors',
+       'Pseudo-classes_and_pseudo-elements': 'Pseudo-classes and pseudo-elements',
+       'Combinators': 'Combinators',
+       'Cascade_and_inheritance': 'Cascade, specificity, and inheritance',
+       'Cascade_layers': 'Cascade layers',
        'The_box_model': 'The box model',
        'Backgrounds_and_borders': 'Backgrounds and borders',
        'Handling_different_text_directions': 'Handling different text directions',
@@ -124,7 +129,6 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'Understanding CSS z-index',
       'Scroll_snap': 'Scroll snap',
         'Basic_concepts_of_scroll_snap': 'Basic concepts of scroll snap',
-        'Browser_compatibility_and_scroll_snap': 'Browser compatibility and scroll snap',
       'Shapes': 'Shapes',
         'Overview_of_shapes': 'Overview of shapes',
         'Shapes_from_box_values': 'Shapes from box values',
@@ -271,7 +275,6 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'Comprendre le z-index CSS',
       'Scroll_snap': 'Ancrage du défilement',
         'Basic_concepts_of_scroll_snap': 'Concepts de base pour l\'ancrage du défilement',
-        'Browser_compatibility_and_scroll_snap': 'Compatibilité des navigateurs et ancrage du défilement',
       'Shapes': 'Formes',
         'Overview_of_shapes': 'Aperçu des formes',
         'Shapes_from_box_values': 'Formes à partir des valeurs de boîtes',
@@ -471,7 +474,6 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'CSS z-index 이해하기',
       'Scroll_snap': '스크롤 스냅',
         'Basic_concepts_of_scroll_snap': '스크롤 스냅 기본 개념',
-        'Browser_compatibility_and_scroll_snap': '스크롤 스냅과 브라우저 호환성',
       'Shapes': '도형',      
         'Overview_of_shapes': '도형의 기본 개념',
         'Shapes_from_box_values': 'CSS 박스 모델로 도형 만들기',
@@ -671,7 +673,6 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'Понимание CSS z-index',
       'Scroll_snap': 'Scroll snap',
         'Basic_concepts_of_scroll_snap': 'Базовые концепции CSS Scroll Snap',
-        'Browser_compatibility_and_scroll_snap': 'Совместимость с браузером и Scroll Snap',
       'Shapes': 'Фигуры',
         'Overview_of_shapes': 'Обзор фигур',
         'Shapes_from_box_values': 'Фигуры из блочных значений',
@@ -822,7 +823,6 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'CSS z-index',
       'Scroll_snap': 'Scroll snap',
         'Basic_concepts_of_scroll_snap': 'scroll snap 基础概念',
-        'Browser_compatibility_and_scroll_snap': 'scroll snap 和浏览器兼容性',
       'Shapes': '形状',
         'Overview_of_shapes': '形状概述',
         'Shapes_from_box_values': '使用 box 值指定形状',
@@ -1077,7 +1077,7 @@ async function buildPropertylist(pages, title) {
 
 %>
 
-<section id="Quick_links">
+<section id="Quick_links" data-macro="CSSRef">
 
 <ol>
   <li><a href="/<%=locale%>/docs/Web/CSS"><strong>CSS</strong></a></li>
@@ -1101,8 +1101,13 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['CSS_building_blocks']%></summary>
           <ol>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks`, null, text['CSS_building_blocks_overview'], learnURL)%></li>
-            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors`, null, text['CSS_selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors`, null, text['Type_Class_and_ID_Selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Attribute_selectors`, null, text['Attribute_selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements`, null, text['Pseudo-classes_and_pseudo-elements'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors/Combinators`, null, text['Combinators'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_layers`, null, text['Cascade_layers'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/The_box_model`, null, text['The_box_model'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Backgrounds_and_borders`, null, text['Backgrounds_and_borders'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Handling_different_text_directions`, null, text['Handling_different_text_directions'], learnURL)%></li>
@@ -1116,6 +1121,7 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Fundamental_CSS_comprehension`, null, text['Assessment_Fundamental_CSS_comprehension'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/Creating_fancy_letterheaded_paper`, null, text['Assessment_Creating_fancy_letterheaded_paper'], learnURL)%></li>
             <li><%-smartLink(`${learnURL}CSS/Building_blocks/A_cool_looking_box`, null, text['Assessment_A_cool_looking_box'], learnURL)%></li>
+          </ol>
       </details>
   </li>
   <li class="toggle">
@@ -1336,7 +1342,6 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['Scroll_snap']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Scroll_Snap/Basic_concepts`, null, text['Basic_concepts_of_scroll_snap'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Scroll_Snap/Browser_compat`, null, text['Browser_compatibility_and_scroll_snap'], cssURL)%></li>
           </ol>
       </details>
   </li>

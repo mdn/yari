@@ -23,6 +23,16 @@ export async function toggleNewsletterSubscription(
   }
 }
 
+export async function toggleNoAds(enabled: boolean) {
+  return await fetch(SETTINGS_BASE_PATH, {
+    body: JSON.stringify({ no_ads: enabled }),
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
+
 export async function getNewsletterSubscription(): Promise<boolean | null> {
   try {
     const res = await fetch(NEWSLETTER_BASE_PATH);
