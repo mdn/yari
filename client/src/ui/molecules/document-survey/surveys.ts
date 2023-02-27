@@ -42,7 +42,7 @@ export const SURVEYS: Survey[] = [
     show: (doc: Doc) => /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/7241049/MDN-Web-Docs-Content-Discovery",
     teaser:
-      "The MDN Web Docs writers team wants to understand the needs of our readers better.",
+      "The MDN Web Docs team wants to know what content you want to see. The survey is a single open-ended question and will help us understand what you're looking for.",
     question: "Help us understand the content you're interested in seeing.",
     ...survey_duration(SurveyBucket.CONTENT_DISCOVERY_2023),
     ...survey_rates(SurveyKey.CONTENT_DISCOVERY_2023),
