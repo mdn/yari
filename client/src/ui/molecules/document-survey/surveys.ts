@@ -43,7 +43,7 @@ export const SURVEYS: Survey[] = [
     src: "https://survey.alchemer.com/s3/7241049/MDN-Web-Docs-Content-Discovery",
     teaser:
       "The MDN Web Docs writers team wants to understand the needs of our readers better.",
-    question: "Help us shape the future of MDN Web Docs.",
+    question: "Help us understand the content you're interested in seeing.",
     ...survey_duration(SurveyBucket.CONTENT_DISCOVERY_2023),
     ...survey_rates(SurveyKey.CONTENT_DISCOVERY_2023),
   },
