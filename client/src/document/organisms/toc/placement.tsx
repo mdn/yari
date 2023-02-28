@@ -60,7 +60,8 @@ export function Placement() {
         },
         body: JSON.stringify({ keywords: [] }),
       });
-      gleanClick("pong: pong->fetched");
+
+      gleanClick(`pong: pong->fetched ${response.status}`);
 
       if (!response.ok) {
         throw Error(response.statusText);

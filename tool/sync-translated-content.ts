@@ -95,11 +95,10 @@ function resolve(slug: string) {
   return doc?.metadata.slug ?? slug;
 }
 
-async function mdOrHtmlExists(filePath: string) {
-  const dir = path.dirname(filePath);
+async function mdOrHtmlExists(folderPath: string) {
   return (
-    (await fse.pathExists(path.join(dir, MARKDOWN_FILENAME))) ||
-    (await fse.pathExists(path.join(dir, HTML_FILENAME)))
+    (await fse.pathExists(path.join(folderPath, MARKDOWN_FILENAME))) ||
+    (await fse.pathExists(path.join(folderPath, HTML_FILENAME)))
   );
 }
 
@@ -160,19 +159,16 @@ export async function syncTranslatedContent(
     metadata.slug = metadata.slug.substring(0, hash);
   };
 
-  const getFilePath = () => {
-    const folderPath = path.join(
+  const getFileDir = () => {
+    return path.join(
       CONTENT_TRANSLATED_ROOT,
       locale,
       slugToFolder(metadata.slug)
     );
-
-    const filePath = path.join(folderPath, fileName);
-    return filePath;
   };
 
   dehash();
-  let filePath = getFilePath();
+  let folderPath = getFileDir();
 
   status.orphaned = !(await mdOrHtmlExists(
     path.join(CONTENT_ROOT, DEFAULT_LOCALE_LC, slugToFolder(metadata.slug))
@@ -187,22 +183,23 @@ export async function syncTranslatedContent(
     status.followed = false;
     metadata.slug = `${ORPHANED}/${metadata.slug}`;
     status.moved = true;
-    filePath = getFilePath();
-    if (await mdOrHtmlExists(filePath)) {
+    folderPath = getFileDir();
+    if (await mdOrHtmlExists(folderPath)) {
+      const filePath = path.join(folderPath, fileName);
       log.log(`${inFilePath} → ${filePath}`);
       throw new Error(`file: ${filePath} already exists!`);
     }
-  } else if (status.moved && (await mdOrHtmlExists(filePath))) {
+  } else if (status.moved && (await mdOrHtmlExists(folderPath))) {
     console.log(`unrooting ${inFilePath} (conflicting translation)`);
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
-    filePath = getFilePath();
-    if (await mdOrHtmlExists(filePath)) {
+    folderPath = getFilPDir();
+    if (await mdOrHtmlExists(folderPath)) {
       metadata.slug = `${metadata.slug}_${crypto
         .createHash("md5")
         .update(oldMetadata.slug)
         .digest("hex")}`;
-      filePath = getFilePath();
+      folderPath = getFileDir();
     }
   }
 
@@ -211,6 +208,7 @@ export async function syncTranslatedContent(
     buildURL(VALID_LOCALES.get(locale), metadata.slug),
   ];
 
+  const filePath = path.join(folderPath, fileName);
   log.log(`${inFilePath} → ${filePath}`);
   Document.updateWikiHistory(
     path.join(CONTENT_TRANSLATED_ROOT, locale.toLowerCase()),
@@ -218,7 +216,7 @@ export async function syncTranslatedContent(
     metadata.slug
   );
   if (status.moved) {
-    await moveContent(path.dirname(inFilePath), path.dirname(filePath));
+    await moveContent(path.dirname(inFilePath), folderPath);
     metadata.original_slug = oldMetadata.slug;
   }
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
