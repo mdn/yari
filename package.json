@@ -156,7 +156,7 @@
     "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "diff": "^5.1.0",
-    "downshift": "^7.2.1",
+    "downshift": "^7.2.2",
     "eslint": "^8.35.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-gitignore": "^0.1.0",
