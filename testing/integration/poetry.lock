@@ -543,14 +543,14 @@ requests = ">=2.9"
 
 [[package]]
 name = "pytest-rerunfailures"
-version = "11.1"
+version = "11.1.1"
 description = "pytest plugin to re-run tests to eliminate flaky failures"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytest-rerunfailures-11.1.tar.gz", hash = "sha256:bc6ad13614c976b04558c3a7bcc393a7e09686fb86b6ae73f827b78326c09f75"},
-    {file = "pytest_rerunfailures-11.1-py3-none-any.whl", hash = "sha256:9acd6cb19e3ba2f9191ecaaa15428348c2dead2e99a56f7e63479c0a3aabfeb8"},
+    {file = "pytest-rerunfailures-11.1.1.tar.gz", hash = "sha256:acab447edff7c29a76b8410207c48da01406a161653c99a325cf5703d44eb162"},
+    {file = "pytest_rerunfailures-11.1.1-py3-none-any.whl", hash = "sha256:4333983de0914f79d942a6ec29332f2c9cfe2d2d47ba2b634f3617b7f9d94f86"},
 ]
 
 [package.dependencies]
@@ -611,4 +611,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "849aea7986a944d71f49e3a35f9b93f4dd19ec0e73d453e9f304bddf42724c88"
+content-hash = "a518b052b005085e216a2d728a022d36d310186c224dd00b94f8bd1c68ad8cb7"

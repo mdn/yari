@@ -288,9 +288,7 @@ function LoadingError({ error }) {
             <small>{error.statusText}</small>
           </p>
         ) : (
-          <p>
-            <pre>{error.toString()}</pre>
-          </p>
+          <pre>{error.toString()}</pre>
         )}
         <p>
           <button
