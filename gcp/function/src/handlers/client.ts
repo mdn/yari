@@ -9,11 +9,14 @@ export function client(): express.Handler {
     source: Source.client,
     http(source) {
       const clientProxy = httpProxy.createProxy({
+        prependPath: true,
         changeOrigin: true,
         target: source,
         autoRewrite: true,
       });
-      return (req, res) => clientProxy.web(req, res);
+      return (req, res) => {
+        clientProxy.web(req, res);
+      };
     },
     file(source) {
       return (req, res) => {

@@ -9,6 +9,7 @@ export function bcdApi(): express.Handler {
     source: Source.bcdApi,
     http(source) {
       const bcdProxy = httpProxy.createProxy({
+        prependPath: true,
         changeOrigin: true,
         target: source,
         autoRewrite: true,

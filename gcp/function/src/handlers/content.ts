@@ -11,11 +11,23 @@ export function docs(): express.Handler {
     source: Source.content,
     http(source) {
       const contentProxy = httpProxy.createProxy({
+        prependPath: true,
+        ignorePath: true,
         changeOrigin: true,
         target: source,
         autoRewrite: true,
       });
-      return (req, res) => contentProxy.web(req, res);
+      contentProxy.on("proxyReq", (proxyReq, req) => {
+        const rPath = req.url;
+        let folderName = slugToFolder(rPath);
+        if (path.extname(folderName) === "") {
+          folderName = path.join(folderName, "index.html");
+        }
+        proxyReq.path = path.join(proxyReq.path, folderName);
+      });
+      return (req, res) => {
+        contentProxy.web(req, res);
+      };
     },
     file(source) {
       return (req, res) => {
