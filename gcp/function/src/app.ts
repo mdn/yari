@@ -1,0 +1,32 @@
+import { docs } from "./handlers/content.js";
+import { client } from "./handlers/client.js";
+
+import type express from "express";
+import { Router } from "express";
+import { Origin, origin } from "./env.js";
+import { liveSamples } from "./handlers/liveSamples.js";
+import { bcdApi } from "./handlers/bcdApi.js";
+import { spa } from "./handlers/spa.js";
+import { rumba } from "./handlers/rumba.js";
+
+const mainRouter = Router();
+mainRouter.get("/bcd/api/*", bcdApi());
+mainRouter.all("/api/*", rumba);
+mainRouter.all("/users/fxa/*", rumba);
+mainRouter.get("/[^/]+/plus/*", spa);
+mainRouter.get("/[^/]+/docs/*", docs());
+mainRouter.get("*", client());
+
+export async function handler(req: express.Request, res: express.Response) {
+  const rPath = req.path;
+  const reqOrigin = origin(req);
+  if (reqOrigin === Origin.main && !rPath.includes("/_sample_.")) {
+    return mainRouter(req, res, () => {
+      console.error("must not be called");
+    });
+  } else if (reqOrigin === Origin.liveSamples) {
+    return liveSamples(req, res);
+  } else {
+    return res.status(404).send();
+  }
+}
