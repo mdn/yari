@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../env";
+import { CRUD_MODE, IEX_DOMAIN } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
@@ -38,6 +38,7 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { useGleanClick } from "../telemetry/glean-context";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -171,6 +172,23 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   }, []);
   // const { setToastData } = useUIStatus();
+
+  const gleanClick = useGleanClick();
+  React.useEffect(() => {
+    const listener = (event: MessageEvent) => {
+      if (
+        event.origin === IEX_DOMAIN &&
+        typeof event.data === "object" &&
+        event.data.type === "action"
+      ) {
+        gleanClick(`interactive-examples: ${event.data.source}`);
+      }
+    };
+
+    window.addEventListener("message", listener);
+
+    return () => window.removeEventListener("message", listener);
+  });
 
   if (!doc && !error) {
     return <Loading minHeight={800} message="Loading document..." />;
