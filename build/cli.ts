@@ -237,6 +237,7 @@ async function buildDocuments(
       body: _,
       toc: __,
       sidebarHTML: ___,
+      sidebarMacro: ____,
       ...builtMetadata
     } = builtDocument;
     builtMetadata.hash = hash;
