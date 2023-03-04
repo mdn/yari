@@ -35,6 +35,8 @@ interface DocumentEdits {
   parentModified: string;
   commitURL: string;
   parentCommitURL: string;
+  sourceCommitsBehindCount: number;
+  sourceCommitURL?: string;
 }
 
 interface Document {
@@ -606,6 +608,7 @@ function DocumentsTable({
             <TableHead id="popularity" title="Popularity" />
             <TableHead id="modified" title="Last modified" />
             <TableHead id="differences" title="Differences" />
+            <TableHead id="sourceCommit" title="Source Commit" />
           </tr>
         </thead>
         <tbody>
@@ -658,6 +661,14 @@ function DocumentsTable({
                     <LastModified edits={doc.edits} />
                   </td>
                   <td>{doc.differences.total.toLocaleString()}</td>
+                  <td>
+                    <L10nSourceCommitModified
+                      sourceCommitsBehindCount={
+                        doc.edits.sourceCommitsBehindCount
+                      }
+                      sourceCommitURL={doc.edits.sourceCommitURL}
+                    />
+                  </td>
                 </tr>
               );
             })}
@@ -677,6 +688,17 @@ function DocumentsTable({
         </p>
       )}
     </div>
+  );
+}
+
+function L10nSourceCommitModified({
+  sourceCommitsBehindCount,
+  sourceCommitURL,
+}: Pick<DocumentEdits, "sourceCommitsBehindCount" | "sourceCommitURL">) {
+  if (!sourceCommitURL) return null;
+
+  return (
+    <a href={sourceCommitURL}>{`${sourceCommitsBehindCount} commits behind`}</a>
   );
 }
 

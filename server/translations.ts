@@ -3,6 +3,7 @@ import path from "node:path";
 
 import express from "express";
 import { fdir } from "fdir";
+import { execSync } from "node:child_process";
 
 import { getPopularities, Document, Translation } from "../content/index.js";
 import {
@@ -141,22 +142,45 @@ function getDocument(filePath) {
     };
   }
 
+  function getCommitBehindFromLatest(filename, commitHash) {
+    const commitHashes = execSync(
+      `cd ${CONTENT_ROOT} && git log --pretty=format:%H -- ${filename}`
+    )
+      .toString()
+      .split("\n");
+
+    return commitHashes.indexOf(commitHash);
+  }
+
   function packageEdits(document, parentDocument) {
-    const commitURL = getLastCommitURL(
-      document.fileInfo.root,
-      document.metadata.hash
-    );
-    const parentCommitURL = getLastCommitURL(
-      parentDocument.fileInfo.root,
-      parentDocument.metadata.hash
-    );
-    const modified = document.metadata.modified;
-    const parentModified = parentDocument.metadata.modified;
+    const {
+      fileInfo: { root: fileRoot },
+      metadata: { hash: fileHash, modified, l10n },
+    } = document;
+    const {
+      fileInfo: { root: parentFileRoot, path: parentFilePath },
+      metadata: { hash: parentFileHash, parentModified },
+    } = parentDocument;
+
+    const commitURL = getLastCommitURL(fileRoot, fileHash);
+    const parentCommitURL = getLastCommitURL(parentFileRoot, parentFileHash);
+    let sourceCommitURL;
+    let sourceCommitsBehindCount;
+    if (l10n?.sourceCommit) {
+      sourceCommitURL = getLastCommitURL(CONTENT_ROOT, l10n.sourceCommit);
+      sourceCommitsBehindCount = getCommitBehindFromLatest(
+        parentFilePath,
+        l10n.sourceCommit
+      );
+    }
+
     return {
       commitURL,
       parentCommitURL,
       modified,
       parentModified,
+      sourceCommitURL,
+      sourceCommitsBehindCount,
     };
   }
 
