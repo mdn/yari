@@ -133,7 +133,6 @@ export function useGleanPage() {
 
   return useEffect(() => {
     if (!isServer) {
-      path.current = loc.pathname;
       const submit = gleanAnalytics.page({
         path: window?.location.toString(),
         referrer: document?.referrer,
@@ -142,6 +141,7 @@ export function useGleanPage() {
         subscriptionType: userData?.subscriptionType || "anonymous",
       });
       if (userData && path.current !== loc.pathname) {
+        path.current = loc.pathname;
         submit();
       }
     }
