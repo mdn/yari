@@ -1,20 +1,21 @@
 import fs from "node:fs";
-import Templates from "../src/templates";
-import { render } from "../src/render";
+import { fileURLToPath } from "node:url";
+import { jest } from "@jest/globals";
+
+import Templates from "../src/templates.js";
+import { render } from "../src/render.js";
 import {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
-} from "../src/errors";
-
-const dirname = __dirname;
+} from "../src/errors.js";
 
 const PAGE_ENV = { slug: "" };
 
 describe("render() function", () => {
   function fixture(name) {
-    return `${dirname}/fixtures/render/${name}`;
+    return fileURLToPath(new URL(`./fixtures/render/${name}`, import.meta.url));
   }
   function get(name) {
     return fs.readFileSync(fixture(name), "utf-8");

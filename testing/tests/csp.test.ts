@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants";
+import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants/index.js";
 
 describe("Content-Security-Policy", () => {
   test('All inline <script> tags must have a corresponding "script-src" CSP entry.', () => {

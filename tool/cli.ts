@@ -1,43 +1,49 @@
 #!/usr/bin/env node
-import { isValidLocale } from "../libs/locale-utils";
-import type { Doc } from "../libs/types/document";
 
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
-import { program } from "@caporal/core";
+import caporal from "@caporal/core";
 import chalk from "chalk";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
+import { Action, ActionParameters, Logger } from "types";
 
-const dirname = __dirname;
-
-import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { Redirect, Document, buildURL, getRoot } from "../content";
-import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
-
-import { VALID_FLAW_CHECKS } from "../libs/constants";
+import {
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+  VALID_FLAW_CHECKS,
+} from "../libs/constants/index.js";
+import { Redirect, Document, buildURL, getRoot } from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import type { Doc } from "../libs/types/document.js";
 import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} from "../libs/env";
-import { runMakePopularitiesFile } from "./popularities";
-import { runOptimizeClientBuild } from "./optimize-client-build";
-import { runBuildRobotsTxt } from "./build-robots-txt";
-import { syncAllTranslatedContent } from "./sync-translated-content";
-import * as kumascript from "../kumascript";
-import { Action, ActionParameters, Logger } from "types";
+} from "../libs/env/index.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+import { syncAllTranslatedContent } from "./sync-translated-content.js";
+import { macroUsageReport } from "./macro-usage-report.js";
+import * as kumascript from "../kumascript/index.js";
 import {
   MacroInvocationError,
   MacroRedirectedLinkError,
-} from "../kumascript/src/errors";
-import { macroUsageReport } from "./macro-usage-report";
+} from "../kumascript/src/errors.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -136,7 +142,7 @@ interface GatherGitHistoryActionParameters extends ActionParameters {
 
 interface SyncTranslatedContentActionParameters extends ActionParameters {
   args: {
-    locale: string[];
+    locales: string[];
   };
   options: {
     verbose: boolean;
@@ -648,29 +654,31 @@ program
     "sync-translated-content",
     "Sync translated content (sync with en-US slugs) for a locale"
   )
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
     tryOrExit(
       async ({ args, options }: SyncTranslatedContentActionParameters) => {
-        const { locale } = args;
+        const { locales } = args;
         const { verbose } = options;
         if (verbose) {
           log.setDefaultLevel(log.levels.DEBUG);
         }
-        for (const l of locale) {
+        for (const locale of locales) {
           const {
             movedDocs,
             conflictingDocs,
             orphanedDocs,
             redirectedDocs,
+            renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(l);
-          console.log(chalk.green(`Syncing ${l}:`));
+          } = syncAllTranslatedContent(locale);
+          console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
+          console.log(chalk.green(`Renamed ${renamedDocs} documents`));
           console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
           console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
           console.log(
@@ -820,7 +828,7 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(dirname, "..", "popularities.json")),
+    default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -897,7 +905,7 @@ program
         if (account) {
           const dntHelperCode = fs
             .readFileSync(
-              path.join(dirname, "mozilla.dnthelper.min.js"),
+              new URL("mozilla.dnthelper.min.js", import.meta.url),
               "utf-8"
             )
             .trim();

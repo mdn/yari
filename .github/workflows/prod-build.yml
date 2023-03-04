@@ -89,7 +89,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: yarn
 
       - name: Install all yarn packages
@@ -98,7 +98,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.10"
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1
@@ -118,6 +118,9 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
+
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
 
       - name: Build everything
         env:
@@ -167,13 +170,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_INTEROP_2023: 1667217600000 # (new Date("2022-10-31 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_END_INTEROP_2023: 1667822400000 # (new Date("2022-11-07 12:00:00Z")).getTime()
-
-          REACT_APP_SURVEY_RATE_FROM_INTEROP_2023_CSS_HTML: 0.0
-          REACT_APP_SURVEY_RATE_TILL_INTEROP_2023_CSS_HTML: 0.10 # 10 %
-          REACT_APP_SURVEY_RATE_FROM_INTEROP_2023_API_JS: 0.10
-          REACT_APP_SURVEY_RATE_TILL_INTEROP_2023_API_JS: 0.15 # 5 %
+          REACT_APP_SURVEY_START_CONTENT_DISCOVERY_2023: 1677499200000 # (new Date("2023-02-27 12:00:00Z")).getTime()
+          REACT_APP_SURVEY_END_CONTENT_DISCOVERY_2023: 1677672000000 # (new Date("2023-03-01 12:00:00Z")).getTime()
+          REACT_APP_SURVEY_RATE_FROM_CONTENT_DISCOVERY_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_CONTENT_DISCOVERY_2023: 0.05 # 5%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -181,6 +181,9 @@ jobs:
 
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: true
+
+          # Placement
+          REACT_APP_PLACEMENT_ENABLED: true
 
         run: |
 
@@ -233,6 +236,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
+
+          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_SITE_ID }}
+          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_NETWORK_ID }}
+          SIGN_SECRET: ${{ secrets.DEPLOYER_PROD_SIGN_SECRET }}
 
         run: |
 

@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
+import { handleSidebarClick } from "./sidebar-click";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -89,14 +90,15 @@ function glean(): GleanAnalytics {
       pings.action.submit();
     },
   };
+  const gleanClick = (source: string) => {
+    gleanContext.click({
+      source,
+      subscriptionType: "",
+    });
+  };
   window?.addEventListener("click", (ev) => {
-    const anchor = ev?.target as Element;
-    if (anchor?.nodeName === "A" && anchor?.classList.contains("external")) {
-      gleanContext.click({
-        source: `external-link: ${anchor.getAttribute("href") || ""}`,
-        subscriptionType: "",
-      });
-    }
+    handleLinkClick(ev, gleanClick);
+    handleSidebarClick(ev, gleanClick);
   });
 
   return gleanContext;
@@ -104,6 +106,18 @@ function glean(): GleanAnalytics {
 
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
+
+function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
+  const anchor = ev?.target as Element;
+  if (anchor?.nodeName === "A") {
+    if (anchor?.classList.contains("external")) {
+      click(`external-link: ${anchor.getAttribute("href") || ""}`);
+    }
+    if (anchor?.hasAttribute?.("data-pong")) {
+      click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
+    }
+  }
+}
 
 export function GleanProvider(props: { children: React.ReactNode }) {
   return (

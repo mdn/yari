@@ -21,7 +21,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Evolution of HTTP',
     'ResourcesURI': 'Resources and URIs',
     'Identifying': 'Identifying resources on the Web',
-    'DataURIs': 'Data URIs',
+    'DataURLs': 'Data URLs',
     'MIMETypes': 'Introduction to MIME types',
     'ListMIMETypes': 'Common MIME types',
     'WWWorNotWWW': 'Choosing between www and non-www URLs',
@@ -58,7 +58,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Evolución de HTTP',
     'ResourcesURI': 'Recursons y URIs',
     'Identifying': 'Identificación de recursons en la Web',
-    'DataURIs': 'URIs de Datos',
+    'DataURLs': 'URLs de Datos',
     'MIMETypes': 'Presentación de tipos MIME',
     'ListMIMETypes': 'Lista completa de tipos MIME',
     'WWWorNotWWW': 'Eleción entre ww y no-www URLs',
@@ -92,7 +92,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Évolution de HTTP',
     'ResourcesURI': 'Ressources et URI',
     'Identifying': 'Identifier des ressources sur le Web',
-    'DataURIs': 'URI de données',
+    'DataURLs': 'URL de données',
     'MIMETypes': 'Introduction aux types MIME',
     'ListMIMETypes': 'Types MIME usuels',
     'WWWorNotWWW': 'Choisir entre les URL avec ou sans www',
@@ -130,7 +130,7 @@ var text = mdn.localStringMap({
     'Evolution': 'HTTP の進化',
     'ResourcesURI': 'リソースと URI',
     'Identifying': 'ウェブ上のリソースの識別',
-    'DataURIs': 'データ URL',
+    'DataURLs': 'データ URL',
     'MIMETypes': 'MIME タイプ入門',
     'ListMIMETypes': 'よくある MIME タイプ',
     'WWWorNotWWW': 'www 付きと www なしの URL の選択',
@@ -162,13 +162,13 @@ var text = mdn.localStringMap({
   },
   'ko': {
     'HTTP': 'HTTP',
-    'HTTPGuide': 'HTTP 가이드',
+    'HTTPGuide': 'HTTP 안내서',
     'Basics': 'HTTP 기본',
     'Overview': 'HTTP 개요',
     'Evolution': 'HTTP의 진화',
     'ResourcesURI': '리소스와 URIs',
     'Identifying': '웹의 리소스 식별하기',
-    'DataURIs': '데이터 URIs',
+    'DataURLs': '데이터 URLs',
     'MIMETypes': 'MIME 타입 소개',
     'ListMIMETypes': 'MIME 타입의 전체 리스트',
     'WWWorNotWWW': 'www와 non-www URL 중에서 선택하기',
@@ -206,7 +206,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Эволюция протокола HTTP',
     'ResourcesURI': 'Ресурсы и URI-адреса',
     'Identifying': 'Идентификация ресурсов в Вебе',
-    'DataURIs': 'Data URL',
+    'DataURLs': 'Data URL',
     'MIMETypes': 'Введение в MIME типы',
     'ListMIMETypes': 'Неполный список типов MIME',
     'WWWorNotWWW': 'Choosing between www and non-www URLs',
@@ -244,7 +244,7 @@ var text = mdn.localStringMap({
     'Evolution': 'HTTP 的发展',
     'ResourcesURI': '资源和 URI',
     'Identifying': '标识互联网上的内容',
-    'DataURIs': 'Data URI',
+    'DataURLs': 'Data URL',
     'MIMETypes': 'MIME 类型介绍',
     'ListMIMETypes': '常见的 MIME 类型',
     'WWWorNotWWW': '选择 www 或非 www 域名？',
@@ -278,7 +278,7 @@ var text = mdn.localStringMap({
 %>
 
 
-<section id="Quick_links">
+<section id="Quick_links" data-macro="HTTPSidebar">
   <ol>
     <li><a href="/<%=locale%>/docs/Web/HTTP"><strong><%=text['HTTP']%></strong></a></li>
     <li><strong><%=text['Guides']%></strong></li>
@@ -287,7 +287,7 @@ var text = mdn.localStringMap({
             <summary><%=text['ResourcesURI']%></summary>
             <ol>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web"><%=text['Identifying']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Data_URIs"><%=text['DataURIs']%></a></li>
+                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Data_URLs"><%=text['DataURLs']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/MIME_Types"><%=text['MIMETypes']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types"><%=text['ListMIMETypes']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs"><%=text['WWWorNotWWW']%></a></li>

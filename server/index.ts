@@ -15,28 +15,31 @@ import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} from "../build";
-import { findDocumentTranslations } from "../content/translations";
-import { Document, Redirect, Image } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants";
+} from "../build/index.js";
+import { findDocumentTranslations } from "../content/translations.js";
+import { Document, Redirect, Image } from "../content/index.js";
+import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} from "../libs/env";
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+} from "../libs/env/index.js";
 
-import documentRouter from "./document";
-import fakeV1APIRouter from "./fake-v1-api";
-import { searchIndexRoute } from "./search-index";
-import flawsRoute from "./flaws";
-import { router as translationsRouter } from "./translations";
-import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
-import { getRoot } from "../content/utils";
+import documentRouter from "./document.js";
+import fakeV1APIRouter from "./fake-v1-api.js";
+import { searchIndexRoute } from "./search-index.js";
+import flawsRoute from "./flaws.js";
+import { router as translationsRouter } from "./translations.js";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
+import { getRoot } from "../content/utils.js";
 
-import { renderHTML } from "../ssr/dist/main";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -89,6 +92,16 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
+const pongProxy = createProxyMiddleware({
+  target: `https://developer.allizom.org`,
+  changeOrigin: true,
+  proxyTimeout: 20000,
+  timeout: 20000,
+  headers: {
+    Connection: "keep-alive",
+  },
+});
+
 const contentProxy =
   CONTENT_HOSTNAME &&
   createProxyMiddleware({
@@ -98,6 +111,8 @@ const contentProxy =
     // timeout: 20000,
   });
 
+app.use("/pong/*", pongProxy);
+app.use("/pimg/*", pongProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);

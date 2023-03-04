@@ -1,4 +1,4 @@
-import { packageBCD } from "../resolve-bcd";
+import { packageBCD } from "../resolve-bcd.js";
 
 // Bad BCD queries are when the `<div class="bc-data">` tags have an
 // ID (or even lack the `id` attribute) that don't match anything in the

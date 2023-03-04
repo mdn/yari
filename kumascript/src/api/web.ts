@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import * as util from "./util";
+import * as util from "./util.js";
+
+import { CONTENT_ROOT } from "../../../libs/env/index.js";
+import { KumaThis } from "../environment.js";
 
 const DUMMY_BASE_URL = "https://example.com";
-
-import { CONTENT_ROOT } from "../../../libs/env";
-import { KumaThis } from "../environment";
 
 const _warned = new Map();
 // The purpose of this function is to make sure `console.warn` is only called once

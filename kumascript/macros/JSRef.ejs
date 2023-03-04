@@ -10,270 +10,242 @@
 //  $2 - Related objects to display (comma separated) – OBSOLETE
 
 // Strings
-var commonl10n = web.getJSONData('L10n-Common');
-var jsl10n = web.getJSONData('L10n-JavaScript');
+const commonl10n = web.getJSONData("L10n-Common");
+const jsl10n = web.getJSONData("L10n-JavaScript");
 
-var text = {
-    'stdlib': mdn.getLocalString(jsl10n, 'stdlib'),
-    'Properties': mdn.getLocalString(commonl10n, 'Properties'),
-    'Methods': mdn.getLocalString(commonl10n, 'Methods'),
-    'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
-    'Related': mdn.getLocalString(commonl10n, 'Related_pages_wo_group'),
+const text = {
+  stdlib: mdn.getLocalString(jsl10n, "stdlib"),
+  Constructor: mdn.getLocalString(commonl10n, "Constructor"),
+  Properties: mdn.getLocalString(commonl10n, "Properties"),
+  Methods: mdn.getLocalString(commonl10n, "Methods"),
+  Inheritance: mdn.getLocalString(commonl10n, "Inheritance"),
+  Related: mdn.getLocalString(commonl10n, "Related_pages_wo_group"),
 };
-
 
 // Variables
-var containsTag = page.hasTag;
-var slug = env.slug;
-var output = "";
-// slug is not available in preview mode.
-if (slug) {
-var locale = env.locale;
-var rtlLocales = ['ar', 'he', 'fa'];
-var slug_stdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
-var mainObj = slug.replace('Web/JavaScript/Reference/Global_Objects/', '').split('/')[0];
+const slug = env.slug;
+const locale = env.locale;
+const rtlLocales = ["ar", "he", "fa"];
+const slugStdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
+const subPath = slug.replace("Web/JavaScript/Reference/Global_Objects/", "")
+let subPathParts = subPath.split("/");
+// For Intl, we should use the first two parts of the slug if has
+// e.g. subPath startswith "Intl/Collator" we should use "Intl.Collator"
+// note that Intl owns some methods, we have some special handling for it later
+subPathParts = subPathParts.slice(0, subPathParts[0] === "Intl" ? 2 : 1);
+let mainObj = subPathParts.join(".");
 
 // Data for inheritance chain
-var inheritance = ["Object", "Function"];
-var inheritanceData = {
-    "Math": ["Object"],
-    "Date": ["Object"],
-    "Function": ["Object"],
-    "Object": [],
-    "JSON": ["Object"],
-    "Intl": ["Object"],
-    "arguments": [],
-    "Reflect": ["Object"],
-    "Proxy": [],
-    "Atomics": ["Object"],
-    "WebAssembly": ["Object"],
+const inheritanceData = {
+  Math: ["Object"],
+  Date: ["Object"],
+  Function: ["Object"],
+  Object: [],
+  JSON: ["Object"],
+  Intl: ["Object"],
+  arguments: [],
+  Reflect: ["Object"],
+  Proxy: [],
+  Atomics: ["Object"]
 };
-if (typeof inheritanceData[mainObj] != 'undefined') {
-    inheritance = inheritanceData[mainObj];
-}
+
+const inheritance = inheritanceData[mainObj.split(".")[0]] ?? ["Object", "Function"];
 
 // Data for related pages
-var groupData = {
-    "Error": ["Error", "EvalError", "InternalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError"],
-    "Intl": ["Intl", "Intl.Collator", "Intl.DateTimeFormat", "Intl.ListFormat", "Intl.NumberFormat", "Intl.PluralRules", "Intl.RelativeTimeFormat", "Intl.Segmenter"],
-    "TypedArray": ["TypedArray", "Int8Array", "Uint8Array", "Uint8ClampedArray", "Int16Array", "Uint16Array",
-                   "Int32Array", "Uint32Array", "Float32Array", "Float64Array", "BigInt64Array", "BigUint64Array"],
-    "Proxy": ["Proxy", "handler"],
-    "WebAssembly": ["WebAssembly", "WebAssembly.Module", "WebAssembly.Global", "WebAssembly.Instance", "WebAssembly.Memory",
-                    "WebAssembly.Table", "WebAssembly.CompileError", "WebAssembly.LinkError", "WebAssembly.RuntimeError",
-                    "WebAssembly.Tag", "WebAssembly.Exception"],
+const groupData = {
+  Error: ["Error", "EvalError", "InternalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError"],
+  Intl: ["Intl", "Intl.Collator", "Intl.DateTimeFormat", "Intl.ListFormat", "Intl.NumberFormat", "Intl.PluralRules", "Intl.RelativeTimeFormat", "Intl.Segmenter"],
+  TypedArray: ["TypedArray", "Int8Array", "Uint8Array", "Uint8ClampedArray", "Int16Array", "Uint16Array",
+                "Int32Array", "Uint32Array", "Float32Array", "Float64Array", "BigInt64Array", "BigUint64Array"],
+  Proxy: ["Proxy", "handler"]
 };
 
 // Exceptions, we want the main object in the sidebar (e.g. Int8Array -> TypedArray)
-if (groupData["TypedArray"].indexOf(mainObj) != -1) { mainObj = "TypedArray"; }
-if (groupData["Error"].indexOf(mainObj) != -1) { mainObj = "Error"; }
-if (groupData["Proxy"].indexOf(mainObj) != -1) { mainObj = "Proxy/handler"; }
+if (groupData.TypedArray.includes(mainObj)) {
+  mainObj = "TypedArray";
+} else if (groupData.Error.includes(mainObj)) {
+  mainObj = "Error";
+} else if (groupData.Proxy.includes(mainObj)) {
+  mainObj = "Proxy/handler";
+} else if (mainObj.startsWith("Intl") && !groupData.Intl.includes(mainObj)) {
+  // Special case for Intl, we should make sure that the main object is Intl
+  // as Intl owns some methods (e.g. Intl.getCanonicalLocales)
+  mainObj = "Intl";
+}
 
 // Get related pages from groups and exclude self
-var group = [];
-for(g in groupData) {
-    var index = groupData[g].indexOf(mainObj);
-    if(index != -1 ) {
-        group = groupData[g];
-        group.splice(index, 1);
-        break;
-    }
+let group = [];
+for(const key in groupData) {
+  const index = groupData[key].indexOf(mainObj);
+  if(index !== -1) {
+    group = groupData[key];
+    group.splice(index, 1);
+    break;
+  }
 }
+
+const mainObjPath = mainObj.replaceAll(".", "/"); // e.g. Intl.Collator -> Intl/Collator
 
 // Collect pages
-var source = {};
-source[mainObj] = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + mainObj);
-if  (inheritance.indexOf("Function") > -1) {
-    source["iFunction"] = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function');
-}
-if  (inheritance.indexOf("Object") > -1) {
-    source["iObject"] = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object');
-}
+const source = {};
+source[mainObj] = await page.subpagesExpand(`/en-US/docs/Web/JavaScript/Reference/Global_Objects/${mainObjPath}`);
 
-var result = {};
+const result = {};
 result[mainObj] = {
-    title: mainObj,
-    methods: [],
-    properties: [],
-    defaultOpened: true
+  title: mainObj,
+  subPath: mainObjPath,
+  constructors: [],
+  methods: [],
+  properties: [],
+  defaultOpened: true
 };
-if  (inheritance.indexOf("Function") > -1) {
-result['iFunction'] = {
-    title: 'Function',
+
+if (inheritance.includes("Function")) {
+  source.iFunction = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function');
+
+  result.iFunction = {
+    title: "Function",
+    subPath: "Function",
+    constructors: [],
     methods: [],
     properties: [],
     defaultOpened: false
-};
-}
-if  (inheritance.indexOf("Object") > -1) {
-result['iObject'] = {
-    title: 'Object',
-    methods: [],
-    properties: [],
-    defaultOpened: false
-};
+  };
 }
 
-var pageList;
+if (inheritance.includes("Object")) {
+  source.iObject = await page.subpagesExpand('/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object');
+
+  result.iObject = {
+    title: "Object",
+    subPath: "Object",
+    constructors: [],
+    methods: [],
+    properties: [],
+    defaultOpened: false
+  };
+}
 
 function isPrototypeMemberPage(page) {
-    return [
-        "javascript-instance-accessor-property",
-        "javascript-instance-data-property",
-        "javascript-instance-method",
-    ].includes(page.pageType);
+  return [
+    "javascript-instance-accessor-property",
+    "javascript-instance-data-property",
+    "javascript-instance-method",
+  ].includes(page.pageType);
 }
 
 function isPropertyPage(page) {
-    return [
-        "javascript-static-accessor-property",
-        "javascript-static-data-property",
-        "javascript-instance-accessor-property",
-        "javascript-instance-data-property",
-    ].includes(page.pageType);
+  return [
+    "javascript-static-accessor-property",
+    "javascript-static-data-property",
+    "javascript-instance-accessor-property",
+    "javascript-instance-data-property",
+  ].includes(page.pageType);
 }
 
 function isMethodPage(page) {
-    return [
-        "javascript-static-method",
-        "javascript-instance-method",
-    ].includes(page.pageType);
+  return [
+    "javascript-static-method",
+    "javascript-instance-method",
+  ].includes(page.pageType);
 }
 
-for (var object in source) {
-    pageList = source[object];
-    if (object === "iObject") {
-        // For objects, we're only interested in prototype members.
-        pageList = pageList.filter(page => isPrototypeMemberPage(page));
+function isConstructorPage(page) {
+  return "javascript-constructor" === page.pageType;
+}
+
+for (const key in source) {
+  let pageList = source[key];
+  if (key === "iObject") {
+    // For objects, we're only interested in prototype members.
+    pageList = pageList.filter(page => isPrototypeMemberPage(page));
+  }
+  for (const page of pageList) {
+    if (isConstructorPage(page)) {
+      result[key].constructors.push(page);
     }
-    for (const page of pageList) {
-        if (isPropertyPage(page)) {
-            result[object].properties.push(page);
-          }
-        if (isMethodPage(page)) {
-            result[object].methods.push(page);
-        }
+    if (isPropertyPage(page)) {
+      result[key].properties.push(page);
     }
+    if (isMethodPage(page)) {
+      result[key].methods.push(page);
+    }
+  }
 }
 
 // Output helper
 
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge  : await template("NonStandardBadge"),
-  DeprecatedBadge   : await template("DeprecatedBadge"),
-  ObsoleteBadge     : await template("ObsoleteBadge"),
-}
+async function buildSublist(pages, title, opened) {
+  const getTitle = locale === "en-US"
+  ? page => page.title
+  : page => page.translations.find(translation => translation.locale === locale)?.title ?? page.title;
 
-function buildSublist(pages, title, opened) {
-  var result = '<li><details>';
-  if (opened !== '') {
-    result = '<li><details open>';
-  }
-  result += '<summary>' + title + '</summary></a><ol>';
+  const items = pages.map(async aPage => {
+    const url = aPage.url.replace("en-US", locale);
+    const title = getTitle(aPage);
+    const pageBadges = (await page.badges(aPage)).join("");
 
-  for (var i in pages) {
-    var aPage = pages[i];
-    result += '<li>';
+    const start = rtlLocales.includes(locale) ? "<li><bdi>" : "<li>";
+    const end = rtlLocales.includes(locale) ? "</bdi></li>" : "</li>";
+    return `${start}${web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slugStdlib, "JSRef")}${pageBadges}${end}`
+  })
 
-    var url = aPage.url.replace('en-US', locale);
-    var title = aPage.title;
+  // Wait for all the links to be built
+  const resolvedItems = await Promise.all(items);
 
-    if (locale != 'en-US') {
-        aPage.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                url = translation.url;
-                title = translation.title;
-            }
-        });
-    }
-
-    var pageBadges = '';
-    if (containsTag(aPage, 'Experimental')) {
-        pageBadges += badges.ExperimentalBadge;
-    }
-
-    if (containsTag(aPage, 'Non-standard') || containsTag(aPage, 'Non Standard')) {
-        pageBadges += badges.NonStandardBadge;
-    }
-
-    if (containsTag(aPage, 'Deprecated')) {
-        pageBadges += badges.DeprecatedBadge;
-    }
-
-    if (containsTag(aPage, 'Obsolete')) {
-        pageBadges += badges.ObsoleteBadge;
-        result += '<s class="obsoleteElement">';
-    }
-
-    if (rtlLocales.indexOf(locale) != -1) {
-        result += '<bdi>';
-    }
-
-    result += pageBadges + web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slug_stdlib, "JSRef");
-
-    if (rtlLocales.indexOf(locale) != -1) {
-        result += '</bdi>';
-    }
-
-    if (containsTag(aPage, 'Obsolete')) {
-        result += '</s>';
-    }
-
-    result += '</li>';
-  }
-
-  result += '</ol></details></li>';
+  const start = opened ? "<li><details open>" : "<li><details>";
+  const end = "</details></li>";
+  const result = `${start}<summary>${title}</summary></a><ol>${resolvedItems.join("")}</ol>${end}`
 
   return result;
 }
 
-
-var resultTitle;
-var resultProperties;
-var resultMethods;
-var resultOpen;
-var len = 0;
-
 // Output
 
-output  = '<section class="Quick_links" id="Quick_links"><ol>';
-const link = web.smartLink(slug_stdlib, null, text['stdlib'], slug_stdlib, slug_stdlib, "JSRef");
-output += `<li><strong>${link}</strong></li>`;
+async function renderOutput() {
+  let output = '<section class="Quick_links" id="Quick_links" data-macro="JSRef"><ol>';
+  const link = web.smartLink(slugStdlib, null, text.stdlib, slugStdlib, slugStdlib, "JSRef");
+  output += `<li><strong>${link}</strong></li>`;
 
-for (object in result) {
-    len++;
-    resultTitle      = result[object].title || '';
-    resultProperties = result[object].properties || '';
-    resultMethods    = result[object].methods || '';
-    resultOpen       = result[object].defaultOpened || '';
+  for (const [index, item] of Object.values(result).entries()) {
+    const resultTitle        = item.title ?? "";
+    const resultSubPath      = item.subPath ?? "";
+    const resultConstructors = item.constructors ?? [];
+    const resultProperties   = item.properties ?? [];
+    const resultMethods      = item.methods ?? [];
+    const resultOpen         = item.defaultOpened ?? false;
 
-    if (len == 2) {
-        output += '<li><strong>'+text['Inheritance']+'</strong></li>';
+    if (index === 1) {
+      output += `<li><strong>${text.Inheritance}</strong></li>`;
     }
 
-    const link = web.smartLink(`${slug_stdlib}/${resultTitle}`, null, `<code>${resultTitle}</code>`, null, slug_stdlib, "JSRef");
+    const link = web.smartLink(`${slugStdlib}/${resultSubPath}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
     output += `<li><strong>${link}</strong></li>`;
 
+    if (resultConstructors.length > 0) {
+      output += await buildSublist(resultConstructors, text.Constructor, resultOpen);
+    }
     if (resultProperties.length > 0) {
-        output += buildSublist(resultProperties, text['Properties'], resultOpen);
+      output += await buildSublist(resultProperties, text.Properties, resultOpen);
     }
     if (resultMethods.length > 0) {
-        output += buildSublist(resultMethods, text['Methods'], resultOpen);
+      output += await buildSublist(resultMethods, text.Methods, resultOpen);
     }
 
-    if (len == 1 && group.length > 0) {
-        output += '<li><strong>'+text['Related']+'</strong></li>';
-        for (var i = 0; i < group.length; i++) {
-            const link = web.smartLink(`${slug_stdlib}/${group[i].replace(".", "/")}`, null, `<code>${group[i]}</code>`, null, slug_stdlib, "JSRef");
-            output += `<li><strong>${link}</strong></li>`;
-        }
+    if (index === 0 && group.length > 0) {
+      output += `<li><strong>${text.Related}</strong></li>`;
+      for (const groupItem of group) {
+        const link = web.smartLink(`${slugStdlib}/${groupItem.replace(".", "/")}`, null, `<code>${groupItem}</code>`, null, slugStdlib, "JSRef");
+        output += `<li><strong>${link}</strong></li>`;
+      }
     }
+  }
 
+  output += "</ol></section>";
+  return output;
 }
 
-output += '</ol></section>';
-}
+const output = await renderOutput();
 %>
 
 <%-output%>

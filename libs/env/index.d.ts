@@ -1,4 +1,3 @@
-export const ROOT: string;
 export const BUILD_OUT_ROOT: string;
 export const DEFAULT_FLAW_LEVELS: string;
 export const FILES: string;

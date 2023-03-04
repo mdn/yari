@@ -1,15 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
-import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 
-const YARI = path.normalize(path.join(__dirname, ".."));
-const MACRO_PATH = path.join(YARI, "kumascript", "macros");
+const YARI_URL = new URL("..", import.meta.url);
+const MACROS_URL = new URL("kumascript/macros", YARI_URL);
+const YARI_PATH = fileURLToPath(YARI_URL);
+const MACROS_PATH = fileURLToPath(MACROS_URL);
 
 async function getMacros(): Promise<string[]> {
-  const macroFilenames = await fs.readdir(MACRO_PATH);
+  const macroFilenames = await fs.readdir(MACROS_PATH);
   const macros = macroFilenames
     .map((filename) => path.basename(filename, ".ejs"))
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
@@ -61,7 +64,9 @@ async function getFilesByMacro(
         `\\{\\{\\s*(${macroNames.join("|")})\\b`,
         [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT].filter(Boolean)
       ),
-      findMatches(`template\\(["'](${macroNames.join("|")})["']`, [MACRO_PATH]),
+      findMatches(`template\\(["'](${macroNames.join("|")})["']`, [
+        MACROS_PATH,
+      ]),
     ])
   ).flat();
 
@@ -113,10 +118,10 @@ async function filterDeprecatedMacros(macros: string[]) {
 }
 
 async function isMacroDeprecated(macro: string) {
-  const file = path.join(MACRO_PATH, `${macro}.ejs`);
+  const file = path.join(MACROS_PATH, `${macro}.ejs`);
   const content = await fs.readFile(file, "utf-8");
 
-  return content.includes("mdn.deprecated()");
+  return content.includes("mdn.deprecated(");
 }
 
 function formatCell(files: string[]): string {
@@ -138,7 +143,7 @@ async function writeMarkdownTable(
   }
 ) {
   const columns = ["yari"];
-  const paths = [MACRO_PATH];
+  const paths = [MACROS_PATH];
 
   for (const locale of ACTIVE_LOCALES) {
     const path = getPathByLocale(locale);
@@ -194,7 +199,7 @@ function writeJson(
         file
           .replace(CONTENT_ROOT, "content")
           .replace(CONTENT_TRANSLATED_ROOT, "translated-content")
-          .replace(YARI, "yari")
+          .replace(YARI_PATH, "yari/")
       ),
     };
   }

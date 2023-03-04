@@ -16,7 +16,9 @@ test.describe("Site search", () => {
 
     await page.fill(SEARCH_SELECTOR, "foo");
     await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    await page.$eval('form[role="search"]', (form) => form.submit());
+    await page.$eval('form[role="search"]', (form) =>
+      (form as HTMLFormElement).submit()
+    );
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
     // Force a wait for the search results
@@ -32,7 +34,9 @@ test.describe("Site search", () => {
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "FOO");
     await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    await page.$eval('form[role="search"]', (form) => form.submit());
+    await page.$eval('form[role="search"]', (form) =>
+      (form as HTMLFormElement).submit()
+    );
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
     expect(page.url()).toBe(testURL("/en-US/search/?q=FOO"));
@@ -47,7 +51,9 @@ test.describe("Site search", () => {
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "NOTHING");
     await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    await page.$eval('form[role="search"]', (form) => form.submit());
+    await page.$eval('form[role="search"]', (form) =>
+      (form as HTMLFormElement).submit()
+    );
     await page.waitForLoadState("networkidle");
     expect(page.url()).toBe(testURL("/en-US/search/?q=NOTHING"));
     expect(
@@ -62,7 +68,9 @@ test.describe("Site search", () => {
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "SERIAL(20)");
     await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    await page.$eval('form[role="search"]', (form) => form.submit());
+    await page.$eval('form[role="search"]', (form) =>
+      (form as HTMLFormElement).submit()
+    );
     await page.waitForLoadState("networkidle");
     expect(
       await page.isVisible("text=Search results for: SERIAL(20)")

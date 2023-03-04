@@ -1,8 +1,8 @@
-import { packageBCD } from "./resolve-bcd";
-import * as bcd from "@mdn/browser-compat-data/types";
-import { Specification } from "../libs/types/document";
-import specs from "browser-specs";
-import web from "../kumascript/src/api/web";
+import { packageBCD } from "./resolve-bcd.js";
+import bcd from "@mdn/browser-compat-data/types";
+import { Specification } from "../libs/types/document.js";
+import specs from "web-specs/index.json" assert { type: "json" };
+import web from "../kumascript/src/api/web.js";
 
 export function extractSpecifications(
   query: string | undefined,
@@ -71,7 +71,8 @@ export function extractSpecifications(
     }
   }
 
-  if (query) {
+  // The `spec-url` frontmatter takes precedence over spec URLs derived from `browser-compat` frontmatter.
+  if (query && !specURLsString) {
     for (const feature of query.split(",").map((id) => id.trim())) {
       const { data } = packageBCD(feature);
       // If 'data' is non-null, we have data for one or more BCD features
@@ -90,7 +91,7 @@ export function extractSpecifications(
   specURLs = [...new Set(specURLs)];
 
   // Use BCD specURLs to look up more specification data
-  // from the browser-specs package
+  // from the web-specs package
   const specifications = specURLs
     .map((specURL) => {
       const spec = specs.find(

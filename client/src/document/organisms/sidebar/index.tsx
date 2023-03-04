@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
@@ -7,7 +7,15 @@ import { useUIStatus } from "../../../ui-context";
 import "./index.scss";
 import { TOC } from "../toc";
 
-export function SidebarContainer({ doc, children }) {
+export function SidebarContainer({
+  doc,
+  label,
+  children,
+}: {
+  doc: any;
+  label?: string;
+  children: React.ReactNode;
+}) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
 
@@ -42,14 +50,18 @@ export function SidebarContainer({ doc, children }) {
 
   return (
     <>
-      <aside id="sidebar-quicklinks" className={classes}>
+      <aside
+        id="sidebar-quicklinks"
+        className={classes}
+        data-macro={doc.sidebarMacro}
+      >
         <Button
           extraClasses="backdrop"
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Collapse sidebar"
         />
-        <nav className="sidebar-inner">
+        <nav aria-label={label} className="sidebar-inner">
           <div className="in-nav-toc">
             {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           </div>
@@ -63,10 +75,9 @@ export function SidebarContainer({ doc, children }) {
 export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
     return (
-      <SidebarContainer doc={doc}>
+      <SidebarContainer doc={doc} label="Related Topics">
         {doc.sidebarHTML && (
           <>
-            <h4 className="sidebar-heading">Related Topics</h4>
             <div
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,

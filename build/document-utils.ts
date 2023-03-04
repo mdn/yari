@@ -1,4 +1,4 @@
-import { Document } from "../content";
+import { Document } from "../content/index.js";
 
 const TRANSFORM_STRINGS = new Map(
   Object.entries({
@@ -64,13 +64,13 @@ export function addBreadcrumbData(url, document) {
     }
   }
 
-  if (!document.short_title) {
-    document.short_title = transformTitle(document.title);
+  if (!document.shortTitle) {
+    document.shortTitle = transformTitle(document.title);
   }
 
   parents.push({
     uri: url,
-    title: document.short_title,
+    title: document.shortTitle,
   });
   document.parents = parents;
 }
