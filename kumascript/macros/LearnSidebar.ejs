@@ -25,6 +25,8 @@ const l10nStrings = mdn.localStringMap({
     'Accessibility_—_Make_the_web_usable_by_everyone' : 'Accessibility — Make the web usable by everyone',
       'Accessibility_guides' : 'Accessibility guides',
       'Accessibility_assessment' : 'Accessibility assessment',
+    'Performance' : 'Performance — Making websites fast and responsive',
+      'Performance_guides' : 'Performance guides',
     'MathML_Writing_mathematics' : 'MathML — Writing mathematics with MathML',
       'MathML_first_steps': 'MathML first steps',
     'Tools_and_testing' : 'Tools and testing',
@@ -289,7 +291,50 @@ const l10nStrings = mdn.localStringMap({
       'Express_Web_Framework_(Node.js_JavaScript)' : 'Express Web Framework (node.js/JavaScript)',
     'Further_resources': 'Further resources',
       'Common_questions': 'Common questions',
-  }
+  },
+  'ko': {
+    'Complete_beginners_start_here': '입문자들은 여기서부터 시작하세요!',
+      'Getting_started_with_the_web': 'Web과 함께 시작하기',
+    'HTML_Structuring_the_web': 'HTML — 웹 구성',
+      'Introduction_to_HTML': 'Introduction to HTML',
+      'Multimedia_and_embedding': 'Multimedia and embedding',
+      'HTML_tables' : 'HTML tables',
+    'CSS_Styling_the_web': 'CSS — 웹 꾸미기',
+      'CSS_first_steps': 'CSS 첫 번째 단계',
+      'CSS_building_blocks': 'CSS 구성요소',
+      'Styling_text': '텍스트 꾸미기',
+      'CSS_layout': 'CSS 레이아웃',
+    'JavaScript_dynamic_client-side_scripting': 'JavaScript — 동적 클라이언트 사이드 스크립트 언어',
+      'JavaScript_first_steps': 'JavaScript 첫걸음',
+      'JavaScript_building_blocks': 'JavaScript 구성요소',
+      'Introducing_JavaScript_objects' :  'JavaScript 객체',
+      'Asynchronous_JavaScript': 'JavaScript의 비동기성',
+      'Client-side_web_APIs': '클라이언트 사이드 웹 API',
+    'Web_forms' : '웹 Form — 사용자 데이터 사용하기',
+      'Web_forms_core' : '웹 form 핵심',
+      'Web_forms_advanced': '고급 form',
+    'Accessibility_—_Make_the_web_usable_by_everyone' : '접근성 - 모두를 위한 웹 만들기',
+      'Accessibility_guides' : '접근성 안내서',
+      'Accessibility_assessment' : '과제: 접근성 평가',
+    'MathML_Writing_mathematics' : 'MathML — MathML을 이용해 수학 쓰기',
+      'MathML_first_steps': 'MathML 첫 걸음',
+    'Tools_and_testing' : '도구과 테스트',
+      'Cross_browser_testing' : '크로스 브라우저 테스팅',
+      'Git_and_GitHub' : 'Git과 GitHub',
+      'Client-side_web_development_tools' : '클라이언트 사이드 웹 개발 도구',
+      'Introduction_to_client-side_frameworks': '클라이언트 사이드 프레임워크 소개',
+      'React': 'React',
+      'Ember': 'Ember',
+      'Vue': 'Vue',
+      'Svelte': 'Svelte',
+      'Angular': 'Angular',
+    'Server-side_website_programming' : '서버 사이드 웹사이트 프로그래밍',
+      'First_steps' : '첫 걸음',
+      'Django_web_framework_(Python)' : 'Django 웹 프레임워크 (Python)',
+      'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 웹 프레임워크 (Node.js/JavaScript)',
+    'Further_resources': '추가 자료',
+      'Common_questions': '자주 묻는 질문',
+  },
 });
 
 const sections = [
@@ -374,8 +419,13 @@ const sections = [
         name: "CSS_building_blocks",
         pages: [
           "CSS/Building_blocks",
-          "CSS/Building_blocks/Cascade_and_inheritance",
           "CSS/Building_blocks/Selectors",
+          "CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors",
+          "CSS/Building_blocks/Selectors/Attribute_selectors",
+          "CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements",
+          "CSS/Building_blocks/Selectors/Combinators",
+          "CSS/Building_blocks/Cascade_and_inheritance",
+          "CSS/Building_blocks/Cascade_layers",
           "CSS/Building_blocks/The_box_model",
           "CSS/Building_blocks/Backgrounds_and_borders",
           "CSS/Building_blocks/Handling_different_text_directions",
@@ -549,6 +599,28 @@ const sections = [
           "Accessibility/WAI-ARIA_basics",
           "Accessibility/Multimedia",
           "Accessibility/Mobile",
+        ]
+      }
+    ]
+  },
+  {
+    name: "Performance",
+    link: "Performance",
+    subsections: [
+      {
+        name: "Performance_guides",
+        pages: [
+          "Performance/",
+          "Performance/why_web_performance",
+          "Performance/What_is_web_performance",
+          "Performance/Perceived_performance",
+          "Performance/Measuring_performance",
+          "Performance/Multimedia",
+          "Performance/video",
+          "Performance/JavaScript",
+          "Performance/HTML",
+          "Performance/CSS",
+          "Performance/business_case_for_performance",
         ]
       }
     ]
@@ -778,7 +850,7 @@ async function renderSection(section) {
 }
 
 async function renderSidebar() {
-  let output = '<section id="Quick_links"><ol>';
+  let output = '<section id="Quick_links" data-macro="LearnSidebar"><ol>';
 
   for (const section of sections) {
     output += await renderSection(section);
