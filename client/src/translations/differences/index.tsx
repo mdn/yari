@@ -695,7 +695,7 @@ function L10nSourceCommitModified({
   sourceCommitsBehindCount,
   sourceCommitURL,
 }: Pick<DocumentEdits, "sourceCommitsBehindCount" | "sourceCommitURL">) {
-  if (!sourceCommitURL) return null;
+  if (!sourceCommitURL) return <p>Metadata does not exist.</p>;
 
   return (
     <a href={sourceCommitURL}>{`${sourceCommitsBehindCount} commits behind`}</a>
