@@ -8,11 +8,10 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && rm -rf ./src/internal && mkdir ./src/internal && cp -R ../../libs/{constants,fundamental-redirects,locale-utils,slug-utils} ./src/internal/",
     "clean": "tsc -b --clean",
     "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
-    "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
-    "prepare": "rm -f ./src/internal && ln -s ../../../libs ./src/internal"
+    "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'"
   },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.1.3",
