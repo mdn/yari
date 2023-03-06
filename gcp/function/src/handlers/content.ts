@@ -19,7 +19,7 @@ export function docs(): express.Handler {
       });
       contentProxy.on("proxyReq", (proxyReq, req) => {
         const rPath = req.url;
-        let folderName = slugToFolder(rPath);
+        let folderName = slugToFolder(rPath || "");
         if (path.extname(folderName) === "") {
           folderName = path.join(folderName, "index.html");
         }

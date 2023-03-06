@@ -14,4 +14,6 @@
 .gitignore
 
 node_modules
-#!include:.gitignore
+src/**/*.ts
+!#include:.gitignore
+

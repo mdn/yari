@@ -7,7 +7,12 @@
   "author": "",
   "type": "module",
   "main": "src/index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "tsc -b --clean",
+    "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
+    "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'"
+  },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.1.3",
     "@yari-internal/constants": "file:src/internal/libs/constants",
