@@ -12,7 +12,7 @@
     "clean": "tsc -b --clean",
     "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
     "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
-    "prepare": "ln -s ../../libs ./src/internal"
+    "prepare": "rm -f ./src/internal && ln -s ../../../libs ./src/internal"
   },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.1.3",
