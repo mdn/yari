@@ -35,10 +35,10 @@ export const RUNTIME_ENV: string = process.env["RUNTIME_ENV"] || "prod";
 export const ORIGIN_MAIN: string =
   process.env["ORIGIN_MAIN"] || "developer.mozilla.org";
 export const ORIGIN_LIVE_SAMPLES: string =
-  process.env["ORIGIN_LIVE_SAMPLES"] || "interactive-examples.mdn.mozilla.net";
+  process.env["ORIGIN_LIVE_SAMPLES"] || "yari-demos.prod.mdn.mozit.cloud";
 export const ORIGIN_INTERACTIVE_SAMPLES: string =
   process.env["ORIGIN_INTERACTIVE_SAMPLES"] ||
-  "yari-demos.prod.mdn.mozit.cloud";
+  "interactive-examples.mdn.mozilla.net";
 
 export function origin(req: express.Request): Origin {
   switch (req.hostname) {
