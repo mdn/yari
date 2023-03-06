@@ -4,7 +4,6 @@ import { client } from "./handlers/client.js";
 import type express from "express";
 import { Router } from "express";
 import { Origin, origin } from "./env.js";
-import { liveSamples } from "./handlers/liveSamples.js";
 import { bcdApi } from "./handlers/bcdApi.js";
 import { spa } from "./handlers/spa.js";
 import { rumba } from "./handlers/rumba.js";
@@ -19,6 +18,10 @@ mainRouter.get("/[^/]+/docs/*", docsHandler);
 mainRouter.get("/[^/]+/search-index.json", docsHandler);
 mainRouter.get("*", client());
 
+const liveSampleRouter = Router();
+liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", client());
+liveSampleRouter.get("/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)", client());
+
 export async function handler(
   req: express.Request,
   res: express.Response,
@@ -29,7 +32,7 @@ export async function handler(
   if (reqOrigin === Origin.main && !rPath.includes("/_sample_.")) {
     return mainRouter(req, res, next);
   } else if (reqOrigin === Origin.liveSamples) {
-    return liveSamples(req, res);
+    return liveSampleRouter(req, res, next);
   } else {
     return res.status(404).send();
   }
