@@ -122,6 +122,8 @@ export function findDocuments({ locale }) {
   };
 }
 
+const commitHashCache = {};
+
 function getDocument(filePath) {
   function packagePopularity(document, parentDocument) {
     return {
@@ -143,13 +145,17 @@ function getDocument(filePath) {
   }
 
   function getCommitBehindFromLatest(filename, commitHash) {
-    const commitHashes = execSync(`git log --pretty=format:%H -- ${filename}`, {
-      cwd: CONTENT_ROOT,
-    })
-      .toString()
-      .split("\n");
-
-    return commitHashes.indexOf(commitHash);
+    if (commitHashCache[filename] === undefined) {
+      commitHashCache[filename] = execSync(
+        `git log --pretty=format:%H -- ${filename}`,
+        {
+          cwd: CONTENT_ROOT,
+        }
+      )
+        .toString()
+        .split("\n");
+    }
+    return commitHashCache[filename].indexOf(commitHash);
   }
 
   function packageEdits(document, parentDocument) {
