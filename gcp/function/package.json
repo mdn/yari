@@ -27,5 +27,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
   }
 }
