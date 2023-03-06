@@ -143,9 +143,9 @@ function getDocument(filePath) {
   }
 
   function getCommitBehindFromLatest(filename, commitHash) {
-    const commitHashes = execSync(
-      `cd ${CONTENT_ROOT} && git log --pretty=format:%H -- ${filename}`
-    )
+    const commitHashes = execSync(`git log --pretty=format:%H -- ${filename}`, {
+      cwd: CONTENT_ROOT,
+    })
       .toString()
       .split("\n");
 
