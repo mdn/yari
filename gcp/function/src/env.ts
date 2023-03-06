@@ -41,7 +41,8 @@ export const ORIGIN_INTERACTIVE_SAMPLES: string =
   "interactive-examples.mdn.mozilla.net";
 
 export function origin(req: express.Request): Origin {
-  switch (req.hostname) {
+  const host = req.headers.host || req.hostname;
+  switch (host) {
     case ORIGIN_MAIN:
       return Origin.main;
     case ORIGIN_LIVE_SAMPLES:
