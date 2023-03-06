@@ -1,12 +1,12 @@
-import { docs } from "./handlers/content.js";
-import { client } from "./handlers/client.js";
-
 import type express from "express";
 import { Router } from "express";
 import { Origin, origin } from "./env.js";
+import { docs } from "./handlers/content.js";
+import { client } from "./handlers/client.js";
 import { bcdApi } from "./handlers/bcdApi.js";
 import { spa } from "./handlers/spa.js";
 import { rumba } from "./handlers/rumba.js";
+import { pathnameLC } from "./middlewares/pathnameLC.js";
 
 const mainRouter = Router();
 const docsHandler = docs();
@@ -19,6 +19,7 @@ mainRouter.get("/[^/]+/search-index.json", docsHandler);
 mainRouter.get("*", client());
 
 const liveSampleRouter = Router();
+liveSampleRouter.use(pathnameLC);
 liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", client());
 liveSampleRouter.get("/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)", client());
 
