@@ -7,7 +7,6 @@ export function pathnameLC(
   _res: express.Response,
   next: express.NextFunction
 ) {
-  console.log("before", req.url);
   const urlParsed = url.parse(req.url);
   if (urlParsed.pathname) {
     urlParsed.pathname = urlParsed.pathname.toLowerCase();

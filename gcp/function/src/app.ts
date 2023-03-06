@@ -22,6 +22,9 @@ const liveSampleRouter = Router();
 liveSampleRouter.use(pathnameLC);
 liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", client());
 liveSampleRouter.get("/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)", client());
+liveSampleRouter.get("*", (_req: express.Request, res: express.Response) =>
+  res.status(404).send()
+);
 
 export async function handler(
   req: express.Request,
