@@ -4,7 +4,6 @@ import { client } from "./handlers/client.js";
 import type express from "express";
 import { Router } from "express";
 import { Origin, origin } from "./env.js";
-import { interactiveSamples } from "./handlers/interactiveSamples.js";
 import { liveSamples } from "./handlers/liveSamples.js";
 import { bcdApi } from "./handlers/bcdApi.js";
 import { spa } from "./handlers/spa.js";
@@ -29,8 +28,6 @@ export async function handler(
   const reqOrigin = origin(req);
   if (reqOrigin === Origin.main && !rPath.includes("/_sample_.")) {
     return mainRouter(req, res, next);
-  } else if (reqOrigin === Origin.interactiveSamples) {
-    return interactiveSamples(req, res);
   } else if (reqOrigin === Origin.liveSamples) {
     return liveSamples(req, res);
   } else {
