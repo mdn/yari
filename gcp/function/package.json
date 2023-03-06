@@ -11,7 +11,8 @@
     "build": "tsc -b && rm -rf ./src/internal && mkdir ./src/internal && cp -R ../../libs/{constants,fundamental-redirects,locale-utils,slug-utils} ./src/internal/",
     "clean": "tsc -b --clean",
     "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
-    "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'"
+    "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
+    "start": "ts-node src/cli.ts"
   },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.1.3",
@@ -28,6 +29,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
 }
