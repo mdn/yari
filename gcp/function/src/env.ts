@@ -65,6 +65,9 @@ export const SOURCE_BCD_API: string =
   process.env["SOURCE_BCD_API"] || "https://developer.mozilla.org";
 export const SOURCE_CLIENT: string =
   process.env["SOURCE_CLIENT"] || "https://developer.mozilla.org";
+export const SOURCE_INTERACTIVE_SAMPLES: string =
+  process.env["SOURCE_INTERACTIVE_SAMPLES"] ||
+  "https://interactive-examples.mdn.mozilla.net";
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "https://developer.mozilla.org";
 
@@ -76,6 +79,8 @@ export function sourceUri(source: Source): string {
       return SOURCE_BCD_API;
     case Source.client:
       return SOURCE_CLIENT;
+    case Source.interactiveSamples:
+      return SOURCE_INTERACTIVE_SAMPLES;
     case Source.liveSamples:
       return SOURCE_LIVE_SAMPLES;
     case Source.rumba:
