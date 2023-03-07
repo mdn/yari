@@ -26,18 +26,20 @@ liveSampleRouter.get("*", (_req: express.Request, res: express.Response) =>
   res.status(404).send()
 );
 
-export async function handler(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  const rPath = req.path;
-  const reqOrigin = origin(req);
-  if (reqOrigin === Origin.main && !rPath.includes("/_sample_.")) {
-    return mainRouter(req, res, next);
-  } else if (reqOrigin === Origin.liveSamples) {
-    return liveSampleRouter(req, res, next);
-  } else {
-    return res.status(404).send();
-  }
+export function createHandler(o?: Origin) {
+  return async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    const rPath = req.path;
+    const reqOrigin = o || origin(req);
+    if (reqOrigin === Origin.main && !rPath.includes("/_sample_.")) {
+      return mainRouter(req, res, next);
+    } else if (reqOrigin === Origin.liveSamples) {
+      return liveSampleRouter(req, res, next);
+    } else {
+      return res.status(404).send();
+    }
+  };
 }

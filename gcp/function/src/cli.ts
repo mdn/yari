@@ -1,13 +1,19 @@
 import express from "express";
-import { handler } from "./app.js";
+import { createHandler } from "./app.js";
+import { Origin } from "./env.js";
 
 const contentApp = express();
 const contentPort = 3000;
 
-contentApp.all("*", handler);
+contentApp.all("*", createHandler(Origin.main));
 contentApp.listen(contentPort, () => {
   console.log(`Content app listening on port ${contentPort}`);
 });
-contentApp.listen(5042, () => {
-  console.log(`Sample app listening on port ${5042}`);
+
+const liveSampleApp = express();
+const liveSamplePort = 5042;
+
+liveSampleApp.all("*", createHandler(Origin.liveSamples));
+liveSampleApp.listen(liveSamplePort, () => {
+  console.log(`Sample app listening on port ${liveSamplePort}`);
 });
