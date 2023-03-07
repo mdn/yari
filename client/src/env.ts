@@ -27,7 +27,15 @@ export const KUMA_HOST =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 
 export const PLUS_IS_ENABLED = Boolean(
-  process.env.REACT_APP_ENABLE_PLUS || "false"
+  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
+);
+
+export const NEWSLETTER_ENABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_NEWSLETTER_ENABLED || "false")
+);
+
+export const PLACEMENT_ENABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_PLACEMENT_ENABLED || "false")
 );
 
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
@@ -63,7 +71,6 @@ export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
 
-// TODO Inline after 2022-07-01.
 export function survey_duration(surveyBucket: string): {
   start: number;
   end: number;

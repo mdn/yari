@@ -66,27 +66,19 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          node-version: 18
+          cache: yarn
 
       - name: Install all yarn packages
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v4.2.0
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.10"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.3
+        uses: snok/install-poetry@v1
 
       - name: Install deployer
         run: |
@@ -103,6 +95,9 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
+
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
 
       - name: Build everything
         env:
@@ -212,7 +207,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}

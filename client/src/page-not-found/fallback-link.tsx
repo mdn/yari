@@ -6,6 +6,7 @@ import { Doc } from "../../../libs/types";
 import NoteCard from "../ui/molecules/notecards";
 
 import LANGUAGES_RAW from "../../../libs/languages";
+import { RETIRED_LOCALES } from "../../../libs/constants";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -108,11 +109,71 @@ export default function FallbackLink({ url }: { url: string }) {
         </p>
       </NoteCard>
     );
-  } else if (document === null) {
-    // It means the lookup "worked" in principle, but there wasn't an English
-    // document there. Bummer. But at least we tried.
-    // Should we say something??
   }
 
-  return null;
+  const isRetiredLocale = RETIRED_LOCALES.has(locale.toLowerCase());
+
+  if (isRetiredLocale) {
+    return (
+      <NoteCard type="warning" extraClasses="fallback-document">
+        <p>
+          The{" "}
+          <strong>
+            {LANGUAGES.get(locale.toLowerCase())?.English} ({locale})
+          </strong>{" "}
+          locale has been retired, and this page doesn't exist in English.
+        </p>
+
+        <p>
+          You may find an archived version of this page in one of these
+          repositories:
+          <ul>
+            <li>
+              <a
+                className="external"
+                href={`https://github.com/mdn/retired-content`}
+              >
+                mdn/retired-content
+              </a>{" "}
+              for pages that were available when the locale was retired,
+            </li>
+            <li>
+              <a
+                className="external"
+                href={`https://github.com/mdn/retired-archived-content`}
+              >
+                mdn/retired-archived-content
+              </a>{" "}
+              for pages that had already been archived before.
+            </li>
+          </ul>
+        </p>
+      </NoteCard>
+    );
+  }
+
+  const locationParts = location.pathname
+    .split("/")
+    .filter((part) => part && ![locale, "docs"].includes(part));
+  const normalizedLocationParts = locationParts
+    .map((part) => part.replace(/_/g, " "))
+    .reverse();
+
+  return (
+    <NoteCard type="info" extraClasses="fallback-document">
+      <p>
+        The page you requested doesn't exist, but you could try a site search
+        for:
+        <ul>
+          {normalizedLocationParts.map((part) => (
+            <li>
+              <a href={`/${locale}/search?q=${encodeURIComponent(part)}`}>
+                <code>{part}</code>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </p>
+    </NoteCard>
+  );
 }

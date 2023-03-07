@@ -3,7 +3,7 @@
  * by the exported functions below. Some of them are themselves exported.
  */
 import sanitizeFilename from "sanitize-filename";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
@@ -138,8 +138,8 @@ function collectClosestCode($start) {
 }
 
 export class HTMLTool {
-  private pathDescription;
-  private $;
+  private pathDescription: string;
+  private $: cheerio.CheerioAPI;
 
   constructor(html, pathDescription?: any) {
     this.$ =
@@ -177,7 +177,8 @@ export class HTMLTool {
     // And we ensure all IDs that get added are completely lowercase.
     $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
       const $element = $(element);
-      const isDt = $element[0].name === "dt";
+      const $first = $element[0] as cheerio.Element;
+      const isDt = $first.name === "dt";
       // Default is the existing one. Let's see if we need to change it.
       let id = $element.attr("id");
       if ($element.attr("name")) {
@@ -188,13 +189,10 @@ export class HTMLTool {
         // as the value isn’t "Quick_links" (which we need to keep as-is),
         // and as long as it’s not a class=bc-data div (the ID for which we
         // need to keep as-is).
-        if (
-          id !== "Quick_links" &&
-          $element[0].attribs["class"] !== "bc-data"
-        ) {
+        if (id !== "Quick_links" && $first.attribs["class"] !== "bc-data") {
           id = id.toLowerCase();
         }
-      } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
+      } else if (H1_TO_H6_TAGS.has($first.name) || isDt) {
         // For heading elements, we start by getting the text content of
         // the entire heading element (including any children it may have).
         let text = $element.text();
@@ -280,8 +278,9 @@ export class HTMLTool {
 
   extractLiveSampleObject(iframeID) {
     const sectionID = iframeID.substr("frame_".length);
+    let result;
     if (hasHeading(this.$, sectionID)) {
-      const result = Object.create(null);
+      result = Object.create(null);
       const sample = this.getSection(sectionID);
       // We have to wrap the collection of elements from the section
       // we've just acquired because we're going to search among all
@@ -305,23 +304,27 @@ export class HTMLTool {
           `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`
         );
       }
-      return result;
     } else {
       // We're here because we can't find the sectionID, so instead we're going
       // to find the live-sample iframe by its id (iframeID, NOT sectionID), and
       // then collect the closest blocks of code for the live sample.
-      const result = collectClosestCode(findSectionStart(this.$, iframeID));
+      result = collectClosestCode(findSectionStart(this.$, iframeID));
       if (!result) {
         throw new KumascriptError(
           `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`
         );
       }
-      return result;
     }
+    result.hasMathML = /<math\b/i.test(result.html);
+    return result;
   }
 
   html() {
     return this.$.html();
+  }
+
+  cheerio() {
+    return this.$;
   }
 }
 

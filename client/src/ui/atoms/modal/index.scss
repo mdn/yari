@@ -70,7 +70,12 @@ body.ReactModal__Body--open {
 
   p {
     margin: 0;
+    margin-top: 1rem;
     overflow-wrap: anywhere;
+
+    &:first-child {
+      margin: 0;
+    }
   }
 
   .mdn-form-item {
@@ -78,6 +83,12 @@ body.ReactModal__Body--open {
 
     &:first-child {
       padding-top: 0;
+    }
+
+    @media screen and (max-width: $screen-lg) {
+      &:last-child {
+        padding-bottom: 1.5rem;
+      }
     }
 
     &.is-button-row {
@@ -88,6 +99,7 @@ body.ReactModal__Body--open {
     }
 
     label,
+    textarea,
     [type="text"] {
       font-size: 1rem;
       font-weight: normal;
@@ -118,7 +130,7 @@ body.ReactModal__Body--open {
 
   .modal-content {
     border-radius: var(--elem-radius);
-    box-shadow: 0px 2px 14px rgba(58, 57, 68, 0.2);
+    box-shadow: 0 2px 14px rgba(58, 57, 68, 0.2);
     height: fit-content;
     max-height: 90vh;
     max-width: 40rem;

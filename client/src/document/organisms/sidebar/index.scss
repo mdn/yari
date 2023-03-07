@@ -16,7 +16,7 @@
     max-height: 100vh;
     position: fixed;
     right: 0;
-    top: --var(--offset);
+    top: var(--offset);
     transform: translateX(-100%);
     z-index: var(--z-index-top);
 
@@ -123,6 +123,10 @@
     margin-top: 1rem;
   }
 
+  li:first-of-type strong {
+    margin-top: unset;
+  }
+
   ol {
     font-size: var(--type-smaller-font-size);
 
@@ -160,6 +164,7 @@
   }
 
   summary {
+    cursor: pointer;
     font-size: var(--type-smaller-font-size);
   }
 
@@ -169,13 +174,9 @@
     font-family: var(--font-code);
     font-size: var(--type-smaller-font-size);
     line-height: 1.2;
-    padding: 0.125rem 0.125rem;
+    padding: 0.125rem;
     white-space: normal;
     word-wrap: break-word;
-  }
-
-  summary {
-    cursor: pointer;
   }
 
   details {

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-import fs from "fs";
-import path from "path";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 
 import chalk from "chalk";
 import express from "express";
@@ -8,46 +9,44 @@ import send from "send";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
+import { getBCDDataForPath } from "@mdn/bcd-utils-api";
 
 import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} from "../build";
-import { findDocumentTranslations } from "../content/translations";
-import { Document, Redirect, Image } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants";
+} from "../build/index.js";
+import { findDocumentTranslations } from "../content/translations.js";
+import { Document, Redirect, Image } from "../content/index.js";
+import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} from "../libs/env";
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+} from "../libs/env/index.js";
 
-import documentRouter from "./document";
-import fakeV1APIRouter from "./fake-v1-api";
-import { searchIndexRoute } from "./search-index";
-import flawsRoute from "./flaws";
-import { router as translationsRouter } from "./translations";
-import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
-import { getRoot } from "../content/utils";
+import documentRouter from "./document.js";
+import fakeV1APIRouter from "./fake-v1-api.js";
+import { searchIndexRoute } from "./search-index.js";
+import flawsRoute from "./flaws.js";
+import { router as translationsRouter } from "./translations.js";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
+import { getRoot } from "../content/utils.js";
 
-import { renderHTML } from "../ssr/dist/main";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;
   }
-  const documentOptions = {
-    // The only times the server builds on the fly is basically when
-    // you're in "development mode". And when you're not building
-    // to ship you don't want the cache to stand have any hits
-    // since it might prevent reading fresh data from disk.
-    clearKumascriptRenderCache: true,
-  };
+  const documentOptions = {};
   if (CONTENT_TRANSLATED_ROOT) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
@@ -58,6 +57,23 @@ async function buildDocumentFromURL(url) {
 }
 
 const app = express();
+
+const bcdRouter = express.Router({ caseSensitive: true });
+
+bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
+  const data = getBCDDataForPath(req.params.path);
+  return data ? res.json(data) : res.status(404).send("BCD path not found");
+});
+
+bcdRouter.use(
+  "/updates/v0/",
+  createProxyMiddleware({
+    target: "http://localhost:8080",
+    pathRewrite: (path) => path.replace("/bcd/updates/v0/", "/"),
+  })
+);
+
+app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
@@ -76,6 +92,16 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
+const pongProxy = createProxyMiddleware({
+  target: `https://developer.allizom.org`,
+  changeOrigin: true,
+  proxyTimeout: 20000,
+  timeout: 20000,
+  headers: {
+    Connection: "keep-alive",
+  },
+});
+
 const contentProxy =
   CONTENT_HOSTNAME &&
   createProxyMiddleware({
@@ -85,6 +111,8 @@ const contentProxy =
     // timeout: 20000,
   });
 
+app.use("/pong/*", pongProxy);
+app.use("/pimg/*", pongProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
@@ -247,8 +275,8 @@ app.get("/*", async (req, res, ...args) => {
 
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
-  let bcdDataURL = "";
-  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
+  let isMetadata = false;
+  let isDocument = false;
 
   if (req.path.endsWith("index.json")) {
     // It's a bit special then.
@@ -257,23 +285,23 @@ app.get("/*", async (req, res, ...args) => {
     // and that won't be found in getRedirectUrl() since that doesn't
     // index things with the '/index.json' suffix. So we need to
     // temporarily remove it and remember to but it back when we're done.
+    isDocument = true;
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.path)) {
-    bcdDataURL = req.path;
-    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
+  } else if (req.path.endsWith("metadata.json")) {
+    isMetadata = true;
+    extraSuffix = "/metadata.json";
+    lookupURL = lookupURL.replace(extraSuffix, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
-  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
     const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
-      bcdData = built.bcdData;
     } else if (
       lookupURL.split("/")[1] &&
       lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
@@ -304,13 +332,18 @@ app.get("/*", async (req, res, ...args) => {
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
-  if (bcdDataURL) {
-    return res.json(
-      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
-    );
-  }
+  if (isDocument) {
+    res.json({ doc: document });
+  } else if (isMetadata) {
+    const docString = JSON.stringify({ doc: document });
 
-  if (isJSONRequest) {
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
+    builtMetadata.hash = hash;
+
+    res.json(builtMetadata);
+  } else if (isJSONRequest) {
+    // TODO: what's this for?
     res.json({ doc: document });
   } else {
     res.header("Content-Security-Policy", CSP_VALUE);

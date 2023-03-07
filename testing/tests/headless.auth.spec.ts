@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+import { test, expect } from "@playwright/test";
 
 export {};
 
@@ -14,15 +14,12 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await context.clearCookies();
   });
 
-  test("'Already a subscriber?' should link to fxa authentication flow and sign in", async ({
+  test("'Log in' should link to fxa authentication flow and sign in", async ({
     page,
   }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
 
-    const signinHref = await page.getAttribute(
-      "text='Already a subscriber?'",
-      "href"
-    );
+    const signinHref = await page.getAttribute("text='Log in'", "href");
 
     expect(signinHref).toContain(
       `/users/fxa/login/authenticate/?${new URLSearchParams({
@@ -30,7 +27,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
       }).toString()}`
     );
 
-    await page.click("text='Already a subscriber?'");
+    await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
     expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
@@ -47,7 +44,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
 
     // Sign in
-    await page.click("text='Already a subscriber?'");
+    await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
     expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));

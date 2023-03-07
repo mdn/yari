@@ -1,34 +1,48 @@
 import LRU from "lru-cache";
+import * as cheerio from "cheerio";
 
-import { Document } from "../content";
-import { m2h } from "../markdown";
+import { Document } from "../content/index.js";
+import { m2h } from "../markdown/index.js";
 
-import info from "./src/info";
-import { render as renderMacros } from "./src/render";
-export { buildLiveSamplePages } from "./src/live-sample";
-import { HTMLTool } from "./src/api/util";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import info from "./src/info.js";
+import { render as renderMacros } from "./src/render.js";
+export { buildLiveSamplePages } from "./src/live-sample.js";
+import { HTMLTool } from "./src/api/util.js";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} from "../libs/env";
-import { SourceCodeError } from "./src/errors";
+} from "../libs/env/index.js";
+import { SourceCodeError } from "./src/errors.js";
 
 const DEPENDENCY_LOOP_INTRO =
-  'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
+  'The following documents form a circular dependency when rendering (via the "page" macros):';
 
-export const renderCache = new LRU<string, unknown>({ max: 2000 });
+export const renderCache = new LRU<string, [string, SourceCodeError[]]>({
+  max: 2000,
+});
+
+interface RenderOptions {
+  urlsSeen?: Set<string>;
+  selective_mode?: [string, string[]] | false;
+  invalidateCache?: boolean;
+}
 
 export async function render(
   url: string,
-  { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
-): Promise<[string, SourceCodeError[]]> {
+  {
+    urlsSeen = null,
+    selective_mode = false,
+    invalidateCache = false,
+  }: RenderOptions = {}
+): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
       renderCache.delete(urlLC);
     } else {
-      return renderCache.get(urlLC);
+      const [renderedHtml, errors] = renderCache.get(urlLC);
+      return [cheerio.load(renderedHtml), errors];
     }
   }
 
@@ -41,7 +55,7 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE.toString())
+    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
     : Document.findByURL(url);
   if (!document) {
     throw new Error(
@@ -58,7 +72,7 @@ export async function render(
       .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
 
     const parentDocument = invalidateCache
-      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE.toString())
+      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
       : Document.findByURL(parentURL);
     if (parentDocument) {
       metadata = { ...parentDocument.metadata, ...metadata };
@@ -102,12 +116,16 @@ export async function render(
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  renderCache.set(urlLC, [
-    tool.html(),
-    // The prerequisite errors have already been updated with their own file information.
-    [...prerequisiteErrorsByKey.values()].concat(
-      errors.map((e) => e.updateFileInfo(fileInfo))
-    ),
-  ]);
-  return renderCache.get(urlLC);
+  const allErrors = [...prerequisiteErrorsByKey.values()].concat(
+    errors.map((e) => e.updateFileInfo(fileInfo))
+  );
+  if (urlsSeen?.size > 1) {
+    // This means we recursed so let's cache this
+    renderCache.set(urlLC, [
+      tool.html(),
+      // The prerequisite errors have already been updated with their own file information.
+      allErrors,
+    ]);
+  }
+  return [tool.cheerio(), allErrors];
 }

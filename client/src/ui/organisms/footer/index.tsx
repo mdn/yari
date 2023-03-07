@@ -70,6 +70,9 @@ export function Footer() {
                 Careers
               </a>
             </li>
+            <li className="footer-nav-item">
+              <a href={`/en-US/advertising/with_us`}>Advertise with us</a>
+            </li>
           </ul>
         </div>
 
@@ -89,17 +92,9 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback#documentation_issues`}
+                href={`/${locale}/docs/MDN/Community/Issues`}
               >
-                Report a page issue
-              </a>
-            </li>
-            <li className="footer-nav-item">
-              <a
-                className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback#site_issues`}
-              >
-                Report a site issue
+                Report an issue
               </a>
             </li>
           </ul>
@@ -233,7 +228,9 @@ export function Footer() {
             <br />
             Portions of this content are ©1998–{new Date().getFullYear()} by
             individual mozilla.org contributors. Content available under{" "}
-            <a href="/docs/MDN/About#Copyrights_and_licenses">
+            <a
+              href={`/${locale}/docs/MDN/Writing_guidelines/Attrib_copyright_license`}
+            >
               a Creative Commons license
             </a>
             .

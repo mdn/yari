@@ -3,11 +3,11 @@
  * (react-scripts) can't do.
  *
  */
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
-const cheerio = require("cheerio");
-const md5File = require("md5-file");
+import cheerio from "cheerio";
+import md5File from "md5-file";
 
 export async function runOptimizeClientBuild(buildRoot) {
   const indexHtmlFilePath = path.join(buildRoot, "index.html");

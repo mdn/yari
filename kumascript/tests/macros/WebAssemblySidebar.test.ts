@@ -1,7 +1,7 @@
-import { assert, itMacro, describeMacro } from "./utils";
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 const expected = `\
-<section id="Quick_links">
+<section id="Quick_links" data-macro="WebAssemblySidebar">
 
 <ol>
   <li data-default-state="open"><a href="/en-US/docs/WebAssembly"><strong>WebAssembly home page</strong></a>
@@ -16,7 +16,6 @@ const expected = `\
         <li><a href="/en-US/docs/WebAssembly/Understanding_the_text_format">Understanding WebAssembly text format</a></li>
         <li><a href="/en-US/docs/WebAssembly/Text_format_to_wasm">Converting WebAssembly text format to wasm</a></li>
         <li><a href="/en-US/docs/WebAssembly/Loading_and_running">Loading and running WebAssembly code</a></li>
-        <li><a href="/en-US/docs/WebAssembly/Caching_modules">Caching compiled WebAssembly modules</a></li>
         <li><a href="/en-US/docs/WebAssembly/Exported_functions">Exported WebAssembly functions</a></li>
       </ol>
     </details>

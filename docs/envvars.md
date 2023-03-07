@@ -131,17 +131,6 @@ When doing local development, it's recommended to set this to
 
 The base URL used in the Interactive Example iframes.
 
-### `BUILD_MACROS_USED_LOGFILE`
-
-**Default `not set`**
-
-This needs to be be a file path. E.g.
-`export BUILD_MACROS_USED_LOGFILE=/tmp/macros-used.log` It will write one line
-for every (normalized) macro name used and its arguments in rendering.
-
-This is an advanced feature to help potentially figuring out which kumascript
-macros, in the source, that aren't used.
-
 ### `BUILD_GOOGLE_ANALYTICS_ACCOUNT`
 
 **Default: `''`**
@@ -312,7 +301,7 @@ included this value for `geo.country`.
 
 **Default: `false`**
 
-- Setting this to true logs glean pings to the console to to help debug.
+- Setting this to true logs glean pings to the console to help debug.
 
 ### `REACT_APP_GLEAN_ENABLED`
 

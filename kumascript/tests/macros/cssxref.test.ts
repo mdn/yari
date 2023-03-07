@@ -1,4 +1,5 @@
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
+import { jest } from "@jest/globals";
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 // Basic const
 const CSS_BASE_URL = "/en-US/docs/Web/CSS";
@@ -30,7 +31,7 @@ const MOCK_PAGES = {
       url: [CSS_BASE_URL, "display"].join("/"),
       summary:
         'The <strong><code>display</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> property specifies the type of rendering box used for an element.',
-      tags: ["CSS", "CSS Property", "CSS Display"],
+      pageType: "css-property",
     },
   },
   attr: {
@@ -39,7 +40,7 @@ const MOCK_PAGES = {
       url: [CSS_BASE_URL, "attr()"].join("/"),
       summary:
         'The <strong><code>attr()</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> function is used to retrieve the value of an attribute of the selected element and use it in the style sheet.',
-      tags: ["CSS", "Reference", "Web", "CSS Function", "Layout"],
+      pageType: "css-function",
     },
   },
   length: {
@@ -48,7 +49,7 @@ const MOCK_PAGES = {
       url: [CSS_BASE_URL, "length"].join("/"),
       summary:
         'The <strong><code>&lt;length&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> represents a distance value.',
-      tags: ["CSS", "Reference", "Web", "Layout", "CSS Data Type", "length"],
+      pageType: "css-type",
     },
   },
   color_value: {
@@ -57,7 +58,7 @@ const MOCK_PAGES = {
       url: [CSS_BASE_URL, "color_value"].join("/"),
       summary:
         'The <strong><code>&lt;color&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> represents a color in the <a href="https://en.wikipedia.org/wiki/SRGB" class="external">sRGB color space</a>.',
-      tags: ["CSS", "Reference", "Web", "CSS Data Type", "Layout"],
+      pageType: "css-type",
     },
   },
   flex_value: {
@@ -66,7 +67,7 @@ const MOCK_PAGES = {
       url: [CSS_BASE_URL, "flex_value"].join("/"),
       summary:
         'The <strong><code>&lt;flex&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> denotes a flexible length within a grid container.',
-      tags: ["CSS", "Reference", "Web", "CSS Data Type", "Layout"],
+      pageType: "css-type",
     },
   },
   position_value: {
@@ -75,7 +76,7 @@ const MOCK_PAGES = {
       url: [CSS_BASE_URL, "position_value"].join("/"),
       summary:
         'The <strong><code>&lt;position&gt;</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> <a href="/en-US/docs/Web/CSS/CSS_Types">data type</a> denotes a two-dimensional coordinate used to set a location relative to an element box.',
-      tags: ["CSS", "Reference", "Web", "CSS Data Type", "Layout"],
+      pageType: "css-type",
     },
   },
 };

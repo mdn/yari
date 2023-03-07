@@ -1,23 +1,25 @@
 import fm from "front-matter";
-import { program } from "@caporal/core";
+import caporal from "@caporal/core";
 import chalk from "chalk";
-import { Document } from "../../content";
-import { saveFile } from "../../content/document";
-import { VALID_LOCALES } from "../../libs/constants";
+import { Document } from "../../content/index.js";
+import { saveFile } from "../../content/document.js";
+import { VALID_LOCALES } from "../../libs/constants/index.js";
 
-import { m2h } from "./";
+import { m2h } from "./index.js";
+
+const { program } = caporal;
 
 interface CliOptions {
   v?: boolean;
   verbose?: boolean;
 }
 
-function tryOrExit(f: Function) {
+function tryOrExit(f: ({ options, ...args }) => Promise<void>) {
   return async ({ options = {}, ...args }: { options: CliOptions }) => {
     try {
       await f({ options, ...args });
     } catch (error) {
-      if (options.verbose || options.v) {
+      if (error instanceof Error && (options.verbose || options.v)) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -47,11 +49,11 @@ program
   .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args, options }) => {
-      const all = Document.findAll({
+      const all = await Document.findAll({
         folderSearch: args.folder,
         locales: buildLocaleMap(options.locale),
       });
-      for (let doc of all.iter()) {
+      for (const doc of all.iterDocs()) {
         if (!doc.isMarkdown) {
           continue;
         }

@@ -1,39 +1,39 @@
-import { Doc } from "../libs/types";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import chalk from "chalk";
-import * as cheerio from "cheerio";
 import {
+  MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
-} from "../kumascript/src/errors";
+} from "../kumascript/src/errors.js";
 
-import { Document, Image, execGit } from "../content";
-import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
-import * as kumascript from "../kumascript";
+import { Doc } from "../libs/types/document.js";
+import { Document, Image, execGit } from "../content/index.js";
+import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
+import * as kumascript from "../kumascript/index.js";
 
-import { FLAW_LEVELS } from "../libs/constants";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
+import { extractSections } from "./extract-sections.js";
+import { extractSidebar } from "./extract-sidebar.js";
+import { extractSummary } from "./extract-summary.js";
+export { default as SearchIndex } from "./search-index.js";
+import { addBreadcrumbData } from "./document-utils.js";
 import {
-  extractSections,
-  extractSidebar,
-  extractSummary,
-} from "./document-extractor";
-export { default as SearchIndex } from "./search-index";
-import { addBreadcrumbData } from "./document-utils";
-import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
-import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls";
-import { checkImageReferences, checkImageWidths } from "./check-images";
-import { getPageTitle } from "./page-title";
-import { syntaxHighlight } from "./syntax-highlight";
-import { formatNotecards } from "./format-notecards";
-import buildOptions from "./build-options";
-export { gather as gatherGitHistory } from "./git-history";
-export { buildSPAs } from "./spas";
-import { renderCache as renderKumascriptCache } from "../kumascript";
-import LANGUAGES_RAW from "../libs/languages";
-import { safeDecodeURIComponent } from "../kumascript/src/api/util";
-import { wrapTables } from "./wrap-tables";
+  fixFixableFlaws,
+  injectFlaws,
+  injectSectionFlaws,
+} from "./flaws/index.js";
+import { checkImageReferences, checkImageWidths } from "./check-images.js";
+import { getPageTitle } from "./page-title.js";
+import { syntaxHighlight } from "./syntax-highlight.js";
+import { formatNotecards } from "./format-notecards.js";
+import buildOptions from "./build-options.js";
+export { gather as gatherGitHistory } from "./git-history.js";
+export { buildSPAs } from "./spas.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
+import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
+import { wrapTables } from "./wrap-tables.js";
 import { injectBanners } from "./inject-banners";
 
 const LANGUAGES = new Map(
@@ -137,11 +137,7 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    const rel = ($a.attr("rel") || "").split(" ");
-    if (!rel.includes("noopener")) {
-      rel.push("noopener");
-      $a.attr("rel", rel.join(" "));
-    }
+    $a.attr("target", "_blank");
   });
 }
 
@@ -285,15 +281,15 @@ export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
   fileAttachments: any;
-  bcdData: BCDData[];
   source?: {
     github_url: string;
   };
 }
 
 interface DocumentOptions {
-  clearKumascriptRenderCache?: boolean;
   fixFlaws?: boolean;
+  fixFlawsDryRun?: boolean;
+  fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
 }
 
@@ -329,16 +325,16 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let renderedHtml = "";
+  let $ = null;
   const liveSamples: LiveSample[] = [];
 
-  if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.clear();
-  }
   try {
-    [renderedHtml, flaws] = await kumascript.render(document.url);
+    [$, flaws] = await kumascript.render(document.url);
   } catch (error) {
-    if (error.name === "MacroInvocationError") {
+    if (
+      error instanceof MacroInvocationError &&
+      error.name === "MacroInvocationError"
+    ) {
       // The source HTML couldn't even be parsed! There's no point allowing
       // anything else move on.
       // But considering that this might just be one of many documents you're
@@ -346,14 +342,12 @@ export async function buildDocument(
       // message.
       error.updateFileInfo(document.fileInfo);
       throw new Error(
-        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        `MacroInvocationError trying to parse file.\n\nFile:    ${error.filepath}\nMessage: ${error.error.message}\n\n${error.sourceContext}`
       );
     }
     // Any other unexpected error re-thrown.
     throw error;
   }
-
-  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
   const liveSamplePages = kumascript.buildLiveSamplePages(
     document.url,
@@ -361,7 +355,9 @@ export async function buildDocument(
     $,
     document.rawBody
   );
-  for (let { id, html, flaw } of liveSamplePages) {
+  for (const liveSamplePage of liveSamplePages) {
+    const { id, flaw } = liveSamplePage;
+    let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
       if (flaw.name === "MacroLiveSampleError") {
@@ -483,6 +479,10 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
+  const browserCompat = metadata["browser-compat"];
+  doc.browserCompat =
+    browserCompat &&
+    (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -599,12 +599,6 @@ export async function buildDocument(
   // section. It's always a plain text string.
   doc.summary = extractSummary(doc.body);
 
-  // Creates new mdn_url's for the browser-compatibility-table to link to
-  // pages within this project rather than use the absolute URLs
-  normalizeBCDURLs(doc as Doc, options);
-
-  const bcdData = extractBCDData(doc as Doc);
-
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
   doc.popularity = metadata.popularity
@@ -636,6 +630,9 @@ export async function buildDocument(
 
   injectSource(doc, document, metadata);
 
+  if (document.metadata["short-title"]) {
+    doc.shortTitle = document.metadata["short-title"];
+  }
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
   // a breadcrumb in the React component.
@@ -649,7 +646,7 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
+  return { doc: doc as Doc, liveSamples, fileAttachments };
 }
 
 interface BuiltLiveSamplePage {

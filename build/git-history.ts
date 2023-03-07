@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-import { execGit } from "../content";
-import { CONTENT_ROOT } from "../libs/env";
+import { execGit } from "../content/index.js";
+import { CONTENT_ROOT } from "../libs/env/index.js";
 
 function getFromGit(contentRoot = CONTENT_ROOT) {
   // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it

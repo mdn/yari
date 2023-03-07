@@ -73,7 +73,8 @@ def analyze_pr(build_directory: Path, config):
             for comment in github_issue.get_comments():
                 if comment.user.login == "github-actions[bot]":
                     if hidden_comment_regex.search(comment.body):
-                        combined_comment += f"\n\n*(this comment was updated {datetime.datetime.utcnow()})*"
+                        now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+                        combined_comment += f"\n\n*(comment last updated: {now})*"
                         comment.edit(body=combined_comment)
                         print(f"Updating existing comment ({comment})")
                         break
@@ -111,7 +112,6 @@ def mdn_url_to_dev_url(prefix, mdn_url):
 def post_about_dangerous_content(
     build_directory: Path, patch: Optional[PatchSet], **config
 ):
-
     OK_URL_PREFIXES = [
         "https://github.com/mdn/",
     ]
@@ -197,7 +197,6 @@ def post_about_dangerous_content(
 
 
 def post_about_flaws(build_directory: Path, **config):
-
     comments = []
 
     MAX_FLAW_EXPLANATION = 5

@@ -1,36 +1,55 @@
 #!/usr/bin/env node
-const path = require("path");
+import path from "node:path";
 
-const program = require("@caporal/core").default;
+import caporal, { ActionParameters } from "@caporal/core";
 
-const { runChecker } = require("./checker");
-const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("../libs/constants");
+import { runChecker } from "./checker.js";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+
+const { program } = caporal;
+
+interface FilecheckArgsAndOptions extends ActionParameters {
+  args: {
+    files?: string[];
+  };
+  options: {
+    cwd?: string;
+    maxCompressionDifferencePercentage?: number;
+    saveCompression?: boolean;
+  };
+}
 
 program
   .version("0.0.0")
   .option("--cwd <path>", "Explicit current-working-directory", {
-    validator: program.PATH,
-    default: path.join(process.cwd(), ".."),
+    validator: program.STRING,
+    default: process.cwd(),
   })
   .option(
     "--max-compression-difference-percentage <amount>",
     "Max percentage for reduction after compression",
-    { validator: program.FLOAT, default: MAX_COMPRESSION_DIFFERENCE_PERCENTAGE }
+    {
+      validator: program.NUMBER,
+      default: MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
+    }
   )
   .option("--save-compression", "If it can be compressed, save the result", {
-    validator: program.BOOL,
+    validator: program.BOOLEAN,
   })
-  .argument("[files...]", "list of files to check")
-  .action(({ args, options }) => {
+  .argument("[files...]", "list of files and/or directories to check", {
+    default: [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT].filter(Boolean),
+  })
+  .action(({ args, options, logger }: FilecheckArgsAndOptions) => {
     const cwd = options.cwd || process.cwd();
-    const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
-    if (!allFilePaths.length) {
-      throw new Error("no files to check");
+    const files = (args.files || []).map((f) => path.resolve(cwd, f));
+
+    if (!files.length) {
+      logger.info("No files to check.");
+      return;
     }
-    return runChecker(allFilePaths, options).catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
+
+    return runChecker(files, options);
   });
 
 program.run();

@@ -23,19 +23,10 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: "yarn"
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: cached-node_modules
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/npm-published-simulation.yml') }}
-
       - name: Install all yarn packages
-        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
@@ -66,7 +57,9 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
+          yarn cache clean --all
           yarn add file:$TARBALL
+          yarn install
 
       - name: (mdn/content) yarn yari-build --help
         working-directory: mdn/content

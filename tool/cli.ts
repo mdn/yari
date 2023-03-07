@@ -1,39 +1,49 @@
 #!/usr/bin/env node
-import type { Doc } from "../libs/types/document";
 
-const fs = require("fs");
-const path = require("path");
-const { fdir } = require("fdir");
-const frontmatter = require("front-matter");
-const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const { prompt } = require("inquirer");
-const openEditor = require("open-editor");
-const open = require("open");
-const {
-  syncAllTranslatedContent,
-} = require("../build/sync-translated-content");
-const log = require("loglevel");
-const cheerio = require("cheerio");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const dirname = __dirname;
+import { fdir, PathsOutput } from "fdir";
+import frontmatter from "front-matter";
+import caporal from "@caporal/core";
+import chalk from "chalk";
+import inquirer from "inquirer";
+import openEditor from "open-editor";
+import open from "open";
+import log from "loglevel";
+import { Action, ActionParameters, Logger } from "types";
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { Redirect, Document, buildURL, getRoot } = require("../content");
-const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
-
-const { VALID_FLAW_CHECKS } = require("../libs/constants");
-const {
+import {
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+  VALID_FLAW_CHECKS,
+} from "../libs/constants/index.js";
+import { Redirect, Document, buildURL, getRoot } from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import type { Doc } from "../libs/types/document.js";
+import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} = require("../libs/env");
-const { runMakePopularitiesFile } = require("./popularities");
-const { runOptimizeClientBuild } = require("./optimize-client-build");
-const { runBuildRobotsTxt } = require("./build-robots-txt");
-const kumascript = require("../kumascript");
+} from "../libs/env/index.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+import { syncAllTranslatedContent } from "./sync-translated-content.js";
+import { macroUsageReport } from "./macro-usage-report.js";
+import * as kumascript from "../kumascript/index.js";
+import {
+  MacroInvocationError,
+  MacroRedirectedLinkError,
+} from "../kumascript/src/errors.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -43,16 +53,178 @@ const PORT = parseInt(process.env.SERVER_PORT || "5042");
 // will include very rarely used URIs.
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
-interface Options {
-  v?: boolean;
-  verbose?: boolean;
+interface ValidateRedirectsActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
+  options: {
+    strict: boolean;
+  };
+}
+interface TestRedirectsActionParameters extends ActionParameters {
+  args: {
+    urls: string[];
+  };
+}
+interface AddRedirectActionParameters extends ActionParameters {
+  args: {
+    from: string;
+    to: string;
+  };
+}
+interface FixRedirectsActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
 }
 
-function tryOrExit(f) {
-  return async ({ options = {}, ...args }: { options: Options }) => {
+interface DeleteActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    recursive: boolean;
+    redirect?: string;
+    yes: boolean;
+  };
+}
+
+interface MoveActionParameters extends ActionParameters {
+  args: {
+    oldSlug: string;
+    newSlug: string;
+    locale: string;
+  };
+  options: {
+    yes: boolean;
+  };
+}
+
+interface CreateActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+
+interface EditActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+interface ValidateActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+
+interface PreviewActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    hostname: string;
+    port: string;
+  };
+}
+
+interface GatherGitHistoryActionParameters extends ActionParameters {
+  options: {
+    saveHistory: string;
+    loadHistory: string;
+    verbose: boolean;
+  };
+}
+
+interface SyncTranslatedContentActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
+  options: {
+    verbose: boolean;
+  };
+}
+
+interface FixFlawsActionParameters extends ActionParameters {
+  args: {
+    fixFlawsTypes: string[];
+  };
+  options: {
+    locale: string;
+    fileTypes: string[];
+  };
+}
+
+interface FlawsActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    yes: boolean;
+  };
+}
+
+interface PopularitiesActionParameters extends ActionParameters {
+  options: {
+    outfile: string;
+    maxUris: number;
+    refresh: boolean;
+  };
+  logger: Logger;
+}
+
+interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
+  options: {
+    account: string;
+    debug: boolean;
+    outfile: string;
+  };
+}
+
+interface BuildRobotsTxtActionParameters extends ActionParameters {
+  options: {
+    outfile: string;
+    maxUris: number;
+    refresh: boolean;
+  };
+  logger: Logger;
+}
+
+interface MacrosActionParameters extends ActionParameters {
+  args: {
+    cmd: string;
+    foldersearch: string;
+    macros: string[];
+  };
+}
+
+interface OptimizeClientBuildActionParameters extends ActionParameters {
+  args: {
+    buildroot: string;
+  };
+}
+
+interface MacroUsageReportActionParameters extends ActionParameters {
+  options: {
+    deprecatedOnly: boolean;
+    format: "md-table" | "json";
+    unusedOnly: boolean;
+  };
+}
+
+function tryOrExit<T extends ActionParameters>(
+  f: ({ options, ...args }: T) => unknown
+): Action {
+  return async ({ options = {}, ...args }: ActionParameters) => {
     try {
-      await f({ options, ...args });
-    } catch (error) {
+      await f({ options, ...args } as T);
+    } catch (e) {
+      const error = e as Error;
       if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
@@ -74,42 +246,40 @@ program
   })
   .option("--strict", "Strict validation")
   .action(
-    tryOrExit(({ args, options, logger }) => {
-      const { locales } = args;
-      const { strict } = options;
-      let fine = true;
-      if (strict) {
-        for (const locale of locales) {
+    tryOrExit(
+      ({ args, options, logger }: ValidateRedirectsActionParameters) => {
+        const { locales } = args;
+        const { strict } = options;
+        if (strict) {
+          for (const locale of locales) {
+            try {
+              Redirect.validateLocale(locale, strict);
+              logger.info(
+                chalk.green(`✓ redirects for ${locale} looking good!`)
+              );
+            } catch (e) {
+              throw new Error(
+                `_redirects.txt for ${locale} is causing issues: ${e}`
+              );
+            }
+          }
+        } else {
           try {
-            Redirect.validateLocale(locale, strict);
-            logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
+            Redirect.load(locales, true);
           } catch (e) {
-            logger.info(
-              chalk.red(`_redirects.txt for ${locale} is causing issues: ${e}`)
-            );
-            fine = false;
+            throw new Error(`Unable to load redirects: ${e}`);
           }
         }
-      } else {
-        try {
-          Redirect.load(locales, true);
-        } catch (e) {
-          logger.info(chalk.red(`Unable to load redirects: ${e}`));
-          fine = false;
-        }
-      }
-      if (fine) {
+
         logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
-      } else {
-        throw new Error("🔥 Errors loading redirects 🔥");
       }
-    })
+    )
   )
 
   .command("test-redirects", "Test URLs (pathnames) to see if they redirect")
   .argument("[urls...]", "URLs to test")
   .action(
-    tryOrExit(({ args, logger }) => {
+    tryOrExit(({ args, logger }: TestRedirectsActionParameters) => {
       for (const url of args.urls) {
         const resolved = Redirect.resolve(url);
         if (resolved === url) {
@@ -125,8 +295,9 @@ program
   .argument("<from>", "From-URL")
   .argument("<to>", "To-URL")
   .action(
-    tryOrExit(({ args, logger }) => {
-      const { from, to } = args;
+    tryOrExit(({ args, logger }: AddRedirectActionParameters) => {
+      const from = new URL(args.from).pathname;
+      const to = new URL(args.to).pathname;
       const locale = from.split("/")[1];
       Redirect.add(locale, [[from, to]]);
       logger.info(chalk.green(`Saved '${from}' → '${to}'`));
@@ -139,9 +310,8 @@ program
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
-    tryOrExit(({ args, logger }) => {
-      const { locales } = args;
-      for (const locale of locales) {
+    tryOrExit(({ args, logger }: FixRedirectsActionParameters) => {
+      for (const locale of args.locales) {
         Redirect.add(locale.toLowerCase(), [], { fix: true, strict: true });
         logger.info(chalk.green(`Fixed ${locale}`));
       }
@@ -161,7 +331,7 @@ program
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
       const changes = Document.remove(slug, locale, {
@@ -195,7 +365,10 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, { recursive, redirect });
+        const removed = Document.remove(slug, locale, {
+          recursive,
+          redirect,
+        });
         console.log(chalk.green(`Moved ${removed.length} documents.`));
       }
     })
@@ -205,7 +378,7 @@ program
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
     validator: (value) => {
-      if (value.includes("#")) {
+      if (typeof value === "string" && value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
       return value;
@@ -217,7 +390,7 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: MoveActionParameters) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
       const changes = Document.move(oldSlug, newSlug, locale, {
@@ -255,7 +428,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(({ args }) => {
+    tryOrExit(({ args }: EditActionParameters) => {
       const { slug, locale } = args;
       if (!Document.exists(slug, locale)) {
         throw new Error(`${slug} does not exists for ${locale}`);
@@ -272,7 +445,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(({ args }) => {
+    tryOrExit(({ args }: CreateActionParameters) => {
       const { slug, locale } = args;
       const parentSlug = Document.parentSlug(slug);
       if (!Document.exists(parentSlug, locale)) {
@@ -294,7 +467,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args }) => {
+    tryOrExit(async ({ args }: ValidateActionParameters) => {
       const { slug, locale } = args;
       let okay = true;
       const document = Document.findByURL(buildURL(locale, slug));
@@ -335,10 +508,10 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: PreviewActionParameters) => {
       const { slug, locale } = args;
       const { hostname, port } = options;
-      let url;
+      let url: string;
       // Perhaps they typed in a path relative to the content root
       if (
         (slug.startsWith("files") || fs.existsSync(slug)) &&
@@ -379,7 +552,7 @@ program
         // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
         // it spits out from its CLI.
         const { doc } = JSON.parse(
-          fs.readFileSync(path.join(slug, "index.json"))
+          fs.readFileSync(path.join(slug, "index.json"), "utf-8")
         );
         if (doc) {
           url = doc.mdn_url;
@@ -411,7 +584,7 @@ program
   .option("--save-history <path>", "File to save all previous history")
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
-    tryOrExit(async ({ options }) => {
+    tryOrExit(async ({ options }: GatherGitHistoryActionParameters) => {
       const { saveHistory, loadHistory, verbose } = options;
       if (loadHistory) {
         if (fs.existsSync(loadHistory)) {
@@ -434,7 +607,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         const locale = relPath.split(path.sep)[0];
-        if (!VALID_LOCALES.has(locale)) {
+        if (!isValidLocale(locale)) {
           continue;
         }
         allHistory[relPath] = value;
@@ -481,35 +654,39 @@ program
     "sync-translated-content",
     "Sync translated content (sync with en-US slugs) for a locale"
   )
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
-      const { locale } = args;
-      const { verbose } = options;
-      if (verbose) {
-        log.setDefaultLevel(log.levels.DEBUG);
+    tryOrExit(
+      async ({ args, options }: SyncTranslatedContentActionParameters) => {
+        const { locales } = args;
+        const { verbose } = options;
+        if (verbose) {
+          log.setDefaultLevel(log.levels.DEBUG);
+        }
+        for (const locale of locales) {
+          const {
+            movedDocs,
+            conflictingDocs,
+            orphanedDocs,
+            redirectedDocs,
+            renamedDocs,
+            totalDocs,
+          } = syncAllTranslatedContent(locale);
+          console.log(chalk.green(`Syncing ${locale}:`));
+          console.log(chalk.green(`Total of ${totalDocs} documents`));
+          console.log(chalk.green(`Moved ${movedDocs} documents`));
+          console.log(chalk.green(`Renamed ${renamedDocs} documents`));
+          console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
+          console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+          console.log(
+            chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
+          );
+        }
       }
-      for (const l of locale) {
-        const {
-          movedDocs,
-          conflictingDocs,
-          orphanedDocs,
-          redirectedDocs,
-          totalDocs,
-        } = syncAllTranslatedContent(l);
-        console.log(chalk.green(`Syncing ${l}:`));
-        console.log(chalk.green(`Total of ${totalDocs} documents`));
-        console.log(chalk.green(`Moved ${movedDocs} documents`));
-        console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
-        console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
-        console.log(
-          chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
-        );
-      }
-    })
+    )
   )
 
   .command("fix-flaws", "Fix all flaws")
@@ -526,13 +703,13 @@ program
     validator: [...VALID_FLAW_CHECKS],
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: FixFlawsActionParameters) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
-      const allDocs = Document.findAll({
+      const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
-      for (const document of allDocs.iter()) {
+      for (const document of allDocs.iterDocs()) {
         if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
           await buildDocument(document, {
             fixFlaws: true,
@@ -552,7 +729,7 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: FlawsActionParameters) => {
       const { slug, locale } = args;
       const { yes } = options;
       const document = Document.findByURL(buildURL(locale, slug));
@@ -594,13 +771,13 @@ program
       if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
         throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
       }
-      const documents = Document.findAll();
+      const documents = await Document.findAll();
       if (!documents.count) {
         throw new Error("No documents to analyze");
       }
       // Build up a map of translations by their `translation_of`
       const map = new Map();
-      for (const document of documents.iter()) {
+      for (const document of documents.iterDocs()) {
         if (!document.isTranslated) continue;
         const { translation_of, locale } = document.metadata;
         if (!map.has(translation_of)) {
@@ -651,7 +828,7 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(dirname, "..", "popularities.json")),
+    default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -660,7 +837,7 @@ program
     default: false,
   })
   .action(
-    tryOrExit(async ({ options, logger }) => {
+    tryOrExit(async ({ options, logger }: PopularitiesActionParameters) => {
       const { refresh, outfile } = options;
       if (!refresh && fs.existsSync(outfile)) {
         const stat = fs.statSync(outfile);
@@ -722,18 +899,22 @@ program
     }
   )
   .action(
-    tryOrExit(async ({ options, logger }) => {
-      const { outfile, debug, account } = options;
-      if (account) {
-        const dntHelperCode = fs
-          .readFileSync(path.join(dirname, "mozilla.dnthelper.min.js"), "utf-8")
-          .trim();
+    tryOrExit(
+      async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
+        const { outfile, debug, account } = options;
+        if (account) {
+          const dntHelperCode = fs
+            .readFileSync(
+              new URL("mozilla.dnthelper.min.js", import.meta.url),
+              "utf-8"
+            )
+            .trim();
 
-        const gaScriptURL = `https://www.google-analytics.com/${
-          debug ? "analytics_debug" : "analytics"
-        }.js`;
+          const gaScriptURL = `https://www.google-analytics.com/${
+            debug ? "analytics_debug" : "analytics"
+          }.js`;
 
-        const code = `
+          const code = `
 // Mozilla DNT Helper
 ${dntHelperCode}
 // only load GA if DNT is not enabled
@@ -747,18 +928,19 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     gaScript.async = 1; gaScript.src = '${gaScriptURL}';
     document.head.appendChild(gaScript);
 }`.trim();
-        fs.writeFileSync(outfile, `${code}\n`, "utf-8");
-        logger.info(
-          chalk.green(
-            `Generated ${outfile} for SSR rendering using ${account}${
-              debug ? " (debug mode)" : ""
-            }.`
-          )
-        );
-      } else {
-        logger.info(chalk.yellow("No Google Analytics code file generated"));
+          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
+          logger.info(
+            chalk.green(
+              `Generated ${outfile} for SSR rendering using ${account}${
+                debug ? " (debug mode)" : ""
+              }.`
+            )
+          );
+        } else {
+          logger.info(chalk.yellow("No Google Analytics code file generated"));
+        }
       }
-    })
+    )
   )
 
   .command(
@@ -769,7 +951,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join(BUILD_OUT_ROOT, "robots.txt"),
   })
   .action(
-    tryOrExit(async ({ options, logger }) => {
+    tryOrExit(async ({ options, logger }: BuildRobotsTxtActionParameters) => {
       const { outfile } = options;
       await runBuildRobotsTxt(outfile);
       logger.info(
@@ -801,7 +983,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .argument("<foldersearch>", "folder of documents to target")
   .argument("<macros...>", "one or more macro names")
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: MacrosActionParameters) => {
       if (!CONTENT_ROOT) {
         throw new Error("CONTENT_ROOT not set");
       }
@@ -819,9 +1001,8 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           .map((m) => `"${m}"`)
           .join(", ")} within content folder(s) matching "${foldersearch}"`
       );
-      const documents = Document.findAll({
+      const documents = await Document.findAll({
         folderSearch: foldersearch,
-        quiet: true,
       });
       if (!documents.count) {
         throw new Error("no documents found");
@@ -834,13 +1015,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             selective_mode: [cmdLC, macros],
           });
         } catch (error) {
-          if (error.name === "MacroInvocationError") {
+          if (error instanceof MacroInvocationError) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
             );
           }
-          // Any other unexpected error re-thrown.
+
           throw error;
         }
       }
@@ -849,14 +1030,19 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       let countSkipped = 0;
       let countModified = 0;
       let countNoChange = 0;
-      for (const document of documents.iter()) {
+      for (const document of documents.iterDocs()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
         const originalRawBody = document.rawBody;
-        let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+        let [$, flaws] = await renderOrRemoveMacros(document);
         if (flaws.length) {
-          const fixableFlaws = flaws.filter((f) => f.redirectInfo);
-          const nonFixableFlaws = flaws.filter((f) => !f.redirectInfo);
+          const fixableFlaws = flaws.filter(
+            (f): f is MacroRedirectedLinkError =>
+              Object.prototype.hasOwnProperty.call(f, "redirectInfo")
+          );
+          const nonFixableFlaws = flaws.filter(
+            (f) => !Object.prototype.hasOwnProperty.call(f, "redirectInfo")
+          );
           const nonFixableFlawNames = [
             ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
           ].join(", ");
@@ -893,7 +1079,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 document.metadata
               );
               // Ok, we've fixed the fixable flaws, now let's render again.
-              [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+              [$, flaws] = await renderOrRemoveMacros(document);
             }
           } else {
             // There are one or more flaws that we can't fix, and we're not
@@ -906,10 +1092,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             continue;
           }
         }
-        // The Kumascript rendering wraps the result with a "body" tag
-        // (and more), so let's extract the HTML content of the "body"
-        // to get what we'll store in the document.
-        const $ = cheerio.load(renderedHTML);
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
           Document.update(document.url, newRawHTML, document.metadata);
@@ -944,7 +1126,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         .withErrors()
         .filter((filePath) => filePath.endsWith(".md"))
         .crawl(CONTENT_ROOT);
-      const paths = await crawler.withPromise();
+      const paths = (await crawler.withPromise()) as PathsOutput;
 
       const inventory = paths.map((path) => {
         const fileContents = fs.readFileSync(path, "utf-8");
@@ -968,23 +1150,46 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join("client", "build"),
   })
   .action(
-    tryOrExit(async ({ args, options, logger }) => {
-      const { buildroot } = args;
-      const { results } = await runOptimizeClientBuild(buildroot);
-      if (options.verbose) {
-        for (const result of results) {
-          logger.info(`${result.filePath} -> ${result.hashedHref}`);
+    tryOrExit(
+      async ({
+        args,
+        options,
+        logger,
+      }: OptimizeClientBuildActionParameters) => {
+        const { buildroot } = args;
+        const { results } = await runOptimizeClientBuild(buildroot);
+        if (options.verbose) {
+          for (const result of results) {
+            logger.info(`${result.filePath} -> ${result.hashedHref}`);
+          }
+        } else {
+          logger.info(
+            chalk.green(
+              `Hashed ${results.length} files in ${path.join(
+                buildroot,
+                "index.html"
+              )}`
+            )
+          );
         }
-      } else {
-        logger.info(
-          chalk.green(
-            `Hashed ${results.length} files in ${path.join(
-              buildroot,
-              "index.html"
-            )}`
-          )
-        );
       }
+    )
+  )
+
+  .command(
+    "macro-usage-report",
+    "Counts occurrences of each macro and prints it as a table."
+  )
+  .option("--deprecated-only", "Only reports deprecated macros.")
+  .option("--format <type>", "Format of the report.", {
+    default: "md-table",
+    validator: ["json", "md-table"],
+  })
+  .option("--unused-only", "Only reports unused macros.")
+  .action(
+    tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
+      const { deprecatedOnly, format, unusedOnly } = options;
+      return macroUsageReport({ deprecatedOnly, format, unusedOnly });
     })
   );
 

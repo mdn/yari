@@ -28,3 +28,4 @@ _githistory.json
 /ssr/mozilla.dnthelper.min.js
 /mdn/content
 popularities.json
+/client/public/service-worker.js

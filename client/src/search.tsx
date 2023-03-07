@@ -9,8 +9,7 @@ import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
-import { useUserData } from "./user-context";
-import { getCollectionItems } from "./plus/collections-quicksearch";
+import { useGleanClick } from "./telemetry/glean-context";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -18,11 +17,12 @@ const SHOW_INDEXING_AFTER_MS = 500;
 type Item = {
   url: string;
   title: string;
-  collection: boolean;
 };
 
+type FlexItem = [index: number, title: string, slugTail: string];
+
 type SearchIndex = {
-  flex: any;
+  flex: FlexItem[];
   items: null | Item[];
 };
 
@@ -30,8 +30,19 @@ type ResultItem = {
   title: string;
   url: string;
   positions: Set<number>;
-  collection: boolean;
 };
+
+function quicksearchPing(input) {
+  return `quick-search: ${input}`;
+}
+
+function splitQuery(term: string): string[] {
+  return term
+    .trim()
+    .toLowerCase()
+    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
+    .split(/[ ,]+/);
+}
 
 function useSearchIndex(): readonly [
   null | SearchIndex,
@@ -42,7 +53,6 @@ function useSearchIndex(): readonly [
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const { locale = "en-US" } = useParams();
-  const user = useUserData();
 
   const url = `/${locale}/search-index.json`;
 
@@ -63,39 +73,21 @@ function useSearchIndex(): readonly [
       return;
     }
     const gather = async () => {
-      const collection: Item[] = [];
-      if (user?.settings?.colInSearch) {
-        const all = getCollectionItems();
-        collection.push(
-          ...all.map((item) => {
-            return { ...item, collection: true };
-          })
-        );
-      }
-      const collectionSet = new Set(collection.map(({ url }) => url));
-      const mixed = [
-        ...collection,
-        ...data
-          .filter(({ url }) => !collectionSet.has(url))
-          .map((item) => {
-            return { ...item, collection: false };
-          }),
-      ];
-
-      const flex = mixed.map(({ title }, i) => [i, title.toLowerCase()]);
+      const flex = data.map(
+        ({ title, url }, i): FlexItem => [
+          i,
+          title.toLowerCase(),
+          (url.split("/").pop() as string).toLowerCase(),
+        ]
+      );
 
       setSearchIndex({
         flex,
-        items: mixed!,
+        items: data,
       });
     };
     gather();
-  }, [
-    shouldInitialize,
-    data,
-    user?.settings?.colInSearch,
-    user?.mdnWorker?.mutationCounter,
-  ]);
+  }, [shouldInitialize, data]);
 
   return useMemo(
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
@@ -105,7 +97,7 @@ function useSearchIndex(): readonly [
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
   // Split on highlight term and include term into parts, ignore case.
-  const words = q.trim().toLowerCase().split(/[ ,]+/);
+  const words = splitQuery(q);
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const regex = regexWords.map((word) => `(${word})`).join("|");
@@ -195,6 +187,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
+  const gleanClick = useGleanClick();
 
   const [searchIndex, searchIndexError, initializeSearchIndex] =
     useSearchIndex();
@@ -228,14 +221,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    const q: string[] = inputValue
-      .toLowerCase()
-      .split(" ")
-      .map((s) => s.trim());
-    const indexResults: number[] = searchIndex.flex
+    const inputValueLC = inputValue.toLowerCase().trim();
+    const q = splitQuery(inputValue);
+    const indexResults = searchIndex.flex
       .filter(([_, title]) => q.every((q) => title.includes(q)))
-      .map(([i]) => i)
+      .map(([index, title, slugTail]) => {
+        const exact = Number([title, slugTail].includes(inputValueLC));
+        return [exact, index];
+      })
+      .sort(([aExact], [bExact]) => bExact - aExact) // Boost exact matches.
+      .map(([_, i]) => i)
       .slice(0, limit);
+
     return indexResults.map(
       (index: number) => (searchIndex.items || [])[index] as ResultItem
     );
@@ -262,7 +259,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     getInputProps,
     getItemProps,
     getMenuProps,
-    getComboboxProps,
 
     highlightedIndex,
     isOpen,
@@ -281,6 +277,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ type, selectedItem }) => {
       if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
+        gleanClick(quicksearchPing(inputValue));
         navigate(selectedItem.url);
         onChangeInputValue("");
         reset();
@@ -345,14 +342,16 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
     if (searchIndexError) {
       return (
-        <div className="searchindex-error">Error initializing search index</div>
+        <div className="searchindex-error result-item">
+          <span>Failed to load search index!</span>
+        </div>
       );
     }
 
     if (!searchIndex) {
       return showIndexing ? (
-        <div className="indexing-warning">
-          <em>Initializing index</em>
+        <div className="indexing-warning result-item">
+          <em>Loading search index...</em>
         </div>
       ) : null;
     }
@@ -392,10 +391,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               <div
                 {...getItemProps({
                   key: item.url,
-                  className:
-                    "result-item " +
-                    (i === highlightedIndex ? "highlight " : " ") +
-                    (item.collection ? "qs-collection " : " "),
+                  className: `result-item ${
+                    i === highlightedIndex ? "highlight " : ""
+                  }`,
                   item,
                   index: i,
                 })}
@@ -405,6 +403,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   onClick={(event: React.MouseEvent) => {
                     if (event.ctrlKey || event.metaKey) {
                       // Open in new tab, don't navigate current tab.
+                      gleanClick(quicksearchPing(inputValue));
                       event.stopPropagation();
                     } else {
                       // Open in same tab, navigate via combobox.
@@ -454,31 +453,27 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   return (
     <form
       action={formAction}
-      {...getComboboxProps({
-        ref: formRef as any, // downshift's types hardcode it as a div
-        className: "search-form search-widget",
-        id: formId,
-        role: "search",
-        onSubmit: (e) => {
-          // This comes into effect if the input is completely empty and the
-          // user hits Enter, which triggers the native form submission.
-          // When something *is* entered, the onKeyDown event is triggered
-          // on the <input> and within that handler you can
-          // access `event.key === 'Enter'` as a signal to submit the form.
-          if (!inputValue.trim()) {
-            e.preventDefault();
-          }
-        },
-        onFocus: () => {
-          onChangeIsFocused(true);
-        },
-        onBlur: (e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            // focus has moved outside of container
-            onChangeIsFocused(false);
-          }
-        },
-      })}
+      ref={formRef as any} // downshift's types hardcode it as a div
+      className={"search-form search-widget"}
+      id={formId}
+      role={"search"}
+      onSubmit={(e) => {
+        // This comes into effect if the input is completely empty and the
+        // user hits Enter, which triggers the native form submission.
+        // When something *is* entered, the onKeyDown event is triggered
+        // on the <input> and within that handler you can
+        // access `event.key === 'Enter'` as a signal to submit the form.
+        if (!inputValue.trim()) {
+          e.preventDefault();
+        }
+      }}
+      onFocus={() => onChangeIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          // focus has moved outside of container
+          onChangeIsFocused(false);
+        }
+      }}
     >
       <label
         id={`${id}-label`}

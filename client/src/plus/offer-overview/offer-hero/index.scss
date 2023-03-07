@@ -19,7 +19,7 @@ $text-stroke-width: 2px;
     grid-row: 1;
     margin: 0 auto;
     max-width: 52rem;
-    padding: 1rem 1rem;
+    padding: 1rem;
     -moz-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     width: initial;
@@ -80,7 +80,7 @@ $text-stroke-width: 2px;
         .button-secondary {
           background: #15141a1a;
           border: 2px solid var(--button-secondary-border-red);
-          color: white;
+          color: #fff;
         }
 
         .button-secondary:hover {
@@ -89,6 +89,7 @@ $text-stroke-width: 2px;
       }
     }
   }
+
   .mandala-wrapper {
     --mandala-primary: var(--border-primary);
     grid-column: 1;

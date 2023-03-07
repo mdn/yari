@@ -17,7 +17,6 @@
     margin: 0 auto;
     max-width: 52rem;
     padding: 0 1rem;
-    padding: 0 1rem;
     width: 100%;
 
     h1 {
@@ -80,6 +79,7 @@
       background-color: rgba(1, 1, 1, 0.5);
       border-radius: 10rem;
       padding: 2rem;
+      width: 100%;
 
       &:focus {
         border-color: var(--field-focus-border);
@@ -94,6 +94,7 @@
     .search-widget {
       display: flex;
       gap: 0;
+      width: 100%;
     }
 
     .search-results {
@@ -140,6 +141,7 @@
 
     .button-wrap {
       background: none;
+
       &:hover {
         background: none;
         border: 1px solid transparent;
@@ -153,11 +155,6 @@
         background-color: var(--icon-primary);
         border: none;
       }
-    }
-  }
-
-  .search-form {
-    &[aria-expanded="true"] {
     }
   }
 }

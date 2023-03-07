@@ -1,23 +1,22 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-import readChunk from "read-chunk";
+import { readChunkSync } from "read-chunk";
 import imageType from "image-type";
 import isSvg from "is-svg";
 
-import { DEFAULT_LOCALE } from "../libs/constants";
-import { ROOTS } from "../libs/env";
-import { memoize, slugToFolder } from "./utils";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { ROOTS } from "../libs/env/index.js";
+import { memoize, slugToFolder } from "./utils.js";
 
 function isImage(filePath) {
   if (fs.statSync(filePath).isDirectory()) {
     return false;
   }
   if (filePath.toLowerCase().endsWith(".svg")) {
-    return isSvg(fs.readFileSync(filePath));
+    return isSvg(fs.readFileSync(filePath, "utf-8"));
   }
-
-  const buffer = readChunk.sync(filePath, 0, 12);
+  const buffer = readChunkSync(filePath, { length: 12 });
   if (buffer.length === 0) {
     return false;
   }
@@ -36,7 +35,7 @@ function urlToFilePath(url) {
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-const find = memoize((relativePath) => {
+const find = memoize((relativePath: string) => {
   return ROOTS.map((root) => path.join(root, relativePath)).find(
     (filePath) => fs.existsSync(filePath) && isImage(filePath)
   );

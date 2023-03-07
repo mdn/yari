@@ -1,4 +1,4 @@
-import unified from "unified";
+import { unified } from "unified";
 import parse from "remark-parse";
 import remark2rehype from "remark-rehype";
 import stringify from "rehype-stringify";
@@ -6,8 +6,8 @@ import gfm from "remark-gfm";
 import raw from "rehype-raw";
 import format from "rehype-format";
 
-import { buildLocalizedHandlers } from "./handlers";
-import { decodeKS, encodeKS } from "../utils";
+import { buildLocalizedHandlers } from "./handlers/index.js";
+import { decodeKS, encodeKS } from "../utils/index.js";
 
 interface ProcessorOptions {
   locale?: string;

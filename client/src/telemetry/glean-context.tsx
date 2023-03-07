@@ -1,17 +1,22 @@
 import * as React from "react";
-import { path, referrer } from "./generated/page";
-import { clicked } from "./generated/element";
+import * as pageMetric from "./generated/page";
+import * as navigatorMetric from "./generated/navigator";
+import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
+import { handleSidebarClick } from "./sidebar-click";
 
 export type PageProps = {
   referrer: string | undefined;
   path: string | undefined;
+  subscriptionType: string;
+  geo: string | undefined;
+  userAgent: string | undefined;
 };
 
 export type PageEventProps = {
@@ -21,7 +26,7 @@ export type PageEventProps = {
 
 export type ElementClickedProps = {
   source: string;
-  subscription_type: string;
+  subscriptionType: string;
 };
 
 export type GleanAnalytics = {
@@ -40,7 +45,6 @@ function glean(): GleanAnalytics {
       click: (element: ElementClickedProps) => {},
     };
   }
-
   const userIsOptedOut = document.cookie
     .split("; ")
     .includes(`${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true`);
@@ -63,28 +67,57 @@ function glean(): GleanAnalytics {
   const gleanContext = {
     page: (page: PageProps) => {
       if (page.path) {
-        path.set(page.path);
+        pageMetric.path.set(page.path);
       }
-
       if (page.referrer) {
-        referrer.set(page.referrer);
+        pageMetric.referrer.set(page.referrer);
       }
+      if (page.geo) {
+        navigatorMetric.geo.set(page.geo);
+      }
+      if (page.userAgent) {
+        navigatorMetric.userAgent.set(page.userAgent);
+      }
+      navigatorMetric.subscriptionType.set(page.subscriptionType);
       pings.page.submit();
     },
     click: (event: ElementClickedProps) => {
-      const { source, subscription_type } = event;
-      clicked.record({
+      const { source, subscriptionType: subscription_type } = event;
+      elementMetric.clicked.record({
         source,
         subscription_type,
       });
       pings.action.submit();
     },
   };
+  const gleanClick = (source: string) => {
+    gleanContext.click({
+      source,
+      subscriptionType: "",
+    });
+  };
+  window?.addEventListener("click", (ev) => {
+    handleLinkClick(ev, gleanClick);
+    handleSidebarClick(ev, gleanClick);
+  });
+
   return gleanContext;
 }
 
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
+
+function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
+  const anchor = ev?.target as Element;
+  if (anchor?.nodeName === "A") {
+    if (anchor?.classList.contains("external")) {
+      click(`external-link: ${anchor.getAttribute("href") || ""}`);
+    }
+    if (anchor?.hasAttribute?.("data-pong")) {
+      click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
+    }
+  }
+}
 
 export function GleanProvider(props: { children: React.ReactNode }) {
   return (
@@ -100,16 +133,22 @@ export function useGlean() {
 
 export function useGleanPage() {
   const loc = useLocation();
+  const userData = useUserData();
   const isServer = useIsServer();
+  const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    if (!isServer) {
+    if (!isServer && userData && path.current !== loc.pathname) {
+      path.current = loc.pathname;
       gleanAnalytics.page({
         path: window?.location.toString(),
         referrer: document?.referrer,
+        userAgent: navigator?.userAgent,
+        geo: userData?.geo?.country,
+        subscriptionType: userData?.subscriptionType || "anonymous",
       });
     }
-  }, [loc.pathname, isServer]);
+  }, [loc.pathname, isServer, userData]);
 }
 
 export function useGleanClick() {
@@ -118,6 +157,6 @@ export function useGleanClick() {
   return (source: string) =>
     glean.click({
       source,
-      subscription_type: userData?.subscriptionType || "none",
+      subscriptionType: userData?.subscriptionType || "none",
     });
 }

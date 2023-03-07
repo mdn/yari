@@ -32,7 +32,7 @@
     .img-container {
       align-items: center;
       border-radius: 1rem;
-      box-shadow: 0px 3px 22px #2b2a331a;
+      box-shadow: 0 3px 22px #2b2a331a;
       height: 100%;
       max-width: 25rem;
       @media screen and (min-width: $screen-xl) {
@@ -45,9 +45,11 @@
       max-width: 40rem;
 
       text-align: center;
+
       a {
         justify-content: start;
       }
+
       h2 {
         color: var(--plus-accent-color);
         font: 700 12px/120% Inter;
@@ -81,8 +83,10 @@
     }
   }
 }
+
 .offer-overview-feature:nth-child(odd) {
   background: var(--background-secondary);
+
   .wrapper {
     flex-direction: column;
     @media screen and (min-width: $screen-xl) {

@@ -33,16 +33,13 @@ function RecentContributions(props: HydrationData<any>) {
       <h2>Recent contributions</h2>
       <ul className="contribution-list">
         {hyData.recentContributions.items.map(
-          ({ number, url, title, updated_at }) => (
+          ({ number, url, title, updated_at, repo }) => (
             <li className="request-item" key={number}>
               <p className="request-title">
                 <a href={url}>{title}</a>
                 <span>
-                  <a
-                    className="request-repo"
-                    href={hyData.recentContributions.repo.url}
-                  >
-                    {hyData.recentContributions.repo.name}
+                  <a className="request-repo" href={repo.url}>
+                    {repo.name}
                   </a>
                 </span>
               </p>

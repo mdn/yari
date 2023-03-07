@@ -1,0 +1,10 @@
+{
+  "name": "@yari-internal/locale-utils",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MPL-2.0",
+  "type": "module",
+  "exports": "./index.js",
+  "main": "index.js",
+  "types": "index.d.ts"
+}

@@ -26,7 +26,8 @@
       margin-bottom: 2rem;
     }
 
-    .wrapper {
+    .wrapper,
+    .wrapper-offline {
       align-items: center;
       display: flex;
       flex-direction: column;
@@ -34,8 +35,7 @@
       justify-content: center;
       margin: 0 auto;
 
-      &-offline {
-        @extend .wrapper;
+      .wrapper-offline {
         display: none;
       }
 
@@ -144,7 +144,6 @@
 
               a {
                 color: var(--text-invert);
-                display: block;
                 text-decoration: underline;
                 width: fit-content;
 
@@ -152,30 +151,14 @@
                   text-decoration: none;
                 }
               }
-            }
-          }
-          .sub-link {
-            align-items: center;
-            align-self: center;
-            background: $mdn-color-neutral-90;
-            border-radius: 1rem;
-            color: white;
-            display: flex;
-            font-weight: 620;
-            height: 2rem;
-            justify-content: center;
-            min-width: fit-content;
-            padding: 0.25rem 0.5rem;
-            width: calc(100% - 1rem);
-          }
-          .terms {
-            color: var(--text-invert);
-            font-size: 14px;
-            font-style: italic;
-            margin-top: auto;
-            text-decoration: underline;
-            &.external::after {
-              background-color: var(--text-invert);
+
+              sup {
+                background-color: var(--mdn-color-background-highlight);
+                border-radius: 0.125rem;
+                font-size: 0.75rem;
+                margin-left: 0.25rem;
+                padding: 0.125rem;
+              }
             }
           }
 
@@ -192,6 +175,18 @@
             min-width: fit-content;
             padding: 0.25rem 0.5rem;
             width: calc(100% - 1rem);
+          }
+
+          .terms {
+            color: var(--text-invert);
+            font-size: 14px;
+            font-style: italic;
+            margin-top: auto;
+            text-decoration: underline;
+
+            &.external::after {
+              background-color: var(--text-invert);
+            }
           }
 
           .current {

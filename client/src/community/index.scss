@@ -11,6 +11,7 @@ main.contribute {
     margin-bottom: 3rem;
     width: 100%;
   }
+
   section {
     margin: 0 auto;
     max-width: 52rem;
@@ -65,6 +66,7 @@ main.contribute {
       @media screen and (min-width: $screen-md) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }
+
       li {
         align-items: center;
         background: var(--text-link);
@@ -76,6 +78,7 @@ main.contribute {
         .number {
           font-size: 3rem;
         }
+
         .legend {
           font-size: 0.8rem;
           max-width: 5rem;

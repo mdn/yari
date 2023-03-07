@@ -7,4 +7,6 @@ export enum BannerId {
   PLUS_LAUNCH_ANNOUNCEMENT = "plus_launch_announcement",
   PRIDE_DAY_2022 = "pride_day_2022",
   PREVIEW_FEATURES = "preview_features",
+  MULTIPLE_COLLECTIONS = "multiple_collections",
+  NEWSLETTER_ANNOUNCEMENT = "newsletter_announcement",
 }
