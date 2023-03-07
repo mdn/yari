@@ -3,6 +3,7 @@ import httpProxy from "http-proxy";
 import * as path from "node:path";
 import { Source } from "../env.js";
 import { responder } from "../source.js";
+import { resolveIndexHTML } from "../utils.js";
 
 export function client(): express.Handler {
   return responder({
@@ -15,13 +16,14 @@ export function client(): express.Handler {
         autoRewrite: true,
       });
       return (req, res) => {
+        req.url = resolveIndexHTML(req.url);
         clientProxy.web(req, res);
       };
     },
     file(source) {
       return (req, res) => {
-        const rPath = req.path;
-        const filePath = path.join(source, rPath);
+        const resolvedPath = resolveIndexHTML(req.path);
+        const filePath = path.join(source, resolvedPath);
         res.sendFile(filePath);
       };
     },
