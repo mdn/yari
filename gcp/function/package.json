@@ -8,11 +8,13 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc -b && rm -rf ./src/internal && mkdir ./src/internal && cp -R ../../libs/{constants,fundamental-redirects,locale-utils,slug-utils} ./src/internal/",
+    "build": "tsc -b",
     "build-deploy-clean": "npm-run-all -s build deploy clean",
     "clean": "tsc -b --clean",
+    "copy-internal": "rm -rf ./src/internal && mkdir ./src/internal && cp -R ../../libs/{constants,fundamental-redirects,locale-utils,slug-utils} ./src/internal/",
     "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
     "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
+    "prepare": "[ ! -e ../../libs ] || npm run copy-internal",
     "start": "ts-node src/cli.ts"
   },
   "dependencies": {
