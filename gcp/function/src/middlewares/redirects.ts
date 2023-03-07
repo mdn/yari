@@ -15,6 +15,24 @@ export function redirects(
   res: express.Response,
   next: express.NextFunction
 ) {
+  // If the URL was something like `https://domain/en-US/search/`, our code
+  // would make a that a redirect to `/en-US/search` (stripping the trailing slash).
+  // But if it was `https://domain//en-US/search/` it *would* make a redirect
+  // to `//en-US/search`.
+  // However, if pathname starts with `//` the Location header might look
+  // relative but it's actually an absolute URL.
+  // A 302 redirect from `https://domain//evil.com/` actually ends open
+  // opening `https://evil.com/` in the browser, because the browser will
+  // treat `//evil.com/ == https://evil.com/`.
+  // Prevent any pathnames that start with a double //.
+  // This essentially means that a request for `GET /////anything` becomes
+  // 302 with `Location: /anything`.
+  if (req.url.startsWith("//")) {
+    res.redirect(`/${req.url.replace(/^\/+/g, "")}`);
+    next();
+    return;
+  }
+
   const { url, status } = resolveFundamental(req.url);
   if (url) {
     res.set("Cache-Control", `max-age=${THIRTY_DAYS}`);
