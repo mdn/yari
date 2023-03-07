@@ -66,7 +66,6 @@ export function redirects(
     );
     if (typeof REDIRECTS[source] == "string") {
       const target = REDIRECTS[source] + suffix;
-      console.log(req.url, target);
       res.set("Cache-Control", `max-age=${THIRTY_DAYS}`);
       res.redirect(301, target);
       next();
