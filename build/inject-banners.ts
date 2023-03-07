@@ -43,7 +43,7 @@ export function injectBanners(
   // In a handful of cases BCD is an array.
   // In these cases we can't properly answer
   // status questions, so ignore them
-  if (bcdQuery && !Array.isArray(bcdQuery)) {
+  if (bcdQuery && typeof bcdQuery === "string") {
     const bcd = packageBCD(bcdQuery);
     if (bcd?.data?.__compat?.status?.experimental) {
       injectBanner($, locale, "ExperimentalBanner", "experimental");
