@@ -1,14 +1,14 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-import { packageBCD } from "./resolve-bcd";
+import { CONTENT_ROOT } from "../libs/env/index.js";
 
 // Module-level cache
 let l10nStrings = {};
 
 function initL10nStrings(root: string) {
   if (Object.keys(l10nStrings).length === 0) {
-    const l10nPath = path.join(root, "jsondata", "L10n-Common.json");
+    const l10nPath = path.join(root, "jsondata", "L10n-Banners.json");
     l10nStrings = JSON.parse(fs.readFileSync(l10nPath).toString());
   }
 }
@@ -18,39 +18,47 @@ function getL10nString(id, locale) {
   return block[locale] ?? block[DEFAULT_LOCALE] ?? null;
 }
 
-function injectBanner($, locale, messageId, bannerClass) {
-  const message = getL10nString(messageId, locale);
-  if (message) {
-    const banner = $(`<div class="notecard ${bannerClass}">${message}</div>`);
-    $("div#_body").prepend(banner);
+function injectBanner($, locale, titleId, descriptionId, bannerClass) {
+  const title = getL10nString(titleId, locale);
+  const description = getL10nString(descriptionId, locale);
+
+  if (title && description) {
+    const banner = $(
+      `<div class="notecard ${bannerClass}"><strong>${title}: </strong>${description}</div>`
+    );
+
+    $("body").prepend(banner);
   }
 }
 
-export function injectBanners(
-  $,
-  locale: string,
-  metadata: object
-) {
+export function injectBanners($, locale: string, metadata: object) {
   initL10nStrings(CONTENT_ROOT);
-
-  const security = metadata["security-requirements"];
-  if (security && security.includes("secure-context")) {
-    injectBanner($, locale, "SecureContextBanner", "secure");
+  const status = metadata["status"];
+  if (status && status.includes("deprecated")) {
+    injectBanner(
+      $,
+      locale,
+      "Deprecated_title",
+      "Deprecated_description",
+      "deprecated"
+    );
   }
-
-  // Inject banners that are driven by BCD
-  const bcdQuery = metadata["browser-compat"];
-  // In a handful of cases BCD is an array.
-  // In these cases we can't properly answer
-  // status questions, so ignore them
-  if (bcdQuery && typeof bcdQuery === "string") {
-    const bcd = packageBCD(bcdQuery);
-    const status = bcd?.data?.__compat?.status;
-    if (status?.experimental) {
-      injectBanner($, locale, "ExperimentalBanner", "experimental");
-    }
-    if (status?.deprecated) {
-      injectBanner($, locale, "DeprecatedBanner", "deprecated");
-    }
+  if (status && status.includes("experimental")) {
+    injectBanner(
+      $,
+      locale,
+      "Experimental_title",
+      "Experimental_description",
+      "experimental"
+    );
+  }
+  if (status && status.includes("non-standard")) {
+    injectBanner(
+      $,
+      locale,
+      "NonStandard_title",
+      "NonStandard_description",
+      "nonstandard"
+    );
   }
 }

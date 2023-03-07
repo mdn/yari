@@ -34,7 +34,7 @@ export { buildSPAs } from "./spas.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
-import { injectBanners } from "./inject-banners";
+import { injectBanners } from "./inject-banners.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
