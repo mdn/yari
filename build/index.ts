@@ -569,7 +569,7 @@ export async function buildDocument(
 
   wrapTables($);
 
-  injectBanners($, CONTENT_ROOT, doc.locale, metadata);
+  injectBanners($, doc.locale, metadata);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
