@@ -7,17 +7,17 @@ import { bcdApi } from "./handlers/bcdApi.js";
 import { spa } from "./handlers/spa.js";
 import { rumba } from "./handlers/rumba.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
-import { fundamental } from "./middlewares/fundamental.js";
+import { redirects } from "./middlewares/redirects.js";
 
 const mainRouter = Router();
 const docsHandler = docs();
 mainRouter.get("/bcd/api/*", bcdApi());
 mainRouter.all("/api/*", rumba);
 mainRouter.all("/users/fxa/*", rumba);
+mainRouter.use(redirects);
 mainRouter.get("/[^/]+/plus/*", spa);
 mainRouter.get("/[^/]+/docs/*", docsHandler);
 mainRouter.get("/[^/]+/search-index.json", docsHandler);
-mainRouter.use(fundamental);
 mainRouter.get("*", client());
 
 const liveSampleRouter = Router();
