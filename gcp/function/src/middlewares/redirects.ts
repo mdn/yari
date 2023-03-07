@@ -23,6 +23,8 @@ export function redirects(
     } else {
       res.redirect(url);
     }
+    next();
+    return;
   }
 
   // Important: The request.uri may be URI-encoded.
@@ -49,7 +51,8 @@ export function redirects(
       console.log(req.url, target);
       res.set("Cache-Control", `max-age=${THIRTY_DAYS}`);
       res.redirect(301, target);
-      break;
+      next();
+      return;
     }
   }
 
