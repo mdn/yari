@@ -45,10 +45,11 @@ export function injectBanners(
   // status questions, so ignore them
   if (bcdQuery && typeof bcdQuery === "string") {
     const bcd = packageBCD(bcdQuery);
-    if (bcd?.data?.__compat?.status?.experimental) {
+    const status = bcd?.data?.__compat?.status;
+    if (status?.experimental) {
       injectBanner($, locale, "ExperimentalBanner", "experimental");
     }
-    if (bcd?.data?.__compat?.status?.deprecated) {
+    if (status?.deprecated) {
       injectBanner($, locale, "DeprecatedBanner", "deprecated");
     }
   }
