@@ -31,7 +31,7 @@ export function injectBanners(
   locale: string,
   metadata: object
 ) {
-  initL10nStrings(root);
+  initL10nStrings(CONTENT_ROOT);
 
   const security = metadata["security-requirements"];
   if (security && security.includes("secure-context")) {
