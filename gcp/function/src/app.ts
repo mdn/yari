@@ -7,6 +7,7 @@ import { bcdApi } from "./handlers/bcdApi.js";
 import { spa } from "./handlers/spa.js";
 import { rumba } from "./handlers/rumba.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
+import { fundamental } from "./middlewares/fundamental.js";
 
 const mainRouter = Router();
 const docsHandler = docs();
@@ -16,6 +17,7 @@ mainRouter.all("/users/fxa/*", rumba);
 mainRouter.get("/[^/]+/plus/*", spa);
 mainRouter.get("/[^/]+/docs/*", docsHandler);
 mainRouter.get("/[^/]+/search-index.json", docsHandler);
+mainRouter.use(fundamental);
 mainRouter.get("*", client());
 
 const liveSampleRouter = Router();
