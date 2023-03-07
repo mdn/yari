@@ -30,7 +30,9 @@ export function createHandler(o?: Origin) {
   return async (
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction = () => {
+      /* noop */
+    }
   ) => {
     const rPath = req.path;
     const reqOrigin = o || origin(req);
