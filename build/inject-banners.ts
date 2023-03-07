@@ -28,7 +28,6 @@ function injectBanner($, locale, messageId, bannerClass) {
 
 export function injectBanners(
   $,
-  root: string,
   locale: string,
   metadata: object
 ) {
