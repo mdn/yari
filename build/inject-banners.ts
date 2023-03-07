@@ -15,16 +15,7 @@ function initL10nStrings(root: string) {
 
 function getL10nString(id, locale) {
   const block = l10nStrings[id];
-  // Try the locale first
-  if (block && block[locale]) {
-    return block[locale];
-  }
-  // Fall back to en-US
-  if (block && block["en-US"]) {
-    return block["en-US"];
-  }
-  // Fall back to nothing
-  return null;
+  return block[locale] ?? block[DEFAULT_LOCALE] ?? null;
 }
 
 function injectBanner($, locale, messageId, bannerClass) {
