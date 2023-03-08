@@ -236,22 +236,9 @@ export default function AllFlaws() {
             locale={locale}
             counts={lastData.counts}
             documents={lastData.documents}
+            pageCount={pageCount}
+            page={page}
           />
-          {pageCount > 1 && (
-            <p className="pagination">
-              <PageLink number={1} disabled={page === 1}>
-                First page
-              </PageLink>{" "}
-              {page > 2 && (
-                <PageLink number={page - 1}>
-                  Previous page ({page - 1})
-                </PageLink>
-              )}{" "}
-              <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-                Next page ({page + 1})
-              </PageLink>
-            </p>
-          )}
         </div>
       )}
       {data && data.counts && <AllFlawCounts counts={data.counts.flaws} />}
@@ -547,10 +534,14 @@ function DocumentsTable({
   locale,
   counts,
   documents,
+  pageCount,
+  page,
 }: {
   locale: string;
   counts: Counts;
   documents: Document[];
+  pageCount: number;
+  page: number;
 }) {
   const [filters, updateFiltersURL] = useFiltersURL();
 
@@ -577,7 +568,14 @@ function DocumentsTable({
     const bits = flaws.map((flaw) => {
       return `${humanizeFlawName(flaw.name)}: ${flaw.value}`;
     });
-    return `${bits.join(", ")} (${totalCountFixable} fixable)`;
+    return (
+      <>
+        {bits.join(", ")}{" "}
+        <span className="document-flaws-fixable">
+          ({totalCountFixable} fixable)
+        </span>
+      </>
+    );
   }
 
   function TH({ id, title }: { id: string; title: string }) {
@@ -627,7 +625,11 @@ function DocumentsTable({
     <div className="documents">
       <h3>
         Documents with flaws found ({counts.found.toLocaleString()}){" "}
-        {filters.page > 1 && <span className="page">page {filters.page}</span>}
+        {pageCount > 1 && (
+          <span className="page">
+            page {page}/{pageCount}
+          </span>
+        )}
       </h3>
       {!counts.built ? (
         <WarnAboutNothingBuilt />
@@ -664,6 +666,7 @@ function DocumentsTable({
                   </span>
                 </td>
                 <td
+                  className={doc.popularity.ranking ? "" : "no-popularity"}
                   title={
                     doc.popularity.ranking
                       ? `Meaning there are ${
@@ -676,12 +679,30 @@ function DocumentsTable({
                     ? "n/a"
                     : `${getGetOrdinal(doc.popularity.ranking)}`}
                 </td>
-                <td>{summarizeFlaws(doc.flaws)}</td>
+                <td className="document-flaws">{summarizeFlaws(doc.flaws)}</td>
               </tr>
             );
           })}
         </tbody>
       </table>
+
+      {pageCount > 1 && (
+        <p className="pagination">
+          <PageLink number={1} disabled={page === 1}>
+            ⇤ First page
+          </PageLink>{" "}
+          {page > 2 && <PageLink number={page - 1}>← Previous page</PageLink>}{" "}
+          {page}{" "}
+          {page < pageCount - 1 && (
+            <PageLink number={page + 1} disabled={page + 1 > pageCount}>
+              Next page →
+            </PageLink>
+          )}
+          <PageLink number={pageCount} disabled={page === pageCount}>
+            Last page ({pageCount}) ⇥
+          </PageLink>
+        </p>
+      )}
     </div>
   );
 }
@@ -720,7 +741,7 @@ function PageLink({
 
 function WarnAboutNothingBuilt() {
   return (
-    <div className="attention document-warnings">
+    <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
       <p>
         At the moment, you have to use the command line tools to build documents

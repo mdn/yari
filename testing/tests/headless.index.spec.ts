@@ -228,15 +228,13 @@ test.describe("changing language", () => {
 test.describe("viewing retired locales", () => {
   test("redirect retired locale to English (document)", async ({ page }) => {
     await page.goto(testURL("/ar/docs/Web/Foo"));
-    expect(page.url()).toMatch(
-      testURL("/en-US/docs/Web/Foo/?retiredLocale=ar")
-    );
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
   });
 
   test("redirect retired locale to English (index.json)", async ({ page }) => {
     await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
-    expect(page.url()).toMatch(
+    expect(page.url()).toBe(
       testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
     );
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
@@ -246,9 +244,7 @@ test.describe("viewing retired locales", () => {
     page,
   }) => {
     await page.goto(testURL("/ar/search?q=video"));
-    expect(page.url()).toMatch(
-      testURL("/en-US/search/?q=video&retiredLocale=ar")
-    );
+    expect(page.url()).toBe(testURL("/en-US/search/?q=video&retiredLocale=ar"));
     expect(await page.isVisible("text=Search results for: video")).toBeTruthy();
   });
 

@@ -443,7 +443,7 @@ export function findByURL(
   return doc;
 }
 
-export function findAll({
+export async function findAll({
   chunk = 1,
   chunks = 1,
   files = new Set<string>(),
@@ -516,7 +516,8 @@ export function findAll({
         return true;
       })
       .crawl(root);
-    filePaths.push(...(api.sync() as PathsOutput));
+    const output: PathsOutput = await api.withPromise();
+    filePaths.push(...output);
   }
 
   if (chunks > 1) {
