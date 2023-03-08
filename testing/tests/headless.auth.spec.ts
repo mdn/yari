@@ -30,7 +30,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
     await page.click("#my-mdn-plus-button");
@@ -47,7 +47,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
     // open up user menu
