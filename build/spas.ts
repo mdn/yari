@@ -64,7 +64,7 @@ async function buildContributorSpotlight(locale, options) {
     const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
-      locale,
+      locale.toLowerCase(),
       `${prefix}/${hyData.folderName}`
     );
     const filePath = path.join(outPath, "index.html");
@@ -244,11 +244,12 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const locale of fs.readdirSync(root)) {
+    for (const localeLC of fs.readdirSync(root)) {
+      const locale = VALID_LOCALES.get(localeLC) || localeLC;
       if (!isValidLocale(locale)) {
         continue;
       }
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+      if (!fs.statSync(path.join(root, localeLC)).isDirectory()) {
         continue;
       }
 
@@ -286,7 +287,7 @@ export async function buildSPAs(options) {
       };
       const context = { hyData };
       const html = renderHTML(url, context);
-      const outPath = path.join(BUILD_OUT_ROOT, locale);
+      const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
       fs.writeFileSync(filePath, html);
