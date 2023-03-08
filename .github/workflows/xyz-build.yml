@@ -89,10 +89,10 @@ jobs:
           #BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
 
           # This enables the Plus call-to-action banner and the Plus landing page
-          REACT_APP_ENABLE_PLUS: false
+          REACT_APP_ENABLE_PLUS: true
 
           # This adds the ability to sign in (stage only for now)
-          REACT_APP_DISABLE_AUTH: true
+          REACT_APP_DISABLE_AUTH: false
 
           # Use the stage version of interactive examples in react app
           REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.developer.allizom.xyz
