@@ -12,7 +12,7 @@
     "build-deploy-clean": "npm-run-all -s build deploy clean",
     "clean": "tsc -b --clean && git checkout -- redirects.json",
     "copy-internal": "rm -rf ./src/internal && mkdir ./src/internal && cp -R ../../libs/ ./src/internal/",
-    "deploy": "gcloud functions deploy mdn-two --region europe-west3 --memory=128MB --runtime nodejs18 --trigger-http --allow-unauthenticated",
+    "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
     "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
     "prepare": "[ ! -e ../../libs ] || npm run copy-internal",
     "start": "ts-node src/cli.ts"
