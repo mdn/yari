@@ -105,7 +105,7 @@ export const CSP_DIRECTIVES = {
 
     "interactive-examples.mdn.mozilla.net",
     "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
     "mdn.github.io",
     "yari-demos.prod.mdn.mozit.cloud",
     "mdn.mozillademos.org",
@@ -133,7 +133,7 @@ export const CSP_DIRECTIVES = {
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
     "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
 
