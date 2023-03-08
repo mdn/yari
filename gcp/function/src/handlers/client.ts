@@ -16,7 +16,9 @@ export function client(): express.Handler {
         autoRewrite: true,
       });
       return (req, res) => {
-        req.url = resolveIndexHTML(req.url);
+        if (!req.url.startsWith("/static/")) {
+          req.url = resolveIndexHTML(req.url);
+        }
         clientProxy.web(req, res);
       };
     },
