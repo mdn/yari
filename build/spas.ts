@@ -9,7 +9,11 @@ import got from "got";
 
 import { m2h } from "../markdown/index.js";
 
-import { VALID_LOCALES, MDN_PLUS_TITLE } from "../libs/constants/index.js";
+import {
+  VALID_LOCALES,
+  MDN_PLUS_TITLE,
+  DEFAULT_LOCALE,
+} from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -94,9 +98,13 @@ export async function buildSPAs(options) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
+  const url = `/${DEFAULT_LOCALE}/404.html`;
   const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+  const outPath = path.join(
+    BUILD_OUT_ROOT,
+    DEFAULT_LOCALE.toLowerCase(),
+    "_spas"
+  );
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
   buildCount++;
@@ -188,7 +196,7 @@ export async function buildSPAs(options) {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
-      const locale = "en-us";
+      const locale = DEFAULT_LOCALE.toLowerCase();
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
@@ -262,7 +270,7 @@ export async function buildSPAs(options) {
           FEATURED_ARTICLES.map(async (url) => {
             const document =
               findByURL(`/${locale}/docs/${url}`) ||
-              findByURL(`/en-US/docs/${url}`);
+              findByURL(`/${DEFAULT_LOCALE}/docs/${url}`);
             if (document) {
               const {
                 doc: { mdn_url, summary, title, parents },
@@ -366,7 +374,7 @@ async function fetchLatestNews() {
   items.push(
     {
       title: "Experimenting with advertising on MDN",
-      url: "/en-US/advertising",
+      url: `/${DEFAULT_LOCALE}/advertising`,
       author: "Mozilla",
       published_at: new Date("2023-02-15 15:00Z").toString(),
       source: {
