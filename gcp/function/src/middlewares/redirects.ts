@@ -3,8 +3,9 @@ import { createRequire } from "node:module";
 import type express from "express";
 
 import { resolveFundamental } from "@yari-internal/fundamental-redirects";
+import { getLocale } from "@yari-internal/locale-utils";
 import { decodePath } from "@yari-internal/slug-utils";
-import { DEFAULT_LOCALE, VALID_LOCALES } from "@yari-internal/constants";
+import { VALID_LOCALES } from "@yari-internal/constants";
 
 const require = createRequire(import.meta.url);
 const REDIRECTS = require("../../redirects.json");
@@ -114,7 +115,7 @@ export function redirects(
       ? requestURI.slice(0, -1)
       : requestURI;
     // Note that "getLocale" only returns valid locales, never a retired locale.
-    const locale = DEFAULT_LOCALE; // TODO getLocale(req.cookies);
+    const locale = getLocale(req);
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)
     return redirect(`/${locale}${path || "/"}` + qs);
