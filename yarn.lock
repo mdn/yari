@@ -4994,10 +4994,10 @@ download@^7.1.0:
     p-event "^2.1.0"
     pify "^3.0.0"
 
-downshift@^7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-7.3.0.tgz#b2758c8897659763f9c48483a0fc79e73818c628"
-  integrity sha512-TrD/XI1zRtvoSNQJOx+1LMSt6Um0EgtYRcnLB7mnFmJ/JIdSTFh5TF/aj2k4tA/U9M/ypF7FloQSobD/5a+2VA==
+downshift@^7.3.2:
+  version "7.3.2"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-7.3.2.tgz#c517339d6623975bcdea98c45a511a63f2816347"
+  integrity sha512-0X/y/av0HBqKDPE4bkgPrgk59NnXIZAm3wcvCG/yaBR1ZDzqovuTCgHn4e4JL4AEH9Sgt5t12+Ak2/WFtg/pNA==
   dependencies:
     "@babel/runtime" "^7.14.8"
     compute-scroll-into-view "^2.0.4"
