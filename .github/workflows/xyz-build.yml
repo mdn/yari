@@ -154,7 +154,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Sync build with GCS bucket
-        run: gsutil -m rsync -d -r client/build/ gs://${{ secrets.GCS_BUCKET }}/
+        run: gsutil -q -m rsync -d -r client/build/ gs://${{ secrets.GCS_BUCKET }}/
 
 
       - name: Deploy Function
