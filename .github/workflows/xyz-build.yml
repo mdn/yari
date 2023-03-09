@@ -156,7 +156,6 @@ jobs:
       - name: Sync build with GCS bucket
         run: gsutil -q -m rsync -d -r client/build/ gs://${{ secrets.GCS_BUCKET }}/
 
-
       - name: Deploy Function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
