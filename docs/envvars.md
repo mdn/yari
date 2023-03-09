@@ -267,11 +267,11 @@ bar appears based on this.
 
 **Default: `localhost, localhost.org, 127.0.0.1`**
 
-Only applicable if `REACT_APP_WRITER_MODE` is truthy. Essentially you can disable
-certain CRUD mode features depending on the hostname you use. So if you built
-the static assets (the React code) with `REACT_APP_WRITER_MODE=true` it might
-disable certain features if you use a `window.location.hostname` that is _not_
-in this list.
+Only applicable if `REACT_APP_WRITER_MODE` is truthy. Essentially you can
+disable certain CRUD mode features depending on the hostname you use. So if you
+built the static assets (the React code) with `REACT_APP_WRITER_MODE=true` it
+might disable certain features if you use a `window.location.hostname` that is
+_not_ in this list.
 
 The use case for this is when you build the site in a pull request and want
 flaws to _appear_ but without the "Fix fixable flaws" link or the "Open in your

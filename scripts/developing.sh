@@ -30,6 +30,7 @@ echo "--------------------"
 echo "Start the dev server"
 echo "--------------------"
 
+export REACT_APP_WRITER_MODE=true
 export CONTENT_ROOT="mdn/content/files"
 ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 echo "" > client/.env
