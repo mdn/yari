@@ -38,7 +38,10 @@ const FEATURED_ARTICLES = [
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-async function buildContributorSpotlight(locale, options) {
+async function buildContributorSpotlight(
+  locale: string,
+  options: { verbose?: boolean }
+) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
@@ -49,7 +52,7 @@ async function buildContributorSpotlight(locale, options) {
     );
 
     const frontMatter = frontmatter<DocFrontmatter>(markdown);
-    const contributorHTML = await m2h(frontMatter.body, locale);
+    const contributorHTML = await m2h(frontMatter.body, { locale });
 
     const { sections } = splitSections(contributorHTML);
 
@@ -94,7 +97,10 @@ async function buildContributorSpotlight(locale, options) {
   }
 }
 
-export async function buildSPAs(options) {
+export async function buildSPAs(options: {
+  quiet?: boolean;
+  verbose?: boolean;
+}) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
@@ -184,7 +190,11 @@ export async function buildSPAs(options) {
    * @param {string} slug
    * @param {string} title
    */
-  async function buildStaticPages(dirpath, slug, title = "MDN") {
+  async function buildStaticPages(
+    dirpath: string,
+    slug: string,
+    title = "MDN"
+  ) {
     const crawler = new fdir()
       .withFullPaths()
       .withErrors()
