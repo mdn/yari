@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
@@ -106,9 +106,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
-      refreshInterval: CRUD_MODE ? 500 : 0,
+      refreshInterval: WRITER_MODE ? 500 : 0,
     }
   );
   useIncrementFrequentlyViewed(doc);
@@ -226,7 +226,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </aside>
 
         <MainContentContainer>
-          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+          {!isServer && WRITER_MODE && !props.isPreview && doc.isActive && (
             <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
               <Toolbar
                 doc={doc}

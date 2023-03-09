@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../env";
+import { WRITER_MODE, WRITER_MODE_HOSTNAMES } from "../../env";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -205,7 +205,7 @@ function Flaws({
   flaws: FlawCount[];
   reloadPage: () => void;
 }) {
-  if (!CRUD_MODE) {
+  if (!WRITER_MODE) {
     throw new Error("This shouldn't be used in non-development builds");
   }
 
@@ -217,7 +217,7 @@ function Flaws({
     })
     .flat();
 
-  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+  const isReadOnly = !WRITER_MODE_HOSTNAMES.includes(window.location.hostname);
 
   // Note! This will work on Windows. The filename can be sent to
   // the server in POSIX style and the `open-editor` program will make
