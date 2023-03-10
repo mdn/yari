@@ -103,14 +103,21 @@ export const CSP_DIRECTIVES = {
   "frame-src": [
     "'self'",
 
+    // Prod.
     "interactive-examples.mdn.mozilla.net",
     "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
-    "mdn.github.io",
     "yari-demos.prod.mdn.mozit.cloud",
-    "mdn.mozillademos.org",
+
+    // Stage.
+    "interactive-examples.stage.mdn.mozilla.net",
     "yari-demos.stage.mdn.mozit.cloud",
+
+    // XYZ.
+    "interactive-examples.developer.allizom.xyz",
     "yari-demos.developer.allizom.xyz",
+
+    "mdn.github.io",
+    "mdn.mozillademos.org",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
