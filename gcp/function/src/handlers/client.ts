@@ -4,6 +4,7 @@ import * as path from "node:path";
 import { Source } from "../env.js";
 import { responder } from "../source.js";
 import { resolveIndexHTML } from "../utils.js";
+import { withResponseHeaders, withProxyResponseHeaders } from "../headers.js";
 
 export function client(): express.Handler {
   return responder({
@@ -15,6 +16,7 @@ export function client(): express.Handler {
         target: source,
         autoRewrite: true,
       });
+      clientProxy.on("proxyRes", withProxyResponseHeaders);
       return (req, res) => {
         if (!req.url.startsWith("/static/")) {
           req.url = resolveIndexHTML(req.url);
@@ -26,7 +28,10 @@ export function client(): express.Handler {
       return (req, res) => {
         const resolvedPath = resolveIndexHTML(req.path);
         const filePath = path.join(source, resolvedPath);
-        res.sendFile(filePath);
+        return withResponseHeaders(res, {
+          csp: resolvedPath.endsWith(".html"),
+          xFrame: true,
+        }).sendFile(filePath);
       };
     },
   });

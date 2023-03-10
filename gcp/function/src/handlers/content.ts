@@ -1,6 +1,6 @@
 import type express from "express";
 import * as path from "node:path";
-import { withResponseHeaders } from "../headers.js";
+import { withResponseHeaders, withProxyResponseHeaders } from "../headers.js";
 import { responder } from "../source.js";
 import { Source } from "../env.js";
 import httpProxy from "http-proxy";
@@ -21,6 +21,7 @@ export function docs(): express.Handler {
         const resolvedPath = resolveIndexHTML(req.url || "");
         proxyReq.path = path.join(proxyReq.path, resolvedPath);
       });
+      contentProxy.on("proxyRes", withProxyResponseHeaders);
       return (req, res) => {
         contentProxy.web(req, res);
       };
@@ -29,9 +30,10 @@ export function docs(): express.Handler {
       return (req, res) => {
         const resolvedPath = resolveIndexHTML(req.path);
         const filePath = path.join(source, resolvedPath);
-        return withResponseHeaders(res, { csp: true, xFrame: true }).sendFile(
-          filePath
-        );
+        return withResponseHeaders(res, {
+          csp: resolvedPath.endsWith(".html"),
+          xFrame: true,
+        }).sendFile(filePath);
       };
     },
   });
