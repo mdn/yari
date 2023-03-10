@@ -8,9 +8,32 @@ export const DISABLE_AUTH = Boolean(
   JSON.parse(process.env.REACT_APP_DISABLE_AUTH || "false")
 );
 
-export const WRITER_MODE = Boolean(
-  JSON.parse(process.env.REACT_APP_WRITER_MODE || "false")
-);
+/** Deprecated, don't export, use WRITER_MODE and/or DEV_MODE instead. */
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
+
+if (CRUD_MODE) {
+  console.warn(
+    "Warning: REACT_APP_CRUD_MODE is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
+  );
+
+  if (process.env.NODE_ENV === "development") {
+    console.warn(
+      "Warning: setting REACT_APP_CRUD_MODE with NODE_ENV=development is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
+    );
+  }
+}
+
+export const WRITER_MODE =
+  CRUD_MODE ||
+  Boolean(JSON.parse(process.env.REACT_APP_WRITER_MODE || "false"));
 
 export const WRITER_MODE_HOSTNAMES = (
   process.env.REACT_APP_WRITER_MODE_HOSTNAMES ||
@@ -20,12 +43,8 @@ export const WRITER_MODE_HOSTNAMES = (
   .map((x) => x.trim())
   .filter(Boolean);
 
-export const DEV_MODE = Boolean(
-  JSON.parse(
-    process.env.REACT_APP_DEV_MODE ||
-      JSON.stringify(process.env.NODE_ENV === "development")
-  )
-);
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));
 
 export const KUMA_HOST =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";

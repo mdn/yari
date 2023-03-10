@@ -206,7 +206,7 @@ function Flaws({
   reloadPage: () => void;
 }) {
   if (!WRITER_MODE) {
-    throw new Error("This shouldn't be used in non-development builds");
+    throw new Error("This shouldn't be used without WRITER_MODE=true");
   }
 
   const fixableFlaws = Object.values(doc.flaws)

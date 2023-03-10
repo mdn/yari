@@ -248,12 +248,9 @@ for content editing as authentication is then not required.
 
 ### `REACT_APP_DEV_MODE`
 
-**Default: `NODE_ENV==='development'`**
+**Default: `false`**
 
 Enables features or setup which only make sense in local development.
-
-It defaults to `NODE_ENV==='development'` if not set which means that it's
-enable by default when doing development with the `localhost:3000` dev server.
 
 ### `REACT_APP_WRITER_MODE`
 
@@ -282,7 +279,7 @@ make sense to present the "Fix fixable flaws" button for example.
 
 ### `REACT_APP_ENABLE_PLUS`
 
-**Default: `NODE_ENV==='development'`**
+**Default: `false`**
 
 Determines if the MDN++ SPA should be reachable or not.
 
