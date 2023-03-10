@@ -162,11 +162,6 @@ jobs:
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-          ORIGIN_MAIN: developer.allizom.xyz
-          ORIGIN_LIVE_SAMPLES: yari-demos.developer.allizom.xyz
-          SOURCE_CONTENT: https://storage.googleapis.com/fiji-mdn-content/
-          SOURCE_CLIENT: https://storage.googleapis.com/fiji-mdn-content/
-          SOURCE_INTERACTIVE_SAMPLES: https://storage.googleapis.com/fiji-mdn-interactive-examples/
         working-directory: gcp/function
         run: |
           npm ci
