@@ -50,6 +50,8 @@ jobs:
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: '${{ secrets.GCP_PROJECT_NAME }}'
 
       - name: Deploy Function
         env:
