@@ -110,6 +110,7 @@ export const CSP_DIRECTIVES = {
     "yari-demos.prod.mdn.mozit.cloud",
     "mdn.mozillademos.org",
     "yari-demos.stage.mdn.mozit.cloud",
+    "yari-demos.developer.allizom.xyz",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
