@@ -6,14 +6,14 @@ import { client } from "./handlers/client.js";
 import { bcdApi } from "./handlers/bcdApi.js";
 import { rumba } from "./handlers/rumba.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
-import { redirects } from "./middlewares/redirects.js";
+import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 
 const mainRouter = Router();
 const docsHandler = docs();
 mainRouter.get("/bcd/api/*", bcdApi());
 mainRouter.all("/api/*", rumba);
 mainRouter.all("/users/fxa/*", rumba);
-mainRouter.use(redirects);
+mainRouter.use(contentOriginRequest);
 mainRouter.get("/[^/]+/docs/*", docsHandler);
 mainRouter.get("/[^/]+/search-index.json", docsHandler);
 mainRouter.get("*", client());
