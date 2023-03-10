@@ -53,21 +53,33 @@ export function origin(req: express.Request): Origin {
   }
 }
 
-export const SOURCE_CONTENT: string =
+function resolveSource(pathOrUrl: string) {
+  if (pathOrUrl.startsWith(".")) {
+    return path.resolve(path.join(cwd(), pathOrUrl));
+  } else {
+    return pathOrUrl;
+  }
+}
+
+export const SOURCE_CONTENT: string = resolveSource(
   process.env["SOURCE_CONTENT"] ||
-  process.env["BUILD_OUT_ROOT"] ||
-  "https://developer.mozilla.org";
-export const SOURCE_LIVE_SAMPLES: string =
+    process.env["BUILD_OUT_ROOT"] ||
+    "https://developer.mozilla.org"
+);
+export const SOURCE_LIVE_SAMPLES: string = resolveSource(
   process.env["SOURCE_LIVE_SAMPLES"] ||
-  process.env["BUILD_OUT_ROOT"] ||
-  "https://yari-demos.prod.mdn.mozit.cloud";
+    process.env["BUILD_OUT_ROOT"] ||
+    "https://yari-demos.prod.mdn.mozit.cloud"
+);
 export const SOURCE_BCD_API: string =
   process.env["SOURCE_BCD_API"] || "https://developer.mozilla.org";
-export const SOURCE_CLIENT: string =
-  process.env["SOURCE_CLIENT"] || "https://developer.mozilla.org";
-export const SOURCE_INTERACTIVE_SAMPLES: string =
+export const SOURCE_CLIENT: string = resolveSource(
+  process.env["SOURCE_CLIENT"] || "https://developer.mozilla.org"
+);
+export const SOURCE_INTERACTIVE_SAMPLES: string = resolveSource(
   process.env["SOURCE_INTERACTIVE_SAMPLES"] ||
-  "https://interactive-examples.mdn.mozilla.net";
+    "https://interactive-examples.mdn.mozilla.net"
+);
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "https://developer.mozilla.org";
 
