@@ -20,17 +20,13 @@ const _warned = new Map();
 // broken link. But that problem lies with the `CSSRef.ejs` macro, which we
 // don't entirely want to swallow and forget. But we don't want to point this
 // out on every single page that *uses* that `CSSRef` macro.
-function warnBrokenFlawByMacro(macro, href, extra = "") {
+function warnBrokenFlawByMacro(macro: string, href: string, notes: string) {
   if (!_warned.has(macro)) {
     _warned.set(macro, new Set());
   }
   if (!_warned.get(macro).has(href)) {
     _warned.get(macro).add(href);
-    console.warn(
-      `In ${macro} the smartLink to ${href} is broken${
-        extra ? ` (${extra})` : ""
-      }`
-    );
+    console.warn(`In ${macro} the smartLink to ${href} is broken! (${notes})`);
   }
 }
 
@@ -162,7 +158,7 @@ const web = {
       }
     }
     if (ignoreFlawMacro) {
-      warnBrokenFlawByMacro(ignoreFlawMacro, href);
+      warnBrokenFlawByMacro(ignoreFlawMacro, href, "does not exist");
     } else {
       flaw = this.env.recordNonFatalError(
         "broken-link",
