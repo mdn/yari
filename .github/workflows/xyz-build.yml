@@ -165,8 +165,8 @@ jobs:
           SOURCE_CONTENT: https://storage.googleapis.com/fiji-mdn-content/
           SOURCE_CLIENT: https://storage.googleapis.com/fiji-mdn-content/
           SOURCE_INTERACTIVE_SAMPLES: https://storage.googleapis.com/fiji-mdn-interactive-examples/
+        working-directory: gcp/function
         run: |
-          cd gcp/function
           npm ci
           npm run build
           npm run deploy
