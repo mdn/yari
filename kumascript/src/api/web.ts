@@ -145,9 +145,7 @@ const web = {
       if (enUSPage.url) {
         // But it's still a flaw. Record it so that translators can write a
         // translated document to "fill the hole".
-        if (ignoreFlawMacro) {
-          warnBrokenFlawByMacro(ignoreFlawMacro, href);
-        } else {
+        if (!ignoreFlawMacro) {
           flaw = this.env.recordNonFatalError(
             "broken-link",
             `${hrefpath} does not exist but fell back to ${enUSPage.url}`
