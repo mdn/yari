@@ -68,7 +68,7 @@ const commitHashCache = fs.existsSync("./source-commit.json")
       )
     )
   : new Map();
-export function findDocuments({ locale }) {
+export async function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,
@@ -84,7 +84,7 @@ export function findDocuments({ locale }) {
   const documents = [];
 
   const t1 = new Date();
-  const documentsFound = Document.findAll({
+  const documentsFound = await Document.findAll({
     locales: new Map([[locale, true]]),
   });
   counts.total = documentsFound.count;
@@ -262,7 +262,7 @@ function getDocument(filePath) {
 
 const _defaultLocaleDocumentsCache = new Map();
 
-function gatherL10NstatsSection({
+async function gatherL10NstatsSection({
   locale,
   mdnSection = "/",
   subSections = [],
@@ -338,7 +338,7 @@ function gatherL10NstatsSection({
     locale + mdnSection.toLowerCase() + (mdnSection.endsWith("/") ? "" : "/")
   );
 
-  const foundTranslations = Document.findAll({
+  const foundTranslations = await Document.findAll({
     locales: new Map([[locale, true]]),
     folderSearch,
   });
@@ -361,7 +361,7 @@ function gatherL10NstatsSection({
       (mdnSection.endsWith("/") ? "" : "/")
   );
 
-  const foundDefaultLocale = Document.findAll({
+  const foundDefaultLocale = await Document.findAll({
     locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
     folderSearch: folderSearchDefaultLocale,
   });
@@ -470,7 +470,7 @@ function gatherL10NstatsSection({
 
 const _detailsSectionCache = new Map();
 
-function buildL10nDashboard({
+async function buildL10nDashboard({
   locale,
   section,
 }: {
@@ -486,10 +486,13 @@ function buildL10nDashboard({
   }
   const sectionDirPath = replaceSepPerOS(section);
   const defaultLocaleDocs = [
-    ...Document.findAll({
-      locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
-      folderSearch: DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
-    }).iterDocs(),
+    ...(
+      await Document.findAll({
+        locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
+        folderSearch:
+          DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
+      })
+    ).iterDocs(),
   ];
 
   const subSectionsStartingWith = defaultLocaleDocs
@@ -515,7 +518,7 @@ function buildL10nDashboard({
     })
     .map((s) => "/" + s);
 
-  const l10nStatsSection = gatherL10NstatsSection({
+  const l10nStatsSection = await gatherL10NstatsSection({
     locale,
     mdnSection: section,
     subSections,
@@ -605,7 +608,7 @@ router.get("/", async (req, res) => {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
 
-  const countsByLocale = countFilesByLocale();
+  const countsByLocale = await countFilesByLocale();
 
   const locales = [...VALID_LOCALES]
     .map(([localeLC, locale]) => {
@@ -623,7 +626,7 @@ router.get("/", async (req, res) => {
   res.json({ locales });
 });
 
-function countFilesByLocale() {
+async function countFilesByLocale() {
   const counts = new Map();
   let strip = CONTENT_TRANSLATED_ROOT;
   if (!strip.endsWith(path.sep)) {
@@ -662,7 +665,7 @@ router.get("/differences", async (req, res) => {
 
   const label = `Find all translated documents (${locale})`;
   console.time(label);
-  const found = findDocuments({ locale });
+  const found = await findDocuments({ locale });
   console.timeEnd(label);
   res.json(found);
 });
@@ -707,7 +710,7 @@ router.get("/dashboard", async (req, res) => {
 
   const label = `Gather stat for ${locale} and section ${section}`;
   console.time(label);
-  const data = buildL10nDashboard({ locale, section });
+  const data = await buildL10nDashboard({ locale, section });
   console.timeEnd(label);
   res.json(data);
 });
