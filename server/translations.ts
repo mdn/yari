@@ -146,16 +146,19 @@ function getDocument(filePath) {
 
   function getCommitBehindFromLatest(filename, commitHash) {
     if (commitHashCache[filename] === undefined) {
-      commitHashCache[filename] = execSync(
-        `git log --pretty=format:%H -- ${filename}`,
-        {
-          cwd: CONTENT_ROOT,
-        }
-      )
-        .toString()
-        .split("\n");
+      try {
+        commitHashCache[filename] = execSync(
+          `git rev-list --count ${commitHash}..HEAD -- ${filename}`,
+          {
+            cwd: CONTENT_ROOT,
+          }
+        ).toString();
+      } catch (err) {
+        // console.log(err)
+      }
     }
-    return commitHashCache[filename].indexOf(commitHash);
+    // console.log(`${filename}: ${commitHashCache[filename]}`)
+    return commitHashCache[filename];
   }
 
   function packageEdits(document, parentDocument) {
