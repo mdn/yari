@@ -144,26 +144,42 @@ function getDocument(filePath) {
     };
   }
 
-  function getCommitBehindFromLatest(filename, commitHash) {
-    if (commitHashCache[filename] === undefined) {
+  function recordInvalidSourceCommit(str: string) {
+    const filePath = "./source-commit-report.txt";
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, "");
+      console.log(`File created!`);
+    }
+
+    fs.appendFile(filePath, `${str}\n`, function (err) {
+      if (err) throw err;
+    });
+  }
+
+  function getCommitBehindFromLatest(
+    filePath: string,
+    parentFilePath: string,
+    commitHash: string
+  ) {
+    if (commitHashCache[filePath] === undefined) {
       try {
-        commitHashCache[filename] = execSync(
-          `git rev-list --count ${commitHash}..HEAD -- ${filename}`,
+        commitHashCache[filePath] = execSync(
+          `git rev-list --count ${commitHash}..HEAD -- ${parentFilePath}`,
           {
             cwd: CONTENT_ROOT,
           }
         ).toString();
       } catch (err) {
-        // console.log(err)
+        recordInvalidSourceCommit(`${filePath}: ${commitHash}`);
       }
     }
-    // console.log(`${filename}: ${commitHashCache[filename]}`)
-    return commitHashCache[filename];
+
+    return commitHashCache[filePath];
   }
 
   function packageEdits(document, parentDocument) {
     const {
-      fileInfo: { root: fileRoot },
+      fileInfo: { root: fileRoot, path: filePath },
       metadata: { hash: fileHash, modified, l10n },
     } = document;
     const {
@@ -178,6 +194,7 @@ function getDocument(filePath) {
     if (l10n?.sourceCommit) {
       sourceCommitURL = getLastCommitURL(CONTENT_ROOT, l10n.sourceCommit);
       sourceCommitsBehindCount = getCommitBehindFromLatest(
+        filePath,
         parentFilePath,
         l10n.sourceCommit
       );
