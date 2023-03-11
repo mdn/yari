@@ -175,14 +175,16 @@ function getDocument(filePath) {
       try {
         commitHashCache.set(
           fileFolder,
-          execSync(
-            `git rev-list --count ${commitHash}..HEAD -- ${parentFilePath}`,
-            {
-              cwd: CONTENT_ROOT,
-            }
+          Number(
+            execSync(
+              `git rev-list --count ${commitHash}..HEAD -- ${parentFilePath}`,
+              {
+                cwd: CONTENT_ROOT,
+              }
+            )
+              .toString()
+              .trimEnd()
           )
-            .toString()
-            .trimEnd()
         );
       } catch (err) {
         recordInvalidSourceCommit(`${fileFolder}: ${commitHash}`);

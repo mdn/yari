@@ -704,8 +704,15 @@ function L10nSourceCommitModified({
 }: Pick<DocumentEdits, "sourceCommitsBehindCount" | "sourceCommitURL">) {
   if (!sourceCommitURL) return <p>Metadata does not exist.</p>;
 
+  const getImportanceColor = () => {
+    if (sourceCommitsBehindCount === 0) return "🟢";
+    return sourceCommitsBehindCount < 10 ? "🟠" : "🔴";
+  };
+
   return (
-    <a href={sourceCommitURL}>{`${sourceCommitsBehindCount} commits behind`}</a>
+    <a
+      href={sourceCommitURL}
+    >{`${getImportanceColor()} ${sourceCommitsBehindCount} commits behind`}</a>
   );
 }
 
