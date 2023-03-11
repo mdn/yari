@@ -163,6 +163,19 @@
     dt {
       margin-bottom: 0.5rem;
       margin-top: 2rem;
+
+      a {
+        &:link,
+        &:visited {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
     }
 
     dd {
