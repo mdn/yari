@@ -443,7 +443,7 @@ export function findByURL(
   return doc;
 }
 
-export function findAll({
+export async function findAll({
   files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
@@ -514,7 +514,8 @@ export function findAll({
         return true;
       })
       .crawl(root);
-    filePaths.push(...(api.sync() as PathsOutput));
+    const output: PathsOutput = await api.withPromise();
+    filePaths.push(...output);
   }
   return {
     count: filePaths.length,

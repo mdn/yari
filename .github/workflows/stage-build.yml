@@ -137,7 +137,7 @@ jobs:
           BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
 
           # Use the stage version of interactive examples.
-          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -155,7 +155,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: false
 
           # Use the stage version of interactive examples in react app
-          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
@@ -167,10 +167,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
           # Surveys.
-          REACT_APP_SURVEY_START_FIREFOX_WEB_COMPAT_2023: 0 # stage
-          REACT_APP_SURVEY_END_FIREFOX_WEB_COMPAT_2023: 1675944000000 # (new Date("2023-02-09 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_FIREFOX_WEB_COMPAT_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_FIREFOX_WEB_COMPAT_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_CONTENT_DISCOVERY_2023: 0 # stage
+          REACT_APP_SURVEY_END_CONTENT_DISCOVERY_2023: 1677672000000 # (new Date("2023-03-01 12:00:00Z")).getTime()
+          REACT_APP_SURVEY_RATE_FROM_CONTENT_DISCOVERY_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_CONTENT_DISCOVERY_2023: 0.05 # 5%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
