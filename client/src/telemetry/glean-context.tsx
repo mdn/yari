@@ -7,7 +7,6 @@ import Glean from "@mozilla/glean/web";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
-import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
 import { VIEWPORT_BREAKPOINTS } from "./constants";
@@ -36,7 +35,7 @@ export type ElementClickedProps = {
 };
 
 export type GleanAnalytics = {
-  page: (arg: PageProps) => void;
+  page: (arg: PageProps) => () => void;
   click: (arg: ElementClickedProps) => void;
 };
 
@@ -47,7 +46,7 @@ function glean(): GleanAnalytics {
   if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
     return {
-      page: (page: PageProps) => {},
+      page: (page: PageProps) => () => {},
       click: (element: ElementClickedProps) => {},
     };
   }
@@ -96,7 +95,7 @@ function glean(): GleanAnalytics {
         );
       }
       navigatorMetric.subscriptionType.set(page.subscriptionType);
-      pings.page.submit();
+      return () => pings.page.submit();
     },
     click: (event: ElementClickedProps) => {
       const { source, subscriptionType: subscription_type } = event;
@@ -151,30 +150,28 @@ export function useGlean() {
 export function useGleanPage() {
   const loc = useLocation();
   const userData = useUserData();
-  const isServer = useIsServer();
   const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    if (!isServer && userData && path.current !== loc.pathname) {
+    const submit = gleanAnalytics.page({
+      path: window?.location.toString(),
+      referrer: document?.referrer,
+      userAgent: navigator?.userAgent,
+      geo: userData?.geo?.country,
+      subscriptionType: userData?.subscriptionType || "anonymous",
+      viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
+        ([_, width]) => width <= window.innerWidth
+      )?.[0],
+      viewportRatio: Math.round((100 * window.innerWidth) / window.innerHeight),
+      viewportHorizontalCoverage: Math.round(
+        (100 * window.innerWidth) / window.screen.width
+      ),
+    });
+    if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
-      gleanAnalytics.page({
-        path: window?.location.toString(),
-        referrer: document?.referrer,
-        userAgent: navigator?.userAgent,
-        geo: userData?.geo?.country,
-        subscriptionType: userData?.subscriptionType || "anonymous",
-        viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
-          ([_, width]) => width <= window.innerWidth
-        )?.[0],
-        viewportRatio: Math.round(
-          (100 * window.innerWidth) / window.innerHeight
-        ),
-        viewportHorizontalCoverage: Math.round(
-          (100 * window.innerWidth) / window.screen.width
-        ),
-      });
+      submit();
     }
-  }, [loc.pathname, isServer, userData]);
+  }, [loc.pathname, userData]);
 }
 
 export function useGleanClick() {
