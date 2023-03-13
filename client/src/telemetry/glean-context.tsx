@@ -10,9 +10,9 @@ import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { BREAKPOINTS } from "./constants";
+import { VIEWPORT_BREAKPOINTS } from "./constants";
 
-export type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -163,7 +163,7 @@ export function useGleanPage() {
         userAgent: navigator?.userAgent,
         geo: userData?.geo?.country,
         subscriptionType: userData?.subscriptionType || "anonymous",
-        viewportBreakpoint: BREAKPOINTS.find(
+        viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
           ([_, width]) => width <= window.innerWidth
         )?.[0],
         viewportRatio: Math.round(

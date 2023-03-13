@@ -42,7 +42,7 @@ export const PLUS_UPDATES = Object.freeze({
 
 export const BREADCRUMB_CLICK = "breadcrumb_click";
 
-export const BREAKPOINTS: readonly [Breakpoint, number][] = Object.freeze([
+export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] = Object.freeze([
   ["xxl", 1441],
   ["xl", 1200],
   ["lg", 992],
