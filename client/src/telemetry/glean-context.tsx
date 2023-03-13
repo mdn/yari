@@ -9,6 +9,9 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
+import { VIEWPORT_BREAKPOINTS } from "./constants";
+
+export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -16,6 +19,9 @@ export type PageProps = {
   subscriptionType: string;
   geo: string | undefined;
   userAgent: string | undefined;
+  viewportBreakpoint: ViewportBreakpoint | undefined;
+  viewportRatio: number;
+  viewportHorizontalCoverage: number;
 };
 
 export type PageEventProps = {
@@ -76,6 +82,17 @@ function glean(): GleanAnalytics {
       }
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
+      }
+      if (page.viewportBreakpoint) {
+        navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
+      }
+      if (page.viewportRatio) {
+        navigatorMetric.viewportRatio.set(page.viewportRatio);
+      }
+      if (page.viewportHorizontalCoverage) {
+        navigatorMetric.viewportHorizontalCoverage.set(
+          page.viewportHorizontalCoverage
+        );
       }
       navigatorMetric.subscriptionType.set(page.subscriptionType);
       return () => pings.page.submit();
@@ -142,6 +159,13 @@ export function useGleanPage() {
       userAgent: navigator?.userAgent,
       geo: userData?.geo?.country,
       subscriptionType: userData?.subscriptionType || "anonymous",
+      viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
+        ([_, width]) => width <= window.innerWidth
+      )?.[0],
+      viewportRatio: Math.round((100 * window.innerWidth) / window.innerHeight),
+      viewportHorizontalCoverage: Math.round(
+        (100 * window.innerWidth) / window.screen.width
+      ),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
