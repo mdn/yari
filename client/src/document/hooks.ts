@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useIsServer } from "../hooks";
 import { Doc } from "../../../libs/types/document";
+import { useGleanClick } from "../telemetry/glean-context";
+import { IEX_DOMAIN } from "../env";
 
 export function useDocumentURL() {
   const { "*": slug, locale } = useParams();
@@ -243,4 +245,26 @@ export function useFirstVisibleElement(
 
     return () => observer.disconnect();
   }, [rootMargin, observedElementsProvider, visibleElementCallback]);
+}
+
+/**
+ * Forwards user interactions with interactive-examples to Glean.
+ */
+export function useInteractiveExamplesActionHandler() {
+  const gleanClick = useGleanClick();
+  useEffect(() => {
+    const listener = (event: MessageEvent) => {
+      if (
+        event.origin === IEX_DOMAIN &&
+        typeof event.data === "object" &&
+        event.data.type === "action"
+      ) {
+        gleanClick(`interactive-examples: ${event.data.source}`);
+      }
+    };
+
+    window.addEventListener("message", listener);
+
+    return () => window.removeEventListener("message", listener);
+  });
 }
