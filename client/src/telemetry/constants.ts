@@ -1,4 +1,4 @@
-import { Breakpoint } from "./glean-context";
+import { ViewportBreakpoint } from "./glean-context";
 
 export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
   "article_actions_collection_select_opened";
@@ -42,11 +42,12 @@ export const PLUS_UPDATES = Object.freeze({
 
 export const BREADCRUMB_CLICK = "breadcrumb_click";
 
-export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] = Object.freeze([
-  ["xxl", 1441],
-  ["xl", 1200],
-  ["lg", 992],
-  ["md", 769],
-  ["sm", 426],
-  ["xs", 0],
-]);
+export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
+  Object.freeze([
+    ["xxl", 1441],
+    ["xl", 1200],
+    ["lg", 992],
+    ["md", 769],
+    ["sm", 426],
+    ["xs", 0],
+  ]);

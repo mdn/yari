@@ -20,7 +20,7 @@ export type PageProps = {
   subscriptionType: string;
   geo: string | undefined;
   userAgent: string | undefined;
-  viewportBreakpoint: Breakpoint | undefined;
+  viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
   viewportHorizontalCoverage: number;
 };
