@@ -83,7 +83,9 @@ export type UserData = {
   mutate: () => void;
 };
 
-export const UserDataContext = React.createContext<UserData | null>(null);
+export const UserDataContext = React.createContext<UserData | null | undefined>(
+  undefined
+);
 
 // The argument for using sessionStorage rather than localStorage is because
 // it's marginally simpler and "safer". For example, if we use localStorage
@@ -104,13 +106,13 @@ function getSessionStorageData() {
       if (!parsed.geo) {
         // If we don't do this check, you might be returning stored data
         // that doesn't match any of the new keys.
-        return false;
+        return undefined;
       }
       return parsed as UserData;
     }
   } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
-    return null;
+    return undefined;
   }
 }
 
@@ -157,51 +159,51 @@ function setSessionStorageData(data: UserData) {
 }
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
-  const { data, mutate } = useSWR<UserData | null, Error | null>(
-    DISABLE_AUTH ? null : "/api/v1/whoami",
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        removeSessionStorageData();
-        throw new Error(`${response.status} on ${response.url}`);
-      }
-      const data = await response.json();
-      const collectionLastModified =
-        data?.settings?.collections_last_modified_time;
-      const settings: UserPlusSettings | null = data?.settings
-        ? {
-            collectionLastModified:
-              (collectionLastModified && new Date(collectionLastModified)) ||
-              null,
-            mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
-            noAds: data?.settings?.no_ads || null,
-          }
-        : null;
-
-      return {
-        username: data.username || null,
-        isAuthenticated: data.is_authenticated || false,
-        isBetaTester: data.is_beta_tester || false,
-        isStaff: data.is_staff || false,
-        isSuperuser: data.is_super_user || false,
-        avatarUrl: data.avatar_url || null,
-        isSubscriber: data.is_subscriber || false,
-        subscriptionType:
-          data.subscription_type === "core"
-            ? SubscriptionType.MDN_CORE
-            : data.subscription_type ?? null,
-        subscriberNumber: data.subscriber_number || null,
-        email: data.email || null,
-        geo: {
-          country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
-        },
-        maintenance: data.maintenance,
-        settings,
-        offlineSettings: null,
-        mutate,
-      };
+  const { data, error, isLoading, mutate } = useSWR<
+    UserData | null,
+    Error | null
+  >(DISABLE_AUTH ? null : "/api/v1/whoami", async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      removeSessionStorageData();
+      throw new Error(`${response.status} on ${response.url}`);
     }
-  );
+    const data = await response.json();
+    const collectionLastModified =
+      data?.settings?.collections_last_modified_time;
+    const settings: UserPlusSettings | null = data?.settings
+      ? {
+          collectionLastModified:
+            (collectionLastModified && new Date(collectionLastModified)) ||
+            null,
+          mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
+          noAds: data?.settings?.no_ads || null,
+        }
+      : null;
+
+    return {
+      username: data.username || null,
+      isAuthenticated: data.is_authenticated || false,
+      isBetaTester: data.is_beta_tester || false,
+      isStaff: data.is_staff || false,
+      isSuperuser: data.is_super_user || false,
+      avatarUrl: data.avatar_url || null,
+      isSubscriber: data.is_subscriber || false,
+      subscriptionType:
+        data.subscription_type === "core"
+          ? SubscriptionType.MDN_CORE
+          : data.subscription_type ?? null,
+      subscriberNumber: data.subscriber_number || null,
+      email: data.email || null,
+      geo: {
+        country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+      },
+      maintenance: data.maintenance,
+      settings,
+      offlineSettings: null,
+      mutate,
+    };
+  });
 
   React.useEffect(() => {
     removeDeprecatedLocalStorageData();
@@ -236,10 +238,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     }
   }, [data]);
 
-  let userData = data || getSessionStorageData();
+  const userData = isLoading ? getSessionStorageData() : error ? null : data;
 
   return (
-    <UserDataContext.Provider value={userData || null}>
+    <UserDataContext.Provider value={userData}>
       {props.children}
     </UserDataContext.Provider>
   );
