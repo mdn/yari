@@ -6,11 +6,7 @@ import { CRUD_MODE } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
-import {
-  useDocumentURL,
-  useCopyExamplesToClipboard,
-  useInteractiveExamplesActionHandler,
-} from "./hooks";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -42,6 +38,7 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -118,7 +115,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
-  useInteractiveExamplesActionHandler();
+  useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
     if (!doc && !error) {
