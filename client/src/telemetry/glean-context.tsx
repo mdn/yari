@@ -7,7 +7,6 @@ import Glean from "@mozilla/glean/web";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
-import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
 
 export type PageProps = {
@@ -128,24 +127,21 @@ export function useGlean() {
 export function useGleanPage() {
   const loc = useLocation();
   const userData = useUserData();
-  const isServer = useIsServer();
   const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    if (!isServer) {
-      const submit = gleanAnalytics.page({
-        path: window?.location.toString(),
-        referrer: document?.referrer,
-        userAgent: navigator?.userAgent,
-        geo: userData?.geo?.country,
-        subscriptionType: userData?.subscriptionType || "anonymous",
-      });
-      if (userData && path.current !== loc.pathname) {
-        path.current = loc.pathname;
-        submit();
-      }
+    const submit = gleanAnalytics.page({
+      path: window?.location.toString(),
+      referrer: document?.referrer,
+      userAgent: navigator?.userAgent,
+      geo: userData?.geo?.country,
+      subscriptionType: userData?.subscriptionType || "anonymous",
+    });
+    if (userData && path.current !== loc.pathname) {
+      path.current = loc.pathname;
+      submit();
     }
-  }, [loc.pathname, isServer, userData]);
+  }, [loc.pathname, userData]);
 }
 
 export function useGleanClick() {
