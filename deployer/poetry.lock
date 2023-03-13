@@ -869,14 +869,14 @@ files = [
 
 [[package]]
 name = "unidiff"
-version = "0.7.4"
+version = "0.7.5"
 description = "Unified diff parsing/metadata extraction library."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "unidiff-0.7.4-py2.py3-none-any.whl", hash = "sha256:688622add422f84a873498cc4ff9bf50da5ea6c23dea908f19d2190fa39a8e39"},
-    {file = "unidiff-0.7.4.tar.gz", hash = "sha256:2bbcbc986e1fb97f04b1d7b864aa6002ab02f4d8a996bf03aa6e5a81447d1fc5"},
+    {file = "unidiff-0.7.5-py2.py3-none-any.whl", hash = "sha256:c93bf2265cc1ba2a520e415ab05da587370bc2a3ae9e0414329f54f0c2fc09e8"},
+    {file = "unidiff-0.7.5.tar.gz", hash = "sha256:2e5f0162052248946b9f0970a40e9e124236bf86c82b70821143a6fc1dea2574"},
 ]
 
 [[package]]
@@ -973,4 +973,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "30b14a6b3d0005ab7ed9769bc83bfd9a49b7197bacd3fff7ec2d245bada9bf2c"
+content-hash = "c8d88e8d37177b32f909fc2386032d35c0cdbcd51dee44473632437421885696"
