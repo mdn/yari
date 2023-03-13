@@ -143,7 +143,7 @@ export function useGleanPage() {
       geo: userData?.geo?.country,
       subscriptionType: userData?.subscriptionType || "anonymous",
     });
-    if (userData && path.current !== loc.pathname) {
+    if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
