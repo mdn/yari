@@ -135,7 +135,7 @@
     "@types/cli-progress": "^3.11.0",
     "@types/hast": "^2.3.4",
     "@types/imagemin": "^8.0.1",
-    "@types/jest": "^29.4.0",
+    "@types/jest": "^29.4.1",
     "@types/mdast": "^3.0.10",
     "@types/node": "^16.18.14",
     "@types/react": "^18.0.28",
