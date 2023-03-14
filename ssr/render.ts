@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { renderToString } from "react-dom/server";
+import { HydrationData } from "../libs/types/hydration";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
@@ -140,16 +141,6 @@ function* extractCSSURLs(css, filterFunction) {
       yield url;
     }
   }
-}
-
-interface HydrationData {
-  doc?: any;
-  pageNotFound?: boolean;
-  hyData?: any;
-  pageTitle?: any;
-  possibleLocales?: any;
-  locale?: any;
-  noIndexing?: any;
 }
 
 export default function render(
