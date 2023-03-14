@@ -175,6 +175,22 @@
         &:focus {
           text-decoration: underline;
         }
+
+        &[href^="#"] {
+          position: relative;
+
+          &:hover::before {
+            color: var(--text-inactive);
+            content: "#";
+            display: inline-flex;
+            font-size: 0.7em;
+            left: -0.75em;
+            line-height: 1;
+            position: absolute;
+            text-decoration: none;
+            top: 0.5em;
+          }
+        }
       }
     }
 
