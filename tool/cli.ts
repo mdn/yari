@@ -388,7 +388,7 @@ program
         if (referringFiles.length) {
           console.warn(
             chalk.yellow(
-              `\n${referringFiles.length} files are referring to the deleted document.` +
+              `\n${referringFiles.length} files are referring to the deleted document. ` +
                 `Please update the following files to remove the links:\n\t${referringFiles.join(
                   "\n\t"
                 )}`
