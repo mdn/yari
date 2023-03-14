@@ -339,7 +339,7 @@ program
         redirect,
         dry: true,
       });
-      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.green(`Will delete ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
         console.log(
@@ -365,11 +365,40 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, {
+        const deletedDocs = Document.remove(slug, locale, {
           recursive,
           redirect,
         });
-        console.log(chalk.green(`Moved ${removed.length} documents.`));
+        console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));
+
+        // find references to the deleted document in content
+        console.log("Checking references...");
+        const referringFiles = [];
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const deleted of deletedDocs) {
+            const url = `/${locale}/docs/${deleted}`;
+            if (rawBody.includes(url)) {
+              referringFiles.push(`${document.url}`);
+            }
+          }
+        }
+
+        if (referringFiles.length) {
+          console.warn(
+            chalk.yellow(
+              `\n${referringFiles.length} files are referring to the deleted document.` +
+                `Please update the following files to remove the links:\n\t${referringFiles.join(
+                  "\n\t"
+                )}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the deleted document.")
+          );
+        }
       }
     })
   )
