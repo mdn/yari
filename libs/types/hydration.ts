@@ -1,5 +1,5 @@
-interface HydrationData<Type = any> {
-  hyData?: Type;
+interface HydrationData<T = any> {
+  hyData?: T;
   doc?: any;
   pageNotFound?: boolean;
   pageTitle?: any;

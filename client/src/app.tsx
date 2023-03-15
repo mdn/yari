@@ -112,8 +112,11 @@ function PageOrPageNotFound({ pageNotFound, children }) {
 export function App(appProps: HydrationData) {
   const { pathname } = useLocation();
   const initialPathname = React.useRef(pathname);
-  const pageNotFound =
-    (appProps.pageNotFound || false) && initialPathname.current === pathname;
+  const pageNotFound = React.useMemo(
+    () =>
+      (appProps.pageNotFound || false) && initialPathname.current === pathname,
+    [appProps.pageNotFound, pathname]
+  );
 
   usePing();
   useGleanPage(pageNotFound);

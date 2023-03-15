@@ -40,7 +40,7 @@ page:
   http_status:
     type: string
     description: |
-      The http status of the page.
+      The HTTP status code of the page.
     lifetime: application
     send_in_pings:
       - page
