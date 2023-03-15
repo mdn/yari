@@ -3,7 +3,8 @@
     "stylelint-config-recommended",
     "stylelint-config-sass-guidelines",
     "stylelint-a11y/recommended",
-    "stylelint-prettier/recommended"
+    "stylelint-prettier/recommended",
+    "stylelint-config-prettier"
   ],
   "plugins": ["stylelint-scss"],
   "rules": {

@@ -12,19 +12,19 @@ const badges: Array<Badge> = [
   {
     status: "experimental",
     tag: "Experimental",
-    macro: "ExperimentalBadge",
+    macro: "Experimental_Inline",
     template: new Map(),
   },
   {
     status: "non-standard",
     tag: "Non-standard",
-    macro: "NonStandardBadge",
+    macro: "Non-Standard_Inline",
     template: new Map(),
   },
   {
     status: "deprecated",
     tag: "Deprecated",
-    macro: "DeprecatedBadge",
+    macro: "Deprecated_Inline",
     template: new Map(),
   },
 ];
