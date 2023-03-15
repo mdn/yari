@@ -35,4 +35,13 @@ jobs:
           echo "Please see the documentation about signed commits and how to sign yours on GitHub:"
           echo "- https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification"
           echo "- https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits"
+          echo ''
+          echo 'Once you have set up commit signatures, you can sign your existing commits:'
+          echo ''
+          echo '  git rebase main --exec "git commit --amend --gpg-sign --no-edit"'
+          echo ''
+          echo 'Then you will need to force-push your branch once:'
+          echo ''
+          echo '  git push --force'
+          echo ''
           exit 1
