@@ -7,6 +7,7 @@ import { IEX_DOMAIN } from "../env";
  */
 export function useInteractiveExamplesActionHandler() {
   const gleanClick = useGleanClick();
+
   useEffect(() => {
     const listener = (event: MessageEvent) => {
       if (
@@ -21,5 +22,5 @@ export function useInteractiveExamplesActionHandler() {
     window.addEventListener("message", listener);
 
     return () => window.removeEventListener("message", listener);
-  });
+  }, [gleanClick]);
 }
