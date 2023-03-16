@@ -6,6 +6,7 @@ import { client } from "./handlers/client.js";
 import { bcdApi } from "./handlers/bcdApi.js";
 import { rumba } from "./handlers/rumba.js";
 import { stripePlans } from "./handlers/stripePlans.js";
+import { telemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 
@@ -15,6 +16,7 @@ mainRouter.get("/bcd/api/*", bcdApi());
 mainRouter.all("/api/v1/stripe/plans", stripePlans);
 mainRouter.all("/api/*", rumba);
 mainRouter.all("/users/fxa/*", rumba);
+mainRouter.all("/submit/mdn-yari/*", telemetry);
 mainRouter.use(contentOriginRequest);
 mainRouter.get("/[^/]+/docs/*", docsHandler);
 mainRouter.get("/[^/]+/search-index.json", docsHandler);
