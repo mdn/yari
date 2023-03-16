@@ -5,12 +5,14 @@ import { docs } from "./handlers/content.js";
 import { client } from "./handlers/client.js";
 import { bcdApi } from "./handlers/bcdApi.js";
 import { rumba } from "./handlers/rumba.js";
+import { stripePlans } from "./handlers/stripePlans.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 
 const mainRouter = Router();
 const docsHandler = docs();
 mainRouter.get("/bcd/api/*", bcdApi());
+mainRouter.all("/api/v1/stripe/plans", stripePlans);
 mainRouter.all("/api/*", rumba);
 mainRouter.all("/users/fxa/*", rumba);
 mainRouter.use(contentOriginRequest);
