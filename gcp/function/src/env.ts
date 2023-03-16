@@ -101,3 +101,12 @@ export function sourceUri(source: Source): string {
       return "";
   }
 }
+
+// Kevel.
+export const KEVEL_SITE_ID = Number(process.env["KEVEL_SITE_ID"] ?? 0);
+export const KEVEL_NETWORK_ID = Number(process.env["KEVEL_NETWORK_ID"] ?? 0);
+export const SIGN_SECRET = process.env["SIGN_SECRET"] ?? "";
+export const CARBON_ZONE_KEY = process.env["CARBON_ZONE_KEY"] ?? "";
+export const CARBON_FALLBACK_ENABLED = Boolean(
+  JSON.parse(process.env["CARBON_FALLBACK_ENABLED"] || "false")
+);
