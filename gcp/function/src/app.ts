@@ -16,6 +16,8 @@ const docsHandler = docs();
 mainRouter.get("/bcd/api/*", bcdApi());
 mainRouter.all("/api/v1/stripe/plans", stripePlans);
 mainRouter.all("/api/*", rumba);
+mainRouter.all("/admin-api/*", rumba);
+mainRouter.all("/events/fxa/*", rumba);
 mainRouter.all("/users/fxa/*", rumba);
 mainRouter.all("/submit/mdn-yari/*", telemetry);
 mainRouter.all("/pong/*", express.json(), kevel);
