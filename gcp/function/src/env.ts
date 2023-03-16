@@ -72,7 +72,7 @@ export const SOURCE_LIVE_SAMPLES: string = resolveSource(
     "https://yari-demos.prod.mdn.mozit.cloud"
 );
 export const SOURCE_BCD_API: string =
-  process.env["SOURCE_BCD_API"] || "https://developer.mozilla.org";
+  process.env["SOURCE_BCD_API"] || "https://bcd.developer.mozilla.org";
 export const SOURCE_CLIENT: string = resolveSource(
   process.env["SOURCE_CLIENT"] || "https://developer.mozilla.org"
 );
