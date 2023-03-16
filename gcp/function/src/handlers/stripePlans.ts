@@ -3,6 +3,7 @@ import type express from "express";
 import { createRequire } from "node:module";
 import acceptLanguageParser from "accept-language-parser";
 import { ORIGIN_MAIN } from "../env.js";
+import { getRequestCountry } from "../utils.js";
 
 const require = createRequire(import.meta.url);
 
@@ -59,14 +60,9 @@ export function stripePlans(req: express.Request, res: express.Response) {
   const lookupData: LookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 
-  // https://cloud.google.com/appengine/docs/flexible/reference/request-headers#app_engine-specific_headers
-  const countryHeader = req.headers["x-appengine-country"];
   const localeHeader = req.headers["accept-language"];
 
-  const countryCode =
-    typeof countryHeader === "string" && countryHeader !== "ZZ"
-      ? countryHeader
-      : "US";
+  const countryCode = getRequestCountry(req);
 
   const supportedCurrency = lookupData.countryToCurrency[countryCode];
 
