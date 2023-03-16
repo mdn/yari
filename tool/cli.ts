@@ -704,7 +704,7 @@ program
     tryOrExit(async ({ args, options }: FixFlawsActionParameters) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
-      const allDocs = Document.findAll({
+      const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
       for (const document of allDocs.iterDocs()) {
@@ -769,7 +769,7 @@ program
       if (!(await fse.pathExists(CONTENT_TRANSLATED_ROOT))) {
         throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
       }
-      const documents = Document.findAll();
+      const documents = await Document.findAll();
       if (!documents.count) {
         throw new Error("No documents to analyze");
       }
@@ -996,7 +996,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           .map((m) => `"${m}"`)
           .join(", ")} within content folder(s) matching "${foldersearch}"`
       );
-      const documents = Document.findAll({
+      const documents = await Document.findAll({
         folderSearch: foldersearch,
       });
       if (!documents.count) {

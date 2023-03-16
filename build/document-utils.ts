@@ -64,13 +64,13 @@ export function addBreadcrumbData(url, document) {
     }
   }
 
-  if (!document.shortTitle) {
-    document.shortTitle = transformTitle(document.title);
+  if (!document.short_title) {
+    document.short_title = transformTitle(document.title);
   }
 
   parents.push({
     uri: url,
-    title: document.shortTitle,
+    title: document.short_title,
   });
   document.parents = parents;
 }

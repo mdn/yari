@@ -76,7 +76,7 @@ export async function findDocuments({ locale }) {
   const documents = [];
 
   const t1 = new Date();
-  const documentsFound = Document.findAll({
+  const documentsFound = await Document.findAll({
     locales: new Map([[locale, true]]),
   });
   counts.total = documentsFound.count;
@@ -272,7 +272,7 @@ async function gatherL10NstatsSection({
     locale + mdnSection.toLowerCase() + (mdnSection.endsWith("/") ? "" : "/")
   );
 
-  const foundTranslations = Document.findAll({
+  const foundTranslations = await Document.findAll({
     locales: new Map([[locale, true]]),
     folderSearch,
   });
@@ -295,7 +295,7 @@ async function gatherL10NstatsSection({
       (mdnSection.endsWith("/") ? "" : "/")
   );
 
-  const foundDefaultLocale = Document.findAll({
+  const foundDefaultLocale = await Document.findAll({
     locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
     folderSearch: folderSearchDefaultLocale,
   });
@@ -420,10 +420,13 @@ async function buildL10nDashboard({
   }
   const sectionDirPath = replaceSepPerOS(section);
   const defaultLocaleDocs = [
-    ...Document.findAll({
-      locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
-      folderSearch: DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
-    }).iterDocs(),
+    ...(
+      await Document.findAll({
+        locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
+        folderSearch:
+          DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
+      })
+    ).iterDocs(),
   ];
 
   const subSectionsStartingWith = defaultLocaleDocs
@@ -539,7 +542,7 @@ router.get("/", async (req, res) => {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
 
-  const countsByLocale = countFilesByLocale();
+  const countsByLocale = await countFilesByLocale();
 
   const locales = [...VALID_LOCALES]
     .map(([localeLC, locale]) => {
@@ -557,7 +560,7 @@ router.get("/", async (req, res) => {
   res.json({ locales });
 });
 
-function countFilesByLocale() {
+async function countFilesByLocale() {
   const counts = new Map();
   let strip = CONTENT_TRANSLATED_ROOT;
   if (!strip.endsWith(path.sep)) {
@@ -596,7 +599,7 @@ router.get("/differences", async (req, res) => {
 
   const label = `Find all translated documents (${locale})`;
   console.time(label);
-  const found = findDocuments({ locale });
+  const found = await findDocuments({ locale });
   console.timeEnd(label);
   res.json(found);
 });

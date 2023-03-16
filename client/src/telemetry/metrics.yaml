@@ -37,6 +37,23 @@ page:
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05
+  http_status:
+    type: string
+    description: |
+      The HTTP status code of the page.
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - technical
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MP-285
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1822124
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
 
 navigator:
   geo:
@@ -88,6 +105,61 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1798296
     data_reviews:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
+  viewport_breakpoint:
+    type: string
+    description: |
+      The currently displayed viewport breakpoint,
+      one of "xs", "sm", "md","lg", "xl" or "xxl".
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - interaction
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MP-282
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
+  viewport_ratio:
+    type: quantity
+    unit: percentage
+    description: |
+      The ratio of viewport width to viewport height,
+      expressed as a percentage.
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - interaction
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MP-282
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
+  viewport_horizontal_coverage:
+    type: quantity
+    unit: percentage
+    description: |
+      The ratio of viewport width to screen width, expressed as a percentage.
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - interaction
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MP-282
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05
