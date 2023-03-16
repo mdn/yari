@@ -58,14 +58,15 @@ export async function kevel(req: express.Request, res: express.Response) {
   const userAgent = req.headers["user-agent"] ?? null;
 
   const parsedUrl = url.parse(req.url);
-  if (parsedUrl.pathname === "/pong/get") {
+  const pathname = parsedUrl.pathname ?? "";
+  const search = parsedUrl.search ?? "";
+
+  if (pathname === "/pong/get") {
     if (req.method !== "POST") {
       return res.status(405).end();
     }
 
-    const { keywords = [] } = JSON.parse(
-      Buffer.from(req.body.data, "base64").toString()
-    );
+    const { keywords = [] } = req.body;
     const decisionReq = {
       placements: [{ adTypes: [465, 369] }],
       keywords: [...keywords, countryCode],
@@ -134,7 +135,7 @@ export async function kevel(req: express.Request, res: express.Response) {
     if (req.method !== "GET") {
       return res.status(405).end();
     }
-    const params = new URLSearchParams(parsedUrl.search ?? "");
+    const params = new URLSearchParams(search);
     try {
       const click = decodeAndVerify(params.get("code") ?? "");
       const fallback = decodeAndVerify(params.get("fallback") ?? "");
@@ -163,14 +164,14 @@ export async function kevel(req: express.Request, res: express.Response) {
       console.error(e);
       return res.status(500).end();
     }
-  } else if (parsedUrl.pathname === "/pong/viewed") {
+  } else if (pathname === "/pong/viewed") {
     if (req.method !== "POST") {
       return {
         status: 405,
         statusDescription: "METHOD_NOT_ALLOWED",
       };
     }
-    const params = new URLSearchParams(parsedUrl.search ?? undefined);
+    const params = new URLSearchParams(search);
     try {
       const view = decodeAndVerify(params.get("code") ?? "");
       const fallback = decodeAndVerify(params.get("fallback") ?? "");
@@ -186,9 +187,9 @@ export async function kevel(req: express.Request, res: express.Response) {
       console.error(e);
       return res.status(500).end();
     }
-  } else if (req.url.startsWith("/pimg/")) {
+  } else if (pathname.startsWith("/pimg/")) {
     const src = decodeAndVerify(
-      decodeURIComponent(req.url.substring("/pimg/".length))
+      decodeURIComponent(pathname.substring("/pimg/".length))
     );
 
     if (!src) {
@@ -201,9 +202,8 @@ export async function kevel(req: express.Request, res: express.Response) {
       .set({
         "cache-control": "max-age=86400",
         "content-type": contentType,
-        "content-transfer-encoding": "base64",
       })
-      .end(Buffer.from(buf).toString("base64"));
+      .end(Buffer.from(buf));
   }
 
   return res.status(204).end();

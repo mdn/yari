@@ -1,4 +1,4 @@
-import type express from "express";
+import express from "express";
 import { Router } from "express";
 import { Origin, origin } from "./env.js";
 import { docs } from "./handlers/content.js";
@@ -18,7 +18,7 @@ mainRouter.all("/api/v1/stripe/plans", stripePlans);
 mainRouter.all("/api/*", rumba);
 mainRouter.all("/users/fxa/*", rumba);
 mainRouter.all("/submit/mdn-yari/*", telemetry);
-mainRouter.all("/pong/*", kevel);
+mainRouter.all("/pong/*", express.json(), kevel);
 mainRouter.all("/pimg/*", kevel);
 mainRouter.use(contentOriginRequest);
 mainRouter.get("/[^/]+/docs/*", docsHandler);
