@@ -50,6 +50,7 @@ interface PlanResult {
   [name: string]: { monthlyPriceInCents: number; id: string };
 }
 interface Result {
+  country: CountryCode;
   currency: CurrencyCode;
   plans: PlanResult;
 }
@@ -107,6 +108,7 @@ export function stripePlans(req: express.Request, res: express.Response) {
   });
 
   const result = {
+    country: countryCode,
     currency: supportedCurrency.currency,
     plans: planResult,
   } satisfies Result;
