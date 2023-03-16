@@ -115,8 +115,8 @@ jobs:
           REACT_APP_SURVEY_RATE_TILL_CONTENT_DISCOVERY_2023: 0.05 # 5%
 
           # Telemetry.
-          REACT_APP_GLEAN_CHANNEL: stage
-          REACT_APP_GLEAN_ENABLED: false
+          REACT_APP_GLEAN_CHANNEL: xyz
+          REACT_APP_GLEAN_ENABLED: true
 
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: false
