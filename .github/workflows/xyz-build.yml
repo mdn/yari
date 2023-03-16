@@ -122,7 +122,7 @@ jobs:
           REACT_APP_NEWSLETTER_ENABLED: false
 
           # Placement
-          REACT_APP_PLACEMENT_ENABLED: false
+          REACT_APP_PLACEMENT_ENABLED: true
 
         run: |
 
