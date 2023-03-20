@@ -22,10 +22,9 @@ mainRouter.all("/users/fxa/*", rumba);
 mainRouter.all("/submit/mdn-yari/*", telemetry);
 mainRouter.all("/pong/*", express.json(), kevel);
 mainRouter.all("/pimg/*", kevel);
-mainRouter.use(contentOriginRequest);
-mainRouter.get("/[^/]+/docs/*", docsHandler);
-mainRouter.get("/[^/]+/search-index.json", docsHandler);
-mainRouter.get("*", client());
+mainRouter.get("/[^/]+/docs/*", contentOriginRequest, docsHandler);
+mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, docsHandler);
+mainRouter.get("*", contentOriginRequest, client());
 
 const liveSampleRouter = Router();
 liveSampleRouter.use(pathnameLC);
