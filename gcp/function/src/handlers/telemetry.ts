@@ -7,6 +7,6 @@ const telemetryProxy = httpProxy.createProxy({
   autoRewrite: true,
 });
 
-export function telemetry(req: express.Request, res: express.Response) {
+export function proxyTelemetry(req: express.Request, res: express.Response) {
   telemetryProxy.web(req, res);
 }

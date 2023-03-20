@@ -6,7 +6,7 @@ import { responder } from "../source.js";
 import { resolveIndexHTML } from "../utils.js";
 import { withResponseHeaders, withProxyResponseHeaders } from "../headers.js";
 
-export function client(): express.Handler {
+export function proxyClient(): express.Handler {
   return responder({
     source: Source.client,
     http(source) {

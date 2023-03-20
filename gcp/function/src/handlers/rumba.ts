@@ -8,6 +8,6 @@ const rumbaProxy = httpProxy.createProxy({
   autoRewrite: true,
 });
 
-export function rumba(req: express.Request, res: express.Response) {
+export function proxyRumba(req: express.Request, res: express.Response) {
   rumbaProxy.web(req, res);
 }

@@ -6,7 +6,7 @@ import { Source } from "../env.js";
 import httpProxy from "http-proxy";
 import { resolveIndexHTML } from "../utils.js";
 
-export function docs(): express.Handler {
+export function createContentProxy(): express.Handler {
   return responder({
     source: Source.content,
     http(source) {

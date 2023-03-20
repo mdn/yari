@@ -51,7 +51,7 @@ function decodeAndVerify(tuple: string): string | null {
   return null;
 }
 
-export async function kevel(req: express.Request, res: express.Response) {
+export async function proxyKevel(req: express.Request, res: express.Response) {
   const countryCode = getRequestCountry(req);
   const anonymousIp = CC_TO_IP[countryCode] ?? "127.0.0.1";
 

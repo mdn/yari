@@ -5,7 +5,7 @@ import { Source } from "../env.js";
 import { responder } from "../source.js";
 import { withResponseHeaders, withProxyResponseHeaders } from "../headers.js";
 
-export function bcdApi(): express.Handler {
+export function proxyBcdApi(): express.Handler {
   return responder({
     source: Source.bcdApi,
     http(source) {

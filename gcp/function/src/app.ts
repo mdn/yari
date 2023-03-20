@@ -1,35 +1,38 @@
 import express from "express";
 import { Router } from "express";
 import { Origin, origin } from "./env.js";
-import { docs } from "./handlers/content.js";
-import { client } from "./handlers/client.js";
-import { bcdApi } from "./handlers/bcdApi.js";
-import { kevel } from "./handlers/kevel.js";
-import { rumba } from "./handlers/rumba.js";
+import { createContentProxy } from "./handlers/content.js";
+import { proxyClient } from "./handlers/client.js";
+import { proxyBcdApi } from "./handlers/bcdApi.js";
+import { proxyKevel } from "./handlers/kevel.js";
+import { proxyRumba } from "./handlers/rumba.js";
 import { stripePlans } from "./handlers/stripePlans.js";
-import { telemetry } from "./handlers/telemetry.js";
+import { proxyTelemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 
 const mainRouter = Router();
-const docsHandler = docs();
-mainRouter.get("/bcd/api/*", bcdApi());
+const proxyContent = createContentProxy();
+mainRouter.get("/bcd/api/*", proxyBcdApi());
 mainRouter.all("/api/v1/stripe/plans", stripePlans);
-mainRouter.all("/api/*", rumba);
-mainRouter.all("/admin-api/*", rumba);
-mainRouter.all("/events/fxa/*", rumba);
-mainRouter.all("/users/fxa/*", rumba);
-mainRouter.all("/submit/mdn-yari/*", telemetry);
-mainRouter.all("/pong/*", express.json(), kevel);
-mainRouter.all("/pimg/*", kevel);
-mainRouter.get("/[^/]+/docs/*", contentOriginRequest, docsHandler);
-mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, docsHandler);
-mainRouter.get("*", contentOriginRequest, client());
+mainRouter.all("/api/*", proxyRumba);
+mainRouter.all("/admin-api/*", proxyRumba);
+mainRouter.all("/events/fxa/*", proxyRumba);
+mainRouter.all("/users/fxa/*", proxyRumba);
+mainRouter.all("/submit/mdn-yari/*", proxyTelemetry);
+mainRouter.all("/pong/*", express.json(), proxyKevel);
+mainRouter.all("/pimg/*", proxyKevel);
+mainRouter.get("/[^/]+/docs/*", contentOriginRequest, proxyContent);
+mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, proxyContent);
+mainRouter.get("*", contentOriginRequest, proxyClient());
 
 const liveSampleRouter = Router();
 liveSampleRouter.use(pathnameLC);
-liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", client());
-liveSampleRouter.get("/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)", client());
+liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", proxyClient());
+liveSampleRouter.get(
+  "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
+  proxyClient()
+);
 liveSampleRouter.get("*", (_req: express.Request, res: express.Response) =>
   res.status(404).send()
 );
