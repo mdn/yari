@@ -2,14 +2,13 @@
 import { createHmac } from "node:crypto";
 
 import { Client } from "@adzerk/decision-sdk";
-import { he } from "he";
+import he from "he";
 import {
   KEVEL_SITE_ID,
   KEVEL_NETWORK_ID,
   SIGN_SECRET,
   CARBON_ZONE_KEY,
   FALLBACK_ENABLED,
-  // eslint-disable-next-line n/no-missing-import
 } from "./env.js";
 import cc2ip from "./cc2ip.js";
 
