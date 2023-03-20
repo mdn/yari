@@ -12,10 +12,12 @@ import { handleSidebarClick } from "./sidebar-click";
 import { VIEWPORT_BREAKPOINTS } from "./constants";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+export type HTTPStatus = "200" | "404";
 
 export type PageProps = {
   referrer: string | undefined;
   path: string | undefined;
+  httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
   userAgent: string | undefined;
@@ -77,6 +79,7 @@ function glean(): GleanAnalytics {
       if (page.referrer) {
         pageMetric.referrer.set(page.referrer);
       }
+      pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
       }
@@ -147,7 +150,7 @@ export function useGlean() {
   return React.useContext(GleanContext);
 }
 
-export function useGleanPage() {
+export function useGleanPage(pageNotFound: boolean) {
   const loc = useLocation();
   const userData = useUserData();
   const path = useRef<String | null>(null);
@@ -156,6 +159,8 @@ export function useGleanPage() {
     const submit = gleanAnalytics.page({
       path: window?.location.toString(),
       referrer: document?.referrer,
+      // on port 3000 this will always return "200":
+      httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
       geo: userData?.geo?.country,
       subscriptionType: userData?.subscriptionType || "anonymous",
@@ -171,7 +176,7 @@ export function useGleanPage() {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData]);
+  }, [loc.pathname, userData, pageNotFound]);
 }
 
 export function useGleanClick() {

@@ -37,6 +37,23 @@ page:
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05
+  http_status:
+    type: string
+    description: |
+      The HTTP status code of the page.
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - technical
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MP-285
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1822124
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
 
 navigator:
   geo:
