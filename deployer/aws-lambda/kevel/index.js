@@ -2,6 +2,7 @@
 import { createHmac } from "node:crypto";
 
 import { Client } from "@adzerk/decision-sdk";
+import { he } from "he";
 import {
   KEVEL_SITE_ID,
   KEVEL_NETWORK_ID,
@@ -124,7 +125,9 @@ export async function handler(event) {
       }
     } else {
       payload = {
-        copy: contents?.[0]?.data?.title || "This is an ad without copy?!",
+        copy: he.decode(
+          contents?.[0]?.data?.title || "This is an ad without copy?!"
+        ),
         image: encodeAndSign(contents[0]?.data?.imageUrl),
         click: encodeAndSign(clickUrl),
         view: encodeAndSign(impressionUrl),
