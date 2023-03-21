@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import React from "react";
 import { StaticRouter } from "react-router-dom/server";
 
