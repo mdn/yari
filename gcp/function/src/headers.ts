@@ -10,6 +10,10 @@ export function withProxyResponseHeaders(
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ): ServerResponse<IncomingMessage> {
+  if (res.headersSent) {
+    return res;
+  }
+
   const isLiveSampleURI = req.url?.includes("/_sample_.") ?? false;
 
   setResponseHeaders((name, value) => res.setHeader(name, value), {
