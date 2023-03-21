@@ -41,7 +41,7 @@ export const SURVEYS: Survey[] = [
   {
     key: SurveyKey.WEB_COMPONENTS_2023,
     bucket: SurveyBucket.WEB_COMPONENTS_2023,
-    show: (doc: Doc) => /en-US\/docs\/Web\/JavaScript(\/|$)/i.test(doc.mdn_url),
+    show: (doc: Doc) => /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/7243449/MDN-Web-Components-Short-Survey",
     teaser:
       "The WebDX community group wants to better understand developers’ needs concerning web components.",
