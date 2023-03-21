@@ -23,7 +23,6 @@ export enum RuntimeEnv {
 
 export enum Source {
   content = "content",
-  client = "client",
   liveSamples = "liveSamples",
   interactiveSamples = "interactiveSamples",
   bcdApi = "bcdApi",
@@ -73,9 +72,6 @@ export const SOURCE_LIVE_SAMPLES: string = resolveSource(
 );
 export const SOURCE_BCD_API: string =
   process.env["SOURCE_BCD_API"] || "https://bcd.developer.mozilla.org";
-export const SOURCE_CLIENT: string = resolveSource(
-  process.env["SOURCE_CLIENT"] || "https://developer.mozilla.org"
-);
 export const SOURCE_INTERACTIVE_SAMPLES: string = resolveSource(
   process.env["SOURCE_INTERACTIVE_SAMPLES"] ||
     "https://interactive-examples.mdn.mozilla.net"
@@ -89,8 +85,6 @@ export function sourceUri(source: Source): string {
       return SOURCE_CONTENT;
     case Source.bcdApi:
       return SOURCE_BCD_API;
-    case Source.client:
-      return SOURCE_CLIENT;
     case Source.interactiveSamples:
       return SOURCE_INTERACTIVE_SAMPLES;
     case Source.liveSamples:

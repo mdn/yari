@@ -2,7 +2,6 @@ import express from "express";
 import { Router } from "express";
 import { Origin, origin } from "./env.js";
 import { createContentProxy } from "./handlers/content.js";
-import { proxyClient } from "./handlers/client.js";
 import { proxyBcdApi } from "./handlers/bcdApi.js";
 import { proxyKevel } from "./handlers/kevel.js";
 import { proxyRumba } from "./handlers/rumba.js";
@@ -24,14 +23,14 @@ mainRouter.all("/pong/*", express.json(), proxyKevel);
 mainRouter.all("/pimg/*", proxyKevel);
 mainRouter.get("/[^/]+/docs/*", contentOriginRequest, proxyContent);
 mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, proxyContent);
-mainRouter.get("*", contentOriginRequest, proxyClient());
+mainRouter.get("*", contentOriginRequest, proxyContent);
 
 const liveSampleRouter = Router();
 liveSampleRouter.use(pathnameLC);
-liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", proxyClient());
+liveSampleRouter.get("/[^/]+/docs/*/_sample_.*.html", proxyContent);
 liveSampleRouter.get(
   "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
-  proxyClient()
+  proxyContent
 );
 liveSampleRouter.get("*", (_req: express.Request, res: express.Response) =>
   res.status(404).send()

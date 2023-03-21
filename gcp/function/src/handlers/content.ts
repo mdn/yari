@@ -12,23 +12,24 @@ export function createContentProxy(): express.Handler {
     http(source) {
       const contentProxy = httpProxy.createProxy({
         prependPath: true,
-        ignorePath: true,
         changeOrigin: true,
         target: source,
         autoRewrite: true,
       });
-      contentProxy.on("proxyReq", (proxyReq, req) => {
-        const resolvedPath = resolveIndexHTML(req.url || "");
-        proxyReq.path = path.join(proxyReq.path, resolvedPath);
-      });
       contentProxy.on("proxyRes", withProxyResponseHeaders);
       return (req, res) => {
+        if (!req.url.startsWith("/static/")) {
+          req.url = resolveIndexHTML(req.url);
+        }
         contentProxy.web(req, res);
       };
     },
     file(source) {
       return (req, res) => {
-        const resolvedPath = resolveIndexHTML(req.path);
+        let resolvedPath = req.path;
+        if (!resolvedPath.startsWith("/static/")) {
+          resolvedPath = resolveIndexHTML(resolvedPath);
+        }
         const filePath = path.join(source, resolvedPath);
         return withResponseHeaders(res, {
           csp: resolvedPath.endsWith(".html"),
