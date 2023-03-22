@@ -56,7 +56,7 @@ interface Result {
   plans: PlanResult;
 }
 
-export function stripePlans(req: express.Request, res: express.Response) {
+export function plans(req: express.Request, res: express.Response) {
   const lookupData: LookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 
