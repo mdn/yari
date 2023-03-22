@@ -9,6 +9,7 @@ import { stripePlans } from "./handlers/stripePlans.js";
 import { proxyTelemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { contentOriginRequest } from "./middlewares/content-origin-request.js";
+import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
@@ -22,9 +23,14 @@ mainRouter.all("/users/fxa/*", proxyRumba);
 mainRouter.all("/submit/mdn-yari/*", proxyTelemetry);
 mainRouter.all("/pong/*", express.json(), proxyKevel);
 mainRouter.all("/pimg/*", proxyKevel);
-mainRouter.get("/[^/]+/docs/*", contentOriginRequest, proxyContent);
+mainRouter.get(
+  "/[^/]+/docs/*",
+  contentOriginRequest,
+  resolveIndexHTML,
+  proxyContent
+);
 mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, proxyContent);
-mainRouter.get("*", contentOriginRequest, proxyContent);
+mainRouter.get("*", contentOriginRequest, resolveIndexHTML, proxyContent);
 
 const liveSampleRouter = Router();
 liveSampleRouter.use(pathnameLC);
