@@ -10,9 +10,11 @@ import { proxyTelemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
+import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
+mainRouter.use(redirectLeadingSlash);
 mainRouter.get("/bcd/api/*", proxyBcdApi());
 mainRouter.all("/api/v1/stripe/plans", plans);
 mainRouter.all("/plus/plans.json", plans);
