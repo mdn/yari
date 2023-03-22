@@ -1,63 +1,22 @@
 import type express from "express";
 
-import { createRequire } from "node:module";
 import acceptLanguageParser from "accept-language-parser";
 import { ORIGIN_MAIN } from "../env.js";
 import { getRequestCountry } from "../utils.js";
-
-const require = createRequire(import.meta.url);
-
-const stageLookup = require("./plans-stage-lookup.json") satisfies LookupData;
-const prodLookup = require("./plans-prod-lookup.json") satisfies LookupData;
-
-type CountryCode = string;
-type LanguageCode = string;
-type CurrencyCode = string;
-type ProductId = string;
-type PriceId = string;
-
-interface Plan {
-  unit_amount: number;
-  currency: CurrencyCode;
-  product: ProductId;
-  recurring: {
-    interval: "month" | "year";
-  };
-  nickname: string;
-  lookup_key: string;
-  metadata: { [key: string]: string };
-  price_id: PriceId;
-}
-interface LookupData {
-  countryToCurrency: {
-    [countryCode: CountryCode]: {
-      currency: CurrencyCode;
-      supportedLanguages: {
-        [languageCode: LanguageCode]: null | {
-          [key: string]: string;
-        };
-      };
-      defaultLanguage: LanguageCode;
-    };
-  };
-  langCurrencyToPlans: {
-    [langCurrencyCode: string]: {
-      [name: string]: Plan;
-    };
-  };
-}
+import stageLookup from "../plans/stage.js";
+import prodLookup from "../plans/prod.js";
 
 interface PlanResult {
   [name: string]: { monthlyPriceInCents: number; id: string };
 }
 interface Result {
-  country: CountryCode;
-  currency: CurrencyCode;
+  country: string;
+  currency: string;
   plans: PlanResult;
 }
 
 export function plans(req: express.Request, res: express.Response) {
-  const lookupData: LookupData =
+  const lookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 
   const localeHeader = req.headers["accept-language"];
