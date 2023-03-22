@@ -13,6 +13,7 @@ import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
 import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
 import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
 import { redirectFundamental } from "./middlewares/redirectFundamental.js";
+import { redirectLocale } from "./middlewares/redirectLocale.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
@@ -30,6 +31,7 @@ mainRouter.all("/pimg/*", proxyKevel);
 mainRouter.get(
   "/[^/]+/docs/*",
   redirectFundamental,
+  redirectLocale,
   contentOriginRequest,
   redirectMovedPages,
   resolveIndexHTML,
@@ -39,6 +41,7 @@ mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, proxyContent);
 mainRouter.get(
   "*",
   redirectFundamental,
+  redirectLocale,
   contentOriginRequest,
   resolveIndexHTML,
   proxyContent
