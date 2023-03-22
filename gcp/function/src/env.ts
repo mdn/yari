@@ -52,24 +52,11 @@ export function origin(req: express.Request): Origin {
   }
 }
 
-function resolveSource(pathOrUrl: string) {
-  if (pathOrUrl.startsWith(".")) {
-    return path.resolve(path.join(cwd(), pathOrUrl));
-  } else {
-    return pathOrUrl;
-  }
-}
-
-export const SOURCE_CONTENT: string = resolveSource(
-  process.env["SOURCE_CONTENT"] ||
-    process.env["BUILD_OUT_ROOT"] ||
-    "https://developer.mozilla.org"
-);
-export const SOURCE_LIVE_SAMPLES: string = resolveSource(
+export const SOURCE_CONTENT: string =
+  process.env["SOURCE_CONTENT"] || "https://developer.mozilla.org";
+export const SOURCE_LIVE_SAMPLES: string =
   process.env["SOURCE_LIVE_SAMPLES"] ||
-    process.env["BUILD_OUT_ROOT"] ||
-    "https://yari-demos.prod.mdn.mozit.cloud"
-);
+  "https://yari-demos.prod.mdn.mozit.cloud";
 export const SOURCE_BCD_API: string =
   process.env["SOURCE_BCD_API"] || "https://bcd.developer.mozilla.org";
 export const SOURCE_INTERACTIVE_SAMPLES: string = resolveSource(
