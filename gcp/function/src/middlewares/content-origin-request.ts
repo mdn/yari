@@ -1,6 +1,5 @@
 import type express from "express";
 
-import { resolveFundamental } from "@yari-internal/fundamental-redirects";
 import { getLocale } from "@yari-internal/locale-utils";
 import { VALID_LOCALES } from "@yari-internal/constants";
 import { THIRTY_DAYS } from "../constants.js";
@@ -65,22 +64,6 @@ export function contentOriginRequest(
   let requestURI = url.pathname;
   const requestURILowerCase = requestURI.toLowerCase();
   const qs = url.search;
-
-  const fundamentalRedirect = resolveFundamental(requestURI);
-  if (fundamentalRedirect.url) {
-    // NOTE: The query string is not forwarded for document requests,
-    //       as directed by their origin request policy, so it's safe to
-    //       assume "request.querystring" is empty for document requests.
-    if (url.search) {
-      fundamentalRedirect.url +=
-        (fundamentalRedirect.url.includes("?") ? "&" : "?") +
-        url.search.substring(1);
-    }
-    return redirect(fundamentalRedirect.url, {
-      status: fundamentalRedirect.status,
-      cacheControlSeconds: THIRTY_DAYS,
-    });
-  }
 
   // Do we need to insert the locale? If we do, trim a trailing slash
   // to avoid a double redirect, except when requesting the home page.

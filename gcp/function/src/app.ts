@@ -12,6 +12,7 @@ import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
 import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
 import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
+import { redirectFundamental } from "./middlewares/redirectFundamental.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
@@ -28,13 +29,20 @@ mainRouter.all("/pong/*", express.json(), proxyKevel);
 mainRouter.all("/pimg/*", proxyKevel);
 mainRouter.get(
   "/[^/]+/docs/*",
+  redirectFundamental,
   contentOriginRequest,
   redirectMovedPages,
   resolveIndexHTML,
   proxyContent
 );
 mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, proxyContent);
-mainRouter.get("*", contentOriginRequest, resolveIndexHTML, proxyContent);
+mainRouter.get(
+  "*",
+  redirectFundamental,
+  contentOriginRequest,
+  resolveIndexHTML,
+  proxyContent
+);
 
 const liveSampleRouter = Router();
 liveSampleRouter.use(pathnameLC);
