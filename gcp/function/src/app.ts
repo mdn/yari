@@ -14,6 +14,7 @@ const mainRouter = Router();
 const proxyContent = createContentProxy();
 mainRouter.get("/bcd/api/*", proxyBcdApi());
 mainRouter.all("/api/v1/stripe/plans", stripePlans);
+mainRouter.all("/plus/plans.json", stripePlans);
 mainRouter.all("/api/*", proxyRumba);
 mainRouter.all("/admin-api/*", proxyRumba);
 mainRouter.all("/events/fxa/*", proxyRumba);
