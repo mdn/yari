@@ -11,6 +11,7 @@ import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
 import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
+import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
@@ -28,6 +29,7 @@ mainRouter.all("/pimg/*", proxyKevel);
 mainRouter.get(
   "/[^/]+/docs/*",
   contentOriginRequest,
+  redirectMovedPages,
   resolveIndexHTML,
   proxyContent
 );

@@ -1,16 +1,10 @@
-import { createRequire } from "node:module";
-
 import type express from "express";
 
 import { resolveFundamental } from "@yari-internal/fundamental-redirects";
 import { getLocale } from "@yari-internal/locale-utils";
-import { decodePath } from "@yari-internal/slug-utils";
 import { VALID_LOCALES } from "@yari-internal/constants";
 import { THIRTY_DAYS } from "../constants.js";
 
-const require = createRequire(import.meta.url);
-const REDIRECTS = require("../../redirects.json");
-const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
 // Note that the keys of "VALID_LOCALES" are lowercase locales.
 const LOCALE_URI_WITHOUT_TRAILING_SLASH = new Set(
@@ -151,34 +145,6 @@ export function contentOriginRequest(
     return redirect(requestURI.slice(0, -1) + qs, {
       cacheControlSeconds: THIRTY_DAYS,
     });
-  }
-
-  // Important: The requestURI may be URI-encoded.
-  // Example:
-  // - Encoded: /zh-TW/docs/AJAX:%E4%B8%8A%E6%89%8B%E7%AF%87
-  // - Decoded: /zh-TW/docs/AJAX:上手篇
-  const decodedUri = decodePath(url.pathname);
-  const decodedUriLC = decodedUri.toLowerCase();
-
-  // Redirect moved pages (see `_redirects.txt` in content/translated-content).
-  // Example:
-  // - Source: /zh-TW/docs/AJAX:上手篇
-  // - Target: /zh-TW/docs/Web/Guide/AJAX/Getting_Started
-  for (const suffix of REDIRECT_SUFFIXES) {
-    if (!decodedUriLC.endsWith(suffix)) {
-      continue;
-    }
-    const source = decodedUriLC.substring(
-      0,
-      decodedUriLC.length - suffix.length
-    );
-    if (typeof REDIRECTS[source] == "string") {
-      const target = REDIRECTS[source] + suffix;
-      return redirect(target, {
-        status: 301,
-        cacheControlSeconds: THIRTY_DAYS,
-      });
-    }
   }
 
   next();
