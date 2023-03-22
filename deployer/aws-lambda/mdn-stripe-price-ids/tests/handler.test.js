@@ -97,7 +97,7 @@ function getEventForAcceptHeaderAndCountry(
       {
         cf: {
           request: {
-            uri: "/api/v1/stripe/plans",
+            uri: "/plus/plans.json",
             method: "GET",
             clientIp: "192.168.0.1",
             origin: {
