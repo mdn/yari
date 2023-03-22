@@ -13,6 +13,12 @@ interface Timer {
   notVisible?: boolean;
 }
 
+enum Status {
+  success = "success",
+  unsupportedGeo = "unsupported_geo",
+  capReached = "cap_reached",
+}
+
 export interface Fallback {
   click: string;
   view: string;
@@ -21,7 +27,12 @@ export interface Fallback {
   by: string;
 }
 
+interface PlacementError {
+  status: Status;
+}
+
 export interface PlacementStatus {
+  status: Status;
   click: string;
   view: string;
   copy?: string;
@@ -63,11 +74,17 @@ export function Placement() {
 
       gleanClick(`pong: pong->fetched ${response.status}`);
 
-      if (!response.ok) {
+      try {
+        const placementResponse: PlacementStatus | PlacementError =
+          await response.json();
+        gleanClick(`pong: pong->status ${placementResponse.status}`);
+        if (placementResponse.status === Status.success) {
+          return placementResponse as PlacementStatus;
+        }
+        throw Error(placementResponse.status);
+      } catch (e) {
         throw Error(response.statusText);
       }
-
-      return (await response.json()) as PlacementStatus;
     },
     {
       revalidateIfStale: true,

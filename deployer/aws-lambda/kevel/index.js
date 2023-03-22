@@ -75,11 +75,22 @@ export async function handler(event) {
     const decisionRes = await client.decisions.get(decisionReq, {
       ip: anonymousIp,
     });
-    const { decisions: { div0 } = {} } = decisionRes;
+    const {
+      decisions: { div0 } = {},
+      candidateRetrieval: { div0: { candidatesFoundCount } = {} } = {},
+    } = decisionRes;
     if (div0 === null || div0?.[0] === null) {
+      let status = !candidatesFoundCount ? "unsupported_geo" : "cap_reached";
       return {
-        status: 204,
+        status: 200,
         statusDescription: "NO_CONTENT",
+        "content-type": [
+          {
+            key: "Content-Type",
+            value: "application/json",
+          },
+        ],
+        body: JSON.stringify({ status }),
       };
     }
 
@@ -106,6 +117,7 @@ export async function handler(event) {
           )
         ).json();
         payload = {
+          status: "success",
           click: encodeAndSign(clickUrl),
           view: encodeAndSign(impressionUrl),
           fallback: {
@@ -125,6 +137,7 @@ export async function handler(event) {
       }
     } else {
       payload = {
+        status: "success",
         copy: he.decode(
           contents?.[0]?.data?.title || "This is an ad without copy?!"
         ),
