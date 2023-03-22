@@ -1,4 +1,4 @@
-export const STRIPE_PLANS_PATH = "/plus/plans.json";
+export const PLUS_PLANS_PATH = "/plus/plans.json";
 export const SETTINGS_BASE_PATH = "/api/v1/plus/settings/";
 export const NEWSLETTER_BASE_PATH = "/api/v1/plus/newsletter/";
 
@@ -43,13 +43,13 @@ export async function getNewsletterSubscription(): Promise<boolean | null> {
   }
 }
 
-export async function getStripePlans() {
+export async function getPlusPlans() {
   let res;
   //This comes from edge lambda so must be from live.
   if (window.location.hostname.includes("localhost")) {
     res = await fetch("https://developer.allizom.org/plus/plans.json");
   } else {
-    res = await fetch(STRIPE_PLANS_PATH);
+    res = await fetch(PLUS_PLANS_PATH);
   }
 
   return await res.json();

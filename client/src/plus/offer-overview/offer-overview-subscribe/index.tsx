@@ -10,7 +10,7 @@ import {
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
-import { getStripePlans } from "../../common/api";
+import { getPlusPlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
@@ -52,7 +52,7 @@ export type PlanInfo = {
   monthlyPriceInCents: number;
 };
 
-export type StripePlans = {
+export type PlusPlans = {
   currency: string;
   plans: { [key: string]: PlanInfo };
 };
@@ -264,7 +264,7 @@ function canUpgrade(
   );
 }
 
-function getLocalizedPlans(countrySpecific: StripePlans): {
+function getLocalizedPlans(countrySpecific: PlusPlans): {
   CORE: OfferDetailsProps;
   PLUS_5: OfferDetailsProps;
   PLUS_10: OfferDetailsProps;
@@ -315,7 +315,7 @@ function OfferOverviewSubscribe() {
     (async () => {
       if (isOnline) {
         try {
-          const plans: StripePlans = await getStripePlans();
+          const plans: PlusPlans = await getPlusPlans();
           setOfferDetails(getLocalizedPlans(plans));
         } catch (error) {
           //Paid subs Not supported by region just display Free subscription
