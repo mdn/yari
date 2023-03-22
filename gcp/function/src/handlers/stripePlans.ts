@@ -109,9 +109,12 @@ export function stripePlans(req: express.Request, res: express.Response) {
     plans: planResult,
   } satisfies Result;
 
-  return res
-    .status(200)
-    .setHeader("Cache-Control", "max-age=86400")
-    .setHeader("Content-Type", "application/json")
-    .end(JSON.stringify(result));
+  return (
+    res
+      .status(200)
+      // Google CDN cannot partition by country, so we can only cache in browser.
+      .setHeader("Cache-Control", "private, max-age=86400")
+      .setHeader("Content-Type", "application/json")
+      .end(JSON.stringify(result))
+  );
 }
