@@ -11,7 +11,7 @@ import {
   CARBON_ZONE_KEY,
   CARBON_FALLBACK_ENABLED,
 } from "../env.js";
-import { CC_TO_IP } from "./cc2ip.js";
+import { CC_TO_IP } from "../constants.js";
 import { getRequestCountry } from "../utils.js";
 
 const siteId = KEVEL_SITE_ID;

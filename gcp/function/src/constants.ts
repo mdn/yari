@@ -171,3 +171,7 @@ export const CC_TO_IP: { [countryCode: string]: string } = {
   ZA: "102.36.123.181",
   ZW: "41.174.104.223",
 };
+
+export const DEFAULT_COUNTRY = "US";
+
+export const THIRTY_DAYS = 3600 * 24 * 30;

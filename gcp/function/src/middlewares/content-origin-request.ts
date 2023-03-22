@@ -6,11 +6,11 @@ import { resolveFundamental } from "@yari-internal/fundamental-redirects";
 import { getLocale } from "@yari-internal/locale-utils";
 import { decodePath } from "@yari-internal/slug-utils";
 import { VALID_LOCALES } from "@yari-internal/constants";
+import { THIRTY_DAYS } from "../constants.js";
 
 const require = createRequire(import.meta.url);
 const REDIRECTS = require("../../redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
-const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
 // Note that the keys of "VALID_LOCALES" are lowercase locales.
 const LOCALE_URI_WITHOUT_TRAILING_SLASH = new Set(

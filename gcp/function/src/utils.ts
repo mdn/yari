@@ -1,6 +1,7 @@
 import * as path from "node:path";
 import type express from "express";
 import { slugToFolder } from "@yari-internal/slug-utils";
+import { DEFAULT_COUNTRY } from "./constants.js";
 
 export function resolveIndexHTML(pathOrUrl: string) {
   let resolvedPath = slugToFolder(pathOrUrl);
@@ -9,8 +10,6 @@ export function resolveIndexHTML(pathOrUrl: string) {
   }
   return resolvedPath;
 }
-
-const DEFAULT_COUNTRY = "US";
 
 export function getRequestCountry(req: express.Request): string {
   // https://cloud.google.com/appengine/docs/flexible/reference/request-headers#app_engine-specific_headers
