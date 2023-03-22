@@ -14,6 +14,7 @@ import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
 import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
 import { redirectFundamental } from "./middlewares/redirectFundamental.js";
 import { redirectLocale } from "./middlewares/redirectLocale.js";
+import { redirectTrailingSlash } from "./middlewares/redirectTrailingSlash.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
@@ -32,6 +33,7 @@ mainRouter.get(
   "/[^/]+/docs/*",
   redirectFundamental,
   redirectLocale,
+  redirectTrailingSlash,
   contentOriginRequest,
   redirectMovedPages,
   resolveIndexHTML,
@@ -42,6 +44,7 @@ mainRouter.get(
   "*",
   redirectFundamental,
   redirectLocale,
+  redirectTrailingSlash,
   contentOriginRequest,
   resolveIndexHTML,
   proxyContent
