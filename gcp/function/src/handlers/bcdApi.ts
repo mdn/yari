@@ -1,16 +1,15 @@
 import type * as express from "express";
-import httpProxy from "http-proxy";
+import { createProxyMiddleware } from "http-proxy-middleware";
+
 import { Source, sourceUri } from "../env.js";
 import { withProxyResponseHeaders } from "../headers.js";
 
 export function proxyBcdApi(): express.Handler {
-  const bcdProxy = httpProxy.createProxy({
+  return createProxyMiddleware({
     prependPath: true,
     changeOrigin: true,
     target: sourceUri(Source.bcdApi),
     autoRewrite: true,
+    onProxyRes: withProxyResponseHeaders,
   });
-  bcdProxy.on("proxyRes", withProxyResponseHeaders);
-
-  return (req, res) => bcdProxy.web(req, res);
 }

@@ -1,17 +1,15 @@
 import type express from "express";
+import { createProxyMiddleware } from "http-proxy-middleware";
+
 import { withProxyResponseHeaders } from "../headers.js";
 import { Source, sourceUri } from "../env.js";
-import httpProxy from "http-proxy";
 
 export function createContentProxy(): express.Handler {
-  const contentProxy = httpProxy.createProxy({
+  return createProxyMiddleware({
     prependPath: true,
     changeOrigin: true,
     target: sourceUri(Source.content),
     autoRewrite: true,
+    onProxyRes: withProxyResponseHeaders,
   });
-  contentProxy.on("proxyRes", withProxyResponseHeaders);
-  return (req, res) => {
-    contentProxy.web(req, res);
-  };
 }

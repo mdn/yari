@@ -1,13 +1,9 @@
-import httpProxy from "http-proxy";
-import type express from "express";
+import { createProxyMiddleware } from "http-proxy-middleware";
+
 import { Source, sourceUri } from "../env.js";
 
-const rumbaProxy = httpProxy.createProxy({
+export const proxyRumba = createProxyMiddleware({
   target: sourceUri(Source.rumba),
   changeOrigin: true,
   autoRewrite: true,
 });
-
-export function proxyRumba(req: express.Request, res: express.Response) {
-  rumbaProxy.web(req, res);
-}
