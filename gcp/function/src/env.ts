@@ -13,13 +13,6 @@ export enum Origin {
   unsafe = "unsafe",
 }
 
-export enum RuntimeEnv {
-  prod = "prod",
-  stage = "stage",
-  dev = "dev",
-  local = "local",
-}
-
 export enum Source {
   content = "content",
   liveSamples = "liveSamples",
@@ -27,7 +20,6 @@ export enum Source {
   rumba = "rumba",
 }
 
-export const RUNTIME_ENV: string = process.env["RUNTIME_ENV"] || "prod";
 export const ORIGIN_MAIN: string =
   process.env["ORIGIN_MAIN"] || "developer.mozilla.org";
 export const ORIGIN_LIVE_SAMPLES: string =

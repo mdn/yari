@@ -3,8 +3,6 @@ import type express from "express";
 
 import { CSP_VALUE } from "@yari-internal/constants";
 
-import { RUNTIME_ENV } from "./env.js";
-
 export function withProxyResponseHeaders(
   _proxyRes: IncomingMessage,
   req: IncomingMessage,
@@ -50,9 +48,7 @@ export function setResponseHeaders(
     ["X-XSS-Protection", "1; mode=block"],
     ["X-Content-Type-Options", "nosniff"],
     ["Strict-Transport-Security", "max-age=63072000"],
-    ...(csp && RUNTIME_ENV !== "local"
-      ? [["Content-Security-Policy", CSP_VALUE]]
-      : []),
+    ...(csp ? [["Content-Security-Policy", CSP_VALUE]] : []),
     ...(xFrame ? [["X-Frame-Options", "DENY"]] : []),
   ].forEach(([k, v]) => k && v && setHeader(k, v));
 }
