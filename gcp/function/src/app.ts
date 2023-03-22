@@ -8,7 +8,6 @@ import { proxyRumba } from "./handlers/rumba.js";
 import { plans } from "./handlers/plans.js";
 import { proxyTelemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
-import { contentOriginRequest } from "./middlewares/content-origin-request.js";
 import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
 import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
 import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
@@ -34,18 +33,16 @@ mainRouter.get(
   redirectFundamental,
   redirectLocale,
   redirectTrailingSlash,
-  contentOriginRequest,
   redirectMovedPages,
   resolveIndexHTML,
   proxyContent
 );
-mainRouter.get("/[^/]+/search-index.json", contentOriginRequest, proxyContent);
+mainRouter.get("/[^/]+/search-index.json", proxyContent);
 mainRouter.get(
   "*",
   redirectFundamental,
   redirectLocale,
   redirectTrailingSlash,
-  contentOriginRequest,
   resolveIndexHTML,
   proxyContent
 );
