@@ -11,7 +11,7 @@
     "build": "tsc -b && ts-node src/build.ts",
     "build-deploy-clean": "npm-run-all -s build deploy clean",
     "clean": "tsc -b --clean && git checkout -- redirects.json",
-    "copy-internal": "rm -rf ./src/internal && cp -R ../../libs ./src/internal",
+    "copy-internal": "rm -rf ./src/internal && cp -R ../../libs ./src/internal && chmod -R -w ./src/internal",
     "deploy": "gcloud functions deploy mdn-two --region europe-west3 --runtime nodejs18 --trigger-http --allow-unauthenticated",
     "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
     "prepare": "[ ! -e ../../libs ] || npm run copy-internal",
