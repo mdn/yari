@@ -85,12 +85,12 @@ jobs:
 
       - name: Deploy Function
         uses: google-github-actions/deploy-cloud-functions@v1
-        working-directory: gcp/function
         with:
           name: mdn-two
           runtime: nodejs18
           memory_mb: 256
           region: europe-west3
+          source_dir: gcp/function
           env_vars: |-
             ORIGIN_MAIN=developer.allizom.xyz
             ORIGIN_LIVE_SAMPLES=yari-demos.developer.allizom.xyz
