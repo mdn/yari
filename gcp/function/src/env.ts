@@ -16,7 +16,6 @@ export enum Origin {
 export enum Source {
   content = "content",
   liveSamples = "liveSamples",
-  bcdApi = "bcdApi",
   rumba = "rumba",
 }
 
@@ -41,8 +40,6 @@ export const SOURCE_CONTENT: string =
 export const SOURCE_LIVE_SAMPLES: string =
   process.env["SOURCE_LIVE_SAMPLES"] ||
   "https://yari-demos.prod.mdn.mozit.cloud";
-export const SOURCE_BCD_API: string =
-  process.env["SOURCE_BCD_API"] || "https://bcd.developer.mozilla.org";
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "https://developer.mozilla.org";
 
@@ -50,8 +47,6 @@ export function sourceUri(source: Source): string {
   switch (source) {
     case Source.content:
       return SOURCE_CONTENT;
-    case Source.bcdApi:
-      return SOURCE_BCD_API;
     case Source.liveSamples:
       return SOURCE_LIVE_SAMPLES;
     case Source.rumba:
