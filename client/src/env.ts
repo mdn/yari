@@ -56,7 +56,7 @@ export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
 export const BCD_BASE_URL =
-  process.env.REACT_APP_BCD_BASE_URL || "https://bcd.developer.allizom.org";
+  process.env.REACT_APP_BCD_BASE_URL ?? "https://bcd.developer.allizom.org";
 
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||

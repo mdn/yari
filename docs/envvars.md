@@ -227,6 +227,14 @@ automatically included in XHR calls on `http://localhost.org:3000`.
 Note that even if you set this, you can still continue to use
 `http://localhost:3000`.
 
+### `REACT_APP_BCD_BASE_URL`
+
+**Default: `https://bcd.developer.allizom.org`**
+
+The base URL (without trailing slash) used to fetch data for BCD tables.
+
+If you want to use local BCD data, set `REACT_APP_BCD_BASE_URL=""`.
+
 ### `REACT_APP_KUMA_HOST`
 
 **Default: `not set`**
