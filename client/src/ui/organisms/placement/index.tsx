@@ -74,6 +74,10 @@ export function Placement() {
 
       gleanClick(`pong: pong->fetched ${response.status}`);
 
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
       try {
         const placementResponse: PlacementStatus | PlacementError =
           await response.json();
