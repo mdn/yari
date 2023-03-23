@@ -34,7 +34,7 @@ mainRouter.get(
   resolveIndexHTML,
   proxyContent
 );
-mainRouter.get("/[^/]+/search-index.json", proxyContent);
+mainRouter.get("/[^/]+/search-index.json", pathnameLC, proxyContent);
 mainRouter.get(
   "*",
   redirectFundamental,
