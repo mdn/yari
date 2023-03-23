@@ -52,6 +52,8 @@ on:
 jobs:
   build:
     environment: stage
+    concurrency:
+      group: ${{ github.workflow }}
     permissions:
       contents: read
       id-token: write
