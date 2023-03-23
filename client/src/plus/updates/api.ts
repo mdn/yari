@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { useSearchParams } from "react-router-dom";
 import { useUserData } from "../../user-context";
+import { BCD_BASE_URL } from "../../env";
 
 export interface Event {
   path: string;
@@ -107,7 +108,7 @@ export function useUpdates() {
 
 export function useBCD(path: string) {
   return useSWR(
-    `/bcd/api/v0/current/${path}.json`,
+    `${BCD_BASE_URL}/bcd/api/v0/current/${path}.json`,
     async (key) => {
       const res = await fetch(key);
       if (res.ok) {
