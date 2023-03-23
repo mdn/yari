@@ -617,3 +617,60 @@ kbd {
   overflow-y: scroll;
   white-space: pre;
 }
+
+.sidebar-container {
+  max-height: calc(100vh - var(--main-document-header-height));
+  overflow: auto;
+  position: sticky;
+  top: 5rem;
+
+  @media screen and (min-width: $screen-md) {
+    .sidebar {
+      mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgb(0, 0, 0) 3rem calc(100% - 3rem),
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+  }
+
+  .toc-container {
+    .place {
+      grid-area: toc;
+      margin: 0;
+    }
+    @media screen and (min-width: $screen-xl) {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      height: calc(100vh - var(--main-document-header-height));
+      mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgb(0, 0, 0) 3rem calc(100% - 3rem),
+        rgba(0, 0, 0, 0) 100%
+      );
+      overflow: scroll;
+      position: sticky;
+      top: var(--main-document-header-height);
+
+      .place {
+        margin: 1rem 0;
+        padding-bottom: 3rem;
+      }
+    }
+    @media screen and (max-width: #{$screen-md - 1}) {
+      .place {
+        display: none;
+      }
+    }
+  }
+  @media screen and (min-width: $screen-xl) {
+    display: contents;
+
+    .sidebar {
+      mask-image: none;
+    }
+  }
+}

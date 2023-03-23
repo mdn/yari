@@ -23,6 +23,8 @@
     .sidebar-inner {
       background: var(--background-primary);
       border-right: 1px solid var(--border-primary);
+      display: flex;
+      flex-direction: column;
       height: var(--max-height);
       max-height: var(--max-height);
       max-width: 20rem;
@@ -35,6 +37,23 @@
       width: 80vw;
       will-change: transform;
       z-index: var(--z-index-top);
+
+      .sidebar-inner-nav {
+        @media screen and (min-height: 50rem) {
+          overflow: auto;
+        }
+        mask-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0% calc(100% - 3rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+        padding-bottom: 3rem;
+      }
+
+      .place {
+        align-self: center;
+        margin-bottom: 0;
+      }
     }
 
     .backdrop {
@@ -73,9 +92,17 @@
   }
 
   @media screen and (min-width: $screen-md) {
+    .place {
+      display: none;
+    }
+  }
+  @media screen and (min-width: $screen-md) {
     display: flex;
-    max-height: var(--max-height);
+    max-height: calc(var(--max-height) - 20rem);
     overflow: auto;
+  }
+  @media screen and (min-width: $screen-xl) {
+    max-height: var(--max-height);
     position: sticky;
     top: var(--offset);
   }

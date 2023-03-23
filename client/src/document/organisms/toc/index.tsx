@@ -61,7 +61,6 @@ export function TOC({ toc }: { toc: Toc[] }) {
           </ul>
         </section>
       </div>
-      {PLACEMENT_ENABLED && <Placement />}
     </>
   );
 }
