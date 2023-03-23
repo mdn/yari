@@ -86,7 +86,7 @@ jobs:
         with:
           name: mdn-two
           runtime: nodejs18
-          entry_point: mdnFunction
+          entry_point: mdnHandler
           memory_mb: 256
           region: europe-west3
           source_dir: gcp/function
