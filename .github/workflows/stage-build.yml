@@ -15,6 +15,9 @@ env:
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron: "0 */24 * * *"
