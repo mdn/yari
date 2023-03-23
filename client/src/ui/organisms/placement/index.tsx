@@ -28,11 +28,11 @@ export interface Fallback {
 }
 
 interface PlacementError {
-  status: Status;
+  status: Status.geoUnsupported | Status.capReached;
 }
 
-export interface PlacementStatus {
-  status: Status;
+interface PlacementStatus {
+  status: Status.success;
   click: string;
   view: string;
   copy?: string;
@@ -61,7 +61,7 @@ export function Placement() {
     data: pong,
     isLoading,
     isValidating,
-  } = useSWR<PlacementStatus | PlacementError>(
+  } = useSWR<PlacementData>(
     !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
     async (url) => {
       const response = await fetch(url, {
@@ -79,7 +79,7 @@ export function Placement() {
       }
 
       try {
-        const placementResponse: PlacementStatus | PlacementError =
+        const placementResponse: PlacementData =
           await response.json();
         gleanClick(`pong: pong->status ${placementResponse.status}`);
         return placementResponse;
