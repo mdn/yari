@@ -16,8 +16,6 @@ on:
 jobs:
   build:
     environment: xyz
-    concurrency:
-      group: ${{ github.workflow }}
     permissions:
       contents: read
       id-token: write
