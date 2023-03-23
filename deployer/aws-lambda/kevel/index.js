@@ -80,10 +80,10 @@ export async function handler(event) {
       candidateRetrieval: { div0: { candidatesFoundCount } = {} } = {},
     } = decisionRes;
     if (div0 === null || div0?.[0] === null) {
-      let status = !candidatesFoundCount ? "unsupported_geo" : "cap_reached";
+      let status = candidatesFoundCount ? "cap_reached" : "geo_unsupported";
       return {
         status: 200,
-        statusDescription: "NO_CONTENT",
+        statusDescription: "OK",
         "content-type": [
           {
             key: "Content-Type",

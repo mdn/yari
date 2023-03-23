@@ -15,7 +15,7 @@ interface Timer {
 
 enum Status {
   success = "success",
-  unsupportedGeo = "unsupported_geo",
+  geoUnsupported = "geo_unsupported",
   capReached = "cap_reached",
 }
 
@@ -61,7 +61,7 @@ export function Placement() {
     data: pong,
     isLoading,
     isValidating,
-  } = useSWR<PlacementStatus>(
+  } = useSWR<PlacementStatus | PlacementError>(
     !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
     async (url) => {
       const response = await fetch(url, {
@@ -78,10 +78,7 @@ export function Placement() {
         const placementResponse: PlacementStatus | PlacementError =
           await response.json();
         gleanClick(`pong: pong->status ${placementResponse.status}`);
-        if (placementResponse.status === Status.success) {
-          return placementResponse as PlacementStatus;
-        }
-        throw Error(placementResponse.status);
+        return placementResponse;
       } catch (e) {
         throw Error(response.statusText);
       }
