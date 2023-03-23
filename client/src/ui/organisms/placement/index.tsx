@@ -13,6 +13,12 @@ interface Timer {
   notVisible?: boolean;
 }
 
+enum Status {
+  success = "success",
+  geoUnsupported = "geo_unsupported",
+  capReached = "cap_reached",
+}
+
 export interface Fallback {
   click: string;
   view: string;
@@ -21,13 +27,20 @@ export interface Fallback {
   by: string;
 }
 
-export interface PlacementStatus {
+interface PlacementError {
+  status: Status.geoUnsupported | Status.capReached;
+}
+
+interface PlacementStatus {
+  status: Status.success;
   click: string;
   view: string;
   copy?: string;
   image?: string;
   fallback?: Fallback;
 }
+
+type PlacementData = PlacementStatus | PlacementError;
 
 function viewed(
   pong: PlacementStatus,
@@ -50,7 +63,7 @@ export function Placement() {
     data: pong,
     isLoading,
     isValidating,
-  } = useSWR<PlacementStatus>(
+  } = useSWR<PlacementData>(
     !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
     async (url) => {
       const response = await fetch(url, {
@@ -67,7 +80,13 @@ export function Placement() {
         throw Error(response.statusText);
       }
 
-      return (await response.json()) as PlacementStatus;
+      try {
+        const placementResponse: PlacementData = await response.json();
+        gleanClick(`pong: pong->status ${placementResponse.status}`);
+        return placementResponse;
+      } catch (e) {
+        throw Error(response.statusText);
+      }
     },
     {
       revalidateIfStale: true,
