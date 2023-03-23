@@ -96,8 +96,8 @@ jobs:
             SOURCE_CONTENT=https://storage.googleapis.com/fiji-mdn-content/
             SOURCE_RUMBA=https://developer.allizom.org/
           secret_environment_variables: |-
-            KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id:latest
-            KEVEL_NETWORK_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-network-id:latest
-            SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret:latest
-            CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key:latest
-            CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled:latest
+            KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id/versions/latest
+            KEVEL_NETWORK_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-network-id/versions/latest
+            SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest
+            CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest
+            CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest
