@@ -14,6 +14,7 @@ import "./ingredients/browser-compatibility-table/index.scss";
 import { useLocale, useIsServer } from "../hooks";
 import NoteCard from "../ui/molecules/notecards";
 import type BCD from "@mdn/browser-compat-data/types";
+import { BCD_BASE_URL } from "../env";
 
 interface QueryJson {
   query: string;
@@ -55,7 +56,9 @@ function LazyBrowserCompatibilityTableInner({ query }: { query: string }) {
   const { error, data } = useSWR(
     query,
     async (query) => {
-      const response = await fetch(`/bcd/api/v0/current/${query}.json`);
+      const response = await fetch(
+        `${BCD_BASE_URL}/bcd/api/v0/current/${query}.json`
+      );
       if (!response.ok) {
         throw new Error(response.status.toString());
       }

@@ -155,6 +155,9 @@ jobs:
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
 
+          # Browser-compat data.
+          REACT_APP_BCD_BASE_URL: https://bcd.developer.mozilla.org
+
           # Offline updates
           REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
 

@@ -60,6 +60,7 @@ const app = express();
 
 const bcdRouter = express.Router({ caseSensitive: true });
 
+// Note that this route will only get hit if .env has this: REACT_APP_BCD_BASE_URL=""
 bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
   const data = getBCDDataForPath(req.params.path);
   return data ? res.json(data) : res.status(404).send("BCD path not found");
