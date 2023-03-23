@@ -4,7 +4,7 @@ import { useIsServer, usePageVisibility } from "../../../hooks";
 import useSWR from "swr";
 import { useUserData } from "../../../user-context";
 
-import "./placement.scss";
+import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
 interface Timer {
