@@ -76,6 +76,7 @@ export type UserData = {
   email: string | null | undefined;
   geo: {
     country: string;
+    country_iso: string;
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
@@ -197,6 +198,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       email: data.email || null,
       geo: {
         country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+        country_iso:
+          (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
       },
       maintenance: data.maintenance,
       settings,
