@@ -93,6 +93,9 @@ export const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "bcd.developer.allizom.org",
+    "bcd.developer.mozilla.org",
+
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
