@@ -40,6 +40,8 @@ interface PlacementStatus {
   fallback?: Fallback;
 }
 
+type PlacementData = PlacementStatus | PlacementError;
+
 function viewed(
   pong: PlacementStatus,
   observer: IntersectionObserver | null = null
@@ -79,8 +81,7 @@ export function Placement() {
       }
 
       try {
-        const placementResponse: PlacementData =
-          await response.json();
+        const placementResponse: PlacementData = await response.json();
         gleanClick(`pong: pong->status ${placementResponse.status}`);
         return placementResponse;
       } catch (e) {
