@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    if: github.repository == 'mdn/yari' && github.triggering_actor != 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v3
