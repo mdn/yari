@@ -18,7 +18,6 @@ const mainRouter = Router();
 const proxyContent = createContentProxy();
 mainRouter.use(redirectLeadingSlash);
 mainRouter.all("/api/v1/stripe/plans", plans);
-mainRouter.all("/plus/plans.json", plans);
 mainRouter.all("/api/*", proxyRumba);
 mainRouter.all("/admin-api/*", proxyRumba);
 mainRouter.all("/events/fxa/*", proxyRumba);
