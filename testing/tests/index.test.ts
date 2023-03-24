@@ -450,7 +450,7 @@ test("content built bar page", () => {
   // expect(doc.popularity).toBe(0.51);
   // expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  expect(doc.flaws.macros).toHaveLength(12);
+  expect(doc.flaws.macros).toHaveLength(15);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
   expect(doc.flaws.macros[0].line).toBe(9);
