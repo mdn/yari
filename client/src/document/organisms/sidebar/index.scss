@@ -3,110 +3,16 @@
 .sidebar {
   --offset: var(--main-document-header-height);
   --max-height: calc(100vh - var(--offset));
+
   color: var(--text-secondary);
+
+  .mdn-cta-container ~ .document-page & {
+    --offset: calc(var(--main-document-header-height) + 3rem);
+    --max-height: calc(100vh - var(--offset));
+  }
 
   .backdrop {
     display: none;
-  }
-
-  // apply drawer styles only to the sizes that need them.
-  @media screen and (max-width: #{$screen-md - 1}) {
-    height: 100vh;
-    left: 0;
-    max-height: 100vh;
-    position: fixed;
-    right: 0;
-    top: var(--offset);
-    transform: translateX(-100%);
-    z-index: var(--z-index-top);
-
-    .sidebar-inner {
-      background: var(--background-primary);
-      border-right: 1px solid var(--border-primary);
-      display: flex;
-      flex-direction: column;
-      height: var(--max-height);
-      max-height: var(--max-height);
-      max-width: 20rem;
-      overflow: hidden; //animations look janky if scrollbars are present
-      overflow: auto;
-      padding: 1rem;
-      position: relative;
-      transform: translateX(-100%);
-      transition: 0.2s linear transform;
-      width: 80vw;
-      will-change: transform;
-      z-index: var(--z-index-top);
-
-      .sidebar-inner-nav {
-        @media screen and (min-height: 48rem) {
-          overflow: auto;
-        }
-        mask-image: linear-gradient(
-          to bottom,
-          rgb(0, 0, 0) 0% calc(100% - 3rem),
-          rgba(0, 0, 0, 0) 100%
-        );
-        padding-bottom: 3rem;
-      }
-
-      .place {
-        align-self: center;
-        margin-bottom: 0;
-      }
-    }
-
-    .backdrop {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 0;
-      bottom: 0;
-      cursor: default;
-
-      display: flex;
-      left: 0;
-      opacity: 0;
-      position: fixed;
-      right: 0;
-      top: 0;
-      transition: opacity 0.2s linear;
-      width: 100%;
-      will-change: opacity;
-      z-index: var(--z-index-mid);
-    }
-
-    &.is-animating {
-      transform: translateX(0);
-    }
-
-    &.is-expanded {
-      transform: translateX(0); // no transition on this one, just show it.
-
-      .sidebar-inner {
-        transform: translateX(0);
-      }
-
-      .backdrop {
-        opacity: 1;
-      }
-    }
-  }
-
-  @media screen and (min-width: $screen-md) {
-    .place {
-      display: none;
-    }
-  }
-  @media screen and (min-width: $screen-md) {
-    display: flex;
-    overflow: auto;
-    @media screen and (min-height: 48rem) {
-      max-height: calc(var(--max-height) - 20rem);
-    }
-  }
-  @media screen and (min-width: $screen-xl) {
-    max-height: var(--max-height);
-    position: sticky;
-    top: var(--offset);
   }
 
   &-heading {
@@ -234,9 +140,103 @@
   .icon-deprecated {
     background-color: var(--icon-critical);
   }
-}
 
-.mdn-cta-container ~ .document-page .sidebar {
-  --offset: calc(var(--main-document-header-height) + 3rem);
-  --max-height: calc(100vh - var(--offset));
+  // apply drawer styles only to the sizes that need them.
+  @media screen and (max-width: #{$screen-md - 1}) {
+    height: 100vh;
+    left: 0;
+    max-height: 100vh;
+    position: fixed;
+    right: 0;
+    top: var(--offset);
+    transform: translateX(-100%);
+    z-index: var(--z-index-top);
+
+    .sidebar-inner {
+      background: var(--background-primary);
+      border-right: 1px solid var(--border-primary);
+      display: flex;
+      flex-direction: column;
+      height: var(--max-height);
+      max-height: var(--max-height);
+      max-width: 20rem;
+      overflow: hidden; //animations look janky if scrollbars are present
+      overflow: auto;
+      padding: 1rem;
+      position: relative;
+      transform: translateX(-100%);
+      transition: 0.2s linear transform;
+      width: 80vw;
+      will-change: transform;
+      z-index: var(--z-index-top);
+
+      .sidebar-inner-nav {
+        @media screen and (min-height: 48rem) {
+          overflow: auto;
+        }
+        mask-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0% calc(100% - 3rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+        padding-bottom: 3rem;
+      }
+
+      .place {
+        align-self: center;
+        margin-bottom: 0;
+      }
+    }
+
+    .backdrop {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0;
+      bottom: 0;
+      cursor: default;
+
+      display: flex;
+      left: 0;
+      opacity: 0;
+      position: fixed;
+      right: 0;
+      top: 0;
+      transition: opacity 0.2s linear;
+      width: 100%;
+      will-change: opacity;
+      z-index: var(--z-index-mid);
+    }
+
+    &.is-animating {
+      transform: translateX(0);
+    }
+
+    &.is-expanded {
+      transform: translateX(0); // no transition on this one, just show it.
+
+      .sidebar-inner {
+        transform: translateX(0);
+      }
+
+      .backdrop {
+        opacity: 1;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .place {
+      display: none;
+    }
+  }
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    @media screen and (min-height: 48rem) {
+      overflow: auto;
+    }
+  }
+  @media screen and (min-width: $screen-xl) {
+    max-height: var(--max-height);
+    position: sticky;
+    top: var(--offset);
+  }
 }
