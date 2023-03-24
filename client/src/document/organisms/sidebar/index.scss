@@ -39,7 +39,7 @@
       z-index: var(--z-index-top);
 
       .sidebar-inner-nav {
-        @media screen and (min-height: 50rem) {
+        @media screen and (min-height: 48rem) {
           overflow: auto;
         }
         mask-image: linear-gradient(
@@ -98,8 +98,10 @@
   }
   @media screen and (min-width: $screen-md) {
     display: flex;
-    max-height: calc(var(--max-height) - 20rem);
     overflow: auto;
+    @media screen and (min-height: 48rem) {
+      max-height: calc(var(--max-height) - 20rem);
+    }
   }
   @media screen and (min-width: $screen-xl) {
     max-height: var(--max-height);
