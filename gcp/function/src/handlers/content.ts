@@ -16,6 +16,7 @@ export function createContentProxy(): express.Handler {
     changeOrigin: true,
     target,
     autoRewrite: true,
+    xfwd: true,
     selfHandleResponse: true,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {

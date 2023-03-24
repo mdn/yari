@@ -6,4 +6,5 @@ export const proxyRumba = createProxyMiddleware({
   target: sourceUri(Source.rumba),
   changeOrigin: true,
   autoRewrite: true,
+  xfwd: true,
 });
