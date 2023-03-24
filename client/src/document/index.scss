@@ -619,8 +619,10 @@ kbd {
 }
 
 .sidebar-container {
-  display: flex;
-  flex-direction: column;
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    flex-direction: column;
+  }
   max-height: calc(100vh - var(--main-document-header-height) - 3rem);
   overflow: auto;
   position: sticky;
