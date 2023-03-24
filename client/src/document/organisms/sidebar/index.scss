@@ -235,3 +235,8 @@
     background-color: var(--icon-critical);
   }
 }
+
+.mdn-cta-container ~ .document-page .sidebar {
+  --offset: calc(var(--main-document-header-height) + 3rem);
+  --max-height: calc(100vh - var(--offset));
+}

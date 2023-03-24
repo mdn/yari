@@ -44,7 +44,7 @@ export function SidebarContainer({
     if (sidebar && currentSidebarItem) {
       [sidebar, sidebar.querySelector(".sidebar-inner-nav")].forEach((n) =>
         n?.scrollTo({
-          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+          top: currentSidebarItem.offsetTop - window.innerHeight / 4,
         })
       );
     }
