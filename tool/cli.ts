@@ -372,25 +372,27 @@ program
 
         // find references to the deleted document in content
         console.log("Checking references...");
-        const referringFiles = [];
+        const referringFiles = new Set();
         const allDocs = await Document.findAll();
         for (const document of allDocs.iterDocs()) {
           const rawBody = document.rawBody;
           for (const deleted of deletedDocs) {
             const url = `/${locale}/docs/${deleted}`;
             if (rawBody.includes(url)) {
-              referringFiles.push(`${document.url}`);
+              referringFiles.add(`${document.url}`);
             }
           }
         }
 
-        if (referringFiles.length) {
+        if (referringFiles.size) {
           console.warn(
             chalk.yellow(
-              `\n${referringFiles.length} files are referring to the deleted document. ` +
-                `Please update the following files to remove the links:\n\t${referringFiles.join(
-                  "\n\t"
-                )}`
+              `\n${referringFiles.size} files are referring to the deleted document(s). ` +
+                `Please update the following files to remove the links:\n\t${[
+                  ...referringFiles,
+                ]
+                  .sort()
+                  .join("\n\t")}`
             )
           );
         } else {
@@ -443,8 +445,41 @@ program
             default: true,
           });
       if (run) {
-        const moved = await Document.move(oldSlug, newSlug, locale);
-        console.log(chalk.green(`Moved ${moved.length} documents.`));
+        const movedDocs = await Document.move(oldSlug, newSlug, locale);
+        console.log(chalk.green(`Moved ${movedDocs.length} documents.`));
+
+        // find and update references to the moved document
+        console.log("\nUpdating references...");
+        const updatedFiles = new Set();
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const [oldSlug, newSlug] of movedDocs) {
+            const updatedBody = rawBody.replaceAll(oldSlug, newSlug);
+            if (rawBody !== updatedBody) {
+              Document.saveFile(
+                document.fileInfo.path,
+                updatedBody,
+                document.metadata,
+                document.metadata.frontMatterKeys
+              );
+              updatedFiles.add(document.url);
+            }
+          }
+        }
+
+        if (updatedFiles.size) {
+          console.warn(
+            chalk.green(
+              `${updatedFiles.size} files referring to the moved document(s) have been updated:` +
+                `\n\t${[...updatedFiles.values()].sort().join("\n\t")}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the moved document.")
+          );
+        }
       }
     })
   )
