@@ -577,11 +577,8 @@ function DocumentsTable({
         const b = B.mdn_url;
         return reverse * a.localeCompare(b);
       } else if (sort === "sourceCommit") {
-        const a = A.edits.sourceCommitsBehindCount;
-        const b = B.edits.sourceCommitsBehindCount;
-        if (b === undefined) {
-          return -1;
-        }
+        const a = A.edits.sourceCommitsBehindCount ?? -1;
+        const b = B.edits.sourceCommitsBehindCount ?? -1;
         return reverse * (b - a);
       } else {
         throw new Error(`Unrecognized sort '${sort}'`);
