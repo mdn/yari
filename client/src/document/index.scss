@@ -536,6 +536,7 @@ pre {
 .code-example {
   color: var(--code-default);
   position: relative;
+  z-index: var(--z-index-back);
 
   .copy-icon {
     border-radius: var(--elem-radius);
