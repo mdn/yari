@@ -68,6 +68,8 @@ const commitHashCache = fs.existsSync("./source-commit.json")
       )
     )
   : new Map();
+const memCommitStore = new Map<string, string[]>();
+let memCommitStoreOldest = "HEAD";
 export async function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
@@ -155,8 +157,9 @@ function getDocument(filePath) {
     };
   }
 
-  function recordInvalidSourceCommit(str: string) {
+  function recordInvalidSourceCommit(isValid: boolean, str: string) {
     const filePath = "./source-commit-report.txt";
+    if (isValid) return;
     if (!fs.existsSync(filePath)) {
       fs.writeFileSync(filePath, "");
     }
@@ -171,24 +174,37 @@ function getDocument(filePath) {
     parentFilePath: string,
     commitHash: string
   ) {
-    if (!commitHashCache.has(fileFolder)) {
-      try {
-        commitHashCache.set(
-          fileFolder,
-          Number(
-            execSync(
-              `git rev-list --count ${commitHash}..HEAD -- ${parentFilePath}`,
-              {
-                cwd: CONTENT_ROOT,
-              }
-            )
-              .toString()
-              .trimEnd()
-          )
-        );
-      } catch (err) {
-        recordInvalidSourceCommit(`${fileFolder}: ${commitHash}`);
+    try {
+      let count = 0;
+      if (!memCommitStore.has(commitHash)) {
+        execSync(
+          `git log --pretty=format:'%H' --name-only ${commitHash}..${memCommitStoreOldest}`,
+          {
+            cwd: CONTENT_ROOT,
+          }
+        )
+          .toString()
+          .trimEnd()
+          .split("\n\n")
+          .forEach((commit) => {
+            const [hash, ...files] = commit.split("\n");
+            memCommitStore.set(hash, files);
+          });
+        memCommitStoreOldest = commitHash;
       }
+      for (const [hash, files] of memCommitStore.entries()) {
+        if (hash === commitHash) {
+          recordInvalidSourceCommit(
+            files.includes(parentFilePath),
+            `${fileFolder}: ${commitHash}`
+          );
+          break;
+        }
+        if (files.includes(parentFilePath)) count++;
+      }
+      commitHashCache.set(fileFolder, count);
+    } catch (err) {
+      recordInvalidSourceCommit(false, `${fileFolder}: ${commitHash}`);
     }
 
     return commitHashCache.get(fileFolder);
@@ -213,7 +229,7 @@ function getDocument(filePath) {
       sourceCommitURL = getLastCommitURL(CONTENT_ROOT, l10n.sourceCommit);
       sourceCommitsBehindCount = getCommitBehindFromLatest(
         fileFolder,
-        parentFilePath,
+        parentFilePath.replace(parentFileRoot, "files"),
         l10n.sourceCommit
       );
     }
