@@ -104,7 +104,7 @@ testing/content/files/en-us/markdown/tool/m2h/index.html
 client/.eslintcache
 popularities.json
 source-commit.json
-source-commit-report.txt
+source-commit-invalid-report.txt
 
 client/src/.linaria_cache
 ssr/.linaria-cache/

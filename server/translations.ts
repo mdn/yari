@@ -157,14 +157,19 @@ function getDocument(filePath) {
     };
   }
 
-  function recordInvalidSourceCommit(isValid: boolean, str: string) {
-    const filePath = "./source-commit-report.txt";
+  function recordInvalidSourceCommit(
+    isValid: boolean,
+    fileFolder: string,
+    commitHash: string
+  ) {
+    const filePath = "./source-commit-invalid-report.txt";
+    const errorMessage = `- ${commitHash} commit hash is invalid in ${fileFolder}`;
     if (isValid) return;
     if (!fs.existsSync(filePath)) {
       fs.writeFileSync(filePath, "");
     }
 
-    fs.appendFile(filePath, `${str}\n`, function (err) {
+    fs.appendFile(filePath, `${errorMessage}\n`, function (err) {
       if (err) throw err;
     });
   }
@@ -196,7 +201,8 @@ function getDocument(filePath) {
         if (hash === commitHash) {
           recordInvalidSourceCommit(
             files.includes(parentFilePath),
-            `${fileFolder}: ${commitHash}`
+            fileFolder,
+            commitHash
           );
           break;
         }
@@ -204,7 +210,7 @@ function getDocument(filePath) {
       }
       commitHashCache.set(fileFolder, count);
     } catch (err) {
-      recordInvalidSourceCommit(false, `${fileFolder}: ${commitHash}`);
+      recordInvalidSourceCommit(false, fileFolder, commitHash);
     }
 
     return commitHashCache.get(fileFolder);
