@@ -35,7 +35,7 @@ interface DocumentEdits {
   parentModified: string;
   commitURL: string;
   parentCommitURL: string;
-  sourceCommitsBehindCount: number;
+  sourceCommitsBehindCount?: number;
   sourceCommitURL?: string;
 }
 
@@ -699,7 +699,12 @@ function L10nSourceCommitModified({
   sourceCommitsBehindCount,
   sourceCommitURL,
 }: Pick<DocumentEdits, "sourceCommitsBehindCount" | "sourceCommitURL">) {
-  if (!sourceCommitURL) return <>Metadata does not exist.</>;
+  if (
+    !sourceCommitURL ||
+    (!sourceCommitsBehindCount && sourceCommitsBehindCount !== 0)
+  ) {
+    return <>Metadata does not exist.</>;
+  }
 
   const getImportanceColor = () => {
     if (sourceCommitsBehindCount === 0) return "🟢";
