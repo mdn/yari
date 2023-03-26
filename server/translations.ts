@@ -61,7 +61,7 @@ function packageTranslationDifferences(translationDifferences) {
 }
 
 const _foundDocumentsCache = new Map();
-const commitHashCache = fs.existsSync("./source-commit.json")
+const sourceCommitCache = fs.existsSync("./source-commit.json")
   ? new Map(
       Object.entries(
         JSON.parse(fs.readFileSync("./source-commit.json", "utf8"))
@@ -71,6 +71,32 @@ const commitHashCache = fs.existsSync("./source-commit.json")
 const memCommitStore = new Map<string, string[]>();
 let memCommitStoreOldest = "HEAD";
 export async function findDocuments({ locale }) {
+  function checkCacheValidation(prevCache: Map<any, any>): void {
+    const contentHash = getRecentRepoHash(CONTENT_ROOT);
+    const translatedContentHash = getRecentRepoHash(CONTENT_TRANSLATED_ROOT);
+
+    function getRecentRepoHash(cwd: string): string {
+      return execSync("git rev-parse HEAD", { cwd }).toString().trimEnd();
+    }
+    function isValidSourceCommitCache(): boolean {
+      return (
+        prevCache.has(CONTENT_ROOT) &&
+        prevCache.has(CONTENT_TRANSLATED_ROOT) &&
+        prevCache.get(CONTENT_ROOT) === contentHash &&
+        prevCache.get(CONTENT_TRANSLATED_ROOT) === translatedContentHash
+      );
+    }
+
+    if (!isValidSourceCommitCache()) {
+      prevCache.clear();
+      prevCache.set(CONTENT_ROOT, contentHash);
+      prevCache.set(CONTENT_TRANSLATED_ROOT, translatedContentHash);
+      sourceCommitCache.clear();
+      memCommitStore.clear();
+      memCommitStoreOldest = "HEAD";
+    }
+  }
+
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,
@@ -91,6 +117,7 @@ export async function findDocuments({ locale }) {
   });
   counts.total = documentsFound.count;
 
+  checkCacheValidation(_foundDocumentsCache);
   if (!_foundDocumentsCache.has(locale)) {
     _foundDocumentsCache.set(locale, new Map());
   }
@@ -126,7 +153,7 @@ export async function findDocuments({ locale }) {
 
   fs.writeFileSync(
     "./source-commit.json",
-    JSON.stringify(Object.fromEntries(commitHashCache)),
+    JSON.stringify(Object.fromEntries(sourceCommitCache)),
     "utf8"
   );
 
@@ -208,12 +235,12 @@ function getDocument(filePath) {
         }
         if (files.includes(parentFilePath)) count++;
       }
-      commitHashCache.set(fileFolder, count);
+      sourceCommitCache.set(fileFolder, count);
     } catch (err) {
       recordInvalidSourceCommit(false, fileFolder, commitHash);
     }
 
-    return commitHashCache.get(fileFolder);
+    return sourceCommitCache.get(fileFolder);
   }
 
   function packageEdits(document, parentDocument) {
