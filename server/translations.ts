@@ -62,12 +62,12 @@ function packageTranslationDifferences(translationDifferences) {
 
 const _foundDocumentsCache = new Map();
 const sourceCommitCache = fs.existsSync("./source-commit.json")
-  ? new Map(
+  ? new Map<string, number>(
       Object.entries(
         JSON.parse(fs.readFileSync("./source-commit.json", "utf8"))
       )
     )
-  : new Map();
+  : new Map<string, number>();
 const memCommitStore = new Map<string, string[]>();
 let memCommitStoreOldest = "HEAD";
 export async function findDocuments({ locale }) {
@@ -78,7 +78,7 @@ export async function findDocuments({ locale }) {
     function getRecentRepoHash(cwd: string): string {
       return execSync("git rev-parse HEAD", { cwd }).toString().trimEnd();
     }
-    function isValidSourceCommitCache(): boolean {
+    function isValidCache(): boolean {
       return (
         prevCache.has(CONTENT_ROOT) &&
         prevCache.has(CONTENT_TRANSLATED_ROOT) &&
@@ -87,7 +87,7 @@ export async function findDocuments({ locale }) {
       );
     }
 
-    if (!isValidSourceCommitCache()) {
+    if (!isValidCache()) {
       prevCache.clear();
       prevCache.set(CONTENT_ROOT, contentHash);
       prevCache.set(CONTENT_TRANSLATED_ROOT, translatedContentHash);
@@ -205,7 +205,7 @@ function getDocument(filePath) {
     fileFolder: string,
     parentFilePath: string,
     commitHash: string
-  ) {
+  ): number {
     try {
       let count = 0;
       if (!memCommitStore.has(commitHash)) {
