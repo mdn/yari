@@ -23,6 +23,11 @@ export function withProxyResponseHeaders(
     xFrame: !isLiveSampleURI,
   });
 
+  if (req.url?.endsWith("/sitemap.xml.gz")) {
+    res.setHeader("Content-Type", "application/xml");
+    res.setHeader("Content-Encoding", "gzip");
+  }
+
   return res;
 }
 
