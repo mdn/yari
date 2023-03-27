@@ -28,6 +28,15 @@ let subPathParts = subPath.split("/");
 // note that Intl owns some methods, we have some special handling for it later
 subPathParts = subPathParts.slice(0, subPathParts[0] === "Intl" ? 2 : 1);
 let mainObj = subPathParts.join(".");
+if (subPath.startsWith("Intl/Segmenter/segment/Segments")) {
+  mainObj = "Intl/Segmenter/segment/Segments";
+} else if (subPath.startsWith("Proxy/Proxy")) {
+  mainObj = "Proxy/handler";
+} else if (/Intl\/[a-z]/.test(subPath)) {
+  // If we are on a method page of Intl (e.g. Intl.supportedLocalesOf),
+  // the main object is Intl
+  mainObj = "Intl";
+}
 
 // Data for inheritance chain
 const inheritanceData = {
@@ -85,6 +94,10 @@ const groupData = {
     "Intl.RelativeTimeFormat",
     "Intl.Segmenter",
   ],
+  Segments: [
+    "Segments",
+    "Intl.Segmenter",
+  ],
   TypedArray: [
     "TypedArray",
     ...Object.keys(inheritanceData).filter((key) =>
@@ -93,14 +106,6 @@ const groupData = {
   ],
   Proxy: ["Proxy", "Proxy/handler"],
 };
-
-if (subPath.startsWith("Proxy/Proxy")) {
-  mainObj = "Proxy/handler";
-} else if (mainObj.startsWith("Intl") && !groupData.Intl.includes(mainObj)) {
-  // Special case for Intl, we should make sure that the main object is Intl
-  // as Intl owns some methods (e.g. Intl.getCanonicalLocales)
-  mainObj = "Intl";
-}
 
 // Get related pages from groups and exclude self
 let group = [];
@@ -148,7 +153,12 @@ const result = [];
 for (const obj of inheritance) {
   const objPath = obj.replaceAll(".", "/");
   const item = {
-    title: obj === "%Base%" ? "Object/Function" : obj,
+    title:
+      obj === "%Base%"
+        ? "Object/Function"
+        : obj === "Intl/Segmenter/segment/Segments"
+        ? "Segments"
+        : obj,
     subPath: objPath === "%Base%" ? "Object" : objPath,
     defaultOpened: obj === mainObj,
     constructors: [],
