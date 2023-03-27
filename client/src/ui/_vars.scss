@@ -247,7 +247,8 @@ $screen-lg: 992px;
 $screen-xl: 1200px;
 $screen-xxl: 1441px;
 
-$screen-height-limit: 44rem;
+// screen is to small for sticky placement
+$screen-height-place-limit: 44rem;
 
 /*
  * z-index scale

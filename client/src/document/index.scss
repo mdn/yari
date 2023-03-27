@@ -624,12 +624,12 @@ kbd {
 
   @media screen and (max-width: $screen-lg) {
     .mdn-cta-container ~ .document-page & {
+      // minus 3 rem to ~ account for the top banner
       --offset: calc(var(--main-document-header-height) + 3rem);
-      --max-height: calc(100vh - var(--offset));
     }
   }
 
-  @media screen and (min-width: $screen-md) and (min-height: $screen-height-limit) {
+  @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
     display: flex;
     flex-direction: column;
   }
@@ -645,7 +645,7 @@ kbd {
         rgba(0, 0, 0, 0) 100%
       );
     }
-    @media screen and (max-height: $screen-height-limit) {
+    @media screen and not (min-height: $screen-height-place-limit) {
       overflow: auto;
     }
   }
