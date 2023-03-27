@@ -619,15 +619,23 @@ kbd {
 }
 
 .sidebar-container {
-  @media screen and (min-width: $screen-md) {
+  --offset: var(--main-document-header-height);
+  --max-height: calc(100vh - var(--offset));
+
+  @media screen and (max-width: $screen-lg) {
+    .mdn-cta-container ~ .document-page & {
+      --offset: calc(var(--main-document-header-height) + 3rem);
+      --max-height: calc(100vh - var(--offset));
+    }
+  }
+
+  @media screen and (min-width: $screen-md) and (min-height: $screen-height-limit) {
     display: flex;
     flex-direction: column;
   }
-  max-height: calc(100vh - var(--main-document-header-height) - 3rem);
-  overflow: auto;
+  max-height: var(--max-height);
   position: sticky;
   top: 5rem;
-
   @media screen and (min-width: $screen-md) {
     .sidebar {
       mask-image: linear-gradient(
@@ -636,6 +644,9 @@ kbd {
         rgb(0, 0, 0) 3rem calc(100% - 3rem),
         rgba(0, 0, 0, 0) 100%
       );
+    }
+    @media screen and (max-height: $screen-height-limit) {
+      overflow: auto;
     }
   }
 
@@ -655,7 +666,7 @@ kbd {
         rgb(0, 0, 0) 3rem calc(100% - 3rem),
         rgba(0, 0, 0, 0) 100%
       );
-      overflow: scroll;
+      overflow: auto;
       position: sticky;
       top: var(--main-document-header-height);
 

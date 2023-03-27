@@ -1,15 +1,7 @@
 @use "../../../ui/vars" as *;
 
 .sidebar {
-  --offset: var(--main-document-header-height);
-  --max-height: calc(100vh - var(--offset));
-
   color: var(--text-secondary);
-
-  .mdn-cta-container ~ .document-page & {
-    --offset: calc(var(--main-document-header-height) + 3rem);
-    --max-height: calc(100vh - var(--offset));
-  }
 
   .backdrop {
     display: none;
@@ -155,8 +147,7 @@
     .sidebar-inner {
       background: var(--background-primary);
       border-right: 1px solid var(--border-primary);
-      display: flex;
-      flex-direction: column;
+      display: grid;
       height: var(--max-height);
       max-height: var(--max-height);
       max-width: 20rem;
@@ -171,9 +162,7 @@
       z-index: var(--z-index-top);
 
       .sidebar-inner-nav {
-        @media screen and (min-height: 48rem) {
-          overflow: auto;
-        }
+        display: contents;
         mask-image: linear-gradient(
           to bottom,
           rgb(0, 0, 0) 0% calc(100% - 3rem),
@@ -182,8 +171,21 @@
         padding-bottom: 3rem;
       }
 
+      @media screen and (min-height: $screen-height-limit) {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .sidebar-inner-nav {
+          display: block;
+          overflow: auto;
+        }
+      }
+
       .place {
         align-self: center;
+        grid-row: 2/3;
+        justify-self: center;
         margin-bottom: 0;
       }
     }
@@ -230,9 +232,11 @@
   }
   @media screen and (min-width: $screen-md) {
     display: flex;
-    @media screen and (min-height: 48rem) {
-      overflow: auto;
-    }
+  }
+  @media screen and (min-height: $screen-height-limit),
+    screen and (min-width: $screen-lg) {
+    display: block;
+    overflow: auto;
   }
   @media screen and (min-width: $screen-xl) {
     max-height: var(--max-height);
