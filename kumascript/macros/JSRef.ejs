@@ -74,6 +74,8 @@ if (
   inheritance.push("%Base%");
 }
 
+inheritance.unshift(mainObj);
+
 // Data for related pages
 const groupData = {
   Error: [
@@ -95,7 +97,7 @@ const groupData = {
     "Intl.Segmenter",
   ],
   Segments: [
-    "Segments",
+    "Intl/Segmenter/segment/Segments",
     "Intl.Segmenter",
   ],
   TypedArray: [
@@ -127,8 +129,6 @@ for (const groupItem of Object.values(groupData)) {
   }
 }
 
-inheritance.unshift(mainObj);
-
 function isPrototypeMemberPage(page) {
   return [
     "javascript-instance-accessor-property",
@@ -148,7 +148,7 @@ const pageTypeToKind = {
 };
 
 // Collect pages
-const result = [];
+const inheritanceChain = [];
 
 for (const obj of inheritance) {
   const objPath = obj.replaceAll(".", "/");
@@ -197,7 +197,7 @@ for (const obj of inheritance) {
       );
     }
   }
-  result.push(item);
+  inheritanceChain.push(item);
 }
 
 // Output helper
@@ -239,7 +239,6 @@ async function buildSublist(pages, title, opened) {
 }
 
 // Output
-
 async function renderOutput() {
   let output =
     '<section class="Quick_links" id="Quick_links" data-macro="JSRef"><ol>';
@@ -253,7 +252,7 @@ async function renderOutput() {
   );
   output += `<li><strong>${link}</strong></li>`;
 
-  for (const [index, item] of result.entries()) {
+  for (const [index, item] of inheritanceChain.entries()) {
     const {
       title,
       subPath,
@@ -314,20 +313,20 @@ async function renderOutput() {
         defaultOpened,
       );
     }
+  }
 
-    if (index === 0 && group.length > 0) {
-      output += `<li><strong>${text.Related}</strong></li>`;
-      for (const groupItem of group) {
-        const link = web.smartLink(
-          `${slugStdlib}/${groupItem.replace(".", "/")}`,
-          null,
-          `<code>${groupItem}</code>`,
-          null,
-          slugStdlib,
-          "JSRef",
-        );
-        output += `<li><strong>${link}</strong></li>`;
-      }
+  if (group.length > 0) {
+    output += `<li><strong>${text.Related}</strong></li>`;
+    for (const groupItem of group) {
+      const link = web.smartLink(
+        `${slugStdlib}/${groupItem.replace(".", "/")}`,
+        null,
+        `<code>${groupItem}</code>`,
+        null,
+        slugStdlib,
+        "JSRef",
+      );
+      output += `<li><strong>${link}</strong></li>`;
     }
   }
 
