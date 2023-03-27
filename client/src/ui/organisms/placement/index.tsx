@@ -95,7 +95,9 @@ export function Placement() {
     }
   );
 
-  return isLoading || isValidating ? null : (
+  return isLoading || isValidating ? (
+    <section className="place"></section>
+  ) : (
     <PlacementInner pong={pong}></PlacementInner>
   );
 }
