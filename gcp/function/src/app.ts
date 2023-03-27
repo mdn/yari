@@ -25,6 +25,7 @@ mainRouter.all("/users/fxa/*", proxyRumba);
 mainRouter.all("/submit/mdn-yari/*", proxyTelemetry);
 mainRouter.all("/pong/*", express.json(), proxyKevel);
 mainRouter.all("/pimg/*", proxyKevel);
+mainRouter.get("/static/*", proxyContent);
 mainRouter.get(
   "/[^/]+/docs/*",
   redirectFundamental,
