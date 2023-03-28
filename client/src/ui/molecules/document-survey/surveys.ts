@@ -44,7 +44,7 @@ export const SURVEYS: Survey[] = [
     show: (doc: Doc) => /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/7243449/MDN-Web-Components-Short-Survey",
     teaser:
-      "The WebDX community group wants to better understand developers’ needs concerning web components.",
+      "The Web Developer Experience CG wants to better understand developers’ needs concerning web components.",
     question: "What’s your experience with Web Components?",
     ...survey_duration(SurveyBucket.WEB_COMPONENTS_2023),
     ...survey_rates(SurveyKey.WEB_COMPONENTS_2023),
