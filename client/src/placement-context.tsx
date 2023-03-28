@@ -34,11 +34,10 @@ export interface PlacementStatus {
 
 export type PlacementData = PlacementStatus | PlacementError;
 
-const PLACEMENT_TYPES = ["docs", "search"];
+const PLACEMENT_PATH_RE = /\/[^\/]+\/(docs\/|search$)/i;
 
 function hasPlacement(pathname: string): boolean {
-  const [, , typ] = pathname.split("/");
-  return PLACEMENT_TYPES.includes(typ?.toLowerCase?.());
+  return PLACEMENT_PATH_RE.test(pathname);
 }
 
 export const PlacementContext = React.createContext<
@@ -47,16 +46,18 @@ export const PlacementContext = React.createContext<
 
 export function PlacementProvider(props: { children: React.ReactNode }) {
   const user = useUserData();
-  const { pathname } = useLocation();
+  const location = useLocation();
   const gleanClick = useGleanClick();
-  const pn = useRef(pathname);
+  const pathname = useRef(location.pathname);
   const {
     data: pong,
     isLoading,
     isValidating,
     mutate,
   } = useSWR<PlacementData>(
-    !PLACEMENT_ENABLED || user?.settings?.noAds || !hasPlacement(pathname)
+    !PLACEMENT_ENABLED ||
+      user?.settings?.noAds ||
+      !hasPlacement(location.pathname)
       ? null
       : "/pong/get",
     async (url) => {
@@ -89,11 +90,11 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
     }
   );
   useEffect(() => {
-    if (pathname !== pn.current) {
+    if (location.pathname !== pathname.current) {
       mutate();
-      pn.current = pathname;
+      pathname.current = location.pathname;
     }
-  }, [pathname, mutate]);
+  }, [location.pathname, mutate]);
 
   return (
     <PlacementContext.Provider value={isLoading || isValidating ? null : pong}>

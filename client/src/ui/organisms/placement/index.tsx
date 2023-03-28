@@ -27,12 +27,12 @@ function viewed(
 }
 
 export function Placement() {
-  const pong = usePlacement();
+  const placementData = usePlacement();
 
-  return !pong ? (
+  return !placementData ? (
     <section className="place"></section>
   ) : (
-    <PlacementInner pong={pong}></PlacementInner>
+    <PlacementInner pong={placementData}></PlacementInner>
   );
 }
 
