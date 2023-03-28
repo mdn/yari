@@ -93,7 +93,7 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
       mutate();
       pn.current = pathname;
     }
-  }, [pathname]);
+  }, [pathname, mutate]);
 
   return (
     <PlacementContext.Provider value={isLoading || isValidating ? null : pong}>

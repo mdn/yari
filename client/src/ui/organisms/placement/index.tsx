@@ -1,16 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
-import { PLACEMENT_ENABLED } from "../../../env";
 import { useIsServer, usePageVisibility } from "../../../hooks";
-import useSWR from "swr";
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import {
-  PlacementData,
-  PlacementStatus,
-  usePlacement,
-} from "../../../placement-context";
+import { PlacementStatus, usePlacement } from "../../../placement-context";
 
 interface Timer {
   timeout: number | null;
