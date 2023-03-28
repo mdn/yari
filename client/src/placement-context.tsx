@@ -34,7 +34,7 @@ export interface PlacementStatus {
 
 export type PlacementData = PlacementStatus | PlacementError;
 
-const PLACEMENT_PATH_RE = /\/[^\/]+\/(docs\/|search$)/i;
+const PLACEMENT_PATH_RE = /\/[^/]+\/(docs\/|search$)/i;
 
 function hasPlacement(pathname: string): boolean {
   return PLACEMENT_PATH_RE.test(pathname);
