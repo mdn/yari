@@ -23,6 +23,7 @@ enum SurveyBucket {
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
+  WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
 }
 
 enum SurveyKey {
@@ -33,18 +34,19 @@ enum SurveyKey {
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
+  WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
 }
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.CONTENT_DISCOVERY_2023,
-    bucket: SurveyBucket.CONTENT_DISCOVERY_2023,
+    key: SurveyKey.WEB_COMPONENTS_2023,
+    bucket: SurveyBucket.WEB_COMPONENTS_2023,
     show: (doc: Doc) => /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7241049/MDN-Web-Docs-Content-Discovery",
+    src: "https://survey.alchemer.com/s3/7243449/MDN-Web-Components-Short-Survey",
     teaser:
-      "The MDN Web Docs team wants to know what content you want to see. The survey is a single open-ended question and will help us understand what you're looking for.",
-    question: "Help us understand the content you're interested in seeing.",
-    ...survey_duration(SurveyBucket.CONTENT_DISCOVERY_2023),
-    ...survey_rates(SurveyKey.CONTENT_DISCOVERY_2023),
+      "The Web Developer Experience CG wants to better understand developers’ needs concerning web components.",
+    question: "What’s your experience with Web Components?",
+    ...survey_duration(SurveyBucket.WEB_COMPONENTS_2023),
+    ...survey_rates(SurveyKey.WEB_COMPONENTS_2023),
   },
 ];
