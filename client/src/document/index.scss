@@ -27,6 +27,7 @@
     a:link,
     a:visited {
       color: var(--text-primary);
+      position: relative;
       text-decoration: none;
     }
 
@@ -40,14 +41,18 @@
     }
 
     a[href^="#"]:hover {
-      &:after {
+      &:before {
+        align-items: center;
+        bottom: 0;
         color: var(--text-inactive);
         content: "#";
         display: inline-flex;
         font-size: 0.7em;
         line-height: 1;
-        margin-left: 4px;
+        margin-left: -0.8em;
+        position: absolute;
         text-decoration: none;
+        top: 0;
       }
     }
   }
