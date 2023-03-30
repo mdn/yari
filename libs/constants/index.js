@@ -117,8 +117,8 @@ export const CSP_DIRECTIVES = {
     "yari-demos.stage.mdn.mozit.cloud",
 
     // XYZ.
-    "interactive-examples.developer.allizom.xyz",
     "yari-demos.developer.allizom.xyz",
+
     "mdn.github.io",
     "mdn.mozillademos.org",
 
