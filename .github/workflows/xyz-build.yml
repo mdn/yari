@@ -159,7 +159,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Sync build with GCS bucket
-        run: gsutil -q -m cp -r client/build/ gs://${{ secrets.GCS_BUCKET }}/$DEPLOYMENT_ID/
+        run: gsutil -q -m cp -r client/build gs://${{ secrets.GCS_BUCKET }}/$DEPLOYMENT_ID
 
       - name: Build Function
         working-directory: gcp/function
