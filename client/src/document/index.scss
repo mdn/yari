@@ -447,14 +447,11 @@ pre {
   padding: 0 1rem;
   position: relative;
 
-  &::after {
+  &::before {
     background-size: 24px;
     content: "";
-    display: block;
+    float: right;
     height: 16px;
-    position: absolute;
-    right: 16px;
-    top: 18px;
     width: 16px;
   }
 }
@@ -467,7 +464,7 @@ pre {
 .example-bad {
   background-color: var(--background-critical);
 
-  &::after {
+  &::before {
     background-color: var(--icon-critical);
     mask-image: url("../assets/icons/no.svg");
   }
@@ -476,7 +473,7 @@ pre {
 .example-good {
   background-color: var(--background-success);
 
-  &::after {
+  &::before {
     background-color: var(--icon-success);
     mask-image: url("../assets/icons/checkmark.svg");
   }
