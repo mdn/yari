@@ -170,7 +170,7 @@ jobs:
       - name: Deploy Function
         uses: google-github-actions/deploy-cloud-functions@v1
         with:
-          name: mdn-two
+          name: ${{ vars.GCP_FUNCTION_NAME }}
           runtime: nodejs18
           entry_point: mdnHandler
           memory_mb: 256
