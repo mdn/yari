@@ -141,37 +141,17 @@ jobs:
 
           yarn tool sync-translated-content
 
-          yarn build --locale en-us > en-us.log &
-          build1=$!
-          yarn build --locale es > es.log &
-          build2=$!
-          yarn build --locale fr > fr.log &
-          build3=$!
-          yarn build --locale ja > ja.log &
-          build4=$!
-          yarn build --locale ko > ko.log &
-          build5=$!
-          yarn build --locale pt-br > pt-br.log &
-          build6=$!
-          yarn build --locale ru > ru.log &
-          build7=$!
-          yarn build --locale zh-cn > zh-cn.log &
-          build8=$!
-          yarn build --locale zh-tw > zh-tw.log &
-          build9=$!
+          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build --locale $locale &
+            pids+=($!)
+          done
 
           tail -n 0 -qF *.log &
           tail=$!
 
-          wait $build1
-          wait $build2
-          wait $build3
-          wait $build4
-          wait $build5
-          wait $build6
-          wait $build7
-          wait $build8
-          wait $build9
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
 
           kill $tail
 
