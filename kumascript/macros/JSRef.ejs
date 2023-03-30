@@ -21,22 +21,28 @@ const slug = env.slug;
 const locale = env.locale;
 const rtlLocales = ["ar", "he", "fa"];
 const slugStdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
-const subPath = slug.replace("Web/JavaScript/Reference/Global_Objects/", "");
-let subPathParts = subPath.split("/");
-// For Intl, we should use the first two parts of the slug if has
-// e.g. subPath startswith "Intl/Collator" we should use "Intl.Collator"
-// note that Intl owns some methods, we have some special handling for it later
-subPathParts = subPathParts.slice(0, subPathParts[0] === "Intl" ? 2 : 1);
-let mainObj = subPathParts.join(".");
-if (subPath.startsWith("Intl/Segmenter/segment/Segments")) {
-  mainObj = "Intl/Segmenter/segment/Segments";
-} else if (subPath.startsWith("Proxy/Proxy")) {
-  mainObj = "Proxy/handler";
-} else if (/Intl\/[a-z]/.test(subPath)) {
-  // If we are on a method page of Intl (e.g. Intl.supportedLocalesOf),
-  // the main object is Intl
-  mainObj = "Intl";
+
+function slugToObjName(slug) {
+  const subPath = slug.replace("Web/JavaScript/Reference/Global_Objects/", "");
+  // Handle special cases
+  if (subPath.startsWith("Intl/Segmenter/segment/Segments")) {
+    return "Intl/Segmenter/segment/Segments";
+  } else if (subPath.startsWith("Proxy/Proxy")) {
+    return "Proxy/handler";
+  } else if (/Intl\/[a-z]/.test(subPath)) {
+    // If we are on a method page of Intl (e.g. Intl.supportedLocalesOf),
+    // the main object is Intl
+    return "Intl";
+  }
+  let subPathParts = subPath.split("/");
+  // For Intl, we should use the first two parts of the slug if has
+  // e.g. subPath startswith "Intl/Collator" we should use "Intl.Collator"
+  // note that Intl owns some methods, which are already handled above
+  subPathParts = subPathParts.slice(0, subPathParts[0] === "Intl" ? 2 : 1);
+  return subPathParts.join(".");
 }
+
+const mainObj = slugToObjName(slug);
 
 // Data for inheritance chain
 const inheritanceData = {
@@ -86,15 +92,12 @@ const groupData = {
   ],
   Intl: [
     "Intl",
-    "Intl.Collator",
-    "Intl.DateTimeFormat",
-    "Intl.DisplayNames",
-    "Intl.ListFormat",
-    "Intl.Locale",
-    "Intl.NumberFormat",
-    "Intl.PluralRules",
-    "Intl.RelativeTimeFormat",
-    "Intl.Segmenter",
+    ...(await page
+      .subpagesExpand(
+        "/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl",
+      )
+      .filter((page) => page.pageType === "javascript-class")
+      .map((page) => slugToObjName(page.slug))),
   ],
   Segments: [
     "Intl/Segmenter/segment/Segments",
