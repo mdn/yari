@@ -27,7 +27,6 @@
     a:link,
     a:visited {
       color: var(--text-primary);
-      position: relative;
       text-decoration: none;
     }
 
@@ -39,20 +38,24 @@
     a:active {
       background-color: transparent;
     }
-
-    a[href^="#"]:hover {
-      &:before {
-        align-items: center;
-        bottom: 0;
+    
+    a[href^="#"] {
+      &::before {
         color: var(--text-inactive);
         content: "#";
         display: inline-flex;
         font-size: 0.7em;
         line-height: 1;
         margin-left: -0.8em;
-        position: absolute;
         text-decoration: none;
-        top: 0;
+        visibility: hidden;
+        width: 0.8em;
+      }
+      
+      &:hover {
+        &::before {
+          visibility: visible;
+        }
       }
     }
   }
