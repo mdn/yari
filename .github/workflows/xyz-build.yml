@@ -160,7 +160,7 @@ jobs:
           yarn build --locale zh-tw > zh-tw.log &
           build9=$!
 
-          tail -n 0 -F *.log &
+          tail -n 0 -qF *.log &
           tail=$!
 
           wait $build1
