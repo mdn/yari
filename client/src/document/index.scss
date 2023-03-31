@@ -38,7 +38,6 @@
     a:active {
       background-color: transparent;
     }
-    
     a[href^="#"] {
       &::before {
         color: var(--text-inactive);
