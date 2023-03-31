@@ -296,7 +296,7 @@ jobs:
 
       - name: Sync Yari Content
         run: |-
-          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -r client/build gs://content-stage-mdn/main
+          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-stage-mdn/main
 
       - name: Slack Notification
         if: failure()
