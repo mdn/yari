@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest-large
 
     env:
-      DEPLOYMENT_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      BUCKET_PATH: main
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -171,7 +171,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Sync build with GCS bucket
-        run: gsutil -q -m cp -r client/build gs://${{ vars.GCP_BUCKET_NAME }}/$DEPLOYMENT_ID
+        run: gsutil -q -m rsync -cdr client/build gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH
 
       - name: Build Function
         working-directory: gcp/function
@@ -194,7 +194,7 @@ jobs:
           env_vars: |-
             ORIGIN_MAIN=${{ vars.ORIGIN_MAIN }}
             ORIGIN_LIVE_SAMPLES=${{ vars.ORIGIN_LIVE_SAMPLES }}
-            SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ env.DEPLOYMENT_ID }}/
+            SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ env.BUCKET_PATH }}/
             SOURCE_RUMBA=https://developer.allizom.org/
           secret_environment_variables: |-
             KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id/versions/latest
