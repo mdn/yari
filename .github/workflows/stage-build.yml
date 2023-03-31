@@ -335,11 +335,11 @@ jobs:
             --set-env-vars="ORIGIN_LIVE_SAMPLES=yari-demos.developer.allizom.org" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/content-stage-mdn/" \
             --set-env-vars="SOURCE_RUMBA=https://api.developer.allizom.org/" \
-            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id/versions/latest" \
-            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-network-id/versions/latest" \
-            --set-secrets="SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest" \
-            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest" \
-            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest"
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
+            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest"
             \
           done
 
