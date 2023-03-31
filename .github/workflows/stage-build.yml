@@ -321,30 +321,27 @@ jobs:
       - name: Deploy Function
         run: |-
           for region in europe-west1 us-west1 asia-east1; do
-            gcloud function deploy mdn-nonprod-stage-$region \
+            gcloud functions deploy mdn-nonprod-stage-$region \
             --gen2 \
             --runtime=nodejs18 \
             --region=$region \
             --source=gcp/function \
             --trigger-http \
-            --allow-unathenticated \
+            --allow-unauthenticated \
             --entry-point=mdnHandler \
             --memory=256MB \
             --timeout=60s \
-            --set-env-vars=[\
-              ORIGIN_MAIN=developer.allizom.org,\
-              ORIGIN_LIVE_SAMPLES=yari-demos.developer.allizom.org,\
-              SOURCE_CONTENT=https://storage.googleapis.com/content-stage-mdn/,\
-              SOURCE_RUMBA=https://developer.allizom.org/,\
-            ]\
-            --set-secrets=[\
-              KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id/versions/latest,\
-              KEVEL_NETWORK_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-network-id/versions/latest,\
-              SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest,\
-              CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest,\
-              CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest,\
-            ]
-          ; done
+            --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=yari-demos.developer.allizom.org" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/content-stage-mdn/" \
+            --set-env-vars="SOURCE_RUMBA=https://developer.allizom.org/" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest" \
+            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest"
+            \
+          done
 
       - name: Slack Notification
         if: failure()
