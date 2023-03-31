@@ -231,10 +231,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.6.82":
-  version "2.6.82"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.82.tgz#e44512185cbd59178c3eb4cda3f95169e35554a9"
-  integrity sha512-FHJrD8tvh2I9iyiVsTBTLK9k3J662CQRIFsy5/V7cDFGWnQFv3qz2iHUw77AqLuvP1DGKLN/0Hm2oNzIktG0rg==
+"@zip.js/zip.js@2.6.83":
+  version "2.6.83"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.83.tgz#b30532eb7911a09a2f11d720705ff01dbc28f5c4"
+  integrity sha512-+DNoawyQwwqMY1HjQ3/YO5zWqEKbG1onJZDlhKGuH39Q4KmGvLYzX4UqtQX7u0rUDKaVGdDpcN3/H+rc3Spg4g==
 
 acorn-import-assertions@^1.7.6:
   version "1.8.0"
@@ -871,10 +871,10 @@ webpack-sources@^3.2.3:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
 
-webpack@^5.76.3:
-  version "5.76.3"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.76.3.tgz#dffdc72c8950e5b032fddad9c4452e7787d2f489"
-  integrity sha512-18Qv7uGPU8b2vqGeEEObnfICyw2g39CHlDEK4I7NK13LOur1d0HGmGNKGT58Eluwddpn3oEejwvBPoP4M7/KSA==
+webpack@^5.77.0:
+  version "5.77.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.77.0.tgz#dea3ad16d7ea6b84aa55fa42f4eac9f30e7eb9b4"
+  integrity sha512-sbGNjBr5Ya5ss91yzjeJTLKyfiwo5C628AFjEa6WSXcZa4E+F57om3Cc8xLb1Jh0b243AWuSYRf3dn7HVeFQ9Q==
   dependencies:
     "@types/eslint-scope" "^3.7.3"
     "@types/estree" "^0.0.51"
