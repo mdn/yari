@@ -20,7 +20,7 @@ jobs:
       contents: read
       id-token: write
 
-    runs-on: ubuntu-latest-large
+    runs-on: ubuntu-latest-4core
 
     env:
       BUCKET_PATH: main
