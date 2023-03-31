@@ -229,74 +229,15 @@ jobs:
           # Generate sitemap index file
           yarn build --sitemap-index
 
-      - name: Deploy with deployer
-        env:
-          GITHUB_SHA: ${{ env.GITHUB_SHA }}
-          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
-          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
-
-          # Set the CONTENT_ROOT first
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-
-          DEPLOYER_BUCKET_NAME: mdn-content-stage
-          DEPLOYER_DISTRIBUTION_ID: E2MLRMA1VTVDHX
-
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-
-          DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
-
-          DEPLOYER_LAMBDA_PREFIX: stage-
-
-          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_SITE_ID }}
-          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_NETWORK_ID }}
-          SIGN_SECRET: ${{ secrets.DEPLOYER_STAGE_SIGN_SECRET }}
-
-        run: |
-
-          # Info about which CONTENT_* environment variables were set and to what.
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-
-          cd deployer
-
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
-          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
-
-          poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
-          poetry run deployer search-index ../client/build
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+      - uses: actions/upload-artifact@v3
         with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          name: stage-build
+          path: client/build/
 
-      - name: Invalidate CDN
-        env:
-          DISTRIBUTION: E2MLRMA1VTVDHX
-          PATHS: /*
-        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
-
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
+      - uses: actions/upload-artifact@v3
         with:
-          token_format: access_token
-          service_account: deploy-stage-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
-          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-
-      - name: Sync Yari Content
-        run: |-
-          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -r client/build gs://content-stage-mdn/main
+          name: stage-build-en-us
+          path: client/build/en-us/
 
       - name: Slack Notification
         if: failure()
