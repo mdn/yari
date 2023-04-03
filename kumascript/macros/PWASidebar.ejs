@@ -94,7 +94,7 @@ async function renderSection(section) {
 }
 
 async function renderSidebar() {
-  let output = '<section id="Quick_links"><ol>';
+  let output = '<section id="Quick_links" data-macro="PWASidebar"><ol>';
 
   output += `<li><a href="${baseURL}"><strong>${await getTitle(
     ""
