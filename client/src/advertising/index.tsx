@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
@@ -58,7 +58,6 @@ export function Advertising({ pageTitle, ...props }: { pageTitle?: string }) {
           </Layout>
         }
       />
-      <Route path="/with_us" element={<Navigate to=".." />} />
     </Routes>
   );
 }
