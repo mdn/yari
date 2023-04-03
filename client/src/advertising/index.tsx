@@ -7,7 +7,6 @@ import { MainContentContainer } from "../ui/atoms/page-content";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { DocParent } from "../../../libs/types/document";
 
-import { About } from "./about";
 import { AdvertiseWithUs } from "./with_us";
 
 interface LayoutProps {
@@ -51,14 +50,6 @@ function Layout({
 export function Advertising({ pageTitle, ...props }: { pageTitle?: string }) {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <Layout>
-            <About />
-          </Layout>
-        }
-      />
       <Route
         path="/with_us"
         element={
