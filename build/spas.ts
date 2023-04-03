@@ -156,9 +156,8 @@ export async function buildSPAs(options: {
         { prefix: "community", pageTitle: "Contribute to MDN" },
         {
           prefix: "advertising",
-          pageTitle: "Experimenting with advertising on MDN",
+          pageTitle: "Advertise with us",
         },
-        { prefix: "advertising/with_us", pageTitle: "Advertise with us" },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
