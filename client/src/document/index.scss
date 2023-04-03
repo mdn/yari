@@ -38,7 +38,7 @@
     a:active {
       background-color: transparent;
     }
-    
+
     a[href^="#"] {
       &::before {
         color: var(--text-inactive);
@@ -51,7 +51,7 @@
         visibility: hidden;
         width: 0.8em;
       }
-      
+
       &:hover {
         &::before {
           visibility: visible;
