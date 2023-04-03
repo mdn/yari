@@ -63,9 +63,7 @@ async function renderSubsection(subsection) {
     subsection.name
   )}</summary><ol>`;
 
-  for (const item of subsection.contents) {
-    output += await renderItem(item);
-  }
+  output += (await Promise.all(subsection.contents.map(item => renderItem(item))).join('');
   output += "</ol></details></li>";
 
   return output;
