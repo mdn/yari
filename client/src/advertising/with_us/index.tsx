@@ -51,7 +51,7 @@ export function AdvertiseWithUs() {
         </section>
       </div>
       <section>
-        <h2>Join MDN's Ethical Ad Journey: Privacy-First Approach</h2>
+        <h2>Join MDN's Privacy-First Ad Journey</h2>
         <p>
           At MDN, we champion user privacy and we stand by{" "}
           <a
@@ -60,7 +60,7 @@ export function AdvertiseWithUs() {
             rel="noreferrer"
             className="external"
           >
-            Mozilla’s Ad targeting guidelines
+            Mozilla's Ad targeting guidelines
           </a>
           . We pride ourselves with an ethical advertising approach that ensures
           ads are context-based, free from tracking pixels, and don't involve
@@ -124,7 +124,7 @@ export function AdvertiseWithUs() {
             rel="noreferrer"
             className="external"
           >
-            Mozilla’s Ad targeting guidelines
+            Mozilla's Ad targeting guidelines
           </a>{" "}
           and{" "}
           <a
