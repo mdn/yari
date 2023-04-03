@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useLocale } from "../../../hooks";
 import "./index.scss";
 import { useLocation } from "react-router-dom";
@@ -71,7 +70,7 @@ export function Footer() {
               </a>
             </li>
             <li className="footer-nav-item">
-              <a href={`/en-US/advertising/with_us`}>Advertise with us</a>
+              <a href={`/en-US/advertising`}>Advertise with us</a>
             </li>
           </ul>
         </div>

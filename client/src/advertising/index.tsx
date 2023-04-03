@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
@@ -51,13 +51,14 @@ export function Advertising({ pageTitle, ...props }: { pageTitle?: string }) {
   return (
     <Routes>
       <Route
-        path="/with_us"
+        path="/"
         element={
           <Layout>
             <AdvertiseWithUs />
           </Layout>
         }
       />
+      <Route path="/with_us" element={<Navigate to=".." />} />
     </Routes>
   );
 }
