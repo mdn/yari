@@ -73,9 +73,7 @@
         rgba(0, 0, 0, 0) 100%
       );
       max-height: calc(100vh - var(--offset));
-      overflow: auto;
-      position: sticky;
-      top: var(--offset);
+      padding-bottom: 0;
     }
 
     .in-nav-toc {

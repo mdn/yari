@@ -142,7 +142,7 @@ interface GatherGitHistoryActionParameters extends ActionParameters {
 
 interface SyncTranslatedContentActionParameters extends ActionParameters {
   args: {
-    locale: string[];
+    locales: string[];
   };
   options: {
     verbose: boolean;
@@ -339,7 +339,7 @@ program
         redirect,
         dry: true,
       });
-      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.green(`Will delete ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
         console.log(
@@ -365,11 +365,40 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, {
+        const deletedDocs = Document.remove(slug, locale, {
           recursive,
           redirect,
         });
-        console.log(chalk.green(`Moved ${removed.length} documents.`));
+        console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));
+
+        // find references to the deleted document in content
+        console.log("Checking references...");
+        const referringFiles = [];
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const deleted of deletedDocs) {
+            const url = `/${locale}/docs/${deleted}`;
+            if (rawBody.includes(url)) {
+              referringFiles.push(`${document.url}`);
+            }
+          }
+        }
+
+        if (referringFiles.length) {
+          console.warn(
+            chalk.yellow(
+              `\n${referringFiles.length} files are referring to the deleted document. ` +
+                `Please update the following files to remove the links:\n\t${referringFiles.join(
+                  "\n\t"
+                )}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the deleted document.")
+          );
+        }
       }
     })
   )
@@ -654,29 +683,31 @@ program
     "sync-translated-content",
     "Sync translated content (sync with en-US slugs) for a locale"
   )
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
     tryOrExit(
       async ({ args, options }: SyncTranslatedContentActionParameters) => {
-        const { locale } = args;
+        const { locales } = args;
         const { verbose } = options;
         if (verbose) {
           log.setDefaultLevel(log.levels.DEBUG);
         }
-        for (const l of locale) {
+        for (const locale of locales) {
           const {
             movedDocs,
             conflictingDocs,
             orphanedDocs,
             redirectedDocs,
+            renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(l);
-          console.log(chalk.green(`Syncing ${l}:`));
+          } = syncAllTranslatedContent(locale);
+          console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
+          console.log(chalk.green(`Renamed ${renamedDocs} documents`));
           console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
           console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
           console.log(
@@ -704,7 +735,7 @@ program
     tryOrExit(async ({ args, options }: FixFlawsActionParameters) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
-      const allDocs = Document.findAll({
+      const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
       for (const document of allDocs.iterDocs()) {
@@ -769,7 +800,7 @@ program
       if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
         throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
       }
-      const documents = Document.findAll();
+      const documents = await Document.findAll();
       if (!documents.count) {
         throw new Error("No documents to analyze");
       }
@@ -999,7 +1030,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           .map((m) => `"${m}"`)
           .join(", ")} within content folder(s) matching "${foldersearch}"`
       );
-      const documents = Document.findAll({
+      const documents = await Document.findAll({
         folderSearch: foldersearch,
       });
       if (!documents.count) {

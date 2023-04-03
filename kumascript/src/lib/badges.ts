@@ -1,50 +1,57 @@
 import { KumaThis } from "../environment.js";
 import page from "../api/page.js";
 
-const badges = [
+type Badge = {
+  status: string;
+  tag: string;
+  macro: string;
+  template: Map<string, string>;
+};
+
+const badges: Array<Badge> = [
   {
     status: "experimental",
     tag: "Experimental",
-    macro: "ExperimentalBadge",
-    template: "",
+    macro: "Experimental_Inline",
+    template: new Map(),
   },
   {
     status: "non-standard",
     tag: "Non-standard",
-    macro: "NonStandardBadge",
-    template: "",
+    macro: "Non-Standard_Inline",
+    template: new Map(),
   },
   {
     status: "deprecated",
     tag: "Deprecated",
-    macro: "DeprecatedBadge",
-    template: "",
+    macro: "Deprecated_Inline",
+    template: new Map(),
   },
 ];
 
-let badgeTemplatesLoaded = false;
+const loadedLocales = new Set<string>();
 
 export async function getBadgeTemplates(kuma: KumaThis, aPage: any) {
-  await assertTemplatesLoaded(kuma);
+  const locale = kuma.env.locale.toLocaleLowerCase();
+  await assertTemplatesLoaded(kuma, locale);
   return badges
     .filter(
       ({ status, tag }) =>
-        (status && aPage.status?.includes(status)) || page.hasTag(aPage, tag)
+        aPage.status?.includes(status) || page.hasTag(aPage, tag)
     )
-    .map(({ template }) => template);
+    .map(({ template }) => template.get(locale));
 }
 
-async function assertTemplatesLoaded(kuma: KumaThis) {
-  if (!badgeTemplatesLoaded) {
-    await loadBadgeTemplates(kuma);
-    badgeTemplatesLoaded = true;
+async function assertTemplatesLoaded(kuma: KumaThis, locale: string) {
+  if (!loadedLocales.has(locale)) {
+    await loadBadgeTemplates(kuma, locale);
+    loadedLocales.add(locale);
   }
-  return badges;
 }
 
-async function loadBadgeTemplates(kuma: KumaThis) {
-  async function loadBadge(badge: (typeof badges)[0]) {
-    badge.template = (await kuma.template(badge.macro)) as string;
+async function loadBadgeTemplates(kuma: KumaThis, locale: string) {
+  async function loadBadge(badge: Badge) {
+    badge.template.set(locale, (await kuma.template(badge.macro)) as string);
   }
 
   await Promise.all(badges.map(loadBadge));

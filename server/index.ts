@@ -60,6 +60,7 @@ const app = express();
 
 const bcdRouter = express.Router({ caseSensitive: true });
 
+// Note that this route will only get hit if .env has this: REACT_APP_BCD_BASE_URL=""
 bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
   const data = getBCDDataForPath(req.params.path);
   return data ? res.json(data) : res.status(404).send("BCD path not found");
@@ -90,6 +91,15 @@ const proxy = FAKE_V1_API
       changeOrigin: true,
       // proxyTimeout: 20000,
       // timeout: 20000,
+      onError: (_err, req, res) => {
+        if (req.url === "/api/v1/whoami") {
+          // Fallback if rumba is not running.
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+          });
+          res.end(JSON.stringify({}));
+        }
+      },
     });
 
 const pongProxy = createProxyMiddleware({

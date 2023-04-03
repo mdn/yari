@@ -16,7 +16,7 @@ export function LastModified({ value, locale }) {
   return (
     <>
       This page was last modified on{" "}
-      <time dateTime={value}>
+      <time dateTime={value} suppressHydrationWarning>
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
     </>

@@ -2,6 +2,7 @@
 import { createHmac } from "node:crypto";
 
 import { Client } from "@adzerk/decision-sdk";
+import he from "he";
 import {
   KEVEL_SITE_ID,
   KEVEL_NETWORK_ID,
@@ -74,11 +75,22 @@ export async function handler(event) {
     const decisionRes = await client.decisions.get(decisionReq, {
       ip: anonymousIp,
     });
-    const { decisions: { div0 } = {} } = decisionRes;
+    const {
+      decisions: { div0 } = {},
+      candidateRetrieval: { div0: { candidatesFoundCount } = {} } = {},
+    } = decisionRes;
     if (div0 === null || div0?.[0] === null) {
+      let status = candidatesFoundCount ? "cap_reached" : "geo_unsupported";
       return {
-        status: 204,
-        statusDescription: "NO_CONTENT",
+        status: 200,
+        statusDescription: "OK",
+        "content-type": [
+          {
+            key: "Content-Type",
+            value: "application/json",
+          },
+        ],
+        body: JSON.stringify({ status }),
       };
     }
 
@@ -105,6 +117,7 @@ export async function handler(event) {
           )
         ).json();
         payload = {
+          status: "success",
           click: encodeAndSign(clickUrl),
           view: encodeAndSign(impressionUrl),
           fallback: {
@@ -124,7 +137,10 @@ export async function handler(event) {
       }
     } else {
       payload = {
-        copy: contents?.[0]?.data?.title || "This is an ad without copy?!",
+        status: "success",
+        copy: he.decode(
+          contents?.[0]?.data?.title || "This is an ad without copy?!"
+        ),
         image: encodeAndSign(contents[0]?.data?.imageUrl),
         click: encodeAndSign(clickUrl),
         view: encodeAndSign(impressionUrl),

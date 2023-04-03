@@ -119,6 +119,9 @@ jobs:
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
 
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
       - name: Build everything
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
@@ -152,6 +155,9 @@ jobs:
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
 
+          # Browser-compat data.
+          REACT_APP_BCD_BASE_URL: https://bcd.developer.mozilla.org
+
           # Offline updates
           REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
 
@@ -167,10 +173,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_FIREFOX_WEB_COMPAT_2023: 1675252800000 # (new Date("2023-02-01 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_END_FIREFOX_WEB_COMPAT_2023: 1675944000000 # (new Date("2023-02-09 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_FIREFOX_WEB_COMPAT_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_FIREFOX_WEB_COMPAT_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_WEB_COMPONENTS_2023: 1680004800000 # (new Date("2023-03-28 12:00:00Z").getTime())
+          REACT_APP_SURVEY_END_WEB_COMPONENTS_2023: 1680264000000 # (new Date("2023-03-31 12:00:00Z").getTime())
+          REACT_APP_SURVEY_RATE_FROM_WEB_COMPONENTS_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_WEB_COMPONENTS_2023: 0.10 # 10%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod

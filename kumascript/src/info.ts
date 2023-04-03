@@ -196,6 +196,7 @@ export const info = {
       locale,
       slug,
       title,
+      short_title: document.metadata["short-title"],
       status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],

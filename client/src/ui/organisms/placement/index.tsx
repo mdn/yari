@@ -4,13 +4,19 @@ import { useIsServer, usePageVisibility } from "../../../hooks";
 import useSWR from "swr";
 import { useUserData } from "../../../user-context";
 
-import "./placement.scss";
+import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
 interface Timer {
   timeout: number | null;
   start: number | null;
   notVisible?: boolean;
+}
+
+enum Status {
+  success = "success",
+  geoUnsupported = "geo_unsupported",
+  capReached = "cap_reached",
 }
 
 export interface Fallback {
@@ -21,13 +27,20 @@ export interface Fallback {
   by: string;
 }
 
-export interface PlacementStatus {
+interface PlacementError {
+  status: Status.geoUnsupported | Status.capReached;
+}
+
+interface PlacementStatus {
+  status: Status.success;
   click: string;
   view: string;
   copy?: string;
   image?: string;
   fallback?: Fallback;
 }
+
+type PlacementData = PlacementStatus | PlacementError;
 
 function viewed(
   pong: PlacementStatus,
@@ -50,7 +63,7 @@ export function Placement() {
     data: pong,
     isLoading,
     isValidating,
-  } = useSWR<PlacementStatus>(
+  } = useSWR<PlacementData>(
     !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
     async (url) => {
       const response = await fetch(url, {
@@ -60,13 +73,20 @@ export function Placement() {
         },
         body: JSON.stringify({ keywords: [] }),
       });
-      gleanClick("pong: pong->fetched");
+
+      gleanClick(`pong: pong->fetched ${response.status}`);
 
       if (!response.ok) {
         throw Error(response.statusText);
       }
 
-      return (await response.json()) as PlacementStatus;
+      try {
+        const placementResponse: PlacementData = await response.json();
+        gleanClick(`pong: pong->status ${placementResponse.status}`);
+        return placementResponse;
+      } catch (e) {
+        throw Error(response.statusText);
+      }
     },
     {
       revalidateIfStale: true,
@@ -75,7 +95,9 @@ export function Placement() {
     }
   );
 
-  return isLoading || isValidating ? null : (
+  return isLoading || isValidating ? (
+    <section className="place"></section>
+  ) : (
     <PlacementInner pong={pong}></PlacementInner>
   );
 }

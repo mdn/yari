@@ -586,7 +586,7 @@ var text = mdn.localStringMap({
 
 %>
 
-<section id="Quick_links">
+<section id="Quick_links" data-macro="AddonSidebar">
   <ol>
     <li><a href="<%=baseURL%>WebExtensions"><strong><%=text['WebExtensions']%></strong></a></li>
     <li class="toggle">
@@ -656,11 +656,7 @@ var text = mdn.localStringMap({
         </ol>
       </details>
     </li>
-    <li class="toggle">
-      <details>
-        <summary><a href="<%=baseURL%>WebExtensions/Firefox_differentiators"><%=text['WebExtensions/Firefox_differentiators']%></a></summary>
-      </details>
-    </li>
+    <li><a href="<%=baseURL%>WebExtensions/Firefox_differentiators"><%=text['WebExtensions/Firefox_differentiators']%></a></li>
     <li class="toggle">
       <details <%=currentPageIsUnder('WebExtensions/API')%>>
         <summary><%=text['WebExtensions/API']%></summary>

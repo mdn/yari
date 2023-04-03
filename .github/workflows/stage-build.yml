@@ -42,8 +42,20 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
 jobs:
   build:
+    environment: stage
+    permissions:
+      contents: read
+      id-token: write
+
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
@@ -119,6 +131,9 @@ jobs:
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
 
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
       - name: Build everything
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
@@ -134,7 +149,7 @@ jobs:
           BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
 
           # Use the stage version of interactive examples.
-          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -152,7 +167,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: false
 
           # Use the stage version of interactive examples in react app
-          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
@@ -164,10 +179,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
           # Surveys.
-          REACT_APP_SURVEY_START_FIREFOX_WEB_COMPAT_2023: 0 # stage
-          REACT_APP_SURVEY_END_FIREFOX_WEB_COMPAT_2023: 1675944000000 # (new Date("2023-02-09 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_FIREFOX_WEB_COMPAT_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_FIREFOX_WEB_COMPAT_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_WEB_COMPONENTS_2023: 0 # stage
+          REACT_APP_SURVEY_END_WEB_COMPONENTS_2023: 1680264000000 # (new Date("2023-03-31 12:00:00Z").getTime())
+          REACT_APP_SURVEY_RATE_FROM_WEB_COMPONENTS_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_WEB_COMPONENTS_2023: 0.10 # 10%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
@@ -268,6 +283,20 @@ jobs:
           DISTRIBUTION: E2MLRMA1VTVDHX
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: deploy-stage-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Sync Yari Content
+        run: |-
+          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-stage-mdn/main
 
       - name: Slack Notification
         if: failure()

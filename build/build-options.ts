@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../libs/constants/index.js";
