@@ -55,15 +55,8 @@ async function getTitle(pageSlug) {
   return mdn.htmlEscape(title);
 }
 
-async function renderSubsection(subsection) {
-  let output = `<li><details><summary>${await getTitle(
-    subsection.name
-  )}</summary><ol>`;
-
-  output += (await Promise.all(subsection.contents.map(item => renderItem(item)))).join('');
-  output += "</ol></details></li>";
-
-  return output;
+async function renderRootItem(item) {
+return `<li><a href="${getLink(item)}"><strong>${await getTitle(item)}</strong></a></li>`
 }
 
 async function renderItem(item) {
@@ -78,26 +71,28 @@ async function renderItem(item) {
   return output;
 }
 
-async function renderSection(section) {
-  let output = `<li><a href="${getLink(section.name)}"><strong>${await getTitle(section.name)}</strong></a></li>`;
-  for (const item of section.contents) {
-    output += await renderItem(item);
-  }
+async function renderSubsection(subsection) {
+  let output = `<li><details><summary>${await getTitle(
+    subsection.name
+  )}</summary><ol>`;
 
+  output += (await Promise.all(subsection.contents.map(item => renderItem(item)))).join('');
+  output += "</ol></details></li>";
+
+  return output;
+}
+
+async function renderSection(section) {
+  let output = await renderRootItem(section.name);
+  output += (await Promise.all(section.contents.map(item => renderItem(item)))).join('');
   return output;
 }
 
 async function renderSidebar() {
   let output = '<section id="Quick_links" data-macro="PWASidebar"><ol>';
-
-  output += `<li><a href="${getLink(sidebar.sidebarURL)}"><strong>${await getTitle(sidebar.sidebarURL
-  )}</strong></a></li>`;
-
-  for (const section of sidebar.sections) {
-    output += await renderSection(section);
-  }
+  output +=  await renderRootItem(sidebar.sidebarURL);
+  output += (await Promise.all(sidebar.sections.map(section => renderSection(section)))).join('');
   output += "</ol></section>";
-
   return output;
 }
 
