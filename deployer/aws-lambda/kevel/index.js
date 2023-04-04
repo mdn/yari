@@ -8,6 +8,7 @@ import {
   fetchImage,
 } from "@yari-internal/pong";
 
+// eslint-disable-next-line n/no-missing-import
 import * as env from "./env.js";
 import cc2ip from "./cc2ip.js";
 
