@@ -64,6 +64,8 @@ export const ALWAYS_ALLOW_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
+export const SENTRY_DSN_BUILD = process.env.SENTRY_DSN_BUILD || "";
+
 // -------
 // content
 // -------
