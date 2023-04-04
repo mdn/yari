@@ -109,8 +109,8 @@ export const CSP_DIRECTIVES = {
     "interactive-examples.mdn.mozilla.net",
     "interactive-examples.mdn.allizom.net",
     "mdn.github.io",
-    "yari-demos.prod.mdn.mozit.cloud",
-    "yari-demos.stage.mdn.mozit.cloud",
+    "live-samples.mdn.mozilla.net",
+    "live-samples.mdn.allizom.net",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
