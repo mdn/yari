@@ -1,51 +1,33 @@
-/* global fetch */
-import { createHmac } from "node:crypto";
-
 import { Client } from "@adzerk/decision-sdk";
-import he from "he";
+
+import { Coder } from "@yari-internal/pong";
 import {
-  KEVEL_SITE_ID,
-  KEVEL_NETWORK_ID,
-  SIGN_SECRET,
-  CARBON_ZONE_KEY,
-  FALLBACK_ENABLED,
-  // eslint-disable-next-line n/no-missing-import
-} from "./env.js";
+  makePongGetHandler,
+  makePongClickHandler,
+  makePongViewedHandler,
+  fetchImage,
+} from "@yari-internal/pong";
+
+import * as env from "./env.js";
 import cc2ip from "./cc2ip.js";
+
+const STATUS_DESCRIPTION = {
+  200: "OK",
+  204: "NO_CONTENT",
+  404: "NOT_FOUND",
+  405: "METHOD_NOT_ALLOWED",
+};
+
+const { KEVEL_SITE_ID, KEVEL_NETWORK_ID, SIGN_SECRET } = env;
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
 const client = new Client({ networkId, siteId });
 
-export async function fetchImage(src) {
-  const imageResponse = await fetch(src);
-  const imageBuffer = await imageResponse.arrayBuffer();
-  const contentType = imageResponse.headers.get("content-type");
-  return { buf: imageBuffer, contentType };
-}
-
-function encodeAndSign(s = "") {
-  const hmac = createHmac("sha256", SIGN_SECRET);
-  hmac.update(s);
-  return `${Buffer.from(s, "utf-8").toString("base64")}.${hmac.digest(
-    "base64"
-  )}`;
-}
-
-function decodeAndVerify(tuple = "") {
-  if (tuple === null) {
-    return null;
-  }
-  const [encoded, digest] = tuple.split(".");
-  const s = Buffer.from(encoded, "base64").toString("utf-8");
-  const hmac = createHmac("sha256", SIGN_SECRET);
-  hmac.update(s);
-  if (hmac.digest("base64") == digest) {
-    // === won't work...
-    return s;
-  }
-  return null;
-}
+const CODER = new Coder(SIGN_SECRET);
+const pongGetHandler = makePongGetHandler(client, CODER, env);
+const pongClickHandler = makePongClickHandler(CODER);
+const pongViewedHandler = makePongViewedHandler(CODER);
 
 export async function handler(event) {
   const request = event.Records[0].cf.request;
@@ -61,94 +43,21 @@ export async function handler(event) {
     if (request.method !== "POST") {
       return {
         status: 405,
-        statusDescription: "METHOD_NOT_ALLOWED",
+        statusDescription: STATUS_DESCRIPTION[405],
       };
     }
-    const { keywords = [] } = JSON.parse(
+    const body = JSON.parse(
       Buffer.from(request.body.data, "base64").toString()
     );
-    const decisionReq = {
-      placements: [{ adTypes: [465, 369] }],
-      keywords: [...keywords, countryCode],
-    };
-
-    const decisionRes = await client.decisions.get(decisionReq, {
-      ip: anonymousIp,
-    });
-    const {
-      decisions: { div0 } = {},
-      candidateRetrieval: { div0: { candidatesFoundCount } = {} } = {},
-    } = decisionRes;
-    if (div0 === null || div0?.[0] === null) {
-      let status = candidatesFoundCount ? "cap_reached" : "geo_unsupported";
-      return {
-        status: 200,
-        statusDescription: "OK",
-        "content-type": [
-          {
-            key: "Content-Type",
-            value: "application/json",
-          },
-        ],
-        body: JSON.stringify({ status }),
-      };
-    }
-
-    let payload = {};
-
-    const [{ contents, clickUrl, impressionUrl }] = div0;
-    if (
-      FALLBACK_ENABLED &&
-      CARBON_ZONE_KEY &&
-      CARBON_ZONE_KEY !== "undefined" &&
-      contents?.[0]?.data?.customData?.fallback
-    ) {
-      // fall back to carbon
-      try {
-        const {
-          ads: [
-            { description = null, statlink, statimp, smallImage, ad_via_link },
-          ] = [],
-        } = await (
-          await fetch(
-            `https://srv.buysellads.com/ads/${CARBON_ZONE_KEY}.json?forwardedip=${encodeURIComponent(
-              anonymousIp
-            )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
-          )
-        ).json();
-        payload = {
-          status: "success",
-          click: encodeAndSign(clickUrl),
-          view: encodeAndSign(impressionUrl),
-          fallback: {
-            click: encodeAndSign(statlink),
-            view: encodeAndSign(statimp),
-            image: encodeAndSign(smallImage),
-            copy: description,
-            by: ad_via_link,
-          },
-        };
-      } catch (e) {
-        console.log(e);
-        return {
-          status: 400,
-          statusDescription: "BAD_REQUEST",
-        };
-      }
-    } else {
-      payload = {
-        status: "success",
-        copy: he.decode(
-          contents?.[0]?.data?.title || "This is an ad without copy?!"
-        ),
-        image: encodeAndSign(contents[0]?.data?.imageUrl),
-        click: encodeAndSign(clickUrl),
-        view: encodeAndSign(impressionUrl),
-      };
-    }
+    const { statusCode: status, payload } = await pongGetHandler(
+      body,
+      countryCode,
+      anonymousIp,
+      userAgent
+    );
     const response = {
-      status: 200,
-      statusDescription: "OK",
+      status,
+      statusDescription: STATUS_DESCRIPTION[status],
       headers: {
         "cache-control": [
           {
@@ -176,18 +85,7 @@ export async function handler(event) {
     }
     const params = new URLSearchParams(request.querystring);
     try {
-      const click = decodeAndVerify(params.get("code"));
-      const fallback = decodeAndVerify(params.get("fallback"));
-      const res = await fetch(click, { redirect: "manual" });
-      let status = res.status;
-      let headers = res.headers;
-      if (fallback) {
-        const fallbackRes = await fetch(`https:${fallback}`, {
-          redirect: "manual",
-        });
-        status = fallbackRes.status;
-        headers = fallbackRes.headers;
-      }
+      const { status, location } = await pongClickHandler(params);
       if (status === 301 || status === 302) {
         return {
           status: 302,
@@ -196,7 +94,7 @@ export async function handler(event) {
             location: [
               {
                 key: "Location",
-                value: headers.get("location"),
+                value: location,
               },
             ],
           },
@@ -214,10 +112,7 @@ export async function handler(event) {
     }
     const params = new URLSearchParams(request.querystring);
     try {
-      const view = decodeAndVerify(params.get("code"));
-      const fallback = decodeAndVerify(params.get("fallback"));
-      fallback && (await fetch(`https:${fallback}`, { redirect: "manual" }));
-      await fetch(view, { redirect: "manual" });
+      await pongViewedHandler(params);
       return {
         status: 201,
         statusDescription: "CREATED",
@@ -226,7 +121,7 @@ export async function handler(event) {
       console.error(e);
     }
   } else if (request.uri.startsWith("/pimg/")) {
-    const src = decodeAndVerify(
+    const src = CODER.decodeAndVerify(
       decodeURIComponent(request.uri.substring("/pimg/".length))
     );
     const { buf, contentType } = await fetchImage(src);

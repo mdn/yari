@@ -1,0 +1,13 @@
+{
+  "name": "@yari-internal/pong",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@adzerk/decision-sdk": "^1.0.0-beta.20",
+    "he": "^1.2.0"
+  },
+  "export": "./index.js"
+}
