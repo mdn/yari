@@ -107,11 +107,9 @@ export const CSP_DIRECTIVES = {
     "'self'",
 
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
     "interactive-examples.mdn.allizom.net",
     "mdn.github.io",
     "yari-demos.prod.mdn.mozit.cloud",
-    "mdn.mozillademos.org",
     "yari-demos.stage.mdn.mozit.cloud",
 
     "jsfiddle.net",
@@ -131,11 +129,9 @@ export const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
-    "mdn.mozillademos.org",
     "media.prod.mdn.mozit.cloud",
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
     "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
