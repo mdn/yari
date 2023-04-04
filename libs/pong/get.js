@@ -101,7 +101,9 @@ export function makePongGetHandler(client, coder, env) {
               {
                 status: "success",
                 copy: he.decode(
-                  contents?.[0]?.data?.title || "This is an ad without copy?!"
+                  contents?.[0]?.data?.title ||
+                    contents?.[0]?.data?.cttitle ||
+                    "This is an ad without copy?!"
                 ),
                 image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
                 click: coder.encodeAndSign(clickUrl),
