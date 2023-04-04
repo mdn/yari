@@ -89,6 +89,7 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
       revalidateOnReconnect: false,
     }
   );
+
   useEffect(() => {
     if (location.pathname !== pathname.current) {
       mutate();
