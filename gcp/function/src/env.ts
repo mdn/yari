@@ -22,7 +22,7 @@ export enum Source {
 export const ORIGIN_MAIN: string =
   process.env["ORIGIN_MAIN"] || "developer.mozilla.org";
 export const ORIGIN_LIVE_SAMPLES: string =
-  process.env["ORIGIN_LIVE_SAMPLES"] || "yari-demos.prod.mdn.mozit.cloud";
+  process.env["ORIGIN_LIVE_SAMPLES"] || "live-samples.mdn.mozilla.net";
 
 export function origin(req: express.Request): Origin {
   switch (req.hostname) {
@@ -38,8 +38,7 @@ export function origin(req: express.Request): Origin {
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || "https://developer.mozilla.org";
 export const SOURCE_LIVE_SAMPLES: string =
-  process.env["SOURCE_LIVE_SAMPLES"] ||
-  "https://yari-demos.prod.mdn.mozit.cloud";
+  process.env["SOURCE_LIVE_SAMPLES"] || "https://live-samples.mdn.mozilla.net";
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "https://developer.mozilla.org";
 
