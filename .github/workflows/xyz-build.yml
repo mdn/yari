@@ -5,6 +5,8 @@ on:
     branches:
       - gcp
 
+  workflow_dispatch:
+
   workflow_call:
     secrets:
       GCP_PROJECT_NAME:
