@@ -67,6 +67,101 @@ jobs:
       - name: Print information about CPU
         run: cat /proc/cpuinfo
 
+      - name: Build everything
+        env:
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+
+          # The default for this environment variable is geared for writers
+          # (aka. local development). Usually defaults are supposed to be for
+          # secure production but this is an exception and default
+          # is not insecure.
+          BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.developer.allizom.xyz
+
+          # Use the stage version of interactive examples.
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+
+          # Now is not the time to worry about flaws.
+          BUILD_FLAW_LEVELS: "*:ignore"
+
+          # This is the Google Analytics account ID for developer.mozilla.org
+          # If it's used on other domains (e.g. stage or dev builds), it's OK
+          # because ultimately Google Analytics will filter it out since the
+          # origin domain isn't what that account expects.
+          #BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+
+          # This enables the Plus call-to-action banner and the Plus landing page
+          REACT_APP_ENABLE_PLUS: true
+
+          # This adds the ability to sign in (stage only for now)
+          REACT_APP_DISABLE_AUTH: false
+
+          # Use the stage version of interactive examples in react app
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+
+          # Firefox Accounts and SubPlat settings
+          REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
+
+          # Surveys.
+          REACT_APP_SURVEY_START_CONTENT_DISCOVERY_2023: 0 # stage
+          REACT_APP_SURVEY_END_CONTENT_DISCOVERY_2023: 1677672000000 # (new Date("2023-03-01 12:00:00Z")).getTime()
+          REACT_APP_SURVEY_RATE_FROM_CONTENT_DISCOVERY_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_CONTENT_DISCOVERY_2023: 0.05 # 5%
+
+          # Telemetry.
+          REACT_APP_GLEAN_CHANNEL: xyz
+          REACT_APP_GLEAN_ENABLED: true
+
+          # Newsletter
+          REACT_APP_NEWSLETTER_ENABLED: false
+
+          # Placement
+          REACT_APP_PLACEMENT_ENABLED: true
+
+        run: |
+
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          # Build the ServiceWorker first
+          yarn build:sw
+          yarn build:prepare
+
+          # (July 15, 2021) This is a temporary solution. This should become an
+          # integrated part of 'build:prepare'.
+          # See https://github.com/mdn/yari/issues/4217
+          yarn tool popularities
+
+          yarn tool sync-translated-content
+
+          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build --locale $locale &
+            pids+=($!)
+          done
+
+          tail -n 0 -qF *.log &
+          tail=$!
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+          kill $tail
+
+          du -sh client/build
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v0
         with:
@@ -76,6 +171,11 @@ jobs:
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
+
+      - name: Sync build with GCS bucket
+        run: |
+          gsutil -q -m cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH/static
+          gsutil -q -m rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH
 
       - name: Build Function
         working-directory: gcp/function
