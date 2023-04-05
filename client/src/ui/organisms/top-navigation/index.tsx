@@ -21,7 +21,6 @@ export function TopNavigation() {
       <input
         id="menu-toggle"
         type="checkbox"
-        aria-haspopup={"menu"}
         aria-label={assistiveText}
         title={assistiveText}
         className="visually-hidden"
