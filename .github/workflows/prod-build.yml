@@ -219,6 +219,10 @@ jobs:
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
 
+          # Sentry.
+          SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
+          SENTRY_ENVIRONMENT: prod
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
