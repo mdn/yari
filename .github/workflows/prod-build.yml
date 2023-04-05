@@ -222,6 +222,7 @@ jobs:
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
           SENTRY_ENVIRONMENT: prod
+          SENTRY_RELEASE: ${{ github.sha }}
 
         run: |
 
