@@ -1,8 +1,8 @@
 /* global fetch */
-export function makePongClickHandler(CODER) {
+export function createPongClickHandler(coder) {
   return async (params) => {
-    const click = CODER.decodeAndVerify(params.get("code"));
-    const fallback = CODER.decodeAndVerify(params.get("fallback"));
+    const click = coder.decodeAndVerify(params.get("code"));
+    const fallback = coder.decodeAndVerify(params.get("fallback"));
     const res = await fetch(click, { redirect: "manual" });
     let status = res.status;
     let headers = res.headers;

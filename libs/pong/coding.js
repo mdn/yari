@@ -1,7 +1,16 @@
 import { createHmac } from "node:crypto";
 
 export class Coder {
+  /**
+   * The signing secret.
+   * @type {string}
+   */
   signSecret;
+
+  /**
+   * Create a Coder to en/decode and sign/verify fields.
+   * @param {string} signSecret - The signing secret.
+   */
   constructor(signSecret) {
     this.signSecret = signSecret;
   }

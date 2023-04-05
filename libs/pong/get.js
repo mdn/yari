@@ -1,5 +1,6 @@
 /* global fetch */
 import he from "he";
+import anonymousIpByCC from "./cc2ip.js";
 import { fallbackHandler } from "./fallback.js";
 
 const PLACEMENTS = {
@@ -7,14 +8,15 @@ const PLACEMENTS = {
   topBanner: 585,
 };
 
-export function makePongGetHandler(client, coder, env) {
+export function createPongGetHandler(client, coder, env) {
   const {
     CARBON_ZONE_KEY,
     FALLBACK_ENABLED,
     // eslint-disable-next-line n/no-missing-import
   } = env;
-  return async (body, countryCode, anonymousIp, userAgent) => {
+  return async (body, countryCode, userAgent) => {
     const { keywords = [], pongs = null } = body;
+    const anonymousIp = anonymousIpByCC(countryCode);
 
     if (pongs === null) {
       const decisionReq = {

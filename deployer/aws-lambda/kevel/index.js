@@ -2,15 +2,14 @@ import { Client } from "@adzerk/decision-sdk";
 
 import { Coder } from "@yari-internal/pong";
 import {
-  makePongGetHandler,
-  makePongClickHandler,
-  makePongViewedHandler,
+  createPongGetHandler,
+  createPongClickHandler,
+  createPongViewedHandler,
   fetchImage,
 } from "@yari-internal/pong";
 
 // eslint-disable-next-line n/no-missing-import
 import * as env from "./env.js";
-import cc2ip from "./cc2ip.js";
 
 const STATUS_DESCRIPTION = {
   200: "OK",
@@ -25,17 +24,16 @@ const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
 const client = new Client({ networkId, siteId });
 
-const CODER = new Coder(SIGN_SECRET);
-const pongGetHandler = makePongGetHandler(client, CODER, env);
-const pongClickHandler = makePongClickHandler(CODER);
-const pongViewedHandler = makePongViewedHandler(CODER);
+const coder = new Coder(SIGN_SECRET);
+const handleGet = createPongGetHandler(client, coder, env);
+const handleClick = createPongClickHandler(coder);
+const handleViewed = createPongViewedHandler(coder);
 
 export async function handler(event) {
   const request = event.Records[0].cf.request;
   // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html
   const countryHeader = request.headers["cloudfront-viewer-country"];
   const countryCode = countryHeader ? countryHeader[0].value : "US";
-  const anonymousIp = cc2ip[countryCode] ?? "127.0.0.1";
 
   const userAgentHeader = request.headers["user-agent"];
   const userAgent = userAgentHeader ? userAgentHeader[0].value : null;
@@ -50,10 +48,9 @@ export async function handler(event) {
     const body = JSON.parse(
       Buffer.from(request.body.data, "base64").toString()
     );
-    const { statusCode: status, payload } = await pongGetHandler(
+    const { statusCode: status, payload } = await handleGet(
       body,
       countryCode,
-      anonymousIp,
       userAgent
     );
     const response = {
@@ -86,7 +83,7 @@ export async function handler(event) {
     }
     const params = new URLSearchParams(request.querystring);
     try {
-      const { status, location } = await pongClickHandler(params);
+      const { status, location } = await handleClick(params);
       if (status === 301 || status === 302) {
         return {
           status: 302,
@@ -113,7 +110,7 @@ export async function handler(event) {
     }
     const params = new URLSearchParams(request.querystring);
     try {
-      await pongViewedHandler(params);
+      await handleViewed(params);
       return {
         status: 201,
         statusDescription: "CREATED",
@@ -122,7 +119,7 @@ export async function handler(event) {
       console.error(e);
     }
   } else if (request.uri.startsWith("/pimg/")) {
-    const src = CODER.decodeAndVerify(
+    const src = coder.decodeAndVerify(
       decodeURIComponent(request.uri.substring("/pimg/".length))
     );
     const { buf, contentType } = await fetchImage(src);

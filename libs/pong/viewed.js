@@ -1,5 +1,5 @@
 /* global fetch */
-export function makePongViewedHandler(coder) {
+export function createPongViewedHandler(coder) {
   return async (params) => {
     const view = coder.decodeAndVerify(params.get("code"));
     const fallback = coder.decodeAndVerify(params.get("fallback"));
