@@ -106,21 +106,12 @@ export const CSP_DIRECTIVES = {
   "frame-src": [
     "'self'",
 
-    // Prod.
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "yari-demos.prod.mdn.mozit.cloud",
-
-    // Stage.
     "interactive-examples.mdn.allizom.net",
-    "interactive-examples.mdn.allizom.net",
-    "yari-demos.stage.mdn.mozit.cloud",
-
-    // XYZ.
-    "yari-demos.developer.allizom.xyz",
-
     "mdn.github.io",
-    "mdn.mozillademos.org",
+    "yari-demos.prod.mdn.mozit.cloud",
+    "yari-demos.stage.mdn.mozit.cloud",
+    "yari-demos.developer.allizom.xyz",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
@@ -139,11 +130,9 @@ export const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
-    "mdn.mozillademos.org",
     "media.prod.mdn.mozit.cloud",
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
     "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
