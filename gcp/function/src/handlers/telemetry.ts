@@ -4,4 +4,5 @@ export const proxyTelemetry = createProxyMiddleware({
   target: "https://incoming.telemetry.mozilla.org",
   changeOrigin: true,
   autoRewrite: true,
+  xfwd: true,
 });
