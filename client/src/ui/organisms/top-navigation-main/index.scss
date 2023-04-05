@@ -1,29 +1,46 @@
 @use "../../vars" as *;
 
 .top-navigation-main {
-  display: none;
-  justify-content: space-between;
-  padding: 0;
-  width: 100%;
-
   .show-nav & {
     display: flex;
     flex-direction: column;
   }
 
+  .logo {
+    grid-area: logo;
+    min-height: var(--top-nav-height);
+  }
+
   .auth-container {
+    grid-area: user;
     order: 0;
   }
 
+  .place {
+    grid-area: place;
+  }
+
+  .theme-switcher-menu {
+    grid-area: theme;
+  }
+
   .header-search {
+    grid-area: search;
     order: 1;
   }
 
   .main-nav {
+    grid-area: nav;
     order: 2;
   }
 
+  .main-menu-toggle {
+    grid-area: button;
+    justify-self: flex-end;
+  }
+
   .user-menu {
+    grid-area: user;
     order: 3;
   }
 
@@ -151,16 +168,7 @@
   }
 
   @media screen and (min-width: $screen-lg) {
-    align-items: center;
-    display: flex;
-    flex: 1;
-    flex-direction: row;
     gap: 0.5rem;
-    left: inherit;
-    padding: 0;
-    position: initial;
-    top: inherit;
-    z-index: inherit;
 
     .show-nav & {
       flex-direction: row;

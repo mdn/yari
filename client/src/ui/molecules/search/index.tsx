@@ -49,7 +49,11 @@ export function Search({
 
   return (
     <div
-      className={isHomepageSearch ? "homepage-hero-search" : "header-search"}
+      className={
+        isHomepageSearch
+          ? "homepage-hero-search"
+          : "header-search mobile-hidden"
+      }
     >
       <SearchNavigateWidget {...searchProps} onResultPicked={onResultPicked} />
     </div>

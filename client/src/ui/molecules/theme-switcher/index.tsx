@@ -61,7 +61,7 @@ export const ThemeSwitcher = () => {
 
   return (
     <DropdownMenuWrapper
-      className="theme-switcher-menu"
+      className="theme-switcher-menu mobile-hidden"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
     >

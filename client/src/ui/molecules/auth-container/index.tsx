@@ -8,7 +8,7 @@ export const AuthContainer = ({
   subscribeGleanContext,
 }) => {
   return (
-    <ul className="auth-container">
+    <ul className="auth-container mobile-hidden">
       <li>
         <SignInLink gleanContext={signInGleanContext} />
       </li>

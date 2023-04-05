@@ -15,13 +15,13 @@ import {
   TOP_NAV_GET_MDN_PLUS,
 } from "../../../telemetry/constants";
 
-export const TopNavigationMain = ({ isOpenOnMobile }) => {
+export const TopNavigationMain = () => {
   const userData = useUserData();
   const isServer = useIsServer();
 
   return (
-    <div className="top-navigation-main">
-      <MainMenu isOpenOnMobile={isOpenOnMobile} />
+    <>
+      <MainMenu />
 
       <Search id="top-nav-search" />
       <ThemeSwitcher />
@@ -40,6 +40,6 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
             subscribeGleanContext={TOP_NAV_GET_MDN_PLUS}
           />
         )}
-    </div>
+    </>
   );
 };

@@ -71,7 +71,7 @@ export const UserMenu = () => {
 
   return (
     <DropdownMenuWrapper
-      className="top-level-entry-container user-menu"
+      className="top-level-entry-container user-menu mobile-hidden"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
     >

@@ -1,5 +1,26 @@
 @use "../../vars" as *;
 
+@media screen and (max-width: #{$screen-lg - 1}) {
+  #menu-toggle:focus
+    ~ .top-navigation
+    > .top-navigation-main
+    > .main-menu-toggle {
+    outline-color: var(--accent-primary);
+    outline-offset: 1px;
+    outline-style: auto;
+  }
+
+  #menu-toggle:not(:checked) ~ .top-navigation > .top-navigation-main {
+    .main-menu-toggle > .menu-toggle-icon {
+      mask-image: url("../../../assets/icons/menu.svg");
+    }
+
+    > .mobile-hidden {
+      display: none;
+    }
+  }
+}
+
 .top-navigation {
   background-color: var(--background-primary);
   border-bottom: 1px solid var(--border-primary);
@@ -7,15 +28,12 @@
   width: 100%;
   z-index: $bottom-layer;
 
-  .container {
-    align-items: center;
-    background-color: var(--background-primary);
-    display: flex;
-    flex-flow: row wrap;
-    gap: var(--gutter);
-
-    @media screen and (min-width: $screen-md) {
-      background-color: transparent;
+  .main-menu-toggle {
+    > .menu-toggle-icon {
+      background-color: var(--text-primary);
+      height: 1rem;
+      mask-image: url("../../../assets/icons/cancel.svg");
+      width: 1rem;
     }
   }
 
@@ -24,15 +42,24 @@
   }
 
   /* Wrapper strictly used for containing the logo and menu toggle */
-  .top-navigation-wrap {
+  .top-navigation-main {
     align-items: center;
-    display: flex;
-    flex: 1;
-    height: var(--top-nav-height);
-    justify-content: space-between;
+    display: grid;
+    grid-template-areas:
+      "logo   place  button"
+      "theme  theme  theme "
+      "search search search"
+      "nav    nav    nav   "
+      "user   user   user  ";
+    min-height: var(--top-nav-height);
+    @media screen and (min-width: $screen-lg) {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
   }
 
-  &.show-nav {
+  #menu-toggle:checked ~ & {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     z-index: var(--z-index-top);
 
@@ -45,9 +72,5 @@
 @media screen and (min-width: $screen-lg) {
   .main-menu-toggle {
     display: none;
-  }
-
-  .top-navigation .top-navigation-wrap {
-    flex: 0;
   }
 }
