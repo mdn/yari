@@ -12,8 +12,8 @@ const NOT_FOUND_PATH = "en-us/_spas/404.html";
 export function createContentProxy(): express.Handler {
   const target = sourceUri(Source.content);
   return createProxyMiddleware({
-    changeOrigin: true,
     target,
+    changeOrigin: true,
     autoRewrite: true,
     proxyTimeout: 20000,
     xfwd: true,
