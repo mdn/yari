@@ -3,11 +3,7 @@
 @media screen and (min-width: $screen-sm) {
   .bc-table {
     thead {
-      background-color: var(--background-primary);
       display: table-header-group;
-      position: sticky;
-      top: var(--main-document-header-height);
-      z-index: var(--z-index-low);
 
       .bc-platforms {
         th {
@@ -38,6 +34,7 @@
 
   .table-container {
     margin: 0 -3rem;
+    overflow: auto;
     width: 100vw;
   }
 
