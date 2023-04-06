@@ -1,4 +1,4 @@
-import express from "express";
+import type express from "express";
 import httpProxy from "http-proxy";
 
 const proxy = httpProxy.createProxyServer();
