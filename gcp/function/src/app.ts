@@ -16,13 +16,14 @@ import { redirectTrailingSlash } from "./middlewares/redirectTrailingSlash.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
+mainRouter.use(express.raw({ type: "*/*" }));
 mainRouter.use(redirectLeadingSlash);
 mainRouter.all("/api/v1/stripe/plans", plans);
 mainRouter.all("/api/*", proxyRumba);
 mainRouter.all("/admin-api/*", proxyRumba);
 mainRouter.all("/events/fxa/*", proxyRumba);
 mainRouter.all("/users/fxa/*", proxyRumba);
-mainRouter.all("/submit/mdn-yari/*", express.raw(), proxyTelemetry);
+mainRouter.all("/submit/mdn-yari/*", proxyTelemetry);
 mainRouter.all("/pong/*", express.json(), proxyKevel);
 mainRouter.all("/pimg/*", proxyKevel);
 mainRouter.get("/sitemaps/*", proxyContent);
