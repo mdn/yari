@@ -18,17 +18,19 @@ export function createContentProxy(): express.Handler {
     proxyTimeout: 20000,
     xfwd: true,
     selfHandleResponse: true,
-    onProxyRes: responseInterceptor(
-      async (responseBuffer, proxyRes, req, res) => {
-        withProxyResponseHeaders(proxyRes, req, res);
-        if (proxyRes.statusCode === 404) {
-          const response = await fetch(`${target}${NOT_FOUND_PATH}`);
-          res.setHeader("Content-Type", "text/html");
-          return Buffer.from(await response.arrayBuffer());
-        }
+    on: {
+      proxyRes: responseInterceptor(
+        async (responseBuffer, proxyRes, req, res) => {
+          withProxyResponseHeaders(proxyRes, req, res);
+          if (proxyRes.statusCode === 404) {
+            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
+            res.setHeader("Content-Type", "text/html");
+            return Buffer.from(await response.arrayBuffer());
+          }
 
-        return responseBuffer;
-      }
-    ),
+          return responseBuffer;
+        }
+      ),
+    },
   });
 }
