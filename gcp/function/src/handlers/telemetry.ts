@@ -6,4 +6,7 @@ export const proxyTelemetry = createProxyMiddleware({
   autoRewrite: true,
   proxyTimeout: 20000,
   xfwd: true,
+  headers: {
+    Connection: "keep-alive",
+  },
 });
