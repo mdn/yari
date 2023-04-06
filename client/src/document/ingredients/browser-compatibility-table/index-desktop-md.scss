@@ -1,11 +1,39 @@
 @media screen and (min-width: $screen-md) {
   .table-container {
+    overflow: initial;
     width: calc(100% + 6rem);
+  }
+  
+  .table-container-inner {
+    min-width: auto;
   }
 
   .bc-table {
-    tbody th {
-      width: 20%;
+    overflow: hidden;
+    table-layout: fixed;
+
+    thead {
+      background-color: var(--background-primary);
+      top: var(--main-document-header-height);
+      position: sticky;
+      z-index: var(--z-index-low)
+    }
+
+    td,
+    th {
+      width: auto;
+    }
+  }
+
+  .bc-platforms {
+    td {
+      width: 25%;
+    }
+  }
+
+  .bc-table-row-header {
+    code {
+      overflow-wrap: anywhere;
     }
   }
 }
