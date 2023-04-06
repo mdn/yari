@@ -4,6 +4,7 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
+import { Context } from "@mozilla/glean/dist/core/context";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
@@ -57,6 +58,10 @@ function glean(): GleanAnalytics {
     .includes(`${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true`);
 
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
+
+  if (document.location.hostname === "localhost") {
+    Context.testing = true;
+  }
 
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
