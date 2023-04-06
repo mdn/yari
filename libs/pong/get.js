@@ -9,11 +9,7 @@ const PLACEMENTS = {
 };
 
 export function createPongGetHandler(client, coder, env) {
-  const {
-    CARBON_ZONE_KEY,
-    FALLBACK_ENABLED,
-    // eslint-disable-next-line n/no-missing-import
-  } = env;
+  const { CARBON_ZONE_KEY, FALLBACK_ENABLED } = env;
   return async (body, countryCode, userAgent) => {
     const { keywords = [], pongs = null } = body;
     const anonymousIp = anonymousIpByCC(countryCode);
