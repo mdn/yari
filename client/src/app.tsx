@@ -53,7 +53,9 @@ function Layout({ pageType, children }) {
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {pageType !== "document-page" && <TopNavigation />}
+        {pageType !== "document-page" && (
+          <TopNavigation extraClasses="main-document-header-container" />
+        )}
         {children}
       </div>
       <Footer />
