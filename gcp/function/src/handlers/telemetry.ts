@@ -1,14 +1,9 @@
-import express from "express";
-import httpProxy from "http-proxy";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
-const proxy = httpProxy.createProxyServer();
-
-export const proxyTelemetry = (req: express.Request, res: express.Response) => {
-  proxy.web(req, res, {
-    target: "https://incoming.telemetry.mozilla.org",
-    changeOrigin: true,
-    autoRewrite: true,
-    proxyTimeout: 20000,
-    xfwd: true,
-  });
-};
+export const proxyTelemetry = createProxyMiddleware({
+  target: "https://incoming.telemetry.mozilla.org",
+  changeOrigin: true,
+  autoRewrite: true,
+  proxyTimeout: 20000,
+  xfwd: true,
+});
