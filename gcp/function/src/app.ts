@@ -8,7 +8,6 @@ import { plans } from "./handlers/plans.js";
 import { proxyTelemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
-import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
 import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
 import { redirectFundamental } from "./middlewares/redirectFundamental.js";
 import { redirectLocale } from "./middlewares/redirectLocale.js";
@@ -16,7 +15,6 @@ import { redirectTrailingSlash } from "./middlewares/redirectTrailingSlash.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
-mainRouter.use(redirectLeadingSlash);
 mainRouter.all("/api/v1/stripe/plans", plans);
 mainRouter.all("/api/*", proxyRumba);
 mainRouter.all("/admin-api/*", proxyRumba);
