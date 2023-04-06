@@ -14,8 +14,8 @@
 
     thead {
       background-color: var(--background-primary);
-      top: var(--main-document-header-height);
       position: sticky;
+      top: var(--main-document-header-height);
       z-index: var(--z-index-low);
     }
 
