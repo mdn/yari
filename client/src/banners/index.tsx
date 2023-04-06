@@ -23,7 +23,7 @@ export function Banner() {
     ? NEWSLETTER_ENABLED && !userData?.settings?.mdnplusNewsletter
       ? BannerId.NEWSLETTER_ANNOUNCEMENT
       : BannerId.MULTIPLE_COLLECTIONS
-    : BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
+    : null;
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
       <React.Suspense fallback={null}>
