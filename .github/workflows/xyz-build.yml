@@ -68,7 +68,7 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
-        if: ! ${{ vars.SKIP_BUILD }}
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -174,13 +174,13 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Sync build with GCS bucket
-        if: ! ${{ vars.SKIP_BUILD }}
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           gsutil -q -m cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH/static
           gsutil -q -m rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH
 
       - name: Build Function
-        if: ! ${{ vars.SKIP_FUNCTION }}
+        if: ${{ ! vars.SKIP_FUNCTION }}
         working-directory: gcp/function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
@@ -190,7 +190,7 @@ jobs:
           npm run build
 
       - name: Deploy Function
-        if: ! ${{ vars.SKIP_FUNCTION }}
+        if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
           for region in europe-west1 us-west1 asia-east1; do
             gcloud functions deploy mdn-xyz-$region \
@@ -222,6 +222,6 @@ jobs:
           done
 
       - name: Invalidate CDN
-        if: ! ${{ vars.SKIP_INVALIDATE }}
+        if: ${{ ! vars.SKIP_INVALIDATE }}
         run: |-
           gcloud compute url-maps invalidate-cdn-cache ${{ vars.GCP_LOAD_BALANCER_NAME }} --path "/*"
