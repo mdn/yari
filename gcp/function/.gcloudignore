@@ -16,4 +16,4 @@
 
 #!include:.gitignore
 !redirects.json
-!src/internal/
+!src/internal/**
