@@ -12,10 +12,11 @@
     "copy-internal": "rm -rf ./src/internal && cp -R ../../libs ./src/internal",
     "gcp-build": "npm run build",
     "prepare": "([ ! -e ../../libs ] || npm run copy-internal) && ([ -e redirects.json ] || npm run redirects)",
-    "prestart": "npm run build",
+    "proxy": "ts-node src/proxy.ts",
     "redirects": "ts-node src/build.ts",
-    "start": "functions-framework --target=mdnHandler",
-    "watch": "nodemon --exec npm run start"
+    "server": "npm run build && functions-framework --target=mdnHandler",
+    "server:watch": "nodemon --exec npm run server",
+    "start": "nf start"
   },
   "dependencies": {
     "@adzerk/decision-sdk": "^1.0.0-beta.20",
@@ -37,6 +38,7 @@
     "@types/accept-language-parser": "^1.5.3",
     "@types/compression": "^1.7.2",
     "@types/http-proxy": "^1.17.10",
+    "http-proxy": "^1.18.1",
     "nodemon": "^2.0.22",
     "npm-run-all": "^4.1.5",
     "ts-node": "^10.9.1",
@@ -46,6 +48,7 @@
     "node": ">=18.0.0"
   },
   "nodemonConfig": {
+    "ext": "json,ts",
     "watch": [
       ".env",
       "src"

@@ -42,6 +42,16 @@ export const SOURCE_LIVE_SAMPLES: string =
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "https://developer.mozilla.org";
 
+export function getOriginFromRequest(req: express.Request): Origin {
+  if (req.hostname === ORIGIN_MAIN && !req.path.includes("/_sample_.")) {
+    return Origin.main;
+  } else if (req.hostname === ORIGIN_LIVE_SAMPLES) {
+    return Origin.liveSamples;
+  } else {
+    return Origin.unsafe;
+  }
+}
+
 export function sourceUri(source: Source): string {
   switch (source) {
     case Source.content:
