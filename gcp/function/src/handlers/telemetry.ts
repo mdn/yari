@@ -1,4 +1,4 @@
-import { createProxyMiddleware } from "http-proxy-middleware";
+import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import { DEBUG_TELEMETRY } from "../env.js";
 
 export const proxyTelemetry = createProxyMiddleware({
@@ -9,4 +9,5 @@ export const proxyTelemetry = createProxyMiddleware({
   autoRewrite: true,
   proxyTimeout: 20000,
   xfwd: true,
+  onProxyReq: fixRequestBody,
 });
