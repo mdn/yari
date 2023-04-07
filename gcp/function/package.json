@@ -13,7 +13,7 @@
     "copy-internal": "rm -rf ./src/internal && cp -R ../../libs ./src/internal",
     "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
     "prepare": "[ ! -e ../../libs ] || npm run copy-internal",
-    "start": "nodemon --watch src --exec ts-node src/cli.ts"
+    "start": "nodemon --exec ts-node src/cli.ts"
   },
   "dependencies": {
     "@adzerk/decision-sdk": "^1.0.0-beta.20",
@@ -40,5 +40,11 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "nodemonConfig": {
+    "watch": [
+      ".env",
+      "src"
+    ]
   }
 }
