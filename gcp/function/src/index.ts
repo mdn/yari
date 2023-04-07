@@ -1,5 +1,5 @@
 import { createHandler } from "./app.js";
-import functions from "@google-cloud/functions-framework";
+import { http } from "@google-cloud/functions-framework";
 import { GCPFunction } from "@sentry/serverless";
 
 let handler = createHandler();
@@ -9,4 +9,4 @@ if (process.env["SENTRY_DSN"]) {
   handler = GCPFunction.wrapHttpFunction(handler);
 }
 
-functions.http("mdnHandler", handler);
+http("mdnHandler", handler);

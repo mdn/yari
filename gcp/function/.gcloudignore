@@ -14,7 +14,5 @@
 .git
 .gitignore
 
-node_modules
-src/**/*.ts
-!#include:.gitignore
-
+#!include:.gitignore
+!redirects.json

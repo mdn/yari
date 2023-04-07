@@ -8,12 +8,14 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc -b && ts-node src/build.ts",
-    "clean": "tsc -b --clean && git checkout -- redirects.json",
+    "build": "tsc -b",
     "copy-internal": "rm -rf ./src/internal && cp -R ../../libs ./src/internal",
-    "package": "zip -r -X f.zip . -i package.json .env 'src/*.js' 'src/handlers/*.js' 'src/internal'",
-    "prepare": "[ ! -e ../../libs ] || npm run copy-internal",
-    "start": "nodemon --exec ts-node src/cli.ts"
+    "gcp-build": "npm run build",
+    "prepare": "([ ! -e ../../libs ] || npm run copy-internal) && ([ -e redirects.json ] || npm run redirects)",
+    "prestart": "npm run build",
+    "redirects": "ts-node src/build.ts",
+    "start": "functions-framework --target=mdnHandler",
+    "watch": "nodemon --exec npm run start"
   },
   "dependencies": {
     "@adzerk/decision-sdk": "^1.0.0-beta.20",
