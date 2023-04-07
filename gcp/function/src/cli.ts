@@ -42,22 +42,17 @@ liveSampleApp.listen(liveSamplePort, () => {
 
 if (DEBUG_TELEMETRY) {
   const debugApp = express();
-  debugApp.all(
-    "*",
-    express.json(),
-    async (req: express.Request, res: express.Response) => {
-      const { method, url, query, headers, body } = req;
-      const payload = {
-        method,
-        url,
-        headers,
-        query,
-        body,
-      };
-      res.setHeader("Content-Type", "application/json"),
-        res.write(JSON.stringify(payload));
-      res.end();
-    }
-  );
+  debugApp.all("*", async (req: express.Request, res: express.Response) => {
+    const { method, url, query, headers } = req;
+    const payload = {
+      method,
+      url,
+      headers,
+      query,
+    };
+    res.setHeader("Content-Type", "application/json"),
+      res.write(JSON.stringify(payload));
+    res.end();
+  });
   debugApp.listen(8888);
 }
