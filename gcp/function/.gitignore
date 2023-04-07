@@ -1,5 +1,6 @@
 node_modules
 .env*
+*.log
 redirects.json
 src/**/*.js
 src/internal
