@@ -11,7 +11,7 @@
     "build": "tsc -b",
     "copy-internal": "rm -rf ./src/internal && cp -R ../../libs ./src/internal",
     "gcp-build": "npm run build",
-    "prepare": "([ ! -e ../../libs ] || npm run copy-internal) && ([ -e redirects.json ] || npm run redirects)",
+    "prepare": "([ ! -e ../../libs ] || npm run copy-internal)",
     "proxy": "ts-node src/proxy.ts",
     "redirects": "ts-node src/build.ts",
     "server": "npm run build && functions-framework --target=mdnHandler",
