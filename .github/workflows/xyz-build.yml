@@ -145,11 +145,11 @@ jobs:
           yarn tool sync-translated-content
 
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale &
+            yarn build --locale $locale > build-$locale.log &
             pids+=($!)
           done
 
-          tail -n 0 -qF *.log &
+          tail -n 0 -qF build-*.log &
           tail=$!
 
           for pid in "${pids[@]}"; do
@@ -217,11 +217,11 @@ jobs:
             --set-secrets="SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest" \
             --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest" \
             --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest" \
-            &
+            > deploy-$region.log &
             pids+=($!)
           done
 
-          tail -n 0 -qF *.log &
+          tail -n 0 -qF deploy-*.log &
           tail=$!
 
           for pid in "${pids[@]}"; do
