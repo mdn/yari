@@ -1,5 +1,7 @@
 import express from "express";
 import { Router } from "express";
+import compression from "compression";
+
 import { Origin, origin } from "./env.js";
 import { createContentProxy } from "./handlers/content.js";
 import { proxyKevel } from "./handlers/kevel.js";
@@ -22,7 +24,7 @@ mainRouter.all("/api/*", proxyRumba);
 mainRouter.all("/admin-api/*", proxyRumba);
 mainRouter.all("/events/fxa/*", proxyRumba);
 mainRouter.all("/users/fxa/*", proxyRumba);
-mainRouter.all("/submit/mdn-yari/*", proxyTelemetry);
+mainRouter.all("/submit/mdn-yari/*", compression(), proxyTelemetry);
 mainRouter.all("/pong/*", express.json(), proxyKevel);
 mainRouter.all("/pimg/*", proxyKevel);
 mainRouter.get("/sitemaps/*", proxyContent);
