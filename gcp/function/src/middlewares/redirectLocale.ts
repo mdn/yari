@@ -1,7 +1,7 @@
 import type express from "express";
 
-import { getLocale } from "@yari-internal/locale-utils";
-import { VALID_LOCALES } from "@yari-internal/constants";
+import { getLocale } from "../internal/locale-utils/index.js";
+import { VALID_LOCALES } from "../internal/constants/index.js";
 import { redirect } from "../utils.js";
 
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;

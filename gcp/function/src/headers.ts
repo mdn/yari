@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type express from "express";
 
-import { CSP_VALUE } from "@yari-internal/constants";
+import { CSP_VALUE } from "./internal/constants/index.js";
 
 export function withProxyResponseHeaders(
   _proxyRes: IncomingMessage,

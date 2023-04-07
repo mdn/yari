@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import dotenv from "dotenv";
 
-import { VALID_LOCALES } from "@yari-internal/constants";
+import { VALID_LOCALES } from "./internal/constants/index.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 

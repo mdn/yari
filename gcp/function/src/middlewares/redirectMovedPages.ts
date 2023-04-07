@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 
 import type express from "express";
-import { decodePath } from "@yari-internal/slug-utils";
+import { decodePath } from "../internal/slug-utils/index.js";
 
 import { THIRTY_DAYS } from "../constants.js";
 import { redirect } from "../utils.js";

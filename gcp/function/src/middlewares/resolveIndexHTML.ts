@@ -1,5 +1,5 @@
 import type express from "express";
-import { slugToFolder } from "@yari-internal/slug-utils";
+import { slugToFolder } from "../internal/slug-utils/index.js";
 import * as path from "node:path";
 
 export function resolveIndexHTML(
