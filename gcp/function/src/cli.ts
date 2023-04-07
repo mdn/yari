@@ -1,14 +1,32 @@
+import { readFileSync } from "node:fs";
+import { createServer as createHttpsServer } from "node:https";
+import { createServer as createHttpServer } from "node:http";
+
 import express from "express";
 import { createHandler } from "./app.js";
-import { Origin } from "./env.js";
+import { HTTPS_CERT_FILE, HTTPS_KEY_FILE, Origin } from "./env.js";
 
 const contentApp = express();
 const contentPort = 3000;
 
 contentApp.all("*", createHandler(Origin.main));
-contentApp.listen(contentPort, () => {
+
+createHttpServer(contentApp).listen(contentPort, () => {
   console.log(`Content app listening on port ${contentPort}`);
 });
+
+if (HTTPS_CERT_FILE && HTTPS_KEY_FILE) {
+  const PORT = 443;
+  createHttpsServer(
+    {
+      key: readFileSync(HTTPS_KEY_FILE),
+      cert: readFileSync(HTTPS_CERT_FILE),
+    },
+    contentApp
+  ).listen(PORT, () =>
+    console.log(`Content app listening on port ${PORT} [HTTPS]`)
+  );
+}
 
 const liveSampleApp = express();
 const liveSamplePort = 5042;

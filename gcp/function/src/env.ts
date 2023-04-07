@@ -63,3 +63,7 @@ export const CARBON_ZONE_KEY = process.env["CARBON_ZONE_KEY"] ?? "";
 export const CARBON_FALLBACK_ENABLED = Boolean(
   JSON.parse(process.env["CARBON_FALLBACK_ENABLED"] || "false")
 );
+
+// HTTP / HTTPS.
+export const HTTPS_KEY_FILE = process.env["HTTPS_KEY_FILE"] ?? "";
+export const HTTPS_CERT_FILE = process.env["HTTPS_CERT_FILE"] ?? "";
