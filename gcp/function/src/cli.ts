@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import { createServer as createHttpsServer } from "node:https";
-import { createServer as createHttpServer } from "node:http";
 
 import express from "express";
 import { createHandler } from "./app.js";
@@ -10,8 +9,7 @@ const contentApp = express();
 const contentPort = 3000;
 
 contentApp.all("*", createHandler(Origin.main));
-
-createHttpServer(contentApp).listen(contentPort, () => {
+contentApp.listen(contentPort, () => {
   console.log(`Content app listening on port ${contentPort}`);
 });
 
