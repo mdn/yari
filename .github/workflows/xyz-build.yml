@@ -221,7 +221,7 @@ jobs:
             pids+=($!)
           done
 
-          tail -n 0 -qF deploy-*.log &
+          tail -n 0 -F deploy-*.log &
           tail=$!
 
           for pid in "${pids[@]}"; do
