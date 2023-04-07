@@ -16,7 +16,6 @@ import { redirectTrailingSlash } from "./middlewares/redirectTrailingSlash.js";
 
 const mainRouter = Router();
 const proxyContent = createContentProxy();
-mainRouter.use(express.raw({ type: "*/*" }));
 mainRouter.use(redirectLeadingSlash);
 mainRouter.all("/api/v1/stripe/plans", plans);
 mainRouter.all("/api/*", proxyRumba);
