@@ -231,10 +231,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.6.84":
-  version "2.6.84"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.84.tgz#8d06caee4670b3735c3ea840beea8974fd60b6a7"
-  integrity sha512-sieEHoH7lwzsVx1EIg0ORa0nN4IKr/TERrQtlmKlWIzEZSXBU5RzTbhgYtCpiVp7R2+BYdQWE8d0iuTSoBoFgg==
+"@zip.js/zip.js@2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.1.tgz#4d828ad1057760d95fbaad1fbf2cf07ee5c56f77"
+  integrity sha512-Mi7yttBQ3Nzq4Dz71uvwWAY6osr/KxvRCkHLAL3urhjwZTuYJdvXh40zaI+w34SEliMXsrahqGUgqRXzRZD3WQ==
 
 acorn-import-assertions@^1.7.6:
   version "1.8.0"
@@ -819,10 +819,10 @@ ts-loader@^9.4.2:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-typescript@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.3.tgz#fe976f0c826a88d0a382007681cbb2da44afdedf"
-  integrity sha512-xv8mOEDnigb/tN9PSMTwSEqAnUvkoXMQlicOb0IUVDBSQCgBSaAAROUZYy2IcUy5qU6XajK5jjjO7TMWqBTKZA==
+typescript@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 uri-js@^4.2.2:
   version "4.4.1"
