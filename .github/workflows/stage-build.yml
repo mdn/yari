@@ -351,7 +351,7 @@ jobs:
             --memory=256MB \
             --timeout=60s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=yari-demos.developer.allizom.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.allizom.net" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/content-stage-mdn/main/" \
             --set-env-vars="SOURCE_RUMBA=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
