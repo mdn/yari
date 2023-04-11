@@ -11,10 +11,11 @@
   ],
   "scripts": {
     "build": "node build.js",
-    "make-package": "yarn build && yarn install --production && zip -r -X function.zip . -i index.js package.json env.js cc2ip.js 'node_modules/*'"
+    "make-package": "yarn build && yarn install --production && zip -r -X function.zip . -i index.js package.json env.js 'node_modules/*'"
   },
   "dependencies": {
     "@adzerk/decision-sdk": "^1.0.0-beta.20",
+    "@yari-internal/pong": "file:../../../libs/pong",
     "he": "^1.2.0"
   },
   "devDependencies": {
