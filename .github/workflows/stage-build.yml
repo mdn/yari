@@ -94,6 +94,7 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
@@ -108,19 +109,23 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
       - name: Install Python poetry
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: snok/install-poetry@v1
 
       - name: Install deployer
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           cd deployer
           poetry install
 
       - name: Display Python & Poetry version
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           python --version
           poetry --version
@@ -135,6 +140,7 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -230,6 +236,7 @@ jobs:
           yarn build --sitemap-index
 
       - name: Deploy with deployer
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
           GITHUB_SHA: ${{ env.GITHUB_SHA }}
           GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
@@ -272,6 +279,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
+        if: ${{ ! vars.SKIP_INVALIDATE }}
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
@@ -279,12 +287,14 @@ jobs:
           aws-region: us-east-1
 
       - name: Invalidate CDN
+        if: ${{ ! vars.SKIP_INVALIDATE }}
         env:
           DISTRIBUTION: E2MLRMA1VTVDHX
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
       - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/auth@v1
         with:
           token_format: access_token
@@ -292,14 +302,17 @@ jobs:
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Sync Yari Content
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-stage-mdn/main
 
       # Deploy Function
       - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_FUNCTION || !vars.SKIP_INVALIDATE }}
         uses: google-github-actions/auth@v1
         with:
           token_format: access_token
@@ -307,9 +320,11 @@ jobs:
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
+        if: ${{ ! vars.SKIP_FUNCTION || !vars.SKIP_INVALIDATE }}
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Build Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
         working-directory: gcp/function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
@@ -319,6 +334,7 @@ jobs:
           npm run build
 
       - name: Deploy Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
           for region in europe-west1 us-west1 asia-east1; do
             gcloud functions deploy mdn-nonprod-stage-$region \
