@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - gcp
+    paths:
+      - .github/workflows/xyz-build.yml
+      - gcp/function/**
 
   workflow_dispatch:
 
