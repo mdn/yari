@@ -3,7 +3,7 @@ import type express from "express";
 
 import { CSP_VALUE } from "./internal/constants/index.js";
 
-export function withProxyResponseHeaders(
+export function withContentResponseHeaders(
   _proxyRes: IncomingMessage,
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
@@ -14,7 +14,7 @@ export function withProxyResponseHeaders(
 
   const isLiveSampleURI = req.url?.includes("/_sample_.") ?? false;
 
-  setResponseHeaders((name, value) => res.setHeader(name, value), {
+  setContentResponseHeaders((name, value) => res.setHeader(name, value), {
     csp:
       !isLiveSampleURI &&
       parseContentType(_proxyRes.headers["content-type"]).startsWith(
@@ -41,11 +41,14 @@ export function withResponseHeaders(
   res: express.Response,
   options?: { csp?: boolean; xFrame?: boolean }
 ): express.Response {
-  setResponseHeaders((name, value) => res.set(name, value), options ?? {});
+  setContentResponseHeaders(
+    (name, value) => res.set(name, value),
+    options ?? {}
+  );
   return res;
 }
 
-export function setResponseHeaders(
+export function setContentResponseHeaders(
   setHeader: (name: string, value: string) => void,
   { csp = true, xFrame = true }: { csp?: boolean; xFrame?: boolean }
 ): void {
