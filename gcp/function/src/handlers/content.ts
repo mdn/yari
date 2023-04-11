@@ -1,6 +1,7 @@
 import type express from "express";
 import {
   createProxyMiddleware,
+  fixRequestBody,
   responseInterceptor,
 } from "http-proxy-middleware";
 
@@ -18,6 +19,7 @@ export function createContentProxy(): express.Handler {
     proxyTimeout: 20000,
     xfwd: true,
     selfHandleResponse: true,
+    onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
         withProxyResponseHeaders(proxyRes, req, res);

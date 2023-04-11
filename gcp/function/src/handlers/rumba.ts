@@ -1,4 +1,4 @@
-import { createProxyMiddleware } from "http-proxy-middleware";
+import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 
 import { Source, sourceUri } from "../env.js";
 
@@ -8,4 +8,5 @@ export const proxyRumba = createProxyMiddleware({
   autoRewrite: true,
   proxyTimeout: 20000,
   xfwd: true,
+  onProxyReq: fixRequestBody,
 });
