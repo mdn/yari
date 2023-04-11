@@ -358,9 +358,19 @@ jobs:
             --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
             --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
             --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
-            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest"
-            \
+            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
+            > deploy-$region.log &
+            pids+=($!)
           done
+
+          tail -n 0 -F deploy-*.log &
+          tail=$!
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+          kill $tail
 
       - name: Invalidate CDN
         if: ${{ ! vars.SKIP_INVALIDATE }}
