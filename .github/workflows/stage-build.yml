@@ -240,7 +240,7 @@ jobs:
           yarn build --sitemap-index
 
       - name: Deploy with deployer
-        if: ${{ ! vars.SKIP_BUILD }}
+        if: ${{ ! (vars.SKIP_BUILD || vars.SKIP_AWS) }}
         env:
           GITHUB_SHA: ${{ env.GITHUB_SHA }}
           GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
@@ -283,7 +283,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
-        if: ${{ ! vars.SKIP_INVALIDATE }}
+        if: ${{ ! (vars.SKIP_INVALIDATE || vars.SKIP_AWS) }}
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
@@ -291,7 +291,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Invalidate CDN
-        if: ${{ ! vars.SKIP_INVALIDATE }}
+        if: ${{ ! (vars.SKIP_INVALIDATE || vars.SKIP_AWS) }}
         env:
           DISTRIBUTION: E2MLRMA1VTVDHX
           PATHS: /*
