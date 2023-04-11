@@ -327,15 +327,14 @@ jobs:
         if: ${{ ! vars.SKIP_FUNCTION || !vars.SKIP_INVALIDATE }}
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Build Function
+      - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
         working-directory: gcp/function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
         run: |
-          npm ci
-          npm run build
+          npm run redirects
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
