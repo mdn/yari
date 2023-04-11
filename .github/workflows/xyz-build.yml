@@ -148,18 +148,13 @@ jobs:
           yarn tool sync-translated-content
 
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale > build-$locale.log &
+            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
-
-          tail -n 0 -qF build-*.log &
-          tail=$!
 
           for pid in "${pids[@]}"; do
             wait $pid
           done
-
-          kill $tail
 
           du -sh client/build
 
