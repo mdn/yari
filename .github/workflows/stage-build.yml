@@ -106,6 +106,7 @@ jobs:
           cache: yarn
 
       - name: Install all yarn packages
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         run: yarn --frozen-lockfile
 
       - name: Install Python
