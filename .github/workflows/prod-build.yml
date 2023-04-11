@@ -134,7 +134,7 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.prod.mdn.mozit.cloud
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.mozilla.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"

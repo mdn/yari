@@ -1,0 +1,103 @@
+<%
+
+const sidebar = {
+  sidebarURL: "/docs/Web/Progressive_web_apps",
+  sections: [
+    {
+      name: "/docs/Web/Progressive_web_apps/Guides",
+      contents: [
+        "/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable",
+        "/docs/Web/Progressive_web_apps/Guides/Offline_and_background_operation",
+        "/docs/Web/Progressive_web_apps/Guides/Structural_overview",
+      ],
+    },
+    {
+      name: "/docs/Web/Progressive_web_apps/Tutorials",
+      contents: [
+        {
+          name: "/docs/Web/Progressive_web_apps/Tutorials/js13kGames",
+          contents: [
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Introduction",
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/App_structure",
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers",
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Installable_PWAs",
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Re-engageable_Notifications_Push",
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Loading",
+          ],
+        },
+      ],
+    },
+    {
+      name: "/docs/Web/Progressive_web_apps/How_to",
+      contents: [
+        "/docs/Web/Progressive_web_apps/How_to/Create_a_standalone_app",
+        "/docs/Web/Progressive_web_apps/How_to/Customize_your_app_colors",
+        "/docs/Web/Progressive_web_apps/How_to/Display_badge_on_app_icon",
+      ],
+    },
+    {
+      name: "/docs/Web/Progressive_web_apps/Reference",
+      contents: [],
+    },
+  ]
+};
+
+function getLink(pageSlug) {
+  return `/${env.locale}${pageSlug}`;
+}
+
+async function getTitle(pageSlug) {
+  let page = await wiki.getPage(getLink(pageSlug));
+  if (!page.title) {
+    page = await wiki.getPage(`/en-US${pageSlug}`);
+  }
+  const title = page.short_title || page.title;
+  return mdn.htmlEscape(title);
+}
+
+async function renderRootItem(item) {
+  return `<li><a href="${getLink(item)}"><strong>${await getTitle(item)}</strong></a></li>`
+}
+
+async function renderItem(item) {
+  let output = "";
+  if (typeof item === "string") {
+    output += `<li><a href="${getLink(item)}">${await getTitle(
+      item
+    )}</a></li>`;
+  } else {
+    output += `<li><ol>${await renderSubsection(item)}</ol></li>`;
+  }
+  return output;
+}
+
+async function renderSubsection(subsection) {
+  let output = `<li><details><summary>${await getTitle(
+    subsection.name
+  )}</summary><ol>`;
+
+  output += (await Promise.all(subsection.contents.map(item => renderItem(item)))).join('');
+  output += "</ol></details></li>";
+
+  return output;
+}
+
+async function renderSection(section) {
+  let output = await renderRootItem(section.name);
+  output += (await Promise.all(section.contents.map(item => renderItem(item)))).join('');
+  return output;
+}
+
+async function renderSidebar() {
+  let output = '<section id="Quick_links" data-macro="PWASidebar"><ol>';
+  output +=  await renderRootItem(sidebar.sidebarURL);
+  output += (await Promise.all(sidebar.sections.map(section => renderSection(section)))).join('');
+  output += "</ol></section>";
+  return output;
+}
+
+const output = await renderSidebar();
+
+%>
+
+<%-output%>

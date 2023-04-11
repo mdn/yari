@@ -231,10 +231,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.6.83":
-  version "2.6.83"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.83.tgz#b30532eb7911a09a2f11d720705ff01dbc28f5c4"
-  integrity sha512-+DNoawyQwwqMY1HjQ3/YO5zWqEKbG1onJZDlhKGuH39Q4KmGvLYzX4UqtQX7u0rUDKaVGdDpcN3/H+rc3Spg4g==
+"@zip.js/zip.js@2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.1.tgz#4d828ad1057760d95fbaad1fbf2cf07ee5c56f77"
+  integrity sha512-Mi7yttBQ3Nzq4Dz71uvwWAY6osr/KxvRCkHLAL3urhjwZTuYJdvXh40zaI+w34SEliMXsrahqGUgqRXzRZD3WQ==
 
 acorn-import-assertions@^1.7.6:
   version "1.8.0"
@@ -819,10 +819,10 @@ ts-loader@^9.4.2:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-typescript@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.3.tgz#fe976f0c826a88d0a382007681cbb2da44afdedf"
-  integrity sha512-xv8mOEDnigb/tN9PSMTwSEqAnUvkoXMQlicOb0IUVDBSQCgBSaAAROUZYy2IcUy5qU6XajK5jjjO7TMWqBTKZA==
+typescript@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 uri-js@^4.2.2:
   version "4.4.1"
@@ -871,10 +871,10 @@ webpack-sources@^3.2.3:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
 
-webpack@^5.77.0:
-  version "5.77.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.77.0.tgz#dea3ad16d7ea6b84aa55fa42f4eac9f30e7eb9b4"
-  integrity sha512-sbGNjBr5Ya5ss91yzjeJTLKyfiwo5C628AFjEa6WSXcZa4E+F57om3Cc8xLb1Jh0b243AWuSYRf3dn7HVeFQ9Q==
+webpack@^5.78.0:
+  version "5.78.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.78.0.tgz#836452a12416af2a7beae906b31644cb2562f9e6"
+  integrity sha512-gT5DP72KInmE/3azEaQrISjTvLYlSM0j1Ezhht/KLVkrqtv10JoP/RXhwmX/frrutOPuSq3o5Vq0ehR/4Vmd1g==
   dependencies:
     "@types/eslint-scope" "^3.7.3"
     "@types/estree" "^0.0.51"

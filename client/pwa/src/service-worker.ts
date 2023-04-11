@@ -16,9 +16,7 @@ import { fetchWithExampleOverride } from "./fetcher.js";
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
 );
-export const LIVE_SAMPLES_URL = new URL(
-  "https://yari-demos.prod.mdn.mozit.cloud"
-);
+export const LIVE_SAMPLES_URL = new URL("https://live-samples.mdn.mozilla.net");
 export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
 
 const UPDATES_BASE_URL = `https://updates.${
