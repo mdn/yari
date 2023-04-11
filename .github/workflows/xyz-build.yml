@@ -220,18 +220,13 @@ jobs:
             --set-secrets="SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest" \
             --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest" \
             --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest" \
-            > deploy-$region.log &
+            | sed "s/^/[$region] /" &
             pids+=($!)
           done
-
-          tail -n 0 -F deploy-*.log &
-          tail=$!
 
           for pid in "${pids[@]}"; do
             wait $pid
           done
-
-          kill $tail
 
       - name: Invalidate CDN
         if: ${{ ! vars.SKIP_INVALIDATE }}
