@@ -363,7 +363,7 @@ jobs:
       - name: Invalidate CDN
         if: ${{ ! vars.SKIP_INVALIDATE }}
         run: |-
-          gcloud compute url-maps invalidate-cdn-cache ${{ vars.GCP_LOAD_BALANCER_NAME }} --path "/*"
+          gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
 
       - name: Slack Notification
         if: failure()
