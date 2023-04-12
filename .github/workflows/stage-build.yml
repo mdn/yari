@@ -115,7 +115,7 @@ jobs:
           cache: yarn
 
       - name: Install all yarn packages
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
 
       - name: Install Python
@@ -342,6 +342,7 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
         run: |
+          npm ci
           npm run redirects
 
       - name: Deploy Function
