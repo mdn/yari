@@ -275,6 +275,20 @@ jobs:
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: deploy-prod-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Sync Yari Content
+        run: |-
+          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-prod-mdn/main
+
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2
