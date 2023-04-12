@@ -170,6 +170,8 @@ jobs:
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
+        with:
+          install_components: 'beta'
 
       - name: Sync build with GCS bucket
         if: ${{ ! vars.SKIP_BUILD }}
@@ -191,7 +193,6 @@ jobs:
         run: |-
           for region in europe-west1 us-west1 asia-east1; do
             gcloud beta functions deploy mdn-xyz-$region \
-            --quiet \
             --gen2 \
             --runtime=nodejs18 \
             --region=$region \
