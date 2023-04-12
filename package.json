@@ -208,7 +208,7 @@
     "resolve": "^1.22.2",
     "resolve-url-loader": "^5.0.0",
     "rough-notation": "^0.5.1",
-    "sass": "^1.61.0",
+    "sass": "^1.62.0",
     "sass-loader": "^13.2.2",
     "semver": "^7.4.0",
     "source-map-explorer": "^2.5.3",
