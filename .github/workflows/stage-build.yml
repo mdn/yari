@@ -357,7 +357,7 @@ jobs:
             --trigger-http \
             --allow-unauthenticated \
             --entry-point=mdnHandler \
-            --concurrency=8 \
+            --concurrency=16 \
             --min-instances=100 \
             --max-instances=1000 \
             --memory=2GB \
