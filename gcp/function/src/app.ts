@@ -47,6 +47,7 @@ router.get(
 router.get(
   "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
   requireOrigin(Origin.main, Origin.liveSamples),
+  pathnameLC,
   proxyContent
 );
 router.get(
