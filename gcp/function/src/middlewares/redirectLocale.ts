@@ -6,7 +6,7 @@ import { redirect } from "../utils.js";
 
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
 
-export function redirectLocale(
+export async function redirectLocale(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction

@@ -4,7 +4,7 @@ import { THIRTY_DAYS } from "../constants.js";
 import { resolveFundamental } from "../internal/fundamental-redirects/index.js";
 import { redirect } from "../utils.js";
 
-export function redirectFundamental(
+export async function redirectFundamental(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction

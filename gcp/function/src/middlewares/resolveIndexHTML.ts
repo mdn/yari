@@ -2,7 +2,7 @@ import type express from "express";
 import { slugToFolder } from "../internal/slug-utils/index.js";
 import * as path from "node:path";
 
-export function resolveIndexHTML(
+export async function resolveIndexHTML(
   req: express.Request,
   _res: express.Response,
   next: express.NextFunction

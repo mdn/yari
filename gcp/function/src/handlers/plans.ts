@@ -15,7 +15,7 @@ interface Result {
   plans: PlanResult;
 }
 
-export function plans(req: express.Request, res: express.Response) {
+export async function plans(req: express.Request, res: express.Response) {
   const lookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 

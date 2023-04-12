@@ -2,7 +2,7 @@ import * as url from "node:url";
 
 import type express from "express";
 
-export function pathnameLC(
+export async function pathnameLC(
   req: express.Request,
   _res: express.Response,
   next: express.NextFunction

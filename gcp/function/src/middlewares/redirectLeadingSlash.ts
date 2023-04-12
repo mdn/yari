@@ -13,7 +13,7 @@ import { redirect } from "../utils.js";
 // Prevent any pathnames that start with a double //.
 // This essentially means that a request for `GET /////anything` becomes
 // 302 with `Location: /anything`.
-export function redirectLeadingSlash(
+export async function redirectLeadingSlash(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction

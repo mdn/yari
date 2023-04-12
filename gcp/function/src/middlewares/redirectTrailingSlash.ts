@@ -25,7 +25,7 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
   )})?/(?:account|contribute|maintenance-mode|payments)/?$`
 );
 
-export function redirectTrailingSlash(
+export async function redirectTrailingSlash(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction

@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const REDIRECTS = require("../../redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
-export function redirectMovedPages(
+export async function redirectMovedPages(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
