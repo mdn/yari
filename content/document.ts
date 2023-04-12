@@ -146,7 +146,9 @@ export function saveFile(
   const folderPath = path.dirname(filePath);
   fs.mkdirSync(folderPath, { recursive: true });
 
-  const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
+  const combined = `---\n${yaml.dump(saveMetadata, {
+    quotingType: '"',
+  })}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
