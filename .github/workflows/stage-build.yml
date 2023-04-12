@@ -333,7 +333,7 @@ jobs:
         if: ${{ ! vars.SKIP_FUNCTION || !vars.SKIP_INVALIDATE }}
         uses: google-github-actions/setup-gcloud@v1
         with:
-          install_components: 'beta'
+          install_components: "beta"
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}

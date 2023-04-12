@@ -172,7 +172,7 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
-          install_components: 'beta'
+          install_components: "beta"
 
       - name: Sync build with GCS bucket
         if: ${{ ! vars.SKIP_BUILD }}
