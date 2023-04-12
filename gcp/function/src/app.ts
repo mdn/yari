@@ -16,6 +16,7 @@ import { redirectFundamental } from "./middlewares/redirectFundamental.js";
 import { redirectLocale } from "./middlewares/redirectLocale.js";
 import { redirectTrailingSlash } from "./middlewares/redirectTrailingSlash.js";
 import { requireOrigin } from "./middlewares/requireOrigin.js";
+import { notFound } from "./middlewares/notFound.js";
 
 const proxyContent = createContentProxy();
 
@@ -72,6 +73,7 @@ router.get(
   resolveIndexHTML,
   proxyContent
 );
+router.all("*", notFound);
 
 export function createHandler() {
   return async (req: Request, res: Response) =>
