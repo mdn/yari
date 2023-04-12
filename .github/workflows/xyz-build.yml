@@ -204,7 +204,7 @@ jobs:
             --entry-point=mdnHandler \
             --min-instances=1 \
             --max-instances=1 \
-            --concurrency=32 \
+            --concurrency=100 \
             --memory=16G \
             --timeout=30s \
             --set-env-vars="ORIGIN_MAIN=${{ vars.ORIGIN_MAIN }}" \
