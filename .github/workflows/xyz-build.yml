@@ -203,7 +203,7 @@ jobs:
             --allow-unauthenticated \
             --entry-point=mdnHandler \
             --min-instances=1 \
-            --max-instances=1 \
+            --max-instances=100 \
             --concurrency=100 \
             --memory=16G \
             --timeout=30s \
