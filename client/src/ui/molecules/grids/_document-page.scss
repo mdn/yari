@@ -66,13 +66,6 @@
       display: block;
       grid-area: toc;
       height: fit-content;
-      mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgb(0, 0, 0) 10% 90%,
-        rgba(0, 0, 0, 0) 100%
-      );
-      max-height: calc(100vh - var(--offset));
       padding-bottom: 0;
     }
 
