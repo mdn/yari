@@ -315,7 +315,8 @@ jobs:
       - name: Sync Yari Content
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-prod-mdn/main
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/static
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       # Deploy Function
       - name: Authenticate with GCP
@@ -338,7 +339,7 @@ jobs:
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-        run: |
+        run: |-
           npm ci
           npm run redirects
 
@@ -361,7 +362,7 @@ jobs:
             --timeout=30s \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.mozilla.net" \
-            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/content-prod-mdn/main/" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_RUMBA=https://api.developer.mozilla.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=prod" \
