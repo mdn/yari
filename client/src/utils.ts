@@ -1,5 +1,6 @@
 import { IEX_DOMAIN } from "./env";
 import { Theme } from "./types/theme";
+import { User } from "./user-context";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
@@ -67,7 +68,7 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   }
 }
 
-export function isPlusSubscriber(user) {
+export function isPlusSubscriber(user): user is User {
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&

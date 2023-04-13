@@ -12,17 +12,17 @@ export const Avatar = ({ userData }: { userData: UserData }) => {
     <>
       <figure
         className={
-          userData.isSubscriber ? "avatar-wrap is-subscriber" : "avatar-wrap"
+          userData?.isSubscriber ? "avatar-wrap is-subscriber" : "avatar-wrap"
         }
       >
         <img
           alt="Avatar"
           className="avatar"
-          src={userData.avatarUrl || avatarImage}
+          src={userData?.avatarUrl || avatarImage}
         />
       </figure>
       <span className="avatar-username visually-hidden">
-        {userData.username}
+        {userData?.username}
       </span>
     </>
   );
