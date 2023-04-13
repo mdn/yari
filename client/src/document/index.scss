@@ -642,6 +642,7 @@ kbd {
   max-height: var(--max-height);
   position: sticky;
   top: 5rem;
+  z-index: var(--z-index-top);
   @media screen and (min-width: $screen-md) {
     .sidebar {
       mask-image: linear-gradient(
