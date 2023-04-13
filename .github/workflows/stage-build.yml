@@ -360,7 +360,7 @@ jobs:
             --concurrency=100 \
             --min-instances=1 \
             --max-instances=100 \
-            --memory=16GB \
+            --memory=2GB \
             --timeout=30s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.allizom.net" \

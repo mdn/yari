@@ -205,7 +205,7 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --concurrency=100 \
-            --memory=16G \
+            --memory=2GB \
             --timeout=30s \
             --set-env-vars="ORIGIN_MAIN=${{ vars.ORIGIN_MAIN }}" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=${{ vars.ORIGIN_LIVE_SAMPLES }}" \
