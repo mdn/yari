@@ -16,6 +16,9 @@ export function withContentResponseHeaders(
   res: ServerResponse<IncomingMessage>
 ): ServerResponse<IncomingMessage> {
   if (res.headersSent) {
+    console.warn(
+      `Cannot set content response headers. Headers already sent for: ${req.url}`
+    );
     return res;
   }
 
