@@ -300,7 +300,7 @@ jobs:
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
-     - name: Authenticate with GCP
+      - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/auth@v1
         with:
