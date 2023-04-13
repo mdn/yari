@@ -42,8 +42,20 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
 jobs:
   build:
+    environment: prod
+    permissions:
+      contents: read
+      id-token: write
+
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
