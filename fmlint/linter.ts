@@ -15,6 +15,7 @@ import { fdir, PathsOutput } from "fdir";
 
 const ORDER = [
   "title",
+  "short-title",
   "slug",
   "page-type",
   "status",
@@ -97,6 +98,7 @@ export async function checkFrontMatter(
   if (options.fix) {
     const {
       title,
+      "short-title": shortTitle,
       slug,
       "page-type": pageType,
       status,
@@ -104,7 +106,13 @@ export async function checkFrontMatter(
       "browser-compat": bcd,
     } = fmObject;
 
-    fmObject = { title, slug };
+    fmObject = { title };
+
+    if (shortTitle) {
+      fmObject["short-title"] = shortTitle;
+    }
+
+    fmObject["slug"] = slug;
 
     if (pageType) {
       fmObject["page-type"] = pageType;
@@ -136,6 +144,7 @@ export async function checkFrontMatter(
       quotingType: '"',
     });
     yml = yml.replace(/[\s\n]+$/g, "");
+    yml = yml.replaceAll("$", "$$$");
     content = content.replace(frontMatter, yml);
 
     fs.writeFile(filePath, content);

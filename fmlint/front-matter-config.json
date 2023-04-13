@@ -10,7 +10,13 @@
         "title": "Title",
         "description": "Rendered page title and for SEO",
         "type": "string",
-        "maxLength": 150
+        "maxLength": 120
+      },
+      "short-title": {
+        "title": "Short Title",
+        "description": "To be used in sidebars",
+        "type": "string",
+        "maxLength": 60
       },
       "slug": {
         "title": "slug",
@@ -19,6 +25,7 @@
       },
       "page-type": {
         "title": "Page Type",
+        "description": "Type of the page",
         "type": "string"
       },
       "status": {
@@ -28,7 +35,7 @@
         "uniqueItems": true,
         "items": {
           "type": "string",
-          "enum": ["experimental", "non-standard", "deprecated"]
+          "enum": ["deprecated", "experimental", "non-standard"]
         }
       },
       "browser-compat": {
@@ -122,6 +129,18 @@
       "javascript-static-data-property",
       "javascript-static-method"
     ],
+    "Web/HTTP/Headers/Content-Security-Policy/": ["http-csp-directive"],
+    "Web/HTTP/Headers/Permissions-Policy/": [
+      "http-permissions-policy-directive"
+    ],
+    "Web/HTTP/Headers/": ["guide", "http-header"],
+    "Web/HTTP/Methods/": ["http-method"],
+    "Web/HTTP/Status/": ["http-status-code"],
+    "Web/MathML/Element/": ["mathml-element"],
+    "Web/MathML/Global_attributes/": ["mathml-attribute"],
+    "Web/Accessibility/ARIA/Attributes/": ["aria-attribute"],
+    "Web/Accessibility/ARIA/Roles/": ["aria-role"],
+    "Web/HTTP/CORS/Errors/": ["http-cors-error"],
     "global": ["guide", "landing-page"]
   }
 }
