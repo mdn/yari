@@ -8,8 +8,8 @@ const PLACEMENTS = {
   topBanner: 585,
 };
 
-// allow list for client sent keywords
-const KEYWORDS = [];
+// Allow list for client sent keywords.
+const ALLOWED_KEYWORDS = [];
 
 export function createPongGetHandler(client, coder, env) {
   const { CARBON_ZONE_KEY, FALLBACK_ENABLED } = env;
@@ -21,7 +21,7 @@ export function createPongGetHandler(client, coder, env) {
       const decisionReq = {
         placements: [{ adTypes: [465, 369] }],
         keywords: [
-          ...keywords.filter((k) => KEYWORDS.includes(k)),
+          ...keywords.filter((k) => ALLOWED_KEYWORDS.includes(k)),
           countryCode,
         ],
       };
@@ -80,7 +80,7 @@ export function createPongGetHandler(client, coder, env) {
       const decisionReq = {
         placements,
         keywords: [
-          ...keywords.filter((k) => KEYWORDS.includes(k)),
+          ...keywords.filter((k) => ALLOWED_KEYWORDS.includes(k)),
           countryCode,
         ],
       };
