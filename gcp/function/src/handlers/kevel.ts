@@ -40,7 +40,7 @@ export async function proxyKevel(req: express.Request, res: express.Response) {
       return res.status(405).end();
     }
 
-    const body = JSON.parse(Buffer.from(req.body.data, "base64").toString());
+    const { body } = req;
     const { statusCode: status, payload } = await handleGet(
       body,
       countryCode,
