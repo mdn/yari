@@ -233,6 +233,7 @@ jobs:
     environment: xyz
     needs: build
     if: ${{ ! vars.SKIP_INVALIDATE }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Authenticate with GCP
