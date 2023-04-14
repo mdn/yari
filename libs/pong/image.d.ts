@@ -1,4 +1,4 @@
-export function fetchImage(src: any): Promise<{
+export function fetchImage(src: string): Promise<{
   buf: ArrayBuffer;
   contentType: string;
 }>;

@@ -1,1 +1,1 @@
-export default function anonymousIpByCC(countryCode: any): any;
+export default function anonymousIpByCC(countryCode: string): string;

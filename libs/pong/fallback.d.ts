@@ -1,12 +1,14 @@
+import { Coder } from "./coding.js";
+
 export function fallbackHandler(
-  coder: any,
-  carbonZoneKey: any,
-  userAgent: any,
-  anonymousIp: any
+  coder: Coder,
+  carbonZoneKey: string,
+  userAgent: string,
+  anonymousIp: string
 ): Promise<{
-  click: any;
-  view: any;
-  image: any;
-  copy: any;
-  by: any;
+  click: string;
+  view: string;
+  image: string;
+  copy: string;
+  by: string;
 }>;
