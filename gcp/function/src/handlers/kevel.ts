@@ -29,7 +29,7 @@ const handleViewed = createPongViewedHandler(coder);
 export async function proxyKevel(req: express.Request, res: express.Response) {
   const countryCode = getRequestCountry(req);
 
-  const userAgent = req.headers["user-agent"] ?? null;
+  const userAgent = req.headers["user-agent"] ?? "";
 
   const parsedUrl = url.parse(req.url);
   const pathname = parsedUrl.pathname ?? "";
