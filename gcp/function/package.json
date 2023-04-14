@@ -32,6 +32,7 @@
     "@yari-internal/constants": "file:src/internal/constants",
     "@yari-internal/fundamental-redirects": "file:src/internal/fundamental-redirects",
     "@yari-internal/locale-utils": "file:src/internal/locale-utils",
+    "@yari-internal/pong": "file:src/internal/pong",
     "@yari-internal/slug-utils": "file:src/internal/slug-utils",
     "accept-language-parser": "^1.5.0",
     "compression": "^1.7.4",
