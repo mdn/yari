@@ -1,3 +1,5 @@
+import { Coder } from "./coding.js";
+
 export function createPongViewedHandler(
-  coder: any
-): (params: any) => Promise<void>;
+  coder: Coder
+): (params: URLSearchParams) => Promise<void>;

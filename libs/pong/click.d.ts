@@ -1,4 +1,8 @@
-export function createPongClickHandler(coder: any): (params: any) => Promise<{
+import { Coder } from "./coding.js";
+
+export function createPongClickHandler(coder: Coder): (
+  params: URLSearchParams
+) => Promise<{
   status: number;
   location: string;
 }>;
