@@ -12,33 +12,6 @@
     border: none;
     margin: 0 0 1rem;
 
-    .bc-browsers {
-      td {
-        border-left: 1px solid var(--border-primary);
-      }
-
-      th:last-child {
-        border-right: 1px solid var(--border-primary);
-      }
-    }
-
-    .bc-platforms {
-      td {
-        border-left: 1px solid var(--border-primary);
-        border-top: 1px solid var(--border-primary);
-        border-top-left-radius: var(--elem-radius);
-      }
-
-      th {
-        border-top: 1px solid var(--border-primary);
-
-        &:last-child {
-          border-right: 1px solid var(--border-primary);
-          border-top-right-radius: var(--elem-radius);
-        }
-      }
-    }
-
     tbody tr {
       td:last-child {
         border-right: 1px solid var(--border-primary);
@@ -73,6 +46,33 @@
 
     tbody th {
       width: 20%;
+    }
+  }
+
+  .bc-browsers {
+    td {
+      border-left: 1px solid var(--border-primary);
+    }
+
+    th:last-child {
+      border-right: 1px solid var(--border-primary);
+    }
+  }
+
+  .bc-platforms {
+    td {
+      border-left: 1px solid var(--border-primary);
+      border-top: 1px solid var(--border-primary);
+      border-top-left-radius: var(--elem-radius);
+    }
+
+    th {
+      border-top: 1px solid var(--border-primary);
+
+      &:last-child {
+        border-right: 1px solid var(--border-primary);
+        border-top-right-radius: var(--elem-radius);
+      }
     }
   }
 }
