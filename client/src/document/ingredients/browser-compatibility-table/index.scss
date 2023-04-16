@@ -41,15 +41,6 @@
     tr {
       height: 3rem;
 
-      @media screen and (min-width: $screen-md) {
-        &:last-child {
-          th,
-          td {
-            border-bottom-width: 0;
-          }
-        }
-      }
-
       th {
         border-left-width: 0;
         vertical-align: middle;
