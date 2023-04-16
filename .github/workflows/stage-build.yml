@@ -146,7 +146,7 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
@@ -296,7 +296,7 @@ jobs:
 
       - name: Sync Yari Content
         run: |-
-          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -r client/build gs://content-stage-mdn/main
+          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-stage-mdn/main
 
       - name: Slack Notification
         if: failure()

@@ -91,6 +91,15 @@ const proxy = FAKE_V1_API
       changeOrigin: true,
       // proxyTimeout: 20000,
       // timeout: 20000,
+      onError: (_err, req, res) => {
+        if (req.url === "/api/v1/whoami") {
+          // Fallback if rumba is not running.
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+          });
+          res.end(JSON.stringify({}));
+        }
+      },
     });
 
 const pongProxy = createProxyMiddleware({
