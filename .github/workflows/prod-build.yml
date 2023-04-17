@@ -318,7 +318,7 @@ jobs:
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
-        working-directory: gcp/function
+        working-directory: cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
@@ -334,7 +334,7 @@ jobs:
             --gen2 \
             --runtime=nodejs18 \
             --region=$region \
-            --source=gcp/function \
+            --source=cloud-function \
             --trigger-http \
             --allow-unauthenticated \
             --entry-point=mdnHandler \

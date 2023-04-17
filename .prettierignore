@@ -29,4 +29,4 @@ _githistory.json
 /mdn/content
 popularities.json
 /client/public/service-worker.js
-/gcp/function/src/internal/
+/cloud-function/src/internal/
