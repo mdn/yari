@@ -214,8 +214,8 @@ jobs:
             --concurrency=100 \
             --memory=2GB \
             --timeout=30s \
-            --set-env-vars="ORIGIN_MAIN=${{ vars.ORIGIN_MAIN }}" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=${{ vars.ORIGIN_LIVE_SAMPLES }}" \
+            --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ env.BUCKET_PATH }}/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
