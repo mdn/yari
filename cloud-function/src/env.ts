@@ -78,7 +78,3 @@ export const CARBON_FALLBACK_ENABLED = Boolean(
 // (Use https://github.com/FiloSottile/mkcert to generate a locally-trusted certificate.)
 export const HTTPS_KEY_FILE = process.env["HTTPS_KEY_FILE"] ?? "";
 export const HTTPS_CERT_FILE = process.env["HTTPS_CERT_FILE"] ?? "";
-
-export const DEBUG_TELEMETRY = Boolean(
-  JSON.parse(process.env["DEBUG_TELEMETRY"] || "false")
-);
