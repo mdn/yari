@@ -3,7 +3,7 @@ import { Router } from "express";
 import compression from "compression";
 
 import { Origin } from "./env.js";
-import { createContentProxy } from "./handlers/proxy-content.js";
+import { proxyContent } from "./handlers/proxy-content.js";
 import { proxyKevel } from "./handlers/proxy-kevel.js";
 import { proxyApi } from "./handlers/proxy-api.js";
 import { handleStripePlans } from "./handlers/handle-stripe-plans.js";
@@ -17,8 +17,6 @@ import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
-
-const proxyContent = createContentProxy();
 
 const router = Router();
 router.use(redirectLeadingSlash);
