@@ -3,7 +3,7 @@ name: XYZ Build (GCP)
 on:
   push:
     branches:
-      - gcp
+      - main
     paths:
       - .github/workflows/xyz-build.yml
       - gcp/function/**
