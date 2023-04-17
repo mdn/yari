@@ -56,7 +56,7 @@ permissions:
 jobs:
   build:
     environment: prod
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-4core
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -225,24 +225,26 @@ jobs:
 
           yarn tool sync-translated-content
 
-          # Spread the work across 2 processes. Why 2? Because that's
-          # what you get in the default GitHub-hosted Linux runners.
-          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build --locale     en-us --locale     ja --locale     fr &
-          build1=$!
-          yarn build --not-locale en-us --not-locale ja --not-locale fr &
-          build2=$!
+          # Build using one process per locale.
+          # Note: We have 4 cores, but 9 processes is a reasonable number.
+          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            pids+=($!)
+          done
 
-          # You must explicitly specify the job you're waiting-on to ensure
-          # that the exit status of the wait command reflects the exit status
-          # of the job it's waiting-on.
-          wait $build1
-          wait $build2
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
 
           du -sh client/build
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # Generate whatsdeployed files.
+          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Deploy with deployer
         if: ${{ ! (vars.SKIP_BUILD || vars.SKIP_AWS) }}
@@ -275,9 +277,6 @@ jobs:
 
           cd deployer
 
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 

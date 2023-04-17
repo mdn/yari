@@ -22,7 +22,6 @@ from .update_lambda_functions import (
 )
 from .upload import upload_content
 from .utils import log
-from .whatsdeployed import dump as dump_whatsdeployed
 from .analyze_pr import analyze_pr
 from . import search
 
@@ -108,27 +107,6 @@ def update_lambda_functions(ctx, directory, distribution, force):
 
     updated_functions = update_lambdas(directory, dry_run=dry_run, force=force)
     deploy_lambdas(updated_functions, distribution, dry_run=dry_run)
-
-
-@cli.command(
-    help="Create a whatsdeployed.json file "
-    "by asking git for the date and commit hash of HEAD."
-)
-@click.option(
-    "--output",
-    type=click.Path(),
-    help="Name of JSON file to create",
-    default="whatsdeployed.json",
-)
-@click.argument(
-    "directory",
-    type=click.Path(),
-    callback=validate_directory,
-    default=".",
-)
-@click.pass_context
-def whatsdeployed(ctx, directory: Path, output: str):
-    dump_whatsdeployed(directory, Path(output), dry_run=ctx.obj["dry_run"])
 
 
 @cli.command()
