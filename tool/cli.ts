@@ -41,6 +41,7 @@ import {
   MacroInvocationError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
+import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -214,6 +215,16 @@ interface MacroUsageReportActionParameters extends ActionParameters {
     deprecatedOnly: boolean;
     format: "md-table" | "json";
     unusedOnly: boolean;
+  };
+}
+
+interface WhatsdeployedActionParameters extends ActionParameters {
+  args: {
+    directory: string;
+  };
+  options: {
+    output: string;
+    dryRun: boolean;
   };
 }
 
@@ -1219,6 +1230,25 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
       const { deprecatedOnly, format, unusedOnly } = options;
       return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
+  )
+
+  .command(
+    "whatsdeployed",
+    "Create a whatsdeployed.json file by asking git for the date and commit hash of HEAD."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: process.cwd(),
+  })
+  .option("--output <output>", "Name of JSON file to create.", {
+    default: "whatsdeployed.json",
+  })
+  .option("--dry-run", "Prints the result without writing the file")
+  .action(
+    tryOrExit(async ({ args, options }: WhatsdeployedActionParameters) => {
+      const { directory } = args;
+      const { output, dryRun } = options;
+      return whatsdeployed(directory, output, dryRun);
     })
   );
 
