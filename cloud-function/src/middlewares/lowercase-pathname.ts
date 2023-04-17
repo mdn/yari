@@ -2,7 +2,7 @@ import * as url from "node:url";
 
 import type express from "express";
 
-export async function pathnameLC(
+export async function lowercasePathname(
   req: express.Request,
   _res: express.Response,
   next: express.NextFunction

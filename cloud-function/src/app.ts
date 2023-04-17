@@ -8,15 +8,15 @@ import { proxyKevel } from "./handlers/kevel.js";
 import { proxyRumba } from "./handlers/rumba.js";
 import { stripePlans } from "./handlers/stripe-plans.js";
 import { proxyTelemetry } from "./handlers/telemetry.js";
-import { pathnameLC } from "./middlewares/pathnameLC.js";
-import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
-import { redirectLeadingSlash } from "./middlewares/redirectLeadingSlash.js";
-import { redirectMovedPages } from "./middlewares/redirectMovedPages.js";
-import { redirectFundamental } from "./middlewares/redirectFundamental.js";
-import { redirectLocale } from "./middlewares/redirectLocale.js";
-import { redirectTrailingSlash } from "./middlewares/redirectTrailingSlash.js";
-import { requireOrigin } from "./middlewares/requireOrigin.js";
-import { notFound } from "./middlewares/notFound.js";
+import { lowercasePathname } from "./middlewares/lowercase-pathname.js";
+import { resolveIndexHTML } from "./middlewares/resolve-index-html.js";
+import { redirectLeadingSlash } from "./middlewares/redirect-leading-slash.js";
+import { redirectMovedPages } from "./middlewares/redirect-moved-pages.js";
+import { redirectFundamental } from "./middlewares/redirect-fundamental.js";
+import { redirectLocale } from "./middlewares/redirect-locale.js";
+import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
+import { requireOrigin } from "./middlewares/require-origin.js";
+import { notFound } from "./middlewares/not-found.js";
 
 const proxyContent = createContentProxy();
 
@@ -41,13 +41,13 @@ router.get("/", requireOrigin(Origin.main), redirectLocale);
 router.get(
   "/[^/]+/docs/*/_sample_.*.html",
   requireOrigin(Origin.liveSamples),
-  pathnameLC,
+  lowercasePathname,
   proxyContent
 );
 router.get(
   "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
   requireOrigin(Origin.main, Origin.liveSamples),
-  pathnameLC,
+  lowercasePathname,
   proxyContent
 );
 router.get(
@@ -63,7 +63,7 @@ router.get(
 router.get(
   "/[^/]+/search-index.json",
   requireOrigin(Origin.main),
-  pathnameLC,
+  lowercasePathname,
   proxyContent
 );
 router.get(
