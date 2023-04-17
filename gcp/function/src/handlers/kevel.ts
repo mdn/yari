@@ -69,10 +69,7 @@ export async function proxyKevel(req: express.Request, res: express.Response) {
     }
   } else if (pathname === "/pong/viewed") {
     if (req.method !== "POST") {
-      return {
-        status: 405,
-        statusDescription: "METHOD_NOT_ALLOWED",
-      };
+      return res.status(405).end();
     }
     const params = new URLSearchParams(search);
     try {
