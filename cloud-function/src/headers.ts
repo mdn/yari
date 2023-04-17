@@ -101,7 +101,3 @@ export function setContentResponseHeaders(
     ...(xFrame ? [["X-Frame-Options", "DENY"]] : []),
   ].forEach(([k, v]) => k && v && setHeader(k, v));
 }
-
-export function country(res: Response): string {
-  return res.header("X-Appengine-Country") || "";
-}
