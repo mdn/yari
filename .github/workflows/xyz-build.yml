@@ -169,6 +169,11 @@ jobs:
           # Generate sitemap index file
           yarn build --sitemap-index
 
+          # Generate whatsdeployed files.
+          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v0
         with:
