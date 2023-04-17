@@ -10,6 +10,8 @@ import { Source, sourceUri } from "../env.js";
 
 const NOT_FOUND_PATH = "en-us/_spas/404.html";
 
+let notFoundBuffer: ArrayBuffer;
+
 export function createContentProxy(): express.Handler {
   const target = sourceUri(Source.content);
   return createProxyMiddleware({
@@ -24,9 +26,12 @@ export function createContentProxy(): express.Handler {
       async (responseBuffer, proxyRes, req, res) => {
         withContentResponseHeaders(proxyRes, req, res);
         if (proxyRes.statusCode === 404) {
-          const response = await fetch(`${target}${NOT_FOUND_PATH}`);
+          if (!notFoundBuffer) {
+            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
+            notFoundBuffer = await response.arrayBuffer();
+          }
           res.setHeader("Content-Type", "text/html");
-          return Buffer.from(await response.arrayBuffer());
+          return Buffer.from(notFoundBuffer);
         }
 
         return responseBuffer;
