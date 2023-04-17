@@ -1,8 +1,8 @@
 import { createRequire } from "node:module";
 
-import type express from "express";
-import { decodePath } from "../internal/slug-utils/index.js";
+import { NextFunction, Request, Response } from "express";
 
+import { decodePath } from "../internal/slug-utils/index.js";
 import { THIRTY_DAYS } from "../constants.js";
 import { redirect } from "../utils.js";
 
@@ -11,9 +11,9 @@ const REDIRECTS = require("../../redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 export async function redirectMovedPages(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   // Important: The requestURI may be URI-encoded.
   // Example:

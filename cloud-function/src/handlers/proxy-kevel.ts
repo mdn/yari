@@ -1,7 +1,7 @@
 import * as url from "node:url";
 
-import type express from "express";
 import { Client } from "@adzerk/decision-sdk";
+import type { Request, Response } from "express";
 
 import { Coder } from "../internal/pong/index.js";
 import {
@@ -26,7 +26,7 @@ const handleGet = createPongGetHandler(client, coder, env);
 const handleClick = createPongClickHandler(coder);
 const handleViewed = createPongViewedHandler(coder);
 
-export async function proxyKevel(req: express.Request, res: express.Response) {
+export async function proxyKevel(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
 
   const userAgent = req.headers["user-agent"] ?? "";

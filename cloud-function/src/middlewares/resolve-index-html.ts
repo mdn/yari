@@ -1,11 +1,13 @@
-import type express from "express";
-import { slugToFolder } from "../internal/slug-utils/index.js";
 import * as path from "node:path";
 
+import { NextFunction, Request, Response } from "express";
+
+import { slugToFolder } from "../internal/slug-utils/index.js";
+
 export async function resolveIndexHTML(
-  req: express.Request,
-  _res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  _res: Response,
+  next: NextFunction
 ) {
   let resolvedUrl = slugToFolder(req.url);
   if (path.extname(resolvedUrl) === "") {

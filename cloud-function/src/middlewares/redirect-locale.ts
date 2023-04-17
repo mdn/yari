@@ -1,4 +1,4 @@
-import type express from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { getLocale } from "../internal/locale-utils/index.js";
 import { VALID_LOCALES } from "../internal/constants/index.js";
@@ -7,9 +7,9 @@ import { redirect } from "../utils.js";
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
 
 export async function redirectLocale(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`);
   const requestURI = url.pathname;

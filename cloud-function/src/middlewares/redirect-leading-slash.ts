@@ -1,4 +1,5 @@
-import type express from "express";
+import { NextFunction, Request, Response } from "express";
+
 import { redirect } from "../utils.js";
 
 // If the URL was something like `https://domain/en-US/search/`, our code
@@ -14,9 +15,9 @@ import { redirect } from "../utils.js";
 // This essentially means that a request for `GET /////anything` becomes
 // 302 with `Location: /anything`.
 export async function redirectLeadingSlash(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const pathname = req.url;
   if (pathname.startsWith("//")) {

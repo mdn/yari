@@ -1,7 +1,8 @@
-import type express from "express";
-import dotenv from "dotenv";
 import * as path from "node:path";
 import { cwd } from "node:process";
+
+import dotenv from "dotenv";
+import { Request } from "express";
 
 dotenv.config({
   path: path.join(cwd(), process.env["ENV_FILE"] || ".env"),
@@ -26,7 +27,7 @@ export const ORIGIN_MAIN: string = process.env["ORIGIN_MAIN"] || "localhost";
 export const ORIGIN_LIVE_SAMPLES: string =
   process.env["ORIGIN_LIVE_SAMPLES"] || "localhost";
 
-export function origin(req: express.Request): Origin {
+export function origin(req: Request): Origin {
   switch (req.hostname) {
     case ORIGIN_MAIN:
       return Origin.main;
@@ -42,7 +43,7 @@ export const SOURCE_CONTENT: string =
 export const SOURCE_API: string =
   process.env["SOURCE_API"] || "https://developer.allizom.org/";
 
-export function getOriginFromRequest(req: express.Request): Origin {
+export function getOriginFromRequest(req: Request): Origin {
   if (req.hostname === ORIGIN_MAIN && !req.path.includes("/_sample_.")) {
     return Origin.main;
   } else if (req.hostname === ORIGIN_LIVE_SAMPLES) {

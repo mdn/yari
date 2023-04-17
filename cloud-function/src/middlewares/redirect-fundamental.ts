@@ -1,13 +1,13 @@
-import type express from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { THIRTY_DAYS } from "../constants.js";
 import { resolveFundamental } from "../internal/fundamental-redirects/index.js";
 import { redirect } from "../utils.js";
 
 export async function redirectFundamental(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`);
   const requestURI = req.path;

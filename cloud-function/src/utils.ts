@@ -1,7 +1,8 @@
-import type express from "express";
+import { Request, Response } from "express";
+
 import { DEFAULT_COUNTRY } from "./constants.js";
 
-export function getRequestCountry(req: express.Request): string {
+export function getRequestCountry(req: Request): string {
   const value = req.headers["cloudfront-viewer-country"];
 
   if (typeof value === "string" && value !== "ZZ") {
@@ -12,7 +13,7 @@ export function getRequestCountry(req: express.Request): string {
 }
 
 export function redirect(
-  res: express.Response,
+  res: Response,
   location: string,
   { status = 302, cacheControlSeconds = 0 } = {}
 ): void {

@@ -1,6 +1,6 @@
-import type express from "express";
-
 import acceptLanguageParser from "accept-language-parser";
+import { Request, Response } from "express";
+
 import { ORIGIN_MAIN } from "../env.js";
 import { getRequestCountry } from "../utils.js";
 import stageLookup from "../stripe-plans/stage.js";
@@ -15,10 +15,7 @@ interface Result {
   plans: PlanResult;
 }
 
-export async function handleStripePlans(
-  req: express.Request,
-  res: express.Response
-) {
+export async function handleStripePlans(req: Request, res: Response) {
   const lookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 

@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+
 import { Origin, getOriginFromRequest } from "../env.js";
 
 export function requireOrigin(...expectedOrigins: Origin[]) {

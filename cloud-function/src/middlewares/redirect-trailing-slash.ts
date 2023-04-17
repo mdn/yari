@@ -1,4 +1,4 @@
-import type express from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { THIRTY_DAYS } from "../constants.js";
 import { VALID_LOCALES } from "../internal/constants/index.js";
@@ -26,9 +26,9 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 );
 
 export async function redirectTrailingSlash(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const url = new URL(req.url, `${req.protocol}://${req.headers.host}`);
   let requestURI = url.pathname;

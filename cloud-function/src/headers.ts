@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type express from "express";
+import { Response } from "express";
 
 import { CSP_VALUE } from "./internal/constants/index.js";
 
@@ -79,9 +79,9 @@ function parseContentType(value: unknown): string {
 }
 
 export function withResponseHeaders(
-  res: express.Response,
+  res: Response,
   options?: { csp?: boolean; xFrame?: boolean }
-): express.Response {
+): Response {
   setContentResponseHeaders(
     (name, value) => res.set(name, value),
     options ?? {}
@@ -102,6 +102,6 @@ export function setContentResponseHeaders(
   ].forEach(([k, v]) => k && v && setHeader(k, v));
 }
 
-export function country(res: express.Request): string {
+export function country(res: Response): string {
   return res.header("X-Appengine-Country") || "";
 }

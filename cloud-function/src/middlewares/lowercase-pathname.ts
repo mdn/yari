@@ -1,11 +1,11 @@
 import * as url from "node:url";
 
-import type express from "express";
+import { NextFunction, Request, Response } from "express";
 
 export async function lowercasePathname(
-  req: express.Request,
-  _res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  _res: Response,
+  next: NextFunction
 ) {
   const urlParsed = url.parse(req.url);
   if (urlParsed.pathname) {
