@@ -10,5 +10,5 @@ export class Coder {
    */
   signSecret: string;
   encodeAndSign(s?: string): string;
-  decodeAndVerify(tuple?: string): string;
+  decodeAndVerify(tuple?: string): string | null;
 }
