@@ -6,7 +6,7 @@ import { Origin } from "./env.js";
 import { createContentProxy } from "./handlers/content.js";
 import { proxyKevel } from "./handlers/kevel.js";
 import { proxyRumba } from "./handlers/rumba.js";
-import { plans } from "./handlers/plans.js";
+import { stripePlans } from "./handlers/stripe-plans.js";
 import { proxyTelemetry } from "./handlers/telemetry.js";
 import { pathnameLC } from "./middlewares/pathnameLC.js";
 import { resolveIndexHTML } from "./middlewares/resolveIndexHTML.js";
@@ -22,7 +22,7 @@ const proxyContent = createContentProxy();
 
 const router = Router();
 router.use(redirectLeadingSlash);
-router.all("/api/v1/stripe/plans", requireOrigin(Origin.main), plans);
+router.all("/api/v1/stripe/plans", requireOrigin(Origin.main), stripePlans);
 router.all("/api/*", requireOrigin(Origin.main), proxyRumba);
 router.all("/admin-api/*", requireOrigin(Origin.main), proxyRumba);
 router.all("/events/fxa/*", requireOrigin(Origin.main), proxyRumba);
