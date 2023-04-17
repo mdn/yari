@@ -7,6 +7,7 @@ client/public/service-worker.js
 client/public/
 client/src/document/*.js
 cloud-function/src/internal/
+cloud-function/**/*.js
 filecheck/*.js
 mdn/content/
 tool/*.js
