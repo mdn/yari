@@ -15,8 +15,8 @@ The function uses the following environment variables:
   value for requests to live samples.
 - `SOURCE_CONTENT` (default: `"http://localhost:8100"`) - The URL at which the
   built content is served.
-- `SOURCE_API` (default: `"http://localhost:8000"`) - The URL at which the API
-  is served.
+- `SOURCE_API` (default: `"https://developer.allizom.org/"`) - The URL at which
+  the API is served.
 
 The placement handler uses the following environment variables:
 
@@ -28,4 +28,4 @@ The placement handler uses the following environment variables:
 - `CARBON_FALLBACK_ENABLED` (default: `"false"`) - Whether fallback placements
   should be served via Carbon.
 
-You can override the defaults by adding `.env` file with `KEY=value` lines.
+You can override the defaults by adding a `.env` file with `KEY=value` lines.

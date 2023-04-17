@@ -40,7 +40,7 @@ export function origin(req: express.Request): Origin {
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
 export const SOURCE_API: string =
-  process.env["SOURCE_API"] || "http://localhost:8000/";
+  process.env["SOURCE_API"] || "https://developer.allizom.org/";
 
 export function getOriginFromRequest(req: express.Request): Origin {
   if (req.hostname === ORIGIN_MAIN && !req.path.includes("/_sample_.")) {
