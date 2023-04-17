@@ -26,7 +26,11 @@ export const proxyContent = createProxyMiddleware({
     async (responseBuffer, proxyRes, req, res) => {
       withContentResponseHeaders(proxyRes, req, res);
       if (proxyRes.statusCode === 404) {
-        if (!notFoundBuffer) {
+        const tryHtml = await fetch(`${target}${req.url}/index.html`);
+        if (tryHtml.ok) {
+          res.statusCode = 200;
+          return Buffer.from(await tryHtml.arrayBuffer());
+        } else if (!notFoundBuffer) {
           const response = await fetch(`${target}${NOT_FOUND_PATH}`);
           notFoundBuffer = await response.arrayBuffer();
         }
