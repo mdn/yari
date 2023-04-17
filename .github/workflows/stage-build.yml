@@ -322,7 +322,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
         run: |
           npm ci
-          npm run redirects
+          npm run build-redirects
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
