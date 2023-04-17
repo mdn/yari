@@ -3,8 +3,8 @@ import type express from "express";
 import acceptLanguageParser from "accept-language-parser";
 import { ORIGIN_MAIN } from "../env.js";
 import { getRequestCountry } from "../utils.js";
-import stageLookup from "../plans/stage.js";
-import prodLookup from "../plans/prod.js";
+import stageLookup from "../stripe-plans/stage.js";
+import prodLookup from "../stripe-plans/prod.js";
 
 interface PlanResult {
   [name: string]: { monthlyPriceInCents: number; id: string };
