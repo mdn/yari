@@ -5,6 +5,29 @@ This is MDN's HTTP request handler, deployed using
 [Cloud CDN](https://cloud.google.com/cdn/). It mostly proxies requests and
 handles some special routes directly.
 
+## Quickstart
+
+Run `npm start` to serve the Cloud Function at http://localhost:7100/.
+
+By default, it will use your local `client/build` directory, serving it at
+http://localhost:8100/, and proxy API requests to the stage API at
+`https://developer.allizom.org/`.
+
+### How to use a local Rumba?
+
+Set `SOURCE_API=http://localhost:8000/` in your `.env.`
+
+### How to use Glean?
+
+To use Glean, the Cloud Function must be accessed via HTTPS. Otherwise the
+Glean.js SDK throws an uncaught error that prevents execution of JavaScript.
+
+We recommend using [mkcert](https://github.com/FiloSottile/mkcert) to create a
+locally-trusted development certificate. Add the key and certificate paths as
+`HTTPS_KEY_FILE` and `HTTPS_CERT_FILE` variables to your `.env` file. This will
+automatically enable an HTTPS proxy at https://localhost/ in addition to
+`http://localhost:7100/`.
+
 ## Environment variables
 
 The function uses the following environment variables:
@@ -14,7 +37,7 @@ The function uses the following environment variables:
 - `ORIGIN_LIVE_SAMPLES` (default: `"localhost"`) - The expected `Host` header
   value for requests to live samples.
 - `SOURCE_CONTENT` (default: `"http://localhost:8100"`) - The URL at which the
-  built content is served.
+  client build is served.
 - `SOURCE_API` (default: `"https://developer.allizom.org/"`) - The URL at which
   the API is served.
 
