@@ -1232,10 +1232,10 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@csstools/postcss-gradients-interpolation-method@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@csstools/postcss-gradients-interpolation-method/-/postcss-gradients-interpolation-method-3.0.3.tgz#39771e0fc76246a07a5e5e262d133e0cf3920a49"
-  integrity sha512-0i6HQ8V3jcGEEhhGPAQdMemPjXTOct9qDYLIzjsgKHhrHVwhjwBVcUV70658vJJmrJJvVXgZx2qc4S6okKZJpg==
+"@csstools/postcss-gradients-interpolation-method@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@csstools/postcss-gradients-interpolation-method/-/postcss-gradients-interpolation-method-3.0.4.tgz#c03402087c41feee0115f714cc87696e6424ba92"
+  integrity sha512-GgKoY7OlvL65UPigEdlrvMAUCR5kOQCjtue2/36TPrBNoRS6KM2KOqmjIVsxEwYYwK+L28pdnM8r10m03hhZxA==
   dependencies:
     "@csstools/css-color-parser" "^1.1.2"
     "@csstools/css-parser-algorithms" "^2.1.1"
@@ -10724,16 +10724,16 @@ postcss-place@^8.0.1:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-preset-env@^8.3.1:
-  version "8.3.1"
-  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-8.3.1.tgz#f7a5af0604df54da12eb0be9123c4c7fd5e01f81"
-  integrity sha512-k3Y8BXbVLBAufrla3CNmQJhMS1iRuT9LFlysYvzs1rU5E78+ShX2u0EUL6KpMi0pDJO3wZcuVYSR8cgukfoRtg==
+postcss-preset-env@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-8.3.2.tgz#9ec368e0f0df9c693d52b69d525d366fe4b1833a"
+  integrity sha512-VSAOsfxTXzO/gX5QljC8x8hN3ABbD9iqqLgqHqohBdNI5FhJptwpl96kpu+kYvvzK7BWwaHYou0IeYrp+NqmcQ==
   dependencies:
     "@csstools/postcss-cascade-layers" "^3.0.1"
     "@csstools/postcss-color-function" "^2.2.1"
     "@csstools/postcss-color-mix-function" "^1.0.1"
     "@csstools/postcss-font-format-keywords" "^2.0.2"
-    "@csstools/postcss-gradients-interpolation-method" "^3.0.3"
+    "@csstools/postcss-gradients-interpolation-method" "^3.0.4"
     "@csstools/postcss-hwb-function" "^2.2.1"
     "@csstools/postcss-ic-unit" "^2.0.2"
     "@csstools/postcss-is-pseudo-class" "^3.2.0"
