@@ -39,8 +39,8 @@ export function origin(req: express.Request): Origin {
 
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
-export const SOURCE_RUMBA: string =
-  process.env["SOURCE_RUMBA"] || "http://localhost:8000/";
+export const SOURCE_API: string =
+  process.env["SOURCE_API"] || "http://localhost:8000/";
 
 export function getOriginFromRequest(req: express.Request): Origin {
   if (req.hostname === ORIGIN_MAIN && !req.path.includes("/_sample_.")) {
@@ -57,7 +57,7 @@ export function sourceUri(source: Source): string {
     case Source.content:
       return SOURCE_CONTENT;
     case Source.api:
-      return SOURCE_RUMBA;
+      return SOURCE_API;
     default:
       return "";
   }
