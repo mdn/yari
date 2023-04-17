@@ -9,8 +9,9 @@ export async function resolveIndexHTML(
   _res: Response,
   next: NextFunction
 ) {
-  let resolvedUrl = slugToFolder(req.url);
-  if (path.extname(resolvedUrl) === "") {
+  let resolvedUrl = slugToFolder(req.path);
+  const ext = path.extname(resolvedUrl);
+  if (ext === "") {
     resolvedUrl = path.join(resolvedUrl, "index.html");
   }
   req.url = resolvedUrl;
