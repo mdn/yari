@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - gcp
     paths:
       - .github/workflows/xyz-build.yml
       - cloud-function/**
@@ -13,7 +14,7 @@ on:
       notes:
         description: "Notes"
         required: false
-        default: ${DEFAULT_NOTES}
+        default: ""
 
   workflow_call:
     secrets:
