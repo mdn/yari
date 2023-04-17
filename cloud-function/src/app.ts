@@ -3,11 +3,11 @@ import { Router } from "express";
 import compression from "compression";
 
 import { Origin } from "./env.js";
-import { createContentProxy } from "./handlers/content.js";
-import { proxyKevel } from "./handlers/kevel.js";
-import { proxyRumba } from "./handlers/rumba.js";
-import { stripePlans } from "./handlers/stripe-plans.js";
-import { proxyTelemetry } from "./handlers/telemetry.js";
+import { createContentProxy } from "./handlers/proxy-content.js";
+import { proxyKevel } from "./handlers/proxy-kevel.js";
+import { proxyApi } from "./handlers/proxy-api.js";
+import { handleStripePlans } from "./handlers/handle-stripe-plans.js";
+import { proxyTelemetry } from "./handlers/proxy-telemetry.js";
 import { lowercasePathname } from "./middlewares/lowercase-pathname.js";
 import { resolveIndexHTML } from "./middlewares/resolve-index-html.js";
 import { redirectLeadingSlash } from "./middlewares/redirect-leading-slash.js";
@@ -22,11 +22,15 @@ const proxyContent = createContentProxy();
 
 const router = Router();
 router.use(redirectLeadingSlash);
-router.all("/api/v1/stripe/plans", requireOrigin(Origin.main), stripePlans);
-router.all("/api/*", requireOrigin(Origin.main), proxyRumba);
-router.all("/admin-api/*", requireOrigin(Origin.main), proxyRumba);
-router.all("/events/fxa/*", requireOrigin(Origin.main), proxyRumba);
-router.all("/users/fxa/*", requireOrigin(Origin.main), proxyRumba);
+router.all(
+  "/api/v1/stripe/plans",
+  requireOrigin(Origin.main),
+  handleStripePlans
+);
+router.all("/api/*", requireOrigin(Origin.main), proxyApi);
+router.all("/admin-api/*", requireOrigin(Origin.main), proxyApi);
+router.all("/events/fxa/*", requireOrigin(Origin.main), proxyApi);
+router.all("/users/fxa/*", requireOrigin(Origin.main), proxyApi);
 router.all(
   "/submit/mdn-yari/*",
   requireOrigin(Origin.main),
