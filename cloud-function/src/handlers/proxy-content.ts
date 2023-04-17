@@ -6,6 +6,7 @@ import {
 
 import { withContentResponseHeaders } from "../headers.js";
 import { Source, sourceUri } from "../env.js";
+import { PROXY_TIMEOUT } from "../constants.js";
 
 const NOT_FOUND_PATH = "en-us/_spas/404.html";
 
@@ -17,7 +18,7 @@ export const proxyContent = createProxyMiddleware({
   target,
   changeOrigin: true,
   autoRewrite: true,
-  proxyTimeout: 20000,
+  proxyTimeout: PROXY_TIMEOUT,
   xfwd: true,
   selfHandleResponse: true,
   onProxyReq: fixRequestBody,
