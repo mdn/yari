@@ -6,7 +6,7 @@ libs/
 client/public/service-worker.js
 client/public/
 client/src/document/*.js
-filecheck/*.js
 cloud-function/src/internal/
+filecheck/*.js
 mdn/content/
 tool/*.js
