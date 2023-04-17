@@ -1,8 +1,25 @@
 import { readFileSync } from "node:fs";
 import { createServer } from "node:https";
 import httpProxy from "http-proxy";
+import httpServer from "http-server";
 
-import { HTTPS_CERT_FILE, HTTPS_KEY_FILE } from "./env.js";
+import {
+  HTTPS_CERT_FILE,
+  HTTPS_KEY_FILE,
+  LOCAL_BUILD,
+  SOURCE_CONTENT,
+  SOURCE_LIVE_SAMPLES,
+} from "./env.js";
+
+if ([SOURCE_CONTENT, SOURCE_LIVE_SAMPLES].includes(LOCAL_BUILD)) {
+  const url = new URL(LOCAL_BUILD);
+  const contentServer = httpServer.createServer({
+    root: "../client/build",
+  });
+  contentServer.listen(url.port, () =>
+    console.log(`client/build served on port ${url.port}`)
+  );
+}
 
 if (HTTPS_CERT_FILE && HTTPS_KEY_FILE) {
   const proxy = httpProxy.createProxyServer({
@@ -38,8 +55,4 @@ if (HTTPS_CERT_FILE && HTTPS_KEY_FILE) {
   console.log(
     "Hint: Use mkcert to create a locally-trusted development certificate."
   );
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    // Nothing.
-  }
 }
