@@ -238,20 +238,14 @@ function OfferDetails({
   );
 }
 
-function isCurrent(
-  user: UserData | null | undefined,
-  subscriptionType: SubscriptionType
-) {
+function isCurrent(user: UserData, subscriptionType: SubscriptionType) {
   if (!user?.isAuthenticated) {
     return false;
   }
   return user.subscriptionType === subscriptionType;
 }
 
-function canUpgrade(
-  user: UserData | null | undefined,
-  subscriptionType: SubscriptionType
-) {
+function canUpgrade(user: UserData, subscriptionType: SubscriptionType) {
   if (!user?.isAuthenticated) {
     return null;
   }

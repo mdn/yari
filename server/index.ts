@@ -78,28 +78,18 @@ app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
+const target = `${
+  ["developer.mozilla.org", "developer.allizom.org"].includes(PROXY_HOSTNAME)
+    ? "https://"
+    : "http://"
+}${PROXY_HOSTNAME}`;
 const proxy = FAKE_V1_API
   ? fakeV1APIRouter
   : createProxyMiddleware({
-      target: `${
-        ["developer.mozilla.org", "developer.allizom.org"].includes(
-          PROXY_HOSTNAME
-        )
-          ? "https://"
-          : "http://"
-      }${PROXY_HOSTNAME}`,
+      target,
       changeOrigin: true,
       // proxyTimeout: 20000,
       // timeout: 20000,
-      onError: (_err, req, res) => {
-        if (req.url === "/api/v1/whoami") {
-          // Fallback if rumba is not running.
-          res.writeHead(200, {
-            "Content-Type": "application/json",
-          });
-          res.end(JSON.stringify({}));
-        }
-      },
     });
 
 const pongProxy = createProxyMiddleware({
