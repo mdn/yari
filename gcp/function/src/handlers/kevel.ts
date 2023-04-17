@@ -82,6 +82,9 @@ export async function proxyKevel(req: express.Request, res: express.Response) {
     const src = coder.decodeAndVerify(
       decodeURIComponent(pathname.substring("/pimg/".length))
     );
+    if (!src) {
+      return res.status(400).end();
+    }
     const { buf, contentType } = await fetchImage(src);
     return res
       .status(200)
