@@ -1,4 +1,4 @@
-name: XYZ Build (GCP)
+name: XYZ Build
 
 on:
   push:
