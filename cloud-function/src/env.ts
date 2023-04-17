@@ -39,8 +39,6 @@ export function origin(req: express.Request): Origin {
 
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
-export const SOURCE_LIVE_SAMPLES: string =
-  process.env["SOURCE_LIVE_SAMPLES"] || LOCAL_CONTENT;
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "http://localhost:8000/";
 
@@ -58,8 +56,6 @@ export function sourceUri(source: Source): string {
   switch (source) {
     case Source.content:
       return SOURCE_CONTENT;
-    case Source.liveSamples:
-      return SOURCE_LIVE_SAMPLES;
     case Source.api:
       return SOURCE_RUMBA;
     default:

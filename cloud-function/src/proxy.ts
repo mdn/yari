@@ -8,10 +8,9 @@ import {
   HTTPS_KEY_FILE,
   LOCAL_CONTENT,
   SOURCE_CONTENT,
-  SOURCE_LIVE_SAMPLES,
 } from "./env.js";
 
-if ([SOURCE_CONTENT, SOURCE_LIVE_SAMPLES].includes(LOCAL_CONTENT)) {
+if (SOURCE_CONTENT === LOCAL_CONTENT) {
   const url = new URL(LOCAL_CONTENT);
   const contentServer = httpServer.createServer({
     root: "../client/build",
