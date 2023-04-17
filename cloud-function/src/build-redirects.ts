@@ -8,7 +8,7 @@ import { VALID_LOCALES } from "./internal/constants/index.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const root = path.join(dirname, "..", "..", "..");
+const root = path.join(dirname, "..", "..");
 dotenv.config({
   path: path.join(root, process.env["ENV_FILE"] || ".env"),
 });
