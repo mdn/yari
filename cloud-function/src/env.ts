@@ -7,7 +7,7 @@ dotenv.config({
   path: path.join(cwd(), process.env["ENV_FILE"] || ".env"),
 });
 
-export const LOCAL_BUILD = "http://localhost:8100/";
+export const LOCAL_CONTENT = "http://localhost:8100/";
 export const LOCAL_RUMBA = "http://localhost:8000/";
 
 export enum Origin {
@@ -38,9 +38,9 @@ export function origin(req: express.Request): Origin {
 }
 
 export const SOURCE_CONTENT: string =
-  process.env["SOURCE_CONTENT"] || LOCAL_BUILD;
+  process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
 export const SOURCE_LIVE_SAMPLES: string =
-  process.env["SOURCE_LIVE_SAMPLES"] || LOCAL_BUILD;
+  process.env["SOURCE_LIVE_SAMPLES"] || LOCAL_CONTENT;
 export const SOURCE_RUMBA: string =
   process.env["SOURCE_RUMBA"] || "http://localhost:8000/";
 

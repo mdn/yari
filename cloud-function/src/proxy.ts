@@ -6,13 +6,13 @@ import httpServer from "http-server";
 import {
   HTTPS_CERT_FILE,
   HTTPS_KEY_FILE,
-  LOCAL_BUILD,
+  LOCAL_CONTENT,
   SOURCE_CONTENT,
   SOURCE_LIVE_SAMPLES,
 } from "./env.js";
 
-if ([SOURCE_CONTENT, SOURCE_LIVE_SAMPLES].includes(LOCAL_BUILD)) {
-  const url = new URL(LOCAL_BUILD);
+if ([SOURCE_CONTENT, SOURCE_LIVE_SAMPLES].includes(LOCAL_CONTENT)) {
+  const url = new URL(LOCAL_CONTENT);
   const contentServer = httpServer.createServer({
     root: "../client/build",
   });
