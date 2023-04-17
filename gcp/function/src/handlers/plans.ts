@@ -26,7 +26,7 @@ export async function plans(req: express.Request, res: express.Response) {
   const supportedCurrency = lookupData.countryToCurrency[countryCode];
 
   if (!supportedCurrency) {
-    return res.status(404);
+    return res.status(404).end();
   }
 
   const acceptLanguage = typeof localeHeader === "string" ? localeHeader : null;
@@ -48,7 +48,7 @@ export async function plans(req: express.Request, res: express.Response) {
 
   const plans = lookupData.langCurrencyToPlans[key];
   if (!plans) {
-    return res.status(500);
+    return res.status(500).end();
   }
 
   const planResult: PlanResult = {};
