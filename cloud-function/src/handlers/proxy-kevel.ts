@@ -37,7 +37,7 @@ export async function proxyKevel(req: Request, res: Response) {
 
   if (pathname === "/pong/get") {
     if (req.method !== "POST") {
-      return res.status(405).end();
+      return res.sendStatus(405).end();
     }
 
     const { body } = req;
@@ -54,7 +54,7 @@ export async function proxyKevel(req: Request, res: Response) {
       .end(JSON.stringify(payload));
   } else if (req.path === "/pong/click") {
     if (req.method !== "GET") {
-      return res.status(405).end();
+      return res.sendStatus(405).end();
     }
     const params = new URLSearchParams(search);
     try {
@@ -62,19 +62,19 @@ export async function proxyKevel(req: Request, res: Response) {
       if (location && (status === 301 || status === 302)) {
         return res.redirect(location);
       } else {
-        return res.status(502).end();
+        return res.sendStatus(502).end();
       }
     } catch (e) {
       console.error(e);
     }
   } else if (pathname === "/pong/viewed") {
     if (req.method !== "POST") {
-      return res.status(405).end();
+      return res.sendStatus(405).end();
     }
     const params = new URLSearchParams(search);
     try {
       await handleViewed(params);
-      return res.status(201).end();
+      return res.sendStatus(201).end();
     } catch (e) {
       console.error(e);
     }
@@ -83,7 +83,7 @@ export async function proxyKevel(req: Request, res: Response) {
       decodeURIComponent(pathname.substring("/pimg/".length))
     );
     if (!src) {
-      return res.status(400).end();
+      return res.sendStatus(400).end();
     }
     const { buf, contentType } = await fetchImage(src);
     return res

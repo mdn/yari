@@ -9,7 +9,7 @@ export function requireOrigin(...expectedOrigins: Origin[]) {
     if (expectedOrigins.includes(actualOrigin)) {
       return next();
     } else {
-      return res.status(404).end();
+      return res.sendStatus(404).end();
     }
   };
 }

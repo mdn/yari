@@ -26,7 +26,7 @@ export async function handleStripePlans(req: Request, res: Response) {
   const supportedCurrency = lookupData.countryToCurrency[countryCode];
 
   if (!supportedCurrency) {
-    return res.status(404).end();
+    return res.sendStatus(404).end();
   }
 
   const acceptLanguage = typeof localeHeader === "string" ? localeHeader : null;
@@ -48,7 +48,7 @@ export async function handleStripePlans(req: Request, res: Response) {
 
   const plans = lookupData.langCurrencyToPlans[key];
   if (!plans) {
-    return res.status(500).end();
+    return res.sendStatus(500).end();
   }
 
   const planResult: PlanResult = {};
