@@ -1,4 +1,5 @@
 import * as path from "node:path";
+import * as url from "node:url";
 
 import { NextFunction, Request, Response } from "express";
 
@@ -17,13 +18,17 @@ export async function resolveIndexHTML(
   _res: Response,
   next: NextFunction
 ) {
-  let resolvedUrl = slugToFolder(req.path);
-  if (!isAsset(resolvedUrl)) {
-    resolvedUrl = path.join(resolvedUrl, "index.html");
+  const urlParsed = url.parse(req.url);
+  if (urlParsed.pathname) {
+    let pathname = slugToFolder(urlParsed.pathname);
+    if (!isAsset(pathname)) {
+      pathname = path.join(pathname, "index.html");
+    }
+    urlParsed.pathname = pathname;
+    req.url = url.format(urlParsed);
+    // Workaround for http-proxy-middleware v2 using `req.originalUrl`.
+    // See: https://github.com/chimurai/http-proxy-middleware/pull/731
+    req.originalUrl = req.url;
   }
-  req.url = resolvedUrl;
-  // Workaround for http-proxy-middleware v2 using `req.originalUrl`.
-  // See: https://github.com/chimurai/http-proxy-middleware/pull/731
-  req.originalUrl = req.url;
   next();
 }
