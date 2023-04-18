@@ -210,7 +210,7 @@
     "rough-notation": "^0.5.1",
     "sass": "^1.62.0",
     "sass-loader": "^13.2.2",
-    "semver": "^7.4.0",
+    "semver": "^7.5.0",
     "source-map-explorer": "^2.5.3",
     "source-map-loader": "^4.0.1",
     "style-dictionary": "^3.7.2",
