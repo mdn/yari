@@ -25,7 +25,7 @@ export const proxyContent = createProxyMiddleware({
   onProxyRes: responseInterceptor(
     async (responseBuffer, proxyRes, req, res) => {
       withContentResponseHeaders(proxyRes, req, res);
-      if (proxyRes.statusCode === 404) {
+      if (proxyRes.statusCode === 404 && !req.url?.includes("/_sample_.")) {
         const tryHtml = await fetch(`${target}${req.url?.slice(1)}/index.html`);
         if (tryHtml.ok) {
           res.statusCode = 200;
