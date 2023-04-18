@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import { Router } from "express";
-import compression from "compression";
 
 import { Origin } from "./env.js";
 import { proxyContent } from "./handlers/proxy-content.js";
@@ -30,12 +29,7 @@ router.all(
   requireOrigin(Origin.main),
   proxyApi
 );
-router.all(
-  "/submit/mdn-yari/*",
-  requireOrigin(Origin.main),
-  compression(),
-  proxyTelemetry
-);
+router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyKevel);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyKevel);
 router.get(
