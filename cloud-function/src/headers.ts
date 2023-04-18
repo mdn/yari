@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { Response } from "express";
 
 import { CSP_VALUE } from "./internal/constants/index.js";
+import { isLiveSampleURL } from "./utils.js";
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
 const DEFAULT_MAX_AGE = 60 * 60 * 24;
@@ -24,15 +25,15 @@ export function withContentResponseHeaders(
 
   const url = req.url ?? "";
 
-  const isLiveSampleURI = url.includes("/_sample_.") ?? false;
+  const isLiveSample = isLiveSampleURL(url);
 
   setContentResponseHeaders((name, value) => res.setHeader(name, value), {
     csp:
-      !isLiveSampleURI &&
+      !isLiveSample &&
       parseContentType(proxyRes.headers["content-type"]).startsWith(
         "text/html"
       ),
-    xFrame: !isLiveSampleURI,
+    xFrame: !isLiveSample,
   });
 
   if (req.url?.endsWith("/sitemap.xml.gz")) {

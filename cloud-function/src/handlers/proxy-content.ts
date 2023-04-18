@@ -7,6 +7,7 @@ import {
 import { withContentResponseHeaders } from "../headers.js";
 import { Source, sourceUri } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
+import { isLiveSampleURL } from "../utils.js";
 
 const NOT_FOUND_PATH = "en-us/_spas/404.html";
 
@@ -25,7 +26,7 @@ export const proxyContent = createProxyMiddleware({
   onProxyRes: responseInterceptor(
     async (responseBuffer, proxyRes, req, res) => {
       withContentResponseHeaders(proxyRes, req, res);
-      if (proxyRes.statusCode === 404 && !req.url?.includes("/_sample_.")) {
+      if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
         const tryHtml = await fetch(`${target}${req.url?.slice(1)}/index.html`);
         if (tryHtml.ok) {
           res.statusCode = 200;

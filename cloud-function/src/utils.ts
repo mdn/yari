@@ -38,3 +38,7 @@ export function redirect(
 
   res.set("Cache-Control", cacheControlValue).redirect(status, newLocation);
 }
+
+export function isLiveSampleURL(url: string) {
+  return url.includes("/_sample_.");
+}
