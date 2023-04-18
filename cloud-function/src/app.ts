@@ -49,7 +49,7 @@ router.get(
 router.get(
   "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
   requireOrigin(Origin.main, Origin.liveSamples),
-  lowercasePathname,
+  resolveIndexHTML,
   proxyContent
 );
 router.get(
