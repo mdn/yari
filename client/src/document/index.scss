@@ -39,15 +39,23 @@
       background-color: transparent;
     }
 
-    a[href^="#"]:hover {
-      &:after {
+    a[href^="#"] {
+      &::before {
         color: var(--text-inactive);
         content: "#";
-        display: inline-flex;
+        display: inline-block;
         font-size: 0.7em;
         line-height: 1;
-        margin-left: 4px;
+        margin-left: -0.8em;
         text-decoration: none;
+        visibility: hidden;
+        width: 0.8em;
+      }
+
+      &:hover {
+        &::before {
+          visibility: visible;
+        }
       }
     }
   }
@@ -447,14 +455,12 @@ pre {
   padding: 0 1rem;
   position: relative;
 
-  &::after {
+  &::before {
     background-size: 24px;
     content: "";
-    display: block;
+    float: right;
     height: 16px;
-    position: absolute;
-    right: 16px;
-    top: 18px;
+    margin-left: 8px;
     width: 16px;
   }
 }
@@ -467,7 +473,7 @@ pre {
 .example-bad {
   background-color: var(--background-critical);
 
-  &::after {
+  &::before {
     background-color: var(--icon-critical);
     mask-image: url("../assets/icons/no.svg");
   }
@@ -476,7 +482,7 @@ pre {
 .example-good {
   background-color: var(--background-success);
 
-  &::after {
+  &::before {
     background-color: var(--icon-success);
     mask-image: url("../assets/icons/checkmark.svg");
   }
@@ -616,4 +622,76 @@ kbd {
 .loading-error pre {
   overflow-y: scroll;
   white-space: pre;
+}
+
+.sidebar-container {
+  --offset: var(--main-document-header-height);
+  --max-height: calc(100vh - var(--offset));
+
+  @media screen and (max-width: $screen-lg) {
+    .mdn-cta-container ~ .document-page & {
+      // minus 3 rem to ~ account for the top banner
+      --offset: calc(var(--main-document-header-height) + 3rem);
+    }
+  }
+
+  @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
+    display: flex;
+    flex-direction: column;
+  }
+  max-height: var(--max-height);
+  position: sticky;
+  top: 5rem;
+  @media screen and (min-width: $screen-md) {
+    .sidebar {
+      mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgb(0, 0, 0) 3rem calc(100% - 3rem),
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+    @media screen and not (min-height: $screen-height-place-limit) {
+      overflow: auto;
+    }
+  }
+
+  .toc-container {
+    .place {
+      grid-area: toc;
+      margin: 0;
+    }
+    @media screen and (min-width: $screen-xl) {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      height: calc(100vh - var(--main-document-header-height));
+      mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgb(0, 0, 0) 3rem calc(100% - 3rem),
+        rgba(0, 0, 0, 0) 100%
+      );
+      overflow: auto;
+      position: sticky;
+      top: var(--main-document-header-height);
+
+      .place {
+        margin: 1rem 0;
+        padding-bottom: 3rem;
+      }
+    }
+    @media screen and (max-width: #{$screen-md - 1}) {
+      .place {
+        display: none;
+      }
+    }
+  }
+  @media screen and (min-width: $screen-xl) {
+    display: contents;
+
+    .sidebar {
+      mask-image: none;
+    }
+  }
 }

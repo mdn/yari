@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../env";
+import { CRUD_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
@@ -38,6 +38,8 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
+import { Placement } from "../ui/organisms/placement";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -111,8 +113,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
+
   useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
+  useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -219,11 +223,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )
       )}
       <div className="main-wrapper">
-        <RenderSideBar doc={doc} />
-
-        <aside className="toc">
-          <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
-        </aside>
+        <div className="sidebar-container">
+          <RenderSideBar doc={doc} />
+          <div className="toc-container">
+            <aside className="toc">
+              <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+            </aside>
+            {PLACEMENT_ENABLED && <Placement />}
+          </div>
+        </div>
 
         <MainContentContainer>
           {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (

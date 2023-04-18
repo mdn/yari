@@ -1,32 +1,15 @@
 import { useCallback, useEffect, useRef } from "react";
-import { PLACEMENT_ENABLED } from "../../../env";
 import { useIsServer, usePageVisibility } from "../../../hooks";
-import useSWR from "swr";
 import { useUserData } from "../../../user-context";
 
-import "./placement.scss";
+import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
+import { PlacementStatus, usePlacement } from "../../../placement-context";
 
 interface Timer {
   timeout: number | null;
   start: number | null;
   notVisible?: boolean;
-}
-
-export interface Fallback {
-  click: string;
-  view: string;
-  copy: string;
-  image: string;
-  by: string;
-}
-
-export interface PlacementStatus {
-  click: string;
-  view: string;
-  copy?: string;
-  image?: string;
-  fallback?: Fallback;
 }
 
 function viewed(
@@ -44,40 +27,12 @@ function viewed(
 }
 
 export function Placement() {
-  const user = useUserData();
-  const gleanClick = useGleanClick();
-  const {
-    data: pong,
-    isLoading,
-    isValidating,
-  } = useSWR<PlacementStatus>(
-    !PLACEMENT_ENABLED || user?.settings?.noAds ? null : "/pong/get",
-    async (url) => {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ keywords: [] }),
-      });
+  const placementData = usePlacement();
 
-      gleanClick(`pong: pong->fetched ${response.status}`);
-
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-
-      return (await response.json()) as PlacementStatus;
-    },
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
-
-  return isLoading || isValidating ? null : (
-    <PlacementInner pong={pong}></PlacementInner>
+  return !placementData ? (
+    <section className="place"></section>
+  ) : (
+    <PlacementInner pong={placementData}></PlacementInner>
   );
 }
 

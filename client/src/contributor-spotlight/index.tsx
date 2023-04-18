@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { CRUD_MODE } from "../env";
-import { HydrationData } from "../types/hydration";
+import { HydrationData } from "../../../libs/types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
 

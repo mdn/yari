@@ -6,6 +6,8 @@ import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
+import { PLACEMENT_ENABLED } from "../../../env";
+import { Placement } from "../../../ui/organisms/placement";
 
 export function SidebarContainer({
   doc,
@@ -40,9 +42,9 @@ export function SidebarContainer({
     const sidebar = document.querySelector("#sidebar-quicklinks");
     const currentSidebarItem = sidebar?.querySelector("em");
     if (sidebar && currentSidebarItem) {
-      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach((n) =>
+      [sidebar, sidebar.querySelector(".sidebar-inner-nav")].forEach((n) =>
         n?.scrollTo({
-          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+          top: currentSidebarItem.offsetTop - window.innerHeight / 4,
         })
       );
     }
@@ -62,10 +64,13 @@ export function SidebarContainer({
           aria-label="Collapse sidebar"
         />
         <nav aria-label={label} className="sidebar-inner">
-          <div className="in-nav-toc">
-            {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+          <div className="sidebar-inner-nav">
+            <div className="in-nav-toc">
+              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+            </div>
+            {children}
           </div>
-          {children}
+          {PLACEMENT_ENABLED && <Placement />}
         </nav>
       </aside>
     </>

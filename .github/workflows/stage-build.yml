@@ -42,9 +42,21 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    environment: stage
+    permissions:
+      contents: read
+      id-token: write
+
+    runs-on: ubuntu-latest-4core
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -134,10 +146,10 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
 
           # Use the stage version of interactive examples.
-          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -155,7 +167,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: false
 
           # Use the stage version of interactive examples in react app
-          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
@@ -167,10 +179,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
           # Surveys.
-          REACT_APP_SURVEY_START_CONTENT_DISCOVERY_2023: 0 # stage
-          REACT_APP_SURVEY_END_CONTENT_DISCOVERY_2023: 1677672000000 # (new Date("2023-03-01 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_CONTENT_DISCOVERY_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_CONTENT_DISCOVERY_2023: 0.05 # 5%
+          REACT_APP_SURVEY_START_WEB_COMPONENTS_2023: 0 # stage
+          REACT_APP_SURVEY_END_WEB_COMPONENTS_2023: 1680264000000 # (new Date("2023-03-31 12:00:00Z").getTime())
+          REACT_APP_SURVEY_RATE_FROM_WEB_COMPONENTS_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_WEB_COMPONENTS_2023: 0.10 # 10%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
@@ -198,24 +210,26 @@ jobs:
 
           yarn tool sync-translated-content
 
-          # Spread the work across 2 processes. Why 2? Because that's what you
-          # get in the default GitHub hosting Linux runners.
-          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build --locale     en-us --locale     ja --locale     fr &
-          build1=$!
-          yarn build --not-locale en-us --not-locale ja --not-locale fr &
-          build2=$!
+          # Build using one process per locale.
+          # Note: We have 4 cores, but 9 processes is a reasonable number.
+          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            pids+=($!)
+          done
 
-          # You must explicitly specify the job you're waiting-on to ensure
-          # that the exit status of the wait command reflects the exit status
-          # of the job it's waiting-on.
-          wait $build1
-          wait $build2
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
 
           du -sh client/build
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # Generate whatsdeployed files.
+          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json 
+          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Deploy with deployer
         env:
@@ -249,9 +263,6 @@ jobs:
 
           cd deployer
 
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
@@ -271,6 +282,20 @@ jobs:
           DISTRIBUTION: E2MLRMA1VTVDHX
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: deploy-stage-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Sync Yari Content
+        run: |-
+          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-stage-mdn/main
 
       - name: Slack Notification
         if: failure()

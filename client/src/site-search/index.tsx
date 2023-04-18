@@ -5,6 +5,7 @@ import { Loading } from "../ui/atoms/loading";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
 import "./index.scss";
+import { Placement } from "../ui/organisms/placement";
 
 const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
@@ -52,6 +53,7 @@ export function SiteSearch() {
     <div className="main-wrapper site-search">
       <MainContentContainer>
         <article className="main-page-content">
+          <Placement />
           {query ? (
             <h1>
               Search results for: <span className="query-string">{query}</span>{" "}

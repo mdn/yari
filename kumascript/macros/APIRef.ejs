@@ -147,8 +147,8 @@ function getImplementedBy(data) {
 getImplementedBy(webAPIData[0]);
 
 function getPageTitle(page) {
-  if (page.shortTitle) {
-    return htmlEscape(page.shortTitle);
+  if (page.short_title) {
+    return htmlEscape(page.short_title);
   }
   const titleSplit = htmlEscape(page.title).split('.'); // Two cases, as sometimes the interface name is forgotten in the title:
   let title = titleSplit[titleSplit.length - 1];       // "WebGLRenderingContext.activeTexture()" and "activeTexture()" should both become "activeTexture()"

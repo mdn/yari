@@ -1,9 +1,15 @@
-.place {
+section.place {
   display: flex;
   flex-direction: column;
   margin: 1rem 0;
   max-width: 12rem;
   min-height: 20rem;
+
+  a:not(.button),
+  a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
 
   .pong-box {
     background-color: var(--background-secondary);
@@ -19,6 +25,7 @@
       padding: 0.825rem;
 
       img {
+        margin: 0;
         max-height: 6.25rem;
         width: 8.125rem;
       }

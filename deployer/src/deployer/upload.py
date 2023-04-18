@@ -192,6 +192,10 @@ class UploadFileTask(UploadTask):
         return mime_type
 
     @property
+    def content_encoding(self):
+        return mimetypes.guess_type(str(self.file_path))[1]
+
+    @property
     def is_hashed(self):
         return hashed_filename_regex.search(self.file_path.name)
 
@@ -218,15 +222,20 @@ class UploadFileTask(UploadTask):
 
     def upload(self, bucket_manager):
         if not self.dry_run:
+            extra_args = {
+                "ACL": "public-read",
+                "ContentType": self.content_type,
+                "CacheControl": self.cache_control,
+            }
+            content_encoding = self.content_encoding
+            if content_encoding:
+                extra_args["ContentEncoding"] = content_encoding
+
             bucket_manager.client.upload_file(
                 str(self.file_path),
                 bucket_manager.bucket_name,
                 self.key,
-                ExtraArgs={
-                    "ACL": "public-read",
-                    "ContentType": self.content_type,
-                    "CacheControl": self.cache_control,
-                },
+                ExtraArgs=extra_args,
             )
 
 

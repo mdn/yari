@@ -1,4 +1,4 @@
-export default {
+const cc2ip = {
   AD: "46.172.232.102",
   AE: "94.200.156.82",
   AF: "103.146.146.97",
@@ -171,3 +171,7 @@ export default {
   ZA: "102.36.123.181",
   ZW: "41.174.104.223",
 };
+
+export default function anonymousIpByCC(countryCode) {
+  return cc2ip[countryCode] ?? "127.0.0.1";
+}

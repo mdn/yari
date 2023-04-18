@@ -60,6 +60,7 @@ const app = express();
 
 const bcdRouter = express.Router({ caseSensitive: true });
 
+// Note that this route will only get hit if .env has this: REACT_APP_BCD_BASE_URL=""
 bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
   const data = getBCDDataForPath(req.params.path);
   return data ? res.json(data) : res.status(404).send("BCD path not found");
@@ -77,16 +78,15 @@ app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
+const target = `${
+  ["developer.mozilla.org", "developer.allizom.org"].includes(PROXY_HOSTNAME)
+    ? "https://"
+    : "http://"
+}${PROXY_HOSTNAME}`;
 const proxy = FAKE_V1_API
   ? fakeV1APIRouter
   : createProxyMiddleware({
-      target: `${
-        ["developer.mozilla.org", "developer.allizom.org"].includes(
-          PROXY_HOSTNAME
-        )
-          ? "https://"
-          : "http://"
-      }${PROXY_HOSTNAME}`,
+      target,
       changeOrigin: true,
       // proxyTimeout: 20000,
       // timeout: 20000,

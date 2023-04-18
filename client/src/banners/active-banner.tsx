@@ -3,7 +3,6 @@ import * as React from "react";
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 import { BannerId } from "./ids";
-import { usePlusUrl } from "../plus/utils";
 import { useGleanClick } from "../telemetry/glean-context";
 import {
   BANNER_MULTIPLE_COLLECTIONS_DISMISSED,
@@ -82,37 +81,6 @@ function useSendCTAEventToGA() {
       eventLabel: "banner",
     });
   };
-}
-
-function PlusLaunchAnnouncementBanner({
-  onDismissed,
-}: {
-  onDismissed: () => void;
-}) {
-  const bannerId = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
-  const sendCTAEventToGA = useSendCTAEventToGA();
-  const plusUrl = usePlusUrl();
-
-  return (
-    <Banner id={bannerId} onDismissed={onDismissed}>
-      <p className="mdn-cta-copy">
-        <a href={plusUrl} className="mdn-plus">
-          MDN Plus
-        </a>{" "}
-        now available in <span className="underlined">your</span> country!
-        Support MDN <span className="underlined">and</span> make it your own.{" "}
-        <a
-          href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => sendCTAEventToGA(bannerId)}
-        >
-          Learn more
-        </a>{" "}
-        ✨
-      </p>
-    </Banner>
-  );
 }
 
 function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
@@ -211,13 +179,6 @@ export default function ActiveBanner({
   onDismissed: () => void;
 }) {
   switch (id) {
-    case BannerId.PLUS_LAUNCH_ANNOUNCEMENT:
-      return (
-        <>
-          <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
-        </>
-      );
-
     case BannerId.MULTIPLE_COLLECTIONS:
       return (
         <>

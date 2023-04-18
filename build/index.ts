@@ -17,7 +17,6 @@ import { FLAW_LEVELS } from "../libs/constants/index.js";
 import { extractSections } from "./extract-sections.js";
 import { extractSidebar } from "./extract-sidebar.js";
 import { extractSummary } from "./extract-summary.js";
-export { default as SearchIndex } from "./search-index.js";
 import { addBreadcrumbData } from "./document-utils.js";
 import {
   fixFixableFlaws,
@@ -29,11 +28,12 @@ import { getPageTitle } from "./page-title.js";
 import { syntaxHighlight } from "./syntax-highlight.js";
 import { formatNotecards } from "./format-notecards.js";
 import buildOptions from "./build-options.js";
-export { gather as gatherGitHistory } from "./git-history.js";
-export { buildSPAs } from "./spas.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
+export { default as SearchIndex } from "./search-index.js";
+export { gather as gatherGitHistory } from "./git-history.js";
+export { buildSPAs } from "./spas.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -628,7 +628,7 @@ export async function buildDocument(
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {
-    doc.shortTitle = document.metadata["short-title"];
+    doc.short_title = document.metadata["short-title"];
   }
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
