@@ -25,10 +25,11 @@ router.all(
   requireOrigin(Origin.main),
   handleStripePlans
 );
-router.all("/api/*", requireOrigin(Origin.main), proxyApi);
-router.all("/admin-api/*", requireOrigin(Origin.main), proxyApi);
-router.all("/events/fxa/*", requireOrigin(Origin.main), proxyApi);
-router.all("/users/fxa/*", requireOrigin(Origin.main), proxyApi);
+router.all(
+  ["/api/*", "/admin-api/*", "/events/fxa/*", "/users/fxa/*"],
+  requireOrigin(Origin.main),
+  proxyApi
+);
 router.all(
   "/submit/mdn-yari/*",
   requireOrigin(Origin.main),
