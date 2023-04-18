@@ -38,8 +38,11 @@ router.all(
 );
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyKevel);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyKevel);
-router.get("/sitemaps/*", requireOrigin(Origin.main), proxyContent);
-router.get("/static/*", requireOrigin(Origin.main), proxyContent);
+router.get(
+  ["/assets/*", "/sitemaps/*", "/static/*"],
+  requireOrigin(Origin.main),
+  proxyContent
+);
 router.get("/", requireOrigin(Origin.main), redirectLocale);
 router.get(
   "/[^/]+/docs/*/_sample_.*.html",
