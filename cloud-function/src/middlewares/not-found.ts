@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
 
 export async function notFound(_req: Request, res: Response) {
-  res.send(404);
+  res.sendStatus(404);
 }
