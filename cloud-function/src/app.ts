@@ -39,7 +39,7 @@ router.all(
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyKevel);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyKevel);
 router.get(
-  ["/assets/*", "/sitemaps/*", "/static/*"],
+  ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
   proxyContent
 );
