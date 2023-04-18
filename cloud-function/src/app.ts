@@ -43,7 +43,7 @@ router.get("/", requireOrigin(Origin.main), redirectLocale);
 router.get(
   "/[^/]+/docs/*/_sample_.*.html",
   requireOrigin(Origin.liveSamples),
-  lowercasePathname,
+  resolveIndexHTML,
   proxyContent
 );
 router.get(
