@@ -1,9 +1,14 @@
+@use "../../vars" as *;
+
 section.place {
   display: flex;
-  flex-direction: column;
   margin: 1rem 0;
-  max-width: 12rem;
-  min-height: 20rem;
+
+  &:not(.other) {
+    flex-direction: column;
+    max-width: 12rem;
+    min-height: 20rem;
+  }
 
   a:not(.button),
   a {
@@ -47,14 +52,103 @@ section.place {
       width: max-content;
     }
   }
+
+  .no-pong {
+    color: var(--text-secondary);
+    font-size: 0.6rem;
+    margin-bottom: 0.5rem;
+    max-width: 12rem;
+    padding: 0;
+    text-decoration: underline;
+    width: 100%;
+  }
 }
 
-.no-pong {
-  color: var(--text-secondary);
-  font-size: 0.6rem;
-  margin-bottom: 0.5rem;
-  max-width: 12rem;
-  padding: 0;
-  text-decoration: underline;
+section.place.other {
+  display: grid;
+  font-size: 0.625rem;
+
+  grid-template-areas: "pong pong pong" "no space note";
+  margin: 0 auto;
   width: 100%;
+
+  @media screen and (min-width: $screen-md) {
+    grid-template-areas: "pong cta cta" "pong no note";
+    grid-template-columns: 1fr 10rem 4rem;
+  }
+
+  .pong-box {
+    border: none;
+    display: contents;
+    width: 100%;
+
+    .pong {
+      color: var(--place-other-color);
+      flex-direction: row;
+      grid-area: pong;
+      padding: 0.125rem;
+      text-decoration: none;
+
+      img {
+        height: 3.125rem;
+        width: auto;
+      }
+
+      span {
+        color: var(--place-other-color);
+        max-width: 22rem;
+        padding: 0 1rem;
+      }
+    }
+
+    .pong-cta {
+      background-color: var(--place-other-cta-background);
+      border-radius: var(--elem-radius);
+      color: var(--place-other-cta-color);
+      font-size: var(--type-smaller-font-size);
+      grid-area: cta;
+      margin: 0.125rem auto;
+      padding: 0.25rem 1rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .pong-note {
+      color: var(--place-other-color);
+      grid-area: note;
+      margin: auto 0.5rem 0 auto;
+      width: 4rem;
+      width: auto;
+    }
+  }
+
+  .no-pong {
+    color: var(--place-other-color);
+    grid-area: no;
+    margin: auto 0.5rem 0;
+  }
+}
+
+.top-banner {
+  --place-other-background: var(--background-secondary);
+  --place-other-color: var(--text-primary);
+  --place-other-cta-background: var(--text-primary);
+  --place-other-cta-color: var(--background-secondary);
+
+  background-color: var(--place-other-background);
+  border: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+
+  &.empty {
+    height: 0;
+  }
+
+  &.visible {
+    height: fit-content;
+  }
+
+  @media screen and (max-width: #{$screen-md - 1}) {
+    display: none;
+  }
 }

@@ -20,12 +20,12 @@ import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
-import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
+import { OtherPlacement } from "./ui/organisms/placement";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -34,11 +34,10 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
+  const isServer = useIsServer();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
-
-  const isServer = useIsServer();
 
   React.useEffect(() => {
     setCategory(getCategoryByPathname(pathname));
@@ -47,12 +46,12 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {!isServer && <Banner />}
       <div
         className={`page-wrapper  ${
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
+        {!isServer && <OtherPlacement />}
         {pageType !== "document-page" && (
           <TopNavigation extraClasses="main-document-header-container" />
         )}

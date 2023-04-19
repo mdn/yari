@@ -4,7 +4,11 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { PlacementStatus, usePlacement } from "../../../placement-context";
+import {
+  PlacementStatus,
+  TopBannerPlacementData,
+  usePlacement,
+} from "../../../placement-context";
 
 interface Timer {
   timeout: number | null;
@@ -29,14 +33,55 @@ function viewed(
 export function Placement() {
   const placementData = usePlacement();
 
-  return !placementData ? (
+  return !placementData?.banner ? (
     <section className="place"></section>
   ) : (
-    <PlacementInner pong={placementData}></PlacementInner>
+    <PlacementInner
+      pong={placementData.banner as PlacementStatus}
+    ></PlacementInner>
   );
 }
 
-export function PlacementInner({ pong }) {
+export function OtherPlacement() {
+  const placementData = usePlacement();
+  const { color, background, ctaColor, ctaBackground } =
+    (placementData?.topBanner as TopBannerPlacementData)?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-other-background", background],
+      ["--place-other-color", color],
+      ["--place-other-cta-background", ctaBackground],
+      ["--place-other-cta-color", ctaColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
+
+  return (
+    <div
+      className={`top-banner ${placementData?.topBanner ? "visible" : "empty"}`}
+      style={css}
+    >
+      {!placementData?.topBanner ? (
+        <section className="place other container"></section>
+      ) : (
+        <PlacementInner
+          pong={placementData.topBanner as PlacementStatus}
+          extraClassNames={["other", "container"]}
+          cta={(placementData.topBanner as TopBannerPlacementData)?.cta}
+        ></PlacementInner>
+      )}
+    </div>
+  );
+}
+
+export function PlacementInner({
+  pong,
+  extraClassNames = [],
+  cta,
+}: {
+  pong: PlacementStatus;
+  extraClassNames?: string[];
+  cta?: string;
+}) {
   const isServer = useIsServer();
   const user = useUserData();
   const isVisible = usePageVisibility();
@@ -115,7 +160,10 @@ export function PlacementInner({ pong }) {
     <>
       {!isServer && click && image && copy && (
         <>
-          <section ref={place} className="place">
+          <section
+            ref={place}
+            className={["place", ...extraClassNames].join(" ")}
+          >
             <p className="pong-box">
               <a
                 className="pong"
@@ -135,6 +183,21 @@ export function PlacementInner({ pong }) {
                 ></img>
                 <span>{pong?.copy}</span>
               </a>
+              {cta && (
+                <a
+                  className="pong-cta"
+                  data-pong="pong->click"
+                  href={`/pong/click?code=${encodeURIComponent(click)}${
+                    pong?.fallback
+                      ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
+                      : ""
+                  }`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {cta}
+                </a>
+              )}
               <a
                 href={pong?.fallback?.by || "/en-US/advertising"}
                 className="pong-note"
