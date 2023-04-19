@@ -49,13 +49,13 @@ on:
       WIP_PROJECT_ID:
         required: true
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     environment: stage
-    permissions:
-      contents: read
-      id-token: write
-
     runs-on: ubuntu-latest-4core
 
     # Only run the scheduled workflows on the main repo.
@@ -65,6 +65,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
           path: mdn/content
@@ -87,6 +88,7 @@ jobs:
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -94,33 +96,40 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: yarn
 
       - name: Install all yarn packages
+        if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
 
       - name: Install Python
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
       - name: Install Python poetry
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: snok/install-poetry@v1
 
       - name: Install deployer
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           cd deployer
           poetry install
 
       - name: Display Python & Poetry version
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           python --version
           poetry --version
@@ -135,6 +144,7 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -228,10 +238,11 @@ jobs:
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json 
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Deploy with deployer
+        if: ${{ ! (vars.SKIP_BUILD || vars.SKIP_AWS) }}
         env:
           GITHUB_SHA: ${{ env.GITHUB_SHA }}
           GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
@@ -270,20 +281,8 @@ jobs:
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Invalidate CDN
-        env:
-          DISTRIBUTION: E2MLRMA1VTVDHX
-          PATHS: /*
-        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
-
       - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/auth@v1
         with:
           token_format: access_token
@@ -291,11 +290,77 @@ jobs:
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Sync Yari Content
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -m -h "Cache-Control:public, max-age=86400" rsync -crj html,json,txt client/build gs://content-stage-mdn/main
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/static
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+
+      # Deploy Function
+      - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: deploy-stage-nonprod-mdn-ingre@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          install_components: "beta"
+
+      - name: Generate redirects map
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: cloud-function
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+        run: |
+          npm ci
+          npm run build-redirects
+
+      - name: Deploy Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        run: |-
+          for region in europe-west1 us-west1 asia-east1; do
+            gcloud beta functions deploy mdn-nonprod-stage-$region \
+            --gen2 \
+            --runtime=nodejs18 \
+            --region=$region \
+            --source=cloud-function \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point=mdnHandler \
+            --concurrency=100 \
+            --min-instances=1 \
+            --max-instances=100 \
+            --memory=2GB \
+            --timeout=30s \
+            --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.allizom.net" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
+            --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
+            --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
+            --set-env-vars="SENTRY_ENVIRONMENT=stage" \
+            --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
+            --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
+            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
+            2>&1 | sed "s/^/[$region] /" &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
 
       - name: Slack Notification
         if: failure()
@@ -308,3 +373,39 @@ jobs:
           SLACK_MESSAGE: "Build failed :collision:"
           SLACK_FOOTER: "Powered by stage-build.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+  invalidate:
+    environment: stage
+    needs: build
+    if: ${{ ! vars.SKIP_INVALIDATE }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS Credentials
+        if: ${{ ! vars.SKIP_AWS }}
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Invalidate CDN
+        if: ${{ ! vars.SKIP_AWS }}
+        env:
+          DISTRIBUTION: E2MLRMA1VTVDHX
+          PATHS: /*
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: deploy-stage-nonprod-mdn-ingre@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Invalidate CDN
+        run: |-
+          gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
