@@ -24,9 +24,6 @@ jobs:
           cache-dependency-path: |
             yarn.lock
             client/pwa/yarn.lock
-            deployer/aws-lambda/content-origin-request/yarn.lock
-            deployer/aws-lambda/content-origin-response/yarn.lock
-            deployer/aws-lambda/tests/yarn.lock
             libs/**/*.js
 
       - name: Install all yarn packages (ROOT)
@@ -34,18 +31,6 @@ jobs:
 
       - name: Install all yarn packages (pwa)
         working-directory: client/pwa
-        run: yarn --frozen-lockfile
-
-      - name: Install all yarn packages (aws-lambda/content-origin-request)
-        working-directory: deployer/aws-lambda/content-origin-request
-        run: yarn --frozen-lockfile
-
-      - name: Install all yarn packages (aws-lambda/content-origin-response)
-        working-directory: deployer/aws-lambda/content-origin-response
-        run: yarn --frozen-lockfile
-
-      - name: Install all yarn packages (aws-lambda/tests)
-        working-directory: deployer/aws-lambda/tests
         run: yarn --frozen-lockfile
 
       - name: Lint prettier

@@ -258,7 +258,6 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-prod
-          DEPLOYER_DISTRIBUTION_ID: E2ZY2DGUN70EMI
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
@@ -281,7 +280,6 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
