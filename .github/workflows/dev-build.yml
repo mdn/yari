@@ -174,7 +174,6 @@ jobs:
 
           DEPLOYER_BUCKET_NAME: mdn-content-dev
           DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix }}
-          DEPLOYER_DISTRIBUTION_ID: E9813D0RN1QZI
           DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD: ${{ github.event.inputs.log_each_successful_upload }}
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}

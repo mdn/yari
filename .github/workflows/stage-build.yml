@@ -253,7 +253,6 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-stage
-          DEPLOYER_DISTRIBUTION_ID: E2MLRMA1VTVDHX
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}

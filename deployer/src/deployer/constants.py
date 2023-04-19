@@ -13,7 +13,6 @@ CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
 
 DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
 DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")
-DEFAULT_DISTRIBUTION_ID = config("DEPLOYER_DISTRIBUTION_ID", default=None)
 
 # When uploading a bunch of files, the work is done in a thread pool.
 # If you use too many "workers" it might saturate your network, meaning it's
