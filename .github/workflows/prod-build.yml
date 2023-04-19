@@ -281,7 +281,6 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP

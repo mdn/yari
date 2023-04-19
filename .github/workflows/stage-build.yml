@@ -260,8 +260,6 @@ jobs:
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
 
-          DEPLOYER_LAMBDA_PREFIX: stage-
-
           KEVEL_SITE_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_SITE_ID }}
           KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_NETWORK_ID }}
           SIGN_SECRET: ${{ secrets.DEPLOYER_STAGE_SIGN_SECRET }}
@@ -278,7 +276,6 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP

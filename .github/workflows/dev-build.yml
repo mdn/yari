@@ -200,12 +200,6 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
-          # TODO
-          # Execute command to tell the Dev CloudFront distribution to use the
-          # latest and greatest *version* of the updated lambda functions.
-          # (Or, make it an optional flag to the `update-lambda-functions` command)
-
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials

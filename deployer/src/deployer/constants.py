@@ -52,5 +52,3 @@ DEFAULT_GITHUB_TOKEN = config("GITHUB_TOKEN", default=None)
 
 # Object prefixes that are managed manually and must not be pruned.
 MANUAL_PREFIXES = ["bcd", "opendesign", "_whatsdeployed"]
-
-LAMBDA_PREFIX = config("DEPLOYER_LAMBDA_PREFIX", default="")
