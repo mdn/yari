@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
 
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
