@@ -1,2 +1,2 @@
-server: yarn start:server
-web: yarn start:client
+server: npm run start:server
+web: npm run start:client

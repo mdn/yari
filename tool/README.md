@@ -32,7 +32,7 @@ CONTENT_ROOT=/Users/steve/mozilla/mdn-content/files
 You can then run the tool with the following command:
 
 ```bash
-yarn tool inventory
+npm run tool inventory
 ```
 
 This will output the JSON to the stdout which can then be piped into another
@@ -40,7 +40,7 @@ utility. If you want to write the JSON to a file, you can use the following
 command:
 
 ```bash
-yarn run --silent tool inventory > inventory.json
+npm run run --silent tool inventory > inventory.json
 ```
 
 This will write a file called `inventory.json` to the root directory of the

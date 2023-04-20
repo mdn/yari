@@ -110,7 +110,7 @@ Output is stored in an S3 bucket named `mdn-popularities-prod`.
 ## Run the CLI tool
 
 ```bash
-yarn tool popularities
+npm run tool popularities
 ```
 
 This should now download the latest popularities csv and update the file

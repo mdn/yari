@@ -6,5 +6,8 @@
   "type": "module",
   "exports": "./index.js",
   "main": "index.js",
-  "types": "index.d.ts"
+  "types": "index.d.ts",
+  "dependencies": {
+    "dotenv": "^16.0.1"
+  }
 }

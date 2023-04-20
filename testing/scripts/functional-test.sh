@@ -3,7 +3,7 @@ set -e
 
 export ENV_FILE=.env.testing
 
-yarn build:prepare
-yarn build
+npm run build:prepare
+npm run build
 
-yarn test:testing $@
+npm run test:testing -- $@

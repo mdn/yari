@@ -26,7 +26,7 @@ import/
 /docs/
 README.md
 client/search-experimentation.js
-yarn-error.log
+*.log
 content/files/
 
 # Since we ship the built stuff, we actually no longer need any of the source

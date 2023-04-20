@@ -21,10 +21,10 @@ else
 fi
 
 echo "-------------------------"
-echo "Install all yarn packages"
+echo "Install all npm packages"
 echo "-------------------------"
 
-yarn --frozen-lockfile
+npm ci
 
 echo "--------------------"
 echo "Start the dev server"
@@ -34,9 +34,9 @@ export CONTENT_ROOT="mdn/content/files"
 ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 echo "" > client/.env
 
-yarn build:prepare
+npm run build:prepare
 
-yarn start > developing.log 2>&1 &
+npm run start > developing.log 2>&1 &
 PID=$!
 
 {
@@ -49,7 +49,7 @@ PID=$!
     echo "Test viewing the dev server"
     echo "---------------------------"
 
-    yarn test:developing
+    npm run test:developing
 
     echo "-----------"
     echo "Stop server"

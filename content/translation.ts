@@ -1,4 +1,5 @@
-import * as Parser from "../kumascript/src/parser.js";
+// eslint-disable-next-line n/no-extraneous-import
+import * as Parser from "@yari-internal/kumascript/src/parser.js";
 
 function* fastKSParser(s: string) {
   for (const match of s.matchAll(

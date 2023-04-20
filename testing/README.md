@@ -11,36 +11,36 @@ content but mostly we try to control all the content that we test against.
 
 ## Functional tests
 
-This is primarily to test the outcome of the Yari builder. You run `yarn build`
-in a way so it builds based on the content here in `/testing/` and then, using
-`jest`, we analyze the generated `index.json`, `index.html`, and file
-attachments generated from that build.
+This is primarily to test the outcome of the Yari builder. You run
+`npm run build` in a way so it builds based on the content here in `/testing/`
+and then, using `jest`, we analyze the generated `index.json`, `index.html`, and
+file attachments generated from that build.
 
 To run these tests, first run:
 
 ```sh
 export ENV_FILE=.env.testing
-yarn build:prepare
-yarn build
-yarn start:static-server
+npm run build:prepare
+npm run build
+npm run start:static-server
 ```
 
 This will start a server on <http://localhost:5042> which serves the built
 content. Now, in a separate terminal, you can run:
 
 ```sh
-yarn test:testing
+npm run test:testing
 ```
 
 The last command is just an alias for `jest` so you can run, for example:
 
 ```sh
 # See jest help
-yarn test:testing --help
+npm run test:testing -- --help
 # Interactive re-run every time a file is saved and exit on the first error
-yarn test:testing --watch --bail
+npm run test:testing -- --watch --bail
 # Alias for searching by test file name. I.e. only run `index.test.js`
-yarn test:testing index
+npm run test:testing index
 ```
 
 ## Headless tests
@@ -50,13 +50,13 @@ files with `playwright`. It's based on the same steps as above, so first:
 
 ```sh
 export ENV_FILE=.env.testing
-yarn test:prepare
+npm run test:prepare
 ```
 
 Now, to run the actual headless tests you run:
 
 ```sh
-yarn test:headless
+npm run test:headless
 ```
 
 In CI automation it automatically picks up the browser binary according to the
@@ -77,9 +77,9 @@ some quick tips to get you started.
 
 ```sh
 # Just run the test by a test description string
-yarn test:headless -g 'show your settings page'
+npm run test:headless -- -g 'show your settings page'
 # Make it NOT headless by making a browser pop up for each test
-yarn test:headless --headed
+npm run test:headless -- --headed
 # Exclusively run the tests in headless.sitesearch.spec.js only
 playwright test headless.sitesearch
 ```
@@ -97,16 +97,16 @@ and `/testing/translated-content/` fixtures. The first one is testing what Yari
 developers would see. To run these you first need to run, in one terminal:
 
 ```sh
-yarn dev
+npm run dev
 ```
 
 > NOTE: Ensure that you have `REACT_APP_CRUD_MODE` set to `true` in the `.env`
-> at the root of the project before running `yarn dev`.
+> at the root of the project before running `npm run dev`.
 
 And in another terminal, run:
 
 ```sh
-yarn test:developing
+npm run test:developing
 ```
 
 **Note!** To avoid "cross-contamination" with the other fixture-based headless
@@ -120,14 +120,14 @@ first run in one terminal:
 
 ```sh
 cd /where/is/mdn/content
-yarn start
+npm run start
 ```
 
 Now, to run the tests in another terminal:
 
 ```sh
 cd /back/to/mdn/yari
-DEVELOPING_SKIP_DEV_URL=true yarn test:developing
+DEVELOPING_SKIP_DEV_URL=true npm run test:developing
 ```
 
 **Note!** It's admittedly many permutations of testing and it's hard to remember
@@ -143,14 +143,14 @@ First to unit test some React components. This tests the
 `client/src/**/*.test.tsx` files:
 
 ```sh
-yarn test:client
+npm run test:client
 ```
 
 Secondly, to unit test the `kumascript` tests. These tests are located in
 `kumascript/tests/*.test.js`:
 
 ```sh
-yarn test:kumascript
+npm run test:kumascript
 ```
 
 In both of these cases, it's `jest` so you can do things like adding
@@ -164,13 +164,13 @@ See the file `deployer/README.md` for instructions.
 
 Going back to testing the content in `/testing/content/files/` and
 `/testing/translated-content/files/` you might find it fiddly to see what you're
-testing. The `--headed` flag to `yarn test:headless` is good but it's a bit hard
-to see what you're getting to get around that you can do the following:
+testing. The `--headed` flag to `npm run test:headless` is good but it's a bit
+hard to see what you're getting to get around that you can do the following:
 
 ```sh
 echo 'CONTENT_ROOT=testing/content/files' >> .env
 echo 'CONTENT_TRANSLATED_ROOT=testing/translated-content/files' >> .env
-yarn dev
+npm run dev
 ```
 
 Now you can browse both <http://localhost:3000> and <http://localhost:5042> to

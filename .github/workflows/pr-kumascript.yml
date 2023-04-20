@@ -14,7 +14,7 @@ on:
     paths:
       - kumascript/**
       - .github/workflows/pr-kumascript.yml
-      - yarn.lock
+      - package-lock.json
 
 jobs:
   test:
@@ -27,13 +27,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Install all npm packages
+        run: npm ci
 
       - name: Unit testing kumascript
         env:
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn test:kumascript
+          npm run test:kumascript

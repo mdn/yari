@@ -42,15 +42,15 @@ can extract into your `/tmp/` directory and manually inspect the files in there.
 
 But note, it's not just about what's included in the tarball. What also matters
 is what happens when someone installs the tarball. Because the tarball contains
-a `package.json` and consecuent `yarn install` (or `npm install` for that
-matter) will start to download those dependencies too.
+a `package.json` and consecuent `npm install` will start to download those
+dependencies too.
 
 In Yari, any dependency that you don't need in Content, but you need in Yari
 should go into the `devDependencies` (rather than `dependencies`) in the
 `package.json`. For example, things that are used to for automated testing of
 Yari:
 
-    yarn add --dev jest-environment-jsdom-sixteen
+    npm add -D jest-environment-jsdom-sixteen
 
 ## Debugging the tarball
 
@@ -62,7 +62,7 @@ First of all, make you relevant edits in `~/yari` then run:
 
     export REACT_APP_DISABLE_AUTH=true
     export REACT_APP_CRUD_MODE=true
-    yarn build:prepare
+    npm run build:prepare
     echo .git/info/exclude >> .npmignore
     echo .env >> .npmignore
     npm pack
@@ -74,11 +74,11 @@ will produce a `mdn-yari-x.y.z.tgz` file on your disk.
 Now, go to `~/content` and run:
 
     rm -fr node_modules
-    yarn add ~/yari/mdn-yari-x.y.z.tgz
-    yarn start
+    npm run add ~/yari/mdn-yari-x.y.z.tgz
+    npm run start
     open http://localhost:5042
 
-Make sure you actually test it out fully. For example, just because `yarn start`
-starts the server OK, doesn't mean it can do all things it needs to do. The best
-place to start is to navigate into <http://localhost:5042> to an actual page
-which will need to built-on-the-fly.
+Make sure you actually test it out fully. For example, just because
+`npm run start` starts the server OK, doesn't mean it can do all things it needs
+to do. The best place to start is to navigate into <http://localhost:5042> to an
+actual page which will need to built-on-the-fly.

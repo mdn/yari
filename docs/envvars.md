@@ -197,7 +197,7 @@ this is the default port.
 **Default: `8080`**
 
 This is the port for the WebSocket server, which is started when you run
-`yarn start`.
+`npm run start`.
 
 ### `SERVER_STATIC_ROOT`
 

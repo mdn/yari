@@ -36,11 +36,11 @@ import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
-import * as kumascript from "../kumascript/index.js";
+import * as kumascript from "@yari-internal/kumascript/index.js";
 import {
   MacroInvocationError,
   MacroRedirectedLinkError,
-} from "../kumascript/src/errors.js";
+} from "@yari-internal/kumascript/src/errors.js";
 import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
@@ -245,7 +245,7 @@ function tryOrExit<T extends ActionParameters>(
 }
 
 program
-  .bin("yarn tool")
+  .bin("npm run tool")
   .name("tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
@@ -589,7 +589,7 @@ program
         fs.existsSync(slug) &&
         fs.existsSync(path.join(slug, "index.json"))
       ) {
-        // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
+        // Someone probably ran `npm run build` and copy-n-pasted one of the lines
         // it spits out from its CLI.
         const { doc } = JSON.parse(
           fs.readFileSync(path.join(slug, "index.json"), "utf-8")
@@ -887,7 +887,7 @@ program
           )
         );
         logger.info(
-          `Reset ${outfile} by running: yarn tool popularities --refresh`
+          `Reset ${outfile} by running: npm run tool popularities -- --refresh`
         );
         return;
       }
@@ -1157,7 +1157,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     tryOrExit(async () => {
       if (!CONTENT_ROOT) {
         throw new Error(
-          "CONTENT_ROOT not set. Please run yarn tool inventory --help for more information."
+          "CONTENT_ROOT not set. Please run npm run tool inventory --help for more information."
         );
       }
 
