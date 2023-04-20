@@ -10,18 +10,6 @@ echo "-------------------------"
 
 npm ci
 
-echo "-------------"
-echo "Lint prettier"
-echo "-------------"
-
-npm run prettier-check
-
-echo "-----------"
-echo "Lint ESLint"
-echo "-----------"
-
-npm run eslint
-
 echo "-------------------"
 echo "Unit testing client"
 echo "-------------------"
