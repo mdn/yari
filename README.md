@@ -19,8 +19,7 @@ Before you can start working with Yari, you need to:
     So for now let's make an exception. -->
 <!-- markdownlint-disable list-marker-space -->
 
-1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>=
-    16.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+1.  Install [git](https://git-scm.com/) and [Node.js](https://nodejs.org).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
     the MDN [content](https://github.com/mdn/content) and
@@ -39,7 +38,7 @@ To run Yari locally, you'll first need to install its dependencies and build the
 app locally. Do this like so:
 
     cd yari
-    yarn install
+    npm install
 
 Now copy the `.env-dist` file to `.env`:
 
@@ -52,16 +51,16 @@ set and Yari will be able to find the content it needs to render.
 At this point, you can get started. Run the following lines to compile required
 files, start the Yari web server running, and open it in your browser:
 
-    yarn dev
+    npm run dev
     open http://localhost:3000
 
-If you prefer you can use `yarn start`, which will re-use any previously
-compiled files; this is "riskier" but faster. `yarn dev` always ensures that
+If you prefer you can use `npm run start`, which will re-use any previously
+compiled files; this is "riskier" but faster. `npm run dev` always ensures that
 everything is up-to-date.
 
-The `yarn start` command also starts a server with slightly different behavior —
-it doesn't automatically reload when its source code files change, so use with
-caution.
+The `npm run start` command also starts a server with slightly different
+behavior — it doesn't automatically reload when its source code files change, so
+use with caution.
 
 See also our [reviewing guide](docs/REVIEWING.md) for information on how to
 review Yari changes.
@@ -92,8 +91,8 @@ you called [the remote location](https://git-scm.com/docs/git-remote) of the
 original yari repo):
 
     git pull yari-origin main
-    yarn
-    yarn dev
+    npm install
+    npm run dev
 
 When you embark on making a change, do it on a new branch, for example
 `git checkout -b my-new-branch`.
@@ -121,11 +120,11 @@ the front-end code, ready to be served as static files.
 
 ## Development
 
-The `yarn start` command encapsulates the front-end dev server (on
+The `npm run start` command encapsulates the front-end dev server (on
 <http://localhost:3000>) and the `server` (on <http://localhost:5042>).
 
-All the sub-commands of `yarn start` can be broken down and run individually if
-you want to work more rapidly.
+All the sub-commands of `npm run start` can be broken down and run individually
+if you want to work more rapidly.
 
 ### Setting up `$EDITOR`
 
@@ -153,15 +152,15 @@ The `server` has two main jobs:
 All JavaScript and TypeScript code needs to be formatted with `prettier` and
 it's easy to test this with:
 
-    yarn prettier-check
+    npm run prettier-check
 
 And conveniently, if you're not even interested in what the flaws were, run:
 
-    yarn prettier-format
+    npm run prettier-format
 
-When you ran `yarn` for the first time (`yarn` is an alias for `yarn install`)
-it automatically sets up a `git` pre-commit hook that uses `lint-staged` — a
-wrapper for `prettier` that checks only the files in the git commit.
+When you ran `npm install` for the first time it automatically sets up a `git`
+pre-commit hook that uses `lint-staged` — a wrapper for `prettier` that checks
+only the files in the git commit.
 
 If you have doubts about formatting, submit your pull request anyway. If you
 have formatting flaws, the
@@ -172,7 +171,7 @@ have formatting flaws, the
 We maintain the dependencies using `Dependabot` in GitHub but if you want to
 manually upgrade them you can use:
 
-    yarn upgrade-interactive --latest
+    npx npm-check -u
 
 ### Sharing your dev environment with `ngrok`
 
@@ -184,7 +183,7 @@ your uplink Internet connection but it should be fairly feature-complete.
 
 1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
 2. [Download the executable](https://ngrok.com/download)
-3. Start your Yari server with `yarn start` in one terminal
+3. Start your Yari server with `npm run start` in one terminal
 4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5042`
 
 This will display something like this:
@@ -212,7 +211,7 @@ One potential advantage is that you can get a more complete list of all possible
 
 The most fundamental CLI command is:
 
-    yarn build
+    npm run build
 
 ### What gets built
 
@@ -270,15 +269,6 @@ There are two options to resolve this.
 
 2. Increase `max_user_watches`:\
    See <https://github.com/guard/listen#increasing-the-amount-of-inotify-watchers>
-
-### `Error: Cannot find module 'levenary'`
-
-We can't know for sure what's causing this error but speculate a bug in how
-`yarn` fails to resolve if certain `@babel` helper libs should install its own
-sub-dependencies. A sure way to solve it is to run:
-
-    rm -fr node_modules
-    yarn install
 
 ### `Error: listen EADDRINUSE: address already in use :::5042`
 

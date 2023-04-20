@@ -24,10 +24,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "yarn"
+          cache: npm
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/npm-published-simulation.yml') }}
+
+      - name: Install all npm packages
+        run: |
+          npm clean-install
+          npm run clean-install:all
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -46,7 +56,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn build:prepare
+          npm run build:prepare
 
       - name: Build and install tarball
         run: |
@@ -57,25 +67,24 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
-          yarn cache clean --all
-          yarn add file:$TARBALL
-          yarn install
+          npm add file:$TARBALL
+          npm install
 
-      - name: (mdn/content) yarn yari-build --help
+      - name: (mdn/content) npx yari-build
         working-directory: mdn/content
-        run: yarn yari-build --help
+        run: npx yari-build --help
 
-      - name: (mdn/content) yarn yari-filecheck --help
+      - name: (mdn/content) npx yari-filecheck
         working-directory: mdn/content
-        run: yarn yari-filecheck --help
+        run: npx yari-filecheck --help
 
-      - name: (mdn/content) yarn yari-tool
+      - name: (mdn/content) npx yari-tool
         working-directory: mdn/content
-        run: yarn yari-tool --help
+        run: npx yari-tool --help
 
-      - name: (mdn/content) yarn start
+      - name: (mdn/content) npm run start
         working-directory: mdn/content
-        run: yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+        run: npm run start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: View some URLs on localhost:5042
         run: |
@@ -93,12 +102,12 @@ jobs:
           # Testing that dev server is not relevant or important in this context.
           DEVELOPING_SKIP_DEV_URL: true
         run: |
-          yarn test:developing
+          npm run test:developing
 
       - name: SSR build a page
         working-directory: mdn/content
         run: |
-          yarn build files/en-us/mdn/kitchensink/index.md
+          npm run build files/en-us/mdn/kitchensink/index.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()

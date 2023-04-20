@@ -1,5 +1,5 @@
 /**
- * This script does all the necessary things the `yarn client:build`
+ * This script does all the necessary things the `npm run client:build`
  * (react-scripts) can't do.
  *
  */

@@ -67,10 +67,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          cache: npm
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install all npm packages
+        run: npm ci
 
       - name: Install Python
         uses: actions/setup-python@v4
@@ -115,7 +123,7 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # Uncomment when hacking on this workflow. It means the `yarn build`
+          # Uncomment when hacking on this workflow. It means the `npm run build`
           # finishes much sooner, which can be helpful debugging the other stuff
           # the workflow needs to do.
           # BUILD_FOLDERSEARCH: web/html
@@ -131,21 +139,21 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn build:prepare
+          npm run build:prepare
 
           # (July 15, 2021) This is a temporary solution. This should become an
           # integrated part of 'build:prepare'.
           # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
+          npm run tool popularities
 
-          yarn tool sync-translated-content
+          npm run tool sync-translated-content
 
           # Spread the work across 2 processes. Why 2? Because that's what you
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build --locale     en-us --locale     ja --locale     fr &
+          npm run build -- --locale     en-us --locale     ja --locale     fr &
           build1=$!
-          yarn build --not-locale en-us --not-locale ja --not-locale fr &
+          npm run build -- --not-locale en-us --not-locale ja --not-locale fr &
           build2=$!
 
           # You must explicitly specify the job you're waiting-on to ensure
@@ -159,12 +167,12 @@ jobs:
           du -sh client/build
 
           # Generate sitemap index file
-          yarn build --sitemap-index
+          npm run build --sitemap-index
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          npm run tool whatsdeployed -- --output client/build/_whatsdeployed/code.json
+          npm run tool whatsdeployed $CONTENT_ROOT -- --output client/build/_whatsdeployed/content.json
+          npm run tool whatsdeployed $CONTENT_TRANSLATED_ROOT -- --output client/build/_whatsdeployed/translated-content.json
 
       - name: Deploy with deployer
         env:

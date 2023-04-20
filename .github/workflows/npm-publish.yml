@@ -25,10 +25,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          cache: npm
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/npm-publish.yml') }}
+
+      - name: Install all npm packages
+        run: |
+          npm clean-install
+          npm run clean-install:all
 
       - name: Build the build
         env:
@@ -41,7 +51,7 @@ jobs:
           # whoami endpoint.
           REACT_APP_DISABLE_AUTH: true
 
-          # The 'yarn build:prepare' command is going to try to build up a
+          # The 'npm run build:prepare' command is going to try to build up a
           # file for the git history so it can have an index of each files.
           # This makes sense in most of the cases where you have a CONTENT_ROOT
           # which you'll want to build. But the CONTENT_ROOT can't be empty
@@ -49,7 +59,7 @@ jobs:
           # we use for the end-to-end testing.
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn build:prepare
+          npm run build:prepare
 
       - name: Dry-run publish to see which files are included
         run: |

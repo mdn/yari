@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn install --ignore-scripts && yarn lint-staged
+npm install --ignore-scripts && npx lint-staged

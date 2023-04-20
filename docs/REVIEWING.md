@@ -7,19 +7,19 @@ This document provides information on how to review changes to the Yari repo.
 Set up the Yari repo and the corresponding
 [content repo](https://github.com/mdn/content) locally, as described in the
 [Yari quickstart](../README.md#quickstart) guide. Once you've got them
-successfully set up, run the `yarn` and `yarn dev` commands to update your fork
-with the latest packages and start the MDN test server running locally on
-`localhost:3000`.
+successfully set up, run the `npm install` and `npm run dev` commands to update
+your fork with the latest packages and start the MDN test server running locally
+on `localhost:3000`.
 
-`yarn dev` is slower to execute than `yarn start` but it makes sure
+`npm run dev` is slower to execute than `npm run start` but it makes sure
 `client/build/` is clean, and it also reloads the SSR part of the site (it does
 a fresh `webpack` build). This might matter after you've run `git pull` &
-`yarn`, since certain packages might be upgraded and it's always good to test
-with a clean, up-to-date build.
+`npm install`, since certain packages might be upgraded and it's always good to
+test with a clean, up-to-date build.
 
 Make sure you set the `CONTENT_ROOT` environment variable to an absolute path to
-the `content` repo `files` subdirectory before running `yarn dev`, so Yari can
-find the content to render. This can be done using an `export` command like:
+the `content` repo `files` subdirectory before running `npm run dev`, so Yari
+can find the content to render. This can be done using an `export` command like:
 
 ```bash
 export CONTENT_ROOT=/Users/path/to/content/files
@@ -41,8 +41,8 @@ When you are tasked with reviewing a Yari pull request:
 
 1. Go to your local fork clone, switch to a new branch for testing, and pull the
    PR branch into it.
-2. Next, run `yarn` to pull in any package changes, then `yarn dev` to build the
-   site and start the local server.
+2. Next, run `npm install` to pull in any package changes, then `npm run dev` to
+   build the site and start the local server.
 3. Now go to the local server (<http://localhost:3000>) to test the change.
 4. Provide feedback. Be helpful, and above all, welcoming and friendly.
 

@@ -14,7 +14,7 @@ on:
     paths:
       - kumascript/**
       - .github/workflows/pr-kumascript.yml
-      - yarn.lock
+      - package-lock.json
 
 jobs:
   test:
@@ -27,13 +27,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          cache: npm
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/pr-kumascript.yml') }}
+
+      - name: Install all npm packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm ci
 
       - name: Unit testing kumascript
         env:
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn test:kumascript
+          npm run test:kumascript

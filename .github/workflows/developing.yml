@@ -19,10 +19,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          cache: npm
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/developing.yml') }}
+
+      - name: Install all npm packages
+        run: npm ci
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -45,8 +53,8 @@ jobs:
           # the content if loading this page fails.
           ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
-          yarn build:prepare
-          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+          npm run build:prepare
+          npm run start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Wait for servers
         run: |
@@ -58,7 +66,7 @@ jobs:
 
       - name: Test viewing the dev server
         run: |
-          yarn test:developing
+          npm run test:developing
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()

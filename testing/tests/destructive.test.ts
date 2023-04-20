@@ -1,10 +1,10 @@
 /**
  * These jest tests are considered destructive because they make changes
- * to the files created by `yarn build`.
+ * to the files created by `npm run build`.
  *
  * What these tests do is they copy the whole (testing) content directory
  * and the (client) build directory all into a temp directory. Now we
- * can trigger `yarn build` and be OK with it messing
+ * can trigger `npm run build` and be OK with it messing
  * with any of the files there.
  */
 
@@ -79,7 +79,7 @@ describe("fixing flaws", () => {
   });
 
   it("can be run in dry-run mode", () => {
-    const stdout = execSync("yarn build", {
+    const stdout = execSync("npm run build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
@@ -108,7 +108,7 @@ describe("fixing flaws", () => {
   });
 
   it("can actually change the files", () => {
-    const stdout = execSync("yarn build", {
+    const stdout = execSync("npm run build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(

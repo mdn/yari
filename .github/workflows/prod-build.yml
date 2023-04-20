@@ -106,11 +106,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          cache: npm
 
-      - name: Install all yarn packages
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install all npm packages
         if: ${{ ! vars.SKIP_BUILD }}
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
@@ -215,20 +223,20 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn build:sw
-          yarn build:prepare
+          npm run build:sw
+          npm run build:prepare
 
           # (July 15, 2021) This is a temporary solution. This should become an
           # integrated part of 'build:prepare'.
           # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
+          npm run tool popularities
 
-          yarn tool sync-translated-content
+          npm run tool sync-translated-content
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            npm run build -- --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -239,12 +247,12 @@ jobs:
           du -sh client/build
 
           # Generate sitemap index file
-          yarn build --sitemap-index
+          npm run build --sitemap-index
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          npm run tool whatsdeployed -- --output client/build/_whatsdeployed/code.json
+          npm run tool whatsdeployed $CONTENT_ROOT -- --output client/build/_whatsdeployed/content.json
+          npm run tool whatsdeployed $CONTENT_TRANSLATED_ROOT -- --output client/build/_whatsdeployed/translated-content.json
 
       - name: Deploy with deployer
         if: ${{ ! (vars.SKIP_BUILD || vars.SKIP_AWS) }}

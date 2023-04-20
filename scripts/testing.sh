@@ -5,16 +5,28 @@
 set -e
 
 echo "-------------------------"
-echo "Install all yarn packages"
+echo "Install all npm packages"
 echo "-------------------------"
 
-yarn --frozen-lockfile
+npm ci
+
+echo "-------------"
+echo "Lint prettier"
+echo "-------------"
+
+npm run prettier-check
+
+echo "-----------"
+echo "Lint ESLint"
+echo "-----------"
+
+npm run eslint
 
 echo "-------------------"
 echo "Unit testing client"
 echo "-------------------"
 
-yarn test:client
+npm run test:client
 
 echo "----------------------"
 echo "Build and start server"
@@ -22,10 +34,10 @@ echo "----------------------"
 
 export ENV_FILE=".env.testing"
 
-yarn build:prepare
-yarn build
+npm run build:prepare
+npm run build
 
-nohup yarn start:static-server > testing.log 2>&1 &
+nohup npm run start:static-server > testing.log 2>&1 &
 PID=$!
 
 sleep 1
@@ -37,8 +49,8 @@ sleep 1
     echo "Functional testing"
     echo "------------------"
 
-    yarn test:testing
-    yarn test:headless
+    npm run test:testing
+    npm run test:headless
 
     echo "-----------"
     echo "Stop server"
@@ -67,5 +79,5 @@ echo "----------------------"
 echo "Basic m2h tool testing"
 echo "----------------------"
 
-yarn m2h markdown/tool/m2h --locale en-US
+npm run m2h -- markdown/tool/m2h --locale en-US
 diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html

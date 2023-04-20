@@ -5,31 +5,31 @@
 set -e
 
 echo "-------------------------"
-echo "Install all yarn packages"
+echo "Install all npm packages"
 echo "-------------------------"
 
-yarn --frozen-lockfile
+npm ci
 
 echo "-------------"
 echo "Lint prettier"
 echo "-------------"
 
-yarn prettier-check
+npm run prettier-check
 
 echo "-----------"
 echo "Lint ESLint"
 echo "-----------"
 
-yarn eslint
+npm run eslint
 
 echo "--------------"
 echo "Lint stylelint"
 echo "--------------"
 
-yarn stylelint
+npm run stylelint
 
 echo "--------------"
 echo "Check TypeScript"
 echo "--------------"
 
-yarn check:tsc
+npm run check:tsc
