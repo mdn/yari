@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - gcp
     paths:
       - .github/workflows/xyz-build.yml
       - cloud-function/**
