@@ -26,6 +26,7 @@ import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
+import { Newsletter } from "./newsletter";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -283,6 +284,14 @@ export function App(appProps: HydrationData) {
               element={
                 <StandardLayout>
                   <ContributorSpotlight {...appProps} />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/newsletter"
+              element={
+                <StandardLayout>
+                  <Newsletter {...appProps} />
                 </StandardLayout>
               }
             />
