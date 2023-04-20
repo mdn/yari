@@ -139,6 +139,7 @@ section.place.other {
   border: 1px solid var(--border-primary);
   position: sticky;
   top: 0;
+  z-index: var(--z-index-top);
 
   &.empty {
     height: 0;

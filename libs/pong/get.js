@@ -108,9 +108,7 @@ export function createPongGetHandler(client, coder, env) {
                 {
                   status: "success",
                   copy: he.decode(
-                    contents?.[0]?.data?.title ||
-                      contents?.[0]?.data?.cttitle ||
-                      "This is an ad without copy?!"
+                    contents?.[0]?.data?.title || "This is an ad without copy?!"
                   ),
                   image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
                   click: coder.encodeAndSign(clickUrl),
@@ -119,38 +117,16 @@ export function createPongGetHandler(client, coder, env) {
               ];
             } else if (p === "topBanner") {
               const [{ contents, clickUrl, impressionUrl }] = v;
-              const {
-                ctImage,
-                ctCopy,
-                ctCtaCopy,
-                ctColor,
-                ctBackground,
-                ctCtaColor,
-                ctCtaBackground,
-              } = contents?.[0]?.data || {};
-              const colors =
-                ctColor || ctBackground || ctCtaColor || ctCtaBackground
-                  ? {
-                      color: ctColor,
-                      background: ctBackground,
-                      ctaColor: ctCtaColor,
-                      ctaBackground: ctCtaBackground,
-                    }
-                  : undefined;
+              const { colors, cta } = contents?.[0]?.data?.customData || {};
               return [
                 p,
                 {
                   status: "success",
                   copy: he.decode(
-                    contents?.[0]?.data?.title ||
-                      ctCopy ||
-                      "This is an ad without copy?!"
+                    contents?.[0]?.data?.title || "This is an ad without copy?!"
                   ),
-                  cta: he.decode(ctCtaCopy || "No CTA"),
-                  image: coder.encodeAndSign(
-                    contents[0]?.data?.imageUrl ||
-                      (ctImage && `https://s.zkcdn.net/Advertisers/${ctImage}`)
-                  ),
+                  cta: he.decode(cta || "No CTA"),
+                  image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
                   colors,
                   click: coder.encodeAndSign(clickUrl),
                   view: coder.encodeAndSign(impressionUrl),
