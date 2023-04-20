@@ -9,11 +9,6 @@ on:
       - cloud-function/**
 
   workflow_dispatch:
-    inputs:
-      notes:
-        description: "Notes"
-        required: false
-        default: ""
 
   workflow_call:
     secrets:
