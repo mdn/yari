@@ -6,12 +6,12 @@ import {
   MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
-} from "../kumascript/src/errors.js";
+} from "@yari-internal/kumascript/src/errors.js";
 
 import { Doc } from "../libs/types/document.js";
 import { Document, Image, execGit } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
-import * as kumascript from "../kumascript/index.js";
+import * as kumascript from "@yari-internal/kumascript/index.js";
 
 import { FLAW_LEVELS } from "../libs/constants/index.js";
 import { extractSections } from "./extract-sections.js";
@@ -29,7 +29,7 @@ import { syntaxHighlight } from "./syntax-highlight.js";
 import { formatNotecards } from "./format-notecards.js";
 import buildOptions from "./build-options.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
-import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
+import { safeDecodeURIComponent } from "@yari-internal/kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";

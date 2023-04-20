@@ -1,0 +1,16 @@
+{
+  "extensionsToTreatAsEsm": [".ts", ".tsx"],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "preset": "ts-jest/presets/default-esm",
+  "transform": {
+    "\\.tsx?$": [
+      "ts-jest",
+      {
+        "babelConfig": true,
+        "useESM": true
+      }
+    ]
+  }
+}

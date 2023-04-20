@@ -14,6 +14,7 @@
   "workspaces": [
     "./client",
     "./client/pwa",
+    "./kumascript",
     "./libs/*"
   ],
   "scripts": {
@@ -50,7 +51,7 @@
     "test:content": "npm run jest content",
     "test:developing": "cross-env CONTENT_ROOT=mdn/content/files TESTING_DEVELOPING=true playwright test developing",
     "test:headless": "playwright test headless",
-    "test:kumascript": "npm run jest kumascript -- --env=node",
+    "test:kumascript": "npm --prefix kumascript test",
     "test:prepare": "npm run build:prepare && npm run build && npm run start:static-server",
     "test:testing": "npm run jest -- --rootDir testing",
     "tool": "ts-node tool/cli.ts",
