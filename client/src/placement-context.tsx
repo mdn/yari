@@ -35,25 +35,18 @@ export interface PlacementStatus {
   };
 }
 
-export interface PlacementData {
-  banner: PlacementStatus;
-  topBanner: PlacementStatus;
-}
+type PlacementType = "side" | "top";
+type PlacementData = Record<PlacementType, PlacementStatus>;
 
-const BANNER_PLACEMENT_TUPLE: [string, RegExp] = [
-  "banner",
-  /\/[^/]+\/(docs\/|search$|_homepage)/i,
-];
-const TOP_BANNER_PLACEMENT_PATH_RE: [string, RegExp] = ["topBanner", /.*/i];
-const PLACEMENT_MAP: [string, RegExp][] = [
-  BANNER_PLACEMENT_TUPLE,
-  TOP_BANNER_PLACEMENT_PATH_RE,
-];
+const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
+  side: /\/[^/]+\/(docs\/|search$|_homepage)/i,
+  top: /.*/i,
+};
 
 function placementTypes(pathname: string): string[] {
-  return PLACEMENT_MAP.map(([k, re]) => re.test(pathname) && k).filter(
-    Boolean
-  ) as string[];
+  return Object.entries(PLACEMENT_MAP)
+    .map(([k, re]) => re.test(pathname) && k)
+    .filter(Boolean) as string[];
 }
 
 export const PlacementContext = React.createContext<
@@ -96,7 +89,7 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
 
       try {
         const placementResponse: PlacementData = await response.json();
-        gleanClick(`pong: pong->status ${placementResponse.banner.status}`);
+        gleanClick(`pong: pong->status ${placementResponse.side.status}`);
         return placementResponse;
       } catch (e) {
         throw Error(response.statusText);

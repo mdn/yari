@@ -3,8 +3,8 @@ import anonymousIpByCC from "./cc2ip.js";
 import { fallbackHandler } from "./fallback.js";
 
 const PLACEMENTS = {
-  banner: 369,
-  topBanner: 585,
+  side: 369,
+  top: 585,
 };
 
 // Allow list for client sent keywords.
@@ -101,7 +101,7 @@ export function createPongGetHandler(client, coder, env) {
             if (v === null || v?.[0] === null) {
               return [p, null];
             }
-            if (p === "banner") {
+            if (p === "side") {
               const [{ contents, clickUrl, impressionUrl }] = v;
               return [
                 p,
@@ -115,7 +115,7 @@ export function createPongGetHandler(client, coder, env) {
                   view: coder.encodeAndSign(impressionUrl),
                 },
               ];
-            } else if (p === "topBanner") {
+            } else if (p === "top") {
               const [{ contents, clickUrl, impressionUrl }] = v;
               const { colors, cta } = contents?.[0]?.data?.customData || {};
               return [

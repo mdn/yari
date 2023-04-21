@@ -29,12 +29,14 @@ function viewed(
 export function Placement() {
   const placementData = usePlacement();
 
-  return !placementData?.banner ? (
+  return !placementData?.side ? (
     <section className="place side"></section>
   ) : (
     <PlacementInner
-      pong={placementData.banner}
+      pong={placementData.side}
       extraClassNames={["side"]}
+      imageWidth={130}
+      imageHeight={100}
     ></PlacementInner>
   );
 }
@@ -42,7 +44,7 @@ export function Placement() {
 export function TopPlacement() {
   const placementData = usePlacement();
   const { color, background, ctaColor, ctaBackground } =
-    placementData?.topBanner?.colors || {};
+    placementData?.top?.colors || {};
   const css = Object.fromEntries(
     [
       ["--place-top-background", background],
@@ -54,16 +56,17 @@ export function TopPlacement() {
 
   return (
     <div
-      className={`top-banner ${placementData?.topBanner ? "visible" : "empty"}`}
+      className={`top-banner ${placementData?.top ? "visible" : "empty"}`}
       style={css}
     >
-      {!placementData?.topBanner ? (
+      {!placementData?.top ? (
         <section className="place top container"></section>
       ) : (
         <PlacementInner
-          pong={placementData.topBanner}
+          pong={placementData.top}
           extraClassNames={["top", "container"]}
-          cta={placementData.topBanner?.cta}
+          cta={placementData.top?.cta}
+          imageHeight={50}
         ></PlacementInner>
       )}
     </div>
@@ -74,10 +77,14 @@ export function PlacementInner({
   pong,
   extraClassNames = [],
   cta,
+  imageWidth,
+  imageHeight,
 }: {
   pong: PlacementStatus;
   extraClassNames?: string[];
   cta?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }) {
   const isServer = useIsServer();
   const user = useUserData();
@@ -177,6 +184,8 @@ export function PlacementInner({
                   src={`/pimg/${encodeURIComponent(image || "")}`}
                   aria-hidden="true"
                   alt=""
+                  width={imageWidth}
+                  height={imageHeight}
                 ></img>
                 <span>{copy}</span>
               </a>
