@@ -4,11 +4,7 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import {
-  PlacementStatus,
-  TopBannerPlacementData,
-  usePlacement,
-} from "../../../placement-context";
+import { PlacementStatus, usePlacement } from "../../../placement-context";
 
 interface Timer {
   timeout: number | null;
@@ -45,7 +41,7 @@ export function Placement() {
 export function OtherPlacement() {
   const placementData = usePlacement();
   const { color, background, ctaColor, ctaBackground } =
-    (placementData?.topBanner as TopBannerPlacementData)?.colors || {};
+    placementData?.topBanner?.colors || {};
   const css = Object.fromEntries(
     [
       ["--place-other-background", background],
@@ -66,7 +62,7 @@ export function OtherPlacement() {
         <PlacementInner
           pong={placementData.topBanner as PlacementStatus}
           extraClassNames={["other", "container"]}
-          cta={(placementData.topBanner as TopBannerPlacementData)?.cta}
+          cta={placementData.topBanner?.cta}
         ></PlacementInner>
       )}
     </div>
@@ -158,7 +154,7 @@ export function PlacementInner({
 
   return (
     <>
-      {!isServer && click && image && copy && (
+      {!isServer && click && image && (
         <>
           <section
             ref={place}
@@ -181,7 +177,7 @@ export function PlacementInner({
                   aria-hidden="true"
                   alt=""
                 ></img>
-                <span>{pong?.copy}</span>
+                <span>{copy}</span>
               </a>
               {cta && (
                 <a

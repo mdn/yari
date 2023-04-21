@@ -19,26 +19,14 @@ export interface Fallback {
   by: string;
 }
 
-export interface PlacementError {
-  status: Status.geoUnsupported | Status.capReached;
-}
-
 export interface PlacementStatus {
-  status: Status.success;
+  status: Status;
   click: string;
   view: string;
   copy?: string;
   image?: string;
   fallback?: Fallback;
-}
-
-export interface TopBannerPlacementData {
-  status: Status.success;
-  click: string;
-  view: string;
-  copy: string;
-  image: string;
-  cta: string;
+  cta?: string;
   colors?: {
     color?: string;
     background?: string;
@@ -48,8 +36,8 @@ export interface TopBannerPlacementData {
 }
 
 export interface PlacementData {
-  banner: PlacementStatus | PlacementError;
-  topBanner: TopBannerPlacementData | PlacementError;
+  banner: PlacementStatus;
+  topBanner: PlacementStatus;
 }
 
 const BANNER_PLACEMENT_TUPLE: [string, RegExp] = [

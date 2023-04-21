@@ -122,9 +122,7 @@ export function createPongGetHandler(client, coder, env) {
                 p,
                 {
                   status: "success",
-                  copy: he.decode(
-                    contents?.[0]?.data?.title || "This is an ad without copy?!"
-                  ),
+                  copy: he.decode(contents?.[0]?.data?.title || ""),
                   cta: he.decode(cta || "No CTA"),
                   image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
                   colors,

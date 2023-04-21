@@ -86,6 +86,7 @@ section.place.other {
       color: var(--place-other-color);
       flex-direction: row;
       grid-area: pong;
+      max-width: 30rem;
       padding: 0.125rem;
       text-decoration: none;
 
@@ -96,7 +97,8 @@ section.place.other {
 
       span {
         color: var(--place-other-color);
-        max-width: 22rem;
+        max-height: 3.125rem;
+        overflow: auto;
         padding: 0 1rem;
       }
     }
