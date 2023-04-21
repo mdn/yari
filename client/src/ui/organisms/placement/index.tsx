@@ -32,9 +32,7 @@ export function Placement() {
   return !placementData?.banner ? (
     <section className="place"></section>
   ) : (
-    <PlacementInner
-      pong={placementData.banner as PlacementStatus}
-    ></PlacementInner>
+    <PlacementInner pong={placementData.banner}></PlacementInner>
   );
 }
 
@@ -60,7 +58,7 @@ export function OtherPlacement() {
         <section className="place other container"></section>
       ) : (
         <PlacementInner
-          pong={placementData.topBanner as PlacementStatus}
+          pong={placementData.topBanner}
           extraClassNames={["other", "container"]}
           cta={placementData.topBanner?.cta}
         ></PlacementInner>
