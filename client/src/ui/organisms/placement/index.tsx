@@ -30,22 +30,25 @@ export function Placement() {
   const placementData = usePlacement();
 
   return !placementData?.banner ? (
-    <section className="place"></section>
+    <section className="place side"></section>
   ) : (
-    <PlacementInner pong={placementData.banner}></PlacementInner>
+    <PlacementInner
+      pong={placementData.banner}
+      extraClassNames={["side"]}
+    ></PlacementInner>
   );
 }
 
-export function OtherPlacement() {
+export function TopPlacement() {
   const placementData = usePlacement();
   const { color, background, ctaColor, ctaBackground } =
     placementData?.topBanner?.colors || {};
   const css = Object.fromEntries(
     [
-      ["--place-other-background", background],
-      ["--place-other-color", color],
-      ["--place-other-cta-background", ctaBackground],
-      ["--place-other-cta-color", ctaColor],
+      ["--place-top-background", background],
+      ["--place-top-color", color],
+      ["--place-top-cta-background", ctaBackground],
+      ["--place-top-cta-color", ctaColor],
     ].filter(([_, v]) => Boolean(v))
   );
 
@@ -55,11 +58,11 @@ export function OtherPlacement() {
       style={css}
     >
       {!placementData?.topBanner ? (
-        <section className="place other container"></section>
+        <section className="place top container"></section>
       ) : (
         <PlacementInner
           pong={placementData.topBanner}
-          extraClassNames={["other", "container"]}
+          extraClassNames={["top", "container"]}
           cta={placementData.topBanner?.cta}
         ></PlacementInner>
       )}

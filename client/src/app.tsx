@@ -25,7 +25,7 @@ import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
-import { OtherPlacement } from "./ui/organisms/placement";
+import { TopPlacement } from "./ui/organisms/placement";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -51,7 +51,7 @@ function Layout({ pageType, children }) {
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {!isServer && <OtherPlacement />}
+        {!isServer && <TopPlacement />}
         {pageType !== "document-page" && (
           <TopNavigation extraClasses="main-document-header-container" />
         )}
