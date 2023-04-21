@@ -19,25 +19,34 @@ export interface Fallback {
   by: string;
 }
 
-export interface PlacementError {
-  status: Status.geoUnsupported | Status.capReached;
-}
-
 export interface PlacementStatus {
-  status: Status.success;
+  status: Status;
   click: string;
   view: string;
   copy?: string;
   image?: string;
   fallback?: Fallback;
+  cta?: string;
+  colors?: {
+    textColor?: string;
+    backgroundColor?: string;
+    ctaTextColor?: string;
+    ctaBackgroundColor?: string;
+  };
 }
 
-export type PlacementData = PlacementStatus | PlacementError;
+type PlacementType = "side" | "top";
+type PlacementData = Record<PlacementType, PlacementStatus>;
 
-const PLACEMENT_PATH_RE = /\/[^/]+\/(docs\/|search$)/i;
+const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
+  side: /\/[^/]+\/(docs\/|search$|_homepage)/i,
+  top: /.*/i,
+};
 
-function hasPlacement(pathname: string): boolean {
-  return PLACEMENT_PATH_RE.test(pathname);
+function placementTypes(pathname: string): string[] {
+  return Object.entries(PLACEMENT_MAP)
+    .map(([k, re]) => re.test(pathname) && k)
+    .filter(Boolean) as string[];
 }
 
 export const PlacementContext = React.createContext<
@@ -57,7 +66,7 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
   } = useSWR<PlacementData>(
     !PLACEMENT_ENABLED ||
       user?.settings?.noAds ||
-      !hasPlacement(location.pathname)
+      !placementTypes(location.pathname)
       ? null
       : "/pong/get",
     async (url) => {
@@ -66,7 +75,10 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ keywords: [] }),
+        body: JSON.stringify({
+          keywords: [],
+          pongs: placementTypes(location.pathname),
+        }),
       });
 
       gleanClick(`pong: pong->fetched ${response.status}`);
@@ -77,7 +89,7 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
 
       try {
         const placementResponse: PlacementData = await response.json();
-        gleanClick(`pong: pong->status ${placementResponse.status}`);
+        gleanClick(`pong: pong->status ${placementResponse.side.status}`);
         return placementResponse;
       } catch (e) {
         throw Error(response.statusText);

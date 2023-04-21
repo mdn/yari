@@ -72,6 +72,11 @@
   --gutter: 1rem; /* Space between content and browser window */
   --top-navigation-height: 4rem;
   --top-navigation-offset: -4rem;
+  --top-banner-inner-height: 3.125rem;
+  // top-banner-inner-height + 2 * padding + 2 * border;
+  --top-banner-height: calc(
+    var(--top-banner-inner-height) + 2 * 0.125rem + 2 * 1px
+  );
 
   --z-index-back: -1;
   --z-index-top: 9999;

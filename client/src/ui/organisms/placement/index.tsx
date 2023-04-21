@@ -26,17 +26,66 @@ function viewed(
   observer?.disconnect();
 }
 
-export function Placement() {
+export function SidePlacement() {
   const placementData = usePlacement();
 
-  return !placementData ? (
-    <section className="place"></section>
+  return !placementData?.side ? (
+    <section className="place side"></section>
   ) : (
-    <PlacementInner pong={placementData}></PlacementInner>
+    <PlacementInner
+      pong={placementData.side}
+      extraClassNames={["side"]}
+      imageWidth={130}
+      imageHeight={100}
+    ></PlacementInner>
   );
 }
 
-export function PlacementInner({ pong }) {
+export function TopPlacement() {
+  const placementData = usePlacement();
+  const { textColor, backgroundColor, ctaTextColor, ctaBackgroundColor } =
+    placementData?.top?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-top-background", backgroundColor],
+      ["--place-top-color", textColor],
+      ["--place-top-cta-background", ctaBackgroundColor],
+      ["--place-top-cta-color", ctaTextColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
+
+  return (
+    <div
+      className={`top-banner ${placementData?.top ? "visible" : "empty"}`}
+      style={css}
+    >
+      {!placementData?.top ? (
+        <section className="place top container"></section>
+      ) : (
+        <PlacementInner
+          pong={placementData.top}
+          extraClassNames={["top", "container"]}
+          cta={placementData.top?.cta}
+          imageHeight={50}
+        ></PlacementInner>
+      )}
+    </div>
+  );
+}
+
+export function PlacementInner({
+  pong,
+  extraClassNames = [],
+  cta,
+  imageWidth,
+  imageHeight,
+}: {
+  pong: PlacementStatus;
+  extraClassNames?: string[];
+  cta?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+}) {
   const isServer = useIsServer();
   const user = useUserData();
   const isVisible = usePageVisibility();
@@ -113,9 +162,12 @@ export function PlacementInner({ pong }) {
 
   return (
     <>
-      {!isServer && click && image && copy && (
+      {!isServer && click && image && (
         <>
-          <section ref={place} className="place">
+          <section
+            ref={place}
+            className={["place", ...extraClassNames].join(" ")}
+          >
             <p className="pong-box">
               <a
                 className="pong"
@@ -132,9 +184,26 @@ export function PlacementInner({ pong }) {
                   src={`/pimg/${encodeURIComponent(image || "")}`}
                   aria-hidden="true"
                   alt=""
+                  width={imageWidth}
+                  height={imageHeight}
                 ></img>
-                <span>{pong?.copy}</span>
+                <span>{copy}</span>
               </a>
+              {cta && (
+                <a
+                  className="pong-cta"
+                  data-pong="pong->click"
+                  href={`/pong/click?code=${encodeURIComponent(click)}${
+                    pong?.fallback
+                      ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
+                      : ""
+                  }`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {cta}
+                </a>
+              )}
               <a
                 href={pong?.fallback?.by || "/en-US/advertising"}
                 className="pong-note"

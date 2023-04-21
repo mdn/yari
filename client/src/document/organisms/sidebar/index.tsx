@@ -7,7 +7,7 @@ import { useUIStatus } from "../../../ui-context";
 import "./index.scss";
 import { TOC } from "../toc";
 import { PLACEMENT_ENABLED } from "../../../env";
-import { Placement } from "../../../ui/organisms/placement";
+import { SidePlacement } from "../../../ui/organisms/placement";
 
 export function SidebarContainer({
   doc,
@@ -70,7 +70,7 @@ export function SidebarContainer({
             </div>
             {children}
           </div>
-          {PLACEMENT_ENABLED && <Placement />}
+          {PLACEMENT_ENABLED && <SidePlacement />}
         </nav>
       </aside>
     </>
