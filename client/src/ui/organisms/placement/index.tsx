@@ -26,7 +26,7 @@ function viewed(
   observer?.disconnect();
 }
 
-export function Placement() {
+export function SidePlacement() {
   const placementData = usePlacement();
 
   return !placementData?.side ? (
