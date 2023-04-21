@@ -145,6 +145,7 @@ section.place {
   z-index: var(--z-index-top);
 
   &.empty {
+    border: none;
     height: 0;
   }
 
