@@ -43,14 +43,14 @@ export function SidePlacement() {
 
 export function TopPlacement() {
   const placementData = usePlacement();
-  const { color, background, ctaColor, ctaBackground } =
+  const { textColor, backgroundColor, ctaTextColor, ctaBackgroundColor } =
     placementData?.top?.colors || {};
   const css = Object.fromEntries(
     [
-      ["--place-top-background", background],
-      ["--place-top-color", color],
-      ["--place-top-cta-background", ctaBackground],
-      ["--place-top-cta-color", ctaColor],
+      ["--place-top-background", backgroundColor],
+      ["--place-top-color", textColor],
+      ["--place-top-cta-background", ctaBackgroundColor],
+      ["--place-top-cta-color", ctaTextColor],
     ].filter(([_, v]) => Boolean(v))
   );
 

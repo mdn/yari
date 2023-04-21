@@ -28,10 +28,10 @@ export interface PlacementStatus {
   fallback?: Fallback;
   cta?: string;
   colors?: {
-    color?: string;
-    background?: string;
-    ctaColor?: string;
-    ctaBackground?: string;
+    textColor?: string;
+    backgroundColor?: string;
+    ctaTextColor?: string;
+    ctaBackgroundColor?: string;
   };
 }
 

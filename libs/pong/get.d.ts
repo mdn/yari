@@ -10,10 +10,10 @@ type Fallback = {
 };
 
 type Colors = {
-  color?: string;
-  background?: string;
-  ctaColor?: string;
-  ctaBackground?: string;
+  textColor?: string;
+  backgroundColor?: string;
+  ctaTextColor?: string;
+  ctaBackgroundColor?: string;
 };
 
 type Payload = {
