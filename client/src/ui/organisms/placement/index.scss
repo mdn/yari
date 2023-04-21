@@ -139,17 +139,16 @@ section.place {
   --place-top-cta-color: var(--background-secondary);
 
   background-color: var(--place-top-background);
-  border: 1px solid var(--border-primary);
   position: sticky;
   top: 0;
   z-index: var(--z-index-top);
 
   &.empty {
-    border: none;
     height: 0;
   }
 
   &.visible {
+    border: 1px solid var(--border-primary);
     height: fit-content;
   }
 
