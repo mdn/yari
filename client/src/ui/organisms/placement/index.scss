@@ -4,12 +4,6 @@ section.place {
   display: flex;
   margin: 1rem 0;
 
-  &:not(.top) {
-    flex-direction: column;
-    max-width: 12rem;
-    min-height: 20rem;
-  }
-
   a:not(.button),
   a {
     color: var(--text-primary);
@@ -61,6 +55,12 @@ section.place {
     padding: 0;
     text-decoration: underline;
     width: 100%;
+  }
+
+  &.side {
+    flex-direction: column;
+    max-width: 12rem;
+    min-height: 20rem;
   }
 
   &.top {
