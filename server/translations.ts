@@ -3,7 +3,7 @@ import path from "node:path";
 
 import express from "express";
 import { fdir } from "fdir";
-import { execSync } from "node:child_process";
+import { execSync, spawn } from "node:child_process";
 
 import { getPopularities, Document, Translation } from "../content/index.js";
 import {
@@ -68,8 +68,8 @@ const sourceCommitCache = fs.existsSync("./source-commit.json")
       )
     )
   : new Map<string, number>();
-const memCommitStore = new Map<string, string[]>();
-let memCommitStoreOldest = "HEAD";
+const commitFiles = new Map<string, string[]>();
+let commitFilesOldest = "HEAD";
 export async function findDocuments({ locale }) {
   function checkCacheValidation(prevCache: Map<any, any>): void {
     const contentHash = getRecentRepoHash(CONTENT_ROOT);
@@ -92,8 +92,8 @@ export async function findDocuments({ locale }) {
       prevCache.set(CONTENT_ROOT, contentHash);
       prevCache.set(CONTENT_TRANSLATED_ROOT, translatedContentHash);
       sourceCommitCache.clear();
-      memCommitStore.clear();
-      memCommitStoreOldest = "HEAD";
+      commitFiles.clear();
+      commitFilesOldest = "HEAD";
     }
   }
 
@@ -128,7 +128,7 @@ export async function findDocuments({ locale }) {
 
     if (!cache.has(filePath) || cache.get(filePath).mtime < mtime) {
       counts.cacheMisses++;
-      const document = getDocument(filePath);
+      const document = await getDocument(filePath);
       cache.set(filePath, {
         document,
         mtime,
@@ -164,7 +164,7 @@ export async function findDocuments({ locale }) {
   };
 }
 
-function getDocument(filePath) {
+async function getDocument(filePath) {
   function packagePopularity(document, parentDocument) {
     return {
       value: document.metadata.popularity,
@@ -185,13 +185,15 @@ function getDocument(filePath) {
   }
 
   function recordInvalidSourceCommit(
-    isValid: boolean,
     fileFolder: string,
-    commitHash: string
+    commitHash: string,
+    message: string
   ) {
     const filePath = "./source-commit-invalid-report.txt";
-    const errorMessage = `- ${commitHash} commit hash is invalid in ${fileFolder}`;
-    if (isValid) return;
+    const errorMessage = `- ${commitHash} commit hash is invalid in ${fileFolder}: ${message.replace(
+      /\n/g,
+      " "
+    )}`;
     if (!fs.existsSync(filePath)) {
       fs.writeFileSync(filePath, "");
     }
@@ -201,49 +203,101 @@ function getDocument(filePath) {
     });
   }
 
-  function getCommitBehindFromLatest(
+  class GitError extends Error {
+    constructor(stderr: string) {
+      super(stderr);
+      this.name = "GitError";
+    }
+  }
+
+  function fillMemStore(commitHash: string) {
+    return new Promise((resolve, reject) => {
+      commitHash = "13e249a7051d637deb3c8fd3a25c397c401edf13"; // oldest commit in mdn/content
+      const memBefore = process.memoryUsage.rss();
+      console.log(`rss before: ${memBefore} bytes`);
+
+      const git = spawn(
+        "git",
+        [
+          "log",
+          "--pretty=format:%x00%x00%H",
+          "--name-only",
+          "-z",
+          `${commitHash}..${commitFilesOldest}`,
+        ],
+        {
+          cwd: CONTENT_ROOT,
+        }
+      );
+
+      let stdoutBuffer = "";
+
+      git.stdout.on("data", (data) => {
+        stdoutBuffer += data.toString();
+        const commits = stdoutBuffer.split("\0\0");
+        const partial = commits.pop();
+        stdoutBuffer = partial;
+        commits.forEach((commit) => {
+          const [dirtyHash, files] = commit.split("\n");
+          // necessary for commits following those with no changes:
+          const hash = dirtyHash.replace(/\0/g, "");
+          commitFiles.set(hash, files ? files.split("\0") : []);
+        });
+      });
+
+      let stderr = "";
+
+      git.stderr.on("data", (data) => {
+        stderr += data.toString();
+      });
+
+      git.on("close", (code) => {
+        const memAfter = process.memoryUsage.rss();
+        console.log(`rss after: ${memAfter} bytes`);
+        console.log(`rss diff: ${memAfter - memBefore} bytes`);
+
+        commitFilesOldest = commitHash;
+        code ? reject(new GitError(stderr)) : resolve(null);
+      });
+    });
+  }
+
+  async function getCommitBehindFromLatest(
     fileFolder: string,
     parentFilePath: string,
     commitHash: string
-  ): number {
+  ): Promise<number> {
     try {
       let count = 0;
-      if (!memCommitStore.has(commitHash)) {
-        execSync(
-          `git log --pretty=format:'%H' --name-only ${commitHash}..${memCommitStoreOldest}`,
-          {
-            cwd: CONTENT_ROOT,
-          }
-        )
-          .toString()
-          .trimEnd()
-          .split("\n\n")
-          .forEach((commit) => {
-            const [hash, ...files] = commit.split("\n");
-            memCommitStore.set(hash, files);
-          });
-        memCommitStoreOldest = commitHash;
+      if (!commitFiles.has(commitHash)) {
+        await fillMemStore(commitHash);
       }
-      for (const [hash, files] of memCommitStore.entries()) {
+      for (const [hash, files] of commitFiles.entries()) {
         if (hash === commitHash) {
-          recordInvalidSourceCommit(
-            files.includes(parentFilePath),
-            fileFolder,
-            commitHash
-          );
+          if (!files.includes(parentFilePath)) {
+            recordInvalidSourceCommit(
+              fileFolder,
+              commitHash,
+              "file isn't changed in this commit"
+            );
+          }
           break;
         }
         if (files.includes(parentFilePath)) count++;
       }
       sourceCommitCache.set(fileFolder, count);
     } catch (err) {
-      recordInvalidSourceCommit(false, fileFolder, commitHash);
+      if (err instanceof GitError) {
+        recordInvalidSourceCommit(fileFolder, commitHash, err.message);
+      } else {
+        throw err;
+      }
     }
 
     return sourceCommitCache.get(fileFolder);
   }
 
-  function packageEdits(document, parentDocument) {
+  async function packageEdits(document, parentDocument) {
     const {
       fileInfo: { root: fileRoot, folder: fileFolder },
       metadata: { hash: fileHash, modified, l10n },
@@ -260,7 +314,7 @@ function getDocument(filePath) {
 
     if (l10n?.sourceCommit) {
       sourceCommitURL = getLastCommitURL(CONTENT_ROOT, l10n.sourceCommit);
-      sourceCommitsBehindCount = getCommitBehindFromLatest(
+      sourceCommitsBehindCount = await getCommitBehindFromLatest(
         fileFolder,
         parentFilePath.replace(parentFileRoot, "files"),
         l10n.sourceCommit
@@ -280,12 +334,16 @@ function getDocument(filePath) {
   // We can't just open the `index.json` and return it like that in the XHR
   // payload. It's too much stuff and some values need to be repackaged/
   // serialized or some other transformation computation.
-  function packageDocument(document, englishDocument, translationDifferences) {
+  async function packageDocument(
+    document,
+    englishDocument,
+    translationDifferences
+  ) {
     const mdn_url = document.url;
     const { title } = document.metadata;
     const popularity = packagePopularity(document, englishDocument);
     const differences = packageTranslationDifferences(translationDifferences);
-    const edits = packageEdits(document, englishDocument);
+    const edits = await packageEdits(document, englishDocument);
     return { popularity, differences, edits, mdn_url, title };
   }
 
@@ -308,7 +366,7 @@ function getDocument(filePath) {
   )) {
     differences.push(difference);
   }
-  return packageDocument(document, englishDocument, differences);
+  return await packageDocument(document, englishDocument, differences);
 }
 
 const _defaultLocaleDocumentsCache = new Map();
