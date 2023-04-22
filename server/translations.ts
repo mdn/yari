@@ -60,9 +60,11 @@ function packageTranslationDifferences(translationDifferences) {
   return { total, countByType };
 }
 
+type RecentRepoHashType = string;
+
 const _foundDocumentsCache = new Map();
 const sourceCommitCache = fs.existsSync("./source-commit.json")
-  ? new Map<string, number>(
+  ? new Map<string, number | RecentRepoHashType>(
       Object.entries(
         JSON.parse(fs.readFileSync("./source-commit.json", "utf8"))
       )
@@ -78,22 +80,29 @@ export async function findDocuments({ locale }) {
     function getRecentRepoHash(cwd: string): string {
       return execSync("git rev-parse HEAD", { cwd }).toString().trimEnd();
     }
-    function isValidCache(): boolean {
+    function updateRecentRepoHash(cache: Map<string, any>): void {
+      cache.set(CONTENT_ROOT, contentHash);
+      cache.set(CONTENT_TRANSLATED_ROOT, translatedContentHash);
+    }
+    function isValidCache(cache: Map<string, any>): boolean {
       return (
-        prevCache.has(CONTENT_ROOT) &&
-        prevCache.has(CONTENT_TRANSLATED_ROOT) &&
-        prevCache.get(CONTENT_ROOT) === contentHash &&
-        prevCache.get(CONTENT_TRANSLATED_ROOT) === translatedContentHash
+        cache.has(CONTENT_ROOT) &&
+        cache.has(CONTENT_TRANSLATED_ROOT) &&
+        cache.get(CONTENT_ROOT) === contentHash &&
+        cache.get(CONTENT_TRANSLATED_ROOT) === translatedContentHash
       );
     }
 
-    if (!isValidCache()) {
+    if (isValidCache(sourceCommitCache)) {
+      return;
+    }
+    if (!isValidCache(prevCache)) {
       prevCache.clear();
-      prevCache.set(CONTENT_ROOT, contentHash);
-      prevCache.set(CONTENT_TRANSLATED_ROOT, translatedContentHash);
       sourceCommitCache.clear();
       commitFiles.clear();
       commitFilesOldest = "HEAD";
+      updateRecentRepoHash(prevCache);
+      updateRecentRepoHash(sourceCommitCache);
     }
   }
 
@@ -267,6 +276,10 @@ async function getDocument(filePath) {
     parentFilePath: string,
     commitHash: string
   ): Promise<number> {
+    if (sourceCommitCache.has(fileFolder)) {
+      return sourceCommitCache.get(fileFolder) as number;
+    }
+
     try {
       let count = 0;
       if (!commitFiles.has(commitHash)) {
@@ -294,7 +307,7 @@ async function getDocument(filePath) {
       }
     }
 
-    return sourceCommitCache.get(fileFolder);
+    return sourceCommitCache.get(fileFolder) as number;
   }
 
   async function packageEdits(document, parentDocument) {
