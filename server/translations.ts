@@ -221,10 +221,6 @@ async function getDocument(filePath) {
 
   function fillMemStore(commitHash: string) {
     return new Promise((resolve, reject) => {
-      commitHash = "13e249a7051d637deb3c8fd3a25c397c401edf13"; // oldest commit in mdn/content
-      const memBefore = process.memoryUsage.rss();
-      console.log(`rss before: ${memBefore} bytes`);
-
       const git = spawn(
         "git",
         [
@@ -261,10 +257,6 @@ async function getDocument(filePath) {
       });
 
       git.on("close", (code) => {
-        const memAfter = process.memoryUsage.rss();
-        console.log(`rss after: ${memAfter} bytes`);
-        console.log(`rss diff: ${memAfter - memBefore} bytes`);
-
         commitFilesOldest = commitHash;
         code ? reject(new GitError(stderr)) : resolve(null);
       });
