@@ -114,7 +114,6 @@ export function saveFile(
     "tags",
     "translation_of",
     "translation_of_original",
-    "original_slug",
     "browser-compat",
   ];
 

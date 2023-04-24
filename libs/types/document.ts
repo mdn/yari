@@ -165,7 +165,6 @@ export interface DocFrontmatter {
   quote?: any;
   title?: string;
   slug?: string;
-  original_slug?: string;
 }
 
 export type Section = ProseSection | SpecificationsSection | BCDSection;

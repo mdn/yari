@@ -213,7 +213,6 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
   );
   if (status.moved) {
     moveContent(path.dirname(inFilePath), folderPath);
-    metadata.original_slug = oldMetadata.slug;
   }
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
 
