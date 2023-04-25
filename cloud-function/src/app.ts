@@ -25,7 +25,7 @@ router.all(
   handleStripePlans
 );
 router.all(
-  ["/api/*", "/admin-api/*", "/events/fxa/*", "/users/fxa/*"],
+  ["/api/*", "/admin-api/*", "/events/fxa", "/users/fxa/*"],
   requireOrigin(Origin.main),
   proxyApi
 );
