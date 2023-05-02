@@ -1,11 +1,10 @@
-/* global fetch */
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 import { fallbackHandler } from "./fallback.js";
 
 const PLACEMENTS = {
-  banner: 369,
-  topBanner: 585,
+  side: 369,
+  top: 585,
 };
 
 // Allow list for client sent keywords.
@@ -102,21 +101,36 @@ export function createPongGetHandler(client, coder, env) {
             if (v === null || v?.[0] === null) {
               return [p, null];
             }
-            const [{ contents, clickUrl, impressionUrl }] = v;
-            return [
-              p,
-              {
-                status: "success",
-                copy: he.decode(
-                  contents?.[0]?.data?.title ||
-                    contents?.[0]?.data?.cttitle ||
-                    "This is an ad without copy?!"
-                ),
-                image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
-                click: coder.encodeAndSign(clickUrl),
-                view: coder.encodeAndSign(impressionUrl),
-              },
-            ];
+            if (p === "side") {
+              const [{ contents, clickUrl, impressionUrl }] = v;
+              return [
+                p,
+                {
+                  status: "success",
+                  copy: he.decode(
+                    contents?.[0]?.data?.title || "This is an ad without copy?!"
+                  ),
+                  image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
+                  click: coder.encodeAndSign(clickUrl),
+                  view: coder.encodeAndSign(impressionUrl),
+                },
+              ];
+            } else if (p === "top") {
+              const [{ contents, clickUrl, impressionUrl }] = v;
+              const { colors, cta } = contents?.[0]?.data?.customData || {};
+              return [
+                p,
+                {
+                  status: "success",
+                  copy: he.decode(contents?.[0]?.data?.title || ""),
+                  cta: he.decode(cta || "No CTA"),
+                  image: coder.encodeAndSign(contents[0]?.data?.imageUrl),
+                  colors,
+                  click: coder.encodeAndSign(clickUrl),
+                  view: coder.encodeAndSign(impressionUrl),
+                },
+              ];
+            }
           })
           .filter(Boolean)
       );

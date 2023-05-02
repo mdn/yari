@@ -39,7 +39,7 @@ import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
-import { Placement } from "../ui/organisms/placement";
+import { SidePlacement } from "../ui/organisms/placement";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -229,7 +229,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <aside className="toc">
               <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
             </aside>
-            {PLACEMENT_ENABLED && <Placement />}
+            {PLACEMENT_ENABLED && <SidePlacement />}
           </div>
         </div>
 
