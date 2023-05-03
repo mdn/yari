@@ -6,7 +6,7 @@ import { renderToString } from "react-dom/server";
 import { HydrationData } from "../libs/types/hydration";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
+import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT, BASE_URL } from "../libs/env";
 
 const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 
@@ -153,19 +153,24 @@ export default function render(
     possibleLocales = null,
     locale = null,
     noIndexing = null,
+    image = null,
+    blogMeta = null,
   }: HydrationData = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
   const rendered = renderToString(renderApp);
 
-  let canonicalURL = "https://developer.mozilla.org";
+  let canonicalURL = BASE_URL;
 
   let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
 
   const hydrationData: HydrationData = {};
   const translations: string[] = [];
+  if (blogMeta) {
+    hydrationData.blogMeta = blogMeta;
+  }
   if (pageNotFound) {
     escapedPageTitle = `🤷🏽‍♀️ Page not found | ${
       escapedPageTitle || "MDN Web Docs"
@@ -238,6 +243,10 @@ export default function render(
     og.set("description", pageDescription);
   }
 
+  if (image) {
+    og.set("image", image);
+  }
+
   const root = `<div id="root">${rendered}</div><script type="application/json" id="hydration">${
     // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
     JSON.stringify(hydrationData).replace(
@@ -254,7 +263,8 @@ export default function render(
       ? "noindex, nofollow"
       : "index, follow";
   const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
-  const ssr_data = [...translations, ...webfontTags, robotsMeta];
+  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="/en-US/blog/rss.xml" />`;
+  const ssr_data = [...translations, ...webfontTags, rssLink, robotsMeta];
   let html = buildHtml;
   html = html.replace(
     '<html lang="en"',
