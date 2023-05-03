@@ -10,6 +10,7 @@
       "ts-jest",
       {
         "babelConfig": true,
+        "isolatedModules": true,
         "useESM": true
       }
     ]
