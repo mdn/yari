@@ -263,7 +263,8 @@ export default function render(
       ? "noindex, nofollow"
       : "index, follow";
   const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
-  const ssr_data = [...translations, ...webfontTags, robotsMeta];
+  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="/en-US/blog/rss.xml" />`;
+  const ssr_data = [...translations, ...webfontTags, rssLink, robotsMeta];
   let html = buildHtml;
   html = html.replace(
     '<html lang="en"',
