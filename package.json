@@ -28,7 +28,7 @@
     "filecheck": "ts-node filecheck/cli.ts",
     "install:all": "find . -mindepth 2 -name 'yarn.lock' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'yarn --cwd $(dirname $0) install'",
     "install:all:npm": "find . -mindepth 2 -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'npm --prefix $(dirname $0) install'",
-    "jest": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "jest": "node --experimental-vm-modules --expose-gc ./node_modules/.bin/jest --logHeapUsage",
     "m2h": "ts-node markdown/m2h/cli.ts",
     "prepack": "yarn build:dist",
     "prepare": "husky install && yarn install:all && yarn install:all:npm",
