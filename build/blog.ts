@@ -326,6 +326,7 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
       title: post.title,
       id: post.slug,
       link,
+      guid: link,
       description: post.description,
       author: [
         {
