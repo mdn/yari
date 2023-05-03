@@ -250,6 +250,9 @@ jobs:
           # Generate sitemap index file
           yarn build --sitemap-index
 
+          # Build the blog
+          yarn build:blog
+
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
