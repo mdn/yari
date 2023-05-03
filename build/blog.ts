@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
 
 import { fdir } from "fdir";
 import { Feed } from "feed";
@@ -124,7 +123,7 @@ export async function allPostFrontmatter({
       ({ published = true, date }) =>
         includeUnpublished || (published && Date.parse(date) <= Date.now())
     )
-    .sort(({ date: a }, { date: b }) => (a > b ? -1 : a < b ? 1 : 0));
+    .sort(({ date: a }, { date: b }) => Date.parse(b) - Date.parse(a));
 }
 
 export async function buildBlogIndex(options: { verbose?: boolean }) {
