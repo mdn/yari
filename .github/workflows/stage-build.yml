@@ -75,6 +75,13 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          token: ${{ secrets.MDN_STUDIO_PAT }}
+
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
       # trigger we rely on the inputs and only the inputs. That way, the user can
@@ -151,6 +158,8 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          BASE_URL: "https://developer.allizom.org"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -209,6 +218,7 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
           yarn build:prepare
@@ -235,6 +245,9 @@ jobs:
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # Build the blog
+          yarn build:blog
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json

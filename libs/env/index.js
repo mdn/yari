@@ -18,6 +18,8 @@ dotenv.config({
 // build
 // -----
 
+export const BASE_URL = process.env.BASE_URL || "https://developer.mozilla.org";
+
 export const BUILD_OUT_ROOT =
   process.env.BUILD_OUT_ROOT || path.join(ROOT, "client", "build");
 
@@ -75,6 +77,8 @@ export const CONTENT_TRANSLATED_ROOT = correctContentPathFromEnv(
 export const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
   "CONTRIBUTOR_SPOTLIGHT_ROOT"
 );
+
+export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
 
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.

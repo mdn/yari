@@ -40,6 +40,12 @@ import { getRoot } from "../content/utils.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
+import {
+  allPostFrontmatter,
+  findPostLiveSampleBySlug,
+  findPostBySlug,
+  findPostPathBySlug,
+} from "../build/blog.js";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -219,6 +225,34 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
+app.get("/:locale/blog/index.json", async (_, res) => {
+  const posts = await allPostFrontmatter({ includeUnpublished: true });
+  return res.json({ hyData: { posts } });
+});
+app.get("/:locale/blog/:slug/index.json", async (req, res) => {
+  const { slug } = req.params;
+  const data = await findPostBySlug(slug);
+  if (!data) {
+    return res.status(404).send("Nothing here 🤷‍♂️");
+  }
+  return res.json(data);
+});
+app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
+  const { slug, id } = req.params;
+  try {
+    return res.send(await findPostLiveSampleBySlug(slug, id));
+  } catch (e) {
+    return res.status(404).send(e.toString());
+  }
+});
+app.get("/:locale/blog/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  const p = findPostPathBySlug(slug);
+  if (p) {
+    return send(req, path.resolve(path.join(p, asset))).pipe(res);
+  }
+  return res.status(404).send("Nothing here 🤷‍♂️");
+});
 app.get("/*", async (req, res, ...args) => {
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
