@@ -5,7 +5,6 @@ import { spawnSync } from "node:child_process";
 import { fdir } from "fdir";
 import { Feed } from "feed";
 import frontmatter from "front-matter";
-import { rgPath } from "vscode-ripgrep";
 
 import * as kumascript from "../kumascript/index.js";
 
@@ -16,6 +15,7 @@ import { BlogPostData, BlogPostFrontmatter } from "../libs/types/blog.js";
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import {
+  findPostFileBySlug,
   injectLoadingLazyAttributes,
   injectNoTranslate,
   makeTOC,
@@ -32,11 +32,6 @@ import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
-const POST_URL_RE = /^\/en-US\/blog\/([^/]+)\/?$/;
-
-export function getSlugByBlogPostUrl(url: string): string | null {
-  return url.match(POST_URL_RE)?.[1] || null;
-}
 
 function calculateReadTime(copy: string): number {
   return Math.max(
@@ -55,25 +50,6 @@ async function readPost(
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
   const readTime = calculateReadTime(body);
   return { blogMeta: { readTime, ...attributes }, body };
-}
-
-export function findPostFileBySlug(slug: string): string | null {
-  try {
-    const { stdout, stderr, status } = spawnSync(rgPath, [
-      "-il",
-      `slug: ${slug}`,
-      BLOG_ROOT,
-    ]);
-    if (status === 0) {
-      const file = stdout.toString("utf-8").split("\n")[0];
-      return file;
-    } else {
-      console.error(`error running rg: ${stderr}`);
-    }
-  } catch {
-    console.error("rg failed");
-  }
-  return null;
 }
 
 export function findPostPathBySlug(slug: string): string | null {

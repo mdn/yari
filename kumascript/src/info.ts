@@ -4,7 +4,7 @@ import * as Parser from "./parser.js";
 import { Document, Redirect } from "../../content/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import { m2hSync } from "../../markdown/index.js";
-import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/blog.js";
+import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/utils.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 

@@ -9,10 +9,13 @@ import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
+import { rgPath } from "vscode-ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants/index.js";
 import { Image } from "../content/index.js";
+import { spawnSync } from "node:child_process";
+import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
@@ -301,4 +304,29 @@ export function makeTOC(doc) {
       return null;
     })
     .filter(Boolean);
+}
+
+export function findPostFileBySlug(slug: string): string | null {
+  try {
+    const { stdout, stderr, status } = spawnSync(rgPath, [
+      "-il",
+      `slug: ${slug}`,
+      BLOG_ROOT,
+    ]);
+    if (status === 0) {
+      const file = stdout.toString("utf-8").split("\n")[0];
+      return file;
+    } else {
+      console.error(`error running rg: ${stderr}`);
+    }
+  } catch {
+    console.error("rg failed");
+  }
+  return null;
+}
+
+const POST_URL_RE = /^\/en-US\/blog\/([^/]+)\/?$/;
+
+export function getSlugByBlogPostUrl(url: string): string | null {
+  return url.match(POST_URL_RE)?.[1] || null;
 }
