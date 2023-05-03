@@ -11,6 +11,7 @@ import { lowercasePathname } from "./middlewares/lowercase-pathname.js";
 import { resolveIndexHTML } from "./middlewares/resolve-index-html.js";
 import { redirectLeadingSlash } from "./middlewares/redirect-leading-slash.js";
 import { redirectMovedPages } from "./middlewares/redirect-moved-pages.js";
+import { redirectEnforceTrailingSlash } from "./middlewares/redirect-enforce-trailing-slash.js";
 import { redirectFundamental } from "./middlewares/redirect-fundamental.js";
 import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
@@ -39,7 +40,7 @@ router.get(
 );
 router.get("/", requireOrigin(Origin.main), redirectLocale);
 router.get(
-  "/[^/]+/docs/*/_sample_.*.html",
+  ["/[^/]+/docs/*/_sample_.*.html", "/[^/]+/blog/*/_sample_.*.html"],
   requireOrigin(Origin.liveSamples),
   resolveIndexHTML,
   proxyContent
@@ -57,6 +58,14 @@ router.get(
   redirectLocale,
   redirectTrailingSlash,
   redirectMovedPages,
+  resolveIndexHTML,
+  proxyContent
+);
+router.get(
+  "/[^/]+/blog($|/*)",
+  requireOrigin(Origin.main),
+  redirectLocale,
+  redirectEnforceTrailingSlash,
   resolveIndexHTML,
   proxyContent
 );

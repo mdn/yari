@@ -1,0 +1,32 @@
+.blog-container.post {
+  max-width: calc(48rem + 4rem);
+}
+
+.blog-container {
+  .author {
+    font-weight: var(--font-body-strong-weight);
+  }
+
+  .read-time {
+    font-size: var(--type-smaller-font-size);
+    margin-left: 0.5rem;
+  }
+
+  figure.blog-image {
+    margin: 0 auto 2rem;
+    width: fit-content;
+
+    img {
+      background: transparent;
+      border: none !important;
+      margin: 0 0 0.125rem;
+      width: 100%;
+    }
+
+    figcaption {
+      font-size: smaller;
+      margin-left: auto;
+      width: fit-content;
+    }
+  }
+}

@@ -14,6 +14,7 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env/index.js";
 import { SourceCodeError } from "./src/errors.js";
+import { Doc } from "../libs/types/document.js";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" macros):';
@@ -34,7 +35,8 @@ export async function render(
     urlsSeen = null,
     selective_mode = false,
     invalidateCache = false,
-  }: RenderOptions = {}
+  }: RenderOptions = {},
+  doc?: Doc
 ): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
@@ -54,9 +56,11 @@ export async function render(
   }
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
-  const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
-    : Document.findByURL(url);
+  const document =
+    doc ||
+    (invalidateCache
+      ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
+      : Document.findByURL(url));
   if (!document) {
     throw new Error(
       `From URL ${url} no folder on disk could be found. ` +

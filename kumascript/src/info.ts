@@ -4,6 +4,7 @@ import * as Parser from "./parser.js";
 import { Document, Redirect } from "../../content/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import { m2hSync } from "../../markdown/index.js";
+import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/blog.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -261,8 +262,12 @@ export const info = {
     };
   },
 
-  hasPage(url) {
-    return Boolean(Document.findByURL(info.cleanURL(url)));
+  hasPage(url): boolean {
+    if (Document.findByURL(info.cleanURL(url))) {
+      return true;
+    }
+    const slug = getSlugByBlogPostUrl(url);
+    return Boolean(slug) && Boolean(findPostFileBySlug(slug));
   },
 };
 

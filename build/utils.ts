@@ -12,6 +12,7 @@ import imageminSvgo from "imagemin-svgo";
 import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants/index.js";
+import { Image } from "../content/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
@@ -169,4 +170,135 @@ export function splitSections(rawHTML) {
 
   const sections = blocks.map((block) => block.html().trim());
   return { sections, toc };
+}
+
+/**
+ * Return an array of all images that are inside the documents source folder.
+ *
+ * @param {Document} document
+ */
+export function getAdjacentImages(documentDirectory) {
+  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
+  return dirents
+    .filter((dirent) => {
+      // This needs to match what we do in filecheck/checker.py
+      return (
+        !dirent.isDirectory() &&
+        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
+      );
+    })
+    .map((dirent) => path.join(documentDirectory, dirent.name));
+}
+/**
+ * Find all tags that we need to change to tell tools like Google Translate
+ * to not translate.
+ *
+ * @param {Cheerio document instance} $
+ */
+export function injectNoTranslate($) {
+  $("pre").addClass("notranslate");
+}
+
+/**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+export function injectLoadingLazyAttributes($) {
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
+}
+
+/**
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" and rel="noopener">`
+ *
+ *
+ * @param {Cheerio document instance} $
+ */
+export function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
+    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
+      // This should have been removed since it's considered a flaw.
+      // But we haven't applied all fixable flaws yet and we still have to
+      // support translated content which is quite a long time away from
+      // being entirely treated with the fixable flaws cleanup.
+      return;
+    }
+    $a.addClass("external");
+    $a.attr("target", "_blank");
+  });
+}
+
+/**
+ * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
+ * `<a href="$CURRENT_PATH/THING">`
+ *
+ *
+ * @param {Cheerio document instance} $
+ */
+export function postLocalFileLinks($, doc) {
+  $("a[href]").each((i, element) => {
+    const href = element.attribs.href;
+
+    // This test is merely here to quickly bail if there's no hope to find the
+    // image as a local file link. There are a LOT of hyperlinks throughout
+    // the content and this simple if statement means we can skip 99% of the
+    // links, so it's presumed to be worth it.
+    if (
+      !href ||
+      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
+    ) {
+      return;
+    }
+    // There are a lot of links that don't match. E.g. `<a href="SubPage">`
+    // So we'll look-up a lot "false positives" that are not images.
+    // Thankfully, this lookup is fast.
+    const url = `${doc.mdn_url}/${href}`;
+    const image = Image.findByURLWithFallback(url);
+    if (image) {
+      $(element).attr("href", url);
+    }
+  });
+}
+
+/**
+ * Fix the heading IDs so they're all lower case.
+ *
+ * @param {Cheerio document instance} $
+ */
+export function postProcessSmallerHeadingIDs($) {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
+    const id = element.attribs.id;
+    const lcID = id.toLowerCase();
+    if (id !== lcID) {
+      $(element).attr("id", lcID);
+    }
+  });
+}
+
+/**
+ * Return an array of objects like this [{text: ..., id: ...}, ...]
+ * from a document's body.
+ * This will be used for the "Table of Contents" menu which expects to be able
+ * to link to each section with anchor links.
+ *
+ * @param {Document} doc
+ */
+export function makeTOC(doc) {
+  return doc.body
+    .map((section) => {
+      if (
+        (section.type === "prose" ||
+          section.type === "browser_compatibility" ||
+          section.type === "specifications") &&
+        section.value.id &&
+        section.value.title &&
+        !section.value.isH3
+      ) {
+        return { text: section.value.title, id: section.value.id };
+      }
+      return null;
+    })
+    .filter(Boolean);
 }
