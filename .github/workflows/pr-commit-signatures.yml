@@ -38,7 +38,7 @@ jobs:
           echo ''
           echo 'Once you have set up commit signatures, you can sign your existing commits:'
           echo ''
-          echo '  git rebase main --exec "git commit --amend --gpg-sign --no-edit"'
+          echo '  git rebase ${{ github.event.pull_request.base.sha }} --exec "git commit --amend --gpg-sign --no-edit"'
           echo ''
           echo 'Then you will need to force-push your branch once:'
           echo ''
