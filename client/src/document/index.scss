@@ -2,7 +2,6 @@
 @use "../ui/base/themes" as *;
 @use "../ui/base/mdn";
 @use "../ui/molecules/grids/grids.scss" as *;
-@use "../ui/base/typography" as *;
 
 :root {
   --sticky-header-height: var(--main-document-header-height);

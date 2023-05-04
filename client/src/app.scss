@@ -1,6 +1,5 @@
 @use "./ui/vars" as *;
 @use "./ui/base/mdn";
-@use "./ui/base/typography";
 @use "./ui/base/reset";
 @use "./ui/base/themes";
 @use "./ui/base/prism";
@@ -16,13 +15,10 @@
 */
 :root {
   /* Typography */
-  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-
-  --font-body: Inter, var(--font-fallback);
-  --font-heading: Inter, var(--font-fallback);
-  --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-    monospace;
+  --font: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial,
+    sans-serif;
+  --font-code: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+    "DejaVu Sans Mono", monospace;
 
   --base-font-size: 100%;
   --base-line-height: 1.2;
@@ -49,23 +45,23 @@
   --type-heading-h4-font-size-mobile: 1.266rem;
 
   --type-emphasis-m: var(--font-body-strong-weight)
-    var(--type-smaller-font-size) / 1.23 var(--font-body);
-  --type-label-s: 600 var(--type-tiny-font-size) / 1.2 var(--font-heading);
+    var(--type-smaller-font-size) / 1.23 var(--font);
+  --type-label-s: 600 var(--type-tiny-font-size) / 1.2 var(--font);
 
   --type-heading-h1: 600 var(--type-heading-h1-font-size-mobile) /
-    var(--heading-line-height) var(--font-heading);
+    var(--heading-line-height) var(--font);
   --type-heading-h2: 500 var(--type-heading-h2-font-size-mobile) /
-    var(--heading-line-height) var(--font-heading);
+    var(--heading-line-height) var(--font);
   --type-heading-h3: 300 var(--type-heading-h3-font-size-mobile) /
-    var(--heading-line-height) var(--font-heading);
+    var(--heading-line-height) var(--font);
   --type-heading-h4: 400 var(--type-heading-h4-font-size-mobile) /
-    var(--heading-line-height) var(--font-heading);
+    var(--heading-line-height) var(--font);
   --type-heading-h5: 400 var(--type-heading-h5-font-size) /
-    var(--heading-line-height) var(--font-heading);
+    var(--heading-line-height) var(--font);
   --type-heading-h6: 400 var(--type-base-font-size-rem) /
-    var(--heading-line-height) var(--font-heading);
+    var(--heading-line-height) var(--font);
   --type-article-p: 400 var(--type-base-font-size-rem) /
-    var(--font-content-line-height) var(--font-body);
+    var(--font-content-line-height) var(--font);
 
   /* Grid and Layout */
   --max-width: 1440px;
@@ -102,13 +98,13 @@
 @media screen and (min-width: $screen-md) {
   :root {
     --type-heading-h1: 600 var(--type-heading-h1-font-size) /
-      var(--heading-line-height) var(--font-heading);
+      var(--heading-line-height) var(--font);
     --type-heading-h2: 500 var(--type-heading-h2-font-size) /
-      var(--heading-line-height) var(--font-heading);
+      var(--heading-line-height) var(--font);
     --type-heading-h3: 300 var(--type-heading-h3-font-size) /
-      var(--heading-line-height) var(--font-heading);
+      var(--heading-line-height) var(--font);
     --type-heading-h4: 400 var(--type-heading-h4-font-size) /
-      var(--heading-line-height) var(--font-heading);
+      var(--heading-line-height) var(--font);
   }
 }
 

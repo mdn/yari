@@ -1,5 +1,4 @@
 @use "../../vars" as *;
-@use "../../base/typography" as *;
 
 @mixin not-inline-submenu {
   background-color: var(--background-secondary);
