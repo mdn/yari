@@ -132,7 +132,7 @@
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.33.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
-    "@svgr/webpack": "^6.5.1",
+    "@svgr/webpack": "^7.0.0",
     "@swc/core": "^1.3.56",
     "@testing-library/react": "^14.0.0",
     "@types/async": "^3.2.20",
