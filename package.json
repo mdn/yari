@@ -93,7 +93,7 @@
     "imagemin-mozjpeg": "^10.0.0",
     "imagemin-pngquant": "^9.0.2",
     "imagemin-svgo": "^10.0.1",
-    "inquirer": "^9.1.5",
+    "inquirer": "^9.2.0",
     "is-svg": "^5.0.0",
     "js-yaml": "^4.1.0",
     "loglevel": "^1.8.1",
