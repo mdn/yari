@@ -94,16 +94,16 @@
 
   /* Major Components */
   --top-nav-height: 4rem;
-  --article-actions-bar-height: 2rem;
+  --article-actions-container-height: 2rem;
   --icon-size: 1rem;
   --sticky-header-height: calc(
-    var(--top-nav-height) + var(--article-actions-bar-height) + 2px
+    var(--top-nav-height) + var(--article-actions-container-height) + 2px
   );
 }
 
 .top-banner.visible ~ * {
   --sticky-header-height: calc(
-    var(--top-nav-height) + var(--article-actions-bar-height) +
+    var(--top-nav-height) + var(--article-actions-container-height) +
       var(--top-banner-height) + 2px
   );
 }
