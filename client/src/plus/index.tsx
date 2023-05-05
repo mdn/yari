@@ -78,9 +78,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="collections/*"
         element={
-          <Layout
-            parents={[...parents, { uri: pathname, title: "Collections" }]}
-          >
+          <Layout>
             <Collections />
           </Layout>
         }
@@ -88,7 +86,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="updates/*"
         element={
-          <Layout parents={[...parents, { uri: pathname, title: "Updates" }]}>
+          <Layout>
             <Updates />
           </Layout>
         }
@@ -96,9 +94,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="/settings"
         element={
-          <Layout
-            parents={[...parents, { uri: pathname, title: "My Settings" }]}
-          >
+          <Layout>
             <Settings {...props} />
           </Layout>
         }

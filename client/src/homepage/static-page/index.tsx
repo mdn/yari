@@ -19,7 +19,6 @@ interface StaticPageProps {
   extraClasses?: string;
   locale: string;
   slug: string;
-  parents: DocParent[];
   fallbackData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
@@ -29,7 +28,6 @@ function StaticPage({
   extraClasses = "",
   locale,
   slug,
-  parents = [],
   fallbackData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
@@ -67,10 +65,6 @@ function StaticPage({
 
   return (
     <>
-      <ArticleActionsContainer
-        parents={[...parents, { uri: baseURL, title: hyData.title }]}
-      />
-
       <div className="main-wrapper">
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
