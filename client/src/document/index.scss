@@ -4,10 +4,6 @@
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
-:root {
-  --sticky-header-height: var(--main-document-header-height);
-}
-
 .main-document-header-container {
   position: sticky;
   top: 0;
@@ -630,13 +626,13 @@ kbd {
 }
 
 .sidebar-container {
-  --offset: var(--main-document-header-height);
+  --offset: var(--sticky-header-height);
   --max-height: calc(100vh - var(--offset));
 
   @media screen and (max-width: $screen-lg) {
     .mdn-cta-container ~ .document-page & {
       // minus 3 rem to ~ account for the top banner
-      --offset: calc(var(--main-document-header-height) + 3rem);
+      --offset: calc(var(--sticky-header-height) + 3rem);
     }
   }
 
@@ -646,7 +642,7 @@ kbd {
   }
   max-height: var(--max-height);
   position: sticky;
-  top: 5rem;
+  top: var(--offset);
   @media screen and (min-width: $screen-md) {
     .sidebar {
       mask-image: linear-gradient(
@@ -670,7 +666,7 @@ kbd {
       display: flex;
       flex-direction: column;
       gap: 0;
-      height: calc(100vh - var(--main-document-header-height));
+      height: calc(100vh - var(--sticky-header-height));
       mask-image: linear-gradient(
         to bottom,
         rgba(0, 0, 0, 0) 0%,
@@ -679,7 +675,7 @@ kbd {
       );
       overflow: auto;
       position: sticky;
-      top: var(--main-document-header-height);
+      top: var(--sticky-header-height);
 
       .place {
         margin: 1rem 0;
