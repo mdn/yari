@@ -278,11 +278,15 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Sync Yari Content
+      - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
+          # 1. Copy static assets to make sure they're available as soon as the first updated pages land.
           gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/static
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          # 2. Sync everything.
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -crj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          # 3. Sync everything and delete extra files.
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -crd client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
