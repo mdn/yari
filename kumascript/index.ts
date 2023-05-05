@@ -1,4 +1,4 @@
-import LRU from "lru-cache";
+import { LRUCache } from "lru-cache";
 import * as cheerio from "cheerio";
 
 import { Document } from "../content/index.js";
@@ -6,7 +6,6 @@ import { m2h } from "../markdown/index.js";
 
 import info from "./src/info.js";
 import { render as renderMacros } from "./src/render.js";
-export { buildLiveSamplePages } from "./src/live-sample.js";
 import { HTMLTool } from "./src/api/util.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
@@ -15,11 +14,12 @@ import {
 } from "../libs/env/index.js";
 import { SourceCodeError } from "./src/errors.js";
 import { Doc } from "../libs/types/document.js";
+export { buildLiveSamplePages } from "./src/live-sample.js";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" macros):';
 
-export const renderCache = new LRU<string, [string, SourceCodeError[]]>({
+export const renderCache = new LRUCache<string, [string, SourceCodeError[]]>({
   max: 2000,
 });
 
