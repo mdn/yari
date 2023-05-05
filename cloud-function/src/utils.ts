@@ -42,3 +42,11 @@ export function redirect(
 export function isLiveSampleURL(url: string) {
   return url.includes("/_sample_.");
 }
+
+// These are the only extensions in client/build/*/docs/*.
+// `find client/build -type f | grep docs | xargs basename | sed 's/.*\.\([^.]*\)$/\1/' | sort | uniq`
+const ASSET_REGEXP = /\.(gif|html|jpeg|jpg|json|png|svg|txt|xml)$/i;
+
+export function isAsset(url: string) {
+  return ASSET_REGEXP.test(url);
+}

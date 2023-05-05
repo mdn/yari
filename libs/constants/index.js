@@ -135,6 +135,7 @@ export const CSP_DIRECTIVES = {
     "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
+    "upload.wikimedia.org",
 
     "www.google-analytics.com",
     "www.gstatic.com",

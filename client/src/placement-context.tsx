@@ -39,7 +39,7 @@ type PlacementType = "side" | "top";
 type PlacementData = Record<PlacementType, PlacementStatus>;
 
 const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
-  side: /\/[^/]+\/(docs\/|search$|_homepage)/i,
+  side: /\/[^/]+\/(docs\/|blog\/|search$|_homepage)/i,
   top: /.*/i,
 };
 

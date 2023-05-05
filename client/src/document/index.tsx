@@ -46,7 +46,7 @@ import { SidePlacement } from "../ui/organisms/placement";
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
   public readonly status: number;
   public readonly url: string;
   public readonly text: string;
@@ -262,7 +262,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 }
 
-function RenderDocumentBody({ doc }) {
+export function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       return <Prose key={section.value.id} section={section.value} />;
