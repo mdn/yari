@@ -277,12 +277,8 @@ jobs:
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          # 1. Copy static assets to make sure they're available as soon as the first updated pages land.
           gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/static
-          # 2. Sync everything.
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -crj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
-          # 3. Sync everything and delete extra files.
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -crd client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt -y "^/static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
