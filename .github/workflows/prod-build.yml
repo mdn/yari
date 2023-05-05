@@ -376,4 +376,4 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Invalidate Google Cloud CDN
-        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async
