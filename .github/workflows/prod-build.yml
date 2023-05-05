@@ -358,22 +358,6 @@ jobs:
           SLACK_FOOTER: "Powered by prod-build.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  invalidate:
-    environment: prod
-    needs: build
-    if: ${{ ! vars.SKIP_INVALIDATE }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          token_format: access_token
-          service_account: deploy-prod-prod-mdn-ingress@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
-          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-
       - name: Invalidate Google Cloud CDN
-        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
+        if: ${{ ! vars.SKIP_INVALIDATE }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async
