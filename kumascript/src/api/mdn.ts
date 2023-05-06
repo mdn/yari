@@ -131,6 +131,16 @@ const mdn = {
     this.env.recordNonFatalError("deprecated", message);
   },
 
+  /**
+   * Throw a deprecation error for parameters to macros.
+   */
+  deprecatedParams(
+    this: KumaThis,
+    message = "Parameters for this macro have been deprecated and should be removed."
+  ) {
+    this.env.recordNonFatalError("deprecated", message);
+  },
+
   async fetchWebExtExamples() {
     if (!webExtExamples) {
       try {

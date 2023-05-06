@@ -37,30 +37,6 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
 
-  - package-ecosystem: npm
-    directory: "/deployer/aws-lambda/mdn-stripe-price-ids"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-
-  - package-ecosystem: npm
-    directory: "/deployer/aws-lambda/content-origin-request"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-
-  - package-ecosystem: npm
-    directory: "/deployer/aws-lambda/content-origin-response"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-
-  - package-ecosystem: npm
-    directory: "/deployer/aws-lambda/tests"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-
     # This forces the Dependabot commit messages to conform to something
     # our auto-merge workflow can always cope with.
     # See https://github.com/ahmadnassri/action-dependabot-auto-merge/issues/31#issuecomment-718779806

@@ -65,7 +65,7 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = translationsOf(document.metadata);
+      const translations = await translationsOf(document.metadata);
       if (translations && translations.length > 0) {
         document.translations = translations;
       } else {
@@ -133,7 +133,7 @@ async function buildDocuments(
 
   const metadata: GlobalMetadata = {};
 
-  const documents = Document.findAll(findAllOptions);
+  const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
@@ -237,6 +237,7 @@ async function buildDocuments(
       body: _,
       toc: __,
       sidebarHTML: ___,
+      sidebarMacro: ____,
       ...builtMetadata
     } = builtDocument;
     builtMetadata.hash = hash;

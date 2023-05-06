@@ -49,7 +49,7 @@ program
   .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args, options }) => {
-      const all = Document.findAll({
+      const all = await Document.findAll({
         folderSearch: args.folder,
         locales: buildLocaleMap(options.locale),
       });

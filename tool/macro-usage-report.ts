@@ -121,7 +121,7 @@ async function isMacroDeprecated(macro: string) {
   const file = path.join(MACROS_PATH, `${macro}.ejs`);
   const content = await fs.readFile(file, "utf-8");
 
-  return content.includes("mdn.deprecated()");
+  return content.includes("mdn.deprecated(");
 }
 
 function formatCell(files: string[]): string {
@@ -199,7 +199,7 @@ function writeJson(
         file
           .replace(CONTENT_ROOT, "content")
           .replace(CONTENT_TRANSLATED_ROOT, "translated-content")
-          .replace(YARI_PATH, "yari")
+          .replace(YARI_PATH, "yari/")
       ),
     };
   }

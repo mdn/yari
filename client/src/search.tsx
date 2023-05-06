@@ -259,7 +259,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     getInputProps,
     getItemProps,
     getMenuProps,
-    getComboboxProps,
 
     highlightedIndex,
     isOpen,
@@ -454,31 +453,27 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   return (
     <form
       action={formAction}
-      {...getComboboxProps({
-        ref: formRef as any, // downshift's types hardcode it as a div
-        className: "search-form search-widget",
-        id: formId,
-        role: "search",
-        onSubmit: (e) => {
-          // This comes into effect if the input is completely empty and the
-          // user hits Enter, which triggers the native form submission.
-          // When something *is* entered, the onKeyDown event is triggered
-          // on the <input> and within that handler you can
-          // access `event.key === 'Enter'` as a signal to submit the form.
-          if (!inputValue.trim()) {
-            e.preventDefault();
-          }
-        },
-        onFocus: () => {
-          onChangeIsFocused(true);
-        },
-        onBlur: (e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            // focus has moved outside of container
-            onChangeIsFocused(false);
-          }
-        },
-      })}
+      ref={formRef as any} // downshift's types hardcode it as a div
+      className={"search-form search-widget"}
+      id={formId}
+      role={"search"}
+      onSubmit={(e) => {
+        // This comes into effect if the input is completely empty and the
+        // user hits Enter, which triggers the native form submission.
+        // When something *is* entered, the onKeyDown event is triggered
+        // on the <input> and within that handler you can
+        // access `event.key === 'Enter'` as a signal to submit the form.
+        if (!inputValue.trim()) {
+          e.preventDefault();
+        }
+      }}
+      onFocus={() => onChangeIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          // focus has moved outside of container
+          onChangeIsFocused(false);
+        }
+      }}
     >
       <label
         id={`${id}-label`}

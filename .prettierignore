@@ -29,3 +29,5 @@ _githistory.json
 /mdn/content
 popularities.json
 /client/public/service-worker.js
+/cloud-function/src/internal/
+/cloud-function/**/*.js

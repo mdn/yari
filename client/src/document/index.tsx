@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../env";
+import { CRUD_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
@@ -38,13 +38,15 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
+import { SidePlacement } from "../ui/organisms/placement";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
   public readonly status: number;
   public readonly url: string;
   public readonly text: string;
@@ -111,8 +113,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
+
   useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
+  useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -219,11 +223,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )
       )}
       <div className="main-wrapper">
-        <RenderSideBar doc={doc} />
-
-        <aside className="toc">
-          <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
-        </aside>
+        <div className="sidebar-container">
+          <RenderSideBar doc={doc} />
+          <div className="toc-container">
+            <aside className="toc">
+              <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+            </aside>
+            {PLACEMENT_ENABLED && <SidePlacement />}
+          </div>
+        </div>
 
         <MainContentContainer>
           {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
@@ -254,7 +262,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 }
 
-function RenderDocumentBody({ doc }) {
+export function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       return <Prose key={section.value.id} section={section.value} />;
@@ -288,9 +296,7 @@ function LoadingError({ error }) {
             <small>{error.statusText}</small>
           </p>
         ) : (
-          <p>
-            <pre>{error.toString()}</pre>
-          </p>
+          <pre>{error.toString()}</pre>
         )}
         <p>
           <button

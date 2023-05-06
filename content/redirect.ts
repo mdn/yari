@@ -149,6 +149,17 @@ function errorOnDuplicated(pairs: Pairs) {
   }
 }
 
+function fixRedirectsCase(oldPairs: Pairs, caseChangedTargets: string[]) {
+  const newTargets = new Map(
+    caseChangedTargets.map((p) => [p.toLowerCase(), p])
+  );
+  const newPairs = oldPairs.map(([from, to]): Pair => {
+    const target = newTargets.get(to.toLowerCase()) ?? to;
+    return [from, target];
+  });
+  return newPairs;
+}
+
 function removeConflictingOldRedirects(oldPairs: Pairs, updatePairs: Pairs) {
   if (oldPairs.length === 0) {
     return oldPairs;
@@ -226,8 +237,19 @@ function loadLocaleAndAdd(
     pairs.push(...loadPairsFromFile(redirectsFilePath, locale, strict && !fix));
   }
 
-  const cleanPairs = removeConflictingOldRedirects(pairs, updatePairs);
-  cleanPairs.push(...updatePairs);
+  const caseChangedTargets = [];
+  const newPairs = [];
+  for (const [from, to] of updatePairs) {
+    if (from.toLowerCase() === to.toLowerCase()) {
+      caseChangedTargets.push(to);
+    } else {
+      newPairs.push([from, to]);
+    }
+  }
+
+  let cleanPairs = removeConflictingOldRedirects(pairs, newPairs);
+  cleanPairs = fixRedirectsCase(cleanPairs, caseChangedTargets);
+  cleanPairs.push(...newPairs);
 
   let simplifiedPairs = shortCuts(cleanPairs);
   if (fix) {
