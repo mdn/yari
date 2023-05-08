@@ -65,6 +65,7 @@ function Fallback() {
 }
 
 export function TopPlacement() {
+  const isServer = useIsServer();
   const placementData = usePlacement();
   const { textColor, backgroundColor, ctaTextColor, ctaBackgroundColor } =
     placementData?.top?.colors || {};
@@ -78,7 +79,7 @@ export function TopPlacement() {
   );
 
   const status =
-    placementData?.status === Status.loading
+    isServer || placementData?.status === Status.loading
       ? "loading"
       : placementData?.top
       ? "visible"
@@ -86,9 +87,11 @@ export function TopPlacement() {
 
   return (
     <div className={`top-banner ${status}`} style={css}>
-      {!placementData?.top ? (
+      {isServer || !placementData?.top ? (
         <section className="place top container">
-          {placementData?.status !== Status.loading && <Fallback />}
+          {!isServer && placementData?.status !== Status.loading && (
+            <Fallback />
+          )}
         </section>
       ) : (
         <PlacementInner
