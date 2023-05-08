@@ -4,7 +4,12 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { PlacementStatus, usePlacement } from "../../../placement-context";
+import {
+  PlacementData,
+  Status,
+  usePlacement,
+} from "../../../placement-context";
+import { BANNER_BLOG_LAUNCH_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
@@ -13,7 +18,7 @@ interface Timer {
 }
 
 function viewed(
-  pong: PlacementStatus,
+  pong: PlacementData,
   observer: IntersectionObserver | null = null
 ) {
   navigator?.sendBeacon?.(
@@ -41,7 +46,26 @@ export function SidePlacement() {
   );
 }
 
+function Fallback() {
+  const gleanClick = useGleanClick();
+
+  return (
+    <p className="fallback-copy">
+      Discover the latest web development insights on our new{" "}
+      <a
+        href="/en-US/blog/"
+        onClick={() => {
+          gleanClick(BANNER_BLOG_LAUNCH_CLICK);
+        }}
+      >
+        MDN Blog
+      </a>
+    </p>
+  );
+}
+
 export function TopPlacement() {
+  const isServer = useIsServer();
   const placementData = usePlacement();
   const { textColor, backgroundColor, ctaTextColor, ctaBackgroundColor } =
     placementData?.top?.colors || {};
@@ -54,13 +78,21 @@ export function TopPlacement() {
     ].filter(([_, v]) => Boolean(v))
   );
 
+  const status =
+    isServer || placementData?.status === Status.loading
+      ? "loading"
+      : placementData?.top
+      ? "visible"
+      : "fallback";
+
   return (
-    <div
-      className={`top-banner ${placementData?.top ? "visible" : "empty"}`}
-      style={css}
-    >
-      {!placementData?.top ? (
-        <section className="place top container"></section>
+    <div className={`top-banner ${status}`} style={css}>
+      {isServer || !placementData?.top ? (
+        <section className="place top container">
+          {!isServer && placementData?.status !== Status.loading && (
+            <Fallback />
+          )}
+        </section>
       ) : (
         <PlacementInner
           pong={placementData.top}
@@ -80,7 +112,7 @@ export function PlacementInner({
   imageWidth,
   imageHeight,
 }: {
-  pong: PlacementStatus;
+  pong: PlacementData;
   extraClassNames?: string[];
   cta?: string;
   imageWidth?: number;

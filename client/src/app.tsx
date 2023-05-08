@@ -35,7 +35,6 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
-  const isServer = useIsServer();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
@@ -52,7 +51,7 @@ function Layout({ pageType, children }) {
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {!isServer && <TopPlacement />}
+        <TopPlacement />
         {pageType !== "document-page" && (
           <TopNavigation extraClasses="main-document-header-container" />
         )}

@@ -73,10 +73,10 @@
   --top-navigation-height: 4rem;
   --top-navigation-offset: -4rem;
   --top-banner-inner-height: 3.125rem;
-  // top-banner-inner-height + 2 * padding + 2 * border;
-  --top-banner-height: calc(
-    var(--top-banner-inner-height) + 2 * 0.125rem + 2 * 1px
-  );
+  // top-banner-inner-height + 2 * padding;
+  --top-banner-height: calc(var(--top-banner-inner-height) + 2 * 0.125rem);
+  // + border
+  --top-banner-outer-height: calc(var(--top-banner-height) + 2 * 1px);
 
   --z-index-back: -1;
   --z-index-top: 9999;
@@ -101,10 +101,11 @@
   );
 }
 
-.top-banner.visible ~ * {
+.top-banner.visible ~ *,
+.top-banner.loading ~ * {
   --sticky-header-height: calc(
     var(--top-nav-height) + var(--article-actions-container-height) +
-      var(--top-banner-height) + 2px
+      var(--top-banner-outer-height) + 2px
   );
 }
 
