@@ -161,7 +161,7 @@
     "css-minimizer-webpack-plugin": "^5.0.0",
     "diff": "^5.1.0",
     "downshift": "^7.6.0",
-    "eslint": "^8.39.0",
+    "eslint": "^8.40.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-gitignore": "^0.1.0",
     "eslint-plugin-flowtype": "^8.0.3",
