@@ -33,6 +33,10 @@ export interface PlacementData {
     backgroundColor?: string;
     ctaTextColor?: string;
     ctaBackgroundColor?: string;
+    textColorDark?: string;
+    backgroundColorDark?: string;
+    ctaTextColorDark?: string;
+    ctaBackgroundColorDark?: string;
   };
 }
 
