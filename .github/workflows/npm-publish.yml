@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    if: github.triggering_actor != 'dependabot[bot]'
+    if: github.repository == 'mdn/yari' && github.triggering_actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
 
     steps:
