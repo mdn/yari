@@ -9,7 +9,8 @@
   top: 0;
   z-index: var(--z-index-top);
   @media screen and (min-width: $screen-md) {
-    .top-banner.visible ~ & {
+    .top-banner.visible ~ &,
+    .top-banner.loading ~ & {
       top: var(--top-banner-height);
     }
   }

@@ -101,7 +101,8 @@
   );
 }
 
-.top-banner.visible ~ * {
+.top-banner.visible ~ *,
+.top-banner.loading ~ * {
   --sticky-header-height: calc(
     var(--top-nav-height) + var(--article-actions-container-height) +
       var(--top-banner-height) + 2px

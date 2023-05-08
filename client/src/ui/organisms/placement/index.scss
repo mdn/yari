@@ -68,6 +68,7 @@ section.place {
     font-size: 0.625rem;
 
     grid-template-areas: "pong pong pong" "no space note";
+    height: var(--top-banner-height);
     margin: 0 auto;
     width: 100%;
 
@@ -139,20 +140,35 @@ section.place {
   --place-top-cta-color: var(--background-secondary);
 
   background-color: var(--place-top-background);
+
+  border-bottom: 1px solid var(--border-primary);
+  height: 3.5rem;
   position: sticky;
   top: 0;
   z-index: var(--z-index-top);
 
-  &.empty {
-    height: 0;
-  }
-
-  &.visible {
-    border: 1px solid var(--border-primary);
-    height: fit-content;
+  &.fallback {
+    position: initial;
   }
 
   @media screen and (max-width: #{$screen-md - 1}) {
     display: none;
+  }
+
+  .mdn-cta-copy {
+    font-size: 1rem;
+    grid-column: 1/4;
+    height: 3.5rem;
+    line-height: 3.5rem;
+    margin: 0 auto;
+
+    a:not(.button) {
+      color: var(--apis-accent-color);
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
   }
 }
