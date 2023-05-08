@@ -93,10 +93,19 @@
   --form-elem-height: 2rem;
 
   /* Major Components */
-  --sticky-header-height: 0;
   --top-nav-height: 4rem;
-  --main-document-header-height: 6rem;
+  --article-actions-container-height: 2rem;
   --icon-size: 1rem;
+  --sticky-header-height: calc(
+    var(--top-nav-height) + var(--article-actions-container-height) + 2px
+  );
+}
+
+.top-banner.visible ~ * {
+  --sticky-header-height: calc(
+    var(--top-nav-height) + var(--article-actions-container-height) +
+      var(--top-banner-height) + 2px
+  );
 }
 
 @media screen and (min-width: $screen-md) {

@@ -90,7 +90,6 @@ function PlusDocs({ ...props }) {
         locale,
         slug: `plus/docs/${slug}`,
         title: MDN_PLUS_TITLE,
-        parents: [{ uri: `/${locale}/plus`, title: MDN_PLUS_TITLE }],
         sidebarHeader: <PlusDocsNav />,
         fallbackData: props.hyData ? props : undefined,
       }}
