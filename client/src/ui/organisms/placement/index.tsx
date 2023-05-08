@@ -51,7 +51,7 @@ function Fallback() {
 
   return (
     <p className="mdn-cta-copy">
-      Discover the latest web dev insights on our new{" "}
+      Discover the latest web development insights on our new{" "}
       <a
         href="/en-US/blog/"
         onClick={() => {
@@ -60,7 +60,6 @@ function Fallback() {
       >
         MDN Blog
       </a>
-      .
     </p>
   );
 }
