@@ -236,7 +236,11 @@ function tryOrExit<T extends ActionParameters>(
       await f({ options, ...args } as T);
     } catch (e) {
       const error = e as Error;
-      if (options.verbose || options.v) {
+      if (
+        options.verbose ||
+        options.v ||
+        (error instanceof Error && !error.message)
+      ) {
         console.error(chalk.red(error.stack));
       }
       throw error;
