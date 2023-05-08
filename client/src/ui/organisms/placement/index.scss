@@ -134,10 +134,27 @@ section.place {
 }
 
 .top-banner {
-  --place-top-background: var(--background-secondary);
-  --place-top-color: var(--text-primary);
-  --place-top-cta-background: var(--text-primary);
-  --place-top-cta-color: var(--background-secondary);
+  --place-top-background-light: var(--background-secondary);
+  --place-top-color-light: var(--text-primary);
+  --place-top-cta-background-light: var(--text-primary);
+  --place-top-cta-color-light: var(--background-secondary);
+
+  --place-top-background-dark: var(--background-secondary);
+  --place-top-color-dark: var(--text-primary);
+  --place-top-cta-background-dark: var(--text-primary);
+  --place-top-cta-color-dark: var(--background-secondary);
+
+  --place-top-background: var(--place-top-background-light);
+  --place-top-color: var(--place-top-color-light);
+  --place-top-cta-background: var(--place-top-cta-background-light);
+  --place-top-cta-color: var(--place-top-cta-color-light);
+
+  @media (prefers-color-scheme: dark) {
+    --place-top-background: var(--place-top-background-dark);
+    --place-top-color: var(--place-top-color-dark);
+    --place-top-cta-background: var(--place-top-cta-background-dark);
+    --place-top-cta-color: var(--place-top-cta-color-dark);
+  }
 
   background-color: var(--place-top-background);
 
@@ -170,4 +187,11 @@ section.place {
       }
     }
   }
+}
+
+.dark .top-banner {
+  --place-top-background: var(--place-top-background-dark);
+  --place-top-color: var(--place-top-color-dark);
+  --place-top-cta-background: var(--place-top-cta-background-dark);
+  --place-top-cta-color: var(--place-top-cta-color-dark);
 }

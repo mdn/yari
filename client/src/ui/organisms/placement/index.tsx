@@ -67,14 +67,29 @@ function Fallback() {
 export function TopPlacement() {
   const isServer = useIsServer();
   const placementData = usePlacement();
-  const { textColor, backgroundColor, ctaTextColor, ctaBackgroundColor } =
-    placementData?.top?.colors || {};
+  const {
+    textColor,
+    backgroundColor,
+    ctaTextColor,
+    ctaBackgroundColor,
+    textColorDark,
+    backgroundColorDark,
+    ctaTextColorDark,
+    ctaBackgroundColorDark,
+  } = placementData?.top?.colors || {};
   const css = Object.fromEntries(
     [
-      ["--place-top-background", backgroundColor],
-      ["--place-top-color", textColor],
-      ["--place-top-cta-background", ctaBackgroundColor],
-      ["--place-top-cta-color", ctaTextColor],
+      ["--place-top-background-light", backgroundColor],
+      ["--place-top-color-light", textColor],
+      ["--place-top-cta-background-light", ctaBackgroundColor],
+      ["--place-top-cta-color-light", ctaTextColor],
+      ["--place-top-background-dark", backgroundColorDark || backgroundColor],
+      ["--place-top-color-dark", textColorDark || textColor],
+      [
+        "--place-top-cta-background-dark",
+        ctaBackgroundColorDark || ctaBackgroundColor,
+      ],
+      ["--place-top-cta-color-dark", ctaTextColorDark || ctaBackgroundColor],
     ].filter(([_, v]) => Boolean(v))
   );
 
