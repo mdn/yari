@@ -142,7 +142,7 @@ section.place {
   background-color: var(--place-top-background);
 
   border-bottom: 1px solid var(--border-primary);
-  height: 3.5rem;
+  height: var(--top-banner-height);
   position: sticky;
   top: 0;
   z-index: var(--z-index-top);
@@ -158,8 +158,7 @@ section.place {
   .mdn-cta-copy {
     font-size: 1rem;
     grid-column: 1/4;
-    height: 3.5rem;
-    line-height: 3.5rem;
+    line-height: var(--top-banner-height);
     margin: 0 auto;
 
     a:not(.button) {
