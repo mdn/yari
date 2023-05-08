@@ -50,7 +50,7 @@ function Fallback() {
   const gleanClick = useGleanClick();
 
   return (
-    <p className="mdn-cta-copy">
+    <p className="fallback-copy">
       Discover the latest web development insights on our new{" "}
       <a
         href="/en-US/blog/"

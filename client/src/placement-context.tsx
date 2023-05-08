@@ -74,7 +74,6 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
       ? null
       : "/pong/get",
     async (url) => {
-      console.log("url", url);
       const response = await fetch(url, {
         method: "POST",
         headers: {
