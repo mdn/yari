@@ -16,7 +16,7 @@ import {
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } from "../build/index.js";
-import { findDocumentTranslations } from "../content/translations.js";
+import { findTranslations } from "../content/translations.js";
 import { Document, Redirect, Image } from "../content/index.js";
 import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
@@ -47,7 +47,7 @@ import {
   findPostPathBySlug,
 } from "../build/blog.js";
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;
@@ -57,7 +57,10 @@ async function buildDocumentFromURL(url) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
     // the phase that happens when you do a regular `yarn build`.
-    document.translations = findDocumentTranslations(document);
+    document.translations = findTranslations(
+      document.metadata.slug,
+      document.metadata.locale
+    );
   }
   return await buildDocument(document, documentOptions);
 }
