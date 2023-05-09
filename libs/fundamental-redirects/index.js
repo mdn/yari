@@ -1233,19 +1233,14 @@ const MISC_REDIRECT_PATTERNS = [
     { permanent: true }
   ),
   // Content archived as part of the GCP migration.
-  redirect(/^diagrams\/?$/i, "https://mdn.dev/archives/media/diagrams/", {
-    permanent: false,
-  }),
   redirect(
-    /^presentations\/?$/i,
-    "https://mdn.dev/archives/media/presentations/",
+    /^(?<prefix>diagrams|presentations|samples)(?<subPath>\/.*)?$/i,
+    ({ prefix, subPath = "" }) =>
+      `https://mdn.dev/archives/media/${prefix}${subPath}`,
     {
       permanent: false,
     }
   ),
-  redirect(/^samples\/?$/i, "https://mdn.dev/archives/media/samples/", {
-    permanent: false,
-  }),
 ];
 
 const REDIRECT_PATTERNS = [].concat(
