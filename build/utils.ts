@@ -9,7 +9,7 @@ import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
-import { rgPath } from "vscode-ripgrep";
+import { rgPath } from "@vscode/ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants/index.js";
