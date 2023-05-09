@@ -7,6 +7,7 @@ import NoteCard from "../ui/molecules/notecards";
 
 import LANGUAGES_RAW from "../../../libs/languages";
 import { RETIRED_LOCALES } from "../../../libs/constants";
+import { isValidLocale } from "../../../libs/locale-utils";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -22,7 +23,8 @@ const LANGUAGES = new Map(
 // like "Did you mean: <a href=$url>$doctitle</a>?"
 
 export default function FallbackLink({ url }: { url: string }) {
-  const { locale = "en-US" } = useParams();
+  const { localeRaw } = useParams();
+  const locale = !isValidLocale(localeRaw) ? "en-US" : localeRaw;
   const location = useLocation();
 
   const [fallbackCheckURL, setFallbackCheckURL] = React.useState<null | string>(
