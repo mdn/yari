@@ -5,10 +5,10 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    open-pull-requests-limit: 35
     ignore:
-      # Temporarily disable updates to Dinocons
-      - dependency-name: "@mdn/dinocons"
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -29,31 +29,46 @@ updates:
     directory: "/client/pwa"
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: npm
     directory: "/cloud-function"
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: npm
     directory: "/lib/locale-utils"
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: npm
     directory: "/lib/pong"
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: npm
     directory: "/lib/slug-utils"
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
 
     # This forces the Dependabot commit messages to conform to something
     # our auto-merge workflow can always cope with.
