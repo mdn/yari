@@ -129,6 +129,11 @@ export function useStickyHeaderHeight() {
       // SSR.
       return 0;
     }
+    const sidebar = document.querySelector(".sidebar-container");
+
+    if (sidebar) {
+      return parseFloat(getComputedStyle(sidebar).top);
+    }
 
     const styles = getComputedStyle(document.documentElement);
     const stickyHeaderHeight = styles

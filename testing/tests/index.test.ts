@@ -126,12 +126,14 @@ test("content built foo page", () => {
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]')
+    .first()
+    .attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
   // building static assets for Dev or Stage, you don't know what domain is
@@ -176,8 +178,8 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -232,8 +234,8 @@ test("content built zh-CN page for hreflang tag testing", () => {
   const $ = cheerio.load(html);
   // The built page should not have duplicate hreflang tags,
   // when zh-TW translation is also available.
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -261,8 +263,8 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);

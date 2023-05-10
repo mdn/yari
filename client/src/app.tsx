@@ -26,6 +26,7 @@ import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
+import { Blog } from "./blog";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -34,7 +35,6 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
-  const isServer = useIsServer();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
@@ -51,7 +51,7 @@ function Layout({ pageType, children }) {
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {!isServer && <TopPlacement />}
+        <TopPlacement />
         {pageType !== "document-page" && (
           <TopNavigation extraClasses="main-document-header-container" />
         )}
@@ -157,6 +157,14 @@ export function App(appProps: HydrationData) {
         time it hits any React code.
        */}
       <Route path="/" element={homePage} />
+      <Route
+        path="/en-US/blog/*"
+        element={
+          <StandardLayout extraClasses="blog">
+            <Blog {...appProps} />
+          </StandardLayout>
+        }
+      />
       <Route
         path="/:locale/*"
         element={

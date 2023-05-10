@@ -1,7 +1,7 @@
 import path from "node:path";
 import childProcess from "node:child_process";
 
-import LRU from "lru-cache";
+import { LRUCache } from "lru-cache";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { slugToFolder as _slugToFolder } from "../libs/slug-utils/index.js";
@@ -49,7 +49,7 @@ export function memoize<Args>(
     return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any;
   }
 
-  const cache = new LRU({ max: 2000 });
+  const cache = new LRUCache({ max: 2000 });
   return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => {
     let invalidate = false;
     if (args.includes(MEMOIZE_INVALIDATE)) {

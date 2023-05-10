@@ -16,7 +16,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const { isViewed } = useViewedState();
 
   const plusMenu: MenuEntry = {
-    label: "MDN Plus",
+    label: "Plus",
     id: "mdn-plus",
     to: plusUrl,
     items: [

@@ -9,6 +9,7 @@ export enum Status {
   success = "success",
   geoUnsupported = "geo_unsupported",
   capReached = "cap_reached",
+  loading = "loading",
 }
 
 export interface Fallback {
@@ -19,7 +20,7 @@ export interface Fallback {
   by: string;
 }
 
-export interface PlacementStatus {
+export interface PlacementData {
   status: Status;
   click: string;
   view: string;
@@ -32,14 +33,21 @@ export interface PlacementStatus {
     backgroundColor?: string;
     ctaTextColor?: string;
     ctaBackgroundColor?: string;
+    textColorDark?: string;
+    backgroundColorDark?: string;
+    ctaTextColorDark?: string;
+    ctaBackgroundColorDark?: string;
   };
 }
 
 type PlacementType = "side" | "top";
-type PlacementData = Record<PlacementType, PlacementStatus>;
+export interface PlacementContextData
+  extends Partial<Record<PlacementType, PlacementData>> {
+  status: Status;
+}
 
 const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
-  side: /\/[^/]+\/(docs\/|search$|_homepage)/i,
+  side: /\/[^/]+\/(docs\/|blog\/|search$|_homepage)/i,
   top: /.*/i,
 };
 
@@ -50,7 +58,7 @@ function placementTypes(pathname: string): string[] {
 }
 
 export const PlacementContext = React.createContext<
-  PlacementData | null | undefined
+  PlacementContextData | null | undefined
 >(undefined);
 
 export function PlacementProvider(props: { children: React.ReactNode }) {
@@ -63,7 +71,7 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
     isLoading,
     isValidating,
     mutate,
-  } = useSWR<PlacementData>(
+  } = useSWR<PlacementContextData>(
     !PLACEMENT_ENABLED ||
       user?.settings?.noAds ||
       !placementTypes(location.pathname)
@@ -88,8 +96,8 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
       }
 
       try {
-        const placementResponse: PlacementData = await response.json();
-        gleanClick(`pong: pong->status ${placementResponse.side.status}`);
+        const placementResponse: PlacementContextData = await response.json();
+        gleanClick(`pong: pong->status ${placementResponse.side?.status}`);
         return placementResponse;
       } catch (e) {
         throw Error(response.statusText);
@@ -110,7 +118,9 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
   }, [location.pathname, mutate]);
 
   return (
-    <PlacementContext.Provider value={isLoading || isValidating ? null : pong}>
+    <PlacementContext.Provider
+      value={isLoading || isValidating ? { status: Status.loading } : pong}
+    >
       {props.children}
     </PlacementContext.Provider>
   );
