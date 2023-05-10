@@ -122,6 +122,7 @@
     "unified": "^10.1.2",
     "unist-builder": "^3.0.1",
     "unist-util-visit": "^4.1.2",
+    "web-features": "^0.4.1",
     "web-specs": "^2.57.0"
   },
   "devDependencies": {

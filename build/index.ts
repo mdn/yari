@@ -1,13 +1,15 @@
 import path from "node:path";
 
 import chalk from "chalk";
+import webFeatures from "web-features/index.json" assert { type: "json" };
+
 import {
   MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc } from "../libs/types/document.js";
+import { Doc, WebFeature, WebFeatureStatus } from "../libs/types/document.js";
 import { Document, execGit } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
@@ -359,6 +361,8 @@ export async function buildDocument(
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
+  doc.baseline = addBaseline(doc);
+
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
   if ($("math").length > 0) {
@@ -520,6 +524,21 @@ export async function buildDocument(
     document.metadata.slug.startsWith("conflicting/");
 
   return { doc: doc as Doc, liveSamples, fileAttachments };
+}
+
+function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
+  if (doc.browserCompat) {
+    for (const feature of Object.values<WebFeature>(webFeatures)) {
+      if (
+        feature.status &&
+        feature.compat_features?.some((query) =>
+          doc.browserCompat?.includes(query)
+        )
+      ) {
+        return feature.status;
+      }
+    }
+  }
 }
 
 interface BuiltLiveSamplePage {
