@@ -28,6 +28,7 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  ELASTICSEARCH_URL,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
 } from "../libs/env/index.js";
@@ -42,6 +43,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 import { whatsdeployed } from "./whatsdeployed.js";
+import { searchIndex } from "./search-index.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -225,6 +227,17 @@ interface WhatsdeployedActionParameters extends ActionParameters {
   options: {
     output: string;
     dryRun: boolean;
+  };
+}
+
+interface SearchIndexActionParameters extends ActionParameters {
+  args: {
+    buildroot: string;
+  };
+  options: {
+    url: string;
+    update: boolean;
+    noProgressbar: boolean;
   };
 }
 
@@ -1254,6 +1267,40 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       const { output, dryRun } = options;
       return whatsdeployed(directory, output, dryRun);
     })
+  )
+
+  .command(
+    "search_index",
+    "Updates the Elasticsearch index with the contents of all index.json files in the directory"
+  )
+  .argument(
+    "<buildroot>",
+    "Path to client build that contains the index.json files to index"
+  )
+  .option(
+    "--url <url>",
+    "Elasticsearch URL (if not env var ELASTICSEARCH_URL)",
+    {
+      default: ELASTICSEARCH_URL,
+    }
+  )
+  .option("--update", "Don't first delete the index")
+  .option(
+    "--no-progressbar",
+    "Disables the progressbar (this is true by default if env var CI==true"
+  )
+  .action(
+    tryOrExit(
+      async ({ args, options, logger }: SearchIndexActionParameters) => {
+        const { buildroot } = args;
+        const { url, update, noProgressbar } = options;
+        if (!url) {
+          logger.warn("ELASTICSEARCH_URL or --url not set or empty");
+          throw Error("url not set");
+        }
+        return searchIndex(buildroot, url, { update, noProgressbar });
+      }
+    )
   );
 
 program.run();
