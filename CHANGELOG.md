@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.0](https://github.com/mdn/yari/compare/v2.19.0...v2.20.0) (2023-05-10)
+
+
+### Features
+
+* **docs:** baseline indicator ([#8772](https://github.com/mdn/yari/issues/8772)) ([35786d8](https://github.com/mdn/yari/commit/35786d80399b225507530931286deaa55b0c9a82))
+
 ## [2.19.0](https://github.com/mdn/yari/compare/v2.18.1...v2.19.0) (2023-05-10)
 
 
