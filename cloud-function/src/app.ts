@@ -48,7 +48,7 @@ router.get(
   proxyContent
 );
 router.get(
-  "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
+  "/[^/]+/docs/*/*.(gif|jpe?g|mp3|mp4|png|ogg|svg|webm|webp|woff2)",
   requireOrigin(Origin.main, Origin.liveSamples),
   resolveIndexHTML,
   proxyContent

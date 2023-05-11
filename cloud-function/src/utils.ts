@@ -45,7 +45,8 @@ export function isLiveSampleURL(url: string) {
 
 // These are the only extensions in client/build/*/docs/*.
 // `find client/build -type f | grep docs | xargs basename | sed 's/.*\.\([^.]*\)$/\1/' | sort | uniq`
-const ASSET_REGEXP = /\.(gif|html|jpeg|jpg|json|png|svg|txt|xml)$/i;
+const ASSET_REGEXP =
+  /\.(gif|html|jpe?g|json|mp3|mp4|png|ogg|svg|txt|webm|webp|woff2|xml)$/i;
 
 export function isAsset(url: string) {
   return ASSET_REGEXP.test(url);
