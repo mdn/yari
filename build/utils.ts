@@ -12,7 +12,10 @@ import imageminSvgo from "imagemin-svgo";
 import { rgPath } from "@vscode/ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../libs/constants/index.js";
+import {
+  ANY_ATTACHMENT_REGEXP,
+  VALID_MIME_TYPES,
+} from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
 import { spawnSync } from "node:child_process";
 import { BLOG_ROOT } from "../libs/env/index.js";
@@ -189,12 +192,7 @@ export function getAdjacentFileAttachments(documentDirectory: string) {
   return dirents
     .filter((dirent) => {
       // This needs to match what we do in filecheck/checker.py
-      return (
-        !dirent.isDirectory() &&
-        /\.(mp3|mp4|png|jpeg|jpg|gif|ogg|svg|webm|webp|woff2)$/i.test(
-          dirent.name
-        )
-      );
+      return !dirent.isDirectory() && ANY_ATTACHMENT_REGEXP.test(dirent.name);
     })
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }

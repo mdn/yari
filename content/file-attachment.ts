@@ -5,7 +5,14 @@ import { readChunkSync } from "read-chunk";
 import imageType from "image-type";
 import isSvg from "is-svg";
 
-import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import {
+  ANY_IMAGE_EXT,
+  AUDIO_EXT,
+  DEFAULT_LOCALE,
+  FONT_EXT,
+  VIDEO_EXT,
+  createRegExpFromExtensions,
+} from "../libs/constants/index.js";
 import { ROOTS } from "../libs/env/index.js";
 import { memoize, slugToFolder } from "./utils.js";
 
@@ -22,20 +29,25 @@ function isFileAttachment(filePath: string) {
   );
 }
 
+const AUDIO_FILE_REGEXP = createRegExpFromExtensions(...AUDIO_EXT);
+const FONT_FILE_REGEXP = createRegExpFromExtensions(...FONT_EXT);
+const VIDEO_FILE_REGEXP = createRegExpFromExtensions(...VIDEO_EXT);
+const IMAGE_FILE_REGEXP = createRegExpFromExtensions(...ANY_IMAGE_EXT);
+
 function isAudio(filePath: string) {
-  return /\.(mp3|ogg)$/i.test(filePath);
+  return AUDIO_FILE_REGEXP.test(filePath);
 }
 
 function isFont(filePath: string) {
-  return /\.(woff2)$/i.test(filePath);
+  return FONT_FILE_REGEXP.test(filePath);
 }
 
 function isVideo(filePath: string) {
-  return /\.(mp4|webm)$/i.test(filePath);
+  return VIDEO_FILE_REGEXP.test(filePath);
 }
 
 function isImage(filePath: string) {
-  if (!/\.(gif|jpe?g|png|svg)$/i.test(filePath)) {
+  if (!IMAGE_FILE_REGEXP.test(filePath)) {
     return false;
   }
 

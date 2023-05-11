@@ -20,9 +20,19 @@ import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
+  createRegExpFromExtensions,
+  AUDIO_EXT,
+  VIDEO_EXT,
+  FONT_EXT,
 } from "../libs/constants/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
+
+const BINARY_FILE_REGEXP = createRegExpFromExtensions(
+  ...AUDIO_EXT,
+  ...VIDEO_EXT,
+  ...FONT_EXT
+);
 
 function formatSize(bytes: number): string {
   if (bytes > 1024 * 1024) {
@@ -79,7 +89,7 @@ export async function checkFile(
   }
 
   // Ensure that binary files contain what their extension indicates.
-  if (/\.(mp3|mp4|ogg|webm|woff2)$/i.test(filePath)) {
+  if (BINARY_FILE_REGEXP.test(filePath)) {
     const ext = filePath.split(".").pop();
     const type = await fileTypeFromFile(filePath);
     if (!type) {

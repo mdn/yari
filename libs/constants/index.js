@@ -153,6 +153,37 @@ export const cspToString = (csp) =>
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
+export const AUDIO_EXT = ["mp3", "ogg"];
+export const FONT_EXT = ["woff2"];
+export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
+export const ANY_IMAGE_EXT = ["svg", ...BINARY_IMAGE_EXT];
+export const VIDEO_EXT = ["mp4", "webm"];
+
+export const BINARY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...BINARY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export const ANY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...ANY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export function createRegExpFromExtensions(...extensions) {
+  return new RegExp(`\\.(${extensions.join("|")})$`, "i");
+}
+
+export const ANY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...ANY_ATTACHMENT_EXT
+);
+export const BINARY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...BINARY_ATTACHMENT_EXT
+);
+
 // -----
 // build
 // -----

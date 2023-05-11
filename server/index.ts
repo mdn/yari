@@ -18,7 +18,11 @@ import {
 } from "../build/index.js";
 import { findTranslations } from "../content/translations.js";
 import { Document, Redirect, FileAttachment } from "../content/index.js";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import {
+  ANY_ATTACHMENT_REGEXP,
+  CSP_VALUE,
+  DEFAULT_LOCALE,
+} from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
@@ -292,9 +296,7 @@ app.get("/*", async (req, res, ...args) => {
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
-  // TODO: Would be nice to have a list of all supported file extensions
-  // in a constants file.
-  if (/\.(gif|jpe?g|mp3|mp4|png|ogg|svg|webm|webp|woff2)$/.test(req.path)) {
+  if (ANY_ATTACHMENT_REGEXP.test(req.path)) {
     // Remember, FileAttachment.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
     // Using a "fallback" strategy here so that images embedded in live samples
