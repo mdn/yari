@@ -56,10 +56,6 @@ jobs:
           CONTENT_ROOT: testing/content/files
         run: yarn build:prepare
 
-      - name: Dry-run publish to see which files are included
-        if: steps.release.outputs.release_created
-        run: npm publish --dry-run
-
       - name: Publish to npmjs
         if: steps.release.outputs.release_created
         run: npm publish
