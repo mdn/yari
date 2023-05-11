@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.20.1](https://github.com/mdn/yari/compare/v2.20.0...v2.20.1) (2023-05-11)
+
+
+### Bug Fixes
+
+* **dev:** TypeScript errors when running `yarn dev` ([#8835](https://github.com/mdn/yari/issues/8835)) ([039515b](https://github.com/mdn/yari/commit/039515b730f6a636e0791e683604ae7fa8ad5072))
+* **npm-publish:** revert renaming of NPM_AUTH_TOKEN ([#8831](https://github.com/mdn/yari/issues/8831)) ([3ccc923](https://github.com/mdn/yari/commit/3ccc923e6690fa81b08435cf6e4ca44812fd06a4))
+
 ## [2.20.0](https://github.com/mdn/yari/compare/v2.19.0...v2.20.0) (2023-05-10)
 
 
