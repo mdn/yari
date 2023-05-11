@@ -1823,10 +1823,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mozilla/glean@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.3.0.tgz#e8ed1a548393c1b70b5b0cfbd7ee247aa302aa59"
-  integrity sha512-2bEhpV8Tf4U/KEAJvaesVhe8SXk089jeDCHicEiBbznsRiIElHZVku7t7QHJI16oTqJEf/wHqjTDSQI9Wl3p3A==
+"@mozilla/glean@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.4.0.tgz#a29cb3bde7e52de4d100c1e539298aa3a7ec28f8"
+  integrity sha512-16YgRBPexUtgGD13dnAYYmHeeEzatQ2wSFuwopNvXuy4CeJw3xpJ+N4fVjnMJtQffpp89l2f4BvKva+eAmmBPg==
   dependencies:
     fflate "^0.7.1"
     jose "^4.0.4"
