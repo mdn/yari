@@ -32,6 +32,7 @@ jobs:
         with:
           node-version: 18
           cache: yarn
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install
         if: steps.release.outputs.release_created
