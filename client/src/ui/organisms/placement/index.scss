@@ -117,18 +117,33 @@ section.place {
       }
 
       .pong-note {
-        color: var(--place-top-color);
         grid-area: note;
-        margin: 0 0 auto auto;
-        width: fit-content;
+        width: 100%;
+        height: 100%;
+        padding: 0 0.5rem;
+        text-align: end;
+        display: block;
+        margin: 0;
+        border-right: 1px solid var(--border-primary);
+        border-left: 1px solid var(--border-primary);
+        background-color: var(--background-secondary);
+        color: var(--text-primary);
       }
     }
 
     .no-pong {
-      color: var(--place-top-color);
       grid-area: no;
-      margin: auto 0 0 2rem;
-      width: fit-content;
+      width: 100%;
+      height: 100%;
+      padding: 0.75rem 0.5rem 0;
+      text-align: end;
+      display: block;
+      margin: 0;
+      border-right: 1px solid var(--border-primary);
+      border-left: 1px solid var(--border-primary);
+      border-bottom: 1px solid var(--border-primary);
+      background-color: var(--background-secondary);
+      color: var(--text-primary);
     }
   }
 }
