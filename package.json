@@ -54,7 +54,8 @@
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "resolutions": {
-    "lodash": ">=4.17.15"
+    "lodash": ">=4.17.15",
+    "react-dev-utils/fork-ts-checker-webpack-plugin": "^6.5.3"
   },
   "dependencies": {
     "@caporal/core": "^2.0.2",
