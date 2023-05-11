@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.20.3](https://github.com/mdn/yari/compare/v2.20.2...v2.20.3) (2023-05-11)
+
+
+### Bug Fixes
+
+* **lint-staged:** use negative pattern correctly ([#8842](https://github.com/mdn/yari/issues/8842)) ([8e74e5f](https://github.com/mdn/yari/commit/8e74e5fb0518d8b140a41a965e71ab267e11bef5))
+* **npm-publish:** setup node with registry url ([#8841](https://github.com/mdn/yari/issues/8841)) ([660a28b](https://github.com/mdn/yari/commit/660a28ba34772eba75a602de01a1fa2aa8865992))
+
 ## [2.20.2](https://github.com/mdn/yari/compare/v2.20.1...v2.20.2) (2023-05-11)
 
 
