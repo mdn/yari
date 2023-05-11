@@ -60,6 +60,6 @@ jobs:
 
       - name: Publish
         if: steps.release.outputs.release_created
-        run: npm publish
+        run: npm publish --access public
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
