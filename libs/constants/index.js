@@ -157,7 +157,7 @@ export const AUDIO_EXT = ["mp3", "ogg"];
 export const FONT_EXT = ["woff2"];
 export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
 export const ANY_IMAGE_EXT = ["svg", ...BINARY_IMAGE_EXT];
-export const VIDEO_EXT = ["mp4", "webm"];
+export const VIDEO_EXT = ["avif", "mp4", "webm"];
 
 export const BINARY_ATTACHMENT_EXT = [
   ...AUDIO_EXT,
@@ -243,6 +243,7 @@ export const VALID_MIME_TYPES = new Set([
   "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
   "image/gif",
   "image/webp",
+  "video/avif",
   "video/mp4",
   "video/ogg",
   "video/webm",
