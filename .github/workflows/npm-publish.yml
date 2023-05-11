@@ -15,27 +15,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - name: Release
+        uses: google-github-actions/release-please-action@v3
         id: release
         with:
           release-type: node
           package-name: release-please-action
 
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         if: steps.release.outputs.release_created
 
-      - name: Setup Node.js environment
+      - name: Setup
         uses: actions/setup-node@v3
         if: steps.release.outputs.release_created
         with:
           node-version: 18
           cache: yarn
 
-      - name: Install all yarn packages
+      - name: Install
         if: steps.release.outputs.release_created
         run: yarn --frozen-lockfile
 
-      - name: Build the build
+      - name: Build
         if: steps.release.outputs.release_created
         env:
           # What this does is it makes sure the built client is made for
@@ -56,12 +58,8 @@ jobs:
           CONTENT_ROOT: testing/content/files
         run: yarn build:prepare
 
-      - name: Dry-run publish to see which files are included
-        if: steps.release.outputs.release_created
-        run: npm publish --dry-run
-
-      - name: Publish to npmjs
+      - name: Publish
         if: steps.release.outputs.release_created
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
