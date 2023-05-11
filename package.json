@@ -235,7 +235,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
     "use-debounce": "^9.0.4",
-    "webpack": "^5.82.0",
+    "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-middleware": "^6.1.0",
     "webpack-dev-server": "^4.15.0",
