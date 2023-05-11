@@ -1,5 +1,8 @@
 name: XYZ Build
 
+env:
+  DEFAULT_NOTES: ""
+
 on:
   push:
     branches:
@@ -9,6 +12,11 @@ on:
       - cloud-function/**
 
   workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ${DEFAULT_NOTES}
 
   workflow_call:
     secrets:
@@ -28,9 +36,6 @@ jobs:
     environment: xyz
     runs-on: ubuntu-latest-4core
 
-    env:
-      BUCKET_PATH: main
-
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
 
@@ -38,6 +43,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
           path: mdn/content
@@ -48,6 +54,14 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -55,11 +69,13 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -80,6 +96,8 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          BASE_URL: "https://developer.allizom.xyz"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -97,7 +115,7 @@ jobs:
           # If it's used on other domains (e.g. stage or dev builds), it's OK
           # because ultimately Google Analytics will filter it out since the
           # origin domain isn't what that account expects.
-          #BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -117,11 +135,7 @@ jobs:
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
-          # Surveys.
-          REACT_APP_SURVEY_START_CONTENT_DISCOVERY_2023: 0 # stage
-          REACT_APP_SURVEY_END_CONTENT_DISCOVERY_2023: 1677672000000 # (new Date("2023-03-01 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_CONTENT_DISCOVERY_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_CONTENT_DISCOVERY_2023: 0.05 # 5%
+          # No surveys.
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: xyz
@@ -138,6 +152,7 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
           yarn build:prepare
@@ -149,6 +164,8 @@ jobs:
 
           yarn tool sync-translated-content
 
+          # Build using one process per locale.
+          # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
             yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
@@ -162,6 +179,9 @@ jobs:
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # Build the blog
+          yarn build:blog
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -182,9 +202,9 @@ jobs:
 
       - name: Sync build with GCS bucket
         if: ${{ ! vars.SKIP_BUILD }}
-        run: |
-          gsutil -q -m cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH/static
-          gsutil -q -m rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/$BUCKET_PATH
+        run: |-
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -208,24 +228,24 @@ jobs:
             --trigger-http \
             --allow-unauthenticated \
             --entry-point=mdnHandler \
+            --concurrency=100 \
             --min-instances=1 \
             --max-instances=100 \
-            --concurrency=100 \
             --memory=2GB \
             --timeout=30s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
-            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ env.BUCKET_PATH }}/" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=xyz" \
             --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
             --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
-            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-site-id/versions/latest" \
-            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-kevel-network-id/versions/latest" \
-            --set-secrets="SIGN_SECRET=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-sign-secret/versions/latest" \
-            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-carbon-zone-key/versions/latest" \
-            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.WIP_PROJECT_ID }}/secrets/stage-fallback-enabled/versions/latest" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
+            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
             2>&1 | sed "s/^/[$region] /" &
             pids+=($!)
           done
@@ -234,23 +254,6 @@ jobs:
             wait $pid
           done
 
-  invalidate:
-    environment: xyz
-    needs: build
-    if: ${{ ! vars.SKIP_INVALIDATE }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v0
-        with:
-          token_format: access_token
-          service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
-          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-
       - name: Invalidate CDN
-        run: |-
-          gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
+        if: ${{ ! vars.SKIP_INVALIDATE }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async
