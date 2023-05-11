@@ -28,7 +28,7 @@ import {
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
-const BINARY_FILE_REGEXP = createRegExpFromExtensions(
+const BINARY_NON_IMAGE_FILE_REGEXP = createRegExpFromExtensions(
   ...AUDIO_EXT,
   ...VIDEO_EXT,
   ...FONT_EXT
@@ -89,7 +89,8 @@ export async function checkFile(
   }
 
   // Ensure that binary files contain what their extension indicates.
-  if (BINARY_FILE_REGEXP.test(filePath)) {
+  // Exclude images, as they're checked separately in checkCompression().
+  if (BINARY_NON_IMAGE_FILE_REGEXP.test(filePath)) {
     const ext = filePath.split(".").pop();
     const type = await fileTypeFromFile(filePath);
     if (!type) {
