@@ -277,7 +277,7 @@ export function getBrokenLinksFlaws(
       const absoluteURL = new URL(href, "http://www.example.com");
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
-        // Before we give up, check if it's an image.
+        // Before we give up, check if it's an attachment.
         if (!FileAttachment.findByURLWithFallback(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
