@@ -67,14 +67,15 @@ section.place {
     display: grid;
     font-size: 0.625rem;
 
-    grid-template-areas: "pong pong pong" "no space note";
+    grid-template-areas: "pong cta" "no note";
     height: var(--top-banner-height);
     margin: 0 auto;
     width: 100%;
+    align-items: center;
 
     @media screen and (min-width: $screen-md) {
-      grid-template-areas: "pong cta cta" "pong no note";
-      grid-template-columns: 1fr 10rem 4rem;
+      grid-template-areas: "pong cta note" "pong cta no";
+      grid-template-columns: fit-content(100%) auto fit-content(100%);
     }
 
     .pong-box {
@@ -86,7 +87,6 @@ section.place {
         color: var(--place-top-color);
         flex-direction: row;
         grid-area: pong;
-        max-width: 30rem;
         padding: 0.125rem;
         text-decoration: none;
 
@@ -110,25 +110,25 @@ section.place {
         color: var(--place-top-cta-color);
         font-size: var(--type-smaller-font-size);
         grid-area: cta;
-        margin: 0.125rem auto;
         padding: 0.25rem 1rem;
         text-align: center;
-        width: 100%;
+        height: fit-content;
+        margin-right: auto;
       }
 
       .pong-note {
         color: var(--place-top-color);
         grid-area: note;
-        margin: auto 0.5rem 0 auto;
-        width: 4rem;
-        width: auto;
+        margin: 0 0 auto auto;
+        width: fit-content;
       }
     }
 
     .no-pong {
       color: var(--place-top-color);
       grid-area: no;
-      margin: auto 0.5rem 0;
+      margin: auto 0 0 2rem;
+      width: fit-content;
     }
   }
 }
