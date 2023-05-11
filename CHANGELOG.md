@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.2](https://github.com/mdn/yari/compare/v2.20.1...v2.20.2) (2023-05-11)
+
+
+### Bug Fixes
+
+* **npm-publish:** restore --access public option ([#8839](https://github.com/mdn/yari/issues/8839)) ([c5f8c48](https://github.com/mdn/yari/commit/c5f8c48ada5b17ef672810e09ca399ea518a46fa))
+
 ## [2.20.1](https://github.com/mdn/yari/compare/v2.20.0...v2.20.1) (2023-05-11)
 
 
