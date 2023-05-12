@@ -175,7 +175,7 @@ export default function BrowserCompatibilityTable({
         >
           Report problems with this compatibility data on GitHub
         </a>
-        <figure className="table-container">
+        <figure className="table-container bc-table-container">
           <figure className="table-container-inner">
             <table key="bc-table" className="bc-table bc-table-web">
               <Headers
