@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { Client } from "@elastic/elasticsearch";
 import cliProgress from "cli-progress";
 import { fdir } from "fdir";
-import { JSDOM } from "jsdom";
+import * as cheerio from "cheerio";
 
 import { Doc, ProseSection } from "../libs/types/document.js";
 
@@ -359,21 +359,18 @@ export function htmlStrip(html: string): string {
     return "";
   }
 
-  const dom = new JSDOM(html);
-  const body = dom.window.document.body;
+  const $ = cheerio.load(html);
 
-  body.querySelectorAll("div.warning, div.hidden, p.hidden").forEach((tag) => {
-    tag.remove();
-  });
+  $("div.warning, div.hidden, p.hidden").remove();
 
-  body.querySelectorAll("div[style]").forEach((tag) => {
-    const style = tag.getAttribute("style");
+  $("div[style]").each((i, el) => {
+    const style = el.attribs["style"];
     if (style && DISPLAY_NONE_REGEX.test(style)) {
-      tag.remove();
+      $(el).remove();
     }
   });
 
-  const text = body.textContent.trim().replace(/\r\n?/g, "\n");
+  const text = $.text().trim().replace(/\r\n?/g, "\n");
 
   return text;
 }
