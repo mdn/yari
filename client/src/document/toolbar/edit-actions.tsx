@@ -4,6 +4,7 @@ import { CRUD_MODE_HOSTNAMES } from "../../env";
 import { Source } from "../../../../libs/types/document";
 
 import "./edit-actions.scss";
+import { useLocale } from "../../hooks";
 
 export function EditActions({ source }: { source: Source }) {
   const { folder, filename, github_url } = source;
@@ -50,7 +51,8 @@ export function EditActions({ source }: { source: Source }) {
     }
   }
 
-  const { locale = "en-US", "*": slug } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
 
   if (!folder) {
     return null;

@@ -1,10 +1,10 @@
 import React from "react";
-import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
-import { useIsServer } from "../hooks";
+import { useIsServer, useLocale } from "../hooks";
 
 import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "../../../libs/types/document";
@@ -65,7 +65,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();

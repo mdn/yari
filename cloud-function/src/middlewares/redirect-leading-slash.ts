@@ -20,9 +20,14 @@ export async function redirectLeadingSlash(
   next: NextFunction
 ) {
   const pathname = req.url;
-  if (pathname.startsWith("//")) {
-    return redirect(res, pathname.replace(/^\/+/g, "/"));
+  const normalizedPathname = normalizeLeadingSlash(pathname);
+  if (pathname !== normalizedPathname) {
+    return redirect(res, normalizedPathname);
   }
 
   next();
+}
+
+function normalizeLeadingSlash(pathname: string): string {
+  return pathname.replace(/^(\/|%2f)+/i, "/");
 }
