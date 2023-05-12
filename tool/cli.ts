@@ -1270,7 +1270,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   )
 
   .command(
-    "search_index",
+    "search-index",
     "Updates the Elasticsearch index with the contents of all index.json files in the directory"
   )
   .argument(
