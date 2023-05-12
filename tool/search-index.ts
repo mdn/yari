@@ -5,7 +5,6 @@ import cliProgress from "cli-progress";
 import { fdir } from "fdir";
 import { JSDOM } from "jsdom";
 
-import { MARKDOWN_FILENAME } from "../libs/constants/index.js";
 import { Doc, ProseSection } from "../libs/types/document.js";
 
 class IndexAliasError extends Error {
@@ -60,8 +59,8 @@ export async function searchIndex(
   const client = new Client({
     node: url,
   });
-  const health = await client.healthReport();
-  const status = health.status;
+  const health = await client.cluster.health();
+  const status = health.body.status;
   if (!["green", "yellow"].includes(status)) {
     throw new Error(`status ${status} not green or yellow`);
   }
@@ -88,10 +87,10 @@ export async function searchIndex(
     } else {
       const newIndexName = createIndexName();
       console.info(
-        `Deleting any possible existing index and creating a new one called ${documentIndex}`
+        `Deleting any possible existing index and creating a new one called ${newIndexName}`
       );
-      await client.indices.delete({ index: documentIndex }, { ignore: [404] });
-      await client.indices.create({ index: documentIndex });
+      await client.indices.delete({ index: newIndexName }, { ignore: [404] });
+      await client.indices.create({ index: newIndexName });
 
       return newIndexName;
     }
@@ -102,7 +101,7 @@ export async function searchIndex(
   const skipped = [];
 
   async function* generator() {
-    for (const file in files) {
+    for (const file of files) {
       // The reason for specifying the exact index name is that we might
       // be doing an update and if you don't specify it, elasticsearch_dsl
       // will fall back to using whatever Document._meta.Index automatically
@@ -237,7 +236,7 @@ async function walk(root: string) {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
-    .filter((filePath) => filePath.endsWith(MARKDOWN_FILENAME))
+    .filter((filePath) => filePath.endsWith("index.json"))
     .crawl(root);
   return api.withPromise();
 }
@@ -268,7 +267,7 @@ async function toSearch(file: string, index: string) {
     return;
   }
   const doc = data.doc;
-  const [locale, slug] = doc.mdn_url.substring(1).split("/docs/", 1);
+  const [locale, slug] = doc.mdn_url.substring(1).split("/docs/", 2);
   if (slug.endsWith("/Index")) {
     // We have a lot of pages that uses the `{{Index(...)}}` kumascript macro
     // which can produce enormous pages whose content is rather useless
