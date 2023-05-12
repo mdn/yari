@@ -78,6 +78,10 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
 
+      - name: Print information about build
+        run: |
+          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+
       - name: Print information about CPU
         run: cat /proc/cpuinfo
 
