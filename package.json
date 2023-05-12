@@ -181,7 +181,7 @@
     "file-loader": "^6.2.0",
     "foreman": "^3.0.1",
     "history": "^5.2.0",
-    "html-validate": "^7.16.0",
+    "html-validate": "^7.17.0",
     "html-webpack-plugin": "^5.5.1",
     "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
