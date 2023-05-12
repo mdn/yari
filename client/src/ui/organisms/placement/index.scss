@@ -118,16 +118,22 @@ section.place {
 
       .pong-note {
         grid-area: note;
-        width: 100%;
         height: 100%;
-        padding: 0 0.5rem;
-        text-align: end;
         display: block;
-        margin: 0;
-        border-right: 1px solid var(--border-primary);
-        border-left: 1px solid var(--border-primary);
-        background-color: var(--background-secondary);
-        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        border-top: none;
+        padding: 0 0.5rem;
+        margin: 0 0 0 auto;
+        color: var(--background-secondary);
+        background-color: var(--text-primary);
+        border-radius: 0 0 0.5rem 0.5rem;
+        text-decoration: none;
+
+        &:hover,
+        &:focus,
+        &:active {
+          text-decoration: underline;
+        }
       }
     }
 
@@ -139,11 +145,6 @@ section.place {
       text-align: end;
       display: block;
       margin: 0;
-      border-right: 1px solid var(--border-primary);
-      border-left: 1px solid var(--border-primary);
-      border-bottom: 1px solid var(--border-primary);
-      background-color: var(--background-secondary);
-      color: var(--text-primary);
     }
   }
 }
