@@ -48,6 +48,184 @@ type UpdateAliasAction =
 // the _YYYYMMDDHHMMSS date suffix.
 const INDEX_ALIAS_NAME = "mdn_docs";
 
+const settings = {
+  analysis: {
+    analyzer: {
+      textAnalyzer: {
+        tokenizer: "standard",
+        filter: [
+          "yari_word_delimiter",
+          "elision",
+          "lowercase",
+          "custom_stopwords",
+          "asciifolding",
+        ],
+        char_filter: [
+          "unicorns_char_filter",
+          "special_charater_name_char_filter",
+          "keep_html_char_filter",
+        ],
+      },
+    },
+    filter: {
+      yari_word_delimiter: {
+        type: "word_delimiter",
+        preserve_original: true,
+        split_on_case_change: true,
+        split_on_numerics: false,
+      },
+      custom_stopwords: {
+        type: "stop",
+        ignore_case: true,
+        // See https://www.peterbe.com/plog/english-stop-words-javascript-reserved-keywords
+        // It's basically all the regular English stop words minus the JavaScript
+        // reserved keywords (because JavaScript).
+        // But, we're also making some special exception for words that are important
+        // in JavaScript but aren't reserved keywords.
+        // These exceptions are...
+        //
+        //   "at"
+        //   https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
+        //   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
+        //   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+        //
+        //   "is"
+        //   https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/is
+        //   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+        //
+        //   "of"
+        //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
+        //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/of
+        //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/of
+        //
+        //   "to"
+        //   https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/To
+        //   https://developer.mozilla.org/en-US/docs/Web/API/CSSNumericValue/to
+        //
+        // If we discover that there are other words that are too important to our
+        // context, we can simply pluck them out of the list below.
+        stopwords: [
+          "a",
+          "an",
+          "and",
+          "are",
+          "as",
+          "be",
+          "but",
+          "by",
+          "into",
+          "it",
+          "no",
+          "not",
+          "on",
+          "or",
+          "such",
+          "that",
+          "the",
+          "their",
+          "then",
+          "there",
+          "these",
+          "they",
+          "was",
+          "will",
+        ],
+      },
+    },
+    char_filter: {
+      keep_html_char_filter: {
+        type: "pattern_replace",
+        pattern: "<([a-z]+)>",
+        // The magic here is that turning things like `<video>` to `_video_`
+        // and `<a>` to `_a_` means that it gets analyzed as its own token like that.
+        // This way you can search for `<a>` and find `<a>: The Anchor element`.
+        // But note that a search for `<section>` will *also* match
+        // `<nav>: The Navigation Section element` because `<section>` is turned in the
+        // the following two tokens: `['_section_', 'section']`.
+        // Not great.
+        // However, what if the user wants to find the page about the `<section>` HTML
+        // tag and they search for `section`. Then it's a good thing that that token
+        // expands to both forms.
+        // A more extreme variant would be something that doesn't get token delimited.
+        // For example:
+        //
+        //   `replacement="html$1html"`
+        //
+        // This would turn `<a>` to `htmlahtml` which means a search for `<a>` will
+        // work expected but a search for `video` wouldn't match
+        // the `<video>: The Video Embed element` page.
+        replacement: "_$1_",
+      },
+      special_charater_name_char_filter: {
+        type: "pattern_replace",
+        // In Java, this matches things like `yield*`, `Function*` and `data-*`.
+        // But not that it will also match things like: `x*y` or `*emphasis*` which
+        // is a "risk" worth accepting because event `*emphasis*` would get converted
+        // to `emphasisstar` which is more accurate than letting the standard tokenizer
+        // turn it into `emphasis` alone.
+        pattern: "(\\w+)-?\\*",
+        // Now a search for `yield*` becomes a search for `yieldstar` which won't
+        // get confused for `yield`.
+        // We *could* consider changing the replacement for `$1__starcharacter` which means
+        // it would tokenize `yield*` into `[yieldstarcharacter, yield, starcharacter]`
+        // which might capture people who didn't expect to find the page about `yield`
+        // when they searched for `yield*`.
+        replacement: "$1star",
+      },
+      unicorns_char_filter: {
+        type: "mapping",
+        mappings: [
+          // e.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+          // Also see https://github.com/mdn/yari/issues/3074
+          "?. => Optionalchaining",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
+          "??= => Logicalnullishassignment",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
+          "?? => Nullishcoalescingoperator",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment
+          "&&= => LogicalANDassignment",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment
+          "||= => LogicalORassignment",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Exponentiation_assignment
+          "**= => Exponentiationassignment",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Multiplication_assignment
+          "*= => Multiplicationassignment",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+          "--* => CustompropertiesCSSVariables",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Exponentiation
+          "** => 'Exponentiation",
+          // E.g. http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality
+          "=== => Strictequality",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_inequality
+          "!== => Strictinequality",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality
+          "== => Equality",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Inequality
+          "!= => Inequality",
+          // E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment
+          "= => Assignment",
+        ],
+      },
+    },
+  },
+};
+
+const mappings = {
+  title: {
+    type: "text",
+    required: true,
+    analyzer: "text_analyzer",
+  },
+  body: {
+    type: "text",
+    norms: false,
+  },
+  summary: { type: "text", analyzer: "text_analyzer" },
+  locale: { type: "keyword" },
+  slug: { type: "keyword" },
+  popularity: { type: "float" },
+};
+
 export async function searchIndex(
   buildroot: string,
   url: string,
@@ -90,7 +268,13 @@ export async function searchIndex(
         `Deleting any possible existing index and creating a new one called ${newIndexName}`
       );
       await client.indices.delete({ index: newIndexName }, { ignore: [404] });
-      await client.indices.create({ index: newIndexName });
+      await client.indices.create({
+        index: newIndexName,
+        body: {
+          settings,
+          mappings,
+        },
+      });
 
       return newIndexName;
     }
@@ -137,7 +321,7 @@ export async function searchIndex(
     );
     progressBar.start(countTodo, 0);
     return {
-      update: progressBar.increment,
+      update: (step: number) => progressBar.increment(step),
     };
   }
 
@@ -151,7 +335,15 @@ export async function searchIndex(
 
   const bar = getProgressbar();
 
-  const items = await parallelBulk(client, generator());
+  const items = await client.helpers.bulk({
+    datasource: generator(),
+    onDocument(doc) {
+      bar.update(1);
+      return {
+        index: doc,
+      };
+    },
+  });
 
   for (const item of items) {
     const { index } = item;
@@ -166,7 +358,6 @@ export async function searchIndex(
     }
 
     countDone += 1;
-    bar.update(1);
   }
 
   bar.update(skipped.length);
@@ -297,34 +488,6 @@ async function toSearch(file: string, index: string) {
     slug: slug.toLowerCase(),
     locale: locale.toLowerCase(),
   };
-}
-
-async function parallelBulk(
-  client: Client,
-  items: AsyncGenerator<
-    {
-      _index: string;
-      _id: string;
-      title: string;
-      body: string;
-      popularity: number;
-      summary: string;
-      slug: string;
-      locale: string;
-    },
-    void,
-    unknown
-  >
-) {
-  const body = [];
-
-  for await (const item of items) {
-    body.push(item);
-  }
-
-  const bulkResponse = await client.bulk({ body });
-
-  return bulkResponse.items;
 }
 
 function formatTime(seconds: number) {
