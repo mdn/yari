@@ -353,7 +353,7 @@ function round(x: number, digits: number) {
 
 const DISPLAY_NONE_REGEX = /display:\s*none/;
 
-function htmlStrip(html: string): string {
+export function htmlStrip(html: string): string {
   html = html.trim();
 
   if (!html) {

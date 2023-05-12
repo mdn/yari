@@ -42,7 +42,7 @@
     "start:static-server": "ts-node server/static.ts",
     "style-dictionary": "style-dictionary build -c sd-config.js",
     "stylelint": "stylelint \"**/*.scss\"",
-    "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:content && yarn test:testing",
+    "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:tool && yarn test:content && yarn test:testing",
     "test:client": "cd client && tsc --noEmit && cross-env NODE_ENV=test BABEL_ENV=test PUBLIC_URL='' node scripts/test.js --env=jsdom",
     "test:content": "yarn jest --rootDir content",
     "test:developing": "cross-env CONTENT_ROOT=mdn/content/files TESTING_DEVELOPING=true playwright test developing",
@@ -50,6 +50,7 @@
     "test:kumascript": "yarn jest --rootDir kumascript --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
+    "test:tool": "yarn jest --rootDir tool",
     "tool": "ts-node tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
