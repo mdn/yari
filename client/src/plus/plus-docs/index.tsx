@@ -3,6 +3,7 @@ import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import { useUserData } from "../../user-context";
 import "./index.scss";
+import { useLocale } from "../../hooks";
 
 function PlusDocsNav() {
   const userData = useUserData();
@@ -46,7 +47,7 @@ function RelatedTopics({
   heading: string;
   items: { slug: string; title: string }[];
 }) {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const { pathname: locationPathname } = useLocation();
 
   return (
@@ -81,7 +82,8 @@ function RelatedTopics({
 }
 
 function PlusDocs({ ...props }) {
-  const { locale = "en-US", "*": slug } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
 
   return (
     <StaticPage

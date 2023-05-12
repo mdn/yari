@@ -8,6 +8,7 @@ import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
+import { useLocale } from "../hooks";
 
 type ContributorDetails = {
   sections: [string];
@@ -23,7 +24,8 @@ type ContributorDetails = {
 };
 
 export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
-  const { "*": slug, locale = "en-US" } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 
