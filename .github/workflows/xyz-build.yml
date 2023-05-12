@@ -4,14 +4,6 @@ env:
   DEFAULT_NOTES: ""
 
 on:
-  push:
-    branches:
-      - main
-      - xyz-env
-    paths:
-      - .github/workflows/xyz-build.yml
-      - cloud-function/**
-
   workflow_dispatch:
     inputs:
       notes:
