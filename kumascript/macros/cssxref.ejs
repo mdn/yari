@@ -6,6 +6,10 @@
   This template handles CSS data types and CSS functions gracefully by
   automatically adding arrow brackets or round brackets, respectively.
 
+  For the ease of linking to CSS descriptors and functions, if only one
+  parameter is specified and it contains a slash, the displayed link name
+  will strip the last slash and any content before it.
+
   Parameters:
   $0 - API name to refer to
   $1 - name of the link to display (optional)
@@ -18,9 +22,8 @@
   {{cssxref("length")}} =>
       <a href="/en-US/docs/Web/CSS/length" title="The <length> CSS data type
       denotes..."><code>&lt;length&gt;</code></a>
-  {{cssxref("linear-gradient()")}} =>
-      <a href="/en-US/docs/Web/CSS/linear-gradient()" title="The CSS
-      linear-gradient() function creates..."><code>linear-gradient()</code></a>
+  {{cssxref("gradient/linear-gradient")}} =>
+      <a href="/en-US/docs/Web/CSS/gradient/linear-gradient"><code>linear-gradient()</code></a>
   {{cssxref("margin-top", "top margin")}} =>
       <a href="/en-US/docs/Web/CSS/margin-top" title="The margin-top CSS
       property of an element sets..."><code>top margin</code></a>
@@ -31,7 +34,7 @@
 var lang = env.locale;
 var url = "";
 var urlWithoutAnchor = "";
-var displayName = ($1 || $0);
+let displayName = ($1 || $0.slice($0.lastIndexOf("/") + 1));
 
 // Deal with CSS data types by removing <>
 var slug = $0.replace(/&lt;(.*)&gt;/g, '$1');
