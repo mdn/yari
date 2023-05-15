@@ -20,6 +20,7 @@ const loadAllLanguages = lazy(() => {
   // - C-like (clike)
   // - JavaScript (javascript, js)
   loadLanguages([
+    "apacheconf",
     "bash",
     "batch",
     "c",
