@@ -15,7 +15,7 @@ body.ReactModal__Body--open {
   position: fixed;
   right: 0;
   top: 0;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-modal-overlay);
 
   &.wait {
     &,
@@ -30,7 +30,7 @@ body.ReactModal__Body--open {
   flex-basis: 32.5rem;
   outline: none;
   padding: 1.5rem;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-modal-content);
 }
 
 .modal-header {

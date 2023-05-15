@@ -7,7 +7,7 @@
 .main-document-header-container {
   position: sticky;
   top: 0;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-main-header);
   @media screen and (min-width: $screen-md) {
     .top-banner.visible ~ &,
     .top-banner.loading ~ & {
@@ -645,10 +645,15 @@ kbd {
     display: flex;
     flex-direction: column;
   }
+
   max-height: var(--max-height);
   position: sticky;
   top: var(--offset);
+  z-index: var(--z-index-sidebar-mobile);
+
   @media screen and (min-width: $screen-md) {
+    z-index: auto;
+
     .sidebar {
       mask-image: linear-gradient(
         to bottom,
@@ -657,6 +662,7 @@ kbd {
         rgba(0, 0, 0, 0) 100%
       );
     }
+
     @media screen and not (min-height: $screen-height-place-limit) {
       overflow: auto;
     }
