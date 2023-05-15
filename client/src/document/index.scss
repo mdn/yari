@@ -230,6 +230,10 @@
         color: inherit;
       }
     }
+
+    blockquote > :last-child {
+      margin-bottom: 0;
+    }
   }
 
   @media screen and (min-width: $screen-sm) {
