@@ -41,6 +41,7 @@ import {
   MacroInvocationError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
+import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -217,6 +218,16 @@ interface MacroUsageReportActionParameters extends ActionParameters {
   };
 }
 
+interface WhatsdeployedActionParameters extends ActionParameters {
+  args: {
+    directory: string;
+  };
+  options: {
+    output: string;
+    dryRun: boolean;
+  };
+}
+
 function tryOrExit<T extends ActionParameters>(
   f: ({ options, ...args }: T) => unknown
 ): Action {
@@ -225,7 +236,11 @@ function tryOrExit<T extends ActionParameters>(
       await f({ options, ...args } as T);
     } catch (e) {
       const error = e as Error;
-      if (options.verbose || options.v) {
+      if (
+        options.verbose ||
+        options.v ||
+        (error instanceof Error && !error.message)
+      ) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -339,7 +354,7 @@ program
         redirect,
         dry: true,
       });
-      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.green(`Will delete ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
         console.log(
@@ -365,11 +380,40 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, {
+        const deletedDocs = Document.remove(slug, locale, {
           recursive,
           redirect,
         });
-        console.log(chalk.green(`Moved ${removed.length} documents.`));
+        console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));
+
+        // find references to the deleted document in content
+        console.log("Checking references...");
+        const referringFiles = [];
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const deleted of deletedDocs) {
+            const url = `/${locale}/docs/${deleted}`;
+            if (rawBody.includes(url)) {
+              referringFiles.push(`${document.url}`);
+            }
+          }
+        }
+
+        if (referringFiles.length) {
+          console.warn(
+            chalk.yellow(
+              `\n${referringFiles.length} files are referring to the deleted document. ` +
+                `Please update the following files to remove the links:\n\t${referringFiles.join(
+                  "\n\t"
+                )}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the deleted document.")
+          );
+        }
       }
     })
   )
@@ -1190,6 +1234,25 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
       const { deprecatedOnly, format, unusedOnly } = options;
       return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
+  )
+
+  .command(
+    "whatsdeployed",
+    "Create a whatsdeployed.json file by asking git for the date and commit hash of HEAD."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: process.cwd(),
+  })
+  .option("--output <output>", "Name of JSON file to create.", {
+    default: "whatsdeployed.json",
+  })
+  .option("--dry-run", "Prints the result without writing the file")
+  .action(
+    tryOrExit(async ({ args, options }: WhatsdeployedActionParameters) => {
+      const { directory } = args;
+      const { output, dryRun } = options;
+      return whatsdeployed(directory, output, dryRun);
     })
   );
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -52,7 +52,7 @@ function useSearchIndex(): readonly [
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
 
   const url = `/${locale}/search-index.json`;
 

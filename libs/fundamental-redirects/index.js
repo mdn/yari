@@ -1232,6 +1232,15 @@ const MISC_REDIRECT_PATTERNS = [
     ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
     { permanent: true }
   ),
+  // Content archived as part of the GCP migration.
+  redirect(
+    /^(?<prefix>diagrams|presentations|samples)(?<subPath>\/.*)?$/i,
+    ({ prefix, subPath = "" }) =>
+      `https://mdn.dev/archives/media/${prefix}${subPath}`,
+    {
+      permanent: false,
+    }
+  ),
 ];
 
 const REDIRECT_PATTERNS = [].concat(
@@ -1254,6 +1263,9 @@ const REDIRECT_PATTERNS = [].concat(
       ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
       { prependLocale: false, permanent: true }
     ),
+    localeRedirect(/advertising\/with_us/i, "/advertising", {
+      permanent: true,
+    }),
   ],
   LOCALE_PATTERNS,
   MISC_REDIRECT_PATTERNS

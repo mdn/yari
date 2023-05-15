@@ -14,6 +14,7 @@ import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   BUILD_OUT_ROOT,
+  SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,6 +30,7 @@ import { DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
+import { initSentry } from "./sentry.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -339,6 +341,10 @@ interface BuildArgsAndOptions {
     notLocale?: string[];
     sitemapIndex?: boolean;
   };
+}
+
+if (SENTRY_DSN_BUILD) {
+  initSentry(SENTRY_DSN_BUILD);
 }
 
 program

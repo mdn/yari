@@ -1,16 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  createSearchParams,
-  Link,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
 
 import { humanizeFlawName } from "../flaw-utils";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { useLocale } from "../hooks";
 
 interface DocumentPopularity {
   value: number;
@@ -156,7 +152,7 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
 }
 
 export default function AllFlaws() {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [filters] = useFiltersURL();
   const [lastData, setLastData] = useState<Data | null>(null);
 

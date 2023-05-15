@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useLocale } from "../../../hooks";
 import "./index.scss";
 import { useLocation } from "react-router-dom";
@@ -53,13 +52,7 @@ export function Footer() {
               <a href={`/en-US/about`}>About</a>
             </li>
             <li className="footer-nav-item">
-              <a
-                href="https://hacks.mozilla.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Hacks Blog
-              </a>
+              <a href={`/en-US/blog/`}>Blog</a>
             </li>
             <li className="footer-nav-item">
               <a
@@ -71,7 +64,7 @@ export function Footer() {
               </a>
             </li>
             <li className="footer-nav-item">
-              <a href={`/en-US/advertising/with_us`}>Advertise with us</a>
+              <a href={`/en-US/advertising`}>Advertise with us</a>
             </li>
           </ul>
         </div>
@@ -151,6 +144,15 @@ export function Footer() {
                 </a>
               </li>
             )}
+            <li className="footer-nav-item">
+              <a
+                href="https://hacks.mozilla.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacks Blog
+              </a>
+            </li>
           </ul>
         </div>
 

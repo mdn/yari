@@ -40,6 +40,12 @@ import { getRoot } from "../content/utils.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
+import {
+  allPostFrontmatter,
+  findPostLiveSampleBySlug,
+  findPostBySlug,
+  findPostPathBySlug,
+} from "../build/blog.js";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -60,6 +66,7 @@ const app = express();
 
 const bcdRouter = express.Router({ caseSensitive: true });
 
+// Note that this route will only get hit if .env has this: REACT_APP_BCD_BASE_URL=""
 bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
   const data = getBCDDataForPath(req.params.path);
   return data ? res.json(data) : res.status(404).send("BCD path not found");
@@ -77,16 +84,15 @@ app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
+const target = `${
+  ["developer.mozilla.org", "developer.allizom.org"].includes(PROXY_HOSTNAME)
+    ? "https://"
+    : "http://"
+}${PROXY_HOSTNAME}`;
 const proxy = FAKE_V1_API
   ? fakeV1APIRouter
   : createProxyMiddleware({
-      target: `${
-        ["developer.mozilla.org", "developer.allizom.org"].includes(
-          PROXY_HOSTNAME
-        )
-          ? "https://"
-          : "http://"
-      }${PROXY_HOSTNAME}`,
+      target,
       changeOrigin: true,
       // proxyTimeout: 20000,
       // timeout: 20000,
@@ -219,6 +225,34 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
+app.get("/:locale/blog/index.json", async (_, res) => {
+  const posts = await allPostFrontmatter({ includeUnpublished: true });
+  return res.json({ hyData: { posts } });
+});
+app.get("/:locale/blog/:slug/index.json", async (req, res) => {
+  const { slug } = req.params;
+  const data = await findPostBySlug(slug);
+  if (!data) {
+    return res.status(404).send("Nothing here 🤷‍♂️");
+  }
+  return res.json(data);
+});
+app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
+  const { slug, id } = req.params;
+  try {
+    return res.send(await findPostLiveSampleBySlug(slug, id));
+  } catch (e) {
+    return res.status(404).send(e.toString());
+  }
+});
+app.get("/:locale/blog/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  const p = findPostPathBySlug(slug);
+  if (p) {
+    return send(req, path.resolve(path.join(p, asset))).pipe(res);
+  }
+  return res.status(404).send("Nothing here 🤷‍♂️");
+});
 app.get("/*", async (req, res, ...args) => {
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there

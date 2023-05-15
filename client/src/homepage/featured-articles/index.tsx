@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { DEV_MODE } from "../../env";
-import { HydrationData } from "../../types/hydration";
+import { HydrationData } from "../../../../libs/types/hydration";
 
 import "./index.scss";
 
