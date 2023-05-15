@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.21.0](https://github.com/mdn/yari/compare/v2.20.3...v2.21.0) (2023-05-15)
+
+
+### Features
+
+* **build:** collect errors + warnings with @sentry/node ([#8571](https://github.com/mdn/yari/issues/8571)) ([f18d609](https://github.com/mdn/yari/commit/f18d609c6ddfda87efca707234f9d4a6c49798df))
+* **ci:** add xyz-build ([#8661](https://github.com/mdn/yari/issues/8661)) ([77df4fc](https://github.com/mdn/yari/commit/77df4fc754464e4ba241589d8f5f21d0a9dc8a23))
+
+
+### Bug Fixes
+
+* avoid leading double slash ([#8846](https://github.com/mdn/yari/issues/8846)) ([0fb0fa9](https://github.com/mdn/yari/commit/0fb0fa9008d8e866367a37288050ca1e40be443a))
+* **CSS:** last elements inside blockquotes do not need bottom margin ([#8855](https://github.com/mdn/yari/issues/8855)) ([80094ea](https://github.com/mdn/yari/commit/80094ea5054fec899b15a2d4e2310053eac542eb))
+* **macros/PWASidebar:** remove structural overview page ([#8845](https://github.com/mdn/yari/issues/8845)) ([93ac66f](https://github.com/mdn/yari/commit/93ac66fb39b7614c8f33f16a8dd4a84026acaa70))
+
 ## [2.20.3](https://github.com/mdn/yari/compare/v2.20.2...v2.20.3) (2023-05-11)
 
 
