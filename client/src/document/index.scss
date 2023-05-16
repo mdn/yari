@@ -634,13 +634,6 @@ kbd {
   --offset: var(--sticky-header-height);
   --max-height: calc(100vh - var(--offset));
 
-  @media screen and (max-width: $screen-lg) {
-    .mdn-cta-container ~ .document-page & {
-      // minus 3 rem to ~ account for the top banner
-      --offset: calc(var(--sticky-header-height) + 3rem);
-    }
-  }
-
   @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
     display: flex;
     flex-direction: column;
