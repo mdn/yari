@@ -36,7 +36,7 @@ export function TimeToRead({ readTime }: { readTime: number | undefined }) {
 
 export function PublishDate({ date }: { date: string }) {
   return (
-    <time className="date">
+    <time className="date" suppressHydrationWarning>
       {Intl.DateTimeFormat(undefined, { dateStyle: "long" }).format(
         new Date(date)
       )}
