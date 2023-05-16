@@ -110,6 +110,7 @@
     "open-editor": "^4.0.0",
     "prism-svelte": "^0.5.0",
     "prismjs": "^1.29.0",
+    "react-markdown": "^8.0.7",
     "react-modal": "^3.16.1",
     "read-chunk": "^4.0.3",
     "rehype-format": "^4.0.1",
