@@ -298,7 +298,7 @@ export function App(appProps: HydrationData) {
               path="/newsletter"
               element={
                 <StandardLayout>
-                  <Newsletter {...appProps} />
+                  <Newsletter />
                 </StandardLayout>
               }
             />

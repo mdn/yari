@@ -1,110 +1,105 @@
 import React, { useState } from "react";
 
 import { useIsServer } from "../hooks";
-import { Loading } from "../ui/atoms/loading";
+import { Button } from "../ui/atoms/button";
 import { MainContentContainer } from "../ui/atoms/page-content";
 
-interface LayoutProps {
-  withoutContainer?: boolean;
-  withSSR?: boolean;
-  children: React.ReactNode;
-}
+import "./index.scss";
 
-function Layout({
-  withoutContainer = false,
-  withSSR = false,
-  children,
-}: LayoutProps) {
-  const loading = <Loading message={`Loading…`} minHeight={800} />;
-  const isServer = useIsServer();
-  const inner = (
-    <>
-      {isServer ? (
-        withSSR ? (
-          children
-        ) : (
-          loading
-        )
-      ) : (
-        <React.Suspense fallback={loading}>{children}</React.Suspense>
-      )}
-    </>
-  );
-
-  return withoutContainer ? (
-    inner
-  ) : (
-    <>
-      <MainContentContainer>{inner}</MainContentContainer>
-    </>
-  );
-}
-
-export function Newsletter({ pageTitle, ...props }: { pageTitle?: string }) {
+export function Newsletter() {
   return (
-    <Layout>
+    <MainContentContainer className="main-newsletter">
       <SignUpForm />
-    </Layout>
+    </MainContentContainer>
   );
 }
 
 function SignUpForm() {
+  const isServer = useIsServer();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState("");
-  const subscribe = async () => {
-    await fetch("/api/v1/newsletter", {
-      body: JSON.stringify({ email }),
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setPending(true);
+    try {
+      const response = await fetch("/api/v1/newsletter", {
+        body: JSON.stringify({ email }),
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw Error();
+      }
+    } catch {
+      setError(true);
+      setPending(false);
+      return;
+    }
     setSubmitted(true);
   };
 
   return submitted ? (
-    <h1>Thank you</h1>
+    <>
+      <h1>Thanks!</h1>
+      <p>
+        If you haven't previously confirmed a subscription to a Mozilla-related
+        newsletter, you may have to do so. Please check your inbox or your spam
+        filter for an email from us.
+      </p>
+    </>
   ) : (
-    <form
-      onSubmit={(event: React.FormEvent) => {
-        event.preventDefault();
-        subscribe();
-      }}
-    >
-      <h1>Love MDN</h1>
-      <p>Get the MDN's newsletter and help us keep the web open and free.</p>
-      <fieldset className="p-newsletter-fieldset">
-        <label htmlFor="id_email">Your email address:</label>
+    <>
+      <h1>Stay Informed with MDN</h1>
+      <p>
+        Get the MDN newsletter and never miss an update on the latest web
+        development trends, tips, and best practices.
+      </p>
+      <form className="mdn-form mdn-form-big" onSubmit={submit}>
+        <div className="mdn-form-item">
+          <label htmlFor="newsletter_email">Your email address:</label>
 
-        <input
-          type="email"
-          name="email"
-          required={true}
-          placeholder="yourname@example.com"
-          className="p-newsletter-input"
-          id="id_email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            type="email"
+            name="email"
+            required={true}
+            placeholder="yourname@example.com"
+            id="newsletter_email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={pending}
+          />
+        </div>
 
-        <p>
-          <label htmlFor="privacy" className="p-newsletter-privacy-check">
+        <div className="mdn-form-item">
+          <label htmlFor="newsletter_privacy">
             <input
               type="checkbox"
-              id="privacy"
+              id="newsletter_privacy"
               name="privacy"
               required={true}
-              aria-required="true"
+              disabled={pending}
             />{" "}
-            I’m okay with Mozilla handling my info as explained in{" "}
-            <a href="/en-US/privacy/websites/">this Privacy Notice</a>
+            I’m okay with Mozilla handling my info as explained in this{" "}
+            <a
+              href="https://www.mozilla.org/en-US/privacy/websites/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Privacy Notice
+            </a>
           </label>
-        </p>
+        </div>
 
-        <button type="submit" id="newsletter-submit" className="button">
-          Sign Up Now
-        </button>
-      </fieldset>
-    </form>
+        <div className="mdn-form-item">
+          <Button buttonType="submit" isDisabled={pending || isServer}>
+            {error ? "Something went wrong, try again" : "Sign Up Now"}
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }
