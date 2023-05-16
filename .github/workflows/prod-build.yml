@@ -118,6 +118,9 @@ jobs:
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}

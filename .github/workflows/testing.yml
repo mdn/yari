@@ -28,6 +28,9 @@ jobs:
 
       - name: Install all yarn packages (ROOT)
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install all yarn packages (pwa)
         working-directory: client/pwa
@@ -59,6 +62,9 @@ jobs:
 
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Unit testing client
         run: yarn test:client
