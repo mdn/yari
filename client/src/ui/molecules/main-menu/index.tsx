@@ -77,6 +77,11 @@ export default function MainMenu({ isOpenOnMobile }) {
             toggleMenu={toggleMenu}
           />
         )}
+        <li className="top-level-entry-container">
+          <a className="top-level-entry menu-link" href="/en-US/blog/">
+            Blog
+          </a>
+        </li>
       </ul>
     </nav>
   );

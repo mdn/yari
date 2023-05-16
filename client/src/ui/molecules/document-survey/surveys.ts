@@ -24,6 +24,7 @@ enum SurveyBucket {
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
+  DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
 }
 
 enum SurveyKey {
@@ -35,18 +36,19 @@ enum SurveyKey {
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
+  DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
 }
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.WEB_COMPONENTS_2023,
-    bucket: SurveyBucket.WEB_COMPONENTS_2023,
-    show: (doc: Doc) => /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7243449/MDN-Web-Components-Short-Survey",
+    key: SurveyKey.DISCOVERABILITY_2023,
+    bucket: SurveyBucket.DISCOVERABILITY_2023,
+    show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/7312179/MDN-Discoverability-User-Satisfaction",
     teaser:
-      "The Web Developer Experience CG wants to better understand developers’ needs concerning web components.",
-    question: "What’s your experience with Web Components?",
-    ...survey_duration(SurveyBucket.WEB_COMPONENTS_2023),
-    ...survey_rates(SurveyKey.WEB_COMPONENTS_2023),
+      "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
+    question: "What’s your experience on MDN Web Docs?",
+    ...survey_duration(SurveyBucket.DISCOVERABILITY_2023),
+    ...survey_rates(SurveyKey.DISCOVERABILITY_2023),
   },
 ];

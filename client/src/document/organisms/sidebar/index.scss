@@ -142,7 +142,6 @@
     right: 0;
     top: var(--offset);
     transform: translateX(-100%);
-    z-index: var(--z-index-top);
 
     .sidebar-inner {
       background: var(--background-primary);
@@ -159,7 +158,6 @@
       transition: 0.2s linear transform;
       width: 80vw;
       will-change: transform;
-      z-index: var(--z-index-top);
 
       .sidebar-inner-nav {
         display: contents;
@@ -205,7 +203,6 @@
       transition: opacity 0.2s linear;
       width: 100%;
       will-change: opacity;
-      z-index: var(--z-index-mid);
     }
 
     &.is-animating {

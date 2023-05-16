@@ -4,14 +4,7 @@ import * as url from "node:url";
 import { NextFunction, Request, Response } from "express";
 
 import { slugToFolder } from "../internal/slug-utils/index.js";
-
-// These are the only extensions in client/build/*/docs/*.
-// `find client/build -type f | grep docs | xargs basename | sed 's/.*\.\([^.]*\)$/\1/' | sort | uniq`
-const ASSET_REGEXP = /\.(gif|html|jpeg|jpg|json|png|svg|txt)$/i;
-
-function isAsset(url: string) {
-  return ASSET_REGEXP.test(url);
-}
+import { isAsset } from "../utils.js";
 
 export async function resolveIndexHTML(
   req: Request,

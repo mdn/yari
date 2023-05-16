@@ -75,6 +75,13 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          token: ${{ secrets.MDN_STUDIO_PAT }}
+
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
       # trigger we rely on the inputs and only the inputs. That way, the user can
@@ -151,6 +158,8 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          BASE_URL: "https://developer.mozilla.org"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -195,10 +204,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_WEB_COMPONENTS_2023: 1680004800000 # (new Date("2023-03-28 12:00:00Z").getTime())
-          REACT_APP_SURVEY_END_WEB_COMPONENTS_2023: 1680264000000 # (new Date("2023-03-31 12:00:00Z").getTime())
-          REACT_APP_SURVEY_RATE_FROM_WEB_COMPONENTS_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_WEB_COMPONENTS_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_DISCOVERABILITY_2023: 1681992000000 # (new Date("2023-04-20 12:00:00Z").getTime())
+          REACT_APP_SURVEY_END_DISCOVERABILITY_2023: 1682424000000 # (new Date("2023-04-25 12:00:00Z").getTime())
+          REACT_APP_SURVEY_RATE_FROM_DISCOVERABILITY_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_DISCOVERABILITY_2023: 0.10 # 10%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -209,6 +218,11 @@ jobs:
 
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
+
+          # Sentry.
+          SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
+          SENTRY_ENVIRONMENT: prod
+          SENTRY_RELEASE: ${{ github.sha }}
 
         run: |
 
@@ -241,45 +255,20 @@ jobs:
           # Generate sitemap index file
           yarn build --sitemap-index
 
+          # Build the blog
+          yarn build:blog
+
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
-      - name: Deploy with deployer
-        if: ${{ ! (vars.SKIP_BUILD || vars.SKIP_AWS) }}
+      - name: Update search index
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
-          GITHUB_SHA: ${{ env.GITHUB_SHA }}
-          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
-          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
-
-          # Set the CONTENT_ROOT first
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-
-          DEPLOYER_BUCKET_NAME: mdn-content-prod
-
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
-
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
-
-          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_SITE_ID }}
-          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_NETWORK_ID }}
-          SIGN_SECRET: ${{ secrets.DEPLOYER_PROD_SIGN_SECRET }}
-
         run: |
-
-          # Info about which CONTENT_* environment variables were set and to what.
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-
           cd deployer
-
-          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
-
-          poetry run deployer upload --prune ../client/build
           poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
@@ -294,11 +283,11 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Sync Yari Content
+      - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/static
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -374,37 +363,6 @@ jobs:
           SLACK_FOOTER: "Powered by prod-build.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  invalidate:
-    environment: prod
-    needs: build
-    if: ${{ ! vars.SKIP_INVALIDATE }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS Credentials
-        if: ${{ ! vars.SKIP_AWS }}
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Invalidate AWS CloudFront CDN
-        if: ${{ ! vars.SKIP_AWS }}
-        env:
-          DISTRIBUTION: E2ZY2DGUN70EMI
-          PATHS: /*
-        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
-
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          token_format: access_token
-          service_account: deploy-prod-prod-mdn-ingress@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
-          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-
       - name: Invalidate Google Cloud CDN
-        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
+        if: ${{ ! vars.SKIP_INVALIDATE }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async

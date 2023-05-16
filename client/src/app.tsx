@@ -20,12 +20,13 @@ import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
-import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
+import { TopPlacement } from "./ui/organisms/placement";
+import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
@@ -39,8 +40,6 @@ function Layout({ pageType, children }) {
     getCategoryByPathname(pathname)
   );
 
-  const isServer = useIsServer();
-
   React.useEffect(() => {
     setCategory(getCategoryByPathname(pathname));
   }, [pathname]);
@@ -48,12 +47,12 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {!isServer && <Banner />}
       <div
         className={`page-wrapper  ${
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
+        <TopPlacement />
         {pageType !== "document-page" && (
           <TopNavigation extraClasses="main-document-header-container" />
         )}
@@ -159,6 +158,14 @@ export function App(appProps: HydrationData) {
         time it hits any React code.
        */}
       <Route path="/" element={homePage} />
+      <Route
+        path="/en-US/blog/*"
+        element={
+          <StandardLayout extraClasses="blog">
+            <Blog {...appProps} />
+          </StandardLayout>
+        }
+      />
       <Route
         path="/:locale/*"
         element={

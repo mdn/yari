@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useGA } from "../../../../ga-context";
 import { Translation } from "../../../../../../libs/types/document";
@@ -8,6 +8,7 @@ import { Submenu } from "../../../molecules/submenu";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
+import { useLocale } from "../../../../hooks";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -25,7 +26,7 @@ export function LanguageMenu({
   const ga = useGA();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   function translateURL(destinationLocale: string) {

@@ -1,24 +1,31 @@
 import { Client } from "@adzerk/decision-sdk";
 import { Coder } from "./coding.js";
 
-type Payload =
-  | {
-      click: string;
-      view: string;
-      fallback: {
-        click: string;
-        view: string;
-        image: string;
-        copy: string;
-        by: string;
-      };
-    }
-  | {
-      copy: string;
-      image: string;
-      click: string;
-      view: string;
-    };
+type Fallback = {
+  click: string;
+  view: string;
+  copy: string;
+  image: string;
+  by: string;
+};
+
+type Colors = {
+  textColor?: string;
+  backgroundColor?: string;
+  ctaTextColor?: string;
+  ctaBackgroundColor?: string;
+};
+
+type Payload = {
+  status: Status;
+  click: string;
+  view: string;
+  copy?: string;
+  image?: string;
+  fallback?: Fallback;
+  cta?: string;
+  colors?: Colors;
+};
 
 export function createPongGetHandler(
   client: Client,

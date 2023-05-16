@@ -4,14 +4,16 @@
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
-:root {
-  --sticky-header-height: var(--main-document-header-height);
-}
-
 .main-document-header-container {
   position: sticky;
   top: 0;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-main-header);
+  @media screen and (min-width: $screen-md) {
+    .top-banner.visible ~ &,
+    .top-banner.loading ~ & {
+      top: var(--top-banner-height);
+    }
+  }
 }
 
 .main-page-content {
@@ -67,7 +69,7 @@
   }
 
   /* reduce the top margin of the interactive example heading */
-  h2:first-of-type {
+  section h2:first-of-type {
     margin-top: 2rem;
   }
 
@@ -227,6 +229,10 @@
       .button-wrap {
         color: inherit;
       }
+    }
+
+    blockquote > :last-child {
+      margin-bottom: 0;
     }
   }
 
@@ -625,13 +631,13 @@ kbd {
 }
 
 .sidebar-container {
-  --offset: var(--main-document-header-height);
+  --offset: var(--sticky-header-height);
   --max-height: calc(100vh - var(--offset));
 
   @media screen and (max-width: $screen-lg) {
     .mdn-cta-container ~ .document-page & {
       // minus 3 rem to ~ account for the top banner
-      --offset: calc(var(--main-document-header-height) + 3rem);
+      --offset: calc(var(--sticky-header-height) + 3rem);
     }
   }
 
@@ -639,10 +645,15 @@ kbd {
     display: flex;
     flex-direction: column;
   }
+
   max-height: var(--max-height);
   position: sticky;
-  top: 5rem;
+  top: var(--offset);
+  z-index: var(--z-index-sidebar-mobile);
+
   @media screen and (min-width: $screen-md) {
+    z-index: auto;
+
     .sidebar {
       mask-image: linear-gradient(
         to bottom,
@@ -651,6 +662,7 @@ kbd {
         rgba(0, 0, 0, 0) 100%
       );
     }
+
     @media screen and not (min-height: $screen-height-place-limit) {
       overflow: auto;
     }
@@ -665,7 +677,7 @@ kbd {
       display: flex;
       flex-direction: column;
       gap: 0;
-      height: calc(100vh - var(--main-document-header-height));
+      height: calc(100vh - var(--sticky-header-height));
       mask-image: linear-gradient(
         to bottom,
         rgba(0, 0, 0, 0) 0%,
@@ -674,7 +686,7 @@ kbd {
       );
       overflow: auto;
       position: sticky;
-      top: var(--main-document-header-height);
+      top: var(--sticky-header-height);
 
       .place {
         margin: 1rem 0;
