@@ -171,9 +171,6 @@ section.place {
 
   border-bottom: 1px solid var(--border-primary);
   height: var(--top-banner-height);
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-top-banner);
 
   &.fallback {
     position: initial;
