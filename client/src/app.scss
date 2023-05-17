@@ -84,7 +84,6 @@
   --z-index-a11y: 10000;
   --z-index-modal-content: 801;
   --z-index-modal-overlay: 800;
-  --z-index-top-banner: 701;
   --z-index-main-header: 700;
   --z-index-sidebar-mobile: 600;
   --z-index-mid: 500;
@@ -106,16 +105,6 @@
   --sticky-header-height: calc(
     var(--top-nav-height) + var(--article-actions-container-height) + 2px
   );
-}
-
-@media screen and (min-width: $screen-md) {
-  .top-banner.visible ~ *,
-  .top-banner.loading ~ * {
-    --sticky-header-height: calc(
-      var(--top-nav-height) + var(--article-actions-container-height) +
-        var(--top-banner-outer-height) + 2px
-    );
-  }
 }
 
 @media screen and (min-width: $screen-md) {

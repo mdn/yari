@@ -8,12 +8,6 @@
   position: sticky;
   top: 0;
   z-index: var(--z-index-main-header);
-  @media screen and (min-width: $screen-md) {
-    .top-banner.visible ~ &,
-    .top-banner.loading ~ & {
-      top: var(--top-banner-height);
-    }
-  }
 }
 
 .main-page-content {
