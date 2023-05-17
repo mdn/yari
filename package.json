@@ -66,7 +66,7 @@
     "@sentry/integrations": "^7.52.1",
     "@sentry/node": "^7.52.1",
     "@use-it/interval": "^1.0.0",
-    "@vscode/ripgrep": "^1.15.2",
+    "@vscode/ripgrep": "^1.15.3",
     "@webref/css": "^5.4.4",
     "accept-language-parser": "^1.5.0",
     "async": "^3.2.4",
