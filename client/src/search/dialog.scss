@@ -1,0 +1,18 @@
+$dialog-height: min(500px, 100vh);
+$border-width: 1px;
+
+.search-dialog {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  top: calc(--top-banner-outer-height + 1rem);
+  border-width: $border-width;
+  height: $dialog-height;
+  padding: 0;
+  width: 766px;
+  z-index: var(--z-index-top);
+
+  &::backdrop {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
