@@ -1,8 +1,8 @@
-import { Flaw } from ".";
+import { Flaw } from "./index.js";
 
-import { Document, Translation } from "../../content";
-import { DEFAULT_LOCALE } from "../../libs/constants";
-import { Doc } from "../../libs/types";
+import { Document, Translation } from "../../content/index.js";
+import { DEFAULT_LOCALE } from "../../libs/constants/index.js";
+import { Doc } from "../../libs/types/document.js";
 import * as cheerio from "cheerio";
 
 export function injectTranslationDifferences(

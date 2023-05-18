@@ -34,6 +34,10 @@ export const NEWSLETTER_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_NEWSLETTER_ENABLED || "false")
 );
 
+export const PLACEMENT_ENABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_PLACEMENT_ENABLED || "false")
+);
+
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5Y_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10M_PLAN}`;
@@ -50,6 +54,9 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+
+export const BCD_BASE_URL =
+  process.env.REACT_APP_BCD_BASE_URL ?? "https://bcd.developer.allizom.org";
 
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||

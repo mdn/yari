@@ -1,8 +1,16 @@
-export * as Document from "./document";
-export * as Translation from "./translation";
-export { getPopularities } from "./popularities";
-export * as Redirect from "./redirect";
-export * as Image from "./image";
-export { buildURL, memoize, slugToFolder, execGit, getRoot } from "./utils";
-export { resolveFundamental } from "../libs/fundamental-redirects";
-export { translationsOf } from "./translations";
+export * as Document from "./document.js";
+export * as Translation from "./translation.js";
+export { getPopularities } from "./popularities.js";
+export * as Redirect from "./redirect.js";
+export * as Image from "./image.js";
+export {
+  buildURL,
+  memoize,
+  slugToFolder,
+  execGit,
+  getRoot,
+  urlToFolderPath,
+  MEMOIZE_INVALIDATE,
+} from "./utils.js";
+export { resolveFundamental } from "../libs/fundamental-redirects/index.js";
+export { translationsOf } from "./translations.js";

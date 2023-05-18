@@ -1,5 +1,3 @@
-import * as BCD from "@mdn/browser-compat-data/types";
-
 export interface Source {
   folder: string;
   github_url: string;
@@ -127,6 +125,7 @@ export type Toc = {
 
 export interface DocMetadata {
   title: string;
+  short_title: string;
   locale: string;
   native: string;
   pageTitle: string;
@@ -147,11 +146,13 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
+  baseline?: WebFeatureStatus;
   hash?: string;
 }
 
 export interface Doc extends DocMetadata {
   sidebarHTML: string;
+  sidebarMacro?: string;
   toc: Toc[];
   body: Section[];
 }
@@ -204,5 +205,33 @@ export interface BCDSection {
     title: string;
     isH3: boolean;
     query: string;
+  };
+}
+
+export interface NewsItem {
+  url: string;
+  title: string;
+  author?: string;
+  source: {
+    name: string;
+    url: string;
+  };
+  published_at: string;
+}
+
+export interface WebFeature {
+  compat_features?: string[];
+  status?: WebFeatureStatus;
+  spec?: unknown;
+}
+
+export interface WebFeatureStatus {
+  is_baseline?: boolean;
+  since?: string;
+  support?: {
+    chrome?: string | boolean;
+    edge?: string | boolean;
+    firefox?: string | boolean;
+    safari?: string | boolean;
   };
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -19,8 +19,10 @@ type Item = {
   title: string;
 };
 
+type FlexItem = [index: number, title: string, slugTail: string];
+
 type SearchIndex = {
-  flex: any;
+  flex: FlexItem[];
   items: null | Item[];
 };
 
@@ -50,7 +52,7 @@ function useSearchIndex(): readonly [
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
 
   const url = `/${locale}/search-index.json`;
 
@@ -71,7 +73,13 @@ function useSearchIndex(): readonly [
       return;
     }
     const gather = async () => {
-      const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
+      const flex = data.map(
+        ({ title, url }, i): FlexItem => [
+          i,
+          title.toLowerCase(),
+          (url.split("/").pop() as string).toLowerCase(),
+        ]
+      );
 
       setSearchIndex({
         flex,
@@ -213,11 +221,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
+    const inputValueLC = inputValue.toLowerCase().trim();
     const q = splitQuery(inputValue);
-    const indexResults: number[] = searchIndex.flex
+    const indexResults = searchIndex.flex
       .filter(([_, title]) => q.every((q) => title.includes(q)))
-      .map(([i]) => i)
+      .map(([index, title, slugTail]) => {
+        const exact = Number([title, slugTail].includes(inputValueLC));
+        return [exact, index];
+      })
+      .sort(([aExact], [bExact]) => bExact - aExact) // Boost exact matches.
+      .map(([_, i]) => i)
       .slice(0, limit);
+
     return indexResults.map(
       (index: number) => (searchIndex.items || [])[index] as ResultItem
     );
@@ -244,7 +259,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     getInputProps,
     getItemProps,
     getMenuProps,
-    getComboboxProps,
 
     highlightedIndex,
     isOpen,
@@ -439,31 +453,27 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   return (
     <form
       action={formAction}
-      {...getComboboxProps({
-        ref: formRef as any, // downshift's types hardcode it as a div
-        className: "search-form search-widget",
-        id: formId,
-        role: "search",
-        onSubmit: (e) => {
-          // This comes into effect if the input is completely empty and the
-          // user hits Enter, which triggers the native form submission.
-          // When something *is* entered, the onKeyDown event is triggered
-          // on the <input> and within that handler you can
-          // access `event.key === 'Enter'` as a signal to submit the form.
-          if (!inputValue.trim()) {
-            e.preventDefault();
-          }
-        },
-        onFocus: () => {
-          onChangeIsFocused(true);
-        },
-        onBlur: (e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            // focus has moved outside of container
-            onChangeIsFocused(false);
-          }
-        },
-      })}
+      ref={formRef as any} // downshift's types hardcode it as a div
+      className={"search-form search-widget"}
+      id={formId}
+      role={"search"}
+      onSubmit={(e) => {
+        // This comes into effect if the input is completely empty and the
+        // user hits Enter, which triggers the native form submission.
+        // When something *is* entered, the onKeyDown event is triggered
+        // on the <input> and within that handler you can
+        // access `event.key === 'Enter'` as a signal to submit the form.
+        if (!inputValue.trim()) {
+          e.preventDefault();
+        }
+      }}
+      onFocus={() => onChangeIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          // focus has moved outside of container
+          onChangeIsFocused(false);
+        }
+      }}
     >
       <label
         id={`${id}-label`}

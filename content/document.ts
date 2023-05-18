@@ -6,18 +6,22 @@ import fm from "front-matter";
 import yaml from "js-yaml";
 import { fdir, PathsOutput } from "fdir";
 
-import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
+import {
+  CONTENT_TRANSLATED_ROOT,
+  CONTENT_ROOT,
+  ROOTS,
+} from "../libs/env/index.js";
 import {
   ACTIVE_LOCALES,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} from "../libs/constants";
-import { isValidLocale } from "../libs/locale-utils";
-import { getPopularities } from "./popularities";
-import { getWikiHistories } from "./wikihistories";
-import { getGitHistories } from "./githistories";
-import { childrenFoldersForPath } from "./document-paths";
+} from "../libs/constants/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import { getPopularities } from "./popularities.js";
+import { getWikiHistories } from "./wikihistories.js";
+import { getGitHistories } from "./githistories.js";
+import { childrenFoldersForPath } from "./document-paths.js";
 
 import {
   buildURL,
@@ -28,10 +32,11 @@ import {
   urlToFolderPath,
   toPrettyJSON,
   MEMOIZE_INVALIDATE,
-} from "./utils";
-export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
-import * as Redirect from "./redirect";
-import { DocFrontmatter } from "../libs/types";
+} from "./utils.js";
+import * as Redirect from "./redirect.js";
+import { DocFrontmatter } from "../libs/types/document.js";
+
+export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
 
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -138,7 +143,12 @@ export function saveFile(
     throw new Error("newSlug can not contain the '#' character");
   }
 
-  const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
+  const folderPath = path.dirname(filePath);
+  fs.mkdirSync(folderPath, { recursive: true });
+
+  const combined = `---\n${yaml.dump(saveMetadata, {
+    quotingType: '"',
+  })}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -152,8 +162,6 @@ export function trimLineEndings(string) {
 export function createHTML(html: string, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
-  fs.mkdirSync(folderPath, { recursive: true });
-
   saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
   return folderPath;
 }
@@ -164,8 +172,6 @@ export function createMarkdown(
   root: string | null = null
 ) {
   const folderPath = getFolderPath(metadata, root);
-
-  fs.mkdirSync(folderPath, { recursive: true });
 
   saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
@@ -242,14 +248,14 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     locale = extractLocale(folder);
   }
 
-  if (filePath.includes(" ")) {
+  if (folder.includes(" ")) {
     throw new Error(
       `Folder contains whitespace which is not allowed (${util.inspect(
         filePath
       )})`
     );
   }
-  if (filePath.includes("\u200b")) {
+  if (folder.includes("\u200b")) {
     throw new Error(
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );
@@ -439,7 +445,7 @@ export function findByURL(
   return doc;
 }
 
-export function findAll({
+export async function findAll({
   files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
@@ -510,7 +516,8 @@ export function findAll({
         return true;
       })
       .crawl(root);
-    filePaths.push(...(api.sync() as PathsOutput));
+    const output: PathsOutput = await api.withPromise();
+    filePaths.push(...output);
   }
   return {
     count: filePaths.length,

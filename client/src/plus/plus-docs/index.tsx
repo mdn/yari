@@ -3,6 +3,7 @@ import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import { useUserData } from "../../user-context";
 import "./index.scss";
+import { useLocale } from "../../hooks";
 
 function PlusDocsNav() {
   const userData = useUserData();
@@ -15,8 +16,8 @@ function PlusDocsNav() {
           title: "Overview",
         },
         {
-          slug: "plus/docs/features/notifications",
-          title: "Notifications",
+          slug: "plus/docs/features/updates",
+          title: "Updates",
         },
         {
           slug: "plus/docs/features/collections",
@@ -46,7 +47,7 @@ function RelatedTopics({
   heading: string;
   items: { slug: string; title: string }[];
 }) {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const { pathname: locationPathname } = useLocation();
 
   return (
@@ -81,7 +82,8 @@ function RelatedTopics({
 }
 
 function PlusDocs({ ...props }) {
-  const { locale = "en-US", "*": slug } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
 
   return (
     <StaticPage
@@ -90,7 +92,6 @@ function PlusDocs({ ...props }) {
         locale,
         slug: `plus/docs/${slug}`,
         title: MDN_PLUS_TITLE,
-        parents: [{ uri: `/${locale}/plus`, title: MDN_PLUS_TITLE }],
         sidebarHeader: <PlusDocsNav />,
         fallbackData: props.hyData ? props : undefined,
       }}

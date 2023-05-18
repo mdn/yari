@@ -1,13 +1,23 @@
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
+import { PLACEMENT_ENABLED } from "../../../env";
+import { SidePlacement } from "../../../ui/organisms/placement";
 
-export function SidebarContainer({ doc, children }) {
+export function SidebarContainer({
+  doc,
+  label,
+  children,
+}: {
+  doc: any;
+  label?: string;
+  children: React.ReactNode;
+}) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
 
@@ -32,9 +42,9 @@ export function SidebarContainer({ doc, children }) {
     const sidebar = document.querySelector("#sidebar-quicklinks");
     const currentSidebarItem = sidebar?.querySelector("em");
     if (sidebar && currentSidebarItem) {
-      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach((n) =>
+      [sidebar, sidebar.querySelector(".sidebar-inner-nav")].forEach((n) =>
         n?.scrollTo({
-          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+          top: currentSidebarItem.offsetTop - window.innerHeight / 4,
         })
       );
     }
@@ -42,18 +52,25 @@ export function SidebarContainer({ doc, children }) {
 
   return (
     <>
-      <aside id="sidebar-quicklinks" className={classes}>
+      <aside
+        id="sidebar-quicklinks"
+        className={classes}
+        data-macro={doc.sidebarMacro}
+      >
         <Button
           extraClasses="backdrop"
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Collapse sidebar"
         />
-        <nav className="sidebar-inner">
-          <div className="in-nav-toc">
-            {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+        <nav aria-label={label} className="sidebar-inner">
+          <div className="sidebar-inner-nav">
+            <div className="in-nav-toc">
+              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+            </div>
+            {children}
           </div>
-          {children}
+          {PLACEMENT_ENABLED && <SidePlacement />}
         </nav>
       </aside>
     </>
@@ -63,10 +80,9 @@ export function SidebarContainer({ doc, children }) {
 export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
     return (
-      <SidebarContainer doc={doc}>
+      <SidebarContainer doc={doc} label="Related Topics">
         {doc.sidebarHTML && (
           <>
-            <h4 className="sidebar-heading">Related Topics</h4>
             <div
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,

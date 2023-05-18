@@ -13,7 +13,7 @@ import fse from "fs-extra";
 import path from "node:path";
 import { execSync } from "node:child_process";
 
-import tempy from "tempy";
+import { temporaryDirectory } from "tempy";
 
 const CONTENT_DIR = path.resolve(path.join("testing", "content"));
 const BUILD_DIR = path.resolve(path.join("client", "build"));
@@ -60,7 +60,7 @@ describe("fixing flaws", () => {
 
   beforeEach(() => {
     // Copy the whole content directory
-    tempdir = tempy.directory();
+    tempdir = temporaryDirectory();
     tempContentDir = path.join(tempdir, "content");
     fse.copySync(CONTENT_DIR, tempContentDir);
     populateFilesBefore(tempContentDir);
@@ -99,10 +99,10 @@ describe("fixing flaws", () => {
       .split("\n")
       .filter((line) => regexPattern.test(line));
     expect(dryRunNotices).toHaveLength(4);
-    expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
-    expect(dryRunNotices[3]).toContain(pattern);
+    expect(dryRunNotices[0]).toContain(pattern);
+    expect(dryRunNotices[1]).toContain(path.join(pattern, "bad_pre_tags"));
+    expect(dryRunNotices[2]).toContain(path.join(pattern, "deprecated_macros"));
+    expect(dryRunNotices[3]).toContain(path.join(pattern, "images"));
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles).toHaveLength(0);
   });
@@ -153,7 +153,6 @@ describe("fixing flaws", () => {
     );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
-    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
     // Broken links that get fixed.
     expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
     expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");

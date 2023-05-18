@@ -1,6 +1,7 @@
 import { JSDOM } from "jsdom";
+import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 const SUMMARIES = {
   "en-US": [
@@ -8,7 +9,6 @@ const SUMMARIES = {
     "Concepts",
     "User interface",
     "How to",
-    "Firefox differentiators",
     "JavaScript APIs",
     "Manifest keys",
     "Extension Workshop",
@@ -19,7 +19,6 @@ const SUMMARIES = {
     "Concepts",
     "Interface utilisateur",
     "Mode d'emploi",
-    "Différences de Firefox",
     "Les API JavaScript",
     "Clés de manifeste",
     "Atelier des extensions",
@@ -30,7 +29,6 @@ const SUMMARIES = {
     "概念",
     "ユーザーインターフェイス",
     "逆引きリファレンス",
-    "Firefox differentiators",
     "JavaScript API 群",
     "Manifest keys",
     "Extension Workshop",
@@ -41,7 +39,6 @@ const SUMMARIES = {
     "概念",
     "用户界面",
     "怎么做",
-    "Firefox differentiators",
     "JavaScript APIs",
     "Manifest keys",
     "Extension Workshop",
@@ -52,7 +49,6 @@ const SUMMARIES = {
     "Conceptos",
     "Interfaz de usuario",
     "Cómo hacer",
-    "Diferenciadores de Firefox",
     "API de JavaScript",
     "Claves de manifiesto",
     "Taller de Extensión",

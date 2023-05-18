@@ -2,23 +2,26 @@ import path from "node:path";
 import chalk from "chalk";
 import { RequestError } from "got";
 
-import { Document } from "../../content";
-import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../../libs/constants";
-import { DEFAULT_LOCALE } from "../../libs/constants";
+import { Document } from "../../content/index.js";
+import {
+  FLAW_LEVELS,
+  VALID_FLAW_CHECKS,
+  DEFAULT_LOCALE,
+} from "../../libs/constants/index.js";
 import {
   replaceMatchesInText,
   replaceMatchingLinksInMarkdown,
-} from "../matches-in-text";
-import { forceExternalURL, downloadAndResizeImage } from "../utils";
-import { getBadBCDQueriesFlaws } from "./bad-bcd-queries";
-import { getBrokenLinksFlaws } from "./broken-links";
-import { getHeadingLinksFlaws } from "./heading-links";
-import { getPreTagFlaws } from "./pre-tags";
-export { injectSectionFlaws } from "./sections";
-import { getUnsafeHTMLFlaws } from "./unsafe-html";
-import { injectTranslationDifferences } from "./translation-differences";
+} from "../matches-in-text.js";
+import { forceExternalURL, downloadAndResizeImage } from "../utils.js";
+import { getBadBCDQueriesFlaws } from "./bad-bcd-queries.js";
+import { getBrokenLinksFlaws } from "./broken-links.js";
+import { getHeadingLinksFlaws } from "./heading-links.js";
+import { getPreTagFlaws } from "./pre-tags.js";
+export { injectSectionFlaws } from "./sections.js";
+import { getUnsafeHTMLFlaws } from "./unsafe-html.js";
+import { injectTranslationDifferences } from "./translation-differences.js";
 import * as cheerio from "cheerio";
-import { Doc } from "../../libs/types/document";
+import { Doc } from "../../libs/types/document.js";
 
 export interface Flaw {
   explanation: any;

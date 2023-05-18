@@ -48,7 +48,6 @@
         align-items: center;
         background-color: var(--text-secondary);
         border-radius: 1rem;
-        color: var(--text-primary);
         color: var(--text-invert);
         display: flex;
         flex-direction: column;
@@ -144,13 +143,20 @@
 
               a {
                 color: var(--text-invert);
-                display: block;
                 text-decoration: underline;
                 width: fit-content;
 
                 &:hover {
                   text-decoration: none;
                 }
+              }
+
+              sup {
+                background-color: var(--mdn-color-background-highlight);
+                border-radius: 0.125rem;
+                font-size: 0.75rem;
+                margin-left: 0.25rem;
+                padding: 0.125rem;
               }
             }
           }

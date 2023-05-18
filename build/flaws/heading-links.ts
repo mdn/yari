@@ -1,7 +1,7 @@
-import { findMatchesInText } from "../matches-in-text";
+import { findMatchesInText } from "../matches-in-text.js";
 import * as cheerio from "cheerio";
-import { Doc } from "../../libs/types/document";
-import { Flaw } from ".";
+import { Doc } from "../../libs/types/document.js";
+import { Flaw } from "./index.js";
 
 // You're not allowed to have `<a>` elements inside `<h2>` or `<h3>` elements
 // because those will be rendered out as "links to themselves".

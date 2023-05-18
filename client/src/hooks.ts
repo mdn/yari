@@ -139,26 +139,57 @@ export function usePing() {
   const user = useUserData();
 
   React.useEffect(() => {
-    const nextPing = new Date(localStorage.getItem("next-ping") || 0);
-    if (isOnline && user?.isAuthenticated && nextPing < new Date()) {
-      const params = new URLSearchParams();
+    try {
+      const nextPing = new Date(localStorage.getItem("next-ping") || 0);
+      if (
+        navigator.sendBeacon &&
+        isOnline &&
+        user?.isAuthenticated &&
+        nextPing < new Date()
+      ) {
+        const params = new URLSearchParams();
 
-      // fetch offline settings from local storage as its
-      // values are very inconsistent in the user context
-      const offlineSettings = JSON.parse(
-        localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
-      );
-      if (offlineSettings?.offline) params.set("offline", "true");
+        // fetch offline settings from local storage as its
+        // values are very inconsistent in the user context
+        const offlineSettings = JSON.parse(
+          localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
+        );
+        if (offlineSettings?.offline) params.set("offline", "true");
 
-      navigator.sendBeacon("/api/v1/ping", params);
+        navigator.sendBeacon("/api/v1/ping", params);
 
-      const newNextPing = new Date();
-      newNextPing.setUTCDate(newNextPing.getUTCDate() + 1);
-      newNextPing.setUTCHours(0);
-      newNextPing.setUTCMinutes(0);
-      newNextPing.setUTCSeconds(0);
-      newNextPing.setUTCMilliseconds(0);
-      localStorage.setItem("next-ping", newNextPing.toISOString());
+        const newNextPing = new Date();
+        newNextPing.setUTCDate(newNextPing.getUTCDate() + 1);
+        newNextPing.setUTCHours(0);
+        newNextPing.setUTCMinutes(0);
+        newNextPing.setUTCSeconds(0);
+        newNextPing.setUTCMilliseconds(0);
+        localStorage.setItem("next-ping", newNextPing.toISOString());
+      }
+    } catch (e) {
+      console.error("Failed to send ping", e);
     }
   }, [isOnline, user]);
+}
+
+function getIsDocumentHidden() {
+  if (typeof document !== "undefined") {
+    return !document.hidden;
+  }
+  return false;
+}
+
+export function usePageVisibility() {
+  const [isVisible, setIsVisible] = React.useState(getIsDocumentHidden());
+  const onVisibilityChange = () => setIsVisible(getIsDocumentHidden());
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const visibilityChange = "visibilitychange";
+      document.addEventListener(visibilityChange, onVisibilityChange, false);
+      return () => {
+        document.removeEventListener(visibilityChange, onVisibilityChange);
+      };
+    }
+  });
+  return isVisible;
 }

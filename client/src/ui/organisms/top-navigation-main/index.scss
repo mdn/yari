@@ -23,12 +23,8 @@
     order: 2;
   }
 
-  .notifications-menu {
-    order: 3;
-  }
-
   .user-menu {
-    order: 4;
+    order: 3;
   }
 
   .top-level-entry-container {
@@ -89,7 +85,7 @@
       padding: 0.5rem;
     }
 
-    @media screen and (max-width: $screen-lg) {
+    @media screen and (max-width: #{$screen-lg -1}) {
       &.button {
         --button-color: var(--text-secondary);
         --button-padding: 0;
@@ -107,6 +103,11 @@
         &:focus {
           --button-focus-effect: none;
         }
+      }
+
+      &.menu-link {
+        min-height: 53px;
+        padding: 0.5rem;
       }
     }
 
@@ -180,16 +181,12 @@
       order: 1;
     }
 
-    .notifications-menu {
+    .auth-container {
       order: 2;
     }
 
-    .auth-container {
-      order: 3;
-    }
-
     .user-menu {
-      order: 4;
+      order: 3;
     }
 
     .menu-toggle + .top-level-entry {

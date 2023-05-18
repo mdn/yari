@@ -1,12 +1,12 @@
-import { Flaw } from ".";
+import { Flaw } from "./index.js";
 
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} from "../../libs/env";
-import { findMatchesInText } from "../matches-in-text";
+} from "../../libs/env/index.js";
+import { findMatchesInText } from "../matches-in-text.js";
 import * as cheerio from "cheerio";
-import { Doc } from "../../libs/types";
+import { Doc } from "../../libs/types/document.js";
 import { isTag } from "domhandler";
 
 const safeIFrameSrcs = [

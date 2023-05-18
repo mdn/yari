@@ -1,33 +1,32 @@
+import fs from "node:fs";
 import { JSDOM } from "jsdom";
+import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
-
-const dirname = __dirname;
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
-import fs from "node:fs";
-import path from "node:path";
-const pagesFixturePath = path.resolve(
-  dirname,
-  "fixtures/defaultapisidebar/pages.json"
+
+const pagesFixturePath = new URL(
+  "./fixtures/defaultapisidebar/pages.json",
+  import.meta.url
 );
 const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf-8"));
 const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"],
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
 ];
-const commonl10nFixturePath = path.resolve(
-  dirname,
-  "fixtures/defaultapisidebar/commonl10n.json"
+const commonl10nFixturePath = new URL(
+  "./fixtures/defaultapisidebar/commonl10n.json",
+  import.meta.url
 );
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf-8")
 );
-const groupDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/defaultapisidebar/groupdata.json"
+const groupDataFixturePath = new URL(
+  "./fixtures/defaultapisidebar/groupdata.json",
+  import.meta.url
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf-8")
@@ -310,7 +309,7 @@ describeMacro("DefaultAPISidebar", function () {
       throw new Error(`Unimplemented mock fixture ${name}`);
     });
     // Mock calls to wiki.getPage()
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.wiki.getPage = jest.fn(async (url: string) => {
       return pagesJSON[url];
     });
   });

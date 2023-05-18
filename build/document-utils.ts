@@ -1,4 +1,4 @@
-import { Document } from "../content";
+import { Document } from "../content/index.js";
 
 const TRANSFORM_STRINGS = new Map(
   Object.entries({

@@ -4,14 +4,15 @@
 
 import path from "node:path";
 
-import sizeOf from "image-size";
+import imagesize from "image-size";
 
-import { Document, Image } from "../content";
-import { FLAW_LEVELS } from "../libs/constants";
-import { findMatchesInText } from "./matches-in-text";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import { Document, Image } from "../content/index.js";
+import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { findMatchesInText } from "./matches-in-text.js";
 import * as cheerio from "cheerio";
-import { Doc } from "../libs/types";
+import { Doc } from "../libs/types/document.js";
+
+const { default: sizeOf } = imagesize;
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,

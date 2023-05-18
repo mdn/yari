@@ -112,7 +112,6 @@ def mdn_url_to_dev_url(prefix, mdn_url):
 def post_about_dangerous_content(
     build_directory: Path, patch: Optional[PatchSet], **config
 ):
-
     OK_URL_PREFIXES = [
         "https://github.com/mdn/",
     ]
@@ -198,7 +197,6 @@ def post_about_dangerous_content(
 
 
 def post_about_flaws(build_directory: Path, **config):
-
     comments = []
 
     MAX_FLAW_EXPLANATION = 5

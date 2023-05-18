@@ -1,8 +1,8 @@
-import { Flaw } from ".";
+import { Flaw } from "./index.js";
 
-import { getFirstMatchInText } from "../matches-in-text";
+import { getFirstMatchInText } from "../matches-in-text.js";
 import * as cheerio from "cheerio";
-import { Doc } from "../../libs/types";
+import { Doc } from "../../libs/types/document.js";
 const escapeHTML = (s: string) =>
   s
     .replace(/&/g, "&amp;")

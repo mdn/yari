@@ -1,9 +1,14 @@
 /* eslint no-restricted-globals: ["off", "self"] */
-import { WhoamiInterceptor, DefaultApiInterceptor } from "./fetch-interceptors";
-import { offlineDb } from "./db";
-import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
-import { USER_CONTENT_URL } from "./service-worker";
-import { openCache } from "./caches";
+import {
+  WhoamiInterceptor,
+  DefaultApiInterceptor,
+} from "./fetch-interceptors.js";
+import { offlineDb } from "./db.js";
+import {
+  INTERACTIVE_EXAMPLES_URL,
+  USER_CONTENT_URL,
+} from "./service-worker.js";
+import { openCache } from "./caches.js";
 
 let interceptors = [new WhoamiInterceptor(offlineDb)];
 

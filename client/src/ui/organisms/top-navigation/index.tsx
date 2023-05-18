@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 const DARK_NAV_ROUTES = [/\/plus\/?$/i, "_homepage", /^\/?$/];
 const TRANSPARENT_NAV_ROUTES = []; //["_homepage", /\/?$/];
 
-export function TopNavigation() {
+export function TopNavigation({ extraClasses }: { extraClasses?: string }) {
   const location = useLocation();
   const [showMainMenu, setShowMainMenu] = useState(false);
 
@@ -30,7 +30,7 @@ export function TopNavigation() {
 
   return (
     <header
-      className={`main-document-header-container top-navigation ${
+      className={`top-navigation ${extraClasses || ""} ${
         showMainMenu ? "show-nav" : ""
       }
       ${dark ? " dark" : ""}
@@ -41,9 +41,9 @@ export function TopNavigation() {
           <Logo />
           <Button
             type="action"
-            ariaHasPopup={"menu"}
-            ariaLabel={assistiveText}
-            ariaExpanded={showMainMenu}
+            aria-haspopup={"menu"}
+            aria-label={assistiveText}
+            aria-expanded={showMainMenu}
             title={assistiveText}
             icon={showMainMenu ? "cancel" : "menu"}
             onClickHandler={toggleMainMenu}

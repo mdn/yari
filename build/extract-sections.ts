@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
-import { ProseSection, Section } from "../libs/types";
-import { extractSpecifications } from "./extract-specifications";
+import { ProseSection, Section } from "../libs/types/document.js";
+import { extractSpecifications } from "./extract-specifications.js";
 
 type SectionsAndFlaws = [Section[], string[]];
 

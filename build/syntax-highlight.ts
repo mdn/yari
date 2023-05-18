@@ -1,5 +1,6 @@
 import Prism from "prismjs";
-import loadLanguages from "prismjs/components/index";
+import loadLanguages from "prismjs/components/index.js";
+import "prism-svelte";
 import * as cheerio from "cheerio";
 
 const lazy = (creator) => {
@@ -20,13 +21,16 @@ const loadAllLanguages = lazy(() => {
   // - C-like (clike)
   // - JavaScript (javascript, js)
   loadLanguages([
+    "apacheconf",
     "bash",
     "batch",
     "c",
     "cpp",
     "cs",
     "diff",
+    "django",
     "glsl",
+    "handlebars",
     "http",
     "ignore",
     "ini",
@@ -42,6 +46,7 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
+    "svelte",
     "sql",
     "toml",
     "tsx",
@@ -60,9 +65,6 @@ const loadAllLanguages = lazy(() => {
 // because Prism is an implementation detail.
 const ALIASES = new Map([
   // ["idl", "webidl"],  // block list
-  ["css-nolint", "css"],
-  ["html-nolint", "html"],
-  ["js-nolint", "js"],
   ["sh", "shell"],
 ]);
 
@@ -95,7 +97,10 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
     if (!match) {
       return;
     }
-    const name = ALIASES.get(match[1]) || match[1];
+    let name = match[1].replace("-nolint", "");
+    if (ALIASES.has(name)) {
+      name = ALIASES.get(name);
+    }
     if (IGNORE.has(name)) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;

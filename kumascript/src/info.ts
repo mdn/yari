@@ -1,9 +1,10 @@
 import cheerio from "cheerio";
 
-import Parser from "./parser.js";
-import { Document, Redirect } from "../../content";
-import { isValidLocale } from "../../libs/locale-utils";
-import { m2hSync } from "../../markdown";
+import * as Parser from "./parser.js";
+import { Document, Redirect } from "../../content/index.js";
+import { isValidLocale } from "../../libs/locale-utils/index.js";
+import { m2hSync } from "../../markdown/index.js";
+import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/utils.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -59,7 +60,7 @@ function repairURL(url) {
   return url;
 }
 
-const info = {
+export const info = {
   getPathname(url) {
     // This function returns just the pathname of the given "url", removing
     // any trailing "/".
@@ -196,6 +197,7 @@ const info = {
       locale,
       slug,
       title,
+      short_title: document.metadata["short-title"],
       status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
@@ -260,8 +262,12 @@ const info = {
     };
   },
 
-  hasPage(url) {
-    return Boolean(Document.findByURL(info.cleanURL(url)));
+  hasPage(url): boolean {
+    if (Document.findByURL(info.cleanURL(url))) {
+      return true;
+    }
+    const slug = getSlugByBlogPostUrl(url);
+    return Boolean(slug) && Boolean(findPostFileBySlug(slug));
   },
 };
 

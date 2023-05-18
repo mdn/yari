@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { resolveFundamental } from "../libs/fundamental-redirects";
-import { decodePath, slugToFolder } from "../libs/slug-utils";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { VALID_LOCALES } from "../libs/constants";
-import { getRoot } from "./utils";
+import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
+import { decodePath, slugToFolder } from "../libs/slug-utils/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import { getRoot } from "./utils.js";
 
 type Pair = [string, string];
 type Pairs = Pair[];
@@ -149,6 +149,17 @@ function errorOnDuplicated(pairs: Pairs) {
   }
 }
 
+function fixRedirectsCase(oldPairs: Pairs, caseChangedTargets: string[]) {
+  const newTargets = new Map(
+    caseChangedTargets.map((p) => [p.toLowerCase(), p])
+  );
+  const newPairs = oldPairs.map(([from, to]): Pair => {
+    const target = newTargets.get(to.toLowerCase()) ?? to;
+    return [from, target];
+  });
+  return newPairs;
+}
+
 function removeConflictingOldRedirects(oldPairs: Pairs, updatePairs: Pairs) {
   if (oldPairs.length === 0) {
     return oldPairs;
@@ -226,8 +237,19 @@ function loadLocaleAndAdd(
     pairs.push(...loadPairsFromFile(redirectsFilePath, locale, strict && !fix));
   }
 
-  const cleanPairs = removeConflictingOldRedirects(pairs, updatePairs);
-  cleanPairs.push(...updatePairs);
+  const caseChangedTargets = [];
+  const newPairs = [];
+  for (const [from, to] of updatePairs) {
+    if (from.toLowerCase() === to.toLowerCase()) {
+      caseChangedTargets.push(to);
+    } else {
+      newPairs.push([from, to]);
+    }
+  }
+
+  let cleanPairs = removeConflictingOldRedirects(pairs, newPairs);
+  cleanPairs = fixRedirectsCase(cleanPairs, caseChangedTargets);
+  cleanPairs.push(...newPairs);
 
   let simplifiedPairs = shortCuts(cleanPairs);
   if (fix) {

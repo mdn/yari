@@ -1,6 +1,27 @@
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = "development";
-process.env.NODE_ENV = "development";
+// Ensure environment variables are read.
+import "../config/env.js";
+
+import fs from "node:fs";
+import chalk from "react-dev-utils/chalk.js";
+import webpack from "webpack";
+import WebpackDevServer from "webpack-dev-server";
+import clearConsole from "react-dev-utils/clearConsole.js";
+import checkRequiredFiles from "react-dev-utils/checkRequiredFiles.js";
+import { checkBrowsers } from "react-dev-utils/browsersHelper.js";
+import {
+  choosePort,
+  createCompiler,
+  prepareProxy,
+  prepareUrls,
+} from "react-dev-utils/WebpackDevServerUtils.js";
+import openBrowser from "react-dev-utils/openBrowser.js";
+import semver from "semver";
+import react from "react";
+
+import paths from "../config/paths.js";
+import configFactory from "../config/webpack.config.js";
+import createDevServerConfig from "../config/webpackDevServer.config.js";
+import getClientEnvironment from "../config/env.js";
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -9,28 +30,7 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-// Ensure environment variables are read.
-require("../config/env");
-
-const fs = require("fs");
-const chalk = require("react-dev-utils/chalk");
-const webpack = require("webpack");
-const WebpackDevServer = require("webpack-dev-server");
-const clearConsole = require("react-dev-utils/clearConsole");
-const checkRequiredFiles = require("react-dev-utils/checkRequiredFiles");
-const {
-  choosePort,
-  createCompiler,
-  prepareProxy,
-  prepareUrls,
-} = require("react-dev-utils/WebpackDevServerUtils");
-const openBrowser = require("react-dev-utils/openBrowser");
-const semver = require("semver");
-const paths = require("../config/paths");
-const configFactory = require("../config/webpack.config");
-const createDevServerConfig = require("../config/webpackDevServer.config");
-const getClientEnvironment = require("../config/env");
-const react = require(require.resolve("react", { paths: [paths.appPath] }));
+const appPackageJson = JSON.parse(fs.readFileSync(paths.appPackageJson));
 
 const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 const useYarn = fs.existsSync(paths.yarnLockFile);
@@ -64,7 +64,6 @@ if (process.env.HOST) {
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
-const { checkBrowsers } = require("react-dev-utils/browsersHelper");
 checkBrowsers(paths.appPath, isInteractive)
   .then(() => {
     // We attempt to use the default port but if it is busy, we offer the user to
@@ -79,7 +78,7 @@ checkBrowsers(paths.appPath, isInteractive)
 
     const config = configFactory("development");
     const protocol = process.env.HTTPS === "true" ? "https" : "http";
-    const appName = require(paths.appPackageJson).name;
+    const appName = appPackageJson.name;
 
     const useTypeScript = fs.existsSync(paths.appTsConfig);
     const urls = prepareUrls(
@@ -98,7 +97,7 @@ checkBrowsers(paths.appPath, isInteractive)
       webpack,
     });
     // Load proxy config
-    const proxySetting = require(paths.appPackageJson).proxy;
+    const proxySetting = appPackageJson.proxy;
     const proxyConfig = prepareProxy(
       proxySetting,
       paths.appPublic,

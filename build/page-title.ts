@@ -1,5 +1,5 @@
-import { Document } from "../content";
-import { Doc } from "../libs/types";
+import { Document } from "../content/index.js";
+import { Doc } from "../libs/types/document.js";
 
 /**
  * Return the appropriate document title to go into the HTML <title>

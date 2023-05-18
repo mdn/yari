@@ -1,11 +1,14 @@
-const path = require("path");
-const fs = require("fs");
-const getPublicUrlOrPath = require("react-dev-utils/getPublicUrlOrPath");
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import getPublicUrlOrPath from "react-dev-utils/getPublicUrlOrPath.js";
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const appDirectory = new URL("..", import.meta.url);
+const resolveApp = (relativePath) =>
+  fileURLToPath(new URL(relativePath, appDirectory));
+
+const appPackage = JSON.parse(fs.readFileSync(resolveApp("package.json")));
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -15,7 +18,7 @@ const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === "development",
-  require(resolveApp("package.json")).homepage,
+  appPackage.homepage,
   process.env.PUBLIC_URL
 );
 
@@ -49,26 +52,27 @@ const resolveModule = (resolveFn, filePath) => {
 };
 
 // config after eject: we're in ./config/
-module.exports = {
-  dotenv: resolveApp(".env"),
+const config = {
+  dotenv: resolveApp("../.env"),
   appPath: resolveApp("."),
   appBuild: resolveApp(buildPath),
   appPublic: resolveApp("public"),
   appHtml: resolveApp("public/index.html"),
   appIndexJs: resolveModule(resolveApp, "src/index"),
-  appPackageJson: resolveApp("package.json"),
+  appPackageJson: resolveApp("../package.json"),
   appSrc: resolveApp("src"),
   appTsConfig: resolveApp("tsconfig.json"),
   appJsConfig: resolveApp("jsconfig.json"),
-  yarnLockFile: resolveApp("yarn.lock"),
+  yarnLockFile: resolveApp("../yarn.lock"),
   testsSetup: resolveModule(resolveApp, "src/setupTests"),
   proxySetup: resolveApp("src/setupProxy.js"),
-  appNodeModules: resolveApp("node_modules"),
-  appWebpackCache: resolveApp("node_modules/.cache"),
-  appTsBuildInfoFile: resolveApp("node_modules/.cache/tsconfig.tsbuildinfo"),
+  appNodeModules: resolveApp("../node_modules"),
+  appWebpackCache: resolveApp("../node_modules/.cache"),
+  appTsBuildInfoFile: resolveApp("../node_modules/.cache/tsconfig.tsbuildinfo"),
   swSrc: resolveModule(resolveApp, "src/service-worker"),
   publicUrlOrPath,
   libsPath: resolveApp("../libs"),
+  moduleFileExtensions,
 };
 
-module.exports.moduleFileExtensions = moduleFileExtensions;
+export default config;

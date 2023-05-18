@@ -1,4 +1,4 @@
-import Parser from "../kumascript/src/parser.js";
+import * as Parser from "../kumascript/src/parser.js";
 
 function* fastKSParser(s: string) {
   for (const match of s.matchAll(
@@ -61,9 +61,6 @@ const IMPORTANT_MACROS = new Map(
     "Specifications",
     "WebAssemblySidebar",
     "WebExtAPISidebar",
-    "WebGLSidebar",
-    "WebRTCSidebar",
-    "languages",
     "page",
   ].map((name) => [name.toLowerCase(), name])
 );

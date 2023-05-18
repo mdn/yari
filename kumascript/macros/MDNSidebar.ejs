@@ -94,26 +94,26 @@ const text = mdn.localStringMap({
       "Exper": "Experimental, deprecated and obsolete",
   },
   "ko": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
+    "MDN_project": "MDN 웹 문서 프로젝트",
+    "Community_guide": "커뮤니티 지침",
+      "Comm_overview": "커뮤니티 개요",
+      "Contributing": "MDN에 기역하기",
+      "Open_source": "오픈소스 에절",
       "Communication": "Communication channels",
-      "Discuss": "Discussions",
+      "Discuss": "논의",
       "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+      "Issues": "문제",
+      "PRs": "Pull requests",
+      "Content": "콘텐츠 레포지토리 지침",
+      "Users": "사용자와 팀",
+    "Writing_guide": "MDN Web Docs 지침",
+      "Write_overview": "MDN Web Docs에 대해",
+      "What_write": "MDN Web Docs 내용",
+      "Style_guide": "MDN Web Docs 작성 안내서",
+      "Howto": "How-to 안내서",
+      "Structures": "페이지 구조",
+      "Attrib": "귀속과 저작권",
+      "Exper": "Experimental, deprecated 그리고 obsolete",
   },
   "pt-BR": {
     "MDN_project": "The MDN Web Docs Project",
@@ -207,14 +207,13 @@ const text = mdn.localStringMap({
 
 %>
 
-<section id="Quick_links">
+<section id="Quick_links" data-macro="MDNSidebar">
     <ol>
         <li>
             <a href="<%=baseURL%>"><%=text['MDN_project']%></a>
         </li>
 
         <li class="toggle">
-            <details>
             <details>
                 <summary><%=text['Community_guide']%></summary>
                 <ol>
@@ -246,6 +245,5 @@ const text = mdn.localStringMap({
                 </ol>
             </details>
         </li>
-
     </ol>
 </section>

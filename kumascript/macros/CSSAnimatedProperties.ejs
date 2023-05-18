@@ -4,9 +4,15 @@
   in columns
 */
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 // Read all CSSData and extract animated properties
 
-var data = require('mdn-data/css');
+const data = require('mdn-data/css');
+
 var animatedProps = [];
 
 // Go through all properties, and test if they are animated. If so, add them to

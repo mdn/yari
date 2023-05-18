@@ -20,8 +20,7 @@ echo "----------------------"
 echo "Build and start server"
 echo "----------------------"
 
-export ENV_FILE="testing/.env"
-cp testing/.env client/
+export ENV_FILE=".env.testing"
 
 yarn build:prepare
 yarn build

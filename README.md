@@ -1,7 +1,7 @@
 # Yari
 
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
-![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
+![Prod Build](https://github.com/mdn/yari/workflows/Prod%20Build/badge.svg)
 
 ## Quickstart
 
@@ -19,8 +19,8 @@ Before you can start working with Yari, you need to:
     So for now let's make an exception. -->
 <!-- markdownlint-disable list-marker-space -->
 
-1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>=
-    16.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org), and
+    [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
     the MDN [content](https://github.com/mdn/content) and

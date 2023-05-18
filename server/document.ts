@@ -3,10 +3,10 @@ import path from "node:path";
 
 import express, { Request } from "express";
 
-import { Document, slugToFolder } from "../content";
-import { buildDocument } from "../build";
-import { BUILD_OUT_ROOT } from "../libs/env";
-import { Doc } from "../libs/types/document";
+import { Document, slugToFolder } from "../content/index.js";
+import { buildDocument } from "../build/index.js";
+import { BUILD_OUT_ROOT } from "../libs/env/index.js";
+import { Doc } from "../libs/types/document.js";
 
 const router = express();
 

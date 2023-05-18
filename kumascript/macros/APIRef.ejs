@@ -113,11 +113,7 @@ if (impl.length > 0) {
 
 
 function APISort(a, b) {
-  var aSplit = a.title.split('.');
-  var a = aSplit[aSplit.length - 1];
-  var bSplit = b.title.split('.');
-  var b = bSplit[bSplit.length - 1];
-  return a.toLowerCase().localeCompare(b.toLowerCase());
+  return getPageTitle(a).toLowerCase().localeCompare(getPageTitle(b).toLowerCase());
 }
 
 staticProperties.sort(APISort);
@@ -150,83 +146,61 @@ function getImplementedBy(data) {
 }
 getImplementedBy(webAPIData[0]);
 
-// output helpers
-
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-  ObsoleteBadge : await template("ObsoleteBadge"),
+function getPageTitle(page) {
+  if (page.short_title) {
+    return htmlEscape(page.short_title);
+  }
+  const titleSplit = htmlEscape(page.title).split('.'); // Two cases, as sometimes the interface name is forgotten in the title:
+  let title = titleSplit[titleSplit.length - 1];       // "WebGLRenderingContext.activeTexture()" and "activeTexture()" should both become "activeTexture()"
+  // Event pages have a title like "Interface: eventname event" which looks silly
+  // in the sidebar. So for event pages we use the slug, which is supposed to be
+  // in the form "eventname_event", and split off "_event" to leave us (hopefully)
+  // with just "eventname" for the link text.
+  if (page.pageType === 'web-api-event') {
+    title = page.slug.split('/').pop();
+    if (title.endsWith('_event')) {
+        title = title.slice(0,-6);
+    }
+  }
+  return title;
 }
 
-function buildSublist(pages, title) {
+async function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
 
   for (var i in pages) {
     var aPage = pages[i];
     var url = aPage.url.replace('en-US', locale);
-    var titleSplit = htmlEscape(aPage.title).split('.'); // Two cases, as sometimes the interface name is forgotten in the title:
-    var title = titleSplit[titleSplit.length - 1];       // "WebGLRenderingContext.activeTexture()" and "activeTexture()" should both become "activeTexture()"
 
     var translated = false;
     if (locale != 'en-US') {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
                 url = translation.url;
-                titleSplit = htmlEscape(translation.title).split('.');
-                title = titleSplit[titleSplit.length - 1];
                 translated = true;
             }
         });
     }
 
-    // Event pages have a title like "Interface: eventname event" which looks silly
-    // in the sidebar. So for event pages we use the slug, which is supposed to be
-    // in the form "eventname_event", and split off "_event" to leave us (hopefully)
-    // with just "eventname" for the link text.
-    if (aPage.pageType === 'web-api-event') {
-        title = aPage.slug.split('/').pop();
-        if (title.endsWith('_event')) {
-            title = title.slice(0,-6);
-        }
-    }
+    const title = getPageTitle(aPage);
 
     result += '<li>';
-
-    var pageBadges = '';
-    if (hasTag(aPage, 'Experimental')) {
-        pageBadges += badges.ExperimentalBadge;
-    }
-
-    if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
-        pageBadges += badges.NonStandardBadge;
-    }
-
-    if (hasTag(aPage, 'Deprecated')) {
-        pageBadges += badges.DeprecatedBadge;
-    }
-
-    if (hasTag(aPage, 'Obsolete')) {
-        pageBadges += badges.ObsoleteBadge;
-        result += '<s class="obsoleteElement">';
-    }
+    
+    const pageBadges = (await page.badges(aPage)).join("");
 
     if (rtlLocales.indexOf(locale) != -1) {
         result += '<bdi>';
     }
 
     if (slug == aPage.slug) {
-        result += '<em>' + pageBadges + ' <code>' + title + '</code></em>'
+        result += `<em><code>${title}</code> ${pageBadges}</em>`
     } else {
-        result += pageBadges + web.smartLink(url, null, `<code>${title}</code>`, APIHref, null, "APIRef");
+        result += web.smartLink(url, null, `<code>${title}</code>`, APIHref, null, "APIRef");
+        result += pageBadges;
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
         result += '</bdi>';
-    }
-
-    if (hasTag(aPage, 'Obsolete')) {
-        result += '</s>';
     }
 
     result += '</li>';
@@ -251,7 +225,7 @@ function buildIFList(interfaces, title) {
 }
 
 // output
-output = '<section id="Quick_links"><ol>';
+output = '<section id="Quick_links" data-macro="APIRef"><ol>';
 if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
   output += `<li><strong>${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref, null, "APIRef")}</strong></li>`;
 }
@@ -259,22 +233,22 @@ if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
 output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref, null, "APIRef")}</strong></li>`;
 
 if (ctors.length > 0) {
-  output += buildSublist(ctors, text['Constructor']);
+  output += await buildSublist(ctors, text['Constructor']);
 }
 if (staticProperties.length > 0) {
-  output += buildSublist(staticProperties, text['Static properties']);
+  output += await buildSublist(staticProperties, text['Static properties']);
 }
 if (instanceProperties.length > 0) {
-  output += buildSublist(instanceProperties, text['Instance properties']);
+  output += await buildSublist(instanceProperties, text['Instance properties']);
 }
 if (staticMethods.length > 0) {
-  output += buildSublist(staticMethods, text['Static methods']);
+  output += await buildSublist(staticMethods, text['Static methods']);
 }
 if (instanceMethods.length > 0) {
-  output += buildSublist(instanceMethods, text['Instance methods']);
+  output += await buildSublist(instanceMethods, text['Instance methods']);
 }
 if (events.length > 0) {
-  output += buildSublist(events, text['Events']);
+  output += await buildSublist(events, text['Events']);
 }
 if (inh.length > 0) {
   output += buildIFList(inheritedIF, text['Inheritance']);

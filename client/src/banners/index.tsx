@@ -20,12 +20,10 @@ const daysToEmbargo = 30;
 export function Banner() {
   const userData = useUserData();
   const currentBannerId: BannerId | null = userData?.isAuthenticated
-    ? NEWSLETTER_ENABLED &&
-      userData?.isSubscriber &&
-      !userData?.settings?.mdnplusNewsletter
+    ? NEWSLETTER_ENABLED && !userData?.settings?.mdnplusNewsletter
       ? BannerId.NEWSLETTER_ANNOUNCEMENT
       : BannerId.MULTIPLE_COLLECTIONS
-    : BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
+    : null;
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
       <React.Suspense fallback={null}>

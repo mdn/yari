@@ -19,33 +19,21 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: yarn
           cache-dependency-path: |
             yarn.lock
             client/pwa/yarn.lock
-            deployer/aws-lambda/content-origin-request/yarn.lock
-            deployer/aws-lambda/content-origin-response/yarn.lock
-            deployer/aws-lambda/tests/yarn.lock
             libs/**/*.js
 
       - name: Install all yarn packages (ROOT)
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install all yarn packages (pwa)
         working-directory: client/pwa
-        run: yarn --frozen-lockfile
-
-      - name: Install all yarn packages (aws-lambda/content-origin-request)
-        working-directory: deployer/aws-lambda/content-origin-request
-        run: yarn --frozen-lockfile
-
-      - name: Install all yarn packages (aws-lambda/content-origin-response)
-        working-directory: deployer/aws-lambda/content-origin-response
-        run: yarn --frozen-lockfile
-
-      - name: Install all yarn packages (aws-lambda/tests)
-        working-directory: deployer/aws-lambda/tests
         run: yarn --frozen-lockfile
 
       - name: Lint prettier
@@ -69,11 +57,14 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: 18
           cache: yarn
 
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Unit testing client
         run: yarn test:client
@@ -81,17 +72,8 @@ jobs:
       - name: Build and start server
         id: server
         env:
-          ENV_FILE: testing/.env
+          ENV_FILE: .env.testing
         run: |
-
-          # because `yarn build:prepare` is a wrapper for `yarn build:client` and
-          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
-          # because it has to build from the `./client/` directory, we have to
-          # manually copy the `testing/.env` file into `client/` so that when
-          # `yarn build:client` runs, it gets the same environment variables
-          # as you'd get when doing `yarn build:ssr`.
-          cp testing/.env client/
-
           yarn build:prepare
           yarn build
 
@@ -106,7 +88,7 @@ jobs:
 
       - name: Basic m2h tool testing
         env:
-          ENV_FILE: testing/.env
+          ENV_FILE: .env.testing
         run: |
           yarn m2h markdown/tool/m2h --locale en-US
           diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html

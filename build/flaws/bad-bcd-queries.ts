@@ -1,7 +1,7 @@
-import { packageBCD } from "../resolve-bcd";
+import { packageBCD } from "../resolve-bcd.js";
 import * as cheerio from "cheerio";
-import { Doc } from "../../libs/types";
-import { Flaw } from ".";
+import { Doc } from "../../libs/types/document.js";
+import { Flaw } from "./index.js";
 
 // Bad BCD queries are when the `<div class="bc-data">` tags have an
 // ID (or even lack the `id` attribute) that don't match anything in the

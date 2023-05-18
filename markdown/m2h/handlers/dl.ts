@@ -1,4 +1,4 @@
-import { all, wrap } from "./mdast-util-to-hast-utils";
+import { all, wrap } from "./mdast-util-to-hast-utils.js";
 
 export const DEFINITION_PREFIX = ": ";
 

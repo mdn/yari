@@ -1,10 +1,10 @@
 import express from "express";
 
-import { CSP_VALUE } from "../libs/constants";
-import { STATIC_ROOT } from "../libs/env";
-import { resolveFundamental } from "../libs/fundamental-redirects";
-import { getLocale } from "../libs/locale-utils";
-import { devMiddlewares } from "./dev";
+import { CSP_VALUE } from "../libs/constants/index.js";
+import { STATIC_ROOT } from "../libs/env/index.js";
+import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
+import { getLocale } from "../libs/locale-utils/index.js";
+import { devMiddlewares } from "./dev.js";
 
 // Lowercase every request because every possible file we might have
 // on disk is always in lowercase.

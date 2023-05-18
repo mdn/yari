@@ -1,9 +1,9 @@
-const {
+import {
   DEFAULT_LOCALE,
   VALID_LOCALES,
   LOCALE_ALIASES,
   RETIRED_LOCALES,
-} = require("../constants");
+} from "../constants/index.js";
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
@@ -1232,6 +1232,15 @@ const MISC_REDIRECT_PATTERNS = [
     ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
     { permanent: true }
   ),
+  // Content archived as part of the GCP migration.
+  redirect(
+    /^(?<prefix>diagrams|presentations|samples)(?<subPath>\/.*)?$/i,
+    ({ prefix, subPath = "" }) =>
+      `https://mdn.dev/archives/media/${prefix}${subPath}`,
+    {
+      permanent: false,
+    }
+  ),
 ];
 
 const REDIRECT_PATTERNS = [].concat(
@@ -1254,6 +1263,9 @@ const REDIRECT_PATTERNS = [].concat(
       ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
       { prependLocale: false, permanent: true }
     ),
+    localeRedirect(/advertising\/with_us/i, "/advertising", {
+      permanent: true,
+    }),
   ],
   LOCALE_PATTERNS,
   MISC_REDIRECT_PATTERNS
@@ -1262,7 +1274,7 @@ const REDIRECT_PATTERNS = [].concat(
 const STARTING_SLASH = /^\//;
 const ABSOLUTE_URL = /^https?:\/\/.*/;
 
-function resolveFundamental(path) {
+export function resolveFundamental(path) {
   if (ABSOLUTE_URL.exec(path)) {
     return {};
   }
@@ -1275,7 +1287,3 @@ function resolveFundamental(path) {
   }
   return {};
 }
-
-module.exports = {
-  resolveFundamental,
-};

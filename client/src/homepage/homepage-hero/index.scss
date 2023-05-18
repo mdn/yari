@@ -79,6 +79,7 @@
       background-color: rgba(1, 1, 1, 0.5);
       border-radius: 10rem;
       padding: 2rem;
+      width: 100%;
 
       &:focus {
         border-color: var(--field-focus-border);
@@ -93,6 +94,7 @@
     .search-widget {
       display: flex;
       gap: 0;
+      width: 100%;
     }
 
     .search-results {

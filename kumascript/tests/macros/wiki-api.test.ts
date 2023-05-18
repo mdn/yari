@@ -2,7 +2,7 @@
 // The functions defined by that macro have been moved to
 // ../../src/environment.js, but the tests that are still relevant remain here.
 
-import { assert, itMacro, describeMacro } from "./utils";
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 describeMacro("dekiscript-wiki", function () {
   itMacro("basic API", function (macro) {

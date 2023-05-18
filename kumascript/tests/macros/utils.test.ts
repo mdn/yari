@@ -1,4 +1,4 @@
-import { lintHTML } from "./utils";
+import { lintHTML } from "./utils.js";
 
 const ERROR_TEST_CASES = [
   {

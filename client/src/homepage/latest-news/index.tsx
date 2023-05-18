@@ -2,22 +2,12 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../env";
-import { HydrationData } from "../../types/hydration";
+import { HydrationData } from "../../../../libs/types/hydration";
+import { NewsItem } from "../../../../libs/types/document";
 
 import "./index.scss";
 
 dayjs.extend(relativeTime);
-
-export interface NewsItem {
-  url: string;
-  title: string;
-  author?: string;
-  source: {
-    name: string;
-    url: string;
-  };
-  published_at: string;
-}
 
 export function LatestNews(props: HydrationData<any>) {
   const fallbackData = props.hyData ? props : undefined;

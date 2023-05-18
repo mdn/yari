@@ -1,24 +1,27 @@
-import LRU from "lru-cache";
+import { LRUCache } from "lru-cache";
+import * as cheerio from "cheerio";
 
-import { Document } from "../content";
-import { m2h } from "../markdown";
+import { Document } from "../content/index.js";
+import { m2h } from "../markdown/index.js";
 
-import info from "./src/info";
-import { render as renderMacros } from "./src/render";
-export { buildLiveSamplePages } from "./src/live-sample";
-import { HTMLTool } from "./src/api/util";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import info from "./src/info.js";
+import { render as renderMacros } from "./src/render.js";
+import { HTMLTool } from "./src/api/util.js";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} from "../libs/env";
-import { SourceCodeError } from "./src/errors";
-import * as cheerio from "cheerio";
+} from "../libs/env/index.js";
+import { SourceCodeError } from "./src/errors.js";
+import { Doc } from "../libs/types/document.js";
+export { buildLiveSamplePages } from "./src/live-sample.js";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" macros):';
 
-export const renderCache = new LRU<string, unknown>({ max: 2000 });
+export const renderCache = new LRUCache<string, [string, SourceCodeError[]]>({
+  max: 2000,
+});
 
 interface RenderOptions {
   urlsSeen?: Set<string>;
@@ -32,15 +35,15 @@ export async function render(
     urlsSeen = null,
     selective_mode = false,
     invalidateCache = false,
-  }: RenderOptions = {}
+  }: RenderOptions = {},
+  doc?: Doc
 ): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
       renderCache.delete(urlLC);
     } else {
-      const [renderedHtml, errors]: [string, SourceCodeError[]] =
-        renderCache.get(urlLC);
+      const [renderedHtml, errors] = renderCache.get(urlLC);
       return [cheerio.load(renderedHtml), errors];
     }
   }
@@ -53,9 +56,11 @@ export async function render(
   }
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
-  const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
-    : Document.findByURL(url);
+  const document =
+    doc ||
+    (invalidateCache
+      ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
+      : Document.findByURL(url));
   if (!document) {
     throw new Error(
       `From URL ${url} no folder on disk could be found. ` +

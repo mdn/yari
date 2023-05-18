@@ -5,11 +5,6 @@ pages, static files (e.g. JS, CSS, and image files), and sitemap files into an
 existing AWS S3 bucket. Since we serve MDN document pages from an S3 bucket via
 a CloudFront CDN, this is the way we upload a new version of the site.
 
-Second, it is used to update and publish changes to existing AWS Lambda
-functions. For example, we use it to update and publish new versions of a Lambda
-function that we use to transform incoming document URL's into their
-corresponding S3 keys.
-
 ## Getting started
 
 You can install it globally or in a `virtualenv` environment. Whichever you
@@ -64,25 +59,6 @@ export DEPLOYER_BUCKET_PREFIX=pr1234
 cd deployer
 poetry run deployer upload ../client/build
 ```
-
-## Updating Lambda Functions
-
-The command:
-
-```sh
-cd deployer
-poetry run deployer update-lambda-functions
-```
-
-will discover every folder that contains a Lambda function, create a deployment
-package (Zip file) for each one by running:
-
-```sh
-yarn make-package
-```
-
-and if the deployment package is different from what is already in AWS, it will
-upload and publish a new version.
 
 ## Elasticsearch indexing
 
@@ -316,5 +292,5 @@ And to format all files with `black` run:
 
 ```sh
 cd deployer
-poetry run black deployer
+poetry run black .
 ```

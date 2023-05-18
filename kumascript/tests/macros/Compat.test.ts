@@ -1,18 +1,17 @@
-import { assert, itMacro, describeMacro, lintHTML } from "./utils";
+import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
 
 import fs from "node:fs";
-import path from "node:path";
 import { JSDOM } from "jsdom";
 import extend from "extend";
-const dirname = __dirname;
-const fixture_dir = path.resolve(dirname, "fixtures/compat");
+
+const fixture_dir = new URL("./fixtures/compat/", import.meta.url);
 
 let fixtureCompatData = {};
 fs.readdirSync(fixture_dir).forEach(function (fn) {
   fixtureCompatData = extend(
     true,
     fixtureCompatData,
-    JSON.parse(fs.readFileSync(path.resolve(fixture_dir, fn), "utf-8"))
+    JSON.parse(fs.readFileSync(new URL(fn, fixture_dir), "utf-8"))
   );
 });
 
