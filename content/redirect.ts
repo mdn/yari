@@ -398,7 +398,7 @@ function shortCuts(pairs: Pairs, throws = false): Pairs {
   const transit = (
     s: string,
     froms: string[] = []
-  ): [string[], string] | string[] => {
+  ): [string[], string] | [] => {
     const next = dg.get(s);
     if (next) {
       froms.push(s);
