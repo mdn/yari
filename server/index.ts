@@ -47,7 +47,7 @@ import {
   findPostPathBySlug,
 } from "../build/blog.js";
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;

@@ -1,7 +1,9 @@
 // Remove h4s from any existing notecards and transform them
 // from <div class="note notecard"><h4>Note:</h4>foobar</div> to
 // <div class="note notecard"><p><strong>Note:</strong>foobar</p></div>
-export function formatNotecards($) {
+import * as cheerio from "cheerio";
+
+export function formatNotecards($: cheerio.CheerioAPI) {
   $("div.notecard h4").each((_, element) => {
     const h4 = $(element);
     const text = h4.text();
