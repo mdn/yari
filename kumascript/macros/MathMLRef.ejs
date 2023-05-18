@@ -1,49 +1,88 @@
 <%
-function containsTag(tagList, tag) {
-    if (!tagList || tagList == undefined) return 0;
-    tag = tag.toLowerCase();
-    for (var i = 0, len = tagList.length; i < len; i++) {
-        if (tagList[i].toLowerCase() == tag) return 1;
-    }
-    return 0;
+const locale = env.locale;
+
+const text = mdn.localStringMap({
+  'en-US': {
+    'Reference': 'Reference',
+    'Elements': 'Elements',
+    'Global attributes': 'Global attributes',
+    'Guides': 'Guides',
+    'Examples': 'Examples',
+  },
+  'fr': {
+    'Reference': 'Références',
+    'Elements': 'Éléments',
+    'Guides': 'Guides',
+  },
+  'ja': {
+    'Reference': 'リファレンス',
+    'Elements': '要素',
+  },
+  'ko': {
+    'Reference': '참고서:',
+    'Elements': '요소',
+    'Guides': '안내서:',
+  },
+  'pt-BR': {
+    'Reference': 'Referências',
+    'Elements': 'Elementos',
+    'Guides': 'Guides',
+  },
+  'ru': {
+    'Reference': 'Справочники',
+    'Elements': 'Элементы',
+    'Guides': 'Путеводитель',
+  },
+  'zh-CN': {
+    'Reference': '参考：',
+    'Elements': '元素',
+    'Guides': '指南：',
+  },
+});
+
+const sidebarURL = `/docs/Web/MathML/`;
+const baseURL = `/${env.locale}${sidebarURL}`;
+
+async function getTitle(pageSlug) {
+  let page = await wiki.getPage(`${baseURL}${pageSlug}`);
+  if (!page.title) {
+    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
+  }
+  return mdn.htmlEscape(page.title);
 }
 
-function safe_tags(str) {
-    return str.replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
-}
-
-var s_mathml_ref_href = '/en-US/docs/Web/MathML/Element';
-var s_mathml_ref_title = 'MathML Reference';
-var s_mathml_element_tag = 'MathML:Element';
-
-switch (env.locale) {
-    case 'ru':
-        s_mathml_ref_href = '/ru/docs/Web/MathML/Element';
-        s_mathml_ref_title = 'Руководство MathML';
-        s_mathml_element_tag = 'MathML:Element';
-        break;
-    default: break;
-}
-
-// Find the pages of s_mathml_ref_href that are tagged with s_mathml_element_tag
-var pageList = await page.subpagesExpand(s_mathml_ref_href);   // Get subpages, including tags
-var result = [];
-
-for (aPage in pageList) {
-    if (containsTag(pageList[aPage].tags, s_mathml_element_tag)) {
-        result.push(pageList[aPage]);
-    }
-}
 %>
-
-<section id="Quick_links">
+<section id="Quick_links" data-macro="MathMLRef">
+ <ol>
+  <li><a href="/<%=locale%>/docs/Web/MathML"><strong>MathML</strong></a></li>
+  <li><strong><%=text['Guides']%></strong></li>
+  <li>
     <ol>
-        <li><strong><a href="<%=s_mathml_ref_href%>"><%=s_mathml_ref_title%></a></strong>
-
-        <% for (aPage in result) { %>
-            <li><a href="<%-result[aPage].url%>"><%-safe_tags(result[aPage].title)%></a></li>
-        <% } %>
-
-        </li>
+    <li><a href="/<%=locale%>/docs/Web/MathML/Authoring"><%=await getTitle("Authoring")%></a></li>
+    <li><a href="/<%=locale%>/docs/Web/MathML/Fonts"><%=await getTitle("Fonts")%></a></li>
+    <li><a href="/<%=locale%>/docs/Web/MathML/Values"><%=await getTitle("Values")%></a></li>
     </ol>
+  </li>
+  <li><strong><%=text['Reference']%></strong></li>
+  <li class="toggle">
+    <details>
+      <summary><%=text['Elements']%></summary>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/MathML/Element'])%>
+    </details>
+  </li>
+  <li class="toggle">
+    <details>
+      <summary><%=text['Global attributes']%></summary>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/MathML/Global_attributes'])%>
+    </details>
+  </li>
+  <li><a href="/<%=locale%>/docs/Web/MathML/Attribute"><%=await getTitle("Attribute")%></a></li>
+  <li><strong><%=text['Examples']%></strong></li>
+  <li>
+    <ol>
+    <li><a href="/<%=locale%>/docs/Web/MathML/Examples/Deriving_the_Quadratic_Formula"><%=await getTitle("Examples/Deriving_the_Quadratic_Formula")%></a></li>
+    <li><a href="/<%=locale%>/docs/Web/MathML/Examples/MathML_Pythagorean_Theorem"><%=await getTitle("Examples/MathML_Pythagorean_Theorem")%></a></li>
+    </ol>
+  </li>
+ </ol>
 </section>

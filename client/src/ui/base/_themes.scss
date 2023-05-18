@@ -183,6 +183,15 @@
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-50};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-50, 0.2)};
 
+  --baseline-supported-bg: #e6f4ea;
+  --baseline-supported-engine-bg: #ceead6;
+  --baseline-supported-img: url("../../assets/icons/baseline/check.svg");
+  --baseline-unsupported-bg: #f1f3f4;
+  --baseline-unsupported-engine-bg: #e3e6e8;
+  --baseline-unsupported-img: url("../../assets/icons/baseline/cross.svg");
+  --baseline-browser-supported-bg: #1e8e3e;
+  --baseline-browser-unsupported-bg: #666;
+
   color-scheme: light;
 }
 
@@ -366,6 +375,15 @@
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-40};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-40, 0.2)};
 
+  --baseline-supported-bg: #0e2a10;
+  --baseline-supported-engine-bg: #031b05;
+  --baseline-supported-img: url("../../assets/icons/baseline/check-dark.svg");
+  --baseline-unsupported-bg: #282a2c;
+  --baseline-unsupported-engine-bg: #1d1e1f;
+  --baseline-unsupported-img: url("../../assets/icons/baseline/cross-dark.svg");
+  --baseline-browser-supported-bg: #5bb974;
+  --baseline-browser-unsupported-bg: #9aa0a6;
+
   color-scheme: dark;
 }
 
@@ -373,6 +391,8 @@ body,
 :root {
   --mdn-color-white: #{$mdn-color-white};
   --mdn-color-black: #{$mdn-color-black};
+  --mdn-color-ads: #{$mdn-color-ads};
+  --mdn-color-background-highlight: #{$mdn-color-light-theme-yellow-10};
   --mdn-color-dark-grey: #{$mdn-color-neutral-70};
   --mdn-background-dark: #{$mdn-theme-dark-background-primary};
   --mdn-background-light: #{$mdn-theme-light-background-primary};

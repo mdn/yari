@@ -16,8 +16,8 @@ export function Settings() {
       <OfflineStatusBar />
       <article className="settings">
         <h1 className="slab-highlight _ify">{pageTitle} </h1>
-        {NEWSLETTER_ENABLED && <Newsletter />}
         <Manage />
+        {NEWSLETTER_ENABLED && <Newsletter />}
         <OfflineSettings />
       </article>
     </>

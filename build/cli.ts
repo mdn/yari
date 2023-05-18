@@ -14,6 +14,7 @@ import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   BUILD_OUT_ROOT,
+  SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,6 +30,7 @@ import { DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
+import { initSentry } from "./sentry.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -51,8 +53,8 @@ interface GlobalMetadata {
 }
 
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -65,7 +67,7 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = translationsOf(document.metadata);
+      const translations = await translationsOf(document.metadata);
       if (translations && translations.length > 0) {
         document.translations = translations;
       } else {
@@ -133,7 +135,7 @@ async function buildDocuments(
 
   const metadata: GlobalMetadata = {};
 
-  const documents = Document.findAll(findAllOptions);
+  const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
@@ -168,8 +170,9 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;
@@ -237,6 +240,7 @@ async function buildDocuments(
       body: _,
       toc: __,
       sidebarHTML: ___,
+      sidebarMacro: ____,
       ...builtMetadata
     } = builtDocument;
     builtMetadata.hash = hash;
@@ -338,6 +342,10 @@ interface BuildArgsAndOptions {
     notLocale?: string[];
     sitemapIndex?: boolean;
   };
+}
+
+if (SENTRY_DSN_BUILD) {
+  initSentry(SENTRY_DSN_BUILD);
 }
 
 program

@@ -9,7 +9,11 @@ import got from "got";
 
 import { m2h } from "../markdown/index.js";
 
-import { VALID_LOCALES, MDN_PLUS_TITLE } from "../libs/constants/index.js";
+import {
+  VALID_LOCALES,
+  MDN_PLUS_TITLE,
+  DEFAULT_LOCALE,
+} from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -34,7 +38,10 @@ const FEATURED_ARTICLES = [
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-async function buildContributorSpotlight(locale, options) {
+async function buildContributorSpotlight(
+  locale: string,
+  options: { verbose?: boolean }
+) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
@@ -45,7 +52,7 @@ async function buildContributorSpotlight(locale, options) {
     );
 
     const frontMatter = frontmatter<DocFrontmatter>(markdown);
-    const contributorHTML = await m2h(frontMatter.body, locale);
+    const contributorHTML = await m2h(frontMatter.body, { locale });
 
     const { sections } = splitSections(contributorHTML);
 
@@ -64,7 +71,7 @@ async function buildContributorSpotlight(locale, options) {
     const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
-      locale,
+      locale.toLowerCase(),
       `${prefix}/${hyData.folderName}`
     );
     const filePath = path.join(outPath, "index.html");
@@ -90,13 +97,20 @@ async function buildContributorSpotlight(locale, options) {
   }
 }
 
-export async function buildSPAs(options) {
+export async function buildSPAs(options: {
+  quiet?: boolean;
+  verbose?: boolean;
+}) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
+  const url = `/${DEFAULT_LOCALE}/404.html`;
   const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+  const outPath = path.join(
+    BUILD_OUT_ROOT,
+    DEFAULT_LOCALE.toLowerCase(),
+    "_spas"
+  );
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
   buildCount++;
@@ -140,6 +154,10 @@ export async function buildSPAs(options) {
         },
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
+        {
+          prefix: "advertising",
+          pageTitle: "Advertise with us",
+        },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
@@ -171,7 +189,11 @@ export async function buildSPAs(options) {
    * @param {string} slug
    * @param {string} title
    */
-  async function buildStaticPages(dirpath, slug, title = "MDN") {
+  async function buildStaticPages(
+    dirpath: string,
+    slug: string,
+    title = "MDN"
+  ) {
     const crawler = new fdir()
       .withFullPaths()
       .withErrors()
@@ -183,7 +205,7 @@ export async function buildSPAs(options) {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
-      const locale = "en-us";
+      const locale = DEFAULT_LOCALE.toLowerCase();
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
@@ -239,11 +261,12 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const locale of fs.readdirSync(root)) {
+    for (const localeLC of fs.readdirSync(root)) {
+      const locale = VALID_LOCALES.get(localeLC) || localeLC;
       if (!isValidLocale(locale)) {
         continue;
       }
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+      if (!fs.statSync(path.join(root, localeLC)).isDirectory()) {
         continue;
       }
 
@@ -256,7 +279,7 @@ export async function buildSPAs(options) {
           FEATURED_ARTICLES.map(async (url) => {
             const document =
               findByURL(`/${locale}/docs/${url}`) ||
-              findByURL(`/en-US/docs/${url}`);
+              findByURL(`/${DEFAULT_LOCALE}/docs/${url}`);
             if (document) {
               const {
                 doc: { mdn_url, summary, title, parents },
@@ -281,7 +304,7 @@ export async function buildSPAs(options) {
       };
       const context = { hyData };
       const html = renderHTML(url, context);
-      const outPath = path.join(BUILD_OUT_ROOT, locale);
+      const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
       fs.writeFileSync(filePath, html);
@@ -356,6 +379,29 @@ async function fetchLatestNews() {
   const $ = cheerio.load(xml, { xmlMode: true });
 
   const items: NewsItem[] = [];
+
+  items.push(
+    {
+      title: "Experimenting with advertising on MDN",
+      url: `/${DEFAULT_LOCALE}/advertising`,
+      author: "Mozilla",
+      published_at: new Date("2023-02-15 15:00Z").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: "/",
+      },
+    },
+    {
+      title: "A shared and open roadmap for MDN",
+      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
+      author: "Mozilla",
+      published_at: new Date("2023-02-08").toString(),
+      source: {
+        name: "blog.mozilla.org",
+        url: "https://blog.mozilla.org/",
+      },
+    }
+  );
 
   $("item").each((i, item) => {
     const $item = $(item);

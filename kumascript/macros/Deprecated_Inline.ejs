@@ -6,25 +6,27 @@
 //
 // Parameters:
 //
-//  $0  Version of deprecation (optional).
-//
-// The version should be prepended with "html", "js", "css", or "gecko"
-// to indicate which technology the version number refers to. For backward
-// compatibility, unprefixed versions are assumed to refer to Gecko, but
-// you shouldn't rely on this.
+//   None
 
-var str = $0;
-var type = 0;   // assume we want the text badge
+const title = mdn.localString({
+  "en-US": "Deprecated. Not for use in new websites.",
+  "ko": "지원이 중단되었습니다. 새로운 웹사이트에서 사용하지 마세요.",
+  "zh-CN": "已弃用。请不要在新的网站中使用。",
+  "zh-TW": "已棄用。請不要在新的網站中使用。"
+});
 
-if (/^\d/.test($0)) {
-    str = "gecko" + $0;
-} else {
-    type = 1;   // switch to the icon indicator if no version specified
-}
-
-if (str.length) {
-    %><%-await template('deprecatedGeneric', ["inline",str])%><%
-} else {
-    %><%-await template('DeprecatedBadge', [type])%><%
-}
+const abbreviation = mdn.localString({
+  "en-US": "Deprecated",
+  "es": "Obsoleto",
+  "fr": "Obsolète",
+  "ja": "非推奨",
+  "ko": "지원이 중단되었습니다",
+  "ru": "Устарело",
+  "zh-CN": "已弃用",
+  "zh-TW": "已棄用"
+});
 %>
+
+<abbr class="icon icon-deprecated" title="<%= title %>">
+  <span class="visually-hidden"><%= abbreviation %></span>
+</abbr>

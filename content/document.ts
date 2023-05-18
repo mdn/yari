@@ -143,7 +143,12 @@ export function saveFile(
     throw new Error("newSlug can not contain the '#' character");
   }
 
-  const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
+  const folderPath = path.dirname(filePath);
+  fs.mkdirSync(folderPath, { recursive: true });
+
+  const combined = `---\n${yaml.dump(saveMetadata, {
+    quotingType: '"',
+  })}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -157,8 +162,6 @@ export function trimLineEndings(string) {
 export function createHTML(html: string, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
-  fs.mkdirSync(folderPath, { recursive: true });
-
   saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
   return folderPath;
 }
@@ -169,8 +172,6 @@ export function createMarkdown(
   root: string | null = null
 ) {
   const folderPath = getFolderPath(metadata, root);
-
-  fs.mkdirSync(folderPath, { recursive: true });
 
   saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
@@ -444,7 +445,7 @@ export function findByURL(
   return doc;
 }
 
-export function findAll({
+export async function findAll({
   files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
@@ -515,7 +516,8 @@ export function findAll({
         return true;
       })
       .crawl(root);
-    filePaths.push(...(api.sync() as PathsOutput));
+    const output: PathsOutput = await api.withPromise();
+    filePaths.push(...output);
   }
   return {
     count: filePaths.length,

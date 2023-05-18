@@ -1,5 +1,7 @@
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
+import "prism-svelte";
+import * as cheerio from "cheerio";
 
 const lazy = (creator) => {
   let res;
@@ -19,6 +21,7 @@ const loadAllLanguages = lazy(() => {
   // - C-like (clike)
   // - JavaScript (javascript, js)
   loadLanguages([
+    "apacheconf",
     "bash",
     "batch",
     "c",
@@ -43,6 +46,7 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
+    "svelte",
     "sql",
     "toml",
     "tsx",
@@ -75,7 +79,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * syntax highlighted with Prism.
  *
  */
-export function syntaxHighlight($, doc) {
+export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
   loadAllLanguages();
 
   // Our content will be like this: `<pre class="brush:js">` or

@@ -1,23 +1,24 @@
 import fs from "node:fs";
 import path from "node:path";
+import { cwd } from "node:process";
 import { fileURLToPath } from "node:url";
 
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
-// Spread into two lines to get the ROOT path,
-// to prevent Webpack from treating 'new URL("../..", import.meta.url)' as an import.
-const currentDir = path.dirname(fileURLToPath(import.meta.url));
-export const ROOT = path.join(currentDir, "..", "..");
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+const ROOT = path.join(dirname, "..", "..");
 
 dotenv.config({
-  path: path.join(ROOT, process.env.ENV_FILE || ".env"),
+  path: path.join(cwd(), process.env.ENV_FILE || ".env"),
 });
 
 // -----
 // build
 // -----
+
+export const BASE_URL = process.env.BASE_URL || "https://developer.mozilla.org";
 
 export const BUILD_OUT_ROOT =
   process.env.BUILD_OUT_ROOT || path.join(ROOT, "client", "build");
@@ -63,6 +64,8 @@ export const ALWAYS_ALLOW_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
+export const SENTRY_DSN_BUILD = process.env.SENTRY_DSN_BUILD || "";
+
 // -------
 // content
 // -------
@@ -76,6 +79,8 @@ export const CONTENT_TRANSLATED_ROOT = correctContentPathFromEnv(
 export const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
   "CONTRIBUTOR_SPOTLIGHT_ROOT"
 );
+
+export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
 
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.

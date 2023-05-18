@@ -99,10 +99,10 @@ describe("fixing flaws", () => {
       .split("\n")
       .filter((line) => regexPattern.test(line));
     expect(dryRunNotices).toHaveLength(4);
-    expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
-    expect(dryRunNotices[3]).toContain(pattern);
+    expect(dryRunNotices[0]).toContain(pattern);
+    expect(dryRunNotices[1]).toContain(path.join(pattern, "bad_pre_tags"));
+    expect(dryRunNotices[2]).toContain(path.join(pattern, "deprecated_macros"));
+    expect(dryRunNotices[3]).toContain(path.join(pattern, "images"));
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles).toHaveLength(0);
   });
@@ -153,7 +153,6 @@ describe("fixing flaws", () => {
     );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
-    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
     // Broken links that get fixed.
     expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
     expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");

@@ -1,4 +1,4 @@
-import unified from "unified";
+import { unified } from "unified";
 import parse from "remark-parse";
 import remark2rehype from "remark-rehype";
 import stringify from "rehype-stringify";

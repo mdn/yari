@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { useIsServer } from "../hooks";
+import { useIsServer, useLocale } from "../hooks";
 import { Doc } from "../../../libs/types/document";
 
 export function useDocumentURL() {
-  const { "*": slug, locale } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
   const url = `/${locale}/docs/${slug}`;
   // If you're in local development Express will force the trailing /
   // on any URL. We can't keep that if we're going to compare the current
@@ -128,6 +129,11 @@ export function useStickyHeaderHeight() {
     if (typeof getComputedStyle !== "function") {
       // SSR.
       return 0;
+    }
+    const sidebar = document.querySelector(".sidebar-container");
+
+    if (sidebar) {
+      return parseFloat(getComputedStyle(sidebar).top);
     }
 
     const styles = getComputedStyle(document.documentElement);

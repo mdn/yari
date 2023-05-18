@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import paths from "./paths.js";
 
 // Double-check to make sure NODE_ENV is defined

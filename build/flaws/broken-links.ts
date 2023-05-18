@@ -8,6 +8,9 @@ import {
   VALID_LOCALES,
 } from "../../libs/constants/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document.js";
+import { Flaw } from "./index.js";
 
 const _safeToHttpsDomains = new Map();
 
@@ -39,12 +42,10 @@ function isHomepageURL(url) {
 }
 
 function mutateLink(
-  $element,
-  { suggestion, enUSFallback, isSelfLink } = {
-    suggestion: null,
-    enUSFallback: null,
-    isSelfLink: false,
-  }
+  $element: cheerio.Cheerio<cheerio.Element>,
+  suggestion: string = null,
+  enUSFallback: string = null,
+  isSelfLink = false
 ) {
   if (isSelfLink) {
     $element.attr("aria-current", "page");
@@ -63,8 +64,13 @@ function mutateLink(
 
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
-export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
-  const flaws = [];
+export function getBrokenLinksFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  { rawContent },
+  level
+) {
+  const flaws: Flaw[] = [];
 
   // This is needed because the same href can occur multiple time.
   // For example:
@@ -75,7 +81,7 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   // this refers to the second time it appears. That's important for the
   // sake of finding which match, in the original source (rawContent),
   // it belongs to.
-  const checked = new Map();
+  const checked = new Map<string, number>();
 
   // Our cache for looking things up by `href`. This basically protects
   // us from calling `findMatchesInText()` more than once.
@@ -83,15 +89,15 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   // A closure function to help making it easier to append flaws
   function addBrokenLink(
-    $element,
-    index,
-    href,
-    suggestion = null,
-    explanation = null,
-    enUSFallback = null,
+    $element: cheerio.Cheerio<cheerio.Element>,
+    index: number,
+    href: string,
+    suggestion: string = null,
+    explanation: string = null,
+    enUSFallback: string = null,
     isSelfLink = false
   ) {
-    mutateLink($element, { suggestion, enUSFallback, isSelfLink });
+    mutateLink($element, suggestion, enUSFallback, isSelfLink);
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about

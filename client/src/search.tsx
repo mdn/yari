@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -52,7 +52,7 @@ function useSearchIndex(): readonly [
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
 
   const url = `/${locale}/search-index.json`;
 
@@ -259,7 +259,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     getInputProps,
     getItemProps,
     getMenuProps,
-    getComboboxProps,
 
     highlightedIndex,
     isOpen,
@@ -454,31 +453,27 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   return (
     <form
       action={formAction}
-      {...getComboboxProps({
-        ref: formRef as any, // downshift's types hardcode it as a div
-        className: "search-form search-widget",
-        id: formId,
-        role: "search",
-        onSubmit: (e) => {
-          // This comes into effect if the input is completely empty and the
-          // user hits Enter, which triggers the native form submission.
-          // When something *is* entered, the onKeyDown event is triggered
-          // on the <input> and within that handler you can
-          // access `event.key === 'Enter'` as a signal to submit the form.
-          if (!inputValue.trim()) {
-            e.preventDefault();
-          }
-        },
-        onFocus: () => {
-          onChangeIsFocused(true);
-        },
-        onBlur: (e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            // focus has moved outside of container
-            onChangeIsFocused(false);
-          }
-        },
-      })}
+      ref={formRef as any} // downshift's types hardcode it as a div
+      className={"search-form search-widget"}
+      id={formId}
+      role={"search"}
+      onSubmit={(e) => {
+        // This comes into effect if the input is completely empty and the
+        // user hits Enter, which triggers the native form submission.
+        // When something *is* entered, the onKeyDown event is triggered
+        // on the <input> and within that handler you can
+        // access `event.key === 'Enter'` as a signal to submit the form.
+        if (!inputValue.trim()) {
+          e.preventDefault();
+        }
+      }}
+      onFocus={() => onChangeIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          // focus has moved outside of container
+          onChangeIsFocused(false);
+        }
+      }}
     >
       <label
         id={`${id}-label`}

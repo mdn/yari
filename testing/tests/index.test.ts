@@ -126,11 +126,14 @@ test("content built foo page", () => {
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]')).toHaveLength(3);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]')
+    .first()
+    .attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
   // building static assets for Dev or Stage, you don't know what domain is
@@ -175,10 +178,11 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(3);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: Une page de test | MDN"
@@ -210,6 +214,37 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
+test("content built zh-CN page for hreflang tag testing", () => {
+  const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
+  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(doc.flaws.translation_differences).toHaveLength(1);
+  expect(doc.title).toBe("<foo>: 测试网页");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].native).toBe("English (US)");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // The built page should not have duplicate hreflang tags,
+  // when zh-TW translation is also available.
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
+  expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-CN");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: 测试网页 | MDN"
+  );
+});
+
 test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
@@ -228,10 +263,11 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(3);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
@@ -416,7 +452,7 @@ test("content built bar page", () => {
   // expect(doc.popularity).toBe(0.51);
   // expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  expect(doc.flaws.macros).toHaveLength(12);
+  expect(doc.flaws.macros).toHaveLength(10);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
   expect(doc.flaws.macros[0].line).toBe(9);
@@ -440,78 +476,59 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("Bob");
   expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("Blob");
   expect(doc.flaws.macros[4].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[4].macroSource).toBe(
-    '{{htmlattrxref("href", "bigfoot")}}'
-  );
+  expect(doc.flaws.macros[4].macroSource).toBe('{{jsxref("bigfoot")}}');
   expect(doc.flaws.macros[4].line).toBe(15);
   expect(doc.flaws.macros[4].column).toBe(6);
   expect(doc.flaws.macros[5].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[5].macroSource).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
+  expect(doc.flaws.macros[5].macroSource).toBe('{{jsxref("Stern_mode")}}');
   expect(doc.flaws.macros[5].line).toBe(16);
   expect(doc.flaws.macros[5].column).toBe(6);
   expect(doc.flaws.macros[5].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[5].redirectInfo.current).toBe("anchor");
-  expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("a");
-  expect(doc.flaws.macros[6].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("bigfoot")}}');
+  expect(doc.flaws.macros[5].redirectInfo.current).toBe("Stern_mode");
+  expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("Strict_mode");
+  expect(doc.flaws.macros[6].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("Flag")}}');
   expect(doc.flaws.macros[6].line).toBe(18);
   expect(doc.flaws.macros[6].column).toBe(6);
+  expect(doc.flaws.macros[6].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[6].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[6].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[7].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[7].macroSource).toBe('{{jsxref("Stern_mode")}}');
+  expect(doc.flaws.macros[7].macroSource).toBe("{{ jsxref('Flag') }}");
   expect(doc.flaws.macros[7].line).toBe(19);
   expect(doc.flaws.macros[7].column).toBe(6);
   expect(doc.flaws.macros[7].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[7].redirectInfo.current).toBe("Stern_mode");
-  expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Strict_mode");
+  expect(doc.flaws.macros[7].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[8].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[8].macroSource).toBe('{{jsxref("Flag")}}');
-  expect(doc.flaws.macros[8].line).toBe(21);
+  expect(doc.flaws.macros[8].macroSource).toBe('{{JSXref("Flag")}}');
+  expect(doc.flaws.macros[8].line).toBe(20);
   expect(doc.flaws.macros[8].column).toBe(6);
   expect(doc.flaws.macros[8].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[8].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[8].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[9].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[9].macroSource).toBe("{{ jsxref('Flag') }}");
-  expect(doc.flaws.macros[9].line).toBe(22);
+  expect(doc.flaws.macros[9].macroSource).toBe('{{JSXref("Flag")}}');
+  expect(doc.flaws.macros[9].line).toBe(21);
   expect(doc.flaws.macros[9].column).toBe(6);
   expect(doc.flaws.macros[9].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[9].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[9].redirectInfo.suggested).toBe("Boolean");
-  expect(doc.flaws.macros[10].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[10].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[10].line).toBe(23);
-  expect(doc.flaws.macros[10].column).toBe(6);
-  expect(doc.flaws.macros[10].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[10].redirectInfo.current).toBe("Flag");
-  expect(doc.flaws.macros[10].redirectInfo.suggested).toBe("Boolean");
-  expect(doc.flaws.macros[11].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[11].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[11].line).toBe(24);
-  expect(doc.flaws.macros[11].column).toBe(6);
-  expect(doc.flaws.macros[11].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[11].redirectInfo.current).toBe("Flag");
-  expect(doc.flaws.macros[11].redirectInfo.suggested).toBe("Boolean");
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("a[data-flaw-src]").length).toEqual(12);
+  expect($("a[data-flaw-src]").length).toEqual(10);
 
   const brokenLinks = $("a.page-not-created");
-  expect(brokenLinks.length).toEqual(4);
+  expect(brokenLinks.length).toEqual(3);
   expect(brokenLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("bigfoot")}}');
   expect(brokenLinks.eq(0).text()).toBe("bigfoot");
   expect(brokenLinks.eq(1).data("flaw-src")).toBe('{{DOMxRef("bigfoot")}}');
   expect(brokenLinks.eq(1).text()).toBe("bigfoot");
-  expect(brokenLinks.eq(2).data("flaw-src")).toBe(
-    '{{htmlattrxref("href", "bigfoot")}}'
-  );
-  expect(brokenLinks.eq(2).text()).toBe("href");
-  expect(brokenLinks.eq(3).data("flaw-src")).toBe('{{jsxref("bigfoot")}}');
-  expect(brokenLinks.eq(3).text()).toBe("bigfoot");
+  expect(brokenLinks.eq(2).data("flaw-src")).toBe('{{jsxref("bigfoot")}}');
+  expect(brokenLinks.eq(2).text()).toBe("bigfoot");
   brokenLinks.each((index, element) => {
     expect($(element).attr("title")).toMatch(
       /The documentation about this has not yet been written/
@@ -531,18 +548,6 @@ test("content built bar page", () => {
   expect(blobLinks.eq(0).data("flaw-src")).toBe('{{DOMxRef("Bob")}}');
   expect(blobLinks.eq(1).text()).toBe("Blob");
   expect(blobLinks.eq(1).data("flaw-src")).toBeFalsy();
-
-  const hrefLinks = $(
-    'a[href="/en-US/docs/Web/HTML/Element/a#attr-href"]:not([title])'
-  );
-  expect(hrefLinks.length).toEqual(2);
-  hrefLinks.each((index, element) => {
-    expect($(element).text()).toBe("href");
-  });
-  expect(hrefLinks.eq(0).data("flaw-src")).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
-  expect(hrefLinks.eq(1).data("flaw-src")).toBeFalsy();
 
   const strictModeLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Strict_mode"]:not([title])'

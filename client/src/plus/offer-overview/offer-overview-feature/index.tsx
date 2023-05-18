@@ -10,8 +10,8 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
             className="img-container"
             src={img}
             alt={imgAlt}
-            width="1600"
-            height="900"
+            width="320"
+            height="320"
           ></img>
           <div className="copy-container">{children}</div>
         </div>
@@ -73,6 +73,21 @@ export default function OfferOverviewFeatures() {
             navigable resources of MDN at your disposal even when offline.
           </p>
           <Button href="/en-US/plus/docs/features/offline" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
+      <OfferOverviewFeature id="afree" img="/assets/afree.png" imgAlt="">
+        <section aria-labelledby="afree-section-title">
+          <h2 id="afree-section-title">Go ads free</h2>
+          <h3>Enjoy MDN ads-free with an MDN Plus subscription.</h3>
+          <p>
+            Support MDN and enjoy a focused, ad-free experience alongside other
+            features such as curated collections, custom web platform updates,
+            offline access, and more. Subscribers to paid tiers of MDN Plus have
+            the option to browse MDN without ads.
+          </p>
+          <Button href="/en-US/advertising" target="_self">
             Learn more →
           </Button>
         </section>

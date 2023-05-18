@@ -150,6 +150,7 @@ $mdn-color-dark-theme-pink-90: $mdn-color-light-theme-pink-90;
 
 $mdn-color-black: #000;
 $mdn-color-white: #fff;
+$mdn-color-ads: #00d0aa;
 
 $mdn-theme-light-text-primary: $mdn-color-neutral-90;
 $mdn-theme-light-text-secondary: $mdn-color-neutral-70;
@@ -246,11 +247,5 @@ $screen-lg: 992px;
 $screen-xl: 1200px;
 $screen-xxl: 1441px;
 
-/*
- * z-index scale
- */
-$send-to-back: -1;
-$bring-to-front: 9999;
-$bottom-layer: 100;
-$middle-layer: 200;
-$top-layer: 300;
+// screen is to small for sticky placement
+$screen-height-place-limit: 44rem;

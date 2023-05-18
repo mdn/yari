@@ -27,6 +27,10 @@ article.settings {
           font-weight: 600;
         }
 
+        p {
+          margin: 0;
+        }
+
         span {
           font-size: 0.8rem;
           grid-column: 1/2;
@@ -53,7 +57,9 @@ article.settings {
           grid-row: 1/3;
           height: max-content;
           justify-self: end;
+          min-width: 10rem;
           padding: 0.5rem 1rem;
+          text-align: center;
           width: max-content;
         }
 
