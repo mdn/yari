@@ -52,7 +52,7 @@ const loadAllLanguages = lazy(() => {
     "typescript",
     "uri",
     "wasm",
-    "web-idl",
+    "webidl",
     "yaml",
   ]);
 });
