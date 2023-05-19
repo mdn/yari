@@ -248,7 +248,7 @@ export function useAiChat({
 
       setIsLoading?.(true);
     },
-    [currentMessageIndex, messages, messageTemplate]
+    [currentMessageIndex, messages, messageTemplate, setIsLoading]
   );
 
   function reset() {
