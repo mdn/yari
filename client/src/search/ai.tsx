@@ -23,8 +23,6 @@ export function AIDialogInner() {
     setIsLoading,
   });
 
-  const isWaiting = isLoading || isResponding;
-
   return (
     <section className="search-ai">
       <div className="search-ai-header">
@@ -88,10 +86,10 @@ export function AIDialogInner() {
         >
           <input
             ref={inputRef}
-            disabled={isWaiting}
+            disabled={isLoading || isResponding}
             type="text"
             placeholder={
-              isWaiting
+              isLoading || isResponding
                 ? "Waiting for an answer..."
                 : "Ask MDN AI a question..."
             }
