@@ -46,7 +46,6 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
-    "svelte",
     "sql",
     "toml",
     "tsx",
