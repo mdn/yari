@@ -67,12 +67,10 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = await translationsOf(document.metadata);
-      if (translations && translations.length > 0) {
-        document.translations = translations;
-      } else {
-        document.translations = [];
-      }
+      document.translations = translationsOf(
+        document.metadata.slug,
+        document.metadata.locale
+      );
     }
 
     return { document, doc: await buildDocument(document), skip: false };
