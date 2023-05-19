@@ -17,8 +17,10 @@ import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
+import { stripXfwdHeaders } from "./middlewares/stripXfwdHeaders.js";
 
 const router = Router();
+router.use(stripXfwdHeaders);
 router.use(redirectLeadingSlash);
 router.all(
   "/api/v1/stripe/plans",
