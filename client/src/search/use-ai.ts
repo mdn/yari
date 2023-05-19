@@ -111,7 +111,7 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
     case "append-content": {
       const { index, content } = messageAction;
       if (current[index]) {
-        console.log((current[index].content += content));
+        current[index].content += content;
       }
       break;
     }
@@ -146,8 +146,6 @@ export function useAiChat({
 
   const submit = useCallback(
     async (query: string) => {
-      console.log(`Submitting query: ${query}`);
-
       if (!edgeFunctionUrl) return console.error("No edge function url");
 
       dispatchMessage({
