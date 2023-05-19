@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.22.0](https://github.com/mdn/yari/compare/v2.21.0...v2.22.0) (2023-05-19)
+
+
+### Features
+
+* **syntax-highlight:** add apacheconf to Prism.js languages ([#8862](https://github.com/mdn/yari/issues/8862)) ([8b8ae3d](https://github.com/mdn/yari/commit/8b8ae3d1e7e5ec63599946a1ad8a699d93a7ffa0))
+
+
+### Bug Fixes
+
+* **blog:** hydration error on date ([#8871](https://github.com/mdn/yari/issues/8871)) ([a271858](https://github.com/mdn/yari/commit/a271858662aef8963ca4a5826636d077db5431c8))
+* **content:** only collect required translations ([#8806](https://github.com/mdn/yari/issues/8806)) ([5ec562c](https://github.com/mdn/yari/commit/5ec562cd2d59d0fd0e4f5d3cb8ac48e2a4985274))
+* **sidebar:** incorrect offset and z-index on mobile ([#8856](https://github.com/mdn/yari/issues/8856)) ([af1cfdc](https://github.com/mdn/yari/commit/af1cfdc4b728a85df9263986809dbd3df1a37f14))
+* **top-banner:** adjust width ([#8863](https://github.com/mdn/yari/issues/8863)) ([f5c6dbc](https://github.com/mdn/yari/commit/f5c6dbc5f674a5c4967aa331c88d01abe74c0f94))
+* **ui:** gap at top of page in tablet mode ([#8885](https://github.com/mdn/yari/issues/8885)) ([dd98b12](https://github.com/mdn/yari/commit/dd98b127bdc8ce655a38ba4db37343af86345f9d))
+* **workflows:** rate limit downloading ripgrep ([#8865](https://github.com/mdn/yari/issues/8865)) ([6187817](https://github.com/mdn/yari/commit/61878177d153cf17c8d968ed4de953bc4a81589e))
+
 ## [2.21.0](https://github.com/mdn/yari/compare/v2.20.3...v2.21.0) (2023-05-15)
 
 
