@@ -91,7 +91,7 @@ export function AIDialogInner() {
             placeholder={
               isLoading || isResponding
                 ? "Waiting for an answer..."
-                : "Ask MDN AI a question..."
+                : "Ask MDN a question..."
             }
           />
         </form>
