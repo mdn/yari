@@ -70,6 +70,8 @@
 .theme-switcher-menu,
 .languages-switcher-menu {
   > .button {
+    display: block;
+
     .button-wrap:after {
       background-color: var(--icon-secondary);
       content: "";
