@@ -46,14 +46,13 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
-    "svelte",
     "sql",
     "toml",
     "tsx",
     "typescript",
     "uri",
     "wasm",
-    // "webidl", // block list
+    "webidl",
     "yaml",
   ]);
 });
@@ -63,10 +62,7 @@ const loadAllLanguages = lazy(() => {
 // Prism expects. It'd be hard to require that content writers
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
-const ALIASES = new Map([
-  // ["idl", "webidl"],  // block list
-  ["sh", "shell"],
-]);
+const ALIASES = new Map([["sh", "shell"]]);
 
 // Over the years we have accumulated some weird <pre> tags whose
 // brush is more or less "junk".
