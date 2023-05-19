@@ -222,7 +222,7 @@
     "source-map-explorer": "^2.5.3",
     "source-map-loader": "^4.0.1",
     "style-dictionary": "^3.8.0",
-    "style-loader": "^3.3.2",
+    "style-loader": "^3.3.3",
     "stylelint": "^15.6.1",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^9.0.5",
