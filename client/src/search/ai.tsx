@@ -27,7 +27,7 @@ export function AIDialogInner() {
     <section className="search-ai">
       <div className="search-ai-header">
         <span className="search-ai-header-icon">🤖</span>{" "}
-        <span className="search-ai-header-title">MDN AI</span>
+        <span className="search-ai-header-title">Ask MDN</span>
       </div>
       <div className="search-ai-body">
         {hasError && (
