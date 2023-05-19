@@ -193,7 +193,7 @@
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^22.0.0",
     "lint-staged": "^13.2.2",
-    "mini-css-extract-plugin": "^2.7.5",
+    "mini-css-extract-plugin": "^2.7.6",
     "node-dev": "^8.0.0",
     "pegjs": "^0.10.0",
     "postcss": "^8.4.23",
