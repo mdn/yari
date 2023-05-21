@@ -85,7 +85,7 @@
       padding: 0.5rem;
     }
 
-    @media screen and (max-width: $screen-lg) {
+    @media screen and (max-width: #{$screen-lg -1}) {
       &.button {
         --button-color: var(--text-secondary);
         --button-padding: 0;
@@ -103,6 +103,11 @@
         &:focus {
           --button-focus-effect: none;
         }
+      }
+
+      &.menu-link {
+        min-height: 53px;
+        padding: 0.5rem;
       }
     }
 

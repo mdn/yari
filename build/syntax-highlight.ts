@@ -1,6 +1,7 @@
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import "prism-svelte";
+import * as cheerio from "cheerio";
 
 const lazy = (creator) => {
   let res;
@@ -20,6 +21,7 @@ const loadAllLanguages = lazy(() => {
   // - C-like (clike)
   // - JavaScript (javascript, js)
   loadLanguages([
+    "apacheconf",
     "bash",
     "batch",
     "c",
@@ -44,14 +46,13 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
-    "svelte",
     "sql",
     "toml",
     "tsx",
     "typescript",
     "uri",
     "wasm",
-    // "webidl", // block list
+    "webidl",
     "yaml",
   ]);
 });
@@ -61,10 +62,7 @@ const loadAllLanguages = lazy(() => {
 // Prism expects. It'd be hard to require that content writers
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
-const ALIASES = new Map([
-  // ["idl", "webidl"],  // block list
-  ["sh", "shell"],
-]);
+const ALIASES = new Map([["sh", "shell"]]);
 
 // Over the years we have accumulated some weird <pre> tags whose
 // brush is more or less "junk".
@@ -77,7 +75,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * syntax highlighted with Prism.
  *
  */
-export function syntaxHighlight($, doc) {
+export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
   loadAllLanguages();
 
   // Our content will be like this: `<pre class="brush:js">` or

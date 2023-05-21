@@ -5,32 +5,44 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build:
-    if: github.triggering_actor != 'dependabot[bot]'
+    if: github.repository == 'mdn/yari'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Release
+        uses: google-github-actions/release-please-action@v3
+        id: release
         with:
-          # Needs to be a bit more than 1 otherwise it might fail to push
-          # a new tag.
-          # With `fetch-depth: 1` which is the default you might get
-          # [remote rejected]   v0.x.x -> v0.x.y (shallow update not allowed)
-          # in the GitHub Action.
-          # So not sure what the number is but let's try something beyond 1.
-          fetch-depth: 10
+          release-type: node
+          package-name: release-please-action
 
-      - name: Setup Node.js environment
+      - name: Checkout
+        uses: actions/checkout@v3
+        if: steps.release.outputs.release_created
+
+      - name: Setup
         uses: actions/setup-node@v3
+        if: steps.release.outputs.release_created
         with:
           node-version: 18
           cache: yarn
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Install all yarn packages
+      - name: Install
+        if: steps.release.outputs.release_created
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build the build
+      - name: Build
+        if: steps.release.outputs.release_created
         env:
           # What this does is it makes sure the built client is made for
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
@@ -48,15 +60,10 @@ jobs:
           # so you have to set it to something. So let's (ab)use the content
           # we use for the end-to-end testing.
           CONTENT_ROOT: testing/content/files
-        run: |
-          yarn build:prepare
+        run: yarn build:prepare
 
-      - name: Dry-run publish to see which files are included
-        run: |
-          npm publish --access public --dry-run
-
-      - name: Publish to npmjs
-        uses: mikeal/merge-release@master
+      - name: Publish
+        if: steps.release.outputs.release_created
+        run: npm publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

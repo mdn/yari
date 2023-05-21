@@ -61,21 +61,12 @@
     padding-right: 1rem;
 
     .toc {
-      --offset: var(--main-document-header-height);
+      --offset: var(--sticky-header-height);
 
       display: block;
       grid-area: toc;
       height: fit-content;
-      mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgb(0, 0, 0) 10% 90%,
-        rgba(0, 0, 0, 0) 100%
-      );
-      max-height: calc(100vh - var(--offset));
-      overflow: auto;
-      position: sticky;
-      top: var(--offset);
+      padding-bottom: 0;
     }
 
     .in-nav-toc {

@@ -1,15 +1,16 @@
-import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
+import webFeatures from "web-features/index.json" assert { type: "json" };
+
 import {
   MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc } from "../libs/types/document.js";
-import { Document, Image, execGit } from "../content/index.js";
+import { Doc, WebFeature, WebFeatureStatus } from "../libs/types/document.js";
+import { Document, execGit } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
@@ -17,7 +18,6 @@ import { FLAW_LEVELS } from "../libs/constants/index.js";
 import { extractSections } from "./extract-sections.js";
 import { extractSidebar } from "./extract-sidebar.js";
 import { extractSummary } from "./extract-summary.js";
-export { default as SearchIndex } from "./search-index.js";
 import { addBreadcrumbData } from "./document-utils.js";
 import {
   fixFixableFlaws,
@@ -29,11 +29,22 @@ import { getPageTitle } from "./page-title.js";
 import { syntaxHighlight } from "./syntax-highlight.js";
 import { formatNotecards } from "./format-notecards.js";
 import buildOptions from "./build-options.js";
-export { gather as gatherGitHistory } from "./git-history.js";
-export { buildSPAs } from "./spas.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
+import {
+  getAdjacentImages,
+  injectLoadingLazyAttributes,
+  injectNoTranslate,
+  makeTOC,
+  postLocalFileLinks,
+  postProcessExternalLinks,
+  postProcessSmallerHeadingIDs,
+} from "./utils.js";
+export { default as SearchIndex } from "./search-index.js";
+export { gather as gatherGitHistory } from "./git-history.js";
+export { buildSPAs } from "./spas.js";
+import * as cheerio from "cheerio";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -46,7 +57,7 @@ const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/con
 // Module-level cache
 const rootToGitBranchMap = new Map();
 
-function getCurrentGitBranch(root) {
+function getCurrentGitBranch(root: string) {
   if (!rootToGitBranchMap.has(root)) {
     // If this is running in a GitHub Action "PR Build" workflow the current
     // branch name will be set in `GITHUB_REF_NAME_SLUG`.
@@ -84,7 +95,7 @@ function getCurrentGitBranch(root) {
  * the content (metadata file).
  * If all is well, do nothing. Nothing is expected to return.
  */
-function validateSlug(slug) {
+function validateSlug(slug: string) {
   if (!slug) {
     throw new Error("slug is empty");
   }
@@ -100,101 +111,13 @@ function validateSlug(slug) {
 }
 
 /**
- * Find all tags that we need to change to tell tools like Google Translate
- * to not translate.
- *
- * @param {Cheerio document instance} $
- */
-function injectNoTranslate($) {
-  $("pre").addClass("notranslate");
-}
-
-/**
- * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
- *
- * @param {Cheerio document instance} $
- */
-function injectLoadingLazyAttributes($) {
-  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
-}
-
-/**
- * For every `<a href="http...">` make it
- * `<a href="http..." class="external" and rel="noopener">`
- *
- *
- * @param {Cheerio document instance} $
- */
-function postProcessExternalLinks($) {
-  $("a[href^=http]").each((i, element) => {
-    const $a = $(element);
-    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
-      // This should have been removed since it's considered a flaw.
-      // But we haven't applied all fixable flaws yet and we still have to
-      // support translated content which is quite a long time away from
-      // being entirely treated with the fixable flaws cleanup.
-      return;
-    }
-    $a.addClass("external");
-    $a.attr("target", "_blank");
-  });
-}
-
-/**
- * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
- * `<a href="$CURRENT_PATH/THING">`
- *
- *
- * @param {Cheerio document instance} $
- */
-function postLocalFileLinks($, doc) {
-  $("a[href]").each((i, element) => {
-    const href = element.attribs.href;
-
-    // This test is merely here to quickly bail if there's no hope to find the
-    // image as a local file link. There are a LOT of hyperlinks throughout
-    // the content and this simple if statement means we can skip 99% of the
-    // links, so it's presumed to be worth it.
-    if (
-      !href ||
-      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
-    ) {
-      return;
-    }
-    // There are a lot of links that don't match. E.g. `<a href="SubPage">`
-    // So we'll look-up a lot "false positives" that are not images.
-    // Thankfully, this lookup is fast.
-    const url = `${doc.mdn_url}/${href}`;
-    const image = Image.findByURLWithFallback(url);
-    if (image) {
-      $(element).attr("href", url);
-    }
-  });
-}
-
-/**
- * Fix the heading IDs so they're all lower case.
- *
- * @param {Cheerio document instance} $
- */
-function postProcessSmallerHeadingIDs($) {
-  $("h4[id], h5[id], h6[id]").each((i, element) => {
-    const id = element.attribs.id;
-    const lcID = id.toLowerCase();
-    if (id !== lcID) {
-      $(element).attr("id", lcID);
-    }
-  });
-}
-
-/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
  *
  * @param {Cheerio document instance} $
  */
-function injectNotecardOnWarnings($) {
+function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
   $("div.warning, div.note, div.blockIndicator")
     .addClass("notecard")
     .removeClass("blockIndicator");
@@ -204,7 +127,7 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder, filename) {
+function getGitHubURL(root: string, folder: string, filename: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
@@ -215,7 +138,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-export function getLastCommitURL(root, hash) {
+export function getLastCommitURL(root: string, hash: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
 }
@@ -230,50 +153,6 @@ function injectSource(doc, document, metadata) {
     last_commit_url: getLastCommitURL(root, metadata.hash),
     filename,
   };
-}
-
-/**
- * Return an array of objects like this [{text: ..., id: ...}, ...]
- * from a document's body.
- * This will be used for the "Table of Contents" menu which expects to be able
- * to link to each section with anchor links.
- *
- * @param {Document} doc
- */
-function makeTOC(doc) {
-  return doc.body
-    .map((section) => {
-      if (
-        (section.type === "prose" ||
-          section.type === "browser_compatibility" ||
-          section.type === "specifications") &&
-        section.value.id &&
-        section.value.title &&
-        !section.value.isH3
-      ) {
-        return { text: section.value.title, id: section.value.id };
-      }
-      return null;
-    })
-    .filter(Boolean);
-}
-
-/**
- * Return an array of all images that are inside the documents source folder.
- *
- * @param {Document} document
- */
-function getAdjacentImages(documentDirectory) {
-  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => {
-      // This needs to match what we do in filecheck/checker.py
-      return (
-        !dirent.isDirectory() &&
-        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
-      );
-    })
-    .map((dirent) => path.join(documentDirectory, dirent.name));
 }
 
 export interface BuiltDocument {
@@ -324,7 +203,7 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let $ = null;
+  let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
 
   try {
@@ -483,6 +362,8 @@ export async function buildDocument(
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
+  doc.baseline = addBaseline(doc);
+
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
   if ($("math").length > 0) {
@@ -628,7 +509,7 @@ export async function buildDocument(
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {
-    doc.shortTitle = document.metadata["short-title"];
+    doc.short_title = document.metadata["short-title"];
   }
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
@@ -646,13 +527,28 @@ export async function buildDocument(
   return { doc: doc as Doc, liveSamples, fileAttachments };
 }
 
+function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
+  if (doc.browserCompat) {
+    for (const feature of Object.values<WebFeature>(webFeatures)) {
+      if (
+        feature.status &&
+        feature.compat_features?.some((query) =>
+          doc.browserCompat?.includes(query)
+        )
+      ) {
+        return feature.status;
+      }
+    }
+  }
+}
+
 interface BuiltLiveSamplePage {
   id: string;
   html: string | null;
   flaw: MacroLiveSampleError | null;
 }
 
-export async function buildLiveSamplePageFromURL(url) {
+export async function buildLiveSamplePageFromURL(url: string) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
   // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.

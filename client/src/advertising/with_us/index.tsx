@@ -51,29 +51,64 @@ export function AdvertiseWithUs() {
         </section>
       </div>
       <section>
+        <h2>Join MDN's Privacy-First Ad Journey</h2>
+        <p>
+          At MDN, we champion user privacy and we stand by{" "}
+          <a
+            href="https://www.mozilla.org/en-US/privacy/ad-targeting-guidelines/"
+            target="_blank"
+            rel="noreferrer"
+            className="external"
+          >
+            Mozilla's Ad targeting guidelines
+          </a>
+          . We pride ourselves with an ethical advertising approach that ensures
+          ads are context-based, free from tracking pixels, and don't involve
+          personal data sharing.
+        </p>
+        <p>
+          While we understand that advertisers rely on attribution to gauge
+          campaign effectiveness, we also find that current methods pose privacy
+          concerns. In line with our vision of protecting user privacy and
+          personal data, Mozilla is part of a working group to develop
+          Interoperable Private Attribution (IPA), a privacy-preserving
+          attribution solution. We aim to enable attribution without tracking,
+          enhancing ad quality and value.
+        </p>
+        <p>
+          Until this becomes a reality, we are working with advertising partners
+          who support our privacy goals. For now, that means collaborating
+          without attribution and developing a better way together.{" "}
+          <a
+            href="https://survey.alchemer.com/s3/7212589/MDN-Advertise-with-us"
+            target="_blank"
+            rel="noreferrer"
+            className="external"
+          >
+            Join us
+          </a>{" "}
+          in this journey!
+        </p>
+        <h2>Our offering</h2>
+        <p>
+          We collaborate with vetted advertisers who share our vision for web
+          development. We display at most two static ads per page. We offer
+          exclusive opportunities for prominent homepage visibility, providing
+          advertisers a unique way to capture our audience's attention. We are
+          also happy to collaborate on writing and publishing sponsored content
+          on our blog.
+        </p>
         <h2>Our audience</h2>
         <p>
-          MDN is an open source documentation resource for web developers. It
-          primarily consists of reference and educational documentation on a
-          wide variety of subjects, including{" "}
-          <a href="/en-US/docs/Web/CSS">CSS</a>,{" "}
-          <a href="/en-US/docs/Web/HTML">HTML</a>,{" "}
-          <a href="/en-US/docs/Web/JavaScript">JavaScript</a>, and{" "}
-          <a href="/en-US/docs/Web/API/">Web APIs</a>. We also provide an
-          extensive set of <a href="/en-US/docs/Learn">learning resources</a>{" "}
-          for new developers and students, accounting for approximately 10% of
-          our audience. More than 17 million web developers visit our website
-          every month, and we pride ourselves with a customer satisfaction of
-          over 90%.
+          MDN is a go-to resource for over 17 million web developers monthly,
+          providing open-source documentation on CSS, HTML, JavaScript, and Web
+          APIs. We boast 90% customer satisfaction and offer comprehensive
+          learning materials for beginners, who make up about 10% of our
+          audience.
         </p>
-        <h2>Our offer</h2>
+        <h2>Partner with us</h2>
         <p>
-          We are currently experimenting with the first advertising campaigns on
-          MDN. You can check <a href="/en-US/advertising">this page</a> for more
-          information about the 'Why' and the 'How' of the experiments.
-        </p>
-        <p>
-          If you are interested in advertising with us, please fill out{" "}
+          Ready to advertise on MDN? Complete{" "}
           <a
             href="https://survey.alchemer.com/s3/7212589/MDN-Advertise-with-us"
             target="_blank"
@@ -81,16 +116,24 @@ export function AdvertiseWithUs() {
             className="external"
           >
             this form
-          </a>{" "}
-          and we'll make sure to get back to you very soon. Learn more about our
-          advertising principles and policies{" "}
+          </a>
+          , and we'll respond shortly. Discover more about{" "}
           <a
             href="https://www.mozilla.org/en-US/privacy/ad-targeting-guidelines/"
             target="_blank"
             rel="noreferrer"
             className="external"
           >
-            here
+            Mozilla's Ad targeting guidelines
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://www.mozilla.org/en-US/privacy/"
+            target="_blank"
+            rel="noreferrer"
+            className="external"
+          >
+            Privacy policy
           </a>
           .
         </p>

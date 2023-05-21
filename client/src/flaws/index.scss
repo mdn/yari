@@ -1,31 +1,42 @@
 .all-flaws {
   .search-error {
-    background-color: rgb(252, 159, 159);
+    background-color: var(--background-warning);
+  }
 
-    h3,
-    h4 {
-      margin-top: 0;
+  h3 {
+    margin-top: 0;
+  }
+
+  h3 span.page {
+    color: var(--text-inactive);
+  }
+
+  td {
+    a .url-prefix,
+    .document-title-preview {
+      color: var(--text-inactive);
+      font-size: 80%;
+      margin-right: 2px;
     }
 
-    h3 span.page {
-      color: #666;
-      margin-left: 10px;
+    a,
+    .document-title-preview {
+      display: block;
     }
   }
 
-  td a .url-prefix,
-  td .document-title-preview {
-    color: rgb(159, 159, 159);
-    font-size: 80%;
-    margin-right: 2px;
-  }
+  .documents {
+    overflow-x: scroll;
+    width: 100%;
 
-  td .document-title-preview {
-    margin-left: 10px;
-  }
+    .no-popularity {
+      color: var(--text-inactive);
+    }
 
-  .document-warnings {
-    background-color: rgb(255, 215, 154);
+    .document-flaws-fixable {
+      display: block;
+      font-size: 80%;
+    }
   }
 
   .search-times {
@@ -41,7 +52,7 @@
     text-align: center;
 
     a.disabled {
-      color: rgb(159, 159, 159);
+      color: var(--text-inactive);
     }
 
     a {
@@ -50,11 +61,13 @@
   }
 
   div.filter-documents {
-    .filters {
-      // XXX Can someone please turn this into a CSS grid
-      float: left;
-      width: 300px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 300px 1fr;
+    margin: auto;
+    width: calc(100% - 40px);
 
+    .filters {
       h4 {
         border-bottom: 1px solid #efefef;
         margin-bottom: 10px;
@@ -70,8 +83,6 @@
     }
 
     .documents {
-      margin-left: 300px;
-
       h4.subheader {
         margin-top: 2px;
       }

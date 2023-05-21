@@ -1,10 +1,10 @@
 import React from "react";
-import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../env";
+import { CRUD_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
-import { useIsServer } from "../hooks";
+import { useIsServer, useLocale } from "../hooks";
 
 import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "../../../libs/types/document";
@@ -38,13 +38,16 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
+import { SidePlacement } from "../ui/organisms/placement";
+import { BaselineIndicator } from "./baseline-indicator";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
   public readonly status: number;
   public readonly url: string;
   public readonly text: string;
@@ -62,7 +65,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -111,8 +114,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
+
   useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
+  useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -219,11 +224,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )
       )}
       <div className="main-wrapper">
-        <RenderSideBar doc={doc} />
-
-        <aside className="toc">
-          <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
-        </aside>
+        <div className="sidebar-container">
+          <RenderSideBar doc={doc} />
+          <div className="toc-container">
+            <aside className="toc">
+              <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+            </aside>
+            {PLACEMENT_ENABLED && <SidePlacement />}
+          </div>
+        </div>
 
         <MainContentContainer>
           {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
@@ -243,7 +252,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </React.Suspense>
           )}
           <article className="main-page-content" lang={doc.locale}>
-            <h1>{doc.title}</h1>
+            <header>
+              <h1>{doc.title}</h1>
+              {doc.baseline && <BaselineIndicator status={doc.baseline} />}
+            </header>
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
@@ -254,7 +266,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 }
 
-function RenderDocumentBody({ doc }) {
+export function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       return <Prose key={section.value.id} section={section.value} />;

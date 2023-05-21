@@ -238,15 +238,15 @@ function OfferDetails({
   );
 }
 
-function isCurrent(user: UserData | null, subscriptionType: SubscriptionType) {
-  if (user === null || !user.isAuthenticated) {
+function isCurrent(user: UserData, subscriptionType: SubscriptionType) {
+  if (!user?.isAuthenticated) {
     return false;
   }
   return user.subscriptionType === subscriptionType;
 }
 
-function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
-  if (user === null || !user.isAuthenticated) {
+function canUpgrade(user: UserData, subscriptionType: SubscriptionType) {
+  if (!user?.isAuthenticated) {
     return null;
   }
   if (!user.isSubscriber || !user.subscriptionType) {

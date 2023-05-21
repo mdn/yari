@@ -9,6 +9,8 @@ import imagesize from "image-size";
 import { Document, Image } from "../content/index.js";
 import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { findMatchesInText } from "./matches-in-text.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../libs/types/document.js";
 
 const { default: sizeOf } = imagesize;
 
@@ -17,7 +19,12 @@ const { default: sizeOf } = imagesize;
  * log them as flaws if they're not passing linting.
  *
  */
-export function checkImageReferences(doc, $, options, { url, rawContent }) {
+export function checkImageReferences(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  { url, rawContent }
+) {
   const filePaths = new Set();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
@@ -120,11 +127,10 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
         } else {
-          const suggestion = null;
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
-            suggestion,
+            suggestion: null,
           });
         }
       }
@@ -232,13 +238,22 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-export function checkImageWidths(doc, $, options, { rawContent }) {
+export function checkImageWidths(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  { rawContent }
+) {
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
   const checked = new Map();
 
-  function addStyleFlaw($img, style, suggestion) {
+  function addStyleFlaw(
+    $img: cheerio.Cheerio<cheerio.Element>,
+    style: string,
+    suggestion: string
+  ) {
     if (!("image_widths" in doc.flaws)) {
       doc.flaws.image_widths = [];
     }

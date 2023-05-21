@@ -93,6 +93,9 @@ export const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "bcd.developer.allizom.org",
+    "bcd.developer.mozilla.org",
+
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
@@ -104,12 +107,11 @@ export const CSP_DIRECTIVES = {
     "'self'",
 
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
     "mdn.github.io",
-    "yari-demos.prod.mdn.mozit.cloud",
-    "mdn.mozillademos.org",
-    "yari-demos.stage.mdn.mozit.cloud",
+    "live-samples.mdn.mozilla.net",
+    "live-samples.mdn.allizom.net",
+    "live-samples.developer.allizom.xyz",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
@@ -128,14 +130,12 @@ export const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
-    "mdn.mozillademos.org",
-    "media.prod.mdn.mozit.cloud",
-    "media.stage.mdn.mozit.cloud",
+    "mdn.dev",
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
+    "upload.wikimedia.org",
 
     "www.google-analytics.com",
     "www.gstatic.com",

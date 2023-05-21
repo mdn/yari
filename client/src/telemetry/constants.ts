@@ -1,3 +1,5 @@
+import { ViewportBreakpoint } from "./glean-context";
+
 export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
   "article_actions_collection_select_opened";
 export const ARTICLE_ACTIONS_NEW_COLLECTION = "article_actions_new_collection";
@@ -29,6 +31,7 @@ export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
 export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
 export const TOGGLE_PLUS_ADS_FREE_DISABLED = "toggle_plus_ads_free_disabled";
 export const TOGGLE_PLUS_ADS_FREE_ENABLED = "toggle_plus_ads_free_enabled";
+export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
 
 export const PLUS_UPDATES = Object.freeze({
   EVENT_COLLAPSE: "plus_updates_event_collapse",
@@ -39,3 +42,13 @@ export const PLUS_UPDATES = Object.freeze({
 });
 
 export const BREADCRUMB_CLICK = "breadcrumb_click";
+
+export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
+  Object.freeze([
+    ["xxl", 1441],
+    ["xl", 1200],
+    ["lg", 992],
+    ["md", 769],
+    ["sm", 426],
+    ["xs", 0],
+  ]);

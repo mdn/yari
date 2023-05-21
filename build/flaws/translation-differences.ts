@@ -2,9 +2,15 @@ import { Flaw } from "./index.js";
 
 import { Document, Translation } from "../../content/index.js";
 import { DEFAULT_LOCALE } from "../../libs/constants/index.js";
+import { Doc } from "../../libs/types/document.js";
+import * as cheerio from "cheerio";
 
-export function injectTranslationDifferences(doc, $, document): Flaw[] {
-  const flaws = [];
+export function injectTranslationDifferences(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  document
+): Flaw[] {
+  const flaws: Flaw[] = [];
 
   const englishDocument = Document.read(
     document.fileInfo.folder.replace(
