@@ -115,7 +115,7 @@ export const info = {
   },
 
   // TODO
-  getTranslations(url) {
+  getTranslations(url: string) {
     // function buildTranslationObjects(data) {
     //   // Builds a list of translation objects suitable for
     //   // consumption by Kumascript macros, using the translation
@@ -155,11 +155,11 @@ export const info = {
     //   }
     //   return result;
     // }
-    return info.getPageByURL(url, { throwIfDoesNotExist: true }).translations;
+    return info.getPageByURL(url, { throwIfDoesNotExist: true }).translations();
   },
 
   getPageByURL(
-    url,
+    url: string,
     { throwIfDoesNotExist = false, followRedirects = true } = {}
   ) {
     // Always start by looking it up *without* following redirects.
@@ -203,13 +203,8 @@ export const info = {
       tags: tags || [],
       pageType: document.metadata["page-type"],
       // Let translations be lazy loaded.
-      get translations() {
-        return (
-          translationsOf({
-            slug: document.metadata.slug,
-            locale: document.metadata.locale,
-          }) ?? []
-        );
+      translations() {
+        return translationsOf(document.metadata.slug, document.metadata.locale);
       },
       summary() {
         // Back in the old Kuma days we used to store the summary as another piece

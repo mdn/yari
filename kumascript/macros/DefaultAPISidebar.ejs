@@ -50,11 +50,11 @@ function buildSublist(pages, title) {
     var title = htmlEscape(aPage.title);
 
     if (locale !== 'en-US') {
-        aPage.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                title = htmlEscape(translation.title);
-            }
-        });
+      for (const translation of aPage.translations()) {
+        if (translation.locale === locale) {
+          title = htmlEscape(translation.title);
+        }
+      }
     }
 
     result += '<li>';

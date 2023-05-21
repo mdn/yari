@@ -974,11 +974,11 @@ async function makePageLink(aPage) {
   let title = htmlEscape(aPage.title);
 
   if (locale !== 'en-US') {
-    aPage.translations.forEach(function(translation){
+    for (const translation of aPage.translations()) {
       if (translation.locale === locale) {
         title = htmlEscape(translation.title);
       }
-    });
+    }
   }
 
   const pageBadges = (await page.badges(aPage)).join("");
