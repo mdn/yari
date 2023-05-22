@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -9,7 +8,6 @@ import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
-import { useGleanClick } from "./telemetry/glean-context";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -31,10 +29,6 @@ type ResultItem = {
   url: string;
   positions: Set<number>;
 };
-
-function quicksearchPing(input) {
-  return `quick-search: ${input}`;
-}
 
 function splitQuery(term: string): string[] {
   return term
@@ -145,7 +139,6 @@ function BreadcrumbURI({
 }
 
 type InnerSearchNavigateWidgetProps = SearchProps & {
-  onResultPicked?: () => void;
   defaultSelection: [number, number];
 };
 
@@ -180,14 +173,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
-    onResultPicked,
     defaultSelection,
   } = props;
 
   const formId = `${id}-form`;
-  const navigate = useNavigate();
   const locale = useLocale();
-  const gleanClick = useGleanClick();
 
   const [searchIndex, searchIndexError, initializeSearchIndex] =
     useSearchIndex();
@@ -275,22 +265,19 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     isOpen: isFocused,
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
-    onSelectedItemChange: ({ type, selectedItem }) => {
-      if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
-        gleanClick(quicksearchPing(inputValue));
-        navigate(selectedItem.url);
-        onChangeInputValue("");
-        reset();
-        toggleMenu();
-        inputRef.current?.blur();
-        if (onResultPicked) {
-          onResultPicked();
-        }
-        window.scroll({
-          top: 0,
-          left: 0,
-          behavior: "smooth",
-        });
+    stateReducer: (state, { type, changes }) => {
+      // https://github.com/downshift-js/downshift/tree/v7.6.0/src/hooks/useCombobox#statereducer
+      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+          return {
+            ...changes, // default Downshift new state changes on item selection.
+            isOpen: state.isOpen, // but keep menu open.
+            highlightedIndex: state.highlightedIndex, // with the item highlighted.
+          };
+        default:
+          return changes; // otherwise business as usual.
       }
     },
   });
@@ -313,7 +300,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     const item = resultItems[highlightedIndex];
     if (item && preloadSupported()) {
       const timeout = setTimeout(() => {
-        preload(`${item.url}/index.json`);
+        preload(`${item.url}`);
       }, PRELOAD_WAIT_MS);
       return () => {
         clearTimeout(timeout);
@@ -367,19 +354,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            <a
-              href={searchPath}
-              onClick={(event: React.MouseEvent) => {
-                if (event.ctrlKey || event.metaKey) {
-                  // Open in new tab, don't navigate current tab.
-                  event.stopPropagation();
-                } else {
-                  // Open in same tab, navigate via combobox.
-                  event.preventDefault();
-                }
-              }}
-              tabIndex={-1}
-            >
+            <a href={searchPath} tabIndex={-1}>
               No document titles found.
               <br />
               Site search for <code>{inputValue}</code>
@@ -398,20 +373,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   index: i,
                 })}
               >
-                <a
-                  href={item.url}
-                  onClick={(event: React.MouseEvent) => {
-                    if (event.ctrlKey || event.metaKey) {
-                      // Open in new tab, don't navigate current tab.
-                      gleanClick(quicksearchPing(inputValue));
-                      event.stopPropagation();
-                    } else {
-                      // Open in same tab, navigate via combobox.
-                      event.preventDefault();
-                    }
-                  }}
-                  tabIndex={-1}
-                >
+                <a href={item.url} tabIndex={-1}>
                   {resultsWithHighlighting[i]}
                 </a>
               </div>
@@ -426,19 +388,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 index: resultItems.length,
               })}
             >
-              <a
-                href={searchPath}
-                onClick={(event: React.MouseEvent) => {
-                  if (event.ctrlKey || event.metaKey) {
-                    // Open in new tab, don't navigate current tab.
-                    event.stopPropagation();
-                  } else {
-                    // Open in same tab, navigate via combobox.
-                    event.preventDefault();
-                  }
-                }}
-                tabIndex={-1}
-              >
+              <a href={searchPath} tabIndex={-1}>
                 Not seeing what you're searching for?
                 <br />
                 Site search for <code>{inputValue}</code>
@@ -497,13 +447,27 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               reset();
               toggleMenu();
               inputRef.current?.blur();
-            } else if (
-              event.key === "Enter" &&
-              inputValue.trim() &&
-              highlightedIndex === -1
-            ) {
-              inputRef.current!.blur();
-              formRef.current!.submit();
+            } else if (event.key === "Enter") {
+              if (inputValue.trim() && highlightedIndex === -1) {
+                inputRef.current!.blur();
+                formRef.current!.submit();
+              } else {
+                const { ctrlKey, shiftKey, altKey, metaKey } = event;
+                document
+                  .querySelector<HTMLElement>(
+                    `#${id}-item-${highlightedIndex} a`
+                  )
+                  ?.dispatchEvent(
+                    new MouseEvent("click", {
+                      // we attempt to pass modifier keys through
+                      // but browser support is incredibly varied
+                      ctrlKey,
+                      shiftKey,
+                      altKey,
+                      metaKey,
+                    })
+                  );
+              }
             }
           },
           onChange(event) {
