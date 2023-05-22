@@ -47,6 +47,7 @@ const loadAllLanguages = lazy(() => {
     "rust",
     "scss",
     "sql",
+    // 'svelte', // Loaded by `prism-svelte` extension
     "toml",
     "tsx",
     "typescript",
