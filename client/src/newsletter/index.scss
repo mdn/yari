@@ -1,0 +1,10 @@
+.main-newsletter {
+  max-width: 35rem;
+  margin: 0 auto;
+  padding: 2rem;
+
+  input[type="email"],
+  button {
+    width: 100%;
+  }
+}
