@@ -382,6 +382,16 @@ async function fetchLatestNews() {
 
   items.push(
     {
+      title: "Introducing Baseline: a unified view of stable web features",
+      url: `/${DEFAULT_LOCALE}/blog/baseline-unified-view-stable-web-features/`,
+      author: "Hermina Condei",
+      published_at: new Date("2023-05-10").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
       title: "Experimenting with advertising on MDN",
       url: `/${DEFAULT_LOCALE}/advertising`,
       author: "Mozilla",
