@@ -1969,13 +1969,13 @@
     "@sentry/utils" "7.52.1"
     tslib "^1.9.3"
 
-"@sentry/integrations@^7.52.1":
-  version "7.52.1"
-  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.52.1.tgz#e8a5988477e8d295fa1d90ce5628c1a7794c2a09"
-  integrity sha512-4uejF01723wzEHjcP5AcNcV+Z/6U27b1LyaDu0jY3XDry98MMjhS/ASzecLpaEFxi3dh/jMTUrNp1u7WMj59Lg==
+"@sentry/integrations@^7.53.0":
+  version "7.53.0"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.53.0.tgz#e60a99702ef436c359088d768dccf55530d449ce"
+  integrity sha512-6GC5ULGnSHjPlOFdK3E1tW/4FitaX+Wm0daBdYl5EYUz9haWWdlKXfi0ELzW+SWDJVE1o86zEyZ4saCUhwz52g==
   dependencies:
-    "@sentry/types" "7.52.1"
-    "@sentry/utils" "7.52.1"
+    "@sentry/types" "7.53.0"
+    "@sentry/utils" "7.53.0"
     localforage "^1.8.1"
     tslib "^1.9.3"
 
@@ -1998,12 +1998,25 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.52.1.tgz#bcff6d0462d9b9b7b9ec31c0068fe02d44f25da2"
   integrity sha512-OMbGBPrJsw0iEXwZ2bJUYxewI1IEAU2e1aQGc0O6QW5+6hhCh+8HO8Xl4EymqwejjztuwStkl6G1qhK+Q0/Row==
 
+"@sentry/types@7.53.0":
+  version "7.53.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.53.0.tgz#f267ea223ceaf1832a4247363bfd3afcca9b7fe5"
+  integrity sha512-hqlbrCL8nfDfjlF6wh4NHNW9plhWJ1m2BSqRyspcxOC44e293BPfwjUzr0aQapJK/aRkHROnfAtzsEu2awNPzg==
+
 "@sentry/utils@7.52.1":
   version "7.52.1"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.52.1.tgz#4a3e49b918f78dba4524c924286210259020cac5"
   integrity sha512-MPt1Xu/jluulknW8CmZ2naJ53jEdtdwCBSo6fXJvOTI0SDqwIPbXDVrsnqLAhVJuIN7xbkj96nuY/VBR6S5sWg==
   dependencies:
     "@sentry/types" "7.52.1"
+    tslib "^1.9.3"
+
+"@sentry/utils@7.53.0":
+  version "7.53.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.53.0.tgz#ff3470135fdeec00ef4c355c10488cf9227c5ed0"
+  integrity sha512-T3F2DkXB9fDjUIAcrOMrGCnquyTQxTyTb5Mh+NbFBevQn32fHehQ62VraLhe20HTVy8YBFkXisvLu6HeOZ5Mog==
+  dependencies:
+    "@sentry/types" "7.53.0"
     tslib "^1.9.3"
 
 "@sidvind/better-ajv-errors@^2.0.0":
