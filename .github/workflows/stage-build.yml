@@ -168,7 +168,7 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
@@ -215,6 +215,9 @@ jobs:
 
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
+
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_URL: mdnyalp.dev
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
@@ -330,7 +333,8 @@ jobs:
             --memory=2GB \
             --timeout=30s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.allizom.net" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live,mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \

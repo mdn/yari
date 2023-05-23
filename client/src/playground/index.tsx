@@ -10,10 +10,10 @@ import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
 import { EditorContent, update } from "./utils";
-import { PLAYGROUND_BASE_URL } from "../../../libs/env";
 
 import "./index.scss";
 import { Switch } from "../ui/atoms/switch";
+import { PLAYGROUND_BASE_URL } from "../env";
 
 const HTML_DEFAULT = "<!-- HTML goes here -->";
 const CSS_DEFAULT = "/* CSS goes here */";
