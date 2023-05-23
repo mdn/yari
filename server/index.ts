@@ -18,7 +18,12 @@ import {
 } from "../build/index.js";
 import { findTranslations } from "../content/translations.js";
 import { Document, Redirect, Image } from "../content/index.js";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import {
+  CSP_VALUE,
+  DEFAULT_LOCALE,
+  PLAYGROUND_CSP_VALUE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
+} from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
@@ -257,6 +262,7 @@ app.get("/:locale/blog/:slug/:asset", async (req, res) => {
   return res.status(404).send("Nothing here 🤷‍♂️");
 });
 app.get("/*", async (req, res, ...args) => {
+  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
@@ -275,6 +281,18 @@ app.get("/*", async (req, res, ...args) => {
     return contentProxy(req, res, ...args);
   }
 
+  if (parsedUrl.pathname.endsWith("/runner.html")) {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
+  if (parsedUrl.pathname.endsWith("/unsafe-runner.html")) {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
   if (req.url.includes("/_sample_.")) {
     try {
       return res.send(await buildLiveSamplePageFromURL(req.path));

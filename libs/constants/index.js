@@ -85,8 +85,6 @@ export const CSP_SCRIPT_SRC_VALUES = [
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
-  "script-src": CSP_SCRIPT_SRC_VALUES,
-  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
@@ -112,6 +110,8 @@ export const CSP_DIRECTIVES = {
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
     "live-samples.developer.allizom.xyz",
+    "mdnplay.dev",
+    "mdnyalp.dev",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
@@ -151,7 +151,35 @@ export const cspToString = (csp) =>
     .map(([directive, values]) => `${directive} ${values.join(" ")};`)
     .join(" ");
 
-export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
+export const CSP_VALUE = cspToString({
+  ...CSP_DIRECTIVES,
+  "script-src": CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
+});
+
+export const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
+  "'unsafe-eval'",
+  "'unsafe-inline'",
+  "'wasm-unsafe-eval'",
+];
+
+export const PLAYGROUND_UNSAFE_CSP_DIRECTIVES = {
+  "default-src": ["*"],
+  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "style-src": ["'report-sample'", "*", "'unsafe-inline'", "'unsafe-eval'"],
+  "base-uri": ["'self'"],
+};
+
+export const PLAYGROUND_CSP_VALUE = cspToString({
+  ...CSP_DIRECTIVES,
+  "script-src": [...CSP_SCRIPT_SRC_VALUES, "'nonce-deadbeef'"],
+  "script-src-elem": [...CSP_SCRIPT_SRC_VALUES, "'nonce-deadbeef'"],
+});
+
+export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString(
+  PLAYGROUND_UNSAFE_CSP_DIRECTIVES
+);
 
 // -----
 // build

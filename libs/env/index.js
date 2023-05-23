@@ -157,3 +157,10 @@ export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
 export const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
 
 export const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
+
+// ----------
+// playground
+// ----------
+
+export const PLAYGROUND_BASE_URL =
+  process.env.REACT_APP_PLAYGROUND_BASE_URL || "mdnplay.dev";

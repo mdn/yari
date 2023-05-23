@@ -14,6 +14,7 @@ export const LOCAL_RUMBA = "http://localhost:8000/";
 export enum Origin {
   main = "main",
   liveSamples = "liveSamples",
+  play = "play",
   unsafe = "unsafe",
 }
 
@@ -26,17 +27,7 @@ export enum Source {
 export const ORIGIN_MAIN: string = process.env["ORIGIN_MAIN"] || "localhost";
 export const ORIGIN_LIVE_SAMPLES: string =
   process.env["ORIGIN_LIVE_SAMPLES"] || "localhost";
-
-export function origin(req: Request): Origin {
-  switch (req.hostname) {
-    case ORIGIN_MAIN:
-      return Origin.main;
-    case ORIGIN_LIVE_SAMPLES:
-      return Origin.liveSamples;
-    default:
-      return Origin.unsafe;
-  }
-}
+export const ORIGIN_PLAY: string = process.env["ORIGIN_PLAY"] || "localhost";
 
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
@@ -44,10 +35,21 @@ export const SOURCE_API: string =
   process.env["SOURCE_API"] || "https://developer.allizom.org/";
 
 export function getOriginFromRequest(req: Request): Origin {
-  if (req.hostname === ORIGIN_MAIN && !req.path.includes("/_sample_.")) {
+  if (
+    req.hostname === ORIGIN_MAIN &&
+    !req.path.includes("/_sample_.") &&
+    !req.path.endsWith("/runner.html") &&
+    !req.path.endsWith("/unsafe-runner.html")
+  ) {
     return Origin.main;
-  } else if (req.hostname === ORIGIN_LIVE_SAMPLES) {
+  } else if (
+    req.hostname === ORIGIN_LIVE_SAMPLES &&
+    !req.path.endsWith("/runner.html") &&
+    !req.path.endsWith("/unsafe-runner.html")
+  ) {
     return Origin.liveSamples;
+  } else if (req.hostname.endsWith(ORIGIN_PLAY)) {
+    return Origin.play;
   } else {
     return Origin.unsafe;
   }

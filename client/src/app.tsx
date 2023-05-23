@@ -33,6 +33,7 @@ const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
+const Playground = React.lazy(() => import("./playground"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
@@ -158,6 +159,14 @@ export function App(appProps: HydrationData) {
         time it hits any React code.
        */}
       <Route path="/" element={homePage} />
+      <Route
+        path="/play"
+        element={
+          <LazyStandardLayout>
+            <Playground />
+          </LazyStandardLayout>
+        }
+      />
       <Route
         path="/en-US/blog/*"
         element={

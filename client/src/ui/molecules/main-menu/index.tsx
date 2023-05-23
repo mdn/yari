@@ -82,6 +82,11 @@ export default function MainMenu({ isOpenOnMobile }) {
             Blog
           </a>
         </li>
+        <li className="top-level-entry-container">
+          <a className="top-level-entry menu-link" href="/play">
+            Play
+          </a>
+        </li>
       </ul>
     </nav>
   );

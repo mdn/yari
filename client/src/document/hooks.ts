@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useIsServer, useLocale } from "../hooks";
 import { Doc } from "../../../libs/types/document";
+import { EditorContent, update } from "../playground/utils";
+
+const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 
 export function useDocumentURL() {
   const locale = useLocale();
@@ -13,6 +16,160 @@ export function useDocumentURL() {
   return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
 }
 
+const SECTION_RE = /h[1-6]/i;
+function partOfSection(heading: Element, element: Element) {
+  if (
+    SECTION_RE.test(element.tagName) &&
+    element.tagName.toLowerCase() <= heading.tagName.toLowerCase()
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function sectionForHeading(heading: Element | null): Element[] {
+  const nodes: Element[] = [];
+  if (heading === null) {
+    return [];
+  }
+  let next = heading.nextElementSibling;
+  while (next && partOfSection(heading, next)) {
+    nodes.push(next);
+    if (next.nextElementSibling === null) {
+      next = next.parentElement?.nextElementSibling?.firstElementChild || null;
+    } else {
+      next = next.nextElementSibling;
+    }
+  }
+  return nodes;
+}
+
+function closestHeading(element: Element) {
+  let prev = element;
+  while (prev.parentElement && prev.parentElement.firstElementChild) {
+    if (SECTION_RE.test(prev.parentElement.firstElementChild.tagName)) {
+      return prev.parentElement.firstElementChild;
+    }
+    prev = prev.parentElement;
+  }
+  return null;
+}
+
+function prevHeading(heading: Element) {
+  let prev = heading;
+  while (prev.parentElement?.previousElementSibling?.firstElementChild) {
+    prev = prev.parentElement.previousElementSibling.firstElementChild;
+    if (
+      SECTION_RE.test(prev.tagName) &&
+      prev.tagName.toLowerCase() <= heading.tagName.toLowerCase()
+    ) {
+      return prev;
+    }
+  }
+  return null;
+}
+
+function codeForHeading(
+  heading: Element,
+  src: string
+): { code: EditorContent; nodes: Element[] } | null {
+  const section = sectionForHeading(heading);
+
+  if (!section.length) {
+    return null;
+  }
+  const code: EditorContent = {
+    css: "",
+    html: "",
+    js: "",
+    src,
+  };
+
+  let empty = true;
+  const nodes: Element[] = [];
+  for (const part of LIVE_SAMPLE_PARTS) {
+    const src = section
+      .flatMap((e) => [
+        ...e?.querySelectorAll(
+          `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`
+        ),
+      ])
+
+      .map((e) => {
+        nodes.push(e);
+        return e.textContent;
+      })
+      .join("\n");
+    if (src) {
+      empty = false;
+      code[part] += src;
+    }
+  }
+  return empty ? null : { code, nodes };
+}
+
+export function useMakeInteractive(doc: Doc | undefined) {
+  const isServer = useIsServer();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    if (!doc) {
+      return;
+    }
+    [...document.querySelectorAll("iframe")].forEach((iframe) => {
+      const src = iframe.src;
+      if (!(src && src.toLowerCase().includes(`/runner.html`))) {
+        return;
+      }
+      const iframeId = iframe.id;
+      const id = iframeId.substring("frame_".length);
+      let heading = document.getElementById(id) || closestHeading(iframe);
+      if (!heading) {
+        return null;
+      }
+      let r = codeForHeading(heading, iframe.src);
+      while (r === null) {
+        heading = prevHeading(heading);
+        if (heading === null) {
+          return null;
+        }
+        r = codeForHeading(heading, iframe.src);
+      }
+      const { code, nodes } = r;
+      nodes.forEach((element) => {
+        const wrapper = element.parentElement;
+        // No idea how a parentElement could be falsy in practice, but it can
+        // in theory and hence in TypeScript. So to having to test for it, bail
+        // early if we have to.
+        if (!wrapper) return;
+
+        const button = document.createElement("button");
+        const span = document.createElement("span");
+
+        span.textContent = "Open in Playground";
+
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "icon play-icon");
+        span.setAttribute("class", "visually-hidden");
+        button.appendChild(span);
+        wrapper.appendChild(button);
+
+        button.onclick = async () => {
+          const key = `play-${id}-${doc.mdn_url}`;
+          sessionStorage.setItem(key, JSON.stringify(code));
+          const url = new URL(window?.location.href);
+          url.pathname = "/play";
+          url.searchParams.set("local", key);
+          window.location.href = url.href;
+        };
+      });
+      setTimeout(() => update(iframe, code), 500);
+    });
+  }, [doc, isServer]);
+}
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   const location = useLocation();
   const isServer = useIsServer();

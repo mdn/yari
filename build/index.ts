@@ -408,12 +408,6 @@ export async function buildDocument(
     throw error;
   }
 
-  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
-  // that were used for that. If we don't do this, for example, the `pre` tags will be
-  // syntax highligted, which is a waste because they're going to be invisible
-  // anyway.
-  $("div.hidden").remove();
-
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
 

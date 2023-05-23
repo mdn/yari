@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style id="style"></style>
+    <script nonce="deadbeef">
+      const consoleDiv = document.getElementById("console");
+      const consoleProxy = new Proxy(console, {
+        get(target, prop) {
+          if (prop === "log" || prop === "error" || prop === "warn") {
+            return (...args) => {
+              const message = args.join(" ");
+              window.parent.postMessage({ typ: "console", prop, message }, "*");
+              target[prop](...args);
+            };
+          }
+          return target[prop];
+        },
+      });
+
+      window.console = consoleProxy;
+
+      function init(state) {
+        window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
+        const style = document.head.querySelector("#style");
+        style.innerHTML = state.css;
+        document.head.appendChild(style);
+        document.body.innerHTML = state.html;
+        const script = document.createElement("script");
+        script.nonce = "deadbeef";
+        script.textContent = state.js;
+        document.body.appendChild(script);
+        dispatchEvent(new Event("load"));
+      }
+      window.addEventListener("message", (event) => {
+        const e = event.data;
+        if (e.typ === "init") {
+          init(e.state);
+        }
+      });
+      window.parent.postMessage(
+        {
+          typ: "ready",
+          prop: Number(new URLSearchParams(location.search).get("v")),
+        },
+        "*"
+      );
+    </script>
+  </head>
+
+  <body></body>
+</html>

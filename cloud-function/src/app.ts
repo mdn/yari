@@ -17,6 +17,8 @@ import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
+import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
+import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 
 const router = Router();
@@ -42,6 +44,19 @@ router.get(
 );
 router.get("/", requireOrigin(Origin.main), redirectLocale);
 router.get(
+  [
+    "/[^/]+/docs/*/runner.html",
+    "/[^/]+/blog/*/runner.html",
+    "^/runner.html",
+    "/[^/]+/docs/*/unsafe-runner.html",
+    "/[^/]+/blog/*/unsafe-runner.html",
+    "^/unsafe-runner.html",
+  ],
+  requireOrigin(Origin.play),
+  resolveRunnerHtml,
+  proxyRunner
+);
+router.get(
   ["/[^/]+/docs/*/_sample_.*.html", "/[^/]+/blog/*/_sample_.*.html"],
   requireOrigin(Origin.liveSamples),
   resolveIndexHTML,
@@ -49,7 +64,7 @@ router.get(
 );
 router.get(
   "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
-  requireOrigin(Origin.main, Origin.liveSamples),
+  requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
   proxyContent
 );
