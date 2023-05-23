@@ -8,6 +8,7 @@ import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
+import { useGleanClick } from "./telemetry/glean-context";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -29,6 +30,10 @@ type ResultItem = {
   url: string;
   positions: Set<number>;
 };
+
+function quicksearchPing(input: string) {
+  return `quick-search: ${input}`;
+}
 
 function splitQuery(term: string): string[] {
   return term
@@ -178,6 +183,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const formId = `${id}-form`;
   const locale = useLocale();
+  const gleanClick = useGleanClick();
 
   const [searchIndex, searchIndexError, initializeSearchIndex] =
     useSearchIndex();
@@ -244,6 +250,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     () => ({ url: searchPath, title: "", positions: new Set() }),
     [searchPath]
   );
+
+  const resultClick: React.MouseEventHandler<HTMLAnchorElement> = () => {
+    gleanClick(quicksearchPing(inputValue));
+  };
 
   const {
     getInputProps,
@@ -354,7 +364,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            <a href={searchPath} tabIndex={-1}>
+            <a
+              href={searchPath}
+              onClick={resultClick}
+              onAuxClick={resultClick}
+              tabIndex={-1}
+            >
               No document titles found.
               <br />
               Site search for <code>{inputValue}</code>
@@ -373,7 +388,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   index: i,
                 })}
               >
-                <a href={item.url} tabIndex={-1}>
+                <a
+                  href={item.url}
+                  onClick={resultClick}
+                  onAuxClick={resultClick}
+                  tabIndex={-1}
+                >
                   {resultsWithHighlighting[i]}
                 </a>
               </div>
@@ -388,7 +408,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 index: resultItems.length,
               })}
             >
-              <a href={searchPath} tabIndex={-1}>
+              <a
+                href={searchPath}
+                onClick={resultClick}
+                onAuxClick={resultClick}
+                tabIndex={-1}
+              >
                 Not seeing what you're searching for?
                 <br />
                 Site search for <code>{inputValue}</code>
@@ -454,13 +479,15 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               } else {
                 const { ctrlKey, shiftKey, altKey, metaKey } = event;
                 document
-                  .querySelector<HTMLElement>(
+                  .querySelector<HTMLAnchorElement>(
                     `#${id}-item-${highlightedIndex} a`
                   )
                   ?.dispatchEvent(
                     new MouseEvent("click", {
+                      // so react receives the event:
+                      bubbles: true,
                       // we attempt to pass modifier keys through
-                      // but browser support is incredibly varied
+                      // but browser support is incredibly varied:
                       ctrlKey,
                       shiftKey,
                       altKey,
