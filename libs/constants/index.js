@@ -110,8 +110,8 @@ export const CSP_DIRECTIVES = {
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
     "live-samples.developer.allizom.xyz",
-    "mdnplay.dev",
-    "mdnyalp.dev",
+    "*.mdnplay.dev",
+    "*.mdnyalp.dev",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",

@@ -27,7 +27,7 @@ export const KUMA_HOST =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 
 export const PLAYGROUND_BASE_URL =
-  process.env.REACT_APP_PLAYGROUND_BASE_URL || "mdnplay.dev";
+  process.env.REACT_APP_PLAYGROUND_BASE_URL || "doom.mdnplay.dev";
 
 export const PLUS_IS_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")

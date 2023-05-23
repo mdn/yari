@@ -37,7 +37,7 @@ async function save(editorContent: EditorContent) {
   });
   let { id } = await res.json();
   let url = new URL(document.URL);
-  url.search = new URLSearchParams([["gist", id]]).toString();
+  url.search = new URLSearchParams([["id", id]]).toString();
   return url;
 }
 
@@ -51,7 +51,7 @@ export default function Playground() {
   let [state, setState] = useState(State.initial);
   let [version, setVersion] = useState<number>(0);
   let [unsafe, setUnsafe] = useState(false);
-  let gistId = searchParams.get("gist");
+  let gistId = searchParams.get("id");
   let localKey = searchParams.get("local");
   let { data: code } = useSWR<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
@@ -80,7 +80,8 @@ export default function Playground() {
   const cssRef = useRef<EditorHandle | null>(null);
   const jsRef = useRef<EditorHandle | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
-  const diaRef = useRef<HTMLDialogElement | null>(null);
+  const shareDiaRef = useRef<HTMLDialogElement | null>(null);
+  const flagDiaRef = useRef<HTMLDialogElement | null>(null);
   let messageListener = useCallback(({ data: { typ, prop, message } }) => {
     if (typ === "console") {
       if (prop === "clear") {
@@ -124,7 +125,7 @@ export default function Playground() {
     jsRef.current?.setContent(JS_DEFAULT);
 
     if (iframe.current?.contentWindow?.location?.href) {
-      iframe.current.contentWindow.location.href = `https://${PLAYGROUND_BASE_URL}/${
+      iframe.current.contentWindow.location.href = `//${PLAYGROUND_BASE_URL}/${
         unsafe ? "unsafe-runner.html" : "runner.html"
       }`;
     }
@@ -168,10 +169,40 @@ export default function Playground() {
   return (
     <>
       <main className="play container">
-        <dialog id="playDialog" ref={diaRef}>
+        <dialog id="playDialog" ref={shareDiaRef}>
           <div>
             <span>Share your code via this Permalink:</span>
             {url && <a href={url}>{url}</a>}
+          </div>
+        </dialog>
+        <dialog id="flagDialog" ref={flagDiaRef}>
+          <div>
+            <span>
+              Report this malicious or inappropriate shared playground. Can you
+              please share some details what wrong with this content:
+            </span>
+            <textarea id="flagReason"></textarea>
+            <Button
+              onClickHandler={async (e) => {
+                await fetch("/api/v1/play/flag", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    id: gistId,
+                    reason: (
+                      document.getElementById(
+                        "flagReason"
+                      ) as HTMLTextAreaElement
+                    ).value,
+                  }),
+                });
+                flagDiaRef.current?.close();
+              }}
+            >
+              Send
+            </Button>
           </div>
         </dialog>
         <section className="editors">
@@ -197,7 +228,7 @@ export default function Playground() {
                   setUrl(url.toString());
                   setSearchParams(url.searchParams);
                   setShared(true);
-                  diaRef.current?.showModal();
+                  shareDiaRef.current?.showModal();
                 }}
               >
                 share
@@ -229,7 +260,14 @@ export default function Playground() {
         </section>
         <section className="preview">
           {gistId && (
-            <a className="flag-example" href="/">
+            <a
+              className="flag-example"
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                flagDiaRef.current?.showModal();
+              }}
+            >
               Seeing something inappropriate?
             </a>
           )}
@@ -238,7 +276,7 @@ export default function Playground() {
             ref={iframeRef}
             src={`${
               code?.src ||
-              `https://${PLAYGROUND_BASE_URL}/${
+              `//${PLAYGROUND_BASE_URL}/${
                 unsafe ? "unsafe-runner.html" : "runner.html"
               }`
             }?v=${version}`}

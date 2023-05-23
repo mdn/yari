@@ -29,20 +29,24 @@ main.play {
   dialog {
     z-index: 1;
 
-    &#playDialog > div {
-      display: flex;
-      flex-direction: column;
-      padding: 2rem;
-    }
-
-    &#refineDialog > div,
-    &#askDialog > div {
+    > div {
       align-items: center;
       display: flex;
       flex-direction: column;
+      padding: 2rem;
       gap: 0.5rem;
-      min-height: 15rem;
-      min-width: 20rem;
+      width: 25rem;
+    }
+
+    &#playDialog > div {
+      max-width: 30rem;
+      overflow-wrap: anywhere;
+    }
+
+    &#flagDialog > div > textarea {
+      width: 100%;
+      height: 6rem;
+      resize: none;
     }
   }
 
