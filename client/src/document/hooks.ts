@@ -110,6 +110,7 @@ function codeForHeading(
 
 export function useMakeInteractive(doc: Doc | undefined) {
   const isServer = useIsServer();
+  const locale = useLocale();
 
   useEffect(() => {
     if (isServer) {
@@ -161,14 +162,14 @@ export function useMakeInteractive(doc: Doc | undefined) {
           const key = `play-${id}-${doc.mdn_url}`;
           sessionStorage.setItem(key, JSON.stringify(code));
           const url = new URL(window?.location.href);
-          url.pathname = "/play";
+          url.pathname = `/${locale}/play`;
           url.searchParams.set("local", key);
           window.location.href = url.href;
         };
       });
       setTimeout(() => update(iframe, code), 500);
     });
-  }, [doc, isServer]);
+  }, [doc, isServer, locale]);
 }
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   const location = useLocation();

@@ -6,8 +6,10 @@ import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
+import { useLocale } from "../../../hooks";
 
 export default function MainMenu({ isOpenOnMobile }) {
+  const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
@@ -83,7 +85,7 @@ export default function MainMenu({ isOpenOnMobile }) {
           </a>
         </li>
         <li className="top-level-entry-container">
-          <a className="top-level-entry menu-link" href="/play">
+          <a className="top-level-entry menu-link" href={`/${locale}/play`}>
             Play
           </a>
         </li>

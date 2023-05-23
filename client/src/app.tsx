@@ -160,14 +160,6 @@ export function App(appProps: HydrationData) {
        */}
       <Route path="/" element={homePage} />
       <Route
-        path="/play"
-        element={
-          <LazyStandardLayout>
-            <Playground />
-          </LazyStandardLayout>
-        }
-      />
-      <Route
         path="/en-US/blog/*"
         element={
           <StandardLayout extraClasses="blog">
@@ -241,6 +233,14 @@ export function App(appProps: HydrationData) {
               </>
             )}
             <Route path="/" element={homePage} />
+            <Route
+              path="/play"
+              element={
+                <LazyStandardLayout>
+                  <Playground />
+                </LazyStandardLayout>
+              }
+            />
             <Route
               path="/search"
               element={
