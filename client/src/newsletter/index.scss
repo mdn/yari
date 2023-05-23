@@ -1,4 +1,4 @@
-.main-newsletter {
+.section-newsletter {
   max-width: 35rem;
   margin: 0 auto;
   padding: 2rem;
@@ -6,5 +6,15 @@
   input[type="email"],
   button {
     width: 100%;
+  }
+
+  form {
+    margin-bottom: 2rem;
+  }
+
+  .blog-container.post + & {
+    h1 {
+      font: var(--type-heading-h3);
+    }
   }
 }
