@@ -9,7 +9,11 @@ import * as kumascript from "../kumascript/index.js";
 
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { BLOG_ROOT, BUILD_OUT_ROOT, BASE_URL } from "../libs/env/index.js";
-import { BlogPostData, BlogPostFrontmatter } from "../libs/types/blog.js";
+import {
+  BlogPostData,
+  BlogPostFrontmatter,
+  BlogPostLimitedFrontmatter,
+} from "../libs/types/blog.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -42,12 +46,24 @@ function calculateReadTime(copy: string): number {
 }
 
 async function readPost(
-  file: string
+  file: string,
+  extraMeta = true
 ): Promise<{ blogMeta: BlogPostFrontmatter; body: string }> {
   const raw = await fs.readFile(file, "utf-8");
 
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
   const readTime = calculateReadTime(body);
+
+  if (extraMeta) {
+    const posts = await allPostFrontmatter();
+    const index = posts.findIndex((post) => post.slug === attributes.slug);
+    const filterFrontmatter = (
+      f?: BlogPostFrontmatter
+    ): BlogPostLimitedFrontmatter => f && { title: f.title, slug: f.slug };
+    attributes.previous = filterFrontmatter(posts[index + 1]);
+    attributes.next = filterFrontmatter(posts[index - 1]);
+  }
+
   return { blogMeta: { readTime, ...attributes }, body };
 }
 
@@ -115,7 +131,7 @@ export async function allPostFrontmatter({
       (
         await allPostFiles()
       ).map(async (file) => {
-        return (await readPost(file)).blogMeta;
+        return (await readPost(file, false)).blogMeta;
       })
     )
   )
@@ -123,7 +139,10 @@ export async function allPostFrontmatter({
       ({ published = true, date }) =>
         includeUnpublished || (published && Date.parse(date) <= Date.now())
     )
-    .sort(({ date: a }, { date: b }) => Date.parse(b) - Date.parse(a));
+    .sort(
+      (a, b) =>
+        Date.parse(b.date) - Date.parse(a.date) || (a.title > b.title ? 1 : -1)
+    );
 }
 
 export async function buildBlogIndex(options: { verbose?: boolean }) {

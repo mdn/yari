@@ -10,6 +10,7 @@ import {
   BlogImage,
   BlogPostData,
   BlogPostFrontmatter,
+  BlogPostLimitedFrontmatter,
 } from "../../../libs/types/blog";
 import { useCopyExamplesToClipboard } from "../document/hooks";
 
@@ -106,6 +107,39 @@ function BlogImageFigure({
   );
 }
 
+function PreviousNext({
+  metadata: { previous, next },
+}: {
+  metadata: BlogPostFrontmatter;
+}) {
+  return (
+    <section className="previous-next">
+      {previous && (
+        <PreviousNextLink direction="Previous" metadata={previous} />
+      )}
+      {next && <PreviousNextLink direction="Next" metadata={next} />}
+    </section>
+  );
+}
+
+function PreviousNextLink({
+  direction,
+  metadata: { slug, title },
+}: {
+  direction: string;
+  metadata: BlogPostLimitedFrontmatter;
+}) {
+  return (
+    <a href={`/en-US/blog/${slug}/`} className={direction.toLowerCase()}>
+      <article>
+        <h1>
+          <strong>{direction} Post</strong> {title}
+        </h1>
+      </article>
+    </a>
+  );
+}
+
 export function BlogPost(props: HydrationData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<BlogPostData>(
@@ -145,6 +179,7 @@ export function BlogPost(props: HydrationData) {
           <h1>{doc?.title}</h1>
           <AuthorDateReadTime metadata={blogMeta} />
           <RenderDocumentBody doc={doc} />
+          <PreviousNext metadata={blogMeta} />
         </article>
       )}
     </>
