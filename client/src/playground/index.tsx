@@ -110,7 +110,7 @@ export default function Playground() {
         jsRef.current?.setContent(JS_DEFAULT);
       }
     }
-  }, [code, state]);
+  }, [code, state, localKey, setSearchParams]);
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
