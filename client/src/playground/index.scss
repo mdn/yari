@@ -91,7 +91,7 @@ main.play {
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 2.25rem;
+        min-height: 2.25rem;
 
         &[open] {
           height: 100%;
