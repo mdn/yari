@@ -91,8 +91,7 @@ main.play {
         display: flex;
         flex-direction: column;
         width: 100%;
-        overflow: auto;
-        min-height: 2.25rem;
+        height: 2.25rem;
 
         &[open] {
           height: 100%;
@@ -104,9 +103,10 @@ main.play {
         }
 
         .editor {
-          margin: 0.5rem 0;
+          margin: 0.5rem 0 0;
           overflow: scroll;
-          height: calc(100% - 3rem);
+          // 100% - 2.25rem details header - 0.5rem margin - 1px border
+          height: calc(100% - 2.75rem - 1px);
 
           .cm-editor {
             height: 100%;

@@ -122,7 +122,7 @@ export function useMakeInteractive(doc: Doc | undefined) {
     }
     [...document.querySelectorAll("iframe")].forEach((iframe) => {
       const src = iframe.src;
-      if (!(src && src.toLowerCase().includes(`/runner.html`))) {
+      if (!(src && src.toLowerCase().includes(`/unsafe-runner.html`))) {
         return;
       }
       const iframeId = iframe.id;

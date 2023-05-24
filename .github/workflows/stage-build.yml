@@ -217,7 +217,7 @@ jobs:
           REACT_APP_PLACEMENT_ENABLED: true
 
           # Playground
-          REACT_APP_PLAYGROUND_BASE_URL: doom.mdnyalp.dev
+          REACT_APP_PLAYGROUND_BASE_URL: mdnyalp.dev
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}

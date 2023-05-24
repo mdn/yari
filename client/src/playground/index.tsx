@@ -25,8 +25,6 @@ enum State {
   modified,
 }
 
-export function resetIframe(iframe: HTMLIFrameElement | null) {}
-
 async function save(editorContent: EditorContent) {
   const res = await fetch("/api/v1/play/", {
     method: "POST",
@@ -43,6 +41,8 @@ async function save(editorContent: EditorContent) {
 
 export default function Playground() {
   let [searchParams, setSearchParams] = useSearchParams();
+  let gistId = searchParams.get("id");
+  let localKey = searchParams.get("local");
   let [shared, setShared] = useState(false);
   let [url, setUrl] = useState<string | null>(null);
   let [vConsole, setVConsole] = useState<{ prop: string; message: string }[]>(
@@ -50,9 +50,7 @@ export default function Playground() {
   );
   let [state, setState] = useState(State.initial);
   let [version, setVersion] = useState<number>(0);
-  let [unsafe, setUnsafe] = useState(false);
-  let gistId = searchParams.get("id");
-  let localKey = searchParams.get("local");
+  let [unsafe, setUnsafe] = useState(Boolean(localKey));
   let { data: code } = useSWR<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
@@ -75,6 +73,7 @@ export default function Playground() {
         undefined,
     }
   );
+  const subdomain = useRef<string>(crypto.randomUUID());
   const versionRef = useRef<number>(version);
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
@@ -102,6 +101,9 @@ export default function Playground() {
         cssRef.current?.setContent(code?.css);
         jsRef.current?.setContent(code?.js);
         setState(State.remote);
+        if (localKey) {
+          setSearchParams([]);
+        }
       } else {
         htmlRef.current?.setContent(HTML_DEFAULT);
         cssRef.current?.setContent(CSS_DEFAULT);
@@ -125,7 +127,7 @@ export default function Playground() {
     jsRef.current?.setContent(JS_DEFAULT);
 
     if (iframe.current?.contentWindow?.location?.href) {
-      iframe.current.contentWindow.location.href = `//${PLAYGROUND_BASE_URL}/${
+      iframe.current.contentWindow.location.href = `//${subdomain}.${PLAYGROUND_BASE_URL}/${
         unsafe ? "unsafe-runner.html" : "runner.html"
       }`;
     }
@@ -165,6 +167,10 @@ export default function Playground() {
       console.error(e);
     }
   };
+  const codeSrc = code?.src && `${code.src.split("/").slice(0, -1).join("/")}`;
+  const src = `${codeSrc || `//${subdomain.current}.${PLAYGROUND_BASE_URL}`}/${
+    unsafe ? "unsafe-" : ""
+  }runner.html?v=${version}`;
 
   return (
     <>
@@ -274,12 +280,7 @@ export default function Playground() {
           <iframe
             title="runner"
             ref={iframeRef}
-            src={`${
-              code?.src ||
-              `//${PLAYGROUND_BASE_URL}/${
-                unsafe ? "unsafe-runner.html" : "runner.html"
-              }`
-            }?v=${version}`}
+            src={src}
             sandbox="allow-scripts"
           ></iframe>
           <ul>
