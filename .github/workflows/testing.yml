@@ -13,6 +13,7 @@ jobs:
   lint:
     if: github.repository == 'mdn/yari'
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
