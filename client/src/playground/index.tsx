@@ -9,7 +9,7 @@ import parserHTML from "prettier/esm/parser-html.mjs";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { EditorContent, update } from "./utils";
+import { EditorContent, updatePlayIframe } from "./utils";
 
 import "./index.scss";
 import { Switch } from "../ui/atoms/switch";
@@ -51,6 +51,7 @@ export default function Playground() {
   let [state, setState] = useState(State.initial);
   let [version, setVersion] = useState<number>(0);
   let [unsafe, setUnsafe] = useState(Boolean(localKey));
+  let [codeSrc, setCodeSrc] = useState<string | undefined>();
   let { data: code } = useSWR<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
@@ -90,7 +91,7 @@ export default function Playground() {
       }
     } else if (typ === "ready") {
       if (prop === versionRef.current) {
-        update(iframe.current, getEditorContent());
+        updatePlayIframe(iframe.current, getEditorContent());
       }
     }
   }, []);
@@ -101,6 +102,11 @@ export default function Playground() {
         cssRef.current?.setContent(code?.css);
         jsRef.current?.setContent(code?.js);
         setState(State.remote);
+        if (code.src) {
+          setCodeSrc(
+            code?.src && `${code.src.split("/").slice(0, -1).join("/")}`
+          );
+        }
         if (localKey) {
           setSearchParams([]);
         }
@@ -122,6 +128,7 @@ export default function Playground() {
   }, []);
   const reset = async () => {
     setSearchParams([]);
+    setCodeSrc(undefined);
     htmlRef.current?.setContent(HTML_DEFAULT);
     cssRef.current?.setContent(CSS_DEFAULT);
     jsRef.current?.setContent(JS_DEFAULT);
@@ -167,7 +174,6 @@ export default function Playground() {
       console.error(e);
     }
   };
-  const codeSrc = code?.src && `${code.src.split("/").slice(0, -1).join("/")}`;
   const src = `${codeSrc || `//${subdomain.current}.${PLAYGROUND_BASE_URL}`}/${
     unsafe ? "unsafe-" : ""
   }runner.html?v=${version}`;

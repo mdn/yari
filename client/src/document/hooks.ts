@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useIsServer, useLocale } from "../hooks";
 import { Doc } from "../../../libs/types/document";
-import { EditorContent, update } from "../playground/utils";
+import { EditorContent, initPlayIframe } from "../playground/utils";
 
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 
@@ -167,7 +167,7 @@ export function useMakeInteractive(doc: Doc | undefined) {
           window.location.href = url.href;
         };
       });
-      setTimeout(() => update(iframe, code), 500);
+      initPlayIframe(iframe, code);
     });
   }, [doc, isServer, locale]);
 }

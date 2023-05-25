@@ -10,7 +10,7 @@ export interface Message {
   state: EditorContent;
 }
 
-export function update(
+export function updatePlayIframe(
   iframe: HTMLIFrameElement | null,
   editorContent: EditorContent | null
 ) {
@@ -25,16 +25,40 @@ export function update(
     typ: "init",
     state: editorContent,
   };
-  if (iframe.contentDocument?.readyState === "loading") {
-    iframe.contentDocument?.addEventListener("DOMContentLoaded", () => {
-      console.log("in the ****");
-      iframe.contentWindow!.postMessage(message, {
+
+  if (iframe.contentWindow) {
+    if (iframe.contentDocument?.readyState === "loading") {
+      iframe.contentDocument?.addEventListener("DOMContentLoaded", () => {
+        iframe.contentWindow!.postMessage(message, {
+          targetOrigin: "*",
+        });
+      });
+    } else {
+      iframe.contentWindow?.postMessage(message, {
         targetOrigin: "*",
       });
-    });
-  } else {
-    iframe.contentWindow!.postMessage(message, {
-      targetOrigin: "*",
-    });
+    }
   }
+}
+
+export function initPlayIframe(
+  iframe: HTMLIFrameElement | null,
+  editorContent: EditorContent | null
+) {
+  if (!iframe || !editorContent) {
+    return;
+  }
+
+  const message: Message = {
+    typ: "init",
+    state: editorContent,
+  };
+  const deferred = ({ data: { typ = null } = {} } = {}) => {
+    if (typ === "ready") {
+      console.log("ready");
+      iframe.contentWindow!.postMessage(message, { targetOrigin: "*" });
+    }
+    window.removeEventListener("message", deferred);
+  };
+  window.addEventListener("message", deferred);
 }

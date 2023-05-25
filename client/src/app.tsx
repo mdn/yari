@@ -80,7 +80,10 @@ function LazyStandardLayout(props: {
   extraClasses?: string;
   children: React.ReactNode;
 }) {
-  return (
+  const isServer = useIsServer();
+  return isServer ? (
+    <LoadingFallback />
+  ) : (
     <React.Suspense fallback={<LoadingFallback />}>
       <StandardLayout {...props}></StandardLayout>
     </React.Suspense>
