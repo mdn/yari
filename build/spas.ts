@@ -402,10 +402,10 @@ async function fetchLatestNews() {
       },
     },
     {
-      title: "Experimenting with advertising on MDN",
+      title: "Advertise with us",
       url: `/${DEFAULT_LOCALE}/advertising`,
       author: "Mozilla",
-      published_at: new Date("2023-02-15 15:00Z").toString(),
+      published_at: new Date("2023-04-03").toString(),
       source: {
         name: "developer.mozilla.org",
         url: "/",
