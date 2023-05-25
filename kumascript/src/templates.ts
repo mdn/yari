@@ -108,7 +108,7 @@ export default class Templates {
       });
       return rendered.trim();
     } catch (error) {
-      console.error(`${name} macro failed:`, error);
+      console.error(`The ${name} macro on ${args?.page?.uri} failed:`, error);
       throw error;
     }
   }
