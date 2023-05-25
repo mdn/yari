@@ -81,35 +81,37 @@ export async function updateEmbeddings(directory: string) {
         `[${path}] Adding ${sections.length} page sections (with embeddings)`
       );
 
-      for (const { heading, content } of sections) {
-        // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
-        const input = content.replace(/\n/g, " ");
+      await Promise.all(
+        sections.map(async ({ heading, content }) => {
+          // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
+          const input = content.replace(/\n/g, " ");
 
-        const embeddingResponse = await openai.createEmbedding({
-          model: "text-embedding-ada-002",
-          input,
-        });
+          const embeddingResponse = await openai.createEmbedding({
+            model: "text-embedding-ada-002",
+            input,
+          });
 
-        if (embeddingResponse.status !== 200) {
-          console.error("Embedding request failed", embeddingResponse.data);
-          throw new Error("Embedding request failed");
-        }
+          if (embeddingResponse.status !== 200) {
+            console.error("Embedding request failed", embeddingResponse.data);
+            throw new Error("Embedding request failed");
+          }
 
-        const [responseData] = embeddingResponse.data.data;
+          const [responseData] = embeddingResponse.data.data;
 
-        await supabaseClient
-          .from("dfods_page_section")
-          .insert({
-            page_id: page!.id,
-            heading,
-            content,
-            token_count: embeddingResponse.data.usage.total_tokens,
-            embedding: responseData.embedding,
-          })
-          .select()
-          .single()
-          .throwOnError();
-      }
+          await supabaseClient
+            .from("dfods_page_section")
+            .insert({
+              page_id: page!.id,
+              heading,
+              content,
+              token_count: embeddingResponse.data.usage.total_tokens,
+              embedding: responseData.embedding,
+            })
+            .select()
+            .single()
+            .throwOnError();
+        })
+      );
 
       // Set page checksum so that we know this page was stored successfully
       await supabaseClient
