@@ -1969,13 +1969,13 @@
     "@sentry/utils" "7.53.1"
     tslib "^1.9.3"
 
-"@sentry/integrations@^7.53.0":
-  version "7.53.0"
-  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.53.0.tgz#e60a99702ef436c359088d768dccf55530d449ce"
-  integrity sha512-6GC5ULGnSHjPlOFdK3E1tW/4FitaX+Wm0daBdYl5EYUz9haWWdlKXfi0ELzW+SWDJVE1o86zEyZ4saCUhwz52g==
+"@sentry/integrations@^7.53.1":
+  version "7.53.1"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.53.1.tgz#49db5eb5dbacab4509e22fd1ca1b94d155cae7c1"
+  integrity sha512-Y2Sq+nkYG2FFYWZ3NLDUdFdJQEAfSNL95MeoIAjpAioHmPBOHXoRwUzAMlaOR/2VibaKwGEIGwsHofj7RwtjrA==
   dependencies:
-    "@sentry/types" "7.53.0"
-    "@sentry/utils" "7.53.0"
+    "@sentry/types" "7.53.1"
+    "@sentry/utils" "7.53.1"
     localforage "^1.8.1"
     tslib "^1.9.3"
 
@@ -1993,23 +1993,10 @@
     lru_map "^0.3.3"
     tslib "^1.9.3"
 
-"@sentry/types@7.53.0":
-  version "7.53.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.53.0.tgz#f267ea223ceaf1832a4247363bfd3afcca9b7fe5"
-  integrity sha512-hqlbrCL8nfDfjlF6wh4NHNW9plhWJ1m2BSqRyspcxOC44e293BPfwjUzr0aQapJK/aRkHROnfAtzsEu2awNPzg==
-
 "@sentry/types@7.53.1":
   version "7.53.1"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.53.1.tgz#3eefbad851f2d0deff67285d7e976d23d7d06a41"
   integrity sha512-/ijchRIu+jz3+j/zY+7KRPfLSCY14fTx5xujjbOdmEKjmIHQmwPBdszcQm40uwofrR8taV4hbt5MFN+WnjCkCw==
-
-"@sentry/utils@7.53.0":
-  version "7.53.0"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.53.0.tgz#ff3470135fdeec00ef4c355c10488cf9227c5ed0"
-  integrity sha512-T3F2DkXB9fDjUIAcrOMrGCnquyTQxTyTb5Mh+NbFBevQn32fHehQ62VraLhe20HTVy8YBFkXisvLu6HeOZ5Mog==
-  dependencies:
-    "@sentry/types" "7.53.0"
-    tslib "^1.9.3"
 
 "@sentry/utils@7.53.1":
   version "7.53.1"
