@@ -3020,10 +3020,10 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.4.tgz#3982ee6f8b42845437fc4d391e93ac5d9da52f0f"
   integrity sha512-0xRgjgDLdz6G7+vvDLlaRpFatJaJ69uTalZLRSMX5B3VUrDmXcrVA3+6fXXQgmYz7bY9AAgs348XQdmtLsK41A==
 
-"@webref/css@^5.4.4":
-  version "5.4.4"
-  resolved "https://registry.yarnpkg.com/@webref/css/-/css-5.4.4.tgz#91cd765acc1cd92587b2099adb5d2f09608a608c"
-  integrity sha512-x+WAreAVNfSaLWBux9y/9QTKMDpiUbcZZKh72JOFVtm7ZQqmi5/m4YlbYNCu+GjCvuMWOtgwiBx7qf7OvWWykA==
+"@webref/css@^6.5.7":
+  version "6.5.7"
+  resolved "https://registry.yarnpkg.com/@webref/css/-/css-6.5.7.tgz#0e7352669a146b4c701f1cf0f1a3d6a5ef64d8d2"
+  integrity sha512-ol6gkUruFdDjPkADk9daoFVdgqk5glAijFKAi68VtgF/F0urLg4LBtErHoy84W7tAPvULoKnDjX6xVaItKWfNw==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
