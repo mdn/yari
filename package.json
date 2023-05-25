@@ -195,6 +195,7 @@
     "lint-staged": "^13.2.2",
     "mini-css-extract-plugin": "^2.7.6",
     "node-dev": "^8.0.0",
+    "openai": "^3.2.1",
     "pegjs": "^0.10.0",
     "postcss": "^8.4.23",
     "postcss-flexbugs-fixes": "^5.0.2",
