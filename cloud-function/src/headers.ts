@@ -109,6 +109,7 @@ export function withRunnerResponseHeaders(
   [
     ["X-XSS-Protection", "1; mode=block"],
     ["X-Content-Type-Options", "nosniff"],
+    ["Clear-Site-Data", "*"],
     ["Strict-Transport-Security", "max-age=63072000"],
     [
       "Content-Security-Policy",
