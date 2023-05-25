@@ -392,6 +392,16 @@ async function fetchLatestNews() {
       },
     },
     {
+      title: "Welcome to the MDN blog",
+      url: `/${DEFAULT_LOCALE}/blog/welcome-to-the-MDN-blog/`,
+      author: "Ruth John",
+      published_at: new Date("2023-05-03").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
       title: "Experimenting with advertising on MDN",
       url: `/${DEFAULT_LOCALE}/advertising`,
       author: "Mozilla",
