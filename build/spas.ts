@@ -410,16 +410,6 @@ async function fetchLatestNews() {
         name: "developer.mozilla.org",
         url: "/",
       },
-    },
-    {
-      title: "A shared and open roadmap for MDN",
-      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
-      author: "Mozilla",
-      published_at: new Date("2023-02-08").toString(),
-      source: {
-        name: "blog.mozilla.org",
-        url: "https://blog.mozilla.org/",
-      },
     }
   );
 
