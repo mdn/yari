@@ -42,6 +42,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 import { whatsdeployed } from "./whatsdeployed.js";
+import { updateEmbeddings } from "./update-embeddings.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -225,6 +226,12 @@ interface WhatsdeployedActionParameters extends ActionParameters {
   options: {
     output: string;
     dryRun: boolean;
+  };
+}
+
+interface GenerateEmbeddingsActionParameters extends ActionParameters {
+  args: {
+    directory: string;
   };
 }
 
@@ -1253,6 +1260,20 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       const { directory } = args;
       const { output, dryRun } = options;
       return whatsdeployed(directory, output, dryRun);
+    })
+  )
+
+  .command(
+    "update-embeddings",
+    "Generates OpenAI embeddings for all document sections and uploads them to Supabase."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: CONTENT_ROOT,
+  })
+  .action(
+    tryOrExit(async ({ args }: GenerateEmbeddingsActionParameters) => {
+      const { directory } = args;
+      return updateEmbeddings(directory);
     })
   );
 
