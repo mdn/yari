@@ -8,6 +8,7 @@ import "./index.scss";
 import { TOC } from "../toc";
 import { PLACEMENT_ENABLED } from "../../../env";
 import { SidePlacement } from "../../../ui/organisms/placement";
+import { SidebarFilter } from "./filter";
 
 export function SidebarContainer({
   doc,
@@ -63,6 +64,7 @@ export function SidebarContainer({
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Collapse sidebar"
         />
+        <SidebarFilter />
         <nav aria-label={label} className="sidebar-inner">
           <div className="sidebar-inner-nav">
             <div className="in-nav-toc">
