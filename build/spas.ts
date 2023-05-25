@@ -387,23 +387,33 @@ async function fetchLatestNews() {
 
   items.push(
     {
-      title: "Experimenting with advertising on MDN",
-      url: `/${DEFAULT_LOCALE}/advertising`,
-      author: "Mozilla",
-      published_at: new Date("2023-02-15 15:00Z").toString(),
+      title: "Introducing Baseline: a unified view of stable web features",
+      url: `/${DEFAULT_LOCALE}/blog/baseline-unified-view-stable-web-features/`,
+      author: "Hermina Condei",
+      published_at: new Date("2023-05-10").toString(),
       source: {
         name: "developer.mozilla.org",
-        url: "/",
+        url: `/${DEFAULT_LOCALE}/blog/`,
       },
     },
     {
-      title: "A shared and open roadmap for MDN",
-      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
-      author: "Mozilla",
-      published_at: new Date("2023-02-08").toString(),
+      title: "Welcome to the MDN blog",
+      url: `/${DEFAULT_LOCALE}/blog/welcome-to-the-MDN-blog/`,
+      author: "Ruth John",
+      published_at: new Date("2023-05-03").toString(),
       source: {
-        name: "blog.mozilla.org",
-        url: "https://blog.mozilla.org/",
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
+      title: "Advertise with us",
+      url: `/${DEFAULT_LOCALE}/advertising`,
+      author: "Mozilla",
+      published_at: new Date("2023-04-03").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: "/",
       },
     }
   );
