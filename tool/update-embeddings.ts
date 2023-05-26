@@ -31,45 +31,45 @@ export async function updateEmbeddings(directory: string) {
   });
   const openai = new OpenAIApi(configuration);
 
-  for await (const { path, content } of contentDocs(directory)) {
+  for await (const { slug, content } of contentDocs(directory)) {
     try {
       const checksum = createHash("sha256").update(content).digest("base64");
 
-      // Check for existing page in DB and compare checksums
-      const { data: existingPage } = await supabaseClient
+      // Check for existing document in DB and compare checksums.
+      const { data: existingDoc } = await supabaseClient
         .from("mdn_doc")
-        .select("id, path, checksum")
-        .filter("path", "eq", path)
+        .select("id, slug, checksum")
+        .filter("slug", "eq", slug)
         .maybeSingle()
         .throwOnError();
 
-      if (existingPage?.checksum === checksum) {
-        console.log(`[${path}] Checksum has NOT changed => Skipping document.`);
+      if (existingDoc?.checksum === checksum) {
+        console.log(`[${slug}] Checksum has NOT changed => Skipping document.`);
         continue;
       }
 
-      if (existingPage) {
+      if (existingDoc) {
         console.log(
-          `[${path}] Checksum has changed => Removing old sections (and their embeddings).`
+          `[${slug}] Checksum has changed => Removing old sections (and their embeddings).`
         );
 
         await supabaseClient
           .from("mdn_doc_section")
           .delete()
-          .filter("page_id", "eq", existingPage.id)
+          .filter("doc_id", "eq", existingDoc.id)
           .throwOnError();
       }
 
-      // Create/update page record. Intentionally clear checksum until we
-      // have successfully generated all page sections.
-      const { data: page } = await supabaseClient
+      // Create/update document record. Intentionally clear checksum until we
+      // have successfully generated all document sections.
+      const { data: doc } = await supabaseClient
         .from("mdn_doc")
         .upsert(
           {
             checksum: null,
-            path,
+            slug,
           },
-          { onConflict: "path" }
+          { onConflict: "slug" }
         )
         .select()
         .single()
@@ -78,7 +78,7 @@ export async function updateEmbeddings(directory: string) {
       const sections = splitAndFilterSections(content);
 
       console.log(
-        `[${path}] Adding ${sections.length} page sections (with embeddings)`
+        `[${slug}] Adding ${sections.length} document sections (with embeddings)`
       );
 
       await Promise.all(
@@ -101,7 +101,7 @@ export async function updateEmbeddings(directory: string) {
           await supabaseClient
             .from("mdn_doc_section")
             .insert({
-              page_id: page!.id,
+              doc_id: doc!.id,
               heading,
               content,
               token_count: embeddingResponse.data.usage.total_tokens,
@@ -113,15 +113,15 @@ export async function updateEmbeddings(directory: string) {
         })
       );
 
-      // Set page checksum so that we know this page was stored successfully
+      // Set document checksum so that we know this document was stored successfully
       await supabaseClient
         .from("mdn_doc")
         .update({ checksum })
-        .filter("id", "eq", page!.id)
+        .filter("id", "eq", doc!.id)
         .throwOnError();
     } catch (err) {
       console.error(
-        `Page '${path}' or one/multiple of its page sections failed to store properly. Page has been marked with null checksum to indicate that it needs to be re-generated.`
+        `Document '${slug}' or one/multiple of its document sections failed to store properly. Document has been marked with null checksum to indicate that it needs to be re-generated.`
       );
       console.error(err);
     }
@@ -155,7 +155,7 @@ async function* contentDocs(directory: string) {
     content = removeMacroCalls(content);
     content = content.trim();
 
-    yield { path: slug, content: `# ${title}\n\n${content}` };
+    yield { slug, content: `# ${title}\n\n${content}` };
   }
 }
 
