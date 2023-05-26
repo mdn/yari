@@ -70,7 +70,7 @@
     border-top: 1px solid var(--border-secondary);
     color: var(--text-secondary);
     cursor: pointer;
-    display: block;
+    display: flex;
     padding: 1rem 0.5rem;
     text-align: left;
     width: 100%;
@@ -83,6 +83,12 @@
     &.menu-toggle {
       min-height: 53px;
       padding: 0.5rem;
+    }
+
+    sup.new {
+      --new-background: var(--text-link);
+      --new-color: var(--background-primary);
+      align-self: flex-start;
     }
 
     @media screen and (max-width: #{$screen-lg -1}) {
