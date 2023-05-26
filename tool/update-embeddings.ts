@@ -37,7 +37,7 @@ export async function updateEmbeddings(directory: string) {
 
       // Check for existing page in DB and compare checksums
       const { data: existingPage } = await supabaseClient
-        .from("dfods_page")
+        .from("mdn_doc")
         .select("id, path, checksum")
         .filter("path", "eq", path)
         .maybeSingle()
@@ -54,7 +54,7 @@ export async function updateEmbeddings(directory: string) {
         );
 
         await supabaseClient
-          .from("dfods_page_section")
+          .from("mdn_doc_section")
           .delete()
           .filter("page_id", "eq", existingPage.id)
           .throwOnError();
@@ -63,7 +63,7 @@ export async function updateEmbeddings(directory: string) {
       // Create/update page record. Intentionally clear checksum until we
       // have successfully generated all page sections.
       const { data: page } = await supabaseClient
-        .from("dfods_page")
+        .from("mdn_doc")
         .upsert(
           {
             checksum: null,
@@ -99,7 +99,7 @@ export async function updateEmbeddings(directory: string) {
           const [responseData] = embeddingResponse.data.data;
 
           await supabaseClient
-            .from("dfods_page_section")
+            .from("mdn_doc_section")
             .insert({
               page_id: page!.id,
               heading,
@@ -115,7 +115,7 @@ export async function updateEmbeddings(directory: string) {
 
       // Set page checksum so that we know this page was stored successfully
       await supabaseClient
-        .from("dfods_page")
+        .from("mdn_doc")
         .update({ checksum })
         .filter("id", "eq", page!.id)
         .throwOnError();
