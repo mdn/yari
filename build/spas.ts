@@ -283,34 +283,36 @@ export async function buildSPAs(options: {
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
             const segment = url.split("/")[0];
-            const document =
-              segment === "docs" &&
-              (findByURL(`/${locale}/${url}`) ||
-                findByURL(`/${DEFAULT_LOCALE}/${url}`));
-            if (document) {
-              const {
-                doc: { mdn_url, summary, title, parents },
-              } = await buildDocument(document);
-              return {
-                mdn_url,
-                summary,
-                title,
-                tag: parents.length > 2 ? parents[1] : null,
-              };
-            }
-            const post =
-              segment === "blog" &&
-              (await findPostBySlug(getSlugByBlogPostUrl(`/en-US/${url}`)));
-            if (post) {
-              const {
-                doc: { title },
-                blogMeta: { description, slug },
-              } = post;
-              return {
-                mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
-                summary: description,
-                title,
-              };
+            if (segment === "docs") {
+              const document =
+                findByURL(`/${locale}/${url}`) ||
+                findByURL(`/${DEFAULT_LOCALE}/${url}`);
+              if (document) {
+                const {
+                  doc: { mdn_url, summary, title, parents },
+                } = await buildDocument(document);
+                return {
+                  mdn_url,
+                  summary,
+                  title,
+                  tag: parents.length > 2 ? parents[1] : null,
+                };
+              }
+            } else if (segment === "blog") {
+              const post = await findPostBySlug(
+                getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+              );
+              if (post) {
+                const {
+                  doc: { title },
+                  blogMeta: { description, slug },
+                } = post;
+                return {
+                  mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+                  summary: description,
+                  title,
+                };
+              }
             }
           })
         )
