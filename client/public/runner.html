@@ -38,6 +38,9 @@
         if (e.typ === "init") {
           init(e.state);
         }
+        if (e.typ === "reload") {
+          window.location.reload();
+        }
       });
       window.parent.postMessage(
         {

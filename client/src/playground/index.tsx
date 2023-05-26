@@ -49,7 +49,6 @@ export default function Playground() {
     []
   );
   let [state, setState] = useState(State.initial);
-  let [version, setVersion] = useState<number>(0);
   let [unsafe, setUnsafe] = useState(Boolean(localKey));
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   let { data: code } = useSWR<EditorContent>(
@@ -75,7 +74,6 @@ export default function Playground() {
     }
   );
   const subdomain = useRef<string>(crypto.randomUUID());
-  const versionRef = useRef<number>(version);
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
   const jsRef = useRef<EditorHandle | null>(null);
@@ -90,9 +88,7 @@ export default function Playground() {
         setVConsole((vConsole) => [...vConsole, { prop, message }]);
       }
     } else if (typ === "ready") {
-      if (prop === versionRef.current) {
-        updatePlayIframe(iframe.current, getEditorContent());
-      }
+      updatePlayIframe(iframe.current, getEditorContent());
     }
   }, []);
   useEffect(() => {
@@ -123,9 +119,6 @@ export default function Playground() {
       window.removeEventListener("message", messageListener);
     };
   }, [messageListener]);
-  const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
-    iframe.current = node;
-  }, []);
   const reset = async () => {
     setSearchParams([]);
     setCodeSrc(undefined);
@@ -133,11 +126,7 @@ export default function Playground() {
     cssRef.current?.setContent(CSS_DEFAULT);
     jsRef.current?.setContent(JS_DEFAULT);
 
-    if (iframe.current?.contentWindow?.location?.href) {
-      iframe.current.contentWindow.location.href = `//${subdomain}.${PLAYGROUND_BASE_URL}/${
-        unsafe ? "unsafe-runner.html" : "runner.html"
-      }`;
-    }
+    updateWithEditorContent();
   };
   const resetConfirm = async () => {
     if (window.confirm("Do you really want to reset everything?")) {
@@ -154,8 +143,14 @@ export default function Playground() {
   };
 
   const updateWithEditorContent = () => {
-    setVersion((v) => v + 1);
-    versionRef.current += 1;
+    iframe.current?.contentWindow?.postMessage(
+      {
+        typ: "reload",
+      },
+      {
+        targetOrigin: "*",
+      }
+    );
   };
 
   const format = () => {
@@ -176,7 +171,7 @@ export default function Playground() {
   };
   const src = `${codeSrc || `//${subdomain.current}.${PLAYGROUND_BASE_URL}`}/${
     unsafe ? "unsafe-" : ""
-  }runner.html?v=${version}`;
+  }runner.html`;
 
   return (
     <>
@@ -285,7 +280,7 @@ export default function Playground() {
           )}
           <iframe
             title="runner"
-            ref={iframeRef}
+            ref={iframe}
             src={src}
             sandbox="allow-scripts"
           ></iframe>
