@@ -70,10 +70,10 @@
     border-top: 1px solid var(--border-secondary);
     color: var(--text-secondary);
     cursor: pointer;
+    display: flex;
     padding: 1rem 0.5rem;
     text-align: left;
     width: 100%;
-    display: flex;
 
     &:link,
     &:visited {

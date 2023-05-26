@@ -320,14 +320,14 @@ u {
 }
 
 sup.new {
-  line-height: 1.7;
-  text-transform: uppercase;
+  background: var(--new-background);
+  border-radius: 1em;
+  color: var(--new-color);
+  display: inline-block;
   font-size: 0.45rem;
   font-weight: bold;
-  background: var(--new-background);
-  color: var(--new-color);
+  line-height: 1.7;
   padding: 0 0.4em;
-  border-radius: 1em;
   text-rendering: optimizeLegibility;
-  display: inline-block;
+  text-transform: uppercase;
 }
