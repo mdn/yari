@@ -63,7 +63,10 @@ const loadAllLanguages = lazy(() => {
 // Prism expects. It'd be hard to require that content writers
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
-const ALIASES = new Map([["sh", "shell"]]);
+const ALIASES = new Map([
+  ["sh", "shell"],
+  ["vue", "markup"], // See https://github.com/PrismJS/prism/issues/1665#issuecomment-536529608
+]);
 
 // Over the years we have accumulated some weird <pre> tags whose
 // brush is more or less "junk".
