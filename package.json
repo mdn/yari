@@ -228,6 +228,7 @@
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-recommended": "^12.0.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
+    "stylelint-order": "^6.0.3",
     "stylelint-prettier": "^3.0.0",
     "stylelint-scss": "^5.0.0",
     "swr": "^2.1.5",
