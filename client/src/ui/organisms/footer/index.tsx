@@ -121,6 +121,16 @@ export function Footer() {
                 MDN Chat
               </a>
             </li>
+            <li className="footer-nav-item">
+              <a
+                className="footer-nav-link"
+                href="https://discord.gg/Q2rdGBg4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Community Discord Server
+              </a>
+            </li>
           </ul>
         </div>
 
