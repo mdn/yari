@@ -108,10 +108,7 @@ export default class Templates {
       });
       return rendered.trim();
     } catch (error) {
-      console.error(
-        `The ${name} macro in ${args.env.path ?? "?"} failed to render.`,
-        error
-      );
+      console.error(`${name} macro failed:`, error);
       throw error;
     }
   }
