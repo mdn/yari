@@ -128,7 +128,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Community Discord Server
+                MDN Discord Server
               </a>
             </li>
           </ul>
