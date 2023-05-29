@@ -169,9 +169,12 @@ export default function Playground() {
       console.error(e);
     }
   };
-  const src = `${codeSrc || `//${subdomain.current}.${PLAYGROUND_BASE_URL}`}/${
-    unsafe ? "unsafe-" : ""
-  }runner.html`;
+  const src = `${
+    codeSrc ||
+    `//${
+      PLAYGROUND_BASE_URL.startsWith("localhost") ? "" : `${subdomain.current}.`
+    }${PLAYGROUND_BASE_URL}`
+  }/${unsafe ? "unsafe-" : ""}runner.html`;
 
   return (
     <>

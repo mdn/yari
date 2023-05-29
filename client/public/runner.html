@@ -42,10 +42,11 @@
           window.location.reload();
         }
       });
+      const searchParams = new URLSearchParams(location.search);
       window.parent.postMessage(
         {
           typ: "ready",
-          prop: Number(new URLSearchParams(location.search).get("v")),
+          prop: Object.fromEntries(searchParams.entries()),
         },
         "*"
       );

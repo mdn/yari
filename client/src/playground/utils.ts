@@ -53,12 +53,13 @@ export function initPlayIframe(
     typ: "init",
     state: editorContent,
   };
-  const deferred = ({ data: { typ = null } = {} } = {}) => {
-    if (typ === "ready") {
-      console.log("ready");
-      iframe.contentWindow!.postMessage(message, { targetOrigin: "*" });
+  const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
+    if (iframe.id.substring("frame_".length) === prop["id"]) {
+      if (typ === "ready") {
+        iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });
+      }
+      window.removeEventListener("message", deferred);
     }
-    window.removeEventListener("message", deferred);
   };
   window.addEventListener("message", deferred);
 }
