@@ -81,7 +81,7 @@ export default function MainMenu({ isOpenOnMobile }) {
         )}
         <li className="top-level-entry-container">
           <a className="top-level-entry menu-link" href="/en-US/blog/">
-            Blog
+            Blog <sup className="new">New</sup>
           </a>
         </li>
         <li className="top-level-entry-container">

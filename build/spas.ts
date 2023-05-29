@@ -25,15 +25,16 @@ import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
-import { splitSections } from "./utils.js";
+import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
+import { findPostBySlug } from "./blog.js";
 
 const FEATURED_ARTICLES = [
-  "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
-  "Web/CSS/CSS_Container_Queries",
-  "Web/API/Performance_API",
-  "Web/CSS/font-palette",
+  "blog/regular-expressions-reference-updates/",
+  "blog/aria-accessibility-html-landmark-roles/",
+  "docs/Web/API/Performance_API",
+  "docs/Web/CSS/font-palette",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
@@ -282,19 +283,37 @@ export async function buildSPAs(options: {
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
-            const document =
-              findByURL(`/${locale}/docs/${url}`) ||
-              findByURL(`/${DEFAULT_LOCALE}/docs/${url}`);
-            if (document) {
-              const {
-                doc: { mdn_url, summary, title, parents },
-              } = await buildDocument(document);
-              return {
-                mdn_url,
-                summary,
-                title,
-                tag: parents.length > 2 ? parents[1] : null,
-              };
+            const segment = url.split("/")[0];
+            if (segment === "docs") {
+              const document =
+                findByURL(`/${locale}/${url}`) ||
+                findByURL(`/${DEFAULT_LOCALE}/${url}`);
+              if (document) {
+                const {
+                  doc: { mdn_url, summary, title, parents },
+                } = await buildDocument(document);
+                return {
+                  mdn_url,
+                  summary,
+                  title,
+                  tag: parents.length > 2 ? parents[1] : null,
+                };
+              }
+            } else if (segment === "blog") {
+              const post = await findPostBySlug(
+                getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+              );
+              if (post) {
+                const {
+                  doc: { title },
+                  blogMeta: { description, slug },
+                } = post;
+                return {
+                  mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+                  summary: description,
+                  title,
+                };
+              }
             }
           })
         )
