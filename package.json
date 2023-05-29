@@ -191,7 +191,7 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-resolve": "^29.5.0",
     "jest-watch-typeahead": "^2.2.2",
-    "jsdom": "^22.0.0",
+    "jsdom": "^22.1.0",
     "lint-staged": "^13.2.2",
     "mini-css-extract-plugin": "^2.7.6",
     "node-dev": "^8.0.0",
