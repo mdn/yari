@@ -1,6 +1,13 @@
+import { Coder } from "./coding.js";
+
 /* global fetch */
-export function createPongClickHandler(coder) {
-  return async (params) => {
+export function createPongClickHandler(coder: Coder): (
+  params: URLSearchParams
+) => Promise<{
+  status: number;
+  location: string;
+}> {
+  return async (params: URLSearchParams) => {
     const click = coder.decodeAndVerify(params.get("code"));
     const fallback = coder.decodeAndVerify(params.get("fallback"));
     const res = await fetch(click, { redirect: "manual" });

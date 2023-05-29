@@ -1,10 +1,18 @@
+import { Coder } from "./coding.js";
+
 /* global fetch */
 export async function fallbackHandler(
-  coder,
-  carbonZoneKey,
-  userAgent,
-  anonymousIp
-) {
+  coder: Coder,
+  carbonZoneKey: string,
+  userAgent: string,
+  anonymousIp: string
+): Promise<{
+  click: string;
+  view: string;
+  image: string;
+  copy: string;
+  by: string;
+}> {
   try {
     const {
       ads: [

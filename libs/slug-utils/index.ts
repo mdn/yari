@@ -1,6 +1,6 @@
 import sanitizeFilename from "sanitize-filename";
 
-export function slugToFolder(slug, joiner = "/") {
+export function slugToFolder(slug: string, joiner = "/"): string {
   return (
     slug
       // We have slugs with these special characters that would be
@@ -14,17 +14,17 @@ export function slugToFolder(slug, joiner = "/") {
 
       .toLowerCase()
       .split("/")
-      .map(sanitizeFilename)
+      .map((str) => sanitizeFilename(str))
       .join(joiner)
   );
 }
 
-export function decodePath(path) {
+export function decodePath(path: string): string {
   const decoded = path.split("/").map(decodeURIComponent).join("/");
   return decoded;
 }
 
-export function encodePath(path) {
+export function encodePath(path: string): string {
   const decoded = path.split("/").map(encodeURIComponent).join("/");
   return decoded;
 }

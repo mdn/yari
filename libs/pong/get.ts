@@ -1,6 +1,54 @@
+import { Client } from "@adzerk/decision-sdk";
 import he from "he";
+
 import anonymousIpByCC from "./cc2ip.js";
 import { fallbackHandler } from "./fallback.js";
+import { Coder } from "./coding.js";
+
+interface PongEnvs {
+  KEVEL_SITE_ID: number;
+  KEVEL_NETWORK_ID: number;
+  CARBON_ZONE_KEY: string;
+  SIGN_SECRET: string;
+  FALLBACK_ENABLED: boolean;
+}
+
+type GetHandler = (
+  body: string,
+  countryCode: string,
+  userAgent: string
+) => Promise<{
+  statusCode: number;
+  payload: Payload;
+}>;
+
+type Payload = {
+  status: Status;
+  click: string;
+  view: string;
+  copy?: string;
+  image?: string;
+  fallback?: Fallback;
+  cta?: string;
+  colors?: Colors;
+};
+
+type Status = "cap_reached" | "geo_unsupported";
+
+type Fallback = {
+  click: string;
+  view: string;
+  copy: string;
+  image: string;
+  by: string;
+};
+
+type Colors = {
+  textColor?: string;
+  backgroundColor?: string;
+  ctaTextColor?: string;
+  ctaBackgroundColor?: string;
+};
 
 const PLACEMENTS = {
   side: 369,
@@ -10,7 +58,11 @@ const PLACEMENTS = {
 // Allow list for client sent keywords.
 const ALLOWED_KEYWORDS = [];
 
-export function createPongGetHandler(client, coder, env) {
+export function createPongGetHandler(
+  client: Client,
+  coder: Coder,
+  env: PongEnvs
+): GetHandler {
   const { CARBON_ZONE_KEY, FALLBACK_ENABLED } = env;
   return async (body, countryCode, userAgent) => {
     const { keywords = [], pongs = null } = body;
@@ -25,12 +77,12 @@ export function createPongGetHandler(client, coder, env) {
         ],
       };
 
-      const decisionRes = await client.decisions.get(decisionReq, {
+      const decisionRes = (await client.decisions.get(decisionReq, {
         ip: anonymousIp,
-      });
+      })) as any;
       const {
         decisions: { div0 } = {},
-        candidateRetrieval: { div0: { candidatesFoundCount } = {} } = {},
+        candidateRetrieval: { div0: { candidatesFoundCount = null } = {} } = {},
       } = decisionRes;
       if (div0 === null || div0?.[0] === null) {
         let status = candidatesFoundCount ? "cap_reached" : "geo_unsupported";

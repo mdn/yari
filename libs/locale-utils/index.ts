@@ -72,6 +72,6 @@ export function getLocale(request, fallback = DEFAULT_LOCALE) {
   return locale || fallback;
 }
 
-export function isValidLocale(locale) {
+export function isValidLocale(locale: unknown): locale is string {
   return typeof locale === "string" && VALID_LOCALES.has(locale.toLowerCase());
 }

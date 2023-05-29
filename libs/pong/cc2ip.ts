@@ -172,6 +172,6 @@ const cc2ip = {
   ZW: "41.174.104.223",
 };
 
-export default function anonymousIpByCC(countryCode) {
+export default function anonymousIpByCC(countryCode: string): string {
   return cc2ip[countryCode] ?? "127.0.0.1";
 }

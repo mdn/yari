@@ -4,7 +4,6 @@
   "private": true,
   "license": "MPL-2.0",
   "type": "module",
-  "exports": "./index.js",
-  "main": "index.js",
-  "types": "index.d.ts"
+  "exports": "./index.ts",
+  "main": "index.ts"
 }

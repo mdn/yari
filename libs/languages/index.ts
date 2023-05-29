@@ -1,4 +1,4 @@
-export default {
+const languages: Record<string, { English: string; native: string }> = {
   ach: {
     English: "Acholi",
     native: "Acholi",
@@ -520,3 +520,4 @@ export default {
     native: "\u6b63\u9ad4\u4e2d\u6587 (\u7e41\u9ad4)",
   },
 };
+export default languages;

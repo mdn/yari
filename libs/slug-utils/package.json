@@ -4,10 +4,9 @@
   "private": true,
   "license": "MPL-2.0",
   "type": "module",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "index.ts",
   "dependencies": {
     "sanitize-filename": "^1.6.3"
   },
-  "export": "./index.js"
+  "export": "./index.ts"
 }

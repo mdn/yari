@@ -9,7 +9,12 @@ const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
 const LOCALE_PATTERN = "(?:[a-zA-Z]{2}|eng)(?:-[a-zA-Z]{2})?";
 
-function redirect(pattern, template, options = {}) {
+interface RedirectOptions {
+  permanent?: boolean;
+  colonToSlash?: boolean;
+}
+
+function redirect(pattern, template, options: RedirectOptions = {}) {
   return (path) => {
     const match = pattern.exec(path);
     if (match === null) {
@@ -33,8 +38,9 @@ function redirect(pattern, template, options = {}) {
 function localeRedirect(
   pattern,
   template,
-  { prependLocale = true, ...options } = {}
+  options: { prependLocale?: boolean } & RedirectOptions = {}
 ) {
+  const { prependLocale = true, ...otherOptions } = options;
   const patternStrWithLocale = pattern.source.replace(
     startRe,
     "^(?<locale>" + LOCALE_PATTERN + "/)?"
@@ -42,13 +48,13 @@ function localeRedirect(
   const patternWithLocale = new RegExp(patternStrWithLocale, pattern.flags);
   let _template = template;
   if (prependLocale) {
-    _template = ({ locale, ...group } = {}) =>
+    _template = ({ locale = undefined, ...group } = {}) =>
       `/${locale ? `${locale}` : ""}${(typeof template === "string"
         ? template
         : template(group)
       ).replace(startTemplate, "")}`;
   }
-  return redirect(patternWithLocale, _template, options);
+  return redirect(patternWithLocale, _template, otherOptions);
 }
 
 function externalRedirect(pattern, template, options = {}) {
@@ -1274,7 +1280,10 @@ const REDIRECT_PATTERNS = [].concat(
 const STARTING_SLASH = /^\//;
 const ABSOLUTE_URL = /^https?:\/\/.*/;
 
-export function resolveFundamental(path) {
+export function resolveFundamental(path: string): {
+  url?: string;
+  status?: 301 | 302;
+} {
   if (ABSOLUTE_URL.exec(path)) {
     return {};
   }

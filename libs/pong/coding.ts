@@ -5,7 +5,7 @@ export class Coder {
    * The signing secret.
    * @type {string}
    */
-  signSecret;
+  signSecret: string;
 
   /**
    * Create a Coder to en/decode and sign/verify fields.
@@ -14,7 +14,7 @@ export class Coder {
   constructor(signSecret) {
     this.signSecret = signSecret;
   }
-  encodeAndSign(s = "") {
+  encodeAndSign(s = ""): string {
     const hmac = createHmac("sha256", this.signSecret);
     hmac.update(s);
     return `${Buffer.from(s, "utf-8").toString("base64")}.${hmac.digest(
@@ -22,7 +22,7 @@ export class Coder {
     )}`;
   }
 
-  decodeAndVerify(tuple = "") {
+  decodeAndVerify(tuple = ""): string | null {
     if (tuple === null) {
       return null;
     }
