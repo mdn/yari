@@ -1,71 +1,18 @@
 import { useEffect, useState } from "react";
-import { splitQuery } from "../../../utils";
+import { SidebarFilterer } from "./SidebarFilterer";
 
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     const quicklinks = document.getElementById("sidebar-quicklinks");
+
     if (!quicklinks) {
       return;
     }
 
-    const details = Array.from(
-      quicklinks.querySelectorAll<HTMLDetailsElement>("details")
-    );
-    const links = Array.from(
-      quicklinks.querySelectorAll<HTMLAnchorElement>("a[href]")
-    );
-
-    if (query) {
-      // Hide and collapse all parents.
-      details.forEach((detail) => {
-        detail.style.display = "none";
-        detail.dataset.open = detail.dataset.open ?? String(detail.open);
-        detail.open = false;
-      });
-
-      // Show/hide items (+ show parents).
-      const q = splitQuery(query);
-      links.forEach((link) => {
-        const innerTextLC = link.innerText.toLowerCase();
-        const isMatch = q.every((q) => innerTextLC.includes(q));
-        const target = link.closest("li") || link;
-
-        if (isMatch) {
-          // Show item.
-          target.style.display = "inherit";
-
-          // Expand parents.
-          let parent = target.parentElement;
-          while (parent) {
-            if (parent instanceof HTMLDetailsElement) {
-              parent.style.display = "inherit";
-              parent.open = true;
-            }
-            parent = parent.parentElement;
-          }
-        } else {
-          // Hide item.
-          target.style.display = "none";
-        }
-      });
-    } else {
-      // Show all links.
-      links.forEach((link) => {
-        const target = link.closest("li") || link;
-        target.style.display = "inherit";
-      });
-
-      // Show all parents.
-      details.forEach((detail) => {
-        detail.style.display = "inherit";
-        if (detail.dataset.open) {
-          detail.open = JSON.parse(detail.dataset.open);
-          delete detail.dataset.open;
-        }
-      });
-    }
+    const filterer = new SidebarFilterer(quicklinks);
+    filterer.applyFilter(query);
   }, [query]);
 
   return (
