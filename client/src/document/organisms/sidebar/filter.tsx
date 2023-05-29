@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { splitQuery } from "../../../utils";
 
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
@@ -25,9 +26,10 @@ export function SidebarFilter() {
       });
 
       // Show/hide items (+ show parents).
-      const queryLC = query.toLowerCase();
+      const q = splitQuery(query);
       links.forEach((link) => {
-        const isMatch = link.innerText.toLowerCase().includes(queryLC);
+        const innerTextLC = link.innerText.toLowerCase();
+        const isMatch = q.every((q) => innerTextLC.includes(q));
         const target = link.closest("li") || link;
 
         if (isMatch) {
