@@ -89,8 +89,10 @@ export function AIDialogInner() {
             disabled={isLoading || isResponding}
             type="text"
             placeholder={
-              isLoading || isResponding
+              isLoading
                 ? "Waiting for an answer..."
+                : isResponding
+                ? "Receiving answer..."
                 : "Ask MDN a question..."
             }
           />
