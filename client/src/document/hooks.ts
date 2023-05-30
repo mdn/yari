@@ -32,6 +32,9 @@ function sectionForHeading(heading: Element | null): Element[] {
   if (heading === null) {
     return [];
   }
+  if (!SECTION_RE.test(heading.tagName)) {
+    return [...heading.children];
+  }
   let next = heading.nextElementSibling;
   while (next && partOfSection(heading, next)) {
     nodes.push(next);
