@@ -83,9 +83,7 @@ export class SidebarFilterer {
   }
 
   private highlightMatches(el: HTMLElement, terms: string[]) {
-    const nodes = Array.from(el.childNodes).filter(
-      (node) => node.nodeType === Node.TEXT_NODE
-    ) as (Element & Text)[];
+    const nodes = this.getTextNodes(el);
 
     nodes.forEach((node) => {
       const haystack = node.textContent?.toLowerCase();
@@ -127,6 +125,24 @@ export class SidebarFilterer {
 
       this.replaceChildNode(rest, "span");
     });
+  }
+
+  private getTextNodes(parentNode: Node): (Node & Text)[] {
+    const parents = [parentNode];
+    const nodes: (Node & Text)[] = [];
+
+    while (parents.length) {
+      const parent = parents.shift() as Node;
+      for (const childNode of parent.childNodes) {
+        if (childNode.nodeType === Node.TEXT_NODE) {
+          nodes.push(childNode as Node & Text);
+        } else if (childNode.hasChildNodes()) {
+          parents.push(childNode);
+        }
+      }
+    }
+
+    return nodes;
   }
 
   private replaceChildNode(node: ChildNode, tagName: string) {
