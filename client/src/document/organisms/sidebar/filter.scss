@@ -7,7 +7,7 @@
   width: calc(100% - 1rem); /* Leaves some space to scrollbar. */
 
   .sidebar-filter-label {
-    left: 1rem; /* Moves icon inside field. */
+    left: 1.1rem; /* Moves icon inside field. */
     position: relative;
     top: 0.1rem; /* Aligns icon with input. */
   }
@@ -38,28 +38,33 @@
       ~ .button.clear-sidebar-filter-button {
         display: block;
       }
+
+      ~ .sidebar-filter-thumbs {
+        display: none;
+      }
     }
 
     ~ .button.clear-sidebar-filter-button {
+      --button-color: var(--icon-secondary);
+      --button-height: 1.5rem;
+      --button-padding: 0;
       display: none;
+      position: absolute;
+      right: 0.75rem;
+      top: 0.25rem;
+      width: 1.5rem;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    ~ .sidebar-filter-thumbs {
+      margin-left: 1rem;
     }
   }
 
   .icon {
     background-color: var(--icon-secondary);
-  }
-
-  .button {
-    --button-color: var(--icon-secondary);
-    --button-height: 1.5rem;
-    --button-padding: 0;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.25rem;
-    width: 1.5rem;
-
-    &:hover {
-      background: transparent;
-    }
   }
 }
