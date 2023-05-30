@@ -170,19 +170,6 @@ export function useAiChat({
         try {
           setIsLoading?.(false);
 
-          if (e.data === "[DONE]") {
-            setIsResponding(false);
-            dispatchMessage({
-              type: "update",
-              index: currentMessageIndex,
-              message: {
-                status: MessageStatus.Complete,
-              },
-            });
-            setCurrentMessageIndex((x) => x + 2);
-            return;
-          }
-
           dispatchMessage({
             type: "update",
             index: currentMessageIndex,
@@ -199,6 +186,7 @@ export function useAiChat({
           const [
             {
               delta: { content },
+              finish_reason,
             },
           ] =
             completionResponse.choices as CreateChatCompletionResponseChoicesInnerDelta[];
@@ -209,6 +197,16 @@ export function useAiChat({
               index: currentMessageIndex,
               content,
             });
+          } else if (finish_reason === "stop") {
+            setIsResponding(false);
+            dispatchMessage({
+              type: "update",
+              index: currentMessageIndex,
+              message: {
+                status: MessageStatus.Complete,
+              },
+            });
+            setCurrentMessageIndex((x) => x + 2);
           }
         } catch (err) {
           handleError(err);
