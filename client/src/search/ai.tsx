@@ -6,12 +6,14 @@ import { useAiChat } from "./use-ai";
 import "./ai.scss";
 
 const questions: string[] = [
-  "How do I get started with Supabase?",
-  "How do I run Supabase locally?",
-  "How do I connect to my database?",
-  "How do I run migrations? ",
-  "How do I listen to changes in a table?",
-  "How do I set up authentication?",
+  "What pages can you recommend to learn web development?",
+  "How to migrate a table layout to grid?",
+  "What are some tips to make my site accessible?",
+  "How can I apply functional programming with JavaScript?",
+  "What are some techniques to improve web performance?",
+  "How can I read and write to the clipboard?",
+  "What does it mean if a web feature is baseline?",
+  "How can I contribute to MDN?",
 ];
 
 export function AIDialogInner() {
