@@ -102,7 +102,10 @@ export class SidebarFilterer {
         ([x1, y1], [x2, y2]) => x1 - x2 || y1 - y2
       );
 
-      let rest = node;
+      const span = this.replaceChildNode(node, "span");
+      span.className = "highlight-container";
+
+      let rest = span.childNodes[0] as Node & Text;
       let cursor = 0;
 
       for (const [rangeBegin, rangeEnd] of sortedRanges) {
@@ -147,13 +150,10 @@ export class SidebarFilterer {
 
   private replaceChildNode(node: ChildNode, tagName: string) {
     const text = node.textContent;
-    if (text) {
-      const currentSpan = document.createElement(tagName);
-      currentSpan.innerText = text;
-      node.replaceWith(currentSpan);
-    } else {
-      node.parentElement?.removeChild(node);
-    }
+    const newNode = document.createElement(tagName);
+    newNode.innerText = text ?? "";
+    node.replaceWith(newNode);
+    return newNode;
   }
 
   private expandParents(target: HTMLElement) {
