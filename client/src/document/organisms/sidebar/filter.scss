@@ -47,9 +47,9 @@
       --button-height: 1.5rem;
       --button-padding: 0;
       display: none;
+      left: calc(100% - 3rem);
       margin-top: 0.25rem;
       position: absolute;
-      right: 1.25rem;
       width: 1.5rem;
 
       &:hover {
