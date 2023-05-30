@@ -1,0 +1,64 @@
+@use "../../../ui/vars.scss" as *;
+
+.sidebar-filter {
+  display: flex;
+  position: relative;
+  width: 100%;
+
+  .sidebar-filter-label {
+    left: 1rem; /* Moves icon inside field. */
+    position: relative;
+    top: 0.1rem; /* Aligns icon with input. */
+  }
+
+  .sidebar-filter-input-field {
+    -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 100px;
+    color: var(--text-primary);
+    height: var(--form-elem-height);
+    padding-left: 1.5rem;
+    width: 9rem;
+
+    &:focus {
+      outline: var(--border-primary);
+    }
+
+    &::placeholder {
+      color: var(--text-inactive);
+    }
+
+    &:focus,
+    &:not([value=""]) {
+      padding-right: 1.5rem;
+      width: 100%;
+
+      ~ .button.clear-sidebar-filter-button {
+        display: block;
+      }
+    }
+
+    ~ .button.clear-sidebar-filter-button {
+      display: none;
+    }
+  }
+
+  .icon {
+    background-color: var(--icon-secondary);
+  }
+
+  .button {
+    --button-color: var(--icon-secondary);
+    --button-height: 1.5rem;
+    --button-padding: 0;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.25rem;
+    width: 1.5rem;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
