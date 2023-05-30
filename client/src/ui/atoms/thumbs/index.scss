@@ -1,4 +1,11 @@
 .glean-thumbs {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+
+  .feedback,
   .thanks {
     font-size: var(--type-tiny-font-size);
   }

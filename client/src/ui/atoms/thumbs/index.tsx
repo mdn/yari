@@ -5,13 +5,7 @@ import { Button } from "../button";
 
 import "./index.scss";
 
-export function GleanThumbs({
-  extraClasses = "",
-  feature,
-}: {
-  extraClasses?: string;
-  feature: string;
-}) {
+export function GleanThumbs({ feature }: { feature: string }) {
   const [submitted, setSubmitted] = useState(false);
   const gleanClick = useGleanClick();
 
@@ -21,37 +15,48 @@ export function GleanThumbs({
   };
 
   return (
-    <>
+    <section className="glean-thumbs" title="Rate this feature">
       {submitted ? (
-        <section className={`glean-thumbs ${extraClasses}`}>
-          <span className="thanks">Thanks for voting!</span>
-        </section>
+        <span className="thanks">Thanks for rating!</span>
       ) : (
-        <Thumbs
-          extraClasses={`${extraClasses}`}
-          onThumbsUp={() => handleThumbs("up")}
-          onThumbsDown={() => handleThumbs("down")}
-        />
+        <>
+          <Thumbs
+            size="small"
+            onThumbsUp={() => handleThumbs("up")}
+            onThumbsDown={() => handleThumbs("down")}
+          />
+        </>
       )}
-    </>
+    </section>
   );
 }
 
 export function Thumbs({
-  extraClasses = "",
   onThumbsUp,
   onThumbsDown,
+  size,
 }: {
   extraClasses?: string;
   onThumbsUp: React.MouseEventHandler;
   onThumbsDown: React.MouseEventHandler;
+  size?: "small" | "medium";
 }) {
   return (
-    <section className={`thumbs-up-down ${extraClasses}`}>
-      <Button type="action" icon="thumbs-up" onClickHandler={onThumbsUp}>
+    <section className="thumbs">
+      <Button
+        type="action"
+        icon="thumbs-up"
+        size={size}
+        onClickHandler={onThumbsUp}
+      >
         <span className="visually-hidden">Thumbs up</span>
       </Button>
-      <Button type="action" icon="thumbs-down" onClickHandler={onThumbsDown}>
+      <Button
+        type="action"
+        icon="thumbs-down"
+        size={size}
+        onClickHandler={onThumbsDown}
+      >
         <span className="visually-hidden">Thumbs down</span>
       </Button>
     </section>

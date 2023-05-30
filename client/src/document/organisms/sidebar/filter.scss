@@ -1,10 +1,22 @@
 @use "../../../ui/vars.scss" as *;
 
-.sidebar-filter {
+.sidebar-filter-container {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  );
+  background-attachment: fixed;
   display: flex;
+  gap: 0.25rem;
   margin-top: -2.5rem;
-  position: relative;
-  width: calc(100% - 1rem); /* Leaves some space to scrollbar. */
+  width: 100%;
+
+  .sidebar-filter {
+    display: flex;
+    justify-content: center;
+    max-width: calc(100% - 1rem);
+  }
 
   .sidebar-filter-label {
     left: 1.1rem; /* Moves icon inside field. */
@@ -20,14 +32,10 @@
     color: var(--text-primary);
     height: var(--form-elem-height);
     padding-left: 1.5rem;
-    width: 9rem;
+    width: 8.5rem;
 
     &:focus {
       outline: var(--border-primary);
-    }
-
-    &::placeholder {
-      color: var(--text-inactive);
     }
 
     &:focus,
@@ -38,10 +46,6 @@
       ~ .button.clear-sidebar-filter-button {
         display: block;
       }
-
-      ~ .sidebar-filter-thumbs {
-        display: none;
-      }
     }
 
     ~ .button.clear-sidebar-filter-button {
@@ -50,21 +54,23 @@
       --button-padding: 0;
       display: none;
       position: absolute;
-      right: 0.75rem;
-      top: 0.25rem;
+      margin-top: 0.25rem;
+      right: 1.25rem;
       width: 1.5rem;
 
       &:hover {
         background: transparent;
       }
     }
-
-    ~ .sidebar-filter-thumbs {
-      margin-left: 1rem;
-    }
   }
 
   .icon {
     background-color: var(--icon-secondary);
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    .thumbs {
+      margin-left: 1rem;
+    }
   }
 }
