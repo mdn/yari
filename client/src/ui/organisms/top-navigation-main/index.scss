@@ -23,8 +23,12 @@
     order: 2;
   }
 
-  .user-menu {
+  .ask-opener {
     order: 3;
+  }
+
+  .user-menu {
+    order: 4;
   }
 
   .top-level-entry-container {
@@ -185,8 +189,12 @@
       order: 2;
     }
 
-    .user-menu {
+    .ask-opener {
       order: 3;
+    }
+
+    .user-menu {
+      order: 4;
     }
 
     .menu-toggle + .top-level-entry {

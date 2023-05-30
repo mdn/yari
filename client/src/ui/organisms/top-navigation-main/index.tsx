@@ -14,10 +14,13 @@ import {
   TOP_NAV_ALREADY_SUBSCRIBER,
   TOP_NAV_GET_MDN_PLUS,
 } from "../../../telemetry/constants";
+import { Button } from "../../atoms/button";
+import { useUIStatus } from "../../../ui-context";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
   const isServer = useIsServer();
+  const { setIsDialogOpen } = useUIStatus();
 
   return (
     <div className="top-navigation-main">
@@ -31,6 +34,11 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
         userData &&
         userData.isAuthenticated && (
           <>
+            <div className="ask-opener">
+              <Button onClickHandler={() => setIsDialogOpen(true)}>
+                Ask MDN
+              </Button>
+            </div>
             <UserMenu />
           </>
         )) ||
