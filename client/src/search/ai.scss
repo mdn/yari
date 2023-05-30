@@ -1,6 +1,6 @@
 .search-ai {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   font-size: var(--type-smaller-font-size);
   overflow: hidden;
@@ -12,8 +12,14 @@
   }
 
   &-header {
+    align-items: center;
     border-bottom: 1px solid var(--border-primary);
     display: flex;
+    justify-content: space-between;
+
+    &-left {
+      display: flex;
+    }
 
     &-icon {
       flex-shrink: 0;
@@ -42,17 +48,17 @@
 
   &-example {
     border-radius: 100px;
+    color: var(--text-secondary);
     display: flex;
     padding: 0.5rem;
-    color: var(--text-secondary);
 
     &:hover {
       background-color: var(--background-secondary);
     }
 
     &-icon {
-      margin-right: 0.5rem;
       flex-shrink: 0;
+      margin-right: 0.5rem;
       text-align: center;
       width: 2rem;
     }
@@ -73,8 +79,8 @@
 
     &-role {
       flex-shrink: 0;
-      width: 3rem;
       text-align: center;
+      width: 3rem;
     }
 
     &-content {

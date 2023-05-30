@@ -4,6 +4,8 @@ import remarkGfm from "remark-gfm";
 
 import { useAiChat } from "./use-ai";
 import "./ai.scss";
+import { Button } from "../ui/atoms/button";
+import { useUIStatus } from "../ui-context";
 
 const questions: string[] = [
   "What pages can you recommend to learn web development?",
@@ -24,12 +26,24 @@ export function AIDialogInner() {
   const { isResponding, hasError, messages, submit } = useAiChat({
     setIsLoading,
   });
+  const { setIsDialogOpen } = useUIStatus();
 
   return (
     <section className="search-ai">
       <div className="search-ai-header">
-        <span className="search-ai-header-icon">🤖</span>{" "}
-        <span className="search-ai-header-title">Ask MDN</span>
+        <div className="search-ai-header-left">
+          <span className="search-ai-header-icon">🤖</span>{" "}
+          <span className="search-ai-header-title">Ask MDN</span>
+        </div>
+        <div className="search-ai-header-right">
+          <Button
+            type="action"
+            icon="cancel"
+            onClickHandler={() => setIsDialogOpen(false)}
+          >
+            <span className="visually-hidden">Close dialog</span>
+          </Button>
+        </div>
       </div>
       <div className="search-ai-body">
         {hasError && (
