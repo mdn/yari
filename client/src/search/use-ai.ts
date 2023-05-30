@@ -146,6 +146,7 @@ export function useAiChat({
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
         payload: JSON.stringify({
           messages: messages
             .filter(({ status }) => status === MessageStatus.Complete)
