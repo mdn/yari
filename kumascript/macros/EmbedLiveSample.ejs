@@ -68,7 +68,8 @@ if (sampleSlug) {
       }
     }
 }
-var url = await template('LiveSampleURL', [sampleIdOrOffset, sampleUrl]);
+var id = web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset));
+var url = await template('LiveSampleURL', [id, sampleUrl]);
 
 if (hasScreenshot) {
 %><table class="sample-code-table"><%
@@ -86,7 +87,7 @@ if (hasScreenshot) {
       %><td><%
 } // end hasScreenshot
 %><iframe class="<%= className %>"<%
-%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
+%> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%

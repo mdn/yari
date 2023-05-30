@@ -20,11 +20,11 @@ main.play {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
+  min-height: calc(100vh - var(--sticky-header-height));
+  padding: 1rem;
   @media screen and (min-width: $screen-md) {
     grid-template-columns: 1fr 1fr;
   }
-  min-height: calc(100vh - var(--sticky-header-height));
-  padding: 1rem;
 
   dialog {
     z-index: 1;
@@ -33,8 +33,8 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
-      padding: 2rem;
       gap: 0.5rem;
+      padding: 2rem;
       width: 25rem;
     }
 
@@ -44,24 +44,24 @@ main.play {
     }
 
     &#flagDialog > div > textarea {
-      width: 100%;
       height: 6rem;
       resize: none;
+      width: 100%;
     }
   }
 
   section {
     &.editors {
       display: flex;
+      flex-direction: column;
       gap: 1rem;
       max-height: max(80vh, 30rem);
-      flex-direction: column;
 
       aside {
         display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
         justify-content: flex-end;
-        flex-wrap: wrap;
 
         .switch {
           margin-right: auto;
@@ -69,9 +69,9 @@ main.play {
 
         menu {
           display: flex;
+          flex-wrap: wrap;
           gap: 0.5rem;
           justify-content: flex-end;
-          flex-wrap: wrap;
           margin: 0;
 
           button {
@@ -90,8 +90,8 @@ main.play {
         border: 1px solid var(--border-primary);
         display: flex;
         flex-direction: column;
-        width: 100%;
         min-height: 2.25rem;
+        width: 100%;
 
         &[open] {
           height: 100%;
@@ -103,10 +103,10 @@ main.play {
         }
 
         .editor {
-          margin: 0.5rem 0 0;
-          overflow: scroll;
           // 100% - 2.25rem details header - 0.5rem margin - 1px border
           height: calc(100% - 2.75rem - 1px);
+          margin: 0.5rem 0 0;
+          overflow: scroll;
 
           .cm-editor {
             height: 100%;
@@ -120,20 +120,21 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
+      @media screen and (min-width: 25rem) {
+        .place {
+          max-width: 20rem;
+          min-height: 10rem;
 
-      .place {
-        max-width: 20rem;
-        min-height: 10rem;
+          .pong-box {
+            width: 100%;
 
-        .pong-box {
-          width: 100%;
+            .pong {
+              flex-direction: row;
+            }
 
-          .pong {
-            flex-direction: row;
-          }
-
-          .pong-note {
-            margin-top: 0;
+            .pong-note {
+              margin-top: 0;
+            }
           }
         }
       }

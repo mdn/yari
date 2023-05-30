@@ -222,7 +222,7 @@ export default function Playground() {
               checked={unsafe}
               toggle={(e) => setUnsafe(e.target.checked)}
             >
-              Enable unsafe content
+              Load remote content
             </Switch>
             <menu>
               <Button id="format" onClickHandler={format}>
