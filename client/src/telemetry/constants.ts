@@ -52,3 +52,4 @@ export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
     ["sm", 426],
     ["xs", 0],
   ]);
+export const THUMBS = "thumbs";

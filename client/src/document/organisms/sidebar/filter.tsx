@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SidebarFilterer } from "./SidebarFilterer";
 import { Button } from "../../../ui/atoms/button";
+import { GleanThumbs } from "../../../ui/atoms/thumbs";
 
 import "./filter.scss";
 
@@ -44,6 +45,10 @@ export function SidebarFilter() {
       >
         <span className="visually-hidden">Clear filter input</span>
       </Button>
+      <GleanThumbs
+        feature="sidebar-filter"
+        extraClasses="sidebar-filter-thumbs"
+      />
     </section>
   );
 }
