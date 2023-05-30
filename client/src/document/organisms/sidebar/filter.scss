@@ -1,12 +1,6 @@
 @use "../../../ui/vars.scss" as *;
 
 .sidebar-filter-container {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  background-attachment: fixed;
   display: flex;
   gap: 0.25rem;
   margin-top: -2.5rem;
@@ -53,8 +47,8 @@
       --button-height: 1.5rem;
       --button-padding: 0;
       display: none;
-      position: absolute;
       margin-top: 0.25rem;
+      position: absolute;
       right: 1.25rem;
       width: 1.5rem;
 
