@@ -8,9 +8,7 @@ import "./filter.scss";
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
   const [hasFocus, setFocus] = useState(false);
-  const [scrollTop, setScrollPosition] = useState<Number | undefined>(
-    undefined
-  );
+  const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
 
   useEffect(() => {
     const quicklinks = document.getElementById("sidebar-quicklinks");
@@ -20,8 +18,9 @@ export function SidebarFilter() {
     }
 
     // Save scroll position.
-    if (query && typeof scrollTop === "undefined") {
-      setScrollPosition(quicklinks.scrollTop);
+    if (query && typeof scrollTop === "undefined" && quicklinks.scrollTop > 0) {
+      setScrollTop(quicklinks.scrollTop);
+      quicklinks.scrollTop = 0;
     }
 
     // Filter sidebar.
@@ -29,9 +28,9 @@ export function SidebarFilter() {
     filterer.applyFilter(query);
 
     // Restore scroll position.
-    if (!query && typeof scrollTop == "number") {
+    if (!query && typeof scrollTop === "number") {
       quicklinks.scrollTop = scrollTop;
-      setScrollPosition(undefined);
+      setScrollTop(undefined);
     }
   }, [query, scrollTop]);
 
