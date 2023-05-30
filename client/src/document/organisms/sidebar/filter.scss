@@ -2,8 +2,9 @@
 
 .sidebar-filter {
   display: flex;
+  margin-top: -2.5rem;
   position: relative;
-  width: 100%;
+  width: calc(100% - 1rem); /* Leaves some space to scrollbar. */
 
   .sidebar-filter-label {
     left: 1rem; /* Moves icon inside field. */
