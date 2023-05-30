@@ -261,7 +261,7 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     );
   }
   // Use Boolean() because otherwise, `isTranslated` might become `undefined`
-  // rather than an actuall boolean value.
+  // rather than an actual boolean value.
   const isTranslated = Boolean(
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );

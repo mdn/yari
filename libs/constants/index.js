@@ -23,6 +23,7 @@ export const RETIRED_LOCALES = new Map(
     "ms",
     "my",
     "nl",
+    "pl",
     "pt-PT",
     "sv-SE",
     "th",
@@ -130,8 +131,7 @@ export const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
-    "media.prod.mdn.mozit.cloud",
-    "media.stage.mdn.mozit.cloud",
+    "mdn.dev",
     "interactive-examples.mdn.mozilla.net",
     "interactive-examples.mdn.allizom.net",
 

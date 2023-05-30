@@ -46,14 +46,14 @@ const loadAllLanguages = lazy(() => {
     "regex",
     "rust",
     "scss",
-    "svelte",
     "sql",
+    // 'svelte', // Loaded by `prism-svelte` extension
     "toml",
     "tsx",
     "typescript",
     "uri",
     "wasm",
-    // "webidl", // block list
+    "webidl",
     "yaml",
   ]);
 });
@@ -64,8 +64,8 @@ const loadAllLanguages = lazy(() => {
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
 const ALIASES = new Map([
-  // ["idl", "webidl"],  // block list
   ["sh", "shell"],
+  ["vue", "markup"], // See https://github.com/PrismJS/prism/issues/1665#issuecomment-536529608
 ]);
 
 // Over the years we have accumulated some weird <pre> tags whose
