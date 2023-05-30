@@ -64,7 +64,9 @@ export function SidebarContainer({
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Collapse sidebar"
         />
-        <SidebarFilter />
+        <header className="sidebar-actions">
+          <SidebarFilter />
+        </header>
         <nav aria-label={label} className="sidebar-inner">
           <div className="sidebar-inner-nav">
             <div className="in-nav-toc">

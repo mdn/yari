@@ -78,6 +78,11 @@
     }
   }
 
+  .sidebar-actions {
+    position: sticky;
+    top: 0;
+  }
+
   /* This is for sidebars where there is no sub-heading
    * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress
    */
