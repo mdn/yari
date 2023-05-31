@@ -72,4 +72,13 @@
     position: unset;
     z-index: unset;
   }
+
+  .sidebar-filter-footer {
+    align-items: center;
+    display: flex;
+    font-size: var(--type-tiny-font-size);
+    height: 1.5rem;
+    justify-content: center;
+    text-align: center;
+  }
 }

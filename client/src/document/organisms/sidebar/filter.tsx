@@ -8,6 +8,7 @@ import "./filter.scss";
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
   const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
+  const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
 
   useEffect(() => {
     const quicklinks = document.getElementById("sidebar-quicklinks");
@@ -24,7 +25,8 @@ export function SidebarFilter() {
 
     // Filter sidebar.
     const filterer = new SidebarFilterer(quicklinks);
-    filterer.applyFilter(query);
+    const items = filterer.applyFilter(query);
+    setMatchCount(items);
 
     // Restore scroll position.
     if (!query && typeof scrollTop === "number") {
@@ -61,7 +63,17 @@ export function SidebarFilter() {
           <span className="visually-hidden">Clear filter input</span>
         </Button>
       </div>
-      <GleanThumbs feature="sidebar-filter" />
+      <div className="sidebar-filter-footer">
+        {matchCount === undefined ? (
+          <GleanThumbs feature="sidebar-filter" />
+        ) : (
+          <span>
+            {matchCount === 0
+              ? "No items found."
+              : `${matchCount} ${matchCount === 1 ? "item" : "items"} found.`}
+          </span>
+        )}
+      </div>
     </section>
   );
 }

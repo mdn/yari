@@ -3,9 +3,10 @@ import { splitQuery } from "../../../utils";
 export class SidebarFilterer {
   applyFilter(query: string) {
     if (query) {
-      this.showOnlyMatchingItems(query);
+      return this.showOnlyMatchingItems(query);
     } else {
       this.showAllItems();
+      return undefined;
     }
   }
   root: HTMLElement;
@@ -61,6 +62,7 @@ export class SidebarFilterer {
 
     // Show/hide items (+ show parents).
     const terms = splitQuery(query);
+    let matchCount = 0;
     this.links.forEach((link) => {
       this.resetHighlighting(link);
       const haystack = link.innerText.toLowerCase();
@@ -70,10 +72,13 @@ export class SidebarFilterer {
       target.style.display = isMatch ? "inherit" : "none";
 
       if (isMatch) {
+        matchCount++;
         this.highlightMatches(link, terms);
         this.expandParents(target);
       }
     });
+
+    return matchCount;
   }
 
   private collapseDetail(el: HTMLDetailsElement) {
