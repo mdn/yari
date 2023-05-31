@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.23.1](https://github.com/mdn/yari/compare/v2.23.0...v2.23.1) (2023-05-29)
+
+
+### Bug Fixes
+
+* **kumascript:** mention path in render error message ([#8936](https://github.com/mdn/yari/issues/8936)) ([27938ad](https://github.com/mdn/yari/commit/27938adc275d599363b09d526395ab7c739d025b))
+* **kumascript:** mention path in render error message (v2) ([#8953](https://github.com/mdn/yari/issues/8953)) ([a9d7370](https://github.com/mdn/yari/commit/a9d737026ac159458a18ed261321e14751aff382))
+
 ## [2.23.0](https://github.com/mdn/yari/compare/v2.22.0...v2.23.0) (2023-05-25)
 
 
