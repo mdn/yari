@@ -18,7 +18,7 @@ export function GleanThumbs({
   const gleanClick = useGleanClick();
 
   const handleThumbs = (value: "up" | "down") => {
-    gleanClick(`${THUMBS}: ${feature} -> ${value}`);
+    gleanClick(`${THUMBS}: ${feature} -> ${value === "up" ? 1 : 0}`);
     setSubmitted(true);
   };
 
