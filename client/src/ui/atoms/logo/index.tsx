@@ -30,7 +30,7 @@ export function Logo() {
             <stop offset="1" />
           </linearGradient>
           <linearGradient
-            xlinkHref="#pride-gradient"
+            href="#pride-gradient"
             id="pride-gradient-v"
             x1="0"
             x2="0"
@@ -39,7 +39,7 @@ export function Logo() {
             gradientUnits="objectBoundingBox"
           />
           <linearGradient
-            xlinkHref="#pride-gradient"
+            href="#pride-gradient"
             id="pride-gradient-h"
             x1="0"
             x2="1"
