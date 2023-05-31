@@ -3,6 +3,8 @@
 //
 // https://peggyjs.org/
 
+"use strict";
+
 function peg$subclass(child, parent) {
   function C() {
     this.constructor = child;
