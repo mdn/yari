@@ -91,7 +91,6 @@ export async function render(
     rawHTML,
     {
       ...metadata,
-      path: fileInfo?.path,
       url,
       tags: metadata.tags || [],
       selective_mode,
