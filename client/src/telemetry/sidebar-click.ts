@@ -1,4 +1,5 @@
-import { SIDEBAR_CLICK } from "./constants";
+import { getSidebarFilterValue } from "../document/organisms/sidebar/filter";
+import { SIDEBAR_CLICK, SIDEBAR_CLICK_WITH_FILTER } from "./constants";
 
 export function handleSidebarClick(
   event: MouseEvent,
@@ -7,6 +8,12 @@ export function handleSidebarClick(
   const payload = getClickPayload(event);
   if (payload) {
     record(`${SIDEBAR_CLICK}: ${payload.macro} ${payload.href}`);
+
+    const filter = getSidebarFilterValue();
+    if (filter) {
+      // Records user input only if it is a subset of the sidebar content.
+      record(`${SIDEBAR_CLICK_WITH_FILTER}: ${payload.macro} ${filter}`);
+    }
   }
 }
 
