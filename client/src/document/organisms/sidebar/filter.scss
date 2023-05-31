@@ -74,15 +74,4 @@
     position: unset;
     z-index: unset;
   }
-
-  &:hover,
-  &:focus-within {
-    .glean-thumbs {
-      opacity: unset;
-    }
-  }
-
-  .glean-thumbs {
-    opacity: 0.5;
-  }
 }
