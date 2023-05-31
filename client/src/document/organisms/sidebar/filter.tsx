@@ -7,7 +7,6 @@ import "./filter.scss";
 
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
-  const [hasFocus, setFocus] = useState(false);
   const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
 
   useEffect(() => {
@@ -52,8 +51,6 @@ export function SidebarFilter() {
           placeholder="Filter sidebar"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
         />
         <Button
           type="action"
@@ -64,7 +61,7 @@ export function SidebarFilter() {
           <span className="visually-hidden">Clear filter input</span>
         </Button>
       </div>
-      {!hasFocus && !query && <GleanThumbs feature="sidebar-filter" />}
+      <GleanThumbs feature="sidebar-filter" />
     </section>
   );
 }

@@ -5,7 +5,15 @@ import { Button } from "../button";
 
 import "./index.scss";
 
-export function GleanThumbs({ feature }: { feature: string }) {
+export function GleanThumbs({
+  feature,
+  question = "Is this useful?",
+  confirmation = "Thanks for your feedback!",
+}: {
+  feature: string;
+  question?: string;
+  confirmation?: string;
+}) {
   const [submitted, setSubmitted] = useState(false);
   const gleanClick = useGleanClick();
 
@@ -15,50 +23,57 @@ export function GleanThumbs({ feature }: { feature: string }) {
   };
 
   return (
-    <section className="glean-thumbs" title="Rate this feature">
-      {submitted ? (
-        <span className="thanks">Thanks for rating!</span>
-      ) : (
+    <section className="glean-thumbs">
+      {!submitted ? (
         <>
+          <span className="question">{question}</span>
           <Thumbs
-            size="small"
+            upLabel="This is useful."
+            downLabel="This is NOT useful."
             onThumbsUp={() => handleThumbs("up")}
             onThumbsDown={() => handleThumbs("down")}
           />
         </>
+      ) : (
+        <span className="confirmation">{confirmation}</span>
       )}
     </section>
   );
 }
 
 export function Thumbs({
+  upLabel = "Thumbs up",
+  downLabel = "Thumbs down",
   onThumbsUp,
   onThumbsDown,
   size,
 }: {
-  extraClasses?: string;
+  upLabel?: string;
+  downLabel?: string;
   onThumbsUp: React.MouseEventHandler;
   onThumbsDown: React.MouseEventHandler;
   size?: "small" | "medium";
 }) {
   return (
-    <section className="thumbs">
+    <>
       <Button
         type="action"
         icon="thumbs-up"
         size={size}
         onClickHandler={onThumbsUp}
+        title={upLabel}
       >
-        <span className="visually-hidden">Thumbs up</span>
+        <span className="visually-hidden">{upLabel}</span>
       </Button>
       <Button
         type="action"
         icon="thumbs-down"
         size={size}
         onClickHandler={onThumbsDown}
+        title={downLabel}
       >
-        <span className="visually-hidden">Thumbs down</span>
+        <span className="visually-hidden">{downLabel}</span>
       </Button>
-    </section>
+    </>
   );
 }

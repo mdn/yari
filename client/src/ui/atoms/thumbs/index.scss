@@ -2,18 +2,12 @@
   align-items: center;
   display: flex;
   flex-direction: row;
+  gap: 0.1rem;
   justify-content: center;
   text-align: center;
 
-  .thanks {
+  .question,
+  .confirmation {
     font-size: var(--type-tiny-font-size);
   }
-}
-
-.thumbs {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  justify-content: center;
 }

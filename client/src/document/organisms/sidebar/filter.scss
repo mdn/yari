@@ -3,13 +3,13 @@
 .sidebar-filter-container {
   background: linear-gradient(
     to bottom,
-    var(--background-primary) 0% calc(100% - 1rem),
+    var(--background-primary) 0% calc(100% - 2rem),
     rgba(0, 0, 0, 0) 100%
   );
   display: flex;
-  gap: 0.25rem;
+  flex-direction: column;
   margin-top: -3rem;
-  padding-bottom: 1rem;
+  padding-bottom: 1.5rem;
   padding-top: 0.5rem;
   width: 100%;
 
@@ -67,11 +67,5 @@
 
   .icon {
     background-color: var(--icon-secondary);
-  }
-
-  @media screen and (min-width: $screen-lg) {
-    .glean-thumbs {
-      margin-left: 1rem;
-    }
   }
 }
