@@ -33,6 +33,7 @@ import { Doc } from "../libs/types/document.js";
 import { extractSections } from "./extract-sections.js";
 import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { memoize } from "../content/utils.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 
@@ -47,14 +48,20 @@ function calculateReadTime(copy: string): number {
 
 async function readPost(
   file: string,
-  extraMeta = true
+  options = {
+    readTime: true,
+    previousNext: true,
+  }
 ): Promise<{ blogMeta: BlogPostFrontmatter; body: string }> {
   const raw = await fs.readFile(file, "utf-8");
 
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
-  const readTime = calculateReadTime(body);
 
-  if (extraMeta) {
+  if (options.readTime) {
+    attributes.readTime = calculateReadTime(body);
+  }
+
+  if (options.previousNext) {
     const posts = await allPostFrontmatter();
     const index = posts.findIndex((post) => post.slug === attributes.slug);
     const filterFrontmatter = (
@@ -64,7 +71,7 @@ async function readPost(
     attributes.next = filterFrontmatter(posts[index - 1]);
   }
 
-  return { blogMeta: { readTime, ...attributes }, body };
+  return { blogMeta: { ...attributes }, body };
 }
 
 export function findPostPathBySlug(slug: string): string | null {
@@ -123,27 +130,31 @@ async function allPostFiles(): Promise<string[]> {
   return await api.withPromise();
 }
 
-export async function allPostFrontmatter({
-  includeUnpublished,
-}: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> {
-  return (
-    await Promise.all(
-      (
-        await allPostFiles()
-      ).map(async (file) => {
-        return (await readPost(file, false)).blogMeta;
-      })
+export const allPostFrontmatter = memoize(
+  async ({
+    includeUnpublished,
+  }: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> => {
+    return (
+      await Promise.all(
+        (
+          await allPostFiles()
+        ).map(async (file) => {
+          return (await readPost(file, { readTime: true, previousNext: false }))
+            .blogMeta;
+        })
+      )
     )
-  )
-    .filter(
-      ({ published = true, date }) =>
-        includeUnpublished || (published && Date.parse(date) <= Date.now())
-    )
-    .sort(
-      (a, b) =>
-        Date.parse(b.date) - Date.parse(a.date) || (a.title > b.title ? 1 : -1)
-    );
-}
+      .filter(
+        ({ published = true, date }) =>
+          includeUnpublished || (published && Date.parse(date) <= Date.now())
+      )
+      .sort(
+        (a, b) =>
+          Date.parse(b.date) - Date.parse(a.date) ||
+          (a.title > b.title ? 1 : -1)
+      );
+  }
+);
 
 export async function buildBlogIndex(options: { verbose?: boolean }) {
   const prefix = "blog";

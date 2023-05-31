@@ -13,6 +13,7 @@ import {
   BlogPostLimitedFrontmatter,
 } from "../../../libs/types/blog";
 import { useCopyExamplesToClipboard } from "../document/hooks";
+import { DEFAULT_LOCALE } from "../../../libs/constants";
 
 function MaybeLink({ link, children }) {
   return link ? (
@@ -126,15 +127,18 @@ function PreviousNextLink({
   direction,
   metadata: { slug, title },
 }: {
-  direction: string;
+  direction: "Previous" | "Next";
   metadata: BlogPostLimitedFrontmatter;
 }) {
   return (
-    <a href={`/en-US/blog/${slug}/`} className={direction.toLowerCase()}>
+    <a
+      href={`/${DEFAULT_LOCALE}/blog/${slug}/`}
+      className={direction.toLowerCase()}
+    >
       <article>
-        <h1>
+        <h2>
           <strong>{direction} Post</strong> {title}
-        </h1>
+        </h2>
       </article>
     </a>
   );

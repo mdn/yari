@@ -31,10 +31,6 @@ export function buildURL(locale: string, slug: string) {
   return `/${locale}/docs/${slug}`;
 }
 
-function isPromise(p): p is Promise<unknown> {
-  return p && Object.prototype.toString.call(p) === "[object Promise]";
-}
-
 /**
  * Memoizes the result of the given function call, mapping parameters to
  * return values. If NODE_ENV is not set to production it simply returns
@@ -67,9 +63,9 @@ export function memoize<Args>(
     }
 
     const value = fn(...(args as Args[]));
-    if (isPromise(value)) {
+    if (value instanceof Promise) {
       return value.then((actualValue) => {
-        cache.set(key, actualValue);
+        cache.set(key, new Promise((resolve) => resolve(actualValue)));
         return actualValue;
       });
     }
