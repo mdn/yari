@@ -4,18 +4,20 @@ function Mandala({
   animate = false,
   animateColors = false,
   rotate = false,
+  pride = false,
   extraClasses = null,
 }: {
   animate?: boolean;
   animateColors?: boolean;
   rotate?: boolean;
+  pride?: boolean;
   extraClasses?: string | null;
 }) {
   return (
     <div
       className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
-        extraClasses || ""
-      }`}
+        pride ? "pride" : ""
+      } ${extraClasses || ""}`}
       aria-hidden="true"
     >
       <div
@@ -116,8 +118,26 @@ function Mandala({
                   />
                 )}
               </path>
+              {pride && (
+                <path
+                  d="M337.5,337.5 m-120,0 a120,120 0 1,1 240,0 a120,120 0 1,1 -240,0"
+                  id="circle6"
+                >
+                  {animate && (
+                    <animateTransform
+                      attributeName="transform"
+                      begin="0s"
+                      dur="500s"
+                      type="rotate"
+                      from="360 337.5 337.5"
+                      to="0 337.5 337.5"
+                      repeatCount="indefinite"
+                    />
+                  )}
+                </path>
+              )}
             </defs>
-            <text className="mandala-accent-1" dy="70" textLength="2010">
+            <text dy="70" textLength="2010">
               <textPath textLength="2010" href="#circle1">
                 &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
                 <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
@@ -142,7 +162,7 @@ function Mandala({
                 <tspan>/</tspan>
               </textPath>
             </text>
-            <text className="mandala-accent-2" dy="70" textLength="1760">
+            <text dy="70" textLength="1760">
               <textPath textLength="1760" href="#circle2">
                 &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
                 &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
@@ -153,7 +173,7 @@ function Mandala({
                 &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
               </textPath>
             </text>
-            <text className="mandala-accent-3" dy="70" textLength="1507">
+            <text dy="70" textLength="1507">
               <textPath textLength="1507" href="#circle3">
                 <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
                 <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>
@@ -175,7 +195,7 @@ function Mandala({
                 &#125;&nbsp;&nbsp;
               </textPath>
             </text>
-            <text className="mandala-accent-4" dy="70" textLength="1257">
+            <text dy="70" textLength="1257">
               <textPath textLength="1257" href="#circle4">
                 &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
                 &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
@@ -183,7 +203,7 @@ function Mandala({
                 &nbsp;&nbsp;&nbsp;../../
               </textPath>
             </text>
-            <text className="mandala-accent-5" dy="70" textLength="1005">
+            <text dy="70" textLength="1005">
               <textPath textLength="1005" href="#circle5">
                 <tspan>&lt;&gt;</tspan>&lt;/&gt;
                 <tspan>&lt;&gt;</tspan>&lt;/&gt;
@@ -203,6 +223,15 @@ function Mandala({
                 <tspan>&lt;&gt;</tspan>&lt;/&gt;
               </textPath>
             </text>
+            {pride && (
+              <text dy="70" textLength="750">
+                <textPath textLength="755" href="#circle6">
+                  <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
+                  <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
+                  <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
+                </textPath>
+              </text>
+            )}
           </svg>
         </div>
       </div>
