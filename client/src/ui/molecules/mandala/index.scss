@@ -25,23 +25,23 @@
     fill: var(--mandala-primary);
   }
 
-  .mandala-accent-1 {
+  textPath[href="#circle1"] {
     font-size: 1.5rem;
   }
 
-  .mandala-accent-2 {
+  textPath[href="#circle2"] {
     font-size: 1.3rem;
   }
 
-  .mandala-accent-3 {
+  textPath[href="#circle3"] {
     font-size: 1.2rem;
   }
 
-  .mandala-accent-4 {
+  textPath[href="#circle4"] {
     font-size: 1.1rem;
   }
 
-  .mandala-accent-5 {
+  textPath[href="#circle5"] {
     font-size: 1rem;
   }
 
@@ -52,24 +52,56 @@
       fill: var(--mandala-primary);
     }
 
-    .mandala-accent-1 > textPath > tspan {
+    textPath[href="#circle1"] > tspan {
       animation-delay: -15s;
       fill: var(--mandala-accent-1);
     }
 
-    .mandala-accent-2 > textPath > tspan {
+    textPath[href="#circle2"] > tspan {
       animation-delay: -20s;
       fill: var(--mandala-accent-2);
     }
 
-    .mandala-accent-3 > textPath > tspan {
+    textPath[href="#circle3"] > tspan {
       animation-delay: -30s;
       fill: var(--mandala-accent-3);
     }
 
-    .mandala-accent-5 > textPath > tspan {
+    textPath[href="#circle5"] > tspan {
       animation-delay: -40s;
       fill: var(--mandala-accent-4);
+    }
+  }
+
+  &.pride {
+    textPath {
+      opacity: 0.9;
+    }
+
+    textPath[href="#circle1"] {
+      fill: var(--pride-0);
+    }
+
+    textPath[href="#circle2"] {
+      fill: var(--pride-1);
+    }
+
+    textPath[href="#circle3"] {
+      fill: var(--pride-2);
+    }
+
+    textPath[href="#circle4"] {
+      fill: var(--pride-3);
+    }
+
+    textPath[href="#circle5"] {
+      fill: var(--pride-4);
+    }
+
+    textPath[href="#circle6"] {
+      fill: var(--pride-5);
+      font-size: 0.9rem;
+      font-weight: 500;
     }
   }
 

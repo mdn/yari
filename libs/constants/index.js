@@ -23,6 +23,7 @@ export const RETIRED_LOCALES = new Map(
     "ms",
     "my",
     "nl",
+    "pl",
     "pt-PT",
     "sv-SE",
     "th",
