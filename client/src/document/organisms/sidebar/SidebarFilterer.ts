@@ -9,24 +9,28 @@ export class SidebarFilterer {
       return undefined;
     }
   }
+
   root: HTMLElement;
+  headings: HTMLElement[];
+  parents: HTMLDetailsElement[];
+  links: HTMLAnchorElement[];
 
   constructor(root: HTMLElement) {
     this.root = root;
-  }
-
-  private get parents(): HTMLDetailsElement[] {
-    return Array.from(
+    this.headings = Array.from(
+      this.root.querySelectorAll<HTMLElement>("li strong")
+    );
+    this.parents = Array.from(
       this.root.querySelectorAll<HTMLDetailsElement>("details")
     );
-  }
-
-  private get links(): HTMLAnchorElement[] {
-    return Array.from(this.root.querySelectorAll<HTMLAnchorElement>("a[href]"));
+    this.links = Array.from(
+      this.root.querySelectorAll<HTMLAnchorElement>("a[href]")
+    );
   }
 
   showAllItems() {
     this.links.forEach((link) => this.resetLink(link));
+    this.headings.forEach((heading) => this.resetHeading(heading));
     this.parents.forEach((parent) => this.resetParent(parent));
   }
 
@@ -34,6 +38,11 @@ export class SidebarFilterer {
     this.resetHighlighting(link);
     const target = link.closest("li") || link;
     target.style.display = "inherit";
+  }
+
+  private resetHeading(heading: HTMLElement) {
+    const container = heading.closest("li") ?? heading;
+    container.style.display = "inherit";
   }
 
   private resetParent(detail: HTMLDetailsElement) {
@@ -58,6 +67,7 @@ export class SidebarFilterer {
   }
 
   showOnlyMatchingItems(query: string) {
+    this.headings.forEach(this.hideHeading);
     this.parents.forEach(this.collapseDetail);
 
     // Show/hide items (+ show parents).
@@ -74,11 +84,17 @@ export class SidebarFilterer {
       if (isMatch) {
         matchCount++;
         this.highlightMatches(link, terms);
+        this.showHeading(target);
         this.expandParents(target);
       }
     });
 
     return matchCount;
+  }
+
+  private hideHeading(heading: HTMLElement) {
+    const container = heading.closest("li") ?? heading;
+    container.style.display = "none";
   }
 
   private collapseDetail(el: HTMLDetailsElement) {
@@ -159,6 +175,29 @@ export class SidebarFilterer {
     newNode.innerText = text ?? "";
     node.replaceWith(newNode);
     return newNode;
+  }
+
+  private showHeading(target: HTMLElement) {
+    const heading = this.findFirstElementBefore(target, this.headings);
+    const container = heading?.closest("li") ?? heading;
+    if (container) {
+      container.style.display = "inherit";
+    }
+  }
+
+  private findFirstElementBefore(
+    target: HTMLElement,
+    candidates: HTMLElement[]
+  ) {
+    return candidates
+      .slice()
+      .reverse()
+      .find((candidate) => {
+        return (
+          candidate.compareDocumentPosition(target) &
+          Node.DOCUMENT_POSITION_FOLLOWING
+        );
+      });
   }
 
   private expandParents(target: HTMLElement) {
