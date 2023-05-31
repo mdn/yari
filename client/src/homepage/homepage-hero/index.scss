@@ -7,6 +7,11 @@
   width: 100%;
 
   section {
+    --contrast-boost-bg: #191919;
+    --contrast-boost-shadow: 2px 2px 3px var(--contrast-boost-bg),
+      2px -2px 3px var(--contrast-boost-bg),
+      -2px -2px 3px var(--contrast-boost-bg),
+      -2px 2px 3px var(--contrast-boost-bg);
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -46,6 +51,35 @@
 
     p {
       font-weight: 300;
+    }
+
+    h1,
+    p {
+      text-shadow: var(--contrast-boost-shadow);
+    }
+
+    p > span {
+      font-size: 1.5rem;
+      position: relative;
+
+      &:after {
+        background: linear-gradient(
+          90deg,
+          var(--pride-0) 0%,
+          var(--pride-1) 20%,
+          var(--pride-2) 40%,
+          var(--pride-3) 60%,
+          var(--pride-4) 80%,
+          var(--pride-5) 100%
+        );
+        bottom: -0.1rem;
+        box-shadow: var(--contrast-boost-shadow);
+        content: "";
+        height: 0.15rem;
+        left: 0;
+        position: absolute;
+        right: 0;
+      }
     }
   }
 
