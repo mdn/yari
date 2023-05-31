@@ -45,7 +45,6 @@
       outline: var(--border-primary);
     }
 
-    &:focus,
     &:not([value=""]) {
       ~ .button.clear-sidebar-filter-button {
         display: block;
