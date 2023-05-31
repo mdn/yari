@@ -1,9 +1,16 @@
 @use "../../../ui/vars.scss" as *;
 
 .sidebar-filter-container {
+  background: linear-gradient(
+    to bottom,
+    var(--background-primary) 0% calc(100% - 1rem),
+    rgba(0, 0, 0, 0) 100%
+  );
   display: flex;
   gap: 0.25rem;
-  margin-top: -2.5rem;
+  margin-top: -3rem;
+  padding-bottom: 1rem;
+  padding-top: 0.5rem;
   width: 100%;
 
   .sidebar-filter {
