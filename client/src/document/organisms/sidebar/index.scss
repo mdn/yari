@@ -125,7 +125,9 @@
     height: 14px;
     margin-right: -0.25rem;
     mask-size: 14px;
+    position: relative;
     width: 14px;
+    z-index: -1;
   }
 
   /* icons in sidebars */
