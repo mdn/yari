@@ -7,6 +7,11 @@
   width: 100%;
 
   section {
+    --contrast-boost-bg: #191919;
+    --contrast-boost-shadow: 2px 2px 3px var(--contrast-boost-bg),
+      2px -2px 3px var(--contrast-boost-bg),
+      -2px -2px 3px var(--contrast-boost-bg),
+      -2px 2px 3px var(--contrast-boost-bg);
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -18,11 +23,6 @@
     max-width: 52rem;
     padding: 0 1rem;
     width: 100%;
-    --contrast-boost-bg: #191919;
-    --contrast-boost-shadow: 2px 2px 3px var(--contrast-boost-bg),
-      2px -2px 3px var(--contrast-boost-bg),
-      -2px -2px 3px var(--contrast-boost-bg),
-      -2px 2px 3px var(--contrast-boost-bg);
 
     h1 {
       /* Title */
@@ -59,15 +59,10 @@
     }
 
     p > span {
-      position: relative;
       font-size: 1.5rem;
+      position: relative;
 
       &:after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 0.15rem;
         background: linear-gradient(
           90deg,
           var(--pride-0) 0%,
@@ -79,6 +74,11 @@
         );
         bottom: -0.1rem;
         box-shadow: var(--contrast-boost-shadow);
+        content: "";
+        height: 0.15rem;
+        left: 0;
+        position: absolute;
+        right: 0;
       }
     }
   }
