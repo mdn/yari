@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.23.1](https://github.com/mdn/yari/compare/v2.23.0...v2.23.1) (2023-05-29)
+
+
+### Bug Fixes
+
+* **kumascript:** mention path in render error message ([#8936](https://github.com/mdn/yari/issues/8936)) ([27938ad](https://github.com/mdn/yari/commit/27938adc275d599363b09d526395ab7c739d025b))
+* **kumascript:** mention path in render error message (v2) ([#8953](https://github.com/mdn/yari/issues/8953)) ([a9d7370](https://github.com/mdn/yari/commit/a9d737026ac159458a18ed261321e14751aff382))
+
+## [2.23.0](https://github.com/mdn/yari/compare/v2.22.0...v2.23.0) (2023-05-25)
+
+
+### Features
+
+* **newsletter:** add public sign-up page ([#8686](https://github.com/mdn/yari/issues/8686)) ([bf3fbf7](https://github.com/mdn/yari/commit/bf3fbf70d0487fb6cb66026bcf9a9942bb64e63a))
+
+
+### Bug Fixes
+
+* **cloud-function:** strip X-Forwarded-Host + Forwarded headers ([#8894](https://github.com/mdn/yari/issues/8894)) ([74bab35](https://github.com/mdn/yari/commit/74bab354a076ad044d909b30991784cd163ace1a))
+* **csp,fundamental-redirects:** replace media.*.mdn.mozit.cloud with mdn.dev ([#8873](https://github.com/mdn/yari/issues/8873)) ([2c81bf5](https://github.com/mdn/yari/commit/2c81bf58e0ab533960b716f00d6e5b43f4d46dd0))
+* **quicksearch:** opened pages don't scroll to top ([#8911](https://github.com/mdn/yari/issues/8911)) ([964251b](https://github.com/mdn/yari/commit/964251b2fa54532eae121f61e57700378e920d25))
+
 ## [2.22.0](https://github.com/mdn/yari/compare/v2.21.0...v2.22.0) (2023-05-19)
 
 
