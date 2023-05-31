@@ -68,4 +68,15 @@
   .icon {
     background-color: var(--icon-secondary);
   }
+
+  &:hover,
+  &:focus-within {
+    .glean-thumbs {
+      opacity: unset;
+    }
+  }
+
+  .glean-thumbs {
+    opacity: 0.5;
+  }
 }
