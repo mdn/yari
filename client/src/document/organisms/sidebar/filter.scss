@@ -20,7 +20,7 @@
   .sidebar-filter {
     display: flex;
     justify-content: center;
-    max-width: calc(100% - 1rem);
+    width: 100%;
   }
 
   .sidebar-filter-label {
@@ -37,7 +37,8 @@
     color: var(--text-primary);
     height: var(--form-elem-height);
     padding-left: 1.5rem;
-    width: 8.5rem;
+    padding-right: 1.5rem;
+    width: 100%;
 
     &:focus {
       outline: var(--border-primary);
@@ -45,9 +46,6 @@
 
     &:focus,
     &:not([value=""]) {
-      padding-right: 1.5rem;
-      width: 100%;
-
       ~ .button.clear-sidebar-filter-button {
         display: block;
       }
@@ -58,7 +56,7 @@
       --button-height: 1.5rem;
       --button-padding: 0;
       display: none;
-      left: calc(100% - 3rem);
+      left: calc(100% - 2rem);
       margin-top: 0.25rem;
       position: absolute;
       width: 1.5rem;
