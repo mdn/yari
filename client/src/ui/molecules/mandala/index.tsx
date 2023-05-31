@@ -224,8 +224,8 @@ function Mandala({
               </textPath>
             </text>
             {pride && (
-              <text dy="70" textLength="750">
-                <textPath textLength="755" href="#circle6">
+              <text dy="70" textLength="754">
+                <textPath textLength="754" href="#circle6">
                   <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
                   <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
                   <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
