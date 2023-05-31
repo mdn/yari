@@ -13,6 +13,10 @@
   padding-top: 0.5rem;
   width: 100%;
 
+  @media screen and (max-width: $screen-sm) {
+    display: none;
+  }
+
   .sidebar-filter {
     display: flex;
     justify-content: center;
