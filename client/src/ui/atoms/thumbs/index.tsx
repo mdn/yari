@@ -58,6 +58,7 @@ export function Thumbs({
     <>
       <Button
         type="action"
+        extraClasses={"thumbs"}
         icon="thumbs-up"
         size={size}
         onClickHandler={onThumbsUp}
@@ -67,6 +68,7 @@ export function Thumbs({
       </Button>
       <Button
         type="action"
+        extraClasses={"thumbs"}
         icon="thumbs-down"
         size={size}
         onClickHandler={onThumbsDown}

@@ -11,3 +11,25 @@
     font-size: var(--type-tiny-font-size);
   }
 }
+
+.thumbs {
+  &:hover {
+    --button-bg-hover: unset;
+  }
+
+  &:active {
+    --button-bg-active: unset;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    .icon-thumbs-up {
+      background-color: var(--icon-success);
+    }
+
+    .icon-thumbs-down {
+      background-color: var(--icon-critical);
+    }
+  }
+}
