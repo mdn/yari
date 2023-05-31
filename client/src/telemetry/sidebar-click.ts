@@ -1,4 +1,3 @@
-import { getSidebarFilterValue } from "../document/organisms/sidebar/filter";
 import { SIDEBAR_CLICK, SIDEBAR_CLICK_WITH_FILTER } from "./constants";
 
 export function handleSidebarClick(
@@ -43,4 +42,11 @@ function getClickPayload(event: MouseEvent) {
     macro,
     href,
   };
+}
+
+export function getSidebarFilterValue() {
+  const input = document.getElementById(
+    "sidebar-filter-input"
+  ) as HTMLInputElement | null;
+  return input?.value;
 }

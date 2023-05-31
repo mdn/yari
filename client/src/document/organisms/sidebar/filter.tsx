@@ -5,13 +5,6 @@ import { GleanThumbs } from "../../../ui/atoms/thumbs";
 
 import "./filter.scss";
 
-export function getSidebarFilterValue() {
-  const input = document.getElementById(
-    "sidebar-filter-input"
-  ) as HTMLInputElement | null;
-  return input?.value;
-}
-
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
   const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
