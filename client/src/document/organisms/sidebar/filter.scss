@@ -71,6 +71,8 @@
 
   .icon {
     background-color: var(--icon-secondary);
+    position: unset;
+    z-index: unset;
   }
 
   &:hover,
