@@ -40,7 +40,7 @@ async function save(editorContent: EditorContent) {
 }
 
 export default function Playground() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   let gistId = searchParams.get("id");
   let localKey = searchParams.get("local");
   let [shared, setShared] = useState(false);
@@ -104,7 +104,7 @@ export default function Playground() {
           );
         }
         if (localKey) {
-          setSearchParams([]);
+          window.history.replaceState({}, "", "/en-US/play");
         }
       } else {
         htmlRef.current?.setContent(HTML_DEFAULT);
@@ -112,7 +112,7 @@ export default function Playground() {
         jsRef.current?.setContent(JS_DEFAULT);
       }
     }
-  }, [code, state, localKey, setSearchParams]);
+  }, [code, state, localKey]);
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
@@ -120,7 +120,7 @@ export default function Playground() {
     };
   }, [messageListener]);
   const reset = async () => {
-    setSearchParams([]);
+    window.history.replaceState({}, "", "/en-US/play");
     setCodeSrc(undefined);
     htmlRef.current?.setContent(HTML_DEFAULT);
     cssRef.current?.setContent(CSS_DEFAULT);
@@ -236,7 +236,11 @@ export default function Playground() {
                 onClickHandler={async () => {
                   const url = await save(getEditorContent());
                   setUrl(url.toString());
-                  setSearchParams(url.searchParams);
+                  window.history.replaceState(
+                    {},
+                    "",
+                    `/en-US/play?${url.searchParams.toString()}`
+                  );
                   setShared(true);
                   shareDiaRef.current?.showModal();
                 }}

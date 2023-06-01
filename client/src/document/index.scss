@@ -543,18 +543,36 @@ pre {
   color: var(--code-default);
   position: relative;
 
+  .example-header {
+    align-items: center;
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0 0.5rem 0 1rem;
+
+    ~ pre {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      margin-top: 0;
+    }
+
+    .language-name {
+      margin-right: auto;
+      text-transform: uppercase;
+    }
+  }
+
   .play-icon {
     border-radius: var(--elem-radius);
     cursor: pointer;
     height: 1.25rem;
     margin: 0;
-    mask-image: url("../assets/icons/external.svg");
+    mask-image: url("../assets/icons/play.svg");
     mask-size: cover;
     opacity: 0.4;
     padding: 0.25rem;
-    position: absolute;
-    right: 2.25rem;
-    top: 0.75rem;
     width: 1.25rem;
 
     &:hover,
@@ -572,9 +590,6 @@ pre {
     mask-size: cover;
     opacity: 0.4;
     padding: 0.25rem;
-    position: absolute;
-    right: 0.5rem;
-    top: 0.75rem;
     width: 1.25rem;
 
     &:hover,
@@ -592,39 +607,12 @@ pre {
     padding: 0.125rem;
     position: absolute;
     right: 0.25rem;
-    top: 15px;
+    top: 2rem;
   }
 
   .example-good,
   .example-bad {
     padding: 1rem;
-  }
-
-  .explain-button {
-    line-height: 1.25rem;
-    position: absolute;
-    right: 3.75rem;
-    top: 0.75rem;
-  }
-
-  .explain-text {
-    background: var(--background-primary);
-    border-radius: 0.25rem;
-    margin-top: 1em;
-    overflow: hidden;
-    padding: 1em;
-
-    p {
-      margin: 0.5rem 0;
-    }
-
-    .explain-text-footer {
-      background: #f0f8ff;
-      font-family: sans;
-      margin: -1em;
-      margin-top: 0.5em;
-      padding: 1em;
-    }
   }
 }
 

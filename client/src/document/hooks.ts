@@ -144,11 +144,11 @@ export function useMakeInteractive(doc: Doc | undefined) {
       }
       const { code, nodes } = r;
       nodes.forEach((element) => {
-        const wrapper = element.parentElement;
+        const header = element.parentElement?.firstElementChild;
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
         // early if we have to.
-        if (!wrapper) return;
+        if (!header || header.querySelector(".play-icon")) return;
 
         const button = document.createElement("button");
         const span = document.createElement("span");
@@ -157,9 +157,10 @@ export function useMakeInteractive(doc: Doc | undefined) {
 
         button.setAttribute("type", "button");
         button.setAttribute("class", "icon play-icon");
+        button.title = "use example in playground";
         span.setAttribute("class", "visually-hidden");
         button.appendChild(span);
-        wrapper.appendChild(button);
+        header.appendChild(button);
 
         button.onclick = async () => {
           const key = `play-${id}-${doc.mdn_url}`;
@@ -196,11 +197,11 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 
     [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
       (element) => {
-        const wrapper = element.parentElement;
+        const header = element.parentElement?.firstElementChild;
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
         // early if we have to.
-        if (!wrapper) return;
+        if (!header || header.querySelector(".copy-icon")) return;
 
         const button = document.createElement("button");
         const span = document.createElement("span");
@@ -213,11 +214,10 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         span.setAttribute("class", "visually-hidden");
         liveregion.classList.add("copy-icon-message", "visually-hidden");
         liveregion.setAttribute("role", "alert");
-        liveregion.style.top = "52px";
 
         button.appendChild(span);
-        wrapper.appendChild(button);
-        wrapper.appendChild(liveregion);
+        header.appendChild(button);
+        header.appendChild(liveregion);
 
         button.onclick = async () => {
           let copiedSuccessfully = true;
@@ -234,15 +234,15 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 
           if (copiedSuccessfully) {
             button.classList.add("copied");
-            showCopiedMessage(wrapper, "Copied!");
+            showCopiedMessage(header, "Copied!");
           } else {
             button.classList.add("failed");
-            showCopiedMessage(wrapper, "Error trying to copy to clipboard!");
+            showCopiedMessage(header, "Error trying to copy to clipboard!");
           }
 
           setTimeout(
             () => {
-              hideCopiedMessage(wrapper);
+              hideCopiedMessage(header);
             },
             copiedSuccessfully ? 1000 : 3000
           );
@@ -252,13 +252,13 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   }, [doc, location, isServer]);
 }
 
-function showCopiedMessage(wrapper: HTMLElement, msg: string) {
+function showCopiedMessage(wrapper: Element, msg: string) {
   const element = getCopiedMessageElement(wrapper);
   element.textContent = msg;
   element.classList.remove("visually-hidden");
 }
 
-function hideCopiedMessage(wrapper: HTMLElement) {
+function hideCopiedMessage(wrapper: Element) {
   const element = getCopiedMessageElement(wrapper);
   element.textContent = ""; // ensure contents change, so that they are picked up by the live region
   if (element) {
@@ -266,7 +266,7 @@ function hideCopiedMessage(wrapper: HTMLElement) {
   }
 }
 
-function getCopiedMessageElement(wrapper: HTMLElement) {
+function getCopiedMessageElement(wrapper: Element) {
   const className = "copy-icon-message";
   let element: HTMLSpanElement | null = wrapper.querySelector(
     `span.${className}`
@@ -276,7 +276,6 @@ function getCopiedMessageElement(wrapper: HTMLElement) {
     element.classList.add(className);
     element.classList.add("visually-hidden");
     element.setAttribute("role", "alert");
-    element.style.top = "52px";
     wrapper.appendChild(element);
   }
   return element;
