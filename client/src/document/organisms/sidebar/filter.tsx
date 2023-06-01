@@ -64,14 +64,15 @@ export function SidebarFilter() {
         </Button>
       </div>
       <div className="sidebar-filter-footer">
-        {matchCount === undefined ? (
+        <div className="sidebar-filter-thumbs">
           <GleanThumbs feature="sidebar-filter" />
-        ) : (
-          <span>
+        </div>
+        {matchCount !== undefined && (
+          <div className="sidebar-filter-count">
             {matchCount === 0
               ? "No items found."
               : `${matchCount} ${matchCount === 1 ? "item" : "items"} found.`}
-          </span>
+          </div>
         )}
       </div>
     </section>

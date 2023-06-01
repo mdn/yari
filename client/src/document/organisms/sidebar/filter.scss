@@ -76,9 +76,16 @@
   .sidebar-filter-footer {
     align-items: center;
     display: flex;
+    flex-direction: column;
     font-size: var(--type-tiny-font-size);
-    height: 1.5rem;
-    justify-content: center;
     text-align: center;
+
+    .glean-thumbs {
+      height: 1.5rem;
+    }
+
+    .sidebar-filter-count {
+      font-style: italic;
+    }
   }
 }
