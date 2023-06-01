@@ -1,7 +1,9 @@
 import path from "node:path";
 
 import chalk from "chalk";
+import * as cheerio from "cheerio";
 import webFeatures from "web-features/index.json" assert { type: "json" };
+import * as Sentry from "@sentry/node";
 
 import {
   MacroInvocationError,
@@ -44,7 +46,6 @@ import {
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
-import * as cheerio from "cheerio";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -175,6 +176,15 @@ export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
+  Sentry.setExtras({
+    doc_path: document?.fileInfo?.path,
+    doc_title: document?.metadata?.title,
+    doc_url: document?.url,
+  });
+  Sentry.setTags({
+    doc_slug: document?.metadata?.slug,
+    doc_locale: document?.metadata?.locale,
+  });
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
