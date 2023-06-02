@@ -139,15 +139,12 @@ export class SidebarFilterer {
         const match = rest.splitText(rangeBegin - cursor);
         const newRest = match.splitText(rangeEnd - rangeBegin);
 
-        // Convert text nodes to HTML elements.
-        this.replaceChildNode(rest, "span");
+        // Convert text node to HTML element.
         this.replaceChildNode(match, "mark");
 
         rest = newRest as Element & Text;
         cursor = rangeEnd;
       }
-
-      this.replaceChildNode(rest, "span");
     });
   }
 
