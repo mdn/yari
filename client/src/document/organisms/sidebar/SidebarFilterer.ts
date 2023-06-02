@@ -152,8 +152,7 @@ export class SidebarFilterer {
     const parents = [parentNode];
     const nodes: (Node & Text)[] = [];
 
-    while (parents.length) {
-      const parent = parents.shift() as Node;
+    for (const parent of parents) {
       for (const childNode of parent.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
           nodes.push(childNode as Node & Text);
