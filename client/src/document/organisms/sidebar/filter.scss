@@ -39,8 +39,6 @@
     color: var(--text-primary);
     height: var(--form-elem-height);
     padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    width: 100%;
 
     &:focus {
       border-color: var(--category-color);
@@ -48,7 +46,15 @@
       outline: 0 none;
     }
 
+    &[value=""] {
+      width: 5rem;
+    }
+
+    &:focus,
     &:not([value=""]) {
+      padding-right: 1.5rem;
+      width: 100%;
+
       ~ .button.clear-sidebar-filter-button {
         display: block;
       }

@@ -50,7 +50,7 @@ export function SidebarFilter() {
           id="sidebar-filter-input"
           className="sidebar-filter-input-field"
           type="text"
-          placeholder="Filter sidebar"
+          placeholder="Filter"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
