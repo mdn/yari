@@ -3,12 +3,17 @@
 //
 // Parameters:
 //  $0  Video ID
+//  $1  title (optional)
+//  $2  width (optional)
+//  $3  height (optional)
 
-var video = '<iframe width="560" height="315" ' +
+var video = '<iframe ' +
   `src="https://www.youtube-nocookie.com/embed/${$0}" ` +
+  `title="${$1 || 'YouTube video'}" ` +
+  `width="${$2 || 560}" ` +
+  `height="${$3 || 315}" ` +
   'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
   'allowfullscreen></iframe>';
-
 %>
 
 <%-video%>
