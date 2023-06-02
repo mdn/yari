@@ -69,6 +69,9 @@ jobs:
       - name: Unit testing client
         run: yarn test:client
 
+      - name: Unit testing libs
+        run: yarn test:libs
+
       - name: Build and start server
         id: server
         env:
