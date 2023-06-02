@@ -4,12 +4,15 @@ import { Button } from "../../../ui/atoms/button";
 import { GleanThumbs } from "../../../ui/atoms/thumbs";
 
 import "./filter.scss";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { SIDEBAR_FILTER_FOCUS } from "../../../telemetry/constants";
 
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
   const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
   const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
   const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
+  const gleanClick = useGleanClick();
 
   useEffect(() => {
     const quicklinks = document.getElementById("sidebar-quicklinks");
@@ -35,6 +38,12 @@ export function SidebarFilter() {
       setScrollTop(undefined);
     }
   }, [query, scrollTop]);
+
+  useEffect(() => {
+    if (hasUserInteraction) {
+      gleanClick(SIDEBAR_FILTER_FOCUS);
+    }
+  }, [gleanClick, hasUserInteraction]);
 
   return (
     <section className="sidebar-filter-container">
