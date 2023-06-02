@@ -153,7 +153,7 @@ export const cspToString = (csp) =>
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
-// Always update client/src/setupProxy.js:20 when adding/removing extensions!
+// Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
 export const FONT_EXT = ["woff2"];
 export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
