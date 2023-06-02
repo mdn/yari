@@ -3,6 +3,24 @@
   display: flex;
   flex-direction: row;
   gap: 0.1rem;
+
+  .confirmation {
+    animation-name: colorHighlight;
+    animation-delay: 5s;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    color: var(--category-color);
+
+    @keyframes colorHighlight {
+      0% {
+        color: var(--category-color);
+      }
+
+      100% {
+        color: var(--text-primary);
+      }
+    }
+  }
 }
 
 .thumbs {
