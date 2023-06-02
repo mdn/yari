@@ -8,7 +8,7 @@ import "./index.scss";
 export function GleanThumbs({
   feature,
   question = "Is this feature useful?",
-  confirmation = "Thank you for your feedback!",
+  confirmation = "Thank you for your feedback! ❤️",
 }: {
   feature: string;
   question?: string;
