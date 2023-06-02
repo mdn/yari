@@ -1,0 +1,32 @@
+<%
+var locale = env.locale;
+var baseURL = '/' + locale + '/docs/Glossary';
+
+var text = mdn.localStringMap({
+  'en-US': {
+    'Glossary_home_page' : 'MDN Web Docs Glossary',
+  },
+  'es': {
+    'Glossary_home_page' : 'Glosario de MDN Web Docs',
+  },
+  'fr': {
+    'Glossary_home_page' : "Glossaire MDN Web Docs",
+  },
+  'ja': {
+    'Glossary_home_page' : 'MDN Web Docs 用語集',
+  },
+  'ko': {
+    'Glossary_home_page' : 'MDN Web Docs 용어집',
+  },
+  'ru': {
+    'Glossary_home_page' : 'Глоссарий MDN Web Docs',
+  }
+});
+
+%>
+
+<section id="Quick_links" data-macro="GlossarySidebar">
+  <ol>
+    <li><strong><a href="<%=baseURL%>"><%=text['Glossary_home_page']%></a></strong><%-await template("ListSubpagesForSidebar", ['/en-us/docs/Glossary', 1])%></li>
+  </ol>
+</section>
