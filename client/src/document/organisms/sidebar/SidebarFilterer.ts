@@ -1,15 +1,6 @@
 import { splitQuery } from "../../../utils";
 
 export class SidebarFilterer {
-  applyFilter(query: string) {
-    if (query) {
-      return this.showOnlyMatchingItems(query);
-    } else {
-      this.showAllItems();
-      return undefined;
-    }
-  }
-
   root: HTMLElement;
   headings: HTMLElement[];
   parents: HTMLDetailsElement[];
@@ -26,6 +17,15 @@ export class SidebarFilterer {
     this.links = Array.from(
       this.root.querySelectorAll<HTMLAnchorElement>("a[href]")
     );
+  }
+
+  applyFilter(query: string) {
+    if (query) {
+      return this.showOnlyMatchingItems(query);
+    } else {
+      this.showAllItems();
+      return undefined;
+    }
   }
 
   showAllItems() {
