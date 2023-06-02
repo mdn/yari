@@ -61,7 +61,7 @@
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
     "@mdn/bcd-utils-api": "^0.0.4",
-    "@mdn/browser-compat-data": "^5.2.60",
+    "@mdn/browser-compat-data": "^5.2.61",
     "@mozilla/glean": "1.4.0",
     "@sentry/integrations": "^7.53.1",
     "@sentry/node": "^7.53.1",
