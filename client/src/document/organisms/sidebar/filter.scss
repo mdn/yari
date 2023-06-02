@@ -3,14 +3,14 @@
 .sidebar-filter-container {
   background: linear-gradient(
     to bottom,
-    var(--background-primary) 0% calc(100% - 2rem),
+    var(--background-primary) 0% calc(100% - 2.5rem),
     rgba(0, 0, 0, 0) 100%
   );
   display: flex;
   flex-direction: column;
   font-size: var(--type-smaller-font-size);
   margin-top: -3rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 3rem;
   padding-top: 0.5rem;
   width: 100%;
 
