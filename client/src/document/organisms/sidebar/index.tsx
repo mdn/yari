@@ -64,10 +64,10 @@ export function SidebarContainer({
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Collapse sidebar"
         />
-        <header className="sidebar-actions">
-          {doc.sidebarHTML && <SidebarFilter />}
-        </header>
         <nav aria-label={label} className="sidebar-inner">
+          <header className="sidebar-actions">
+            {doc.sidebarHTML && <SidebarFilter />}
+          </header>
           <div className="sidebar-inner-nav">
             <div className="in-nav-toc">
               {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}

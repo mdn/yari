@@ -14,10 +14,6 @@
   padding-top: 0.5rem;
   width: 100%;
 
-  @media screen and (max-width: $screen-md) {
-    display: none;
-  }
-
   .sidebar-filter {
     display: flex;
   }
@@ -66,7 +62,12 @@
       padding: 0 0.25rem;
       position: absolute;
       right: 2rem;
-      top: -2.1rem;
+      top: 0.9rem;
+
+      @media screen and (max-width: $screen-md) {
+        right: 3rem;
+        top: 1.9rem;
+      }
     }
 
     ~ .button.clear-sidebar-filter-button {
@@ -81,6 +82,10 @@
 
       &:hover {
         background: transparent;
+      }
+
+      @media screen and (max-width: $screen-md) {
+        left: calc(100% - 3rem);
       }
     }
   }

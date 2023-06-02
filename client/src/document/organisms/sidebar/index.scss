@@ -83,6 +83,14 @@
     padding-bottom: 4rem;
     position: sticky;
     top: -3rem;
+
+    @media screen and (max-width: $screen-md) {
+      height: unset;
+      margin-top: unset;
+      padding-bottom: unset;
+      position: unset;
+      top: unset;
+    }
   }
 
   /* This is for sidebars where there is no sub-heading
