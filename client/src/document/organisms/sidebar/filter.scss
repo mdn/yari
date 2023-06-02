@@ -52,12 +52,23 @@
 
     &:focus,
     &:not([value=""]) {
-      padding-right: 1.5rem;
+      padding-right: 7rem;
       width: 100%;
 
       ~ .button.clear-sidebar-filter-button {
         display: block;
       }
+    }
+
+    ~ .sidebar-filter-count {
+      background: var(--mark-color);
+      border-radius: 1rem;
+      display: block;
+      font-size: var(--type-tiny-font-size);
+      padding: 0 0.25rem;
+      position: absolute;
+      right: 2rem;
+      top: -2.1rem;
     }
 
     ~ .button.clear-sidebar-filter-button {
@@ -90,10 +101,6 @@
 
     .glean-thumbs {
       height: 1.5rem;
-    }
-
-    .sidebar-filter-count {
-      color: var(--category-color);
     }
   }
 }

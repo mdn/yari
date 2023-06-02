@@ -65,6 +65,13 @@ export function SidebarFilter() {
           onFocus={() => setUserInteraction(true)}
           onChange={(event) => setQuery(event.target.value)}
         />
+        {matchCount !== undefined && (
+          <span className="sidebar-filter-count">
+            {matchCount === 0
+              ? "No matches"
+              : `${matchCount} ${matchCount === 1 ? "match" : "matches"}`}
+          </span>
+        )}
         <Button
           type="action"
           icon="cancel"
@@ -79,13 +86,6 @@ export function SidebarFilter() {
           <div className="sidebar-filter-thumbs">
             <GleanThumbs feature="sidebar-filter" />
           </div>
-          {matchCount !== undefined && (
-            <div className="sidebar-filter-count">
-              {matchCount === 0
-                ? "No items found."
-                : `${matchCount} ${matchCount === 1 ? "item" : "items"} found.`}
-            </div>
-          )}
         </div>
       )}
     </section>
