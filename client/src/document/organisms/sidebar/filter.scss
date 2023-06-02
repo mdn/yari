@@ -20,14 +20,14 @@
 
   .sidebar-filter {
     display: flex;
-    justify-content: center;
     width: 100%;
   }
 
   .sidebar-filter-label {
-    left: 1.1rem; /* Moves icon inside field. */
+    left: 0.5rem; /* Moves icon inside field. */
     position: relative;
     top: 0.3rem; /* Aligns icon with input. */
+    width: 0; /* Avoid moving field right. */
   }
 
   .sidebar-filter-input-field {
