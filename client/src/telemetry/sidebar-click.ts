@@ -45,8 +45,8 @@ function getClickPayload(event: MouseEvent) {
 }
 
 export function getSidebarFilterValue() {
-  const input = document.getElementById(
-    "sidebar-filter-input"
-  ) as HTMLInputElement | null;
+  const input = document.querySelector<HTMLInputElement>(
+    "#sidebar-filter-input"
+  );
   return input?.value;
 }
