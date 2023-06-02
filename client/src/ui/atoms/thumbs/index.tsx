@@ -9,10 +9,14 @@ export function GleanThumbs({
   feature,
   question = "Is this feature useful?",
   confirmation = "Thank you for your feedback! ❤️",
+  upLabel = "This feature is useful.",
+  downLabel = "This feature is not useful.",
 }: {
   feature: string;
   question?: string;
   confirmation?: string;
+  upLabel?: string;
+  downLabel?: string;
 }) {
   const [submitted, setSubmitted] = useState(false);
   const gleanClick = useGleanClick();
@@ -28,8 +32,8 @@ export function GleanThumbs({
         <>
           <span className="question">{question}</span>
           <Thumbs
-            upLabel="This feature is useful."
-            downLabel="This feature is not useful."
+            upLabel={upLabel}
+            downLabel={downLabel}
             onThumbsUp={() => handleThumbs("up")}
             onThumbsDown={() => handleThumbs("down")}
           />
