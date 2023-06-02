@@ -1,6 +1,4 @@
 <%
-var locale = env.locale;
-
 async function renderRootItem(slug) {
   const [link, title] = await getPageLinkAndTitle(slug);
   return `<li><a href="${link}"><strong>${title}</strong></a></li>`
