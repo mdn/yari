@@ -65,7 +65,7 @@ export function SidebarContainer({
           aria-label="Collapse sidebar"
         />
         <header className="sidebar-actions">
-          <SidebarFilter />
+          {doc.sidebarHTML && <SidebarFilter />}
         </header>
         <nav aria-label={label} className="sidebar-inner">
           <div className="sidebar-inner-nav">
