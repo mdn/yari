@@ -96,14 +96,6 @@
       color: var(--category-color);
     }
   }
-
-  &:not(:focus-within) {
-    padding-bottom: 1rem;
-
-    .sidebar-filter-footer {
-      visibility: hidden;
-    }
-  }
 }
 
 .sidebar {

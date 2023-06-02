@@ -9,6 +9,7 @@ export function SidebarFilter() {
   const [query, setQuery] = useState("");
   const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
   const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
+  const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
 
   useEffect(() => {
     const quicklinks = document.getElementById("sidebar-quicklinks");
@@ -52,6 +53,7 @@ export function SidebarFilter() {
           type="text"
           placeholder="Filter"
           value={query}
+          onFocus={() => setUserInteraction(true)}
           onChange={(event) => setQuery(event.target.value)}
         />
         <Button
@@ -63,18 +65,20 @@ export function SidebarFilter() {
           <span className="visually-hidden">Clear filter input</span>
         </Button>
       </div>
-      <div className="sidebar-filter-footer">
-        <div className="sidebar-filter-thumbs">
-          <GleanThumbs feature="sidebar-filter" />
-        </div>
-        {matchCount !== undefined && (
-          <div className="sidebar-filter-count">
-            {matchCount === 0
-              ? "No items found."
-              : `${matchCount} ${matchCount === 1 ? "item" : "items"} found.`}
+      {hasUserInteraction && (
+        <div className="sidebar-filter-footer">
+          <div className="sidebar-filter-thumbs">
+            <GleanThumbs feature="sidebar-filter" />
           </div>
-        )}
-      </div>
+          {matchCount !== undefined && (
+            <div className="sidebar-filter-count">
+              {matchCount === 0
+                ? "No items found."
+                : `${matchCount} ${matchCount === 1 ? "item" : "items"} found.`}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }
