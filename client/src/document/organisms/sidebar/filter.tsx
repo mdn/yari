@@ -58,7 +58,9 @@ export function SidebarFilter() {
         </label>
         <input
           id="sidebar-filter-input"
-          className="sidebar-filter-input-field"
+          className={`sidebar-filter-input-field ${
+            hasUserInteraction && "has-user-interaction"
+          }`}
           type="text"
           placeholder="Filter"
           value={query}
@@ -76,7 +78,10 @@ export function SidebarFilter() {
           type="action"
           icon="cancel"
           extraClasses="clear-sidebar-filter-button"
-          onClickHandler={() => setQuery("")}
+          onClickHandler={() => {
+            setQuery("");
+            setUserInteraction(false);
+          }}
         >
           <span className="visually-hidden">Clear filter input</span>
         </Button>
