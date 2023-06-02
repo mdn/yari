@@ -238,7 +238,6 @@ export const VALID_MIME_TYPES = new Set([
   "audio/mpeg",
   "audio/ogg",
   "audio/webm",
-  "font/woff",
   "font/woff2",
   "image/png",
   "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
