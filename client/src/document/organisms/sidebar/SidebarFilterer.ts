@@ -189,12 +189,11 @@ export class SidebarFilterer {
     return candidates
       .slice()
       .reverse()
-      .find((candidate) => {
-        return (
+      .find(
+        (candidate) =>
           candidate.compareDocumentPosition(target) &
           Node.DOCUMENT_POSITION_FOLLOWING
-        );
-      });
+      );
   }
 
   private expandParents(target: HTMLElement) {
