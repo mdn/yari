@@ -15,13 +15,13 @@
   width: 100%;
 
   .sidebar-filter {
+    align-items: center;
     display: flex;
   }
 
   .sidebar-filter-label {
     left: 0.5rem; /* Moves icon inside field. */
     position: relative;
-    top: 0.3rem; /* Aligns icon with input. */
     width: 0; /* Avoid moving field right. */
   }
 
@@ -62,11 +62,9 @@
       padding: 0 0.25rem;
       position: absolute;
       right: 2rem;
-      top: 0.9rem;
 
       @media screen and (max-width: $screen-md) {
         right: 3rem;
-        top: 1.9rem;
       }
     }
 
@@ -76,7 +74,6 @@
       --button-padding: 0;
       display: none;
       left: calc(100% - 2rem);
-      margin-top: 0.25rem;
       position: absolute;
       width: 1.5rem;
 
