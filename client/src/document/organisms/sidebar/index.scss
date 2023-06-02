@@ -78,8 +78,11 @@
   }
 
   .sidebar-actions {
+    height: 0;
+    margin-top: -4rem;
+    padding-bottom: 5.5rem;
     position: sticky;
-    top: 0;
+    top: -3rem;
   }
 
   /* This is for sidebars where there is no sub-heading

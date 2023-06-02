@@ -3,15 +3,14 @@
 .sidebar-filter-container {
   background: linear-gradient(
     to bottom,
-    var(--background-primary) 0% calc(100% - 2.5rem),
-    rgba(0, 0, 0, 0) 100%
+    var(--background-primary) 0% calc(100% - 1.5rem),
+    rgb(0, 0, 0, 0) 100%
   );
   display: flex;
   flex-direction: column;
   font-size: var(--type-smaller-font-size);
-  margin-top: -3rem;
-  padding-bottom: 3rem;
-  padding-top: 0.5rem;
+  padding-bottom: 1.5rem; /* Height + Space + 3rem for background */
+  padding-top: 0.5rem; /* Space to breadrumbs. */
   width: 100%;
 
   @media screen and (max-width: $screen-md) {
@@ -20,8 +19,6 @@
 
   .sidebar-filter {
     display: flex;
-    margin-bottom: 0.5rem;
-    width: 100%;
   }
 
   .sidebar-filter-label {
@@ -98,6 +95,7 @@
     flex-direction: column;
     font-size: var(--type-tiny-font-size);
     margin-left: 0.7rem;
+    margin-top: 0.5rem;
 
     .glean-thumbs {
       height: 1.5rem;
