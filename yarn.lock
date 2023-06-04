@@ -3196,7 +3196,7 @@ acorn-jsx@^5.3.2:
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
   integrity sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==
 
-acorn-walk@^8.0.0, acorn-walk@^8.0.2, acorn-walk@^8.1.1:
+acorn-walk@^8.0.2, acorn-walk@^8.1.1:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
   integrity sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==
@@ -5912,7 +5912,7 @@ eslint@^8.41.0:
     strip-json-comments "^3.1.0"
     text-table "^0.2.0"
 
-espree@^9.0.0, espree@^9.5.2:
+espree@^9.5.2:
   version "9.5.2"
   resolved "https://registry.yarnpkg.com/espree/-/espree-9.5.2.tgz#e994e7dc33a082a7a82dceaf12883a829353215b"
   integrity sha512-7OASN1Wma5fum5SrNhFMAMJxOUAbhyfQ8dQ//PJaJbNw0URTPWqIghHWt1MmAANKhHZIYOHruW4Kw4ruUWOdGw==
@@ -7205,18 +7205,16 @@ html-tags@^3.3.1:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.3.1.tgz#a04026a18c882e4bba8a01a3d39cfe465d40b5ce"
   integrity sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==
 
-html-validate@^7.18.0:
-  version "7.18.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-7.18.0.tgz#14ad70edc4940452630d96e02f0695b96ee37d25"
-  integrity sha512-Ul8tPbrcpcV4XXx8aoWhx9ISRy0uCdhXyOz0MnnXt5IQ7sEyQFJJdY61Oysl8PKjE7JiR7SfLeyISPvQY8oS9Q==
+html-validate@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.0.0.tgz#fd98611d2287b24993faef2d6c65e1be15b73eff"
+  integrity sha512-5Qg2cJceMgx9ayDFVU2TdYlJzWfE0exji/JKWyKpP4JccD2NX90SeM/nx7yKc1deELLfydx72y8u6oSVUDeUIA==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^4.0.1"
     "@sidvind/better-ajv-errors" "^2.0.0"
-    acorn-walk "^8.0.0"
     ajv "^8.0.0"
     deepmerge "^4.2.0"
-    espree "^9.0.0"
     glob "^10.0.0"
     ignore "^5.0.0"
     kleur "^4.1.0"
