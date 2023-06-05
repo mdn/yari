@@ -40,7 +40,7 @@ export interface PlacementData {
   };
 }
 
-type PlacementType = "side" | "top";
+type PlacementType = "side" | "top" | "hpMain" | "hpFooter";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   status: Status;
@@ -48,7 +48,9 @@ export interface PlacementContextData
 
 const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
   side: /\/[^/]+\/(docs\/|blog\/|search$|_homepage)/i,
-  top: /.*/i,
+  top: /\/[^/]+\/(?!$|_homepage$).*/i,
+  hpMain: /\/[^/]+\/($|_homepage$)/i,
+  hpFooter: /\/[^/]+\/($|_homepage$)/i,
 };
 
 function placementTypes(pathname: string): string[] {
