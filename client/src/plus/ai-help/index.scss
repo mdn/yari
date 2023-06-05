@@ -1,6 +1,8 @@
 @use "../../ui/vars" as *;
 
 .ai-help {
+  --text-link: var(--ai-help-link);
+
   > header {
     --plus-header: var(--ai-help-header);
     --plus-mandala: var(--ai-help-mandala);
