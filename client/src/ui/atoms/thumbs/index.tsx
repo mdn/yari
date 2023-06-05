@@ -1,9 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { THUMBS } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { Button } from "../button";
 
 import "./index.scss";
+
+const LOCAL_STORAGE_KEY = "thumbs";
+
+function getPreviouslySubmitted() {
+  try {
+    return JSON.parse(window?.localStorage?.getItem(LOCAL_STORAGE_KEY) ?? "{}");
+  } catch (e) {
+    return {};
+    console.warn("Unable to read thumbs state to localStorage", e);
+  }
+}
+
+function isPreviouslySubmitted(feature: string): boolean {
+  try {
+    return feature in getPreviouslySubmitted();
+  } catch (e) {
+    return false;
+  }
+}
+
+function markPreviouslySubmitted(feature: string, value: boolean) {
+  try {
+    window?.localStorage?.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify({
+        ...getPreviouslySubmitted(),
+        [feature]: {
+          submitted_at: Date.now(),
+          value,
+        },
+      })
+    );
+  } catch (e) {
+    console.warn("Unable to write thumbs state to localStorage", e);
+  }
+}
 
 export function GleanThumbs({
   feature,
@@ -18,30 +54,40 @@ export function GleanThumbs({
   upLabel?: string;
   downLabel?: string;
 }) {
+  const [previouslySubmitted, setPreviouslySubmitted] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const gleanClick = useGleanClick();
+
+  useEffect(() => {
+    setPreviouslySubmitted(isPreviouslySubmitted(feature));
+  }, [feature, setPreviouslySubmitted]);
 
   const handleThumbs = (value: "up" | "down") => {
     gleanClick(`${THUMBS}: ${feature} -> ${value === "up" ? 1 : 0}`);
     setSubmitted(true);
+    markPreviouslySubmitted(feature, value === "up");
   };
 
   return (
-    <section className="glean-thumbs">
-      {!submitted ? (
-        <>
-          <span className="question">{question}</span>
-          <Thumbs
-            upLabel={upLabel}
-            downLabel={downLabel}
-            onThumbsUp={() => handleThumbs("up")}
-            onThumbsDown={() => handleThumbs("down")}
-          />
-        </>
-      ) : (
-        <span className="confirmation">{confirmation}</span>
+    <>
+      {!previouslySubmitted && (
+        <section className="glean-thumbs">
+          {!submitted ? (
+            <>
+              <span className="question">{question}</span>
+              <Thumbs
+                upLabel={upLabel}
+                downLabel={downLabel}
+                onThumbsUp={() => handleThumbs("up")}
+                onThumbsDown={() => handleThumbs("down")}
+              />
+            </>
+          ) : (
+            <span className="confirmation">{confirmation}</span>
+          )}
+        </section>
       )}
-    </section>
+    </>
   );
 }
 
