@@ -36,7 +36,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
           <>
             <div className="ask-opener">
               <Button onClickHandler={() => setIsDialogOpen(true)}>
-                Ask MDN
+                AI Help
               </Button>
             </div>
             <UserMenu />

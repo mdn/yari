@@ -33,7 +33,7 @@ export function AIDialogInner() {
       <div className="search-ai-header">
         <div className="search-ai-header-left">
           <span className="search-ai-header-icon">🤖</span>{" "}
-          <span className="search-ai-header-title">Ask MDN</span>
+          <span className="search-ai-header-title">AI Help</span>
         </div>
         <div className="search-ai-header-right">
           <Button
@@ -109,7 +109,7 @@ export function AIDialogInner() {
                 ? "Waiting for an answer..."
                 : isResponding
                 ? "Receiving answer..."
-                : "Ask MDN a question..."
+                : "Ask your question."
             }
           />
         </form>
