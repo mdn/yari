@@ -14,7 +14,6 @@ import {
   TOP_NAV_ALREADY_SUBSCRIBER,
   TOP_NAV_GET_MDN_PLUS,
 } from "../../../telemetry/constants";
-import { Button } from "../../atoms/button";
 import { useUIStatus } from "../../../ui-context";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
@@ -32,16 +31,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       {(PLUS_IS_ENABLED &&
         !isServer &&
         userData &&
-        userData.isAuthenticated && (
-          <>
-            <div className="ask-opener">
-              <Button onClickHandler={() => setIsDialogOpen(true)}>
-                AI Help
-              </Button>
-            </div>
-            <UserMenu />
-          </>
-        )) ||
+        userData.isAuthenticated && <UserMenu />) ||
         (userData?.maintenance && <Maintenance />) || (
           <AuthContainer
             signInGleanContext={TOP_NAV_ALREADY_SUBSCRIBER}
