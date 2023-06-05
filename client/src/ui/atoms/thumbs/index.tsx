@@ -11,8 +11,8 @@ function getPreviouslySubmitted() {
   try {
     return JSON.parse(window?.localStorage?.getItem(LOCAL_STORAGE_KEY) ?? "{}");
   } catch (e) {
-    return {};
     console.warn("Unable to read thumbs state to localStorage", e);
+    return {};
   }
 }
 
