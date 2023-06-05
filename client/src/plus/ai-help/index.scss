@@ -59,22 +59,32 @@
     }
 
     .ai-help-message {
+      border: 1px solid transparent;
       display: flex;
       padding: 1rem;
     }
 
     .ai-help-message-user {
       color: var(--text-secondary);
+
+      .avatar-wrap {
+        border-radius: unset;
+        height: 1.5rem;
+        margin-left: unset;
+        margin-right: unset;
+        position: unset;
+        width: 1.5rem;
+      }
     }
 
     .ai-help-message-assistant {
+      --icon-size: 1.5rem;
       background-color: var(--background-secondary);
       border: 1px solid var(--border-primary);
     }
 
     .ai-help-message-role {
       flex-shrink: 0;
-      text-align: left;
       width: 2.5rem;
     }
 

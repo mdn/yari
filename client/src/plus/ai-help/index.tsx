@@ -12,6 +12,7 @@ import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
 import "./index.scss";
+import { Avatar } from "../../ui/atoms/avatar";
 
 const questions: string[] = [
   "What pages can you recommend to learn web development?",
@@ -38,7 +39,7 @@ export function AiHelp() {
           <h1>
             <div className="mandala-icon-wrapper">
               <Mandala rotate={true} />
-              <Icon name="unknown" />
+              <Icon name="chatgpt" />
             </div>
             <span>AI Help</span>
           </h1>
@@ -150,11 +151,13 @@ export function AIHelpInner() {
 }
 
 export function RoleIcon({ role }: { role: "user" | "assistant" }) {
+  const userData = useUserData();
+
   switch (role) {
     case "user":
-      return <>👤</>;
+      return <Avatar userData={userData} />;
 
     case "assistant":
-      return <>🤖</>;
+      return <Icon name="chatgpt" />;
   }
 }
