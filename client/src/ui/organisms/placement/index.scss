@@ -144,6 +144,22 @@ section.place {
   }
 }
 
+section.place.hp-main {
+  background-color: var(--place-hp-main-background);
+  margin: 0;
+  width: 100%;
+
+  a {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    img {
+      height: auto;
+    }
+  }
+}
+
 .top-banner {
   --place-top-background-light: var(--background-secondary);
   --place-top-color-light: var(--text-primary);
