@@ -682,7 +682,7 @@ const SCL3_REDIRECT_PATTERNS = [
   redirect(
     /^samples\/(?<sample_path>.*)$/i,
     ({ sample_path }) =>
-      `https://media.prod.mdn.mozit.cloud/samples/${sample_path}`,
+      `https://mdn.dev/archives/media/samples/${sample_path}`,
     { permanent: false }
   ),
   // Bug 887428 - Misprinted URL in promo materials

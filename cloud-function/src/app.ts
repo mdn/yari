@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { Router } from "express";
 
+import { ANY_ATTACHMENT_EXT } from "./internal/constants/index.js";
+
 import { Origin } from "./env.js";
 import { proxyContent } from "./handlers/proxy-content.js";
 import { proxyKevel } from "./handlers/proxy-kevel.js";
@@ -17,8 +19,10 @@ import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
+import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 
 const router = Router();
+router.use(stripForwardedHostHeaders);
 router.use(redirectLeadingSlash);
 router.all(
   "/api/v1/stripe/plans",
@@ -46,7 +50,7 @@ router.get(
   proxyContent
 );
 router.get(
-  "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
+  `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
   requireOrigin(Origin.main, Origin.liveSamples),
   resolveIndexHTML,
   proxyContent

@@ -75,6 +75,9 @@ export async function findPostLiveSampleBySlug(
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...blogMeta },
     isMarkdown: true,
+    fileInfo: {
+      path: file,
+    },
   });
   return liveSamples.find((page) => page.id.toLowerCase() === id)?.html;
 }
@@ -94,6 +97,9 @@ export async function findPostBySlug(
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...blogMeta },
     isMarkdown: true,
+    fileInfo: {
+      path: file,
+    },
   });
   return { doc, blogMeta };
 }
@@ -177,6 +183,9 @@ export async function buildBlogPosts(options: {
       rawBody: body,
       metadata: { locale, ...blogMeta },
       isMarkdown: true,
+      fileInfo: {
+        path: file,
+      },
     };
     const { doc: builtDoc, liveSamples } = await buildPost(renderDoc);
     const { doc } = {
