@@ -146,13 +146,17 @@ section.place {
 
 section.place.hp-main {
   background-color: var(--place-hp-main-background);
-  display: flex;
-  justify-content: center;
   margin: 0;
   width: 100%;
 
-  img {
-    height: auto;
+  a {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    img {
+      height: auto;
+    }
   }
 }
 
