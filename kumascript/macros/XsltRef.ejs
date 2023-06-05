@@ -1,23 +1,41 @@
 <%
-    var lang = env.locale;
+async function renderRootItem(slug) {
+  const [link, title] = await getPageLinkAndTitle(slug);
+  return `<li><a href="${link}"><strong>${title}</strong></a></li>`
+}
 
-    var html = '<b><a href="/en-US/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference">XSLT/XPath Reference</a></b>: <a href="/en-US/docs/Web/XSLT/Element">XSLT elements</a>, <a href="/en-US/docs/Web/EXSLT">EXSLT functions</a>, <a href="/en-US/docs/Web/XPath/Functions">XPath functions</a>, <a href="/en-US/docs/Web/XPath/Axes">XPath axes</a>';
+async function getPageLinkAndTitle(slug) {
+  let link = `/${env.locale}${slug}`;
+  let page = await wiki.getPage(link);
+  if (!page.title && env.locale !== 'en-US') {
+    link = `/en-US${slug}`;
+    page = await wiki.getPage(link);
+  }
+  let title = page.short_title || page.title;
+  title = mdn.htmlEscape(title);
+  return [link, title];
+}
 
-    switch(lang) {
-        case "es":
-            html = '<b><a href="/es/docs/Web/XSLT/Transformando_XML_con_XSLT#Referencia_de_XSLT.2FXPath">Referencia de XSLT y XPath</a></b>: <a href="/es/docs/Web/XSLT/Element">Elementos XSLT</a>, <a href="/es/docs/Web/EXSLT">Funciones EXSLT</a>, <ahref="/es/docs/Web/XPath/Funciones">XPath:Funciones</a>, <a href="/es/docs/Web/XPath/Ejes">XPath:Ejes</a>';
-            break;
-        case "fr":
-            html = '<b><a href="/fr/docs/Web/XSLT/Transformations_XML_avec_XSLT/La_référence_XSLT_XPath_de_Netscape">Référence XSLT/XPath</a></b> : <a href="/fr/docs/Web/XSLT/Element">Éléments XSLT</a>, <a href="/fr/docs/Web/EXSLT">Fonctions EXSLT</a>, <a href="/fr/docs/Web/XPath/Fonctions">Fonctions XPath</a>, <a href="/fr/docs/Web/XPath/Axes">Axes XPath</a>';
-            break;
-        case "ja":
-            html = '<b><a href="/ja/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference">XSLT/XPath リファレンス</a></b>: <a href="/ja/docs/Web/XSLT/Element">XSLT 要素</a>, <a href="/ja/docs/Web/EXSLT">EXSLT 関数</a>, <a href="/ja/docs/Web/XPath/Functions">XPath 関数</a>, <a href="/ja/docs/Web/XPath/Axes">XPath 軸</a>';
-            break;
-        case "ko":
-            html = '<b><a href="/ko/docs/Web/XSLT/Transforming_XML_with_XSLT/The_Netscape_XSLT_XPath_Reference">XSLT/XPath 참고 문서</a></b>: <a href="/ko/docs/Web/XSLT/Element">XSLT 요소</a>, <a href="/ko/docs/Web/XPath/Functions">XPath 함수</a>, <a href="/ko/docs/Web/XPath/Axes">XPath 축</a>';
-            break;
-    }
 %>
-<div style="background:#f5f5f5; margin: 5px 0;">
-    <%-html%>
-</div>
+
+<section id="Quick_links" data-macro="XSLTSidebar">
+  <ol>
+    <%- await renderRootItem("/docs/Web/XSLT") %>
+    <%- await template("ListSubpagesForSidebar", ['/docs/Web/XSLT/Transforming_XML_with_XSLT', 1]) %>
+  </ol>
+  <ol>
+    <%- await renderRootItem("/docs/Web/XSLT/Element") %>
+    <%- await template("ListSubpagesForSidebar", ['/docs/Web/XSLT/Element', 1]) %>
+  </ol>
+  <ol>
+    <%- await renderRootItem("/docs/Web/EXSLT") %>
+    <%- await template("ListSubpagesForSidebar", ['/docs/Web/EXSLT', 1]) %>
+  </ol>
+  <ol>
+    <%- await renderRootItem("/docs/Web/XPath/Functions") %>
+    <%- await template("ListSubpagesForSidebar", ['/docs/Web/XPath/Functions', 1]) %>
+  </ol>
+  <ol>
+    <%- await renderRootItem("/docs/Web/XPath/Axes") %>
+  </ol>
+</section>
