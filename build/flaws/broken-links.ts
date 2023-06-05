@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
-import { Document, Redirect, Image } from "../../content/index.js";
+import { Document, Redirect, FileAttachment } from "../../content/index.js";
 import { findMatchesInText } from "../matches-in-text.js";
 import {
   DEFAULT_LOCALE,
@@ -277,8 +277,8 @@ export function getBrokenLinksFlaws(
       const absoluteURL = new URL(href, "http://www.example.com");
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
-        // Before we give up, check if it's an image.
-        if (!Image.findByURLWithFallback(hrefNormalized)) {
+        // Before we give up, check if it's an attachment.
+        if (!FileAttachment.findByURLWithFallback(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);

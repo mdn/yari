@@ -182,6 +182,38 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString(
   PLAYGROUND_UNSAFE_CSP_DIRECTIVES
 );
 
+// Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
+export const AUDIO_EXT = ["mp3", "ogg"];
+export const FONT_EXT = ["woff2"];
+export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
+export const ANY_IMAGE_EXT = ["svg", ...BINARY_IMAGE_EXT];
+export const VIDEO_EXT = ["mp4", "webm"];
+
+export const BINARY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...BINARY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export const ANY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...ANY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export function createRegExpFromExtensions(...extensions) {
+  return new RegExp(`\\.(${extensions.join("|")})$`, "i");
+}
+
+export const ANY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...ANY_ATTACHMENT_EXT
+);
+export const BINARY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...BINARY_ATTACHMENT_EXT
+);
+
 // -----
 // build
 // -----
@@ -231,9 +263,18 @@ export const MARKDOWN_FILENAME = "index.md";
 // ---------
 
 export const VALID_MIME_TYPES = new Set([
+  "audio/mp4",
+  "audio/mpeg",
+  "audio/ogg",
+  "audio/webm",
+  "font/woff2",
   "image/png",
   "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
   "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/ogg",
+  "video/webm",
 ]);
 
 export const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent
