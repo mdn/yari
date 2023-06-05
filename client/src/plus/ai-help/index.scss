@@ -2,10 +2,10 @@
 
 .ai-help {
   > header {
-    --plus-header: var(--updates-header);
-    --plus-mandala: var(--updates-mandala);
-    --plus-icon: var(--updates-icon);
-    --plus-link: var(--updates-link);
+    --plus-header: var(--ai-help-header);
+    --plus-mandala: var(--ai-help-mandala);
+    --plus-icon: var(--ai-help-icon);
+    --plus-link: var(--ai-help-link);
   }
 
   button.button[disabled],
