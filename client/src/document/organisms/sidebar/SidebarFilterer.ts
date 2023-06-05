@@ -70,7 +70,7 @@ export class SidebarFilterer {
 
   showOnlyMatchingItems(query: string) {
     this.headings.forEach(this.hideHeading);
-    this.parents.forEach(this.collapseDetail);
+    this.parents.forEach(this.collapseParent);
 
     // Show/hide items (+ show parents).
     const terms = splitQuery(query);
@@ -99,7 +99,7 @@ export class SidebarFilterer {
     container.style.display = "none";
   }
 
-  private collapseDetail(el: HTMLDetailsElement) {
+  private collapseParent(el: HTMLDetailsElement) {
     el.style.display = "none";
     el.dataset.open = el.dataset.open ?? String(el.open);
     el.open = false;
