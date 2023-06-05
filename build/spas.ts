@@ -134,6 +134,11 @@ export async function buildSPAs(options: {
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
+          prefix: "plus/ai-help",
+          pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
           noIndexing: true,

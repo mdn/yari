@@ -14,12 +14,10 @@ import {
   TOP_NAV_ALREADY_SUBSCRIBER,
   TOP_NAV_GET_MDN_PLUS,
 } from "../../../telemetry/constants";
-import { useUIStatus } from "../../../ui-context";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
   const isServer = useIsServer();
-  const { setIsDialogOpen } = useUIStatus();
 
   return (
     <div className="top-navigation-main">

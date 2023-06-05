@@ -28,7 +28,6 @@ import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
-import { SearchDialog } from "./search/dialog";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -59,7 +58,6 @@ function Layout({ pageType, children }) {
         )}
         {children}
       </div>
-      <SearchDialog />
       <Footer />
     </>
   );

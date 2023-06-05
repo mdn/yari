@@ -6,13 +6,11 @@ import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
-import { useUIStatus } from "../../../ui-context";
 
 export default function MainMenu({ isOpenOnMobile }) {
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
-  const { setIsDialogOpen } = useUIStatus();
 
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {
@@ -85,14 +83,7 @@ export default function MainMenu({ isOpenOnMobile }) {
           </a>
         </li>
         <li className="top-level-entry-container">
-          <a
-            className="top-level-entry menu-link"
-            href="/en-US/plus/ai-help/"
-            onClick={(event) => {
-              event.preventDefault();
-              setIsDialogOpen(true);
-            }}
-          >
+          <a className="top-level-entry menu-link" href="/en-US/plus/ai-help/">
             AI Help <sup className="new">Beta</sup>
           </a>
         </li>
