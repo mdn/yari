@@ -88,6 +88,7 @@ export function RenderSideBar({ doc }) {
         {doc.sidebarHTML && (
           <>
             <div
+              className="sidebar-body"
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}

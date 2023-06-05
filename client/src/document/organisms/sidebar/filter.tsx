@@ -21,6 +21,12 @@ export function SidebarFilter() {
       return;
     }
 
+    const root = quicklinks.querySelector<HTMLElement>(".sidebar-body");
+
+    if (!root) {
+      return;
+    }
+
     // Save scroll position.
     if (query && typeof scrollTop === "undefined" && quicklinks.scrollTop > 0) {
       setScrollTop(quicklinks.scrollTop);
@@ -28,7 +34,7 @@ export function SidebarFilter() {
     }
 
     // Filter sidebar.
-    const filterer = new SidebarFilterer(quicklinks);
+    const filterer = new SidebarFilterer(root);
     const items = filterer.applyFilter(query);
     setMatchCount(items);
 

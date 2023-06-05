@@ -5,13 +5,12 @@ export class SidebarFilterer {
   headings: HTMLElement[];
   parents: HTMLDetailsElement[];
   links: HTMLAnchorElement[];
+  toc: HTMLElement | null;
 
   constructor(root: HTMLElement) {
     this.root = root;
     this.headings = Array.from(
-      this.root.querySelectorAll<HTMLElement>(
-        "h2.document-toc-heading, li strong"
-      )
+      this.root.querySelectorAll<HTMLElement>("li strong")
     );
     this.parents = Array.from(
       this.root.querySelectorAll<HTMLDetailsElement>("details")
@@ -19,14 +18,26 @@ export class SidebarFilterer {
     this.links = Array.from(
       this.root.querySelectorAll<HTMLAnchorElement>("a[href]")
     );
+    this.toc =
+      this.root
+        .closest<HTMLElement>(".sidebar")
+        ?.querySelector(".in-nav-toc") ?? null;
   }
 
   applyFilter(query: string) {
     if (query) {
+      this.toggleTOC(false);
       return this.showOnlyMatchingItems(query);
     } else {
+      this.toggleTOC(true);
       this.showAllItems();
       return undefined;
+    }
+  }
+
+  toggleTOC(show: boolean) {
+    if (this.toc) {
+      this.toc.style.display = show ? "inherit" : "none";
     }
   }
 
