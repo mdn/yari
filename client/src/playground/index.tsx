@@ -14,6 +14,7 @@ import { EditorContent, updatePlayIframe } from "./utils";
 import "./index.scss";
 import { Switch } from "../ui/atoms/switch";
 import { PLAYGROUND_BASE_URL } from "../env";
+import { useUserData } from "../user-context";
 
 const HTML_DEFAULT = "<!-- HTML goes here -->";
 const CSS_DEFAULT = "/* CSS goes here */";
@@ -40,6 +41,7 @@ async function save(editorContent: EditorContent) {
 }
 
 export default function Playground() {
+  const userData = useUserData();
   let [searchParams] = useSearchParams();
   let gistId = searchParams.get("id");
   let localKey = searchParams.get("local");
@@ -231,22 +233,24 @@ export default function Playground() {
               <Button id="run" onClickHandler={updateWithEditorContent}>
                 run
               </Button>
-              <Button
-                id="share"
-                onClickHandler={async () => {
-                  const url = await save(getEditorContent());
-                  setUrl(url.toString());
-                  window.history.replaceState(
-                    {},
-                    "",
-                    `/en-US/play?${url.searchParams.toString()}`
-                  );
-                  setShared(true);
-                  shareDiaRef.current?.showModal();
-                }}
-              >
-                share
-              </Button>
+              {userData?.isAuthenticated && (
+                <Button
+                  id="share"
+                  onClickHandler={async () => {
+                    const url = await save(getEditorContent());
+                    setUrl(url.toString());
+                    window.history.replaceState(
+                      {},
+                      "",
+                      `/en-US/play?${url.searchParams.toString()}`
+                    );
+                    setShared(true);
+                    shareDiaRef.current?.showModal();
+                  }}
+                >
+                  share
+                </Button>
+              )}
               <Button
                 id="reset"
                 extraClasses="red"
