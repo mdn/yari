@@ -69,13 +69,9 @@
     }
 
     ~ .button.clear-sidebar-filter-button {
-      --button-color: var(--icon-secondary);
-      --button-height: 1.5rem;
-      --button-padding: 0;
       display: none;
       left: calc(100% - 2rem);
       position: absolute;
-      width: 1.5rem;
 
       &:hover {
         background: transparent;
@@ -85,6 +81,13 @@
         left: calc(100% - 3rem);
       }
     }
+  }
+
+  .button {
+    --button-color: var(--icon-secondary);
+    --button-height: 1.5rem;
+    --button-padding: 0;
+    width: 1.5rem;
   }
 
   .icon {
