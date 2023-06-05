@@ -113,9 +113,6 @@ export function range(start: number, stop: number) {
 
 /**
  * Used by quicksearch and sidebar filters.
- *
- * @param term
- * @returns
  */
 export function splitQuery(term: string): string[] {
   return term
