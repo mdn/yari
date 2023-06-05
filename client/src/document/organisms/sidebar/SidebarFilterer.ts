@@ -49,9 +49,9 @@ export class SidebarFilterer {
 
   private resetParent(detail: HTMLDetailsElement) {
     detail.style.display = "inherit";
-    if (detail.dataset.open) {
-      detail.open = JSON.parse(detail.dataset.open);
-      delete detail.dataset.open;
+    if (detail.dataset.wasOpen) {
+      detail.open = JSON.parse(detail.dataset.wasOpen);
+      delete detail.dataset.wasOpen;
     }
   }
 
@@ -101,7 +101,7 @@ export class SidebarFilterer {
 
   private collapseParent(el: HTMLDetailsElement) {
     el.style.display = "none";
-    el.dataset.open = el.dataset.open ?? String(el.open);
+    el.dataset.wasOpen = el.dataset.wasOpen ?? String(el.open);
     el.open = false;
   }
 
