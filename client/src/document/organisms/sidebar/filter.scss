@@ -109,6 +109,10 @@
       margin-right: 0.25rem;
       margin-top: 0.5rem;
       padding: 0 0.25rem;
+
+      .confirmation {
+        margin-right: 0.55em; /* Aligns heart with clear button. */
+      }
     }
   }
 }
