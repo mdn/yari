@@ -136,32 +136,43 @@ export function TopPlacement() {
 }
 
 export function HpMainPlacement() {
-  return HpPlacement({ imageWidth: 970, imageHeight: 250 });
+  const placementData = usePlacement();
+  return HpPlacement({
+    placementData: placementData?.hpMain,
+    imageWidth: 970,
+    imageHeight: 250,
+  });
 }
 
 export function HpFooterPlacement() {
-  return HpPlacement({ imageWidth: 728, imageHeight: 90 });
+  const placementData = usePlacement();
+  return HpPlacement({
+    placementData: placementData?.hpFooter,
+    imageWidth: 728,
+    imageHeight: 90,
+  });
 }
 
 function HpPlacement({
+  placementData,
   imageWidth,
   imageHeight,
 }: {
+  placementData?: PlacementData;
   imageWidth: number;
   imageHeight: number;
 }) {
-  const placementData = usePlacement();
-  const { backgroundColor } = placementData?.hpMain?.colors || {};
+  const { backgroundColor } = placementData?.colors || {};
   const css = Object.fromEntries(
     [["--place-hp-main-background", backgroundColor]].filter(([_, v]) =>
       Boolean(v)
     )
   );
-  return !placementData?.hpMain ? (
+  return !placementData ? (
     <section className="place hp-main"></section>
   ) : (
     <PlacementInner
-      pong={placementData.hpMain}
+      pong={placementData}
       extraClassNames={["hp-main"]}
       imageWidth={imageWidth}
       imageHeight={imageHeight}
@@ -362,6 +373,7 @@ function RenderHpPlacement({
   image,
   imageWidth,
   imageHeight,
+  copy,
   style,
 }: PlacementRenderArgs) {
   return (
@@ -379,8 +391,7 @@ function RenderHpPlacement({
       >
         <img
           src={`/pimg/${encodeURIComponent(image || "")}`}
-          aria-hidden="true"
-          alt=""
+          alt={copy}
           width={imageWidth}
           height={imageHeight}
         ></img>

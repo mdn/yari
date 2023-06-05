@@ -12,7 +12,7 @@ const PLACEMENTS = {
 const ALLOWED_KEYWORDS = [];
 
 export function createPongGetHandler(client, coder) {
-  return async (body, countryCode = "us") => {
+  return async (body, countryCode) => {
     const { keywords = [], pongs = null } = body;
     const anonymousIp = anonymousIpByCC(countryCode);
 
