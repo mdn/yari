@@ -43,13 +43,13 @@
       &:hover {
         background-color: var(--background-secondary);
       }
+    }
 
-      &-icon {
-        flex-shrink: 0;
-        margin-right: 0.5rem;
-        text-align: center;
-        width: 1.1rem;
-      }
+    .ai-help-example-icon {
+      flex-shrink: 0;
+      margin-right: 0.5rem;
+      text-align: center;
+      width: 1.1rem;
     }
 
     .ai-help-messages {
@@ -60,20 +60,34 @@
 
     .ai-help-message {
       display: flex;
+      padding: 1rem;
+    }
 
-      &-user {
-        color: var(--text-secondary);
-      }
+    .ai-help-message-user {
+      color: var(--text-secondary);
+    }
 
-      &-role {
-        flex-shrink: 0;
-        text-align: center;
-        width: 3rem;
-      }
+    .ai-help-message-assistant {
+      background-color: var(--background-secondary);
+      border: 1px solid var(--border-primary);
+    }
 
-      &-content {
-        p:first-child {
+    .ai-help-message-role {
+      flex-shrink: 0;
+      text-align: left;
+      width: 2.5rem;
+    }
+
+    .ai-help-message-content {
+      p {
+        margin: 1rem 0;
+
+        &:first-child {
           margin-top: 0;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
         }
       }
     }
@@ -85,8 +99,8 @@
       color: var(--text-primary);
       height: var(--form-elem-height);
       margin: 0.5rem;
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
       width: calc(100% - 1rem);
     }
   }
