@@ -15,6 +15,10 @@
     cursor: not-allowed;
   }
 
+  a:hover {
+    text-decoration: underline;
+  }
+
   .ai-help-inner {
     display: flex;
     flex: 1;
