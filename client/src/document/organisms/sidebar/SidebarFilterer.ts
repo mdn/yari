@@ -9,7 +9,9 @@ export class SidebarFilterer {
   constructor(root: HTMLElement) {
     this.root = root;
     this.headings = Array.from(
-      this.root.querySelectorAll<HTMLElement>("li strong")
+      this.root.querySelectorAll<HTMLElement>(
+        "h2.document-toc-heading, li strong"
+      )
     );
     this.parents = Array.from(
       this.root.querySelectorAll<HTMLDetailsElement>("details")
