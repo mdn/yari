@@ -8,51 +8,9 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 import { SIDEBAR_FILTER_FOCUS } from "../../../telemetry/constants";
 
 export function SidebarFilter() {
-  const [query, setQuery] = useState("");
-  const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
   const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
-  const filtererRef = useRef<SidebarFilterer | null>(null);
-  const quicklinksRef = useRef<HTMLElement | null>(null);
-  const { saveScrollPosition, restoreScrollPosition } =
-    usePersistedScrollPosition(quicklinksRef);
+  const { query, setQuery, matchCount } = useSidebarFilter();
   const gleanClick = useGleanClick();
-
-  useEffect(() => {
-    quicklinksRef.current = document.getElementById("sidebar-quicklinks");
-  });
-
-  useEffect(() => {
-    const quicklinks = quicklinksRef.current;
-    if (!quicklinks) {
-      return;
-    }
-
-    // Filter sidebar.
-    let filterer = filtererRef.current;
-    if (!filterer) {
-      const root = quicklinks.querySelector<HTMLElement>(".sidebar-body");
-
-      if (!root) {
-        return;
-      }
-
-      filterer = new SidebarFilterer(root);
-      filtererRef.current = filterer;
-    }
-
-    // Save scroll position.
-    if (query) {
-      saveScrollPosition();
-    }
-
-    const items = filterer.applyFilter(query);
-    setMatchCount(items);
-
-    // Restore scroll position.
-    if (!query) {
-      restoreScrollPosition();
-    }
-  }, [query, saveScrollPosition, restoreScrollPosition]);
 
   useEffect(() => {
     if (hasUserInteraction) {
@@ -110,6 +68,58 @@ export function SidebarFilter() {
       )}
     </section>
   );
+}
+
+function useSidebarFilter() {
+  const [query, setQuery] = useState("");
+  const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
+  const filtererRef = useRef<SidebarFilterer | null>(null);
+  const quicklinksRef = useRef<HTMLElement | null>(null);
+  const { saveScrollPosition, restoreScrollPosition } =
+    usePersistedScrollPosition(quicklinksRef);
+
+  useEffect(() => {
+    quicklinksRef.current = document.getElementById("sidebar-quicklinks");
+  });
+
+  useEffect(() => {
+    const quicklinks = quicklinksRef.current;
+    if (!quicklinks) {
+      return;
+    }
+
+    // Filter sidebar.
+    let filterer = filtererRef.current;
+    if (!filterer) {
+      const root = quicklinks.querySelector<HTMLElement>(".sidebar-body");
+
+      if (!root) {
+        return;
+      }
+
+      filterer = new SidebarFilterer(root);
+      filtererRef.current = filterer;
+    }
+
+    // Save scroll position.
+    if (query) {
+      saveScrollPosition();
+    }
+
+    const items = filterer.applyFilter(query);
+    setMatchCount(items);
+
+    // Restore scroll position.
+    if (!query) {
+      restoreScrollPosition();
+    }
+  }, [query, saveScrollPosition, restoreScrollPosition]);
+
+  return {
+    query,
+    setQuery,
+    matchCount,
+  };
 }
 
 function usePersistedScrollPosition(ref: MutableRefObject<HTMLElement | null>) {
