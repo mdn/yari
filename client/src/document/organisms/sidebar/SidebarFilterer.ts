@@ -80,7 +80,8 @@ export class SidebarFilterer {
   }
 
   private resetParent(detail: HTMLDetailsElement) {
-    this.toggleElement(detail, true);
+    const container = this.getContainer(detail);
+    this.toggleElement(container, true);
     if (detail.dataset.wasOpen) {
       detail.open = JSON.parse(detail.dataset.wasOpen);
       delete detail.dataset.wasOpen;
@@ -136,7 +137,8 @@ export class SidebarFilterer {
   }
 
   private collapseParent(el: HTMLDetailsElement) {
-    this.toggleElement(el, false);
+    const container = this.getContainer(el);
+    this.toggleElement(container, false);
     el.dataset.wasOpen = el.dataset.wasOpen ?? String(el.open);
     el.open = false;
   }
@@ -237,7 +239,8 @@ export class SidebarFilterer {
   }
 
   private expandParent(parent: HTMLDetailsElement) {
-    this.toggleElement(parent, true);
+    const container = this.getContainer(parent);
+    this.toggleElement(container, true);
     parent.open = true;
   }
 
