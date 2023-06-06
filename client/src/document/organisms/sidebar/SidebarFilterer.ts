@@ -32,8 +32,12 @@ export class SidebarFilterer {
 
   toggleTOC(show: boolean) {
     if (this.toc) {
-      this.toc.style.display = show ? "inherit" : "none";
+      this.toggleElement(this.toc, show);
     }
+  }
+
+  toggleElement(el: HTMLElement, show: boolean) {
+    el.style.display = show ? "inherit" : "none";
   }
 
   showAllItems() {
@@ -45,16 +49,16 @@ export class SidebarFilterer {
   private resetLink(link: HTMLAnchorElement) {
     this.resetHighlighting(link);
     const target = link.closest("li") || link;
-    target.style.display = "inherit";
+    this.toggleElement(target, true);
   }
 
   private resetHeading(heading: HTMLElement) {
     const container = heading.closest("li") ?? heading;
-    container.style.display = "inherit";
+    this.toggleElement(container, true);
   }
 
   private resetParent(detail: HTMLDetailsElement) {
-    detail.style.display = "inherit";
+    this.toggleElement(detail, true);
     if (detail.dataset.wasOpen) {
       detail.open = JSON.parse(detail.dataset.wasOpen);
       delete detail.dataset.wasOpen;
@@ -87,7 +91,7 @@ export class SidebarFilterer {
       const isMatch = terms.every((needle) => haystack.includes(needle));
 
       const target = link.closest("li") || link;
-      target.style.display = isMatch ? "inherit" : "none";
+      this.toggleElement(target, isMatch);
 
       if (isMatch) {
         matchCount++;
@@ -102,11 +106,11 @@ export class SidebarFilterer {
 
   private hideHeading(heading: HTMLElement) {
     const container = heading.closest("li") ?? heading;
-    container.style.display = "none";
+    this.toggleElement(container, false);
   }
 
   private collapseParent(el: HTMLDetailsElement) {
-    el.style.display = "none";
+    this.toggleElement(el, false);
     el.dataset.wasOpen = el.dataset.wasOpen ?? String(el.open);
     el.open = false;
   }
@@ -185,7 +189,7 @@ export class SidebarFilterer {
     const heading = this.findFirstElementBefore(target, this.headings);
     const container = heading?.closest("li") ?? heading;
     if (container) {
-      container.style.display = "inherit";
+      this.toggleElement(container, true);
     }
   }
 
@@ -207,7 +211,7 @@ export class SidebarFilterer {
     let parent = target.parentElement?.closest("details");
     while (parent) {
       if (parent instanceof HTMLDetailsElement) {
-        parent.style.display = "inherit";
+        this.toggleElement(parent, true);
         parent.open = true;
       }
       parent = parent.parentElement?.closest("details");
