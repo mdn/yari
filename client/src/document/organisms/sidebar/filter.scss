@@ -8,6 +8,7 @@
   );
   display: flex;
   flex-direction: column;
+  font-size: var(--type-smaller-font-size);
   padding-bottom: 2rem;
   padding-top: 0.5rem;
   width: 100%;
@@ -21,6 +22,13 @@
     left: 0.5rem; /* Moves icon inside field. */
     position: relative;
     width: 0; /* Avoid moving field right. */
+
+    .icon {
+      background-size: 1rem;
+      height: 1rem;
+      mask-size: 1rem;
+      width: 1rem;
+    }
   }
 
   .sidebar-filter-input-field {
@@ -40,6 +48,12 @@
 
     &[value=""] {
       width: 5rem;
+    }
+
+    &:not([value=""]) {
+      ~ .sidear-filter-label .icon {
+        background-color: var(--category-color);
+      }
     }
 
     &:focus,
@@ -90,13 +104,9 @@
 
   .icon {
     background-color: var(--icon-secondary);
-    background-size: 1rem;
-    height: 1rem;
     margin-right: unset;
-    mask-size: 1rem;
     position: unset;
     position: relative;
-    width: 1rem;
     z-index: unset;
   }
 
