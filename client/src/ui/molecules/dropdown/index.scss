@@ -1,7 +1,7 @@
 .dropdown {
   position: relative;
 
-  &-list {
+  .dropdown-list {
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
@@ -18,7 +18,7 @@
     right: 0;
   }
 
-  &-item {
+  .dropdown-item {
     .button.action {
       width: 100%;
 
