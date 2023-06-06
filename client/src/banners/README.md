@@ -22,7 +22,7 @@ To adjust the number of days to embargo the banner, update `daysToEmbargo`:
 const daysToEmbargo = 14;
 ```
 
-> NOTE: Banners are not embargoed, if `REACT_APP_CRUD_MODE` is set to `true`.
+> NOTE: Banners are not embargoed, if `REACT_APP_DEV_MODE` is set to `true`.
 
 Now head over to `client/src/banners/active-banner.tsx` and add or update the
 the component function for the banner as appropriate:
