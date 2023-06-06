@@ -93,6 +93,10 @@
       padding-bottom: unset;
       position: unset;
       top: unset;
+
+      ~ .sidebar-inner-nav {
+        margin-top: unset;
+      }
     }
   }
 

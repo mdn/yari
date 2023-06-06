@@ -13,6 +13,10 @@
   padding-right: 0.5rem;
   padding-top: 0.5rem;
 
+  @media screen and (max-width: $screen-md) {
+    padding-bottom: unset;
+  }
+
   .sidebar-filter {
     align-items: center;
     display: flex;
