@@ -30,13 +30,13 @@ export class SidebarFilterer {
     }
   }
 
-  toggleTOC(show: boolean) {
+  private toggleTOC(show: boolean) {
     if (this.toc) {
       this.toggleElement(this.toc, show);
     }
   }
 
-  toggleElement(el: HTMLElement, show: boolean) {
+  private toggleElement(el: HTMLElement, show: boolean) {
     el.style.display = show ? "" : "none";
   }
 
@@ -79,8 +79,8 @@ export class SidebarFilterer {
   }
 
   showOnlyMatchingItems(query: string) {
-    this.headings.forEach(this.hideHeading);
-    this.parents.forEach(this.collapseParent);
+    this.headings.forEach((heading) => this.hideHeading(heading));
+    this.parents.forEach((parent) => this.collapseParent(parent));
 
     // Show/hide items (+ show parents).
     const terms = splitQuery(query);
