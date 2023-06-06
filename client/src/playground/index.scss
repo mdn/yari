@@ -29,24 +29,39 @@ main.play {
   dialog {
     z-index: 1;
 
-    > div {
-      align-items: center;
+    > form {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 0.5rem;
       padding: 2rem;
       width: 25rem;
+      font-size: var(--type-smaller-font-size);
+
+      > .buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
     }
 
-    &#playDialog > div {
+    &#playDialog > form {
       max-width: 30rem;
       overflow-wrap: anywhere;
+
+      > .buttons {
+        margin: 1rem auto 0;
+      }
     }
 
-    &#flagDialog > div > textarea {
-      height: 6rem;
-      resize: none;
-      width: 100%;
+    &#flagDialog > form {
+      > textarea {
+        height: 6rem;
+        resize: none;
+        width: 100%;
+      }
+
+      > .buttons {
+        margin-left: auto;
+      }
     }
   }
 

@@ -15,6 +15,7 @@ import "./index.scss";
 import { Switch } from "../ui/atoms/switch";
 import { PLAYGROUND_BASE_URL } from "../env";
 import { useUserData } from "../user-context";
+import { FlagForm, ShareForm } from "./forms";
 
 const HTML_DEFAULT = "<!-- HTML goes here -->";
 const CSS_DEFAULT = "/* CSS goes here */";
@@ -182,40 +183,10 @@ export default function Playground() {
     <>
       <main className="play container">
         <dialog id="playDialog" ref={shareDiaRef}>
-          <div>
-            <span>Share your code via this Permalink:</span>
-            {url && <a href={url}>{url}</a>}
-          </div>
+          <ShareForm url={url} />
         </dialog>
         <dialog id="flagDialog" ref={flagDiaRef}>
-          <div>
-            <span>
-              Report this malicious or inappropriate shared playground. Can you
-              please share some details what wrong with this content:
-            </span>
-            <textarea id="flagReason"></textarea>
-            <Button
-              onClickHandler={async (e) => {
-                await fetch("/api/v1/play/flag", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    id: gistId,
-                    reason: (
-                      document.getElementById(
-                        "flagReason"
-                      ) as HTMLTextAreaElement
-                    ).value,
-                  }),
-                });
-                flagDiaRef.current?.close();
-              }}
-            >
-              Send
-            </Button>
-          </div>
+          <FlagForm gistId={gistId} />
         </dialog>
         <section className="editors">
           <aside>
@@ -280,7 +251,7 @@ export default function Playground() {
           {gistId && (
             <a
               className="flag-example"
-              href="/"
+              href="#"
               onClick={(e) => {
                 e.preventDefault();
                 flagDiaRef.current?.showModal();
