@@ -19,16 +19,14 @@ const CRUD_MODE =
         )
       );
 
-if (CRUD_MODE) {
+if (process.env.REACT_APP_CRUD_MODE) {
   console.warn(
     "Warning: REACT_APP_CRUD_MODE is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
   );
-
-  if (process.env.NODE_ENV === "development") {
-    console.warn(
-      "Warning: setting REACT_APP_CRUD_MODE with NODE_ENV=development is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
-    );
-  }
+} else if (process.env.NODE_ENV === "development" && CRUD_MODE) {
+  console.warn(
+    "Warning: setting REACT_APP_CRUD_MODE with NODE_ENV=development is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
+  );
 }
 
 export const WRITER_MODE =
