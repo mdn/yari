@@ -84,7 +84,7 @@
     top: 0;
 
     ~ .sidebar-inner-nav {
-      margin-top: 2.5rem;
+      margin-top: 2.5rem; /* Reduce to 0.5rem once SidebarFilter feedback is removed. */
     }
 
     @media screen and (max-width: $screen-md) {
