@@ -8,15 +8,15 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 import { SIDEBAR_FILTER_FOCUS } from "../../../telemetry/constants";
 
 export function SidebarFilter() {
-  const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
+  const [isActive, setActive] = useState<Boolean>(false);
   const { query, setQuery, matchCount } = useSidebarFilter();
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    if (hasUserInteraction) {
+    if (isActive) {
       gleanClick(SIDEBAR_FILTER_FOCUS);
     }
-  }, [gleanClick, hasUserInteraction]);
+  }, [gleanClick, isActive]);
 
   return (
     <section className="sidebar-filter-container">
@@ -31,13 +31,11 @@ export function SidebarFilter() {
         </label>
         <input
           id="sidebar-filter-input"
-          className={`sidebar-filter-input-field ${
-            hasUserInteraction && "has-user-interaction"
-          }`}
+          className={`sidebar-filter-input-field ${isActive && "is-active"}`}
           type="text"
           placeholder="Filter"
           value={query}
-          onFocus={() => setUserInteraction(true)}
+          onFocus={() => setActive(true)}
           onChange={(event) => setQuery(event.target.value)}
         />
         {matchCount !== undefined && (
@@ -53,13 +51,13 @@ export function SidebarFilter() {
           extraClasses="clear-sidebar-filter-button"
           onClickHandler={() => {
             setQuery("");
-            setUserInteraction(false);
+            setActive(false);
           }}
         >
           <span className="visually-hidden">Clear filter input</span>
         </Button>
       </div>
-      {hasUserInteraction && (
+      {isActive && (
         <div className="sidebar-filter-footer">
           <div className="sidebar-filter-thumbs">
             <GleanThumbs feature="sidebar-filter" />
