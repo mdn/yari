@@ -78,14 +78,20 @@
   // + border
   --top-banner-outer-height: calc(var(--top-banner-height) + 2 * 1px);
 
-  --z-index-back: -1;
-  --z-index-top: 9999;
+  /* Z-Indexes
+     Keep this in order, and avoid reusing variables so elements each
+     exist on a distinct layer - we hit a lot of bugs if they don't */
   --z-index-a11y: 10000;
+  --z-index-modal-content: 801;
+  --z-index-modal-overlay: 800;
+  --z-index-main-header: 700;
+  --z-index-sidebar-mobile: 600;
   --z-index-mid: 500;
   --z-index-nav-menu: 200;
   --z-index-search-results: 101;
   --z-index-low: 100;
   --z-index-search-results-home: 99;
+  --z-index-back: -1;
 
   /* Features */
   --elem-radius: 0.25rem;
@@ -98,14 +104,6 @@
   --icon-size: 1rem;
   --sticky-header-height: calc(
     var(--top-nav-height) + var(--article-actions-container-height) + 2px
-  );
-}
-
-.top-banner.visible ~ *,
-.top-banner.loading ~ * {
-  --sticky-header-height: calc(
-    var(--top-nav-height) + var(--article-actions-container-height) +
-      var(--top-banner-outer-height) + 2px
   );
 }
 
@@ -319,4 +317,17 @@ u {
   .icon {
     background-color: CanvasText !important;
   }
+}
+
+sup.new {
+  background: var(--new-background);
+  border-radius: 1em;
+  color: var(--new-color);
+  display: inline-block;
+  font-size: 0.45rem;
+  font-weight: bold;
+  line-height: 1.7;
+  padding: 0 0.4em;
+  text-rendering: optimizeLegibility;
+  text-transform: uppercase;
 }

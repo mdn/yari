@@ -33,7 +33,7 @@ import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
 import {
-  getAdjacentImages,
+  getAdjacentFileAttachments,
   injectLoadingLazyAttributes,
   injectNoTranslate,
   makeTOC,
@@ -44,6 +44,7 @@ import {
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
+import * as cheerio from "cheerio";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -56,7 +57,7 @@ const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/con
 // Module-level cache
 const rootToGitBranchMap = new Map();
 
-function getCurrentGitBranch(root) {
+function getCurrentGitBranch(root: string) {
   if (!rootToGitBranchMap.has(root)) {
     // If this is running in a GitHub Action "PR Build" workflow the current
     // branch name will be set in `GITHUB_REF_NAME_SLUG`.
@@ -94,7 +95,7 @@ function getCurrentGitBranch(root) {
  * the content (metadata file).
  * If all is well, do nothing. Nothing is expected to return.
  */
-function validateSlug(slug) {
+function validateSlug(slug: string) {
   if (!slug) {
     throw new Error("slug is empty");
   }
@@ -116,7 +117,7 @@ function validateSlug(slug) {
  *
  * @param {Cheerio document instance} $
  */
-function injectNotecardOnWarnings($) {
+function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
   $("div.warning, div.note, div.blockIndicator")
     .addClass("notecard")
     .removeClass("blockIndicator");
@@ -126,7 +127,7 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder, filename) {
+function getGitHubURL(root: string, folder: string, filename: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
@@ -137,7 +138,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-export function getLastCommitURL(root, hash) {
+export function getLastCommitURL(root: string, hash: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
 }
@@ -202,7 +203,7 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let $ = null;
+  let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
 
   try {
@@ -381,8 +382,8 @@ export async function buildDocument(
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
-  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+  getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
+    (fp) => fileAttachments.add(fp)
   );
 
   // Check the img tags for possible flaws and possible build-time rewrites
@@ -547,7 +548,7 @@ interface BuiltLiveSamplePage {
   flaw: MacroLiveSampleError | null;
 }
 
-export async function buildLiveSamplePageFromURL(url) {
+export async function buildLiveSamplePageFromURL(url: string) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
   // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.

@@ -1,6 +1,10 @@
 @use "../../../../ui/vars" as *;
 
 .bookmark-menu {
+  > .button {
+    display: block;
+  }
+
   .is-button-row {
     flex-direction: row-reverse;
     justify-content: flex-start;

@@ -48,11 +48,11 @@ export default function Toolbar({
         <EditActions source={doc.source} />
       </div>
       {isReadOnly && (
-        <p>
+        <div>
           <i>
             You're in <b>read-only</b> mode.
           </i>
-        </p>
+        </div>
       )}
       <ToggleDocumentFlaws doc={doc} reloadPage={reloadPage} />
     </div>

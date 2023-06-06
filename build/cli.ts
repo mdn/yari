@@ -53,8 +53,8 @@ interface GlobalMetadata {
 }
 
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -67,12 +67,10 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = await translationsOf(document.metadata);
-      if (translations && translations.length > 0) {
-        document.translations = translations;
-      } else {
-        document.translations = [];
-      }
+      document.translations = translationsOf(
+        document.metadata.slug,
+        document.metadata.locale
+      );
     }
 
     return { document, doc: await buildDocument(document), skip: false };
@@ -170,8 +168,9 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;

@@ -11,6 +11,10 @@
     text-transform: initial;
   }
 
+  .article-actions-toggle {
+    display: block;
+  }
+
   @media screen and (min-width: $screen-md) {
     display: block;
 
