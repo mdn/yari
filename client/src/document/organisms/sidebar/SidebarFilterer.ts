@@ -48,8 +48,12 @@ export class SidebarFilterer {
 
   private resetLink(link: HTMLAnchorElement) {
     this.resetHighlighting(link);
-    const target = link.closest("li") || link;
+    const target = this.getLinkContainer(link);
     this.toggleElement(target, true);
+  }
+
+  private getLinkContainer(link: HTMLAnchorElement) {
+    return link.closest("li") || link;
   }
 
   private resetHeading(heading: HTMLElement) {
@@ -90,7 +94,7 @@ export class SidebarFilterer {
       const haystack = link.innerText.toLowerCase();
       const isMatch = terms.every((needle) => haystack.includes(needle));
 
-      const target = link.closest("li") || link;
+      const target = this.getLinkContainer(link);
       this.toggleElement(target, isMatch);
 
       if (isMatch) {
