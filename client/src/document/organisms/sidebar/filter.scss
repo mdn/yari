@@ -3,14 +3,13 @@
 .sidebar-filter-container {
   background: linear-gradient(
     to bottom,
-    var(--background-primary) 0% 2.5rem,
+    var(--background-primary) 0% calc(100% - 2rem),
     rgb(0, 0, 0, 0) 100%
   );
   display: flex;
   flex-direction: column;
   font-size: var(--type-smaller-font-size);
-  min-height: 3.5rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 2rem;
   padding-top: 0.5rem;
   width: 100%;
 
@@ -103,17 +102,15 @@
   }
 
   .sidebar-filter-footer {
-    display: flex;
-    justify-content: flex-end;
+    background: var(--background-primary);
+    border: 1px solid var(--background-primary);
 
     .glean-thumbs {
-      background: var(--background-primary);
-      border-radius: 1rem;
       font-size: var(--type-tiny-font-size);
       height: 1.5rem;
-      margin-right: 0.25rem;
+      margin-bottom: 0.5rem;
+      margin-left: 1.75rem;
       margin-top: 0.5rem;
-      padding: 0 0.25rem;
 
       .confirmation {
         margin-right: 0.55em; /* Aligns heart with clear button. */

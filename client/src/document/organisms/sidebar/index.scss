@@ -83,6 +83,10 @@
     position: sticky;
     top: 0;
 
+    ~ .sidebar-inner-nav {
+      margin-top: 2.5rem;
+    }
+
     @media screen and (max-width: $screen-md) {
       height: unset;
       margin-top: unset;
