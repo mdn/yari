@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.25.0](https://github.com/mdn/yari/compare/v2.24.0...v2.25.0) (2023-06-06)
+
+
+### Features
+
+* **client/env:** split CRUD_MODE into WRITER_MODE and DEV_MODE ([#8383](https://github.com/mdn/yari/issues/8383)) ([675a854](https://github.com/mdn/yari/commit/675a854205c05576eb34b85f813577d6bd1106f0))
+
 ## [2.24.0](https://github.com/mdn/yari/compare/v2.23.1...v2.24.0) (2023-06-05)
 
 
