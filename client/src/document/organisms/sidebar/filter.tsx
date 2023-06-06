@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SidebarFilterer } from "./SidebarFilterer";
 import { Button } from "../../../ui/atoms/button";
 import { GleanThumbs } from "../../../ui/atoms/thumbs";
@@ -12,6 +12,7 @@ export function SidebarFilter() {
   const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
   const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
   const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
+  const filtererRef = useRef<SidebarFilterer | null>(null);
   const gleanClick = useGleanClick();
 
   useEffect(() => {
@@ -21,10 +22,17 @@ export function SidebarFilter() {
       return;
     }
 
-    const root = quicklinks.querySelector<HTMLElement>(".sidebar-body");
+    // Filter sidebar.
+    let filterer = filtererRef.current;
+    if (!filterer) {
+      const root = quicklinks.querySelector<HTMLElement>(".sidebar-body");
 
-    if (!root) {
-      return;
+      if (!root) {
+        return;
+      }
+
+      filterer = new SidebarFilterer(root);
+      filtererRef.current = filterer;
     }
 
     // Save scroll position.
@@ -33,8 +41,6 @@ export function SidebarFilter() {
       quicklinks.scrollTop = 0;
     }
 
-    // Filter sidebar.
-    const filterer = new SidebarFilterer(root);
     const items = filterer.applyFilter(query);
     setMatchCount(items);
 
