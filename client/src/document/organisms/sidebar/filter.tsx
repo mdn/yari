@@ -31,6 +31,7 @@ export function SidebarFilter() {
         </label>
         <input
           id="sidebar-filter-input"
+          autoComplete="off"
           className={`sidebar-filter-input-field ${isActive && "is-active"}`}
           type="text"
           placeholder="Filter"
