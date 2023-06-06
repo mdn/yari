@@ -10,8 +10,8 @@
   flex-direction: column;
   font-size: var(--type-smaller-font-size);
   padding-bottom: 2rem;
+  padding-right: 0.5rem;
   padding-top: 0.5rem;
-  width: 100%;
 
   .sidebar-filter {
     align-items: center;
@@ -73,7 +73,7 @@
       font-size: var(--type-tiny-font-size);
       padding: 0 0.25rem;
       position: absolute;
-      right: 2rem;
+      right: 2.5rem;
 
       @media screen and (max-width: $screen-md) {
         right: 3rem;
@@ -82,8 +82,8 @@
 
     ~ .button.clear-sidebar-filter-button {
       display: none;
-      left: calc(100% - 2rem);
       position: absolute;
+      right: 0.75rem;
 
       &:hover {
         background: transparent;
