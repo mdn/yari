@@ -57,7 +57,7 @@ export class SidebarFilterer {
   }
 
   private resetHeading(heading: HTMLElement) {
-    const container = heading.closest("li") ?? heading;
+    const container = this.getHeadingContainer(heading);
     this.toggleElement(container, true);
   }
 
@@ -109,7 +109,7 @@ export class SidebarFilterer {
   }
 
   private hideHeading(heading: HTMLElement) {
-    const container = heading.closest("li") ?? heading;
+    const container = this.getHeadingContainer(heading);
     this.toggleElement(container, false);
   }
 
@@ -190,11 +190,19 @@ export class SidebarFilterer {
   }
 
   private showHeading(target: HTMLElement) {
-    const heading = this.findFirstElementBefore(target, this.headings);
-    const container = heading?.closest("li") ?? heading;
+    const heading = this.getHeading(target);
+    const container = heading && this.getHeadingContainer(heading);
     if (container) {
       this.toggleElement(container, true);
     }
+  }
+
+  private getHeading(el: HTMLElement) {
+    return this.findFirstElementBefore(el, this.headings);
+  }
+
+  private getHeadingContainer(heading: HTMLElement) {
+    return heading.closest("li") ?? heading;
   }
 
   private findFirstElementBefore(
