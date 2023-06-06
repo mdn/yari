@@ -176,10 +176,10 @@ export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
-  Sentry.setExtras({
-    doc_path: document?.fileInfo?.path,
-    doc_title: document?.metadata?.title,
-    doc_url: document?.url,
+  Sentry.setContext("doc", {
+    path: document?.fileInfo?.path,
+    title: document?.metadata?.title,
+    url: document?.url,
   });
   Sentry.setTags({
     doc_slug: document?.metadata?.slug,
