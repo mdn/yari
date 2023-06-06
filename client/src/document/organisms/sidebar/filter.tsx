@@ -73,11 +73,14 @@ function useSidebarFilter() {
   const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
   const filtererRef = useRef<SidebarFilterer | null>(null);
   const quicklinksRef = useRef<HTMLElement | null>(null);
+  const sidebarInnerNavRef = useRef<HTMLElement | null>(null); // Scrolls on mobile.
   const { saveScrollPosition, restoreScrollPosition } =
-    usePersistedScrollPosition(quicklinksRef);
+    usePersistedScrollPosition(quicklinksRef, sidebarInnerNavRef);
 
   useEffect(() => {
     quicklinksRef.current = document.getElementById("sidebar-quicklinks");
+    sidebarInnerNavRef.current =
+      quicklinksRef.current?.querySelector(".sidebar-inner-nav") ?? null;
   });
 
   useEffect(() => {
@@ -120,27 +123,31 @@ function useSidebarFilter() {
   };
 }
 
-function usePersistedScrollPosition(ref: MutableRefObject<HTMLElement | null>) {
-  const scrollTopRef = useRef<Number | undefined>(undefined);
-
-  const el = ref.current;
-
+function usePersistedScrollPosition(
+  ...refs: Array<MutableRefObject<HTMLElement | null>>
+) {
   return {
     saveScrollPosition() {
-      if (
-        el &&
-        typeof scrollTopRef.current === "undefined" &&
-        el.scrollTop > 0
-      ) {
-        scrollTopRef.current = el.scrollTop;
-        el.scrollTop = 0;
-      }
+      refs.forEach((ref) => {
+        const el = ref.current;
+        if (
+          el &&
+          typeof el.dataset.lastScrollTop === "undefined" &&
+          el.scrollTop > 0
+        ) {
+          el.dataset.lastScrollTop = String(el.scrollTop);
+          el.scrollTop = 0;
+        }
+      });
     },
     restoreScrollPosition() {
-      if (el && typeof scrollTopRef.current === "number") {
-        el.scrollTop = scrollTopRef.current;
-        scrollTopRef.current = undefined;
-      }
+      refs.forEach((ref) => {
+        const el = ref.current;
+        if (el && typeof el.dataset.lastScrollTop === "string") {
+          el.scrollTop = Number(el.dataset.lastScrollTop);
+          delete el.dataset.lastScrollTop;
+        }
+      });
     },
   };
 }
