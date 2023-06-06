@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { SidebarFilterer } from "./SidebarFilterer";
 import { Button } from "../../../ui/atoms/button";
 import { GleanThumbs } from "../../../ui/atoms/thumbs";
@@ -12,12 +12,17 @@ export function SidebarFilter() {
   const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
   const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
   const filtererRef = useRef<SidebarFilterer | null>(null);
-  const scrollTopRef = useRef<Number | undefined>(undefined);
+  const quicklinksRef = useRef<HTMLElement | null>(null);
+  const { saveScrollPosition, restoreScrollPosition } =
+    usePersistedScrollPosition(quicklinksRef);
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    const quicklinks = document.getElementById("sidebar-quicklinks");
+    quicklinksRef.current = document.getElementById("sidebar-quicklinks");
+  });
 
+  useEffect(() => {
+    const quicklinks = quicklinksRef.current;
     if (!quicklinks) {
       return;
     }
@@ -36,24 +41,18 @@ export function SidebarFilter() {
     }
 
     // Save scroll position.
-    if (
-      query &&
-      typeof scrollTopRef.current === "undefined" &&
-      quicklinks.scrollTop > 0
-    ) {
-      scrollTopRef.current = quicklinks.scrollTop;
-      quicklinks.scrollTop = 0;
+    if (query) {
+      saveScrollPosition();
     }
 
     const items = filterer.applyFilter(query);
     setMatchCount(items);
 
     // Restore scroll position.
-    if (!query && typeof scrollTopRef.current === "number") {
-      quicklinks.scrollTop = scrollTopRef.current;
-      scrollTopRef.current = undefined;
+    if (!query) {
+      restoreScrollPosition();
     }
-  }, [query]);
+  }, [query, saveScrollPosition, restoreScrollPosition]);
 
   useEffect(() => {
     if (hasUserInteraction) {
@@ -111,4 +110,29 @@ export function SidebarFilter() {
       )}
     </section>
   );
+}
+
+function usePersistedScrollPosition(ref: MutableRefObject<HTMLElement | null>) {
+  const scrollTopRef = useRef<Number | undefined>(undefined);
+
+  const el = ref.current;
+
+  return {
+    saveScrollPosition() {
+      if (
+        el &&
+        typeof scrollTopRef.current === "undefined" &&
+        el.scrollTop > 0
+      ) {
+        scrollTopRef.current = el.scrollTop;
+        el.scrollTop = 0;
+      }
+    },
+    restoreScrollPosition() {
+      if (el && typeof scrollTopRef.current === "number") {
+        el.scrollTop = scrollTopRef.current;
+        scrollTopRef.current = undefined;
+      }
+    },
+  };
 }
