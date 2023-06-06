@@ -9,10 +9,10 @@ import { SIDEBAR_FILTER_FOCUS } from "../../../telemetry/constants";
 
 export function SidebarFilter() {
   const [query, setQuery] = useState("");
-  const [scrollTop, setScrollTop] = useState<Number | undefined>(undefined);
   const [matchCount, setMatchCount] = useState<Number | undefined>(undefined);
   const [hasUserInteraction, setUserInteraction] = useState<Boolean>(false);
   const filtererRef = useRef<SidebarFilterer | null>(null);
+  const scrollTopRef = useRef<Number | undefined>(undefined);
   const gleanClick = useGleanClick();
 
   useEffect(() => {
@@ -36,8 +36,12 @@ export function SidebarFilter() {
     }
 
     // Save scroll position.
-    if (query && typeof scrollTop === "undefined" && quicklinks.scrollTop > 0) {
-      setScrollTop(quicklinks.scrollTop);
+    if (
+      query &&
+      typeof scrollTopRef.current === "undefined" &&
+      quicklinks.scrollTop > 0
+    ) {
+      scrollTopRef.current = quicklinks.scrollTop;
       quicklinks.scrollTop = 0;
     }
 
@@ -45,11 +49,11 @@ export function SidebarFilter() {
     setMatchCount(items);
 
     // Restore scroll position.
-    if (!query && typeof scrollTop === "number") {
-      quicklinks.scrollTop = scrollTop;
-      setScrollTop(undefined);
+    if (!query && typeof scrollTopRef.current === "number") {
+      quicklinks.scrollTop = scrollTopRef.current;
+      scrollTopRef.current = undefined;
     }
-  }, [query, scrollTop]);
+  }, [query]);
 
   useEffect(() => {
     if (hasUserInteraction) {
