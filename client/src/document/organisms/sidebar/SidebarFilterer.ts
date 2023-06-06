@@ -27,7 +27,7 @@ export class SidebarFilterer {
     this.items = links.map((link) => ({
       haystack: link.innerText.toLowerCase(),
       link,
-      container: this.getLinkContainer(link),
+      container: this.getContainer(link),
       heading: this.getHeading(link),
       parents: this.getParents(link),
     }));
@@ -66,16 +66,16 @@ export class SidebarFilterer {
 
   private resetLink(link: HTMLAnchorElement) {
     this.resetHighlighting(link);
-    const target = this.getLinkContainer(link);
-    this.toggleElement(target, true);
+    const container = this.getContainer(link);
+    this.toggleElement(container, true);
   }
 
-  private getLinkContainer(link: HTMLAnchorElement) {
-    return link.closest("li") || link;
+  private getContainer(el: HTMLElement) {
+    return el.closest("li") || el;
   }
 
   private resetHeading(heading: HTMLElement) {
-    const container = this.getHeadingContainer(heading);
+    const container = this.getContainer(heading);
     this.toggleElement(container, true);
   }
 
@@ -131,7 +131,7 @@ export class SidebarFilterer {
   }
 
   private hideHeading(heading: HTMLElement) {
-    const container = this.getHeadingContainer(heading);
+    const container = this.getContainer(heading);
     this.toggleElement(container, false);
   }
 
@@ -212,7 +212,7 @@ export class SidebarFilterer {
   }
 
   private showHeading(heading: HTMLElement) {
-    const container = heading && this.getHeadingContainer(heading);
+    const container = heading && this.getContainer(heading);
     if (container) {
       this.toggleElement(container, true);
     }
@@ -220,10 +220,6 @@ export class SidebarFilterer {
 
   private getHeading(el: HTMLElement) {
     return this.findFirstElementBefore(el, this.allHeadings);
-  }
-
-  private getHeadingContainer(heading: HTMLElement) {
-    return heading.closest("li") ?? heading;
   }
 
   private findFirstElementBefore(
