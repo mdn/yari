@@ -32,10 +32,10 @@ main.play {
     > form {
       display: flex;
       flex-wrap: wrap;
+      font-size: var(--type-smaller-font-size);
       gap: 0.5rem;
       padding: 2rem;
       width: 25rem;
-      font-size: var(--type-smaller-font-size);
 
       > .buttons {
         display: flex;
@@ -154,7 +154,9 @@ main.play {
         }
       }
 
-      a.flag-example {
+      button.flag-example {
+        color: var(--text-link);
+        cursor: pointer;
         font-size: smaller;
         margin: 0 auto;
         margin-top: 1.5rem;

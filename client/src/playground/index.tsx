@@ -249,16 +249,15 @@ export default function Playground() {
         </section>
         <section className="preview">
           {gistId && (
-            <a
+            <button
               className="flag-example"
-              href="#"
               onClick={(e) => {
                 e.preventDefault();
                 flagDiaRef.current?.showModal();
               }}
             >
               Seeing something inappropriate?
-            </a>
+            </button>
           )}
           <iframe
             title="runner"
