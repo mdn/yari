@@ -37,7 +37,7 @@ export class SidebarFilterer {
   }
 
   toggleElement(el: HTMLElement, show: boolean) {
-    el.style.display = show ? "inherit" : "none";
+    el.style.display = show ? "" : "none";
   }
 
   showAllItems() {
