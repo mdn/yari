@@ -16,6 +16,7 @@
   .sidebar-filter {
     align-items: center;
     display: flex;
+    margin-bottom: 0.5rem;
   }
 
   .sidebar-filter-label {
@@ -50,10 +51,8 @@
       width: 5rem;
     }
 
-    &:not([value=""]) {
-      ~ .sidear-filter-label .icon {
-        background-color: var(--category-color);
-      }
+    &:not([value=""]) ~ .sidebar-filter-label .icon {
+      background-color: var(--category-color) !important;
     }
 
     &:focus,
@@ -118,8 +117,7 @@
       font-size: var(--type-tiny-font-size);
       height: 1.5rem;
       margin-bottom: 0.5rem;
-      margin-left: 1.75rem;
-      margin-top: 0.5rem;
+      margin-left: 0.6rem;
 
       .confirmation {
         margin-right: 0.55em; /* Aligns heart with clear button. */
