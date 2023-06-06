@@ -82,6 +82,7 @@
     padding-bottom: 4rem;
     position: sticky;
     top: 0;
+    z-index: var(--z-index-main-header);
 
     ~ .sidebar-inner-nav {
       margin-top: 2.5rem; /* Reduce to 0.5rem once SidebarFilter feedback is removed. */
@@ -145,7 +146,6 @@
     mask-size: 14px;
     position: relative;
     width: 14px;
-    z-index: -1;
   }
 
   /* icons in sidebars */
