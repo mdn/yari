@@ -25,7 +25,7 @@ export class SidebarFilterer {
     );
 
     this.items = links.map((link) => ({
-      haystack: link.innerText.toLowerCase(),
+      haystack: (link.textContent ?? "").toLowerCase(),
       link,
       container: this.getContainer(link),
       heading: this.getHeading(link),
