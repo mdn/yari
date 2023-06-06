@@ -212,13 +212,23 @@ export class SidebarFilterer {
   }
 
   private expandParents(target: HTMLElement) {
-    let parent = target.parentElement?.closest("details");
+    for (const parent of this.getParents(target)) {
+      this.toggleElement(parent, true);
+      parent.open = true;
+    }
+  }
+
+  private getParents(el: HTMLElement) {
+    const parents: HTMLDetailsElement[] = [];
+    let parent = el.parentElement?.closest("details");
+
     while (parent) {
       if (parent instanceof HTMLDetailsElement) {
-        this.toggleElement(parent, true);
-        parent.open = true;
+        parents.push(parent);
       }
       parent = parent.parentElement?.closest("details");
     }
+
+    return parents;
   }
 }
