@@ -32,7 +32,7 @@ async function save(editorContent: EditorContent) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ code: JSON.stringify(editorContent) }),
+    body: JSON.stringify(editorContent),
   });
   let { id } = await res.json();
   let url = new URL(document.URL);
@@ -62,7 +62,7 @@ export default function Playground() {
         throw Error(response.statusText);
       }
 
-      return JSON.parse((await response.json())?.code || "null");
+      return (await response.json()) || null;
     },
     {
       revalidateIfStale: false,
