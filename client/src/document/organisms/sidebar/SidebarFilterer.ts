@@ -1,8 +1,8 @@
 import { splitQuery } from "../../../utils";
 
 export class SidebarFilterer {
-  headings: HTMLElement[];
-  parents: HTMLDetailsElement[];
+  allHeadings: HTMLElement[];
+  allParents: HTMLDetailsElement[];
   items: Array<{
     haystack: string;
     link: HTMLAnchorElement;
@@ -13,8 +13,10 @@ export class SidebarFilterer {
   toc: HTMLElement | null;
 
   constructor(root: HTMLElement) {
-    this.headings = Array.from(root.querySelectorAll<HTMLElement>("li strong"));
-    this.parents = Array.from(
+    this.allHeadings = Array.from(
+      root.querySelectorAll<HTMLElement>("li strong")
+    );
+    this.allParents = Array.from(
       root.querySelectorAll<HTMLDetailsElement>("details")
     );
 
@@ -58,8 +60,8 @@ export class SidebarFilterer {
 
   showAllItems() {
     this.items.forEach(({ link }) => this.resetLink(link));
-    this.headings.forEach((heading) => this.resetHeading(heading));
-    this.parents.forEach((parent) => this.resetParent(parent));
+    this.allHeadings.forEach((heading) => this.resetHeading(heading));
+    this.allParents.forEach((parent) => this.resetParent(parent));
   }
 
   private resetLink(link: HTMLAnchorElement) {
@@ -99,8 +101,8 @@ export class SidebarFilterer {
   }
 
   showOnlyMatchingItems(query: string) {
-    this.headings.forEach((heading) => this.hideHeading(heading));
-    this.parents.forEach((parent) => this.collapseParent(parent));
+    this.allHeadings.forEach((heading) => this.hideHeading(heading));
+    this.allParents.forEach((parent) => this.collapseParent(parent));
 
     // Show/hide items (+ show parents).
     const terms = splitQuery(query);
@@ -217,7 +219,7 @@ export class SidebarFilterer {
   }
 
   private getHeading(el: HTMLElement) {
-    return this.findFirstElementBefore(el, this.headings);
+    return this.findFirstElementBefore(el, this.allHeadings);
   }
 
   private getHeadingContainer(heading: HTMLElement) {
