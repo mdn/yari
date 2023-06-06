@@ -32,7 +32,7 @@
     border-radius: 100px;
     color: var(--text-primary);
     height: var(--form-elem-height);
-    padding-left: 1.5rem;
+    padding-left: 1.75rem;
 
     &:focus {
       border-color: var(--category-color);
@@ -92,8 +92,13 @@
 
   .icon {
     background-color: var(--icon-secondary);
+    background-size: 1rem;
+    height: 1rem;
     margin-right: unset;
+    mask-size: 1rem;
     position: unset;
+    position: relative;
+    width: 1rem;
     z-index: unset;
   }
 
