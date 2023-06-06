@@ -60,6 +60,10 @@
       padding-right: 7rem;
       width: 100%;
 
+      ~ .sidebar-filter-count {
+        display: block;
+      }
+
       ~ .button.clear-sidebar-filter-button {
         display: block;
       }
@@ -68,7 +72,7 @@
     ~ .sidebar-filter-count {
       background: var(--mark-color);
       border-radius: 1rem;
-      display: block;
+      display: none;
       font-size: var(--type-tiny-font-size);
       padding: 0 0.25rem;
       position: absolute;
