@@ -108,25 +108,23 @@ export class SidebarFilterer {
     // Show/hide items (+ show parents).
     const terms = splitQuery(query);
     let matchCount = 0;
-    this.items.forEach(
-      ({ haystack, link, container: target, heading, parents }) => {
-        this.resetHighlighting(link);
-        const isMatch = terms.every((needle) => haystack.includes(needle));
+    this.items.forEach(({ haystack, link, container, heading, parents }) => {
+      this.resetHighlighting(link);
+      const isMatch = terms.every((needle) => haystack.includes(needle));
 
-        this.toggleElement(target, isMatch);
+      this.toggleElement(container, isMatch);
 
-        if (isMatch) {
-          matchCount++;
-          this.highlightMatches(link, terms);
-          if (heading) {
-            this.showHeading(heading);
-          }
-          for (const parent of parents) {
-            this.expandParent(parent);
-          }
+      if (isMatch) {
+        matchCount++;
+        this.highlightMatches(link, terms);
+        if (heading) {
+          this.showHeading(heading);
+        }
+        for (const parent of parents) {
+          this.expandParent(parent);
         }
       }
-    );
+    });
 
     return matchCount;
   }
