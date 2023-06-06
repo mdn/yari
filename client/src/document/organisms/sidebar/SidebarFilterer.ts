@@ -3,7 +3,13 @@ import { splitQuery } from "../../../utils";
 export class SidebarFilterer {
   headings: HTMLElement[];
   parents: HTMLDetailsElement[];
-  links: HTMLAnchorElement[];
+  items: Array<{
+    haystack: string;
+    link: HTMLAnchorElement;
+    container: HTMLElement;
+    heading: HTMLElement | undefined;
+    parents: HTMLDetailsElement[];
+  }>;
   toc: HTMLElement | null;
 
   constructor(root: HTMLElement) {
@@ -11,9 +17,19 @@ export class SidebarFilterer {
     this.parents = Array.from(
       root.querySelectorAll<HTMLDetailsElement>("details")
     );
-    this.links = Array.from(
+
+    const links = Array.from(
       root.querySelectorAll<HTMLAnchorElement>("a[href]")
     );
+
+    this.items = links.map((link) => ({
+      haystack: link.innerText.toLowerCase(),
+      link,
+      container: this.getLinkContainer(link),
+      heading: this.getHeading(link),
+      parents: this.getParents(link),
+    }));
+
     this.toc =
       root.closest<HTMLElement>(".sidebar")?.querySelector(".in-nav-toc") ??
       null;
@@ -41,7 +57,7 @@ export class SidebarFilterer {
   }
 
   showAllItems() {
-    this.links.forEach((link) => this.resetLink(link));
+    this.items.forEach(({ link }) => this.resetLink(link));
     this.headings.forEach((heading) => this.resetHeading(heading));
     this.parents.forEach((parent) => this.resetParent(parent));
   }
@@ -89,21 +105,25 @@ export class SidebarFilterer {
     // Show/hide items (+ show parents).
     const terms = splitQuery(query);
     let matchCount = 0;
-    this.links.forEach((link) => {
-      this.resetHighlighting(link);
-      const haystack = link.innerText.toLowerCase();
-      const isMatch = terms.every((needle) => haystack.includes(needle));
+    this.items.forEach(
+      ({ haystack, link, container: target, heading, parents }) => {
+        this.resetHighlighting(link);
+        const isMatch = terms.every((needle) => haystack.includes(needle));
 
-      const target = this.getLinkContainer(link);
-      this.toggleElement(target, isMatch);
+        this.toggleElement(target, isMatch);
 
-      if (isMatch) {
-        matchCount++;
-        this.highlightMatches(link, terms);
-        this.showHeading(target);
-        this.expandParents(target);
+        if (isMatch) {
+          matchCount++;
+          this.highlightMatches(link, terms);
+          if (heading) {
+            this.showHeading(heading);
+          }
+          for (const parent of parents) {
+            this.expandParent(parent);
+          }
+        }
       }
-    });
+    );
 
     return matchCount;
   }
@@ -189,8 +209,7 @@ export class SidebarFilterer {
     return newNode;
   }
 
-  private showHeading(target: HTMLElement) {
-    const heading = this.getHeading(target);
+  private showHeading(heading: HTMLElement) {
     const container = heading && this.getHeadingContainer(heading);
     if (container) {
       this.toggleElement(container, true);
@@ -219,11 +238,9 @@ export class SidebarFilterer {
       );
   }
 
-  private expandParents(target: HTMLElement) {
-    for (const parent of this.getParents(target)) {
-      this.toggleElement(parent, true);
-      parent.open = true;
-    }
+  private expandParent(parent: HTMLDetailsElement) {
+    this.toggleElement(parent, true);
+    parent.open = true;
   }
 
   private getParents(el: HTMLElement) {
