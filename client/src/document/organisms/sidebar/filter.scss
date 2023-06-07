@@ -21,6 +21,12 @@
     align-items: center;
     display: flex;
     margin-bottom: 0.5rem;
+
+    &.has-input {
+      .sidebar-filter-label .icon {
+        background-color: var(--category-color);
+      }
+    }
   }
 
   .sidebar-filter-label {

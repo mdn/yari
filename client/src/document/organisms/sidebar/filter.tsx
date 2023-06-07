@@ -20,7 +20,7 @@ export function SidebarFilter() {
 
   return (
     <section className="sidebar-filter-container">
-      <div className="sidebar-filter">
+      <div className={`sidebar-filter ${query ? "has-input" : ""}`}>
         <label
           id="sidebar-filter-label"
           className="sidebar-filter-label"
