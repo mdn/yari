@@ -17,7 +17,7 @@
   transform: translate(-50%, 0);
   width: 90vw;
 
-  &-content {
+  .toast-content {
     color: var(--toast-color);
     margin-right: auto;
   }
@@ -37,16 +37,16 @@
     --toast-color: #fff;
   }
 
-  &-verbose-text {
+  .toast-verbose-text {
     display: none;
   }
 
   @media screen and (min-width: $screen-md) {
-    &-verbose-text {
+    .toast-verbose-text {
       display: inline;
     }
 
-    &-short-text {
+    .toast-short-text {
       display: none;
     }
   }
