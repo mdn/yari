@@ -13917,10 +13917,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^2.59.0:
-  version "2.59.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.59.0.tgz#bf3e57337850f78fe1dadc2ff3b2639482dfc2eb"
-  integrity sha512-948poJr8AuAbLHENk1Ilvg9Kgb0LVLglKRgMVGvQqtO6ocNGi5yU50YggZl0THTDO0BvcFsXar/WCv43PUmXaQ==
+web-specs@^2.59.1:
+  version "2.59.1"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.59.1.tgz#23c6643adf2af8e67b3b94ebcee5716428ac0274"
+  integrity sha512-fKouugULnNbVy60ntKXEqE6cQ88Fb/81lAzs0ry4lZx0EJN/sKTcbD5R+cAF5iJW2mfj2VUE7wbsZUnR+Vgdtw==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
