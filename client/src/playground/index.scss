@@ -27,6 +27,9 @@ main.play {
   }
 
   dialog {
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    box-shadow: 1px 1px 2px var(--border-primary);
     z-index: 1;
 
     > form {
