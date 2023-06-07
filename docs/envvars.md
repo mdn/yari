@@ -254,26 +254,29 @@ name instead. That means you can log in _from_ Yari with a single click.
 This removes sign-in and `whoami` XHR fetching. Useful when using Yari purely
 for content editing as authentication is then not required.
 
-### `REACT_APP_CRUD_MODE`
+### `REACT_APP_DEV_MODE`
 
-**Default: `NODE_ENV==='development'`**
+**Default: `false`**
+
+Enables features or setup which only make sense in local development.
+
+### `REACT_APP_WRITER_MODE`
+
+**Default: `false`**
 
 Basically, these are the optional, lazy-loaded features of the app that only
 make sense when you're working on authoring the content. For example the Toolbar
 bar appears based on this.
 
-It defaults to `NODE_ENV==='development'` if not set which means that it's
-enable by default when doing development with the `localhost:3000` dev server.
-
-### `REACT_APP_CRUD_MODE_HOSTNAMES`
+### `REACT_APP_WRITER_MODE_HOSTNAMES`
 
 **Default: `localhost, localhost.org, 127.0.0.1`**
 
-Only applicable if `REACT_APP_CRUD_MODE` is truthy. Essentially you can disable
-certain CRUD mode features depending on the hostname you use. So if you built
-the static assets (the React code) with `REACT_APP_CRUD_MODE=true` it might
-disable certain features if you use a `window.location.hostname` that is _not_
-in this list.
+Only applicable if `REACT_APP_WRITER_MODE` is truthy. Essentially you can
+disable certain CRUD mode features depending on the hostname you use. So if you
+built the static assets (the React code) with `REACT_APP_WRITER_MODE=true` it
+might disable certain features if you use a `window.location.hostname` that is
+_not_ in this list.
 
 The use case for this is when you build the site in a pull request and want
 flaws to _appear_ but without the "Fix fixable flaws" link or the "Open in your
@@ -284,7 +287,7 @@ make sense to present the "Fix fixable flaws" button for example.
 
 ### `REACT_APP_ENABLE_PLUS`
 
-**Default: `NODE_ENV==='development'`**
+**Default: `false`**
 
 Determines if the MDN++ SPA should be reachable or not.
 

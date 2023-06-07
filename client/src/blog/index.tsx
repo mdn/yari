@@ -1,7 +1,7 @@
 import useSWR from "swr";
 
 import { HTTPError } from "../document";
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 
 import { Route, Routes } from "react-router-dom";
 import { HydrationData } from "../../../libs/types/hydration";
@@ -84,7 +84,7 @@ function BlogIndex(props: HydrationData) {
     },
     {
       fallbackData: props.hyData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !props.hyData,
     }
   );
