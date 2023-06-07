@@ -61,7 +61,7 @@
         document.body.innerHTML = state.html;
         const script = document.createElement("script");
         script.nonce = "deadbeef";
-        script.textContent = state.js;
+        script.textContent = "try{" + state.js + "}catch(e){console.error(e)}";
         document.body.appendChild(script);
         dispatchEvent(new Event("load"));
       }

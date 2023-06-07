@@ -105,9 +105,13 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;
     }
-    $pre.wrapAll(
-      `<div class='code-example'><p class='example-header'><span class="language-name">${name}</span></p></div>`
-    );
+    if (!$pre.hasClass("hidden")) {
+      $pre.wrapAll(
+        `<div class='code-example'><p class='example-header'><span class="language-name">${name}</span></p></div>`
+      );
+    } else {
+      $pre.wrapAll(`<div class='code-example'></div>`);
+    }
     const grammar = Prism.languages[name];
     if (!grammar) {
       console.warn(

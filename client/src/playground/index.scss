@@ -31,28 +31,38 @@ main.play {
 
     > form {
       display: flex;
+      flex-direction: column;
       flex-wrap: wrap;
       font-size: var(--type-smaller-font-size);
-      gap: 0.5rem;
-      padding: 2rem;
-      width: 25rem;
-
-      > .buttons {
-        display: flex;
-        gap: 0.5rem;
-      }
-    }
-
-    &#playDialog > form {
+      gap: 2rem;
       max-width: 30rem;
       overflow-wrap: anywhere;
+      padding: 0.5rem;
+      width: 25rem;
 
-      > .buttons {
-        margin: 1rem auto 0;
+      > section {
+        display: flex;
+        flex-direction: column;
+
+        > span {
+          font-size: var(--type-base-font-size-rem);
+          font-weight: 600;
+        }
+
+        .button {
+          margin: 0.5rem auto;
+          width: 15rem;
+        }
+      }
+
+      .buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
       }
     }
 
-    &#flagDialog > form {
+    > form.flag {
       > textarea {
         height: 6rem;
         resize: none;
@@ -60,7 +70,7 @@ main.play {
       }
 
       > .buttons {
-        margin-left: auto;
+        justify-content: flex-end;
       }
     }
   }
@@ -112,6 +122,10 @@ main.play {
           height: 100%;
         }
 
+        &:not(:focus-within) {
+          color: var(--text-inactive);
+        }
+
         summary {
           cursor: pointer;
           padding: 0.25rem;
@@ -159,7 +173,8 @@ main.play {
         cursor: pointer;
         font-size: smaller;
         margin: 0 auto;
-        margin-top: 1.5rem;
+        margin-top: 1rem;
+        min-height: 2rem;
         text-decoration: underline;
 
         &:hover {

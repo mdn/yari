@@ -72,6 +72,30 @@ function prevHeading(heading: Element) {
   return null;
 }
 
+function addBreakoutButton(element: Element | null, id, doc, code, locale) {
+  if (!element || element.querySelector(".play-icon")) return;
+  const button = document.createElement("button");
+  const span = document.createElement("span");
+
+  span.textContent = "Open in Playground";
+
+  button.setAttribute("type", "button");
+  button.setAttribute("class", "icon play-icon");
+  button.title = "use example in playground";
+  span.setAttribute("class", "visually-hidden");
+  button.appendChild(span);
+  element.appendChild(button);
+
+  button.onclick = async () => {
+    const key = `play-${id}-${doc.mdn_url}`;
+    sessionStorage.setItem(key, JSON.stringify(code));
+    const url = new URL(window?.location.href);
+    url.pathname = `/${locale}/play`;
+    url.searchParams.set("local", key);
+    window.location.href = url.href;
+  };
+}
+
 function codeForHeading(
   heading: Element,
   src: string
@@ -144,33 +168,22 @@ export function useMakeInteractive(doc: Doc | undefined) {
       }
       const { code, nodes } = r;
       nodes.forEach((element) => {
-        const header = element.parentElement?.firstElementChild;
+        if (element.classList.contains("hidden")) {
+          return;
+        }
+        const header = element.parentElement?.firstElementChild || null;
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
         // early if we have to.
-        if (!header || header.querySelector(".play-icon")) return;
-
-        const button = document.createElement("button");
-        const span = document.createElement("span");
-
-        span.textContent = "Open in Playground";
-
-        button.setAttribute("type", "button");
-        button.setAttribute("class", "icon play-icon");
-        button.title = "use example in playground";
-        span.setAttribute("class", "visually-hidden");
-        button.appendChild(span);
-        header.appendChild(button);
-
-        button.onclick = async () => {
-          const key = `play-${id}-${doc.mdn_url}`;
-          sessionStorage.setItem(key, JSON.stringify(code));
-          const url = new URL(window?.location.href);
-          url.pathname = `/${locale}/play`;
-          url.searchParams.set("local", key);
-          window.location.href = url.href;
-        };
+        addBreakoutButton(header, id, doc, code, locale);
       });
+      addBreakoutButton(
+        iframe.parentElement?.firstElementChild || null,
+        id,
+        doc,
+        code,
+        locale
+      );
       initPlayIframe(iframe, code);
     });
   }, [doc, isServer, locale]);

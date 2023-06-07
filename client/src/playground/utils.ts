@@ -41,6 +41,20 @@ export function updatePlayIframe(
   }
 }
 
+export function codeToMarkdown(code: EditorContent): string {
+  const parts: string[] = [];
+  if (code.html) {
+    parts.push(["```html", code.html, "```"].join("\n"));
+  }
+  if (code.css) {
+    parts.push(["```css", code.css, "```"].join("\n"));
+  }
+  if (code.js) {
+    parts.push(["```js", code.js, "```"].join("\n"));
+  }
+  return parts.join("\n\n");
+}
+
 export function initPlayIframe(
   iframe: HTMLIFrameElement | null,
   editorContent: EditorContent | null
@@ -54,7 +68,6 @@ export function initPlayIframe(
     state: editorContent,
   };
   const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
-    console.log("foo", prop, typ);
     if (iframe.id.substring("frame_".length) === prop["id"]) {
       if (typ === "ready") {
         iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });

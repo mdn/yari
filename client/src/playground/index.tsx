@@ -27,6 +27,12 @@ enum State {
   modified,
 }
 
+enum DialogState {
+  none,
+  share,
+  flag,
+}
+
 async function save(editorContent: EditorContent) {
   const res = await fetch("/api/v1/play/", {
     method: "POST",
@@ -46,8 +52,8 @@ export default function Playground() {
   let [searchParams] = useSearchParams();
   let gistId = searchParams.get("id");
   let localKey = searchParams.get("local");
+  let [diaSate, setDiaState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
-  let [url, setUrl] = useState<string | null>(null);
   let [vConsole, setVConsole] = useState<{ prop: string; message: string }[]>(
     []
   );
@@ -82,7 +88,6 @@ export default function Playground() {
   const jsRef = useRef<EditorHandle | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const shareDiaRef = useRef<HTMLDialogElement | null>(null);
-  const flagDiaRef = useRef<HTMLDialogElement | null>(null);
   let messageListener = useCallback(({ data: { typ, prop, message } }) => {
     if (typ === "console") {
       if (prop === "clear") {
@@ -146,6 +151,17 @@ export default function Playground() {
   };
 
   const updateWithEditorContent = () => {
+    const loading = [
+      { backgroundColor: "var(--button-bg)" },
+      { backgroundColor: "var(--background-primary)", color: "red" },
+      { backgroundColor: "var(--button-bg)" },
+    ];
+
+    const timing = {
+      duration: 2000,
+      iterations: 1,
+    };
+    document.getElementById("run")?.firstElementChild?.animate(loading, timing);
     iframe.current?.contentWindow?.postMessage(
       {
         typ: "reload",
@@ -172,6 +188,16 @@ export default function Playground() {
       console.error(e);
     }
   };
+  const share = async () => {
+    const url = await save(getEditorContent());
+    window.history.replaceState(
+      {},
+      "",
+      `/en-US/play?${url.searchParams.toString()}`
+    );
+    setShared(true);
+    return url.toString();
+  };
   const src = `${
     codeSrc ||
     `//${
@@ -183,10 +209,10 @@ export default function Playground() {
     <>
       <main className="play container">
         <dialog id="playDialog" ref={shareDiaRef}>
-          <ShareForm url={url} />
-        </dialog>
-        <dialog id="flagDialog" ref={flagDiaRef}>
-          <FlagForm gistId={gistId} />
+          {diaSate === DialogState.flag && <FlagForm gistId={gistId} />}
+          {diaSate === DialogState.share && (
+            <ShareForm code={getEditorContent} share={share} />
+          )}
         </dialog>
         <section className="editors">
           <aside>
@@ -207,15 +233,8 @@ export default function Playground() {
               {userData?.isAuthenticated && (
                 <Button
                   id="share"
-                  onClickHandler={async () => {
-                    const url = await save(getEditorContent());
-                    setUrl(url.toString());
-                    window.history.replaceState(
-                      {},
-                      "",
-                      `/en-US/play?${url.searchParams.toString()}`
-                    );
-                    setShared(true);
+                  onClickHandler={() => {
+                    setDiaState(DialogState.share);
                     shareDiaRef.current?.showModal();
                   }}
                 >
@@ -253,7 +272,8 @@ export default function Playground() {
               className="flag-example"
               onClick={(e) => {
                 e.preventDefault();
-                flagDiaRef.current?.showModal();
+                setDiaState(DialogState.flag);
+                shareDiaRef.current?.showModal();
               }}
             >
               Seeing something inappropriate?

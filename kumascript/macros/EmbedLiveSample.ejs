@@ -86,12 +86,12 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="<%= className %>"<%
+%><div class="code-example"><p class="example-header"></p><iframe class="<%= className %>"<%
 %> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
-%>></iframe><%
+%>></iframe></div><%
 if (hasScreenshot) { %></td></tr></tbody></table><% } %>

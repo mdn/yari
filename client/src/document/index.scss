@@ -552,7 +552,9 @@ pre {
     margin: 0;
     padding: 0 0.5rem 0 1rem;
 
-    ~ pre {
+    ~ pre,
+    ~ iframe {
+      border-top: none;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       margin-top: 0;
@@ -561,6 +563,10 @@ pre {
     .language-name {
       margin-right: auto;
       text-transform: uppercase;
+    }
+
+    .play-icon {
+      margin-left: auto;
     }
   }
 
