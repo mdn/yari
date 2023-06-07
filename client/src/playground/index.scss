@@ -125,7 +125,7 @@ main.play {
           height: 100%;
         }
 
-        &:not(:focus-within) {
+        &:not(:focus-within) summary {
           color: var(--text-inactive);
         }
 
