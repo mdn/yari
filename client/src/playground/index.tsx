@@ -52,7 +52,6 @@ export default function Playground() {
     []
   );
   let [state, setState] = useState(State.initial);
-  let [unsafe, setUnsafe] = useState(Boolean(localKey));
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   let { data: code } = useSWR<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
@@ -72,10 +71,11 @@ export default function Playground() {
       fallbackData:
         (!gistId &&
           localKey &&
-          JSON.parse(sessionStorage.getItem(localKey) || "{}")) ||
+          JSON.parse(sessionStorage.getItem(localKey) || "null")) ||
         undefined,
     }
   );
+  let [unsafe, setUnsafe] = useState(Boolean(localKey && code && !gistId));
   const subdomain = useRef<string>(crypto.randomUUID());
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
