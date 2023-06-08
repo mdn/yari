@@ -79,12 +79,12 @@ export class SidebarFilterer {
     this.toggleElement(container, true);
   }
 
-  private resetParent(detail: HTMLDetailsElement) {
-    const container = this.getContainer(detail);
+  private resetParent(parent: HTMLDetailsElement) {
+    const container = this.getContainer(parent);
     this.toggleElement(container, true);
-    if (detail.dataset.wasOpen) {
-      detail.open = JSON.parse(detail.dataset.wasOpen);
-      delete detail.dataset.wasOpen;
+    if (parent.dataset.wasOpen) {
+      parent.open = JSON.parse(parent.dataset.wasOpen);
+      delete parent.dataset.wasOpen;
     }
   }
 
@@ -134,11 +134,11 @@ export class SidebarFilterer {
     this.toggleElement(container, false);
   }
 
-  private collapseParent(el: HTMLDetailsElement) {
-    const container = this.getContainer(el);
+  private collapseParent(parent: HTMLDetailsElement) {
+    const container = this.getContainer(parent);
     this.toggleElement(container, false);
-    el.dataset.wasOpen = el.dataset.wasOpen ?? String(el.open);
-    el.open = false;
+    parent.dataset.wasOpen = parent.dataset.wasOpen ?? String(parent.open);
+    parent.open = false;
   }
 
   private highlightMatches(el: HTMLElement, terms: string[]) {
@@ -186,8 +186,8 @@ export class SidebarFilterer {
     });
   }
 
-  private getTextNodes(parentNode: Node): (Node & Text)[] {
-    const parents = [parentNode];
+  private getTextNodes(node: Node): (Node & Text)[] {
+    const parents = [node];
     const nodes: (Node & Text)[] = [];
 
     for (const parent of parents) {
@@ -222,16 +222,13 @@ export class SidebarFilterer {
     return this.findFirstElementBefore(el, this.allHeadings);
   }
 
-  private findFirstElementBefore(
-    target: HTMLElement,
-    candidates: HTMLElement[]
-  ) {
+  private findFirstElementBefore(el: HTMLElement, candidates: HTMLElement[]) {
     return candidates
       .slice()
       .reverse()
       .find(
         (candidate) =>
-          candidate.compareDocumentPosition(target) &
+          candidate.compareDocumentPosition(el) &
           Node.DOCUMENT_POSITION_FOLLOWING
       );
   }
