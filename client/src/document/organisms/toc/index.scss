@@ -12,14 +12,14 @@
   }
 
   // double classes to override specificity from root styles
-  &-heading.document-toc-heading {
+  .document-toc-heading.document-toc-heading {
     font: var(--type-heading-h5);
     letter-spacing: 1.5px;
     margin: 0 0 1rem;
   }
 
   // double classes to override specificity from root styles
-  &-list.document-toc-list {
+  .document-toc-list.document-toc-list {
     font-size: var(--type-smaller-font-size);
     list-style: none;
     padding-left: 0;
@@ -30,7 +30,7 @@
   }
 
   // double classes to override specificity from root styles
-  &-link.document-toc-link:not(.button) {
+  .document-toc-link.document-toc-link:not(.button) {
     border-left: 2px solid var(--border-secondary);
     color: var(--text-secondary);
     display: block;
@@ -49,7 +49,7 @@
     }
   }
 
-  &-item-sub > .document-toc-link:not(.button) {
+  .document-toc-item-sub > .document-toc-link:not(.button) {
     padding-left: 2rem;
   }
 

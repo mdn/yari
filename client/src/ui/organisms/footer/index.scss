@@ -5,7 +5,7 @@
   padding: (1rem * 2) 1rem;
   position: relative;
 
-  &-grid {
+  .page-footer-grid {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -18,20 +18,20 @@
     color: var(--text-secondary);
   }
 
-  &-logo-col {
+  .page-footer-logo-col {
     p {
       margin-top: 0;
       max-width: 55ch;
     }
   }
 
-  &-app-list {
+  .page-footer-app-list {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  &-app-dl {
+  .page-footer-app-dl {
     display: block;
     max-width: 130px;
 
@@ -45,7 +45,7 @@
     }
   }
 
-  &-moz {
+  .page-footer-moz {
     align-items: center;
     border-top: 1px solid var(--border-primary);
     display: flex;
@@ -55,7 +55,7 @@
     padding-top: 1.5rem;
   }
 
-  &-legal-text {
+  .page-footer-legal-text {
     font-size: var(--type-tiny-font-size);
     margin: 0;
 
@@ -70,18 +70,18 @@
 }
 
 .footer-moz {
-  &-list {
+  .footer-moz-list {
     display: flex;
     flex-wrap: wrap;
     font-size: var(--type-tiny-font-size);
     gap: 1rem;
   }
 
-  &-logo-link {
+  .footer-moz-logo-link {
     display: flex;
   }
 
-  &-link {
+  .footer-moz-link {
     text-decoration: underline;
 
     &:hover {
@@ -112,25 +112,25 @@
 }
 
 .footer-nav {
-  &-heading {
+  .footer-nav-heading {
     font: var(--type-smaller-font-size);
     margin: 0 0 0.5rem;
   }
 
-  &-list {
+  .footer-nav-list {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  &-item {
+  .footer-nav-item {
     font-size: var(--type-smaller-font-size);
   }
 }
 
 @media screen and (min-width: $screen-sm) {
   .page-footer {
-    &-grid {
+    .page-footer-grid {
       display: grid;
       gap: 2.5rem;
       grid-template-areas:
@@ -142,43 +142,43 @@
       grid-template-columns: 1fr 1fr;
     }
 
-    &-logo-col {
+    .page-footer-logo-col {
       grid-area: logo;
     }
 
-    &-nav-col-1 {
+    .page-footer-nav-col-1 {
       grid-area: nav1;
     }
 
-    &-nav-col-2 {
+    .page-footer-nav-col-2 {
       grid-area: nav2;
     }
 
-    &-nav-col-3 {
+    .page-footer-nav-col-3 {
       grid-area: nav3;
     }
 
-    &-nav-col-4 {
+    .page-footer-nav-col-4 {
       grid-area: nav4;
     }
 
-    &-app-col {
+    .page-footer-app-col {
       grid-area: app;
     }
 
-    &-moz {
+    .page-footer-moz {
       grid-area: moz;
     }
 
-    &-legal {
+    .page-footer-legal {
       grid-area: legal;
     }
 
-    &-app-list {
+    .page-footer-app-list {
       flex-direction: row;
     }
 
-    &-app-dl {
+    .page-footer-app-dl {
       img,
       svg {
         height: 38px;
@@ -189,7 +189,7 @@
 
 @media screen and (min-width: $screen-md) {
   .page-footer {
-    &-grid {
+    .page-footer-grid {
       gap: 1rem;
       grid-template-areas:
         "logo  nav1  nav2  nav3  nav4"
@@ -198,11 +198,11 @@
       grid-template-columns: minmax(260px, 2fr) repeat(4, minmax(0, 1fr));
     }
 
-    &-app-list {
+    .page-footer-app-list {
       flex-direction: column;
     }
 
-    &-app-dl {
+    .page-footer-app-dl {
       img,
       svg {
         height: auto;
@@ -213,7 +213,7 @@
 
 @media screen and (min-width: $screen-xxl) {
   .page-footer {
-    &-grid {
+    .page-footer-grid {
       gap: 2.5rem;
     }
   }
