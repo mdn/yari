@@ -27,9 +27,9 @@ export class SidebarFilterer {
     this.items = links.map((link) => ({
       haystack: (link.textContent ?? "").toLowerCase(),
       link,
-      container: this.getContainer(link),
-      heading: this.getHeading(link),
-      parents: this.getParents(link),
+      container: this.getContainerOf(link),
+      heading: this.getHeadingOf(link),
+      parents: this.getParentsOf(link),
     }));
 
     this.toc =
@@ -66,21 +66,21 @@ export class SidebarFilterer {
 
   private resetLink(link: HTMLAnchorElement) {
     this.resetHighlighting(link);
-    const container = this.getContainer(link);
+    const container = this.getContainerOf(link);
     this.toggleElement(container, true);
   }
 
-  private getContainer(el: HTMLElement) {
+  private getContainerOf(el: HTMLElement) {
     return el.closest("li") || el;
   }
 
   private resetHeading(heading: HTMLElement) {
-    const container = this.getContainer(heading);
+    const container = this.getContainerOf(heading);
     this.toggleElement(container, true);
   }
 
   private resetParent(parent: HTMLDetailsElement) {
-    const container = this.getContainer(parent);
+    const container = this.getContainerOf(parent);
     this.toggleElement(container, true);
     if (parent.dataset.wasOpen) {
       parent.open = JSON.parse(parent.dataset.wasOpen);
@@ -130,19 +130,19 @@ export class SidebarFilterer {
   }
 
   private hideHeading(heading: HTMLElement) {
-    const container = this.getContainer(heading);
+    const container = this.getContainerOf(heading);
     this.toggleElement(container, false);
   }
 
   private collapseParent(parent: HTMLDetailsElement) {
-    const container = this.getContainer(parent);
+    const container = this.getContainerOf(parent);
     this.toggleElement(container, false);
     parent.dataset.wasOpen = parent.dataset.wasOpen ?? String(parent.open);
     parent.open = false;
   }
 
   private highlightMatches(el: HTMLElement, terms: string[]) {
-    const nodes = this.getTextNodes(el);
+    const nodes = this.getTextNodesOf(el);
 
     nodes.forEach((node) => {
       const haystack = node.textContent?.toLowerCase();
@@ -186,7 +186,7 @@ export class SidebarFilterer {
     });
   }
 
-  private getTextNodes(node: Node): (Node & Text)[] {
+  private getTextNodesOf(node: Node): (Node & Text)[] {
     const parents = [node];
     const nodes: (Node & Text)[] = [];
 
@@ -212,13 +212,13 @@ export class SidebarFilterer {
   }
 
   private showHeading(heading: HTMLElement) {
-    const container = heading && this.getContainer(heading);
+    const container = heading && this.getContainerOf(heading);
     if (container) {
       this.toggleElement(container, true);
     }
   }
 
-  private getHeading(el: HTMLElement) {
+  private getHeadingOf(el: HTMLElement) {
     return this.findFirstElementBefore(el, this.allHeadings);
   }
 
@@ -234,12 +234,12 @@ export class SidebarFilterer {
   }
 
   private expandParent(parent: HTMLDetailsElement) {
-    const container = this.getContainer(parent);
+    const container = this.getContainerOf(parent);
     this.toggleElement(container, true);
     parent.open = true;
   }
 
-  private getParents(el: HTMLElement) {
+  private getParentsOf(el: HTMLElement) {
     const parents: HTMLDetailsElement[] = [];
     let parent = el.parentElement?.closest("details");
 
