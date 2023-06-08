@@ -3,29 +3,29 @@
 .avatar {
   border-radius: 50%;
 
-  .avatar-wrap {
-    border-radius: 50%;
-    height: 32px;
-    /* pull the avatar into the space on the left
-       introduced by the border */
-    margin-left: -7px;
-    margin-right: 0.1rem;
-    position: relative;
-    width: 32px;
-
-    /*
-    &.is-subscriber {
-      padding: 2px;
-      background: radial-gradient(
-        circle,
-        white 55%,
-        var(--background-mark-yellow) 55%
-      );
-    }
-    */
-  }
-
   @media screen and (min-width: $screen-md) {
     margin: initial;
   }
+}
+
+.avatar-wrap {
+  border-radius: 50%;
+  height: 32px;
+  /* pull the avatar into the space on the left
+     introduced by the border */
+  margin-left: -7px;
+  margin-right: 0.1rem;
+  position: relative;
+  width: 32px;
+
+  /*
+  &.is-subscriber {
+    padding: 2px;
+    background: radial-gradient(
+      circle,
+      white 55%,
+      var(--background-mark-yellow) 55%
+    );
+  }
+  */
 }
