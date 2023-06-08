@@ -6,7 +6,7 @@ import { useUserData } from "../user-context";
 import { usePlusUrl } from "../plus/utils";
 import { useGleanClick } from "../telemetry/glean-context";
 import { AuthContainer } from "../ui/molecules/auth-container";
-import { PLUS_UPDATES } from "../telemetry/constants";
+import { PLAYGROUND } from "../telemetry/constants";
 
 export function FlagForm({ gistId }: { gistId: string | null }) {
   return (
@@ -82,6 +82,7 @@ export function ShareForm({
         <Button
           type="secondary"
           onClickHandler={async () => {
+            gleanClick(`${PLAYGROUND}: share-markdown`);
             code &&
               (await navigator.clipboard.writeText(codeToMarkdown(code())));
           }}
@@ -113,6 +114,7 @@ export function ShareForm({
               <Button
                 onClickHandler={async () => {
                   setLoading(true);
+                  gleanClick(`${PLAYGROUND}: share-permalink`);
                   const u = await share?.();
                   setLoading(false);
                   setUrl(u || null);
@@ -124,26 +126,21 @@ export function ShareForm({
           </>
         ) : (
           <p className="share-get-plus">
-            <span>
-              <span>Want to share this playground via link?</span>
-              <br />
-              <strong>
-                Upgrade to{" "}
-                <a
-                  className="plus-link"
-                  href={href}
-                  onClick={() =>
-                    gleanClick(`${PLUS_UPDATES.MDN_PLUS}: banner-link`)
-                  }
-                >
-                  MDN Plus
-                </a>{" "}
-                for free.
-              </strong>
-            </span>
+            <span>Want to share this playground via link?</span>
+            <strong>
+              Upgrade to{" "}
+              <a
+                className="plus-link"
+                href={href}
+                onClick={() => gleanClick(`${PLAYGROUND}: banner-link`)}
+              >
+                MDN Plus
+              </a>{" "}
+              for free.
+            </strong>
             <AuthContainer
-              signInGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-login`}
-              subscribeGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`}
+              signInGleanContext={`${PLAYGROUND}: banner-login`}
+              subscribeGleanContext={`${PLAYGROUND}: banner-button`}
             />
           </p>
         )}

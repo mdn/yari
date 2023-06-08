@@ -17,6 +17,7 @@ import { PLAYGROUND_BASE_URL } from "../env";
 import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
+import { PLAYGROUND } from "../telemetry/constants";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -151,7 +152,7 @@ export default function Playground() {
   };
   const resetConfirm = async () => {
     if (window.confirm("Do you really want to reset everything?")) {
-      gleanClick("play->action: reset");
+      gleanClick(`${PLAYGROUND}: reset-click`);
       await reset();
     }
   };
@@ -174,14 +175,13 @@ export default function Playground() {
     const loading = [
       {},
       {
-        backgroundColor: "var(--text-primary-red)",
-        color: "var(--background-primary)",
+        backgroundColor: "var(--background-mark-red)",
       },
       {},
     ];
 
     const timing = {
-      duration: 2000,
+      duration: 1000,
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
@@ -261,6 +261,7 @@ export default function Playground() {
                 type="secondary"
                 id="share"
                 onClickHandler={() => {
+                  gleanClick(`${PLAYGROUND}: share-click`);
                   setDiaState(DialogState.share);
                   shareDiaRef.current?.showModal();
                 }}
@@ -299,6 +300,7 @@ export default function Playground() {
               className="flag-example"
               onClick={(e) => {
                 e.preventDefault();
+                gleanClick(`${PLAYGROUND}: flag-click`);
                 setDiaState(DialogState.flag);
                 shareDiaRef.current?.showModal();
               }}

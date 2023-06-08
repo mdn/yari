@@ -59,13 +59,14 @@ main.play {
         }
 
         .share-get-plus {
-          border: 1px solid var(--border-primary);
           background-color: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: var(--elem-radius);
           padding: 0.5rem;
 
           .auth-container {
-            margin-top: 1rem;
             justify-content: center;
+            margin-top: 1rem;
           }
         }
       }
@@ -114,6 +115,7 @@ main.play {
         padding: 0.5rem;
 
         .switch {
+          font-size: smaller;
           margin-right: auto;
         }
 
