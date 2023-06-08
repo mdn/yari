@@ -57,6 +57,17 @@ main.play {
           margin: 0.5rem auto;
           width: 15rem;
         }
+
+        .share-get-plus {
+          border: 1px solid var(--border-primary);
+          background-color: var(--background-secondary);
+          padding: 0.5rem;
+
+          .auth-container {
+            margin-top: 1rem;
+            justify-content: center;
+          }
+        }
       }
 
       #share-cancel {
@@ -117,8 +128,7 @@ main.play {
             text-transform: uppercase;
 
             &.red {
-              --button-bg: var(--icon-critical);
-              --button-bg-hover: var(--icon-warning);
+              --button-color: var(--text-primary-red);
             }
           }
         }

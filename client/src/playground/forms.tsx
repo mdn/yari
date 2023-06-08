@@ -2,6 +2,11 @@ import { useState } from "react";
 import { Button } from "../ui/atoms/button";
 import { EditorContent, codeToMarkdown } from "./utils";
 import { Loading } from "../ui/atoms/loading";
+import { useUserData } from "../user-context";
+import { usePlusUrl } from "../plus/utils";
+import { useGleanClick } from "../telemetry/glean-context";
+import { AuthContainer } from "../ui/molecules/auth-container";
+import { PLUS_UPDATES } from "../telemetry/constants";
 
 export function FlagForm({ gistId }: { gistId: string | null }) {
   return (
@@ -56,6 +61,9 @@ export function ShareForm({
   code?: () => EditorContent;
   extraClasses?: string;
 }) {
+  let userData = useUserData();
+  const href = usePlusUrl();
+  const gleanClick = useGleanClick();
   let [url, setUrl] = useState<string | null>(null);
   let [loading, setLoading] = useState(false);
   return (
@@ -83,33 +91,61 @@ export function ShareForm({
       </section>
       <section>
         <span>Share your code via Permalink</span>
-        {url ? (
-          loading ? (
-            <Loading />
-          ) : (
-            <>
-              <a href={url}>{url}</a>
+        {userData?.isAuthenticated ? (
+          <>
+            {url ? (
+              loading ? (
+                <Loading />
+              ) : (
+                <>
+                  <a href={url}>{url}</a>
+                  <Button
+                    type="secondary"
+                    onClickHandler={async () => {
+                      url && (await navigator.clipboard.writeText(url));
+                    }}
+                  >
+                    Copy to clipboard
+                  </Button>
+                </>
+              )
+            ) : (
               <Button
-                type="secondary"
                 onClickHandler={async () => {
-                  url && (await navigator.clipboard.writeText(url));
+                  setLoading(true);
+                  const u = await share?.();
+                  setLoading(false);
+                  setUrl(u || null);
                 }}
               >
-                Copy to clipboard
+                Create link
               </Button>
-            </>
-          )
+            )}
+          </>
         ) : (
-          <Button
-            onClickHandler={async () => {
-              setLoading(true);
-              const u = await share?.();
-              setLoading(false);
-              setUrl(u || null);
-            }}
-          >
-            Create link
-          </Button>
+          <p className="share-get-plus">
+            <span>
+              <span>Want to share this playground via link?</span>
+              <br />
+              <strong>
+                Upgrade to{" "}
+                <a
+                  className="plus-link"
+                  href={href}
+                  onClick={() =>
+                    gleanClick(`${PLUS_UPDATES.MDN_PLUS}: banner-link`)
+                  }
+                >
+                  MDN Plus
+                </a>{" "}
+                for free.
+              </strong>
+            </span>
+            <AuthContainer
+              signInGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-login`}
+              subscribeGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`}
+            />
+          </p>
         )}
       </section>
     </form>

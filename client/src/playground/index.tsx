@@ -14,7 +14,6 @@ import { EditorContent, updatePlayIframe } from "./utils";
 import "./index.scss";
 import { Switch } from "../ui/atoms/switch";
 import { PLAYGROUND_BASE_URL } from "../env";
-import { useUserData } from "../user-context";
 import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
@@ -49,17 +48,31 @@ async function save(editorContent: EditorContent) {
   return url;
 }
 
+function store(session: string, editorContent: EditorContent) {
+  sessionStorage.setItem(session, JSON.stringify(editorContent));
+}
+
+function load(session) {
+  let code = JSON.parse(sessionStorage.getItem(session) || "{}");
+  return {
+    html: code?.html || HTML_DEFAULT,
+    css: code?.css || CSS_DEFAULT,
+    js: code?.js || JS_DEFAULT,
+  };
+}
+
 export default function Playground() {
   const gleanClick = useGleanClick();
-  const userData = useUserData();
   let [searchParams] = useSearchParams();
   let gistId = searchParams.get("id");
   let sampleKey = searchParams.get("sample");
+  let sessionKey = searchParams.get("session");
   let [diaSate, setDiaState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
+  const subdomain = useRef<string>(crypto.randomUUID());
   let { data: code } = useSWR<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
@@ -76,14 +89,13 @@ export default function Playground() {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       fallbackData:
-        (!gistId &&
-          sampleKey &&
-          JSON.parse(sessionStorage.getItem(sampleKey) || "null")) ||
-        undefined,
+        !gistId &&
+        (sampleKey
+          ? JSON.parse(sessionStorage.getItem(sampleKey) || "null")
+          : (sessionKey && load(sessionKey)) || undefined),
     }
   );
   let [unsafe, setUnsafe] = useState(Boolean(sampleKey && code && !gistId));
-  const subdomain = useRef<string>(crypto.randomUUID());
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
   const jsRef = useRef<EditorHandle | null>(null);
@@ -145,18 +157,27 @@ export default function Playground() {
   };
 
   const getEditorContent = () => {
-    return {
+    const code = {
       html: htmlRef.current?.getContent() || HTML_DEFAULT,
       css: cssRef.current?.getContent() || CSS_DEFAULT,
       js: jsRef.current?.getContent() || JS_DEFAULT,
     };
+    const session = sessionKey || crypto.randomUUID();
+    if (!sessionKey && (code.html || code.css || code.js)) {
+      window.history.replaceState({}, "", `/en-US/play?session=${session}`);
+    }
+    store(session, code);
+    return code;
   };
 
   const updateWithEditorContent = () => {
     const loading = [
-      { backgroundColor: "var(--button-bg)" },
-      { backgroundColor: "var(--background-primary)", color: "red" },
-      { backgroundColor: "var(--button-bg)" },
+      {},
+      {
+        backgroundColor: "var(--text-primary-red)",
+        color: "var(--background-primary)",
+      },
+      {},
     ];
 
     const timing = {
@@ -226,24 +247,28 @@ export default function Playground() {
               Load remote content
             </Switch>
             <menu>
-              <Button id="format" onClickHandler={format}>
+              <Button type="secondary" id="format" onClickHandler={format}>
                 format
               </Button>
-              <Button id="run" onClickHandler={updateWithEditorContent}>
+              <Button
+                type="secondary"
+                id="run"
+                onClickHandler={updateWithEditorContent}
+              >
                 run
               </Button>
-              {userData?.isAuthenticated && (
-                <Button
-                  id="share"
-                  onClickHandler={() => {
-                    setDiaState(DialogState.share);
-                    shareDiaRef.current?.showModal();
-                  }}
-                >
-                  share
-                </Button>
-              )}
               <Button
+                type="secondary"
+                id="share"
+                onClickHandler={() => {
+                  setDiaState(DialogState.share);
+                  shareDiaRef.current?.showModal();
+                }}
+              >
+                share
+              </Button>
+              <Button
+                type="secondary"
                 id="reset"
                 extraClasses="red"
                 onClickHandler={resetConfirm}
