@@ -102,7 +102,7 @@ export default function Playground() {
   const jsRef = useRef<EditorHandle | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const shareDiaRef = useRef<HTMLDialogElement | null>(null);
-  const getEditorContent = () => {
+  const getEditorContent = useCallback(() => {
     const code = {
       html: htmlRef.current?.getContent() || HTML_DEFAULT,
       css: cssRef.current?.getContent() || CSS_DEFAULT,
@@ -114,7 +114,7 @@ export default function Playground() {
     }
     store(session, code);
     return code;
-  };
+  }, [sessionKey]);
 
   let messageListener = useCallback(
     ({ data: { typ, prop, message } }) => {
