@@ -79,10 +79,13 @@ function useSidebarFilter() {
     usePersistedScrollPosition(quicklinksRef, sidebarInnerNavRef);
 
   useEffect(() => {
-    quicklinksRef.current = document.getElementById("sidebar-quicklinks");
+    const quicklinks = document.getElementById("sidebar-quicklinks");
+    // Scrolls on desktop.
+    quicklinksRef.current = quicklinks;
+    // Scrolls on mobile.
     sidebarInnerNavRef.current =
-      quicklinksRef.current?.querySelector(".sidebar-inner-nav") ?? null;
-  });
+      quicklinks?.querySelector(".sidebar-inner-nav") ?? null;
+  }, []);
 
   useEffect(() => {
     const quicklinks = quicklinksRef.current;
