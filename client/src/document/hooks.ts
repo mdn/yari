@@ -73,17 +73,14 @@ function prevHeading(heading: Element) {
 }
 
 function addBreakoutButton(element: Element | null, id, doc, code, locale) {
-  if (!element || element.querySelector(".play-icon")) return;
+  if (!element || element.querySelector(".play-button")) return;
   const button = document.createElement("button");
-  const span = document.createElement("span");
 
-  span.textContent = "Open in Playground";
+  button.textContent = "Play";
 
   button.setAttribute("type", "button");
-  button.setAttribute("class", "icon play-icon");
-  button.title = "use example in playground";
-  span.setAttribute("class", "visually-hidden");
-  button.appendChild(span);
+  button.setAttribute("class", "play-button external");
+  button.title = "Open in Playground";
   element.appendChild(button);
 
   button.onclick = async () => {
@@ -91,7 +88,7 @@ function addBreakoutButton(element: Element | null, id, doc, code, locale) {
     sessionStorage.setItem(key, JSON.stringify(code));
     const url = new URL(window?.location.href);
     url.pathname = `/${locale}/play`;
-    url.searchParams.set("local", key);
+    url.searchParams.set("sample", key);
     window.location.href = url.href;
   };
 }
@@ -135,7 +132,7 @@ function codeForHeading(
   return empty ? null : { code, nodes };
 }
 
-export function useMakeInteractive(doc: Doc | undefined) {
+export function useRunSample(doc: Doc | undefined) {
   const isServer = useIsServer();
   const locale = useLocale();
 

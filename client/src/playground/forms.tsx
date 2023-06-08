@@ -41,7 +41,7 @@ export function FlagForm({ gistId }: { gistId: string | null }) {
           }}
           value="default"
         >
-          Send
+          Report
         </Button>
       </div>
     </form>
@@ -60,6 +60,15 @@ export function ShareForm({
   let [loading, setLoading] = useState(false);
   return (
     <form className="share">
+      <Button
+        id="share-cancel"
+        title="Cancel"
+        extraClasses="action"
+        value="cancel"
+        icon="cancel"
+        buttonType="submit"
+        formMethod="dialog"
+      ></Button>
       <section>
         <span>Share Markdown</span>
         <Button
@@ -103,11 +112,6 @@ export function ShareForm({
           </Button>
         )}
       </section>
-      <div className="buttons">
-        <Button value="cancel" buttonType="submit" formMethod="dialog">
-          Close
-        </Button>
-      </div>
     </form>
   );
 }

@@ -9,7 +9,7 @@ import { useIsServer, useLocale } from "../hooks";
 import {
   useDocumentURL,
   useCopyExamplesToClipboard,
-  useMakeInteractive,
+  useRunSample,
 } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
@@ -120,7 +120,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 
   useIncrementFrequentlyViewed(doc);
-  useMakeInteractive(doc);
+  useRunSample(doc);
   useCopyExamplesToClipboard(doc);
   useInteractiveExamplesTelemetry();
 

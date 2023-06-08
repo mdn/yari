@@ -564,26 +564,29 @@ pre {
       margin-right: auto;
       text-transform: uppercase;
     }
-
-    .play-icon {
-      margin-left: auto;
-    }
   }
 
-  .play-icon {
-    border-radius: var(--elem-radius);
+  .play-button {
     cursor: pointer;
-    height: 1.25rem;
+    font-size: smaller;
     margin: 0;
-    mask-image: url("../assets/icons/play.svg");
-    mask-size: cover;
+    margin-left: auto;
     opacity: 0.4;
-    padding: 0.25rem;
-    width: 1.25rem;
 
     &:hover,
     &:focus {
       opacity: 1;
+    }
+
+    &::after {
+      background-color: var(--icon-primary);
+      content: "";
+      display: inline-flex;
+      height: 10px;
+      margin-left: 4px;
+      mask-image: url("../assets/icons/external.svg");
+      mask-size: cover;
+      width: 10px;
     }
   }
 

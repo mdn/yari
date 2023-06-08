@@ -17,10 +17,11 @@ import { PLAYGROUND_BASE_URL } from "../env";
 import { useUserData } from "../user-context";
 import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
+import { useGleanClick } from "../telemetry/glean-context";
 
-const HTML_DEFAULT = "<!-- HTML goes here -->";
-const CSS_DEFAULT = "/* CSS goes here */";
-const JS_DEFAULT = "/* JavaScript goes here */";
+const HTML_DEFAULT = "";
+const CSS_DEFAULT = "";
+const JS_DEFAULT = "";
 
 enum State {
   initial,
@@ -49,10 +50,11 @@ async function save(editorContent: EditorContent) {
 }
 
 export default function Playground() {
+  const gleanClick = useGleanClick();
   const userData = useUserData();
   let [searchParams] = useSearchParams();
   let gistId = searchParams.get("id");
-  let localKey = searchParams.get("local");
+  let sampleKey = searchParams.get("sample");
   let [diaSate, setDiaState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
@@ -75,12 +77,12 @@ export default function Playground() {
       revalidateOnReconnect: false,
       fallbackData:
         (!gistId &&
-          localKey &&
-          JSON.parse(sessionStorage.getItem(localKey) || "null")) ||
+          sampleKey &&
+          JSON.parse(sessionStorage.getItem(sampleKey) || "null")) ||
         undefined,
     }
   );
-  let [unsafe, setUnsafe] = useState(Boolean(localKey && code && !gistId));
+  let [unsafe, setUnsafe] = useState(Boolean(sampleKey && code && !gistId));
   const subdomain = useRef<string>(crypto.randomUUID());
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
@@ -110,7 +112,7 @@ export default function Playground() {
             code?.src && `${code.src.split("/").slice(0, -1).join("/")}`
           );
         }
-        if (localKey) {
+        if (sampleKey) {
           window.history.replaceState({}, "", "/en-US/play");
         }
       } else {
@@ -119,7 +121,7 @@ export default function Playground() {
         jsRef.current?.setContent(JS_DEFAULT);
       }
     }
-  }, [code, state, localKey]);
+  }, [code, state, sampleKey]);
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
@@ -137,6 +139,7 @@ export default function Playground() {
   };
   const resetConfirm = async () => {
     if (window.confirm("Do you really want to reset everything?")) {
+      gleanClick("play->action: reset");
       await reset();
     }
   };

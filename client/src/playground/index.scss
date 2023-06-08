@@ -20,7 +20,9 @@ main.play {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
-  min-height: calc(100vh - var(--sticky-header-height));
+  min-height: calc(
+    100vh - var(--top-nav-height) - var(--top-banner-outer-height)
+  );
   padding: 1rem;
   @media screen and (min-width: $screen-md) {
     grid-template-columns: 1fr 1fr;
@@ -49,13 +51,20 @@ main.play {
 
         > span {
           font-size: var(--type-base-font-size-rem);
-          font-weight: 600;
         }
 
         .button {
           margin: 0.5rem auto;
           width: 15rem;
         }
+      }
+
+      #share-cancel {
+        float: right;
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+        width: fit-content;
       }
 
       .buttons {
@@ -83,13 +92,15 @@ main.play {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      max-height: max(80vh, 30rem);
+      max-height: max(100%, 30rem);
 
       aside {
+        border: 1px solid var(--border-primary);
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
         justify-content: flex-end;
+        padding: 0.5rem;
 
         .switch {
           margin-right: auto;
@@ -154,6 +165,7 @@ main.play {
       flex-direction: column;
       @media screen and (min-width: 25rem) {
         .place {
+          align-self: flex-end;
           max-width: 20rem;
           min-height: 10rem;
 
@@ -172,12 +184,11 @@ main.play {
       }
 
       button.flag-example {
+        align-self: flex-end;
         color: var(--text-link);
         cursor: pointer;
         font-size: smaller;
-        margin: 0 auto;
-        margin-top: 1rem;
-        min-height: 2rem;
+        margin: 0;
         text-decoration: underline;
 
         &:hover {
@@ -194,12 +205,11 @@ main.play {
         display: flex;
         flex-direction: column;
         font-size: smaller;
-        margin: 0.25rem;
+        margin: 0;
         width: 100%;
 
         > span {
           background-color: var(--code-background-inline);
-          border: 1px solid var(--border-primary);
           font-weight: 600;
           text-align: center;
           width: 100%;
