@@ -102,17 +102,34 @@ export default function Playground() {
   const jsRef = useRef<EditorHandle | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const shareDiaRef = useRef<HTMLDialogElement | null>(null);
-  let messageListener = useCallback(({ data: { typ, prop, message } }) => {
-    if (typ === "console") {
-      if (prop === "clear") {
-        setVConsole([]);
-      } else {
-        setVConsole((vConsole) => [...vConsole, { prop, message }]);
-      }
-    } else if (typ === "ready") {
-      updatePlayIframe(iframe.current, getEditorContent());
+  const getEditorContent = () => {
+    const code = {
+      html: htmlRef.current?.getContent() || HTML_DEFAULT,
+      css: cssRef.current?.getContent() || CSS_DEFAULT,
+      js: jsRef.current?.getContent() || JS_DEFAULT,
+    };
+    const session = sessionKey || crypto.randomUUID();
+    if (!sessionKey && (code.html || code.css || code.js)) {
+      window.history.replaceState({}, "", `/en-US/play?session=${session}`);
     }
-  }, []);
+    store(session, code);
+    return code;
+  };
+
+  let messageListener = useCallback(
+    ({ data: { typ, prop, message } }) => {
+      if (typ === "console") {
+        if (prop === "clear") {
+          setVConsole([]);
+        } else {
+          setVConsole((vConsole) => [...vConsole, { prop, message }]);
+        }
+      } else if (typ === "ready") {
+        updatePlayIframe(iframe.current, getEditorContent());
+      }
+    },
+    [getEditorContent]
+  );
   useEffect(() => {
     if (state === State.initial) {
       if (code && Object.values(code).some(Boolean)) {
@@ -155,20 +172,6 @@ export default function Playground() {
       gleanClick(`${PLAYGROUND}: reset-click`);
       await reset();
     }
-  };
-
-  const getEditorContent = () => {
-    const code = {
-      html: htmlRef.current?.getContent() || HTML_DEFAULT,
-      css: cssRef.current?.getContent() || CSS_DEFAULT,
-      js: jsRef.current?.getContent() || JS_DEFAULT,
-    };
-    const session = sessionKey || crypto.randomUUID();
-    if (!sessionKey && (code.html || code.css || code.js)) {
-      window.history.replaceState({}, "", `/en-US/play?session=${session}`);
-    }
-    store(session, code);
-    return code;
   };
 
   const updateWithEditorContent = () => {
