@@ -695,8 +695,7 @@ kbd {
     .sidebar {
       mask-image: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgb(0, 0, 0) 3rem calc(100% - 3rem),
+        rgb(0, 0, 0) 0% calc(100% - 3rem),
         rgba(0, 0, 0, 0) 100%
       );
     }
