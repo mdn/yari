@@ -70,7 +70,7 @@ section.place {
 
     grid-template-areas: "pong cta" "no note";
     height: var(--top-banner-height);
-    margin: 0 auto;
+    margin: -1px auto;
     width: 100%;
 
     @media screen and (min-width: $screen-md) {
