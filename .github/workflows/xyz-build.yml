@@ -11,6 +11,12 @@ on:
         required: false
         default: ${DEFAULT_NOTES}
 
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
   workflow_call:
     secrets:
       GCP_PROJECT_NAME:
@@ -255,5 +261,5 @@ jobs:
           done
 
       - name: Invalidate CDN
-        if: ${{ ! vars.SKIP_INVALIDATE }}
+        if: ${{ github.event.inputs.invalidate }}
         run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async
