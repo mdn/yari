@@ -43,7 +43,6 @@
     "order/properties-alphabetical-order": true,
     "property-no-vendor-prefix": null,
     "selector-class-pattern": null,
-    "selector-disallowed-list": ["/^&[^,.:[#]/"],
     "selector-max-compound-selectors": null,
     "selector-max-id": null,
     "selector-no-qualifying-type": null,
