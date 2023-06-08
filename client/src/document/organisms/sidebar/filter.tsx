@@ -103,16 +103,18 @@ function useSidebarFilter() {
       filtererRef.current = filterer;
     }
 
+    const trimmedQuery = query.trim();
+
     // Save scroll position.
-    if (query) {
+    if (trimmedQuery) {
       saveScrollPosition();
     }
 
-    const items = filterer.applyFilter(query);
+    const items = filterer.applyFilter(trimmedQuery);
     setMatchCount(items);
 
     // Restore scroll position.
-    if (!query) {
+    if (!trimmedQuery) {
       restoreScrollPosition();
     }
   }, [query, saveScrollPosition, restoreScrollPosition]);
