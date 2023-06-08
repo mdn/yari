@@ -190,19 +190,34 @@ main.play {
         width: 100%;
       }
 
-      ul {
-        background-color: var(--code-background-inline);
-        height: 6rem;
+      #play-console {
+        display: flex;
+        flex-direction: column;
+        font-size: smaller;
         margin: 0.25rem;
-        max-height: 6rem;
-        overflow: auto;
         width: 100%;
 
-        li {
-          padding: 0 1rem;
+        > span {
+          background-color: var(--code-background-inline);
+          border: 1px solid var(--border-primary);
+          font-weight: 600;
+          text-align: center;
+          width: 100%;
+        }
 
-          &::before {
-            content: ">";
+        ul {
+          background-color: var(--code-background-inline);
+          height: 6rem;
+          max-height: 6rem;
+          overflow: auto;
+          width: 100%;
+
+          li {
+            padding: 0 1rem;
+
+            &::before {
+              content: ">";
+            }
           }
         }
       }

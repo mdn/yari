@@ -16,6 +16,7 @@ import { Switch } from "../ui/atoms/switch";
 import { PLAYGROUND_BASE_URL } from "../env";
 import { useUserData } from "../user-context";
 import { FlagForm, ShareForm } from "./forms";
+import { Console, VConsole } from "./console";
 
 const HTML_DEFAULT = "<!-- HTML goes here -->";
 const CSS_DEFAULT = "/* CSS goes here */";
@@ -54,9 +55,7 @@ export default function Playground() {
   let localKey = searchParams.get("local");
   let [diaSate, setDiaState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
-  let [vConsole, setVConsole] = useState<{ prop: string; message: string }[]>(
-    []
-  );
+  let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   let { data: code } = useSWR<EditorContent>(
@@ -285,15 +284,7 @@ export default function Playground() {
             src={src}
             sandbox="allow-scripts"
           ></iframe>
-          <ul>
-            {vConsole.map(({ prop, message }, i) => {
-              return (
-                <li key="i">
-                  <code>{message}</code>
-                </li>
-              );
-            })}
-          </ul>
+          <Console vConsole={vConsole} />
           <SidePlacement></SidePlacement>
         </section>
       </main>
