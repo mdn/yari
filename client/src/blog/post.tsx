@@ -10,6 +10,7 @@ import {
   BlogImage,
   BlogPostData,
   BlogPostFrontmatter,
+  BlogPostFrontmatterLinks,
   BlogPostLimitedFrontmatter,
 } from "../../../libs/types/blog";
 import { useCopyExamplesToClipboard } from "../document/hooks";
@@ -109,9 +110,9 @@ function BlogImageFigure({
 }
 
 function PreviousNext({
-  metadata: { previous, next },
+  links: { previous, next },
 }: {
-  metadata: BlogPostFrontmatter;
+  links: BlogPostFrontmatterLinks;
 }) {
   return (
     <section className="previous-next">
@@ -183,7 +184,7 @@ export function BlogPost(props: HydrationData) {
           <h1>{doc?.title}</h1>
           <AuthorDateReadTime metadata={blogMeta} />
           <RenderDocumentBody doc={doc} />
-          <PreviousNext metadata={blogMeta} />
+          {blogMeta.links && <PreviousNext links={blogMeta.links} />}
         </article>
       )}
     </>

@@ -12,6 +12,7 @@ import { BLOG_ROOT, BUILD_OUT_ROOT, BASE_URL } from "../libs/env/index.js";
 import {
   BlogPostData,
   BlogPostFrontmatter,
+  BlogPostFrontmatterLinks,
   BlogPostLimitedFrontmatter,
 } from "../libs/types/blog.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -46,32 +47,40 @@ function calculateReadTime(copy: string): number {
   );
 }
 
+async function getLinks(slug: string): Promise<BlogPostFrontmatterLinks> {
+  const posts = await allPostFrontmatter();
+  const index = posts.findIndex((post) => post.slug === slug);
+  const filterFrontmatter = (
+    f?: BlogPostFrontmatter
+  ): BlogPostLimitedFrontmatter => f && { title: f.title, slug: f.slug };
+  return {
+    previous: filterFrontmatter(posts[index + 1]),
+    next: filterFrontmatter(posts[index - 1]),
+  };
+}
+
 async function readPost(
   file: string,
-  options = {
-    readTime: true,
-    previousNext: true,
+  options?: {
+    readTime?: boolean;
+    previousNext?: boolean;
   }
 ): Promise<{ blogMeta: BlogPostFrontmatter; body: string }> {
   const raw = await fs.readFile(file, "utf-8");
 
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
 
-  if (options.readTime) {
+  const { readTime = true, previousNext = true } = options || {};
+
+  if (readTime) {
     attributes.readTime = calculateReadTime(body);
   }
 
-  if (options.previousNext) {
-    const posts = await allPostFrontmatter();
-    const index = posts.findIndex((post) => post.slug === attributes.slug);
-    const filterFrontmatter = (
-      f?: BlogPostFrontmatter
-    ): BlogPostLimitedFrontmatter => f && { title: f.title, slug: f.slug };
-    attributes.previous = filterFrontmatter(posts[index + 1]);
-    attributes.next = filterFrontmatter(posts[index - 1]);
+  if (previousNext) {
+    attributes.links = await getLinks(attributes.slug);
   }
 
-  return { blogMeta: { ...attributes }, body };
+  return { blogMeta: attributes, body };
 }
 
 export function findPostPathBySlug(slug: string): string | null {
@@ -144,10 +153,12 @@ export const allPostFrontmatter = memoize(
       await Promise.all(
         (
           await allPostFiles()
-        ).map(async (file) => {
-          return (await readPost(file, { readTime: true, previousNext: false }))
-            .blogMeta;
-        })
+        ).map(
+          async (file) =>
+            (
+              await readPost(file, { previousNext: false })
+            ).blogMeta
+        )
       )
     )
       .filter(

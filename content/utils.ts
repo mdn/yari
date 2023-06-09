@@ -63,13 +63,12 @@ export function memoize<Args>(
     }
 
     const value = fn(...(args as Args[]));
+    cache.set(key, value);
     if (value instanceof Promise) {
-      return value.then((actualValue) => {
-        cache.set(key, new Promise((resolve) => resolve(actualValue)));
-        return actualValue;
+      value.catch(() => {
+        cache.delete(key);
       });
     }
-    cache.set(key, value);
     return value;
   };
 }

@@ -17,6 +17,11 @@ export interface BlogPostLimitedFrontmatter {
   title: string;
 }
 
+export interface BlogPostFrontmatterLinks {
+  previous?: BlogPostLimitedFrontmatter;
+  next?: BlogPostLimitedFrontmatter;
+}
+
 export interface BlogPostFrontmatter extends BlogPostLimitedFrontmatter {
   description: string;
   image: BlogImage;
@@ -26,8 +31,7 @@ export interface BlogPostFrontmatter extends BlogPostLimitedFrontmatter {
   date: string;
   author?: Author;
   readTime?: number;
-  previous?: BlogPostLimitedFrontmatter;
-  next?: BlogPostLimitedFrontmatter;
+  links?: BlogPostFrontmatterLinks;
 }
 
 export interface BlogPostData {
