@@ -8,20 +8,41 @@ export const DISABLE_AUTH = Boolean(
   JSON.parse(process.env.REACT_APP_DISABLE_AUTH || "false")
 );
 
-export const CRUD_MODE = Boolean(
-  JSON.parse(
-    process.env.REACT_APP_CRUD_MODE ||
-      JSON.stringify(process.env.NODE_ENV === "development")
-  )
-);
+/** Deprecated, don't export, use WRITER_MODE and/or DEV_MODE instead. */
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
 
-export const CRUD_MODE_HOSTNAMES = (
-  process.env.REACT_APP_CRUD_MODE_HOSTNAMES ||
+if (process.env.REACT_APP_CRUD_MODE) {
+  console.warn(
+    "Warning: REACT_APP_CRUD_MODE is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
+  );
+} else if (process.env.NODE_ENV === "development" && CRUD_MODE) {
+  console.warn(
+    "Warning: setting REACT_APP_CRUD_MODE with NODE_ENV=development is deprecated, set REACT_APP_WRITER_MODE and/or REACT_APP_DEV_MODE instead."
+  );
+}
+
+export const WRITER_MODE =
+  CRUD_MODE ||
+  Boolean(JSON.parse(process.env.REACT_APP_WRITER_MODE || "false"));
+
+export const WRITER_MODE_HOSTNAMES = (
+  process.env.REACT_APP_WRITER_MODE_HOSTNAMES ||
   "localhost,localhost.org,127.0.0.1"
 )
   .split(",")
   .map((x) => x.trim())
   .filter(Boolean);
+
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));
 
 export const KUMA_HOST =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";

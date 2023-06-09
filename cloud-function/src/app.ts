@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { Router } from "express";
 
+import { ANY_ATTACHMENT_EXT } from "./internal/constants/index.js";
+
 import { Origin } from "./env.js";
 import { proxyContent } from "./handlers/proxy-content.js";
 import { proxyKevel } from "./handlers/proxy-kevel.js";
@@ -48,7 +50,7 @@ router.get(
   proxyContent
 );
 router.get(
-  "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
+  `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
   requireOrigin(Origin.main, Origin.liveSamples),
   resolveIndexHTML,
   proxyContent
