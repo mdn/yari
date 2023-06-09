@@ -2,7 +2,7 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 import { HydrationData } from "../../../libs/types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
@@ -43,7 +43,7 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
     }
   );

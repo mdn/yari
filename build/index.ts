@@ -1,7 +1,9 @@
 import path from "node:path";
 
 import chalk from "chalk";
+import * as cheerio from "cheerio";
 import webFeatures from "web-features/index.json" assert { type: "json" };
+import * as Sentry from "@sentry/node";
 
 import {
   MacroInvocationError,
@@ -33,7 +35,7 @@ import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
 import {
-  getAdjacentImages,
+  getAdjacentFileAttachments,
   injectLoadingLazyAttributes,
   injectNoTranslate,
   makeTOC,
@@ -44,7 +46,6 @@ import {
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
-import * as cheerio from "cheerio";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -175,6 +176,15 @@ export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
+  Sentry.setContext("doc", {
+    path: document?.fileInfo?.path,
+    title: document?.metadata?.title,
+    url: document?.url,
+  });
+  Sentry.setTags({
+    doc_slug: document?.metadata?.slug,
+    doc_locale: document?.metadata?.locale,
+  });
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -382,8 +392,8 @@ export async function buildDocument(
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
-  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+  getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
+    (fp) => fileAttachments.add(fp)
   );
 
   // Check the img tags for possible flaws and possible build-time rewrites

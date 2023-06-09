@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 import { HydrationData } from "../../../libs/types/hydration";
 import { HTTPError, RenderDocumentBody } from "../document";
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 
 import "./index.scss";
 import "./post.scss";
@@ -166,7 +166,7 @@ export function BlogPost(props: HydrationData) {
     },
     {
       fallbackData: props as BlogPostData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !props.blogMeta,
     }
   );

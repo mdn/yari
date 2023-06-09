@@ -4,7 +4,7 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import { DEV_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
@@ -61,12 +61,12 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
-    serverEndpoint: CRUD_MODE
+    serverEndpoint: DEV_MODE
       ? "https://developer.allizom.org"
       : document.location.origin,
   });
 
-  if (CRUD_MODE) {
+  if (DEV_MODE) {
     Glean.setDebugViewTag("mdn-dev");
   }
   Glean.setLogPings(GLEAN_DEBUG);
