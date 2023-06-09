@@ -36,7 +36,7 @@
     display: flex;
     gap: 1rem;
 
-    @media screen and (max-width: $screen-sm) {
+    @media screen and (max-width: $screen-md) {
       flex-direction: column-reverse;
     }
 
@@ -55,7 +55,7 @@
         background: none;
       }
 
-      @media screen and (min-width: $screen-sm) {
+      @media screen and (min-width: $screen-md) {
         &.previous,
         &.next {
           &::before,
