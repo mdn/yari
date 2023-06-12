@@ -107,6 +107,76 @@
           margin-bottom: 0;
         }
       }
+
+      ul,
+      ol {
+        margin: 1rem 0 2rem;
+        padding-left: 2rem;
+
+        li {
+          margin: 0.5rem 0;
+        }
+      }
+
+      ul {
+        list-style: disc;
+
+        ul {
+          list-style-type: circle;
+          margin: 0;
+          padding-left: 1rem;
+        }
+      }
+
+      ol {
+        list-style: decimal;
+
+        ol {
+          list-style: lower-roman;
+          margin: 0;
+        }
+      }
+
+      dd ol,
+      dd ul {
+        margin-bottom: 1rem;
+        padding-left: 3rem;
+      }
+
+      td ul,
+      td ol {
+        padding-left: 1rem;
+      }
+
+      dd li {
+        margin-bottom: 1rem;
+      }
+
+      td li {
+        margin-bottom: 0.5rem;
+      }
+
+      dl {
+        dt {
+          margin-bottom: 0.5rem;
+          margin-top: 2rem;
+        }
+
+        dd {
+          margin-bottom: 1rem;
+          margin-left: 1rem;
+
+          .notecard {
+            p {
+              padding-left: 0;
+            }
+          }
+        }
+
+        p {
+          margin: 0 0 1rem;
+        }
+      }
     }
 
     input {
