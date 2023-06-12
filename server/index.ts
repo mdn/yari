@@ -41,7 +41,7 @@ import { searchIndexRoute } from "./search-index.js";
 import flawsRoute from "./flaws.js";
 import { router as translationsRouter } from "./translations.js";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
-import { getRoot } from "../content/utils.js";
+import { MEMOIZE_INVALIDATE, getRoot } from "../content/utils.js";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -235,7 +235,10 @@ app.get("/*/contributors.txt", async (req, res) => {
 });
 
 app.get("/:locale/blog/index.json", async (_, res) => {
-  const posts = await allPostFrontmatter({ includeUnpublished: true });
+  const posts = await allPostFrontmatter(
+    { includeUnpublished: true },
+    MEMOIZE_INVALIDATE
+  );
   return res.json({ hyData: { posts } });
 });
 app.get("/:locale/blog/:slug/index.json", async (req, res) => {

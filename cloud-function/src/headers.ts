@@ -14,7 +14,7 @@ declare module "http" {
 }
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
-const DEFAULT_MAX_AGE = 60 * 60 * 24;
+const DEFAULT_MAX_AGE = 60 * 60;
 
 const NO_CACHE_VALUE = "no-store, must-revalidate";
 
