@@ -1,6 +1,7 @@
 @use "../../../ui/vars" as *;
 
 .tooltip-popup {
+  --tooltip-offset: 0;
   background-color: var(--background-secondary);
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
@@ -8,12 +9,12 @@
   color: var(--text-primary);
   font-size: smaller;
   left: 50%;
-  max-width: min(90vw, 20rem);
+  max-width: min(100vw, 20rem);
   padding: 0.5rem;
   position: absolute;
   text-align: center;
   top: 100%;
-  transform: translateX(-50%);
+  transform: translateX(var(--tooltip-offset));
   visibility: hidden;
   width: max-content;
   z-index: 1;

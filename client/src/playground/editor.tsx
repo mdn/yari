@@ -1,6 +1,16 @@
 import { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
-import { EditorView, basicSetup } from "codemirror";
+import { keymap, highlightActiveLine, lineNumbers } from "@codemirror/view";
 import { EditorState, StateEffect } from "@codemirror/state";
+import { indentOnInput, bracketMatching } from "@codemirror/language";
+import { defaultKeymap, indentWithTab } from "@codemirror/commands";
+import {
+  autocompletion,
+  completionKeymap,
+  closeBrackets,
+  closeBracketsKeymap,
+} from "@codemirror/autocomplete";
+import { lintKeymap } from "@codemirror/lint";
+import { EditorView, minimalSetup } from "codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { css } from "@codemirror/lang-css";
 import { html } from "@codemirror/lang-html";
@@ -45,6 +55,25 @@ export interface EditorHandle {
   setContent(content: string): void;
 }
 
+function cmExtensions() {
+  return [
+    minimalSetup,
+    lineNumbers(),
+    indentOnInput(),
+    bracketMatching(),
+    closeBrackets(),
+    autocompletion(),
+    highlightActiveLine(),
+    keymap.of([
+      ...closeBracketsKeymap,
+      ...defaultKeymap,
+      ...completionKeymap,
+      ...lintKeymap,
+      indentWithTab,
+    ]),
+  ];
+}
+
 const Editor = forwardRef<EditorHandle, any>(function EditorInner(
   {
     language,
@@ -74,7 +103,7 @@ const Editor = forwardRef<EditorHandle, any>(function EditorInner(
   );
   useEffect(() => {
     const extensions = [
-      basicSetup,
+      ...cmExtensions(),
       updateListenerExtension.current,
       EditorView.lineWrapping,
       ...(colorScheme === "dark" ? [oneDark] : []),
@@ -107,7 +136,7 @@ const Editor = forwardRef<EditorHandle, any>(function EditorInner(
           let state = EditorState.create({
             doc: content,
             extensions: [
-              basicSetup,
+              ...cmExtensions(),
               updateListenerExtension.current,
               EditorView.lineWrapping,
               ...(colorScheme === "dark" ? [oneDark] : []),
