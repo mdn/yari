@@ -21,10 +21,6 @@
       $mdn-color-light-theme-green-30,
       $alpha: -0.6
     )};
-  --background-mark-red: #{color.adjust(
-      $mdn-color-light-theme-red-30,
-      $alpha: -0.6
-    )};
   --background-information: #{color.adjust(
       $mdn-theme-light-icon-information,
       $alpha: -0.9
@@ -216,10 +212,6 @@
     )};
   --background-mark-green: #{color.adjust(
       $mdn-color-light-theme-green-30,
-      $alpha: -0.6
-    )};
-  --background-mark-red: #{color.adjust(
-      $mdn-color-light-theme-red-30,
       $alpha: -0.6
     )};
   --background-information: #{color.adjust(

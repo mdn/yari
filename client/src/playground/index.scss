@@ -16,13 +16,14 @@
 }
 
 main.play {
+  --play-height: calc(
+    100vh - var(--top-nav-height) - var(--top-banner-outer-height)
+  );
   background-color: var(--background-primary);
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
-  min-height: calc(
-    100vh - var(--top-nav-height) - var(--top-banner-outer-height)
-  );
+  min-height: var(--play-height);
   padding: 1rem;
   @media screen and (min-width: $screen-md) {
     grid-template-columns: 1fr 1fr;
@@ -32,6 +33,8 @@ main.play {
     border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
     box-shadow: 1px 1px 2px var(--border-primary);
+    margin: auto;
+    width: fit-content;
     z-index: 1;
 
     > form {
@@ -43,7 +46,7 @@ main.play {
       max-width: 30rem;
       overflow-wrap: anywhere;
       padding: 0.5rem;
-      width: 25rem;
+      width: min(calc(100vw - 5rem), 25rem);
 
       > section {
         display: flex;
@@ -55,7 +58,12 @@ main.play {
 
         .button {
           margin: 0.5rem auto;
-          width: 15rem;
+          width: min(100%, 15rem);
+
+          .button-wrap {
+            height: initial;
+            padding: var(--button-padding);
+          }
         }
 
         .share-get-plus {
@@ -104,19 +112,27 @@ main.play {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      max-height: max(100%, 30rem);
+      max-height: max(calc(var(--play-height) - 2rem), 30rem);
 
       aside {
         border: 1px solid var(--border-primary);
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
-        justify-content: flex-end;
         padding: 0.5rem;
 
         .switch {
           font-size: smaller;
-          margin-right: auto;
+        }
+
+        .remote-info {
+          align-items: center;
+          display: inline-flex;
+          position: relative;
+
+          > svg {
+            color: var(--text-secondary);
+          }
         }
 
         menu {
@@ -125,6 +141,7 @@ main.play {
           gap: 0.5rem;
           justify-content: flex-end;
           margin: 0;
+          margin-left: auto;
 
           button {
             text-transform: uppercase;

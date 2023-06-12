@@ -1,0 +1,24 @@
+@use "../../../ui/vars" as *;
+
+.tooltip-popup {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  box-shadow: 1px 1px 2px var(--border-primary);
+  color: var(--text-primary);
+  font-size: smaller;
+  left: 50%;
+  max-width: min(90vw, 20rem);
+  padding: 0.5rem;
+  position: absolute;
+  text-align: center;
+  top: 100%;
+  transform: translateX(-50%);
+  visibility: hidden;
+  width: max-content;
+  z-index: 1;
+}
+
+*:focus > .tooltip-popup {
+  visibility: visible;
+}

@@ -93,5 +93,6 @@ if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
+sandbox="allow-scripts allow-same-origin"
 %>></iframe></div><%
 if (hasScreenshot) { %></td></tr></tbody></table><% } %>

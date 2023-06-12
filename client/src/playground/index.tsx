@@ -18,6 +18,8 @@ import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
+import { Tooltip } from "../document/molecules/tooltip";
+import { ReactComponent as Info } from "../assets/icons/note-info.svg";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -90,10 +92,11 @@ export default function Playground() {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       fallbackData:
-        !gistId &&
-        (sampleKey
-          ? JSON.parse(sessionStorage.getItem(sampleKey) || "null")
-          : (sessionKey && load(sessionKey)) || undefined),
+        (!gistId &&
+          (sampleKey
+            ? JSON.parse(sessionStorage.getItem(sampleKey) || "null")
+            : sessionKey && load(sessionKey))) ||
+        undefined,
     }
   );
   let [unsafe, setUnsafe] = useState(Boolean(sampleKey && code && !gistId));
@@ -178,7 +181,7 @@ export default function Playground() {
     const loading = [
       {},
       {
-        backgroundColor: "var(--background-mark-red)",
+        backgroundColor: "var(--background-mark-green)",
       },
       {},
     ];
@@ -249,6 +252,13 @@ export default function Playground() {
             >
               Load remote content
             </Switch>
+            <span className="remote-info" tabIndex={0}>
+              <Info />
+              <Tooltip>
+                Allow the Playground to load media and scripts from 3rd parties.
+                This loosens the CSP restrictions for the Playground.
+              </Tooltip>
+            </span>
             <menu>
               <Button type="secondary" id="format" onClickHandler={format}>
                 format
@@ -315,7 +325,7 @@ export default function Playground() {
             title="runner"
             ref={iframe}
             src={src}
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-same-origin"
           ></iframe>
           <Console vConsole={vConsole} />
           <SidePlacement></SidePlacement>

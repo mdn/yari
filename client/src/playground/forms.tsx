@@ -13,7 +13,7 @@ export function FlagForm({ gistId }: { gistId: string | null }) {
     <form className="flag">
       <span>
         Report this malicious or inappropriate shared playground. Can you please
-        share some details what wrong with this content:
+        share some details on what's wrong with this content:
       </span>
       <textarea id="flagReason"></textarea>
       <div className="buttons">
