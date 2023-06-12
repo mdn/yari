@@ -142,7 +142,7 @@ export function useAiChat({
       setHasError(false);
       setIsLoading?.(true);
 
-      const eventSource = new SSE(`http://localhost:8000/api/v1/ai/ask`, {
+      const eventSource = new SSE(`/api/v1/ai/ask`, {
         headers: {
           "Content-Type": "application/json",
         },
