@@ -172,6 +172,7 @@ export function AIHelpInner() {
             type="action"
             icon="send"
             buttonType="submit"
+            title="Submit question"
             isDisabled={!query}
             extraClasses="send-ai-message-button"
           >
