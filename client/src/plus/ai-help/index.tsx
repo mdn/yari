@@ -16,15 +16,10 @@ import { Avatar } from "../../ui/atoms/avatar";
 import { isPlusSubscriber } from "../../utils";
 import { Button } from "../../ui/atoms/button";
 
-const questions: string[] = [
-  "What pages can you recommend to learn web development?",
-  "How to migrate a table layout to grid?",
-  "What are some tips to make my site accessible?",
-  "How can I apply functional programming with JavaScript?",
-  "What are some techniques to improve web performance?",
-  "How can I read and write to the clipboard?",
-  "What does it mean if a web feature is baseline?",
-  "How can I contribute to MDN?",
+const QUESTIONS: string[] = [
+  "How to center a div with CSS?",
+  "How do I create a form in HTML?",
+  "How can I access the clipboard in JavaScript?",
 ];
 
 export function AiHelp() {
@@ -122,7 +117,7 @@ export function AIHelpInner() {
             </ul>
           ) : (
             <section className="ai-help-examples">
-              {questions.map((question) => (
+              {QUESTIONS.map((question) => (
                 <button
                   type="button"
                   className="ai-help-example"
