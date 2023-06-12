@@ -103,6 +103,11 @@
       border: 1px solid transparent;
       display: flex;
       padding: 1rem;
+
+      .glean-thumbs {
+        font-size: var(--type-tiny-font-size);
+        justify-content: flex-end;
+      }
     }
 
     .ai-help-message-user {

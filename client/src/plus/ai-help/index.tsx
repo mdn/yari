@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { useAiChat } from "./use-ai";
+import { MessageStatus, useAiChat } from "./use-ai";
 import { AiLoginBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
@@ -15,6 +15,7 @@ import "./index.scss";
 import { Avatar } from "../../ui/atoms/avatar";
 import { isPlusSubscriber } from "../../utils";
 import { Button } from "../../ui/atoms/button";
+import { GleanThumbs } from "../../ui/atoms/thumbs";
 
 const QUESTIONS: string[] = [
   "How to center a div with CSS?",
@@ -104,12 +105,22 @@ export function AIHelpInner() {
                     {message.role === "user" ? (
                       message.content
                     ) : (
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        linkTarget="_blank"
-                      >
-                        {message.content}
-                      </ReactMarkdown>
+                      <>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          linkTarget="_blank"
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                        {message.status === MessageStatus.Complete && (
+                          <GleanThumbs
+                            feature="ai-help-answer"
+                            question={"Is this answer useful?"}
+                            upLabel={"Yes, this answer is useful."}
+                            downLabel={"No, this answer is not useful."}
+                          />
+                        )}
+                      </>
                     )}
                   </div>
                 </li>
