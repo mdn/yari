@@ -10,6 +10,10 @@
     --plus-link: var(--ai-help-link);
   }
 
+  > .container {
+    padding: var(--gutter);
+  }
+
   button.button[disabled],
   input[disabled] {
     cursor: not-allowed;
