@@ -98,7 +98,11 @@ export function AIHelpInner() {
                     <RoleIcon role={message.role} />
                   </div>
                   <div
-                    className={["ai-help-message-content", message.status]
+                    className={[
+                      "ai-help-message-content",
+                      message.status,
+                      !message.content && "empty",
+                    ]
                       .filter(Boolean)
                       .join(" ")}
                   >
