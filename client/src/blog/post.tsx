@@ -10,8 +10,11 @@ import {
   BlogImage,
   BlogPostData,
   BlogPostFrontmatter,
+  BlogPostFrontmatterLinks,
+  BlogPostLimitedFrontmatter,
 } from "../../../libs/types/blog";
 import { useCopyExamplesToClipboard } from "../document/hooks";
+import { DEFAULT_LOCALE } from "../../../libs/constants";
 
 function MaybeLink({ link, children }) {
   return link ? (
@@ -106,6 +109,42 @@ function BlogImageFigure({
   );
 }
 
+function PreviousNext({
+  links: { previous, next },
+}: {
+  links: BlogPostFrontmatterLinks;
+}) {
+  return (
+    <section className="previous-next">
+      {previous && (
+        <PreviousNextLink direction="Previous" metadata={previous} />
+      )}
+      {next && <PreviousNextLink direction="Next" metadata={next} />}
+    </section>
+  );
+}
+
+function PreviousNextLink({
+  direction,
+  metadata: { slug, title },
+}: {
+  direction: "Previous" | "Next";
+  metadata: BlogPostLimitedFrontmatter;
+}) {
+  return (
+    <a
+      href={`/${DEFAULT_LOCALE}/blog/${slug}/`}
+      className={direction.toLowerCase()}
+    >
+      <article>
+        <h2>
+          <strong>{direction} Post</strong> {title}
+        </h2>
+      </article>
+    </a>
+  );
+}
+
 export function BlogPost(props: HydrationData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<BlogPostData>(
@@ -145,6 +184,7 @@ export function BlogPost(props: HydrationData) {
           <h1>{doc?.title}</h1>
           <AuthorDateReadTime metadata={blogMeta} />
           <RenderDocumentBody doc={doc} />
+          {blogMeta.links && <PreviousNext links={blogMeta.links} />}
         </article>
       )}
     </>
