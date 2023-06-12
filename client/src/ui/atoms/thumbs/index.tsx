@@ -74,7 +74,7 @@ export function GleanThumbs({
         <section className="glean-thumbs">
           {!submitted ? (
             <>
-              <span className="question">{question}</span>
+              {question && <span className="question">{question}</span>}
               <Thumbs
                 upLabel={upLabel}
                 downLabel={downLabel}
@@ -83,7 +83,7 @@ export function GleanThumbs({
               />
             </>
           ) : (
-            <span className="confirmation">{confirmation}</span>
+            confirmation && <span className="confirmation">{confirmation}</span>
           )}
         </section>
       )}
