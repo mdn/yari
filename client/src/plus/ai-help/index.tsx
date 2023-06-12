@@ -13,6 +13,7 @@ import Mandala from "../../ui/molecules/mandala";
 
 import "./index.scss";
 import { Avatar } from "../../ui/atoms/avatar";
+import { isPlusSubscriber } from "../../utils";
 
 const questions: string[] = [
   "What pages can you recommend to learn web development?",
@@ -67,6 +68,7 @@ export function AiHelp() {
 export function AIHelpInner() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const user = useUserData();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isResponding, hasError, messages, submit } = useAiChat({
@@ -145,7 +147,9 @@ export function AIHelpInner() {
                 ? "Waiting for an answer..."
                 : isResponding
                 ? "Receiving answer..."
-                : "Ask your question."
+                : isPlusSubscriber(user)
+                ? "Ask your question (unlimited questions per day)."
+                : "Ask your question (up to 5 questions per day)."
             }
           />
         </form>
