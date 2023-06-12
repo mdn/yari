@@ -177,6 +177,25 @@
           margin: 0 0 1rem;
         }
       }
+
+      &.pending,
+      &.in-progress {
+        > :not(ol):not(ul):not(pre):last-child:after,
+        > ol:last-child li:last-child:after,
+        > pre:last-child code:after,
+        > ul:last-child li:last-child:after {
+          animation: blink 1s steps(5, start) infinite;
+          content: "▋";
+          margin-left: 0.25rem;
+          vertical-align: baseline;
+
+          @keyframes blink {
+            to {
+              visibility: hidden;
+            }
+          }
+        }
+      }
     }
 
     input {

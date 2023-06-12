@@ -89,7 +89,11 @@ export function AIHelpInner() {
                   <div className="ai-help-message-role">
                     <RoleIcon role={message.role} />
                   </div>
-                  <div className="ai-help-message-content">
+                  <div
+                    className={["ai-help-message-content", message.status]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
                     {message.role === "user" ? (
                       message.content
                     ) : (
