@@ -35,6 +35,13 @@
       overflow-y: scroll;
     }
 
+    .ai-help-footer {
+      .ai-help-footer-text {
+        font-size: var(--type-tiny-font-size);
+        text-align: center;
+      }
+    }
+
     .ai-help-examples {
       display: flex;
       flex-direction: column;
