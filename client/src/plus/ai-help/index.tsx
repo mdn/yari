@@ -14,6 +14,7 @@ import Mandala from "../../ui/molecules/mandala";
 import "./index.scss";
 import { Avatar } from "../../ui/atoms/avatar";
 import { isPlusSubscriber } from "../../utils";
+import { Button } from "../../ui/atoms/button";
 
 const questions: string[] = [
   "What pages can you recommend to learn web development?",
@@ -68,6 +69,7 @@ export function AiHelp() {
 export function AIHelpInner() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [query, setQuery] = useState("");
   const user = useUserData();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -76,7 +78,11 @@ export function AIHelpInner() {
   });
 
   return (
-    <section className="ai-help-inner">
+    <section
+      className={["ai-help-inner", query && "has-input"]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className="ai-help-body">
         <>
           {hasError && (
@@ -131,10 +137,8 @@ export function AIHelpInner() {
           ref={formRef}
           onSubmit={(event) => {
             event.preventDefault();
-            const query = inputRef.current?.value;
             if (query) {
               submit(query);
-              formRef.current?.reset();
             }
           }}
         >
@@ -142,6 +146,7 @@ export function AIHelpInner() {
             ref={inputRef}
             disabled={isLoading || isResponding}
             type="text"
+            onChange={(event) => setQuery(event.target.value.trim())}
             placeholder={
               isLoading
                 ? "Waiting for an answer..."
@@ -152,6 +157,15 @@ export function AIHelpInner() {
                 : "Ask your question (up to 5 questions per day)."
             }
           />
+          <Button
+            type="action"
+            icon="send"
+            buttonType="submit"
+            isDisabled={!query}
+            extraClasses="send-ai-message-button"
+          >
+            <span className="visually-hidden">Submit question</span>
+          </Button>
         </form>
         <div className="ai-help-footer-text">
           <span>
