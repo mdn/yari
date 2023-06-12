@@ -134,6 +134,7 @@ export function AIHelpInner() {
       <div className="ai-help-footer">
         <form
           ref={formRef}
+          className="ai-help-input"
           onSubmit={(event) => {
             event.preventDefault();
             if (query) {

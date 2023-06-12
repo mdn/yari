@@ -40,32 +40,32 @@
     }
 
     .ai-help-footer {
-      form {
-        align-items: center;
-        display: flex;
-        width: 100%;
-      }
-
-      .button {
-        --button-color: var(--icon-secondary);
-        --button-height: 1.5rem;
-        --button-padding: 0;
-        width: 1.5rem;
-
-        &.send-ai-message-button {
-          display: block;
-          position: relative;
-          right: 2.25rem;
-
-          &:hover {
-            background: transparent;
-          }
-        }
-      }
-
       .ai-help-footer-text {
         font-size: var(--type-tiny-font-size);
         text-align: center;
+      }
+    }
+
+    .ai-help-input {
+      --form-elem-height: 3rem;
+      align-items: center;
+      display: flex;
+      width: 100%;
+
+      .send-ai-message-button {
+        --button-color: var(--icon-secondary);
+        --button-height: 3rem;
+        --button-padding: 0;
+        --icon-size: 1.5rem;
+
+        display: block;
+        position: relative;
+        right: 2.25rem;
+        width: 0;
+
+        &:hover {
+          background: transparent;
+        }
       }
     }
 
