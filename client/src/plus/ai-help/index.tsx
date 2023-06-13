@@ -16,6 +16,7 @@ import { Avatar } from "../../ui/atoms/avatar";
 import { isPlusSubscriber } from "../../utils";
 import { Button } from "../../ui/atoms/button";
 import { GleanThumbs } from "../../ui/atoms/thumbs";
+import NoteCard from "../../ui/molecules/notecards";
 
 const QUESTIONS: string[] = [
   "How to center a div with CSS?",
@@ -81,9 +82,6 @@ export function AIHelpInner() {
     >
       <div className="ai-help-body">
         <>
-          {hasError && (
-            <section className="ai-help-error">An error occurred.</section>
-          )}
           {messages.length ? (
             <ul className="ai-help-messages">
               {messages.map((message, index) => (
@@ -143,6 +141,12 @@ export function AIHelpInner() {
           )}
         </>
       </div>
+      {hasError && (
+        <NoteCard extraClasses="ai-help-error" type="error">
+          <h4>Error</h4>
+          <p>An error occurred. Please try again.</p>
+        </NoteCard>
+      )}
       <div className="ai-help-footer">
         <form
           ref={formRef}

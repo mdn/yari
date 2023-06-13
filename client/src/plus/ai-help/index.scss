@@ -247,13 +247,17 @@
       }
     }
 
+    .ai-help-error {
+      margin: 0.5rem 0;
+    }
+
     input {
       background-color: var(--background-primary);
       border: 1px solid var(--border-primary);
       border-radius: 100px;
       color: var(--text-primary);
       height: var(--form-elem-height);
-      margin: 0.5rem;
+      margin: 0 0.5rem;
       padding-left: 1rem;
       padding-right: 3rem;
       width: calc(100% - 1rem);
