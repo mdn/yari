@@ -169,7 +169,7 @@ export function useAiChat({
       setHasError(false);
       setIsLoading?.(true);
 
-      const eventSource = new SSE(`/api/v1/ai/ask`, {
+      const eventSource = new SSE(`/api/v1/plus/ai/ask`, {
         headers: {
           "Content-Type": "application/json",
         },
