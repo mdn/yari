@@ -71,7 +71,7 @@ export function AIHelpInner() {
   const locale = useLocale();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isResponding, hasError, messages, submit } = useAiChat({
+  const { isResponding, hasError, messages, quota, submit } = useAiChat({
     setIsLoading,
   });
 
@@ -185,6 +185,8 @@ export function AIHelpInner() {
                 ? "Receiving..."
                 : isPlusSubscriber(user)
                 ? "Ask your question (unlimited questions per day)."
+                : quota
+                ? `Ask your question (${quota.remaining} questions remaining today)`
                 : "Ask your question (up to 5 questions per day)."
             }
           />

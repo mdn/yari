@@ -80,6 +80,12 @@ interface PageReference {
   title: string;
 }
 
+interface Quota {
+  used: number;
+  remaining: number;
+  limit: number;
+}
+
 function messageReducer(state: Message[], messageAction: MessageAction) {
   let current = structuredClone(state);
   const { type } = messageAction;
@@ -136,6 +142,7 @@ export function useAiChat({
 
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(1);
   const [messages, dispatchMessage] = useReducer(messageReducer, []);
@@ -203,7 +210,7 @@ export function useAiChat({
           const data = JSON.parse(e.data);
 
           if (data.type === "metadata") {
-            const { sources = undefined } = data;
+            const { sources = undefined, quota = undefined } = data;
             // Sources.
             if (Array.isArray(sources)) {
               dispatchMessage({
@@ -211,6 +218,10 @@ export function useAiChat({
                 index: currentMessageIndex,
                 sources: sources,
               });
+            }
+            // Quota.
+            if (typeof quota !== "undefined") {
+              setQuota(quota);
             }
             return;
           } else if (!data.id) {
@@ -274,5 +285,6 @@ export function useAiChat({
     messages,
     isResponding,
     hasError,
+    quota,
   };
 }
