@@ -119,9 +119,7 @@ export function AIHelpInner() {
                                 <ul>
                                   {message.sources.map(({ slug, title }) => (
                                     <li>
-                                      <a href={`/${locale}/${slug}`}>
-                                        {title ?? slug}
-                                      </a>
+                                      <a href={`/${locale}/${slug}`}>{title}</a>
                                     </li>
                                   ))}
                                 </ul>

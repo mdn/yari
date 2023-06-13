@@ -77,7 +77,7 @@ type MessageAction =
 
 interface PageReference {
   slug: string;
-  title: string | null;
+  title: string;
 }
 
 function messageReducer(state: Message[], messageAction: MessageAction) {
