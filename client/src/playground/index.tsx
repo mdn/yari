@@ -18,8 +18,7 @@ import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
-import { Tooltip } from "../document/molecules/tooltip";
-import { ReactComponent as Info } from "../assets/icons/note-info.svg";
+import { InfoTooltip } from "../document/molecules/tooltip";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -252,13 +251,10 @@ export default function Playground() {
             >
               Load remote content
             </Switch>
-            <span className="remote-info" tabIndex={0}>
-              <Info />
-              <Tooltip>
-                Allow the Playground to load media and scripts from 3rd parties.
-                This loosens the CSP restrictions for the Playground.
-              </Tooltip>
-            </span>
+            <InfoTooltip>
+              Allow the Playground to load media and scripts from 3rd parties.
+              This loosens the CSP restrictions for the Playground.
+            </InfoTooltip>
             <menu>
               <Button type="secondary" id="format" onClickHandler={format}>
                 format

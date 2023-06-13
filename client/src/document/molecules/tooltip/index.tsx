@@ -1,7 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { ReactComponent as Info } from "../../../assets/icons/note-info.svg";
+
 import "./index.scss";
 
-export function Tooltip({
+export function InfoTooltip({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="info-tooltip" tabIndex={0}>
+      <Info />
+      <Tooltip>{children}</Tooltip>
+    </span>
+  );
+}
+
+function Tooltip({
   children,
   extraClasses,
 }: {

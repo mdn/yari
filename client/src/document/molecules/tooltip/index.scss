@@ -1,5 +1,15 @@
 @use "../../../ui/vars" as *;
 
+.info-tooltip {
+  align-items: center;
+  display: inline-flex;
+  position: relative;
+
+  > svg {
+    color: var(--text-secondary);
+  }
+}
+
 .tooltip-popup {
   --tooltip-offset: 0;
   background-color: var(--background-secondary);

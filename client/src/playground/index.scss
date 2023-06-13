@@ -136,16 +136,6 @@ main.play {
           font-size: smaller;
         }
 
-        .remote-info {
-          align-items: center;
-          display: inline-flex;
-          position: relative;
-
-          > svg {
-            color: var(--text-secondary);
-          }
-        }
-
         menu {
           display: flex;
           flex-wrap: wrap;
