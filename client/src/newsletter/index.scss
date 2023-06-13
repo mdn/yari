@@ -13,8 +13,9 @@
   }
 
   .blog-container.post + & {
-    h1 {
+    h2 {
       font: var(--type-heading-h3);
+      margin: 0;
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createElement, useState } from "react";
 
 import { useIsServer, useLocale } from "../hooks";
 import { Button } from "../ui/atoms/button";
@@ -15,7 +15,7 @@ export function Newsletter() {
   );
 }
 
-function SignUpForm({ sendUsersToSettings = false }) {
+function SignUpForm({ sendUsersToSettings = false, section = false }) {
   const isServer = useIsServer();
   const user = useUserData();
   const locale = useLocale();
@@ -47,7 +47,7 @@ function SignUpForm({ sendUsersToSettings = false }) {
 
   return submitted ? (
     <>
-      <h1>Thanks!</h1>
+      {createElement(section ? "h2" : "h1", null, "Thanks!")}
       <p>
         If you haven't previously confirmed a subscription to a Mozilla-related
         newsletter, you may have to do so. Please check your inbox or your spam
@@ -56,7 +56,7 @@ function SignUpForm({ sendUsersToSettings = false }) {
     </>
   ) : (
     <>
-      <h1>Stay Informed with MDN</h1>
+      {createElement(section ? "h2" : "h1", null, "Stay Informed with MDN")}
       <p>
         Get the MDN newsletter and never miss an update on the latest web
         development trends, tips, and best practices.
@@ -119,7 +119,7 @@ function SignUpForm({ sendUsersToSettings = false }) {
 export function SignUpSection() {
   return (
     <section className="section-newsletter">
-      <SignUpForm sendUsersToSettings={true} />
+      <SignUpForm sendUsersToSettings={true} section={true} />
     </section>
   );
 }
