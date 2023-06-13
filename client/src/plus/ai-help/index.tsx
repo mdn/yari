@@ -87,6 +87,7 @@ export function AIHelpInner() {
             <ul className="ai-help-messages">
               {messages.map((message, index) => (
                 <li
+                  key={index}
                   className={`ai-help-message ai-help-message-${message.role}`}
                 >
                   <div className="ai-help-message-role">
@@ -117,11 +118,15 @@ export function AIHelpInner() {
                               <>
                                 <p>The answer is based on these pages:</p>
                                 <ul>
-                                  {message.sources.map(({ slug, title }) => (
-                                    <li>
-                                      <a href={`/${locale}/${slug}`}>{title}</a>
-                                    </li>
-                                  ))}
+                                  {message.sources.map(
+                                    ({ slug, title }, index) => (
+                                      <li key={index}>
+                                        <a href={`/${locale}/${slug}`}>
+                                          {title}
+                                        </a>
+                                      </li>
+                                    )
+                                  )}
                                 </ul>
                               </>
                             )}
@@ -142,8 +147,9 @@ export function AIHelpInner() {
             </ul>
           ) : (
             <section className="ai-help-examples">
-              {QUESTIONS.map((question) => (
+              {QUESTIONS.map((question, index) => (
                 <button
+                  key={index}
                   type="button"
                   className="ai-help-example"
                   onClick={() => submit(question)}
