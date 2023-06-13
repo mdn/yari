@@ -17,6 +17,7 @@ import { isPlusSubscriber } from "../../utils";
 import { Button } from "../../ui/atoms/button";
 import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
+import { Loading } from "../../ui/atoms/loading";
 
 const QUESTIONS: string[] = [
   "How to center a div with CSS?",
@@ -75,7 +76,9 @@ export function AIHelpInner() {
     setIsLoading,
   });
 
-  return (
+  return typeof quota === "undefined" ? (
+    <Loading />
+  ) : (
     <section
       className={["ai-help-inner", query.trim() && "has-input"]
         .filter(Boolean)
