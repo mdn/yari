@@ -77,7 +77,7 @@ export function AIHelpInner() {
 
   return (
     <section
-      className={["ai-help-inner", query && "has-input"]
+      className={["ai-help-inner", query.trim() && "has-input"]
         .filter(Boolean)
         .join(" ")}
     >
@@ -189,8 +189,9 @@ export function AIHelpInner() {
           className="ai-help-input"
           onSubmit={(event) => {
             event.preventDefault();
-            if (query) {
-              submit(query);
+            if (query.trim()) {
+              submit(query.trim());
+              setQuery("");
             }
           }}
         >
@@ -198,7 +199,8 @@ export function AIHelpInner() {
             ref={inputRef}
             disabled={isLoading || isResponding}
             type="text"
-            onChange={(event) => setQuery(event.target.value.trim())}
+            onChange={(event) => setQuery(event.target.value)}
+            value={query}
             placeholder={
               isLoading
                 ? "Loading..."
