@@ -37,7 +37,7 @@
     .ai-help-footer {
       .ai-help-footer-text {
         font-size: var(--type-tiny-font-size);
-        text-align: center;
+        margin-left: calc(1px + 0.5rem + 1rem); /* Border + margin + padding */
       }
     }
 

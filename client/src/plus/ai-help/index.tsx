@@ -181,25 +181,8 @@ export function AIHelpInner() {
         </form>
         <div className="ai-help-footer-text">
           <span>
-            This feature is powered by{" "}
-            <a
-              href="https://supabase.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="external"
-            >
-              Supabase
-            </a>{" "}
-            and{" "}
-            <a
-              href="https://openai.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="external"
-            >
-              OpenAI
-            </a>
-            .
+            Search results provided by OpenAI GPT-3.5 and MDN's most recent
+            documentation.
           </span>
         </div>
       </div>
