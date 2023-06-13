@@ -160,9 +160,9 @@ export function AIHelpInner() {
             onChange={(event) => setQuery(event.target.value.trim())}
             placeholder={
               isLoading
-                ? "Waiting for an answer..."
+                ? "Loading..."
                 : isResponding
-                ? "Receiving answer..."
+                ? "Receiving..."
                 : isPlusSubscriber(user)
                 ? "Ask your question (unlimited questions per day)."
                 : "Ask your question (up to 5 questions per day)."
