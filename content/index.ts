@@ -2,7 +2,7 @@ export * as Document from "./document.js";
 export * as Translation from "./translation.js";
 export { getPopularities } from "./popularities.js";
 export * as Redirect from "./redirect.js";
-export * as Image from "./image.js";
+export * as FileAttachment from "./file-attachment.js";
 export {
   buildURL,
   memoize,

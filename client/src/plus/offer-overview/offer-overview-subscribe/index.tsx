@@ -214,12 +214,12 @@ function OfferDetails({
                 <>
                   {" "}
                   <a href={`#${href}`}>{text}</a>
-                  {sup && <sup>{sup}</sup>}
+                  {sup && <sup className="new">{sup}</sup>}
                 </>
               )) || (
                 <>
                   {text}
-                  {sup && <sup>{sup}</sup>}
+                  {sup && <sup className="new">{sup}</sup>}
                 </>
               )}
             </li>

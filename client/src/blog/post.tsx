@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 import { HydrationData } from "../../../libs/types/hydration";
 import { HTTPError, RenderDocumentBody } from "../document";
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 
 import "./index.scss";
 import "./post.scss";
@@ -10,8 +10,11 @@ import {
   BlogImage,
   BlogPostData,
   BlogPostFrontmatter,
+  BlogPostFrontmatterLinks,
+  BlogPostLimitedFrontmatter,
 } from "../../../libs/types/blog";
 import { useCopyExamplesToClipboard } from "../document/hooks";
+import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
 function MaybeLink({ link, children }) {
@@ -107,6 +110,42 @@ function BlogImageFigure({
   );
 }
 
+function PreviousNext({
+  links: { previous, next },
+}: {
+  links: BlogPostFrontmatterLinks;
+}) {
+  return (
+    <section className="previous-next">
+      {previous && (
+        <PreviousNextLink direction="Previous" metadata={previous} />
+      )}
+      {next && <PreviousNextLink direction="Next" metadata={next} />}
+    </section>
+  );
+}
+
+function PreviousNextLink({
+  direction,
+  metadata: { slug, title },
+}: {
+  direction: "Previous" | "Next";
+  metadata: BlogPostLimitedFrontmatter;
+}) {
+  return (
+    <a
+      href={`/${DEFAULT_LOCALE}/blog/${slug}/`}
+      className={direction.toLowerCase()}
+    >
+      <article>
+        <h2>
+          <strong>{direction} Post</strong> {title}
+        </h2>
+      </article>
+    </a>
+  );
+}
+
 export function BlogPost(props: HydrationData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<BlogPostData>(
@@ -128,7 +167,7 @@ export function BlogPost(props: HydrationData) {
     },
     {
       fallbackData: props as BlogPostData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !props.blogMeta,
     }
   );
@@ -149,6 +188,7 @@ export function BlogPost(props: HydrationData) {
             <h1>{doc?.title}</h1>
             <AuthorDateReadTime metadata={blogMeta} />
             <RenderDocumentBody doc={doc} />
+            {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
           <NewsletterSignUp />
         </>

@@ -318,3 +318,16 @@ u {
     background-color: CanvasText !important;
   }
 }
+
+sup.new {
+  background: var(--new-background);
+  border-radius: 1em;
+  color: var(--new-color);
+  display: inline-block;
+  font-size: 0.45rem;
+  font-weight: bold;
+  line-height: 1.7;
+  padding: 0 0.4em;
+  text-rendering: optimizeLegibility;
+  text-transform: uppercase;
+}

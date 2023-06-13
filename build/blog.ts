@@ -9,7 +9,12 @@ import * as kumascript from "../kumascript/index.js";
 
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { BLOG_ROOT, BUILD_OUT_ROOT, BASE_URL } from "../libs/env/index.js";
-import { BlogPostData, BlogPostFrontmatter } from "../libs/types/blog.js";
+import {
+  BlogPostData,
+  BlogPostFrontmatter,
+  BlogPostFrontmatterLinks,
+  BlogPostLimitedFrontmatter,
+} from "../libs/types/blog.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -29,6 +34,7 @@ import { Doc } from "../libs/types/document.js";
 import { extractSections } from "./extract-sections.js";
 import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { memoize } from "../content/utils.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 
@@ -41,14 +47,40 @@ function calculateReadTime(copy: string): number {
   );
 }
 
+async function getLinks(slug: string): Promise<BlogPostFrontmatterLinks> {
+  const posts = await allPostFrontmatter();
+  const index = posts.findIndex((post) => post.slug === slug);
+  const filterFrontmatter = (
+    f?: BlogPostFrontmatter
+  ): BlogPostLimitedFrontmatter => f && { title: f.title, slug: f.slug };
+  return {
+    previous: filterFrontmatter(posts[index + 1]),
+    next: filterFrontmatter(posts[index - 1]),
+  };
+}
+
 async function readPost(
-  file: string
+  file: string,
+  options?: {
+    readTime?: boolean;
+    previousNext?: boolean;
+  }
 ): Promise<{ blogMeta: BlogPostFrontmatter; body: string }> {
   const raw = await fs.readFile(file, "utf-8");
 
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
-  const readTime = calculateReadTime(body);
-  return { blogMeta: { readTime, ...attributes }, body };
+
+  const { readTime = true, previousNext = true } = options || {};
+
+  if (readTime) {
+    attributes.readTime = calculateReadTime(body);
+  }
+
+  if (previousNext) {
+    attributes.links = await getLinks(attributes.slug);
+  }
+
+  return { blogMeta: attributes, body };
 }
 
 export function findPostPathBySlug(slug: string): string | null {
@@ -75,6 +107,9 @@ export async function findPostLiveSampleBySlug(
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...blogMeta },
     isMarkdown: true,
+    fileInfo: {
+      path: file,
+    },
   });
   return liveSamples.find((page) => page.id.toLowerCase() === id)?.html;
 }
@@ -94,6 +129,9 @@ export async function findPostBySlug(
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...blogMeta },
     isMarkdown: true,
+    fileInfo: {
+      path: file,
+    },
   });
   return { doc, blogMeta };
 }
@@ -107,24 +145,33 @@ async function allPostFiles(): Promise<string[]> {
   return await api.withPromise();
 }
 
-export async function allPostFrontmatter({
-  includeUnpublished,
-}: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> {
-  return (
-    await Promise.all(
-      (
-        await allPostFiles()
-      ).map(async (file) => {
-        return (await readPost(file)).blogMeta;
-      })
+export const allPostFrontmatter = memoize(
+  async ({
+    includeUnpublished,
+  }: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> => {
+    return (
+      await Promise.all(
+        (
+          await allPostFiles()
+        ).map(
+          async (file) =>
+            (
+              await readPost(file, { previousNext: false })
+            ).blogMeta
+        )
+      )
     )
-  )
-    .filter(
-      ({ published = true, date }) =>
-        includeUnpublished || (published && Date.parse(date) <= Date.now())
-    )
-    .sort(({ date: a }, { date: b }) => Date.parse(b) - Date.parse(a));
-}
+      .filter(
+        ({ published = true, date }) =>
+          includeUnpublished || (published && Date.parse(date) <= Date.now())
+      )
+      .sort(
+        (a, b) =>
+          Date.parse(b.date) - Date.parse(a.date) ||
+          (a.title > b.title ? 1 : -1)
+      );
+  }
+);
 
 export async function buildBlogIndex(options: { verbose?: boolean }) {
   const prefix = "blog";
@@ -177,6 +224,9 @@ export async function buildBlogPosts(options: {
       rawBody: body,
       metadata: { locale, ...blogMeta },
       isMarkdown: true,
+      fileInfo: {
+        path: file,
+      },
     };
     const { doc: builtDoc, liveSamples } = await buildPost(renderDoc);
     const { doc } = {

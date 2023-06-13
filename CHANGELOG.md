@@ -1,5 +1,51 @@
 # Changelog
 
+## [2.25.0](https://github.com/mdn/yari/compare/v2.24.0...v2.25.0) (2023-06-06)
+
+
+### Features
+
+* **client/env:** split CRUD_MODE into WRITER_MODE and DEV_MODE ([#8383](https://github.com/mdn/yari/issues/8383)) ([675a854](https://github.com/mdn/yari/commit/675a854205c05576eb34b85f813577d6bd1106f0))
+
+## [2.24.0](https://github.com/mdn/yari/compare/v2.23.1...v2.24.0) (2023-06-05)
+
+
+### Features
+
+* **docs:** allow audio (mp3/ogg), video (mp4/webm) and font (woff2) attachments ([#7605](https://github.com/mdn/yari/issues/7605)) ([73f8dbc](https://github.com/mdn/yari/commit/73f8dbc6c8baf66a116225cae29c19e80d5b6b4a))
+* **macros:** add GlossarySidebar macro ([#8997](https://github.com/mdn/yari/issues/8997)) ([e704315](https://github.com/mdn/yari/commit/e7043154bf532cb1a81f1857ba9b4b9f80250498))
+* **macros:** add XsltSidebar for XSLT pages ([#9021](https://github.com/mdn/yari/issues/9021)) ([bddd9f7](https://github.com/mdn/yari/commit/bddd9f7eb1bb3e545b16eb68b62d644909fb68d4))
+* **placement:** hp takeover ([#9022](https://github.com/mdn/yari/issues/9022)) ([2ff4a7b](https://github.com/mdn/yari/commit/2ff4a7b11475d8dac0a072475d5cd08a99d558a4))
+* pride month 2023 ([#8979](https://github.com/mdn/yari/issues/8979)) ([776e70a](https://github.com/mdn/yari/commit/776e70a2085252c155596df4a5b79a170e506319))
+
+
+### Bug Fixes
+
+* **constants:** add Polish to RETIRED_LOCALES ([#8970](https://github.com/mdn/yari/issues/8970)) ([08c15a3](https://github.com/mdn/yari/commit/08c15a3c33ac1eb4801a8b478cb1e99548a9ecab))
+* **toolbar:** reduce height if read-only ([#8976](https://github.com/mdn/yari/issues/8976)) ([9e91c72](https://github.com/mdn/yari/commit/9e91c723a088cbfd8ab9bc148aae4a907a80baa5))
+
+## [2.23.1](https://github.com/mdn/yari/compare/v2.23.0...v2.23.1) (2023-05-29)
+
+
+### Bug Fixes
+
+* **kumascript:** mention path in render error message ([#8936](https://github.com/mdn/yari/issues/8936)) ([27938ad](https://github.com/mdn/yari/commit/27938adc275d599363b09d526395ab7c739d025b))
+* **kumascript:** mention path in render error message (v2) ([#8953](https://github.com/mdn/yari/issues/8953)) ([a9d7370](https://github.com/mdn/yari/commit/a9d737026ac159458a18ed261321e14751aff382))
+
+## [2.23.0](https://github.com/mdn/yari/compare/v2.22.0...v2.23.0) (2023-05-25)
+
+
+### Features
+
+* **newsletter:** add public sign-up page ([#8686](https://github.com/mdn/yari/issues/8686)) ([bf3fbf7](https://github.com/mdn/yari/commit/bf3fbf70d0487fb6cb66026bcf9a9942bb64e63a))
+
+
+### Bug Fixes
+
+* **cloud-function:** strip X-Forwarded-Host + Forwarded headers ([#8894](https://github.com/mdn/yari/issues/8894)) ([74bab35](https://github.com/mdn/yari/commit/74bab354a076ad044d909b30991784cd163ace1a))
+* **csp,fundamental-redirects:** replace media.*.mdn.mozit.cloud with mdn.dev ([#8873](https://github.com/mdn/yari/issues/8873)) ([2c81bf5](https://github.com/mdn/yari/commit/2c81bf58e0ab533960b716f00d6e5b43f4d46dd0))
+* **quicksearch:** opened pages don't scroll to top ([#8911](https://github.com/mdn/yari/issues/8911)) ([964251b](https://github.com/mdn/yari/commit/964251b2fa54532eae121f61e57700378e920d25))
+
 ## [2.22.0](https://github.com/mdn/yari/compare/v2.21.0...v2.22.0) (2023-05-19)
 
 
