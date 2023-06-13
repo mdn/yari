@@ -100,6 +100,18 @@
       display: flex;
       padding: 1rem;
 
+      &:first-of-type {
+        background-color: var(--background-primary);
+        mask-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0% calc(100% - 0.5rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+        position: sticky;
+        top: calc(var(--top-nav-height) + 1px);
+        z-index: var(--z-index-main-header);
+      }
+
       .glean-thumbs {
         font-size: var(--type-tiny-font-size);
         justify-content: flex-end;
