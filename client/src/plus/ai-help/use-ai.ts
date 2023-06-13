@@ -38,6 +38,7 @@ export interface Message {
   role: MessageRole;
   content: string;
   status: MessageStatus;
+  sources?: PageReference[];
 }
 
 interface NewMessageAction {
@@ -57,6 +58,12 @@ interface AppendContentAction {
   content: string;
 }
 
+interface SetSourcesAction {
+  type: "set-sources";
+  index: number;
+  sources: PageReference[];
+}
+
 interface ResetAction {
   type: "reset";
 }
@@ -65,7 +72,13 @@ type MessageAction =
   | NewMessageAction
   | UpdateMessageAction
   | AppendContentAction
-  | ResetAction;
+  | ResetAction
+  | SetSourcesAction;
+
+interface PageReference {
+  slug: string;
+  title: string | null;
+}
 
 function messageReducer(state: Message[], messageAction: MessageAction) {
   let current = structuredClone(state);
@@ -88,6 +101,13 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
       const { index, content } = messageAction;
       if (current[index]) {
         current[index].content += content;
+      }
+      break;
+    }
+    case "set-sources": {
+      const { index, sources } = messageAction;
+      if (current[index]) {
+        current[index].sources = sources;
       }
       break;
     }
@@ -180,9 +200,18 @@ export function useAiChat({
 
           setIsResponding(true);
 
-          const completionResponse: CreateChatCompletionResponse = JSON.parse(
-            e.data
-          );
+          const parsedData = JSON.parse(e.data);
+
+          if (Array.isArray(parsedData)) {
+            dispatchMessage({
+              type: "set-sources",
+              index: currentMessageIndex,
+              sources: parsedData,
+            });
+            return;
+          }
+
+          const completionResponse: CreateChatCompletionResponse = parsedData;
           const [
             {
               delta: { content },

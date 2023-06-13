@@ -7,7 +7,7 @@ import { AiLoginBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
-import { useScrollToTop, useViewedState } from "../../hooks";
+import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
@@ -68,6 +68,7 @@ export function AIHelpInner() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const user = useUserData();
+  const locale = useLocale();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isResponding, hasError, messages, submit } = useAiChat({
@@ -111,13 +112,29 @@ export function AIHelpInner() {
                           {message.content}
                         </ReactMarkdown>
                         {message.status === "complete" && (
-                          <GleanThumbs
-                            feature="ai-help-answer"
-                            question={"Is this answer useful?"}
-                            upLabel={"Yes, this answer is useful."}
-                            downLabel={"No, this answer is not useful."}
-                            permanent={true}
-                          />
+                          <>
+                            {message.sources && (
+                              <>
+                                <p>The answer is based on these pages:</p>
+                                <ul>
+                                  {message.sources.map(({ slug, title }) => (
+                                    <li>
+                                      <a href={`/${locale}/${slug}`}>
+                                        {title ?? slug}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </>
+                            )}
+                            <GleanThumbs
+                              feature="ai-help-answer"
+                              question={"Is this answer useful?"}
+                              upLabel={"Yes, this answer is useful."}
+                              downLabel={"No, this answer is not useful."}
+                              permanent={true}
+                            />
+                          </>
                         )}
                       </>
                     )}
