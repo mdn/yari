@@ -48,9 +48,18 @@ main.play {
       padding: 0.5rem;
       width: min(calc(100vw - 5rem), 25rem);
 
+      a:hover:not(.button) {
+        text-decoration: underline;
+      }
+
       > section {
         display: flex;
         flex-direction: column;
+
+        &#share-link > a {
+          align-self: center;
+          margin-top: 1rem;
+        }
 
         > span {
           font-size: var(--type-base-font-size-rem);
@@ -62,15 +71,17 @@ main.play {
 
           .button-wrap {
             height: initial;
-            padding: var(--button-padding);
+            padding: 0.5rem 1rem;
           }
         }
 
         .share-get-plus {
+          --text-link: var(--plus-accent-color);
           background-color: var(--background-secondary);
           border: 1px solid var(--border-primary);
           border-radius: var(--elem-radius);
           padding: 0.5rem;
+          text-align: center;
 
           .auth-container {
             justify-content: center;

@@ -90,7 +90,7 @@ export function ShareForm({
           Copy markdown to clipboard
         </Button>
       </section>
-      <section>
+      <section id="share-link">
         <span>Share your code via Permalink</span>
         {userData?.isAuthenticated ? (
           <>
@@ -99,7 +99,7 @@ export function ShareForm({
                 <Loading />
               ) : (
                 <>
-                  <a href={url}>{url}</a>
+                  <a href={url}>Permalink to this playground</a>
                   <Button
                     type="secondary"
                     onClickHandler={async () => {
@@ -127,6 +127,7 @@ export function ShareForm({
         ) : (
           <p className="share-get-plus">
             <span>Want to share this playground via link?</span>
+            <br />
             <strong>
               Upgrade to{" "}
               <a
