@@ -31,14 +31,14 @@ export async function updateEmbeddings(directory: string) {
   });
   const openai = new OpenAIApi(configuration);
 
-  for await (const { slug, content } of contentDocs(directory)) {
+  for await (const { slug, title, content } of contentDocs(directory)) {
     try {
       const checksum = createHash("sha256").update(content).digest("base64");
 
       // Check for existing document in DB and compare checksums.
       const { data: existingDoc } = await supabaseClient
         .from("mdn_doc")
-        .select("id, slug, checksum")
+        .select("id, slug, title, checksum")
         .filter("slug", "eq", slug)
         .maybeSingle()
         .throwOnError();
@@ -68,6 +68,7 @@ export async function updateEmbeddings(directory: string) {
           {
             checksum: null,
             slug,
+            title,
           },
           { onConflict: "slug" }
         )
@@ -155,7 +156,7 @@ async function* contentDocs(directory: string) {
     content = removeMacroCalls(content);
     content = content.trim();
 
-    yield { slug, content: `# ${title}\n\n${content}` };
+    yield { slug, title, content: `# ${title}\n\n${content}` };
   }
 }
 
