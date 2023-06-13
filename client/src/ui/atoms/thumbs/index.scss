@@ -41,6 +41,10 @@
     --button-bg-active: unset;
   }
 
+  .icon {
+    background-color: var(--icon-secondary);
+  }
+
   &:focus,
   &:hover,
   &:active {
