@@ -110,6 +110,10 @@
         position: sticky;
         top: calc(var(--top-nav-height) + 1px);
         z-index: var(--z-index-main-header);
+
+        .ai-help-actions {
+          white-space: nowrap;
+        }
       }
 
       .glean-thumbs {

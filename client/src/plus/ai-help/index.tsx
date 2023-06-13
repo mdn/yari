@@ -71,7 +71,7 @@ export function AIHelpInner() {
   const locale = useLocale();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isResponding, hasError, messages, quota, submit } = useAiChat({
+  const { isResponding, hasError, messages, quota, reset, submit } = useAiChat({
     setIsLoading,
   });
 
@@ -142,6 +142,21 @@ export function AIHelpInner() {
                       </>
                     )}
                   </div>
+                  {index === 0 && (
+                    <div className="ai-help-actions">
+                      <Button
+                        type="action"
+                        extraClasses="ai-help-button-reset"
+                        onClickHandler={(event) => {
+                          setQuery("");
+                          reset();
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        + New chat
+                      </Button>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
