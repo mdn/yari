@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { MessageStatus, useAiChat } from "./use-ai";
+import { useAiChat } from "./use-ai";
 import { AiLoginBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
@@ -112,12 +112,13 @@ export function AIHelpInner() {
                         >
                           {message.content}
                         </ReactMarkdown>
-                        {message.status === MessageStatus.Complete && (
+                        {message.status === "complete" && (
                           <GleanThumbs
                             feature="ai-help-answer"
                             question={"Is this answer useful?"}
                             upLabel={"Yes, this answer is useful."}
                             downLabel={"No, this answer is not useful."}
+                            permanent={true}
                           />
                         )}
                       </>

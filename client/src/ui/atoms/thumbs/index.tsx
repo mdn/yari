@@ -47,25 +47,29 @@ export function GleanThumbs({
   confirmation = "Thank you for your feedback! ❤️",
   upLabel = "This feature is useful.",
   downLabel = "This feature is not useful.",
+  permanent = false,
 }: {
   feature: string;
   question?: string;
   confirmation?: string;
   upLabel?: string;
   downLabel?: string;
+  permanent?: boolean;
 }) {
   const [previouslySubmitted, setPreviouslySubmitted] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    setPreviouslySubmitted(isPreviouslySubmitted(feature));
-  }, [feature, setPreviouslySubmitted]);
+    setPreviouslySubmitted(!permanent && isPreviouslySubmitted(feature));
+  }, [feature, permanent, setPreviouslySubmitted]);
 
   const handleThumbs = (value: "up" | "down") => {
     gleanClick(`${THUMBS}: ${feature} -> ${value === "up" ? 1 : 0}`);
     setSubmitted(true);
-    markPreviouslySubmitted(feature, value === "up");
+    if (!permanent) {
+      markPreviouslySubmitted(feature, value === "up");
+    }
   };
 
   return (

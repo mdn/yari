@@ -125,10 +125,13 @@
     }
 
     .ai-help-message-assistant {
-      --icon-size: 1.5rem;
       background-color: var(--background-secondary);
       border: 1px solid var(--border-primary);
       border-radius: var(--elem-radius);
+
+      .ai-help-message-role {
+        --icon-size: 1.5rem;
+      }
     }
 
     .ai-help-message-role {
