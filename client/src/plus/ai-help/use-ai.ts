@@ -9,12 +9,14 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useReducer,
   useRef,
   useState,
 } from "react";
 
 import { SSE } from "sse.js";
+import useSWR from "swr";
 
 type CreateChatCompletionResponseChoicesInnerDelta = Omit<
   CreateChatCompletionResponseChoicesInner,
@@ -142,10 +144,18 @@ export function useAiChat({
 
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(1);
   const [messages, dispatchMessage] = useReducer(messageReducer, []);
+
+  const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
+  const remoteQuota = useRemoteQuota();
+
+  useEffect(() => {
+    if (remoteQuota) {
+      setQuota(remoteQuota);
+    }
+  }, [remoteQuota]);
 
   const submit = useCallback(
     async (query: string) => {
@@ -268,6 +278,20 @@ export function useAiChat({
     },
     [currentMessageIndex, messages, messageTemplate]
   );
+
+  function useRemoteQuota() {
+    const { data } = useSWR<Quota>("/api/v1/plus/ai/ask/quota", async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      const data = await response.json();
+      return data.quota;
+    });
+
+    return data;
+  }
 
   function reset() {
     eventSourceRef.current?.close();
