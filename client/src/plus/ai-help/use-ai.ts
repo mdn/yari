@@ -200,18 +200,25 @@ export function useAiChat({
 
           setIsResponding(true);
 
-          const parsedData = JSON.parse(e.data);
+          const data = JSON.parse(e.data);
 
-          if (Array.isArray(parsedData)) {
-            dispatchMessage({
-              type: "set-sources",
-              index: currentMessageIndex,
-              sources: parsedData,
-            });
+          if (data.type === "metadata") {
+            const { sources = undefined } = data;
+            // Sources.
+            if (Array.isArray(sources)) {
+              dispatchMessage({
+                type: "set-sources",
+                index: currentMessageIndex,
+                sources: sources,
+              });
+            }
+            return;
+          } else if (!data.id) {
+            console.warn("Received unsupported message", { data });
             return;
           }
 
-          const completionResponse: CreateChatCompletionResponse = parsedData;
+          const completionResponse: CreateChatCompletionResponse = data;
           const [
             {
               delta: { content },
