@@ -547,10 +547,12 @@ pre {
     align-items: center;
     background-color: var(--background-secondary);
     border: 1px solid var(--border-primary);
+    border-top-left-radius: var(--elem-radius);
+    border-top-right-radius: var(--elem-radius);
     display: flex;
     gap: 0.5rem;
     margin: 0;
-    padding: 0 0.5rem 0 1rem;
+    padding: 0 1rem;
 
     ~ pre,
     ~ iframe {
