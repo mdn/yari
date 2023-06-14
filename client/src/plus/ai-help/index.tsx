@@ -121,7 +121,7 @@ export function AIHelpInner() {
                           <>
                             {message.sources && (
                               <>
-                                <p>The answer is based on these pages:</p>
+                                <p>My answer is based on these MDN pages:</p>
                                 <ul>
                                   {message.sources.map(
                                     ({ slug, title }, index) => (
