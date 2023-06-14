@@ -125,7 +125,7 @@ export function ShareForm({
             )}
           </>
         ) : (
-          <p className="share-get-plus">
+          <div className="share-get-plus">
             <span>Want to share this playground via link?</span>
             <br />
             <strong>
@@ -143,7 +143,7 @@ export function ShareForm({
               signInGleanContext={`${PLAYGROUND}: banner-login`}
               subscribeGleanContext={`${PLAYGROUND}: banner-button`}
             />
-          </p>
+          </div>
         )}
       </section>
     </form>

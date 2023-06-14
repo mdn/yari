@@ -141,6 +141,11 @@ export const LIVE_SAMPLES_BASE_URL =
     ? process.env.BUILD_LIVE_SAMPLES_BASE_URL
     : SERVER_URL;
 
+export const LEGACY_LIVE_SAMPLES_BASE_URL =
+  process.env.BUILD_LEGACY_LIVE_SAMPLES_BASE_URL !== undefined
+    ? process.env.BUILD_LEGACY_LIVE_SAMPLES_BASE_URL
+    : SERVER_URL;
+
 export const INTERACTIVE_EXAMPLES_BASE_URL =
   process.env.BUILD_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";

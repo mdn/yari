@@ -29,7 +29,6 @@ function Tooltip({
       const rect = ref.current?.getBoundingClientRect();
       const wH = (rect?.width || 0) / 2;
       const iW = window.innerWidth;
-      console.log(x, wH, iW);
       const offset =
         -1 *
         (x <= iW / 2 // if the center of the parent is on the left half of the window
@@ -41,7 +40,6 @@ function Tooltip({
           ? 2 * wH - (iW - x)
           : wH);
       const tooltipOffset = `${offset.toFixed(2)}px`;
-      console.log(offset);
       setStyle(Object.fromEntries([["--tooltip-offset", tooltipOffset]]));
     };
     onResize();

@@ -207,8 +207,18 @@ async function buildDocuments(
       )
     );
 
-    for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+    for (const { id, html, slug } of liveSamples) {
+      let liveSamplePath;
+      if (slug) {
+        const liveSampleBasePath = path.join(
+          BUILD_OUT_ROOT,
+          slugToFolder(slug)
+        );
+        liveSamplePath = path.join(liveSampleBasePath, `_sample_.${id}.html`);
+        fs.mkdirSync(liveSampleBasePath, { recursive: true });
+      } else {
+        liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+      }
       fs.writeFileSync(liveSamplePath, html);
     }
 

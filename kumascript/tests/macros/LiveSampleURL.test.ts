@@ -26,7 +26,7 @@ describeMacro("LiveSampleURL", function () {
         "No_JS",
         "/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2"
       ),
-      "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/unsafe-runner.html?id=No_JS"
+      "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_sample_.No_JS.html?id=No_JS&amp;url=%2Fen-US%2Fdocs%2FHTML%2FForms%2FHow_to_build_custom_form_widgets%2FExample_2"
     );
   });
   itMacro("Override with nonexistent page URL", async (macro) => {

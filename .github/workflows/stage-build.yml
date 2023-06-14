@@ -175,6 +175,7 @@ jobs:
           # secure production but this is an exception and default
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net

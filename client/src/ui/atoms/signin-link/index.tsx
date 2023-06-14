@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import { useLocale } from "../../../hooks";
+import { useIsServer, useLocale } from "../../../hooks";
 import { FXA_SIGNIN_URL, KUMA_HOST } from "../../../env";
 
 import "./index.scss";
@@ -14,9 +14,20 @@ export default function SignInLink({
   cta?: string;
 }) {
   const locale = useLocale();
+  const isServer = useIsServer();
   const gleanClick = useGleanClick();
-  const { pathname, search } = useLocation();
+  let { pathname, search } = useLocation();
   const sp = new URLSearchParams();
+
+  if (!isServer) {
+    // For some reason we need this :/
+    if (pathname !== window.location.pathname) {
+      pathname = window.location.pathname;
+    }
+    if (search !== window.location.search) {
+      search = window.location.search;
+    }
+  }
 
   let next = pathname ? pathname + search : `/${locale}/`;
   sp.set("next", encodeURI(next));

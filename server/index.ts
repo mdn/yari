@@ -299,7 +299,10 @@ app.get("/*", async (req, res, ...args) => {
   }
   if (req.url.includes("/_sample_.")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.path));
+      return res
+        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .status(200)
+        .send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }

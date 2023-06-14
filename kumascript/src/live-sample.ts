@@ -1,5 +1,6 @@
 import cheerio from "cheerio";
 import ejs from "ejs";
+import path from "node:path";
 
 import { MacroLiveSampleError } from "./errors.js";
 import { HTMLTool, KumascriptError, slugify } from "./api/util.js";
@@ -58,7 +59,7 @@ const LIVE_SAMPLE_HTML = `
             <%- html %>
         <% } %>
         <% if (js) { %>
-            <script>
+            <script nonce="deadbeef">
                 <%- js %>
             </script>
         <% } %>
@@ -67,24 +68,36 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
+const liveSampleRE = /.*\/unsafe-runner.html($|\?.*$)/i;
+
+function pathPair(uri) {
+  const url = new URL(uri, "https://example.co");
+
+  return [path.dirname(url.pathname), path.basename(url.pathname)];
+}
+
 export function buildLiveSamplePages(uri, title, $, rawBody) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample pages for the given
   // document or else collect flaws
+
   if (typeof $ == "string") {
     $ = cheerio.load($);
   }
   return $("iframe")
     .filter((i, iframe) => {
       const src = $(iframe).attr("src");
-      return (
-        src && src.toLowerCase().includes(`${uri.toLowerCase()}/_sample_.`)
-      );
+      return src && liveSampleRE.test(src.toLowerCase());
     })
     .map((i, iframe) => {
       const iframeId = $(iframe).attr("id");
       const id = slugify(iframeId.substr("frame_".length));
-      const result = { id, html: null, flaw: null };
+      const iframeSrc = $(iframe).attr("src");
+      const result = { id, html: null, flaw: null, slug: null };
+      const [iPath, iFile] = pathPair(iframeSrc);
+      if (uri.toLowerCase() !== iPath.toLowerCase()) {
+        result.slug = iPath;
+      }
       const tool = new HTMLTool($, uri);
       let sampleData;
       try {

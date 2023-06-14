@@ -210,6 +210,7 @@ export async function buildDocument(
   interface LiveSample {
     id: string;
     html: string;
+    slug?: string;
   }
 
   let flaws: any[] = [];
@@ -244,7 +245,7 @@ export async function buildDocument(
     document.rawBody
   );
   for (const liveSamplePage of liveSamplePages) {
-    const { id, flaw } = liveSamplePage;
+    const { id, flaw, slug } = liveSamplePage;
     let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
@@ -291,7 +292,7 @@ export async function buildDocument(
         </html>
         `;
     }
-    liveSamples.push({ id: id.toLowerCase(), html });
+    liveSamples.push({ id: id.toLowerCase(), html, slug });
   }
 
   if (flaws.length) {
