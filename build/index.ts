@@ -238,7 +238,7 @@ export async function buildDocument(
     throw error;
   }
 
-  const liveSamplePages = kumascript.buildLiveSamplePages(
+  const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
     document.metadata.title,
     $,
@@ -567,12 +567,14 @@ export async function buildLiveSamplePageFromURL(url: string) {
     throw new Error(`No document found for ${documentURL}`);
   }
   const liveSamplePage = (
-    kumascript.buildLiveSamplePages(
+    (await kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      (await kumascript.render(document.url))[0],
+      (
+        await kumascript.render(document.url)
+      )[0],
       document.rawBody
-    ) as BuiltLiveSamplePage[]
+    )) as BuiltLiveSamplePage[]
   ).find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {
