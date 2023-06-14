@@ -109,7 +109,7 @@
         );
         position: sticky;
         top: calc(var(--top-nav-height) + 1px);
-        z-index: var(--z-index-main-header);
+        z-index: var(--z-index-nav-menu);
 
         .ai-help-actions {
           white-space: nowrap;
