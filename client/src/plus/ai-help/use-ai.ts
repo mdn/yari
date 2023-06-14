@@ -131,6 +131,32 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
   return current;
 }
 
+class AiHelpStorage {
+  static KEY = "ai-help";
+
+  private static get value() {
+    return JSON.parse(window.localStorage.getItem(this.KEY) ?? "{}");
+  }
+
+  private static mutate(partial) {
+    window.localStorage.setItem(
+      this.KEY,
+      JSON.stringify({
+        ...this.value,
+        ...partial,
+      })
+    );
+  }
+
+  static get messages() {
+    return this.value?.messages ?? [];
+  }
+
+  static set messages(messages) {
+    this.mutate({ messages });
+  }
+}
+
 export interface UseAiChatOptions {
   messageTemplate?: (message: string) => string;
   setIsLoading?: Dispatch<SetStateAction<boolean>>;
@@ -146,10 +172,17 @@ export function useAiChat({
   const [hasError, setHasError] = useState(false);
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(1);
-  const [messages, dispatchMessage] = useReducer(messageReducer, []);
+  const [messages, dispatchMessage] = useReducer(
+    messageReducer,
+    AiHelpStorage.messages
+  );
 
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
   const remoteQuota = useRemoteQuota();
+
+  useEffect(() => {
+    AiHelpStorage.messages = messages;
+  }, [messages]);
 
   useEffect(() => {
     if (remoteQuota) {
