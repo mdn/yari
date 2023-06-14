@@ -30,3 +30,27 @@ export function AiLoginBanner() {
     </div>
   );
 }
+
+export function AiUpsellBanner() {
+  const href = usePlusUrl();
+  const gleanClick = useGleanClick();
+
+  return (
+    <div className="login-banner">
+      <span>
+        <span>You have reached the limit of 5 questions per day.</span>{" "}
+        <span>
+          Upgrade to{" "}
+          <a
+            className="plus-link"
+            href={href}
+            onClick={() => gleanClick(`ai-help: banner-link`)}
+          >
+            MDN Plus
+          </a>{" "}
+          to continue using AI Help.
+        </span>
+      </span>
+    </div>
+  );
+}

@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { useAiChat } from "./use-ai";
-import { AiLoginBanner } from "./login-banner";
+import { AiLoginBanner, AiUpsellBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
@@ -75,6 +75,8 @@ export function AIHelpInner() {
   const { isResponding, hasError, messages, quota, reset, submit } = useAiChat({
     setIsLoading,
   });
+
+  const isQuotaExceeded = quota && quota.remaining <= 0;
 
   return typeof quota === "undefined" ? (
     <Loading />
@@ -164,19 +166,21 @@ export function AIHelpInner() {
               ))}
             </ul>
           ) : (
-            <section className="ai-help-examples">
-              {QUESTIONS.map((question, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="ai-help-example"
-                  onClick={() => submit(question)}
-                >
-                  <span className="ai-help-example-icon">⚡️</span>{" "}
-                  <span className="ai-help-example-text">{question}</span>
-                </button>
-              ))}
-            </section>
+            !isQuotaExceeded && (
+              <section className="ai-help-examples">
+                {QUESTIONS.map((question, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="ai-help-example"
+                    onClick={() => submit(question)}
+                  >
+                    <span className="ai-help-example-icon">⚡️</span>{" "}
+                    <span className="ai-help-example-text">{question}</span>
+                  </button>
+                ))}
+              </section>
+            )
           )}
         </>
       </div>
@@ -187,52 +191,58 @@ export function AIHelpInner() {
         </NoteCard>
       )}
       <div className="ai-help-footer">
-        <form
-          ref={formRef}
-          className="ai-help-input"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (query.trim()) {
-              submit(query.trim());
-              setQuery("");
-            }
-          }}
-        >
-          <input
-            ref={inputRef}
-            disabled={isLoading || isResponding}
-            type="text"
-            onChange={(event) => setQuery(event.target.value)}
-            value={query}
-            placeholder={
-              isLoading
-                ? "Loading..."
-                : isResponding
-                ? "Receiving..."
-                : isPlusSubscriber(user)
-                ? "Ask your question (unlimited questions per day)."
-                : quota
-                ? `Ask your question (${quota.remaining} questions remaining today)`
-                : "Ask your question (up to 5 questions per day)."
-            }
-          />
-          <Button
-            type="action"
-            icon="send"
-            buttonType="submit"
-            title="Submit question"
-            isDisabled={!query}
-            extraClasses="send-ai-message-button"
-          >
-            <span className="visually-hidden">Submit question</span>
-          </Button>
-        </form>
-        <div className="ai-help-footer-text">
-          <span>
-            Search results provided by OpenAI GPT-3.5 and MDN's most recent
-            documentation.
-          </span>
-        </div>
+        {isQuotaExceeded ? (
+          <AiUpsellBanner />
+        ) : (
+          <>
+            <form
+              ref={formRef}
+              className="ai-help-input"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (query.trim()) {
+                  submit(query.trim());
+                  setQuery("");
+                }
+              }}
+            >
+              <input
+                ref={inputRef}
+                disabled={isLoading || isResponding}
+                type="text"
+                onChange={(event) => setQuery(event.target.value)}
+                value={query}
+                placeholder={
+                  isLoading
+                    ? "Loading..."
+                    : isResponding
+                    ? "Receiving..."
+                    : isPlusSubscriber(user)
+                    ? "Ask your question (unlimited questions per day)."
+                    : quota
+                    ? `Ask your question (${quota.remaining} questions remaining today)`
+                    : "Ask your question (up to 5 questions per day)."
+                }
+              />
+              <Button
+                type="action"
+                icon="send"
+                buttonType="submit"
+                title="Submit question"
+                isDisabled={!query}
+                extraClasses="send-ai-message-button"
+              >
+                <span className="visually-hidden">Submit question</span>
+              </Button>
+            </form>
+            <div className="ai-help-footer-text">
+              <span>
+                Search results provided by OpenAI GPT-3.5 and MDN's most recent
+                documentation.
+              </span>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
