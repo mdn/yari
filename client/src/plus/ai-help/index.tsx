@@ -240,8 +240,8 @@ export function AIHelpInner() {
             </form>
             <div className="ai-help-footer-text">
               <span>
-                Search results provided by OpenAI GPT-3.5 and MDN's most recent
-                documentation.
+                Results based on MDN's most recent documentation and powered by
+                OpenAI GPT 3.5
               </span>
             </div>
           </>
