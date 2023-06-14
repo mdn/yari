@@ -18,10 +18,33 @@ import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 
-const QUESTIONS: string[] = [
-  "How to center a div with CSS?",
-  "How do I create a contact form in HTML?",
-  "How can I sort an Array in JavaScript?",
+type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
+
+const EXAMPLES: { category: Category; query: string }[] = [
+  {
+    category: "css",
+    query: "How to center a div with CSS?",
+  },
+  {
+    category: "html",
+    query: "How do I create a form in HTML?",
+  },
+  {
+    category: "js",
+    query: "How can I sort an Array in JavaScript?",
+  },
+  {
+    category: "apis",
+    query: "How can I use the Fetch API to make HTTP requests in JavaScript?",
+  },
+  {
+    category: "http",
+    query: "How can I redirect using HTTP?",
+  },
+  {
+    category: "learn",
+    query: "What are some accessibility best practices?",
+  },
 ];
 
 export function AiHelp() {
@@ -248,15 +271,15 @@ export function AIHelpInner() {
       </div>
       {!hasConversation && !query && !isQuotaExceeded && (
         <section className="ai-help-examples">
-          {QUESTIONS.map((question, index) => (
+          <header>Examples</header>
+          {EXAMPLES.map(({ category, query }, index) => (
             <button
               key={index}
               type="button"
-              className="ai-help-example"
-              onClick={() => setQuery(question)}
+              className={["ai-help-example", `category-${category}`].join(" ")}
+              onClick={() => setQuery(query)}
             >
-              <span className="ai-help-example-icon">⚡️</span>{" "}
-              <span className="ai-help-example-text">{question}</span>
+              {query}
             </button>
           ))}
         </section>
