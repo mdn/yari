@@ -180,33 +180,32 @@ export function AIHelpInner() {
                 </div>
                 {index === 0 && (
                   <div className="ai-help-actions">
-                    <Button
-                      type="action"
-                      extraClasses="ai-help-button-reset"
-                      onClickHandler={(event) => {
-                        setQuery("");
-                        reset();
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      + New chat
-                    </Button>
+                    {isResponding ? (
+                      <Button
+                        type="action"
+                        extraClasses="ai-help-stop-button"
+                        onClickHandler={() => stop()}
+                      >
+                        ⏹ Stop answering
+                      </Button>
+                    ) : (
+                      <Button
+                        type="action"
+                        extraClasses="ai-help-reset-button"
+                        onClickHandler={(event) => {
+                          setQuery("");
+                          reset();
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        + New chat
+                      </Button>
+                    )}
                   </div>
                 )}
               </li>
             ))}
           </ul>
-        </div>
-      )}
-      {isResponding && (
-        <div className="ai-help-stop">
-          <Button
-            type="action"
-            extraClasses="ai-help-stop-button"
-            onClickHandler={() => stop()}
-          >
-            Stop answering
-          </Button>
         </div>
       )}
       {hasError && (
