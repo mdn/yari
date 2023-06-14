@@ -192,10 +192,10 @@ export function AIHelpInner() {
                       <Button
                         type="action"
                         extraClasses="ai-help-reset-button"
-                        onClickHandler={(event) => {
+                        onClickHandler={() => {
                           setQuery("");
                           reset();
-                          window.scrollTo(0, 0);
+                          window.setTimeout(() => window.scrollTo(0, 0));
                         }}
                       >
                         + New chat
