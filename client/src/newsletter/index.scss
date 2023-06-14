@@ -11,11 +11,4 @@
   form {
     margin-bottom: 2rem;
   }
-
-  .blog-container.post + & {
-    h2 {
-      font: var(--type-heading-h3);
-      margin: 0;
-    }
-  }
 }
