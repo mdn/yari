@@ -97,7 +97,7 @@
     }
 
     .ai-help-example {
-      --category-color-engage: var(--plus-accent-engage);
+      --category-color-engage: var(--ai-help-icon);
       background: var(--background-primary);
       border-radius: 0.25rem;
       box-shadow: inset 0.25rem 0 0 var(--category-color-engage);
@@ -106,7 +106,7 @@
       padding: 0.5rem 1rem;
       text-align: left;
 
-      &.category-apis {
+      /*&.category-apis {
         --category-color-engage: var(--apis-accent-engage);
       }
 
@@ -128,7 +128,7 @@
 
       &.category-learn {
         --category-color-engage: var(--learn-accent-engage);
-      }
+      }*/
 
       &:hover {
         color: var(--ai-help-link);
