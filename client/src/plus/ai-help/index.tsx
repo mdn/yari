@@ -311,36 +311,44 @@ function useAutoScroll(dependency) {
   const [autoScroll, setAutoScroll] = useState(true);
   const rootRef = useRef<HTMLElement | null>();
   const lastScrollY = useRef(0);
+  const lastHeight = useRef(0);
 
   useEffect(() => {
     const root = (rootRef.current ??=
       document.querySelector<HTMLElement>(".ai-help"));
 
     if (!root) {
+      console.log("No root");
       return;
     }
 
     const { offsetTop, offsetHeight } = root;
     const { innerHeight, scrollY } = window;
     const elementBottom = offsetTop + offsetHeight;
+    const targetScrollY = elementBottom - window.innerHeight;
     const windowBottom = scrollY + innerHeight;
+
+    const isBottomVisible =
+      scrollY <= elementBottom && elementBottom <= windowBottom;
+
+    // Only scroll if our element grew and the target scroll position is further down.
+    const shouldScroll =
+      lastHeight.current < offsetHeight && lastScrollY.current < targetScrollY;
+
+    lastHeight.current = offsetHeight;
     lastScrollY.current = scrollY;
 
-    if (autoScroll) {
-      const scrollPosition = elementBottom - window.innerHeight;
-      window.scrollTo(0, scrollPosition);
+    if (autoScroll && shouldScroll) {
+      window.scrollTo(0, targetScrollY);
     }
 
     const scrollListener = () => {
       const { scrollY } = window;
-      if (
-        autoScroll &&
-        scrollY < lastScrollY.current &&
-        windowBottom < elementBottom
-      ) {
+      const scrollOffset = scrollY - lastScrollY.current;
+      if (autoScroll && scrollOffset < 0 && !isBottomVisible) {
         // User scrolled up.
         setAutoScroll(false);
-      } else if (!autoScroll && elementBottom < windowBottom) {
+      } else if (!autoScroll && scrollOffset > 0 && isBottomVisible) {
         // User scrolled down again.
         setAutoScroll(true);
       }
