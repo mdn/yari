@@ -40,7 +40,7 @@
       padding-top: 1rem;
       position: sticky;
 
-      .ai-help-stop {
+      .ai-help-footer-actions {
         padding-bottom: 0.5rem;
       }
 
@@ -323,8 +323,10 @@
       }
     }
 
-    .ai-help-stop {
-      text-align: center;
+    .ai-help-footer-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
     }
 
     .ai-help-error {

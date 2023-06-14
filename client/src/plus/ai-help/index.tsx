@@ -106,7 +106,7 @@ export function AIHelpInner() {
   const isQuotaExceeded = quota && quota.remaining <= 0;
   const hasConversation = messages.length > 0;
 
-  const { setAutoScroll } = useAutoScroll(messages);
+  const { autoScroll, setAutoScroll } = useAutoScroll(messages);
 
   return isQuotaLoading ? (
     <Loading />
@@ -211,21 +211,29 @@ export function AIHelpInner() {
         </NoteCard>
       )}
       <div className="ai-help-footer">
+        {(isLoading || isResponding) && (
+          <div className="ai-help-footer-actions">
+            <Button
+              type="action"
+              extraClasses="ai-help-stop-button"
+              onClickHandler={() => stop()}
+            >
+              ⏹ Stop answering
+            </Button>
+            <Button
+              type="action"
+              isDisabled={autoScroll}
+              extraClasses="ai-help-scroll-button"
+              onClickHandler={() => setAutoScroll(true)}
+            >
+              ↓ Enable auto-scroll
+            </Button>
+          </div>
+        )}
         {isQuotaExceeded ? (
           <AiUpsellBanner />
         ) : (
           <>
-            {(isLoading || isResponding) && (
-              <div className="ai-help-stop">
-                <Button
-                  type="action"
-                  extraClasses="ai-help-stop-button"
-                  onClickHandler={() => stop()}
-                >
-                  ⏹ Stop answering
-                </Button>
-              </div>
-            )}
             <form
               ref={formRef}
               className="ai-help-input"
