@@ -40,6 +40,10 @@
       padding-top: 1rem;
       position: sticky;
 
+      .ai-help-stop {
+        padding-bottom: 0.5rem;
+      }
+
       .ai-help-footer-text {
         font-size: var(--type-tiny-font-size);
         margin-left: calc(1px + 0.5rem + 1rem); /* Border + margin + padding */

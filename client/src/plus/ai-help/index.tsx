@@ -184,27 +184,17 @@ export function AIHelpInner() {
                 </div>
                 {index === 0 && (
                   <div className="ai-help-actions">
-                    {isResponding ? (
-                      <Button
-                        type="action"
-                        extraClasses="ai-help-stop-button"
-                        onClickHandler={() => stop()}
-                      >
-                        ⏹ Stop answering
-                      </Button>
-                    ) : (
-                      <Button
-                        type="action"
-                        extraClasses="ai-help-reset-button"
-                        onClickHandler={() => {
-                          setQuery("");
-                          reset();
-                          window.setTimeout(() => window.scrollTo(0, 0));
-                        }}
-                      >
-                        + New chat
-                      </Button>
-                    )}
+                    <Button
+                      type="action"
+                      extraClasses="ai-help-reset-button"
+                      onClickHandler={() => {
+                        setQuery("");
+                        reset();
+                        window.setTimeout(() => window.scrollTo(0, 0));
+                      }}
+                    >
+                      + New chat
+                    </Button>
                   </div>
                 )}
               </li>
@@ -223,6 +213,17 @@ export function AIHelpInner() {
           <AiUpsellBanner />
         ) : (
           <>
+            {isResponding && (
+              <div className="ai-help-stop">
+                <Button
+                  type="action"
+                  extraClasses="ai-help-stop-button"
+                  onClickHandler={() => stop()}
+                >
+                  ⏹ Stop answering
+                </Button>
+              </div>
+            )}
             <form
               ref={formRef}
               className="ai-help-input"
