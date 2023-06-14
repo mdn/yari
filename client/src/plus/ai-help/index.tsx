@@ -292,7 +292,11 @@ export function AIHelpInner() {
               key={index}
               type="button"
               className={["ai-help-example", `category-${category}`].join(" ")}
-              onClick={() => setQuery(query)}
+              onClick={() => {
+                setQuery(query);
+                inputRef.current?.focus();
+                window.setTimeout(() => window.scrollTo(0, 0));
+              }}
             >
               {query}
             </button>
