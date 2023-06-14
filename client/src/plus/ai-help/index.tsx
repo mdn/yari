@@ -120,7 +120,9 @@ export function AIHelpInner() {
             {messages.map((message, index) => (
               <li
                 key={index}
-                className={`ai-help-message ai-help-message-${message.role}`}
+                className={["ai-help-message", `role-${message.role}`].join(
+                  " "
+                )}
               >
                 <div className="ai-help-message-role">
                   <RoleIcon role={message.role} />

@@ -158,39 +158,39 @@
         }
       }
 
+      &.role-user {
+        color: var(--text-secondary);
+
+        .avatar-wrap {
+          border-radius: unset;
+          height: 1.5rem;
+          margin-left: unset;
+          margin-right: unset;
+          margin-top: 0.1rem; /* Align with text. */
+          position: unset;
+          width: 1.5rem;
+        }
+      }
+
+      &.role-assistant {
+        background-color: var(--background-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--elem-radius);
+
+        .ai-help-message-role {
+          --icon-size: 1.5rem;
+        }
+      }
+
+      .ai-help-message-role {
+        flex-shrink: 0;
+        width: 2.5rem;
+      }
+
       .glean-thumbs {
         font-size: var(--type-tiny-font-size);
         justify-content: flex-end;
       }
-    }
-
-    .ai-help-message-user {
-      color: var(--text-secondary);
-
-      .avatar-wrap {
-        border-radius: unset;
-        height: 1.5rem;
-        margin-left: unset;
-        margin-right: unset;
-        margin-top: 0.1rem; /* Align with text. */
-        position: unset;
-        width: 1.5rem;
-      }
-    }
-
-    .ai-help-message-assistant {
-      background-color: var(--background-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--elem-radius);
-
-      .ai-help-message-role {
-        --icon-size: 1.5rem;
-      }
-    }
-
-    .ai-help-message-role {
-      flex-shrink: 0;
-      width: 2.5rem;
     }
 
     .ai-help-message-content {
