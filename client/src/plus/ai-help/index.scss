@@ -259,6 +259,22 @@
           margin-left: unset;
         }
       }
+
+      &.stopped {
+        &.empty::after,
+        > :not(ol):not(ul):not(pre):last-child:after,
+        > ol:last-child li:last-child:after,
+        > pre:last-child code:after,
+        > ul:last-child li:last-child:after {
+          content: "…";
+          margin-left: 0.25rem;
+          vertical-align: baseline;
+        }
+
+        &.empty::after {
+          margin-left: unset;
+        }
+      }
     }
 
     .ai-help-stop {
