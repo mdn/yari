@@ -13,7 +13,6 @@ import Mandala from "../../ui/molecules/mandala";
 
 import "./index.scss";
 import { Avatar } from "../../ui/atoms/avatar";
-import { isPlusSubscriber } from "../../utils";
 import { Button } from "../../ui/atoms/button";
 import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
@@ -72,7 +71,6 @@ export function AIHelpInner() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
-  const user = useUserData();
   const locale = useLocale();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -240,11 +238,11 @@ export function AIHelpInner() {
                     ? "Loading..."
                     : isResponding
                     ? "Receiving..."
-                    : isPlusSubscriber(user)
-                    ? "Ask your question (unlimited questions per day)."
                     : quota
-                    ? `Ask your question (${quota.remaining} questions remaining today)`
-                    : "Ask your question (up to 5 questions per day)."
+                    ? `Ask your question (${quota.remaining} ${
+                        quota.remaining === 1 ? "question" : "questions"
+                      } remaining today)`
+                    : "Ask your question"
                 }
               />
               <Button
