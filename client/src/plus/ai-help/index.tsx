@@ -79,9 +79,11 @@ export function AIHelpInner() {
       setIsLoading,
     });
 
+  const isQuotaLoading = typeof quota === "undefined";
   const isQuotaExceeded = quota && quota.remaining <= 0;
+  const hasConversation = messages.length > 0;
 
-  return typeof quota === "undefined" ? (
+  return isQuotaLoading ? (
     <Loading />
   ) : (
     <section
@@ -89,111 +91,90 @@ export function AIHelpInner() {
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="ai-help-body">
-        <>
-          {messages.length ? (
-            <ul className="ai-help-messages">
-              {messages.map((message, index) => (
-                <li
-                  key={index}
-                  className={`ai-help-message ai-help-message-${message.role}`}
+      {hasConversation && (
+        <div className="ai-help-body">
+          <ul className="ai-help-messages">
+            {messages.map((message, index) => (
+              <li
+                key={index}
+                className={`ai-help-message ai-help-message-${message.role}`}
+              >
+                <div className="ai-help-message-role">
+                  <RoleIcon role={message.role} />
+                </div>
+                <div
+                  className={[
+                    "ai-help-message-content",
+                    message.status,
+                    !message.content && "empty",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
-                  <div className="ai-help-message-role">
-                    <RoleIcon role={message.role} />
-                  </div>
-                  <div
-                    className={[
-                      "ai-help-message-content",
-                      message.status,
-                      !message.content && "empty",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  >
-                    {message.role === "user" ? (
-                      message.content
-                    ) : (
-                      <>
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          linkTarget="_blank"
-                        >
-                          {message.content.replace(
-                            SORRY_BACKEND,
-                            SORRY_FRONTEND
-                          )}
-                        </ReactMarkdown>
-                        {message.status === "complete" &&
-                          !message.content.includes(SORRY_BACKEND) && (
-                            <>
-                              {message.sources && (
-                                <>
-                                  <p>
-                                    Articles that I've consulted that you might
-                                    want to check:
-                                  </p>
-                                  <ul>
-                                    {message.sources.map(
-                                      ({ slug, title }, index) => (
-                                        <li key={index}>
-                                          <a href={`/${locale}/docs/${slug}`}>
-                                            {title}
-                                          </a>
-                                        </li>
-                                      )
-                                    )}
-                                  </ul>
-                                </>
-                              )}
-                              <GleanThumbs
-                                feature="ai-help-answer"
-                                question={"Is this answer useful?"}
-                                upLabel={"Yes, this answer is useful."}
-                                downLabel={"No, this answer is not useful."}
-                                permanent={true}
-                              />
-                            </>
-                          )}
-                      </>
-                    )}
-                  </div>
-                  {index === 0 && (
-                    <div className="ai-help-actions">
-                      <Button
-                        type="action"
-                        extraClasses="ai-help-button-reset"
-                        onClickHandler={(event) => {
-                          setQuery("");
-                          reset();
-                          window.scrollTo(0, 0);
-                        }}
+                  {message.role === "user" ? (
+                    message.content
+                  ) : (
+                    <>
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        linkTarget="_blank"
                       >
-                        + New chat
-                      </Button>
-                    </div>
+                        {message.content.replace(SORRY_BACKEND, SORRY_FRONTEND)}
+                      </ReactMarkdown>
+                      {message.status === "complete" &&
+                        !message.content.includes(SORRY_BACKEND) && (
+                          <>
+                            {message.sources && (
+                              <>
+                                <p>
+                                  Articles that I've consulted that you might
+                                  want to check:
+                                </p>
+                                <ul>
+                                  {message.sources.map(
+                                    ({ slug, title }, index) => (
+                                      <li key={index}>
+                                        <a href={`/${locale}/docs/${slug}`}>
+                                          {title}
+                                        </a>
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </>
+                            )}
+                            <GleanThumbs
+                              feature="ai-help-answer"
+                              question={"Is this answer useful?"}
+                              upLabel={"Yes, this answer is useful."}
+                              downLabel={"No, this answer is not useful."}
+                              permanent={true}
+                            />
+                          </>
+                        )}
+                    </>
                   )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            !isQuotaExceeded && (
-              <section className="ai-help-examples">
-                {QUESTIONS.map((question, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="ai-help-example"
-                    onClick={() => submit(question)}
-                  >
-                    <span className="ai-help-example-icon">⚡️</span>{" "}
-                    <span className="ai-help-example-text">{question}</span>
-                  </button>
-                ))}
-              </section>
-            )
-          )}
-        </>
-      </div>
+                </div>
+                {index === 0 && (
+                  <div className="ai-help-actions">
+                    <Button
+                      type="action"
+                      extraClasses="ai-help-button-reset"
+                      onClickHandler={(event) => {
+                        setQuery("");
+                        reset();
+                        window.scrollTo(0, 0);
+                      }}
+                    >
+                      + New chat
+                    </Button>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {isResponding && (
         <div className="ai-help-stop">
           <Button
@@ -265,6 +246,21 @@ export function AIHelpInner() {
           </>
         )}
       </div>
+      {!hasConversation && !query && !isQuotaExceeded && (
+        <section className="ai-help-examples">
+          {QUESTIONS.map((question, index) => (
+            <button
+              key={index}
+              type="button"
+              className="ai-help-example"
+              onClick={() => setQuery(question)}
+            >
+              <span className="ai-help-example-icon">⚡️</span>{" "}
+              <span className="ai-help-example-text">{question}</span>
+            </button>
+          ))}
+        </section>
+      )}
     </section>
   );
 }
