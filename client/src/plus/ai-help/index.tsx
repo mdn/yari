@@ -20,8 +20,8 @@ import { Loading } from "../../ui/atoms/loading";
 
 const QUESTIONS: string[] = [
   "How to center a div with CSS?",
-  "How do I create a form in HTML?",
-  "How can I access the clipboard in JavaScript?",
+  "How do I create a contact form in HTML?",
+  "How can I sort an Array in JavaScript?",
 ];
 
 export function AiHelp() {
