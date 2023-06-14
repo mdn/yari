@@ -213,7 +213,7 @@ export function AIHelpInner() {
           <AiUpsellBanner />
         ) : (
           <>
-            {isResponding && (
+            {(isLoading || isResponding) && (
               <div className="ai-help-stop">
                 <Button
                   type="action"
