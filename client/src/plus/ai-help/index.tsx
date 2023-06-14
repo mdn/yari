@@ -317,41 +317,47 @@ export function RoleIcon({ role }: { role: "user" | "assistant" }) {
 
 function useAutoScroll(dependency) {
   const [autoScroll, setAutoScroll] = useState(true);
-  const rootRef = useRef<HTMLElement | null>();
+  const bodyRef = useRef<HTMLElement | null>();
+  const footerRef = useRef<HTMLElement | null>();
   const lastScrollY = useRef(0);
   const lastHeight = useRef(0);
 
   useEffect(() => {
-    const root = (rootRef.current ??=
-      document.querySelector<HTMLElement>(".ai-help"));
+    const body = (bodyRef.current ??=
+      document.querySelector<HTMLElement>(".ai-help-body"));
+    const footer = (footerRef.current ??=
+      document.querySelector<HTMLElement>(".ai-help-footer"));
 
-    if (!root) {
-      console.log("No root");
+    if (!body || !footer) {
       return;
     }
 
-    const { offsetTop, offsetHeight } = root;
-    const { innerHeight, scrollY } = window;
-    const elementBottom = offsetTop + offsetHeight;
-    const targetScrollY = elementBottom - window.innerHeight;
-    const windowBottom = scrollY + innerHeight;
+    window.setTimeout(() => {
+      const { offsetTop, offsetHeight } = body;
+      const elementBottom = offsetTop + offsetHeight + footer.offsetHeight;
+      const targetScrollY = elementBottom - window.innerHeight;
 
-    const isBottomVisible =
-      scrollY <= elementBottom && elementBottom <= windowBottom;
+      // Only scroll if our element grew and the target scroll position is further down.
+      const shouldScroll =
+        lastHeight.current < offsetHeight &&
+        lastScrollY.current < targetScrollY;
 
-    // Only scroll if our element grew and the target scroll position is further down.
-    const shouldScroll =
-      lastHeight.current < offsetHeight && lastScrollY.current < targetScrollY;
+      lastHeight.current = offsetHeight;
+      lastScrollY.current = window.scrollY;
 
-    lastHeight.current = offsetHeight;
-    lastScrollY.current = scrollY;
-
-    if (autoScroll && shouldScroll) {
-      window.scrollTo(0, targetScrollY);
-    }
+      if (autoScroll && shouldScroll) {
+        window.scrollTo(0, targetScrollY);
+      }
+    });
 
     const scrollListener = () => {
-      const { scrollY } = window;
+      const { offsetTop, offsetHeight } = body;
+      const { innerHeight, scrollY } = window;
+      const elementBottom = offsetTop + offsetHeight + footer.offsetHeight;
+      const windowBottom = scrollY + innerHeight;
+      const isBottomVisible =
+        scrollY <= elementBottom && elementBottom <= windowBottom;
+
       const scrollOffset = scrollY - lastScrollY.current;
       if (autoScroll && scrollOffset < 0 && !isBottomVisible) {
         // User scrolled up.
