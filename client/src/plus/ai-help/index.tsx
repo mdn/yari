@@ -124,7 +124,7 @@ export function AIHelpInner() {
                       {message.status === "complete" &&
                         !message.content.includes(SORRY_BACKEND) && (
                           <>
-                            {message.sources && (
+                            {message.sources && message.sources.length > 0 && (
                               <>
                                 <p>
                                   Articles that I've consulted that you might
