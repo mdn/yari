@@ -34,6 +34,7 @@ export enum MessageStatus {
   Pending = "pending",
   InProgress = "in-progress",
   Complete = "complete",
+  Stopped = "stopped",
 }
 
 export interface Message {
@@ -326,6 +327,22 @@ export function useAiChat({
     return data;
   }
 
+  function stop() {
+    eventSourceRef.current?.close();
+    eventSourceRef.current = undefined;
+    setIsResponding(false);
+    setHasError(false);
+    setIsResponding(false);
+    dispatchMessage({
+      type: "update",
+      index: currentMessageIndex,
+      message: {
+        status: MessageStatus.Stopped,
+      },
+    });
+    setCurrentMessageIndex((x) => x + 2);
+  }
+
   function reset() {
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
@@ -338,6 +355,7 @@ export function useAiChat({
 
   return {
     submit,
+    stop,
     reset,
     messages,
     isResponding,

@@ -76,9 +76,10 @@ export function AIHelpInner() {
   const locale = useLocale();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isResponding, hasError, messages, quota, reset, submit } = useAiChat({
-    setIsLoading,
-  });
+  const { isResponding, hasError, messages, quota, reset, stop, submit } =
+    useAiChat({
+      setIsLoading,
+    });
 
   const isQuotaExceeded = quota && quota.remaining <= 0;
 
@@ -195,6 +196,17 @@ export function AIHelpInner() {
           )}
         </>
       </div>
+      {isResponding && (
+        <div className="ai-help-stop">
+          <Button
+            type="action"
+            extraClasses="ai-help-stop-button"
+            onClickHandler={() => stop()}
+          >
+            Stop answering
+          </Button>
+        </div>
+      )}
       {hasError && (
         <NoteCard extraClasses="ai-help-error" type="error">
           <h4>Error</h4>
