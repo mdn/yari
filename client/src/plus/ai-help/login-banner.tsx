@@ -46,7 +46,7 @@ export function AiUpsellBanner() {
             href={href}
             onClick={() => gleanClick(`ai-help: banner-link`)}
           >
-            MDN Plus
+            MDN Plus 5/10
           </a>{" "}
           to continue using AI Help.
         </span>
