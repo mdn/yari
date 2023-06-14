@@ -106,6 +106,8 @@ export function AIHelpInner() {
   const isQuotaExceeded = quota && quota.remaining <= 0;
   const hasConversation = messages.length > 0;
 
+  const { setAutoScroll } = useAutoScroll(messages);
+
   return isQuotaLoading ? (
     <Loading />
   ) : (
@@ -232,6 +234,7 @@ export function AIHelpInner() {
                 if (query.trim()) {
                   submit(query.trim());
                   setQuery("");
+                  setAutoScroll(true);
                 }
               }}
             >
@@ -302,4 +305,54 @@ export function RoleIcon({ role }: { role: "user" | "assistant" }) {
     case "assistant":
       return <Icon name="chatgpt" />;
   }
+}
+
+function useAutoScroll(dependency) {
+  const [autoScroll, setAutoScroll] = useState(true);
+  const rootRef = useRef<HTMLElement | null>();
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const root = (rootRef.current ??=
+      document.querySelector<HTMLElement>(".ai-help"));
+
+    if (!root) {
+      return;
+    }
+
+    const { offsetTop, offsetHeight } = root;
+    const { innerHeight, scrollY } = window;
+    const elementBottom = offsetTop + offsetHeight;
+    const windowBottom = scrollY + innerHeight;
+    lastScrollY.current = scrollY;
+
+    if (autoScroll) {
+      const scrollPosition = elementBottom - window.innerHeight;
+      window.scrollTo(0, scrollPosition);
+    }
+
+    const scrollListener = () => {
+      const { scrollY } = window;
+      if (
+        autoScroll &&
+        scrollY < lastScrollY.current &&
+        windowBottom < elementBottom
+      ) {
+        // User scrolled up.
+        setAutoScroll(false);
+      } else if (!autoScroll && elementBottom < windowBottom) {
+        // User scrolled down again.
+        setAutoScroll(true);
+      }
+      lastScrollY.current = scrollY;
+    };
+    window.addEventListener("scroll", scrollListener);
+
+    return () => window.removeEventListener("scroll", scrollListener);
+  }, [autoScroll, dependency]);
+
+  return {
+    autoScroll,
+    setAutoScroll,
+  };
 }
