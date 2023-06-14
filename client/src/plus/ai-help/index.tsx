@@ -121,7 +121,10 @@ export function AIHelpInner() {
                           <>
                             {message.sources && (
                               <>
-                                <p>My answer is based on these MDN pages:</p>
+                                <p>
+                                  Articles that I've consulted that you might
+                                  want to check:
+                                </p>
                                 <ul>
                                   {message.sources.map(
                                     ({ slug, title }, index) => (
