@@ -64,6 +64,10 @@ export function AiHelp() {
   );
 }
 
+const SORRY_BACKEND = "Sorry, I don't know how to help with that.";
+const SORRY_FRONTEND =
+  "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
+
 export function AIHelpInner() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -115,38 +119,42 @@ export function AIHelpInner() {
                           remarkPlugins={[remarkGfm]}
                           linkTarget="_blank"
                         >
-                          {message.content}
+                          {message.content.replace(
+                            SORRY_BACKEND,
+                            SORRY_FRONTEND
+                          )}
                         </ReactMarkdown>
-                        {message.status === "complete" && (
-                          <>
-                            {message.sources && (
-                              <>
-                                <p>
-                                  Articles that I've consulted that you might
-                                  want to check:
-                                </p>
-                                <ul>
-                                  {message.sources.map(
-                                    ({ slug, title }, index) => (
-                                      <li key={index}>
-                                        <a href={`/${locale}/${slug}`}>
-                                          {title}
-                                        </a>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </>
-                            )}
-                            <GleanThumbs
-                              feature="ai-help-answer"
-                              question={"Is this answer useful?"}
-                              upLabel={"Yes, this answer is useful."}
-                              downLabel={"No, this answer is not useful."}
-                              permanent={true}
-                            />
-                          </>
-                        )}
+                        {message.status === "complete" &&
+                          !message.content.includes(SORRY_BACKEND) && (
+                            <>
+                              {message.sources && (
+                                <>
+                                  <p>
+                                    Articles that I've consulted that you might
+                                    want to check:
+                                  </p>
+                                  <ul>
+                                    {message.sources.map(
+                                      ({ slug, title }, index) => (
+                                        <li key={index}>
+                                          <a href={`/${locale}/${slug}`}>
+                                            {title}
+                                          </a>
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                </>
+                              )}
+                              <GleanThumbs
+                                feature="ai-help-answer"
+                                question={"Is this answer useful?"}
+                                upLabel={"Yes, this answer is useful."}
+                                downLabel={"No, this answer is not useful."}
+                                permanent={true}
+                              />
+                            </>
+                          )}
                       </>
                     )}
                   </div>
