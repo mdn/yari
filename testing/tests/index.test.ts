@@ -1367,7 +1367,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("iframe")).toHaveLength(3);
+  expect($("iframe")).toHaveLength(4);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
