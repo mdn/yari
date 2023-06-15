@@ -54,8 +54,7 @@
 
     .ai-help-input-form {
       --form-elem-height: 3rem;
-      align-items: center;
-      display: flex;
+      position: relative;
       width: 100%;
 
       input {
@@ -78,14 +77,14 @@
 
       button {
         --button-color: var(--icon-secondary);
-        --button-height: 3rem;
+        --button-height: 1.5rem;
         --button-padding: 0;
         --icon-size: 1.5rem;
 
         display: block;
-        position: relative;
-        right: 2.25rem;
-        width: 0;
+        position: absolute;
+        top: 0.75rem;
+        right: calc(1rem + 1px);
 
         &:hover {
           background: transparent;
