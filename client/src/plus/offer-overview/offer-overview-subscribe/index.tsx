@@ -75,7 +75,7 @@ const PLUS_FEATURES = [
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
-  ["afree", "Ads free", "new"],
+  ["afree", "Ads free"],
 ];
 
 const CORE: OfferDetailsProps = {
