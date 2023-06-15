@@ -68,9 +68,9 @@ test.describe("Basic viewing of functional pages", () => {
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
     ).toBeTruthy();
-    expect(await page.innerText("#grid_2 pre.css.notranslate")).toMatch(
-      /\.wrapper\s*\{\s*display:\s*grid;/
-    );
+    expect(
+      await page.innerText("#grid_2 pre.css.notranslate:not(.hidden)")
+    ).toMatch(/\.wrapper\s*\{\s*display:\s*grid;/);
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
     ).toBeTruthy();
@@ -113,7 +113,9 @@ test.describe("Basic viewing of functional pages", () => {
       await page.isVisible(`iframe.sample-code-frame[src$="${flexSample1Uri}"]`)
     ).toBeTruthy();
 
-    expect(await page.innerText("#flex_2 pre.css.notranslate")).toMatch(
+    expect(
+      await page.innerText("#flex_2 pre.css.notranslate:not(.hidden)")
+    ).toMatch(
       /\.wrapper {\s*display: flex;\s*\}\s*\.wrapper > div \{\s*flex: 1;\s*\}/
     );
     expect(
@@ -135,16 +137,16 @@ test.describe("Basic viewing of functional pages", () => {
       "A Test Introduction to CSS Grid Layout"
     );
     expect(await page.innerText("#grid_layout")).toBe("Grid Layout");
-    expect(await page.innerText("#grid_1 pre.css.notranslate")).toMatch(
-      /\.wrapper\s*\{\s*display:\s*grid;/
-    );
+    expect(
+      await page.innerText("#grid_1 pre.css.notranslate:not(.hidden)")
+    ).toMatch(/\.wrapper\s*\{\s*display:\s*grid;/);
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
     ).toBeTruthy();
 
-    expect(await page.innerText("#grid_2 pre.css.notranslate")).toMatch(
-      /grid-template-columns: 1fr 1fr 1fr;/
-    );
+    expect(
+      await page.innerText("#grid_2 pre.css.notranslate:not(.hidden)")
+    ).toMatch(/grid-template-columns: 1fr 1fr 1fr;/);
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
     ).toBeTruthy();
