@@ -107,8 +107,8 @@ export function AIHelpInner() {
     submit,
   } = useAiChat();
 
-  const isQuotaLoading = typeof quota === "undefined";
-  const isQuotaExceeded = quota && quota.remaining <= 0;
+  const isQuotaLoading = quota === undefined;
+  const isQuotaExceeded = quota ? quota.remaining <= 0 : false;
   const hasConversation = messages.length > 0;
 
   const { autoScroll, setAutoScroll } = useAutoScroll(messages);

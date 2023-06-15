@@ -179,7 +179,7 @@ export function useAiChat({
   }, [isLoading, isResponding, messages]);
 
   useEffect(() => {
-    if (remoteQuota) {
+    if (remoteQuota !== undefined) {
       setQuota(remoteQuota);
     }
   }, [remoteQuota]);
