@@ -7,6 +7,16 @@ function testURL(pathname = "/") {
   return `http://localhost:${PORT}${pathname}`;
 }
 
+function liveSampleURL(uri: string, id: string, legacy = false) {
+  const params = new URLSearchParams([
+    ["id", id],
+    ["url", uri],
+  ]);
+  return `${uri}/${
+    legacy ? `_sample_.${id}` : "unsafe-runner"
+  }.html?${params.toString()}`;
+}
+
 test.describe("Basic viewing of functional pages", () => {
   test("open the /en-US/docs/Web/Foo page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
@@ -38,10 +48,10 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const flexSample1Uri = `${uri}/Flex/_sample_.flex_1.html`;
-    const flexSample2Uri = `${uri}/Flex/_sample_.flex_2.html`;
-    const gridSample1Uri = `${uri}/Grid/_sample_.grid_1.html`;
-    const gridSample2Uri = `${uri}/_sample_.grid_2.html`;
+    const flexSample1Uri = liveSampleURL(`${uri}/Flex`, "flex_1", true);
+    const flexSample2Uri = liveSampleURL(`${uri}/Flex`, "flex_2", true);
+    const gridSample1Uri = liveSampleURL(`${uri}/Grid`, "grid_1", true);
+    const gridSample2Uri = liveSampleURL(uri, "grid_2");
     await page.goto(testURL(uri));
     expect(await page.title()).toContain("A Test Introduction to CSS layout");
     expect(await page.innerText("h1")).toBe(
@@ -85,8 +95,8 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
-    const flexSample1Uri = `${uri}/_sample_.flex_1.html`;
-    const flexSample2Uri = `${uri}/_sample_.flex_2.html`;
+    const flexSample1Uri = liveSampleURL(uri, "flex_1");
+    const flexSample2Uri = liveSampleURL(uri, "flex_2");
     await page.goto(testURL(uri));
     expect(await page.title()).toContain(
       "A Test Introduction to CSS Flexbox Layout"
@@ -115,8 +125,8 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
-    const gridSample1Uri = `${uri}/_sample_.grid_1.html`;
-    const gridSample2Uri = `${uri}/_sample_.grid_2.html`;
+    const gridSample1Uri = liveSampleURL(uri, "grid_1");
+    const gridSample2Uri = liveSampleURL(uri, "grid_2");
     await page.goto(testURL(uri));
     expect(await page.title()).toContain(
       "A Test Introduction to CSS Grid Layout"
