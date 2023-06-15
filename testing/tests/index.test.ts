@@ -286,7 +286,7 @@ test("content built French Embeddable page", () => {
   expect(doc.flaws.translation_differences).toHaveLength(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
-    "Differences in the important macros (0 in common of 4 possible)"
+    "Differences in the important macros (0 in common of 5 possible)"
   );
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.suggestion).toBeFalsy();
