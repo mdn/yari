@@ -75,7 +75,7 @@ interface PageReference {
   title: string;
 }
 
-interface Quota {
+export interface Quota {
   used: number;
   remaining: number;
   limit: number;

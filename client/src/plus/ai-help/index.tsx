@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { useAiChat } from "./use-ai";
+import { Quota, useAiChat } from "./use-ai";
 import { AiLoginBanner, AiUpsellBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
@@ -109,8 +109,11 @@ export function AIHelpInner() {
 
   const isQuotaLoading = quota === undefined;
   const hasQuota = !isQuotaLoading && quota !== null;
-  const isQuotaExceeded = quota ? quota.remaining <= 0 : false;
   const hasConversation = messages.length > 0;
+
+  function isQuotaExceeded(quota): quota is Quota {
+    return quota ? quota.remaining <= 0 : false;
+  }
 
   function placeholder(status: string) {
     if (!hasQuota) {
@@ -214,7 +217,7 @@ export function AIHelpInner() {
                   <div className="ai-help-actions">
                     <Button
                       type="action"
-                      isDisabled={isQuotaExceeded}
+                      isDisabled={isQuotaExceeded(quota)}
                       extraClasses="ai-help-reset-button"
                       onClickHandler={() => {
                         setQuery("");
@@ -257,8 +260,8 @@ export function AIHelpInner() {
             </Button>
           </div>
         )}
-        {isQuotaExceeded ? (
-          <AiUpsellBanner />
+        {isQuotaExceeded(quota) ? (
+          <AiUpsellBanner limit={quota.limit} />
         ) : (
           <>
             <form
@@ -306,7 +309,7 @@ export function AIHelpInner() {
           </>
         )}
       </div>
-      {!hasConversation && !query && !isQuotaExceeded && (
+      {!hasConversation && !query && !isQuotaExceeded(quota) && (
         <section className="ai-help-examples">
           <header>Examples</header>
           {EXAMPLES.map(({ category, query }, index) => (
