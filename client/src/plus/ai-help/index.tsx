@@ -96,11 +96,16 @@ export function AIHelpInner() {
   const [query, setQuery] = useState("");
   const locale = useLocale();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isResponding, hasError, messages, quota, reset, stop, submit } =
-    useAiChat({
-      setIsLoading,
-    });
+  const {
+    isLoading,
+    isResponding,
+    hasError,
+    messages,
+    quota,
+    reset,
+    stop,
+    submit,
+  } = useAiChat();
 
   const isQuotaLoading = typeof quota === "undefined";
   const isQuotaExceeded = quota && quota.remaining <= 0;

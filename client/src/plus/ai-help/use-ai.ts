@@ -5,15 +5,7 @@ import type {
   CreateChatCompletionResponse,
   CreateChatCompletionResponseChoicesInner,
 } from "openai";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
@@ -160,15 +152,14 @@ class AiHelpStorage {
 
 export interface UseAiChatOptions {
   messageTemplate?: (message: string) => string;
-  setIsLoading?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function useAiChat({
   messageTemplate = (message) => message,
-  setIsLoading,
-}: UseAiChatOptions) {
+}: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -182,8 +173,10 @@ export function useAiChat({
   const remoteQuota = useRemoteQuota();
 
   useEffect(() => {
-    AiHelpStorage.messages = messages;
-  }, [messages]);
+    if (!isLoading && !isResponding && messages.length > 0) {
+      AiHelpStorage.messages = messages;
+    }
+  }, [isLoading, isResponding, messages]);
 
   useEffect(() => {
     if (remoteQuota) {
@@ -358,6 +351,7 @@ export function useAiChat({
     stop,
     reset,
     messages,
+    isLoading,
     isResponding,
     hasError,
     quota,
