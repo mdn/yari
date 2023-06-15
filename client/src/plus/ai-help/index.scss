@@ -47,7 +47,7 @@
 
       .ai-help-footer-text {
         font-size: var(--type-tiny-font-size);
-        margin-left: calc(1px + 0.5rem + 1rem); /* Border + margin + padding */
+        margin-left: calc(1px + 1rem); /* Border + padding */
         margin-top: 0.5rem;
       }
     }
@@ -328,10 +328,9 @@
       border-radius: 100px;
       color: var(--text-primary);
       height: var(--form-elem-height);
-      margin: 0 0.5rem;
       padding-left: 1rem;
       padding-right: 3rem;
-      width: calc(100% - 1rem);
+      width: 100%;
     }
   }
 }
