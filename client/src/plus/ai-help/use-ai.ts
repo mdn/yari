@@ -323,9 +323,9 @@ export function useAiChat({
   function stop() {
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
+    setIsLoading(false);
     setIsResponding(false);
     setHasError(false);
-    setIsResponding(false);
     dispatchMessage({
       type: "update",
       index: currentMessageIndex,
@@ -339,6 +339,7 @@ export function useAiChat({
   function reset() {
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
+    setIsLoading(false);
     setIsResponding(false);
     setHasError(false);
     dispatchMessage({
