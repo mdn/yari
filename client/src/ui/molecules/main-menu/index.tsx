@@ -81,12 +81,12 @@ export default function MainMenu({ isOpenOnMobile }) {
         )}
         <li className="top-level-entry-container">
           <a className="top-level-entry menu-link" href="/en-US/blog/">
-            Blog <sup className="new">New</sup>
+            Blog
           </a>
         </li>
         <li className="top-level-entry-container">
           <a className="top-level-entry menu-link" href={`/${locale}/play`}>
-            Play
+            Play <sup className="new">New</sup>
           </a>
         </li>
       </ul>
