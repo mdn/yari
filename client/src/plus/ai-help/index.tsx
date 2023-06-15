@@ -193,6 +193,7 @@ export function AIHelpInner() {
                   <div className="ai-help-actions">
                     <Button
                       type="action"
+                      isDisabled={isQuotaExceeded}
                       extraClasses="ai-help-reset-button"
                       onClickHandler={() => {
                         setQuery("");
