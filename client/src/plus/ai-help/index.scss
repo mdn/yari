@@ -52,7 +52,7 @@
       }
     }
 
-    .ai-help-input {
+    .ai-help-input-form {
       --form-elem-height: 3rem;
       align-items: center;
       display: flex;
@@ -61,6 +61,12 @@
       input {
         background-color: var(--background-primary);
         border: 1px solid var(--border-primary);
+        border-radius: 100px;
+        color: var(--text-primary);
+        height: var(--form-elem-height);
+        padding-left: 1rem;
+        padding-right: 3rem;
+        width: 100%;
 
         &:focus {
           border-color: var(--category-color);
@@ -70,7 +76,7 @@
         }
       }
 
-      .send-ai-message-button {
+      button {
         --button-color: var(--icon-secondary);
         --button-height: 3rem;
         --button-padding: 0;
@@ -88,7 +94,7 @@
     }
 
     &.has-input {
-      .send-ai-message-button {
+      button {
         --button-color: var(--ai-help-icon);
       }
     }
@@ -320,17 +326,6 @@
 
     .ai-help-error {
       margin: 0.5rem 0;
-    }
-
-    input {
-      background-color: var(--background-primary);
-      border: 1px solid var(--border-primary);
-      border-radius: 100px;
-      color: var(--text-primary);
-      height: var(--form-elem-height);
-      padding-left: 1rem;
-      padding-right: 3rem;
-      width: 100%;
     }
   }
 }

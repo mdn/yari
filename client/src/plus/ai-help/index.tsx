@@ -252,7 +252,7 @@ export function AIHelpInner() {
           <>
             <form
               ref={formRef}
-              className="ai-help-input"
+              className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
                 if (query.trim()) {
@@ -286,7 +286,6 @@ export function AIHelpInner() {
                 buttonType="submit"
                 title="Submit question"
                 isDisabled={!query}
-                extraClasses="send-ai-message-button"
               >
                 <span className="visually-hidden">Submit question</span>
               </Button>
