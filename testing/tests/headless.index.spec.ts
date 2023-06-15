@@ -10,7 +10,7 @@ function testURL(pathname = "/") {
 function liveSampleURL(uri: string, id: string, legacy = false) {
   const params = new URLSearchParams([
     ["id", id],
-    ["url", uri],
+    ...(legacy ? [["url", uri]] : []),
   ]);
   return `${uri}/${
     legacy ? `_sample_.${id}` : "unsafe-runner"
@@ -75,13 +75,8 @@ test.describe("Basic viewing of functional pages", () => {
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
     ).toBeTruthy();
 
-    // Ensure that the live-sample pages were built.
-    for (const sampleUri of [
-      flexSample1Uri,
-      flexSample2Uri,
-      gridSample1Uri,
-      gridSample2Uri,
-    ]) {
+    // Ensure that the legacy live-sample pages were built.
+    for (const sampleUri of [flexSample1Uri, flexSample2Uri, gridSample1Uri]) {
       await page.goto(testURL(sampleUri));
       expect(await page.innerText("body > div.wrapper > div.box1")).toBe("One");
       expect(await page.innerText("body > div.wrapper > div.box2")).toBe("Two");
