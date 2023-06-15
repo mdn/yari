@@ -1356,7 +1356,7 @@ test("img tags without 'src' should not crash", () => {
   expect(doc.flaws).toEqual({});
 });
 
-test("/Web/Embeddable should have 3 valid live samples", () => {
+test("/Web/Embeddable should have 4 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1373,8 +1373,9 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws).toEqual({});
+  expect(doc.flaws.macros[0].name).toEqual("MacroDeprecatedError");
 
+  // Only the transplanted live sample has a file.
   const builtFiles = fs.readdirSync(path.join(builtFolder, "legacy"));
   expect(
     builtFiles
