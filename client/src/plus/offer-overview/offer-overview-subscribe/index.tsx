@@ -82,7 +82,7 @@ const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
-    ["ai-help", "AI Help (5 questions/24h)", "beta"],
+    ["ai-help", "AI Help: 5 questions per day", "beta"],
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
   ],
