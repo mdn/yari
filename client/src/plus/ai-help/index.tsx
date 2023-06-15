@@ -161,7 +161,7 @@ export function AIHelpInner() {
                             {message.sources && message.sources.length > 0 && (
                               <>
                                 <p>
-                                  Articles that I've consulted that you might
+                                  MDN content that I've consulted that you might
                                   want to check:
                                 </p>
                                 <ul>
