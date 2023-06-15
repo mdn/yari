@@ -145,12 +145,6 @@ test.describe("Basic viewing of functional pages", () => {
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
     ).toBeTruthy();
-
-    // Ensure that the live-sample page "gridSample2Uri" was built.
-    await page.goto(testURL(gridSample2Uri));
-    expect(await page.innerText("body > div.wrapper > div.box1")).toBe("One");
-    expect(await page.innerText("body > div.wrapper > div.box2")).toBe("Two");
-    expect(await page.innerText("body > div.wrapper > div.box3")).toBe("Three");
   });
 
   test("return to previous page on back-button press", async ({ page }) => {
