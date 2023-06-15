@@ -30,7 +30,7 @@ export default function OfferOverviewFeatures() {
           <p>
             No more scrolling through page after page to find your answers.
             Introducing an AI assistant that can answer all your questions in
-            real time. Powered by OpenAI GPT 3.5.
+            real time. Powered by OpenAI GPT-3.5.
           </p>
           <Button href="/en-US/plus/docs/features/ai-help" target="_self">
             Learn more →

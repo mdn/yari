@@ -294,7 +294,7 @@ export function AIHelpInner() {
             <div className="ai-help-footer-text">
               <span>
                 Results based on MDN's most recent documentation and powered by
-                OpenAI GPT 3.5
+                OpenAI GPT-3.5
               </span>
             </div>
           </>
