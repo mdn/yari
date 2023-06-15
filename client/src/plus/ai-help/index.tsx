@@ -108,8 +108,19 @@ export function AIHelpInner() {
   } = useAiChat();
 
   const isQuotaLoading = quota === undefined;
+  const hasQuota = !isQuotaLoading && quota !== null;
   const isQuotaExceeded = quota ? quota.remaining <= 0 : false;
   const hasConversation = messages.length > 0;
+
+  function placeholder(status: string) {
+    if (!hasQuota) {
+      return status;
+    }
+
+    return `${status} (${quota.remaining} ${
+      quota.remaining === 1 ? "question" : "questions"
+    } remaining today)`;
+  }
 
   const { autoScroll, setAutoScroll } = useAutoScroll(messages);
 
@@ -268,17 +279,13 @@ export function AIHelpInner() {
                 type="text"
                 onChange={(event) => setQuery(event.target.value)}
                 value={query}
-                placeholder={
+                placeholder={placeholder(
                   isLoading
-                    ? "Loading..."
+                    ? "Requesting answer..."
                     : isResponding
-                    ? "Receiving..."
-                    : quota
-                    ? `Ask your question (${quota.remaining} ${
-                        quota.remaining === 1 ? "question" : "questions"
-                      } remaining today)`
+                    ? "Receiving answer..."
                     : "Ask your question"
-                }
+                )}
               />
               <Button
                 type="action"
