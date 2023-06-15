@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/atoms/button";
 import { EditorContent, codeToMarkdown } from "./utils";
 import { Loading } from "../ui/atoms/loading";
