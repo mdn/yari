@@ -3,8 +3,6 @@ import Toast, { ToastData } from "./ui/atoms/toast";
 
 interface UIStatus {
   toggleMobileOverlay: (id: Overlay, shown?: boolean) => void;
-  isDialogOpen: boolean;
-  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setToastData: React.Dispatch<React.SetStateAction<ToastData | null>>;
@@ -19,8 +17,6 @@ export enum Overlay {
 
 const UIContext = React.createContext<UIStatus>({
   toggleMobileOverlay: () => {},
-  isDialogOpen: false,
-  setIsDialogOpen: () => {},
   isSidebarOpen: false,
   setIsSidebarOpen: () => {},
   setToastData: () => {},
@@ -29,7 +25,6 @@ const UIContext = React.createContext<UIStatus>({
 export function UIProvider(props: any) {
   const [mobileOverlays, setMobileOverlays] = useState<Set<Overlay>>(new Set());
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [toastData, setToastData] = useState<ToastData | null>(null);
 
   const toggleMobileOverlay = useCallback(
@@ -67,8 +62,6 @@ export function UIProvider(props: any) {
     <UIContext.Provider
       value={{
         toggleMobileOverlay,
-        isDialogOpen,
-        setIsDialogOpen,
         isSidebarOpen,
         setIsSidebarOpen,
         setToastData,
