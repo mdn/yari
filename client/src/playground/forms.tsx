@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/atoms/button";
 import { EditorContent, codeToMarkdown } from "./utils";
 import { Loading } from "../ui/atoms/loading";
@@ -54,17 +54,18 @@ export function FlagForm({ gistId }: { gistId: string | null }) {
 }
 
 export function ShareForm({
+  url,
   share,
   code,
 }: {
-  share?: () => Promise<string> | string;
+  url: URL | null;
+  share?: () => Promise<void>;
   code?: () => EditorContent;
   extraClasses?: string;
 }) {
   let userData = useUserData();
   const href = usePlusUrl();
   const gleanClick = useGleanClick();
-  let [url, setUrl] = useState<string | null>(null);
   let [loading, setLoading] = useState(false);
   return (
     <form className="share">
@@ -99,11 +100,12 @@ export function ShareForm({
                 <Loading />
               ) : (
                 <>
-                  <a href={url}>Permalink to this playground</a>
+                  <a href={url.toString()}>Permalink to this playground</a>
                   <Button
                     type="secondary"
                     onClickHandler={async () => {
-                      url && (await navigator.clipboard.writeText(url));
+                      url &&
+                        (await navigator.clipboard.writeText(url.toString()));
                     }}
                   >
                     Copy to clipboard
@@ -115,9 +117,8 @@ export function ShareForm({
                 onClickHandler={async () => {
                   setLoading(true);
                   gleanClick(`${PLAYGROUND}: share-permalink`);
-                  const u = await share?.();
+                  await share?.();
                   setLoading(false);
-                  setUrl(u || null);
                 }}
               >
                 Create link

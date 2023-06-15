@@ -71,6 +71,7 @@ export default function Playground() {
   let sessionKey = searchParams.get("session");
   let [diaSate, setDiaState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
+  let [shareUrl, setShareUrl] = useState<URL | null>(null);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
@@ -103,7 +104,7 @@ export default function Playground() {
   const cssRef = useRef<EditorHandle | null>(null);
   const jsRef = useRef<EditorHandle | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
-  const shareDiaRef = useRef<HTMLDialogElement | null>(null);
+  const diaRef = useRef<HTMLDialogElement | null>(null);
   const getEditorContent = useCallback(() => {
     const code = {
       html: htmlRef.current?.getContent() || HTML_DEFAULT,
@@ -218,13 +219,8 @@ export default function Playground() {
   };
   const share = async () => {
     const url = await save(getEditorContent());
-    window.history.replaceState(
-      {},
-      "",
-      `/en-US/play?${url.searchParams.toString()}`
-    );
     setShared(true);
-    return url.toString();
+    setShareUrl(url);
   };
   const src = `${
     codeSrc ||
@@ -233,13 +229,19 @@ export default function Playground() {
     }${PLAYGROUND_BASE_URL}`
   }/${unsafe ? "unsafe-" : ""}runner.html`;
 
+  const cleanDialog = () => {
+    if (diaSate === DialogState.share) {
+      setShareUrl(null);
+    }
+  };
+
   return (
     <>
       <main className="play container">
-        <dialog id="playDialog" ref={shareDiaRef}>
+        <dialog id="playDialog" ref={diaRef} onClose={cleanDialog}>
           {diaSate === DialogState.flag && <FlagForm gistId={gistId} />}
           {diaSate === DialogState.share && (
-            <ShareForm code={getEditorContent} share={share} />
+            <ShareForm url={shareUrl} code={getEditorContent} share={share} />
           )}
         </dialog>
         <section className="editors">
@@ -272,7 +274,7 @@ export default function Playground() {
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
                   setDiaState(DialogState.share);
-                  shareDiaRef.current?.showModal();
+                  diaRef.current?.showModal();
                 }}
               >
                 share
@@ -311,7 +313,7 @@ export default function Playground() {
                 e.preventDefault();
                 gleanClick(`${PLAYGROUND}: flag-click`);
                 setDiaState(DialogState.flag);
-                shareDiaRef.current?.showModal();
+                diaRef.current?.showModal();
               }}
             >
               Seeing something inappropriate?
