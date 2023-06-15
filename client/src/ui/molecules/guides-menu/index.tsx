@@ -58,6 +58,13 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "Accessibility",
         url: `/${locale}/docs/Web/Accessibility`,
       },
+      {
+        description: "Learn to develop games for the browser",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Game development",
+        url: `/${locale}/docs/Games`,
+      },
     ],
   };
   const isOpen = visibleSubMenuId === menu.id;
