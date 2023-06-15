@@ -113,6 +113,16 @@ export function AIHelpInner() {
 
   const { autoScroll, setAutoScroll } = useAutoScroll(messages);
 
+  useEffect(() => {
+    // Focus input:
+    // - When the user loads the page (-> isQuotaLoading).
+    // - When the user starts a "New chat" (-> hasConversation).
+    const input = inputRef.current;
+    if (input) {
+      window.setTimeout(() => input.focus());
+    }
+  }, [isQuotaLoading, hasConversation]);
+
   return isQuotaLoading ? (
     <Loading />
   ) : (
