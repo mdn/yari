@@ -11,6 +11,7 @@ import { BlogImage, BlogPostFrontmatter } from "../../../libs/types/blog.js";
 import "./index.scss";
 import "./post.scss";
 import { Button } from "../ui/atoms/button";
+import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
 interface BlogIndexData {
   posts: BlogPostFrontmatter[];
@@ -101,6 +102,7 @@ function BlogIndex(props: HydrationData) {
           return <PostPreview key={fm.slug} fm={fm} />;
         })}
       </main>
+      <NewsletterSignUp />
     </>
   );
 }
