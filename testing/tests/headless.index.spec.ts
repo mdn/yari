@@ -101,9 +101,9 @@ test.describe("Basic viewing of functional pages", () => {
     );
     expect(await page.innerText("#flexbox")).toBe("Flexbox");
 
-    expect(await page.innerText("#flex_1 pre.css.notranslate")).toMatch(
-      /\.wrapper\s*\{\s*display:\s*flex;\s*\}/
-    );
+    expect(
+      await page.innerText("#flex_1 pre.css.notranslate:not(.hidden)")
+    ).toMatch(/\.wrapper\s*\{\s*display:\s*flex;\s*\}/);
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${flexSample1Uri}"]`)
     ).toBeTruthy();
