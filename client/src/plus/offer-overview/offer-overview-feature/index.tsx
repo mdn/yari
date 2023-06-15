@@ -23,6 +23,20 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
+      <OfferOverviewFeature id="ai-help" img="/assets/ai-help.png" imgAlt="">
+        <section aria-labelledby="ai-help-section-title">
+          <h2 id="ai-help-section-title">AI Help</h2>
+          <h3>Get real-time assistance and support.</h3>
+          <p>
+            No more scrolling through page after page to find your answers.
+            Introducing an AI assistant that can answer all your questions in
+            real time. Powered by OpenAI GPT 3.5.
+          </p>
+          <Button href="/en-US/plus/docs/features/ai-help" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
       <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
         <section aria-labelledby="updates-section-title">
           <h2 id="updates-section-title">Updates</h2>
