@@ -17,10 +17,7 @@ export function updatePlayIframe(
   if (!iframe || !editorContent) {
     return;
   }
-  //const b = new Blob([editorContent.html], {type: "text/html",});
 
-  //iframe.src = URL.createObjectURL(b);
-  //return;
   const message: Message = {
     typ: "init",
     state: editorContent,
@@ -29,7 +26,7 @@ export function updatePlayIframe(
   if (iframe.contentWindow) {
     if (iframe.contentDocument?.readyState === "loading") {
       iframe.contentDocument?.addEventListener("DOMContentLoaded", () => {
-        iframe.contentWindow!.postMessage(message, {
+        iframe.contentWindow?.postMessage(message, {
           targetOrigin: "*",
         });
       });

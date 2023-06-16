@@ -208,8 +208,14 @@ async function buildDocuments(
     );
 
     for (const { id, html, slug } of liveSamples) {
-      let liveSamplePath;
+      let liveSamplePath: string;
       if (slug) {
+        // Since we no longer build all live samples we have to build live samples
+        // for foreign slugs. If slug is truthy it's a different slug than the current
+        // document. So we need to set up the folder.
+        console.warn(
+          `Building live sample from another page: ${id} in ${documentPath}`
+        );
         const liveSampleBasePath = path.join(
           BUILD_OUT_ROOT,
           slugToFolder(slug)

@@ -1,21 +1,10 @@
-import React from "react";
 import "./index.scss";
 
-interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
+type IconProps = {
   name: string;
   extraClasses?: string;
-  children?: React.ReactNode;
-}
+};
 
-export const Icon = ({
-  children,
-  name,
-  extraClasses,
-  ...attributes
-}: IconProps) => {
-  return (
-    <span className={`icon icon-${name} ${extraClasses || ""}`} {...attributes}>
-      {children}
-    </span>
-  );
+export const Icon = ({ name, extraClasses }: IconProps) => {
+  return <span className={`icon icon-${name} ${extraClasses || ""}`}></span>;
 };

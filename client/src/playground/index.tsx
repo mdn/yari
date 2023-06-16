@@ -13,7 +13,7 @@ import { EditorContent, updatePlayIframe } from "./utils";
 
 import "./index.scss";
 import { Switch } from "../ui/atoms/switch";
-import { PLAYGROUND_BASE_URL } from "../env";
+import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
@@ -232,8 +232,10 @@ export default function Playground() {
   // Optionally prefix with "unsafe-" to receive less restrictive CSP headers.
   const src = new URL(
     `${window.location.protocol}//${
-      PLAYGROUND_BASE_URL.startsWith("localhost") ? "" : `${subdomain.current}.`
-    }${PLAYGROUND_BASE_URL}`
+      PLAYGROUND_BASE_HOST.startsWith("localhost")
+        ? ""
+        : `${subdomain.current}.`
+    }${PLAYGROUND_BASE_HOST}`
   );
   src.pathname = `${codeSrc || ""}/${unsafe ? "unsafe-" : ""}runner.html`;
 

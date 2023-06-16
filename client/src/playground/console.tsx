@@ -10,7 +10,7 @@ export function Console({ vConsole }: { vConsole: VConsole[] }) {
       <ul>
         {vConsole.map(({ prop, message }, i) => {
           return (
-            <li key="i">
+            <li key={i}>
               <code>{message}</code>
             </li>
           );

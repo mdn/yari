@@ -99,6 +99,8 @@ export async function buildLiveSamplePages(uri, title, $, rawBody) {
         let slug = uri;
         let ctx = $;
         if (uri.toLowerCase() !== iframeSlug.toLowerCase()) {
+          // This means we have an transplanted live sample.
+          // It's deprecated but we still apply a workaround for now.
           slug = iframeSlug;
           result.slug = iframeSlug;
           const [c] = await render(slug);

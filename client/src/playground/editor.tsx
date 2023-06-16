@@ -37,7 +37,7 @@ self.MonacoEnvironment = {
   },
 };
 
-function lang(language) {
+function lang(language: string) {
   switch (language) {
     case "javascript":
       return [javascript()];
@@ -55,7 +55,7 @@ export interface EditorHandle {
   setContent(content: string): void;
 }
 
-function cmExtensions() {
+function cmExtensions(colorScheme: string, language: string) {
   return [
     minimalSetup,
     lineNumbers(),
@@ -71,6 +71,9 @@ function cmExtensions() {
       ...lintKeymap,
       indentWithTab,
     ]),
+    EditorView.lineWrapping,
+    ...(colorScheme === "dark" ? [oneDark] : []),
+    ...lang(language),
   ];
 }
 
@@ -103,11 +106,8 @@ const Editor = forwardRef<EditorHandle, any>(function EditorInner(
   );
   useEffect(() => {
     const extensions = [
-      ...cmExtensions(),
+      ...cmExtensions(colorScheme, language),
       updateListenerExtension.current,
-      EditorView.lineWrapping,
-      ...(colorScheme === "dark" ? [oneDark] : []),
-      ...lang(language),
     ];
     if (divEl.current && editor.current === null) {
       let startState = EditorState.create({
@@ -136,11 +136,8 @@ const Editor = forwardRef<EditorHandle, any>(function EditorInner(
           let state = EditorState.create({
             doc: content,
             extensions: [
-              ...cmExtensions(),
+              ...cmExtensions(colorScheme, language),
               updateListenerExtension.current,
-              EditorView.lineWrapping,
-              ...(colorScheme === "dark" ? [oneDark] : []),
-              ...lang(language),
             ],
           });
           editor.current?.setState(state);

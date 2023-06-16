@@ -15,19 +15,13 @@ import {
   TOP_NAV_GET_MDN_PLUS,
 } from "../../../telemetry/constants";
 
-export const TopNavigationMain = ({
-  isOpenOnMobile = false,
-  withoutMain = false,
-}: {
-  isOpenOnMobile?: boolean;
-  withoutMain?: boolean;
-}) => {
+export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
   const isServer = useIsServer();
 
   return (
     <div className="top-navigation-main">
-      {!withoutMain && <MainMenu isOpenOnMobile={isOpenOnMobile} />}
+      <MainMenu isOpenOnMobile={isOpenOnMobile} />
 
       <Search id="top-nav-search" />
       <ThemeSwitcher />
