@@ -68,7 +68,10 @@ export function initPlayIframe(
     state: editorContent,
   };
   const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
-    if (iframe.id.substring("frame_".length) === prop["id"]) {
+    const id = new URL(iframe.src, "https://example.com").searchParams.get(
+      "id"
+    );
+    if (id === prop["id"]) {
       if (typ === "ready") {
         iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });
       }

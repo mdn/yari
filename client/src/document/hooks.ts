@@ -49,7 +49,7 @@ function sectionForHeading(heading: Element | null): Element[] {
 
 function closestHeading(element: Element) {
   let prev = element;
-  while (prev.parentElement && prev.parentElement.firstElementChild) {
+  while (prev.parentElement?.firstElementChild) {
     if (SECTION_RE.test(prev.parentElement.firstElementChild.tagName)) {
       return prev.parentElement.firstElementChild;
     }
@@ -72,7 +72,13 @@ function prevHeading(heading: Element) {
   return null;
 }
 
-function addBreakoutButton(element: Element | null, id, doc, code, locale) {
+function addBreakoutButton(
+  element: Element | null,
+  id: string,
+  doc: Doc,
+  code: EditorContent,
+  locale: string
+) {
   if (!element || element.querySelector(".play-button")) return;
   const button = document.createElement("button");
 
@@ -132,6 +138,22 @@ function codeForHeading(
   return empty ? null : { code, nodes };
 }
 
+function getCodeAndNodesForIframe(id: string, iframe: Element, src: string) {
+  let heading = document.getElementById(id) || closestHeading(iframe);
+  if (!heading) {
+    return null;
+  }
+  let r = codeForHeading(heading, src);
+  while (r === null) {
+    heading = prevHeading(heading);
+    if (heading === null) {
+      return null;
+    }
+    r = codeForHeading(heading, src);
+  }
+  return r;
+}
+
 export function useRunSample(doc: Doc | undefined) {
   const isServer = useIsServer();
   const locale = useLocale();
@@ -149,24 +171,16 @@ export function useRunSample(doc: Doc | undefined) {
       if (
         !(src && src.pathname.toLowerCase().includes(`/unsafe-runner.html`))
       ) {
-        return;
+        return null;
       }
       const id = src.searchParams.get("id");
       if (!id) {
         return null;
       }
 
-      let heading = document.getElementById(id) || closestHeading(iframe);
-      if (!heading) {
+      const r = getCodeAndNodesForIframe(id, iframe, src.pathname);
+      if (r === null) {
         return null;
-      }
-      let r = codeForHeading(heading, src.pathname);
-      while (r === null) {
-        heading = prevHeading(heading);
-        if (heading === null) {
-          return null;
-        }
-        r = codeForHeading(heading, src.pathname);
       }
       const { code, nodes } = r;
       nodes.forEach((element) => {
