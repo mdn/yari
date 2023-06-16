@@ -24,7 +24,7 @@ export default function Newsletter() {
 
   return (
     <section className="field-group">
-      <h2>Newsletter</h2>
+      <h2 id="newsletter">Newsletter</h2>
       <ul>
         <li>
           <h3>Receive updates from MDN Plus</h3>

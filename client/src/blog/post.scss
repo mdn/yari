@@ -2,6 +2,11 @@
 
 .blog-container.post {
   max-width: calc(48rem + 4rem);
+
+  + .section-newsletter h2 {
+    font: var(--type-heading-h3);
+    margin: 0;
+  }
 }
 
 .blog-container {

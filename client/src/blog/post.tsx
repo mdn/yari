@@ -15,6 +15,7 @@ import {
 } from "../../../libs/types/blog";
 import { useCopyExamplesToClipboard } from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
+import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
 function MaybeLink({ link, children }) {
   return link ? (
@@ -175,17 +176,22 @@ export function BlogPost(props: HydrationData) {
   return (
     <>
       {doc && blogMeta && (
-        <article
-          className="blog-container post container main-page-content"
-          lang={doc?.locale}
-        >
-          <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
-          {blogMeta?.sponsored && <span className="sponsored">Sponsored</span>}
-          <h1>{doc?.title}</h1>
-          <AuthorDateReadTime metadata={blogMeta} />
-          <RenderDocumentBody doc={doc} />
-          {blogMeta.links && <PreviousNext links={blogMeta.links} />}
-        </article>
+        <>
+          <article
+            className="blog-container post container main-page-content"
+            lang={doc?.locale}
+          >
+            <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
+            {blogMeta?.sponsored && (
+              <span className="sponsored">Sponsored</span>
+            )}
+            <h1>{doc?.title}</h1>
+            <AuthorDateReadTime metadata={blogMeta} />
+            <RenderDocumentBody doc={doc} />
+            {blogMeta.links && <PreviousNext links={blogMeta.links} />}
+          </article>
+          <NewsletterSignUp />
+        </>
       )}
     </>
   );
