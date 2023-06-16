@@ -62,7 +62,14 @@
         if (dummy.children.length === 0) {
           parent.innerHTML = html;
         } else {
-          for (const child of dummy.children) {
+          for (const child of dummy.childNodes) {
+            if (child.nodeType == Node.TEXT_NODE) {
+              parent.appendChild(document.createTextNode(child.textContent));
+              continue;
+            }
+            if (child.nodeType !== Node.ELEMENT_NODE) {
+              continue;
+            }
             const clone = document.createElement(child.nodeName);
 
             for (const { nodeName, nodeValue } of child.attributes) {
@@ -83,7 +90,7 @@
                 }
               }
             } else {
-              setHTML(parent, child.innerHTML);
+              setHTML(clone, child.innerHTML);
             }
             parent.appendChild(clone);
           }
