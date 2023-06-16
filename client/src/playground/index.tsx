@@ -66,7 +66,7 @@ function load(session: string) {
 
 export default function Playground() {
   const gleanClick = useGleanClick();
-  let [searchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
   let gistId = searchParams.get("id");
   let sampleKey = searchParams.get("sample");
   let sessionKey = searchParams.get("session");
@@ -112,7 +112,7 @@ export default function Playground() {
     };
     const session = sessionKey || crypto.randomUUID();
     if (!sessionKey && (code.html || code.css || code.js)) {
-      window.history.replaceState({}, "", `/en-US/play?session=${session}`);
+      setSearchParams([["session", session]], { replace: true });
     }
     store(session, code);
     return code;
@@ -146,7 +146,7 @@ export default function Playground() {
           );
         }
         if (sampleKey) {
-          window.history.replaceState({}, "", "/en-US/play");
+          setSearchParams([], { replace: true });
         }
       } else {
         htmlRef.current?.setContent(HTML_DEFAULT);
@@ -162,7 +162,7 @@ export default function Playground() {
     };
   }, [messageListener]);
   const reset = async () => {
-    window.history.replaceState({}, "", "/en-US/play");
+    setSearchParams([], { replace: true });
     setCodeSrc(undefined);
     htmlRef.current?.setContent(HTML_DEFAULT);
     cssRef.current?.setContent(CSS_DEFAULT);
@@ -330,7 +330,7 @@ export default function Playground() {
             sandbox="allow-scripts allow-same-origin"
           ></iframe>
           <Console vConsole={vConsole} />
-          <SidePlacement></SidePlacement>
+          <SidePlacement />
         </section>
       </main>
     </>
