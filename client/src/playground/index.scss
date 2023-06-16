@@ -155,11 +155,14 @@ main.play {
       }
 
       details.editor-container {
+        --editor-header-height: 2.25rem;
+        --editor-header-border-width: 1px;
+
         background-color: var(--background-secondary);
-        border: 1px solid var(--border-primary);
+        border: var(--editor-header-border-width) solid var(--border-primary);
         display: flex;
         flex-direction: column;
-        min-height: 2.25rem;
+        min-height: var(--editor-header-height);
         width: 100%;
 
         &[open] {
@@ -176,8 +179,10 @@ main.play {
         }
 
         .editor {
-          // 100% - 2.25rem details header - 0.5rem margin - 1px border
-          height: calc(100% - 2.75rem - 1px);
+          height: calc(
+            100% - var(--editor-header-height) -
+              var(--editor-header-border-width)
+          );
           margin: 0.5rem 0 0;
           overflow: scroll;
 

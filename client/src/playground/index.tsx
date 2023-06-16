@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import prettier from "prettier/esm/standalone.mjs";
 import parserBabel from "prettier/esm/parser-babel.mjs";
 import parserCSS from "prettier/esm/parser-postcss.mjs";
@@ -54,7 +54,7 @@ function store(session: string, editorContent: EditorContent) {
   sessionStorage.setItem(session, JSON.stringify(editorContent));
 }
 
-function load(session) {
+function load(session: string) {
   let code = JSON.parse(sessionStorage.getItem(session) || "{}");
   return {
     html: code?.html || HTML_DEFAULT,
@@ -69,14 +69,14 @@ export default function Playground() {
   let gistId = searchParams.get("id");
   let sampleKey = searchParams.get("sample");
   let sessionKey = searchParams.get("session");
-  let [diaSate, setDiaState] = useState(DialogState.none);
+  let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   const subdomain = useRef<string>(crypto.randomUUID());
-  let { data: code } = useSWR<EditorContent>(
+  let { data: code } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
       const response = await fetch(url);
@@ -88,9 +88,6 @@ export default function Playground() {
       return (await response.json()) || null;
     },
     {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
       fallbackData:
         (!gistId &&
           (sampleKey
@@ -222,6 +219,9 @@ export default function Playground() {
     setShared(true);
     setShareUrl(url);
   };
+
+  // We're using a random subdomain for origin isolation.
+  // Optionally prefix with "unsafe-" to receive less restrictive CSP headers.
   const src = `${
     codeSrc ||
     `//${
@@ -230,7 +230,7 @@ export default function Playground() {
   }/${unsafe ? "unsafe-" : ""}runner.html`;
 
   const cleanDialog = () => {
-    if (diaSate === DialogState.share) {
+    if (dialogState === DialogState.share) {
       setShareUrl(null);
     }
   };
@@ -239,8 +239,8 @@ export default function Playground() {
     <>
       <main className="play container">
         <dialog id="playDialog" ref={diaRef} onClose={cleanDialog}>
-          {diaSate === DialogState.flag && <FlagForm gistId={gistId} />}
-          {diaSate === DialogState.share && (
+          {dialogState === DialogState.flag && <FlagForm gistId={gistId} />}
+          {dialogState === DialogState.share && (
             <ShareForm url={shareUrl} code={getEditorContent} share={share} />
           )}
         </dialog>
@@ -274,7 +274,7 @@ export default function Playground() {
                 id="share"
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
-                  setDiaState(DialogState.share);
+                  setDialogState(DialogState.share);
                   diaRef.current?.showModal();
                 }}
               >
@@ -313,7 +313,7 @@ export default function Playground() {
               onClick={(e) => {
                 e.preventDefault();
                 gleanClick(`${PLAYGROUND}: flag-click`);
-                setDiaState(DialogState.flag);
+                setDialogState(DialogState.flag);
                 diaRef.current?.showModal();
               }}
             >

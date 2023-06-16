@@ -149,8 +149,11 @@ export function useRunSample(doc: Doc | undefined) {
       if (!(src && src.toLowerCase().includes(`/unsafe-runner.html`))) {
         return;
       }
-      const iframeId = iframe.id;
-      const id = iframeId.substring("frame_".length);
+      const id = new URL(src, "https://example.com").searchParams.get("id");
+      if (!id) {
+        return null;
+      }
+
       let heading = document.getElementById(id) || closestHeading(iframe);
       if (!heading) {
         return null;
@@ -205,8 +208,9 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       return;
     }
 
-    [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
-      (element) => {
+    document
+      .querySelectorAll("div.code-example pre:not(.hidden)")
+      .forEach((element) => {
         const header = element.parentElement?.firstElementChild;
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
@@ -257,8 +261,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
             copiedSuccessfully ? 1000 : 3000
           );
         };
-      }
-    );
+      });
   }, [doc, location, isServer]);
 }
 
