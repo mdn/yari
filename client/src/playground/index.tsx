@@ -67,15 +67,16 @@ function load(session: string) {
 export default function Playground() {
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
-  let gistId = searchParams.get("id");
-  let sampleKey = searchParams.get("sample");
-  let sessionKey = searchParams.get("session");
+  const gistId = searchParams.get("id");
+  const sampleKey = searchParams.get("sample");
+  const sessionKey = searchParams.get("session");
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
+  const session = useRef(sessionKey || crypto.randomUUID());
   const subdomain = useRef<string>(crypto.randomUUID());
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
@@ -103,6 +104,14 @@ export default function Playground() {
   const jsRef = useRef<EditorHandle | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    if (!sessionKey) {
+      initialCode && store(session.current, initialCode);
+      setSearchParams([["session", session.current]], { replace: true });
+    }
+  }, [initialCode, sessionKey, setSearchParams]);
+
   const getEditorContent = useCallback(() => {
     const code = {
       html: htmlRef.current?.getContent() || HTML_DEFAULT,
@@ -110,13 +119,9 @@ export default function Playground() {
       js: jsRef.current?.getContent() || JS_DEFAULT,
       src: initialCode?.src,
     };
-    const session = sessionKey || crypto.randomUUID();
-    if (!sessionKey && (code.html || code.css || code.js)) {
-      setSearchParams([["session", session]], { replace: true });
-    }
-    store(session, code);
+    store(session.current, code);
     return code;
-  }, [sessionKey, searchParams, initialCode?.src]);
+  }, [initialCode?.src]);
 
   let messageListener = useCallback(
     ({ data: { typ, prop, message } }) => {
