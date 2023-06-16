@@ -60,6 +60,7 @@ function load(session: string) {
     html: code?.html || HTML_DEFAULT,
     css: code?.css || CSS_DEFAULT,
     js: code?.js || JS_DEFAULT,
+    src: code?.src,
   };
 }
 
@@ -76,7 +77,7 @@ export default function Playground() {
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   const subdomain = useRef<string>(crypto.randomUUID());
-  let { data: code } = useSWRImmutable<EditorContent>(
+  let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
       const response = await fetch(url);
@@ -90,13 +91,13 @@ export default function Playground() {
     {
       fallbackData:
         (!gistId &&
-          (sampleKey
-            ? JSON.parse(sessionStorage.getItem(sampleKey) || "null")
-            : sessionKey && load(sessionKey))) ||
+          (sampleKey ? load(sampleKey) : sessionKey && load(sessionKey))) ||
         undefined,
     }
   );
-  let [unsafe, setUnsafe] = useState(Boolean(sampleKey && code && !gistId));
+  let [unsafe, setUnsafe] = useState(
+    Boolean(sampleKey && initialCode && !gistId)
+  );
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
   const jsRef = useRef<EditorHandle | null>(null);
@@ -107,6 +108,7 @@ export default function Playground() {
       html: htmlRef.current?.getContent() || HTML_DEFAULT,
       css: cssRef.current?.getContent() || CSS_DEFAULT,
       js: jsRef.current?.getContent() || JS_DEFAULT,
+      src: initialCode?.src,
     };
     const session = sessionKey || crypto.randomUUID();
     if (!sessionKey && (code.html || code.css || code.js)) {
@@ -132,14 +134,15 @@ export default function Playground() {
   );
   useEffect(() => {
     if (state === State.initial) {
-      if (code && Object.values(code).some(Boolean)) {
-        htmlRef.current?.setContent(code?.html);
-        cssRef.current?.setContent(code?.css);
-        jsRef.current?.setContent(code?.js);
+      if (initialCode && Object.values(initialCode).some(Boolean)) {
+        htmlRef.current?.setContent(initialCode?.html);
+        cssRef.current?.setContent(initialCode?.css);
+        jsRef.current?.setContent(initialCode?.js);
         setState(State.remote);
-        if (code.src) {
+        if (initialCode.src) {
           setCodeSrc(
-            code?.src && `${code.src.split("/").slice(0, -1).join("/")}`
+            initialCode?.src &&
+              `${initialCode.src.split("/").slice(0, -1).join("/")}`
           );
         }
         if (sampleKey) {
@@ -151,7 +154,7 @@ export default function Playground() {
         jsRef.current?.setContent(JS_DEFAULT);
       }
     }
-  }, [code, state, sampleKey]);
+  }, [initialCode, state, sampleKey]);
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
@@ -222,12 +225,12 @@ export default function Playground() {
 
   // We're using a random subdomain for origin isolation.
   // Optionally prefix with "unsafe-" to receive less restrictive CSP headers.
-  const src = `${
-    codeSrc ||
-    `//${
+  const src = new URL(
+    `${window.location.protocol}//${
       PLAYGROUND_BASE_URL.startsWith("localhost") ? "" : `${subdomain.current}.`
     }${PLAYGROUND_BASE_URL}`
-  }/${unsafe ? "unsafe-" : ""}runner.html`;
+  );
+  src.pathname = `${codeSrc || ""}/${unsafe ? "unsafe-" : ""}runner.html`;
 
   const cleanDialog = () => {
     if (dialogState === DialogState.share) {
@@ -323,7 +326,7 @@ export default function Playground() {
           <iframe
             title="runner"
             ref={iframe}
-            src={src}
+            src={src.toString()}
             sandbox="allow-scripts allow-same-origin"
           ></iframe>
           <Console vConsole={vConsole} />

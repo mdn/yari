@@ -145,11 +145,13 @@ export function useRunSample(doc: Doc | undefined) {
       return;
     }
     [...document.querySelectorAll("iframe")].forEach((iframe) => {
-      const src = iframe.src;
-      if (!(src && src.toLowerCase().includes(`/unsafe-runner.html`))) {
+      const src = new URL(iframe.src || "", "https://example.com");
+      if (
+        !(src && src.pathname.toLowerCase().includes(`/unsafe-runner.html`))
+      ) {
         return;
       }
-      const id = new URL(src, "https://example.com").searchParams.get("id");
+      const id = src.searchParams.get("id");
       if (!id) {
         return null;
       }
@@ -158,13 +160,13 @@ export function useRunSample(doc: Doc | undefined) {
       if (!heading) {
         return null;
       }
-      let r = codeForHeading(heading, iframe.src);
+      let r = codeForHeading(heading, src.pathname);
       while (r === null) {
         heading = prevHeading(heading);
         if (heading === null) {
           return null;
         }
-        r = codeForHeading(heading, iframe.src);
+        r = codeForHeading(heading, src.pathname);
       }
       const { code, nodes } = r;
       nodes.forEach((element) => {
