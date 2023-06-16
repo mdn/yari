@@ -162,6 +162,10 @@ export function useAiChat({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [datas, dispatchData] = useReducer(
+    (state: any[], value) => (value === null ? [] : [...state, value]),
+    []
+  );
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(1);
   const [messages, dispatchMessage] = useReducer(
@@ -187,6 +191,7 @@ export function useAiChat({
   const handleEventData = useCallback(
     (data: any) => {
       try {
+        dispatchData(data);
         setIsLoading?.(false);
 
         dispatchMessage({
@@ -333,6 +338,7 @@ export function useAiChat({
     setIsLoading(false);
     setIsResponding(false);
     setHasError(false);
+    dispatchData(null);
   }
 
   function stop() {
@@ -356,6 +362,7 @@ export function useAiChat({
 
   return {
     submit,
+    datas,
     stop,
     reset,
     messages,

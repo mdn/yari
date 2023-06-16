@@ -100,6 +100,7 @@ export function AIHelpInner() {
     isLoading,
     isResponding,
     hasError,
+    datas,
     messages,
     quota,
     reset,
@@ -328,6 +329,7 @@ export function AIHelpInner() {
           ))}
         </section>
       )}
+      <pre>{JSON.stringify(datas, null, 2)}</pre>
     </section>
   );
 }
