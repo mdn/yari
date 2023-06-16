@@ -320,12 +320,16 @@ export function useAiChat({
     return data;
   }
 
-  function stop() {
+  function resetState() {
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
     setIsLoading(false);
     setIsResponding(false);
     setHasError(false);
+  }
+
+  function stop() {
+    resetState();
     dispatchMessage({
       type: "update",
       index: currentMessageIndex,
@@ -337,11 +341,7 @@ export function useAiChat({
   }
 
   function reset() {
-    eventSourceRef.current?.close();
-    eventSourceRef.current = undefined;
-    setIsLoading(false);
-    setIsResponding(false);
-    setHasError(false);
+    resetState();
     dispatchMessage({
       type: "reset",
     });
