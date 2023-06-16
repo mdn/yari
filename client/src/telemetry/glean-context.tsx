@@ -182,9 +182,12 @@ export function useGleanPage(pageNotFound: boolean) {
 export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
-  return (source: string) =>
-    glean.click({
-      source,
-      subscriptionType: userData?.subscriptionType || "none",
-    });
+  return React.useCallback(
+    (source: string) =>
+      glean.click({
+        source,
+        subscriptionType: userData?.subscriptionType || "none",
+      }),
+    [glean, userData?.subscriptionType]
+  );
 }
