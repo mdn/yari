@@ -188,6 +188,13 @@ export function useAiChat({
     }
   }, [remoteQuota]);
 
+  const handleError = useCallback((err) => {
+    setIsLoading?.(false);
+    setIsResponding(false);
+    setHasError(true);
+    console.error(err);
+  }, []);
+
   const handleEventData = useCallback(
     (data: any) => {
       try {
@@ -254,15 +261,8 @@ export function useAiChat({
         handleError(err);
       }
     },
-    [currentMessageIndex]
+    [currentMessageIndex, handleError]
   );
-
-  function handleError<T>(err: T) {
-    setIsLoading?.(false);
-    setIsResponding(false);
-    setHasError(true);
-    console.error(err);
-  }
 
   const submit = useCallback(
     async (query: string) => {
@@ -307,13 +307,13 @@ export function useAiChat({
         const data = JSON.parse(e.data);
 
         handleEventData(data);
-
-        eventSource.stream();
-
-        eventSourceRef.current = eventSource;
-
-        setIsLoading?.(true);
       });
+
+      eventSource.stream();
+
+      eventSourceRef.current = eventSource;
+
+      setIsLoading?.(true);
     },
     [messages, messageTemplate, handleEventData]
   );
