@@ -251,11 +251,12 @@ export default function Playground() {
               checked={unsafe}
               toggle={(e) => setUnsafe(e.target.checked)}
             >
-              Load remote content
+              Load unsafe content
             </Switch>
             <InfoTooltip>
               Allow the Playground to load media and scripts from 3rd parties.
-              This loosens the CSP restrictions for the Playground.
+              And loosens the CSP restrictions for the Playground. This allows
+              running inline code.
             </InfoTooltip>
             <menu>
               <Button type="secondary" id="format" onClickHandler={format}>

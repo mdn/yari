@@ -53,16 +53,58 @@
 
       window.console = consoleProxy;
 
+      const unsafe = window.location.pathname.endsWith("/unsafe-runner.html");
+
+      function setHTML(parent, html) {
+        var dummy = document.createElement("div");
+        dummy.innerHTML = html;
+
+        if (dummy.children.length === 0) {
+          parent.innerHTML = html;
+        } else {
+          for (const child of dummy.children) {
+            const clone = document.createElement(child.nodeName);
+
+            for (const { nodeName, nodeValue } of child.attributes) {
+              clone.setAttribute(nodeName, nodeValue);
+            }
+
+            if (child.children.length === 0) {
+              if (child.nodeName === "SCRIPT") {
+                if (!unsafe) {
+                  clone.removeAttribute("nonce");
+                }
+                if (child.text) {
+                  clone.text = child.text;
+                }
+              } else {
+                if (child.innerHTML) {
+                  clone.innerHTML = child.innerHTML;
+                }
+              }
+            } else {
+              setHTML(parent, child.innerHTML);
+            }
+            parent.appendChild(clone);
+          }
+        }
+      }
+
       function init(state) {
         window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
+
         const style = document.head.querySelector("#style");
         style.innerHTML = state.css;
         document.head.appendChild(style);
-        document.body.innerHTML = state.html;
+
+        setHTML(document.body, state.html);
+
         const script = document.createElement("script");
         script.nonce = "deadbeef";
-        script.textContent = "try{" + state.js + "}catch(e){console.error(e)}";
+        script.textContent =
+          "try{" + state.js + "\n}catch(e){console.error(e)}";
         document.body.appendChild(script);
+
         dispatchEvent(new Event("load"));
       }
       window.addEventListener("message", (event) => {
