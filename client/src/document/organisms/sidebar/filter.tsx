@@ -8,14 +8,16 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 import { SIDEBAR_FILTER_FOCUS } from "../../../telemetry/constants";
 
 export function SidebarFilter() {
-  const [isActive, setActive] = useState<Boolean>(false);
+  const [isActive, setActive] = useState<boolean>(false);
+  const wasActive = useRef(false);
   const { query, setQuery, matchCount } = useSidebarFilter();
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    if (isActive) {
+    if (isActive && !wasActive.current) {
       gleanClick(SIDEBAR_FILTER_FOCUS);
     }
+    wasActive.current = isActive;
   }, [gleanClick, isActive]);
 
   return (
