@@ -126,7 +126,7 @@ export function AIHelpInner() {
     } remaining today)`;
   }
 
-  const { autoScroll, setAutoScroll } = useAutoScroll(messages);
+  //const { autoScroll, setAutoScroll } = useAutoScroll(messages);
 
   useEffect(() => {
     // Focus input:
@@ -251,14 +251,14 @@ export function AIHelpInner() {
             >
               ⏹ Stop answering
             </Button>
-            <Button
+            {/*Button
               type="action"
               isDisabled={autoScroll}
               extraClasses="ai-help-scroll-button"
               onClickHandler={() => setAutoScroll(true)}
             >
               ↓ Enable auto-scroll
-            </Button>
+        </Button>*/}
           </div>
         )}
         {isQuotaExceeded(quota) ? (
@@ -273,7 +273,7 @@ export function AIHelpInner() {
                 if (query.trim()) {
                   submit(query.trim());
                   setQuery("");
-                  setAutoScroll(true);
+                  //setAutoScroll(true);
                 }
               }}
             >
@@ -346,7 +346,7 @@ export function RoleIcon({ role }: { role: "user" | "assistant" }) {
   }
 }
 
-function useAutoScroll(dependency) {
+export function useAutoScroll(dependency) {
   const [autoScroll, setAutoScroll] = useState(true);
   const bodyRef = useRef<HTMLElement | null>();
   const footerRef = useRef<HTMLElement | null>();
