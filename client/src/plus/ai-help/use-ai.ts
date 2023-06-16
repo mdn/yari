@@ -184,6 +184,81 @@ export function useAiChat({
     }
   }, [remoteQuota]);
 
+  const handleEventData = useCallback(
+    (data: any) => {
+      try {
+        setIsLoading?.(false);
+
+        dispatchMessage({
+          type: "update",
+          index: currentMessageIndex,
+          message: {
+            status: MessageStatus.InProgress,
+          },
+        });
+
+        setIsResponding(true);
+
+        if (data.type === "metadata") {
+          const { sources = undefined, quota = undefined } = data;
+          // Sources.
+          if (Array.isArray(sources)) {
+            dispatchMessage({
+              type: "set-sources",
+              index: currentMessageIndex,
+              sources: sources,
+            });
+          }
+          // Quota.
+          if (typeof quota !== "undefined") {
+            setQuota(quota);
+          }
+          return;
+        } else if (!data.id) {
+          console.warn("Received unsupported message", { data });
+          return;
+        }
+
+        const completionResponse: CreateChatCompletionResponse = data;
+        const [
+          {
+            delta: { content },
+            finish_reason,
+          },
+        ] =
+          completionResponse.choices as CreateChatCompletionResponseChoicesInnerDelta[];
+
+        if (content) {
+          dispatchMessage({
+            type: "append-content",
+            index: currentMessageIndex,
+            content,
+          });
+        } else if (finish_reason === "stop") {
+          setIsResponding(false);
+          dispatchMessage({
+            type: "update",
+            index: currentMessageIndex,
+            message: {
+              status: MessageStatus.Complete,
+            },
+          });
+          setCurrentMessageIndex((x) => x + 2);
+        }
+      } catch (err) {
+        handleError(err);
+      }
+    },
+    [currentMessageIndex]
+  );
+
+  function handleError<T>(err: T) {
+    setIsLoading?.(false);
+    setIsResponding(false);
+    setHasError(true);
+    console.error(err);
+  }
+
   const submit = useCallback(
     async (query: string) => {
       dispatchMessage({
@@ -222,88 +297,20 @@ export function useAiChat({
         }),
       });
 
-      function handleError<T>(err: T) {
-        setIsLoading?.(false);
-        setIsResponding(false);
-        setHasError(true);
-        console.error(err);
-      }
-
       eventSource.addEventListener("error", handleError);
       eventSource.addEventListener("message", (e) => {
-        try {
-          setIsLoading?.(false);
+        const data = JSON.parse(e.data);
 
-          dispatchMessage({
-            type: "update",
-            index: currentMessageIndex,
-            message: {
-              status: MessageStatus.InProgress,
-            },
-          });
+        handleEventData(data);
 
-          setIsResponding(true);
+        eventSource.stream();
 
-          const data = JSON.parse(e.data);
+        eventSourceRef.current = eventSource;
 
-          if (data.type === "metadata") {
-            const { sources = undefined, quota = undefined } = data;
-            // Sources.
-            if (Array.isArray(sources)) {
-              dispatchMessage({
-                type: "set-sources",
-                index: currentMessageIndex,
-                sources: sources,
-              });
-            }
-            // Quota.
-            if (typeof quota !== "undefined") {
-              setQuota(quota);
-            }
-            return;
-          } else if (!data.id) {
-            console.warn("Received unsupported message", { data });
-            return;
-          }
-
-          const completionResponse: CreateChatCompletionResponse = data;
-          const [
-            {
-              delta: { content },
-              finish_reason,
-            },
-          ] =
-            completionResponse.choices as CreateChatCompletionResponseChoicesInnerDelta[];
-
-          if (content) {
-            dispatchMessage({
-              type: "append-content",
-              index: currentMessageIndex,
-              content,
-            });
-          } else if (finish_reason === "stop") {
-            setIsResponding(false);
-            dispatchMessage({
-              type: "update",
-              index: currentMessageIndex,
-              message: {
-                status: MessageStatus.Complete,
-              },
-            });
-            setCurrentMessageIndex((x) => x + 2);
-          }
-        } catch (err) {
-          handleError(err);
-        }
+        setIsLoading?.(true);
       });
-
-      eventSource.stream();
-
-      eventSourceRef.current = eventSource;
-
-      setIsLoading?.(true);
     },
-    [setIsLoading, messages, messageTemplate, currentMessageIndex]
+    [messages, messageTemplate, handleEventData]
   );
 
   function useRemoteQuota() {
