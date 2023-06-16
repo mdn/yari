@@ -181,8 +181,8 @@ main.play {
 
         .editor {
           height: calc(
-            100% - var(--editor-header-height) - 2 * var(--edit-header-padding) -
-              var(--editor-header-border-width)
+            100% - var(--editor-header-height) - 2 *
+              var(--editor-header-padding) - var(--editor-header-border-width)
           );
           margin: 0.5rem 0 0;
           overflow: scroll;
