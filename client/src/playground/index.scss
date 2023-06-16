@@ -156,6 +156,7 @@ main.play {
 
       details.editor-container {
         --editor-header-height: 2.25rem;
+        --editor-header-padding: 0.25rem;
         --editor-header-border-width: 1px;
 
         background-color: var(--background-secondary);
@@ -175,12 +176,12 @@ main.play {
 
         summary {
           cursor: pointer;
-          padding: 0.25rem;
+          padding: var(--editor-header-padding);
         }
 
         .editor {
           height: calc(
-            100% - var(--editor-header-height) -
+            100% - var(--editor-header-height) - 2 * var(--edit-header-padding) -
               var(--editor-header-border-width)
           );
           margin: 0.5rem 0 0;

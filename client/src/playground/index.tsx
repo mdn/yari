@@ -116,7 +116,7 @@ export default function Playground() {
     }
     store(session, code);
     return code;
-  }, [sessionKey]);
+  }, [sessionKey, searchParams, initialCode?.src]);
 
   let messageListener = useCallback(
     ({ data: { typ, prop, message } }) => {
@@ -154,7 +154,7 @@ export default function Playground() {
         jsRef.current?.setContent(JS_DEFAULT);
       }
     }
-  }, [initialCode, state, sampleKey]);
+  }, [initialCode, state, sampleKey, setSearchParams]);
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {

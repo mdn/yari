@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { ReactComponent as Info } from "../../../assets/icons/note-info.svg";
 
 import "./index.scss";
+import { Icon } from "../../../ui/atoms/icon";
 
 export function InfoTooltip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="info-tooltip" tabIndex={0}>
-      <Info />
+    <button aria-label="show info tooltip" className="info-tooltip">
+      <Icon name="note-info"></Icon>
       <Tooltip>{children}</Tooltip>
-    </span>
+    </button>
   );
 }
 
