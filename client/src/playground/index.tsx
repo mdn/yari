@@ -47,7 +47,7 @@ async function save(editorContent: EditorContent) {
   let { id } = await res.json();
   let url = new URL(document.URL);
   url.search = new URLSearchParams([["id", id]]).toString();
-  return url;
+  return { url, id };
 }
 
 function store(session: string, editorContent: EditorContent) {
@@ -64,19 +64,19 @@ function load(session: string) {
   };
 }
 
+const SESSION_KEY = "playground-session-code";
+
 export default function Playground() {
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
   const gistId = searchParams.get("id");
   const sampleKey = searchParams.get("sample");
-  const sessionKey = searchParams.get("session");
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
-  const session = useRef(sessionKey || crypto.randomUUID());
   const subdomain = useRef<string>(crypto.randomUUID());
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
@@ -91,8 +91,7 @@ export default function Playground() {
     },
     {
       fallbackData:
-        (!gistId &&
-          (sampleKey ? load(sampleKey) : sessionKey && load(sessionKey))) ||
+        (!gistId && (sampleKey ? load(sampleKey) : load(SESSION_KEY))) ||
         undefined,
     }
   );
@@ -106,11 +105,8 @@ export default function Playground() {
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    if (!sessionKey) {
-      initialCode && store(session.current, initialCode);
-      setSearchParams([["session", session.current]], { replace: true });
-    }
-  }, [initialCode, sessionKey, setSearchParams]);
+    initialCode && store(SESSION_KEY, initialCode);
+  }, [initialCode]);
 
   const getEditorContent = useCallback(() => {
     const code = {
@@ -119,7 +115,7 @@ export default function Playground() {
       js: jsRef.current?.getContent() || JS_DEFAULT,
       src: initialCode?.src,
     };
-    store(session.current, code);
+    store(SESSION_KEY, code);
     return code;
   }, [initialCode?.src]);
 
@@ -222,11 +218,12 @@ export default function Playground() {
       console.error(e);
     }
   };
-  const share = async () => {
-    const url = await save(getEditorContent());
+  const share = useCallback(async () => {
+    const { url, id } = await save(getEditorContent());
+    setSearchParams([["id", id]], { replace: true });
     setShared(true);
     setShareUrl(url);
-  };
+  }, [setSearchParams, setShareUrl, setShared]);
 
   // We're using a random subdomain for origin isolation.
   // Optionally prefix with "unsafe-" to receive less restrictive CSP headers.
