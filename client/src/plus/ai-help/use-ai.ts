@@ -153,11 +153,11 @@ class AiHelpStorage {
     );
   }
 
-  static get messages() {
+  static getMessages() {
     return this.value?.messages ?? [];
   }
 
-  static set messages(messages) {
+  static setMessages(messages) {
     this.mutate({ messages });
   }
 }
@@ -182,7 +182,8 @@ export function useAiChat({
   const [currentMessageIndex, setCurrentMessageIndex] = useState(1);
   const [messages, dispatchMessage] = useReducer(
     messageReducer,
-    AiHelpStorage.messages
+    undefined,
+    () => AiHelpStorage.getMessages()
   );
 
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
@@ -190,7 +191,7 @@ export function useAiChat({
 
   useEffect(() => {
     if (!isLoading && !isResponding && messages.length > 0) {
-      AiHelpStorage.messages = messages;
+      AiHelpStorage.setMessages(messages);
     }
   }, [isLoading, isResponding, messages]);
 
