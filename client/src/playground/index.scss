@@ -190,6 +190,10 @@ main.play {
           .cm-editor {
             height: 100%;
             width: 100%;
+
+            @media screen and (max-width: $screen-sm) {
+              font-size: 1rem;
+            }
           }
         }
       }
