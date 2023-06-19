@@ -6,7 +6,7 @@ import { Icon } from "../../../ui/atoms/icon";
 export function InfoTooltip({ children }: { children: React.ReactNode }) {
   return (
     <span aria-label="show info tooltip" className="info-tooltip" tabIndex={0}>
-      <Icon name="note-info"></Icon>
+      <Icon name="note-info" />
       <Tooltip>{children}</Tooltip>
     </span>
   );

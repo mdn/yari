@@ -249,6 +249,12 @@ app.get("/:locale/blog/:slug/index.json", async (req, res) => {
   }
   return res.json(data);
 });
+app.get("/:locale/blog/:slug/unsafe-runner.html", async (req, res) => {
+  return res
+    .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+    .status(200)
+    .sendFile(path.join(STATIC_ROOT, "runner.html"));
+});
 app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
   const { slug, id } = req.params;
   try {

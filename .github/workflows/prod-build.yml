@@ -174,7 +174,8 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.mozilla.net
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.mozilla.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -227,6 +228,9 @@ jobs:
 
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
+
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
