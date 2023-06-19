@@ -125,13 +125,16 @@
         }
       });
       const searchParams = new URLSearchParams(location.search);
-      window.parent.postMessage(
-        {
-          typ: "ready",
-          prop: Object.fromEntries(searchParams.entries()),
-        },
-        "*"
-      );
+      const ready = () => {
+        window.parent.postMessage(
+          {
+            typ: "ready",
+            prop: Object.fromEntries(searchParams.entries()),
+          },
+          "*"
+        );
+      };
+      window.addEventListener("DOMContentLoaded", ready);
     </script>
   </head>
 

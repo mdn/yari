@@ -23,19 +23,9 @@ export function updatePlayIframe(
     state: editorContent,
   };
 
-  if (iframe.contentWindow) {
-    if (iframe.contentDocument?.readyState === "loading") {
-      iframe.contentDocument?.addEventListener("DOMContentLoaded", () => {
-        iframe.contentWindow?.postMessage(message, {
-          targetOrigin: "*",
-        });
-      });
-    } else {
-      iframe.contentWindow?.postMessage(message, {
-        targetOrigin: "*",
-      });
-    }
-  }
+  iframe.contentWindow?.postMessage(message, {
+    targetOrigin: "*",
+  });
 }
 
 export function codeToMarkdown(code: EditorContent): string {
@@ -64,6 +54,7 @@ export function initPlayIframe(
     typ: "init",
     state: editorContent,
   };
+  iframe.contentWindow?.postMessage?.(message, { targetOrigin: "*" });
   const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
     const id = new URL(iframe.src, "https://example.com").searchParams.get(
       "id"
@@ -72,7 +63,6 @@ export function initPlayIframe(
       if (typ === "ready") {
         iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });
       }
-      window.removeEventListener("message", deferred);
     }
   };
   window.addEventListener("message", deferred);
