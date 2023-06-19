@@ -126,30 +126,6 @@
 
       &:hover {
         color: var(--ai-help-link);
-
-        &.category-apis {
-          --category-color-engage: var(--apis-accent-engage);
-        }
-
-        &.category-css {
-          --category-color-engage: var(--css-accent-engage);
-        }
-
-        &.category-html {
-          --category-color-engage: var(--html-accent-engage);
-        }
-
-        &.category-http {
-          --category-color-engage: var(--http-accent-engage);
-        }
-
-        &.category-js {
-          --category-color-engage: var(--js-accent-engage);
-        }
-
-        &.category-learn {
-          --category-color-engage: var(--learn-accent-engage);
-        }
       }
     }
 
