@@ -159,17 +159,24 @@ export const CSP_VALUE = cspToString({
 });
 
 const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
+  "'self'",
+  "https:",
   "'unsafe-eval'",
   "'unsafe-inline'",
   "'wasm-unsafe-eval'",
-  "https",
 ];
 
 export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
-  "default-src": ["https"],
+  "default-src": ["'self'", "https:"],
   "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
   "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "style-src": ["'report-sample'", "https", "'unsafe-inline'", "'unsafe-eval'"],
+  "style-src": [
+    "'report-sample'",
+    '"self"',
+    "https:",
+    "'unsafe-inline'",
+    "'unsafe-eval'",
+  ],
   "base-uri": ["'self'"],
   "worker-src": ["'self'"],
   "manifest-src": ["'self'"],

@@ -36,7 +36,6 @@
         padding: 5px 10px 5px 26px;
       }
     </style>
-    <style id="style"></style>
     <script nonce="deadbeef">
       const consoleDiv = document.getElementById("console");
       const consoleProxy = new Proxy(console, {
@@ -102,8 +101,8 @@
       function init(state) {
         window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
 
-        const style = document.head.querySelector("#style");
-        style.innerHTML = state.css;
+        const style = document.createElement("style");
+        style.textContent = state.css;
         document.head.appendChild(style);
 
         setHTML(document.body, state.html);
