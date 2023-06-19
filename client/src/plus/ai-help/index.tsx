@@ -183,7 +183,22 @@ export function AIHelpInner() {
                     <>
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
-                        linkTarget="_blank"
+                        components={{
+                          // eslint-disable-next-line jsx-a11y/anchor-has-content
+                          a: ({ node, ...props }) => {
+                            const isExternal = !props.href?.startsWith("/");
+                            if (isExternal) {
+                              props = {
+                                ...props,
+                                className: "external",
+                                rel: "noopener noreferrer",
+                                target: "_blank",
+                              };
+                            }
+                            // eslint-disable-next-line jsx-a11y/anchor-has-content
+                            return <a {...props} />;
+                          },
+                        }}
                       >
                         {message.content.replace(SORRY_BACKEND, SORRY_FRONTEND)}
                       </ReactMarkdown>
