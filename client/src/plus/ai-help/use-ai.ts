@@ -328,7 +328,7 @@ export function useAiChat({
 
       setIsLoading?.(true);
     },
-    [messages, messageTemplate, handleEventData]
+    [messages, messageTemplate, handleError, handleEventData]
   );
 
   function useRemoteQuota() {
