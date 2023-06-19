@@ -82,7 +82,7 @@ export interface Quota {
 }
 
 function messageReducer(state: Message[], messageAction: MessageAction) {
-  let current = structuredClone(state);
+  let current = [...state];
   const { type } = messageAction;
 
   switch (type) {
@@ -94,21 +94,30 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
     case "update": {
       const { index, message } = messageAction;
       if (current[index]) {
-        Object.assign(current[index], message);
+        current[index] = {
+          ...current[index],
+          ...message,
+        };
       }
       break;
     }
     case "append-content": {
       const { index, content } = messageAction;
       if (current[index]) {
-        current[index].content += content;
+        current[index] = {
+          ...current[index],
+          content: current[index].content + content,
+        };
       }
       break;
     }
     case "set-sources": {
       const { index, sources } = messageAction;
       if (current[index]) {
-        current[index].sources = sources;
+        current[index] = {
+          ...current[index],
+          sources,
+        };
       }
       break;
     }
