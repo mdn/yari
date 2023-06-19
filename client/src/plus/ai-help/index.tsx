@@ -17,6 +17,7 @@ import { Button } from "../../ui/atoms/button";
 import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
+import { useLocation } from "react-router-dom";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -95,6 +96,7 @@ export function AIHelpInner() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const locale = useLocale();
+  const { hash } = useLocation();
 
   const {
     isLoading,
@@ -329,7 +331,7 @@ export function AIHelpInner() {
           ))}
         </section>
       )}
-      <pre>{JSON.stringify(datas, null, 2)}</pre>
+      {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
     </section>
   );
 }
