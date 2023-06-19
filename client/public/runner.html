@@ -53,6 +53,7 @@
       });
 
       window.console = consoleProxy;
+      window.addEventListener("error", (e) => console.log(e.error));
 
       const unsafe = window.location.pathname.endsWith("/unsafe-runner.html");
 
@@ -109,8 +110,7 @@
 
         const script = document.createElement("script");
         script.nonce = "deadbeef";
-        script.textContent =
-          "try{" + state.js + "\n}catch(e){console.error(e)}";
+        script.textContent = state.js;
         document.body.appendChild(script);
 
         dispatchEvent(new Event("load"));
