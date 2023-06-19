@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -94,6 +94,8 @@ const SORRY_FRONTEND =
 export function AIHelpInner() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const locale = useLocale();
   const { hash } = useLocation();
@@ -128,7 +130,10 @@ export function AIHelpInner() {
     } remaining today)`;
   }
 
-  const { autoScroll, setAutoScroll } = useAutoScroll(messages);
+  const { autoScroll, setAutoScroll } = useAutoScroll(messages, {
+    bodyRef,
+    footerRef,
+  });
 
   useEffect(() => {
     // Focus input:
@@ -149,7 +154,7 @@ export function AIHelpInner() {
         .join(" ")}
     >
       {hasConversation && (
-        <div className="ai-help-body">
+        <div ref={bodyRef} className="ai-help-body">
           <ul className="ai-help-messages">
             {messages.map((message, index) => (
               <li
@@ -243,7 +248,7 @@ export function AIHelpInner() {
           <p>An error occurred. Please try again.</p>
         </NoteCard>
       )}
-      <div className="ai-help-footer">
+      <div ref={footerRef} className="ai-help-footer">
         {(isLoading || isResponding) && (
           <div className="ai-help-footer-actions">
             <Button
@@ -348,10 +353,17 @@ export function RoleIcon({ role }: { role: "user" | "assistant" }) {
   }
 }
 
-function useAutoScroll(dependency) {
+function useAutoScroll(
+  dependency,
+  {
+    bodyRef,
+    footerRef,
+  }: {
+    bodyRef: MutableRefObject<HTMLElement | null>;
+    footerRef: MutableRefObject<HTMLElement | null>;
+  }
+) {
   const [autoScroll, setAutoScroll] = useState(true);
-  const bodyRef = useRef<HTMLElement | null>();
-  const footerRef = useRef<HTMLElement | null>();
   const lastScrollY = useRef(0);
   const lastHeight = useRef(0);
 
