@@ -351,6 +351,7 @@ export function useAiChat({
     setIsResponding(false);
     setHasError(false);
     dispatchData(null);
+    setCurrentMessageIndex(1);
   }
 
   function stop() {
