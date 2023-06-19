@@ -223,7 +223,7 @@ export default function Playground() {
     setSearchParams([["id", id]], { replace: true });
     setShared(true);
     setShareUrl(url);
-  }, [setSearchParams, setShareUrl, setShared]);
+  }, [setSearchParams, setShareUrl, setShared, getEditorContent]);
 
   // We're using a random subdomain for origin isolation.
   // Optionally prefix with "unsafe-" to receive less restrictive CSP headers.
