@@ -171,7 +171,6 @@ export function AIHelpInner() {
                 <div
                   className={[
                     "ai-help-message-content",
-                    message.status,
                     !message.content && "empty",
                   ]
                     .filter(Boolean)
