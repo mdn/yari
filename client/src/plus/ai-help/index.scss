@@ -77,14 +77,14 @@
 
       button {
         --button-color: var(--icon-secondary);
-        --button-height: 1.5rem;
-        --button-padding: 0;
+        --button-height: 2.5rem;
+        --button-padding: 0.5rem;
         --icon-size: 1.5rem;
 
         display: block;
         position: absolute;
-        right: calc(1rem + 1px);
-        top: 0.75rem;
+        right: calc(0.5rem + 1px);
+        top: 0.25rem;
 
         &:hover {
           background: transparent;
