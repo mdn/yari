@@ -93,32 +93,35 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
     }
     case "update": {
       const { index, message } = messageAction;
-      if (current[index]) {
-        current[index] = {
-          ...current[index],
-          ...message,
-        };
+      if (!current[index]) {
+        throw new Error(`Cannot update on missing current[${index}]!`);
       }
+      current[index] = {
+        ...current[index],
+        ...message,
+      };
       break;
     }
     case "append-content": {
       const { index, content } = messageAction;
-      if (current[index]) {
-        current[index] = {
-          ...current[index],
-          content: current[index].content + content,
-        };
+      if (!current[index]) {
+        throw new Error(`Cannot append-content to missing current[${index}]!`);
       }
+      current[index] = {
+        ...current[index],
+        content: current[index].content + content,
+      };
       break;
     }
     case "set-sources": {
       const { index, sources } = messageAction;
-      if (current[index]) {
-        current[index] = {
-          ...current[index],
-          sources,
-        };
+      if (!current[index]) {
+        throw new Error(`Cannot set-sources on missing current[${index}]!`);
       }
+      current[index] = {
+        ...current[index],
+        sources,
+      };
       break;
     }
     case "reset": {
