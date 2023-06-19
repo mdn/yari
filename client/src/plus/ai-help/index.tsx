@@ -430,7 +430,7 @@ function useAutoScroll(
     window.addEventListener("scroll", scrollListener);
 
     return () => window.removeEventListener("scroll", scrollListener);
-  }, [autoScroll, dependency]);
+  }, [autoScroll, bodyRef, dependency, footerRef]);
 
   return {
     autoScroll,
