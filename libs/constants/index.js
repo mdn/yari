@@ -158,29 +158,28 @@ export const CSP_VALUE = cspToString({
   "script-src-elem": CSP_SCRIPT_SRC_VALUES,
 });
 
-export const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
+const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
   "'unsafe-eval'",
   "'unsafe-inline'",
   "'wasm-unsafe-eval'",
+  "https",
 ];
 
-export const PLAYGROUND_UNSAFE_CSP_DIRECTIVES = {
-  "default-src": ["*"],
+export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
+  "default-src": ["https"],
   "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
   "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "style-src": ["'report-sample'", "*", "'unsafe-inline'", "'unsafe-eval'"],
+  "style-src": ["'report-sample'", "https", "'unsafe-inline'", "'unsafe-eval'"],
   "base-uri": ["'self'"],
-};
+  "worker-src": ["'self'"],
+  "manifest-src": ["'self'"],
+});
 
 export const PLAYGROUND_CSP_VALUE = cspToString({
   ...CSP_DIRECTIVES,
   "script-src": [...CSP_SCRIPT_SRC_VALUES, "'nonce-deadbeef'"],
   "script-src-elem": [...CSP_SCRIPT_SRC_VALUES, "'nonce-deadbeef'"],
 });
-
-export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString(
-  PLAYGROUND_UNSAFE_CSP_DIRECTIVES
-);
 
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
