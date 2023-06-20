@@ -81,6 +81,7 @@ export default function Playground() {
       if (!response.ok) {
         throw Error(response.statusText);
       }
+      gleanClick(`${PLAYGROUND}: load-shared`);
 
       return (await response.json()) || null;
     },

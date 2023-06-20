@@ -79,21 +79,22 @@ function prevHeading(heading: Element) {
 function addBreakoutButton(
   element: Element | null,
   id: string,
-  doc: Doc,
   code: EditorContent,
   locale: string
 ) {
   if (!element || element.querySelector(".play-button")) return;
-  const button = document.createElement("button");
+  const a = document.createElement("a");
 
-  button.textContent = "Play";
+  a.textContent = "Play";
 
-  button.setAttribute("type", "button");
-  button.setAttribute("class", "play-button external");
-  button.title = "Open in Playground";
-  element.appendChild(button);
+  a.setAttribute("class", "play-button external");
+  a.href = `/${locale}/play`;
+  a.setAttribute("data-play", id);
+  a.title = "Open in Playground";
+  element.appendChild(a);
 
-  button.onclick = async () => {
+  a.onclick = async (e) => {
+    e.preventDefault();
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
     window.location.pathname = `/${locale}/play`;
   };
@@ -219,15 +220,11 @@ export function useRunSample(doc: Doc | undefined) {
           return;
         }
         const header = element.parentElement?.firstElementChild || null;
-        // No idea how a parentElement could be falsy in practice, but it can
-        // in theory and hence in TypeScript. So to having to test for it, bail
-        // early if we have to.
-        addBreakoutButton(header, id, doc, code, locale);
+        addBreakoutButton(header, id, code, locale);
       });
       addBreakoutButton(
         iframe.parentElement?.firstElementChild || null,
         id,
-        doc,
         code,
         locale
       );

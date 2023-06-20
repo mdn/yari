@@ -568,13 +568,14 @@ pre {
     }
   }
 
-  .play-button {
+  .play-button:not(.button) {
     color: var(--text-primary);
     cursor: pointer;
     font-size: smaller;
     margin: 0;
     margin-left: auto;
     opacity: 0.4;
+    text-decoration: none;
 
     &:hover,
     &:focus {
