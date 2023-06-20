@@ -116,7 +116,6 @@ function codeForHeading(
     src,
   };
 
-  let empty = true;
   const nodes: Element[] = [];
   for (const part of LIVE_SAMPLE_PARTS) {
     const src = section
@@ -132,11 +131,10 @@ function codeForHeading(
       })
       .join("\n");
     if (src) {
-      empty = false;
       code[part] += src;
     }
   }
-  return empty ? null : { code, nodes };
+  return nodes.length ? { code, nodes } : null;
 }
 
 function getLanguage(node: Element): string | null {
