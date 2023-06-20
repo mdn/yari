@@ -48,7 +48,7 @@ const EXAMPLES: { category: Category; query: string }[] = [
   },
 ];
 
-export function AiHelp() {
+export default function AiHelp() {
   document.title = `AI Help | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
   const user = useUserData();

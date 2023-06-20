@@ -13,8 +13,8 @@ import { DocParent } from "../../../libs/types/document";
 
 import "./index.scss";
 import OfferOverview from "./offer-overview";
-import { AiHelp } from "./ai-help";
 
+const AiHelp = React.lazy(() => import("./ai-help"));
 const Collections = React.lazy(() => import("./collections"));
 const Updates = React.lazy(() => import("./updates"));
 
