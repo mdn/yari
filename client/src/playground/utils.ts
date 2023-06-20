@@ -1,3 +1,5 @@
+export const SESSION_KEY = "playground-session-code";
+
 export interface EditorContent {
   css: string;
   html: string;

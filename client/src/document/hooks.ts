@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useIsServer, useLocale } from "../hooks";
 import { Doc } from "../../../libs/types/document";
-import { EditorContent, initPlayIframe } from "../playground/utils";
+import {
+  EditorContent,
+  initPlayIframe,
+  SESSION_KEY,
+} from "../playground/utils";
 
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 
@@ -90,12 +94,8 @@ function addBreakoutButton(
   element.appendChild(button);
 
   button.onclick = async () => {
-    const key = `play-${id}-${doc.mdn_url}`;
-    sessionStorage.setItem(key, JSON.stringify(code));
-    const url = new URL(window?.location.href);
-    url.pathname = `/${locale}/play`;
-    url.searchParams.set("sample", key);
-    window.location.href = url.href;
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
+    window.location.pathname = `/${locale}/play`;
   };
 }
 
@@ -138,6 +138,37 @@ function codeForHeading(
   return empty ? null : { code, nodes };
 }
 
+function getLanguage(node: Element): string | null {
+  for (const part of LIVE_SAMPLE_PARTS) {
+    if (node.classList.contains(part)) {
+      return part;
+    }
+  }
+  return null;
+}
+
+function getCodeAndNodesForIframeBySampleClass(cls: string, src: string) {
+  const code: EditorContent = {
+    css: "",
+    html: "",
+    js: "",
+    src,
+  };
+
+  let empty = true;
+  const nodes: Element[] = [];
+  document.querySelectorAll(`pre.live-sample___${cls}`).forEach((pre) => {
+    let lang = getLanguage(pre);
+    if (lang === null) {
+      return;
+    }
+    empty = false;
+    nodes.push(pre);
+    code[lang] += pre.textContent;
+  });
+  return empty ? null : { code, nodes };
+}
+
 function getCodeAndNodesForIframe(id: string, iframe: Element, src: string) {
   let heading = document.getElementById(id) || closestHeading(iframe);
   if (!heading) {
@@ -166,7 +197,7 @@ export function useRunSample(doc: Doc | undefined) {
     if (!doc) {
       return;
     }
-    [...document.querySelectorAll("iframe")].forEach((iframe) => {
+    document.querySelectorAll("iframe").forEach((iframe) => {
       const src = new URL(iframe.src || "", "https://example.com");
       if (!(src && src.pathname.toLowerCase().endsWith(`/runner.html`))) {
         return null;
@@ -176,7 +207,9 @@ export function useRunSample(doc: Doc | undefined) {
         return null;
       }
 
-      const r = getCodeAndNodesForIframe(id, iframe, src.pathname);
+      const r =
+        getCodeAndNodesForIframeBySampleClass(id, src.pathname) ||
+        getCodeAndNodesForIframe(id, iframe, src.pathname);
       if (r === null) {
         return null;
       }

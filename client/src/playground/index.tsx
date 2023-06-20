@@ -9,7 +9,7 @@ import parserHTML from "prettier/esm/parser-html.mjs";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { EditorContent, updatePlayIframe } from "./utils";
+import { EditorContent, SESSION_KEY, updatePlayIframe } from "./utils";
 
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
@@ -62,13 +62,10 @@ function load(session: string) {
   };
 }
 
-const SESSION_KEY = "playground-session-code";
-
 export default function Playground() {
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
   const gistId = searchParams.get("id");
-  const sampleKey = searchParams.get("sample");
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
@@ -88,9 +85,7 @@ export default function Playground() {
       return (await response.json()) || null;
     },
     {
-      fallbackData:
-        (!gistId && (sampleKey ? load(sampleKey) : load(SESSION_KEY))) ||
-        undefined,
+      fallbackData: (!gistId && load(SESSION_KEY)) || undefined,
     }
   );
   const htmlRef = useRef<EditorHandle | null>(null);
@@ -141,16 +136,13 @@ export default function Playground() {
               `${initialCode.src.split("/").slice(0, -1).join("/")}`
           );
         }
-        if (sampleKey) {
-          setSearchParams([], { replace: true });
-        }
       } else {
         htmlRef.current?.setContent(HTML_DEFAULT);
         cssRef.current?.setContent(CSS_DEFAULT);
         jsRef.current?.setContent(JS_DEFAULT);
       }
     }
-  }, [initialCode, state, sampleKey, setSearchParams]);
+  }, [initialCode, state]);
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
