@@ -71,20 +71,20 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
-  ["ai-help", "AI Help", "beta"],
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
   ["afree", "Ads free"],
+  ["ai-help", "AI Help", "beta"],
 ];
 
 const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
-    ["ai-help", "AI Help: 5 questions per day", "beta"],
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
+    ["ai-help", "AI Help: 5 questions per day", "beta"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
