@@ -60,7 +60,7 @@ const LIVE_SAMPLE_HTML = `
             <%- html %>
         <% } %>
         <% if (js) { %>
-            <script nonce="deadbeef">
+            <script>
                 <%- js %>
             </script>
         <% } %>
@@ -69,7 +69,7 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-const liveSampleRE = /.*\/(unsafe-runner|_sample_\.(.*))\.html($|\?.*$)/i;
+const liveSampleRE = /.*\/(runner|_sample_\.(.*))\.html($|\?.*$)/i;
 
 function extractSlug(uri) {
   const url = new URL(uri, "https://example.com");

@@ -132,6 +132,13 @@ main.play {
         gap: 0.5rem;
         padding: 0.5rem;
 
+        h1 {
+          display: inline-flex;
+          font-size: 1rem;
+          margin: auto 0;
+          text-transform: uppercase;
+        }
+
         .switch {
           font-size: smaller;
         }

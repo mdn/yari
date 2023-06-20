@@ -38,14 +38,12 @@ export function getOriginFromRequest(req: Request): Origin {
   if (
     req.hostname === ORIGIN_MAIN &&
     !req.path.includes("/_sample_.") &&
-    !req.path.endsWith("/runner.html") &&
-    !req.path.endsWith("/unsafe-runner.html")
+    !req.path.endsWith("/runner.html")
   ) {
     return Origin.main;
   } else if (
     req.hostname === ORIGIN_LIVE_SAMPLES &&
-    !req.path.endsWith("/runner.html") &&
-    !req.path.endsWith("/unsafe-runner.html")
+    !req.path.endsWith("/runner.html")
   ) {
     return Origin.liveSamples;
   } else if (req.hostname.endsWith(ORIGIN_PLAY)) {

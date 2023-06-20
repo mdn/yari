@@ -40,14 +40,7 @@ router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyKevel);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyKevel);
 router.get(
-  [
-    "/[^/]+/docs/*/runner.html",
-    "/[^/]+/blog/*/runner.html",
-    "/runner.html",
-    "/[^/]+/docs/*/unsafe-runner.html",
-    "/[^/]+/blog/*/unsafe-runner.html",
-    "/unsafe-runner.html",
-  ],
+  ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
   requireOrigin(Origin.play),
   resolveRunnerHtml,
   proxyRunner

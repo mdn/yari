@@ -12,13 +12,11 @@ import { SidePlacement } from "../ui/organisms/placement";
 import { EditorContent, updatePlayIframe } from "./utils";
 
 import "./index.scss";
-import { Switch } from "../ui/atoms/switch";
 import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
-import { InfoTooltip } from "../document/molecules/tooltip";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -94,9 +92,6 @@ export default function Playground() {
         (!gistId && (sampleKey ? load(sampleKey) : load(SESSION_KEY))) ||
         undefined,
     }
-  );
-  let [unsafe, setUnsafe] = useState(
-    Boolean(sampleKey && initialCode && !gistId)
   );
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
@@ -226,7 +221,6 @@ export default function Playground() {
   }, [setSearchParams, setShareUrl, setShared, getEditorContent]);
 
   // We're using a random subdomain for origin isolation.
-  // Optionally prefix with "unsafe-" to receive less restrictive CSP headers.
   const src = new URL(
     `${window.location.protocol}//${
       PLAYGROUND_BASE_HOST.startsWith("localhost")
@@ -234,7 +228,7 @@ export default function Playground() {
         : `${subdomain.current}.`
     }${PLAYGROUND_BASE_HOST}`
   );
-  src.pathname = `${codeSrc || ""}/${unsafe ? "unsafe-" : ""}runner.html`;
+  src.pathname = `${codeSrc || ""}/runner.html`;
 
   const cleanDialog = () => {
     if (dialogState === DialogState.share) {
@@ -253,18 +247,7 @@ export default function Playground() {
         </dialog>
         <section className="editors">
           <aside>
-            <Switch
-              name="toggle-unsafe"
-              checked={unsafe}
-              toggle={(e) => setUnsafe(e.target.checked)}
-            >
-              Load unsafe content
-            </Switch>
-            <InfoTooltip>
-              Allow the Playground to load media and scripts from 3rd parties.
-              And loosens the CSP restrictions for the Playground. This allows
-              running inline code.
-            </InfoTooltip>
+            <h1>Playground</h1>
             <menu>
               <Button type="secondary" id="format" onClickHandler={format}>
                 format

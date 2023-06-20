@@ -182,12 +182,6 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
   "manifest-src": ["'self'"],
 });
 
-export const PLAYGROUND_CSP_VALUE = cspToString({
-  ...CSP_DIRECTIVES,
-  "script-src": [...CSP_SCRIPT_SRC_VALUES, "'nonce-deadbeef'"],
-  "script-src-elem": [...CSP_SCRIPT_SRC_VALUES, "'nonce-deadbeef'"],
-});
-
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
 export const FONT_EXT = ["woff2"];

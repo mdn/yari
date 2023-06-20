@@ -13,7 +13,7 @@ function liveSampleURL(uri: string, id: string, legacy = false) {
     ...(legacy ? [["url", uri]] : []),
   ]);
   return `${uri}/${
-    legacy ? `_sample_.${id}` : "unsafe-runner"
+    legacy ? `_sample_.${id}` : "runner"
   }.html?${params.toString()}`;
 }
 

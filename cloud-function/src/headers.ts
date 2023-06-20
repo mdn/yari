@@ -2,16 +2,9 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 import {
   CSP_VALUE,
-  PLAYGROUND_CSP_VALUE,
   PLAYGROUND_UNSAFE_CSP_VALUE,
 } from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
-
-declare module "http" {
-  interface ServerResponse {
-    unsafeRunner?: boolean;
-  }
-}
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
 const DEFAULT_MAX_AGE = 60 * 60;
@@ -111,9 +104,6 @@ export function withRunnerResponseHeaders(
     ["X-Content-Type-Options", "nosniff"],
     ["Clear-Site-Data", '"*"'],
     ["Strict-Transport-Security", "max-age=63072000"],
-    [
-      "Content-Security-Policy",
-      res.unsafeRunner ? PLAYGROUND_UNSAFE_CSP_VALUE : PLAYGROUND_CSP_VALUE,
-    ],
+    ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
   ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }

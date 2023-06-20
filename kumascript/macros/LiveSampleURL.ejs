@@ -18,7 +18,7 @@ const searchParams = new URLSearchParams([["id", $0], ["url", $1]].filter(([_,v]
 wiki.ensureExistence(pagePath);
 const samplePath = $1 ?
   `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`.replace(/\/\/+/g, "/")
-  : `${pagePath}/unsafe-runner.html`.replace(/\/\/+/g, "/");
+  : `${pagePath}/runner.html`.replace(/\/\/+/g, "/");
 
 let url;
 if (env.live_samples.base_url.includes('://')) {

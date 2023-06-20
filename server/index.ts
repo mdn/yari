@@ -22,7 +22,6 @@ import {
   ANY_ATTACHMENT_REGEXP,
   CSP_VALUE,
   DEFAULT_LOCALE,
-  PLAYGROUND_CSP_VALUE,
   PLAYGROUND_UNSAFE_CSP_VALUE,
 } from "../libs/constants/index.js";
 import {
@@ -250,7 +249,7 @@ app.get("/:locale/blog/:slug/index.json", async (req, res) => {
   return res.json(data);
 });
 app.get(
-  ["/:locale/blog/:slug/unsafe-runner.html", "/:locale/blog/:slug/runner.html"],
+  ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
   async (req, res) => {
     return res
       .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
@@ -295,12 +294,6 @@ app.get("/*", async (req, res, ...args) => {
   }
 
   if (parsedUrl.pathname.endsWith("/runner.html")) {
-    return res
-      .setHeader("Content-Security-Policy", PLAYGROUND_CSP_VALUE)
-      .status(200)
-      .sendFile(path.join(STATIC_ROOT, "runner.html"));
-  }
-  if (parsedUrl.pathname.endsWith("/unsafe-runner.html")) {
     return res
       .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
       .status(200)

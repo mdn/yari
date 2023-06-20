@@ -36,7 +36,7 @@
         padding: 5px 10px 5px 26px;
       }
     </style>
-    <script nonce="deadbeef">
+    <script>
       const consoleDiv = document.getElementById("console");
       const consoleProxy = new Proxy(console, {
         get(target, prop) {
@@ -53,8 +53,6 @@
 
       window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
-
-      const unsafe = window.location.pathname.endsWith("/unsafe-runner.html");
 
       function setHTML(parent, html) {
         var dummy = document.createElement("div");
@@ -74,14 +72,15 @@
             const clone = document.createElement(child.nodeName);
 
             for (const { nodeName, nodeValue } of child.attributes) {
-              clone.setAttribute(nodeName, nodeValue);
+              try {
+                clone.setAttribute(nodeName, nodeValue);
+              } catch (e) {
+                console.error(e);
+              }
             }
 
             if (child.children.length === 0) {
               if (child.nodeName === "SCRIPT") {
-                if (!unsafe) {
-                  clone.removeAttribute("nonce");
-                }
                 if (child.text) {
                   clone.text = child.text;
                 }
@@ -108,7 +107,6 @@
         setHTML(document.body, state.html);
 
         const script = document.createElement("script");
-        script.nonce = "deadbeef";
         script.textContent = state.js;
         document.body.appendChild(script);
 

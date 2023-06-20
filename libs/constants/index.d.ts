@@ -6,7 +6,6 @@ export const LOCALE_ALIASES: Map<string, string>;
 export const PREFERRED_LOCALE_COOKIE_NAME: string;
 export const CSP_SCRIPT_SRC_VALUES: string[];
 export const CSP_VALUE: string;
-export const PLAYGROUND_CSP_VALUE: string;
 export const PLAYGROUND_UNSAFE_CSP_VALUE: string;
 export const AUDIO_EXT: string[];
 export const FONT_EXT: string[];

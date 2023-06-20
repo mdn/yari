@@ -168,9 +168,7 @@ export function useRunSample(doc: Doc | undefined) {
     }
     [...document.querySelectorAll("iframe")].forEach((iframe) => {
       const src = new URL(iframe.src || "", "https://example.com");
-      if (
-        !(src && src.pathname.toLowerCase().includes(`/unsafe-runner.html`))
-      ) {
+      if (!(src && src.pathname.toLowerCase().endsWith(`/runner.html`))) {
         return null;
       }
       const id = src.searchParams.get("id");
