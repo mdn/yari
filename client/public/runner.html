@@ -104,6 +104,7 @@
         style.textContent = state.css;
         document.head.appendChild(style);
 
+        document.body.innerHTML = "";
         setHTML(document.body, state.html);
 
         const script = document.createElement("script");
