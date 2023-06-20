@@ -83,21 +83,24 @@ function addBreakoutButton(
   locale: string
 ) {
   if (!element || element.querySelector(".play-button")) return;
-  const a = document.createElement("a");
+  const button = document.createElement("button");
 
-  a.textContent = "Play";
+  button.textContent = "Play";
 
-  a.setAttribute("class", "play-button external");
-  a.href = `/${locale}/play`;
-  a.setAttribute("data-play", id);
-  a.title = "Open in Playground";
-  element.appendChild(a);
+  button.setAttribute("class", "play-button external");
+  button.type = "button";
+  button.setAttribute("data-play", id);
+  button.title = "Open in Playground";
+  element.appendChild(button);
 
-  a.onclick = async (e) => {
-    e.preventDefault();
+  button.addEventListener("click", (e) => {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
-    window.location.pathname = `/${locale}/play`;
-  };
+    const url = new URL(window?.location.href);
+    url.pathname = `/${locale}/play`;
+    url.hash = "";
+    url.search = "";
+    window.location.href = url.href;
+  });
 }
 
 function codeForHeading(

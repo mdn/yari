@@ -117,6 +117,7 @@ function glean(): GleanAnalytics {
   };
   window?.addEventListener("click", (ev) => {
     handleLinkClick(ev, gleanClick);
+    handleButtonClick(ev, gleanClick);
     handleSidebarClick(ev, gleanClick);
   });
 
@@ -125,6 +126,17 @@ function glean(): GleanAnalytics {
 
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
+
+function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
+  const button = ev?.target as Element;
+  if (button?.nodeName === "BUTTON") {
+    if (button.hasAttribute?.("data-play")) {
+      click(
+        `${PLAYGROUND}: breakout->${button.getAttribute("data-play") || ""}`
+      );
+    }
+  }
+}
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   const anchor = ev?.target as Element;
