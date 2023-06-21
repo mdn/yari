@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { fdir } from "fdir";
 import frontmatter from "front-matter";
 import { Configuration, OpenAIApi } from "openai";
-import { createClient } from "@supabase/supabase-js";
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
 
 import { DocFrontmatter } from "../libs/types/document.js";
 import {
@@ -14,6 +14,22 @@ import {
 } from "../libs/env/index.js";
 
 const IGNORE_SECTIONS = ["Specifications", "Browser compatibility", "See also"];
+
+interface IndexedDoc {
+  id: number;
+  url: string;
+  slug: string;
+  title: string;
+  checksum: string;
+}
+
+interface Doc {
+  url: string;
+  slug: string;
+  title: string;
+  content: string;
+  checksum: string;
+}
 
 export async function updateEmbeddings(directory: string) {
   if (!OPENAI_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -31,28 +47,54 @@ export async function updateEmbeddings(directory: string) {
   });
   const openai = new OpenAIApi(configuration);
 
+  console.log(`Retrieving all indexed documents...`);
+  const existingDocs = await fetchAllExistingDocs(supabaseClient);
+  console.log(`-> Done.`);
+
+  const existingDocByUrl = new Map<string, IndexedDoc>(
+    existingDocs.map((doc) => [doc.url, doc])
+  );
+
+  console.log(`Determining changed and deleted documents...`);
+
+  const seenUrls = new Set<string>();
+  const updates: Doc[] = [];
+
   for await (const { url, slug, title, content } of contentDocs(directory)) {
+    seenUrls.add(url);
+    const checksum = createHash("sha256").update(content).digest("base64");
+
+    // Check for existing document in DB and compare checksums.
+    const existingDoc = existingDocByUrl.get(url);
+
+    if (existingDoc?.checksum !== checksum) {
+      updates.push({
+        url,
+        slug,
+        title,
+        content,
+        checksum,
+      });
+      continue;
+    }
+  }
+  console.log(
+    `-> ${updates.length} of ${seenUrls.size} documents were changed (or added).`
+  );
+  const deletions: IndexedDoc[] = [...existingDocByUrl.entries()]
+    .filter(([key]) => !seenUrls.has(key))
+    .map(([, value]) => value);
+  console.log(
+    `-> ${deletions.length} of ${existingDocs.length} indexed documents were deleted (or moved).`
+  );
+
+  console.log(`Applying updates...`);
+  for (const { url, slug, title, content, checksum } of updates) {
     try {
-      const checksum = createHash("sha256").update(content).digest("base64");
-
-      // Check for existing document in DB and compare checksums.
-      const { data: existingDoc } = await supabaseClient
-        .from("mdn_doc")
-        .select("id, url, slug, title, checksum")
-        .filter("url", "eq", url)
-        .maybeSingle()
-        .throwOnError();
-
-      if (existingDoc?.checksum === checksum) {
-        console.log(`[${url}] No change.`);
-        continue;
-      }
+      console.log(`-> [${url}] Updating document...`);
+      const existingDoc = existingDocByUrl.get(url);
 
       if (existingDoc) {
-        console.log(
-          `[${url}] Changes detected, removing old sections (and their embeddings).`
-        );
-
         await supabaseClient
           .from("mdn_doc_section")
           .delete()
@@ -80,7 +122,7 @@ export async function updateEmbeddings(directory: string) {
       const sections = splitAndFilterSections(content);
 
       console.log(
-        `[${url}] Adding ${sections.length} document sections (with embeddings)`
+        `-> [${url}] Indexing ${sections.length} document sections...`
       );
 
       await Promise.all(
@@ -103,7 +145,7 @@ export async function updateEmbeddings(directory: string) {
           await supabaseClient
             .from("mdn_doc_section")
             .insert({
-              doc_id: doc!.id,
+              doc_id: doc.id,
               heading,
               content,
               token_count: embeddingResponse.data.usage.total_tokens,
@@ -119,15 +161,23 @@ export async function updateEmbeddings(directory: string) {
       await supabaseClient
         .from("mdn_doc")
         .update({ checksum })
-        .filter("id", "eq", doc!.id)
+        .filter("id", "eq", doc.id)
         .throwOnError();
     } catch (err) {
       console.error(
-        `[${url}] Document or one/multiple of its document sections failed to store properly. Document has been marked with null checksum to indicate that it needs to be re-generated.`
+        `!> [${url}] Failed to update document. Document has been marked with null checksum to indicate that it needs to be re-generated.`
       );
       console.error(err);
     }
   }
+  console.log(`-> Done.`);
+
+  console.log(`Applying deletions...`);
+  for (const { id, url } of deletions) {
+    console.log(`-> [${url}] Deleting indexed document...`);
+    await supabaseClient.from("mdn_doc").delete().eq("id", id).throwOnError();
+  }
+  console.log(`-> Done.`);
 }
 
 async function* contentPaths(directory: string) {
@@ -191,4 +241,26 @@ function splitAndFilterSections(
       // Ignore sections with few words.
       .filter(({ content }) => content.split(/\b\w+\b/g).length >= 10)
   );
+}
+async function fetchAllExistingDocs(supabase: SupabaseClient) {
+  const PAGE_SIZE = 1000;
+  let { data } = await supabase
+    .from("mdn_doc")
+    .select("id, url, slug, title, checksum")
+    .order("id")
+    .limit(PAGE_SIZE)
+    .throwOnError();
+  let allData = data;
+  while (data.length === PAGE_SIZE) {
+    const lastItem = data[data.length - 1];
+    ({ data } = await supabase
+      .from("mdn_doc")
+      .select("id, url, slug, title, checksum")
+      .order("id")
+      .gt("id", lastItem.id)
+      .limit(PAGE_SIZE)
+      .throwOnError());
+    allData = [...allData, ...data];
+  }
+  return allData;
 }
