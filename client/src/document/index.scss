@@ -583,7 +583,7 @@ pre {
     &::after {
       background-color: var(--icon-primary);
       content: "";
-      display: inline-flex;
+      display: inline-block;
       height: 10px;
       margin-left: 4px;
       mask-image: url("../assets/icons/external.svg");

@@ -220,11 +220,12 @@ export function useRunSample(doc: Doc | undefined) {
         if (element.classList.contains("hidden")) {
           return;
         }
-        const header = element.parentElement?.firstElementChild || null;
+        const header =
+          element.parentElement?.querySelector(".example-header") || null;
         addBreakoutButton(header, id, code, locale);
       });
       addBreakoutButton(
-        iframe.parentElement?.firstElementChild || null,
+        iframe.parentElement?.querySelector(".example-header") || null,
         id,
         code,
         locale
@@ -256,7 +257,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
     document
       .querySelectorAll("div.code-example pre:not(.hidden)")
       .forEach((element) => {
-        const header = element.parentElement?.firstElementChild;
+        const header = element.parentElement?.querySelector(".example-header");
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
         // early if we have to.

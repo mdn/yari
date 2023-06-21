@@ -91,7 +91,6 @@ main.play {
       }
 
       #share-cancel {
-        float: right;
         position: absolute;
         right: 0.5rem;
         top: 0.5rem;
@@ -108,7 +107,7 @@ main.play {
     > form.flag {
       > textarea {
         height: 6rem;
-        resize: none;
+        resize: vertical;
         width: 100%;
       }
 

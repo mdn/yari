@@ -86,6 +86,8 @@ export const CSP_SCRIPT_SRC_VALUES = [
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
+  "script-src": CSP_SCRIPT_SRC_VVALUES,
+  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
@@ -152,11 +154,7 @@ export const cspToString = (csp) =>
     .map(([directive, values]) => `${directive} ${values.join(" ")};`)
     .join(" ");
 
-export const CSP_VALUE = cspToString({
-  ...CSP_DIRECTIVES,
-  "script-src": CSP_SCRIPT_SRC_VALUES,
-  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
-});
+export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
 const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
   "'self'",
