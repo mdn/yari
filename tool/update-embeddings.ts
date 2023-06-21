@@ -13,6 +13,7 @@ import {
   SUPABASE_URL,
 } from "../libs/env/index.js";
 
+const MAX_TABLE_LENGTH = 10000;
 const IGNORE_SECTIONS = ["Specifications", "Browser compatibility", "See also"];
 
 interface IndexedDoc {
@@ -200,10 +201,10 @@ async function* contentDocs(directory: string) {
     const raw = await readFile(contentPath, "utf-8");
     const { attributes, body } = frontmatter<DocFrontmatter>(raw);
 
-    // Use slug as id.
     const { slug, title } = attributes;
 
     let content = body;
+    content = removeLongTables(content);
     content = removeTags(content);
     content = removeMacroCalls(content);
     content = content.trim();
@@ -215,6 +216,12 @@ async function* contentDocs(directory: string) {
       content: `# ${title}\n\n${content}`,
     };
   }
+}
+
+function removeLongTables(str: string): string {
+  return str.replace(/<table\b[^>]*>(?:.*?)<\/table>/gis, (table) =>
+    table.length <= MAX_TABLE_LENGTH ? table : " "
+  );
 }
 
 function removeTags(str: string): string {
