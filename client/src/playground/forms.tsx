@@ -100,7 +100,7 @@ export function ShareForm({
                 <Loading />
               ) : (
                 <>
-                  <a href={url.toString()}>Permalink to this playground</a>
+                  <input value={url.toString()} />
                   <Button
                     type="secondary"
                     onClickHandler={async () => {
