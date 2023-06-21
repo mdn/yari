@@ -71,6 +71,7 @@ type MessageAction =
   | SetSourcesAction;
 
 interface PageReference {
+  url: string;
   slug: string;
   title: string;
 }
