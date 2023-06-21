@@ -31,26 +31,26 @@ export async function updateEmbeddings(directory: string) {
   });
   const openai = new OpenAIApi(configuration);
 
-  for await (const { slug, title, content } of contentDocs(directory)) {
+  for await (const { url, slug, title, content } of contentDocs(directory)) {
     try {
       const checksum = createHash("sha256").update(content).digest("base64");
 
       // Check for existing document in DB and compare checksums.
       const { data: existingDoc } = await supabaseClient
         .from("mdn_doc")
-        .select("id, slug, title, checksum")
-        .filter("slug", "eq", slug)
+        .select("id, url, slug, title, checksum")
+        .filter("url", "eq", url)
         .maybeSingle()
         .throwOnError();
 
       if (existingDoc?.checksum === checksum) {
-        console.log(`[${slug}] No change.`);
+        console.log(`[${url}] No change.`);
         continue;
       }
 
       if (existingDoc) {
         console.log(
-          `[${slug}] Changes detected, removing old sections (and their embeddings).`
+          `[${url}] Changes detected, removing old sections (and their embeddings).`
         );
 
         await supabaseClient
@@ -67,10 +67,11 @@ export async function updateEmbeddings(directory: string) {
         .upsert(
           {
             checksum: null,
+            url,
             slug,
             title,
           },
-          { onConflict: "slug" }
+          { onConflict: "url" }
         )
         .select()
         .single()
@@ -79,7 +80,7 @@ export async function updateEmbeddings(directory: string) {
       const sections = splitAndFilterSections(content);
 
       console.log(
-        `[${slug}] Adding ${sections.length} document sections (with embeddings)`
+        `[${url}] Adding ${sections.length} document sections (with embeddings)`
       );
 
       await Promise.all(
@@ -122,7 +123,7 @@ export async function updateEmbeddings(directory: string) {
         .throwOnError();
     } catch (err) {
       console.error(
-        `Document '${slug}' or one/multiple of its document sections failed to store properly. Document has been marked with null checksum to indicate that it needs to be re-generated.`
+        `[${url}] Document or one/multiple of its document sections failed to store properly. Document has been marked with null checksum to indicate that it needs to be re-generated.`
       );
       console.error(err);
     }
@@ -156,7 +157,12 @@ async function* contentDocs(directory: string) {
     content = removeMacroCalls(content);
     content = content.trim();
 
-    yield { slug, title, content: `# ${title}\n\n${content}` };
+    yield {
+      slug,
+      url: `/en-US/docs/${slug}`,
+      title,
+      content: `# ${title}\n\n${content}`,
+    };
   }
 }
 

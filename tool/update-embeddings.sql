@@ -1,11 +1,12 @@
 create table
   public.mdn_doc (
     id bigint not null default nextval('mdn_doc_id_seq'::regclass),
+    url text not null,
     slug text not null,
     title text not null,
     checksum text null,
     constraint mdn_doc_pkey primary key (id),
-    constraint mdn_doc_path_key unique (slug)
+    constraint mdn_doc_url_key unique (url),
   ) tablespace pg_default;
 
   create table
