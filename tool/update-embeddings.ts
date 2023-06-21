@@ -163,11 +163,12 @@ export async function updateEmbeddings(directory: string) {
         .update({ checksum })
         .filter("id", "eq", doc.id)
         .throwOnError();
-    } catch (err) {
+    } catch (err: any) {
       console.error(
         `!> [${url}] Failed to update document. Document has been marked with null checksum to indicate that it needs to be re-generated.`
       );
-      console.error(err);
+      const context = err?.response?.data ?? err?.response ?? err;
+      console.error(context);
     }
   }
   console.log(`-> Done.`);
