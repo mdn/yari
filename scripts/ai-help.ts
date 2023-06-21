@@ -284,7 +284,7 @@ async function fetchAllExistingDocs(supabase: SupabaseClient) {
 // CLI.
 program
   .command(
-    "update-embeddings",
+    "update-index",
     "Generates OpenAI embeddings for all document sections and uploads them to Supabase."
   )
   .argument("<directory>", "Path in which to execute git", {

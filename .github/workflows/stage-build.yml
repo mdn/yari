@@ -357,7 +357,7 @@ jobs:
           done
 
       - name: Update AI Help index
-        run: yarn ai-help update-embeddings
+        run: yarn ai-help update-index
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
