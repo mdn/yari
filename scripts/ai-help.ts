@@ -1,17 +1,21 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
+import caporal from "@caporal/core";
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { fdir } from "fdir";
 import frontmatter from "front-matter";
 import { Configuration, OpenAIApi } from "openai";
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
 
 import { DocFrontmatter } from "../libs/types/document.js";
 import {
+  CONTENT_ROOT,
   OPENAI_KEY,
   SUPABASE_SERVICE_ROLE_KEY,
   SUPABASE_URL,
 } from "../libs/env/index.js";
+
+const { program } = caporal;
 
 const MAX_TABLE_LENGTH = 10000;
 const IGNORE_SECTIONS = ["Specifications", "Browser compatibility", "See also"];
@@ -276,3 +280,19 @@ async function fetchAllExistingDocs(supabase: SupabaseClient) {
   }
   return allData;
 }
+
+// CLI.
+program
+  .command(
+    "update-embeddings",
+    "Generates OpenAI embeddings for all document sections and uploads them to Supabase."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: CONTENT_ROOT,
+  })
+  .action(function (params) {
+    const { directory } = params.args as { directory: string };
+    return updateEmbeddings(directory);
+  });
+
+program.run();

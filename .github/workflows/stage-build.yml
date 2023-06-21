@@ -87,11 +87,8 @@ jobs:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build dependencies
-        run: yarn build:client && yarn build:ssr
-
       - name: Update embeddings
-        run: yarn tool update-embeddings
+        run: yarn ai-help update-embeddings
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}

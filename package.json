@@ -12,6 +12,7 @@
     "yari-tool": "tool/cli.js"
   },
   "scripts": {
+    "ai-help": "ts-node scripts/ai-help.ts",
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
     "build": "cross-env NODE_ENV=production ts-node build/cli.ts",
