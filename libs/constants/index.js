@@ -86,7 +86,7 @@ export const CSP_SCRIPT_SRC_VALUES = [
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
-  "script-src": CSP_SCRIPT_SRC_VVALUES,
+  "script-src": CSP_SCRIPT_SRC_VALUES,
   "script-src-elem": CSP_SCRIPT_SRC_VALUES,
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
