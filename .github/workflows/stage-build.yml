@@ -399,6 +399,9 @@ jobs:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Run build:prepare
+        run: yarn build:prepare
+
       - name: Update embeddings
         run: yarn tool update-embeddings
         env:
