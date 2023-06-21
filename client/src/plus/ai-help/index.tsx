@@ -7,7 +7,7 @@ import { AiLoginBanner, AiUpsellBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
-import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
+import { useScrollToTop, useViewedState } from "../../hooks";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
@@ -97,7 +97,6 @@ export function AIHelpInner() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
-  const locale = useLocale();
   const { hash } = useLocation();
 
   const {
