@@ -89,97 +89,101 @@ export async function updateEmbeddings(directory: string) {
     `-> ${deletions.length} of ${existingDocs.length} indexed documents were deleted (or moved).`
   );
 
-  console.log(`Applying updates...`);
-  for (const { url, slug, title, content, checksum } of updates) {
-    try {
-      console.log(`-> [${url}] Updating document...`);
-      const existingDoc = existingDocByUrl.get(url);
+  if (updates.length > 0) {
+    console.log(`Applying updates...`);
+    for (const { url, slug, title, content, checksum } of updates) {
+      try {
+        console.log(`-> [${url}] Updating document...`);
+        const existingDoc = existingDocByUrl.get(url);
 
-      if (existingDoc) {
-        await supabaseClient
-          .from("mdn_doc_section")
-          .delete()
-          .filter("doc_id", "eq", existingDoc.id)
-          .throwOnError();
-      }
-
-      // Create/update document record. Intentionally clear checksum until we
-      // have successfully generated all document sections.
-      const { data: doc } = await supabaseClient
-        .from("mdn_doc")
-        .upsert(
-          {
-            checksum: null,
-            url,
-            slug,
-            title,
-          },
-          { onConflict: "url" }
-        )
-        .select()
-        .single()
-        .throwOnError();
-
-      const sections = splitAndFilterSections(content);
-
-      console.log(
-        `-> [${url}] Indexing ${sections.length} document sections...`
-      );
-
-      await Promise.all(
-        sections.map(async ({ heading, content }) => {
-          // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
-          const input = content.replace(/\n/g, " ");
-
-          const embeddingResponse = await openai.createEmbedding({
-            model: "text-embedding-ada-002",
-            input,
-          });
-
-          if (embeddingResponse.status !== 200) {
-            console.error("Embedding request failed", embeddingResponse.data);
-            throw new Error("Embedding request failed");
-          }
-
-          const [responseData] = embeddingResponse.data.data;
-
+        if (existingDoc) {
           await supabaseClient
             .from("mdn_doc_section")
-            .insert({
-              doc_id: doc.id,
-              heading,
-              content,
-              token_count: embeddingResponse.data.usage.total_tokens,
-              embedding: responseData.embedding,
-            })
-            .select()
-            .single()
+            .delete()
+            .filter("doc_id", "eq", existingDoc.id)
             .throwOnError();
-        })
-      );
+        }
 
-      // Set document checksum so that we know this document was stored successfully
-      await supabaseClient
-        .from("mdn_doc")
-        .update({ checksum })
-        .filter("id", "eq", doc.id)
-        .throwOnError();
-    } catch (err: any) {
-      console.error(
-        `!> [${url}] Failed to update document. Document has been marked with null checksum to indicate that it needs to be re-generated.`
-      );
-      const context = err?.response?.data ?? err?.response ?? err;
-      console.error(context);
+        // Create/update document record. Intentionally clear checksum until we
+        // have successfully generated all document sections.
+        const { data: doc } = await supabaseClient
+          .from("mdn_doc")
+          .upsert(
+            {
+              checksum: null,
+              url,
+              slug,
+              title,
+            },
+            { onConflict: "url" }
+          )
+          .select()
+          .single()
+          .throwOnError();
+
+        const sections = splitAndFilterSections(content);
+
+        console.log(
+          `-> [${url}] Indexing ${sections.length} document sections...`
+        );
+
+        await Promise.all(
+          sections.map(async ({ heading, content }) => {
+            // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
+            const input = content.replace(/\n/g, " ");
+
+            const embeddingResponse = await openai.createEmbedding({
+              model: "text-embedding-ada-002",
+              input,
+            });
+
+            if (embeddingResponse.status !== 200) {
+              console.error("Embedding request failed", embeddingResponse.data);
+              throw new Error("Embedding request failed");
+            }
+
+            const [responseData] = embeddingResponse.data.data;
+
+            await supabaseClient
+              .from("mdn_doc_section")
+              .insert({
+                doc_id: doc.id,
+                heading,
+                content,
+                token_count: embeddingResponse.data.usage.total_tokens,
+                embedding: responseData.embedding,
+              })
+              .select()
+              .single()
+              .throwOnError();
+          })
+        );
+
+        // Set document checksum so that we know this document was stored successfully
+        await supabaseClient
+          .from("mdn_doc")
+          .update({ checksum })
+          .filter("id", "eq", doc.id)
+          .throwOnError();
+      } catch (err: any) {
+        console.error(
+          `!> [${url}] Failed to update document. Document has been marked with null checksum to indicate that it needs to be re-generated.`
+        );
+        const context = err?.response?.data ?? err?.response ?? err;
+        console.error(context);
+      }
     }
+    console.log(`-> Done.`);
   }
-  console.log(`-> Done.`);
 
-  console.log(`Applying deletions...`);
-  for (const { id, url } of deletions) {
-    console.log(`-> [${url}] Deleting indexed document...`);
-    await supabaseClient.from("mdn_doc").delete().eq("id", id).throwOnError();
+  if (deletions.length > 0) {
+    console.log(`Applying deletions...`);
+    for (const { id, url } of deletions) {
+      console.log(`-> [${url}] Deleting indexed document...`);
+      await supabaseClient.from("mdn_doc").delete().eq("id", id).throwOnError();
+    }
+    console.log(`-> Done.`);
   }
-  console.log(`-> Done.`);
 }
 
 async function* contentPaths(directory: string) {
