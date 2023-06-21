@@ -23,6 +23,30 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
+      <OfferOverviewFeature
+        id="playground"
+        img="/assets/playground.png"
+        imgAlt=""
+      >
+        <section aria-labelledby="playground-section-title">
+          <h2 id="playground-section-title">Playground</h2>
+          <h3>
+            Share your prototypes.
+            <br />
+            Generate links to your playground and share your code with others
+          </h3>
+          <p>
+            Et omnis qui reiciendis non voluptatem sequi rem omnis. Esse debitis
+            minima deserunt est repellendus quia et repellendus. Quos dolorem
+            iure corporis asperiores. Repudiandae expedita nemo necessitatibus
+            at quas odio libero illum. Qui eligendi est corrupti suscipit
+            voluptatem qui deleniti.
+          </p>
+          <Button href="/en-US/play" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
       <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
         <section aria-labelledby="updates-section-title">
           <h2 id="updates-section-title">Updates</h2>

@@ -83,7 +83,7 @@ const CORE: OfferDetailsProps = {
   features: [
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
-    [null, "Share playgrounds"],
+    ["playground", "Share playgrounds"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
