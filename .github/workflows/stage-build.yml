@@ -374,6 +374,7 @@ jobs:
 
   # Updates our index of content converted to embeddings in Supabase, used for AI Help.
   update-embeddings:
+    needs: build
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
