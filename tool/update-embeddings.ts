@@ -44,13 +44,13 @@ export async function updateEmbeddings(directory: string) {
         .throwOnError();
 
       if (existingDoc?.checksum === checksum) {
-        console.log(`[${slug}] Checksum has NOT changed => Skipping document.`);
+        console.log(`[${slug}] No change.`);
         continue;
       }
 
       if (existingDoc) {
         console.log(
-          `[${slug}] Checksum has changed => Removing old sections (and their embeddings).`
+          `[${slug}] Changes detected, removing old sections (and their embeddings).`
         );
 
         await supabaseClient
