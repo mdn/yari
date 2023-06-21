@@ -1,4 +1,5 @@
 import { useGleanClick } from "../../telemetry/glean-context";
+import { SubscribeLink } from "../../ui/atoms/subscribe-link";
 import { AuthContainer } from "../../ui/molecules/auth-container";
 import { usePlusUrl } from "../utils";
 import "./login-banner.scss";
@@ -42,10 +43,11 @@ export function AiUpsellBanner({ limit }: { limit: number }) {
           Supporter 10.
         </span>
       </span>
-      <AuthContainer
-        signInGleanContext={`ai-help: upsell-login`}
-        subscribeGleanContext={`ai-help: upsell-button`}
-      />
+      <ul className="auth-container">
+        <li>
+          <SubscribeLink gleanContext="ai-help: upsell-button" toPlans={true} />
+        </li>
+      </ul>
     </div>
   );
 }
