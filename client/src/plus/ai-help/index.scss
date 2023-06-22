@@ -54,16 +54,16 @@
     }
 
     .ai-help-input-form {
-      --form-elem-height: 3rem;
+      --input-height: 3rem;
       position: relative;
       width: 100%;
 
       input {
         background-color: var(--background-primary);
         border: var(--input-border-width) solid var(--border-primary);
-        border-radius: 100px;
+        border-radius: var(--input-height);
         color: var(--text-primary);
-        height: var(--form-elem-height);
+        height: var(--input-height);
         padding-left: var(--input-padding-left);
         padding-right: var(--input-padding-right);
         width: 100%;
