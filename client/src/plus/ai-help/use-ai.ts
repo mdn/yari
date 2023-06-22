@@ -83,50 +83,50 @@ export interface Quota {
 }
 
 function messageReducer(state: Message[], messageAction: MessageAction) {
-  let current = [...state];
+  let newState = [...state];
   const { type } = messageAction;
 
   switch (type) {
     case "new": {
       const { message } = messageAction;
-      current.push(message);
+      newState.push(message);
       break;
     }
     case "update": {
       const { index, message } = messageAction;
-      if (!current[index]) {
-        throw new Error(`Cannot update on missing current[${index}]!`);
+      if (!state[index]) {
+        throw new Error(`Cannot update on missing state[${index}]!`);
       }
-      current[index] = {
-        ...current[index],
+      newState[index] = {
+        ...state[index],
         ...message,
       };
       break;
     }
     case "append-content": {
       const { index, content } = messageAction;
-      if (!current[index]) {
-        throw new Error(`Cannot append-content to missing current[${index}]!`);
+      if (!state[index]) {
+        throw new Error(`Cannot append-content to missing state[${index}]!`);
       }
-      current[index] = {
-        ...current[index],
-        content: current[index].content + content,
+      newState[index] = {
+        ...state[index],
+        content: state[index].content + content,
       };
       break;
     }
     case "set-sources": {
       const { index, sources } = messageAction;
-      if (!current[index]) {
-        throw new Error(`Cannot set-sources on missing current[${index}]!`);
+      if (!state[index]) {
+        throw new Error(`Cannot set-sources on missing state[${index}]!`);
       }
-      current[index] = {
-        ...current[index],
+      newState[index] = {
+        ...state[index],
         sources,
       };
       break;
     }
     case "reset": {
-      current = [];
+      newState = [];
       break;
     }
     default: {
@@ -134,7 +134,7 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
     }
   }
 
-  return current;
+  return newState;
 }
 
 class AiHelpStorage {
