@@ -86,7 +86,8 @@
     }
 
     sup.new {
-      --new-background: var(--text-link);
+      --new-background: var(--text-primary-blue);
+      --new-beta-background: var(--learn-accent-color);
       --new-color: var(--background-primary);
       align-self: flex-start;
     }
