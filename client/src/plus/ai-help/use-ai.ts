@@ -43,19 +43,16 @@ interface NewMessageAction {
 
 interface UpdateMessageAction {
   type: "update";
-  index: number;
   message: Partial<Message>;
 }
 
 interface AppendContentAction {
   type: "append-content";
-  index: number;
   content: string;
 }
 
 interface SetSourcesAction {
   type: "set-sources";
-  index: number;
   sources: PageReference[];
 }
 
@@ -86,6 +83,8 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
   let newState = [...state];
   const { type } = messageAction;
 
+  const index = state.length - 1;
+
   switch (type) {
     case "new": {
       const { message } = messageAction;
@@ -93,10 +92,7 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
       break;
     }
     case "update": {
-      const { index, message } = messageAction;
-      if (!state[index]) {
-        throw new Error(`Cannot update on missing state[${index}]!`);
-      }
+      const { message } = messageAction;
       newState[index] = {
         ...state[index],
         ...message,
@@ -104,10 +100,7 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
       break;
     }
     case "append-content": {
-      const { index, content } = messageAction;
-      if (!state[index]) {
-        throw new Error(`Cannot append-content to missing state[${index}]!`);
-      }
+      const { content } = messageAction;
       newState[index] = {
         ...state[index],
         content: state[index].content + content,
@@ -115,10 +108,7 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
       break;
     }
     case "set-sources": {
-      const { index, sources } = messageAction;
-      if (!state[index]) {
-        throw new Error(`Cannot set-sources on missing state[${index}]!`);
-      }
+      const { sources } = messageAction;
       newState[index] = {
         ...state[index],
         sources,
@@ -184,7 +174,6 @@ export function useAiChat({
     []
   );
 
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(1);
   const [messages, dispatchMessage] = useReducer(
     messageReducer,
     undefined,
@@ -221,7 +210,6 @@ export function useAiChat({
 
         dispatchMessage({
           type: "update",
-          index: currentMessageIndex,
           message: {
             status: MessageStatus.InProgress,
           },
@@ -235,7 +223,6 @@ export function useAiChat({
           if (Array.isArray(sources)) {
             dispatchMessage({
               type: "set-sources",
-              index: currentMessageIndex,
               sources: sources,
             });
           }
@@ -263,7 +250,6 @@ export function useAiChat({
         if (content) {
           dispatchMessage({
             type: "append-content",
-            index: currentMessageIndex,
             content,
           });
         }
@@ -283,18 +269,16 @@ export function useAiChat({
           setIsResponding(false);
           dispatchMessage({
             type: "update",
-            index: currentMessageIndex,
             message: {
               status,
             },
           });
-          setCurrentMessageIndex((x) => x + 2);
         }
       } catch (err) {
         handleError(err);
       }
     },
-    [currentMessageIndex, handleError]
+    [handleError]
   );
 
   const submit = useCallback(
@@ -382,12 +366,10 @@ export function useAiChat({
     resetLoadingState();
     dispatchMessage({
       type: "update",
-      index: currentMessageIndex,
       message: {
         status: MessageStatus.Stopped,
       },
     });
-    setCurrentMessageIndex((x) => x + 2);
   }
 
   function reset() {
@@ -395,7 +377,6 @@ export function useAiChat({
     dispatchMessage({
       type: "reset",
     });
-    setCurrentMessageIndex(1);
   }
 
   return {
