@@ -279,7 +279,7 @@ export function useAiChat({
   );
 
   const submit = useCallback(
-    async (query: string) => {
+    (query: string) => {
       dispatchMessage({
         type: "new",
         message: {
