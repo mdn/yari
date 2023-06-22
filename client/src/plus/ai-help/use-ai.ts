@@ -176,7 +176,7 @@ export function useAiChat({
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [datas, dispatchData] = useReducer(
-    (state: any[], value) => (value === null ? [] : [...state, value]),
+    (state: any[], value: any) => (value === null ? [] : [...state, value]),
     []
   );
 
@@ -202,7 +202,7 @@ export function useAiChat({
     }
   }, [remoteQuota]);
 
-  const handleError = useCallback((err) => {
+  const handleError = useCallback((err: any) => {
     setIsLoading(false);
     setIsResponding(false);
     setHasError(true);
