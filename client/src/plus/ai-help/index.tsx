@@ -182,7 +182,6 @@ export function AIHelpInner() {
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                          // eslint-disable-next-line jsx-a11y/anchor-has-content
                           a: ({ node, ...props }) => {
                             const isExternal = !props.href?.startsWith("/");
                             if (isExternal) {
