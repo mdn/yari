@@ -335,4 +335,8 @@ sup.new {
   padding: 0 0.4em;
   text-rendering: optimizeLegibility;
   text-transform: uppercase;
+
+  &.beta {
+    background: var(--new-background-beta, var(--new-background));
+  }
 }
