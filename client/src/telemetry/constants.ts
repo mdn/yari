@@ -1,5 +1,6 @@
 import { ViewportBreakpoint } from "./glean-context";
 
+export const AI_HELP = "ai_help";
 export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
   "article_actions_collection_select_opened";
 export const ARTICLE_ACTIONS_NEW_COLLECTION = "article_actions_new_collection";
