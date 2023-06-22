@@ -337,6 +337,6 @@ sup.new {
   text-transform: uppercase;
 
   &.beta {
-    background: var(--new-beta-background, var(--new-background));
+    background: var(--new-background-beta, var(--new-background));
   }
 }
