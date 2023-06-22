@@ -30,20 +30,14 @@ export default function OfferOverviewFeatures() {
       >
         <section aria-labelledby="playground-section-title">
           <h2 id="playground-section-title">Playground</h2>
-          <h3>
-            Share your prototypes.
-            <br />
-            Generate links to your playground and share your code with others
-          </h3>
+          <h3>Write,Test and Share your code.</h3>
           <p>
-            Et omnis qui reiciendis non voluptatem sequi rem omnis. Esse debitis
-            minima deserunt est repellendus quia et repellendus. Quos dolorem
-            iure corporis asperiores. Repudiandae expedita nemo necessitatibus
-            at quas odio libero illum. Qui eligendi est corrupti suscipit
-            voluptatem qui deleniti.
+            Your playground to learn and share your amazing work with the world.
+            By simply logging in, you can now spread your creativity far and
+            wide.
           </p>
           <Button href="/en-US/play" target="_self">
-            Learn more →
+            Test it →
           </Button>
         </section>
       </OfferOverviewFeature>
