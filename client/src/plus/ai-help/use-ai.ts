@@ -298,7 +298,7 @@ export function useAiChat({
       });
       setIsResponding(false);
       setHasError(false);
-      setIsLoading?.(true);
+      setIsLoading(true);
 
       const eventSource = new SSE(`/api/v1/plus/ai/ask`, {
         headers: {
@@ -327,7 +327,7 @@ export function useAiChat({
 
       eventSourceRef.current = eventSource;
 
-      setIsLoading?.(true);
+      setIsLoading(true);
     },
     [messages, messageTemplate, handleError, handleEventData]
   );
