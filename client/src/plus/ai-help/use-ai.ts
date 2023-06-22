@@ -172,7 +172,7 @@ export function useAiChat({
 }: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [datas, dispatchData] = useReducer(
