@@ -10,8 +10,28 @@
 }
 
 .blog-container {
+  .date-author,
+  .author {
+    --date-author-gap: 1rem;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--date-author-gap);
+  }
+
   .author {
     font-weight: var(--font-body-strong-weight);
+
+    &::after {
+      margin-left: calc(4px - var(--date-author-gap));
+    }
+
+    img {
+      border: none !important;
+      border-radius: 3rem;
+      height: 3rem;
+      margin: 0;
+    }
   }
 
   .read-time {

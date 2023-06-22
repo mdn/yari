@@ -31,6 +31,7 @@ import {
   OFFLINE_CONTENT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  BLOG_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -238,6 +239,12 @@ app.get("/:locale/blog/index.json", async (_, res) => {
     MEMOIZE_INVALIDATE
   );
   return res.json({ hyData: { posts } });
+});
+app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  return send(req, path.resolve(BLOG_ROOT, "..", "authors", slug, asset)).pipe(
+    res
+  );
 });
 app.get("/:locale/blog/:slug/index.json", async (req, res) => {
   const { slug } = req.params;
