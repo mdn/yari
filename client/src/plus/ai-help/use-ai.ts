@@ -203,7 +203,7 @@ export function useAiChat({
   }, [remoteQuota]);
 
   const handleError = useCallback((err) => {
-    setIsLoading?.(false);
+    setIsLoading(false);
     setIsResponding(false);
     setHasError(true);
     console.error(err);
@@ -213,7 +213,7 @@ export function useAiChat({
     (data: any) => {
       try {
         dispatchData(data);
-        setIsLoading?.(false);
+        setIsLoading(false);
 
         dispatchMessage({
           type: "update",
