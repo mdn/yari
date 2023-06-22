@@ -18,6 +18,7 @@ import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
+import { isExternalUrl } from "./utils";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -183,8 +184,7 @@ export function AIHelpInner() {
                         remarkPlugins={[remarkGfm]}
                         components={{
                           a: ({ node, ...props }) => {
-                            const isExternal = !props.href?.startsWith("/");
-                            if (isExternal) {
+                            if (isExternalUrl(props.href ?? "")) {
                               props = {
                                 ...props,
                                 className: "external",
