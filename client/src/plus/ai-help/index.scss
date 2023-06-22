@@ -15,11 +15,6 @@
     padding: var(--gutter);
   }
 
-  button.button[disabled],
-  input[disabled] {
-    cursor: not-allowed;
-  }
-
   a:hover {
     text-decoration: underline;
   }
