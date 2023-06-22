@@ -244,7 +244,9 @@ export function useAiChat({
             setQuota(quota);
           }
           return;
-        } else if (!data.id) {
+        }
+
+        if (!data.id) {
           console.warn("Received unsupported message", { data });
           return;
         }
