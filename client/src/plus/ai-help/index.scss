@@ -20,6 +20,10 @@
   }
 
   .ai-help-inner {
+    --input-border-width: 1px;
+    --input-padding-left: 1rem;
+    --input-padding-right: 3rem;
+
     .ai-help-body,
     .ai-help-footer {
       padding: 0.5rem 0;
@@ -42,7 +46,9 @@
 
       .ai-help-footer-text {
         font-size: var(--type-tiny-font-size);
-        margin-left: calc(1px + 1rem); /* Border + padding */
+        margin-left: calc(
+          var(--input-border-width) + var(--input-padding-left)
+        );
         margin-top: 0.5rem;
       }
     }
@@ -54,12 +60,12 @@
 
       input {
         background-color: var(--background-primary);
-        border: 1px solid var(--border-primary);
+        border: var(--input-border-width) solid var(--border-primary);
         border-radius: 100px;
         color: var(--text-primary);
         height: var(--form-elem-height);
-        padding-left: 1rem;
-        padding-right: 3rem;
+        padding-left: var(--input-padding-left);
+        padding-right: var(--input-padding-right);
         width: 100%;
 
         &:focus {
@@ -78,7 +84,7 @@
 
         display: block;
         position: absolute;
-        right: calc(0.5rem + 1px);
+        right: calc(0.5rem + var(--input-border-width));
         top: 0.25rem;
 
         &:hover {
