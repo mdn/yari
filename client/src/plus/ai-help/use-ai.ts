@@ -353,7 +353,6 @@ export function useAiChat({
     setIsResponding(false);
     setHasError(false);
     dispatchData(null);
-    setCurrentMessageIndex(1);
   }
 
   function stop() {
@@ -373,6 +372,7 @@ export function useAiChat({
     dispatchMessage({
       type: "reset",
     });
+    setCurrentMessageIndex(1);
   }
 
   return {
