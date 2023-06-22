@@ -82,7 +82,7 @@ export default function AiHelp() {
         </Container>
       </header>
       <Container>
-        {user && !user.isAuthenticated ? <AiLoginBanner /> : <AIHelpInner />}
+        {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
       </Container>
     </div>
   );
