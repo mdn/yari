@@ -70,7 +70,7 @@ export default function AiHelp() {
             Get answers using generative AI based on MDN content.
             <br />
             <a
-              href="https://www.example.com/"
+              href="https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
               target="_blank"
               rel="noreferrer noopener"
               className="external"
