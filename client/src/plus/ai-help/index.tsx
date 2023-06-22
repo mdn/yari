@@ -116,7 +116,7 @@ export function AIHelpInner() {
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
 
-  function isQuotaExceeded(quota): quota is Quota {
+  function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
   }
 
