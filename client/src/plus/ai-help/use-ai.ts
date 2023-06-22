@@ -137,14 +137,18 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
   return newState;
 }
 
+interface Storage {
+  messages?: Message[];
+}
+
 class AiHelpStorage {
   static KEY = "ai-help";
 
-  private static get value() {
+  private static get value(): Storage {
     return JSON.parse(window.localStorage.getItem(this.KEY) ?? "{}");
   }
 
-  private static mutate(partial) {
+  private static mutate(partial: Partial<Storage>) {
     window.localStorage.setItem(
       this.KEY,
       JSON.stringify({
@@ -154,11 +158,11 @@ class AiHelpStorage {
     );
   }
 
-  static getMessages() {
+  static getMessages(): Message[] {
     return this.value?.messages ?? [];
   }
 
-  static setMessages(messages) {
+  static setMessages(messages: Message[]) {
     this.mutate({ messages });
   }
 }
