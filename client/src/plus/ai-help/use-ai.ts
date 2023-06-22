@@ -264,13 +264,26 @@ export function useAiChat({
             index: currentMessageIndex,
             content,
           });
-        } else if (finish_reason === "stop") {
+        }
+
+        if (finish_reason) {
+          if (finish_reason !== "stop") {
+            // See: https://platform.openai.com/docs/guides/gpt/chat-completions-response-format
+            // - length (most likely) -> token limit exceeded,
+            // - function_call -> not applicable to our use case,
+            // - content_filter -> content flagged and omitted
+            console.warn("Got unexpected finish_reason", { finish_reason });
+          }
+          const status =
+            finish_reason === "stop"
+              ? MessageStatus.Complete
+              : MessageStatus.Stopped;
           setIsResponding(false);
           dispatchMessage({
             type: "update",
             index: currentMessageIndex,
             message: {
-              status: MessageStatus.Complete,
+              status,
             },
           });
           setCurrentMessageIndex((x) => x + 2);
