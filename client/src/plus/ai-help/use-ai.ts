@@ -304,19 +304,23 @@ export function useAiChat({
       setHasError(false);
       setIsLoading(true);
 
+      // We send all completed in the conversation + the question the user asked.
+      // Note that `dispatchMessage()` above does not change `messages` here yet.
+      const completeMessagesAndUserQuery = messages
+        .filter(({ status }) => status === MessageStatus.Complete)
+        .map(({ role, content }) => ({ role, content }))
+        .concat({
+          role: MessageRole.User,
+          content: messageTemplate(query),
+        });
+
       const eventSource = new SSE(`/api/v1/plus/ai/ask`, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
         payload: JSON.stringify({
-          messages: messages
-            .filter(({ status }) => status === MessageStatus.Complete)
-            .map(({ role, content }) => ({ role, content }))
-            .concat({
-              role: MessageRole.User,
-              content: messageTemplate(query),
-            }),
+          messages: completeMessagesAndUserQuery,
         }),
       });
 
