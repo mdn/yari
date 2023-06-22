@@ -12,7 +12,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/p";
     return assert.eventually.equal(
       macro.call("Example"),
-      "https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/p/_sample_.Example.html"
+      "https://mdn.mozillademos.org/en-US/docs/Web/HTML/Element/p/runner.html?id=Example"
     );
   });
   itMacro("Override page URL", function (macro) {
@@ -26,7 +26,7 @@ describeMacro("LiveSampleURL", function () {
         "No_JS",
         "/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2"
       ),
-      "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_sample_.No_JS.html"
+      "https://mdn.mozillademos.org/en-US/docs/HTML/Forms/How_to_build_custom_form_widgets/Example_2/_sample_.No_JS.html?id=No_JS&amp;url=%2Fen-US%2Fdocs%2FHTML%2FForms%2FHow_to_build_custom_form_widgets%2FExample_2"
     );
   });
   itMacro("Override with nonexistent page URL", async (macro) => {
@@ -49,7 +49,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "/en-US/docs/Web/CSS/background-color";
     return assert.eventually.equal(
       macro.call("Examples"),
-      "https://files-stage.mdn.mozit.cloud/en-US/docs/Web/CSS/background-color/_sample_.Examples.html"
+      "https://files-stage.mdn.mozit.cloud/en-US/docs/Web/CSS/background-color/runner.html?id=Examples"
     );
   });
   itMacro("Development default settings", function (macro) {
@@ -57,7 +57,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/p";
     return assert.eventually.equal(
       macro.call("Example"),
-      "http://localhost:8000/en-US/docs/Web/HTML/Element/p/_sample_.Example.html"
+      "http://localhost:8000/en-US/docs/Web/HTML/Element/p/runner.html?id=Example"
     );
   });
   itMacro("Unicode ID", function (macro) {
@@ -67,7 +67,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "/zh-CN/docs/Web/CSS/flex-direction";
     return assert.eventually.equal(
       macro.call("例子"),
-      "https://mdn.mozillademos.org/zh-CN/docs/Web/CSS/flex-direction/_sample_.%E4%BE%8B%E5%AD%90.html"
+      "https://mdn.mozillademos.org/zh-CN/docs/Web/CSS/flex-direction/runner.html?id=%E4%BE%8B%E5%AD%90"
     );
   });
   itMacro("Development demo settings", function (macro) {
@@ -75,7 +75,7 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/p";
     return assert.eventually.equal(
       macro.call("Example"),
-      "http://demos:8000/en-US/docs/Web/HTML/Element/p/_sample_.Example.html"
+      "http://demos:8000/en-US/docs/Web/HTML/Element/p/runner.html?id=Example"
     );
   });
 });

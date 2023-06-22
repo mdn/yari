@@ -84,6 +84,7 @@ const CORE: OfferDetailsProps = {
   features: [
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
+    ["playground", "Share playgrounds"],
     ["ai-help", "AI Help: 5 questions per day", "beta"],
   ],
   includes: "Includes:",

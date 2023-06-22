@@ -33,6 +33,7 @@ const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
+const Playground = React.lazy(() => import("./playground"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
@@ -79,7 +80,10 @@ function LazyStandardLayout(props: {
   extraClasses?: string;
   children: React.ReactNode;
 }) {
-  return (
+  const isServer = useIsServer();
+  return isServer ? (
+    <LoadingFallback />
+  ) : (
     <React.Suspense fallback={<LoadingFallback />}>
       <StandardLayout {...props}></StandardLayout>
     </React.Suspense>
@@ -232,6 +236,14 @@ export function App(appProps: HydrationData) {
               </>
             )}
             <Route path="/" element={homePage} />
+            <Route
+              path="/play"
+              element={
+                <LazyStandardLayout>
+                  <Playground />
+                </LazyStandardLayout>
+              }
+            />
             <Route
               path="/search"
               element={

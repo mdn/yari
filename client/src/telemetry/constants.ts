@@ -1,6 +1,5 @@
 import { ViewportBreakpoint } from "./glean-context";
 
-export const AI_HELP = "ai_help";
 export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
   "article_actions_collection_select_opened";
 export const ARTICLE_ACTIONS_NEW_COLLECTION = "article_actions_new_collection";
@@ -35,7 +34,9 @@ export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
 export const TOGGLE_PLUS_ADS_FREE_DISABLED = "toggle_plus_ads_free_disabled";
 export const TOGGLE_PLUS_ADS_FREE_ENABLED = "toggle_plus_ads_free_enabled";
 export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
+export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
+export const PLAYGROUND = "play_action";
 
 export const PLUS_UPDATES = Object.freeze({
   EVENT_COLLAPSE: "plus_updates_event_collapse",

@@ -37,6 +37,24 @@ export default function OfferOverviewFeatures() {
           </Button>
         </section>
       </OfferOverviewFeature>
+      <OfferOverviewFeature
+        id="playground"
+        img="/assets/playground.png"
+        imgAlt=""
+      >
+        <section aria-labelledby="playground-section-title">
+          <h2 id="playground-section-title">Playground</h2>
+          <h3>Write,Test and Share your code.</h3>
+          <p>
+            Your playground to learn and share your amazing work with the world.
+            By simply logging in, you can now spread your creativity far and
+            wide.
+          </p>
+          <Button href="/en-US/plus/docs/features/playground" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
       <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
         <section aria-labelledby="updates-section-title">
           <h2 id="updates-section-title">Updates</h2>

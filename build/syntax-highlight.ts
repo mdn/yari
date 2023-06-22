@@ -90,7 +90,7 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
   $("pre[class*=brush]").each((_, element) => {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
-    const $pre = $(element).wrapAll("<div class='code-example'>");
+    const $pre = $(element);
 
     const className = $pre.attr("class").toLowerCase();
     const match = className.match(/brush:?\s*([\w_-]+)/);
@@ -104,6 +104,13 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
     if (IGNORE.has(name)) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;
+    }
+    if (!$pre.hasClass("hidden")) {
+      $pre.wrapAll(
+        `<div class='code-example'><p class='example-header'><span class="language-name">${name}</span></p></div>`
+      );
+    } else {
+      $pre.wrapAll(`<div class='code-example'></div>`);
     }
     const grammar = Prism.languages[name];
     if (!grammar) {

@@ -113,6 +113,8 @@ export const CSP_DIRECTIVES = {
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
     "live-samples.developer.allizom.xyz",
+    "*.mdnplay.dev",
+    "*.mdnyalp.dev",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
@@ -153,6 +155,30 @@ export const cspToString = (csp) =>
     .join(" ");
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
+
+const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
+  "'self'",
+  "https:",
+  "'unsafe-eval'",
+  "'unsafe-inline'",
+  "'wasm-unsafe-eval'",
+];
+
+export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
+  "default-src": ["'self'", "https:"],
+  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "style-src": [
+    "'report-sample'",
+    '"self"',
+    "https:",
+    "'unsafe-inline'",
+    "'unsafe-eval'",
+  ],
+  "base-uri": ["'self'"],
+  "worker-src": ["'self'"],
+  "manifest-src": ["'self'"],
+});
 
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
