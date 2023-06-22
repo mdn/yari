@@ -71,10 +71,10 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
+  ["afree", "Ads free"],
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
-  ["afree", "Ads free"],
   ["ai-help", "AI Help", "beta"],
 ];
 
