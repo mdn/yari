@@ -68,7 +68,8 @@ if (sampleSlug) {
       }
     }
 }
-var url = await template('LiveSampleURL', [sampleIdOrOffset, sampleUrl]);
+var id = web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset));
+var url = await template('LiveSampleURL', [id, sampleUrl]);
 
 if (hasScreenshot) {
 %><table class="sample-code-table"><%
@@ -85,12 +86,13 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="<%= className %>"<%
-%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
+%><div class="code-example"><p class="example-header"></p><iframe class="<%= className %>"<%
+%> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
-%>></iframe><%
+sandbox="allow-scripts allow-same-origin"
+%>></iframe></div><%
 if (hasScreenshot) { %></td></tr></tbody></table><% } %>

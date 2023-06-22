@@ -543,6 +543,55 @@ pre {
   color: var(--code-default);
   position: relative;
 
+  .example-header {
+    align-items: center;
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    border-top-left-radius: var(--elem-radius);
+    border-top-right-radius: var(--elem-radius);
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0 1rem;
+
+    ~ pre,
+    ~ iframe {
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      margin-top: 0;
+    }
+
+    .language-name {
+      margin-right: auto;
+      text-transform: uppercase;
+    }
+  }
+
+  .play-button {
+    cursor: pointer;
+    font-size: smaller;
+    margin: 0;
+    margin-left: auto;
+    opacity: 0.4;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+
+    &::after {
+      background-color: var(--icon-primary);
+      content: "";
+      display: inline-block;
+      height: 10px;
+      margin-left: 4px;
+      mask-image: url("../assets/icons/external.svg");
+      mask-size: cover;
+      width: 10px;
+    }
+  }
+
   .copy-icon {
     border-radius: var(--elem-radius);
     cursor: pointer;
@@ -552,9 +601,6 @@ pre {
     mask-size: cover;
     opacity: 0.4;
     padding: 0.25rem;
-    position: absolute;
-    right: 0.5rem;
-    top: 0.75rem;
     width: 1.25rem;
 
     &:hover,
@@ -572,7 +618,7 @@ pre {
     padding: 0.125rem;
     position: absolute;
     right: 0.25rem;
-    top: 15px;
+    top: 2rem;
   }
 
   .example-good,

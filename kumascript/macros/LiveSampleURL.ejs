@@ -14,15 +14,19 @@ if ($1 && $1.length > 0) {
     pagePath = $1;
 }
 
+const searchParams = new URLSearchParams([["id", $0], ["url", $1]].filter(([_,v]) => Boolean(v)));
 wiki.ensureExistence(pagePath);
-const samplePath = `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`.replace(/\/\/+/g, "/");
+const samplePath = $1 ?
+  `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`.replace(/\/\/+/g, "/")
+  : `${pagePath}/runner.html`.replace(/\/\/+/g, "/");
 
 let url;
 if (env.live_samples.base_url.includes('://')) {
     url = new URL(env.live_samples.base_url);
     url.pathname = samplePath;
+    url.search = searchParams.toString();
 } else {
-    url = samplePath;
+    url = `${samplePath}?${searchParams.toString()}`;
 }
 %>
 <%= url %>

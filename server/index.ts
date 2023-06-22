@@ -22,6 +22,7 @@ import {
   ANY_ATTACHMENT_REGEXP,
   CSP_VALUE,
   DEFAULT_LOCALE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
 } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
@@ -247,6 +248,15 @@ app.get("/:locale/blog/:slug/index.json", async (req, res) => {
   }
   return res.json(data);
 });
+app.get(
+  ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
+  async (req, res) => {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
+);
 app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
   const { slug, id } = req.params;
   try {
@@ -264,6 +274,7 @@ app.get("/:locale/blog/:slug/:asset", async (req, res) => {
   return res.status(404).send("Nothing here 🤷‍♂️");
 });
 app.get("/*", async (req, res, ...args) => {
+  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
@@ -282,9 +293,18 @@ app.get("/*", async (req, res, ...args) => {
     return contentProxy(req, res, ...args);
   }
 
+  if (parsedUrl.pathname.endsWith("/runner.html")) {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
   if (req.url.includes("/_sample_.")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.path));
+      return res
+        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .status(200)
+        .send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }

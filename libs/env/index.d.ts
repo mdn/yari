@@ -21,6 +21,7 @@ export const REPOSITORY_URLS: {
 export const ROOTS: string[];
 export const MAX_FILE_SIZE: number;
 export const LIVE_SAMPLES_BASE_URL: string;
+export const LEGACY_LIVE_SAMPLES_BASE_URL: string;
 export const INTERACTIVE_EXAMPLES_BASE_URL: string;
 export const STATIC_ROOT: string;
 export const PROXY_HOSTNAME: string;
