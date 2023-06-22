@@ -16,6 +16,10 @@ function PlusDocsNav() {
           title: "Overview",
         },
         {
+          slug: "plus/docs/features/playground",
+          title: "Playground",
+        },
+        {
           slug: "plus/docs/features/updates",
           title: "Updates",
         },

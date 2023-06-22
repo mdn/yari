@@ -36,8 +36,8 @@ export default function OfferOverviewFeatures() {
             By simply logging in, you can now spread your creativity far and
             wide.
           </p>
-          <Button href="/en-US/play" target="_self">
-            Test it →
+          <Button href="/en-US/plus/docs/features/playground" target="_self">
+            Learn more →
           </Button>
         </section>
       </OfferOverviewFeature>
