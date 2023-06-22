@@ -325,7 +325,7 @@ export function useAiChat({
       });
 
       eventSource.addEventListener("error", handleError);
-      eventSource.addEventListener("message", (e) => {
+      eventSource.addEventListener("message", (e: any) => {
         const data = JSON.parse(e.data);
 
         handleEventData(data);
