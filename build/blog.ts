@@ -72,8 +72,16 @@ async function getAuthor(slug: string | AuthorFrontmatter) {
 }
 
 async function readAuthor(filePath: string) {
-  const raw = await fs.readFile(filePath, "utf-8");
-  return frontmatter<AuthorFrontmatter>(raw);
+  try {
+    const raw = await fs.readFile(filePath, "utf-8");
+    return frontmatter<AuthorFrontmatter>(raw);
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      console.warn("Couldn't find author metadata:", filePath);
+      return { attributes: {} };
+    }
+    throw e;
+  }
 }
 
 function parseAuthor(slug: string, { name, link, avatar }: AuthorFrontmatter) {
