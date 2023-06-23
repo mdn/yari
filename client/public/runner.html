@@ -54,8 +54,8 @@
       window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
 
-      function setHTML(parent, html, ns) {
-        var dummy = document.createElement("div");
+      function setHTML(parent, html) {
+        const dummy = parent.cloneNode(false);
         dummy.innerHTML = html;
 
         if (dummy.children.length === 0) {
@@ -70,15 +70,12 @@
               continue;
             }
 
-            const namespaceURI = child?.namespaceURI;
-            const namespace =
-              namespaceURI !== "http://www.w3.org/1999/xhtml"
-                ? namespaceURI
-                : ns;
+            const namespaceURI = child.namespaceURI;
 
-            const clone = namespace
-              ? document.createElementNS(namespace, child.name)
-              : document.createElement(child.nodeName);
+            const clone =
+              namespaceURI !== "http://www.w3.org/1999/xhtml"
+                ? document.createElementNS(namespaceURI, child.nodeName)
+                : document.createElement(child.nodeName);
 
             for (const { nodeName, nodeValue } of child.attributes) {
               try {
@@ -99,7 +96,7 @@
                 }
               }
             } else {
-              setHTML(clone, child.innerHTML, namespace);
+              setHTML(clone, child.innerHTML);
             }
             parent.appendChild(clone);
           }
