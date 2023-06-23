@@ -170,7 +170,7 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
   "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
   "style-src": [
     "'report-sample'",
-    '"self"',
+    "'self'",
     "https:",
     "'unsafe-inline'",
     "'unsafe-eval'",

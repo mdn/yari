@@ -54,7 +54,7 @@
       window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
 
-      function setHTML(parent, html) {
+      function setHTML(parent, html, ns) {
         var dummy = document.createElement("div");
         dummy.innerHTML = html;
 
@@ -69,7 +69,16 @@
             if (child.nodeType !== Node.ELEMENT_NODE) {
               continue;
             }
-            const clone = document.createElement(child.nodeName);
+
+            const namespaceURI = child?.namespaceURI;
+            const namespace =
+              namespaceURI !== "http://www.w3.org/1999/xhtml"
+                ? namespaceURI
+                : ns;
+
+            const clone = namespace
+              ? document.createElementNS(namespace, child.name)
+              : document.createElement(child.nodeName);
 
             for (const { nodeName, nodeValue } of child.attributes) {
               try {
@@ -90,7 +99,7 @@
                 }
               }
             } else {
-              setHTML(clone, child.innerHTML);
+              setHTML(clone, child.innerHTML, namespace);
             }
             parent.appendChild(clone);
           }
