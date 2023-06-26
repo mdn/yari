@@ -4,25 +4,27 @@
 //
 // Parameters:
 //
-// $0   The ID of the sample's section or containing block.
-// $1   The URL from which to pull the sample; if not provided,
+// $0 - The ID of the sample's section or containing block.
+// $1 - (Deprecated)  The URL from which to pull the sample; if not provided,
 //      the current page is assumed.
 
-var pagePath = env.url;
+let pagePath = env.url;
+let baseUrl = env.live_samples.base_url;
+let samplePath = `${pagePath}/runner.html`.replace(/\/\/+/g, "/");
 
 if ($1 && $1.length > 0) {
+    mdn.deprecatedParams("The second parameter of 'LiveSampleURL' is deprecated");
     pagePath = $1;
+    baseUrl = env.live_samples.legacy_url;
+    samplePath = `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`.replace(/\/\/+/g, "/");
 }
 
-const searchParams = new URLSearchParams([["id", $0], ["url", $1]].filter(([_,v]) => Boolean(v)));
 wiki.ensureExistence(pagePath);
-const samplePath = $1 ?
-  `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`.replace(/\/\/+/g, "/")
-  : `${pagePath}/runner.html`.replace(/\/\/+/g, "/");
+const searchParams = new URLSearchParams([["id", $0], ["url", $1]].filter(([_,v]) => Boolean(v)));
 
 let url;
-if (env.live_samples.base_url.includes('://')) {
-    url = new URL($1 ? env.live_samples.legacy_url : env.live_samples.base_url);
+if (baseUrl.includes('://')) {
+    url = new URL(baseUrl);
     url.pathname = samplePath;
     url.search = searchParams.toString();
 } else {
