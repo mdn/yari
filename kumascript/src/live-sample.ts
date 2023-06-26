@@ -103,8 +103,17 @@ export async function buildLiveSamplePages(uri, title, $, rawBody) {
           // It's deprecated but we still apply a workaround for now.
           slug = iframeSlug;
           result.slug = iframeSlug;
-          const [c] = await render(slug);
-          ctx = c;
+          try {
+            const [c] = await render(slug);
+            ctx = c;
+          } catch (e) {
+            result.flaw = new MacroLiveSampleError(
+              e,
+              rawBody,
+              JSON.parse($(iframe).attr("data-token"))
+            );
+            return result;
+          }
         }
         const tool = new HTMLTool(ctx, slug);
         let sampleData;
