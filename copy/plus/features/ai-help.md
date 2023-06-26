@@ -4,6 +4,8 @@ title: AI Help
 
 # AI Help
 
+> Get real-time assistance and support
+
 The AI Help feature is an interactive interface developed by MDN in
 collaboration with Supabase and OpenAI. It uses GPT-3.5 to provide interactive
 and timely guidance on coding tasks, programming concepts and assistance
