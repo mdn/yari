@@ -4,8 +4,8 @@
 //
 // Parameters:
 //
-// $0 - The ID of the sample's section or containing block.
-// $1 - (Deprecated)  The URL from which to pull the sample; if not provided,
+// $0   The ID of the sample's section or containing block.
+// $1   The URL from which to pull the sample; if not provided,
 //      the current page is assumed.
 
 let pagePath = env.url;
@@ -13,7 +13,6 @@ let baseUrl = env.live_samples.base_url;
 let samplePath = `${pagePath}/runner.html`.replace(/\/\/+/g, "/");
 
 if ($1 && $1.length > 0) {
-    mdn.deprecatedParams("The second parameter of 'LiveSampleURL' is deprecated");
     pagePath = $1;
     baseUrl = env.live_samples.legacy_url;
     samplePath = `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponent($0))}.html`.replace(/\/\/+/g, "/");
