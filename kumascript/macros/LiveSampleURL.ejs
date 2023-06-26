@@ -22,7 +22,7 @@ const samplePath = $1 ?
 
 let url;
 if (env.live_samples.base_url.includes('://')) {
-    url = new URL(env.live_samples.base_url);
+    url = new URL($1 ? env.live_samples.legacy_url : env.live_samples.base_url);
     url.pathname = samplePath;
     url.search = searchParams.toString();
 } else {
