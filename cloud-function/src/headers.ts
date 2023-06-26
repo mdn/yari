@@ -1,7 +1,9 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { Response } from "express";
 
-import { CSP_VALUE } from "./internal/constants/index.js";
+import {
+  CSP_VALUE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
+} from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
@@ -79,17 +81,6 @@ function parseContentType(value: unknown): string {
   return typeof firstValue === "string" ? firstValue : "";
 }
 
-export function withResponseHeaders(
-  res: Response,
-  options?: { csp?: boolean; xFrame?: boolean }
-): Response {
-  setContentResponseHeaders(
-    (name, value) => res.set(name, value),
-    options ?? {}
-  );
-  return res;
-}
-
 export function setContentResponseHeaders(
   setHeader: (name: string, value: string) => void,
   { csp = true, xFrame = true }: { csp?: boolean; xFrame?: boolean }
@@ -101,4 +92,18 @@ export function setContentResponseHeaders(
     ...(csp ? [["Content-Security-Policy", CSP_VALUE]] : []),
     ...(xFrame ? [["X-Frame-Options", "DENY"]] : []),
   ].forEach(([k, v]) => k && v && setHeader(k, v));
+}
+
+export function withRunnerResponseHeaders(
+  _proxyRes: IncomingMessage,
+  _req: IncomingMessage,
+  res: ServerResponse<IncomingMessage>
+): void {
+  [
+    ["X-XSS-Protection", "1; mode=block"],
+    ["X-Content-Type-Options", "nosniff"],
+    ["Clear-Site-Data", '"*"'],
+    ["Strict-Transport-Security", "max-age=63072000"],
+    ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
+  ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }

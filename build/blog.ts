@@ -354,7 +354,7 @@ export async function buildPost(
 
   [$] = await kumascript.render(document.url, {}, document);
 
-  const liveSamplePages = kumascript.buildLiveSamplePages(
+  const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
     document.metadata.title,
     $,

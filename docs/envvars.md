@@ -115,7 +115,7 @@ information about fixable flaws instead of actually fixing it on disk.
 
 ### `BUILD_LIVE_SAMPLES_BASE_URL`
 
-**Default: `https://mdn.mozillademos.org`**
+**Default: `https://live.mdnplay.dev`**
 
 When generating live samples `<iframe>` tags, the `src` attribute gets this set
 as a prefix. The ultimate reason why it's meant to be different is because the
@@ -124,6 +124,12 @@ of the site.
 
 When doing local development, it's recommended to set this to
 `http://localhost:5042` in your personal `.env`.
+
+### `BUILD_LEGACY_LIVE_SAMPLES_BASE_URL`
+
+**Default: `https://live-samples.mdn.mozilla.net`**
+
+Used to serve legacy lives samples that do not support playground rendering.
 
 ### `BUILD_INTERACTIVE_EXAMPLES_BASE_URL`
 
@@ -323,3 +329,10 @@ included this value for `geo.country`.
   - Be aware of flipping this between true/false as any persisted metrics,
     events and pings (other than first_run_date and first_run_hour) are cleared.
     [More info](https://mozilla.github.io/glean/book/reference/general/initializing.html#when-upload-is-disabled)
+
+### REACT_APP_PLAYGROUND_BASE_HOST
+
+**Default: mdnplay.dev**
+
+- Sets the host name for the playground iframe. Set this to `localhost:5042`
+  when working on playground functionality.
