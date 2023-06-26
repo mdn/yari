@@ -28,9 +28,9 @@ export default function OfferOverviewFeatures() {
           <h2 id="ai-help-section-title">AI Help</h2>
           <h3>Get real-time assistance and support.</h3>
           <p>
-            No more scrolling through page after page to find your answers.
-            Introducing an AI assistant that can answer all your questions in
-            real time. Powered by OpenAI GPT-3.5.
+            No need to scroll through page after page to find your answers.
+            Introducing an AI assistant that can answer all your web development
+            questions in real time. Powered by OpenAI GPT 3.5.
           </p>
           <Button href="/en-US/plus/docs/features/ai-help" target="_self">
             Learn more →
