@@ -1,6 +1,7 @@
+@use "../ui/vars" as *;
+
 .blog {
   --category-color: var(--apis-accent-color);
-  --sponsored-height: 1.375rem;
 
   .top-navigation {
     --text-link: var(--category-color);
@@ -13,19 +14,27 @@
   padding: 2rem 1rem;
 
   .sponsored {
-    color: var(--category-color);
-    font-size: 0.75rem;
-    font-weight: bold;
-    height: var(--sponsored-height);
-    text-transform: uppercase;
+    color: var(--icon-primary);
+
+    &::before {
+      background-color: var(--icon-primary);
+      content: "";
+      display: inline-block;
+      height: 1em;
+      margin-bottom: -0.15em;
+      margin-right: 0.3em;
+      mask-image: url("../assets/icons/note-info.svg");
+      mask-position: center;
+      mask-repeat: no-repeat;
+      width: 1em;
+    }
+  }
+
+  h1 {
+    margin-top: 1rem;
   }
 
   &.blog-index {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: flex-start;
-
     > header {
       width: 100%;
 
@@ -43,20 +52,35 @@
       }
     }
 
+    .article-list {
+      column-gap: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      @media screen and (max-width: $screen-lg) {
+        grid-template-columns: auto;
+      }
+    }
+
     article {
       border: 1px solid var(--border-primary);
       border-radius: 1rem;
-      max-width: 40rem;
+      display: grid;
+      grid-row: span 6;
+      grid-template-rows: subgrid;
+      margin-top: 2rem;
       padding: 2rem;
-      width: 100%;
 
       a.button {
+        margin-left: auto;
         text-decoration: var(--button-bg);
       }
 
       header {
-        display: flex;
+        display: grid;
         flex-direction: column;
+        grid-row: span 3;
+        grid-template-rows: subgrid;
 
         figure.blog-image {
           margin-bottom: 0;
@@ -69,15 +93,12 @@
         }
 
         h2:first-of-type {
+          align-self: center;
           font: var(--type-heading-h3);
           font-size: 1.75rem;
           font-weight: 400;
           margin-bottom: 2.25rem;
           margin-top: 1.5rem;
-        }
-
-        .sponsored ~ h2:first-of-type {
-          margin-top: 0;
         }
       }
 
@@ -86,8 +107,10 @@
         margin-top: 1.5rem;
       }
 
-      @media screen and (min-width: 50rem) {
-        width: max(40vw, 20rem);
+      footer {
+        align-items: center;
+        align-self: end;
+        display: flex;
       }
     }
   }
