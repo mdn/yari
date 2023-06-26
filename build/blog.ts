@@ -62,36 +62,42 @@ async function getLinks(slug: string): Promise<BlogPostMetadataLinks> {
   };
 }
 
-async function getAuthor(slug: string | AuthorFrontmatter) {
+async function getAuthor(
+  slug: string | AuthorFrontmatter
+): Promise<AuthorMetadata> {
   if (typeof slug === "string") {
     const filePath = path.join(BLOG_ROOT, "..", "authors", slug, "index.md");
-    const { attributes } = await readAuthor(filePath);
+    const attributes = await readAuthor(filePath);
     return parseAuthor(slug, attributes);
   }
   return slug;
 }
 
-async function readAuthor(filePath: string) {
+async function readAuthor(filePath: string): Promise<AuthorFrontmatter> {
   try {
     const raw = await fs.readFile(filePath, "utf-8");
-    return frontmatter<AuthorFrontmatter>(raw);
+    const { attributes } = frontmatter<AuthorFrontmatter>(raw);
+    return attributes;
   } catch (e: any) {
     if (e.code === "ENOENT") {
       console.warn("Couldn't find author metadata:", filePath);
-      return { attributes: {} };
+      return {};
     }
     throw e;
   }
 }
 
-function parseAuthor(slug: string, { name, link, avatar }: AuthorFrontmatter) {
+function parseAuthor(
+  slug: string,
+  { name, link, avatar }: AuthorFrontmatter
+): AuthorMetadata {
   return {
     name,
     link,
     avatar_url: avatar
       ? `/${DEFAULT_LOCALE}/blog/author/${slug}/${avatar}`
       : undefined,
-  } satisfies AuthorMetadata;
+  };
 }
 
 async function readPost(
@@ -195,7 +201,7 @@ async function allAuthorFiles(): Promise<string[]> {
   } catch (e: any) {
     if (e.code === "ENOENT") {
       console.warn("Warning: blog authors directory doesn't exist");
-      return Promise.resolve([]);
+      return [];
     }
     throw e;
   }
@@ -466,9 +472,8 @@ export async function buildAuthors(options: { verbose?: boolean }) {
     );
     await fs.mkdir(outPath, { recursive: true });
 
-    const { attributes } = await readAuthor(filePath);
-    if ("avatar" in attributes && attributes.avatar) {
-      const { avatar } = attributes;
+    const { avatar } = await readAuthor(filePath);
+    if (avatar) {
       const from = path.join(dirname, avatar);
       const to = path.join(outPath, avatar);
       await fs.copyFile(from, to);
