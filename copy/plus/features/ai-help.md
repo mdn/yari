@@ -14,13 +14,14 @@ enhances your learning experience and improves productivity using comprehensive
 MDN references, guides, and resources that document the web for its contextual
 help.
 
-## Using AI Help feature
+## Using the AI Help feature
 
 You can navigate to [AI Help](/en-US/plus/ai-help) from the menu bar at the top
 of MDN pages. Type a question about web development in the text input field,
 press Enter, or click the "send" button. The AI Help service processes your
 query and generates a response with an explanation, code examples where
-appropriate, and links to resources on MDN to find out more.
+appropriate, and links to resources on MDN to find out more. appropriate, and
+links to resources on MDN to find out more.
 
 ![Screenshot with asking a question](/assets/plus-docs/ai-help/ask-question.png)
 
