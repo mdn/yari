@@ -59,9 +59,10 @@
         flex-direction: column;
 
         figure.blog-image {
-          margin-bottom: 0.5rem;
+          margin-bottom: 0;
 
           img {
+            margin-bottom: 0;
             max-height: 200px;
             width: auto;
           }
@@ -71,13 +72,20 @@
           font: var(--type-heading-h3);
           font-size: 1.75rem;
           font-weight: 400;
-          margin-top: var(--sponsored-height);
+          margin-bottom: 2.25rem;
+          margin-top: 1.5rem;
         }
 
         .sponsored ~ h2:first-of-type {
           margin-top: 0;
         }
       }
+
+      p {
+        margin-bottom: 2.25rem;
+        margin-top: 1.5rem;
+      }
+
       @media screen and (min-width: 50rem) {
         width: max(40vw, 20rem);
       }
