@@ -185,12 +185,20 @@ async function allPostFiles(): Promise<string[]> {
 }
 
 async function allAuthorFiles(): Promise<string[]> {
-  return await new fdir()
-    .withFullPaths()
-    .withErrors()
-    .filter((filePath) => filePath.endsWith("index.md"))
-    .crawl(path.join(BLOG_ROOT, "..", "authors"))
-    .withPromise();
+  try {
+    return await new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((filePath) => filePath.endsWith("index.md"))
+      .crawl(path.join(BLOG_ROOT, "..", "authors"))
+      .withPromise();
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      console.warn("Warning: blog authors directory doesn't exist");
+      return Promise.resolve([]);
+    }
+    throw e;
+  }
 }
 
 export const allPostFrontmatter = memoize(
@@ -458,10 +466,9 @@ export async function buildAuthors(options: { verbose?: boolean }) {
     );
     await fs.mkdir(outPath, { recursive: true });
 
-    const {
-      attributes: { avatar },
-    } = await readAuthor(filePath);
-    if (avatar) {
+    const { attributes } = await readAuthor(filePath);
+    if ("avatar" in attributes && attributes.avatar) {
+      const { avatar } = attributes;
       const from = path.join(dirname, avatar);
       const to = path.join(outPath, avatar);
       await fs.copyFile(from, to);
