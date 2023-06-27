@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.27.0](https://github.com/mdn/yari/compare/v2.26.0...v2.27.0) (2023-06-27)
+
+
+### Features
+
+* **plus:** add AI Help frontend ([#9116](https://github.com/mdn/yari/issues/9116)) ([ab93937](https://github.com/mdn/yari/commit/ab9393793d31bc33902049677cec1c968ad3877e))
+* **surveys:** add Blog Feedback survey ([#9173](https://github.com/mdn/yari/issues/9173)) ([b4f6115](https://github.com/mdn/yari/commit/b4f61155a1aadca72eab7a7b8f0514820e5ae114))
+
+
+### Bug Fixes
+
+* **live-sample:** use getElementsByClassName ([#9182](https://github.com/mdn/yari/issues/9182)) ([5615b63](https://github.com/mdn/yari/commit/5615b636a4fcda62b0fec57e577903a62710665c))
+* **playground:** only initialize once ([#9176](https://github.com/mdn/yari/issues/9176)) ([005b0f8](https://github.com/mdn/yari/commit/005b0f803ecc48ac0480daaa4dd5d8317fba3b51))
+
 ## [2.26.0](https://github.com/mdn/yari/compare/v2.25.0...v2.26.0) (2023-06-26)
 
 
