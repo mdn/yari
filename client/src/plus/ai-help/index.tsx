@@ -100,6 +100,7 @@ export function AIHelpInner() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
+  const [isExample, setIsExample] = useState(false);
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 
@@ -243,6 +244,7 @@ export function AIHelpInner() {
                       onClickHandler={() => {
                         gleanClick(`${AI_HELP}: reset`);
                         setQuery("");
+                        setIsExample(false);
                         reset();
                         window.setTimeout(() => window.scrollTo(0, 0));
                       }}
@@ -294,10 +296,13 @@ export function AIHelpInner() {
               className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
-                gleanClick(`${AI_HELP}: submit`);
+                gleanClick(
+                  `${AI_HELP}: submit ${isExample ? "example" : "question"}`
+                );
                 if (query.trim()) {
                   submit(query.trim());
                   setQuery("");
+                  setIsExample(false);
                   setAutoScroll(true);
                 }
               }}
@@ -306,7 +311,10 @@ export function AIHelpInner() {
                 ref={inputRef}
                 disabled={isLoading || isResponding}
                 type="text"
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  setIsExample(false);
+                }}
                 value={query}
                 placeholder={placeholder(
                   isLoading
@@ -346,6 +354,7 @@ export function AIHelpInner() {
               onClick={() => {
                 gleanClick(`${AI_HELP}: example`);
                 setQuery(query);
+                setIsExample(true);
                 inputRef.current?.focus();
                 window.setTimeout(() => window.scrollTo(0, 0));
               }}
