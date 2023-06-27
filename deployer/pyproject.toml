@@ -15,7 +15,7 @@ python-decouple = "^3.8"
 requests = {extras = ["security"], version = "^2.31.0"}
 elasticsearch-dsl = "^7.4.1"
 selectolax = "^0.3.14"
-PyGithub = "^1.58"
+PyGithub = "^1.59"
 unidiff = "^0.7.5"
 
 [tool.poetry.dev-dependencies]
