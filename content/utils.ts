@@ -3,6 +3,7 @@ import childProcess from "node:child_process";
 
 import { LRUCache } from "lru-cache";
 
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { slugToFolder as _slugToFolder } from "../libs/slug-utils/index.js";
 
@@ -18,7 +19,9 @@ export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
 export function getRoot(locale: string, throws = "") {
   const root =
-    locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+    locale.toLowerCase() === DEFAULT_LOCALE.toLowerCase()
+      ? CONTENT_ROOT
+      : CONTENT_TRANSLATED_ROOT;
   if (throws && !root) {
     throw new Error(throws);
   }
@@ -38,19 +41,18 @@ export function buildURL(locale: string, slug: string) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-export function memoize<Args>(
-  fn: (...args: Args[]) => any
-): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any {
+export function memoize<Args, T>(
+  fn: (...args: Args[]) => T
+): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => T {
   if (process.env.NODE_ENV !== "production") {
-    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any;
+    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => T;
   }
 
-  const cache = new LRUCache({ max: 2000 });
-  return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => {
-    let invalidate = false;
-    if (args.includes(MEMOIZE_INVALIDATE)) {
+  const cache = new LRUCache<string, T>({ max: 2000 });
+  return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]): T => {
+    const invalidate = args.includes(MEMOIZE_INVALIDATE);
+    if (invalidate) {
       args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
-      invalidate = true;
     }
     const key = JSON.stringify(args);
 
@@ -65,15 +67,17 @@ export function memoize<Args>(
     const value = fn(...(args as Args[]));
     cache.set(key, value);
     if (value instanceof Promise) {
-      value.catch(() => {
-        cache.delete(key);
-      });
+      value.catch(() => cache.delete(key));
     }
     return value;
   };
 }
 
-export function execGit(args, opts: { cwd?: string } = {}, root = null) {
+export function execGit(
+  args: readonly string[],
+  opts: { cwd?: string } = {},
+  root: string = null
+) {
   let gitRoot = root;
   if (!gitRoot) {
     gitRoot = execGit(
@@ -108,7 +112,7 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
   return stdout.toString().trim();
 }
 
-export function toPrettyJSON(value: unknown) {
+export function toPrettyJSON(value: unknown): string {
   const json = JSON.stringify(value, null, 2) + "\n";
   if (prettier) {
     try {
@@ -125,6 +129,6 @@ export function urlToFolderPath(url: string) {
   return path.join(locale.toLowerCase(), _slugToFolder(slugParts.join("/")));
 }
 
-export function slugToFolder(slug) {
+export function slugToFolder(slug: string) {
   return _slugToFolder(slug, path.sep);
 }
