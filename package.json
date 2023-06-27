@@ -62,7 +62,7 @@
     "@caporal/core": "^2.0.2",
     "@codemirror/lang-css": "^6.2.0",
     "@codemirror/lang-html": "^6.4.5",
-    "@codemirror/lang-javascript": "^6.1.4",
+    "@codemirror/lang-javascript": "^6.1.9",
     "@codemirror/state": "^6.2.1",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@fast-csv/parse": "^4.3.6",
