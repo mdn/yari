@@ -241,7 +241,7 @@ export function AIHelpInner() {
                       isDisabled={isQuotaExceeded(quota)}
                       extraClasses="ai-help-reset-button"
                       onClickHandler={() => {
-                        gleanClick(`${AI_HELP}: new`);
+                        gleanClick(`${AI_HELP}: reset`);
                         setQuery("");
                         reset();
                         window.setTimeout(() => window.scrollTo(0, 0));
