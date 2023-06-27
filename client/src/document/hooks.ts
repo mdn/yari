@@ -159,7 +159,7 @@ function getCodeAndNodesForIframeBySampleClass(cls: string, src: string) {
 
   let empty = true;
   const nodes: Element[] = [];
-  [...document.getElementsByClassName(`pre.live-sample___${cls}`)].forEach(
+  [...document.getElementsByClassName(`live-sample___${cls}`)].forEach(
     (pre) => {
       let lang = getLanguage(pre);
       if (lang === null) {
