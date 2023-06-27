@@ -159,15 +159,17 @@ function getCodeAndNodesForIframeBySampleClass(cls: string, src: string) {
 
   let empty = true;
   const nodes: Element[] = [];
-  document.querySelectorAll(`pre.live-sample___${cls}`).forEach((pre) => {
-    let lang = getLanguage(pre);
-    if (lang === null) {
-      return;
+  [...document.getElementsByClassName(`pre.live-sample___${cls}`)].forEach(
+    (pre) => {
+      let lang = getLanguage(pre);
+      if (lang === null) {
+        return;
+      }
+      empty = false;
+      nodes.push(pre);
+      code[lang] += pre.textContent;
     }
-    empty = false;
-    nodes.push(pre);
-    code[lang] += pre.textContent;
-  });
+  );
   return empty ? null : { code, nodes };
 }
 
