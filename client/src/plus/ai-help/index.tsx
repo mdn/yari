@@ -19,6 +19,8 @@ import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
 import { isExternalUrl } from "./utils";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { AI_HELP } from "../../telemetry/constants";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -99,6 +101,7 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const { hash } = useLocation();
+  const gleanClick = useGleanClick();
 
   const {
     isLoading,
@@ -238,6 +241,7 @@ export function AIHelpInner() {
                       isDisabled={isQuotaExceeded(quota)}
                       extraClasses="ai-help-reset-button"
                       onClickHandler={() => {
+                        gleanClick(`${AI_HELP}: new`);
                         setQuery("");
                         reset();
                         window.setTimeout(() => window.scrollTo(0, 0));
@@ -264,7 +268,10 @@ export function AIHelpInner() {
             <Button
               type="action"
               extraClasses="ai-help-stop-button"
-              onClickHandler={() => stop()}
+              onClickHandler={() => {
+                gleanClick(`${AI_HELP}: stop`);
+                stop();
+              }}
             >
               ⏹ Stop answering
             </Button>
@@ -287,6 +294,7 @@ export function AIHelpInner() {
               className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
+                gleanClick(`${AI_HELP}: submit`);
                 if (query.trim()) {
                   submit(query.trim());
                   setQuery("");
@@ -336,6 +344,7 @@ export function AIHelpInner() {
               type="button"
               className={["ai-help-example", `category-${category}`].join(" ")}
               onClick={() => {
+                gleanClick(`${AI_HELP}: example`);
                 setQuery(query);
                 inputRef.current?.focus();
                 window.setTimeout(() => window.scrollTo(0, 0));
