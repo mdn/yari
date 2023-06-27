@@ -68,7 +68,7 @@ function prevHeading(heading: Element) {
     prev = prev.parentElement.previousElementSibling.firstElementChild;
     if (
       SECTION_RE.test(prev.tagName) &&
-      prev.tagName.toLowerCase() <= heading.tagName.toLowerCase()
+      prev.tagName.toLowerCase() < heading.tagName.toLowerCase()
     ) {
       return prev;
     }

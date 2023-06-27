@@ -10,6 +10,7 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
 import { getBCDDataForPath } from "@mdn/bcd-utils-api";
+import sanitizeFilename from "sanitize-filename";
 
 import {
   buildDocument,
@@ -32,6 +33,7 @@ import {
   OFFLINE_CONTENT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  BLOG_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -241,6 +243,19 @@ app.get("/:locale/blog/index.json", async (_, res) => {
   );
   return res.json({ hyData: { posts } });
 });
+app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  return send(
+    req,
+    path.resolve(
+      BLOG_ROOT,
+      "..",
+      "authors",
+      sanitizeFilename(slug),
+      sanitizeFilename(asset)
+    )
+  ).pipe(res);
+});
 app.get("/:locale/blog/:slug/index.json", async (req, res) => {
   const { slug } = req.params;
   const data = await findPostBySlug(slug);
@@ -270,7 +285,9 @@ app.get("/:locale/blog/:slug/:asset", async (req, res) => {
   const { slug, asset } = req.params;
   const p = findPostPathBySlug(slug);
   if (p) {
-    return send(req, path.resolve(path.join(p, asset))).pipe(res);
+    return send(req, path.resolve(path.join(p, sanitizeFilename(asset)))).pipe(
+      res
+    );
   }
   return res.status(404).send("Nothing here 🤷‍♂️");
 });

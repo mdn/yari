@@ -6,7 +6,7 @@ import { WRITER_MODE } from "../env";
 import { Route, Routes } from "react-router-dom";
 import { HydrationData } from "../../../libs/types/hydration";
 import { BlogPost, AuthorDateReadTime } from "./post";
-import { BlogImage, BlogPostFrontmatter } from "../../../libs/types/blog.js";
+import { BlogImage, BlogPostMetadata } from "../../../libs/types/blog.js";
 
 import "./index.scss";
 import "./post.scss";
@@ -14,7 +14,7 @@ import { Button } from "../ui/atoms/button";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
 interface BlogIndexData {
-  posts: BlogPostFrontmatter[];
+  posts: BlogPostMetadata[];
 }
 
 export function Blog(appProps: HydrationData) {
@@ -46,7 +46,7 @@ export function BlogIndexImageFigure({
   );
 }
 
-function PostPreview({ fm }: { fm: BlogPostFrontmatter }) {
+function PostPreview({ fm }: { fm: BlogPostMetadata }) {
   return (
     <article>
       <header>
