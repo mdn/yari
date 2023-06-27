@@ -108,7 +108,7 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
-const pongProxy = createProxyMiddleware({
+const stageApiProxy = createProxyMiddleware({
   target: `https://developer.allizom.org`,
   changeOrigin: true,
   proxyTimeout: 20000,
@@ -127,8 +127,9 @@ const contentProxy =
     // timeout: 20000,
   });
 
-app.use("/pong/*", pongProxy);
-app.use("/pimg/*", pongProxy);
+app.use("/pong/*", stageApiProxy);
+app.use("/pimg/*", stageApiProxy);
+app.use("/api/v1/stripe/plans", stageApiProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
