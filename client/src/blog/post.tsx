@@ -14,7 +14,10 @@ import {
   BlogPostLimitedMetadata,
   AuthorMetadata,
 } from "../../../libs/types/blog";
-import { useCopyExamplesToClipboard, useRunSample } from "../document/hooks";
+import {
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
@@ -184,7 +187,7 @@ export function BlogPost(props: HydrationData) {
   );
   const { doc, blogMeta } = data || props || {};
   useRunSample(doc);
-  useCopyExamplesToClipboard(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   return (
     <>
       {doc && blogMeta && (
