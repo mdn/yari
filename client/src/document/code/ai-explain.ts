@@ -93,7 +93,7 @@ export function addExplainButton(
   const sample = pre.textContent;
 
   document.addEventListener("selectionchange", (e) => {
-    const selected = window.getSelection()?.toString();
+    const selected = window.getSelection()?.toString().replace(/\r\n/g, "\n");
     const highlighted =
       selected && sample?.includes(selected) ? selected : null;
     if (highlighted) {
@@ -110,7 +110,7 @@ export function addExplainButton(
       .querySelector(".language-name")
       ?.textContent?.toLowerCase();
     const sample = pre.textContent;
-    const selected = window.getSelection()?.toString();
+    const selected = window.getSelection()?.toString().replace(/\r\n/g, "\n");
     const highlighted =
       selected && sample?.includes(selected) ? selected : null;
     let all = "";
