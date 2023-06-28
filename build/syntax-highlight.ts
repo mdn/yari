@@ -110,6 +110,7 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
     const code = $pre.text();
     if (SAMPLE_SIGN_KEY) {
       const hmac = createHmac("sha256", SAMPLE_SIGN_KEY);
+      hmac.update(name.toLowerCase());
       hmac.update(code);
       const signature = hmac.digest("base64");
       $pre.attr("data-signature", signature);
