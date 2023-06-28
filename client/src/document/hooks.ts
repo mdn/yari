@@ -68,7 +68,7 @@ export function useRunSample(doc: Doc | undefined) {
     });
   }, [doc, isServer, locale]);
 }
-export function useCopyExamplesToClipboard(doc: Doc | undefined) {
+export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
   const location = useLocation();
   const isServer = useIsServer();
 
