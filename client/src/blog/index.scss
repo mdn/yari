@@ -111,6 +111,8 @@
         align-items: center;
         align-self: end;
         display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
       }
     }
   }
