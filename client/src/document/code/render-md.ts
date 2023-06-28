@@ -5,7 +5,7 @@ import remarkRehype from "remark-rehype";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 
-export function render(md) {
+export function render(md: string) {
   return unified()
     .use(remarkParse)
     .use(remarkGfm)

@@ -1,6 +1,16 @@
 import { SSE } from "sse.js";
 
-function explain(context, callback) {
+interface ExplainRequest {
+  language: string | undefined;
+  highlighted: string | null;
+  sample: string | null;
+  signature: string;
+}
+
+function explain(
+  context: ExplainRequest,
+  callback: (data: any, e?: Error) => void
+) {
   const source = new SSE("/api/v1/plus/ai/explain", {
     headers: { "Content-Type": "application/json" },
     payload: JSON.stringify(context),
@@ -8,7 +18,7 @@ function explain(context, callback) {
   source.addEventListener("message", (e: { data: string }) =>
     callback(JSON.parse(e.data))
   );
-  source.addEventListener("error", (e) => callback(null, e));
+  source.addEventListener("error", (e: Error | undefined) => callback(null, e));
   source.stream();
 }
 
@@ -59,8 +69,7 @@ function feedback(hash: () => string | null, signature: string): Element {
 
 export function addExplainButton(
   element: Element | null | undefined,
-  pre: Element,
-  id: string
+  pre: Element
 ) {
   const signature = pre.getAttribute("data-signature");
   if (!signature || !element || element.querySelector(".ai-explain-button"))
@@ -71,7 +80,7 @@ export function addExplainButton(
   button.textContent = "AI Explain";
   button.classList.add("ai-explain-button");
   button.type = "button";
-  button.setAttribute("data-ai-explain", id);
+  button.setAttribute("data-ai-explain", "explain");
   button.title = "Explain (parts of) this example";
   buttonContainer.appendChild(button);
   const info = document.createElement("div");
@@ -81,7 +90,7 @@ export function addExplainButton(
   const infoToggle = document.createElement("button");
   infoToggle.classList.add("ai-explain-info-toggle", "icon", "icon-note-info");
   infoToggle.type = "button";
-  infoToggle.setAttribute("data-ai-explain", id);
+  infoToggle.setAttribute("data-ai-explain", "info-toggle");
   infoToggle.title = "Toggle AI Explain info";
   infoToggle.addEventListener("click", () =>
     info.classList.toggle("visually-hidden")
@@ -92,30 +101,31 @@ export function addExplainButton(
 
   const sample = pre.textContent;
 
-  document.addEventListener("selectionchange", (e) => {
+  const getHighlighted = () => {
     const selected = window.getSelection()?.toString().replace(/\r\n/g, "\n");
     const highlighted =
       selected && sample?.includes(selected) ? selected : null;
-    if (highlighted) {
+    return highlighted;
+  };
+
+  document.addEventListener("selectionchange", (e) => {
+    if (getHighlighted()) {
       button.classList.add("ai-explain-highlight");
     } else {
       button.classList.remove("ai-explain-highlight");
     }
   });
 
-  const answers = new Map();
+  const answers = new Map<string | null, Element>();
 
   button.addEventListener("click", async (e) => {
     const language = element
       .querySelector(".language-name")
       ?.textContent?.toLowerCase();
-    const sample = pre.textContent;
-    const selected = window.getSelection()?.toString().replace(/\r\n/g, "\n");
-    const highlighted =
-      selected && sample?.includes(selected) ? selected : null;
+    const highlighted = getHighlighted();
     let all = "";
 
-    let answerContainer: Element = answers.get(highlighted);
+    let answerContainer = answers.get(highlighted);
     if (answerContainer) {
       pre.insertAdjacentElement("afterend", answerContainer);
       return;
@@ -159,7 +169,7 @@ export function addExplainButton(
         signature,
       },
       (data, err) => {
-        if (data !== null) {
+        if (data) {
           const { choices, initial } = data;
           if (choices) {
             const [{ delta: { content = "" } = {} } = {}] = choices;
@@ -168,6 +178,9 @@ export function addExplainButton(
           } else if (initial) {
             container.setAttribute("data-hash", initial.hash);
           }
+        }
+        if (err) {
+          console.error(err);
         }
       }
     );

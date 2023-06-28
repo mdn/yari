@@ -4,7 +4,6 @@ import { useIsServer, useLocale } from "../hooks";
 import { Doc } from "../../../libs/types/document";
 import { initPlayIframe } from "../playground/utils";
 import { addExplainButton } from "./code/ai-explain";
-import { useUserData } from "../user-context";
 import {
   addBreakoutButton,
   getCodeAndNodesForIframe,
@@ -72,7 +71,6 @@ export function useRunSample(doc: Doc | undefined) {
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   const location = useLocation();
   const isServer = useIsServer();
-  const userData = useUserData();
 
   useEffect(() => {
     if (isServer) {
@@ -87,7 +85,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       .querySelectorAll("div.code-example pre:not(.hidden)")
       .forEach((element) => {
         const header = element.parentElement?.querySelector(".example-header");
-        addExplainButton(header, element, "");
+        addExplainButton(header, element);
         if (!navigator.clipboard) {
           console.log(
             "Copy-to-clipboard disabled because your browser does not appear to support it."
@@ -97,7 +95,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
           addCopyToClipboardButton(element, header);
         }
       });
-  }, [doc, location, isServer, userData?.isAuthenticated]);
+  }, [doc, location, isServer]);
 }
 
 /**
