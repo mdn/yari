@@ -51,16 +51,18 @@ function PostPreview({ fm }: { fm: BlogPostMetadata }) {
     <article>
       <header>
         <BlogIndexImageFigure image={fm.image} height={200} slug={fm.slug} />
-        {fm.sponsored && <span className="sponsored">Sponsored</span>}
         <h2>
           <a href={`./${fm.slug}/`}>{fm.title}</a>
         </h2>
         <AuthorDateReadTime metadata={fm} />
       </header>
       <p>{fm.description}</p>
-      <Button href={`./${fm.slug}/`} target="_self">
-        Read more →
-      </Button>
+      <footer>
+        {fm.sponsored && <span className="sponsored">Sponsored</span>}
+        <Button href={`./${fm.slug}/`} target="_self">
+          Read more →
+        </Button>
+      </footer>
     </article>
   );
 }
@@ -98,9 +100,11 @@ function BlogIndex(props: HydrationData) {
         <header>
           <h1 className="mify">Blog it better</h1>
         </header>
-        {data?.posts.map((fm) => {
-          return <PostPreview key={fm.slug} fm={fm} />;
-        })}
+        <section className="article-list">
+          {data?.posts.map((fm) => {
+            return <PostPreview key={fm.slug} fm={fm} />;
+          })}
+        </section>
       </main>
       <NewsletterSignUp />
     </>
