@@ -9,25 +9,36 @@ import "./post.scss";
 import {
   BlogImage,
   BlogPostData,
-  BlogPostFrontmatter,
-  BlogPostFrontmatterLinks,
-  BlogPostLimitedFrontmatter,
+  BlogPostMetadata,
+  BlogPostMetadataLinks,
+  BlogPostLimitedMetadata,
+  AuthorMetadata,
 } from "../../../libs/types/blog";
-import { useCopyExamplesToClipboard, useRunSample } from "../document/hooks";
+import {
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
-function MaybeLink({ link, children }) {
+function MaybeLink({ className = "", link, children }) {
   return link ? (
     link.startsWith("https://") ? (
-      <a href={link} className="external" target="_blank" rel="noreferrer">
+      <a
+        href={link}
+        className={`external ${className}`}
+        target="_blank"
+        rel="noreferrer"
+      >
         {children}
       </a>
     ) : (
-      <a href={link}>{children}</a>
+      <a href={link} className={className}>
+        {children}
+      </a>
     )
   ) : (
-    <>{children}</>
+    <span className={className}>{children}</span>
   );
 }
 
@@ -48,10 +59,14 @@ export function PublishDate({ date }: { date: string }) {
   );
 }
 
-export function Author({ metadata }: { metadata: BlogPostFrontmatter }) {
+export function Author({ metadata }: { metadata: AuthorMetadata | undefined }) {
   return (
-    <MaybeLink link={metadata?.author?.link}>
-      <span className="author">{metadata?.author?.name || "The MDN Team"}</span>
+    <MaybeLink link={metadata?.link} className="author">
+      <img
+        src={metadata?.avatar_url ?? "/assets/avatar.png"}
+        alt="Author avatar"
+      />
+      {metadata?.name || "The MDN Team"}
     </MaybeLink>
   );
 }
@@ -59,15 +74,14 @@ export function Author({ metadata }: { metadata: BlogPostFrontmatter }) {
 export function AuthorDateReadTime({
   metadata,
 }: {
-  metadata: BlogPostFrontmatter;
+  metadata: BlogPostMetadata;
 }) {
   return (
-    <span className="date-author">
-      <Author metadata={metadata} />
-      <br />
-      <PublishDate date={metadata.date} />{" "}
+    <div className="date-author">
+      <Author metadata={metadata.author} />
+      <PublishDate date={metadata.date} />
       <TimeToRead readTime={metadata.readTime} />
-    </span>
+    </div>
   );
 }
 
@@ -113,7 +127,7 @@ function BlogImageFigure({
 function PreviousNext({
   links: { previous, next },
 }: {
-  links: BlogPostFrontmatterLinks;
+  links: BlogPostMetadataLinks;
 }) {
   return (
     <section className="previous-next">
@@ -130,7 +144,7 @@ function PreviousNextLink({
   metadata: { slug, title },
 }: {
   direction: "Previous" | "Next";
-  metadata: BlogPostLimitedFrontmatter;
+  metadata: BlogPostLimitedMetadata;
 }) {
   return (
     <a
@@ -173,7 +187,7 @@ export function BlogPost(props: HydrationData) {
   );
   const { doc, blogMeta } = data || props || {};
   useRunSample(doc);
-  useCopyExamplesToClipboard(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   return (
     <>
       {doc && blogMeta && (

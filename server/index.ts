@@ -10,6 +10,7 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
 import { getBCDDataForPath } from "@mdn/bcd-utils-api";
+import sanitizeFilename from "sanitize-filename";
 
 import {
   buildDocument,
@@ -32,6 +33,7 @@ import {
   OFFLINE_CONTENT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  BLOG_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -106,7 +108,7 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
-const pongProxy = createProxyMiddleware({
+const stageApiProxy = createProxyMiddleware({
   target: `https://developer.allizom.org`,
   changeOrigin: true,
   proxyTimeout: 20000,
@@ -125,8 +127,9 @@ const contentProxy =
     // timeout: 20000,
   });
 
-app.use("/pong/*", pongProxy);
-app.use("/pimg/*", pongProxy);
+app.use("/pong/*", stageApiProxy);
+app.use("/pimg/*", stageApiProxy);
+app.use("/api/v1/stripe/plans", stageApiProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
@@ -240,6 +243,19 @@ app.get("/:locale/blog/index.json", async (_, res) => {
   );
   return res.json({ hyData: { posts } });
 });
+app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  return send(
+    req,
+    path.resolve(
+      BLOG_ROOT,
+      "..",
+      "authors",
+      sanitizeFilename(slug),
+      sanitizeFilename(asset)
+    )
+  ).pipe(res);
+});
 app.get("/:locale/blog/:slug/index.json", async (req, res) => {
   const { slug } = req.params;
   const data = await findPostBySlug(slug);
@@ -269,7 +285,9 @@ app.get("/:locale/blog/:slug/:asset", async (req, res) => {
   const { slug, asset } = req.params;
   const p = findPostPathBySlug(slug);
   if (p) {
-    return send(req, path.resolve(path.join(p, asset))).pipe(res);
+    return send(req, path.resolve(path.join(p, sanitizeFilename(asset)))).pipe(
+      res
+    );
   }
   return res.status(404).send("Nothing here 🤷‍♂️");
 });

@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { PLAYGROUND, VIEWPORT_BREAKPOINTS } from "./constants";
+import { AI_EXPLAIN, PLAYGROUND, VIEWPORT_BREAKPOINTS } from "./constants";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
@@ -134,6 +134,8 @@ function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
       click(
         `${PLAYGROUND}: breakout->${button.getAttribute("data-play") || ""}`
       );
+    } else if (button.hasAttribute?.("data-ai-explain")) {
+      click(`${AI_EXPLAIN}: ${button.getAttribute("data-ai-explain") || ""}}`);
     }
   }
 }
@@ -141,11 +143,7 @@ function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   const anchor = ev?.target as Element;
   if (anchor?.nodeName === "A") {
-    if (anchor?.hasAttribute?.("data-play")) {
-      click(
-        `${PLAYGROUND}: breakout->${anchor.getAttribute("data-play") || ""}`
-      );
-    } else if (anchor?.classList.contains("external")) {
+    if (anchor?.classList.contains("external")) {
       click(`external-link: ${anchor.getAttribute("href") || ""}`);
     } else if (anchor?.hasAttribute?.("data-pong")) {
       click(`pong: ${anchor.getAttribute("data-pong") || ""}`);

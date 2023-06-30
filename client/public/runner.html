@@ -55,7 +55,7 @@
       window.addEventListener("error", (e) => console.log(e.error));
 
       function setHTML(parent, html) {
-        var dummy = document.createElement("div");
+        const dummy = parent.cloneNode(false);
         dummy.innerHTML = html;
 
         if (dummy.children.length === 0) {
@@ -69,7 +69,13 @@
             if (child.nodeType !== Node.ELEMENT_NODE) {
               continue;
             }
-            const clone = document.createElement(child.nodeName);
+
+            const namespaceURI = child.namespaceURI;
+
+            const clone =
+              namespaceURI !== "http://www.w3.org/1999/xhtml"
+                ? document.createElementNS(namespaceURI, child.nodeName)
+                : document.createElement(child.nodeName);
 
             for (const { nodeName, nodeValue } of child.attributes) {
               try {
@@ -97,7 +103,11 @@
         }
       }
 
+      let initialized = false;
       function init(state) {
+        if (initialized) {
+          return;
+        }
         window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
 
         const style = document.createElement("style");
@@ -112,6 +122,7 @@
         document.body.appendChild(script);
 
         dispatchEvent(new Event("load"));
+        initialized = true;
       }
       window.addEventListener("message", (event) => {
         const e = event.data;

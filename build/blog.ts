@@ -12,8 +12,11 @@ import { BLOG_ROOT, BUILD_OUT_ROOT, BASE_URL } from "../libs/env/index.js";
 import {
   BlogPostData,
   BlogPostFrontmatter,
-  BlogPostFrontmatterLinks,
-  BlogPostLimitedFrontmatter,
+  BlogPostMetadataLinks,
+  BlogPostLimitedMetadata,
+  BlogPostMetadata,
+  AuthorFrontmatter,
+  AuthorMetadata,
 } from "../libs/types/blog.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -47,15 +50,53 @@ function calculateReadTime(copy: string): number {
   );
 }
 
-async function getLinks(slug: string): Promise<BlogPostFrontmatterLinks> {
+async function getLinks(slug: string): Promise<BlogPostMetadataLinks> {
   const posts = await allPostFrontmatter();
   const index = posts.findIndex((post) => post.slug === slug);
   const filterFrontmatter = (
     f?: BlogPostFrontmatter
-  ): BlogPostLimitedFrontmatter => f && { title: f.title, slug: f.slug };
+  ): BlogPostLimitedMetadata => f && { title: f.title, slug: f.slug };
   return {
     previous: filterFrontmatter(posts[index + 1]),
     next: filterFrontmatter(posts[index - 1]),
+  };
+}
+
+async function getAuthor(
+  slug: string | AuthorFrontmatter
+): Promise<AuthorMetadata> {
+  if (typeof slug === "string") {
+    const filePath = path.join(BLOG_ROOT, "..", "authors", slug, "index.md");
+    const attributes = await readAuthor(filePath);
+    return parseAuthor(slug, attributes);
+  }
+  return slug;
+}
+
+async function readAuthor(filePath: string): Promise<AuthorFrontmatter> {
+  try {
+    const raw = await fs.readFile(filePath, "utf-8");
+    const { attributes } = frontmatter<AuthorFrontmatter>(raw);
+    return attributes;
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      console.warn("Couldn't find author metadata:", filePath);
+      return {};
+    }
+    throw e;
+  }
+}
+
+function parseAuthor(
+  slug: string,
+  { name, link, avatar }: AuthorFrontmatter
+): AuthorMetadata {
+  return {
+    name,
+    link,
+    avatar_url: avatar
+      ? `/${DEFAULT_LOCALE}/blog/author/${slug}/${avatar}`
+      : undefined,
   };
 }
 
@@ -65,22 +106,26 @@ async function readPost(
     readTime?: boolean;
     previousNext?: boolean;
   }
-): Promise<{ blogMeta: BlogPostFrontmatter; body: string }> {
+): Promise<{ blogMeta: BlogPostMetadata; body: string }> {
   const raw = await fs.readFile(file, "utf-8");
 
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
+  const blogMeta: BlogPostMetadata = {
+    ...attributes,
+    author: await getAuthor(attributes.author),
+  };
 
   const { readTime = true, previousNext = true } = options || {};
 
   if (readTime) {
-    attributes.readTime = calculateReadTime(body);
+    blogMeta.readTime = calculateReadTime(body);
   }
 
   if (previousNext) {
-    attributes.links = await getLinks(attributes.slug);
+    blogMeta.links = await getLinks(blogMeta.slug);
   }
 
-  return { blogMeta: attributes, body };
+  return { blogMeta, body };
 }
 
 export function findPostPathBySlug(slug: string): string | null {
@@ -143,6 +188,23 @@ async function allPostFiles(): Promise<string[]> {
     .filter((filePath) => filePath.endsWith("index.md"))
     .crawl(BLOG_ROOT);
   return await api.withPromise();
+}
+
+async function allAuthorFiles(): Promise<string[]> {
+  try {
+    return await new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((filePath) => filePath.endsWith("index.md"))
+      .crawl(path.join(BLOG_ROOT, "..", "authors"))
+      .withPromise();
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      console.warn("Warning: blog authors directory doesn't exist");
+      return [];
+    }
+    throw e;
+  }
 }
 
 export const allPostFrontmatter = memoize(
@@ -394,5 +456,30 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
   await fs.writeFile(filePath, feed.rss2());
   if (options.verbose) {
     console.log("Wrote", filePath);
+  }
+}
+
+export async function buildAuthors(options: { verbose?: boolean }) {
+  for (const filePath of await allAuthorFiles()) {
+    const dirname = path.dirname(filePath);
+    const slug = path.basename(dirname);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      DEFAULT_LOCALE.toLowerCase(),
+      "blog",
+      "author",
+      slug
+    );
+    await fs.mkdir(outPath, { recursive: true });
+
+    const { avatar } = await readAuthor(filePath);
+    if (avatar) {
+      const from = path.join(dirname, avatar);
+      const to = path.join(outPath, avatar);
+      await fs.copyFile(from, to);
+      if (options.verbose) {
+        console.log("Copied", from, "to", to);
+      }
+    }
   }
 }

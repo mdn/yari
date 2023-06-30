@@ -8,7 +8,7 @@ import { useIsServer, useLocale } from "../hooks";
 
 import {
   useDocumentURL,
-  useCopyExamplesToClipboard,
+  useCopyExamplesToClipboardAndAIExplain,
   useRunSample,
 } from "./hooks";
 import { Doc } from "../../../libs/types/document";
@@ -121,7 +121,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
-  useCopyExamplesToClipboard(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {

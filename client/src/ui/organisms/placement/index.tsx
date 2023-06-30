@@ -9,7 +9,7 @@ import {
   Status,
   usePlacement,
 } from "../../../placement-context";
-import { BANNER_BLOG_LAUNCH_CLICK } from "../../../telemetry/constants";
+import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
@@ -60,20 +60,21 @@ export function SidePlacement() {
   );
 }
 
-function Fallback() {
+function TopPlacementFallbackContent() {
   const gleanClick = useGleanClick();
 
   return (
     <p className="fallback-copy">
-      Discover the latest web development insights on our new{" "}
+      Get real-time assistance with your coding queries. Try{" "}
       <a
-        href="/en-US/blog/"
+        href="/en-US/plus/ai-help"
         onClick={() => {
-          gleanClick(BANNER_BLOG_LAUNCH_CLICK);
+          gleanClick(BANNER_AI_HELP_CLICK);
         }}
       >
-        MDN Blog
-      </a>
+        AI Help
+      </a>{" "}
+      now!
     </p>
   );
 }
@@ -119,7 +120,7 @@ export function TopPlacement() {
       {isServer || !placementData?.top ? (
         <section className="place top container">
           {!isServer && placementData?.status !== Status.loading && (
-            <Fallback />
+            <TopPlacementFallbackContent />
           )}
         </section>
       ) : (
