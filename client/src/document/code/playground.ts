@@ -106,10 +106,9 @@ function codeForHeading(
     const src = section
       .flatMap((e) => [
         ...e?.querySelectorAll(
-          `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`
+          `pre.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`
         ),
       ])
-
       .map((e) => {
         nodes.push(e);
         return e.textContent;
