@@ -177,9 +177,6 @@ jobs:
           BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
           BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.mozilla.net
 
-          # Sign key for code samples
-          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
-
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 

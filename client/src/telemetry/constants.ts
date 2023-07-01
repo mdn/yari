@@ -37,7 +37,6 @@ export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
 export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
-export const AI_EXPLAIN = "ai_explain";
 
 export const PLUS_UPDATES = Object.freeze({
   EVENT_COLLAPSE: "plus_updates_event_collapse",
