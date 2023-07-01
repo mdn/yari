@@ -51,17 +51,17 @@ async function postFeedback(
 function feedback(hash: () => string | null, signature: string): Element {
   const div = document.createElement("div");
   div.classList.add("ai-explain-feedback");
-  div.append(document.createTextNode("Was this answer useful?"));
+  div.append(document.createTextNode("How's this answer?"));
   div.appendChild(
-    thumbs("down", "This answer was not very useful.", async () => {
+    thumbs("down", "Was this answer useful?", async () => {
       await postFeedback("thumbs_down", hash, signature);
       div.textContent = "Thank you for your feedback! ❤️";
     })
   );
   div.appendChild(
-    thumbs("up", "This answer was useful.", async () => {
+    thumbs("up", "This answer was useful!", async () => {
       await postFeedback("thumbs_up", hash, signature);
-      div.textContent = "Thank you for your feedback! ❤️";
+      div.textContent = "Thank you for your feedback.";
     })
   );
   return div;
