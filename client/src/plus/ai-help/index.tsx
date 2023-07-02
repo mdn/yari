@@ -74,7 +74,11 @@ export default function AiHelp() {
             Get answers using generative AI based on MDN content.
             <br />
             <a
-              href="https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
+              href={
+                user?.isAuthenticated
+                  ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
+                  : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
+              }
               target="_blank"
               rel="noreferrer noopener"
               className="external"
@@ -339,9 +343,17 @@ export function AIHelpInner() {
             <div className="ai-help-footer-text">
               <span>
                 Results based on MDN's most recent documentation and powered by
-                GPT-3.5, an LLM by OpenAI. Please verify information
-                independently as LLM responses may not be 100% accurate. Read
-                our{" "}
+                GPT-3.5, an LLM by{" "}
+                <a
+                  href="https://platform.openai.com/docs/api-reference/models"
+                  className="external"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  OpenAI
+                </a>
+                . Please verify information independently as LLM responses may
+                not be 100% accurate. Read our{" "}
                 <Button
                   type="link"
                   onClickHandler={() => setShowDisclaimer(true)}
@@ -366,11 +378,20 @@ export function AIHelpInner() {
                 <div className="modal-body">
                   <p>
                     Our AI Help feature employs GPT-3.5, a Language Learning
-                    Model (LLM) developed by OpenAI. While it's designed to
-                    offer helpful and relevant information drawn from MDN's
-                    comprehensive documentation, it's important to bear in mind
-                    that it is an LLM and may not produce perfectly accurate
-                    information in every circumstance.
+                    Model (LLM) developed by{" "}
+                    <a
+                      href="https://platform.openai.com/docs/api-reference/models"
+                      className="external"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      OpenAI
+                    </a>
+                    . While it's designed to offer helpful and relevant
+                    information drawn from MDN's comprehensive documentation,
+                    it's important to bear in mind that it is an LLM and may not
+                    produce perfectly accurate information in every
+                    circumstance.
                   </p>
                   <p>
                     We strongly advise all users to cross-verify the information
