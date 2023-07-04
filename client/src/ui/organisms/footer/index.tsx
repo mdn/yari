@@ -42,6 +42,15 @@ export function Footer() {
                 <span className="visually-hidden">MDN on GitHub</span>
               </a>
             </li>
+            <li>
+              <a
+                className="icon icon-feed"
+                href="/en-US/blog/rss.xml"
+                target="_blank"
+              >
+                <span className="visually-hidden">MDN Blog RSS Feed</span>
+              </a>
+            </li>
           </ul>
         </div>
 

@@ -29,11 +29,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       {(PLUS_IS_ENABLED &&
         !isServer &&
         userData &&
-        userData.isAuthenticated && (
-          <>
-            <UserMenu />
-          </>
-        )) ||
+        userData.isAuthenticated && <UserMenu />) ||
         (userData?.maintenance && <Maintenance />) || (
           <AuthContainer
             signInGleanContext={TOP_NAV_ALREADY_SUBSCRIBER}

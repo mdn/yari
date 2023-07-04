@@ -131,8 +131,14 @@ export async function buildSPAs(options: {
       }
 
       const SPAs = [
+        { prefix: "play", pageTitle: "Playground | MDN" },
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
+        {
+          prefix: "plus/ai-help",
+          pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
         {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
@@ -405,6 +411,26 @@ async function fetchLatestNews() {
 
   items.push(
     {
+      title: "Introducing AI Help: Your Trusted Companion for Web Development",
+      url: `/${DEFAULT_LOCALE}/blog/introducing-ai-help/`,
+      author: "Hermina Condei",
+      published_at: new Date("2023-06-27").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
+      title: "Introducing the MDN Playground: Bring your code to life!",
+      url: `/${DEFAULT_LOCALE}/blog/introducing-the-mdn-playground/`,
+      author: "Florian Dieminger",
+      published_at: new Date("2023-06-22").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
       title: "Introducing Baseline: a unified view of stable web features",
       url: `/${DEFAULT_LOCALE}/blog/baseline-unified-view-stable-web-features/`,
       author: "Hermina Condei",
@@ -412,26 +438,6 @@ async function fetchLatestNews() {
       source: {
         name: "developer.mozilla.org",
         url: `/${DEFAULT_LOCALE}/blog/`,
-      },
-    },
-    {
-      title: "Welcome to the MDN blog",
-      url: `/${DEFAULT_LOCALE}/blog/welcome-to-the-MDN-blog/`,
-      author: "Ruth John",
-      published_at: new Date("2023-05-03").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: `/${DEFAULT_LOCALE}/blog/`,
-      },
-    },
-    {
-      title: "Advertise with us",
-      url: `/${DEFAULT_LOCALE}/advertising`,
-      author: "Mozilla",
-      published_at: new Date("2023-04-03").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: "/",
       },
     }
   );

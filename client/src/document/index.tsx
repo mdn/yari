@@ -6,7 +6,11 @@ import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
-import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import {
+  useDocumentURL,
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -116,7 +120,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 
   useIncrementFrequentlyViewed(doc);
-  useCopyExamplesToClipboard(doc);
+  useRunSample(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
