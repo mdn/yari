@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.28.0](https://github.com/mdn/yari/compare/v2.27.0...v2.28.0) (2023-07-05)
+
+
+### Features
+
+* **ai-explain:** add ai-explain to code blocks ([#9188](https://github.com/mdn/yari/issues/9188)) ([e342081](https://github.com/mdn/yari/commit/e342081cbf92073ca2071e8af8a9a329b05f3d29))
+* **ai-help:** add "Report issue with this answer on GitHub" link ([#9238](https://github.com/mdn/yari/issues/9238)) ([9f9cb5a](https://github.com/mdn/yari/commit/9f9cb5ae7cb8818ca8c13dc864537c5684830dff))
+
+
+### Bug Fixes
+
+* **ai-explain:** feedback copy ([0a80005](https://github.com/mdn/yari/commit/0a8000540cd824bc9d30111e57ec4ae8651e7ed3))
+* **ai-explain:** pause ai-explain ([1bf2856](https://github.com/mdn/yari/commit/1bf285612ca2a2741795916fbe7fd2549e6b0013))
+* **ai-help:** add short and extended explanatory guidance ([#9215](https://github.com/mdn/yari/issues/9215)) ([1da1d4e](https://github.com/mdn/yari/commit/1da1d4e93f98e44b15ad277deed6129f35a47e1e))
+
 ## [2.27.0](https://github.com/mdn/yari/compare/v2.26.0...v2.27.0) (2023-06-27)
 
 
