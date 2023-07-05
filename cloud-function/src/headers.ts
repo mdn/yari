@@ -86,7 +86,6 @@ export function setContentResponseHeaders(
   { csp = true, xFrame = true }: { csp?: boolean; xFrame?: boolean }
 ): void {
   [
-    ["X-XSS-Protection", "1; mode=block"],
     ["X-Content-Type-Options", "nosniff"],
     ["Strict-Transport-Security", "max-age=63072000"],
     ...(csp ? [["Content-Security-Policy", CSP_VALUE]] : []),
@@ -100,7 +99,6 @@ export function withRunnerResponseHeaders(
   res: ServerResponse<IncomingMessage>
 ): void {
   [
-    ["X-XSS-Protection", "1; mode=block"],
     ["X-Content-Type-Options", "nosniff"],
     ["Clear-Site-Data", '"*"'],
     ["Strict-Transport-Security", "max-age=63072000"],
