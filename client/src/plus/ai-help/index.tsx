@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { Quota, useAiChat } from "./use-ai";
+import { Message, MessageRole, Quota, useAiChat } from "./use-ai";
 import { AiLoginBanner, AiUpsellBanner } from "./login-banner";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
@@ -229,13 +229,21 @@ export function AIHelpInner() {
                                 </ul>
                               </>
                             )}
-                            <GleanThumbs
-                              feature="ai-help-answer"
-                              question={"Is this answer useful?"}
-                              upLabel={"Yes, this answer is useful."}
-                              downLabel={"No, this answer is not useful."}
-                              permanent={true}
-                            />
+                            <section className="ai-help-feedback">
+                              <GleanThumbs
+                                feature="ai-help-answer"
+                                question={"Is this answer useful?"}
+                                upLabel={"Yes, this answer is useful."}
+                                downLabel={"No, this answer is not useful."}
+                                permanent={true}
+                              />
+                              <ReportIssueOnGitHubLink
+                                messages={messages}
+                                currentMessage={message}
+                              >
+                                Report an issue with this answer on GitHub
+                              </ReportIssueOnGitHubLink>
+                            </section>
                           </>
                         )}
                     </>
@@ -525,4 +533,52 @@ function useAutoScroll(
     autoScroll,
     setAutoScroll,
   };
+}
+
+function ReportIssueOnGitHubLink({
+  messages,
+  currentMessage,
+  children,
+}: {
+  messages: Message[];
+  currentMessage: Message;
+  children: React.ReactNode;
+}) {
+  const currentMessageIndex = messages.indexOf(currentMessage);
+  const firstMessage = messages[0];
+  const questions = messages
+    .slice(0, currentMessageIndex)
+    .filter((message) => message.role === MessageRole.User)
+    .map(({ content }) => content);
+
+  const url = new URL("https://github.com/");
+  url.pathname = "/mdn/ai-feedback/issues/new";
+
+  const sp = new URLSearchParams();
+  sp.set("title", `[AI Help] Question: ${firstMessage.content}`);
+  sp.set("questions", questions.join("---"));
+  sp.set("answer", currentMessage.content);
+  sp.set(
+    "sources",
+    currentMessage.sources
+      ?.map(
+        (source) =>
+          `- [${source.title}](https://developer.mozilla.org${source.url})`
+      )
+      .join("\n") ?? "(None)"
+  );
+  sp.set("template", "ai-help-answer.yml");
+
+  url.search = sp.toString();
+
+  return (
+    <a
+      href={url.href}
+      title="This will take you to GitHub to file a new issue."
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  );
 }
