@@ -186,9 +186,16 @@
         width: 2.5rem;
       }
 
-      .glean-thumbs {
+      .ai-help-feedback {
+        display: flex;
+        flex-direction: column;
         font-size: var(--type-tiny-font-size);
-        justify-content: flex-end;
+        gap: 0.5rem;
+        text-align: right;
+
+        .glean-thumbs {
+          justify-content: flex-end;
+        }
       }
 
       &.status-pending .ai-help-message-content,
