@@ -232,9 +232,9 @@ export function AIHelpInner() {
                             <section className="ai-help-feedback">
                               <GleanThumbs
                                 feature="ai-help-answer"
-                                question={"Is this answer useful?"}
-                                upLabel={"Yes, this answer is useful."}
-                                downLabel={"No, this answer is not useful."}
+                                question={"Was this answer useful?"}
+                                upLabel={"Yes, this answer was useful."}
+                                downLabel={"No, this answer was not useful."}
                                 permanent={true}
                               />
                               <ReportIssueOnGitHubLink
