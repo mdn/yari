@@ -122,17 +122,6 @@
     position: relative;
     z-index: unset;
   }
-
-  .sidebar-filter-footer {
-    background: var(--background-primary);
-    border: 1px solid var(--background-primary);
-
-    .glean-thumbs {
-      font-size: var(--type-tiny-font-size);
-      margin-bottom: 0.5rem;
-      margin-left: 0.6rem;
-    }
-  }
 }
 
 .sidebar {
