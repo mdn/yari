@@ -62,10 +62,10 @@
     gensync "^1.0.0-beta.2"
     json5 "^2.2.2"
 
-"@babel/eslint-parser@^7.16.3", "@babel/eslint-parser@^7.22.6":
-  version "7.22.6"
-  resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.22.6.tgz#fa75b578a6392d92243eb8fb9c4e7ece8ad7c583"
-  integrity sha512-KAom7E7d6bAh5/PflF3luynWlDLOIqfX+ZJcL0LRs6/6rtXJmJxPiWuIGfxNPtcWdtQ5lSSJbKbQlz/c/R60Ng==
+"@babel/eslint-parser@^7.16.3", "@babel/eslint-parser@^7.22.7":
+  version "7.22.7"
+  resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.22.7.tgz#d2807fbd1fa4376162716da63dfd3c69a2249fed"
+  integrity sha512-LH6HJqjOyu/Qtp7LuSycZXK/CYXQ4ohdkliEaL1QTdtOXVdOVpTBKVxAo/+eeyt+x/2SRzB+zUPduVl+xiEvdg==
   dependencies:
     "@nicolo-ribaudo/eslint-scope-5-internals" "5.1.1-v1"
     "@nicolo-ribaudo/semver-v6" "^6.3.3"
@@ -8637,7 +8637,7 @@ jest-get-type@^29.4.3:
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-29.4.3.tgz#1ab7a5207c995161100b5187159ca82dd48b3dd5"
   integrity sha512-J5Xez4nRRMjk8emnTpWrlkyb9pfRQQanDrvWHhsR1+VUfbwxi30eVcZFlcdGInRibU4G5LwHXpI7IRHU0CY+gg==
 
-jest-haste-map@^29.5.0, jest-haste-map@^29.6.0:
+jest-haste-map@^29.6.0:
   version "29.6.0"
   resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-29.6.0.tgz#5f3e6292bc45f596de48835489ddac409748b15a"
   integrity sha512-dY1DKufptj7hcJSuhpqlYPGcnN3XjlOy/g0jinpRTMsbb40ivZHiuIPzeminOZkrek8C+oDxC54ILGO3vMLojg==
