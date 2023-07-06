@@ -411,6 +411,16 @@ async function fetchLatestNews() {
 
   items.push(
     {
+      title: "Responsibly empowering developers with AI on MDN",
+      url: `https://blog.mozilla.org/en/products/mdn/responsibly-empowering-developers-with-ai-on-mdn/`,
+      author: "Steve Teixeira",
+      published_at: new Date("Thu, 06 Jul 2023 14:41:20 +0000").toString(),
+      source: {
+        name: "blog.mozilla.org",
+        url: `https://blog.mozilla.org/en/latest/`,
+      },
+    },
+    {
       title: "Introducing AI Help: Your Trusted Companion for Web Development",
       url: `/${DEFAULT_LOCALE}/blog/introducing-ai-help/`,
       author: "Hermina Condei",
