@@ -141,7 +141,7 @@
     "web-specs": "^2.63.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.7",
+    "@babel/core": "^7.22.8",
     "@babel/eslint-parser": "^7.22.7",
     "@babel/preset-env": "^7.22.7",
     "@mdn/dinocons": "^0.5.5",
