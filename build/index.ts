@@ -1,7 +1,9 @@
 import path from "node:path";
 
 import chalk from "chalk";
+import * as cheerio from "cheerio";
 import webFeatures from "web-features/index.json" assert { type: "json" };
+import * as Sentry from "@sentry/node";
 
 import {
   MacroInvocationError,
@@ -33,7 +35,7 @@ import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
 import {
-  getAdjacentImages,
+  getAdjacentFileAttachments,
   injectLoadingLazyAttributes,
   injectNoTranslate,
   makeTOC,
@@ -44,7 +46,6 @@ import {
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
-import * as cheerio from "cheerio";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -175,6 +176,15 @@ export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
+  Sentry.setContext("doc", {
+    path: document?.fileInfo?.path,
+    title: document?.metadata?.title,
+    url: document?.url,
+  });
+  Sentry.setTags({
+    doc_slug: document?.metadata?.slug,
+    doc_locale: document?.metadata?.locale,
+  });
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -200,6 +210,7 @@ export async function buildDocument(
   interface LiveSample {
     id: string;
     html: string;
+    slug?: string;
   }
 
   let flaws: any[] = [];
@@ -227,14 +238,14 @@ export async function buildDocument(
     throw error;
   }
 
-  const liveSamplePages = kumascript.buildLiveSamplePages(
+  const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
     document.metadata.title,
     $,
     document.rawBody
   );
   for (const liveSamplePage of liveSamplePages) {
-    const { id, flaw } = liveSamplePage;
+    const { id, flaw, slug } = liveSamplePage;
     let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
@@ -281,7 +292,7 @@ export async function buildDocument(
         </html>
         `;
     }
-    liveSamples.push({ id: id.toLowerCase(), html });
+    liveSamples.push({ id: id.toLowerCase(), html, slug });
   }
 
   if (flaws.length) {
@@ -382,8 +393,8 @@ export async function buildDocument(
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
-  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+  getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
+    (fp) => fileAttachments.add(fp)
   );
 
   // Check the img tags for possible flaws and possible build-time rewrites
@@ -407,12 +418,6 @@ export async function buildDocument(
     console.error(error);
     throw error;
   }
-
-  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
-  // that were used for that. If we don't do this, for example, the `pre` tags will be
-  // syntax highligted, which is a waste because they're going to be invisible
-  // anyway.
-  $("div.hidden").remove();
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
@@ -562,12 +567,14 @@ export async function buildLiveSamplePageFromURL(url: string) {
     throw new Error(`No document found for ${documentURL}`);
   }
   const liveSamplePage = (
-    kumascript.buildLiveSamplePages(
+    (await kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      (await kumascript.render(document.url))[0],
+      (
+        await kumascript.render(document.url)
+      )[0],
       document.rawBody
-    ) as BuiltLiveSamplePage[]
+    )) as BuiltLiveSamplePage[]
   ).find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {

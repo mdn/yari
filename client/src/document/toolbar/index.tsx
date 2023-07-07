@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { CRUD_MODE_HOSTNAMES } from "../../env";
+import { WRITER_MODE_HOSTNAMES } from "../../env";
 import { Doc } from "../../../../libs/types/document";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
@@ -40,7 +40,7 @@ export default function Toolbar({
     }
   }, [doc]);
 
-  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+  const isReadOnly = !WRITER_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <div className="toolbar">
@@ -48,11 +48,11 @@ export default function Toolbar({
         <EditActions source={doc.source} />
       </div>
       {isReadOnly && (
-        <p>
+        <div>
           <i>
             You're in <b>read-only</b> mode.
           </i>
-        </p>
+        </div>
       )}
       <ToggleDocumentFlaws doc={doc} reloadPage={reloadPage} />
     </div>

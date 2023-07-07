@@ -2,6 +2,8 @@ import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import "prism-svelte";
 import * as cheerio from "cheerio";
+import { createHmac } from "node:crypto";
+import { SAMPLE_SIGN_KEY } from "../libs/env/index.js";
 
 const lazy = (creator) => {
   let res;
@@ -90,7 +92,7 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
   $("pre[class*=brush]").each((_, element) => {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
-    const $pre = $(element).wrapAll("<div class='code-example'>");
+    const $pre = $(element);
 
     const className = $pre.attr("class").toLowerCase();
     const match = className.match(/brush:?\s*([\w_-]+)/);
@@ -105,6 +107,20 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;
     }
+    const code = $pre.text();
+    if (SAMPLE_SIGN_KEY) {
+      const hmac = createHmac("sha256", SAMPLE_SIGN_KEY);
+      hmac.update(name.toLowerCase());
+      hmac.update(code);
+      const signature = hmac.digest("base64");
+      $pre.attr("data-signature", signature);
+    }
+    $pre.wrapAll(`<div class='code-example'></div>`);
+    if (!$pre.hasClass("hidden")) {
+      $(
+        `<p class='example-header'><span class="language-name">${name}</span></p>`
+      ).insertBefore($pre);
+    }
     const grammar = Prism.languages[name];
     if (!grammar) {
       console.warn(
@@ -112,7 +128,6 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
       );
       return; // bail!
     }
-    const code = $pre.text();
     const html = Prism.highlight(code, grammar, name);
     const $code = $("<code>").html(html);
 

@@ -1,4 +1,4 @@
-.main-newsletter {
+.section-newsletter {
   margin: 0 auto;
   max-width: 35rem;
   padding: 2rem;
@@ -6,5 +6,9 @@
   input[type="email"],
   button {
     width: 100%;
+  }
+
+  form {
+    margin-bottom: 2rem;
   }
 }
