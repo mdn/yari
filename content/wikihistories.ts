@@ -1,10 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 
-// Module-level cache
-const wikiHistoryMaps = new Map();
+export type WikiHistory = {
+  modified: string;
+  contributors: string[];
+};
 
-export function getWikiHistories(root, locale) {
+// Module-level cache
+const wikiHistoryMaps = new Map<string, Map<string, WikiHistory>>();
+
+export function getWikiHistories(root: string, locale: string) {
   const localeLC = locale.toLowerCase();
   const folder = path.join(root, localeLC);
   if (!wikiHistoryMaps.has(folder)) {
