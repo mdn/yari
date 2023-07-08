@@ -559,18 +559,18 @@ function ReportIssueOnGitHubLink({
   children: React.ReactNode;
 }) {
   const currentMessageIndex = messages.indexOf(currentMessage);
-  const firstMessage = messages[0];
   const questions = messages
     .slice(0, currentMessageIndex)
     .filter((message) => message.role === MessageRole.User)
     .map(({ content }) => content);
+  const lastQuestion = questions.at(-1);
 
   const url = new URL("https://github.com/");
   url.pathname = "/mdn/ai-feedback/issues/new";
 
   const sp = new URLSearchParams();
-  sp.set("title", `[AI Help] Question: ${firstMessage.content}`);
-  sp.set("questions", questions.join("---"));
+  sp.set("title", `[AI Help] Question: ${lastQuestion}`);
+  sp.set("questions", questions.map((question) => `1. ${question}`).join("\n"));
   sp.set("answer", currentMessage.content);
   sp.set(
     "sources",
