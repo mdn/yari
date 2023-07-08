@@ -89,6 +89,20 @@ export default function AiHelp() {
         </Container>
       </header>
       <Container>
+        <div className="notecard experimental">
+          <p>
+            <strong>This is a beta feature.</strong>
+            <br />
+            May occasionally generate incorrect answers. Please always verify
+            information independently.
+            <br />
+            <a href="/en-US/blog/introducing-ai-help/">
+              <strong>Learn more</strong>
+            </a>
+          </p>
+        </div>
+      </Container>
+      <Container>
         {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
       </Container>
     </div>
