@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.28.1](https://github.com/mdn/yari/compare/v2.28.0...v2.28.1) (2023-07-08)
+
+
+### Bug Fixes
+
+* **ai-help:** add beta disclaimer banner ([#9261](https://github.com/mdn/yari/issues/9261)) ([eb8bde1](https://github.com/mdn/yari/commit/eb8bde1ec8467a48133aad1fa35f6b4d773b7010))
+* **ai-help:** enhance issue reporting ([#9262](https://github.com/mdn/yari/issues/9262)) ([2c9e4bb](https://github.com/mdn/yari/commit/2c9e4bb6a9c429659df5f4cbb286510175c90d33))
+* **macros/AddonSidebar:** inline "Using_the_JavaScript_APIs" redirect ([#9212](https://github.com/mdn/yari/issues/9212)) ([d29617c](https://github.com/mdn/yari/commit/d29617c103418321184d25dad722af0cfc40698c))
+* **playground:** don't extract inline css ([#9203](https://github.com/mdn/yari/issues/9203)) ([5324a5d](https://github.com/mdn/yari/commit/5324a5d9800dd0727cf05ae2adfd5237289b2ef2))
+
 ## [2.28.0](https://github.com/mdn/yari/compare/v2.27.0...v2.28.0) (2023-07-05)
 
 
