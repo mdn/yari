@@ -13,6 +13,23 @@
 
   > .container {
     padding: var(--gutter);
+
+    &:not(:last-of-type) {
+      padding-bottom: 0;
+    }
+
+    .notecard {
+      margin-bottom: 0;
+      margin-top: 0;
+
+      a:link {
+        color: var(--text-link);
+
+        &:not(:hover) {
+          text-decoration: underline;
+        }
+      }
+    }
   }
 
   a:hover {
