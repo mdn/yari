@@ -114,21 +114,11 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://wiki.mozilla.org/Matrix"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                MDN Chat
-              </a>
-            </li>
-            <li className="footer-nav-item">
-              <a
-                className="footer-nav-link"
                 href="https://discord.gg/aZqEtMrbr7"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                MDN Discord Server
+                MDN Chat
               </a>
             </li>
           </ul>
