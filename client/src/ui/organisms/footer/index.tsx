@@ -123,7 +123,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://wiki.mozilla.org/Matrix"
+                href="https://discord.gg/aZqEtMrbr7"
                 target="_blank"
                 rel="noopener noreferrer"
               >
