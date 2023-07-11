@@ -24,7 +24,7 @@ const TRANSFORM_STRINGS = new Map(
 function transformTitle(title: string) {
   // if the title contains a string like `<input>: The Input (Form Input) element`,
   // return only the `<input>` portion of the title
-  const htmlTagTopic = /^<\w+>/g.exec(title)?.[0];
+  const htmlTagTopic = /^<\w+>/.exec(title)?.[0];
   // if the above did not match, see if it is one of the strings in the
   // transformStrings object and return the relevant replacement or
   // the unmodified title string
