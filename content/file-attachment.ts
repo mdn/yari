@@ -5,14 +5,52 @@ import { readChunkSync } from "read-chunk";
 import imageType from "image-type";
 import isSvg from "is-svg";
 
-import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import {
+  ANY_IMAGE_EXT,
+  AUDIO_EXT,
+  DEFAULT_LOCALE,
+  FONT_EXT,
+  VIDEO_EXT,
+  createRegExpFromExtensions,
+} from "../libs/constants/index.js";
 import { ROOTS } from "../libs/env/index.js";
 import { memoize, slugToFolder } from "./utils.js";
 
-function isImage(filePath: string) {
+function isFileAttachment(filePath: string) {
   if (fs.statSync(filePath).isDirectory()) {
     return false;
   }
+
+  return (
+    isAudio(filePath) ||
+    isFont(filePath) ||
+    isVideo(filePath) ||
+    isImage(filePath)
+  );
+}
+
+const AUDIO_FILE_REGEXP = createRegExpFromExtensions(...AUDIO_EXT);
+const FONT_FILE_REGEXP = createRegExpFromExtensions(...FONT_EXT);
+const VIDEO_FILE_REGEXP = createRegExpFromExtensions(...VIDEO_EXT);
+const IMAGE_FILE_REGEXP = createRegExpFromExtensions(...ANY_IMAGE_EXT);
+
+function isAudio(filePath: string) {
+  return AUDIO_FILE_REGEXP.test(filePath);
+}
+
+function isFont(filePath: string) {
+  return FONT_FILE_REGEXP.test(filePath);
+}
+
+function isVideo(filePath: string) {
+  return VIDEO_FILE_REGEXP.test(filePath);
+}
+
+function isImage(filePath: string) {
+  if (!IMAGE_FILE_REGEXP.test(filePath)) {
+    return false;
+  }
+
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath, "utf-8"));
   }
@@ -37,7 +75,7 @@ function urlToFilePath(url: string) {
 
 const find = memoize((relativePath: string) => {
   return ROOTS.map((root) => path.join(root, relativePath)).find(
-    (filePath) => fs.existsSync(filePath) && isImage(filePath)
+    (filePath) => fs.existsSync(filePath) && isFileAttachment(filePath)
   );
 });
 

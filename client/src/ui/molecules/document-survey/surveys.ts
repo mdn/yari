@@ -18,6 +18,7 @@ export interface Survey {
 }
 
 enum SurveyBucket {
+  BLOG_FEEDBACK_2023 = "BLOG_FEEDBACK_2023",
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
@@ -29,6 +30,7 @@ enum SurveyBucket {
 }
 
 enum SurveyKey {
+  BLOG_FEEDBACK_2023 = "BLOG_FEEDBACK_2023",
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
@@ -43,15 +45,14 @@ enum SurveyKey {
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.WEB_SECURITY_2023,
-    bucket: SurveyBucket.WEB_SECURITY_2023,
-    show: (doc: Doc) => /en-US\/docs\/Web\/(API|HTTP)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7348686/MDN-Web-Security-short-survey",
+    key: SurveyKey.BLOG_FEEDBACK_2023,
+    bucket: SurveyBucket.BLOG_FEEDBACK_2023,
+    show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/7397017/MDN-Blog-user-feedback",
     teaser:
-      "Are you a Developer concerned about web security? Participate in our survey and help us make the web platform more secure.",
-    question:
-      "As a developer, what are your biggest challenges concerning web security?",
-    ...survey_duration(SurveyBucket.WEB_SECURITY_2023),
-    ...survey_rates(SurveyKey.WEB_SECURITY_2023),
+      "We recently launched the MDN blog to enrich our platform with valuable content and enhance your experience. To ensure that we are meeting your needs, we would like to hear your thoughts and feedback through a short user satisfaction survey.",
+    question: "How satisfied are you with your experience of the MDN blog?",
+    ...survey_duration(SurveyBucket.BLOG_FEEDBACK_2023),
+    ...survey_rates(SurveyKey.BLOG_FEEDBACK_2023),
   },
 ];

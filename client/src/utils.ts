@@ -110,3 +110,14 @@ export function charSlice(string: string, start?: number, end?: number) {
 export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
 }
+
+/**
+ * Used by quicksearch and sidebar filters.
+ */
+export function splitQuery(term: string): string[] {
+  return term
+    .trim()
+    .toLowerCase()
+    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
+    .split(/[ ,]+/);
+}

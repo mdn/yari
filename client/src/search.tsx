@@ -9,6 +9,7 @@ import { Button } from "./ui/atoms/button";
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
 import { useGleanClick } from "./telemetry/glean-context";
+import { splitQuery } from "./utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -33,14 +34,6 @@ type ResultItem = {
 
 function quicksearchPing(input: string) {
   return `quick-search: ${input}`;
-}
-
-function splitQuery(term: string): string[] {
-  return term
-    .trim()
-    .toLowerCase()
-    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
-    .split(/[ ,]+/);
 }
 
 function useSearchIndex(): readonly [
