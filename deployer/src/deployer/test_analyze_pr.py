@@ -55,7 +55,7 @@ def test_analyze_pr_preview_urls():
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
         assert "<details><summary><b>Preview URLs</b> (6 pages)</summary>" in comment
         assert (
-            "- [/en-US/docs/Foo6](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo6)\n\n</details>"
+            "- [`/en-US/docs/Foo6`](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo6)\n\n</details>"
             in comment
         )
 
@@ -207,7 +207,7 @@ def test_analyze_pr_prefix_and_postcomment(mocked_github):
         )
         assert "<b>Preview URLs</b>" in comment
         assert (
-            "- [/en-US/docs/Foo](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
+            "- [`/en-US/docs/Foo`](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
             in comment
         )
 
