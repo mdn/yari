@@ -39,7 +39,7 @@ def test_analyze_pr_prefix():
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
         assert "<b>Preview URLs</b>" in comment
         assert (
-            "- [/en-US/docs/Foo](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
+            "- [`/en-US/docs/Foo`](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
             in comment
         )
 

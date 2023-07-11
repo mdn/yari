@@ -109,11 +109,6 @@ def mdn_url_to_dev_url(prefix, mdn_url):
     return template.format(prefix=prefix, mdn_url=mdn_url)
 
 
-def escape_markdown(text: str):
-    chars = r"_*"
-    return re.sub(f"([({re.escape(chars)}])", r"\\\1", text)
-
-
 def post_about_dangerous_content(
     build_directory: Path, patch: Optional[PatchSet], **config
 ):
