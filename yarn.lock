@@ -5703,10 +5703,10 @@ download@^7.1.0:
     p-event "^2.1.0"
     pify "^3.0.0"
 
-downshift@^7.6.0:
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-7.6.0.tgz#de04fb2962bd6c4ea94589c797c91f34aa9816f3"
-  integrity sha512-VSoTVynTAsabou/hbZ6HJHUVhtBiVOjQoBsCPcQq5eAROIGP+9XKMp9asAKQ3cEcUP4oe0fFdD2pziUjhFY33Q==
+downshift@^7.6.1:
+  version "7.6.1"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-7.6.1.tgz#e4c089519b66994504fa1e8d40798a15e0445cfa"
+  integrity sha512-XIqM6WtPRL2qpyRncleOVThV6rhknB3i9okRYRCxUmviNdVS4pJ1SUICt2XHya5SrRwzEShDaK5h+xB2xLdpZw==
   dependencies:
     "@babel/runtime" "^7.14.8"
     compute-scroll-into-view "^2.0.4"
