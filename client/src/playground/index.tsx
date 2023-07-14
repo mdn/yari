@@ -95,7 +95,7 @@ export default function Playground() {
     },
     {
       fallbackData: (!gistId && load(SESSION_KEY)) || undefined,
-    },
+    }
   );
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
@@ -130,7 +130,7 @@ export default function Playground() {
         updatePlayIframe(iframe.current, getEditorContent());
       }
     },
-    [getEditorContent],
+    [getEditorContent]
   );
   useEffect(() => {
     if (state === State.initial) {
@@ -142,7 +142,7 @@ export default function Playground() {
         if (initialCode.src) {
           setCodeSrc(
             initialCode?.src &&
-              `${initialCode.src.split("/").slice(0, -1).join("/")}`,
+              `${initialCode.src.split("/").slice(0, -1).join("/")}`
           );
         }
       } else {
@@ -194,7 +194,7 @@ export default function Playground() {
       },
       {
         targetOrigin: "*",
-      },
+      }
     );
   };
 
@@ -236,7 +236,7 @@ export default function Playground() {
       PLAYGROUND_BASE_HOST.startsWith("localhost")
         ? ""
         : `${subdomain.current}.`
-    }${PLAYGROUND_BASE_HOST}`,
+    }${PLAYGROUND_BASE_HOST}`
   );
   src.pathname = `${codeSrc || ""}/runner.html`;
 

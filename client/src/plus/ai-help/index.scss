@@ -87,7 +87,8 @@
 
         &:focus {
           border-color: var(--category-color);
-          box-shadow: 0 0 0 3px var(--blend-color),
+          box-shadow:
+            0 0 0 3px var(--blend-color),
             0 0 0 3px var(--category-color);
           outline: 0 none;
         }

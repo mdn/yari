@@ -537,8 +537,8 @@ function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
     for (const feature of Object.values<WebFeature>(webFeatures)) {
       if (
         feature.status &&
-        feature.compat_features?.some((query) =>
-          doc.browserCompat?.includes(query)
+        feature.compat_features?.some(
+          (query) => doc.browserCompat?.includes(query)
         )
       ) {
         return feature.status;
@@ -570,9 +570,7 @@ export async function buildLiveSamplePageFromURL(url: string) {
     (await kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      (
-        await kumascript.render(document.url)
-      )[0],
+      (await kumascript.render(document.url))[0],
       document.rawBody
     )) as BuiltLiveSamplePage[]
   ).find((page) => page.id.toLowerCase() == decodedSampleID);

@@ -40,12 +40,16 @@ import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
+const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;
 
 function calculateReadTime(copy: string): number {
   return Math.max(
     1,
     Math.round(
-      copy.split(/\s+/).filter((w) => READ_TIME_FILTER.test(w)).length / 220
+      copy
+        .replace(HIDDEN_CODE_BLOCK_MATCH, "")
+        .split(/\s+/)
+        .filter((w) => READ_TIME_FILTER.test(w)).length / 220
     )
   );
 }
@@ -213,13 +217,9 @@ export const allPostFrontmatter = memoize(
   }: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> => {
     return (
       await Promise.all(
-        (
-          await allPostFiles()
-        ).map(
+        (await allPostFiles()).map(
           async (file) =>
-            (
-              await readPost(file, { previousNext: false })
-            ).blogMeta
+            (await readPost(file, { previousNext: false })).blogMeta
         )
       )
     )
