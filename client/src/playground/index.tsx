@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/esm/standalone.mjs";
-import parserBabel from "prettier/esm/parser-babel.mjs";
-import parserCSS from "prettier/esm/parser-postcss.mjs";
-import parserHTML from "prettier/esm/parser-html.mjs";
+import prettier from "prettier/standalone";
+import prettierPluginBabel from "prettier/plugins/babel";
+import prettierPluginCSS from "prettier/plugins/postcss";
+// XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
+import prettierPluginESTree from "prettier/plugins/estree.mjs";
+import prettierPluginHTML from "prettier/plugins/html";
 
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
@@ -190,14 +192,28 @@ export default function Playground() {
     );
   };
 
-  const format = () => {
+  const format = async () => {
     const { html, css, js } = getEditorContent();
 
     try {
       const formatted = {
-        html: prettier.format(html, { parser: "html", plugins: [parserHTML] }),
-        css: prettier.format(css, { parser: "css", plugins: [parserCSS] }),
-        js: prettier.format(js, { parser: "babel", plugins: [parserBabel] }),
+        html: await prettier.format(html, {
+          parser: "html",
+          plugins: [
+            prettierPluginHTML,
+            prettierPluginCSS,
+            prettierPluginBabel,
+            prettierPluginESTree,
+          ],
+        }),
+        css: await prettier.format(css, {
+          parser: "css",
+          plugins: [prettierPluginCSS],
+        }),
+        js: await prettier.format(js, {
+          parser: "babel",
+          plugins: [prettierPluginBabel, prettierPluginESTree],
+        }),
       };
       htmlRef.current?.setContent(formatted.html);
       cssRef.current?.setContent(formatted.css);

@@ -217,13 +217,9 @@ export const allPostFrontmatter = memoize(
   }: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> => {
     return (
       await Promise.all(
-        (
-          await allPostFiles()
-        ).map(
+        (await allPostFiles()).map(
           async (file) =>
-            (
-              await readPost(file, { previousNext: false })
-            ).blogMeta
+            (await readPost(file, { previousNext: false })).blogMeta
         )
       )
     )

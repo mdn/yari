@@ -66,8 +66,10 @@
     h1 span,
     p {
       // improve text contrast against mandala
-      text-shadow: 2px 2px 3px var(--plus-header),
-        2px -2px 3px var(--plus-header), -2px -2px 3px var(--plus-header),
+      text-shadow:
+        2px 2px 3px var(--plus-header),
+        2px -2px 3px var(--plus-header),
+        -2px -2px 3px var(--plus-header),
         -2px 2px 3px var(--plus-header);
     }
 
