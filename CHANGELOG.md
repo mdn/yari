@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.28.2](https://github.com/mdn/yari/compare/v2.28.1...v2.28.2) (2023-07-14)
+
+
+### Bug Fixes
+
+* **blog:** ignore hidden code blocks when calculating read time ([#9302](https://github.com/mdn/yari/issues/9302)) ([9f237bd](https://github.com/mdn/yari/commit/9f237bd5b16f4e4655e1ae783e598e0657b2d884))
+* **build:** avoid breadcrumbs over-shortening ([#8830](https://github.com/mdn/yari/issues/8830)) ([285d200](https://github.com/mdn/yari/commit/285d20030a6a5808bba6eb8cb72056872dc1c249))
+* **macros/cssxref:** use en-US page to fetch front matter key ([#8884](https://github.com/mdn/yari/issues/8884)) ([7330766](https://github.com/mdn/yari/commit/733076609ecf56080e07a0fe9978b147eedeb954))
+
 ## [2.28.1](https://github.com/mdn/yari/compare/v2.28.0...v2.28.1) (2023-07-08)
 
 
