@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/standalone.js";
-import prettierPluginBabel from "prettier/plugins/babel.js";
-import prettierPluginCSS from "prettier/plugins/postcss.js";
+import prettier from "prettier/standalone";
+import prettierPluginBabel from "prettier/plugins/babel";
+import prettierPluginCSS from "prettier/plugins/postcss";
 // XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
 import prettierPluginESTree from "prettier/plugins/estree.mjs";
-import prettierPluginHTML from "prettier/plugins/html.js";
+import prettierPluginHTML from "prettier/plugins/html";
 
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
