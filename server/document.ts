@@ -80,7 +80,7 @@ router.put("/", withDocument, async (req: RequestWithDocument, res) => {
 
 // XXX deprecated anyway and doesn't work with Markdown
 // router.put("/move", async (req, res) => {
-//   Document.move(req.query.slug, req.query.newSlug, req.query.locale);
+//   await Document.move(req.query.slug, req.query.newSlug, req.query.locale);
 //   res.sendStatus(200);
 // });
 

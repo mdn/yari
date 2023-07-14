@@ -543,7 +543,7 @@ export function findChildren(url: string, recursive = false) {
   return childPaths.map((folder) => read(folder));
 }
 
-export function move(
+export async function move(
   oldSlug: string,
   newSlug: string,
   locale: string,
@@ -573,7 +573,7 @@ export function move(
   }
 
   doc.metadata.slug = newSlug;
-  update(oldUrl, doc.rawBody, doc.metadata);
+  await update(oldUrl, doc.rawBody, doc.metadata);
 
   return pairs;
 }

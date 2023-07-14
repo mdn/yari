@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/standalone.mjs";
-import prettierPluginBabel from "prettier/plugins/babel.mjs";
-import prettierPluginCSS from "prettier/plugins/postcss.mjs";
+import prettier from "prettier/standalone.js";
+import prettierPluginBabel from "prettier/plugins/babel.js";
+import prettierPluginCSS from "prettier/plugins/postcss.js";
 import prettierPluginESTree from "prettier/plugins/estree.mjs";
-import prettierPluginHTML from "prettier/plugins/html.mjs";
+import prettierPluginHTML from "prettier/plugins/html.js";
 
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
@@ -18,13 +18,6 @@ import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
-
-const prettierPlugins = [
-  prettierPluginHTML,
-  prettierPluginCSS,
-  prettierPluginBabel,
-  prettierPluginESTree,
-];
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -205,15 +198,20 @@ export default function Playground() {
       const formatted = {
         html: await prettier.format(html, {
           parser: "html",
-          plugins: prettierPlugins,
+          plugins: [
+            prettierPluginHTML,
+            prettierPluginCSS,
+            prettierPluginBabel,
+            prettierPluginESTree,
+          ],
         }),
         css: await prettier.format(css, {
           parser: "css",
-          plugins: prettierPlugins,
+          plugins: [prettierPluginCSS],
         }),
         js: await prettier.format(js, {
           parser: "babel",
-          plugins: prettierPlugins,
+          plugins: [prettierPluginBabel, prettierPluginESTree],
         }),
       };
       htmlRef.current?.setContent(formatted.html);
