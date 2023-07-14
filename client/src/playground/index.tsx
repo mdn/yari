@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/esm/standalone.mjs";
-import parserBabel from "prettier/esm/parser-babel.mjs";
-import parserCSS from "prettier/esm/parser-postcss.mjs";
-import parserHTML from "prettier/esm/parser-html.mjs";
+import prettier from "prettier/standalone.mjs";
+import prettierPluginBabel from "prettier/plugins/babel.mjs";
+import prettierPluginCSS from "prettier/plugins/postcss.mjs";
+import prettierPluginESTree from "prettier/plugins/estree.mjs";
+import prettierPluginHTML from "prettier/plugins/html.mjs";
 
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
@@ -17,6 +18,13 @@ import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
+
+const prettierPlugins = [
+  prettierPluginHTML,
+  prettierPluginCSS,
+  prettierPluginBabel,
+  prettierPluginESTree,
+];
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -87,7 +95,7 @@ export default function Playground() {
     },
     {
       fallbackData: (!gistId && load(SESSION_KEY)) || undefined,
-    }
+    },
   );
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
@@ -122,7 +130,7 @@ export default function Playground() {
         updatePlayIframe(iframe.current, getEditorContent());
       }
     },
-    [getEditorContent]
+    [getEditorContent],
   );
   useEffect(() => {
     if (state === State.initial) {
@@ -134,7 +142,7 @@ export default function Playground() {
         if (initialCode.src) {
           setCodeSrc(
             initialCode?.src &&
-              `${initialCode.src.split("/").slice(0, -1).join("/")}`
+              `${initialCode.src.split("/").slice(0, -1).join("/")}`,
           );
         }
       } else {
@@ -186,18 +194,27 @@ export default function Playground() {
       },
       {
         targetOrigin: "*",
-      }
+      },
     );
   };
 
-  const format = () => {
+  const format = async () => {
     const { html, css, js } = getEditorContent();
 
     try {
       const formatted = {
-        html: prettier.format(html, { parser: "html", plugins: [parserHTML] }),
-        css: prettier.format(css, { parser: "css", plugins: [parserCSS] }),
-        js: prettier.format(js, { parser: "babel", plugins: [parserBabel] }),
+        html: await prettier.format(html, {
+          parser: "html",
+          plugins: prettierPlugins,
+        }),
+        css: await prettier.format(css, {
+          parser: "css",
+          plugins: prettierPlugins,
+        }),
+        js: await prettier.format(js, {
+          parser: "babel",
+          plugins: prettierPlugins,
+        }),
       };
       htmlRef.current?.setContent(formatted.html);
       cssRef.current?.setContent(formatted.css);
@@ -219,7 +236,7 @@ export default function Playground() {
       PLAYGROUND_BASE_HOST.startsWith("localhost")
         ? ""
         : `${subdomain.current}.`
-    }${PLAYGROUND_BASE_HOST}`
+    }${PLAYGROUND_BASE_HOST}`,
   );
   src.pathname = `${codeSrc || ""}/runner.html`;
 
