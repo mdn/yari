@@ -4,6 +4,7 @@ import useSWRImmutable from "swr/immutable";
 import prettier from "prettier/standalone.js";
 import prettierPluginBabel from "prettier/plugins/babel.js";
 import prettierPluginCSS from "prettier/plugins/postcss.js";
+// XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
 import prettierPluginESTree from "prettier/plugins/estree.mjs";
 import prettierPluginHTML from "prettier/plugins/html.js";
 
