@@ -1211,11 +1211,11 @@ async function buildPropertylist(pages, title) {
       <details>
           <summary><%=text['Columns']%></summary>
           <ol>
-            <li><%-smartLink(`${cssURL}CSS_Columns/Basic_Concepts_of_Multicol`, null, text['Basic_concepts_of_Multicol'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Columns/Styling_Columns`, null, text['Styling_columns'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Columns/Spanning_Columns`, null, text['Spanning_and_balancing'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Columns/Handling_Overflow_in_Multicol`, null, text['Handling_overflow_in_Multicol'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Columns/Handling_content_breaks_in_multicol`, null, text['Content_breaks_in_Multicol'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Multicol_Layout/Basic_concepts`, null, text['Basic_concepts_of_Multicol'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Multicol_Layout/Styling_columns`, null, text['Styling_columns'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Multicol_Layout/Spanning_balancing_columns`, null, text['Spanning_and_balancing'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Multicol_Layout/Handling_overflow_in_multicol_layout`, null, text['Handling_overflow_in_Multicol'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Multicol_Layout/Handling_content_breaks_in_multicol_layout`, null, text['Content_breaks_in_Multicol'], cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -1243,7 +1243,7 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Relationship_of_Flexbox_to_Other_Layout_Methods`, null, text['Comparison_with_other_layout_methods'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Aligning_Items_in_a_Flex_Container`, null, text['Aligning_items_in_a_flex_container'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Ordering_Flex_Items`, null, text['Ordering_flex_items'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Controlling_Ratios_of_Flex_Items_Along_the_Main_Ax`, null, text['Controlling_flex_item_ratios'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Controlling_ratios_of_flex_items_along_the_main_axis`, null, text['Controlling_flex_item_ratios'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Mastering_Wrapping_of_Flex_Items`, null, text['Mastering_wrapping_of_flex_items'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox`, null, text['Typical_use_cases_of_Flexbox'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Backwards_Compatibility_of_Flexbox`, null, text['Backwards_compatibility_of_Flexbox'], cssURL)%></li>
@@ -1256,7 +1256,7 @@ async function buildPropertylist(pages, title) {
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Block_and_Inline_Layout_in_Normal_Flow`, null, text['Block_and_Inline_layout_in_normal_flow'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flow_Layout/In_Flow_and_Out_of_Flow`, null, text['In_flow_and_Out_of_flow'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Intro_to_formatting_contexts`, null, text['Formatting_contexts_explained'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Introduction_to_formatting_contexts`, null, text['Formatting_contexts_explained'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Writing_Modes`, null, text['Flow_layout_and_writing_modes'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Overflow`, null, text['Flow_layout_and_overflow'], cssURL)%></li>
           </ol>
@@ -1276,16 +1276,16 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['Grid']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout`, null, text['Basics_concepts_of_grid_layout'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Relationship_of_Grid_Layout`, null, text['Relationship_to_other_layout_methods'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Line-based_Placement_with_CSS_Grid`, null, text['Line-based_placement'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Relationship_of_grid_layout_with_other_layout_methods`, null, text['Relationship_to_other_layout_methods'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grid_layout_using_line-based_placement`, null, text['Line-based_placement'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grid_Template_Areas`, null, text['Grid_template_areas'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Layout_using_Named_Grid_Lines`, null, text['Layout_using_named_grid_lines'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Auto-placement_in_CSS_Grid_Layout`, null, text['Auto-placement_in_grid_layout'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Box_Alignment_in_CSS_Grid_Layout`, null, text['Box_alignment_in_grid_layout'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Logical_Values_and_Writing_Modes`, null, text['Grids_logical_values_and_writing_modes'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Layout_and_Accessibility`, null, text['Grid_layout_and_accessibility'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_and_Progressive_Enhancement`, null, text['Grid_Layout_and_progressive_enhancement'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Realizing_common_layouts_using_CSS_Grid_Layout`, null, text['Realizing_common_layouts_using_grids'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grid_layout_using_named_grid_lines`, null, text['Layout_using_named_grid_lines'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Auto-placement_in_grid_layout`, null, text['Auto-placement_in_grid_layout'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Box_alignment_in_grid_layout`, null, text['Box_alignment_in_grid_layout'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grids_logical_values_and_writing_modes`, null, text['Grids_logical_values_and_writing_modes'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grid_layout_and_accessibility`, null, text['Grid_layout_and_accessibility'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grid_layout_and_progressive_enhancement`, null, text['Grid_Layout_and_progressive_enhancement'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Realizing_common_layouts_using_grids`, null, text['Realizing_common_layouts_using_grids'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Subgrid`, null, text['Subgrid'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Masonry_Layout`, null, text['Masonry_layout'], cssURL)%></li>
          </ol>
@@ -1304,7 +1304,7 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['Lists_and_counters']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Counter_Styles/Using_CSS_counters`, null, text['Using_CSS_counters'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Lists_and_Counters/Consistent_list_indentation`, null, text['Consistent_list_indentation'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Lists/Consistent_list_indentation`, null, text['Consistent_list_indentation'], cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -1312,10 +1312,10 @@ async function buildPropertylist(pages, title) {
       <details>
           <summary><%=text['Logical_properties']%></summary>
           <ol>
-            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Basic_concepts`, null, text['Basic_concepts'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Floating_and_positioning`, null, text['Floating_and_positioning'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Margins_borders_padding`, null, text['Margins_borders_and_padding'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Sizing`, null, text['Sizing'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Basic_concepts_of_logical_properties_and_values`, null, text['Basic_concepts'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Floating_and_positioning`, null, text['Floating_and_positioning'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Margins_borders_padding`, null, text['Margins_borders_and_padding'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Sizing`, null, text['Sizing'], cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -1323,9 +1323,9 @@ async function buildPropertylist(pages, title) {
       <details>
           <summary><%=text['Media_queries']%></summary>
           <ol>
-            <li><%-smartLink(`${cssURL}Media_Queries/Using_media_queries`, null, text['Using_media_queries'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}Media_Queries/Using_Media_Queries_for_Accessibility`, null, text['Using_media_queries_for_accessibility'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}Media_Queries/Testing_media_queries`, null, text['Testing_media_queries_programmatically'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Media_Queries/Using_media_queries`, null, text['Using_media_queries'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Media_Queries/Using_Media_Queries_for_Accessibility`, null, text['Using_media_queries_for_accessibility'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Media_Queries/Testing_media_queries`, null, text['Testing_media_queries_programmatically'], cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -1333,7 +1333,7 @@ async function buildPropertylist(pages, title) {
       <details>
           <summary><%=text['Positioning']%></summary>
           <ol>
-            <li><%-smartLink(`${cssURL}CSS_Positioning/Understanding_z_index`, null, text['Understanding_CSS_z-index'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Positioned_Layout/Understanding_z-index`, null, text['Understanding_CSS_z-index'], cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -1349,7 +1349,7 @@ async function buildPropertylist(pages, title) {
       <details>
           <summary><%=text['Shapes']%></summary>
           <ol>
-            <li><%-smartLink(`${cssURL}CSS_Shapes/Overview_of_CSS_Shapes`, null, text['Overview_of_shapes'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Shapes/Overview_of_Shapes`, null, text['Overview_of_shapes'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Shapes/From_box_values`, null, text['Shapes_from_box_values'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Shapes/Basic_Shapes`, null, text['Basic_shapes'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Shapes/Shapes_From_Images`, null, text['Shapes_from_images'], cssURL)%></li>
@@ -1360,7 +1360,7 @@ async function buildPropertylist(pages, title) {
       <details>
           <summary><%=text['Text']%></summary>
           <ol>
-            <li><%-smartLink(`${cssURL}CSS_Text/Wrapping_Text`, null, text['Wrapping_and_breaking_text'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Text/Wrapping_Breaking_Text`, null, text['Wrapping_and_breaking_text'], cssURL)%></li>
           </ol>
       </details>
   </li>
