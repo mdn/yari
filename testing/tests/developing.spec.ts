@@ -209,7 +209,9 @@ test.describe("Testing the CRUD apps", () => {
 
     expect(await page.title()).toContain("MDN Web Docs");
 
-    expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
+    expect(
+      await page.isVisible("text=MDN Content Writer Homepage")
+    ).toBeTruthy();
     expect(await page.isVisible('a:has-text("Flaws Dashboard")')).toBeTruthy();
     expect(await page.isVisible('a:has-text("Sitemap")')).toBeTruthy();
   });
@@ -234,7 +236,9 @@ test.describe("Testing the CRUD apps", () => {
     await page.goto(devURL("/"));
     await page.waitForSelector("#writers-homepage");
 
-    expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
+    expect(
+      await page.isVisible("text=MDN Content Writer Homepage")
+    ).toBeTruthy();
     await page.click('a:has-text("Sitemap")');
     await page.waitForSelector('#sitemap:has-text("root")');
 
