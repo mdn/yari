@@ -160,7 +160,7 @@ function injectSource(doc, document, metadata) {
 export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
-  fileAttachments: Map<string, string>;
+  fileAttachmentMap: Map<string, string>;
   source?: {
     github_url: string;
   };
@@ -388,14 +388,14 @@ export async function buildDocument(
   extractSidebar($, doc);
 
   // Check and scrutinize any local image references
-  const fileAttachments = checkImageReferences(doc, $, options, document);
+  const fileAttachmentMap = checkImageReferences(doc, $, options, document);
   // Not all images are referenced as `<img>` tags. Some are just sitting in the
   // current document's folder and they might be referenced in live samples.
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
   getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
-    (fp) => fileAttachments.set(path.basename(fp), fp)
+    (fp) => fileAttachmentMap.set(path.basename(fp), fp)
   );
 
   if (doc.locale !== DEFAULT_LOCALE) {
@@ -410,8 +410,8 @@ export async function buildDocument(
     if (fs.existsSync(defaultLocaleDir)) {
       getAdjacentFileAttachments(defaultLocaleDir).forEach((fp) => {
         const basename = path.basename(fp);
-        if (!fileAttachments.has(basename)) {
-          fileAttachments.set(basename, fp);
+        if (!fileAttachmentMap.has(basename)) {
+          fileAttachmentMap.set(basename, fp);
         }
       });
     }
@@ -549,7 +549,7 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachments };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
 }
 
 function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {

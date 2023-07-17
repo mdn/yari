@@ -177,7 +177,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
       document,
     } = result;
 
@@ -228,7 +228,7 @@ async function buildDocuments(
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    for (const [basename, filePath] of fileAttachments) {
+    for (const [basename, filePath] of fileAttachmentMap) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
       fs.copyFileSync(filePath, path.join(outPath, basename));

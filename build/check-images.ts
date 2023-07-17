@@ -24,9 +24,9 @@ export function checkImageReferences(
   $: cheerio.CheerioAPI,
   options,
   { url, rawContent }
-) {
-  // filePaths is a map of basename to full path
-  const filePaths = new Map<string, string>();
+): Map<string, string> {
+  // imageMap is a map of basename to full path
+  const imageMap = new Map<string, string>();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
@@ -141,25 +141,13 @@ export function checkImageReferences(
       // but all our images are going to be static.
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
-      // of the correct case because `FileAttachment.findByURL` operates case
-      // insensitively.
+      // of the correct case because `FileAttachment.findByURLWithFallback`
+      // operates case insensitively.
 
-      // What follows uses the same algorithm as FileAttachment.findByURLWithFallback
-      let filePath = FileAttachment.findByURL(finalSrc);
-      if (
-        !filePath &&
-        doc.locale !== DEFAULT_LOCALE &&
-        !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
-      ) {
-        const enUSFinalSrc = finalSrc.replace(
-          new RegExp(`^/${doc.locale}/`, "i"),
-          `/${DEFAULT_LOCALE}/`
-        );
-        // try to find the attachment in the default locale
-        filePath = FileAttachment.findByURL(enUSFinalSrc);
-      }
+      const filePath = FileAttachment.findByURLWithFallback(finalSrc);
+
       if (filePath) {
-        filePaths.set(path.basename(filePath), filePath);
+        imageMap.set(path.basename(filePath), filePath);
       }
 
       if (checkImages) {
@@ -214,7 +202,7 @@ export function checkImageReferences(
     }
   });
 
-  return filePaths;
+  return imageMap;
 }
 
 /**
