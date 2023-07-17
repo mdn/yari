@@ -77,23 +77,6 @@
       }
     }
 
-    &[id^="attr-"] {
-      &:link,
-      &:visited {
-        color: var(--text-link);
-        text-decoration: none;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-      }
-
-      &:active {
-        color: #fff;
-      }
-    }
-
     &[aria-current] {
       color: var(--text-link);
       font-weight: var(--font-body-strong-weight);
