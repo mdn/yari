@@ -7,7 +7,7 @@ import path from "node:path";
 import imagesize from "image-size";
 
 import { Document, FileAttachment } from "../content/index.js";
-import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
 import { findMatchesInText } from "./matches-in-text.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../libs/types/document.js";
