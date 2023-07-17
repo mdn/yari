@@ -8,6 +8,7 @@ import "./index.scss";
 import { TOC } from "../toc";
 import { PLACEMENT_ENABLED } from "../../../env";
 import { SidePlacement } from "../../../ui/organisms/placement";
+import { SidebarFilter } from "./filter";
 
 export function SidebarContainer({
   doc,
@@ -42,10 +43,11 @@ export function SidebarContainer({
     const sidebar = document.querySelector("#sidebar-quicklinks");
     const currentSidebarItem = sidebar?.querySelector("em");
     if (sidebar && currentSidebarItem) {
-      [sidebar, sidebar.querySelector(".sidebar-inner-nav")].forEach((n) =>
-        n?.scrollTo({
-          top: currentSidebarItem.offsetTop - window.innerHeight / 4,
-        })
+      [sidebar, sidebar.querySelector(".sidebar-inner-nav")].forEach(
+        (n) =>
+          n?.scrollTo({
+            top: currentSidebarItem.offsetTop - window.innerHeight / 4,
+          })
       );
     }
   }, []);
@@ -64,6 +66,9 @@ export function SidebarContainer({
           aria-label="Collapse sidebar"
         />
         <nav aria-label={label} className="sidebar-inner">
+          <header className="sidebar-actions">
+            {doc.sidebarHTML && <SidebarFilter />}
+          </header>
           <div className="sidebar-inner-nav">
             <div className="in-nav-toc">
               {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
@@ -84,6 +89,7 @@ export function RenderSideBar({ doc }) {
         {doc.sidebarHTML && (
           <>
             <div
+              className="sidebar-body"
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}

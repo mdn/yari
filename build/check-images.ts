@@ -7,7 +7,7 @@ import path from "node:path";
 import imagesize from "image-size";
 
 import { Document, FileAttachment } from "../content/index.js";
-import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
 import { findMatchesInText, findMatchesInMarkdown } from "./matches.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../libs/types/document.js";
@@ -24,8 +24,9 @@ export function checkImageReferences(
   $: cheerio.CheerioAPI,
   options,
   { url, rawContent }
-) {
-  const filePaths = new Set();
+): Map<string, string> {
+  // imageMap is a map of basename to full path
+  const imageMap = new Map<string, string>();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
@@ -149,39 +150,17 @@ export function checkImageReferences(
       // but all our images are going to be static.
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
-      // of the correct case because `FileAttachment.findByURL` operates case
-      // insensitively.
+      // of the correct case because `FileAttachment.findByURLWithFallback`
+      // operates case insensitively.
 
-      // What follows uses the same algorithm as FileAttachment.findByURLWithFallback
-      // but only adds a filePath if it exists for the DEFAULT_LOCALE
-      const filePath = FileAttachment.findByURL(finalSrc);
-      let enUSFallback = false;
-      if (
-        !filePath &&
-        doc.locale !== DEFAULT_LOCALE &&
-        !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
-      ) {
-        const enUSFinalSrc = finalSrc.replace(
-          new RegExp(`^/${doc.locale}/`, "i"),
-          `/${DEFAULT_LOCALE}/`
-        );
-        if (FileAttachment.findByURL(enUSFinalSrc)) {
-          // Use the en-US src instead
-          finalSrc = enUSFinalSrc;
-          // Note that this `<img src="...">` value can work if you use the
-          // en-US equivalent URL instead.
-          enUSFallback = true;
-        }
-      }
+      const filePath = FileAttachment.findByURLWithFallback(finalSrc);
+
       if (filePath) {
-        filePaths.add(filePath);
+        imageMap.set(path.basename(filePath), filePath);
       }
 
       if (checkImages) {
-        if (enUSFallback) {
-          // If it worked by switching to the en-US src, don't do anything more.
-          // Do nothing! I.e. don't try to perfect the spelling.
-        } else if (!filePath) {
+        if (!filePath) {
           // E.g. <img src="doesnotexist.png"
           addImageFlaw(img, src, {
             explanation:
@@ -232,7 +211,7 @@ export function checkImageReferences(
     }
   });
 
-  return filePaths;
+  return imageMap;
 }
 
 /**

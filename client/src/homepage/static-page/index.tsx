@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../env";
+import { DEV_MODE } from "../../env";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { Toc } from "../../../../libs/types/document";
@@ -45,7 +45,7 @@ function StaticPage({
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: DEV_MODE,
       revalidateOnMount: !fallbackData,
     }
   );

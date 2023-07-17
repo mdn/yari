@@ -1,5 +1,102 @@
 # Changelog
 
+## [2.28.2](https://github.com/mdn/yari/compare/v2.28.1...v2.28.2) (2023-07-14)
+
+
+### Bug Fixes
+
+* **blog:** ignore hidden code blocks when calculating read time ([#9302](https://github.com/mdn/yari/issues/9302)) ([9f237bd](https://github.com/mdn/yari/commit/9f237bd5b16f4e4655e1ae783e598e0657b2d884))
+* **build:** avoid breadcrumbs over-shortening ([#8830](https://github.com/mdn/yari/issues/8830)) ([285d200](https://github.com/mdn/yari/commit/285d20030a6a5808bba6eb8cb72056872dc1c249))
+* **macros/cssxref:** use en-US page to fetch front matter key ([#8884](https://github.com/mdn/yari/issues/8884)) ([7330766](https://github.com/mdn/yari/commit/733076609ecf56080e07a0fe9978b147eedeb954))
+
+## [2.28.1](https://github.com/mdn/yari/compare/v2.28.0...v2.28.1) (2023-07-08)
+
+
+### Bug Fixes
+
+* **ai-help:** add beta disclaimer banner ([#9261](https://github.com/mdn/yari/issues/9261)) ([eb8bde1](https://github.com/mdn/yari/commit/eb8bde1ec8467a48133aad1fa35f6b4d773b7010))
+* **ai-help:** enhance issue reporting ([#9262](https://github.com/mdn/yari/issues/9262)) ([2c9e4bb](https://github.com/mdn/yari/commit/2c9e4bb6a9c429659df5f4cbb286510175c90d33))
+* **macros/AddonSidebar:** inline "Using_the_JavaScript_APIs" redirect ([#9212](https://github.com/mdn/yari/issues/9212)) ([d29617c](https://github.com/mdn/yari/commit/d29617c103418321184d25dad722af0cfc40698c))
+* **playground:** don't extract inline css ([#9203](https://github.com/mdn/yari/issues/9203)) ([5324a5d](https://github.com/mdn/yari/commit/5324a5d9800dd0727cf05ae2adfd5237289b2ef2))
+
+## [2.28.0](https://github.com/mdn/yari/compare/v2.27.0...v2.28.0) (2023-07-05)
+
+
+### Features
+
+* **ai-explain:** add ai-explain to code blocks ([#9188](https://github.com/mdn/yari/issues/9188)) ([e342081](https://github.com/mdn/yari/commit/e342081cbf92073ca2071e8af8a9a329b05f3d29))
+* **ai-help:** add "Report issue with this answer on GitHub" link ([#9238](https://github.com/mdn/yari/issues/9238)) ([9f9cb5a](https://github.com/mdn/yari/commit/9f9cb5ae7cb8818ca8c13dc864537c5684830dff))
+
+
+### Bug Fixes
+
+* **ai-explain:** feedback copy ([0a80005](https://github.com/mdn/yari/commit/0a8000540cd824bc9d30111e57ec4ae8651e7ed3))
+* **ai-explain:** pause ai-explain ([1bf2856](https://github.com/mdn/yari/commit/1bf285612ca2a2741795916fbe7fd2549e6b0013))
+* **ai-help:** add short and extended explanatory guidance ([#9215](https://github.com/mdn/yari/issues/9215)) ([1da1d4e](https://github.com/mdn/yari/commit/1da1d4e93f98e44b15ad277deed6129f35a47e1e))
+
+## [2.27.0](https://github.com/mdn/yari/compare/v2.26.0...v2.27.0) (2023-06-27)
+
+
+### Features
+
+* **plus:** add AI Help frontend ([#9116](https://github.com/mdn/yari/issues/9116)) ([ab93937](https://github.com/mdn/yari/commit/ab9393793d31bc33902049677cec1c968ad3877e))
+* **surveys:** add Blog Feedback survey ([#9173](https://github.com/mdn/yari/issues/9173)) ([b4f6115](https://github.com/mdn/yari/commit/b4f61155a1aadca72eab7a7b8f0514820e5ae114))
+
+
+### Bug Fixes
+
+* **live-sample:** use getElementsByClassName ([#9182](https://github.com/mdn/yari/issues/9182)) ([5615b63](https://github.com/mdn/yari/commit/5615b636a4fcda62b0fec57e577903a62710665c))
+* **playground:** only initialize once ([#9176](https://github.com/mdn/yari/issues/9176)) ([005b0f8](https://github.com/mdn/yari/commit/005b0f803ecc48ac0480daaa4dd5d8317fba3b51))
+
+## [2.26.0](https://github.com/mdn/yari/compare/v2.25.0...v2.26.0) (2023-06-26)
+
+
+### Features
+
+* **blog:** add author avatars ([#9131](https://github.com/mdn/yari/issues/9131)) ([f8d0251](https://github.com/mdn/yari/commit/f8d025145ce8b3ed1dd9b14174c0359ba76a1190))
+* **blog:** previous/next links at end of posts ([#8922](https://github.com/mdn/yari/issues/8922)) ([1da298c](https://github.com/mdn/yari/commit/1da298c5246cd449c211a14ff24023251c26788d))
+* **blog:** show newsletter form or link below posts ([#8920](https://github.com/mdn/yari/issues/8920)) ([203b298](https://github.com/mdn/yari/commit/203b29811797b9396425bd0e8219bb0e6fb82eae))
+* **footer:** add blog feed icon ([#9060](https://github.com/mdn/yari/issues/9060)) ([0f6a075](https://github.com/mdn/yari/commit/0f6a075ed99ba4f997e624e9be04132ebbe5eae8))
+* **playground:** Introduce the MDN Playground ([#9117](https://github.com/mdn/yari/issues/9117)) ([b3050a4](https://github.com/mdn/yari/commit/b3050a428e237aeb6a27d0ef2cead1f50912c511))
+* **sidebar:** add filter ([#8968](https://github.com/mdn/yari/issues/8968)) ([3a4c28d](https://github.com/mdn/yari/commit/3a4c28dbfaab6a61ca6bee8606f9a5bc5d36400b))
+
+
+### Bug Fixes
+
+* **gcp:** cache volatile content for 1h ([#9050](https://github.com/mdn/yari/issues/9050)) ([78c6e35](https://github.com/mdn/yari/commit/78c6e357ebd433742ad2486716f777401f54c946))
+* **github:** include build/** in search results ([#9030](https://github.com/mdn/yari/issues/9030)) ([16f8fd3](https://github.com/mdn/yari/commit/16f8fd38fbdbd1301198fd5e7f2422fede8d930e))
+* **glean:** avoid gleanClick changing between re-renders ([#9108](https://github.com/mdn/yari/issues/9108)) ([db88b56](https://github.com/mdn/yari/commit/db88b56bb86d9900a62b00ca3476a93f169056c4))
+* **icons:** use rotated thumbs-up as thumbs-down ([#9107](https://github.com/mdn/yari/issues/9107)) ([f05db31](https://github.com/mdn/yari/commit/f05db31ff1b8e4af385072c55aeec96f6dbe12c4))
+* **livesamples:** use correct legacy url ([#9158](https://github.com/mdn/yari/issues/9158)) ([1da46c9](https://github.com/mdn/yari/commit/1da46c950fcb18642e0a5ce0eb74248201361bea))
+* **playground:** console scroll to bottom ([#9153](https://github.com/mdn/yari/issues/9153)) ([85871bb](https://github.com/mdn/yari/commit/85871bbdae0d3a7bb6025704d30a3b26c33346b5))
+* **playground:** render SVGs ([#9141](https://github.com/mdn/yari/issues/9141)) ([0caebd9](https://github.com/mdn/yari/commit/0caebd91d34b66b13b39530afc10c43cd3211787))
+* prevent live-sample render errors killing the whole build ([#9155](https://github.com/mdn/yari/issues/9155)) ([c99d7fe](https://github.com/mdn/yari/commit/c99d7fee024d224f36edfa069d5f0fdd4833a4cd))
+* **prod:** set ORIGIN_PLAY for cloud function ([#9136](https://github.com/mdn/yari/issues/9136)) ([e50d50c](https://github.com/mdn/yari/commit/e50d50c70ce55f248b613ff67dda0fabfb240257))
+
+## [2.25.0](https://github.com/mdn/yari/compare/v2.24.0...v2.25.0) (2023-06-06)
+
+
+### Features
+
+* **client/env:** split CRUD_MODE into WRITER_MODE and DEV_MODE ([#8383](https://github.com/mdn/yari/issues/8383)) ([675a854](https://github.com/mdn/yari/commit/675a854205c05576eb34b85f813577d6bd1106f0))
+
+## [2.24.0](https://github.com/mdn/yari/compare/v2.23.1...v2.24.0) (2023-06-05)
+
+
+### Features
+
+* **docs:** allow audio (mp3/ogg), video (mp4/webm) and font (woff2) attachments ([#7605](https://github.com/mdn/yari/issues/7605)) ([73f8dbc](https://github.com/mdn/yari/commit/73f8dbc6c8baf66a116225cae29c19e80d5b6b4a))
+* **macros:** add GlossarySidebar macro ([#8997](https://github.com/mdn/yari/issues/8997)) ([e704315](https://github.com/mdn/yari/commit/e7043154bf532cb1a81f1857ba9b4b9f80250498))
+* **macros:** add XsltSidebar for XSLT pages ([#9021](https://github.com/mdn/yari/issues/9021)) ([bddd9f7](https://github.com/mdn/yari/commit/bddd9f7eb1bb3e545b16eb68b62d644909fb68d4))
+* **placement:** hp takeover ([#9022](https://github.com/mdn/yari/issues/9022)) ([2ff4a7b](https://github.com/mdn/yari/commit/2ff4a7b11475d8dac0a072475d5cd08a99d558a4))
+* pride month 2023 ([#8979](https://github.com/mdn/yari/issues/8979)) ([776e70a](https://github.com/mdn/yari/commit/776e70a2085252c155596df4a5b79a170e506319))
+
+
+### Bug Fixes
+
+* **constants:** add Polish to RETIRED_LOCALES ([#8970](https://github.com/mdn/yari/issues/8970)) ([08c15a3](https://github.com/mdn/yari/commit/08c15a3c33ac1eb4801a8b478cb1e99548a9ecab))
+* **toolbar:** reduce height if read-only ([#8976](https://github.com/mdn/yari/issues/8976)) ([9e91c72](https://github.com/mdn/yari/commit/9e91c723a088cbfd8ab9bc148aae4a907a80baa5))
+
 ## [2.23.1](https://github.com/mdn/yari/compare/v2.23.0...v2.23.1) (2023-05-29)
 
 

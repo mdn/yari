@@ -73,38 +73,6 @@
     }
   }
 
-  &.pride {
-    textPath {
-      opacity: 0.9;
-    }
-
-    textPath[href="#circle1"] {
-      fill: var(--pride-0);
-    }
-
-    textPath[href="#circle2"] {
-      fill: var(--pride-1);
-    }
-
-    textPath[href="#circle3"] {
-      fill: var(--pride-2);
-    }
-
-    textPath[href="#circle4"] {
-      fill: var(--pride-3);
-    }
-
-    textPath[href="#circle5"] {
-      fill: var(--pride-4);
-    }
-
-    textPath[href="#circle6"] {
-      fill: var(--pride-5);
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-  }
-
   @keyframes rotation {
     from {
       transform: rotate(0deg);
