@@ -519,11 +519,9 @@ function DocumentsTable({
             setSearchParams(createSearchParams({ sort: id }));
           }
         }}
-        className={`sortable ${sort === id ? "active" : ""} ${
-          sort === id && sortReverse ? "reverse" : ""
-        }`}
+        className="sortable"
       >
-        {title}
+        {title} {sort === id ? (sortReverse ? "↓" : "↑") : null}
       </th>
     );
   }

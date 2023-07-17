@@ -579,7 +579,7 @@ function DocumentsTable({
     return (
       <th onClick={() => setSort(id)} className="sortable">
         {title}{" "}
-        {filters.sort_by === id ? (filters.sort_reverse ? "🔽" : "🔼") : null}
+        {filters.sort_by === id ? (filters.sort_reverse ? "↓" : "↑") : null}
       </th>
     );
   }

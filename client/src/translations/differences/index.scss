@@ -39,14 +39,6 @@
   table {
     width: 100%;
 
-    th.sortable.active {
-      background-color: rgb(237, 237, 237);
-    }
-
-    th.sortable.active.reverse {
-      transform: rotate(-180deg);
-    }
-
     td a .url-prefix {
       color: rgb(159, 159, 159);
       font-size: 80%;
