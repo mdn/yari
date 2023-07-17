@@ -408,7 +408,7 @@ export async function buildDocument(
     );
 
     if (fs.existsSync(defaultLocaleDir)) {
-      getAdjacentImages(defaultLocaleDir).forEach((fp) => {
+      getAdjacentFileAttachments(defaultLocaleDir).forEach((fp) => {
         const basename = path.basename(fp);
         if (!fileAttachments.has(basename)) {
           fileAttachments.set(basename, fp);
