@@ -18,6 +18,7 @@ export interface Survey {
 }
 
 enum SurveyBucket {
+  BLOG_FEEDBACK_2023 = "BLOG_FEEDBACK_2023",
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
@@ -25,9 +26,11 @@ enum SurveyBucket {
   INTEROP_2023 = "INTEROP_2023",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
+  WEB_SECURITY_2023 = "WEB_SECURITY_2023",
 }
 
 enum SurveyKey {
+  BLOG_FEEDBACK_2023 = "BLOG_FEEDBACK_2023",
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
@@ -37,18 +40,19 @@ enum SurveyKey {
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
+  WEB_SECURITY_2023 = "WEB_SECURITY_2023",
 }
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.DISCOVERABILITY_2023,
-    bucket: SurveyBucket.DISCOVERABILITY_2023,
+    key: SurveyKey.BLOG_FEEDBACK_2023,
+    bucket: SurveyBucket.BLOG_FEEDBACK_2023,
     show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7312179/MDN-Discoverability-User-Satisfaction",
+    src: "https://survey.alchemer.com/s3/7397017/MDN-Blog-user-feedback",
     teaser:
-      "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
-    question: "What’s your experience on MDN Web Docs?",
-    ...survey_duration(SurveyBucket.DISCOVERABILITY_2023),
-    ...survey_rates(SurveyKey.DISCOVERABILITY_2023),
+      "We recently launched the MDN blog to enrich our platform with valuable content and enhance your experience. To ensure that we are meeting your needs, we would like to hear your thoughts and feedback through a short user satisfaction survey.",
+    question: "How satisfied are you with your experience of the MDN blog?",
+    ...survey_duration(SurveyBucket.BLOG_FEEDBACK_2023),
+    ...survey_rates(SurveyKey.BLOG_FEEDBACK_2023),
   },
 ];

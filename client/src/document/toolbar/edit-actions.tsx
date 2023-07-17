@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CRUD_MODE_HOSTNAMES } from "../../env";
+import { WRITER_MODE_HOSTNAMES } from "../../env";
 import { Source } from "../../../../libs/types/document";
 
 import "./edit-actions.scss";
+import { useLocale } from "../../hooks";
 
 export function EditActions({ source }: { source: Source }) {
   const { folder, filename, github_url } = source;
@@ -50,7 +51,8 @@ export function EditActions({ source }: { source: Source }) {
     }
   }
 
-  const { locale = "en-US", "*": slug } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
 
   if (!folder) {
     return null;
@@ -58,7 +60,7 @@ export function EditActions({ source }: { source: Source }) {
 
   // If window.location.host is 'localhost:3000` then
   // window.location.hostname is 'localhost'
-  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+  const isReadOnly = !WRITER_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <ul className="edit-actions">

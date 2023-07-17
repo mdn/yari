@@ -1,10 +1,15 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useIsServer, usePageVisibility } from "../../../hooks";
-import { useUserData } from "../../../user-context";
+import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { PlacementStatus, usePlacement } from "../../../placement-context";
+import {
+  PlacementData,
+  Status,
+  usePlacement,
+} from "../../../placement-context";
+import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
@@ -12,8 +17,21 @@ interface Timer {
   notVisible?: boolean;
 }
 
+interface PlacementRenderArgs {
+  place: any;
+  extraClassNames?: string[];
+  click: string;
+  image: string;
+  imageWidth: number;
+  imageHeight: number;
+  copy?: string;
+  cta?: string;
+  user: User;
+  style: object;
+}
+
 function viewed(
-  pong: PlacementStatus,
+  pong: PlacementData,
   observer: IntersectionObserver | null = null
 ) {
   navigator?.sendBeacon?.(
@@ -37,39 +55,131 @@ export function SidePlacement() {
       extraClassNames={["side"]}
       imageWidth={130}
       imageHeight={100}
+      renderer={RenderSideOrTopBanner}
     ></PlacementInner>
   );
 }
 
+function TopPlacementFallbackContent() {
+  const gleanClick = useGleanClick();
+
+  return (
+    <p className="fallback-copy">
+      Get real-time assistance with your coding queries. Try{" "}
+      <a
+        href="/en-US/plus/ai-help"
+        onClick={() => {
+          gleanClick(BANNER_AI_HELP_CLICK);
+        }}
+      >
+        AI Help
+      </a>{" "}
+      now!
+    </p>
+  );
+}
+
 export function TopPlacement() {
+  const isServer = useIsServer();
   const placementData = usePlacement();
-  const { textColor, backgroundColor, ctaTextColor, ctaBackgroundColor } =
-    placementData?.top?.colors || {};
+  const {
+    textColor,
+    backgroundColor,
+    ctaTextColor,
+    ctaBackgroundColor,
+    textColorDark,
+    backgroundColorDark,
+    ctaTextColorDark,
+    ctaBackgroundColorDark,
+  } = placementData?.top?.colors || {};
   const css = Object.fromEntries(
     [
-      ["--place-top-background", backgroundColor],
-      ["--place-top-color", textColor],
-      ["--place-top-cta-background", ctaBackgroundColor],
-      ["--place-top-cta-color", ctaTextColor],
+      ["--place-top-background-light", backgroundColor],
+      ["--place-top-color-light", textColor],
+      ["--place-top-cta-background-light", ctaBackgroundColor],
+      ["--place-top-cta-color-light", ctaTextColor],
+      ["--place-top-background-dark", backgroundColorDark || backgroundColor],
+      ["--place-top-color-dark", textColorDark || textColor],
+      [
+        "--place-top-cta-background-dark",
+        ctaBackgroundColorDark || ctaBackgroundColor,
+      ],
+      ["--place-top-cta-color-dark", ctaTextColorDark || ctaBackgroundColor],
     ].filter(([_, v]) => Boolean(v))
   );
 
+  const status =
+    isServer || placementData?.status === Status.loading
+      ? "loading"
+      : placementData?.top
+      ? "visible"
+      : "fallback";
+
   return (
-    <div
-      className={`top-banner ${placementData?.top ? "visible" : "empty"}`}
-      style={css}
-    >
-      {!placementData?.top ? (
-        <section className="place top container"></section>
+    <div className={`top-banner ${status}`} style={css}>
+      {isServer || !placementData?.top ? (
+        <section className="place top container">
+          {!isServer && placementData?.status !== Status.loading && (
+            <TopPlacementFallbackContent />
+          )}
+        </section>
       ) : (
         <PlacementInner
           pong={placementData.top}
           extraClassNames={["top", "container"]}
           cta={placementData.top?.cta}
           imageHeight={50}
+          renderer={RenderSideOrTopBanner}
         ></PlacementInner>
       )}
     </div>
+  );
+}
+
+export function HpMainPlacement() {
+  const placementData = usePlacement();
+  return HpPlacement({
+    placementData: placementData?.hpMain,
+    imageWidth: 970,
+    imageHeight: 250,
+  });
+}
+
+export function HpFooterPlacement() {
+  const placementData = usePlacement();
+  return HpPlacement({
+    placementData: placementData?.hpFooter,
+    imageWidth: 728,
+    imageHeight: 90,
+  });
+}
+
+function HpPlacement({
+  placementData,
+  imageWidth,
+  imageHeight,
+}: {
+  placementData?: PlacementData;
+  imageWidth: number;
+  imageHeight: number;
+}) {
+  const { backgroundColor } = placementData?.colors || {};
+  const css = Object.fromEntries(
+    [["--place-hp-main-background", backgroundColor]].filter(([_, v]) =>
+      Boolean(v)
+    )
+  );
+  return !placementData ? (
+    <section className="place hp-main"></section>
+  ) : (
+    <PlacementInner
+      pong={placementData}
+      extraClassNames={["hp-main"]}
+      imageWidth={imageWidth}
+      imageHeight={imageHeight}
+      style={css}
+      renderer={RenderHpPlacement}
+    ></PlacementInner>
   );
 }
 
@@ -79,12 +189,16 @@ export function PlacementInner({
   cta,
   imageWidth,
   imageHeight,
+  style,
+  renderer,
 }: {
-  pong: PlacementStatus;
+  pong: PlacementData;
   extraClassNames?: string[];
   cta?: string;
   imageWidth?: number;
   imageHeight?: number;
+  style?: object;
+  renderer: (PlacementRenderArgs) => JSX.Element;
 }) {
   const isServer = useIsServer();
   const user = useUserData();
@@ -162,73 +276,127 @@ export function PlacementInner({
 
   return (
     <>
-      {!isServer && click && image && (
-        <>
-          <section
-            ref={place}
-            className={["place", ...extraClassNames].join(" ")}
-          >
-            <p className="pong-box">
-              <a
-                className="pong"
-                data-pong="pong->click"
-                href={`/pong/click?code=${encodeURIComponent(click)}${
-                  pong?.fallback
-                    ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
-                    : ""
-                }`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={`/pimg/${encodeURIComponent(image || "")}`}
-                  aria-hidden="true"
-                  alt=""
-                  width={imageWidth}
-                  height={imageHeight}
-                ></img>
-                <span>{copy}</span>
-              </a>
-              {cta && (
-                <a
-                  className="pong-cta"
-                  data-pong="pong->click"
-                  href={`/pong/click?code=${encodeURIComponent(click)}${
-                    pong?.fallback
-                      ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
-                      : ""
-                  }`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {cta}
-                </a>
-              )}
-              <a
-                href={pong?.fallback?.by || "/en-US/advertising"}
-                className="pong-note"
-                data-pong="pong->about"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {pong?.fallback?.by ? "Ads by Carbon" : "Mozilla ads"}
-              </a>
-            </p>
-
-            <a
-              className="no-pong"
-              data-pong={user?.isSubscriber ? "pong->settings" : "pong->plus"}
-              href={
-                user?.isSubscriber
-                  ? "/en-US/plus/settings?ref=nope"
-                  : "/en-US/plus?ref=nope#subscribe"
-              }
-            >
-              Don't want to see ads?
-            </a>
-          </section>
-        </>
-      )}
+      {!isServer &&
+        click &&
+        image &&
+        renderer({
+          place,
+          extraClassNames,
+          click,
+          image,
+          imageWidth,
+          imageHeight,
+          copy,
+          cta,
+          user,
+          style,
+        })}
     </>
+  );
+}
+
+function RenderSideOrTopBanner({
+  place,
+  extraClassNames = [],
+  click,
+  image,
+  imageWidth,
+  imageHeight,
+  copy,
+  cta,
+  user,
+  style,
+}: PlacementRenderArgs) {
+  return (
+    <section
+      ref={place}
+      className={["place", ...extraClassNames].join(" ")}
+      style={style}
+    >
+      <p className="pong-box">
+        <a
+          className="pong"
+          data-pong="pong->click"
+          href={`/pong/click?code=${encodeURIComponent(click)}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img
+            src={`/pimg/${encodeURIComponent(image || "")}`}
+            aria-hidden="true"
+            alt=""
+            width={imageWidth}
+            height={imageHeight}
+          ></img>
+          <span>{copy}</span>
+        </a>
+        {cta && (
+          <a
+            className="pong-cta"
+            data-pong="pong->click"
+            href={`/pong/click?code=${encodeURIComponent(click)}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {cta}
+          </a>
+        )}
+        <a
+          href="/en-US/advertising"
+          className="pong-note"
+          data-pong="pong->about"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Mozilla ads
+        </a>
+      </p>
+
+      <a
+        className="no-pong"
+        data-pong={user?.isSubscriber ? "pong->settings" : "pong->plus"}
+        href={
+          user?.isSubscriber
+            ? "/en-US/plus/settings?ref=nope"
+            : "/en-US/plus?ref=nope#subscribe"
+        }
+      >
+        Don't want to see ads?
+      </a>
+    </section>
+  );
+}
+
+function RenderHpPlacement({
+  place,
+  extraClassNames = [],
+  click,
+  image,
+  imageWidth,
+  imageHeight,
+  copy,
+  style,
+}: PlacementRenderArgs) {
+  return (
+    <section
+      ref={place}
+      className={["place", ...extraClassNames].join(" ")}
+      style={style}
+    >
+      <a
+        className="pong"
+        data-pong="pong->click"
+        href={`/pong/click?code=${encodeURIComponent(click)}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img
+          src={`/pimg/${encodeURIComponent(image || "")}`}
+          alt={copy}
+          width={imageWidth}
+          height={imageHeight}
+        ></img>
+      </a>
+    </section>
   );
 }

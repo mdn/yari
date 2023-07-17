@@ -16,7 +16,7 @@ try {
 
 export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
-export function getRoot(locale, throws = "") {
+export function getRoot(locale: string, throws = "") {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
   if (throws && !root) {
@@ -25,14 +25,10 @@ export function getRoot(locale, throws = "") {
   return root;
 }
 
-export function buildURL(locale, slug) {
+export function buildURL(locale: string, slug: string) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
-}
-
-function isPromise(p): p is Promise<unknown> {
-  return p && Object.prototype.toString.call(p) === "[object Promise]";
 }
 
 /**
@@ -67,13 +63,12 @@ export function memoize<Args>(
     }
 
     const value = fn(...(args as Args[]));
-    if (isPromise(value)) {
-      return value.then((actualValue) => {
-        cache.set(key, actualValue);
-        return actualValue;
+    cache.set(key, value);
+    if (value instanceof Promise) {
+      value.catch(() => {
+        cache.delete(key);
       });
     }
-    cache.set(key, value);
     return value;
   };
 }
@@ -113,7 +108,7 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
   return stdout.toString().trim();
 }
 
-export function toPrettyJSON(value) {
+export function toPrettyJSON(value: unknown) {
   const json = JSON.stringify(value, null, 2) + "\n";
   if (prettier) {
     try {
@@ -125,7 +120,7 @@ export function toPrettyJSON(value) {
   return json;
 }
 
-export function urlToFolderPath(url) {
+export function urlToFolderPath(url: string) {
   const [, locale, , ...slugParts] = url.split("/");
   return path.join(locale.toLowerCase(), _slugToFolder(slugParts.join("/")));
 }

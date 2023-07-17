@@ -9,10 +9,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pytest = "^7.3.1"
+pytest = "^7.4.0"
 pytest-base-url = "^2.0.0"
 pytest-rerunfailures = "^11.1"
-requests = "^2.29.0"
+requests = "^2.31.0"
 pyquery = "^2.0.0"
 braceexpand = "^0.1.7"
 

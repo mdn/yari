@@ -9,7 +9,15 @@ import * as kumascript from "../kumascript/index.js";
 
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { BLOG_ROOT, BUILD_OUT_ROOT, BASE_URL } from "../libs/env/index.js";
-import { BlogPostData, BlogPostFrontmatter } from "../libs/types/blog.js";
+import {
+  BlogPostData,
+  BlogPostFrontmatter,
+  BlogPostMetadataLinks,
+  BlogPostLimitedMetadata,
+  BlogPostMetadata,
+  AuthorFrontmatter,
+  AuthorMetadata,
+} from "../libs/types/blog.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -29,6 +37,7 @@ import { Doc } from "../libs/types/document.js";
 import { extractSections } from "./extract-sections.js";
 import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { memoize } from "../content/utils.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 
@@ -41,14 +50,82 @@ function calculateReadTime(copy: string): number {
   );
 }
 
+async function getLinks(slug: string): Promise<BlogPostMetadataLinks> {
+  const posts = await allPostFrontmatter();
+  const index = posts.findIndex((post) => post.slug === slug);
+  const filterFrontmatter = (
+    f?: BlogPostFrontmatter
+  ): BlogPostLimitedMetadata => f && { title: f.title, slug: f.slug };
+  return {
+    previous: filterFrontmatter(posts[index + 1]),
+    next: filterFrontmatter(posts[index - 1]),
+  };
+}
+
+async function getAuthor(
+  slug: string | AuthorFrontmatter
+): Promise<AuthorMetadata> {
+  if (typeof slug === "string") {
+    const filePath = path.join(BLOG_ROOT, "..", "authors", slug, "index.md");
+    const attributes = await readAuthor(filePath);
+    return parseAuthor(slug, attributes);
+  }
+  return slug;
+}
+
+async function readAuthor(filePath: string): Promise<AuthorFrontmatter> {
+  try {
+    const raw = await fs.readFile(filePath, "utf-8");
+    const { attributes } = frontmatter<AuthorFrontmatter>(raw);
+    return attributes;
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      console.warn("Couldn't find author metadata:", filePath);
+      return {};
+    }
+    throw e;
+  }
+}
+
+function parseAuthor(
+  slug: string,
+  { name, link, avatar }: AuthorFrontmatter
+): AuthorMetadata {
+  return {
+    name,
+    link,
+    avatar_url: avatar
+      ? `/${DEFAULT_LOCALE}/blog/author/${slug}/${avatar}`
+      : undefined,
+  };
+}
+
 async function readPost(
-  file: string
-): Promise<{ blogMeta: BlogPostFrontmatter; body: string }> {
+  file: string,
+  options?: {
+    readTime?: boolean;
+    previousNext?: boolean;
+  }
+): Promise<{ blogMeta: BlogPostMetadata; body: string }> {
   const raw = await fs.readFile(file, "utf-8");
 
   const { attributes, body } = frontmatter<BlogPostFrontmatter>(raw);
-  const readTime = calculateReadTime(body);
-  return { blogMeta: { readTime, ...attributes }, body };
+  const blogMeta: BlogPostMetadata = {
+    ...attributes,
+    author: await getAuthor(attributes.author),
+  };
+
+  const { readTime = true, previousNext = true } = options || {};
+
+  if (readTime) {
+    blogMeta.readTime = calculateReadTime(body);
+  }
+
+  if (previousNext) {
+    blogMeta.links = await getLinks(blogMeta.slug);
+  }
+
+  return { blogMeta, body };
 }
 
 export function findPostPathBySlug(slug: string): string | null {
@@ -75,6 +152,9 @@ export async function findPostLiveSampleBySlug(
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...blogMeta },
     isMarkdown: true,
+    fileInfo: {
+      path: file,
+    },
   });
   return liveSamples.find((page) => page.id.toLowerCase() === id)?.html;
 }
@@ -94,6 +174,9 @@ export async function findPostBySlug(
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...blogMeta },
     isMarkdown: true,
+    fileInfo: {
+      path: file,
+    },
   });
   return { doc, blogMeta };
 }
@@ -107,24 +190,50 @@ async function allPostFiles(): Promise<string[]> {
   return await api.withPromise();
 }
 
-export async function allPostFrontmatter({
-  includeUnpublished,
-}: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> {
-  return (
-    await Promise.all(
-      (
-        await allPostFiles()
-      ).map(async (file) => {
-        return (await readPost(file)).blogMeta;
-      })
-    )
-  )
-    .filter(
-      ({ published = true, date }) =>
-        includeUnpublished || (published && Date.parse(date) <= Date.now())
-    )
-    .sort(({ date: a }, { date: b }) => Date.parse(b) - Date.parse(a));
+async function allAuthorFiles(): Promise<string[]> {
+  try {
+    return await new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((filePath) => filePath.endsWith("index.md"))
+      .crawl(path.join(BLOG_ROOT, "..", "authors"))
+      .withPromise();
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      console.warn("Warning: blog authors directory doesn't exist");
+      return [];
+    }
+    throw e;
+  }
 }
+
+export const allPostFrontmatter = memoize(
+  async ({
+    includeUnpublished,
+  }: { includeUnpublished?: boolean } = {}): Promise<BlogPostFrontmatter[]> => {
+    return (
+      await Promise.all(
+        (
+          await allPostFiles()
+        ).map(
+          async (file) =>
+            (
+              await readPost(file, { previousNext: false })
+            ).blogMeta
+        )
+      )
+    )
+      .filter(
+        ({ published = true, date }) =>
+          includeUnpublished || (published && Date.parse(date) <= Date.now())
+      )
+      .sort(
+        (a, b) =>
+          Date.parse(b.date) - Date.parse(a.date) ||
+          (a.title > b.title ? 1 : -1)
+      );
+  }
+);
 
 export async function buildBlogIndex(options: { verbose?: boolean }) {
   const prefix = "blog";
@@ -177,6 +286,9 @@ export async function buildBlogPosts(options: {
       rawBody: body,
       metadata: { locale, ...blogMeta },
       isMarkdown: true,
+      fileInfo: {
+        path: file,
+      },
     };
     const { doc: builtDoc, liveSamples } = await buildPost(renderDoc);
     const { doc } = {
@@ -248,7 +360,7 @@ export async function buildPost(
 
   [$] = await kumascript.render(document.url, {}, document);
 
-  const liveSamplePages = kumascript.buildLiveSamplePages(
+  const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
     document.metadata.title,
     $,
@@ -344,5 +456,30 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
   await fs.writeFile(filePath, feed.rss2());
   if (options.verbose) {
     console.log("Wrote", filePath);
+  }
+}
+
+export async function buildAuthors(options: { verbose?: boolean }) {
+  for (const filePath of await allAuthorFiles()) {
+    const dirname = path.dirname(filePath);
+    const slug = path.basename(dirname);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      DEFAULT_LOCALE.toLowerCase(),
+      "blog",
+      "author",
+      slug
+    );
+    await fs.mkdir(outPath, { recursive: true });
+
+    const { avatar } = await readAuthor(filePath);
+    if (avatar) {
+      const from = path.join(dirname, avatar);
+      const to = path.join(outPath, avatar);
+      await fs.copyFile(from, to);
+      if (options.verbose) {
+        console.log("Copied", from, "to", to);
+      }
+    }
   }
 }

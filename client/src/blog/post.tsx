@@ -2,28 +2,43 @@ import useSWR from "swr";
 
 import { HydrationData } from "../../../libs/types/hydration";
 import { HTTPError, RenderDocumentBody } from "../document";
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 
 import "./index.scss";
 import "./post.scss";
 import {
   BlogImage,
   BlogPostData,
-  BlogPostFrontmatter,
+  BlogPostMetadata,
+  BlogPostMetadataLinks,
+  BlogPostLimitedMetadata,
+  AuthorMetadata,
 } from "../../../libs/types/blog";
-import { useCopyExamplesToClipboard } from "../document/hooks";
+import {
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "../document/hooks";
+import { DEFAULT_LOCALE } from "../../../libs/constants";
+import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
-function MaybeLink({ link, children }) {
+function MaybeLink({ className = "", link, children }) {
   return link ? (
     link.startsWith("https://") ? (
-      <a href={link} className="external" target="_blank" rel="noreferrer">
+      <a
+        href={link}
+        className={`external ${className}`}
+        target="_blank"
+        rel="noreferrer"
+      >
         {children}
       </a>
     ) : (
-      <a href={link}>{children}</a>
+      <a href={link} className={className}>
+        {children}
+      </a>
     )
   ) : (
-    <>{children}</>
+    <span className={className}>{children}</span>
   );
 }
 
@@ -36,7 +51,7 @@ export function TimeToRead({ readTime }: { readTime: number | undefined }) {
 
 export function PublishDate({ date }: { date: string }) {
   return (
-    <time className="date">
+    <time className="date" suppressHydrationWarning>
       {Intl.DateTimeFormat(undefined, { dateStyle: "long" }).format(
         new Date(date)
       )}
@@ -44,10 +59,14 @@ export function PublishDate({ date }: { date: string }) {
   );
 }
 
-export function Author({ metadata }: { metadata: BlogPostFrontmatter }) {
+export function Author({ metadata }: { metadata: AuthorMetadata | undefined }) {
   return (
-    <MaybeLink link={metadata?.author?.link}>
-      <span className="author">{metadata?.author?.name || "The MDN Team"}</span>
+    <MaybeLink link={metadata?.link} className="author">
+      <img
+        src={metadata?.avatar_url ?? "/assets/avatar.png"}
+        alt="Author avatar"
+      />
+      {metadata?.name || "The MDN Team"}
     </MaybeLink>
   );
 }
@@ -55,15 +74,14 @@ export function Author({ metadata }: { metadata: BlogPostFrontmatter }) {
 export function AuthorDateReadTime({
   metadata,
 }: {
-  metadata: BlogPostFrontmatter;
+  metadata: BlogPostMetadata;
 }) {
   return (
-    <span className="date-author">
-      <Author metadata={metadata} />
-      <br />
-      <PublishDate date={metadata.date} />{" "}
+    <div className="date-author">
+      <Author metadata={metadata.author} />
+      <PublishDate date={metadata.date} />
       <TimeToRead readTime={metadata.readTime} />
-    </span>
+    </div>
   );
 }
 
@@ -106,6 +124,42 @@ function BlogImageFigure({
   );
 }
 
+function PreviousNext({
+  links: { previous, next },
+}: {
+  links: BlogPostMetadataLinks;
+}) {
+  return (
+    <section className="previous-next">
+      {previous && (
+        <PreviousNextLink direction="Previous" metadata={previous} />
+      )}
+      {next && <PreviousNextLink direction="Next" metadata={next} />}
+    </section>
+  );
+}
+
+function PreviousNextLink({
+  direction,
+  metadata: { slug, title },
+}: {
+  direction: "Previous" | "Next";
+  metadata: BlogPostLimitedMetadata;
+}) {
+  return (
+    <a
+      href={`/${DEFAULT_LOCALE}/blog/${slug}/`}
+      className={direction.toLowerCase()}
+    >
+      <article>
+        <h2>
+          <strong>{direction} Post</strong> {title}
+        </h2>
+      </article>
+    </a>
+  );
+}
+
 export function BlogPost(props: HydrationData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<BlogPostData>(
@@ -127,25 +181,32 @@ export function BlogPost(props: HydrationData) {
     },
     {
       fallbackData: props as BlogPostData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !props.blogMeta,
     }
   );
   const { doc, blogMeta } = data || props || {};
-  useCopyExamplesToClipboard(doc);
+  useRunSample(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   return (
     <>
       {doc && blogMeta && (
-        <article
-          className="blog-container post container main-page-content"
-          lang={doc?.locale}
-        >
-          <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
-          {blogMeta?.sponsored && <span className="sponsored">Sponsored</span>}
-          <h1>{doc?.title}</h1>
-          <AuthorDateReadTime metadata={blogMeta} />
-          <RenderDocumentBody doc={doc} />
-        </article>
+        <>
+          <article
+            className="blog-container post container main-page-content"
+            lang={doc?.locale}
+          >
+            <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
+            {blogMeta?.sponsored && (
+              <span className="sponsored">Sponsored</span>
+            )}
+            <h1>{doc?.title}</h1>
+            <AuthorDateReadTime metadata={blogMeta} />
+            <RenderDocumentBody doc={doc} />
+            {blogMeta.links && <PreviousNext links={blogMeta.links} />}
+          </article>
+          <NewsletterSignUp />
+        </>
       )}
     </>
   );

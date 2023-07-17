@@ -14,12 +14,10 @@ import fs from "node:fs";
 import * as csv from "@fast-csv/parse";
 import got from "got";
 
-const CURRENT_URL =
-  "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";
+const CURRENT_URL = "https://popularities.mdn.mozilla.net/current.csv";
 
 async function fetchPopularities() {
-  const { body: csvURL } = await got(CURRENT_URL);
-  const { body: csv } = await got(csvURL);
+  const { body: csv } = await got(CURRENT_URL);
   return csv;
 }
 

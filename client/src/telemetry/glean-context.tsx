@@ -4,12 +4,12 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import { DEV_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { VIEWPORT_BREAKPOINTS } from "./constants";
+import { AI_EXPLAIN, PLAYGROUND, VIEWPORT_BREAKPOINTS } from "./constants";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
@@ -61,12 +61,12 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
-    serverEndpoint: CRUD_MODE
+    serverEndpoint: DEV_MODE
       ? "https://developer.allizom.org"
       : document.location.origin,
   });
 
-  if (CRUD_MODE) {
+  if (DEV_MODE) {
     Glean.setDebugViewTag("mdn-dev");
   }
   Glean.setLogPings(GLEAN_DEBUG);
@@ -117,6 +117,7 @@ function glean(): GleanAnalytics {
   };
   window?.addEventListener("click", (ev) => {
     handleLinkClick(ev, gleanClick);
+    handleButtonClick(ev, gleanClick);
     handleSidebarClick(ev, gleanClick);
   });
 
@@ -126,13 +127,25 @@ function glean(): GleanAnalytics {
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
+function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
+  const button = ev?.target as Element;
+  if (button?.nodeName === "BUTTON") {
+    if (button.hasAttribute?.("data-play")) {
+      click(
+        `${PLAYGROUND}: breakout->${button.getAttribute("data-play") || ""}`
+      );
+    } else if (button.hasAttribute?.("data-ai-explain")) {
+      click(`${AI_EXPLAIN}: ${button.getAttribute("data-ai-explain") || ""}}`);
+    }
+  }
+}
+
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   const anchor = ev?.target as Element;
   if (anchor?.nodeName === "A") {
     if (anchor?.classList.contains("external")) {
       click(`external-link: ${anchor.getAttribute("href") || ""}`);
-    }
-    if (anchor?.hasAttribute?.("data-pong")) {
+    } else if (anchor?.hasAttribute?.("data-pong")) {
       click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
     }
   }
@@ -182,9 +195,12 @@ export function useGleanPage(pageNotFound: boolean) {
 export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
-  return (source: string) =>
-    glean.click({
-      source,
-      subscriptionType: userData?.subscriptionType || "none",
-    });
+  return React.useCallback(
+    (source: string) =>
+      glean.click({
+        source,
+        subscriptionType: userData?.subscriptionType || "none",
+      }),
+    [glean, userData?.subscriptionType]
+  );
 }

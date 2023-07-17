@@ -1,6 +1,6 @@
 /*
- * PEG.js parser for macros in wiki documents.
- * see also: https://pegjs.org/documentation
+ * Peggy parser for macros in wiki documents.
+ * see also: https://peggyjs.org/documentation.html
  */
 start = Document
 

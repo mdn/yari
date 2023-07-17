@@ -6,9 +6,11 @@ import path from "node:path";
 
 import imagesize from "image-size";
 
-import { Document, Image } from "../content/index.js";
+import { Document, FileAttachment } from "../content/index.js";
 import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { findMatchesInText } from "./matches-in-text.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../libs/types/document.js";
 
 const { default: sizeOf } = imagesize;
 
@@ -17,7 +19,12 @@ const { default: sizeOf } = imagesize;
  * log them as flaws if they're not passing linting.
  *
  */
-export function checkImageReferences(doc, $, options, { url, rawContent }) {
+export function checkImageReferences(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  { url, rawContent }
+) {
   // filePaths is a map of basename to full path
   const filePaths = new Map<string, string>();
 
@@ -121,11 +128,10 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
         } else {
-          const suggestion = null;
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
-            suggestion,
+            suggestion: null,
           });
         }
       }
@@ -135,11 +141,11 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
       // but all our images are going to be static.
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
-      // of the correct case because `Image.findByURL` operates case
+      // of the correct case because `FileAttachment.findByURL` operates case
       // insensitively.
 
-      // What follows uses the same algorithm as Image.findByURLWithFallback
-      let filePath = Image.findByURL(finalSrc);
+      // What follows uses the same algorithm as FileAttachment.findByURLWithFallback
+      let filePath = FileAttachment.findByURL(finalSrc);
       if (
         !filePath &&
         doc.locale !== DEFAULT_LOCALE &&
@@ -149,8 +155,8 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
           new RegExp(`^/${doc.locale}/`, "i"),
           `/${DEFAULT_LOCALE}/`
         );
-        // try to find the image in the default locale
-        filePath = Image.findByURL(enUSFinalSrc);
+        // try to find the attachment in the default locale
+        filePath = FileAttachment.findByURL(enUSFinalSrc);
       }
       if (filePath) {
         filePaths.set(path.basename(filePath), filePath);
@@ -223,13 +229,22 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-export function checkImageWidths(doc, $, options, { rawContent }) {
+export function checkImageWidths(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  { rawContent }
+) {
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
   const checked = new Map();
 
-  function addStyleFlaw($img, style, suggestion) {
+  function addStyleFlaw(
+    $img: cheerio.Cheerio<cheerio.Element>,
+    style: string,
+    suggestion: string
+  ) {
     if (!("image_widths" in doc.flaws)) {
       doc.flaws.image_widths = [];
     }
@@ -342,7 +357,7 @@ export function checkImageWidths(doc, $, options, { rawContent }) {
           );
         }
       } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
-        const filePath = Image.findByURLWithFallback(imgSrc);
+        const filePath = FileAttachment.findByURLWithFallback(imgSrc);
         if (filePath) {
           const dimensions = sizeOf(filePath);
           img.attr("width", `${dimensions.width}`);

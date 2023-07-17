@@ -32,6 +32,24 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: npm
+    directory: "/cloud-function"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/lib/locale-utils"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/lib/pong"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
     directory: "/lib/slug-utils"
     schedule:
       interval: daily

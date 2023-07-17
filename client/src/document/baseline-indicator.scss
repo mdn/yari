@@ -1,0 +1,164 @@
+@use "../ui/vars" as *;
+
+$browsers: "chrome", "edge", "firefox", "safari";
+
+.baseline-indicator {
+  --baseline-bg: var(--baseline-unsupported-bg);
+  --baseline-engine-bg: var(--baseline-unsupported-engine-bg);
+  --baseline-img: var(--baseline-unsupported-img);
+
+  background: var(--baseline-bg);
+  border-radius: 0.25rem;
+  margin: 1rem 0;
+  padding-left: 3.8125rem;
+
+  &.supported {
+    --baseline-bg: var(--baseline-supported-bg);
+    --baseline-engine-bg: var(--baseline-supported-engine-bg);
+    --baseline-img: var(--baseline-supported-img);
+  }
+
+  &[open] {
+    summary .icon-chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  summary {
+    --chevron-size: 0.6875rem;
+    --chevron-padding-left: 0.75rem;
+    --chevron-padding-right: 1.25rem;
+
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem 0;
+    padding-right: calc(
+      var(--chevron-padding-left) + var(--chevron-size) +
+        var(--chevron-padding-right)
+    );
+    position: relative;
+
+    &::-webkit-details-marker {
+      // Remove arrow from older versions of Safari.
+      display: none;
+    }
+
+    .indicator {
+      --width: 2.3125rem;
+
+      background-image: var(--baseline-img);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      display: block;
+      height: 2.25rem;
+      left: calc(-0.5rem - var(--width));
+      position: absolute;
+      top: 1rem;
+      width: var(--width);
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.5;
+      margin: 0;
+      margin-right: auto;
+      padding: 0.375rem 0;
+
+      .not-bold {
+        font-weight: normal;
+      }
+    }
+
+    .browsers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .engine {
+        background: var(--baseline-engine-bg);
+        border-radius: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem 0.625rem;
+
+        .browser {
+          display: flex;
+
+          &::before {
+            background-repeat: no-repeat;
+            background-size: contain;
+            content: "";
+            display: block;
+            height: 1.25rem;
+            width: 1.25rem;
+          }
+
+          @each $name in $browsers {
+            &.#{$name}::before {
+              background-image: url("../assets/icons/baseline/" + $name + ".svg");
+            }
+          }
+
+          &::after {
+            background-color: var(--baseline-browser-unsupported-bg);
+            content: "";
+            display: block;
+            height: 1.25rem;
+            mask-image: url("../assets/icons/baseline/browser-cross.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            width: 1rem;
+          }
+
+          &.supported::after {
+            background-color: var(--baseline-browser-supported-bg);
+            mask-image: url("../assets/icons/baseline/browser-check.svg");
+          }
+        }
+      }
+    }
+
+    .icon-chevron {
+      --icon-size: var(--chevron-size);
+      --icon-primary: var(--text-primary);
+      position: absolute;
+      right: var(--chevron-padding-right);
+    }
+  }
+
+  .extra {
+    padding-bottom: 1.5rem;
+    padding-right: 1rem;
+
+    p {
+      margin-bottom: 1rem;
+      margin-top: 0;
+    }
+
+    ul {
+      column-gap: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0;
+      padding: 0;
+      row-gap: 1rem;
+
+      li {
+        font-weight: 500;
+        list-style: none;
+        margin: 0;
+
+        &:not(:first-child) a {
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+}

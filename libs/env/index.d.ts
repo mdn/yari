@@ -21,9 +21,15 @@ export const REPOSITORY_URLS: {
 export const ROOTS: string[];
 export const MAX_FILE_SIZE: number;
 export const LIVE_SAMPLES_BASE_URL: string;
+export const LEGACY_LIVE_SAMPLES_BASE_URL: string;
 export const INTERACTIVE_EXAMPLES_BASE_URL: string;
 export const STATIC_ROOT: string;
 export const PROXY_HOSTNAME: string;
 export const CONTENT_HOSTNAME: string;
 export const OFFLINE_CONTENT: boolean;
 export const FAKE_V1_API: boolean;
+export const SENTRY_DSN_BUILD: string;
+export const OPENAI_KEY: string;
+export const SUPABASE_URL: string;
+export const SUPABASE_SERVICE_ROLE_KEY: string;
+export const SAMPLE_SIGN_KEY: Buffer;

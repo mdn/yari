@@ -45,6 +45,7 @@
     .sidebar {
       align-self: start;
       grid-area: sidebar;
+      padding-top: unset;
     }
 
     .main-content {
@@ -61,7 +62,7 @@
     padding-right: 1rem;
 
     .toc {
-      --offset: var(--main-document-header-height);
+      --offset: var(--sticky-header-height);
 
       display: block;
       grid-area: toc;

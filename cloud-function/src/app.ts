@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { Router } from "express";
 
+import { ANY_ATTACHMENT_EXT } from "./internal/constants/index.js";
+
 import { Origin } from "./env.js";
 import { proxyContent } from "./handlers/proxy-content.js";
 import { proxyKevel } from "./handlers/proxy-kevel.js";
@@ -17,8 +19,12 @@ import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
+import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
+import { proxyRunner } from "./handlers/proxy-runner.js";
+import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 
 const router = Router();
+router.use(stripForwardedHostHeaders);
 router.use(redirectLeadingSlash);
 router.all(
   "/api/v1/stripe/plans",
@@ -34,6 +40,12 @@ router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyKevel);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyKevel);
 router.get(
+  ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
+  requireOrigin(Origin.play),
+  resolveRunnerHtml,
+  proxyRunner
+);
+router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
   proxyContent
@@ -46,8 +58,8 @@ router.get(
   proxyContent
 );
 router.get(
-  "/[^/]+/docs/*/*.(png|jpeg|jpg|gif|svg|webp)",
-  requireOrigin(Origin.main, Origin.liveSamples),
+  `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
+  requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
   proxyContent
 );
