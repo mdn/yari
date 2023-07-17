@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { MainContentContainer } from "../../ui/atoms/page-content";
+import { Paginator } from "../../ui/molecules/paginator";
 import { useLocale } from "../../hooks";
 
 dayjs.extend(relativeTime);
@@ -622,19 +623,8 @@ function DocumentsTable({
             })}
         </tbody>
       </table>
-      {pageCount > 1 && (
-        <p className="pagination">
-          <PageLink number={1} disabled={page === 1}>
-            First page
-          </PageLink>{" "}
-          {page > 2 && (
-            <PageLink number={page - 1}>Previous page ({page - 1})</PageLink>
-          )}{" "}
-          <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-            Next page ({page + 1})
-          </PageLink>
-        </p>
-      )}
+
+      <Paginator last={pageCount} />
     </div>
   );
 }
@@ -701,39 +691,4 @@ function getGetOrdinal(n: number) {
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
   return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
-}
-
-function PageLink({
-  number,
-  disabled,
-  children,
-}: {
-  number: number;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  const [searchParams] = useSearchParams();
-  const params = createSearchParams(searchParams);
-  if (number > 1) {
-    params.set("page", `${number}`);
-  } else {
-    params.delete("page");
-  }
-  return (
-    <Link
-      to={"?" + params.toString()}
-      className={disabled ? "disabled" : ""}
-      onClick={(event) => {
-        if (disabled) {
-          event.preventDefault();
-        }
-        const top = document.querySelector("div.all-translations");
-        if (top) {
-          top.scrollIntoView({ behavior: "smooth" });
-        }
-      }}
-    >
-      {children}
-    </Link>
-  );
 }

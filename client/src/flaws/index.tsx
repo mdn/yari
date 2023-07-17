@@ -6,6 +6,7 @@ import "./index.scss";
 
 import { humanizeFlawName } from "../flaw-utils";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Paginator } from "../ui/molecules/paginator";
 import { useLocale } from "../hooks";
 
 interface DocumentPopularity {
@@ -682,56 +683,8 @@ function DocumentsTable({
         </tbody>
       </table>
 
-      {pageCount > 1 && (
-        <p className="pagination">
-          <PageLink number={1} disabled={page === 1}>
-            ⇤ First page
-          </PageLink>{" "}
-          {page > 2 && <PageLink number={page - 1}>← Previous page</PageLink>}{" "}
-          {page}{" "}
-          {page < pageCount - 1 && (
-            <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-              Next page →
-            </PageLink>
-          )}
-          <PageLink number={pageCount} disabled={page === pageCount}>
-            Last page ({pageCount}) ⇥
-          </PageLink>
-        </p>
-      )}
+      <Paginator last={pageCount} />
     </div>
-  );
-}
-
-function PageLink({
-  number,
-  disabled,
-  children,
-}: {
-  number: number;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  const [filters] = useFiltersURL();
-  // Unfortunately TS's Partial<T> is not quite the right return type of this function,
-  // as it implies the object could have keys set to undefined, which isn't true here.
-  // Hence we have to use type coercion (any)
-  const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
-  if (newFilters.page) {
-    newFilters.page = String(newFilters.page);
-  }
-  return (
-    <Link
-      to={"?" + createSearchParams(newFilters).toString()}
-      className={disabled ? "disabled" : ""}
-      onClick={(event) => {
-        if (disabled) {
-          event.preventDefault();
-        }
-      }}
-    >
-      {children}
-    </Link>
   );
 }
 
