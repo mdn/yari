@@ -96,7 +96,7 @@
     "front-matter": "^4.0.2",
     "fs-extra": "^11.1.1",
     "got": "^13.0.0",
-    "html-react-parser": "^3.0.16",
+    "html-react-parser": "^4.0.0",
     "http-proxy-middleware": "^2.0.6",
     "image-size": "^1.0.2",
     "image-type": "^4.1.0",
