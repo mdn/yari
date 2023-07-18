@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
-import { Document, Redirect, Image } from "../../content/index.js";
+import { Document, Redirect, FileAttachment } from "../../content/index.js";
 import { findMatchesInText } from "../matches-in-text.js";
 import {
   DEFAULT_LOCALE,
@@ -11,8 +11,11 @@ import {
   VALID_LOCALES,
 } from "../../libs/constants/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document.js";
+import { Flaw } from "./index.js";
 
-function findMatchesInMarkdown(rawContent, href) {
+function findMatchesInMarkdown(rawContent: string, href: string) {
   const matches = [];
   visit(fromMarkdown(rawContent), "link", (node: any) => {
     if (node.url == href) {
@@ -53,12 +56,10 @@ function isHomepageURL(url) {
 }
 
 function mutateLink(
-  $element,
-  { suggestion, enUSFallback, isSelfLink } = {
-    suggestion: null,
-    enUSFallback: null,
-    isSelfLink: false,
-  }
+  $element: cheerio.Cheerio<cheerio.Element>,
+  suggestion: string = null,
+  enUSFallback: string = null,
+  isSelfLink = false
 ) {
   if (isSelfLink) {
     $element.attr("aria-current", "page");
@@ -77,8 +78,13 @@ function mutateLink(
 
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
-export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
-  const flaws = [];
+export function getBrokenLinksFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  { rawContent },
+  level
+) {
+  const flaws: Flaw[] = [];
 
   // This is needed because the same href can occur multiple time.
   // For example:
@@ -89,7 +95,7 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   // this refers to the second time it appears. That's important for the
   // sake of finding which match, in the original source (rawContent),
   // it belongs to.
-  const checked = new Map();
+  const checked = new Map<string, number>();
 
   // Our cache for looking things up by `href`. This basically protects
   // us from calling `findMatchesInText()` more than once.
@@ -97,15 +103,15 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   // A closure function to help making it easier to append flaws
   function addBrokenLink(
-    $element,
-    index,
-    href,
-    suggestion = null,
-    explanation = null,
-    enUSFallback = null,
+    $element: cheerio.Cheerio<cheerio.Element>,
+    index: number,
+    href: string,
+    suggestion: string = null,
+    explanation: string = null,
+    enUSFallback: string = null,
     isSelfLink = false
   ) {
-    mutateLink($element, { suggestion, enUSFallback, isSelfLink });
+    mutateLink($element, suggestion, enUSFallback, isSelfLink);
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about
@@ -219,7 +225,10 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       // Note! If it's not known that the URL's domain can be turned into https://
       // we do nothing here. No flaw. It's unfortunate that we still have http://
       // links in our content but that's a reality of MDN being 15+ years old.
-    } else if (href.startsWith("https://developer.mozilla.org/")) {
+    } else if (
+      href.startsWith("https://developer.mozilla.org/") &&
+      !href.startsWith("https://developer.mozilla.org/en-US/blog/")
+    ) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.
       const absoluteURL = new URL(href);
@@ -271,8 +280,8 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       const absoluteURL = new URL(href, "http://www.example.com");
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
-        // Before we give up, check if it's an image.
-        if (!Image.findByURLWithFallback(hrefNormalized)) {
+        // Before we give up, check if it's an attachment.
+        if (!FileAttachment.findByURLWithFallback(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);

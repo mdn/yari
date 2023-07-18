@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="utf-8" />
@@ -58,7 +58,8 @@
       content="The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
     />
     <meta property="og:image" content="%PUBLIC_URL%/mdn-social-share.png" />
-    <meta property="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="MozDevNet" />
 
     <link rel="canonical" href="https://developer.mozilla.org" />
     <style media="print">
@@ -70,6 +71,8 @@
       .sidebar,
       .top-navigation-main,
       .page-footer,
+      .top-banner,
+      .place,
       ul.prev-next,
       .language-menu {
         display: none !important;

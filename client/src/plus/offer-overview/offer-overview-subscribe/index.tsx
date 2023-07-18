@@ -71,10 +71,11 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
+  ["afree", "Ads free"],
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
-  ["afree", "Ads free", "new"],
+  ["ai-help", "AI Help", "beta"],
 ];
 
 const CORE: OfferDetailsProps = {
@@ -83,6 +84,8 @@ const CORE: OfferDetailsProps = {
   features: [
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
+    ["playground", "Share playgrounds"],
+    ["ai-help", "AI Help: 5 questions per day", "beta"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -214,12 +217,12 @@ function OfferDetails({
                 <>
                   {" "}
                   <a href={`#${href}`}>{text}</a>
-                  {sup && <sup>{sup}</sup>}
+                  {sup && <sup className="new">{sup}</sup>}
                 </>
               )) || (
                 <>
                   {text}
-                  {sup && <sup>{sup}</sup>}
+                  {sup && <sup className="new">{sup}</sup>}
                 </>
               )}
             </li>
@@ -238,20 +241,14 @@ function OfferDetails({
   );
 }
 
-function isCurrent(
-  user: UserData | null | undefined,
-  subscriptionType: SubscriptionType
-) {
+function isCurrent(user: UserData, subscriptionType: SubscriptionType) {
   if (!user?.isAuthenticated) {
     return false;
   }
   return user.subscriptionType === subscriptionType;
 }
 
-function canUpgrade(
-  user: UserData | null | undefined,
-  subscriptionType: SubscriptionType
-) {
+function canUpgrade(user: UserData, subscriptionType: SubscriptionType) {
   if (!user?.isAuthenticated) {
     return null;
   }

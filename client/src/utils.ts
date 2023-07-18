@@ -1,5 +1,6 @@
 import { IEX_DOMAIN } from "./env";
 import { Theme } from "./types/theme";
+import { User } from "./user-context";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
@@ -67,7 +68,7 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   }
 }
 
-export function isPlusSubscriber(user) {
+export function isPlusSubscriber(user): user is User {
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&
@@ -108,4 +109,15 @@ export function charSlice(string: string, start?: number, end?: number) {
 
 export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
+}
+
+/**
+ * Used by quicksearch and sidebar filters.
+ */
+export function splitQuery(term: string): string[] {
+  return term
+    .trim()
+    .toLowerCase()
+    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
+    .split(/[ ,]+/);
 }

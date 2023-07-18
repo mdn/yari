@@ -2,12 +2,13 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE } from "../env";
 import { HydrationData } from "../../../libs/types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
+import { useLocale } from "../hooks";
 
 type ContributorDetails = {
   sections: [string];
@@ -23,7 +24,8 @@ type ContributorDetails = {
 };
 
 export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
-  const { "*": slug, locale = "en-US" } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 
@@ -41,7 +43,7 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
     }
   );

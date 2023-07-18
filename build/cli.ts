@@ -14,6 +14,7 @@ import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   BUILD_OUT_ROOT,
+  SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,6 +30,7 @@ import { DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
+import { initSentry } from "./sentry.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -51,8 +53,8 @@ interface GlobalMetadata {
 }
 
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -65,12 +67,10 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = await translationsOf(document.metadata);
-      if (translations && translations.length > 0) {
-        document.translations = translations;
-      } else {
-        document.translations = [];
-      }
+      document.translations = translationsOf(
+        document.metadata.slug,
+        document.metadata.locale
+      );
     }
 
     return { document, doc: await buildDocument(document), skip: false };
@@ -168,15 +168,16 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
       document,
     } = result;
 
@@ -206,15 +207,31 @@ async function buildDocuments(
       )
     );
 
-    for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+    for (const { id, html, slug } of liveSamples) {
+      let liveSamplePath: string;
+      if (slug) {
+        // Since we no longer build all live samples we have to build live samples
+        // for foreign slugs. If slug is truthy it's a different slug than the current
+        // document. So we need to set up the folder.
+        console.warn(
+          `Building live sample from another page: ${id} in ${documentPath}`
+        );
+        const liveSampleBasePath = path.join(
+          BUILD_OUT_ROOT,
+          slugToFolder(slug)
+        );
+        liveSamplePath = path.join(liveSampleBasePath, `_sample_.${id}.html`);
+        fs.mkdirSync(liveSampleBasePath, { recursive: true });
+      } else {
+        liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+      }
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    for (const filePath of fileAttachments) {
+    for (const [basename, filePath] of fileAttachmentMap) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      fs.copyFileSync(filePath, path.join(outPath, basename));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -298,8 +315,9 @@ async function buildDocuments(
 
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
-    localeMeta.forEach((doc) =>
-      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    localeMeta.forEach(
+      (doc) =>
+        doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
     )
   );
   fs.writeFileSync(
@@ -339,6 +357,10 @@ interface BuildArgsAndOptions {
     notLocale?: string[];
     sitemapIndex?: boolean;
   };
+}
+
+if (SENTRY_DSN_BUILD) {
+  initSentry(SENTRY_DSN_BUILD);
 }
 
 program

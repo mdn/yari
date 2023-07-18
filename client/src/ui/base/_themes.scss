@@ -177,11 +177,25 @@
   --updates-mandala: #{$mdn-color-light-theme-blue-30};
   --updates-icon: #{$mdn-color-light-theme-blue-50};
 
+  --ai-help-link: #{$mdn-color-light-theme-green-60};
+  --ai-help-header: #{$mdn-color-neutral-light-70};
+  --ai-help-mandala: #{$mdn-color-light-theme-green-30};
+  --ai-help-icon: #{$mdn-color-light-theme-green-50};
+
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
   --form-invalid-color: #{$mdn-color-light-theme-red-60};
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-50};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-50, 0.2)};
+
+  --baseline-supported-bg: #e6f4ea;
+  --baseline-supported-engine-bg: #ceead6;
+  --baseline-supported-img: url("../../assets/icons/baseline/check.svg");
+  --baseline-unsupported-bg: #f1f3f4;
+  --baseline-unsupported-engine-bg: #e3e6e8;
+  --baseline-unsupported-img: url("../../assets/icons/baseline/cross.svg");
+  --baseline-browser-supported-bg: #1e8e3e;
+  --baseline-browser-unsupported-bg: #666;
 
   color-scheme: light;
 }
@@ -360,11 +374,25 @@
   --updates-mandala: #{$mdn-color-dark-theme-blue-20};
   --updates-icon: #{$mdn-color-dark-theme-blue-30};
 
+  --ai-help-link: #{$mdn-color-dark-theme-green-30};
+  --ai-help-header: #{$mdn-color-black};
+  --ai-help-mandala: #{$mdn-color-dark-theme-green-20};
+  --ai-help-icon: #{$mdn-color-dark-theme-green-30};
+
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};
   --form-invalid-color: #{$mdn-color-light-theme-red-30};
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-40};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-40, 0.2)};
+
+  --baseline-supported-bg: #0e2a10;
+  --baseline-supported-engine-bg: #031b05;
+  --baseline-supported-img: url("../../assets/icons/baseline/check-dark.svg");
+  --baseline-unsupported-bg: #282a2c;
+  --baseline-unsupported-engine-bg: #1d1e1f;
+  --baseline-unsupported-img: url("../../assets/icons/baseline/cross-dark.svg");
+  --baseline-browser-supported-bg: #5bb974;
+  --baseline-browser-unsupported-bg: #9aa0a6;
 
   color-scheme: dark;
 }

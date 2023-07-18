@@ -153,7 +153,6 @@ describe("fixing flaws", () => {
     );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
-    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
     // Broken links that get fixed.
     expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
     expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");

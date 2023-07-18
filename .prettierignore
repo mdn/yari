@@ -2,6 +2,7 @@
 *~
 # exclude these files
 *.ejs
+CHANGELOG.md
 Dockerfile
 Makefile
 Procfile
@@ -29,3 +30,5 @@ _githistory.json
 /mdn/content
 popularities.json
 /client/public/service-worker.js
+/cloud-function/src/internal/
+/cloud-function/**/*.js
