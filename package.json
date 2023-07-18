@@ -142,6 +142,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@babel/eslint-parser": "^7.22.9",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.22.9",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
