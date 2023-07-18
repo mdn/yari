@@ -3112,11 +3112,6 @@
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
   integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
 
-"@types/unist@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-3.0.0.tgz#988ae8af1e5239e89f9fbb1ade4c935f4eeedf9a"
-  integrity sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==
-
 "@types/websocket@^1.0.3":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/websocket/-/websocket-1.0.5.tgz#3fb80ed8e07f88e51961211cd3682a3a4a81569c"
@@ -14170,12 +14165,12 @@ unique-string@^3.0.0:
   dependencies:
     crypto-random-string "^4.0.0"
 
-unist-builder@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/unist-builder/-/unist-builder-3.0.1.tgz#258b89dcadd3c973656b2327b347863556907f58"
-  integrity sha512-gnpOw7DIpCA0vpr6NqdPvTWnlPTApCTRzr+38E6hCWx3rz/cjo83SsKIlS1Z+L5ttScQ2AwutNnb8+tAvpb6qQ==
+unist-builder@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/unist-builder/-/unist-builder-4.0.0.tgz#817b326c015a6f9f5e92bb55b8e8bc5e578fe243"
+  integrity sha512-wmRFnH+BLpZnTKpc5L7O67Kac89s9HMrtELpnNaE6TAobq5DTZZs5YaTQfAZBA9bFPECx2uVAPO31c+GVug8mg==
   dependencies:
-    "@types/unist" "^2.0.0"
+    "@types/unist" "^3.0.0"
 
 unist-util-generated@^2.0.0:
   version "2.0.1"
