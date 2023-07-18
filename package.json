@@ -154,7 +154,6 @@
     "@testing-library/react": "^14.0.0",
     "@types/async": "^3.2.20",
     "@types/cli-progress": "^3.11.0",
-    "@types/hast": "^2.3.4",
     "@types/imagemin": "^8.0.1",
     "@types/jest": "^29.5.3",
     "@types/mdast": "^3.0.11",
