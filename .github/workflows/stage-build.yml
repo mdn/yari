@@ -42,6 +42,12 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
   workflow_call:
     secrets:
       GCP_PROJECT_NAME:
@@ -168,7 +174,11 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
+
+          # Sign key for code samples
+          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
@@ -201,10 +211,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
           # Surveys.
-          REACT_APP_SURVEY_START_WEB_SECURITY_2023: 0 # stage
-          REACT_APP_SURVEY_END_WEB_SECURITY_2023: 1685016000000 # (new Date("2023-05-25 12:00:00Z").getTime())
-          REACT_APP_SURVEY_RATE_FROM_WEB_SECURITY_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_WEB_SECURITY_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_BLOG_FEEDBACK_2023: 0 # stage
+          REACT_APP_SURVEY_END_BLOG_FEEDBACK_2023: 1688299200000 # (new Date("2023-07-02 12:00:00Z").getTime())
+          REACT_APP_SURVEY_RATE_FROM_BLOG_FEEDBACK_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_BLOG_FEEDBACK_2023: 0.05 # 5%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
@@ -215,6 +225,9 @@ jobs:
 
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
+
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_HOST: mdnyalp.dev
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
@@ -285,8 +298,8 @@ jobs:
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -328,9 +341,10 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=30s \
+            --timeout=60s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.allizom.net" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
@@ -350,6 +364,14 @@ jobs:
             wait $pid
           done
 
+      - name: Update AI Help index
+        run: yarn ai-help update-index
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2
@@ -363,5 +385,5 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Invalidate CDN
-        if: ${{ ! vars.SKIP_INVALIDATE }}
+        if: ${{ github.event.inputs.invalidate }}
         run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async

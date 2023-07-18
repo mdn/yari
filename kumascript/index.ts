@@ -10,6 +10,7 @@ import { HTMLTool } from "./src/api/util.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
+  LEGACY_LIVE_SAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env/index.js";
 import { SourceCodeError } from "./src/errors.js";
@@ -91,14 +92,16 @@ export async function render(
     rawHTML,
     {
       ...metadata,
-      path: fileInfo.path,
       url,
       tags: metadata.tags || [],
       selective_mode,
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },
-      live_samples: { base_url: LIVE_SAMPLES_BASE_URL || url },
+      live_samples: {
+        base_url: LIVE_SAMPLES_BASE_URL || url,
+        legacy_url: LEGACY_LIVE_SAMPLES_BASE_URL || url,
+      },
     },
     async (url) => {
       const [renderedHtml, errors] = await render(info.cleanURL(url), {

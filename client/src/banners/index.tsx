@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { setEmbargoed, isEmbargoed } from "./banner-utils";
-import { CRUD_MODE, NEWSLETTER_ENABLED } from "../env";
+import { DEV_MODE, NEWSLETTER_ENABLED } from "../env";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -24,7 +24,7 @@ export function Banner() {
       ? BannerId.NEWSLETTER_ANNOUNCEMENT
       : BannerId.MULTIPLE_COLLECTIONS
     : null;
-  if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
+  if (currentBannerId && (DEV_MODE || !isEmbargoed(currentBannerId))) {
     return (
       <React.Suspense fallback={null}>
         <ActiveBanner

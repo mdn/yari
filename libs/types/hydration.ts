@@ -1,9 +1,9 @@
-import { BlogPostFrontmatter } from "./blog.js";
+import { BlogPostMetadata } from "./blog.js";
 
 interface HydrationData<T = any> {
   hyData?: T;
   doc?: any;
-  blogMeta?: BlogPostFrontmatter | null;
+  blogMeta?: BlogPostMetadata | null;
   pageNotFound?: boolean;
   pageTitle?: any;
   possibleLocales?: any;

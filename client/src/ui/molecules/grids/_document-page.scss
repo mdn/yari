@@ -45,6 +45,7 @@
     .sidebar {
       align-self: start;
       grid-area: sidebar;
+      padding-top: unset;
     }
 
     .main-content {

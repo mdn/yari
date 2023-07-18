@@ -31,10 +31,6 @@ export function buildURL(locale: string, slug: string) {
   return `/${locale}/docs/${slug}`;
 }
 
-function isPromise(p): p is Promise<unknown> {
-  return p && Object.prototype.toString.call(p) === "[object Promise]";
-}
-
 /**
  * Memoizes the result of the given function call, mapping parameters to
  * return values. If NODE_ENV is not set to production it simply returns
@@ -67,13 +63,12 @@ export function memoize<Args>(
     }
 
     const value = fn(...(args as Args[]));
-    if (isPromise(value)) {
-      return value.then((actualValue) => {
-        cache.set(key, actualValue);
-        return actualValue;
+    cache.set(key, value);
+    if (value instanceof Promise) {
+      value.catch(() => {
+        cache.delete(key);
       });
     }
-    cache.set(key, value);
     return value;
   };
 }
@@ -113,11 +108,11 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
   return stdout.toString().trim();
 }
 
-export function toPrettyJSON(value: unknown) {
+export async function toPrettyJSON(value: unknown) {
   const json = JSON.stringify(value, null, 2) + "\n";
   if (prettier) {
     try {
-      return prettier.format(json, { parser: "json" });
+      return await prettier.format(json, { parser: "json" });
     } catch (e) {
       // If Prettier formatting failed, don't worry
     }

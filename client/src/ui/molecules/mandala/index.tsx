@@ -117,7 +117,7 @@ function Mandala({
                 )}
               </path>
             </defs>
-            <text className="mandala-accent-1" dy="70" textLength="2010">
+            <text dy="70" textLength="2010">
               <textPath textLength="2010" href="#circle1">
                 &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
                 <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
@@ -142,7 +142,7 @@ function Mandala({
                 <tspan>/</tspan>
               </textPath>
             </text>
-            <text className="mandala-accent-2" dy="70" textLength="1760">
+            <text dy="70" textLength="1760">
               <textPath textLength="1760" href="#circle2">
                 &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
                 &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
@@ -153,7 +153,7 @@ function Mandala({
                 &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
               </textPath>
             </text>
-            <text className="mandala-accent-3" dy="70" textLength="1507">
+            <text dy="70" textLength="1507">
               <textPath textLength="1507" href="#circle3">
                 <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
                 <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>
@@ -175,7 +175,7 @@ function Mandala({
                 &#125;&nbsp;&nbsp;
               </textPath>
             </text>
-            <text className="mandala-accent-4" dy="70" textLength="1257">
+            <text dy="70" textLength="1257">
               <textPath textLength="1257" href="#circle4">
                 &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
                 &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
@@ -183,7 +183,7 @@ function Mandala({
                 &nbsp;&nbsp;&nbsp;../../
               </textPath>
             </text>
-            <text className="mandala-accent-5" dy="70" textLength="1005">
+            <text dy="70" textLength="1005">
               <textPath textLength="1005" href="#circle5">
                 <tspan>&lt;&gt;</tspan>&lt;/&gt;
                 <tspan>&lt;&gt;</tspan>&lt;/&gt;

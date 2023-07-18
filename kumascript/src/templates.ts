@@ -109,7 +109,7 @@ export default class Templates {
       return rendered.trim();
     } catch (error) {
       console.error(
-        `The ${name} macro in ${args.env.path ?? "?"} failed to render.`,
+        `The ${name} macro on ${args.env.url} failed to render.`,
         error
       );
       throw error;
