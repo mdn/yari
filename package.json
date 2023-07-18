@@ -95,7 +95,7 @@
     "file-type": "^18.5.0",
     "front-matter": "^4.0.2",
     "fs-extra": "^11.1.1",
-    "got": "^12.6.0",
+    "got": "^13.0.0",
     "html-react-parser": "^3.0.16",
     "http-proxy-middleware": "^2.0.6",
     "image-size": "^1.0.2",
