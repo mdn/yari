@@ -16,6 +16,7 @@ if (NODE_ENV === "development") {
     entry: {
       app: ["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000"],
     },
+    mode: "development",
     plugins: [new webpack.HotModuleReplacementPlugin()],
   };
 
