@@ -266,13 +266,21 @@ for content editing as authentication is then not required.
 
 Enables features or setup which only make sense in local development.
 
+Defaults to `NODE_ENV==='development'` if not set _and_ `REACT_APP_WRITER_MODE`
+is _not_ also set — which means: it's enabled by default when doing development
+with the `localhost:3000` dev server.
+
 ### `REACT_APP_WRITER_MODE`
 
 **Default: `false`**
 
-Basically, these are the optional, lazy-loaded features of the app that only
-make sense when you're working on authoring the content. For example the Toolbar
-bar appears based on this.
+Enables optional, lazy-loaded features that are only useful when you're locally
+editing any article source from the `content` repo; for example, the Toolbar bar
+appears if the value of this is true.
+
+Defaults to `NODE_ENV==='development'` if not set _and_ `REACT_APP_DEV_MODE` is
+_not_ also set — which means: it's enabled by default when doing development
+with the `localhost:3000` dev server.
 
 ### `REACT_APP_WRITER_MODE_HOSTNAMES`
 
