@@ -2,7 +2,8 @@ import type { WebpackConfiguration } from "webpack-dev-server";
 
 export const devMiddlewares = [];
 
-if (process.env.NODE_ENV === "development") {
+const NODE_ENV = process.env.NODE_ENV || "development";
+if (NODE_ENV === "development") {
   const [webpack, webpackDevMiddleware, webpackHotMiddleware] = (
     await Promise.all([
       import("webpack"),
