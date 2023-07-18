@@ -21,11 +21,7 @@ if (NODE_ENV === "development") {
 
   const compiler = webpack(webpackConfig);
 
-  devMiddlewares.push(
-    webpackDevMiddleware(compiler, {
-      publicPath: webpackConfig.output?.publicPath,
-    })
-  );
+  devMiddlewares.push(webpackDevMiddleware(compiler));
 
   devMiddlewares.push(
     webpackHotMiddleware(compiler, {
