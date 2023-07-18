@@ -14,11 +14,7 @@ if (NODE_ENV === "development") {
 
   const webpackConfig: WebpackConfiguration = {
     entry: {
-      app: [
-        "react-hot-loader/patch",
-        "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",
-        "./index.js",
-      ],
+      app: ["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000"],
     },
     plugins: [new webpack.HotModuleReplacementPlugin()],
   };
