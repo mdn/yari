@@ -311,20 +311,29 @@ export function makeTOC(doc) {
 }
 
 export function findPostFileBySlug(slug: string): string | null {
-  try {
-    const { stdout, stderr, status } = spawnSync(rgPath, [
-      "-il",
-      `slug: ${slug}`,
-      BLOG_ROOT,
-    ]);
-    if (status === 0) {
-      const file = stdout.toString("utf-8").split("\n")[0];
-      return file;
-    } else {
-      console.error(`error running rg: ${stderr}`);
+  if (BLOG_ROOT) {
+    try {
+      const { stdout, stderr, status } = spawnSync(rgPath, [
+        "-il",
+        `slug: ${slug}`,
+        BLOG_ROOT,
+      ]);
+      if (status === 0) {
+        const file = stdout.toString("utf-8").split("\n")[0];
+        return file;
+      } else {
+        const message = stderr.toString();
+        if (message) {
+          console.error(`error running rg: ${message}`);
+        } else {
+          console.error(`Blog ${slug} not found in ${BLOG_ROOT}`);
+        }
+      }
+    } catch {
+      console.error("rg failed");
     }
-  } catch {
-    console.error("rg failed");
+  } else {
+    console.warn("'BLOG_ROOT' not set in .env file");
   }
   return null;
 }
