@@ -10,6 +10,7 @@ import {
   useDocumentURL,
   useCopyExamplesToClipboardAndAIExplain,
   useRunSample,
+  useCollectSample,
 } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
@@ -121,6 +122,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
+  useCollectSample(doc);
   useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
