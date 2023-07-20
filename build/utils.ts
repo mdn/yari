@@ -325,13 +325,12 @@ export function findPostFileBySlug(slug: string): string | null {
     if (status === 0) {
       const file = stdout.toString("utf-8").split("\n")[0];
       return file;
+    }
+    const message = stderr.toString();
+    if (message) {
+      console.error(`error running rg: ${message}`);
     } else {
-      const message = stderr.toString();
-      if (message) {
-        console.error(`error running rg: ${message}`);
-      } else {
-        console.error(`Blog ${slug} not found in ${BLOG_ROOT}`);
-      }
+      console.error(`Blog ${slug} not found in ${BLOG_ROOT}`);
     }
   } catch {
     console.error("rg failed");
