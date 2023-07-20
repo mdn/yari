@@ -330,7 +330,7 @@ export function findPostFileBySlug(slug: string): string | null {
     if (message) {
       console.error(`error running rg: ${message}`);
     } else {
-      console.error(`Blog ${slug} not found in ${BLOG_ROOT}`);
+      console.error(`Post ${slug} not found in ${BLOG_ROOT}`);
     }
   } catch {
     console.error("rg failed");
