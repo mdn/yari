@@ -13,8 +13,24 @@ export default function SignInLink({
   gleanContext?: string;
   cta?: string;
 }) {
-  const locale = useLocale();
   const gleanClick = useGleanClick();
+
+  const href = useLoginUrl();
+
+  return (
+    <a
+      href={href}
+      className="signin-link"
+      rel="nofollow"
+      onClick={() => gleanContext && gleanClick(gleanContext)}
+    >
+      {cta}
+    </a>
+  );
+}
+
+export function useLoginUrl() {
+  const locale = useLocale();
   const { pathname, search } = useLocation();
   const sp = new URLSearchParams();
 
@@ -32,14 +48,5 @@ export default function SignInLink({
     prefix = `http://${KUMA_HOST}`;
   }
 
-  return (
-    <a
-      href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`}
-      className="signin-link"
-      rel="nofollow"
-      onClick={() => gleanContext && gleanClick(gleanContext)}
-    >
-      {cta}
-    </a>
-  );
+  return `${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`;
 }

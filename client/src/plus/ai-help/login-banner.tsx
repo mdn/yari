@@ -1,6 +1,6 @@
 import { AI_HELP } from "../../telemetry/constants";
 import { useGleanClick } from "../../telemetry/glean-context";
-import { SubscribeLink } from "../../ui/atoms/subscribe-link";
+import { SignUpLink } from "../../ui/atoms/signup-link";
 import { AuthContainer } from "../../ui/molecules/auth-container";
 import { usePlusUrl } from "../utils";
 import "./login-banner.scss";
@@ -14,7 +14,7 @@ export function AiLoginBanner() {
       <span>
         <span>Want to use AI Help?</span>{" "}
         <strong>
-          Upgrade to{" "}
+          Log in to{" "}
           <a
             className="plus-link"
             href={href}
@@ -26,8 +26,8 @@ export function AiLoginBanner() {
         </strong>
       </span>
       <AuthContainer
-        signInGleanContext={`${AI_HELP}: banner-login`}
-        subscribeGleanContext={`${AI_HELP}: banner-button`}
+        logInGleanContext={`${AI_HELP}: banner-login`}
+        signUpGleanContext={`${AI_HELP}: banner-signup`}
       />
     </div>
   );
@@ -46,7 +46,7 @@ export function AiUpsellBanner({ limit }: { limit: number }) {
       </span>
       <ul className="auth-container">
         <li>
-          <SubscribeLink
+          <SignUpLink
             gleanContext={`${AI_HELP}: upsell-button`}
             toPlans={true}
           />

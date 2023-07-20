@@ -13,7 +13,7 @@ export function LoginBanner() {
       <span>
         <span>Want to use filters?</span>{" "}
         <strong>
-          Upgrade to{" "}
+          Log in to{" "}
           <a
             className="plus-link"
             href={href}
@@ -25,8 +25,8 @@ export function LoginBanner() {
         </strong>
       </span>
       <AuthContainer
-        signInGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-login`}
-        subscribeGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`}
+        logInGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-login`}
+        signUpGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-signup`}
       />
     </div>
   );

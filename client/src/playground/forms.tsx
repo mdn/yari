@@ -130,7 +130,7 @@ export function ShareForm({
             <span>Want to share this playground via link?</span>
             <br />
             <strong>
-              Upgrade to{" "}
+              Log in to{" "}
               <a
                 className="plus-link"
                 href={href}
@@ -138,11 +138,11 @@ export function ShareForm({
               >
                 MDN Plus
               </a>{" "}
-              for free.
+              .
             </strong>
             <AuthContainer
-              signInGleanContext={`${PLAYGROUND}: banner-login`}
-              subscribeGleanContext={`${PLAYGROUND}: banner-button`}
+              logInGleanContext={`${PLAYGROUND}: banner-login`}
+              signUpGleanContext={`${PLAYGROUND}: banner-signup`}
             />
           </div>
         )}
