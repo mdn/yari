@@ -5,8 +5,8 @@ import { Loading } from "../ui/atoms/loading";
 import { useUserData } from "../user-context";
 import { usePlusUrl } from "../plus/utils";
 import { useGleanClick } from "../telemetry/glean-context";
-import { AuthContainer } from "../ui/molecules/auth-container";
 import { PLAYGROUND } from "../telemetry/constants";
+import { PlusLoginBanner } from "../plus/common/login-banner";
 
 export function FlagForm({ gistId }: { gistId: string | null }) {
   return (
@@ -126,25 +126,10 @@ export function ShareForm({
             )}
           </>
         ) : (
-          <div className="share-get-plus">
-            <span>Want to share this playground via link?</span>
+          <PlusLoginBanner className="share-get-plus" gleanPrefix={PLAYGROUND}>
+            Want to share this playground via link?
             <br />
-            <strong>
-              Log in to{" "}
-              <a
-                className="plus-link"
-                href={href}
-                onClick={() => gleanClick(`${PLAYGROUND}: banner-link`)}
-              >
-                MDN Plus
-              </a>
-              .
-            </strong>
-            <AuthContainer
-              logInGleanContext={`${PLAYGROUND}: banner-login`}
-              signUpGleanContext={`${PLAYGROUND}: banner-signup`}
-            />
-          </div>
+          </PlusLoginBanner>
         )}
       </section>
     </form>

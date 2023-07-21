@@ -1,35 +1,12 @@
 import { AI_HELP } from "../../telemetry/constants";
-import { useGleanClick } from "../../telemetry/glean-context";
 import { SignUpLink } from "../../ui/atoms/signup-link";
-import { AuthContainer } from "../../ui/molecules/auth-container";
-import { usePlusUrl } from "../utils";
-import "./login-banner.scss";
+import { PlusLoginBanner } from "../common/login-banner";
 
 export function AiLoginBanner() {
-  const href = usePlusUrl();
-  const gleanClick = useGleanClick();
-
   return (
-    <div className="login-banner">
-      <span>
-        <span>Want to use AI Help?</span>{" "}
-        <strong>
-          Log in to{" "}
-          <a
-            className="plus-link"
-            href={href}
-            onClick={() => gleanClick(`${AI_HELP}: banner-link`)}
-          >
-            MDN Plus
-          </a>
-          .
-        </strong>
-      </span>
-      <AuthContainer
-        logInGleanContext={`${AI_HELP}: banner-login`}
-        signUpGleanContext={`${AI_HELP}: banner-signup`}
-      />
-    </div>
+    <PlusLoginBanner gleanPrefix={AI_HELP}>
+      Want to use AI Help?
+    </PlusLoginBanner>
   );
 }
 
