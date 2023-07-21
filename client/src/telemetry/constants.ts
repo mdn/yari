@@ -31,8 +31,8 @@ export const SIDEBAR_FILTER_FOCUS = "sidebar_filter_focus";
 export const TOP_NAV_ALREADY_SUBSCRIBER = "top_nav_already_subscriber";
 /** @deprecated Used until July 2023. */
 export const TOP_NAV_GET_MDN_PLUS = "top_nav_get_mdn_plus";
-export const TOP_NAV_LOGIN = "top_nav_login";
-export const TOP_NAV_SIGNUP = "top_nav_signup";
+export const TOP_NAV_LOGIN = "top_nav: login";
+export const TOP_NAV_SIGNUP = "top_nav: signup";
 export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
 export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
 export const TOGGLE_PLUS_ADS_FREE_DISABLED = "toggle_plus_ads_free_disabled";
