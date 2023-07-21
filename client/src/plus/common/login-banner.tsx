@@ -20,7 +20,7 @@ export function PlusLoginBanner({
       <span>
         <span>{children}</span>{" "}
         <strong>
-          Log in to{" "}
+          Upgrade to{" "}
           <a
             className="plus-link"
             href={href}
