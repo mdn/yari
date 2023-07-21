@@ -70,7 +70,7 @@
     "@mdn/browser-compat-data": "^5.3.4",
     "@mozilla/glean": "1.4.0",
     "@sentry/integrations": "^7.60.0",
-    "@sentry/node": "^7.59.3",
+    "@sentry/node": "^7.60.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.5",
     "@webref/css": "^5.4.4",
