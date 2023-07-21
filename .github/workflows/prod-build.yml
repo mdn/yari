@@ -368,6 +368,14 @@ jobs:
             wait $pid
           done
 
+      - name: Update AI Help index
+        run: yarn ai-help update-index
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2
