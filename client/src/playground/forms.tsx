@@ -137,7 +137,7 @@ export function ShareForm({
                 onClick={() => gleanClick(`${PLAYGROUND}: banner-link`)}
               >
                 MDN Plus
-              </a>{" "}
+              </a>
               .
             </strong>
             <AuthContainer
