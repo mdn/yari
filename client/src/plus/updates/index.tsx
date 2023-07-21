@@ -19,11 +19,11 @@ import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
-import { LoginBanner } from "./login-banner";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
+import { PlusLoginBanner } from "../common/login-banner";
 
 type EventWithStatus = Event & { status: Status };
 type Status = "added" | "removed";
@@ -201,7 +201,11 @@ function UpdatesLayout() {
           }
         />
 
-        {user && !user.isAuthenticated && <LoginBanner />}
+        {user && !user.isAuthenticated && (
+          <PlusLoginBanner gleanPrefix={PLUS_UPDATES.MDN_PLUS}>
+            Want to use filters?
+          </PlusLoginBanner>
+        )}
 
         {user && user.isAuthenticated && hasFilters && (
           <Button
