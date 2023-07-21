@@ -148,7 +148,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
             title={survey.question}
             src={survey.src}
             height={500}
-            style={{ overflow: "hidden", width: "100%" }}
+            style={{ overflow: "hidden" }}
           ></iframe>
         )}
       </details>
