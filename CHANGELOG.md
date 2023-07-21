@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.28.4](https://github.com/mdn/yari/compare/v2.28.3...v2.28.4) (2023-07-21)
+
+
+### Bug Fixes
+
+* **deployer:** escape markdown markup in link text ([#8996](https://github.com/mdn/yari/issues/8996)) ([810edfa](https://github.com/mdn/yari/commit/810edfa2935a36d76381811f3844d509dacf6e61))
+* **play:** fix cursor jump on first edit ([#9356](https://github.com/mdn/yari/issues/9356)) ([216400e](https://github.com/mdn/yari/commit/216400ea6d43baba352210ff2050e20281ebd0e8))
+
+
+### Enhancements
+
+* **build:** handle missing BLOG_ROOT + log rg errors ([#9340](https://github.com/mdn/yari/issues/9340)) ([dab1fd9](https://github.com/mdn/yari/commit/dab1fd92d636c36073ef1c11933026fc347c5c75))
+* **document-survey:** adjust margins and widths ([#9364](https://github.com/mdn/yari/issues/9364)) ([c4ac8ce](https://github.com/mdn/yari/commit/c4ac8ce4df76136cbf61e728c370a7c22dd6707d))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump eslint-plugin-react from 7.32.2 to 7.33.0 ([#9363](https://github.com/mdn/yari/issues/9363)) ([d53569d](https://github.com/mdn/yari/commit/d53569d9b650e0cd4553e4ea5eab7e6f6697262b))
+* **deps-dev:** bump sass from 1.63.6 to 1.64.0 ([#9355](https://github.com/mdn/yari/issues/9355)) ([f9f31cf](https://github.com/mdn/yari/commit/f9f31cfa5c74228b8d67350ba80812be628af7d0))
+* **deps-dev:** bump stylelint from 15.10.1 to 15.10.2 ([#9344](https://github.com/mdn/yari/issues/9344)) ([4ba0be2](https://github.com/mdn/yari/commit/4ba0be23e6fc0c8fd021f92b3636ea724d9b514b))
+* **deps-dev:** migrate to stylelint-config-recommended-scss ([#9341](https://github.com/mdn/yari/issues/9341)) ([62a544c](https://github.com/mdn/yari/commit/62a544c65becd55f0b9c427467870770781544d9))
+* **deps:** bump @mdn/browser-compat-data from 5.3.3 to 5.3.4 ([#9343](https://github.com/mdn/yari/issues/9343)) ([f2e7d16](https://github.com/mdn/yari/commit/f2e7d1656d0b9acee64f5033d47a0e1fe6044c01))
+* **deps:** bump @sentry/integrations from 7.59.2 to 7.59.3 ([#9354](https://github.com/mdn/yari/issues/9354)) ([427b03a](https://github.com/mdn/yari/commit/427b03ad8bc16eee63fe024a9455b85fc80358a4))
+* **deps:** bump @sentry/integrations from 7.59.3 to 7.60.0 ([#9361](https://github.com/mdn/yari/issues/9361)) ([ea3d030](https://github.com/mdn/yari/commit/ea3d030f10769f1f9c2e7f58fd74d657a48fa615))
+* **deps:** bump @sentry/node from 7.57.0 to 7.59.2 ([#9331](https://github.com/mdn/yari/issues/9331)) ([ed51740](https://github.com/mdn/yari/commit/ed51740026f7cf631fa77a908b59df069f3f2c1e))
+* **deps:** bump @sentry/node from 7.59.2 to 7.59.3 ([#9353](https://github.com/mdn/yari/issues/9353)) ([550acac](https://github.com/mdn/yari/commit/550acacf82959124c553f55464656fbbba6702e3))
+* **deps:** bump @sentry/node from 7.59.3 to 7.60.0 ([#9362](https://github.com/mdn/yari/issues/9362)) ([f028242](https://github.com/mdn/yari/commit/f028242d163b62d911ad66868231207e0f985832))
+* **prod-build:** update AI Help index ([22f19fc](https://github.com/mdn/yari/commit/22f19fc4ee83b4851dbdde71750142fc454866a5))
+
 ## [2.28.3](https://github.com/mdn/yari/compare/v2.28.2...v2.28.3) (2023-07-18)
 
 
