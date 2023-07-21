@@ -2,7 +2,7 @@ import "./index.scss";
 import { Button } from "../button";
 import { usePlusUrl } from "../../../plus/utils";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { useLoginUrl } from "../signin-link";
+import { useLoginUrl } from "../login-link";
 
 export const SignUpLink = ({ toPlans = false, gleanContext = "" }) => {
   const gleanClick = useGleanClick();

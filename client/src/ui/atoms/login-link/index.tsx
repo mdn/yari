@@ -6,7 +6,7 @@ import { FXA_SIGNIN_URL, KUMA_HOST } from "../../../env";
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
-export default function SignInLink({
+export default function LogInLink({
   gleanContext,
   cta = "Log in",
 }: {

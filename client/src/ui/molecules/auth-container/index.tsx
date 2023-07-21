@@ -1,4 +1,4 @@
-import SignInLink from "../../atoms/signin-link";
+import LogInLink from "../../atoms/login-link";
 import { SignUpLink } from "../../atoms/signup-link";
 
 import "./index.scss";
@@ -7,7 +7,7 @@ export const AuthContainer = ({ logInGleanContext, signUpGleanContext }) => {
   return (
     <ul className="auth-container">
       <li>
-        <SignInLink gleanContext={logInGleanContext} />
+        <LogInLink gleanContext={logInGleanContext} />
       </li>
       <li>
         <SignUpLink gleanContext={signUpGleanContext} />

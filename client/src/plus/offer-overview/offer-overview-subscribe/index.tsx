@@ -14,7 +14,7 @@ import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
-import SignInLink from "../../../ui/atoms/signin-link";
+import LogInLink from "../../../ui/atoms/login-link";
 
 export enum Period {
   Month,
@@ -347,7 +347,7 @@ function OfferOverviewSubscribe() {
                 {!activeSubscription && (
                   <>
                     {" "}
-                    or <SignInLink cta="log in" />
+                    or <LogInLink cta="log in" />
                   </>
                 )}
               </h2>
