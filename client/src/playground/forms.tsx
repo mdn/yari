@@ -3,7 +3,6 @@ import { Button } from "../ui/atoms/button";
 import { EditorContent, codeToMarkdown } from "./utils";
 import { Loading } from "../ui/atoms/loading";
 import { useUserData } from "../user-context";
-import { usePlusUrl } from "../plus/utils";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
 import { PlusLoginBanner } from "../plus/common/login-banner";
@@ -64,7 +63,6 @@ export function ShareForm({
   extraClasses?: string;
 }) {
   let userData = useUserData();
-  const href = usePlusUrl();
   const gleanClick = useGleanClick();
   let [loading, setLoading] = useState(false);
   return (
