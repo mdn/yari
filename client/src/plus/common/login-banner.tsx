@@ -27,8 +27,8 @@ export function PlusLoginBanner({
             onClick={() => gleanClick(`${gleanPrefix}: banner-link`)}
           >
             MDN Plus
-          </a>
-          .
+          </a>{" "}
+          for free.
         </strong>
       </span>
       <AuthContainer
