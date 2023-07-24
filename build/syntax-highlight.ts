@@ -39,6 +39,7 @@ const loadAllLanguages = lazy(() => {
     "java",
     "json",
     "jsx",
+    "latex",
     "less",
     "md",
     "php",
