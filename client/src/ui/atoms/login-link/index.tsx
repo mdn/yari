@@ -20,7 +20,7 @@ export default function LogInLink({
   return (
     <a
       href={href}
-      className="signin-link"
+      className="login-link"
       rel="nofollow"
       onClick={() => gleanContext && gleanClick(gleanContext)}
     >
