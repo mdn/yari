@@ -1,10 +1,12 @@
 @use "../../ui/vars" as *;
 
 .login-banner {
+  align-items: center;
   background-color: var(--background-success);
   border: 2px solid var(--background-success);
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
   padding: 1rem;
 
   .plus-link {
@@ -15,27 +17,11 @@
     text-underline-offset: 0.1em;
   }
 
-  @media screen and (min-width: $screen-md) and (max-width: ($screen-lg - 1)) {
-    > span {
-      /* Show text (in two lines) on the left, while "Log in" / "Sign up" are (in one line) on the right. */
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  @media screen and (max-width: ($screen-lg - 1)) {
-    .auth-container {
-      /* Always keep "Log in" / "Sign up" (in one line) in bottom-right corner. */
-      align-self: end;
-      flex-flow: row;
-      justify-content: flex-end;
-      margin-bottom: 0;
-    }
-  }
-
-  @media screen and (max-width: ($screen-md - 1)) {
-    /* Show text (in one line) above "Log in" / "Sign up" (in one line). */
-    flex-direction: column;
-    gap: 0.5rem;
+  .auth-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0;
+    margin-left: auto;
   }
 }
