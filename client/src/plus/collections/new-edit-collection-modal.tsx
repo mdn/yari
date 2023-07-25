@@ -4,7 +4,7 @@ import { Button } from "../../ui/atoms/button";
 import MDNModal from "../../ui/atoms/modal";
 import NoteCard from "../../ui/molecules/notecards";
 import { SubscriptionType, useUserData } from "../../user-context";
-import { SubscribeLink } from "../../ui/atoms/subscribe-link";
+import { SignUpLink } from "../../ui/atoms/signup-link";
 import {
   Collection,
   NewCollection,
@@ -103,7 +103,7 @@ export default function NewEditCollectionModal({
               Upgrade now to receive unlimited access to collections, and more:
             </p>
             <div className="mdn-form-item is-button-row">
-              <SubscribeLink
+              <SignUpLink
                 toPlans={true}
                 gleanContext={NEW_COLLECTION_MODAL_UPGRADE_LINK}
               />

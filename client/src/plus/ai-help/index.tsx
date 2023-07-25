@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Message, MessageRole, Quota, useAiChat } from "./use-ai";
-import { AiLoginBanner, AiUpsellBanner } from "./login-banner";
+import { AiLoginBanner, AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
