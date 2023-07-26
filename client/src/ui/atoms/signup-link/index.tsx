@@ -15,6 +15,7 @@ export const SignUpLink = ({ toPlans = false, gleanContext = "" }) => {
   return (
     <Button
       href={href}
+      target="_self"
       extraClasses="mdn-plus-subscribe-link"
       onClickHandler={() => gleanContext && gleanClick(gleanContext)}
     >
