@@ -186,7 +186,7 @@
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-unicorn": "^48.0.0",
+    "eslint-plugin-unicorn": "^48.0.1",
     "eslint-webpack-plugin": "^4.0.1",
     "extend": "^3.0.2",
     "file-loader": "^6.2.0",
