@@ -14721,10 +14721,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^2.63.0:
-  version "2.63.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.63.0.tgz#ba6970716b6a221821c76c473a7e2a66770c7be7"
-  integrity sha512-auCFLwSz43j9Fquu4Owu9hL+zBaXFtGoWp+pMnjRRWaEg3x5oBmevKnKFOfQJIhK/z/H2l5y26ZMpqgu+XBW7A==
+web-specs@^2.64.0:
+  version "2.64.0"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.64.0.tgz#ad1ac7ec3b08988135b3c2a0e20abc78a5d967f6"
+  integrity sha512-f9HYJ231HxPeoQPGYUJWI+s2jujdAKyEzB0SPdZFneBTL2TH43bJ/70TqRLdr53Fspa0GH9KPL7W313kbul8yA==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
