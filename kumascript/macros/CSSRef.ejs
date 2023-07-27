@@ -125,6 +125,11 @@ const text = mdn.localStringMap({
         'Using_media_queries': 'Using media queries',
         'Using_media_queries_for_accessibility': 'Using media queries for accessibility',
         'Testing_media_queries_programmatically': 'Testing media queries programmatically',
+      'Nesting': 'Nesting',
+        'Using_CSS_nesting': 'Using CSS nesting',
+        'Using_nesting_selector': 'Using nesting selector',
+        'Nesting_and_specificity': 'Nesting and specificity',
+        'Nesting_at-rules': 'Nesting at-rules',
       'Positioning': 'Positioning',
         'Understanding_CSS_z-index': 'Understanding CSS z-index',
       'Scroll_snap': 'Scroll snap',
@@ -474,7 +479,7 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'CSS z-index 이해하기',
       'Scroll_snap': '스크롤 스냅',
         'Basic_concepts_of_scroll_snap': '스크롤 스냅 기본 개념',
-      'Shapes': '도형',      
+      'Shapes': '도형',
         'Overview_of_shapes': '도형의 기본 개념',
         'Shapes_from_box_values': 'CSS 박스 모델로 도형 만들기',
         'Basic_shapes': '기본 도형들',
@@ -984,7 +989,7 @@ async function makePageLink(aPage) {
   const pageBadges = (await page.badges(aPage)).join("");
 
   let result = '<li>';
-  
+
   if (rtlLocales.indexOf(locale) != -1) {
     result += '<bdi>';
   }
