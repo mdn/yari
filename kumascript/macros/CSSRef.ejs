@@ -1336,6 +1336,17 @@ async function buildPropertylist(pages, title) {
   </li>
   <li class="toggle">
       <details>
+          <summary><%=text['Nesting']%></summary>
+          <ol>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Using_CSS_nesting`, null, text['Using_CSS_nesting'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Using_nesting_selector`, null, text['Using_nesting_selector'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Nesting_and_specificity`, null, text['Nesting_and_specificity'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Nesting_at-rules`, null, text['Nesting_at-rules'], cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
           <summary><%=text['Positioning']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Positioned_Layout/Understanding_z-index`, null, text['Understanding_CSS_z-index'], cssURL)%></li>
