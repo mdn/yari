@@ -1,25 +1,25 @@
 .user-research-banner {
-  background: #e6deff;
-  color: #1b1b1b;
   --icon-primary: #696969;
-  padding: 1rem;
-  margin-bottom: 2rem;
+  background: #e6deff;
   border-radius: 0.5rem;
+  color: #1b1b1b;
+  margin-bottom: 2rem;
+  padding: 1rem;
   padding-left: 5.5rem;
   padding-right: 3rem;
   position: relative;
 
   &::before {
-    content: "";
     background-image: url("../../../assets/icons/user-research.png");
-    background-size: contain;
-    background-repeat: none;
     background-position: center center;
-    width: 3.5rem;
-    height: 3.5rem;
+    background-repeat: none;
+    background-size: contain;
+    content: "";
     display: block;
+    height: 3.5rem;
     left: 1rem;
     position: absolute;
+    width: 3.5rem;
   }
 
   .dismiss {
