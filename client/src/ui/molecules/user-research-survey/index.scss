@@ -1,0 +1,46 @@
+.user-research-banner {
+  background: #e6deff;
+  color: #1b1b1b;
+  --icon-primary: #696969;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+  padding-left: 5.5rem;
+  padding-right: 3rem;
+  position: relative;
+
+  &::before {
+    content: "";
+    background-image: url("../../../assets/icons/user-research.png");
+    background-size: contain;
+    background-repeat: none;
+    background-position: center center;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: block;
+    left: 1rem;
+    position: absolute;
+  }
+
+  .dismiss {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+
+    button {
+      cursor: pointer;
+    }
+
+    .icon {
+      margin-top: -0.25rem;
+    }
+  }
+
+  a {
+    color: #6800cf !important;
+
+    &.external::after {
+      display: none;
+    }
+  }
+}
