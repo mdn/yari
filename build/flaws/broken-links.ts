@@ -63,13 +63,16 @@ function mutateLink(
 ) {
   if (isSelfLink) {
     $element.attr("aria-current", "page");
-  } else if (suggestion) {
-    $element.attr("href", suggestion);
   } else if (enUSFallback) {
+    // If we have an English (US) fallback, then we use this first.
+    // As we still suggest the translated version even if we only
+    // have an English (US) version.
     $element.attr("href", enUSFallback);
     $element.append(` <small>(${DEFAULT_LOCALE})<small>`);
     $element.addClass("only-in-en-us");
     $element.attr("title", "Currently only available in English (US)");
+  } else if (suggestion) {
+    $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
     $element.attr("title", "This is a link to an unwritten page");
@@ -293,7 +296,6 @@ export function getBrokenLinksFlaws(
               resolved + absoluteURL.search + absoluteURL.hash.toLowerCase()
             );
           } else {
-            let enUSFallbackURL = null;
             // Test if the document is a translated document and the link isn't
             // to an en-US URL. We know the link is broken (in this locale!)
             // but it might be "salvageable" if we link the en-US equivalent.
@@ -311,27 +313,32 @@ export function getBrokenLinksFlaws(
               );
               const enUSFound = Document.findByURL(enUSHrefNormalized);
               if (enUSFound) {
-                enUSFallbackURL = enUSFound.url;
+                // Only the en-US document exists
+                mutateLink(a, null, enUSFound.url);
               } else {
                 const enUSResolved = Redirect.resolve(enUSHrefNormalized);
+                let suggestion = null;
+                let enUSFallbackURL = null;
                 if (enUSResolved !== enUSHrefNormalized) {
                   enUSFallbackURL =
                     enUSResolved +
                     absoluteURL.search +
                     absoluteURL.hash.toLowerCase();
+                  suggestion = enUSFallbackURL.replace(
+                    `/${DEFAULT_LOCALE}/`,
+                    `/${doc.locale}/`
+                  );
                 }
+                addBrokenLink(
+                  a,
+                  checked.get(href),
+                  href,
+                  suggestion,
+                  null,
+                  enUSFallbackURL
+                );
               }
             }
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              null,
-              enUSFallbackURL
-                ? "Can use the English (en-US) link as a fallback"
-                : null,
-              enUSFallbackURL
-            );
           }
         }
         // But does it have the correct case?!
