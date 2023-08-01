@@ -177,6 +177,9 @@ jobs:
           BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
           BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
 
+          # Sign key for code samples
+          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
+
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
@@ -338,7 +341,7 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=30s \
+            --timeout=60s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
@@ -360,6 +363,14 @@ jobs:
           for pid in "${pids[@]}"; do
             wait $pid
           done
+
+      - name: Update AI Help index
+        run: yarn ai-help update-index
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
       - name: Slack Notification
         if: failure()

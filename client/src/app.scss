@@ -209,6 +209,11 @@ a {
   }
 }
 
+button.button[disabled],
+input[disabled] {
+  cursor: not-allowed;
+}
+
 .expand-this-link:after {
   bottom: 0;
   content: "";
@@ -330,4 +335,8 @@ sup.new {
   padding: 0 0.4em;
   text-rendering: optimizeLegibility;
   text-transform: uppercase;
+
+  &.beta {
+    background: var(--new-background-beta, var(--new-background));
+  }
 }

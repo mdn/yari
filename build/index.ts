@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
@@ -12,11 +13,11 @@ import {
 } from "../kumascript/src/errors.js";
 
 import { Doc, WebFeature, WebFeatureStatus } from "../libs/types/document.js";
-import { Document, execGit } from "../content/index.js";
+import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
-import { FLAW_LEVELS } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants/index.js";
 import { extractSections } from "./extract-sections.js";
 import { extractSidebar } from "./extract-sidebar.js";
 import { extractSummary } from "./extract-summary.js";
@@ -159,7 +160,7 @@ function injectSource(doc, document, metadata) {
 export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
-  fileAttachments: any;
+  fileAttachmentMap: Map<string, string>;
   source?: {
     github_url: string;
   };
@@ -387,15 +388,34 @@ export async function buildDocument(
   extractSidebar($, doc);
 
   // Check and scrutinize any local image references
-  const fileAttachments = checkImageReferences(doc, $, options, document);
+  const fileAttachmentMap = checkImageReferences(doc, $, options, document);
   // Not all images are referenced as `<img>` tags. Some are just sitting in the
   // current document's folder and they might be referenced in live samples.
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
   getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
-    (fp) => fileAttachments.add(fp)
+    (fp) => fileAttachmentMap.set(path.basename(fp), fp)
   );
+
+  if (doc.locale !== DEFAULT_LOCALE) {
+    // If it's not the default locale, we need to add the images
+    // from the default locale too.
+    const defaultLocaleDir = path.join(
+      CONTENT_ROOT,
+      DEFAULT_LOCALE.toLowerCase(),
+      slugToFolder(metadata.slug)
+    );
+
+    if (fs.existsSync(defaultLocaleDir)) {
+      getAdjacentFileAttachments(defaultLocaleDir).forEach((fp) => {
+        const basename = path.basename(fp);
+        if (!fileAttachmentMap.has(basename)) {
+          fileAttachmentMap.set(basename, fp);
+        }
+      });
+    }
+  }
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
@@ -529,7 +549,7 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachments };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
 }
 
 function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
@@ -537,8 +557,8 @@ function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
     for (const feature of Object.values<WebFeature>(webFeatures)) {
       if (
         feature.status &&
-        feature.compat_features?.some((query) =>
-          doc.browserCompat?.includes(query)
+        feature.compat_features?.some(
+          (query) => doc.browserCompat?.includes(query)
         )
       ) {
         return feature.status;
@@ -570,9 +590,7 @@ export async function buildLiveSamplePageFromURL(url: string) {
     (await kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      (
-        await kumascript.render(document.url)
-      )[0],
+      (await kumascript.render(document.url))[0],
       document.rawBody
     )) as BuiltLiveSamplePage[]
   ).find((page) => page.id.toLowerCase() == decodedSampleID);

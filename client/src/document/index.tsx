@@ -8,7 +8,7 @@ import { useIsServer, useLocale } from "../hooks";
 
 import {
   useDocumentURL,
-  useCopyExamplesToClipboard,
+  useCopyExamplesToClipboardAndAIExplain,
   useRunSample,
 } from "./hooks";
 import { Doc } from "../../../libs/types/document";
@@ -45,6 +45,7 @@ import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-vie
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
 import { SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
+import { UserResearchSurvey } from "../ui/molecules/user-research-survey";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -121,7 +122,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
-  useCopyExamplesToClipboard(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
@@ -257,6 +258,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </React.Suspense>
           )}
           <article className="main-page-content" lang={doc.locale}>
+            <UserResearchSurvey doc={doc} />
             <header>
               <h1>{doc.title}</h1>
               {doc.baseline && <BaselineIndicator status={doc.baseline} />}

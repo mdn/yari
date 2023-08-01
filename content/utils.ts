@@ -112,11 +112,11 @@ export function execGit(
   return stdout.toString().trim();
 }
 
-export function toPrettyJSON(value: unknown): string {
+export async function toPrettyJSON(value: unknown): Promise<string> {
   const json = JSON.stringify(value, null, 2) + "\n";
   if (prettier) {
     try {
-      return prettier.format(json, { parser: "json" });
+      return await prettier.format(json, { parser: "json" });
     } catch (e) {
       // If Prettier formatting failed, don't worry
     }

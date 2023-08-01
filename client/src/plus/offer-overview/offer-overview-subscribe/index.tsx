@@ -14,7 +14,7 @@ import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
-import SignInLink from "../../../ui/atoms/signin-link";
+import LogInLink from "../../../ui/atoms/login-link";
 
 export enum Period {
   Month,
@@ -71,10 +71,11 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
+  ["afree", "Ads free"],
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
-  ["afree", "Ads free", "new"],
+  ["ai-help", "AI Help", "beta"],
 ];
 
 const CORE: OfferDetailsProps = {
@@ -84,6 +85,7 @@ const CORE: OfferDetailsProps = {
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
     ["playground", "Share playgrounds"],
+    ["ai-help", "AI Help: 5 questions per day", "beta"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -345,7 +347,7 @@ function OfferOverviewSubscribe() {
                 {!activeSubscription && (
                   <>
                     {" "}
-                    or <SignInLink cta="log in" />
+                    or <LogInLink cta="log in" />
                   </>
                 )}
               </h2>

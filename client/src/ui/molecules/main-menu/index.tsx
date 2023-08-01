@@ -89,6 +89,11 @@ export default function MainMenu({ isOpenOnMobile }) {
             Play <sup className="new">New</sup>
           </a>
         </li>
+        <li className="top-level-entry-container">
+          <a className="top-level-entry menu-link" href="/en-US/plus/ai-help/">
+            AI Help <sup className="new beta">Beta</sup>
+          </a>
+        </li>
       </ul>
     </nav>
   );

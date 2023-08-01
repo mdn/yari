@@ -177,7 +177,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
       document,
     } = result;
 
@@ -228,10 +228,10 @@ async function buildDocuments(
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    for (const filePath of fileAttachments) {
+    for (const [basename, filePath] of fileAttachmentMap) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      fs.copyFileSync(filePath, path.join(outPath, basename));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -315,8 +315,9 @@ async function buildDocuments(
 
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
-    localeMeta.forEach((doc) =>
-      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    localeMeta.forEach(
+      (doc) =>
+        doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
     )
   );
   fs.writeFileSync(

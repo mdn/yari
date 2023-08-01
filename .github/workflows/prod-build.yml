@@ -177,6 +177,9 @@ jobs:
           BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
           BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.mozilla.net
 
+          # Sign key for code samples
+          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
+
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
@@ -342,7 +345,7 @@ jobs:
             --min-instances=10 \
             --max-instances=1000 \
             --memory=2GB \
-            --timeout=30s \
+            --timeout=60s \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.mozilla.net" \
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
@@ -364,6 +367,14 @@ jobs:
           for pid in "${pids[@]}"; do
             wait $pid
           done
+
+      - name: Update AI Help index
+        run: yarn ai-help update-index
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
       - name: Slack Notification
         if: failure()

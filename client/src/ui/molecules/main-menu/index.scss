@@ -4,7 +4,6 @@
 
 ul.main-menu {
   box-sizing: border-box;
-  grid-gap: 1rem;
   list-style: none;
   margin-top: 1rem;
   padding: 0;
@@ -35,6 +34,14 @@ ul.main-menu {
     .menu-toggle {
       display: none;
     }
+
+    .top-level-entry-container {
+      flex-shrink: 0;
+    }
+  }
+
+  @media screen and (min-width: ($screen-xl)) {
+    gap: 1rem;
   }
 }
 

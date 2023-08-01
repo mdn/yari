@@ -93,9 +93,9 @@ function getMockResultForGetChildren(doc_url) {
   ];
 }
 
-function checkSidebarResult(html, locale) {
+async function checkSidebarResult(html, locale) {
   // Lint the HTML
-  expect(lintHTML(html)).toBeFalsy();
+  expect(await lintHTML(html)).toBeFalsy();
   const dom = JSDOM.fragment(html);
   const section = dom.querySelector("section#Quick_links");
 
@@ -144,17 +144,17 @@ describeMacro("AddonSidebar", function () {
     itMacro(`with locale ${locale}`, function (macro) {
       macro.ctx.env.locale = locale;
       macro.ctx.env.slug = "Mozilla/Add-ons/AMO";
-      return macro.call().then(function (result) {
+      return macro.call().then(async function (result) {
         expect(macro.ctx.template).toHaveBeenCalledTimes(1);
-        checkSidebarResult(result, locale);
+        await checkSidebarResult(result, locale);
       });
     });
     itMacro(`with locale ${locale} under WebExtensions/API`, function (macro) {
       macro.ctx.env.locale = locale;
       macro.ctx.env.slug = "Mozilla/Add-ons/WebExtensions/API/alarms";
-      return macro.call().then(function (result) {
+      return macro.call().then(async function (result) {
         expect(macro.ctx.template).toHaveBeenCalledTimes(1);
-        checkSidebarResult(result, locale);
+        await checkSidebarResult(result, locale);
       });
     });
   }

@@ -13,7 +13,6 @@
     "a11y/selector-pseudo-class-focus": null,
     "declaration-property-value-disallowed-list": null,
     "font-family-no-missing-generic-family-keyword": null,
-    "function-no-unknown": null,
     "max-nesting-depth": null,
     "no-descending-specificity": null,
     "no-invalid-position-at-import-rule": null,
