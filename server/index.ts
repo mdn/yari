@@ -55,7 +55,7 @@ import {
 } from "../build/blog.js";
 
 async function buildDocumentFromURL(url: string) {
-  const document = Document.findByURL(url);
+  const document = Document.findByURL(url) as any;
   if (!document) {
     return null;
   }

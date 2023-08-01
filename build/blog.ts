@@ -441,8 +441,8 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
       description: post.description,
       author: [
         {
-          name: post.author?.name || "The MDN Team",
-          link: post.author?.link,
+          name: (<AuthorFrontmatter>post.author)?.name || "The MDN Team",
+          link: (<AuthorFrontmatter>post.author)?.link,
         },
       ],
       date: new Date(post.date),

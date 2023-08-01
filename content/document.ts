@@ -432,7 +432,7 @@ export async function update(url: string, rawBody: string, metadata) {
 
 export function findByURL(
   url: string,
-  ...args: (string | typeof MEMOIZE_INVALIDATE)[]
+  ...args: string[] | [...string[], typeof MEMOIZE_INVALIDATE]
 ) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {

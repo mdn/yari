@@ -41,15 +41,21 @@ export function buildURL(locale: string, slug: string) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-export function memoize<Args, T>(
-  fn: (...args: Args[]) => T
-): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => T {
+export function memoize<Args extends Array<any>, T>(
+  fn: (...args: Args) => T
+): (...args: Args | [...Args, typeof MEMOIZE_INVALIDATE]) => T {
   if (process.env.NODE_ENV !== "production") {
-    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => T;
+    return (...args: Args | [...Args, typeof MEMOIZE_INVALIDATE]): T => {
+      const invalidate = args.includes(MEMOIZE_INVALIDATE);
+      if (invalidate) {
+        args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
+      }
+      return fn(...(args as Args));
+    };
   }
 
   const cache = new LRUCache<string, T>({ max: 2000 });
-  return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]): T => {
+  return (...args: Args | [...Args, typeof MEMOIZE_INVALIDATE]): T => {
     const invalidate = args.includes(MEMOIZE_INVALIDATE);
     if (invalidate) {
       args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
@@ -64,7 +70,7 @@ export function memoize<Args, T>(
       }
     }
 
-    const value = fn(...(args as Args[]));
+    const value = fn(...(args as Args));
     cache.set(key, value);
     if (value instanceof Promise) {
       value.catch(() => cache.delete(key));
