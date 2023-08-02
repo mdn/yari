@@ -8,6 +8,7 @@ import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
+import cliProgress from "cli-progress";
 import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
@@ -753,6 +754,12 @@ program
       const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
+      const progressBar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_grey
+      );
+      progressBar.start(allDocs.count, 0);
+
       for (const document of allDocs.iterDocs()) {
         if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
           await buildDocument(document, {
@@ -761,7 +768,10 @@ program
             fixFlawsVerbose: true,
           });
         }
+        progressBar.increment();
       }
+
+      progressBar.stop();
     })
   )
 
