@@ -761,12 +761,16 @@ program
       progressBar.start(allDocs.count, 0);
 
       for (const document of allDocs.iterDocs()) {
-        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
-          await buildDocument(document, {
-            fixFlaws: true,
-            fixFlawsTypes: new Set(fixFlawsTypes),
-            fixFlawsVerbose: true,
-          });
+        try {
+          if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+            await buildDocument(document, {
+              fixFlaws: true,
+              fixFlawsTypes: new Set(fixFlawsTypes),
+              fixFlawsVerbose: true,
+            });
+          }
+        } catch (e) {
+          console.error(e);
         }
         progressBar.increment();
       }
