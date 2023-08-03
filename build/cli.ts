@@ -58,7 +58,7 @@ async function buildDocumentInteractive(
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
-    const document = invalidate
+    const document: any = invalidate
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
 
