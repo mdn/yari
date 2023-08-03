@@ -58,7 +58,7 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document =
-    doc ||
+    (doc as any) ||
     (invalidateCache
       ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
       : Document.findByURL(url));
