@@ -46,8 +46,8 @@ export function memoize<Args extends Array<any>, T>(
 ): (...args: Args | [...Args, typeof MEMOIZE_INVALIDATE]) => T {
   if (process.env.NODE_ENV !== "production") {
     return (...args: Args | [...Args, typeof MEMOIZE_INVALIDATE]): T => {
-      const invalidate = args.includes(MEMOIZE_INVALIDATE);
-      if (invalidate) {
+      // remove the invalidate symbol
+      if (args.includes(MEMOIZE_INVALIDATE)) {
         args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
       }
       return fn(...(args as Args));
