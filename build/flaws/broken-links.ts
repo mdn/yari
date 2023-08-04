@@ -312,8 +312,10 @@ export function getBrokenLinksFlaws(
                 `/${DEFAULT_LOCALE}/`
               );
               const enUSFound = Document.findByURL(enUSHrefNormalized);
+              // Note, we still recommend that contributors use localized links,
+              // even if the target document is still not localized.
               if (enUSFound) {
-                // Only the en-US document exists
+                // Found the en-US version of the document. Just link to that.
                 mutateLink(a, null, enUSFound.url);
               } else {
                 const enUSResolved = Redirect.resolve(enUSHrefNormalized);
@@ -338,6 +340,9 @@ export function getBrokenLinksFlaws(
                   enUSFallbackURL
                 );
               }
+            } else {
+              // The link is broken and we don't have a suggestion.
+              addBrokenLink(a, checked.get(href), href);
             }
           }
         }
