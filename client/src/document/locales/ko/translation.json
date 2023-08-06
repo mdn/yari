@@ -1,0 +1,15 @@
+{
+  "OnGitHubLink": {
+    "Found a content problem with this page?": "이 문서에 콘텐츠 문제를 찾았나요?",
+    "Edit the page on GitHub": "GitHub에서 문서 편집하기",
+    "Report the content issue": "콘텐츠 문제 신고하기",
+    "View the source on GitHub": "GitHub에서 소스 보기",
+    "Want to get more involved?": "더 참여하고 싶나요?",
+    "Learn how to contribute": "기여하는 방법을 알아보기"
+  },
+  "LastModified": {
+    "Last modified date not known": "마지막 수정 날짜를 알 수 없습니다.",
+    "This page was last modified on": "이 페이지는",
+    "MDN contributors": "MDN 기여자분들"
+  }
+}

@@ -48,6 +48,9 @@ import { BaselineIndicator } from "./baseline-indicator";
 import { UserResearchSurvey } from "../ui/molecules/user-research-survey";
 // import { useUIStatus } from "../ui-context";
 
+// i18n
+import "./locales/i18n";
+
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));

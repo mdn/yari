@@ -244,7 +244,7 @@ function ItemComponent({
           <p>{doc.summary}</p>
           <aside>
             <LastModified value={doc.modified} locale={locale} />,{" "}
-            <Authors url={item.url} />
+            <Authors url={item.url} locale={locale} />
           </aside>
         </>
       )}
