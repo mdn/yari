@@ -50,7 +50,7 @@ export const SURVEYS: Survey[] = [
     key: SurveyKey.DISCOVERABILITY_AUG_2023,
     bucket: SurveyBucket.DISCOVERABILITY_AUG_2023,
     show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
-    src: "",
+    src: "https://survey.alchemer.com/s3/7457498/MDN-Discoverability-User-Satisfaction",
     teaser:
       "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
     question: "What’s your experience on MDN Web Docs?",
