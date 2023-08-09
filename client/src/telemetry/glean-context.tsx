@@ -141,12 +141,14 @@ function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
 }
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
-  const anchor = ev?.target as Element;
-  if (anchor?.nodeName === "A") {
+  const anchor = ev?.target;
+  if (anchor instanceof HTMLAnchorElement) {
     if (anchor?.classList.contains("external")) {
       click(`external-link: ${anchor.getAttribute("href") || ""}`);
     } else if (anchor?.hasAttribute?.("data-pong")) {
       click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
+    } else if (anchor.dataset.glean) {
+      click(anchor.dataset.glean);
     }
   }
 }
