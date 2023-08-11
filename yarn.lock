@@ -2209,12 +2209,12 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mozilla/glean@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.4.0.tgz#a29cb3bde7e52de4d100c1e539298aa3a7ec28f8"
-  integrity sha512-16YgRBPexUtgGD13dnAYYmHeeEzatQ2wSFuwopNvXuy4CeJw3xpJ+N4fVjnMJtQffpp89l2f4BvKva+eAmmBPg==
+"@mozilla/glean@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-2.0.0.tgz#b482f215a31fa365d25a9a5acad74e6779d56471"
+  integrity sha512-4cVhtcWGkLb+KA+SGae0e68PGGNGFr/6nEi2M49J5EgFpEfNrzEAffJCi9PuKetjNeMdkFD6ZetSBvOJbrslEA==
   dependencies:
-    fflate "^0.7.1"
+    fflate "^0.8.0"
     jose "^4.0.4"
     tslib "^2.3.1"
     uuid "^9.0.0"
@@ -6770,10 +6770,10 @@ feed@^4.2.2:
   dependencies:
     xml-js "^1.6.11"
 
-fflate@^0.7.1:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.4.tgz#61587e5d958fdabb5a9368a302c25363f4f69f50"
-  integrity sha512-5u2V/CDW15QM1XbbgS+0DfPxVB+jUKhWEKuuFuHncbk3tEEqzmoXL+2KyOFuKGqOnmdIy0/davWF1CkuwtibCw==
+fflate@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.8.0.tgz#f93ad1dcbe695a25ae378cf2386624969a7cda32"
+  integrity sha512-FAdS4qMuFjsJj6XHbBaZeXOgaypXp8iw/Tpyuq/w3XA41jjLHT8NPA+n7czH/DDhdncq0nAyDZmPeWXh2qmdIg==
 
 figures@^2.0.0:
   version "2.0.0"
