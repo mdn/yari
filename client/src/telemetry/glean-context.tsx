@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { AI_EXPLAIN, PLAYGROUND, VIEWPORT_BREAKPOINTS } from "./constants";
+import { VIEWPORT_BREAKPOINTS } from "./constants";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
@@ -128,27 +128,19 @@ const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
-  const button = ev?.target as Element;
-  if (button?.nodeName === "BUTTON") {
-    if (button.hasAttribute?.("data-play")) {
-      click(
-        `${PLAYGROUND}: breakout->${button.getAttribute("data-play") || ""}`
-      );
-    } else if (button.hasAttribute?.("data-ai-explain")) {
-      click(`${AI_EXPLAIN}: ${button.getAttribute("data-ai-explain") || ""}}`);
-    }
+  const button = ev?.target;
+  if (button instanceof HTMLButtonElement && button.dataset.glean) {
+    click(button.dataset.glean);
   }
 }
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   const anchor = ev?.target;
   if (anchor instanceof HTMLAnchorElement) {
-    if (anchor?.classList.contains("external")) {
-      click(`external-link: ${anchor.getAttribute("href") || ""}`);
-    } else if (anchor?.hasAttribute?.("data-pong")) {
-      click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
-    } else if (anchor.dataset.glean) {
+    if (anchor.dataset.glean) {
       click(anchor.dataset.glean);
+    } else if (anchor.classList.contains("external")) {
+      click(`external-link: ${anchor.getAttribute("href") || ""}`);
     }
   }
 }
