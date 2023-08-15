@@ -219,6 +219,7 @@ jobs:
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
           REACT_APP_GLEAN_ENABLED: true
+          REACT_APP_GLEAN_DEBUG: true
 
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: true
