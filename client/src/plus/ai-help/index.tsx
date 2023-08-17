@@ -22,6 +22,7 @@ import { isExternalUrl } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
+import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -566,7 +567,7 @@ function ReportIssueOnGitHubLink({
   const lastQuestion = questions.at(-1);
 
   const url = new URL("https://github.com/");
-  url.pathname = "/mdn/ai-feedback/issues/new";
+  url.pathname = `/${AI_FEEDBACK_GITHUB_REPO}/issues/new`;
 
   const sp = new URLSearchParams();
   sp.set("title", `[AI Help] Question: ${lastQuestion}`);
