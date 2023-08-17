@@ -588,6 +588,7 @@ function ReportIssueOnGitHubLink({
   return (
     <a
       href={url.href}
+      className="external"
       title="This will take you to GitHub to file a new issue."
       target="_blank"
       rel="noopener noreferrer"
