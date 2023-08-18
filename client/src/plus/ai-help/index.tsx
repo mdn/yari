@@ -221,11 +221,11 @@ export function AIHelpInner() {
                             return <a {...props} />;
                           },
                           pre: ({ node, className, children, ...props }) => {
-                            let code = Children.toArray(children)
+                            const code = Children.toArray(children)
                               .map(
                                 (child) =>
                                   /language-(\w+)/.exec(
-                                    (child as any)?.props?.className || ""
+                                    (child as ReactElement)?.props?.className || ""
                                   )?.[1]
                               )
                               .find(Boolean);
@@ -263,7 +263,7 @@ export function AIHelpInner() {
                                     lang
                                   ),
                                 }}
-                              ></code>
+                              />
                             ) : (
                               <code {...props} className={className}>
                                 {children}
