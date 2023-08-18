@@ -1,5 +1,5 @@
 import Prism from "prismjs";
-import { Children, MutableRefObject, useEffect, useRef, useState } from "react";
+import { Children, MutableRefObject, ReactElement, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
