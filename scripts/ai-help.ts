@@ -52,6 +52,31 @@ export async function updateEmbeddings(directory: string) {
   });
   const openai = new OpenAIApi(configuration);
 
+  const createEmbedding = async (content: string) => {
+    // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
+    const input = content.replace(/\n/g, " ");
+
+    const embeddingResponse = await openai.createEmbedding({
+      model: "text-embedding-ada-002",
+      input,
+    });
+
+    if (embeddingResponse.status !== 200) {
+      console.error("Embedding request failed", embeddingResponse.data);
+      throw new Error("Embedding request failed");
+    }
+
+    const {
+      data: [{ embedding }],
+      usage: { total_tokens },
+    } = embeddingResponse.data;
+
+    return {
+      total_tokens,
+      embedding,
+    };
+  };
+
   console.log(`Retrieving all indexed documents...`);
   const existingDocs = await fetchAllExistingDocs(supabaseClient);
   console.log(`-> Done.`);
@@ -133,20 +158,7 @@ export async function updateEmbeddings(directory: string) {
 
         await Promise.all(
           sections.map(async ({ heading, content }) => {
-            // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
-            const input = content.replace(/\n/g, " ");
-
-            const embeddingResponse = await openai.createEmbedding({
-              model: "text-embedding-ada-002",
-              input,
-            });
-
-            if (embeddingResponse.status !== 200) {
-              console.error("Embedding request failed", embeddingResponse.data);
-              throw new Error("Embedding request failed");
-            }
-
-            const [responseData] = embeddingResponse.data.data;
+            const { total_tokens, embedding } = await createEmbedding(content);
 
             await supabaseClient
               .from("mdn_doc_section")
@@ -154,8 +166,8 @@ export async function updateEmbeddings(directory: string) {
                 doc_id: doc.id,
                 heading,
                 content,
-                token_count: embeddingResponse.data.usage.total_tokens,
-                embedding: responseData.embedding,
+                token_count: total_tokens,
+                embedding: embedding,
               })
               .select()
               .single()
