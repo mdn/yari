@@ -219,10 +219,11 @@
       &.status-pending .ai-help-message-content,
       &.status-in-progress .ai-help-message-content {
         &.empty::after,
-        > :not(ol):not(ul):not(pre):last-child:after,
+        > :not(ol):not(ul):not(pre):not(div.code-example):last-child:after,
         > ol:last-child li:last-child:after,
         > pre:last-child code:after,
-        > ul:last-child li:last-child:after {
+        > ul:last-child li:last-child:after,
+        > div.code-example:last-child pre:last-child code:after {
           animation: blink 1s steps(5, start) infinite;
           content: "▋";
           margin-left: 0.25rem;
