@@ -1,5 +1,12 @@
 import Prism from "prismjs";
-import { Children, MutableRefObject, ReactElement, useEffect, useRef, useState } from "react";
+import {
+  Children,
+  MutableRefObject,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -225,7 +232,8 @@ export function AIHelpInner() {
                               .map(
                                 (child) =>
                                   /language-(\w+)/.exec(
-                                    (child as ReactElement)?.props?.className || ""
+                                    (child as ReactElement)?.props?.className ||
+                                      ""
                                   )?.[1]
                               )
                               .find(Boolean);
