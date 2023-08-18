@@ -25,6 +25,7 @@ interface IndexedDoc {
   url: string;
   slug: string;
   title: string;
+  token_count: number | null;
   checksum: string;
 }
 
@@ -56,14 +57,28 @@ export async function updateEmbeddings(directory: string) {
     // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
     const input = content.replace(/\n/g, " ");
 
-    const embeddingResponse = await openai.createEmbedding({
-      model: "text-embedding-ada-002",
-      input,
-    });
-
-    if (embeddingResponse.status !== 200) {
-      console.error("Embedding request failed", embeddingResponse.data);
-      throw new Error("Embedding request failed");
+    let embeddingResponse;
+    try {
+      embeddingResponse = await openai.createEmbedding({
+        model: "text-embedding-ada-002",
+        input,
+      });
+    } catch (e: any) {
+      const {
+        data: {
+          error: { message, type },
+        },
+        status,
+        statusText,
+      } = e.response;
+      console.error(
+        `[!] Failed to create embedding (${status} ${statusText}): ${type} - ${message}`
+      );
+      // Try again with trimmed content.
+      embeddingResponse = await openai.createEmbedding({
+        model: "text-embedding-ada-002",
+        input: input.substring(0, 15000),
+      });
     }
 
     const {
@@ -106,6 +121,20 @@ export async function updateEmbeddings(directory: string) {
         checksum,
       });
       continue;
+    } else if (existingDoc && existingDoc.token_count === null) {
+      // (Legacy migration:) Add content, token_count, embedding where missing.
+      console.log(`-> [${url}] Adding content/token_count/embedding...`);
+      const { total_tokens, embedding } = await createEmbedding(content);
+
+      await supabaseClient
+        .from("mdn_doc")
+        .update({
+          content,
+          token_count: total_tokens,
+          embedding,
+        })
+        .filter("id", "eq", existingDoc.id)
+        .throwOnError();
     }
   }
   console.log(
@@ -133,6 +162,9 @@ export async function updateEmbeddings(directory: string) {
             .throwOnError();
         }
 
+        // Embedding for full document.
+        const { total_tokens, embedding } = await createEmbedding(content);
+
         // Create/update document record. Intentionally clear checksum until we
         // have successfully generated all document sections.
         const { data: doc } = await supabaseClient
@@ -143,6 +175,9 @@ export async function updateEmbeddings(directory: string) {
               url,
               slug,
               title,
+              content,
+              token_count: total_tokens,
+              embedding,
             },
             { onConflict: "url" }
           )
@@ -275,7 +310,7 @@ async function fetchAllExistingDocs(supabase: SupabaseClient) {
   const selectDocs = () =>
     supabase
       .from("mdn_doc")
-      .select("id, url, slug, title, checksum")
+      .select("id, url, slug, title, checksum, token_count")
       .order("id")
       .limit(PAGE_SIZE);
 
