@@ -260,24 +260,21 @@ function splitAndFilterSections(
 }
 async function fetchAllExistingDocs(supabase: SupabaseClient) {
   const PAGE_SIZE = 1000;
-  let { data } = await supabase
-    .from("mdn_doc")
-    .select("id, url, slug, title, checksum")
-    .order("id")
-    .limit(PAGE_SIZE)
-    .throwOnError();
-  let allData = data;
-  while (data.length === PAGE_SIZE) {
-    const lastItem = data[data.length - 1];
-    ({ data } = await supabase
+  const selectDocs = () =>
+    supabase
       .from("mdn_doc")
       .select("id, url, slug, title, checksum")
       .order("id")
-      .gt("id", lastItem.id)
-      .limit(PAGE_SIZE)
-      .throwOnError());
+      .limit(PAGE_SIZE);
+
+  let { data } = await selectDocs().throwOnError();
+  let allData = data;
+  while (data.length === PAGE_SIZE) {
+    const lastItem = data[data.length - 1];
+    ({ data } = await selectDocs().gt("id", lastItem.id).throwOnError());
     allData = [...allData, ...data];
   }
+
   return allData;
 }
 
