@@ -44,6 +44,17 @@ export type GleanAnalytics = {
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
 const GLEAN_APP_ID = "mdn-yari";
 
+function urlOrNull(url?: string, base?: string | URL) {
+  if (!url) {
+    return null;
+  }
+  try {
+    return new URL(url, base);
+  } catch (_) {
+    return null;
+  }
+}
+
 function glean(): GleanAnalytics {
   if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
@@ -74,11 +85,13 @@ function glean(): GleanAnalytics {
 
   const gleanContext = {
     page: (page: PageProps) => {
-      if (page.path) {
-        pageMetric.path.set(page.path);
+      const path = urlOrNull(page.path);
+      if (path) {
+        pageMetric.path.setUrl(path);
       }
-      if (page.referrer) {
-        pageMetric.referrer.set(page.referrer);
+      const referrer = urlOrNull(page.referrer);
+      if (referrer) {
+        pageMetric.referrer.setUrl(referrer);
       }
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
