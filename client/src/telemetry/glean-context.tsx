@@ -89,7 +89,7 @@ function glean(): GleanAnalytics {
       if (path) {
         pageMetric.path.setUrl(path);
       }
-      const referrer = urlOrNull(page.referrer);
+      const referrer = urlOrNull(page.referrer, window?.location.href);
       if (referrer) {
         pageMetric.referrer.setUrl(referrer);
       }
