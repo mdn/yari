@@ -2451,10 +2451,10 @@
   dependencies:
     cross-fetch "^3.1.5"
 
-"@supabase/supabase-js@^2.32.0":
-  version "2.32.0"
-  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.32.0.tgz#863c636d83232c6a2e9ba5932e0d7c1bf80bc436"
-  integrity sha512-1ShFhuOI5Du7604nlCelBsRD61daXk2O0qwjumoz35bqrYThnSPPtpJqZOHw6Mg6o7mLjIInYLh/DBlh8UvzRg==
+"@supabase/supabase-js@^2.33.0":
+  version "2.33.0"
+  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.33.0.tgz#94ff7cfc1c8dc0ef0f849093446b68e94ed5b206"
+  integrity sha512-8cUAwRRPhDSJrxdsJDsFy3dHA7uhNeVyNOfGCholywge24EeNIuIanbBAT2LCRaGmJjQEG98uXSQoD14hy8iWg==
   dependencies:
     "@supabase/functions-js" "^2.1.0"
     "@supabase/gotrue-js" "^2.46.1"
