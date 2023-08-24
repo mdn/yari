@@ -8829,26 +8829,7 @@ jest-get-type@^29.6.3:
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-29.6.3.tgz#36f499fdcea197c1045a127319c0481723908fd1"
   integrity sha512-zrteXnqYxfQh7l5FHyL38jL39di8H8rHoecLH3JNxH3BwOrBsNeabdap5e0I23lD4HHI8W5VFBZqG4Eaq5LNcw==
 
-jest-haste-map@^29.6.3:
-  version "29.6.3"
-  resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-29.6.3.tgz#a53ac35a137fd32d932039aab29d02a9dab30689"
-  integrity sha512-GecR5YavfjkhOytEFHAeI6aWWG3f/cOKNB1YJvj/B76xAmeVjy4zJUYobGF030cRmKaO1FBw3V8CZZ6KVh9ZSw==
-  dependencies:
-    "@jest/types" "^29.6.3"
-    "@types/graceful-fs" "^4.1.3"
-    "@types/node" "*"
-    anymatch "^3.0.3"
-    fb-watchman "^2.0.0"
-    graceful-fs "^4.2.9"
-    jest-regex-util "^29.6.3"
-    jest-util "^29.6.3"
-    jest-worker "^29.6.3"
-    micromatch "^4.0.4"
-    walker "^1.0.8"
-  optionalDependencies:
-    fsevents "^2.3.2"
-
-jest-haste-map@^29.6.4:
+jest-haste-map@^29.6.3, jest-haste-map@^29.6.4:
   version "29.6.4"
   resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-29.6.4.tgz#97143ce833829157ea7025204b08f9ace609b96a"
   integrity sha512-12Ad+VNTDHxKf7k+M65sviyynRoZYuL1/GTuhEVb8RYsNSNln71nANRb/faSyWvx0j+gHcivChXHIoMJrGYjog==
@@ -8954,14 +8935,14 @@ jest-resolve-dependencies@^29.6.3:
     jest-regex-util "^29.6.3"
     jest-snapshot "^29.6.3"
 
-jest-resolve@^29.6.3:
-  version "29.6.3"
-  resolved "https://registry.yarnpkg.com/jest-resolve/-/jest-resolve-29.6.3.tgz#e3114e1514973c8f1607387c3042f4d2926f2d60"
-  integrity sha512-WMXwxhvzDeA/J+9jz1i8ZKGmbw/n+s988EiUvRI4egM+eTn31Hb5v10Re3slG3/qxntkBt2/6GkQVDGu6Bwyhw==
+jest-resolve@^29.6.3, jest-resolve@^29.6.4:
+  version "29.6.4"
+  resolved "https://registry.yarnpkg.com/jest-resolve/-/jest-resolve-29.6.4.tgz#e34cb06f2178b429c38455d98d1a07572ac9faa3"
+  integrity sha512-fPRq+0vcxsuGlG0O3gyoqGTAxasagOxEuyoxHeyxaZbc9QNek0AmJWSkhjlMG+mTsj+8knc/mWb3fXlRNVih7Q==
   dependencies:
     chalk "^4.0.0"
     graceful-fs "^4.2.9"
-    jest-haste-map "^29.6.3"
+    jest-haste-map "^29.6.4"
     jest-pnp-resolver "^1.2.2"
     jest-util "^29.6.3"
     jest-validate "^29.6.3"
