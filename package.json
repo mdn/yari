@@ -60,7 +60,7 @@
     "react-dev-utils/fork-ts-checker-webpack-plugin": "^6.5.3"
   },
   "dependencies": {
-    "@caporal/core": "^2.0.2",
+    "@caporal/core": "^3.0.0",
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.5",
     "@codemirror/lang-javascript": "^6.2.0",
