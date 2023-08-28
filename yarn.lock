@@ -1406,10 +1406,10 @@
     "@lezer/css" "^1.1.0"
     "@lezer/html" "^1.3.0"
 
-"@codemirror/lang-javascript@^6.0.0", "@codemirror/lang-javascript@^6.1.9":
-  version "6.1.9"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-javascript/-/lang-javascript-6.1.9.tgz#19065ad32db7b3797829eca01b8d9c69da5fd0d6"
-  integrity sha512-z3jdkcqOEBT2txn2a87A0jSy6Te3679wg/U8QzMeftFt+4KA6QooMwfdFzJiuC3L6fXKfTXZcDocoaxMYfGz0w==
+"@codemirror/lang-javascript@^6.0.0", "@codemirror/lang-javascript@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-javascript/-/lang-javascript-6.2.0.tgz#c3e558c92c03b2f4a26d020c9c496fb7ef4e1902"
+  integrity sha512-E01GVTFTDSiXyrnHq+NwGxr/BqvNoAFRp1Wz+C6v2nU8rzjF0lHy7WG8kLCGowNyuk6YgfcmfuXHNxlLXgqQqQ==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/language" "^6.6.0"
