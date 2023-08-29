@@ -316,7 +316,7 @@ function RenderSideOrTopBanner({
       <p className="pong-box">
         <a
           className="pong"
-          data-pong="pong->click"
+          data-glean="pong: pong->click"
           href={`/pong/click?code=${encodeURIComponent(click)}`}
           target="_blank"
           rel="noreferrer"
@@ -333,7 +333,7 @@ function RenderSideOrTopBanner({
         {cta && (
           <a
             className="pong-cta"
-            data-pong="pong->click"
+            data-glean="pong: pong->click"
             href={`/pong/click?code=${encodeURIComponent(click)}`}
             target="_blank"
             rel="noreferrer"
@@ -344,7 +344,7 @@ function RenderSideOrTopBanner({
         <a
           href="/en-US/advertising"
           className="pong-note"
-          data-pong="pong->about"
+          data-glean="pong: pong->about"
           target="_blank"
           rel="noreferrer"
         >
@@ -354,7 +354,9 @@ function RenderSideOrTopBanner({
 
       <a
         className="no-pong"
-        data-pong={user?.isSubscriber ? "pong->settings" : "pong->plus"}
+        data-glean={
+          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+        }
         href={
           user?.isSubscriber
             ? "/en-US/plus/settings?ref=nope"
@@ -385,7 +387,7 @@ function RenderHpPlacement({
     >
       <a
         className="pong"
-        data-pong="pong->click"
+        data-glean="pong: pong->click"
         href={`/pong/click?code=${encodeURIComponent(click)}`}
         target="_blank"
         rel="noreferrer"
