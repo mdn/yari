@@ -71,7 +71,7 @@
     "@mdn/browser-compat-data": "^5.3.13",
     "@mozilla/glean": "2.0.1",
     "@sentry/integrations": "^7.63.0",
-    "@sentry/node": "^7.63.0",
+    "@sentry/node": "^7.65.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.5",
     "@webref/css": "^5.4.4",
