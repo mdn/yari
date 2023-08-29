@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { AI_EXPLAIN, PLAYGROUND, VIEWPORT_BREAKPOINTS } from "./constants";
+import { VIEWPORT_BREAKPOINTS } from "./constants";
 import { Doc } from "../../../libs/types/document";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
@@ -46,6 +46,17 @@ export type GleanAnalytics = {
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
 const GLEAN_APP_ID = "mdn-yari";
 
+function urlOrNull(url?: string, base?: string | URL) {
+  if (!url) {
+    return null;
+  }
+  try {
+    return new URL(url, base);
+  } catch (_) {
+    return null;
+  }
+}
+
 function glean(): GleanAnalytics {
   if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
@@ -63,6 +74,7 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
+    migrateFromLegacyStorage: true,
     serverEndpoint: DEV_MODE
       ? "https://developer.allizom.org"
       : document.location.origin,
@@ -75,11 +87,13 @@ function glean(): GleanAnalytics {
 
   const gleanContext = {
     page: (page: PageProps) => {
-      if (page.path) {
-        pageMetric.path.set(page.path);
+      const path = urlOrNull(page.path);
+      if (path) {
+        pageMetric.path.setUrl(path);
       }
-      if (page.referrer) {
-        pageMetric.referrer.set(page.referrer);
+      const referrer = urlOrNull(page.referrer, window?.location.href);
+      if (referrer) {
+        pageMetric.referrer.setUrl(referrer);
       }
       if (page.isBaseline !== undefined) {
         pageMetric.isBaseline.set(page.isBaseline);
@@ -133,27 +147,19 @@ const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
-  const button = ev?.target as Element;
-  if (button?.nodeName === "BUTTON") {
-    if (button.hasAttribute?.("data-play")) {
-      click(
-        `${PLAYGROUND}: breakout->${button.getAttribute("data-play") || ""}`
-      );
-    } else if (button.hasAttribute?.("data-ai-explain")) {
-      click(`${AI_EXPLAIN}: ${button.getAttribute("data-ai-explain") || ""}}`);
-    }
+  const button = ev?.target;
+  if (button instanceof HTMLButtonElement && button.dataset.glean) {
+    click(button.dataset.glean);
   }
 }
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   const anchor = ev?.target;
   if (anchor instanceof HTMLAnchorElement) {
-    if (anchor?.classList.contains("external")) {
-      click(`external-link: ${anchor.getAttribute("href") || ""}`);
-    } else if (anchor?.hasAttribute?.("data-pong")) {
-      click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
-    } else if (anchor.dataset.glean) {
+    if (anchor.dataset.glean) {
       click(anchor.dataset.glean);
+    } else if (anchor.classList.contains("external")) {
+      click(`external-link: ${anchor.getAttribute("href") || ""}`);
     }
   }
 }
