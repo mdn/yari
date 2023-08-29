@@ -25,7 +25,7 @@ export type PageProps = {
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
   viewportHorizontalCoverage: number;
-  isBaseline?: boolean;
+  isBaseline?: string;
 };
 
 export type PageEventProps = {
@@ -95,7 +95,7 @@ function glean(): GleanAnalytics {
       if (referrer) {
         pageMetric.referrer.setUrl(referrer);
       }
-      if (page.isBaseline !== undefined) {
+      if (page.isBaseline) {
         pageMetric.isBaseline.set(page.isBaseline);
       }
       pageMetric.httpStatus.set(page.httpStatus);
@@ -197,7 +197,12 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       viewportHorizontalCoverage: Math.round(
         (100 * window.innerWidth) / window.screen.width
       ),
-      isBaseline: doc?.baseline?.is_baseline,
+      isBaseline:
+        doc?.baseline?.is_baseline === undefined
+          ? undefined
+          : doc.baseline.is_baseline
+          ? "baseline"
+          : "not_baseline",
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;

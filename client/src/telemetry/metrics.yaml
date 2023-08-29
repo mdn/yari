@@ -55,12 +55,12 @@ page:
       - mdn-team@mozilla.com
     expires: 2023-09-05
   is_baseline:
-    type: boolean
+    type: string
     description: |
       The Baseline status of the page:
-      null if the page has no baseline status
-      true if the page is baseline
-      false is the page is not baseline
+      null: the page has no baseline status
+      "baseline": the page is baseline
+      "not_baseline" the page is not baseline
     lifetime: application
     send_in_pings:
       - page
