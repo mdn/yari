@@ -109,6 +109,7 @@
     background: #fff;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
+    box-sizing: content-box;
     display: inline-block;
     display: flex;
     height: auto;
