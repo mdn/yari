@@ -12,7 +12,11 @@ try {
 } catch (error) {
   if (error.code === "ENOTDIR") {
     console.log(
-      ".git/info/exclude dir doesn't exist, we're probably a submodule"
+      `${path.join(
+        ".git",
+        "info",
+        "exclude"
+      )} dir doesn't exist, we're probably a submodule`
     );
   } else {
     throw error;
