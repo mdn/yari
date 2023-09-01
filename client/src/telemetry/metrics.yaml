@@ -19,7 +19,7 @@ page:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   referrer:
     type: url
     lifetime: application
@@ -36,7 +36,7 @@ page:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   http_status:
     type: string
     description: |
@@ -53,7 +53,7 @@ page:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1822124
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   is_baseline:
     type: string
     description: |
@@ -92,7 +92,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   user_agent:
     type: string
     lifetime: application
@@ -109,7 +109,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   subscription_type:
     type: string
     lifetime: application
@@ -127,7 +127,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   viewport_breakpoint:
     type: string
     description: |
@@ -145,7 +145,7 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   viewport_ratio:
     type: quantity
     unit: percentage
@@ -164,7 +164,7 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   viewport_horizontal_coverage:
     type: quantity
     unit: percentage
@@ -182,7 +182,7 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
 
 element:
   clicked:
@@ -200,7 +200,7 @@ element:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
     extra_keys:
       source:
         description: |
