@@ -54,6 +54,26 @@ page:
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05
+  is_baseline:
+    type: string
+    description: |
+      The Baseline status of the page:
+      null: the page has no baseline status
+      "baseline": the page is baseline
+      "not_baseline" the page is not baseline
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - technical
+    bugs:
+      - "https://mozilla-hub.atlassian.net/browse/MP-542"
+    data_reviews:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1848187"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
 
 navigator:
   geo:

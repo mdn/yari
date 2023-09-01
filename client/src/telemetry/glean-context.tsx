@@ -10,6 +10,7 @@ import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
 import { VIEWPORT_BREAKPOINTS } from "./constants";
+import { Doc } from "../../../libs/types/document";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
@@ -24,6 +25,7 @@ export type PageProps = {
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
   viewportHorizontalCoverage: number;
+  isBaseline?: string;
 };
 
 export type PageEventProps = {
@@ -92,6 +94,9 @@ function glean(): GleanAnalytics {
       const referrer = urlOrNull(page.referrer, window?.location.href);
       if (referrer) {
         pageMetric.referrer.setUrl(referrer);
+      }
+      if (page.isBaseline) {
+        pageMetric.isBaseline.set(page.isBaseline);
       }
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
@@ -171,7 +176,7 @@ export function useGlean() {
   return React.useContext(GleanContext);
 }
 
-export function useGleanPage(pageNotFound: boolean) {
+export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
   const loc = useLocation();
   const userData = useUserData();
   const path = useRef<String | null>(null);
@@ -192,12 +197,18 @@ export function useGleanPage(pageNotFound: boolean) {
       viewportHorizontalCoverage: Math.round(
         (100 * window.innerWidth) / window.screen.width
       ),
+      isBaseline:
+        doc?.baseline?.is_baseline === undefined
+          ? undefined
+          : doc.baseline.is_baseline
+          ? "baseline"
+          : "not_baseline",
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData, pageNotFound]);
+  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.is_baseline]);
 }
 
 export function useGleanClick() {
