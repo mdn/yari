@@ -2368,13 +2368,13 @@
     "@sentry/utils" "7.63.0"
     tslib "^2.4.1 || ^1.9.3"
 
-"@sentry/integrations@^7.63.0":
-  version "7.63.0"
-  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.63.0.tgz#bf4268b524670fdbc290dc489de0069143b499c6"
-  integrity sha512-+P8GNqFZNH/yS/KPbvUfUDERneoRNUrqp9ayvvp8aq4cTtrBdM72CYgI21oG6cti42SSM1VDLYZomTV3ElPzSg==
+"@sentry/integrations@^7.67.0":
+  version "7.67.0"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-7.67.0.tgz#b68f5263ef0675b6cd4bc22e3b1f07562598be06"
+  integrity sha512-Mzv3WxCIfZHy1ATv1H7rit1PMOkuYz2u5WLYDF6WbSVE3KLEGjRaq1OaylvAyHrNghonfHf8eiaJaz7Ik/f2Kw==
   dependencies:
-    "@sentry/types" "7.63.0"
-    "@sentry/utils" "7.63.0"
+    "@sentry/types" "7.67.0"
+    "@sentry/utils" "7.67.0"
     localforage "^1.8.1"
     tslib "^2.4.1 || ^1.9.3"
 
@@ -2397,12 +2397,25 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.63.0.tgz#8032029fee6f70e04b667646626a674b03e2f79b"
   integrity sha512-pZNwJVW7RqNLGuTUAhoygt0c9zmc0js10eANAz0MstygJRhQI1tqPDuiELVdujPrbeL+IFKF+7NvRDAydR2Niw==
 
+"@sentry/types@7.67.0":
+  version "7.67.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.67.0.tgz#1f11e1c23d47869a25f7f37279a72fa7d1daef45"
+  integrity sha512-GV/Hxdsp/hes1YQGPGgSUG1IHRNQVJMnCfYcpuZtZI6CvNJ+7qNOLkdmC/xGFwfpYH9kYsFBvmGsmeC6yUENYA==
+
 "@sentry/utils@7.63.0":
   version "7.63.0"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.63.0.tgz#7c598553b4dbb6e3740dc96bc7f112ec32edbe69"
   integrity sha512-7FQv1RYAwnuTuarruP+1+Jd6YQuN7i/Y7KltwPMVEwU7j5mzYQaexLr/Jz1XIdR2KYVdkbXQyP8jj8BmA6u9Jw==
   dependencies:
     "@sentry/types" "7.63.0"
+    tslib "^2.4.1 || ^1.9.3"
+
+"@sentry/utils@7.67.0":
+  version "7.67.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.67.0.tgz#987883fa8568957216249fa896f872b97c5d513d"
+  integrity sha512-OstjIfAD0xPWVnIRzoAtFBW+YTmxix4h3ehgtFxhA4VJHkC9KXchaTNwk+nlRy/nx4phx5vW9p7YWhO3kJBJmA==
+  dependencies:
+    "@sentry/types" "7.67.0"
     tslib "^2.4.1 || ^1.9.3"
 
 "@sidvind/better-ajv-errors@^2.0.0":
