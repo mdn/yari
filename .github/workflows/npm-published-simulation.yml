@@ -45,7 +45,7 @@ jobs:
           # The following env vars is what we do in npm-publish.yml
           # Each variable set is documented there.
 
-          REACT_APP_CRUD_MODE: true
+          REACT_APP_WRITER_MODE: true
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |

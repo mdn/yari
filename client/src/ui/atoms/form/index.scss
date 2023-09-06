@@ -25,6 +25,7 @@
   }
 
   [type="text"],
+  [type="email"],
   textarea,
   select {
     background: var(--background-primary);
@@ -93,5 +94,31 @@
     &.invalid b {
       color: var(--form-invalid-color);
     }
+  }
+}
+
+.modal-body,
+.mdn-form.mdn-form-big {
+  .mdn-form-item {
+    padding-top: 1.5rem;
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    label,
+    textarea,
+    [type="text"],
+    [type="email"] {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  }
+
+  .button-wrap {
+    font-size: 1rem;
+    height: auto;
+    line-height: 1.5;
+    padding: 0.5rem 2rem;
   }
 }

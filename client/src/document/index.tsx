@@ -2,11 +2,15 @@ import React from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE, PLACEMENT_ENABLED } from "../env";
+import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
-import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import {
+  useDocumentURL,
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -109,14 +113,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
-      refreshInterval: CRUD_MODE ? 500 : 0,
+      refreshInterval: WRITER_MODE ? 500 : 0,
     }
   );
 
   useIncrementFrequentlyViewed(doc);
-  useCopyExamplesToClipboard(doc);
+  useRunSample(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
@@ -235,7 +240,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
 
         <MainContentContainer>
-          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+          {!isServer && WRITER_MODE && !props.isPreview && doc.isActive && (
             <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
               <Toolbar
                 doc={doc}

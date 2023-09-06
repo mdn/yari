@@ -84,7 +84,6 @@
   --z-index-a11y: 10000;
   --z-index-modal-content: 801;
   --z-index-modal-overlay: 800;
-  --z-index-top-banner: 701;
   --z-index-main-header: 700;
   --z-index-sidebar-mobile: 600;
   --z-index-mid: 500;
@@ -106,16 +105,6 @@
   --sticky-header-height: calc(
     var(--top-nav-height) + var(--article-actions-container-height) + 2px
   );
-}
-
-@media screen and (min-width: $screen-md) {
-  .top-banner.visible ~ *,
-  .top-banner.loading ~ * {
-    --sticky-header-height: calc(
-      var(--top-nav-height) + var(--article-actions-container-height) +
-        var(--top-banner-outer-height) + 2px
-    );
-  }
 }
 
 @media screen and (min-width: $screen-md) {
@@ -218,6 +207,11 @@ a {
     mask-size: cover;
     width: 10px;
   }
+}
+
+button.button[disabled],
+input[disabled] {
+  cursor: not-allowed;
 }
 
 .expand-this-link:after {
@@ -327,5 +321,22 @@ u {
 @media (forced-colors: active) {
   .icon {
     background-color: CanvasText !important;
+  }
+}
+
+sup.new {
+  background: var(--new-background);
+  border-radius: 1em;
+  color: var(--new-color);
+  display: inline-block;
+  font-size: 0.45rem;
+  font-weight: bold;
+  line-height: 1.7;
+  padding: 0 0.4em;
+  text-rendering: optimizeLegibility;
+  text-transform: uppercase;
+
+  &.beta {
+    background: var(--new-background-beta, var(--new-background));
   }
 }

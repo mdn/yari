@@ -349,7 +349,7 @@ program
     tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
-      const changes = Document.remove(slug, locale, {
+      const changes = await Document.remove(slug, locale, {
         recursive,
         redirect,
         dry: true,
@@ -380,7 +380,7 @@ program
             default: true,
           });
       if (run) {
-        const deletedDocs = Document.remove(slug, locale, {
+        const deletedDocs = await Document.remove(slug, locale, {
           recursive,
           redirect,
         });
@@ -437,7 +437,7 @@ program
     tryOrExit(async ({ args, options }: MoveActionParameters) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
-      const changes = Document.move(oldSlug, newSlug, locale, {
+      const changes = await Document.move(oldSlug, newSlug, locale, {
         dry: true,
       });
       console.log(
@@ -459,7 +459,7 @@ program
             default: true,
           });
       if (run) {
-        const moved = Document.move(oldSlug, newSlug, locale);
+        const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
     })
@@ -718,7 +718,7 @@ program
             redirectedDocs,
             renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(locale);
+          } = await syncAllTranslatedContent(locale);
           console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -1117,7 +1117,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 console.log(`${flaw.macroSource} --> ${suggestion}`);
               }
               console.groupEnd();
-              Document.update(
+              await Document.update(
                 document.url,
                 document.rawBody,
                 document.metadata
@@ -1138,7 +1138,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
-          Document.update(document.url, newRawHTML, document.metadata);
+          await Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
         } else {

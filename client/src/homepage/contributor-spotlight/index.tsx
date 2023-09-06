@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { CRUD_MODE } from "../../env";
+import { DEV_MODE } from "../../env";
 import { HydrationData } from "../../../../libs/types/hydration";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
@@ -24,7 +24,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: DEV_MODE,
       revalidateOnMount: !fallbackData,
     }
   );
