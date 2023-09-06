@@ -94,6 +94,8 @@ export const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "developer.allizom.org", // required for glean to work on localhost:5042
+
     "bcd.developer.allizom.org",
     "bcd.developer.mozilla.org",
 

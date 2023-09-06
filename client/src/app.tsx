@@ -125,7 +125,7 @@ export function App(appProps: HydrationData) {
   );
 
   usePing();
-  useGleanPage(pageNotFound);
+  useGleanPage(pageNotFound, appProps.doc);
 
   const localeMatch = useMatch("/:locale/*");
 
