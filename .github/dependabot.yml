@@ -6,6 +6,10 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 35
+    groups:
+      sentry:
+        patterns:
+          - "@sentry/*"
     ignore:
       # Temporarily disable updates to Dinocons
       - dependency-name: "@mdn/dinocons"
