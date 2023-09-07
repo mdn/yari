@@ -10,6 +10,12 @@ updates:
       sentry:
         patterns:
           - "@sentry/*"
+      types:
+        patterns:
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       # Temporarily disable updates to Dinocons
       - dependency-name: "@mdn/dinocons"
