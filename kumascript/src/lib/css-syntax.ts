@@ -290,7 +290,8 @@ export async function getCSSSyntax(
         const span = `<span class="token property">${encoded}</span>`;
         // If the type is not included in the syntax, or is in "typesToLink",
         // link to its dedicated page (don't expand it)
-        if (valuespaces[name]?.value && !typesToLink.includes(name)) {
+        const key = name.replace(/(^<|>$)/g, "");
+        if (valuespaces[key]?.value && !typesToLink.includes(name)) {
           return span;
         } else {
           let slug;
