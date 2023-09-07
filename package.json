@@ -70,7 +70,7 @@
     "@mdn/bcd-utils-api": "^0.0.4",
     "@mdn/browser-compat-data": "^5.3.14",
     "@mozilla/glean": "2.0.1",
-    "@sentry/integrations": "^7.67.0",
+    "@sentry/integrations": "^7.68.0",
     "@sentry/node": "^7.67.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.5",
