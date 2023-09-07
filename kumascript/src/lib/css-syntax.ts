@@ -96,7 +96,7 @@ export async function getCSSSyntax(
   };
 
   // get the contents of webref
-  const parsedWebRef = (await webRefData.listAll()) as unknown;
+  const parsedWebRef = await getParsedWebRef();
 
   // get all the value syntaxes
   let valuespaces = {};
@@ -215,18 +215,19 @@ export async function getCSSSyntax(
         if (itemName.endsWith("_value")) {
           itemName = itemName.replace("_value", "");
         }
-        itemName = `<${itemName}>`;
         // not all types have an entry in the syntax
         if (valuespaces[itemName]) {
           itemSyntax = valuespaces[itemName].value;
         }
+        itemName = `<${itemName}>`;
         break;
       case "css-function":
-        itemName = `<${itemName}()>`;
+        itemName = `${itemName}()`;
         // not all functions have an entry in the syntax
         if (valuespaces[itemName]) {
           itemSyntax = valuespaces[itemName].value;
         }
+        itemName = `<${itemName}>`;
         break;
       case "css-at-rule":
         itemSyntax = getAtRuleSyntax(itemName);
@@ -467,7 +468,7 @@ export async function getCSSSyntax(
       // and then get the types in those syntaxes
       constituentSyntaxes = [];
       for (const constituent of allConstituents.slice(oldConstituentsLength)) {
-        const constituentSyntaxEntry = valuespaces[`<${constituent}>`];
+        const constituentSyntaxEntry = valuespaces[constituent];
 
         if (constituentSyntaxEntry?.value) {
           constituentSyntaxes.push(constituentSyntaxEntry.value);
@@ -495,11 +496,8 @@ export async function getCSSSyntax(
 
     // and write each one out
     for (const type of types) {
-      if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
-        output += renderSyntax(
-          `&lt;${type}&gt;`,
-          valuespaces[`<${type}>`].value
-        );
+      if (valuespaces[type] && valuespaces[type].value) {
+        output += renderSyntax(`&lt;${type}&gt;`, valuespaces[type].value);
         output += "<br/>";
       }
     }
@@ -519,4 +517,81 @@ export async function getCSSSyntax(
     output = writeFormalSyntax(name, syntax);
   }
   return output;
+}
+
+async function getParsedWebRef(): Promise<WebRefObjectData> {
+  const rawItems = await getRawWebRefData();
+
+  return Object.fromEntries(
+    Object.entries(rawItems).map(
+      ([name, { spec, properties, atrules, values }]) => [
+        name,
+        {
+          spec,
+          properties: byName(properties),
+          atrules: byName(atrules),
+          valuespaces: byName(values),
+        },
+      ]
+    )
+  );
+}
+
+function byName<T extends Named>(items: T[]): Record<string, T> {
+  return Object.fromEntries(
+    items.map((item) => [item.name.replace(/(^<|>$)/g, ""), item])
+  );
+}
+
+async function getRawWebRefData(): Promise<WebRefArrayData> {
+  return (await webRefData.listAll()) as WebRefArrayData;
+}
+
+// @webref/css v5 interfaces.
+
+type WebRefObjectData = Record<string, WebRefObjectDataItem>;
+interface WebRefObjectDataItem {
+  spec: WebRefSpecEntry;
+  properties: Record<string, WebRefPropertyEntry>;
+  atrules: Record<string, WebRefAtruleEntry>;
+  valuespaces: Record<string, WebRefValuespaceEntry>;
+}
+
+// @webref/css v6 interfaces.
+
+type WebRefArrayData = Record<string, WebRefArrayDataItem>;
+interface WebRefArrayDataItem {
+  spec: WebRefSpecEntry;
+  properties: (WebRefPropertyEntry & Named)[];
+  atrules: (WebRefAtruleEntry & Named)[];
+  values: (WebRefValuespaceEntry & Named)[];
+}
+
+interface Named {
+  name: string;
+}
+
+// Common interfaces.
+
+interface WebRefSpecEntry {
+  title: string;
+  url: string;
+}
+
+interface WebRefPropertyEntry {
+  value: string;
+  newValues: string;
+}
+
+interface WebRefAtruleEntry {
+  descriptors: {
+    name: string;
+    value: string;
+  }[];
+  value: string;
+}
+
+interface WebRefValuespaceEntry {
+  prose?: string;
+  value?: string;
 }
