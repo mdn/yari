@@ -5,18 +5,8 @@ export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
 export const ARTICLE_ACTIONS_NEW_COLLECTION = "article_actions_new_collection";
 export const ARTICLE_ACTIONS_COLLECTIONS_OPENED =
   "article_actions_collections_opened";
-export const BANNER_PREVIEW_FEATURES_DISMISSED =
-  "banner_preview_features_dismissed";
-export const BANNER_PREVIEW_FEATURES_SETTINGS_LINK =
-  "banner_preview_features_settings_link";
 export const COLLECTIONS_BANNER_NEW_COLLECTION =
   "collections_banner_new_collection";
-export const BANNER_MULTIPLE_COLLECTIONS_DISMISSED =
-  "banner_multiple_collections_dismissed";
-export const BANNER_MULTIPLE_COLLECTIONS_LINK =
-  "banner_multiple_collections_link";
-export const BANNER_NEWSLETTER_DISMISSED = "banner_newsletter_dismissed";
-export const BANNER_NEWSLETTER_LINK = "banner_newsletter_link";
 export const NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS =
   "new_collection_modal_submit_article_actions";
 export const NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE =
