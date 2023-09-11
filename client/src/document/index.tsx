@@ -43,7 +43,7 @@ import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
-import { SidePlacement } from "../ui/organisms/placement";
+import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
 // import { useUIStatus } from "../ui-context";
 
@@ -264,6 +264,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
+            <BottomBanner />
           </article>
         </MainContentContainer>
       </div>
