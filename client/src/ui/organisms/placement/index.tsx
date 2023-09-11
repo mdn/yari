@@ -293,7 +293,7 @@ export function PlacementInner({
   return (
     <>
       {!isServer &&
-        ((click && image) || pong.status === Status.empty) &&
+        ((click && image) || pong?.status === Status.empty) &&
         renderer({
           place,
           extraClassNames,
