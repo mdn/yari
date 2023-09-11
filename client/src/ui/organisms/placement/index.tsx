@@ -31,11 +31,11 @@ interface PlacementRenderArgs {
 }
 
 function viewed(
-  pong: PlacementData,
+  pong?: PlacementData,
   observer: IntersectionObserver | null = null
 ) {
   pong?.view &&
-    navigator?.sendBeacon?.(
+    navigator.sendBeacon?.(
       `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
         pong?.fallback
           ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
@@ -192,7 +192,7 @@ export function BottomBanner() {
     <PlacementInner
       pong={{ status: Status.empty }}
       renderer={RenderBottomBanner}
-      typ={"bottom-banner"}
+      typ="bottom-banner"
     />
   );
 }
@@ -207,7 +207,7 @@ export function PlacementInner({
   renderer,
   typ,
 }: {
-  pong: PlacementData;
+  pong?: PlacementData;
   extraClassNames?: string[];
   cta?: string;
   imageWidth?: number;
@@ -244,7 +244,7 @@ export function PlacementInner({
           if (isIntersecting && intersectionRatio >= 0.5) {
             if (timer.current.timeout === null) {
               timer.current = {
-                timeout: window?.setTimeout?.(sendViewed, 1000),
+                timeout: window.setTimeout?.(sendViewed, 1000),
                 start: Date.now(),
               };
             }
@@ -264,15 +264,13 @@ export function PlacementInner({
     [pong, sendViewed]
   );
 
-  const { image, copy } = pong?.fallback || pong || {};
-  const { click } = pong || {};
   useEffect(() => {
     return () => observer.current?.disconnect();
   }, []);
 
   useEffect(() => {
     if (timer.current.timeout !== -1) {
-      // timeout !== -1 means the viewed has been sent
+      // timeout !== -1 means the viewed has not been sent
       if (!isVisible && timer.current.timeout !== null) {
         clearTimeout(timer.current.timeout);
         timer.current = { timeout: null, start: null, notVisible: true };
@@ -283,13 +281,15 @@ export function PlacementInner({
         timer.current.timeout === null
       ) {
         timer.current = {
-          timeout: window?.setTimeout?.(sendViewed, 1000),
+          timeout: window.setTimeout?.(sendViewed, 1000),
           start: Date.now(),
         };
       }
     }
-  }, [isVisible, pong, gleanClick, sendViewed]);
+  }, [isVisible, pong, sendViewed]);
 
+  const { image, copy } = pong?.fallback || pong || {};
+  const { click } = pong || {};
   return (
     <>
       {!isServer &&
