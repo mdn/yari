@@ -17,8 +17,6 @@ import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
-  start: number | null;
-  notVisible?: boolean;
 }
 
 interface PlacementRenderArgs {
@@ -34,10 +32,7 @@ interface PlacementRenderArgs {
   style: object;
 }
 
-function viewed(
-  pong?: PlacementData,
-  observer: IntersectionObserver | null = null
-) {
+function viewed(pong?: PlacementData) {
   pong?.view &&
     navigator.sendBeacon?.(
       `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
@@ -46,7 +41,6 @@ function viewed(
           : ""
       }`
     );
-  observer?.disconnect();
 }
 
 export function SidePlacement() {
@@ -226,7 +220,7 @@ export function PlacementInner({
   const gleanClick = useGleanClick();
 
   const place = useRef<HTMLElement | null>(null);
-  const timer = useRef<Timer>({ timeout: null, start: null });
+  const timer = useRef<Timer>({ timeout: null });
 
   const isIntersecting = useIsIntersecting(place, {
     root: null,
@@ -237,7 +231,7 @@ export function PlacementInner({
   const sendViewed = useCallback(() => {
     viewed(pong);
     gleanClick(`pong: pong->viewed ${typ}`);
-    timer.current = { timeout: -1, start: -1 };
+    timer.current = { timeout: -1 };
   }, [pong, gleanClick, typ]);
 
   useEffect(() => {
@@ -246,13 +240,12 @@ export function PlacementInner({
       if (isVisible && isIntersecting) {
         if (timer.current.timeout === null) {
           timer.current = {
-            timeout: window.setTimeout?.(sendViewed, 1000),
-            start: Date.now(),
+            timeout: window.setTimeout(sendViewed, 1000),
           };
         }
       } else if (timer.current.timeout !== null) {
         clearTimeout(timer.current.timeout);
-        timer.current = { timeout: null, start: null, notVisible: true };
+        timer.current = { timeout: null };
       }
     }
   }, [isVisible, isIntersecting, sendViewed]);
