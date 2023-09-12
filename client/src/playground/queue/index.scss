@@ -1,0 +1,36 @@
+//
+.play-queue-container {
+  margin-top: 1rem;
+
+  > .play-queue {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    padding: 1rem;
+    width: fit-content;
+
+    button {
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    > ul {
+      width: 10rem;
+
+      > li {
+        align-items: center;
+        border-bottom: 1px solid var(--border-primary);
+        display: flex;
+        justify-content: space-between;
+
+        > code {
+          background-color: var(--background-secondary);
+          min-width: 5rem;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}

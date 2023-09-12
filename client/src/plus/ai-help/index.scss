@@ -11,22 +11,49 @@
     --plus-link: var(--ai-help-link);
   }
 
-  > .container {
-    padding: var(--gutter);
+  > .ai-help-main {
+    display: grid;
+    grid-template-columns: [left] 1fr [center] min(52rem, 100%) [right] 1fr;
 
-    &:not(:last-of-type) {
-      padding-bottom: 0;
+    > .play-queue-container {
+      grid-column: right;
+      grid-row: 1/-1;
+      position: sticky;
+      top: calc(var(--top-nav-height) + 1px + 1rem);
+
+      @media screen and (max-width: $screen-lg) {
+        align-items: center;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+        position: absolute;
+        position: fixed;
+        top: initial;
+        width: 100%;
+        z-index: var(--z-index-modal-content);
+      }
     }
 
-    .notecard {
-      margin-bottom: 0;
-      margin-top: 0;
+    > .container {
+      grid-column: center;
+      padding: var(--gutter);
 
-      a:link {
-        color: var(--text-link);
+      &:not(:last-of-type) {
+        padding-bottom: 0;
+      }
 
-        &:not(:hover) {
-          text-decoration: underline;
+      .notecard {
+        margin-bottom: 0;
+        margin-top: 0;
+
+        a:link {
+          color: var(--text-link);
+
+          &:not(:hover) {
+            text-decoration: underline;
+          }
         }
       }
     }

@@ -74,7 +74,6 @@ export default function AiHelp() {
 
   return (
     <div className="ai-help">
-      <PlayQueue />
       <header className="plus-header-mandala">
         <Container>
           <h1>
@@ -102,23 +101,26 @@ export default function AiHelp() {
           </p>
         </Container>
       </header>
-      <Container>
-        <div className="notecard experimental">
-          <p>
-            <strong>This is a beta feature.</strong>
-            <br />
-            May occasionally generate incorrect answers. Please always verify
-            information independently.
-            <br />
-            <a href="/en-US/blog/introducing-ai-help/">
-              <strong>Learn more</strong>
-            </a>
-          </p>
-        </div>
-      </Container>
-      <Container>
-        {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
-      </Container>
+      <div className="ai-help-main">
+        <PlayQueue />
+        <Container>
+          <div className="notecard experimental">
+            <p>
+              <strong>This is a beta feature.</strong>
+              <br />
+              May occasionally generate incorrect answers. Please always verify
+              information independently.
+              <br />
+              <a href="/en-US/blog/introducing-ai-help/">
+                <strong>Learn more</strong>
+              </a>
+            </p>
+          </div>
+        </Container>
+        <Container>
+          {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
+        </Container>
+      </div>
     </div>
   );
 }
@@ -257,12 +259,18 @@ export function AIHelpInner() {
                               sample += 1;
                               return (
                                 <div className="code-example">
-                                  <p className="example-header play-collect">
+                                  <div className="example-header play-collect">
                                     <span className="language-name">
                                       {code}
                                     </span>
                                     <div className="playlist">
-                                      <input type="checkbox" id={`${sample}`} />
+                                      <input
+                                        type="checkbox"
+                                        onChange={(e) => {
+                                          e.target.dataset.queued = `${e.target.checked} `;
+                                        }}
+                                        id={`${sample}`}
+                                      />
                                       <label htmlFor={`${sample}`}></label>
                                       <button
                                         type="button"
@@ -293,7 +301,7 @@ export function AIHelpInner() {
                                         Play?
                                       </button>
                                     </div>
-                                  </p>
+                                  </div>
                                   <pre className={`brush: ${code}`}>
                                     {children}
                                   </pre>

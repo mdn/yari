@@ -135,6 +135,12 @@ export function addCollectButton(
   checkLabel.htmlFor = checkId;
   checkLabel.textContent = "";
   const check = document.createElement("input");
+  check.addEventListener("change", (e) => {
+    const ct = e.currentTarget as HTMLInputElement | null;
+    if (ct?.dataset) {
+      ct.dataset.queued = `${ct.checked} `;
+    }
+  });
   check.type = "checkbox";
   check.id = checkId;
   const button = document.createElement("button");
