@@ -1,5 +1,9 @@
-import { useCallback, useEffect, useRef } from "react";
-import { useIsServer, usePageVisibility } from "../../../hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useIsIntersecting,
+  useIsServer,
+  usePageVisibility,
+} from "../../../hooks";
 import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
@@ -13,8 +17,6 @@ import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
-  start: number | null;
-  notVisible?: boolean;
 }
 
 interface PlacementRenderArgs {
@@ -30,10 +32,13 @@ interface PlacementRenderArgs {
   style: object;
 }
 
-function viewed(
-  pong?: PlacementData,
-  observer: IntersectionObserver | null = null
-) {
+const INTERSECTION_OPTIONS = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.5,
+};
+
+function viewed(pong?: PlacementData) {
   pong?.view &&
     navigator.sendBeacon?.(
       `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
@@ -42,7 +47,6 @@ function viewed(
           : ""
       }`
     );
-  observer?.disconnect();
 }
 
 export function SidePlacement() {
@@ -221,72 +225,38 @@ export function PlacementInner({
   const isVisible = usePageVisibility();
   const gleanClick = useGleanClick();
 
-  const observer = useRef<IntersectionObserver | null>(null);
-  const timer = useRef<Timer>({ timeout: null, start: null });
+  const timer = useRef<Timer>({ timeout: null });
+
+  const [node, setNode] = useState<HTMLElement>();
+  const isIntersecting = useIsIntersecting(node, INTERSECTION_OPTIONS);
 
   const sendViewed = useCallback(() => {
-    viewed(pong, observer?.current);
+    viewed(pong);
     gleanClick(`pong: pong->viewed ${typ}`);
-    timer.current = { timeout: -1, start: -1 };
+    timer.current = { timeout: -1 };
   }, [pong, gleanClick, typ]);
 
-  const place = useCallback(
-    (node) => {
-      if (pong && node !== null && !observer.current) {
-        const observerOptions = {
-          root: null,
-          rootMargin: "0px",
-          threshold: [0.5],
-        };
-        const intersectionObserver = new IntersectionObserver((entries) => {
-          const [{ isIntersecting = false, intersectionRatio = 0 } = {}] =
-            entries;
-          if (isIntersecting && intersectionRatio >= 0.5) {
-            if (timer.current.timeout === null) {
-              timer.current = {
-                timeout: window.setTimeout?.(sendViewed, 1000),
-                start: Date.now(),
-              };
-            }
-          } else if (
-            !isIntersecting &&
-            intersectionRatio <= 0.5 &&
-            timer.current.timeout !== null
-          ) {
-            clearTimeout(timer.current.timeout);
-            timer.current = { timeout: null, start: null };
-          }
-        }, observerOptions);
-        observer.current = intersectionObserver;
-        intersectionObserver.observe(node);
-      }
-    },
-    [pong, sendViewed]
-  );
-
-  useEffect(() => {
-    return () => observer.current?.disconnect();
+  const place = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      setNode(node);
+    }
   }, []);
 
   useEffect(() => {
     if (timer.current.timeout !== -1) {
       // timeout !== -1 means the viewed has not been sent
-      if (!isVisible && timer.current.timeout !== null) {
+      if (isVisible && isIntersecting) {
+        if (timer.current.timeout === null) {
+          timer.current = {
+            timeout: window.setTimeout(sendViewed, 1000),
+          };
+        }
+      } else if (timer.current.timeout !== null) {
         clearTimeout(timer.current.timeout);
-        timer.current = { timeout: null, start: null, notVisible: true };
-      } else if (
-        isVisible &&
-        pong &&
-        timer.current.notVisible &&
-        timer.current.timeout === null
-      ) {
-        timer.current = {
-          timeout: window.setTimeout?.(sendViewed, 1000),
-          start: Date.now(),
-        };
+        timer.current = { timeout: null };
       }
     }
-  }, [isVisible, pong, sendViewed]);
+  }, [isVisible, isIntersecting, sendViewed]);
 
   const { image, copy } = pong?.fallback || pong || {};
   const { click } = pong || {};

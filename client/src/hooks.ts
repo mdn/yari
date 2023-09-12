@@ -193,3 +193,23 @@ export function usePageVisibility() {
   });
   return isVisible;
 }
+
+export function useIsIntersecting(
+  node: HTMLElement | undefined,
+  options: IntersectionObserverInit
+) {
+  const [isIntersectingState, setIsIntersectingState] = useState(false);
+  useEffect(() => {
+    if (node) {
+      const intersectionObserver = new IntersectionObserver((entries) => {
+        const [{ isIntersecting = false } = {}] = entries;
+        setIsIntersectingState(isIntersecting);
+      }, options);
+      intersectionObserver.observe(node);
+      return () => {
+        intersectionObserver.disconnect();
+      };
+    }
+  }, [node, options]);
+  return isIntersectingState;
+}
