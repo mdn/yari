@@ -193,3 +193,23 @@ export function usePageVisibility() {
   });
   return isVisible;
 }
+
+export function useIsIntersecting(
+  nodeRef: React.RefObject<HTMLElement> | null,
+  options: IntersectionObserverInit
+) {
+  const [isIntersectingState, setIsIntersectingState] = useState(false);
+  useEffect(() => {
+    if (nodeRef?.current) {
+      const intersectionObserver = new IntersectionObserver((entries) => {
+        const [{ isIntersecting = false } = {}] = entries;
+        setIsIntersectingState(isIntersecting);
+      }, options);
+      intersectionObserver.observe(nodeRef.current);
+      return () => {
+        intersectionObserver.disconnect();
+      };
+    }
+  }, [nodeRef, options]);
+  return isIntersectingState;
+}
