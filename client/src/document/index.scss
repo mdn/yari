@@ -693,7 +693,7 @@ pre {
 
       &:not(:checked) ~ label {
         &::before {
-          content: "+ ";
+          content: "+ queue for play";
         }
       }
 
@@ -702,7 +702,7 @@ pre {
         opacity: 1;
 
         &::before {
-          content: "✓ ";
+          content: "✓ queued";
         }
       }
     }

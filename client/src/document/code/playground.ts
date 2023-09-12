@@ -133,13 +133,13 @@ export function addCollectButton(
   playlist.classList.add("playlist");
   const checkLabel = document.createElement("label");
   checkLabel.htmlFor = checkId;
-  checkLabel.textContent = "queue for play";
+  checkLabel.textContent = "";
   const check = document.createElement("input");
   check.type = "checkbox";
   check.id = checkId;
   const button = document.createElement("button");
 
-  button.textContent = "Play?";
+  button.textContent = "Play";
 
   button.classList.add("play-button", "external");
   button.type = "button";

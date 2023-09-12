@@ -34,6 +34,7 @@ import MDNModal from "../../ui/atoms/modal";
 import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
 import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
+import { PlayQueue } from "../../playground/queue";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -73,6 +74,7 @@ export default function AiHelp() {
 
   return (
     <div className="ai-help">
+      <PlayQueue />
       <header className="plus-header-mandala">
         <Container>
           <h1>
@@ -261,9 +263,7 @@ export function AIHelpInner() {
                                     </span>
                                     <div className="playlist">
                                       <input type="checkbox" id={`${sample}`} />
-                                      <label htmlFor={`${sample}`}>
-                                        queue for play
-                                      </label>
+                                      <label htmlFor={`${sample}`}></label>
                                       <button
                                         type="button"
                                         className="play-button external"
