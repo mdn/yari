@@ -195,21 +195,21 @@ export function usePageVisibility() {
 }
 
 export function useIsIntersecting(
-  nodeRef: React.RefObject<HTMLElement> | null,
+  node: HTMLElement | undefined,
   options: IntersectionObserverInit
 ) {
   const [isIntersectingState, setIsIntersectingState] = useState(false);
   useEffect(() => {
-    if (nodeRef?.current) {
+    if (node) {
       const intersectionObserver = new IntersectionObserver((entries) => {
         const [{ isIntersecting = false } = {}] = entries;
         setIsIntersectingState(isIntersecting);
       }, options);
-      intersectionObserver.observe(nodeRef.current);
+      intersectionObserver.observe(node);
       return () => {
         intersectionObserver.disconnect();
       };
     }
-  }, [nodeRef, options]);
+  }, [node, options]);
   return isIntersectingState;
 }

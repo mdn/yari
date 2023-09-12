@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useIsIntersecting,
   useIsServer,
@@ -31,6 +31,12 @@ interface PlacementRenderArgs {
   user: User;
   style: object;
 }
+
+const INTERSECTION_OPTIONS = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.5,
+};
 
 function viewed(pong?: PlacementData) {
   pong?.view &&
@@ -219,20 +225,22 @@ export function PlacementInner({
   const isVisible = usePageVisibility();
   const gleanClick = useGleanClick();
 
-  const place = useRef<HTMLElement | null>(null);
   const timer = useRef<Timer>({ timeout: null });
 
-  const isIntersecting = useIsIntersecting(place, {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.5,
-  });
+  const [node, setNode] = useState<HTMLElement>();
+  const isIntersecting = useIsIntersecting(node, INTERSECTION_OPTIONS);
 
   const sendViewed = useCallback(() => {
     viewed(pong);
     gleanClick(`pong: pong->viewed ${typ}`);
     timer.current = { timeout: -1 };
   }, [pong, gleanClick, typ]);
+
+  const place = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      setNode(node);
+    }
+  }, []);
 
   useEffect(() => {
     if (timer.current.timeout !== -1) {
