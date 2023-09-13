@@ -74,7 +74,7 @@
     "@sentry/node": "^7.68.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.5",
-    "@webref/css": "^5.4.4",
+    "@webref/css": "^6.0.0",
     "accept-language-parser": "^1.5.0",
     "async": "^3.2.4",
     "chalk": "^5.3.0",
