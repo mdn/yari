@@ -7,7 +7,7 @@ export async function resolveRunnerHtml(
   _res: Response,
   next: NextFunction
 ) {
-  const urlParsed = url.parse(req.url);
+  const urlParsed = new URL(req.url);
   if (urlParsed.pathname && urlParsed.pathname.endsWith("/runner.html")) {
     urlParsed.pathname = "/runner.html";
     req.url = url.format(urlParsed);
