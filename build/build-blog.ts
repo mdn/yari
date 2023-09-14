@@ -6,7 +6,11 @@ import {
   buildBlogPosts,
 } from "./blog.js";
 
-await buildBlogIndex({ verbose: true });
-await buildBlogPosts({ verbose: true });
-await buildAuthors({ verbose: true });
-await buildBlogFeed({ verbose: true });
+await Promise.all([
+  buildBlogIndex({ verbose: true }),
+  buildBlogPosts({ verbose: true }),
+]);
+await Promise.all([
+  buildAuthors({ verbose: true }),
+  buildBlogFeed({ verbose: true }),
+]);

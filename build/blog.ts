@@ -460,7 +460,7 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
 }
 
 export async function buildAuthors(options: { verbose?: boolean }) {
-  for (const filePath of await allAuthorFiles()) {
+  await Promise.all((await allAuthorFiles()).map(async (filePath) => {
     const dirname = path.dirname(filePath);
     const slug = path.basename(dirname);
     const outPath = path.join(
@@ -476,10 +476,10 @@ export async function buildAuthors(options: { verbose?: boolean }) {
     if (avatar) {
       const from = path.join(dirname, avatar);
       const to = path.join(outPath, avatar);
-      await fs.copyFile(from, to);
       if (options.verbose) {
         console.log("Copied", from, "to", to);
       }
+      return fs.copyFile(from, to);
     }
-  }
+  }));
 }
