@@ -217,9 +217,10 @@ export async function buildDocument(
   let flaws: any[] = [];
   let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
+  let kumascriptMetadata;
 
   try {
-    [$, flaws] = await kumascript.render(document.url);
+    [$, flaws, kumascriptMetadata] = await kumascript.render(document.url);
   } catch (error) {
     if (
       error instanceof MacroInvocationError &&
@@ -369,7 +370,10 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
-  const browserCompat = metadata["browser-compat"];
+
+  // metadata doesn't have a browser-compat key on translated docs:
+  const browserCompat =
+    kumascriptMetadata?.["browser-compat"] || metadata["browser-compat"];
   doc.browserCompat =
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
