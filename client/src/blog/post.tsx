@@ -15,6 +15,7 @@ import {
   AuthorMetadata,
 } from "../../../libs/types/blog";
 import {
+  useCollectSample,
   useCopyExamplesToClipboardAndAIExplain,
   useRunSample,
 } from "../document/hooks";
@@ -187,6 +188,7 @@ export function BlogPost(props: HydrationData) {
   );
   const { doc, blogMeta } = data || props || {};
   useRunSample(doc);
+  useCollectSample(doc);
   useCopyExamplesToClipboardAndAIExplain(doc);
   return (
     <>

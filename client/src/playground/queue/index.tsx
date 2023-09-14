@@ -3,6 +3,7 @@ import "./index.scss";
 import { collectCode } from "../../document/code/playground";
 import { SESSION_KEY } from "../utils";
 import { useLocale } from "../../hooks";
+import { Button } from "../../ui/atoms/button";
 
 function PQEntry({ element, key }: { element: HTMLInputElement; key: number }) {
   const header = element.parentElement?.parentElement;
@@ -14,14 +15,18 @@ function PQEntry({ element, key }: { element: HTMLInputElement; key: number }) {
   const lang = header?.firstChild?.textContent;
   return (
     <li key={key}>
-      <button onClick={intoView}>#</button>
+      <button className="queue-ref" onClick={intoView}>
+        Example {key + 1}
+      </button>
       <code>{lang}</code>
-      <button onClick={() => element.click()}>x</button>
+      <button className="queue-delete" onClick={() => element.click()}>
+        x
+      </button>
     </li>
   );
 }
 
-export function PlayQueue() {
+export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const [queue, setQueue] = useState<Element[]>([]);
   const observer = useRef<null | MutationObserver>(null);
@@ -45,15 +50,17 @@ export function PlayQueue() {
     }
   }, [setQueue]);
   return queue.length ? (
-    <div className="play-queue-container">
+    <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
       <aside className="play-queue">
         <ul>
           {queue.map((el, key) =>
             PQEntry({ element: el as HTMLInputElement, key })
           )}
         </ul>
-        <button
-          onClick={() => {
+        <Button
+          type="secondary"
+          extraClasses="play-button"
+          onClickHandler={() => {
             const code = collectCode();
             sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
             const url = new URL(window?.location.href);
@@ -63,8 +70,8 @@ export function PlayQueue() {
             window.location.href = url.href;
           }}
         >
-          play
-        </button>
+          PLAY
+        </Button>
       </aside>
     </div>
   ) : null;

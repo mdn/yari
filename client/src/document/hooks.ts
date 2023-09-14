@@ -35,7 +35,9 @@ export function useCollectSample(doc: any) {
       return;
     }
     document
-      .querySelectorAll(".example-header:not(.play-sample)")
+      .querySelectorAll(
+        "section > *:not(#syntax) ~ * .example-header:not(.play-sample)"
+      )
       .forEach((header) => {
         addCollectButton(header, "collect", locale);
       });

@@ -295,10 +295,14 @@ export function AIHelpInner() {
                                           url.pathname = `/${locale}/play`;
                                           url.hash = "";
                                           url.search = "";
-                                          window.location.href = url.href;
+                                          if (e.shiftKey === true) {
+                                            window.location.href = url.href;
+                                          } else {
+                                            window.open(url, "_blank");
+                                          }
                                         }}
                                       >
-                                        Play?
+                                        take to Play
                                       </button>
                                     </div>
                                   </div>

@@ -1,29 +1,47 @@
 //
 .play-queue-container {
-  margin-top: 1rem;
-
   > .play-queue {
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
-    padding: 1rem;
+    border-radius: var(--elem-radius);
+    padding: 0.5rem;
     width: fit-content;
+    display: flex;
+    flex-direction: column;
 
     button {
       cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
+      &.play-button {
+        align-self: center;
+        width: fit-content;
       }
     }
 
     > ul {
-      width: 10rem;
+      width: 15rem;
+      margin-bottom: 0.5rem;
 
       > li {
         align-items: center;
         border-bottom: 1px solid var(--border-primary);
         display: flex;
         justify-content: space-between;
+
+        .queue-ref {
+          font-size: var(--type-smaller-font-size);
+          color: var(--text-link);
+          &:hover {
+            text-decoration: underline;
+            color: var(--text-primary);
+          }
+        }
+
+        .queue-delete {
+          font-size: var(--type-smaller-font-size);
+          &:hover {
+            color: var(--icon-critical);
+          }
+        }
 
         > code {
           background-color: var(--background-secondary);

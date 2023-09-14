@@ -87,7 +87,11 @@ export function addBreakoutButton(
     url.pathname = `/${locale}/play`;
     url.hash = "";
     url.search = "";
-    window.location.href = url.href;
+    if (e.shiftKey === true) {
+      window.location.href = url.href;
+    } else {
+      window.open(url, "_blank");
+    }
   });
 }
 
@@ -145,7 +149,7 @@ export function addCollectButton(
   check.id = checkId;
   const button = document.createElement("button");
 
-  button.textContent = "Play";
+  button.textContent = "take to Play";
 
   button.classList.add("play-button", "external");
   button.type = "button";
@@ -164,7 +168,11 @@ export function addCollectButton(
     url.pathname = `/${locale}/play`;
     url.hash = "";
     url.search = "";
-    window.location.href = url.href;
+    if (e.shiftKey === true) {
+      window.location.href = url.href;
+    } else {
+      window.open(url, "_blank");
+    }
   });
 }
 
