@@ -251,11 +251,14 @@ export function PlacementInner({
             timeout: window.setTimeout(sendViewed, 1000),
           };
         }
-      } else if (timer.current.timeout !== null) {
+      }
+    }
+    return () => {
+      if (timer.current.timeout !== null && timer.current.timeout !== -1) {
         clearTimeout(timer.current.timeout);
         timer.current = { timeout: null };
       }
-    }
+    };
   }, [isVisible, isIntersecting, sendViewed]);
 
   const { image, copy } = pong?.fallback || pong || {};
