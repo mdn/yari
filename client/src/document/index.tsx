@@ -46,6 +46,7 @@ import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-vie
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
 import { SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
+import { PlayQueue } from "../playground/queue";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -268,6 +269,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <Metadata doc={doc} locale={locale} />
           </article>
         </MainContentContainer>
+        <PlayQueue standalone={true} />
       </div>
     </>
   );

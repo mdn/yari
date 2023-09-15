@@ -1,5 +1,18 @@
 //
 .play-queue-container {
+  &.standalone {
+    position: sticky;
+    bottom: 0;
+    min-width: 100%;
+    display: flex;
+    grid-column: 1/4;
+    flex-direction: row;
+    justify-content: center;
+    > .play-queue {
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(var(--shadow-02));
+    }
+  }
   > .play-queue {
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
@@ -18,7 +31,7 @@
     }
 
     > ul {
-      width: 15rem;
+      width: 10rem;
       margin-bottom: 0.5rem;
 
       > li {
@@ -45,7 +58,7 @@
 
         > code {
           background-color: var(--background-secondary);
-          min-width: 5rem;
+          min-width: 3rem;
           text-transform: uppercase;
         }
       }

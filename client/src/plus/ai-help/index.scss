@@ -14,13 +14,17 @@
   > .ai-help-main {
     display: grid;
     grid-template-columns: [left] 1fr [center] min(52rem, 100%) [right] 1fr;
+    --ai-top: calc(var(--top-nav-height) + 1px + 1rem);
 
     > .play-queue-container {
       grid-column: right;
       grid-row: 1/3;
       margin-top: 1rem;
+      position: sticky;
+      top: var(--ai-top);
+      height: fit-content;
 
-      @media screen and (max-width: $screen-lg) {
+      @media screen and (max-width: $screen-xl) {
         align-items: center;
         bottom: 0;
         display: flex;
@@ -34,8 +38,8 @@
         z-index: var(--z-index-modal-content);
       }
       > .play-queue {
-        position: sticky;
-        top: calc(var(--top-nav-height) + 1px + 1rem);
+        margin-top: min(30vh, 15rem);
+        margin-bottom: 1rem;
       }
     }
 

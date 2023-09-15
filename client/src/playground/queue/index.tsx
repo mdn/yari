@@ -60,14 +60,18 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
         <Button
           type="secondary"
           extraClasses="play-button"
-          onClickHandler={() => {
+          onClickHandler={(e) => {
             const code = collectCode();
             sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
             const url = new URL(window?.location.href);
             url.pathname = `/${locale}/play`;
             url.hash = "";
             url.search = "";
-            window.location.href = url.href;
+            if (e.shiftKey) {
+              window.location.href = url.href;
+            } else {
+              window.open(url, "_blank");
+            }
           }}
         >
           PLAY
