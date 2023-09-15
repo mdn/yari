@@ -5,32 +5,6 @@ import { Document } from "./index";
 
 declare var global: Window;
 
-// TODO: move this somewhere better once we have more use cases.
-class IntersectionObserver {
-  readonly root: Element | null;
-
-  readonly rootMargin: string;
-
-  readonly thresholds: ReadonlyArray<number>;
-
-  constructor() {
-    this.root = null;
-    this.rootMargin = "";
-    this.thresholds = [];
-  }
-
-  disconnect() {}
-
-  observe() {}
-
-  takeRecords(): IntersectionObserverEntry[] {
-    return [];
-  }
-
-  unobserve() {}
-}
-window.IntersectionObserver = IntersectionObserver;
-
 const sampleDocumentState = Object.freeze({
   doc: Object.freeze({
     title: "Sample Page",

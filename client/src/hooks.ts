@@ -200,7 +200,7 @@ export function useIsIntersecting(
 ) {
   const [isIntersectingState, setIsIntersectingState] = useState(false);
   useEffect(() => {
-    if (node) {
+    if (node && window.IntersectionObserver) {
       const intersectionObserver = new IntersectionObserver((entries) => {
         const [{ isIntersecting = false } = {}] = entries;
         setIsIntersectingState(isIntersecting);
