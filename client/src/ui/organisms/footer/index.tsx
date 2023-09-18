@@ -24,12 +24,12 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
-                className="icon icon-twitter"
-                href="https://twitter.com/mozdevnet"
+                className="icon icon-mastodon"
+                href="https://mozilla.social/@mdn"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
               >
-                <span className="visually-hidden">MDN on Twitter</span>
+                <span className="visually-hidden">MDN on Mastodon</span>
               </a>
             </li>
             <li>
