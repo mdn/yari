@@ -50,9 +50,10 @@ var text = mdn.localStringMap({
     'Security': 'HTTP security',
     'Authentication': 'HTTP authentication',
     'ProtocolUpgradeMech': 'Protocol upgrade mechanism',
-    'CSP': 'Content Security Policy (CSP)'
+    'CSP': 'Content Security Policy (CSP)',
+    'Secure_and_HttpOnly_cookies': 'security'
   },
-    'es': {
+  'es': {
     'HTTP': 'HTTP',
     'Basics': 'Fundamentos de HTTP',
     'Overview': 'Generalidades de HTTP',
@@ -84,7 +85,8 @@ var text = mdn.localStringMap({
     'CSPDirectives': 'Directivas CSP',
     'Security': 'Seguridad en HTTP',
     'Authentication': 'Autenticación en HTTP',
-    'CSP': 'Content Security Policy (CSP)'
+    'CSP': 'Content Security Policy (CSP)',
+    'Secure_and_HttpOnly_cookies': 'seguridad',
   },
   'fr': {
     'HTTP': 'HTTP',
@@ -123,7 +125,8 @@ var text = mdn.localStringMap({
     'Security': 'Sécurité HTTP',
     'Authentication': 'Authentification HTTP',
     'ProtocolUpgradeMech': 'Mécanisme d\'amélioration du protocole',
-    'CSP': 'Content Security Policy (CSP)'
+    'CSP': 'Content Security Policy (CSP)',
+    'Secure_and_HttpOnly_cookies': 'sécurité'
   },
   'ja': {
     'HTTP': 'HTTP',
@@ -162,7 +165,8 @@ var text = mdn.localStringMap({
     'Security': 'HTTP セキュリティ',
     'Authentication': 'HTTP 認証',
     'ProtocolUpgradeMech': 'プロトコルのアップグレードの仕組み',
-    'CSP': 'Content Security Policy (CSP)'
+    'CSP': 'Content Security Policy (CSP)',
+    'Secure_and_HttpOnly_cookies': 'セキュリティ'
   },
   'ko': {
     'HTTP': 'HTTP',
@@ -201,7 +205,11 @@ var text = mdn.localStringMap({
     'Security': 'HTTP 보안',
     'Authentication': 'HTTP 인증',
     'ProtocolUpgradeMech': '프로토콜 업그레이드 메커니즘',
-    'CSP': 'Content Security Policy (CSP)'
+    'CSP': 'Content Security Policy (CSP)',
+    'Secure_and_HttpOnly_cookies': '보안'
+  },
+  'pt-BR': {
+    'Secure_and_HttpOnly_cookies': 'segurança'
   },
   'ru': {
     'HTTP': 'HTTP',
@@ -240,7 +248,8 @@ var text = mdn.localStringMap({
     'Security': 'Безопасность в HTTP',
     'Authentication': 'HTTP авторизация',
     'ProtocolUpgradeMech': 'Protocol upgrade mechanism',
-    'CSP': 'Content Security Policy (CSP)'
+    'CSP': 'Content Security Policy (CSP)',
+    'Secure_and_HttpOnly_cookies': 'безопасность'
   },
   'zh-CN': {
     'HTTP': 'HTTP',
@@ -279,7 +288,11 @@ var text = mdn.localStringMap({
     'Security': 'HTTP 安全',
     'Authentication': 'HTTP 认证',
     'ProtocolUpgradeMech': '协议升级机制',
-    'CSP': '内容安全策略（CSP）'
+    'CSP': '内容安全策略（CSP）',
+    'Secure_and_HttpOnly_cookies': '安全'
+  },
+  'zh-TW': {
+    'Secure_and_HttpOnly_cookies': '安全性'
   }
 });
 %>
@@ -321,7 +334,7 @@ var text = mdn.localStringMap({
             <ol>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/CSP"><%=text['CSP']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/Strict-Transport-Security">HTTP Strict Transport Security (HSTS)</a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Cookies#security">Cookie security</a></li>
+                <li><a href="/<%=locale%>/docs/Web/HTTP/Cookies#<%=text['Secure_and_HttpOnly_cookies']%>">Cookie security</a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-Content-Type-Options">X-Content-Type-Options</a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-XSS-Protection">X-XSS-Protection</a></li>
