@@ -115,7 +115,7 @@ export function useStickyHeaderHeight() {
       const topFloat = parseFloat(top);
       if (Number.isNaN(topFloat)) {
         console.warn(
-          `[useStickyHeaderHeight] .sidebar-container->top has unexpected unit: ${top}`
+          `[useStickyHeaderHeight] .sidebar-container[top] has unexpected unit: ${top}`
         );
         return 0;
       }
