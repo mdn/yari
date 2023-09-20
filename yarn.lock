@@ -2498,10 +2498,10 @@
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
-"@supabase/supabase-js@^2.33.2":
-  version "2.33.2"
-  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.33.2.tgz#d2461506fa6229c9ca26db30c268f0c6a8943e10"
-  integrity sha512-r+xCaERasxI0fMqOTp4zwur200X6HCjif48WKIcWrZgtzdtyP6CsP6J3rwZWfR/mR5MN0qLdK0SGA0QCgxS3Nw==
+"@supabase/supabase-js@^2.34.0":
+  version "2.34.0"
+  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.34.0.tgz#e4664a18cdd063f88edf6c0b858e3cb181cf6c6c"
+  integrity sha512-4x+Kkn1NmeA7odSCrwa0J5TN+YrldDVxcPZ/OJuEIOBY4lUM9W/pENlzCEcfS+CetDF6ufFsmjTaVWGxDdZJKQ==
   dependencies:
     "@supabase/functions-js" "^2.1.5"
     "@supabase/gotrue-js" "^2.51.0"
