@@ -2944,9 +2944,9 @@
     "@types/unist" "*"
 
 "@types/hast@^3.0.0":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/hast/-/hast-3.0.2.tgz#e6c1126a33955cb9493a5074ddf1873fb48248c7"
-  integrity sha512-B5hZHgHsXvfCoO3xgNJvBnX7N8p86TqQeGKXcokW4XXi+qY4vxxPSFYofytvVmpFxzPv7oxDQzjg5Un5m2/xiw==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/hast/-/hast-3.0.1.tgz#e1705ec9258ac4885659c2d50bac06b4fcd16466"
+  integrity sha512-hs/iBJx2aydugBQx5ETV3ZgeSS0oIreQrFJ4bjBl0XvM4wAmDjFEALY7p0rTSLt2eL+ibjRAAs9dTPiCLtmbqQ==
   dependencies:
     "@types/unist" "*"
 
@@ -13204,7 +13204,7 @@ remark-prettier@^2.0.0:
     prettier-linter-helpers "^1.0.0"
     vfile-location "^4.0.0"
 
-remark-rehype@^10.0.0, remark-rehype@^10.1.0:
+remark-rehype@^10.0.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/remark-rehype/-/remark-rehype-10.1.0.tgz#32dc99d2034c27ecaf2e0150d22a6dcccd9a6279"
   integrity sha512-EFmR5zppdBp0WQeDVZ/b66CWJipB2q2VLNFMabzDSGR66Z2fQii83G5gTBbgGEnEEA0QRussvrFHxk1HWGJskw==
@@ -13213,6 +13213,17 @@ remark-rehype@^10.0.0, remark-rehype@^10.1.0:
     "@types/mdast" "^3.0.0"
     mdast-util-to-hast "^12.1.0"
     unified "^10.0.0"
+
+remark-rehype@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/remark-rehype/-/remark-rehype-11.0.0.tgz#7f21c08738bde024be5f16e4a8b13e5d7a04cf6b"
+  integrity sha512-vx8x2MDMcxuE4lBmQ46zYUDfcFMmvg80WYX+UNLeG6ixjdCCLcw1lrgAukwBTuOFsS78eoAedHGn9sNM0w7TPw==
+  dependencies:
+    "@types/hast" "^3.0.0"
+    "@types/mdast" "^4.0.0"
+    mdast-util-to-hast "^13.0.0"
+    unified "^11.0.0"
+    vfile "^6.0.0"
 
 remark-stringify@^11.0.0:
   version "11.0.0"
