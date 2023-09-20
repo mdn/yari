@@ -111,7 +111,15 @@ export function useStickyHeaderHeight() {
     const sidebar = document.querySelector(".sidebar-container");
 
     if (sidebar) {
-      return parseFloat(getComputedStyle(sidebar).top);
+      const top = getComputedStyle(sidebar).top;
+      const topFloat = parseFloat(top);
+      if (Number.isNaN(topFloat)) {
+        console.warn(
+          `[useStickyHeaderHeight] .sidebar-container->top has unexpected unit: ${top}`
+        );
+        return 0;
+      }
+      return topFloat;
     }
 
     const styles = getComputedStyle(document.documentElement);
