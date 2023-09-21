@@ -69,15 +69,15 @@ export function Manage() {
         )}
 
         <li>
-          <h3>Firefox account</h3>
-          <span>Manage your Firefox account</span>
+          <h3>Your account</h3>
+          <span>Manage your account</span>
           <a
             rel="noreferrer noopener"
             target="_blank"
             href={FXA_SETTINGS_URL}
             className="manage external"
           >
-            Firefox account
+            Your Account
           </a>
         </li>
         {user?.isSubscriber && (
