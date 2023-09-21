@@ -108,10 +108,9 @@ export function useStickyHeaderHeight() {
       // SSR.
       return 0;
     }
-    return (
-      document.querySelector<HTMLElement>(".main-document-header-container")
-        ?.offsetHeight || 0
-    );
+
+    const height = parseFloat(getComputedStyle(document.body)["min-height"]);
+    return Number.isNaN(height) ? 0 : height;
   }
 
   const [height, setHeight] = useState<number>(determineStickyHeaderHeight());
@@ -135,7 +134,7 @@ export function useStickyHeaderHeight() {
     window.addEventListener("resize", debouncedListener);
 
     return () => window.removeEventListener("resize", debouncedListener);
-  }, []);
+  }, [setHeight]);
 
   return height;
 }

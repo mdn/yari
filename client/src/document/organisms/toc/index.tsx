@@ -12,7 +12,6 @@ export function TOC({ toc }: { toc: Toc[] }) {
     const elements = mainElement.querySelectorAll(
       "h1, h1 ~ *:not(section), h2:not(.document-toc-heading), h2:not(.document-toc-heading) ~ *:not(section), h3, h3 ~ *:not(section)"
     );
-    console.log(elements);
     return Array.from(elements);
   }, []);
 

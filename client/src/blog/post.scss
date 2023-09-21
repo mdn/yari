@@ -7,17 +7,15 @@
     "post"
     "newsletter";
   width: 100%;
+
   @media screen and (min-width: $screen-lg) {
-    display: grid;
-    gap: 3rem;
     grid-template-areas:
       "post toc"
       "newsletter toc";
     grid-template-columns: minmax(auto, 100%) minmax(0, 12rem);
   }
+
   @media screen and (min-width: $screen-xl) {
-    display: grid;
-    gap: 3rem;
     grid-template-areas:
       "nothing post toc"
       "nothing newsletter toc";
