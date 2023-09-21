@@ -158,7 +158,7 @@
     "@types/jest": "^29.5.5",
     "@types/mdast": "^4.0.0",
     "@types/node": "^18.16.6",
-    "@types/react": "^18.2.21",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@types/react-modal": "^3.16.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
