@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 import { HydrationData } from "../../../libs/types/hydration";
 import { HTTPError, RenderDocumentBody } from "../document";
-import { WRITER_MODE } from "../env";
+import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
 
 import "./index.scss";
 import "./post.scss";
@@ -20,6 +20,8 @@ import {
 } from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
+import { TOC } from "../document/organisms/toc";
+import { SidePlacement } from "../ui/organisms/placement";
 
 function MaybeLink({ className = "", link, children }) {
   return link ? (
@@ -191,11 +193,18 @@ export function BlogPost(props: HydrationData) {
   return (
     <>
       {doc && blogMeta && (
-        <>
-          <article
-            className="blog-container post container main-page-content"
-            lang={doc?.locale}
-          >
+        <main className="blog-post-container container main-page-content">
+          <div className="sidebar-container">
+            <div className="toc-container">
+              <aside className="toc">
+                <nav>
+                  {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+                </nav>
+              </aside>
+              {PLACEMENT_ENABLED && <SidePlacement />}
+            </div>
+          </div>
+          <article className="blog-post blog-container" lang={doc?.locale}>
             <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
             {blogMeta?.sponsored && (
               <span className="sponsored">Sponsored</span>
@@ -206,7 +215,7 @@ export function BlogPost(props: HydrationData) {
             {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
           <NewsletterSignUp />
-        </>
+        </main>
       )}
     </>
   );

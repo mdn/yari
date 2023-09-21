@@ -108,35 +108,10 @@ export function useStickyHeaderHeight() {
       // SSR.
       return 0;
     }
-    const sidebar = document.querySelector(".sidebar-container");
-
-    if (sidebar) {
-      return parseFloat(getComputedStyle(sidebar).top);
-    }
-
-    const styles = getComputedStyle(document.documentElement);
-    const stickyHeaderHeight = styles
-      .getPropertyValue("--sticky-header-height")
-      .trim();
-
-    if (stickyHeaderHeight.endsWith("rem")) {
-      const fontSize = styles.fontSize.trim();
-      if (fontSize.endsWith("px")) {
-        return parseFloat(stickyHeaderHeight) * parseFloat(fontSize);
-      } else {
-        console.warn(
-          `[useStickyHeaderHeight] fontSize has unexpected unit: ${fontSize}`
-        );
-        return 0;
-      }
-    } else if (stickyHeaderHeight.endsWith("px")) {
-      return parseFloat(stickyHeaderHeight);
-    } else {
-      console.warn(
-        `[useStickyHeaderHeight] --sticky-header-height has unexpected unit: ${stickyHeaderHeight}`
-      );
-      return 0;
-    }
+    return (
+      document.querySelector<HTMLElement>(".main-document-header-container")
+        ?.offsetHeight || 0
+    );
   }
 
   const [height, setHeight] = useState<number>(determineStickyHeaderHeight());
