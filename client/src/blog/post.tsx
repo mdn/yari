@@ -201,7 +201,7 @@ export function BlogPost(props: HydrationData) {
                   {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
                 </nav>
               </aside>
-              {PLACEMENT_ENABLED && <SidePlacement />}
+              {PLACEMENT_ENABLED && !blogMeta?.sponsored && <SidePlacement />}
             </div>
           </div>
           <article className="blog-post blog-container" lang={doc?.locale}>
