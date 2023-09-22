@@ -203,8 +203,8 @@ jobs:
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
-          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/?brand=mozilla
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0?brand=mozilla
           REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
