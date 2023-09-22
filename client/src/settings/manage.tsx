@@ -69,7 +69,7 @@ export function Manage() {
         )}
 
         <li>
-          <h3>Your account</h3>
+          <h3>Account</h3>
           <span>Manage your account</span>
           <a
             rel="noreferrer noopener"
@@ -77,7 +77,7 @@ export function Manage() {
             href={FXA_SETTINGS_URL}
             className="manage external"
           >
-            Your Account
+            Account
           </a>
         </li>
         {user?.isSubscriber && (
