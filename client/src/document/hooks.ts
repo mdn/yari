@@ -109,7 +109,12 @@ export function useStickyHeaderHeight() {
       return 0;
     }
 
-    const height = parseFloat(getComputedStyle(document.body)["min-height"]);
+    const height = parseFloat(
+      getComputedStyle(
+        document.getElementsByClassName("main-header-container")?.[0] ||
+          document.body
+      )["min-height"]
+    );
     return Number.isNaN(height) ? 0 : height;
   }
 

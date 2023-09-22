@@ -102,8 +102,10 @@
   --top-nav-height: 4rem;
   --article-actions-container-height: 2rem;
   --icon-size: 1rem;
+  --sticky-header-standalone-height: calc(var(--top-nav-height) + 1px);
   --sticky-header-height: calc(
-    var(--top-nav-height) + var(--article-actions-container-height) + 2px
+    var(--sticky-header-standalone-height) +
+      var(--article-actions-container-height) + 1px
   );
 }
 
@@ -128,7 +130,6 @@ body {
   accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   background-color: var(--background-primary);
   color: var(--text-primary);
-  min-height: var(--sticky-header-height); // used in useStickyHeaderHeight
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 
   &.mobile-overlay-active {
@@ -339,5 +340,16 @@ sup.new {
 
   &.beta {
     background: var(--new-background-beta, var(--new-background));
+  }
+}
+
+.main-header-container {
+  min-height: var(--sticky-header-height);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-main-header);
+
+  &.standalone {
+    min-height: var(--sticky-header-standalone-height);
   }
 }

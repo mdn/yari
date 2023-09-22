@@ -189,7 +189,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   if (error) {
     return (
       <>
-        <div className="main-document-header-container">
+        <div className="main-header-container">
           <TopNavigation />
         </div>
         <MainContentContainer>
@@ -211,7 +211,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <div className="main-document-header-container">
+      <div className="main-header-container">
         <TopNavigation />
         <ArticleActionsContainer doc={doc} />
       </div>

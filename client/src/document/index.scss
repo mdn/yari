@@ -4,12 +4,6 @@
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
-.main-document-header-container {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-main-header);
-}
-
 .main-page-content {
   overflow-wrap: break-word;
   padding: 3rem 1rem 1rem;
