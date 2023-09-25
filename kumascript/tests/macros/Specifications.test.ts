@@ -32,13 +32,13 @@ describeMacro("Specifications", function () {
   itMacro("Outputs valid HTML (browser-compat case)", async (macro) => {
     macro.ctx.env["browser-compat"] = "api.feature";
     const result = await macro.call();
-    expect(lintHTML(result)).toBeFalsy();
+    expect(await lintHTML(result)).toBeFalsy();
   });
 
   itMacro("Outputs valid HTML (spec-urls case)", async (macro) => {
     macro.ctx.env["spec-urls"] = "https://example.com";
     const result = await macro.call();
-    expect(lintHTML(result)).toBeFalsy();
+    expect(await lintHTML(result)).toBeFalsy();
   });
 
   itMacro("Accepts an array from browser-compat", async (macro) => {
@@ -52,7 +52,7 @@ describeMacro("Specifications", function () {
         .split(",").length,
       2
     );
-    expect(lintHTML(result)).toBeFalsy();
+    expect(await lintHTML(result)).toBeFalsy();
   });
 
   itMacro("Accepts an array from spec-urls", async (macro) => {
@@ -66,6 +66,6 @@ describeMacro("Specifications", function () {
         .split(",").length,
       2
     );
-    expect(lintHTML(result)).toBeFalsy();
+    expect(await lintHTML(result)).toBeFalsy();
   });
 });

@@ -9,19 +9,19 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-click = "^8.1.4"
-boto3 = "^1.28.3"
+click = "^8.1.7"
+boto3 = "^1.28.49"
 python-decouple = "^3.8"
 requests = {extras = ["security"], version = "^2.31.0"}
 elasticsearch-dsl = "^7.4.1"
-selectolax = "^0.3.14"
+selectolax = "^0.3.16"
 PyGithub = "^1.59"
 unidiff = "^0.7.5"
 
 [tool.poetry.dev-dependencies]
-black = "^23.7"
-flake8 = "^6.0.0"
-pytest = "^7.4.0"
+black = "^23.9"
+flake8 = "^6.1.0"
+pytest = "^7.4.2"
 
 [tool.poetry.scripts]
 deployer = "deployer.main:cli"

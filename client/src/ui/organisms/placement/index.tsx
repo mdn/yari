@@ -1,5 +1,9 @@
-import { useCallback, useEffect, useRef } from "react";
-import { useIsServer, usePageVisibility } from "../../../hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useIsIntersecting,
+  useIsServer,
+  usePageVisibility,
+} from "../../../hooks";
 import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
@@ -13,8 +17,6 @@ import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
-  start: number | null;
-  notVisible?: boolean;
 }
 
 interface PlacementRenderArgs {
@@ -30,18 +32,21 @@ interface PlacementRenderArgs {
   style: object;
 }
 
-function viewed(
-  pong: PlacementData,
-  observer: IntersectionObserver | null = null
-) {
-  navigator?.sendBeacon?.(
-    `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
-      pong?.fallback
-        ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
-        : ""
-    }`
-  );
-  observer?.disconnect();
+const INTERSECTION_OPTIONS = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.5,
+};
+
+function viewed(pong?: PlacementData) {
+  pong?.view &&
+    navigator.sendBeacon?.(
+      `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
+        pong?.fallback
+          ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
+          : ""
+      }`
+    );
 }
 
 export function SidePlacement() {
@@ -56,6 +61,7 @@ export function SidePlacement() {
       imageWidth={130}
       imageHeight={100}
       renderer={RenderSideOrTopBanner}
+      typ="side"
     ></PlacementInner>
   );
 }
@@ -130,6 +136,7 @@ export function TopPlacement() {
           cta={placementData.top?.cta}
           imageHeight={50}
           renderer={RenderSideOrTopBanner}
+          typ="top-banner"
         ></PlacementInner>
       )}
     </div>
@@ -179,7 +186,18 @@ function HpPlacement({
       imageHeight={imageHeight}
       style={css}
       renderer={RenderHpPlacement}
+      typ="hp-main"
     ></PlacementInner>
+  );
+}
+
+export function BottomBanner() {
+  return (
+    <PlacementInner
+      pong={{ status: Status.empty }}
+      renderer={RenderBottomBanner}
+      typ="bottom-banner"
+    />
   );
 }
 
@@ -191,94 +209,64 @@ export function PlacementInner({
   imageHeight,
   style,
   renderer,
+  typ,
 }: {
-  pong: PlacementData;
+  pong?: PlacementData;
   extraClassNames?: string[];
   cta?: string;
   imageWidth?: number;
   imageHeight?: number;
   style?: object;
   renderer: (PlacementRenderArgs) => JSX.Element;
+  typ: string;
 }) {
   const isServer = useIsServer();
   const user = useUserData();
   const isVisible = usePageVisibility();
   const gleanClick = useGleanClick();
 
-  const observer = useRef<IntersectionObserver | null>(null);
-  const timer = useRef<Timer>({ timeout: null, start: null });
-  const place = useCallback(
-    (node) => {
-      if (pong && node !== null && !observer.current) {
-        const observerOptions = {
-          root: null,
-          rootMargin: "0px",
-          threshold: [0.5],
-        };
-        const intersectionObserver = new IntersectionObserver((entries) => {
-          const [{ isIntersecting = false, intersectionRatio = 0 } = {}] =
-            entries;
-          if (isIntersecting && intersectionRatio >= 0.5) {
-            if (timer.current.timeout === null) {
-              timer.current = {
-                timeout: window?.setTimeout?.(() => {
-                  viewed(pong, observer?.current);
-                  gleanClick("pong: pong->viewed");
-                  timer.current = { timeout: -1, start: -1 };
-                }, 1000),
-                start: Date.now(),
-              };
-            }
-          } else if (
-            !isIntersecting &&
-            intersectionRatio <= 0.5 &&
-            timer.current.timeout !== null
-          ) {
-            clearTimeout(timer.current.timeout);
-            timer.current = { timeout: null, start: null };
-          }
-        }, observerOptions);
-        observer.current = intersectionObserver;
-        intersectionObserver.observe(node);
-      }
-    },
-    [pong, gleanClick]
-  );
+  const timer = useRef<Timer>({ timeout: null });
 
-  const { image, copy } = pong?.fallback || pong || {};
-  const { click } = pong || {};
-  useEffect(() => {
-    return () => observer.current?.disconnect();
+  const [node, setNode] = useState<HTMLElement>();
+  const isIntersecting = useIsIntersecting(node, INTERSECTION_OPTIONS);
+
+  const sendViewed = useCallback(() => {
+    viewed(pong);
+    gleanClick(`pong: pong->viewed ${typ}`);
+    timer.current = { timeout: -1 };
+  }, [pong, gleanClick, typ]);
+
+  const place = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      setNode(node);
+    }
   }, []);
 
   useEffect(() => {
     if (timer.current.timeout !== -1) {
-      // timeout !== -1 means the viewed has been sent
-      if (!isVisible && timer.current.timeout !== null) {
-        clearTimeout(timer.current.timeout);
-        timer.current = { timeout: null, start: null, notVisible: true };
-      } else if (
-        isVisible &&
-        pong &&
-        timer.current.notVisible &&
-        timer.current.timeout === null
-      ) {
-        timer.current = {
-          timeout: window?.setTimeout?.(
-            () => viewed(pong, observer?.current),
-            1000
-          ),
-          start: Date.now(),
-        };
+      // timeout !== -1 means the viewed has not been sent
+      if (isVisible && isIntersecting) {
+        if (timer.current.timeout === null) {
+          timer.current = {
+            timeout: window.setTimeout(sendViewed, 1000),
+          };
+        }
       }
     }
-  }, [isVisible, pong]);
+    return () => {
+      if (timer.current.timeout !== null && timer.current.timeout !== -1) {
+        clearTimeout(timer.current.timeout);
+        timer.current = { timeout: null };
+      }
+    };
+  }, [isVisible, isIntersecting, sendViewed]);
 
+  const { image, copy } = pong?.fallback || pong || {};
+  const { click } = pong || {};
   return (
     <>
       {!isServer &&
-        click &&
-        image &&
+        ((click && image) || pong?.status === Status.empty) &&
         renderer({
           place,
           extraClassNames,
@@ -316,7 +304,7 @@ function RenderSideOrTopBanner({
       <p className="pong-box">
         <a
           className="pong"
-          data-pong="pong->click"
+          data-glean="pong: pong->click"
           href={`/pong/click?code=${encodeURIComponent(click)}`}
           target="_blank"
           rel="noreferrer"
@@ -333,7 +321,7 @@ function RenderSideOrTopBanner({
         {cta && (
           <a
             className="pong-cta"
-            data-pong="pong->click"
+            data-glean="pong: pong->click"
             href={`/pong/click?code=${encodeURIComponent(click)}`}
             target="_blank"
             rel="noreferrer"
@@ -344,7 +332,7 @@ function RenderSideOrTopBanner({
         <a
           href="/en-US/advertising"
           className="pong-note"
-          data-pong="pong->about"
+          data-glean="pong: pong->about"
           target="_blank"
           rel="noreferrer"
         >
@@ -354,7 +342,9 @@ function RenderSideOrTopBanner({
 
       <a
         className="no-pong"
-        data-pong={user?.isSubscriber ? "pong->settings" : "pong->plus"}
+        data-glean={
+          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+        }
         href={
           user?.isSubscriber
             ? "/en-US/plus/settings?ref=nope"
@@ -385,7 +375,7 @@ function RenderHpPlacement({
     >
       <a
         className="pong"
-        data-pong="pong->click"
+        data-glean="pong: pong->click"
         href={`/pong/click?code=${encodeURIComponent(click)}`}
         target="_blank"
         rel="noreferrer"
@@ -399,4 +389,8 @@ function RenderHpPlacement({
       </a>
     </section>
   );
+}
+
+function RenderBottomBanner({ place }: PlacementRenderArgs) {
+  return <div ref={place} className="empty-place bottom-banner"></div>;
 }

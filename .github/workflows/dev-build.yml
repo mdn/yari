@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
@@ -51,14 +51,14 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
@@ -205,7 +205,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v2.2.0
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
