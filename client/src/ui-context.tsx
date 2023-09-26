@@ -72,16 +72,21 @@ export function UIProvider(props: any) {
     if (dark.matches) {
       setColorScheme("dark");
     }
-    dark.addEventListener("change", setDark);
-    const light = window.matchMedia("(prefers-color-scheme: light)");
-    if (dark.matches) {
-      setColorScheme("dark");
+    try {
+      dark.addEventListener("change", setDark);
+      const light = window.matchMedia("(prefers-color-scheme: light)");
+      if (dark.matches) {
+        setColorScheme("dark");
+      }
+      light.addEventListener("change", setLight);
+      return () => {
+        light.removeEventListener("change", setLight);
+        dark.removeEventListener("change", setDark);
+      };
+    } catch (e) {
+      console.warn("Unable to add color scheme event listener", e);
+      return;
     }
-    light.addEventListener("change", setLight);
-    return () => {
-      light.removeEventListener("change", setLight);
-      dark.removeEventListener("change", setDark);
-    };
   }, []);
 
   React.useEffect(() => {
