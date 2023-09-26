@@ -49,6 +49,21 @@ function viewed(pong?: PlacementData) {
     );
 }
 
+function createObjectFromEntries(
+  keyValuePairs: [string, string | undefined][]
+) {
+  return keyValuePairs.reduce(
+    (object, [key, value]) =>
+      Boolean(value)
+        ? {
+            ...object,
+            [key]: value,
+          }
+        : object,
+    {}
+  );
+}
+
 export function SidePlacement() {
   const placementData = usePlacement();
 
@@ -98,21 +113,19 @@ export function TopPlacement() {
     ctaTextColorDark,
     ctaBackgroundColorDark,
   } = placementData?.top?.colors || {};
-  const css = Object.fromEntries(
+  const css = createObjectFromEntries([
+    ["--place-top-background-light", backgroundColor],
+    ["--place-top-color-light", textColor],
+    ["--place-top-cta-background-light", ctaBackgroundColor],
+    ["--place-top-cta-color-light", ctaTextColor],
+    ["--place-top-background-dark", backgroundColorDark || backgroundColor],
+    ["--place-top-color-dark", textColorDark || textColor],
     [
-      ["--place-top-background-light", backgroundColor],
-      ["--place-top-color-light", textColor],
-      ["--place-top-cta-background-light", ctaBackgroundColor],
-      ["--place-top-cta-color-light", ctaTextColor],
-      ["--place-top-background-dark", backgroundColorDark || backgroundColor],
-      ["--place-top-color-dark", textColorDark || textColor],
-      [
-        "--place-top-cta-background-dark",
-        ctaBackgroundColorDark || ctaBackgroundColor,
-      ],
-      ["--place-top-cta-color-dark", ctaTextColorDark || ctaBackgroundColor],
-    ].filter(([_, v]) => Boolean(v))
-  );
+      "--place-top-cta-background-dark",
+      ctaBackgroundColorDark || ctaBackgroundColor,
+    ],
+    ["--place-top-cta-color-dark", ctaTextColorDark || ctaBackgroundColor],
+  ]);
 
   const status =
     isServer || placementData?.status === Status.loading
@@ -171,11 +184,9 @@ function HpPlacement({
   imageHeight: number;
 }) {
   const { backgroundColor } = placementData?.colors || {};
-  const css = Object.fromEntries(
-    [["--place-hp-main-background", backgroundColor]].filter(([_, v]) =>
-      Boolean(v)
-    )
-  );
+  const css = createObjectFromEntries([
+    ["--place-hp-main-background", backgroundColor],
+  ]);
   return !placementData ? (
     <section className="place hp-main"></section>
   ) : (
