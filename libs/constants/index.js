@@ -158,18 +158,16 @@ export const cspToString = (csp) =>
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
-const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
-  "'self'",
-  "https:",
-  "'unsafe-eval'",
-  "'unsafe-inline'",
-  "'wasm-unsafe-eval'",
-];
-
 export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
   "default-src": ["'self'", "https:"],
-  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "script-src": [
+    "'self'",
+    "https:",
+    "'unsafe-eval'",
+    "'unsafe-inline'",
+    "'wasm-unsafe-eval'",
+  ],
+  "script-src-elem": ["'self'", "https:", "'unsafe-inline'"],
   "style-src": [
     "'report-sample'",
     "'self'",
