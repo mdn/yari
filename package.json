@@ -243,7 +243,7 @@
     "stylelint-order": "^6.0.3",
     "stylelint-prettier": "^4.0.2",
     "stylelint-scss": "^5.2.1",
-    "swr": "^2.2.2",
+    "swr": "^2.2.4",
     "tailwindcss": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
     "ts-jest": "^29.1.1",
