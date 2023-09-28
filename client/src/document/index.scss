@@ -763,7 +763,7 @@ kbd {
 }
 
 .sidebar-container {
-  --offset: var(--sticky-header-height);
+  --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
 
   @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
@@ -801,7 +801,7 @@ kbd {
       display: flex;
       flex-direction: column;
       gap: 0;
-      height: calc(100vh - var(--sticky-header-height));
+      height: calc(100vh - var(--sticky-header-with-actions-height));
       mask-image: linear-gradient(
         to bottom,
         rgba(0, 0, 0, 0) 0%,
@@ -810,7 +810,7 @@ kbd {
       );
       overflow: auto;
       position: sticky;
-      top: var(--sticky-header-height);
+      top: var(--sticky-header-with-actions-height);
 
       .place {
         margin: 1rem 0;
