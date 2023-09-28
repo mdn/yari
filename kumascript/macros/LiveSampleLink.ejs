@@ -8,5 +8,7 @@
 //  $1 - The link label
 //
 // See also : EmbedLiveSample
+//
+// We pass evn.url as $1 to LiveSampleURL to enforce fallback to prebuild samples.
 %>
-<a href="<%= await template('LiveSampleURL', [$0]) %>"><%=$1%></a>
+<a href="<%= await template('LiveSampleURL', [$0, env.url]) %>"><%=$1%></a>

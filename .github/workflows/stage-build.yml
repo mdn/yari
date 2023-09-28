@@ -175,7 +175,7 @@ jobs:
           # secure production but this is an exception and default
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
-          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
 
           # Sign key for code samples
           BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
