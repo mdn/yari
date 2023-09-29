@@ -194,6 +194,59 @@ unicorns_char_filter = char_filter(
         "!= => Inequality",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment
         "= => Assignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder_assignment
+        "% => Remainder",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder
+        "%= => Remainderassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_AND
+        "& => BitwiseAND",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_AND_assignment
+        "&= => BitwiseAND",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_NOT
+        "~ => BitwiseNOT",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_OR
+        "| => BitwiseOR",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_OR_assignment
+        "|= => BitwiseORassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR_assignment
+        "^= => BitwiseXORassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR
+        "^ => BitwiseXOR",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR_assignment
+        "^= => BitwiseXORassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Right_shift
+        ">> => Rightshift",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Right_shift_assignment
+        ">>= => Rightshiftassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unsigned_right_shift_assignment
+        ">>>= => UnsignedRightshiftassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Left_shift
+        "<< => Leftshift",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Left_shift_assignment
+        "<<= => Leftshiftassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition_assignment
+        "+= => Additionassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Subtraction_assignment
+        "-= => Subtractionassignment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Increment
+        "++ => Increment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Decrement
+        "-- => Decrement",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/CSS/Comments
+        "/* => BlockCommentBegin",
+        "*/ => BlockCommentEnd",
+        # E.g. https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started#html_comments
+        "<!-- => HTMLCommentBegin",
+        "--> => HTMLCommentEnd",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#hashbang_comments
+        "#!` => HashbangComment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#comments
+        "// => LineComment",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+        "` => TemplateLiteral",
+        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#description
+        "${ => EmbeddedExpressionBegin",
+        "${} => EmbeddedExpression",
     ],
 )
 
