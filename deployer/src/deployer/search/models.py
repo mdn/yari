@@ -208,8 +208,6 @@ unicorns_char_filter = char_filter(
         "| => BitwiseOR",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_OR_assignment
         "|= => BitwiseORassignment",
-        # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR_assignment
-        "^= => BitwiseXORassignment",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR
         "^ => BitwiseXOR",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR_assignment
