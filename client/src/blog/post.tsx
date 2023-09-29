@@ -193,7 +193,7 @@ export function BlogPost(props: HydrationData) {
   return (
     <>
       {doc && blogMeta && (
-        <main className="blog-post-container container main-page-content">
+        <main className="blog-post-container container">
           <div className="sidebar-container">
             <div className="toc-container">
               <aside className="toc">
@@ -204,7 +204,10 @@ export function BlogPost(props: HydrationData) {
               {PLACEMENT_ENABLED && !blogMeta?.sponsored && <SidePlacement />}
             </div>
           </div>
-          <article className="blog-post blog-container" lang={doc?.locale}>
+          <article
+            className="blog-post blog-container main-page-content"
+            lang={doc?.locale}
+          >
             <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
             {blogMeta?.sponsored && (
               <span className="sponsored">Sponsored</span>
