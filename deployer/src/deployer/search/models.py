@@ -231,11 +231,11 @@ unicorns_char_filter = char_filter(
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Decrement
         "-- => Decrement",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/CSS/Comments
-        "/* => Blockcommentcegin",
+        "/* => Blockcommentbegin",
         "*/ => Blockcommentend",
         # E.g. https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started#html_comments
-        "<!-- => HTMLCommentbegin",
-        "--> => HTMLCommentend",
+        "<!-- => HTMLcommentbegin",
+        "--> => HTMLcommentend",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#hashbang_comments
         "#!` => Hashbangcomment",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#comments
