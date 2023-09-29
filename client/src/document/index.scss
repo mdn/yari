@@ -100,7 +100,7 @@
   }
 
   img {
-    background: #fff;
+    background: var(--background-primary);
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
     display: inline-block;
