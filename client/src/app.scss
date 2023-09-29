@@ -126,6 +126,10 @@
   scroll-margin-top: var(--sticky-header-with-actions-height);
 }
 
+.sticky-header-container.without-actions ~ * :target {
+  scroll-margin-top: var(--sticky-header-without-actions-height);
+}
+
 body {
   accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   background-color: var(--background-primary);
