@@ -231,20 +231,20 @@ unicorns_char_filter = char_filter(
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Decrement
         "-- => Decrement",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/CSS/Comments
-        "/* => BlockCommentBegin",
-        "*/ => BlockCommentEnd",
+        "/* => Blockcommentcegin",
+        "*/ => Blockcommentend",
         # E.g. https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started#html_comments
-        "<!-- => HTMLCommentBegin",
-        "--> => HTMLCommentEnd",
+        "<!-- => HTMLCommentbegin",
+        "--> => HTMLCommentend",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#hashbang_comments
-        "#!` => HashbangComment",
+        "#!` => Hashbangcomment",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#comments
-        "// => LineComment",
+        "// => Linecomment",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-        "` => TemplateLiteral",
+        "` => Templateliteral",
         # E.g. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#description
-        "${ => EmbeddedExpressionBegin",
-        "${} => EmbeddedExpression",
+        "${ => Embeddedexpressionbegin",
+        "${} => Embeddedexpression",
     ],
 )
 
