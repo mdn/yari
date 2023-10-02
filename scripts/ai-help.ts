@@ -25,6 +25,7 @@ interface IndexedDoc {
   url: string;
   slug: string;
   title: string;
+  token_count: number | null;
   checksum: string;
 }
 
@@ -51,6 +52,45 @@ export async function updateEmbeddings(directory: string) {
     apiKey: OPENAI_KEY,
   });
   const openai = new OpenAIApi(configuration);
+
+  const createEmbedding = async (content: string) => {
+    // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
+    const input = content.replace(/\n/g, " ");
+
+    let embeddingResponse;
+    try {
+      embeddingResponse = await openai.createEmbedding({
+        model: "text-embedding-ada-002",
+        input,
+      });
+    } catch (e: any) {
+      const {
+        data: {
+          error: { message, type },
+        },
+        status,
+        statusText,
+      } = e.response;
+      console.error(
+        `[!] Failed to create embedding (${status} ${statusText}): ${type} - ${message}`
+      );
+      // Try again with trimmed content.
+      embeddingResponse = await openai.createEmbedding({
+        model: "text-embedding-ada-002",
+        input: input.substring(0, 15000),
+      });
+    }
+
+    const {
+      data: [{ embedding }],
+      usage: { total_tokens },
+    } = embeddingResponse.data;
+
+    return {
+      total_tokens,
+      embedding,
+    };
+  };
 
   console.log(`Retrieving all indexed documents...`);
   const existingDocs = await fetchAllExistingDocs(supabaseClient);
@@ -81,6 +121,20 @@ export async function updateEmbeddings(directory: string) {
         checksum,
       });
       continue;
+    } else if (existingDoc && existingDoc.token_count === null) {
+      // (Legacy migration:) Add content, token_count, embedding where missing.
+      console.log(`-> [${url}] Adding content/token_count/embedding...`);
+      const { total_tokens, embedding } = await createEmbedding(content);
+
+      await supabaseClient
+        .from("mdn_doc")
+        .update({
+          content,
+          token_count: total_tokens,
+          embedding,
+        })
+        .filter("id", "eq", existingDoc.id)
+        .throwOnError();
     }
   }
   console.log(
@@ -108,6 +162,9 @@ export async function updateEmbeddings(directory: string) {
             .throwOnError();
         }
 
+        // Embedding for full document.
+        const { total_tokens, embedding } = await createEmbedding(content);
+
         // Create/update document record. Intentionally clear checksum until we
         // have successfully generated all document sections.
         const { data: doc } = await supabaseClient
@@ -118,6 +175,9 @@ export async function updateEmbeddings(directory: string) {
               url,
               slug,
               title,
+              content,
+              token_count: total_tokens,
+              embedding,
             },
             { onConflict: "url" }
           )
@@ -133,20 +193,7 @@ export async function updateEmbeddings(directory: string) {
 
         await Promise.all(
           sections.map(async ({ heading, content }) => {
-            // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
-            const input = content.replace(/\n/g, " ");
-
-            const embeddingResponse = await openai.createEmbedding({
-              model: "text-embedding-ada-002",
-              input,
-            });
-
-            if (embeddingResponse.status !== 200) {
-              console.error("Embedding request failed", embeddingResponse.data);
-              throw new Error("Embedding request failed");
-            }
-
-            const [responseData] = embeddingResponse.data.data;
+            const { total_tokens, embedding } = await createEmbedding(content);
 
             await supabaseClient
               .from("mdn_doc_section")
@@ -154,8 +201,8 @@ export async function updateEmbeddings(directory: string) {
                 doc_id: doc.id,
                 heading,
                 content,
-                token_count: embeddingResponse.data.usage.total_tokens,
-                embedding: responseData.embedding,
+                token_count: total_tokens,
+                embedding: embedding,
               })
               .select()
               .single()
@@ -260,24 +307,21 @@ function splitAndFilterSections(
 }
 async function fetchAllExistingDocs(supabase: SupabaseClient) {
   const PAGE_SIZE = 1000;
-  let { data } = await supabase
-    .from("mdn_doc")
-    .select("id, url, slug, title, checksum")
-    .order("id")
-    .limit(PAGE_SIZE)
-    .throwOnError();
+  const selectDocs = () =>
+    supabase
+      .from("mdn_doc")
+      .select("id, url, slug, title, checksum, token_count")
+      .order("id")
+      .limit(PAGE_SIZE);
+
+  let { data } = await selectDocs().throwOnError();
   let allData = data;
   while (data.length === PAGE_SIZE) {
     const lastItem = data[data.length - 1];
-    ({ data } = await supabase
-      .from("mdn_doc")
-      .select("id, url, slug, title, checksum")
-      .order("id")
-      .gt("id", lastItem.id)
-      .limit(PAGE_SIZE)
-      .throwOnError());
+    ({ data } = await selectDocs().gt("id", lastItem.id).throwOnError());
     allData = [...allData, ...data];
   }
+
   return allData;
 }
 
