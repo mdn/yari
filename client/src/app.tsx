@@ -55,7 +55,9 @@ function Layout({ pageType, children }) {
       >
         <TopPlacement />
         {pageType !== "document-page" && (
-          <TopNavigation extraClasses="main-document-header-container" />
+          <div className="sticky-header-container without-actions">
+            <TopNavigation />
+          </div>
         )}
         {children}
       </div>

@@ -1,135 +1,127 @@
 @use "../ui/vars" as *;
 
-.blog-container.post {
-  max-width: calc(48rem + 4rem);
+.blog-post-container {
+  display: grid;
+  gap: 3rem;
+  grid-template-areas:
+    "post"
+    "newsletter";
+  width: 100%;
 
-  + .section-newsletter h2 {
-    font: var(--type-heading-h3);
-    margin: 0;
-  }
-}
-
-.blog-container {
-  --author-gap: 1rem;
-  --avatar-size: 3rem;
-
-  .date-author,
-  .author {
-    align-content: flex-start;
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
+  @media screen and (min-width: $screen-lg) {
+    grid-template-areas:
+      "post toc"
+      "newsletter toc";
+    grid-template-columns: minmax(auto, 100%) minmax(0, 12rem);
   }
 
-  .date-author {
-    column-gap: 1.5rem;
-    padding-left: calc(var(--avatar-size) + var(--author-gap));
+  @media screen and (min-width: $screen-xl) {
+    grid-template-areas:
+      "nothing post toc"
+      "nothing newsletter toc";
+    grid-template-columns: minmax(auto, 1fr) minmax(0, 52rem) minmax(15rem, 1fr);
   }
 
-  .author {
-    font-weight: var(--font-body-strong-weight);
-    gap: var(--author-gap);
-    margin-left: calc((var(--avatar-size) + var(--author-gap)) * -1);
+  > .sidebar-container {
+    --offset: var(--top-nav-height);
+    display: none;
 
-    &::after {
-      margin-left: calc(4px - var(--author-gap));
+    .toc-container {
+      position: unset;
+      top: auto;
     }
 
-    img {
-      border: none !important;
-      border-radius: 3rem;
-      height: var(--avatar-size);
+    @media screen and (min-width: $screen-lg) {
+      display: flex;
+      grid-area: toc;
+
+      .toc > nav {
+        margin-top: 2rem;
+      }
+    }
+  }
+
+  > .section-newsletter {
+    grid-area: newsletter;
+  }
+
+  > .blog-post {
+    grid-area: post;
+    max-width: 52rem;
+
+    + .section-newsletter h2 {
+      font: var(--type-heading-h3);
       margin: 0;
-      object-fit: cover;
-      width: var(--avatar-size);
-    }
-  }
-
-  figure.blog-image {
-    margin: 0 auto 2rem;
-    width: fit-content;
-
-    img {
-      background: transparent;
-      border: none !important;
-      margin: 0 0 0.125rem;
-      width: 100%;
     }
 
-    figcaption {
-      font-size: smaller;
-      margin-left: auto;
-      width: fit-content;
-    }
-  }
-
-  .previous-next {
-    display: flex;
-    gap: 1rem;
-
-    @media screen and (max-width: $screen-md) {
-      flex-direction: column-reverse;
-    }
-
-    a {
-      color: var(--text-primary);
+    .previous-next {
       display: flex;
       gap: 1rem;
-      text-decoration: none;
-      width: 100%;
 
-      &:hover h2 {
-        text-decoration: underline;
+      @media screen and (max-width: $screen-md) {
+        flex-direction: column-reverse;
       }
 
-      &:active {
-        background: none;
-      }
+      a {
+        color: var(--text-primary);
+        display: flex;
+        gap: 1rem;
+        text-decoration: none;
+        width: 100%;
 
-      @media screen and (min-width: $screen-md) {
-        &.previous,
-        &.next {
-          &::before,
-          &::after {
-            align-self: center;
-            background-color: var(--text-primary);
-            flex-shrink: 0;
-            height: 1rem;
-            mask-position: center;
-            mask-repeat: no-repeat;
-            vertical-align: middle;
-            width: 1rem;
+        &:hover h2 {
+          text-decoration: underline;
+        }
+
+        &:active {
+          background: none;
+        }
+
+        @media screen and (min-width: $screen-md) {
+          &.previous,
+          &.next {
+            &::before,
+            &::after {
+              align-self: center;
+              background-color: var(--text-primary);
+              flex-shrink: 0;
+              height: 1rem;
+              mask-position: center;
+              mask-repeat: no-repeat;
+              vertical-align: middle;
+              width: 1rem;
+            }
+          }
+
+          &.previous::before {
+            content: "";
+            mask-image: url("../assets/icons/previous.svg");
+          }
+
+          &.next::after {
+            content: "";
+            mask-image: url("../assets/icons/next.svg");
           }
         }
-
-        &.previous::before {
-          content: "";
-          mask-image: url("../assets/icons/previous.svg");
-        }
-
-        &.next::after {
-          content: "";
-          mask-image: url("../assets/icons/next.svg");
-        }
       }
-    }
 
-    article {
-      margin: 0 auto;
-    }
+      article {
+        margin: 0 auto;
+      }
 
-    h2:first-of-type {
-      color: var(--text-link);
-      font-size: 1rem;
-      margin: 0;
-      text-align: center;
+      h2:first-of-type {
+        color: var(--text-link);
+        font-size: 1rem;
+        margin: 0;
+        text-align: center;
 
-      strong {
-        color: var(--text-primary);
-        display: block;
-        font-size: 0.8em;
-        font-weight: normal;
-        line-height: 1.2rem;
+        strong {
+          color: var(--text-primary);
+          display: block;
+          font-size: 0.8em;
+          font-weight: normal;
+          line-height: 1.2rem;
+        }
       }
     }
   }

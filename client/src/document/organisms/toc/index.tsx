@@ -10,7 +10,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
   const observedElements = React.useCallback(() => {
     const mainElement = document.querySelector("main") ?? document;
     const elements = mainElement.querySelectorAll(
-      "h1, h1 ~ *:not(section), h2, h2 ~ *:not(section), h3, h3 ~ *:not(section)"
+      "h1, h1 ~ *:not(section), h2:not(.document-toc-heading), h2:not(.document-toc-heading) ~ *:not(section), h3, h3 ~ *:not(section)"
     );
     return Array.from(elements);
   }, []);
