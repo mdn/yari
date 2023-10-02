@@ -148,7 +148,7 @@ export default function AiHelp() {
         </div>
       </Container>
       <Container>
-        <AIHelpHistory />
+        {user?.experiments?.config.history && <AIHelpHistory />}
         {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
       </Container>
     </div>
@@ -165,7 +165,7 @@ export function AIHelpHistory() {
       const res = await (
         await fetch(`/api/v1/plus/ai/help/history/list`)
       ).json();
-      setHistory(res);
+      setHistory(Array.isArray(res) ? res : []);
     })();
   }, []);
   return (
@@ -422,7 +422,7 @@ export function AIHelpInner() {
                         window.setTimeout(() => window.scrollTo(0, 0));
                       }}
                     >
-                      + New chat
+                      + New Question
                     </Button>
                   </div>
                 )}
@@ -463,7 +463,7 @@ export function AIHelpInner() {
         {isQuotaExceeded(quota) ? (
           <AiUpsellBanner limit={quota.limit} />
         ) : hasConversation && !refine ? (
-          <>
+          <div className="ai-help-refine-or-new">
             <Button
               type="action"
               isDisabled={isQuotaExceeded(quota)}
@@ -480,6 +480,21 @@ export function AIHelpInner() {
             <Button
               type="action"
               isDisabled={isQuotaExceeded(quota)}
+              extraClasses="ai-help-refine-button"
+              onClickHandler={() => {
+                gleanClick(`${AI_HELP}: edit`);
+                setIsExample(false);
+                setRefine(false);
+                setQuery(messages[messages.length - 2]?.content || "");
+                reset();
+                window.setTimeout(() => window.scrollTo(0, 0));
+              }}
+            >
+              ✎ Edit as new
+            </Button>
+            <Button
+              type="primary"
+              isDisabled={isQuotaExceeded(quota)}
               extraClasses="ai-help-new-question-button"
               onClickHandler={() => {
                 gleanClick(`${AI_HELP}: new`);
@@ -491,7 +506,7 @@ export function AIHelpInner() {
             >
               + New Question
             </Button>
-          </>
+          </div>
         ) : (
           <>
             <form

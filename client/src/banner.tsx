@@ -7,9 +7,8 @@ export function TopBanner() {
     <div className={`top-banner`}>
       <section className="place top container">
         <p className="fallback-copy">
-          As an MDN Plus Supporter, you can test our AI Help optimizations and
-          have a direct say in our product's evolution. Activate and provide
-          feedback <a href="/en-US/plus/settings">here</a>.
+          You are eligible to test our AI-Help experiments. Go to{" "}
+          <a href="/en-US/plus/settings">settings</a> to start.
         </p>
       </section>
     </div>

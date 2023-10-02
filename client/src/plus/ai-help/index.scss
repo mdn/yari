@@ -78,6 +78,13 @@
       }
     }
 
+    .ai-help-refine-or-new {
+      display: flex;
+      gap: 1rem;
+      justify-content: end;
+      width: 100%;
+    }
+
     .ai-help-input-form {
       --input-height: 3rem;
       background-color: var(--background-primary);
