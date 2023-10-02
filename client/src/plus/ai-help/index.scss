@@ -68,42 +68,53 @@
         );
         margin-top: 0.5rem;
       }
+
+      .ai-help-refine-button {
+        border: 1px solid var(--text-primary);
+      }
+
+      .ai-help-new-question-button {
+        border: 1px solid var(--text-primary);
+      }
     }
 
     .ai-help-input-form {
       --input-height: 3rem;
+      background-color: var(--background-primary);
+      border: var(--input-border-width) solid var(--border-primary);
+      border-radius: 1rem;
+      display: flex;
+      padding: 0.5rem 1rem;
       position: relative;
       width: 100%;
 
-      input {
-        background-color: var(--background-primary);
-        border: var(--input-border-width) solid var(--border-primary);
-        border-radius: var(--input-height);
+      &:focus-within {
+        border-color: var(--category-color);
+        box-shadow:
+          0 0 0 3px var(--blend-color),
+          0 0 0 3px var(--category-color);
+        outline: 0 none;
+      }
+
+      textarea {
+        border: none;
         color: var(--text-primary);
-        height: var(--input-height);
-        padding-left: var(--input-padding-left);
-        padding-right: var(--input-padding-right);
+        height: 2rem;
+        max-width: calc(100% - 3rem);
+        resize: none;
         width: 100%;
 
-        &:focus {
-          border-color: var(--category-color);
-          box-shadow:
-            0 0 0 3px var(--blend-color),
-            0 0 0 3px var(--category-color);
-          outline: 0 none;
+        &:focus-visible {
+          outline: none;
         }
       }
 
       button {
         --button-color: var(--icon-secondary);
-        --button-height: 2.5rem;
         --button-padding: 0.5rem;
         --icon-size: 1.5rem;
-
-        display: block;
-        position: absolute;
-        right: calc(0.5rem + var(--input-border-width));
-        top: 0.25rem;
+        align-self: end;
+        margin-left: auto;
 
         &:hover {
           background: transparent;

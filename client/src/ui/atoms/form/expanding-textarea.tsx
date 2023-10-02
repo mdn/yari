@@ -1,12 +1,14 @@
 import { DetailedHTMLProps, TextareaHTMLAttributes, useCallback } from "react";
 
+type AreaProps = DetailedHTMLProps<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  HTMLTextAreaElement
+>;
+
 export default function ExpandingTextarea(
-  props: DetailedHTMLProps<
-    TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
-  >
+  props: AreaProps | { enterKeyHint: string }
 ) {
-  const { value } = props;
+  const { value } = props as AreaProps;
 
   const resizeCallback = useCallback(
     (node: HTMLTextAreaElement) => {
@@ -17,5 +19,11 @@ export default function ExpandingTextarea(
     [value]
   );
 
-  return <textarea {...props} rows={2} ref={resizeCallback} />;
+  return (
+    <textarea
+      {...(props as AreaProps)}
+      rows={(props as AreaProps).rows || 2}
+      ref={resizeCallback}
+    />
+  );
 }

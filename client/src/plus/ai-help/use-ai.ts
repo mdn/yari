@@ -6,6 +6,7 @@ import type {
   CreateChatCompletionResponseChoicesInner,
 } from "openai";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
@@ -34,6 +35,8 @@ export interface Message {
   content: string;
   status: MessageStatus;
   sources?: PageReference[];
+  chatId?: string;
+  messageId?: number;
 }
 
 interface NewMessageAction {
@@ -51,13 +54,20 @@ interface AppendContentAction {
   content: string;
 }
 
-interface SetSourcesAction {
-  type: "set-sources";
+interface SetMetadataAction {
+  type: "set-metadata";
   sources: PageReference[];
+  messageId: number;
+  chatId: string;
 }
 
 interface ResetAction {
   type: "reset";
+}
+
+interface SetMessagesAction {
+  type: "set-messages";
+  messages: Message[];
 }
 
 type MessageAction =
@@ -65,7 +75,8 @@ type MessageAction =
   | UpdateMessageAction
   | AppendContentAction
   | ResetAction
-  | SetSourcesAction;
+  | SetMetadataAction
+  | SetMessagesAction;
 
 interface PageReference {
   url: string;
@@ -107,12 +118,19 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
       };
       break;
     }
-    case "set-sources": {
-      const { sources } = messageAction;
+    case "set-metadata": {
+      const { sources, messageId, chatId } = messageAction;
       newState[index] = {
         ...state[index],
         sources,
+        chatId,
+        messageId,
       };
+      break;
+    }
+    case "set-messages": {
+      const { messages } = messageAction;
+      newState = messages;
       break;
     }
     case "reset": {
@@ -129,6 +147,33 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
 
 interface Storage {
   messages?: Message[];
+  chatId?: string;
+}
+
+class AiHelpHistory {
+  static async getMessages(chatId): Promise<Message[]> {
+    const res = await (
+      await fetch(`/api/v1/plus/ai/help/history/${chatId}`)
+    ).json();
+    return res.messages.flatMap((message) => {
+      return [
+        {
+          role: MessageRole.User,
+          content: message.user.content,
+          status: MessageStatus.Complete,
+          chatId: message.metadata.chat_id,
+        },
+        {
+          role: MessageRole.Assistant,
+          content: message.assistant.content,
+          status: MessageStatus.Complete,
+          sources: message.metadata.sources,
+          chatId: message.metadata.chat_id,
+          messageId: message.metadata.message_id,
+        },
+      ];
+    });
+  }
 }
 
 class AiHelpStorage {
@@ -152,6 +197,14 @@ class AiHelpStorage {
     return this.value?.messages ?? [];
   }
 
+  static get(): Storage {
+    return this.value;
+  }
+
+  static set(storage: Storage) {
+    this.mutate(storage);
+  }
+
   static setMessages(messages: Message[]) {
     this.mutate({ messages });
   }
@@ -166,6 +219,7 @@ export function useAiChat({
 }: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -174,20 +228,39 @@ export function useAiChat({
     []
   );
 
+  const [chatId, setChatId] = useState<string | undefined>();
   const [messages, dispatchMessage] = useReducer(
     messageReducer,
     undefined,
-    () => AiHelpStorage.getMessages()
+    () => {
+      const { messages, chatId } = AiHelpStorage.get();
+      setChatId(chatId);
+      return messages || [];
+    }
   );
 
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
   const remoteQuota = useRemoteQuota();
 
   useEffect(() => {
-    if (!isLoading && !isResponding && messages.length > 0) {
-      AiHelpStorage.setMessages(messages);
+    const convId = searchParams.get("c");
+    if (convId) {
+      (async () => {
+        const messages = await AiHelpHistory.getMessages(convId);
+        setChatId(convId);
+        dispatchMessage({
+          type: "set-messages",
+          messages,
+        });
+      })();
     }
-  }, [isLoading, isResponding, messages]);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!isLoading && !isResponding && messages.length > 0) {
+      AiHelpStorage.set({ messages, chatId });
+    }
+  }, [isLoading, isResponding, messages, chatId]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
@@ -218,12 +291,20 @@ export function useAiChat({
         setIsResponding(true);
 
         if (data.type === "metadata") {
-          const { sources = undefined, quota = undefined } = data;
+          const {
+            sources = undefined,
+            quota = undefined,
+            chat_id,
+            message_id,
+          } = data;
+          setChatId(chat_id);
           // Sources.
           if (Array.isArray(sources)) {
             dispatchMessage({
-              type: "set-sources",
+              type: "set-metadata",
               sources: sources,
+              chatId: chat_id,
+              messageId: message_id,
             });
           }
           // Quota.
@@ -281,14 +362,32 @@ export function useAiChat({
     [handleError]
   );
 
+  const sendFeedback = useCallback(
+    async (message_id: number, thumbs?: "up" | "down", feedback?: string) => {
+      await fetch("/api/v1/plus/ai/help/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          thumbs: thumbs && `thumbs_${thumbs}`,
+          feedback,
+          message_id,
+        }),
+      });
+    },
+    [chatId]
+  );
   const submit = useCallback(
-    (query: string) => {
+    (query: string, chatId?: string) => {
       dispatchMessage({
         type: "new",
         message: {
           status: MessageStatus.Complete,
           role: MessageRole.User,
           content: query,
+          chatId,
         },
       });
       dispatchMessage({
@@ -297,6 +396,7 @@ export function useAiChat({
           status: MessageStatus.Pending,
           role: MessageRole.Assistant,
           content: "",
+          chatId,
         },
       });
       setIsResponding(false);
@@ -313,13 +413,14 @@ export function useAiChat({
           content: messageTemplate(query),
         });
 
-      const eventSource = new SSE(`/api/v1/plus/ai/ask`, {
+      const eventSource = new SSE(`/api/v1/plus/ai/help`, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
         payload: JSON.stringify({
           messages: completeMessagesAndUserQuery,
+          chat_id: chatId,
         }),
       });
 
@@ -340,15 +441,18 @@ export function useAiChat({
   );
 
   function useRemoteQuota() {
-    const { data } = useSWR<Quota>("/api/v1/plus/ai/ask/quota", async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
+    const { data } = useSWR<Quota>(
+      "/api/v1/plus/ai/help/quota",
+      async (url) => {
+        const response = await fetch(url);
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`${response.status} on ${url}: ${text}`);
+        }
+        const data = await response.json();
+        return data.quota;
       }
-      const data = await response.json();
-      return data.quota;
-    });
+    );
 
     return data;
   }
@@ -374,6 +478,10 @@ export function useAiChat({
 
   function reset() {
     resetLoadingState();
+    setSearchParams((prev) => {
+      prev.delete("c");
+      return prev;
+    });
     dispatchMessage({
       type: "reset",
     });
@@ -387,7 +495,9 @@ export function useAiChat({
     messages,
     isLoading,
     isResponding,
+    sendFeedback,
     hasError,
     quota,
+    chatId,
   };
 }

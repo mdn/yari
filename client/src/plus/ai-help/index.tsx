@@ -31,6 +31,7 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
 import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
+import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -68,6 +69,24 @@ export default function AiHelp() {
   const { setViewed } = useViewedState();
   useEffect(() => setViewed(FeatureId.PLUS_AI_HELP));
 
+  const {
+    active = null,
+    config: {
+      gpt4 = false,
+      full_doc = false,
+      new_prompt = false,
+      history = false,
+    } = {},
+  } = user?.experiments || {};
+  const activeExperimentsSting = [
+    gpt4 && "GPT-4",
+    full_doc && "Amplified Context",
+    new_prompt && "Optimized Prompts",
+    history && "History",
+  ]
+    .filter(Boolean)
+    .join(", ");
+
   return (
     <div className="ai-help">
       <header className="plus-header-mandala">
@@ -99,22 +118,66 @@ export default function AiHelp() {
       </header>
       <Container>
         <div className="notecard experimental">
-          <p>
-            <strong>This is a beta feature.</strong>
-            <br />
-            May occasionally generate incorrect answers. Please always verify
-            information independently.
-            <br />
-            <a href="/en-US/blog/introducing-ai-help/">
-              <strong>Learn more</strong>
-            </a>
-          </p>
+          {active ? (
+            <p>
+              Experiments{" "}
+              {activeExperimentsSting ? `(${activeExperimentsSting}) ` : ""}
+              enabled! <br />
+              As part of these experiments we're recording your interactions!
+              <br />
+              Modify in <a href="/en-US/plus/settings">settings</a>.
+            </p>
+          ) : active === false ? (
+            <p>
+              As an MDN Plus Supporter, you can test our AI Help optimizations
+              and have a direct say in our product's evolution. Activate and
+              provide feedback <a href="/en-US/plus/settings">here</a>.
+            </p>
+          ) : (
+            <p>
+              <strong>This is a beta feature.</strong>
+              <br />
+              May occasionally generate incorrect answers. Please always verify
+              information independently.
+              <br />
+              <a href="/en-US/blog/introducing-ai-help/">
+                <strong>Learn more</strong>
+              </a>
+            </p>
+          )}
         </div>
       </Container>
       <Container>
+        <AIHelpHistory />
         {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
       </Container>
     </div>
+  );
+}
+
+export function AIHelpHistory() {
+  const [history, setHistory] = useState<
+    { chat_id: string; question: string }[]
+  >([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await (
+        await fetch(`/api/v1/plus/ai/help/history/list`)
+      ).json();
+      setHistory(res);
+    })();
+  }, []);
+  return (
+    <ul>
+      {history.map((h) => {
+        return (
+          <li>
+            <a href={`./?c=${h.chat_id}`}>{h.question}</a>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -123,10 +186,12 @@ const SORRY_FRONTEND =
   "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
 
 export function AIHelpInner() {
+  const user = useUserData();
   const formRef = useRef<HTMLFormElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+  const [refine, setRefine] = useState(false);
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
@@ -143,6 +208,8 @@ export function AIHelpInner() {
     reset,
     stop,
     submit,
+    chatId,
+    sendFeedback,
   } = useAiChat();
 
   const isQuotaLoading = quota === undefined;
@@ -177,6 +244,16 @@ export function AIHelpInner() {
       window.setTimeout(() => input.focus());
     }
   }, [isQuotaLoading, hasConversation]);
+
+  const submitQuestion = () => {
+    gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
+    if (query.trim()) {
+      submit(query.trim(), chatId);
+      setQuery("");
+      setIsExample(false);
+      setAutoScroll(true);
+    }
+  };
 
   return isQuotaLoading ? (
     <Loading />
@@ -310,6 +387,14 @@ export function AIHelpInner() {
                                 upLabel={"Yes, this answer was useful."}
                                 downLabel={"No, this answer was not useful."}
                                 permanent={true}
+                                callback={async (value) => {
+                                  user?.experiments?.active &&
+                                    message.messageId &&
+                                    (await sendFeedback(
+                                      message.messageId,
+                                      value
+                                    ));
+                                }}
                               />
                               <ReportIssueOnGitHubLink
                                 messages={messages}
@@ -377,6 +462,36 @@ export function AIHelpInner() {
         )}
         {isQuotaExceeded(quota) ? (
           <AiUpsellBanner limit={quota.limit} />
+        ) : hasConversation && !refine ? (
+          <>
+            <Button
+              type="action"
+              isDisabled={isQuotaExceeded(quota)}
+              extraClasses="ai-help-refine-button"
+              onClickHandler={() => {
+                gleanClick(`${AI_HELP}: refine`);
+                setQuery("");
+                setIsExample(false);
+                setRefine(true);
+              }}
+            >
+              ↩ Refine
+            </Button>
+            <Button
+              type="action"
+              isDisabled={isQuotaExceeded(quota)}
+              extraClasses="ai-help-new-question-button"
+              onClickHandler={() => {
+                gleanClick(`${AI_HELP}: new`);
+                setQuery("");
+                setIsExample(false);
+                reset();
+                window.setTimeout(() => window.scrollTo(0, 0));
+              }}
+            >
+              + New Question
+            </Button>
+          </>
         ) : (
           <>
             <form
@@ -384,26 +499,25 @@ export function AIHelpInner() {
               className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
-                gleanClick(
-                  `${AI_HELP}: submit ${isExample ? "example" : "question"}`
-                );
-                if (query.trim()) {
-                  submit(query.trim());
-                  setQuery("");
-                  setIsExample(false);
-                  setAutoScroll(true);
-                }
+                submitQuestion();
               }}
             >
-              <input
+              <ExpandingTextarea
                 ref={inputRef}
                 disabled={isLoading || isResponding}
-                type="text"
+                enterKeyHint="send"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    submitQuestion();
+                  }
+                }}
                 onChange={(event) => {
                   setQuery(event.target.value);
                   setIsExample(false);
                 }}
                 value={query}
+                rows={1}
                 placeholder={placeholder(
                   isLoading
                     ? "Requesting answer..."
