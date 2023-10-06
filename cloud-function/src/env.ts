@@ -68,9 +68,13 @@ export function sourceUri(source: Source): string {
 export const KEVEL_SITE_ID = Number(process.env["KEVEL_SITE_ID"] ?? 0);
 export const KEVEL_NETWORK_ID = Number(process.env["KEVEL_NETWORK_ID"] ?? 0);
 export const SIGN_SECRET = process.env["SIGN_SECRET"] ?? "";
-export const CARBON_ZONE_KEY = process.env["CARBON_ZONE_KEY"] ?? "";
-export const CARBON_FALLBACK_ENABLED = Boolean(
-  JSON.parse(process.env["CARBON_FALLBACK_ENABLED"] || "false")
+export const BSA_ZONE_KEYS = Object.fromEntries(
+  (process.env["BSA_ZONE_KEYS"] ?? "").split(";").map((k) => k.split(":"))
+);
+export const BSA_URL_PREFIX =
+  process.env["BSA_URL_PREFIX"] ?? "https://localhost/en-US/play";
+export const BSA_ENABLED = Boolean(
+  JSON.parse(process.env["BSA_ENABLED"] || "false")
 );
 
 // HTTPS.

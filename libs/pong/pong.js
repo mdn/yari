@@ -1,3 +1,4 @@
+/* global fetch */
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
@@ -80,5 +81,22 @@ export function createPongGetHandler(client, coder) {
         .filter(Boolean)
     );
     return { statusCode: 200, payload };
+  };
+}
+
+export function createPongClickHandler(coder) {
+  return async (params) => {
+    const click = coder.decodeAndVerify(params.get("code"));
+    const res = await fetch(click, { redirect: "manual" });
+    const status = res.status;
+    const location = res.headers.get("location");
+    return { status, location };
+  };
+}
+
+export function createPongViewedHandler(coder) {
+  return async (params) => {
+    const view = coder.decodeAndVerify(params.get("code"));
+    await fetch(view, { redirect: "manual" });
   };
 }
