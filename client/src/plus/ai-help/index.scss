@@ -107,6 +107,7 @@
         border: none;
         color: var(--text-primary);
         height: 2rem;
+        max-height: calc(30vh - var(--sticky-header-without-actions-height));
         max-width: calc(100% - 3rem);
         resize: none;
         width: 100%;

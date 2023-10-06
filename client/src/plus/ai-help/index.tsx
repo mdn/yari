@@ -251,6 +251,7 @@ export function AIHelpInner() {
       submit(query.trim(), chatId);
       setQuery("");
       setIsExample(false);
+      setRefine(false);
       setAutoScroll(true);
     }
   };
