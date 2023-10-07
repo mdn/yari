@@ -317,9 +317,6 @@ const SCL3_REDIRECT_PATTERNS = [
     "/docs/Web/API/CanvasRenderingContext2D.globalCompositeOperation",
     { permanent: true }
   ),
-  //##################################
-  // MOZILLADEMOS
-  //##################################
   // canvas example in samples/domref
   redirect(
     /^samples\/domref\/mozGetAsFile.html$/i,
