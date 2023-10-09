@@ -65,6 +65,11 @@ export function addBreakoutButton(
   code: EditorContent,
   locale: string
 ) {
+  if (!element || !element.querySelector("play-sample")) {
+    element?.classList.add("play-sample");
+  } else {
+    return;
+  }
   if (!element || element.querySelector(".play-button")) return;
   const button = document.createElement("button");
 
@@ -82,7 +87,92 @@ export function addBreakoutButton(
     url.pathname = `/${locale}/play`;
     url.hash = "";
     url.search = "";
-    window.location.href = url.href;
+    if (e.shiftKey === true) {
+      window.location.href = url.href;
+    } else {
+      window.open(url, "_blank");
+    }
+  });
+}
+
+export function collectCode(): EditorContent {
+  const selected = [
+    ...document.querySelectorAll(
+      ".example-header.play-collect > div > input:checked"
+    ),
+  ]
+    .map((e) => e.parentElement?.parentElement?.nextElementSibling)
+    .filter(Boolean);
+
+  console.log(selected);
+  return {
+    js: selected
+      .map((pre) => (pre?.classList.contains("js") ? pre.textContent : null))
+      .filter(Boolean)
+      .join("\n"),
+    css: selected
+      .map((pre) => (pre?.classList.contains("css") ? pre.textContent : null))
+      .filter(Boolean)
+      .join("\n"),
+    html: selected
+      .map((pre) => (pre?.classList.contains("html") ? pre.textContent : null))
+      .filter(Boolean)
+      .join("\n"),
+  };
+}
+
+export function addCollectButton(
+  element: Element | null,
+  id: string,
+  locale: string
+) {
+  if (!element || !element.querySelector("play-collect")) {
+    element?.classList.add("play-collect");
+  } else {
+    return;
+  }
+  if (!element || element.querySelector(".play-button")) return;
+  const checkId = crypto.randomUUID();
+  const playlist = document.createElement("div");
+  playlist.classList.add("playlist");
+  const checkLabel = document.createElement("label");
+  checkLabel.htmlFor = checkId;
+  checkLabel.textContent = "";
+  const check = document.createElement("input");
+  check.addEventListener("change", (e) => {
+    const ct = e.currentTarget as HTMLInputElement | null;
+    if (ct?.dataset) {
+      ct.dataset.queued = `${ct.checked} `;
+    }
+  });
+  check.type = "checkbox";
+  check.id = checkId;
+  const button = document.createElement("button");
+
+  button.textContent = "take to Play";
+
+  button.classList.add("play-button", "external");
+  button.type = "button";
+  button.setAttribute("data-play", id);
+  button.title = "Open in Playground";
+  playlist.appendChild(check);
+  playlist.appendChild(checkLabel);
+  playlist.appendChild(button);
+  element.appendChild(playlist);
+
+  button.addEventListener("click", (e) => {
+    check.checked = true;
+    const code = collectCode();
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
+    const url = new URL(window?.location.href);
+    url.pathname = `/${locale}/play`;
+    url.hash = "";
+    url.search = "";
+    if (e.shiftKey === true) {
+      window.location.href = url.href;
+    } else {
+      window.open(url, "_blank");
+    }
   });
 }
 
