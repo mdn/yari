@@ -388,7 +388,7 @@ export function AIHelpInner() {
                                             }
                                           }}
                                         >
-                                          take to Play
+                                          play
                                         </button>
                                       </div>
                                     )}

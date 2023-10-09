@@ -687,16 +687,17 @@ pre {
 
       &:not(:checked) ~ label {
         &::before {
-          content: "+ QUEUE";
+          content: "+ queue";
         }
       }
 
       &:checked ~ label {
-        color: var(--icon-success);
+        color: var(--text-primary-blue);
         opacity: 1;
 
         &::before {
-          content: "queued";
+          color: var(--text-primary-blue);
+          content: "✓ queued";
         }
       }
     }

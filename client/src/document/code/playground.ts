@@ -149,7 +149,7 @@ export function addCollectButton(
   check.id = checkId;
   const button = document.createElement("button");
 
-  button.textContent = "take to Play";
+  button.textContent = "play";
 
   button.classList.add("play-button", "external");
   button.type = "button";
