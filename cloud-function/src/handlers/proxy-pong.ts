@@ -5,7 +5,6 @@ import { proxyKevel } from "./proxy-kevel.js";
 import type { Request, Response } from "express";
 
 export async function proxyPong(req: Request, res: Response) {
-  console.log(BSA_ENABLED, BSA_URL_PREFIX, req.get("referrer"));
   if (BSA_ENABLED) {
     const referrer = req.get("referrer") || "";
     if (referrer.startsWith(BSA_URL_PREFIX)) {
