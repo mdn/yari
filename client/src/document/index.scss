@@ -792,6 +792,7 @@ kbd {
     }
   }
 
+  &.toc-container,
   .toc-container {
     .place {
       grid-area: toc;
@@ -801,7 +802,7 @@ kbd {
       display: flex;
       flex-direction: column;
       gap: 0;
-      height: calc(100vh - var(--sticky-header-with-actions-height));
+      height: calc(100vh - var(--offset));
       mask-image: linear-gradient(
         to bottom,
         rgba(0, 0, 0, 0) 0%,
@@ -810,7 +811,7 @@ kbd {
       );
       overflow: auto;
       position: sticky;
-      top: var(--sticky-header-with-actions-height);
+      top: var(--offset);
 
       .place {
         margin: 1rem 0;
