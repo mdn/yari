@@ -665,6 +665,43 @@ pre {
     }
   }
 
+  .playlist {
+    display: flex;
+    gap: 0.5rem;
+    opacity: 1;
+
+    > label {
+      cursor: pointer;
+      font-size: smaller;
+      opacity: 0.4;
+      padding: 1px;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
+    }
+
+    > input {
+      display: none;
+
+      &:not(:checked) ~ label {
+        &::before {
+          content: "+ QUEUE";
+        }
+      }
+
+      &:checked ~ label {
+        color: var(--icon-success);
+        opacity: 1;
+
+        &::before {
+          content: "queued";
+        }
+      }
+    }
+  }
+
   .ai-explain-button.ai-explain-highlight {
     animation: 1s ease-in 1 ai-explain-highlight-frames;
   }

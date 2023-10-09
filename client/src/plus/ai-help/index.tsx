@@ -1,4 +1,3 @@
-import Prism from "prismjs";
 import {
   Children,
   MutableRefObject,
@@ -9,16 +8,24 @@ import {
 } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Prism from "prismjs";
 
-import { Message, MessageRole, Quota, useAiChat } from "./use-ai";
+import {
+  Message,
+  MessageRole,
+  MessageStatus,
+  Quota,
+  useAiChat,
+} from "./use-ai";
 import { AiLoginBanner, AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
-import { useScrollToTop, useViewedState } from "../../hooks";
+import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
+import { collectCode } from "../../document/code/playground";
 import "./index.scss";
 import { Avatar } from "../../ui/atoms/avatar";
 import { Button } from "../../ui/atoms/button";
@@ -31,6 +38,9 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
 import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
+import React from "react";
+import { SESSION_KEY } from "../../playground/utils";
+import { PlayQueue } from "../../playground/queue";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -97,23 +107,26 @@ export default function AiHelp() {
           </p>
         </Container>
       </header>
-      <Container>
-        <div className="notecard experimental">
-          <p>
-            <strong>This is a beta feature.</strong>
-            <br />
-            May occasionally generate incorrect answers. Please always verify
-            information independently.
-            <br />
-            <a href="/en-US/blog/introducing-ai-help/">
-              <strong>Learn more</strong>
-            </a>
-          </p>
-        </div>
-      </Container>
-      <Container>
-        {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
-      </Container>
+      <div className="ai-help-main">
+        <PlayQueue />
+        <Container>
+          <div className="notecard experimental">
+            <p>
+              <strong>This is a beta feature.</strong>
+              <br />
+              May occasionally generate incorrect answers. Please always verify
+              information independently.
+              <br />
+              <a href="/en-US/blog/introducing-ai-help/">
+                <strong>Learn more</strong>
+              </a>
+            </p>
+          </div>
+        </Container>
+        <Container>
+          {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
+        </Container>
+      </div>
     </div>
   );
 }
@@ -123,6 +136,7 @@ const SORRY_FRONTEND =
   "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
 
 export function AIHelpInner() {
+  const locale = useLocale();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -189,160 +203,220 @@ export function AIHelpInner() {
       {hasConversation && (
         <div ref={bodyRef} className="ai-help-body">
           <ul className="ai-help-messages">
-            {messages.map((message, index) => (
-              <li
-                key={index}
-                className={[
-                  "ai-help-message",
-                  `role-${message.role}`,
-                  `status-${message.status}`,
-                ].join(" ")}
-              >
-                <div className="ai-help-message-role">
-                  <RoleIcon role={message.role} />
-                </div>
-                <div
+            {messages.map((message, index) => {
+              let sample = 0;
+              return (
+                <li
+                  key={index}
                   className={[
-                    "ai-help-message-content",
-                    !message.content && "empty",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                    "ai-help-message",
+                    `role-${message.role}`,
+                    `status-${message.status}`,
+                  ].join(" ")}
                 >
-                  {message.role === "user" ? (
-                    message.content
-                  ) : (
-                    <>
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          a: ({ node, ...props }) => {
-                            if (isExternalUrl(props.href ?? "")) {
-                              props = {
-                                ...props,
-                                className: "external",
-                                rel: "noopener noreferrer",
-                                target: "_blank",
-                              };
-                            }
-                            // eslint-disable-next-line jsx-a11y/anchor-has-content
-                            return <a {...props} />;
-                          },
-                          pre: ({ node, className, children, ...props }) => {
-                            const code = Children.toArray(children)
-                              .map(
-                                (child) =>
-                                  /language-(\w+)/.exec(
-                                    (child as ReactElement)?.props?.className ||
-                                      ""
-                                  )?.[1]
-                              )
-                              .find(Boolean);
+                  <div className="ai-help-message-role">
+                    <RoleIcon role={message.role} />
+                  </div>
+                  <div
+                    className={[
+                      "ai-help-message-content",
+                      !message.content && "empty",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    {message.role === "user" ? (
+                      message.content
+                    ) : (
+                      <>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            a: ({ node, ...props }) => {
+                              if (isExternalUrl(props.href ?? "")) {
+                                props = {
+                                  ...props,
+                                  className: "external",
+                                  rel: "noopener noreferrer",
+                                  target: "_blank",
+                                };
+                              }
+                              // eslint-disable-next-line jsx-a11y/anchor-has-content
+                              return <a {...props} />;
+                            },
+                            pre: ({ node, className, children, ...props }) => {
+                              const code = Children.toArray(children)
+                                .map(
+                                  (child) =>
+                                    /language-(\w+)/.exec(
+                                      (child as ReactElement)?.props
+                                        ?.className || ""
+                                    )?.[1]
+                                )
+                                .find(Boolean);
 
-                            if (!code) {
+                              if (!code) {
+                                return (
+                                  <pre {...props} className={className}>
+                                    {children}
+                                  </pre>
+                                );
+                              }
+                              sample += 1;
                               return (
-                                <pre {...props} className={className}>
-                                  {children}
-                                </pre>
+                                <div className="code-example">
+                                  <div className="example-header play-collect">
+                                    <span className="language-name">
+                                      {code}
+                                    </span>
+                                    {message.status ===
+                                      MessageStatus.Complete && (
+                                      <div className="playlist">
+                                        <input
+                                          type="checkbox"
+                                          onChange={(e) => {
+                                            e.target.dataset.queued = `${e.target.checked} `;
+                                          }}
+                                          id={`${sample}`}
+                                        />
+                                        <label htmlFor={`${sample}`}></label>
+                                        <button
+                                          type="button"
+                                          className="play-button external"
+                                          title="Open in Playground"
+                                          onClick={(e) => {
+                                            try {
+                                              (
+                                                (e.target as HTMLElement)
+                                                  .previousElementSibling
+                                                  ?.previousElementSibling as HTMLInputElement
+                                              ).checked = true;
+                                            } catch {}
+                                            const code = collectCode();
+                                            sessionStorage.setItem(
+                                              SESSION_KEY,
+                                              JSON.stringify(code)
+                                            );
+                                            const url = new URL(
+                                              window?.location.href
+                                            );
+                                            url.pathname = `/${locale}/play`;
+                                            url.hash = "";
+                                            url.search = "";
+                                            if (e.shiftKey === true) {
+                                              window.location.href = url.href;
+                                            } else {
+                                              window.open(url, "_blank");
+                                            }
+                                          }}
+                                        >
+                                          take to Play
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <pre className={`brush: ${code}`}>
+                                    {children}
+                                  </pre>
+                                </div>
                               );
-                            }
-                            return (
-                              <div className="code-example">
-                                <p className="example-header">
-                                  <span className="language-name">{code}</span>
-                                </p>
-                                <pre className={`brush: ${code}`}>
+                            },
+                            code: ({
+                              inline,
+                              className,
+                              children,
+                              ...props
+                            }) => {
+                              const match = /language-(\w+)/.exec(
+                                className || ""
+                              );
+                              const lang = Prism.languages[match?.[1]];
+                              return !inline && lang ? (
+                                <code
+                                  {...props}
+                                  className={className}
+                                  dangerouslySetInnerHTML={{
+                                    __html: Prism.highlight(
+                                      String(children),
+                                      lang
+                                    ),
+                                  }}
+                                />
+                              ) : (
+                                <code {...props} className={className}>
                                   {children}
-                                </pre>
-                              </div>
-                            );
-                          },
-                          code: ({ inline, className, children, ...props }) => {
-                            const match = /language-(\w+)/.exec(
-                              className || ""
-                            );
-                            const lang = Prism.languages[match?.[1]];
-                            return !inline && lang ? (
-                              <code
-                                {...props}
-                                className={className}
-                                dangerouslySetInnerHTML={{
-                                  __html: Prism.highlight(
-                                    String(children),
-                                    lang
-                                  ),
-                                }}
-                              />
-                            ) : (
-                              <code {...props} className={className}>
-                                {children}
-                              </code>
-                            );
-                          },
+                                </code>
+                              );
+                            },
+                          }}
+                        >
+                          {message.content.replace(
+                            SORRY_BACKEND,
+                            SORRY_FRONTEND
+                          )}
+                        </ReactMarkdown>
+                        {message.status === "complete" &&
+                          !message.content.includes(SORRY_BACKEND) && (
+                            <>
+                              {message.sources &&
+                                message.sources.length > 0 && (
+                                  <>
+                                    <p>
+                                      MDN content that I've consulted that you
+                                      might want to check:
+                                    </p>
+                                    <ul>
+                                      {message.sources.map(
+                                        ({ url, title }, index) => (
+                                          <li key={index}>
+                                            <a href={url}>{title}</a>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </>
+                                )}
+                              <section className="ai-help-feedback">
+                                <GleanThumbs
+                                  feature="ai-help-answer"
+                                  question={"Was this answer useful?"}
+                                  upLabel={"Yes, this answer was useful."}
+                                  downLabel={"No, this answer was not useful."}
+                                  permanent={true}
+                                />
+                                <ReportIssueOnGitHubLink
+                                  messages={messages}
+                                  currentMessage={message}
+                                >
+                                  Report an issue with this answer on GitHub
+                                </ReportIssueOnGitHubLink>
+                              </section>
+                            </>
+                          )}
+                      </>
+                    )}
+                  </div>
+                  {index === 0 && (
+                    <div className="ai-help-actions">
+                      <Button
+                        type="action"
+                        isDisabled={isQuotaExceeded(quota)}
+                        extraClasses="ai-help-reset-button"
+                        onClickHandler={() => {
+                          gleanClick(`${AI_HELP}: reset`);
+                          setQuery("");
+                          setIsExample(false);
+                          reset();
+                          window.setTimeout(() => window.scrollTo(0, 0));
                         }}
                       >
-                        {message.content.replace(SORRY_BACKEND, SORRY_FRONTEND)}
-                      </ReactMarkdown>
-                      {message.status === "complete" &&
-                        !message.content.includes(SORRY_BACKEND) && (
-                          <>
-                            {message.sources && message.sources.length > 0 && (
-                              <>
-                                <p>
-                                  MDN content that I've consulted that you might
-                                  want to check:
-                                </p>
-                                <ul>
-                                  {message.sources.map(
-                                    ({ url, title }, index) => (
-                                      <li key={index}>
-                                        <a href={url}>{title}</a>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </>
-                            )}
-                            <section className="ai-help-feedback">
-                              <GleanThumbs
-                                feature="ai-help-answer"
-                                question={"Was this answer useful?"}
-                                upLabel={"Yes, this answer was useful."}
-                                downLabel={"No, this answer was not useful."}
-                                permanent={true}
-                              />
-                              <ReportIssueOnGitHubLink
-                                messages={messages}
-                                currentMessage={message}
-                              >
-                                Report an issue with this answer on GitHub
-                              </ReportIssueOnGitHubLink>
-                            </section>
-                          </>
-                        )}
-                    </>
+                        + New chat
+                      </Button>
+                    </div>
                   )}
-                </div>
-                {index === 0 && (
-                  <div className="ai-help-actions">
-                    <Button
-                      type="action"
-                      isDisabled={isQuotaExceeded(quota)}
-                      extraClasses="ai-help-reset-button"
-                      onClickHandler={() => {
-                        gleanClick(`${AI_HELP}: reset`);
-                        setQuery("");
-                        setIsExample(false);
-                        reset();
-                        window.setTimeout(() => window.scrollTo(0, 0));
-                      }}
-                    >
-                      + New chat
-                    </Button>
-                  </div>
-                )}
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

@@ -10,6 +10,7 @@ import {
   useDocumentURL,
   useCopyExamplesToClipboardAndAIExplain,
   useRunSample,
+  useCollectSample,
 } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
@@ -45,6 +46,7 @@ import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-vie
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
 import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
+import { PlayQueue } from "../playground/queue";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -121,6 +123,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
+  useCollectSample(doc);
   useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
@@ -267,6 +270,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <BottomBanner />
           </article>
         </MainContentContainer>
+        <PlayQueue standalone={true} />
       </div>
     </>
   );
