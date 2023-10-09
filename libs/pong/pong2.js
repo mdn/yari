@@ -48,7 +48,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
                 click: coder.encodeAndSign(statlink),
                 view: coder.encodeAndSign(statimp),
                 image: coder.encodeAndSign(smallImage),
-                copy: description,
+                copy: description && he.decode(copy),
                 cta: callToAction && he.decode(callToAction),
                 colors: {
                   textColor,
