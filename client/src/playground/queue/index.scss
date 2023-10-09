@@ -15,55 +15,111 @@
     }
   }
 
-  > .play-queue {
+  details {
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius);
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem;
+    border-radius: 1.25rem;
+    padding: 0.5rem 0;
     width: fit-content;
-
-    button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > summary {
+      color: var(--text-primary-blue);
+      padding: 0 1rem;
+      width: 100%;
+      display: flex;
       cursor: pointer;
+      align-items: center;
 
-      &.play-button {
-        align-self: center;
-        width: fit-content;
+      &::-webkit-details-marker,
+      &::marker {
+        display: none;
+      }
+      > div {
+        display: inline-block;
+        margin: 0 auto;
+        font-weight: bold;
+      }
+      > .button.action {
+        --button-color: var(--text-primary-blue);
       }
     }
+  }
+  details[open] {
+    min-width: 12rem;
+    > summary {
+      &::before {
+        content: "▼";
+        margin-right: 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+  }
+  details:not([open]) {
+    width: min-content;
+    background-color: var(--text-primary-blue);
+    > summary {
+      color: var(--mdn-color-white);
+      font-size: 0;
+      width: fit-content;
+      &::before {
+        content: "►";
+        margin-right: 0.5rem;
+        font-size: 0.75rem;
+      }
+      > div {
+        width: 1rem;
+        &::first-letter {
+          font-size: 1rem;
+        }
+      }
+      .button {
+        display: none;
+      }
+    }
+  }
 
+  button {
+    cursor: pointer;
+
+    &.play-button {
+      align-self: center;
+      width: fit-content;
+    }
+  }
+  .play-queue-inner {
+    display: flex;
+    flex-direction: column;
     > ul {
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem;
       width: 10rem;
+      width: 100%;
 
       > li {
         align-items: center;
-        border-bottom: 1px solid var(--border-primary);
         display: flex;
-        justify-content: space-between;
+        padding: 0 1rem;
+        color: var(--text-primary);
+        width: 100%;
+        &:hover {
+          background-color: var(--background-information);
+        }
 
         .queue-ref {
-          color: var(--text-link);
           font-size: var(--type-smaller-font-size);
+          color: var(--text-primary);
 
           &:hover {
-            color: var(--text-primary);
+            color: var(--text-primary-blue);
             text-decoration: underline;
           }
         }
 
-        .queue-delete {
-          font-size: var(--type-smaller-font-size);
-
-          &:hover {
-            color: var(--icon-critical);
-          }
-        }
-
         > code {
-          background-color: var(--background-secondary);
-          min-width: 3rem;
+          background-color: transparent;
+          justify-self: center;
+          margin: 0 auto;
           text-transform: uppercase;
         }
       }

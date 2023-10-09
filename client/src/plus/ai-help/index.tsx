@@ -298,6 +298,7 @@ export function AIHelpInner() {
                     className={[
                       "ai-help-message-content",
                       !message.content && "empty",
+                      `role-${message.role}`,
                     ]
                       .filter(Boolean)
                       .join(" ")}
@@ -615,6 +616,18 @@ export function AIHelpInner() {
                     : "Ask your question"
                 )}
               />
+              <Button
+                type="action"
+                icon="cancel"
+                buttonType="reset"
+                title="Delete question"
+                onClickHandler={() => {
+                  setQuery("");
+                  refine && setRefine(false);
+                }}
+              >
+                <span className="visually-hidden">Submit question</span>
+              </Button>
               <Button
                 type="action"
                 icon="send"

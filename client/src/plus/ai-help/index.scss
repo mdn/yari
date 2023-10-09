@@ -210,24 +210,11 @@
 
     .ai-help-message {
       border: 1px solid transparent;
+
+      border: 1px solid var(--border-primary);
+      border-radius: var(--elem-radius);
       display: flex;
       padding: 1rem;
-
-      &:first-of-type {
-        background-color: var(--background-primary);
-        mask-image: linear-gradient(
-          to bottom,
-          rgb(0, 0, 0) 0% calc(100% - 0.5rem),
-          rgba(0, 0, 0, 0) 100%
-        );
-        position: sticky;
-        top: calc(var(--top-nav-height) + 1px);
-        z-index: var(--z-index-nav-menu);
-
-        .ai-help-actions {
-          white-space: nowrap;
-        }
-      }
 
       &.role-user {
         color: var(--text-secondary);
@@ -245,8 +232,6 @@
 
       &.role-assistant {
         background-color: var(--background-secondary);
-        border: 1px solid var(--border-primary);
-        border-radius: var(--elem-radius);
 
         .ai-help-message-role {
           --icon-size: 1.5rem;
@@ -314,6 +299,10 @@
 
     .ai-help-message-content {
       width: 100%;
+
+      &.role-user {
+        white-space: pre-wrap;
+      }
 
       p {
         margin: 1rem 0;

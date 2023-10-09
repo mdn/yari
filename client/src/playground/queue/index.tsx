@@ -19,16 +19,19 @@ function PQEntry({ element, key }: { element: HTMLInputElement; key: number }) {
         Example {key + 1}
       </button>
       <code>{lang}</code>
-      <button className="queue-delete" onClick={() => element.click()}>
-        x
-      </button>
+      <Button
+        type="action"
+        buttonType="reset"
+        icon="trash"
+        onClickHandler={() => element.click()}
+      />
     </li>
   );
 }
 
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
-  const [queue, setQueue] = useState<Element[]>([]);
+  const [queue, setQueue] = useState<HTMLInputElement[]>([]);
   const observer = useRef<null | MutationObserver>(null);
   useEffect(() => {
     if (observer.current === null) {
@@ -37,7 +40,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
           if (mutation.type === "attributes") {
             setQueue([
               ...document.querySelectorAll(".playlist > input:checked"),
-            ]);
+            ] as HTMLInputElement[]);
           }
         }
       };
@@ -51,31 +54,40 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   }, [setQueue]);
   return queue.length ? (
     <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
-      <aside className="play-queue">
-        <ul>
-          {queue.map((el, key) =>
-            PQEntry({ element: el as HTMLInputElement, key })
-          )}
-        </ul>
-        <Button
-          type="secondary"
-          extraClasses="play-button"
-          onClickHandler={(e) => {
-            const code = collectCode();
-            sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
-            const url = new URL(window?.location.href);
-            url.pathname = `/${locale}/play`;
-            url.hash = "";
-            url.search = "";
-            if (e.shiftKey) {
-              window.location.href = url.href;
-            } else {
-              window.open(url, "_blank");
-            }
-          }}
-        >
-          PLAY
-        </Button>
+      <aside>
+        <details className="play-queue" open>
+          <summary>
+            <div>Queue</div>
+            <Button
+              buttonType="reset"
+              icon="cancel"
+              type="action"
+              onClickHandler={() => queue.forEach((e) => e.click())}
+            ></Button>
+          </summary>
+          <div className="play-queue-inner">
+            <ul>{queue.map((el, key) => PQEntry({ element: el, key }))}</ul>
+            <Button
+              type="secondary"
+              extraClasses="play-button"
+              onClickHandler={(e) => {
+                const code = collectCode();
+                sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
+                const url = new URL(window?.location.href);
+                url.pathname = `/${locale}/play`;
+                url.hash = "";
+                url.search = "";
+                if (e.shiftKey) {
+                  window.location.href = url.href;
+                } else {
+                  window.open(url, "_blank");
+                }
+              }}
+            >
+              PLAY
+            </Button>
+          </div>
+        </details>
       </aside>
     </div>
   ) : null;
