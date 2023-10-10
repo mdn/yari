@@ -127,7 +127,6 @@ export default function AiHelp() {
         </Container>
       </header>
       <div className="ai-help-main">
-        <PlayQueue />
         <Container>
           <div className="notecard experimental">
             {active ? (
@@ -159,9 +158,13 @@ export default function AiHelp() {
             )}
           </div>
         </Container>
-        <Container>
-          {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
-        </Container>
+        {user?.isAuthenticated ? (
+          <AIHelpInner />
+        ) : (
+          <Container>
+            <AiLoginBanner />
+          </Container>
+        )}
       </div>
     </div>
   );
@@ -269,476 +272,481 @@ export function AIHelpInner() {
     }
   };
 
-  return isQuotaLoading ? (
-    <Loading />
-  ) : (
-    <section
-      className={["ai-help-inner", query.trim() && "has-input"]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {hasConversation && (
-        <div ref={bodyRef} className="ai-help-body">
-          <ul className="ai-help-messages">
-            {messages.map((message, index) => {
-              let sample = 0;
-              return (
-                <li
-                  key={index}
-                  className={[
-                    "ai-help-message",
-                    `role-${message.role}`,
-                    `status-${message.status}`,
-                  ].join(" ")}
-                >
-                  <div className="ai-help-message-role">
-                    <RoleIcon role={message.role} />
-                  </div>
-                  <div
-                    className={[
-                      "ai-help-message-content",
-                      !message.content && "empty",
-                      `role-${message.role}`,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  >
-                    {message.role === "user" ? (
-                      message.content
-                    ) : (
-                      <>
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            a: ({ node, ...props }) => {
-                              if (isExternalUrl(props.href ?? "")) {
-                                props = {
-                                  ...props,
-                                  className: "external",
-                                  rel: "noopener noreferrer",
-                                  target: "_blank",
-                                };
-                              }
-                              // eslint-disable-next-line jsx-a11y/anchor-has-content
-                              return <a {...props} />;
-                            },
-                            pre: ({ node, className, children, ...props }) => {
-                              const code = Children.toArray(children)
-                                .map(
-                                  (child) =>
-                                    /language-(\w+)/.exec(
-                                      (child as ReactElement)?.props
-                                        ?.className || ""
-                                    )?.[1]
-                                )
-                                .find(Boolean);
-
-                              if (!code) {
-                                return (
-                                  <pre {...props} className={className}>
-                                    {children}
-                                  </pre>
-                                );
-                              }
-                              sample += 1;
-                              return (
-                                <div className="code-example">
-                                  <div className="example-header play-collect">
-                                    <span className="language-name">
-                                      {code}
-                                    </span>
-                                    {message.status ===
-                                      MessageStatus.Complete && (
-                                      <div className="playlist">
-                                        <input
-                                          type="checkbox"
-                                          onChange={(e) => {
-                                            e.target.dataset.queued = `${e.target.checked} `;
-                                          }}
-                                          id={`${sample}`}
-                                        />
-                                        <label htmlFor={`${sample}`}></label>
-                                        <button
-                                          type="button"
-                                          className="play-button external"
-                                          title="Open in Playground"
-                                          onClick={(e) => {
-                                            try {
-                                              (
-                                                (e.target as HTMLElement)
-                                                  .previousElementSibling
-                                                  ?.previousElementSibling as HTMLInputElement
-                                              ).checked = true;
-                                            } catch {}
-                                            const code = collectCode();
-                                            sessionStorage.setItem(
-                                              SESSION_KEY,
-                                              JSON.stringify(code)
-                                            );
-                                            const url = new URL(
-                                              window?.location.href
-                                            );
-                                            url.pathname = `/${locale}/play`;
-                                            url.hash = "";
-                                            url.search = "";
-                                            if (e.shiftKey === true) {
-                                              window.location.href = url.href;
-                                            } else {
-                                              window.open(url, "_blank");
-                                            }
-                                          }}
-                                        >
-                                          play
-                                        </button>
-                                      </div>
-                                    )}
-                                  </div>
-                                  <pre className={`brush: ${code}`}>
-                                    {children}
-                                  </pre>
-                                </div>
-                              );
-                            },
-                            code: ({
-                              inline,
-                              className,
-                              children,
-                              ...props
-                            }) => {
-                              const match = /language-(\w+)/.exec(
-                                className || ""
-                              );
-                              const lang = Prism.languages[match?.[1]];
-                              return !inline && lang ? (
-                                <code
-                                  {...props}
-                                  className={className}
-                                  dangerouslySetInnerHTML={{
-                                    __html: Prism.highlight(
-                                      String(children),
-                                      lang
-                                    ),
-                                  }}
-                                />
-                              ) : (
-                                <code {...props} className={className}>
-                                  {children}
-                                </code>
-                              );
-                            },
-                          }}
+  return (
+    <>
+      {hasConversation && <PlayQueue />}
+      <Container>
+        {isQuotaLoading ? (
+          <Loading />
+        ) : (
+          <section
+            className={["ai-help-inner", query.trim() && "has-input"]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {hasConversation && (
+              <div ref={bodyRef} className="ai-help-body">
+                <ul className="ai-help-messages">
+                  {messages.map((message, index) => {
+                    let sample = 0;
+                    return (
+                      <li
+                        key={index}
+                        className={[
+                          "ai-help-message",
+                          `role-${message.role}`,
+                          `status-${message.status}`,
+                        ].join(" ")}
+                      >
+                        <div className="ai-help-message-role">
+                          <RoleIcon role={message.role} />
+                        </div>
+                        <div
+                          className={[
+                            "ai-help-message-content",
+                            !message.content && "empty",
+                            `role-${message.role}`,
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
                         >
-                          {message.content.replace(
-                            SORRY_BACKEND,
-                            SORRY_FRONTEND
-                          )}
-                        </ReactMarkdown>
-                        {message.status === "complete" &&
-                          !message.content.includes(SORRY_BACKEND) && (
+                          {message.role === "user" ? (
+                            message.content
+                          ) : (
                             <>
-                              {message.sources &&
-                                message.sources.length > 0 && (
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  a: ({ node, ...props }) => {
+                                    if (isExternalUrl(props.href ?? "")) {
+                                      props = {
+                                        ...props,
+                                        className: "external",
+                                        rel: "noopener noreferrer",
+                                        target: "_blank",
+                                      };
+                                    }
+                                    // eslint-disable-next-line jsx-a11y/anchor-has-content
+                                    return <a {...props} />;
+                                  },
+                                  pre: ({
+                                    node,
+                                    className,
+                                    children,
+                                    ...props
+                                  }) => {
+                                    const code = Children.toArray(children)
+                                      .map(
+                                        (child) =>
+                                          /language-(\w+)/.exec(
+                                            (child as ReactElement)?.props
+                                              ?.className || ""
+                                          )?.[1]
+                                      )
+                                      .find(Boolean);
+
+                                    if (!code) {
+                                      return (
+                                        <pre {...props} className={className}>
+                                          {children}
+                                        </pre>
+                                      );
+                                    }
+                                    sample += 1;
+                                    return (
+                                      <div className="code-example">
+                                        <div className="example-header play-collect">
+                                          <span className="language-name">
+                                            {code}
+                                          </span>
+                                          {message.status ===
+                                            MessageStatus.Complete && (
+                                            <div className="playlist">
+                                              <input
+                                                type="checkbox"
+                                                onChange={(e) => {
+                                                  e.target.dataset.queued = `${e.target.checked} `;
+                                                }}
+                                                id={`${sample}`}
+                                              />
+                                              <label
+                                                htmlFor={`${sample}`}
+                                              ></label>
+                                              <button
+                                                type="button"
+                                                className="play-button external"
+                                                title="Open in Playground"
+                                                onClick={(e) => {
+                                                  try {
+                                                    (
+                                                      (e.target as HTMLElement)
+                                                        .previousElementSibling
+                                                        ?.previousElementSibling as HTMLInputElement
+                                                    ).click();
+                                                  } catch {}
+                                                  const code = collectCode();
+                                                  sessionStorage.setItem(
+                                                    SESSION_KEY,
+                                                    JSON.stringify(code)
+                                                  );
+                                                  const url = new URL(
+                                                    window?.location.href
+                                                  );
+                                                  url.pathname = `/${locale}/play`;
+                                                  url.hash = "";
+                                                  url.search = "";
+                                                  if (e.shiftKey === true) {
+                                                    window.location.href =
+                                                      url.href;
+                                                  } else {
+                                                    window.open(url, "_blank");
+                                                  }
+                                                }}
+                                              >
+                                                play
+                                              </button>
+                                            </div>
+                                          )}
+                                        </div>
+                                        <pre className={`brush: ${code}`}>
+                                          {children}
+                                        </pre>
+                                      </div>
+                                    );
+                                  },
+                                  code: ({
+                                    inline,
+                                    className,
+                                    children,
+                                    ...props
+                                  }) => {
+                                    const match = /language-(\w+)/.exec(
+                                      className || ""
+                                    );
+                                    const lang = Prism.languages[match?.[1]];
+                                    return !inline && lang ? (
+                                      <code
+                                        {...props}
+                                        className={className}
+                                        dangerouslySetInnerHTML={{
+                                          __html: Prism.highlight(
+                                            String(children),
+                                            lang
+                                          ),
+                                        }}
+                                      />
+                                    ) : (
+                                      <code {...props} className={className}>
+                                        {children}
+                                      </code>
+                                    );
+                                  },
+                                }}
+                              >
+                                {message.content.replace(
+                                  SORRY_BACKEND,
+                                  SORRY_FRONTEND
+                                )}
+                              </ReactMarkdown>
+                              {message.status === "complete" &&
+                                !message.content.includes(SORRY_BACKEND) && (
                                   <>
-                                    <p>
-                                      MDN content that I've consulted that you
-                                      might want to check:
-                                    </p>
-                                    <ul>
-                                      {message.sources.map(
-                                        ({ url, title }, index) => (
-                                          <li key={index}>
-                                            <a href={url}>{title}</a>
-                                          </li>
-                                        )
+                                    {message.sources &&
+                                      message.sources.length > 0 && (
+                                        <>
+                                          <p>
+                                            MDN content that I've consulted that
+                                            you might want to check:
+                                          </p>
+                                          <ul>
+                                            {message.sources.map(
+                                              ({ url, title }, index) => (
+                                                <li key={index}>
+                                                  <a href={url}>{title}</a>
+                                                </li>
+                                              )
+                                            )}
+                                          </ul>
+                                        </>
                                       )}
-                                    </ul>
+                                    <section className="ai-help-feedback">
+                                      <GleanThumbs
+                                        feature="ai-help-answer"
+                                        question={"Was this answer useful?"}
+                                        upLabel={"Yes, this answer was useful."}
+                                        downLabel={
+                                          "No, this answer was not useful."
+                                        }
+                                        permanent={true}
+                                        callback={async (value) => {
+                                          user?.experiments?.active &&
+                                            message.messageId &&
+                                            (await sendFeedback(
+                                              message.messageId,
+                                              value
+                                            ));
+                                        }}
+                                      />
+                                      <ReportIssueOnGitHubLink
+                                        messages={messages}
+                                        currentMessage={message}
+                                      >
+                                        Report an issue with this answer on
+                                        GitHub
+                                      </ReportIssueOnGitHubLink>
+                                    </section>
                                   </>
                                 )}
-                              <section className="ai-help-feedback">
-                                <GleanThumbs
-                                  feature="ai-help-answer"
-                                  question={"Was this answer useful?"}
-                                  upLabel={"Yes, this answer was useful."}
-                                  downLabel={"No, this answer was not useful."}
-                                  permanent={true}
-                                  callback={async (value) => {
-                                    user?.experiments?.active &&
-                                      message.messageId &&
-                                      (await sendFeedback(
-                                        message.messageId,
-                                        value
-                                      ));
-                                  }}
-                                />
-                                <ReportIssueOnGitHubLink
-                                  messages={messages}
-                                  currentMessage={message}
-                                >
-                                  Report an issue with this answer on GitHub
-                                </ReportIssueOnGitHubLink>
-                              </section>
                             </>
                           )}
-                      </>
-                    )}
-                  </div>
-                  {index === 0 && (
-                    <div className="ai-help-actions">
-                      <Button
-                        type="action"
-                        isDisabled={isQuotaExceeded(quota)}
-                        extraClasses="ai-help-reset-button"
-                        onClickHandler={() => {
-                          gleanClick(`${AI_HELP}: reset`);
-                          setQuery("");
-                          setIsExample(false);
-                          reset();
-                          window.setTimeout(() => window.scrollTo(0, 0));
-                        }}
-                      >
-                        + New Question
-                      </Button>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
-      {hasError && (
-        <NoteCard extraClasses="ai-help-error" type="error">
-          <h4>Error</h4>
-          <p>An error occurred. Please try again.</p>
-        </NoteCard>
-      )}
-      <div ref={footerRef} className="ai-help-footer">
-        {(isLoading || isResponding) && (
-          <div className="ai-help-footer-actions">
-            <Button
-              type="action"
-              extraClasses="ai-help-stop-button"
-              onClickHandler={() => {
-                gleanClick(`${AI_HELP}: stop`);
-                stop();
-              }}
-            >
-              ⏹ Stop answering
-            </Button>
-            <Button
-              type="action"
-              isDisabled={autoScroll}
-              extraClasses="ai-help-scroll-button"
-              onClickHandler={() => setAutoScroll(true)}
-            >
-              ↓ Enable auto-scroll
-            </Button>
-          </div>
-        )}
-        {isQuotaExceeded(quota) ? (
-          <AiUpsellBanner limit={quota.limit} />
-        ) : hasConversation && !refine ? (
-          <div className="ai-help-refine-or-new">
-            <Button
-              type="action"
-              isDisabled={isQuotaExceeded(quota)}
-              extraClasses="ai-help-refine-button"
-              onClickHandler={() => {
-                gleanClick(`${AI_HELP}: refine`);
-                setQuery("");
-                setIsExample(false);
-                setRefine(true);
-              }}
-            >
-              ↩ Refine
-            </Button>
-            <Button
-              type="action"
-              isDisabled={isQuotaExceeded(quota)}
-              extraClasses="ai-help-refine-button"
-              onClickHandler={() => {
-                gleanClick(`${AI_HELP}: edit`);
-                setIsExample(false);
-                setRefine(false);
-                setQuery(messages[messages.length - 2]?.content || "");
-                reset();
-                window.setTimeout(() => window.scrollTo(0, 0));
-              }}
-            >
-              ✎ Edit as new
-            </Button>
-            <Button
-              type="primary"
-              isDisabled={isQuotaExceeded(quota)}
-              extraClasses="ai-help-new-question-button"
-              onClickHandler={() => {
-                gleanClick(`${AI_HELP}: new`);
-                setQuery("");
-                setIsExample(false);
-                reset();
-                window.setTimeout(() => window.scrollTo(0, 0));
-              }}
-            >
-              + New Question
-            </Button>
-          </div>
-        ) : (
-          <>
-            <form
-              ref={formRef}
-              className="ai-help-input-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                submitQuestion();
-              }}
-            >
-              <ExpandingTextarea
-                ref={inputRef}
-                disabled={isLoading || isResponding}
-                enterKeyHint="send"
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault();
-                    submitQuestion();
-                  }
-                }}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                  setIsExample(false);
-                }}
-                value={query}
-                rows={1}
-                placeholder={placeholder(
-                  isLoading
-                    ? "Requesting answer..."
-                    : isResponding
-                    ? "Receiving answer..."
-                    : "Ask your question"
-                )}
-              />
-              <Button
-                type="action"
-                icon="cancel"
-                buttonType="reset"
-                title="Delete question"
-                onClickHandler={() => {
-                  setQuery("");
-                  refine && setRefine(false);
-                }}
-              >
-                <span className="visually-hidden">Submit question</span>
-              </Button>
-              <Button
-                type="action"
-                icon="send"
-                buttonType="submit"
-                title="Submit question"
-                isDisabled={!query}
-              >
-                <span className="visually-hidden">Submit question</span>
-              </Button>
-            </form>
-            <div className="ai-help-footer-text">
-              <span>
-                Results based on MDN's most recent documentation and powered by
-                GPT-3.5, an LLM by{" "}
-                <a
-                  href="https://platform.openai.com/docs/api-reference/models"
-                  className="external"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  OpenAI
-                </a>
-                . Please verify information independently as LLM responses may
-                not be 100% accurate. Read our{" "}
-                <Button
-                  type="link"
-                  onClickHandler={() => setShowDisclaimer(true)}
-                >
-                  full guidance
-                </Button>{" "}
-                for more details.
-              </span>
-              <MDNModal
-                isOpen={showDisclaimer}
-                onRequestClose={() => setShowDisclaimer(false)}
-              >
-                <header className="modal-header">
-                  <h2 className="modal-heading">AI Help Usage Guidance</h2>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+            {hasError && (
+              <NoteCard extraClasses="ai-help-error" type="error">
+                <h4>Error</h4>
+                <p>An error occurred. Please try again.</p>
+              </NoteCard>
+            )}
+            <div ref={footerRef} className="ai-help-footer">
+              {(isLoading || isResponding) && (
+                <div className="ai-help-footer-actions">
                   <Button
-                    onClickHandler={() => setShowDisclaimer(false)}
                     type="action"
-                    icon="cancel"
-                    extraClasses="close-button"
-                  />
-                </header>
-                <div className="modal-body">
-                  <p>
-                    Our AI Help feature employs GPT-3.5, a Language Learning
-                    Model (LLM) developed by{" "}
-                    <a
-                      href="https://platform.openai.com/docs/api-reference/models"
-                      className="external"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      OpenAI
-                    </a>
-                    . While it's designed to offer helpful and relevant
-                    information drawn from MDN's comprehensive documentation,
-                    it's important to bear in mind that it is an LLM and may not
-                    produce perfectly accurate information in every
-                    circumstance.
-                  </p>
-                  <p>
-                    We strongly advise all users to cross-verify the information
-                    generated by this AI Help feature, particularly for complex
-                    or critical topics. While we strive for accuracy and
-                    relevance, the nature of AI means that responses may vary in
-                    precision.
-                  </p>
-                  <p>
-                    The AI Help feature provides links at the end of its
-                    responses to support further reading and verification within
-                    the MDN documentation. These links are intended to
-                    facilitate deeper understanding and context.
-                  </p>
-                  <p>
-                    As you use the AI Help feature, keep in mind its nature as
-                    an LLM. It's not perfect, but it's here to assist you as
-                    best as it can. We're excited to have you try AI Help, and
-                    we hope it makes your MDN experience even better.
-                  </p>
+                    extraClasses="ai-help-stop-button"
+                    onClickHandler={() => {
+                      gleanClick(`${AI_HELP}: stop`);
+                      stop();
+                    }}
+                  >
+                    ⏹ Stop answering
+                  </Button>
+                  <Button
+                    type="action"
+                    isDisabled={autoScroll}
+                    extraClasses="ai-help-scroll-button"
+                    onClickHandler={() => setAutoScroll(true)}
+                  >
+                    ↓ Enable auto-scroll
+                  </Button>
                 </div>
-              </MDNModal>
+              )}
+              {isQuotaExceeded(quota) ? (
+                <AiUpsellBanner limit={quota.limit} />
+              ) : hasConversation && !refine ? (
+                <div className="ai-help-refine-or-new">
+                  <Button
+                    type="action"
+                    isDisabled={isQuotaExceeded(quota)}
+                    extraClasses="ai-help-refine-button"
+                    onClickHandler={() => {
+                      gleanClick(`${AI_HELP}: refine`);
+                      setQuery("");
+                      setIsExample(false);
+                      setRefine(true);
+                    }}
+                  >
+                    ↩ Refine
+                  </Button>
+                  <Button
+                    type="action"
+                    isDisabled={isQuotaExceeded(quota)}
+                    extraClasses="ai-help-refine-button"
+                    onClickHandler={() => {
+                      gleanClick(`${AI_HELP}: edit`);
+                      setIsExample(false);
+                      setRefine(false);
+                      setQuery(messages[messages.length - 2]?.content || "");
+                      reset();
+                      window.setTimeout(() => window.scrollTo(0, 0));
+                    }}
+                  >
+                    ✎ Edit as new
+                  </Button>
+                  <Button
+                    type="action"
+                    isDisabled={isQuotaExceeded(quota)}
+                    extraClasses="ai-help-new-question-button"
+                    onClickHandler={() => {
+                      gleanClick(`${AI_HELP}: new`);
+                      setQuery("");
+                      setIsExample(false);
+                      reset();
+                      window.setTimeout(() => window.scrollTo(0, 0));
+                    }}
+                  >
+                    + New Question
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <form
+                    ref={formRef}
+                    className="ai-help-input-form"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      submitQuestion();
+                    }}
+                  >
+                    <ExpandingTextarea
+                      ref={inputRef}
+                      disabled={isLoading || isResponding}
+                      enterKeyHint="send"
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" && !event.shiftKey) {
+                          event.preventDefault();
+                          submitQuestion();
+                        }
+                      }}
+                      onChange={(event) => {
+                        setQuery(event.target.value);
+                        setIsExample(false);
+                      }}
+                      value={query}
+                      rows={1}
+                      placeholder={placeholder(
+                        isLoading
+                          ? "Requesting answer..."
+                          : isResponding
+                          ? "Receiving answer..."
+                          : "Ask your question"
+                      )}
+                    />
+                    <Button
+                      type="action"
+                      icon="cancel"
+                      buttonType="reset"
+                      title="Delete question"
+                      onClickHandler={() => {
+                        setQuery("");
+                        refine && setRefine(false);
+                      }}
+                    >
+                      <span className="visually-hidden">Submit question</span>
+                    </Button>
+                    <Button
+                      type="action"
+                      icon="send"
+                      buttonType="submit"
+                      title="Submit question"
+                      isDisabled={!query}
+                    >
+                      <span className="visually-hidden">Submit question</span>
+                    </Button>
+                  </form>
+                  <div className="ai-help-footer-text">
+                    <span>
+                      Results based on MDN's most recent documentation and
+                      powered by GPT-3.5, an LLM by{" "}
+                      <a
+                        href="https://platform.openai.com/docs/api-reference/models"
+                        className="external"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        OpenAI
+                      </a>
+                      . Please verify information independently as LLM responses
+                      may not be 100% accurate. Read our{" "}
+                      <Button
+                        type="link"
+                        onClickHandler={() => setShowDisclaimer(true)}
+                      >
+                        full guidance
+                      </Button>{" "}
+                      for more details.
+                    </span>
+                    <MDNModal
+                      isOpen={showDisclaimer}
+                      onRequestClose={() => setShowDisclaimer(false)}
+                    >
+                      <header className="modal-header">
+                        <h2 className="modal-heading">
+                          AI Help Usage Guidance
+                        </h2>
+                        <Button
+                          onClickHandler={() => setShowDisclaimer(false)}
+                          type="action"
+                          icon="cancel"
+                          extraClasses="close-button"
+                        />
+                      </header>
+                      <div className="modal-body">
+                        <p>
+                          Our AI Help feature employs GPT-3.5, a Language
+                          Learning Model (LLM) developed by{" "}
+                          <a
+                            href="https://platform.openai.com/docs/api-reference/models"
+                            className="external"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            OpenAI
+                          </a>
+                          . While it's designed to offer helpful and relevant
+                          information drawn from MDN's comprehensive
+                          documentation, it's important to bear in mind that it
+                          is an LLM and may not produce perfectly accurate
+                          information in every circumstance.
+                        </p>
+                        <p>
+                          We strongly advise all users to cross-verify the
+                          information generated by this AI Help feature,
+                          particularly for complex or critical topics. While we
+                          strive for accuracy and relevance, the nature of AI
+                          means that responses may vary in precision.
+                        </p>
+                        <p>
+                          The AI Help feature provides links at the end of its
+                          responses to support further reading and verification
+                          within the MDN documentation. These links are intended
+                          to facilitate deeper understanding and context.
+                        </p>
+                        <p>
+                          As you use the AI Help feature, keep in mind its
+                          nature as an LLM. It's not perfect, but it's here to
+                          assist you as best as it can. We're excited to have
+                          you try AI Help, and we hope it makes your MDN
+                          experience even better.
+                        </p>
+                      </div>
+                    </MDNModal>
+                  </div>
+                </>
+              )}
             </div>
-          </>
+            {!hasConversation && !query && !isQuotaExceeded(quota) && (
+              <section className="ai-help-examples">
+                <header>Examples</header>
+                {EXAMPLES.map(({ category, query }, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={["ai-help-example", `category-${category}`].join(
+                      " "
+                    )}
+                    onClick={() => {
+                      gleanClick(`${AI_HELP}: example`);
+                      setQuery(query);
+                      setIsExample(true);
+                      inputRef.current?.focus();
+                      window.setTimeout(() => window.scrollTo(0, 0));
+                    }}
+                  >
+                    {query}
+                  </button>
+                ))}
+              </section>
+            )}
+            {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
+          </section>
         )}
-      </div>
-      {!hasConversation && !query && !isQuotaExceeded(quota) && (
-        <section className="ai-help-examples">
-          <header>Examples</header>
-          {EXAMPLES.map(({ category, query }, index) => (
-            <button
-              key={index}
-              type="button"
-              className={["ai-help-example", `category-${category}`].join(" ")}
-              onClick={() => {
-                gleanClick(`${AI_HELP}: example`);
-                setQuery(query);
-                setIsExample(true);
-                inputRef.current?.focus();
-                window.setTimeout(() => window.scrollTo(0, 0));
-              }}
-            >
-              {query}
-            </button>
-          ))}
-        </section>
-      )}
-      {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
-    </section>
+      </Container>
+    </>
   );
 }
 

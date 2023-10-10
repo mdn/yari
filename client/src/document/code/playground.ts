@@ -104,10 +104,13 @@ export function collectCode(): EditorContent {
     .map((e) => e.parentElement?.parentElement?.nextElementSibling)
     .filter(Boolean);
 
-  console.log(selected);
   return {
     js: selected
-      .map((pre) => (pre?.classList.contains("js") ? pre.textContent : null))
+      .map((pre) =>
+        pre?.classList.contains("js") || pre?.classList.contains("javascript")
+          ? pre.textContent
+          : null
+      )
       .filter(Boolean)
       .join("\n"),
     css: selected

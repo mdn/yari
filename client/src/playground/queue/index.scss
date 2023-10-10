@@ -1,79 +1,83 @@
 //
 .play-queue-container {
-  &.standalone {
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    grid-column: 1/4;
-    justify-content: center;
-    min-width: 100%;
-    position: sticky;
-
-    > .play-queue {
-      filter: drop-shadow(var(--shadow-02));
-      margin-bottom: 0.5rem;
-    }
-  }
+  position: fixed;
+  right: 0;
+  top: 50vh;
+  transform: translateY(-50%);
+  z-index: var(--z-index-modal-content);
 
   details {
+    align-items: center;
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
-    border-radius: 1.25rem;
+    border-radius: var(--elem-radius) 0 0 var(--elem-radius);
+    display: flex;
+    filter: drop-shadow(var(--shadow-02));
+    justify-content: center;
     padding: 0.5rem 0;
     width: fit-content;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
     > summary {
+      align-items: center;
       color: var(--text-primary-blue);
+      cursor: pointer;
+      display: flex;
       padding: 0 1rem;
       width: 100%;
-      display: flex;
-      cursor: pointer;
-      align-items: center;
 
       &::-webkit-details-marker,
       &::marker {
         display: none;
       }
+
       > div {
         display: inline-block;
-        margin: 0 auto;
         font-weight: bold;
+        margin: 0 auto;
+        text-transform: uppercase;
       }
+
       > .button.action {
         --button-color: var(--text-primary-blue);
       }
     }
   }
+
   details[open] {
     min-width: 12rem;
+
     > summary {
       &::before {
         content: "▼";
-        margin-right: 0.5rem;
         font-size: 0.75rem;
+        margin-right: 0.5rem;
       }
     }
   }
+
   details:not([open]) {
-    width: min-content;
     background-color: var(--text-primary-blue);
+    width: min-content;
+
     > summary {
       color: var(--mdn-color-white);
       font-size: 0;
       width: fit-content;
+
       &::before {
         content: "►";
-        margin-right: 0.5rem;
         font-size: 0.75rem;
+        margin-right: 0.5rem;
       }
+
       > div {
         width: 1rem;
+
         &::first-letter {
           font-size: 1rem;
         }
       }
+
       .button {
         display: none;
       }
@@ -88,9 +92,11 @@
       width: fit-content;
     }
   }
+
   .play-queue-inner {
     display: flex;
     flex-direction: column;
+
     > ul {
       margin: 0 0 0.5rem;
       width: 10rem;
@@ -98,17 +104,18 @@
 
       > li {
         align-items: center;
+        color: var(--text-primary);
         display: flex;
         padding: 0 1rem;
-        color: var(--text-primary);
         width: 100%;
+
         &:hover {
           background-color: var(--background-information);
         }
 
         .queue-ref {
-          font-size: var(--type-smaller-font-size);
           color: var(--text-primary);
+          font-size: var(--type-smaller-font-size);
 
           &:hover {
             color: var(--text-primary-blue);

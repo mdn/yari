@@ -654,6 +654,7 @@ pre {
     font-size: smaller;
     margin: 0;
     opacity: 0.4;
+    text-transform: uppercase;
 
     &:hover,
     &:focus {
@@ -666,6 +667,7 @@ pre {
   }
 
   .playlist {
+    align-items: center;
     display: flex;
     gap: 0.5rem;
     opacity: 1;
@@ -675,6 +677,7 @@ pre {
       font-size: smaller;
       opacity: 0.4;
       padding: 1px;
+      text-transform: uppercase;
 
       &:hover,
       &:focus {

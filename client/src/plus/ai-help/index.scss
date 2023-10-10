@@ -16,34 +16,6 @@
     display: grid;
     grid-template-columns: [left] 1fr [center] min(52rem, 100%) [right] 1fr;
 
-    > .play-queue-container {
-      grid-column: right;
-      grid-row: 1/3;
-      height: fit-content;
-      margin-top: 1rem;
-      position: sticky;
-      top: var(--ai-top);
-
-      @media screen and (max-width: $screen-xl) {
-        align-items: center;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin: 0 auto;
-        position: absolute;
-        position: fixed;
-        top: initial;
-        width: 100%;
-        z-index: var(--z-index-modal-content);
-      }
-
-      > .play-queue {
-        margin-bottom: 1rem;
-        margin-top: min(30vh, 15rem);
-      }
-    }
-
     > .container {
       grid-column: center;
       padding: var(--gutter);
@@ -109,6 +81,11 @@
       }
 
       .ai-help-new-question-button {
+        --button-bg: var(--button-primary-default);
+        --button-bg-hover: var(--button-primary-hover);
+        --button-bg-active: var(--button-primary-active);
+        --button-border-color: var(--button-primary-default);
+        --button-color: var(--background-primary);
         border: 1px solid var(--text-primary);
       }
     }
