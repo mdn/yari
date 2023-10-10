@@ -367,10 +367,10 @@ export function AIHelpInner() {
                                                 onChange={(e) => {
                                                   e.target.dataset.queued = `${e.target.checked} `;
                                                 }}
-                                                id={`${sample}`}
+                                                id={`sample-${index}-${sample}`}
                                               />
                                               <label
-                                                htmlFor={`${sample}`}
+                                                htmlFor={`sample-${index}-${sample}`}
                                               ></label>
                                               <button
                                                 type="button"
