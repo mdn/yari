@@ -34,6 +34,16 @@ export function Footer() {
             </li>
             <li>
               <a
+                className="icon icon-twitter"
+                href="https://twitter.com/mozdevnet"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="visually-hidden">MDN on Twitter</span>
+              </a>
+            </li>
+            <li>
+              <a
                 className="icon icon-github-mark-small"
                 href="https://github.com/mdn/"
                 target="_blank"
