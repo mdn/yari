@@ -23,7 +23,7 @@ import {
   ANY_ATTACHMENT_REGEXP,
   CSP_VALUE,
   DEFAULT_LOCALE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
+  PLAYGROUND_WILDCARD_CSP_VALUE,
 } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
@@ -268,7 +268,7 @@ app.get(
   ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
   async (req, res) => {
     return res
-      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .setHeader("Content-Security-Policy", PLAYGROUND_WILDCARD_CSP_VALUE)
       .status(200)
       .sendFile(path.join(STATIC_ROOT, "runner.html"));
   }
@@ -313,14 +313,14 @@ app.get("/*", async (req, res, ...args) => {
 
   if (parsedUrl.pathname.endsWith("/runner.html")) {
     return res
-      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .setHeader("Content-Security-Policy", PLAYGROUND_WILDCARD_CSP_VALUE)
       .status(200)
       .sendFile(path.join(STATIC_ROOT, "runner.html"));
   }
   if (req.url.includes("/_sample_.")) {
     try {
       return res
-        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .setHeader("Content-Security-Policy", PLAYGROUND_WILDCARD_CSP_VALUE)
         .status(200)
         .send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {

@@ -166,7 +166,7 @@ const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
   "'wasm-unsafe-eval'",
 ];
 
-export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
+const PLAYGROUND_UNSAFE_CSP = {
   "default-src": ["'self'", "https:"],
   "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
   "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
@@ -181,7 +181,16 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
   "base-uri": ["'self'"],
   "worker-src": ["'self'"],
   "manifest-src": ["'self'"],
+};
+
+// Live samples.
+export const PLAYGROUND_LIVE_HOSTNAME_PREFIX = "live.";
+export const PLAYGROUND_LIVE_CSP_VALUE = cspToString({
+  ...PLAYGROUND_UNSAFE_CSP,
+  "frame-src": ["'self'", "blob:", "https:", "data:"],
 });
+
+export const PLAYGROUND_WILDCARD_CSP_VALUE = cspToString(PLAYGROUND_UNSAFE_CSP);
 
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
