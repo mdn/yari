@@ -222,6 +222,13 @@ export class HTMLTool {
       }
       knownIDs.add(id);
       $element.attr("id", id);
+
+      if (isDt) {
+        $element
+          .find("a[data-link-to-id = true]")
+          .attr("href", "#" + id)
+          .removeAttr("data-link-to-id");
+      }
     });
     return this;
   }

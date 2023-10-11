@@ -75,23 +75,6 @@
       }
     }
 
-    &[id^="attr-"] {
-      &:link,
-      &:visited {
-        color: var(--text-link);
-        text-decoration: none;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-      }
-
-      &:active {
-        color: #fff;
-      }
-    }
-
     &[aria-current] {
       color: var(--text-link);
       font-weight: var(--font-body-strong-weight);
@@ -161,6 +144,35 @@
     dt {
       margin-bottom: 0.5rem;
       margin-top: 2rem;
+
+      a {
+        &:link,
+        &:visited {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+
+        &[href^="#"] {
+          position: relative;
+
+          &:hover::before {
+            color: var(--text-inactive);
+            content: "#";
+            display: inline-flex;
+            font-size: 0.7em;
+            left: -0.75em;
+            line-height: 1;
+            position: absolute;
+            text-decoration: none;
+            top: 0.5em;
+          }
+        }
+      }
     }
 
     dd {
