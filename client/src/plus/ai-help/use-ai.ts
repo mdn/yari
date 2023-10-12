@@ -380,7 +380,7 @@ export function useAiChat({
     [chatId]
   );
   const submit = useCallback(
-    (query: string, chatId?: string) => {
+    (query: string, chatId?: string, history: boolean = true) => {
       dispatchMessage({
         type: "new",
         message: {
@@ -404,14 +404,18 @@ export function useAiChat({
       setIsLoading(true);
 
       // We send all completed in the conversation + the question the user asked.
+      // Unless history is false, then we only send the query.
       // Note that `dispatchMessage()` above does not change `messages` here yet.
-      const completeMessagesAndUserQuery = messages
-        .filter(({ status }) => status === MessageStatus.Complete)
-        .map(({ role, content }) => ({ role, content }))
-        .concat({
-          role: MessageRole.User,
-          content: messageTemplate(query),
-        });
+      const completeMessagesAndUserQuery = (
+        history
+          ? messages
+              .filter(({ status }) => status === MessageStatus.Complete)
+              .map(({ role, content }) => ({ role, content }))
+          : []
+      ).concat({
+        role: MessageRole.User,
+        content: messageTemplate(query),
+      });
 
       const eventSource = new SSE(`/api/v1/plus/ai/help`, {
         headers: {

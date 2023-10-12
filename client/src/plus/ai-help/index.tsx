@@ -170,7 +170,7 @@ export default function AiHelp() {
   );
 }
 
-export function AIHelpHistory() {
+export function AIHelpHistory({ currentChatId }: { currentChatId?: string }) {
   const [history, setHistory] = useState<
     { chat_id: string; question: string }[]
   >([]);
@@ -184,15 +184,25 @@ export function AIHelpHistory() {
     })();
   }, []);
   return (
-    <ul>
-      {history.map((h) => {
-        return (
-          <li>
-            <a href={`./?c=${h.chat_id}`}>{h.question}</a>
-          </li>
-        );
-      })}
-    </ul>
+    <aside className="ai-help-history">
+      <header>History</header>
+      <ul>
+        {history.map((h) => {
+          return (
+            <li
+              className={`${
+                h.chat_id === currentChatId ? "ai-help-history-active" : ""
+              }`}
+            >
+              <a href={`./?c=${h.chat_id}`}>{h.question}</a>
+              {h.chat_id === currentChatId && (
+                <Button type="action" icon="trash" />
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </aside>
   );
 }
 
@@ -211,6 +221,7 @@ export function AIHelpInner() {
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [sendHistory, setSendHistory] = useState(true);
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 
@@ -264,7 +275,7 @@ export function AIHelpInner() {
   const submitQuestion = () => {
     gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
     if (query.trim()) {
-      submit(query.trim(), chatId);
+      submit(query.trim(), chatId, sendHistory);
       setQuery("");
       setIsExample(false);
       setRefine(false);
@@ -275,6 +286,9 @@ export function AIHelpInner() {
   return (
     <>
       {hasConversation && <PlayQueue />}
+      {user?.experiments?.config.history && (
+        <AIHelpHistory currentChatId={chatId} />
+      )}
       <Container>
         {isQuotaLoading ? (
           <Loading />
@@ -443,10 +457,12 @@ export function AIHelpInner() {
                                   },
                                 }}
                               >
-                                {message.content.replace(
-                                  SORRY_BACKEND,
-                                  SORRY_FRONTEND
-                                )}
+                                {message.content
+                                  ? message.content.replace(
+                                      SORRY_BACKEND,
+                                      SORRY_FRONTEND
+                                    )
+                                  : "Retrieving answer…"}
                               </ReactMarkdown>
                               {message.status === "complete" &&
                                 !message.content.includes(SORRY_BACKEND) && (
@@ -554,6 +570,7 @@ export function AIHelpInner() {
                   </Button>
                   <Button
                     type="action"
+                    icon="edit"
                     isDisabled={isQuotaExceeded(quota)}
                     extraClasses="ai-help-refine-button"
                     onClickHandler={() => {
@@ -565,7 +582,7 @@ export function AIHelpInner() {
                       window.setTimeout(() => window.scrollTo(0, 0));
                     }}
                   >
-                    ✎ Edit as new
+                    Edit as new
                   </Button>
                   <Button
                     type="action"
