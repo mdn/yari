@@ -7,7 +7,8 @@ import type { Request, Response } from "express";
 export async function proxyPong(req: Request, res: Response) {
   if (BSA_ENABLED) {
     const referrer = req.get("referrer") || "";
-    if (referrer.startsWith(BSA_URL_PREFIX)) {
+    const version = Number(req.query["version"]) || 1;
+    if (referrer.startsWith(BSA_URL_PREFIX) || version === 2) {
       return proxyBSA(req, res);
     }
   }

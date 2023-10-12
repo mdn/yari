@@ -48,7 +48,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
                 click: coder.encodeAndSign(statlink),
                 view: coder.encodeAndSign(statimp),
                 image: coder.encodeAndSign(smallImage),
-                copy: description && he.decode(copy),
+                copy: description && he.decode(description),
                 cta: callToAction && he.decode(callToAction),
                 colors: {
                   textColor,
@@ -63,7 +63,14 @@ export function createPong2GetHandler(zoneKeys, coder) {
               },
       };
     });
-    const decisionRes = await Promise.all(requests);
+    const decisionRes = (await Promise.allSettled(requests))
+      .filter((p) => {
+        if (p.status === "rejected") {
+          console.log(`rejected ad request: ${p.reason}`);
+        }
+        return p.status === "fulfilled";
+      })
+      .map((p) => p.value);
 
     const decisions = Object.fromEntries(
       decisionRes.map(({ name, p }) => [name, p])
@@ -77,7 +84,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
       Object.entries(decisions)
         .map(([p, v]) => {
           if (v === null) {
-            return [p, null];
+            return null;
           }
           const { copy, image, click, view, cta, colors = {} } = v;
           return [
@@ -90,6 +97,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
               colors,
               click,
               view,
+              version: 2,
             },
           ];
         })
@@ -102,7 +110,11 @@ export function createPong2GetHandler(zoneKeys, coder) {
 export function createPong2ClickHandler(coder) {
   return async (params) => {
     const click = coder.decodeAndVerify(params.get("code"));
-    const res = await fetch(`https:${click}`, { redirect: "follow" });
+
+    if (!click) {
+      return {};
+    }
+    const res = await fetch(`https:${click}`, { redirect: "manual" });
     const status = res.status;
     const location = res.headers.get("location");
     return { status, location };
@@ -112,8 +124,10 @@ export function createPong2ClickHandler(coder) {
 export function createPong2ViewedHandler(coder) {
   return async (params) => {
     const view = coder.decodeAndVerify(params.get("code"));
-    await fetch(`https:${view}`, {
-      redirect: "manual",
-    });
+    if (view) {
+      await fetch(`https:${view}`, {
+        redirect: "manual",
+      });
+    }
   };
 }

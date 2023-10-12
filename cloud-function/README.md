@@ -48,7 +48,8 @@ The placement handler uses the following environment variables:
 - `SIGN_SECRET` (default: `""`) - Required for serving placements.
 - `BSA_ZONE_KEYS` (default: `""`) - Required for serving placements via BSA.
 - `BSA_URL_PREFIX`(default: "https://localhost") - Where to show BSA placements
-  if enabled.
+  if enabled. Formatted like :
+  "placementname1:zonekey1;placementkey2:zonekey2...".
 - `BSA_ENABLED` (default: `"false"`) - Whether to use placements via BSA.
 
 You can override the defaults by adding a `.env` file with `KEY=value` lines.

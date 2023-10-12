@@ -72,7 +72,7 @@ export const BSA_ZONE_KEYS = Object.fromEntries(
   (process.env["BSA_ZONE_KEYS"] ?? "").split(";").map((k) => k.split(":"))
 );
 export const BSA_URL_PREFIX =
-  process.env["BSA_URL_PREFIX"] ?? "https://localhost/en-US/play";
+  process.env["BSA_URL_PREFIX"] ?? "https://localhost";
 export const BSA_ENABLED = Boolean(
   JSON.parse(process.env["BSA_ENABLED"] || "false")
 );

@@ -59,6 +59,7 @@ export function createPongGetHandler(client, coder) {
                 colors,
                 click: coder.encodeAndSign(clickUrl),
                 view: coder.encodeAndSign(impressionUrl),
+                version: 1,
               },
             ];
           } else if (p === "top") {
@@ -74,6 +75,7 @@ export function createPongGetHandler(client, coder) {
                 colors,
                 click: coder.encodeAndSign(clickUrl),
                 view: coder.encodeAndSign(impressionUrl),
+                version: 1,
               },
             ];
           }

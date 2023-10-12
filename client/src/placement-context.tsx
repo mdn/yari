@@ -39,6 +39,7 @@ export interface PlacementData {
     ctaTextColorDark?: string;
     ctaBackgroundColorDark?: string;
   };
+  version?: number;
 }
 
 type PlacementType = "side" | "top" | "hpMain" | "hpFooter";

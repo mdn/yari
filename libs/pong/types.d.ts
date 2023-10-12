@@ -17,4 +17,5 @@ export type Payload = {
   image?: string;
   cta?: string;
   colors?: Colors;
+  version: number;
 };
