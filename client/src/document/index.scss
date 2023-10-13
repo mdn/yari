@@ -148,7 +148,6 @@
       a {
         &:link,
         &:visited {
-          color: inherit;
           text-decoration: none;
         }
 
@@ -158,6 +157,7 @@
         }
 
         &[href^="#"] {
+          color: inherit;
           position: relative;
 
           &:hover::before {
