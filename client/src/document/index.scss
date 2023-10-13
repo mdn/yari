@@ -145,33 +145,31 @@
       margin-bottom: 0.5rem;
       margin-top: 2rem;
 
-      a {
-        &[href^="#"] {
-          color: inherit;
-          position: relative;
+      a[href^="#"] {
+        color: inherit;
+        position: relative;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+
+        &::before {
+          color: var(--text-inactive);
+          content: "#";
+          display: inline-flex;
+          font-size: 0.7em;
+          line-height: 1;
+          margin-left: -0.8em;
           text-decoration: none;
+          top: 0.5em;
+          visibility: hidden;
+          width: 0.8em;
+        }
 
-          &:hover,
-          &:focus {
-            text-decoration: underline;
-          }
-
-          &::before {
-            color: var(--text-inactive);
-            content: "#";
-            display: inline-flex;
-            font-size: 0.7em;
-            line-height: 1;
-            margin-left: -0.8em;
-            text-decoration: none;
-            top: 0.5em;
-            visibility: hidden;
-            width: 0.8em;
-          }
-
-          &:hover::before {
-            visibility: visible;
-          }
+        &:hover::before {
+          visibility: visible;
         }
       }
     }
