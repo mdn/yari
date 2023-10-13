@@ -146,19 +146,15 @@
       margin-top: 2rem;
 
       a {
-        &:link,
-        &:visited {
-          text-decoration: none;
-        }
-
-        &:hover,
-        &:focus {
-          text-decoration: underline;
-        }
-
         &[href^="#"] {
           color: inherit;
           position: relative;
+          text-decoration: none;
+
+          &:hover,
+          &:focus {
+            text-decoration: underline;
+          }
 
           &:hover::before {
             color: var(--text-inactive);
