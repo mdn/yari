@@ -459,8 +459,8 @@ export function AIHelpInner() {
                 </header>
                 <div className="modal-body">
                   <p>
-                    Our AI Help feature employs GPT-3.5, a Language Learning
-                    Model (LLM) developed by{" "}
+                    Our AI Help feature employs GPT-3.5, a Large Language Model
+                    (LLM) developed by{" "}
                     <a
                       href="https://platform.openai.com/docs/api-reference/models"
                       className="external"
