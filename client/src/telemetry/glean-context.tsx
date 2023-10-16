@@ -15,7 +15,7 @@ import { Doc } from "../../../libs/types/document";
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
 
-const UTMParameterNames = [
+const UTM_PARAMETER_NAMES = [
   "source",
   "medium",
   "campaign",
@@ -23,7 +23,7 @@ const UTMParameterNames = [
   "content",
 ] as const;
 type UTMParameters = Partial<
-  Record<(typeof UTMParameterNames)[number], string>
+  Record<(typeof UTM_PARAMETER_NAMES)[number], string>
 >;
 
 export type PageProps = {
@@ -242,7 +242,7 @@ export function useGleanClick() {
 
 function getUTMParameters(): UTMParameters {
   const searchParams = new URLSearchParams(document.location.search);
-  return UTMParameterNames.reduce((acc, name): UTMParameters => {
+  return UTM_PARAMETER_NAMES.reduce((acc, name): UTMParameters => {
     const param = searchParams.get(`utm_${name}`);
     return param ? { ...acc, [name]: param } : acc;
   }, {});
