@@ -32,6 +32,17 @@ function* walker(root) {
   }
 }
 
+function extractMatchesFromString(pattern: RegExp, str: string) {
+  const matches = [];
+
+  let match: string[];
+  while ((match = pattern.exec(str)) !== null) {
+    matches.push(match[1] ?? match[0]);
+  }
+
+  return matches;
+}
+
 describe("fixing flaws", () => {
   const pattern = path.join("web", "fixable_flaws");
   const baseDir = path.resolve(".");
@@ -95,13 +106,10 @@ describe("fixing flaws", () => {
       ),
     }).toString();
 
-    const wouldModify = [];
-    const regexPattern = /Would modify "(.*)"./g;
-
-    let match: string[];
-    while ((match = regexPattern.exec(stdout)) !== null) {
-      wouldModify.push(match[1]);
-    }
+    const wouldModify = extractMatchesFromString(
+      /Would modify "(.*)"./g,
+      stdout
+    );
 
     expect(wouldModify).toHaveLength(4);
     expect(wouldModify).toContain(
