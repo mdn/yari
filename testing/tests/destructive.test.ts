@@ -79,12 +79,13 @@ describe("fixing flaws", () => {
   });
 
   it("can be run in dry-run mode", () => {
+    const root = path.join(tempContentDir, "files");
     const stdout = execSync("yarn build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
         {
-          CONTENT_ROOT: path.join(tempContentDir, "files"),
+          CONTENT_ROOT: root,
           BUILD_OUT_ROOT: tempBuildDir,
           BUILD_FIX_FLAWS: "true",
           BUILD_FIX_FLAWS_DRY_RUN: "true",
@@ -94,15 +95,28 @@ describe("fixing flaws", () => {
       ),
     }).toString();
 
+    const wouldModify = [];
     const regexPattern = /Would modify "(.*)"./g;
-    const dryRunNotices = stdout
-      .split("\n")
-      .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices).toHaveLength(4);
-    expect(dryRunNotices[0]).toContain(pattern);
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[3]).toContain(path.join(pattern, "images"));
+
+    let match: string[];
+    while ((match = regexPattern.exec(stdout)) !== null) {
+      wouldModify.push(match[1]);
+    }
+
+    expect(wouldModify).toHaveLength(4);
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "bad_pre_tags", "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "deprecated_macros", "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "images", "index.html")
+    );
+
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles).toHaveLength(0);
   });
