@@ -217,10 +217,13 @@ export async function buildDocument(
   let flaws: any[] = [];
   let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
-  let kumascriptMetadata;
+  // this will get populated with the parent's frontmatter by kumascript if the document is localized:
+  let allMetadata = metadata;
 
   try {
+    let kumascriptMetadata;
     [$, flaws, kumascriptMetadata] = await kumascript.render(document.url);
+    allMetadata = { ...allMetadata, ...kumascriptMetadata };
   } catch (error) {
     if (
       error instanceof MacroInvocationError &&
@@ -372,8 +375,7 @@ export async function buildDocument(
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
 
   // metadata doesn't have a browser-compat key on translated docs:
-  const browserCompat =
-    kumascriptMetadata?.["browser-compat"] || metadata["browser-compat"];
+  const browserCompat = allMetadata["browser-compat"];
   doc.browserCompat =
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
