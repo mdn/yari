@@ -183,6 +183,12 @@
           padding-left: 0;
         }
       }
+
+      dl {
+        /* Nested definition list. */
+        border-left: 1px solid var(--border-primary);
+        padding-left: 1rem;
+      }
     }
 
     p {
