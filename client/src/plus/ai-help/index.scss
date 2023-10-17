@@ -133,6 +133,13 @@
       gap: 1rem;
       justify-content: flex-end;
       width: 100%;
+
+      .ai-help-new-question-button {
+        align-self: center;
+        .button-wrap {
+          width: max-content;
+        }
+      }
     }
 
     .ai-help-input-form {
@@ -267,6 +274,14 @@
 
         .glean-thumbs {
           justify-content: flex-end;
+        }
+        > a {
+          color: var(--text-primary);
+          text-decoration: underline;
+          padding-right: 0.5rem;
+          &:hover {
+            text-decoration: none;
+          }
         }
       }
 

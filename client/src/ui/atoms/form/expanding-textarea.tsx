@@ -1,29 +1,49 @@
-import { DetailedHTMLProps, TextareaHTMLAttributes, useCallback } from "react";
+import {
+  DetailedHTMLProps,
+  TextareaHTMLAttributes,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 
 type AreaProps = DetailedHTMLProps<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
   HTMLTextAreaElement
 >;
 
-export default function ExpandingTextarea(
-  props: AreaProps | { enterKeyHint: string }
+const ExpandingTextarea = forwardRef(function ExpandingTextarea(
+  props: AreaProps | { enterKeyHint: string },
+  ref
 ) {
   const { value } = props as AreaProps;
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const resizeCallback = useCallback(
-    (node: HTMLTextAreaElement) => {
-      if (value && node && node.scrollHeight > node.clientHeight) {
-        node.style.height = `${node.scrollHeight + 2}px`;
-      }
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        focus() {
+          textAreaRef.current?.focus();
+        },
+      };
     },
-    [value]
+    []
   );
+  useEffect(() => {
+    const node = textAreaRef.current;
+    if (value && node && node.scrollHeight > node.clientHeight) {
+      node.style.height = `${node.scrollHeight + 2}px`;
+    }
+  }, [value]);
 
   return (
     <textarea
       {...(props as AreaProps)}
       rows={(props as AreaProps).rows || 2}
-      ref={resizeCallback}
+      ref={textAreaRef}
     />
   );
-}
+});
+
+export default ExpandingTextarea;

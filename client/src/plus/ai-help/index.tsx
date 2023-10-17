@@ -170,6 +170,13 @@ export default function AiHelp() {
   );
 }
 
+function groupHistory(history) {
+  const today = "";
+  const yesterday = "";
+  const last30Days = "";
+  const groups = [];
+}
+
 export function AIHelpHistory({ currentChatId }: { currentChatId?: string }) {
   const [history, setHistory] = useState<
     { chat_id: string; question: string }[]
@@ -186,10 +193,11 @@ export function AIHelpHistory({ currentChatId }: { currentChatId?: string }) {
   return (
     <aside className="ai-help-history">
       <header>History</header>
-      <ul>
-        {history.map((h) => {
+      <ol>
+        {history.map((h, index) => {
           return (
             <li
+              key={index}
               className={`${
                 h.chat_id === currentChatId ? "ai-help-history-active" : ""
               }`}
@@ -201,8 +209,68 @@ export function AIHelpHistory({ currentChatId }: { currentChatId?: string }) {
             </li>
           );
         })}
-      </ul>
+      </ol>
     </aside>
+  );
+}
+
+function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
+  console.log(message);
+  const [editing, setEditing] = useState(false);
+  const [question, setQuestion] = useState(message.content);
+  const { pos, total } = siblingCount(message.messageId);
+  return editing ? (
+    <>
+      <input
+        defaultValue={question}
+        onChange={(e) => setQuestion(e.target.value)}
+      ></input>
+      <Button
+        type="action"
+        onClickHandler={() => {
+          setEditing(false);
+          setQuestion(message.content);
+        }}
+      >
+        Cancel
+      </Button>
+      <Button
+        type="primary"
+        onClickHandler={() => {
+          submit(question, message.chatId, message.parentId, message.messageId);
+        }}
+      >
+        Submit
+      </Button>
+    </>
+  ) : (
+    <>
+      {total > 1 && (
+        <>
+          <Button
+            type="action"
+            onClickHandler={() => nextPrev(message.messageId, "prev")}
+          >
+            &lt;
+          </Button>
+          <span>
+            {pos} / {total}
+          </span>
+          <Button
+            type="action"
+            onClickHandler={() => nextPrev(message.messageId, "next")}
+          >
+            &gt;
+          </Button>
+        </>
+      )}
+      <div>{message.content}</div>
+      <Button
+        type="action"
+        icon="edit"
+        onClickHandler={() => setEditing(true)}
+      />
+    </>
   );
 }
 
@@ -217,11 +285,9 @@ export function AIHelpInner() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
-  const [refine, setRefine] = useState(false);
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const [sendHistory, setSendHistory] = useState(true);
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 
@@ -233,10 +299,13 @@ export function AIHelpInner() {
     messages,
     quota,
     reset,
+    unReset,
     stop,
     submit,
     chatId,
     sendFeedback,
+    nextPrev,
+    siblingCount,
   } = useAiChat();
 
   const isQuotaLoading = quota === undefined;
@@ -267,18 +336,18 @@ export function AIHelpInner() {
     // - When the user loads the page (-> isQuotaLoading).
     // - When the user starts a "New chat" (-> hasConversation).
     const input = inputRef.current;
+    console.log(input);
     if (input) {
       window.setTimeout(() => input.focus());
     }
   }, [isQuotaLoading, hasConversation]);
 
-  const submitQuestion = () => {
+  const submitQuestion = (parentId) => {
     gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
     if (query.trim()) {
-      submit(query.trim(), chatId, sendHistory);
+      submit(query.trim(), chatId, parentId);
       setQuery("");
       setIsExample(false);
-      setRefine(false);
       setAutoScroll(true);
     }
   };
@@ -325,147 +394,158 @@ export function AIHelpInner() {
                             .join(" ")}
                         >
                           {message.role === "user" ? (
-                            message.content
+                            <AIHelpUserQuestion
+                              message={message}
+                              submit={submit}
+                              nextPrev={nextPrev}
+                              siblingCount={siblingCount}
+                            />
                           ) : (
                             <>
-                              <ReactMarkdown
-                                remarkPlugins={[remarkGfm]}
-                                components={{
-                                  a: ({ node, ...props }) => {
-                                    if (isExternalUrl(props.href ?? "")) {
-                                      props = {
-                                        ...props,
-                                        className: "external",
-                                        rel: "noopener noreferrer",
-                                        target: "_blank",
-                                      };
-                                    }
-                                    // eslint-disable-next-line jsx-a11y/anchor-has-content
-                                    return <a {...props} />;
-                                  },
-                                  pre: ({
-                                    node,
-                                    className,
-                                    children,
-                                    ...props
-                                  }) => {
-                                    const code = Children.toArray(children)
-                                      .map(
-                                        (child) =>
-                                          /language-(\w+)/.exec(
-                                            (child as ReactElement)?.props
-                                              ?.className || ""
-                                          )?.[1]
-                                      )
-                                      .find(Boolean);
+                              {message.content ? (
+                                <ReactMarkdown
+                                  remarkPlugins={[remarkGfm]}
+                                  components={{
+                                    a: ({ node, ...props }) => {
+                                      if (isExternalUrl(props.href ?? "")) {
+                                        props = {
+                                          ...props,
+                                          className: "external",
+                                          rel: "noopener noreferrer",
+                                          target: "_blank",
+                                        };
+                                      }
+                                      // eslint-disable-next-line jsx-a11y/anchor-has-content
+                                      return <a {...props} />;
+                                    },
+                                    pre: ({
+                                      node,
+                                      className,
+                                      children,
+                                      ...props
+                                    }) => {
+                                      const code = Children.toArray(children)
+                                        .map(
+                                          (child) =>
+                                            /language-(\w+)/.exec(
+                                              (child as ReactElement)?.props
+                                                ?.className || ""
+                                            )?.[1]
+                                        )
+                                        .find(Boolean);
 
-                                    if (!code) {
+                                      if (!code) {
+                                        return (
+                                          <pre {...props} className={className}>
+                                            {children}
+                                          </pre>
+                                        );
+                                      }
+                                      sample += 1;
                                       return (
-                                        <pre {...props} className={className}>
-                                          {children}
-                                        </pre>
-                                      );
-                                    }
-                                    sample += 1;
-                                    return (
-                                      <div className="code-example">
-                                        <div className="example-header play-collect">
-                                          <span className="language-name">
-                                            {code}
-                                          </span>
-                                          {message.status ===
-                                            MessageStatus.Complete && (
-                                            <div className="playlist">
-                                              <input
-                                                type="checkbox"
-                                                onChange={(e) => {
-                                                  e.target.dataset.queued = `${e.target.checked} `;
-                                                }}
-                                                id={`sample-${index}-${sample}`}
-                                              />
-                                              <label
-                                                htmlFor={`sample-${index}-${sample}`}
-                                              ></label>
-                                              <button
-                                                type="button"
-                                                className="play-button external"
-                                                title="Open in Playground"
-                                                onClick={(e) => {
-                                                  try {
-                                                    (
-                                                      (e.target as HTMLElement)
-                                                        .previousElementSibling
-                                                        ?.previousElementSibling as HTMLInputElement
-                                                    ).click();
-                                                  } catch {}
-                                                  const code = collectCode();
-                                                  sessionStorage.setItem(
-                                                    SESSION_KEY,
-                                                    JSON.stringify(code)
-                                                  );
-                                                  const url = new URL(
-                                                    window?.location.href
-                                                  );
-                                                  url.pathname = `/${locale}/play`;
-                                                  url.hash = "";
-                                                  url.search = "";
-                                                  if (e.shiftKey === true) {
-                                                    window.location.href =
-                                                      url.href;
-                                                  } else {
-                                                    window.open(url, "_blank");
-                                                  }
-                                                }}
-                                              >
-                                                play
-                                              </button>
-                                            </div>
-                                          )}
+                                        <div className="code-example">
+                                          <div className="example-header play-collect">
+                                            <span className="language-name">
+                                              {code}
+                                            </span>
+                                            {message.status ===
+                                              MessageStatus.Complete && (
+                                              <div className="playlist">
+                                                <input
+                                                  type="checkbox"
+                                                  onChange={(e) => {
+                                                    e.target.dataset.queued = `${e.target.checked} `;
+                                                  }}
+                                                  id={`sample-${index}-${sample}`}
+                                                />
+                                                <label
+                                                  htmlFor={`sample-${index}-${sample}`}
+                                                ></label>
+                                                <button
+                                                  type="button"
+                                                  className="play-button external"
+                                                  title="Open in Playground"
+                                                  onClick={(e) => {
+                                                    try {
+                                                      (
+                                                        (
+                                                          e.target as HTMLElement
+                                                        ).previousElementSibling
+                                                          ?.previousElementSibling as HTMLInputElement
+                                                      ).click();
+                                                    } catch {}
+                                                    const code = collectCode();
+                                                    sessionStorage.setItem(
+                                                      SESSION_KEY,
+                                                      JSON.stringify(code)
+                                                    );
+                                                    const url = new URL(
+                                                      window?.location.href
+                                                    );
+                                                    url.pathname = `/${locale}/play`;
+                                                    url.hash = "";
+                                                    url.search = "";
+                                                    if (e.shiftKey === true) {
+                                                      window.location.href =
+                                                        url.href;
+                                                    } else {
+                                                      window.open(
+                                                        url,
+                                                        "_blank"
+                                                      );
+                                                    }
+                                                  }}
+                                                >
+                                                  play
+                                                </button>
+                                              </div>
+                                            )}
+                                          </div>
+                                          <pre className={`brush: ${code}`}>
+                                            {children}
+                                          </pre>
                                         </div>
-                                        <pre className={`brush: ${code}`}>
+                                      );
+                                    },
+                                    code: ({
+                                      inline,
+                                      className,
+                                      children,
+                                      ...props
+                                    }) => {
+                                      const match = /language-(\w+)/.exec(
+                                        className || ""
+                                      );
+                                      const lang = Prism.languages[match?.[1]];
+                                      return !inline && lang ? (
+                                        <code
+                                          {...props}
+                                          className={className}
+                                          dangerouslySetInnerHTML={{
+                                            __html: Prism.highlight(
+                                              String(children),
+                                              lang
+                                            ),
+                                          }}
+                                        />
+                                      ) : (
+                                        <code {...props} className={className}>
                                           {children}
-                                        </pre>
-                                      </div>
-                                    );
-                                  },
-                                  code: ({
-                                    inline,
-                                    className,
-                                    children,
-                                    ...props
-                                  }) => {
-                                    const match = /language-(\w+)/.exec(
-                                      className || ""
-                                    );
-                                    const lang = Prism.languages[match?.[1]];
-                                    return !inline && lang ? (
-                                      <code
-                                        {...props}
-                                        className={className}
-                                        dangerouslySetInnerHTML={{
-                                          __html: Prism.highlight(
-                                            String(children),
-                                            lang
-                                          ),
-                                        }}
-                                      />
-                                    ) : (
-                                      <code {...props} className={className}>
-                                        {children}
-                                      </code>
-                                    );
-                                  },
-                                }}
-                              >
-                                {message.content
-                                  ? message.content.replace(
-                                      SORRY_BACKEND,
-                                      SORRY_FRONTEND
-                                    )
-                                  : "Retrieving answer…"}
-                              </ReactMarkdown>
+                                        </code>
+                                      );
+                                    },
+                                  }}
+                                >
+                                  {message.content?.replace(
+                                    SORRY_BACKEND,
+                                    SORRY_FRONTEND
+                                  )}
+                                </ReactMarkdown>
+                              ) : (
+                                "Retrieving answer…"
+                              )}
                               {message.status === "complete" &&
-                                !message.content.includes(SORRY_BACKEND) && (
+                                !message.content?.includes(SORRY_BACKEND) && (
                                   <>
                                     {message.sources &&
                                       message.sources.length > 0 && (
@@ -553,108 +633,100 @@ export function AIHelpInner() {
               )}
               {isQuotaExceeded(quota) ? (
                 <AiUpsellBanner limit={quota.limit} />
-              ) : hasConversation && !refine ? (
-                <div className="ai-help-refine-or-new">
-                  <Button
-                    type="action"
-                    isDisabled={isQuotaExceeded(quota)}
-                    extraClasses="ai-help-refine-button"
-                    onClickHandler={() => {
-                      gleanClick(`${AI_HELP}: refine`);
-                      setQuery("");
-                      setIsExample(false);
-                      setRefine(true);
-                    }}
-                  >
-                    ↩ Refine
-                  </Button>
-                  <Button
-                    type="action"
-                    icon="edit"
-                    isDisabled={isQuotaExceeded(quota)}
-                    extraClasses="ai-help-refine-button"
-                    onClickHandler={() => {
-                      gleanClick(`${AI_HELP}: edit`);
-                      setIsExample(false);
-                      setRefine(false);
-                      setQuery(messages[messages.length - 2]?.content || "");
-                      reset();
-                      window.setTimeout(() => window.scrollTo(0, 0));
-                    }}
-                  >
-                    Edit as new
-                  </Button>
-                  <Button
-                    type="action"
-                    isDisabled={isQuotaExceeded(quota)}
-                    extraClasses="ai-help-new-question-button"
-                    onClickHandler={() => {
-                      gleanClick(`${AI_HELP}: new`);
-                      setQuery("");
-                      setIsExample(false);
-                      reset();
-                      window.setTimeout(() => window.scrollTo(0, 0));
-                    }}
-                  >
-                    + New Question
-                  </Button>
-                </div>
               ) : (
                 <>
-                  <form
-                    ref={formRef}
-                    className="ai-help-input-form"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      submitQuestion();
-                    }}
-                  >
-                    <ExpandingTextarea
-                      ref={inputRef}
-                      disabled={isLoading || isResponding}
-                      enterKeyHint="send"
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" && !event.shiftKey) {
-                          event.preventDefault();
-                          submitQuestion();
-                        }
-                      }}
-                      onChange={(event) => {
-                        setQuery(event.target.value);
-                        setIsExample(false);
-                      }}
-                      value={query}
-                      rows={1}
-                      placeholder={placeholder(
-                        isLoading
-                          ? "Requesting answer..."
-                          : isResponding
-                          ? "Receiving answer..."
-                          : "Ask your question"
-                      )}
-                    />
-                    <Button
-                      type="action"
-                      icon="cancel"
-                      buttonType="reset"
-                      title="Delete question"
-                      onClickHandler={() => {
-                        setQuery("");
-                        refine && setRefine(false);
+                  <div className="ai-help-refine-or-new">
+                    {hasConversation && (
+                      <Button
+                        type="action"
+                        icon="add"
+                        isDisabled={isQuotaExceeded(quota)}
+                        extraClasses="ai-help-new-question-button"
+                        onClickHandler={() => {
+                          gleanClick(`${AI_HELP}: new`);
+                          setQuery("");
+                          setIsExample(false);
+                          reset();
+                          window.setTimeout(() => window.scrollTo(0, 0));
+                        }}
+                      >
+                        New Topic
+                      </Button>
+                    )}
+                    <form
+                      ref={formRef}
+                      className="ai-help-input-form"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        submitQuestion(messages.at(-1)?.messageId);
                       }}
                     >
-                      <span className="visually-hidden">Submit question</span>
-                    </Button>
-                    <Button
-                      type="action"
-                      icon="send"
-                      buttonType="submit"
-                      title="Submit question"
-                      isDisabled={!query}
-                    >
-                      <span className="visually-hidden">Submit question</span>
-                    </Button>
-                  </form>
+                      <ExpandingTextarea
+                        ref={inputRef}
+                        disabled={isLoading || isResponding}
+                        enterKeyHint="send"
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" && !event.shiftKey) {
+                            event.preventDefault();
+                            submitQuestion(messages.at(-1)?.messageId);
+                          }
+                        }}
+                        onChange={(event) => {
+                          setQuery(event.target.value);
+                          setIsExample(false);
+                        }}
+                        value={query}
+                        rows={1}
+                        placeholder={placeholder(
+                          isLoading
+                            ? "Requesting answer..."
+                            : isResponding
+                            ? "Receiving answer..."
+                            : hasConversation
+                            ? "Ask your follow up question"
+                            : "Ask your question"
+                        )}
+                      />
+                      {!query && !hasConversation ? (
+                        <Button
+                          type="action"
+                          icon="star"
+                          buttonType="reset"
+                          title="Delete question"
+                          onClickHandler={() => {
+                            unReset();
+                          }}
+                        >
+                          <span className="visually-hidden">
+                            Previous question
+                          </span>
+                        </Button>
+                      ) : query ? (
+                        <Button
+                          type="action"
+                          icon="cancel"
+                          buttonType="reset"
+                          title="Delete question"
+                          onClickHandler={() => {
+                            setQuery("");
+                          }}
+                        >
+                          <span className="visually-hidden">
+                            Reset question
+                          </span>
+                        </Button>
+                      ) : null}
+                      <Button
+                        type="action"
+                        icon="send"
+                        buttonType="submit"
+                        title="Submit question"
+                        isDisabled={!query}
+                      >
+                        <span className="visually-hidden">Submit question</span>
+                      </Button>
+                    </form>
+                  </div>
                   <div className="ai-help-footer-text">
                     <span>
                       Results based on MDN's most recent documentation and
@@ -789,7 +861,7 @@ function useAutoScroll(
     footerRef: MutableRefObject<HTMLElement | null>;
   }
 ) {
-  const [autoScroll, setAutoScroll] = useState(true);
+  const [autoScroll, setAutoScroll] = useState(false);
   const lastScrollY = useRef(0);
   const lastHeight = useRef(0);
 
