@@ -412,8 +412,6 @@ export async function buildPost(
     throw error;
   }
 
-  doc.modified = metadata.modified || null;
-
   doc.pageTitle = `${doc.title} | MDN Blog`;
 
   doc.noIndexing = false;
