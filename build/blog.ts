@@ -344,8 +344,18 @@ export async function buildBlogPosts(options: {
   }
 }
 
+interface BlogPostDoc {
+  url: string;
+  rawBody: string;
+  metadata: BlogPostMetadata & { locale: string };
+  isMarkdown: boolean;
+  fileInfo: {
+    path: string;
+  };
+}
+
 export async function buildPost(
-  document
+  document: BlogPostDoc
 ): Promise<{ doc: Doc; liveSamples: any }> {
   const { metadata } = document;
 
