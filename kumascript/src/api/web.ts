@@ -51,12 +51,12 @@ const web = {
   // then hyperlink to corresponding en-US document is returned.
   smartLink(
     this: KumaThis,
-    href,
-    title,
-    content,
-    subpath,
-    basepath,
-    ignoreFlawMacro = null
+    href: string,
+    title: string | null,
+    content: string,
+    subpath: string | null = null,
+    basepath: string | null = null,
+    ignoreFlawMacro: string | null = null
   ) {
     let flaw;
     let flawAttribute = "";
