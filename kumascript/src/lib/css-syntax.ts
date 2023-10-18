@@ -1,6 +1,8 @@
 import { KumaThis } from "../environment.js";
-import webRefData from "@webref/css";
+import { getSyntax } from "query-css-syntax";
 import { definitionSyntax } from "css-tree";
+
+const typesToOmit = ["<color>", "<gradient>"];
 
 export async function getCSSSyntax(
   kuma: KumaThis,
@@ -95,146 +97,43 @@ export async function getCSSSyntax(
     },
   };
 
-  // get the contents of webref
-  const parsedWebRef = await getParsedWebRef();
-
-  // get all the value syntaxes
-  let valuespaces = {};
-  for (const spec of Object.values(parsedWebRef)) {
-    valuespaces = { ...valuespaces, ...spec.valuespaces };
-  }
-
-  /**
-   * Get the spec shortnames for an item, given:
-   * @param {string} itemName - the name of the item
-   * @param {string} itemType - this can only be "properties" or "atrules"
-   */
-  function getSpecsForItem(itemName: string, itemType: string) {
-    // Get all specs which list this item
-    const specsForItem = [];
-    for (const [shortname, data] of Object.entries(parsedWebRef)) {
-      const itemNames = Object.keys(data[itemType]);
-      if (itemNames.includes(itemName)) {
-        specsForItem.push(shortname);
-      }
-    }
-    return specsForItem;
-  }
-
-  /**
-   * Get the formal syntax for a property from the webref data, given:
-   * @param {string} propertyName - the name of the property
-   */
-  function getPropertySyntax(propertyName: string): string {
-    // 1) Get all specs which list this property
-    let specsForProp = getSpecsForItem(propertyName, "properties");
-    // 2) If we have more than one spec, filter out specs that end "-n" where n is a number
-    if (specsForProp.length > 1) {
-      specsForProp = specsForProp.filter((specName) => !/-\d+$/.test(specName));
-    }
-    // 3) If we have only one spec, return the syntax it lists
-    if (specsForProp.length === 1) {
-      return parsedWebRef[specsForProp[0]].properties[propertyName].value;
-    }
-    // 4) If we have > 1 spec, assume that:
-    // - one of them is the base spec, which defines `values`,
-    // - the others define incremental additions as `newValues`
-    let syntax = "";
-    let newSyntaxes = "";
-    for (const specName of specsForProp) {
-      const baseValue = parsedWebRef[specName].properties[propertyName].value;
-      if (baseValue) {
-        syntax = baseValue;
-      }
-      const newValues =
-        parsedWebRef[specName].properties[propertyName].newValues;
-      if (newValues) {
-        newSyntaxes += ` | ${newValues}`;
-      }
-    }
-    // Concatenate newValues onto values to return a single syntax string
-    if (newSyntaxes) {
-      syntax += newSyntaxes;
-    }
-    return syntax;
-  }
-
-  /**
-   * Get the formal syntax for an at-rule from the webref data, given:
-   * @param {string} atRuleName - the name of the at-rule
-   */
-  function getAtRuleSyntax(atRuleName: string): string {
-    // An at-rule may appear in more than one spec: for example, if extra descriptors
-    // are defined in different specs. But we assume that the at-rule's own syntax,
-    // defined in the `value` property, only appears in one of them.
-    const specs = getSpecsForItem(atRuleName, "atrules");
-    for (const spec of specs) {
-      if (parsedWebRef[spec].atrules[atRuleName].value) {
-        return parsedWebRef[spec].atrules[atRuleName].value;
-      }
-    }
-    return "";
-  }
-
-  /**
-   * Get the formal syntax for an at-rule descriptor from the webref data, given:
-   * @param {string} atRuleDescriptorName - the name of the at-rule descriptor
-   */
-  function getAtRuleDescriptorSyntax(atRuleDescriptorName: string): string {
-    // We assume that the at-rule descriptor page is directly under
-    // the page for its at-rule.
-    const atRuleName = env.slug.split("/").at(-2);
-    const specs = getSpecsForItem(atRuleName, "atrules");
-    // Look through all the specs that define the at-rule, for the one
-    // that defines this descriptor.
-    for (const spec of specs) {
-      const atRule = parsedWebRef[spec].atrules[atRuleName];
-      for (const descriptor of atRule.descriptors) {
-        if (descriptor.name === atRuleDescriptorName) {
-          return descriptor.value;
-        }
-      }
-    }
-    return "";
-  }
-
   /**
    * Get the formal syntax and properly formatted name for an item.
    */
-  function getNameAndSyntax(): { name: string; syntax: string } {
+  function getNameAndSyntax(): {
+    name: string;
+    syntax: string;
+  } {
     // get the item name from the page slug
     let itemName = slug || env.slug.split("/").pop().toLowerCase();
     let itemSyntax;
     switch (env["page-type"]) {
       case "css-shorthand-property":
       case "css-property":
-        itemSyntax = getPropertySyntax(itemName);
+        itemSyntax = getSyntax(itemName, "property", typesToOmit);
         break;
       case "css-type":
         // some CSS data type slugs have a `_value` suffix
         if (itemName.endsWith("_value")) {
           itemName = itemName.replace("_value", "");
         }
-        // not all types have an entry in the syntax
-        if (valuespaces[itemName]) {
-          itemSyntax = valuespaces[itemName].value;
-        }
+
+        itemSyntax = getSyntax(itemName, "type", typesToOmit);
         itemName = `<${itemName}>`;
         break;
       case "css-function":
         itemName = `${itemName}()`;
-        // not all functions have an entry in the syntax
-        if (valuespaces[itemName]) {
-          itemSyntax = valuespaces[itemName].value;
-        }
+        itemSyntax = getSyntax(itemName, "function", typesToOmit);
         itemName = `<${itemName}>`;
         break;
       case "css-at-rule":
-        itemSyntax = getAtRuleSyntax(itemName);
+        itemSyntax = getSyntax(itemName, "at-rule", typesToOmit);
         break;
       case "css-at-rule-descriptor":
-        itemSyntax = getAtRuleDescriptorSyntax(itemName);
+        itemSyntax = getSyntax(itemName, "at-rule-descriptor", typesToOmit);
         break;
+      default:
+        itemSyntax = "";
     }
     return {
       name: itemName,
@@ -291,22 +190,18 @@ export async function getCSSSyntax(
         // If the type is not included in the syntax, or is in "typesToLink",
         // link to its dedicated page (don't expand it)
         const key = name.replace(/(^<|>$)/g, "");
-        if (valuespaces[key]?.value && !typesToLink.includes(name)) {
-          return span;
+        let slug;
+        // If the name is in slugMap, we can't derive the slug from the name
+        if (slugMap[name]) {
+          slug = slugMap[name];
         } else {
-          let slug;
-          // If the name is in slugMap, we can't derive the slug from the name
-          if (slugMap[name]) {
-            slug = slugMap[name];
-          } else {
-            // The slug should not include the angle brackets
-            slug = name.replaceAll("<", "");
-            slug = slug.replaceAll(">", "");
-            // The slug should not contain the range in square brackets, as in "<number [0,∞]>"
-            slug = slug.replace(/\[.*\]/, "");
-          }
-          return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
+          // The slug should not include the angle brackets
+          slug = name.replaceAll("<", "");
+          slug = slug.replaceAll(">", "");
+          // The slug should not contain the range in square brackets, as in "<number [0,∞]>"
+          slug = slug.replace(/\[.*\]/, "");
         }
+        return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
       }
       case "Multiplier": {
         // link to the value definition syntax and provide a tooltip
@@ -427,59 +322,6 @@ export async function getCSSSyntax(
   }
 
   /**
-   * Get names of all the types in a given set of syntaxes
-   */
-  function getTypesForSyntaxes(syntaxes, constituents) {
-    function processNode(node) {
-      // Ignore the constituent parts of "typesToLink" types
-      if (typesToLink.includes(`<${node.name}>`)) {
-        return;
-      }
-      if (node.type === "Type" && !constituents.includes(node.name)) {
-        constituents.push(node.name);
-      }
-    }
-
-    for (const syntax of syntaxes) {
-      const ast = definitionSyntax.parse(syntax);
-      definitionSyntax.walk(ast, processNode);
-    }
-  }
-
-  /**
-   * Given an item (such as a CSS property), fetch all the types that participate
-   * in its formal syntax definition, either directly or transitively.
-   */
-  function getConstituentTypes(itemSyntax) {
-    const allConstituents = [];
-    let oldConstituentsLength = 0;
-    // get all the types in the top-level syntax
-    let constituentSyntaxes = [itemSyntax];
-
-    // while an iteration added more types...
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      oldConstituentsLength = allConstituents.length;
-      getTypesForSyntaxes(constituentSyntaxes, allConstituents);
-
-      if (allConstituents.length <= oldConstituentsLength) {
-        break;
-      }
-      // get the syntaxes for all newly added constituents,
-      // and then get the types in those syntaxes
-      constituentSyntaxes = [];
-      for (const constituent of allConstituents.slice(oldConstituentsLength)) {
-        const constituentSyntaxEntry = valuespaces[constituent];
-
-        if (constituentSyntaxEntry?.value) {
-          constituentSyntaxes.push(constituentSyntaxEntry.value);
-        }
-      }
-    }
-    return allConstituents;
-  }
-
-  /**
    * Write out the complete formal syntax for an item.
    *
    * This includes the item's own syntax, described in `itemSyntax`,
@@ -490,109 +332,27 @@ export async function getCSSSyntax(
     let output = "";
     output += "<pre>";
     // write the syntax for the property
-    output += renderSyntax(itemName, itemSyntax);
+    output += renderSyntax(itemName, itemSyntax.syntax);
     output += "<br/>";
-    // collect all the constituent types for the property
-    const types = getConstituentTypes(itemSyntax);
 
     // and write each one out
-    for (const type of types) {
-      if (valuespaces[type] && valuespaces[type].value) {
-        output += renderSyntax(`&lt;${type}&gt;`, valuespaces[type].value);
-        output += "<br/>";
-      }
+    for (const constituant of itemSyntax.constituents) {
+      output += renderSyntax(`&lt;${constituant.type}&gt;`, constituant.syntax);
+      output += "<br/>";
     }
 
     output += "</pre>";
     return output;
   }
 
-  let output = "";
+  let output;
 
-  const { name, syntax } = getNameAndSyntax();
-
-  if (!syntax) {
-    output = "Error: could not find syntax for this item";
-  } else {
-    // write it out
+  try {
+    const { name, syntax } = getNameAndSyntax();
     output = writeFormalSyntax(name, syntax);
+  } catch (e) {
+    output = "Error: could not find syntax for this item";
   }
+
   return output;
-}
-
-async function getParsedWebRef(): Promise<WebRefObjectData> {
-  const rawItems = await getRawWebRefData();
-
-  return Object.fromEntries(
-    Object.entries(rawItems).map(
-      ([name, { spec, properties, atrules, values }]) => [
-        name,
-        {
-          spec,
-          properties: byName(properties),
-          atrules: byName(atrules),
-          valuespaces: byName(values),
-        },
-      ]
-    )
-  );
-}
-
-function byName<T extends Named>(items: T[]): Record<string, T> {
-  return Object.fromEntries(
-    items.map((item) => [item.name.replace(/(^<|>$)/g, ""), item])
-  );
-}
-
-async function getRawWebRefData(): Promise<WebRefArrayData> {
-  return (await webRefData.listAll()) as WebRefArrayData;
-}
-
-// @webref/css v5 interfaces.
-
-type WebRefObjectData = Record<string, WebRefObjectDataItem>;
-interface WebRefObjectDataItem {
-  spec: WebRefSpecEntry;
-  properties: Record<string, WebRefPropertyEntry>;
-  atrules: Record<string, WebRefAtruleEntry>;
-  valuespaces: Record<string, WebRefValuespaceEntry>;
-}
-
-// @webref/css v6 interfaces.
-
-type WebRefArrayData = Record<string, WebRefArrayDataItem>;
-interface WebRefArrayDataItem {
-  spec: WebRefSpecEntry;
-  properties: (WebRefPropertyEntry & Named)[];
-  atrules: (WebRefAtruleEntry & Named)[];
-  values: (WebRefValuespaceEntry & Named)[];
-}
-
-interface Named {
-  name: string;
-}
-
-// Common interfaces.
-
-interface WebRefSpecEntry {
-  title: string;
-  url: string;
-}
-
-interface WebRefPropertyEntry {
-  value: string;
-  newValues: string;
-}
-
-interface WebRefAtruleEntry {
-  descriptors: {
-    name: string;
-    value: string;
-  }[];
-  value: string;
-}
-
-interface WebRefValuespaceEntry {
-  prose?: string;
-  value?: string;
 }
