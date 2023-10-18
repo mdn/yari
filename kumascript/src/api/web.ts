@@ -53,7 +53,7 @@ const web = {
     this: KumaThis,
     href: string,
     title: string | null,
-    content: string,
+    content: string | null = null,
     subpath: string | null = null,
     basepath: string | null = null,
     ignoreFlawMacro: string | null = null
@@ -128,6 +128,7 @@ const web = {
         }
       }
       const titleAttribute = title ? ` title="${title}"` : "";
+      content ??= page.short_title ?? page.title;
       return `<a href="${
         page.url + hrefhash
       }"${titleAttribute}${flawAttribute}>${content}</a>`;
@@ -150,6 +151,7 @@ const web = {
             flaw.macroSource
           )}"`;
         }
+        content ??= enUSPage.short_title ?? enUSPage.title;
         return (
           '<a class="only-in-en-us" ' +
           'title="Currently only available in English (US)" ' +
@@ -171,6 +173,7 @@ const web = {
       this.web.getJSONData("L10n-Common"),
       "summary"
     );
+    content ??= href;
     return `<a class="page-not-created" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
   },
 
