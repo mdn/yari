@@ -2783,10 +2783,10 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-5.0.1.tgz#3286741fb8f1e1580ac28784add4c7a1d49bdfbc"
   integrity sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==
 
-"@types/async@^3.2.21":
-  version "3.2.21"
-  resolved "https://registry.yarnpkg.com/@types/async/-/async-3.2.21.tgz#470b06c25fc104c169e80a9c91866e8204e91175"
-  integrity sha512-msYM0OYxzkwpiDJZZDo7XsYuFIpiAOh+o3hygudSpSzeW+R0DAEKZvdQriHYT95m9CvscLDg5s0Mxlrlhoy2qw==
+"@types/async@^3.2.22":
+  version "3.2.22"
+  resolved "https://registry.yarnpkg.com/@types/async/-/async-3.2.22.tgz#6c8c8ee46b4dd0c7a7c33fff2bdb313bf3e639d2"
+  integrity sha512-aYsrMkRWXwJfchKtwubTIgvWcgRU8zFT+lL48l9jSu7RJKa3A+E3qwmAJVYap4Do9QzTCLm6p63JmOuII3j7dg==
 
 "@types/babel__core@^7.1.14":
   version "7.1.19"
@@ -2836,10 +2836,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/cli-progress@^3.11.3":
-  version "3.11.3"
-  resolved "https://registry.yarnpkg.com/@types/cli-progress/-/cli-progress-3.11.3.tgz#2a982d4c68fb288048daa0b3293c0ce81c1785ee"
-  integrity sha512-/+C9xAdVtc+g5yHHkGBThgAA8rYpi5B+2ve3wLtybYj0JHEBs57ivR4x/zGfSsplRnV+psE91Nfin1soNKqz5Q==
+"@types/cli-progress@^3.11.4":
+  version "3.11.4"
+  resolved "https://registry.yarnpkg.com/@types/cli-progress/-/cli-progress-3.11.4.tgz#58d9e60bd5fd85a57984890ef9c9d831a0dda896"
+  integrity sha512-yufTxeeNCZuEIxx2uebK8lpSAsJM4lvzakm/VxzYhDtqhXCzwH9jpn7nPCxzrROuEbLATqhFq4MIPoG0tlrsvw==
   dependencies:
     "@types/node" "*"
 
@@ -2949,10 +2949,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/imagemin@^8.0.2":
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/@types/imagemin/-/imagemin-8.0.2.tgz#aa96b701d55dd355aa5658df8934bb02767adfc7"
-  integrity sha512-RcyM00BFTQQ5oFv88APJu4VFnm6xwtLEUiy2Z+lM8lay2NVwVAFetr1Koop1DNnwX+ZGKUgU4v8eZS8MsBEttg==
+"@types/imagemin@^8.0.3":
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/@types/imagemin/-/imagemin-8.0.3.tgz#9357a382497d33d592afc582df900f0759d7769f"
+  integrity sha512-se/hpaYxu5DyvPqmUEwbupmbQSx6JNislk0dkoIgWSmArkj+Ow9pGG9pGz8MRmbQDfGNYNzqwPQKHCUy+K+jpQ==
   dependencies:
     "@types/node" "*"
 
@@ -2975,10 +2975,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^29.5.5":
-  version "29.5.5"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.5.5.tgz#727204e06228fe24373df9bae76b90f3e8236a2a"
-  integrity sha512-ebylz2hnsWR9mYvmBFbXJXr+33UPc4+ZdxyDXh5w0FlPBTfCVN3wPL+kuOiQt3xvrK419v7XWeAs+AeOksafXg==
+"@types/jest@^29.5.6":
+  version "29.5.6"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.5.6.tgz#f4cf7ef1b5b0bfc1aa744e41b24d9cc52533130b"
+  integrity sha512-/t9NnzkOpXb4Nfvg17ieHE6EeSjDS2SGSpNYfoLbUAeL/EOueU/RSdOWFpfQTXBEM7BguYW1XQ0EbM+6RlIh6w==
   dependencies:
     expect "^29.0.0"
     pretty-format "^29.0.0"
@@ -3014,10 +3014,10 @@
   dependencies:
     "@types/unist" "*"
 
-"@types/mdast@^4.0.0", "@types/mdast@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-4.0.1.tgz#9c45e60a04e79f160dcefe6545d28ae536a6ed22"
-  integrity sha512-IlKct1rUTJ1T81d8OHzyop15kGv9A/ff7Gz7IJgrk6jDb4Udw77pCJ+vq8oxZf4Ghpm+616+i1s/LNg/Vh7d+g==
+"@types/mdast@^4.0.0", "@types/mdast@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-4.0.2.tgz#4695661024ffbd9e52cf71e05c69a1f08c0792f6"
+  integrity sha512-tYR83EignvhYO9iU3kDg8V28M0jqyh9zzp5GV+EO+AYnyUl3P5ltkTeJuTiFZQFz670FSb3EwT/6LQdX+UdKfw==
   dependencies:
     "@types/unist" "*"
 
