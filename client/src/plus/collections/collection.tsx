@@ -259,7 +259,7 @@ function ItemComponent({
                 icon="edit"
                 type="action"
                 onClickHandler={(e) => {
-                  gleanClick(PLUS_COLLECTIONS.EDIT_NOTE);
+                  gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_EDIT);
                   return openBookmarkMenu(e);
                 }}
               >
@@ -301,7 +301,7 @@ function ItemComponent({
           icon="edit"
           type="action"
           onClickHandler={(e) => {
-            gleanClick(PLUS_COLLECTIONS.ADD_NOTE);
+            gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_ADD);
             return openBookmarkMenu(e);
           }}
         >

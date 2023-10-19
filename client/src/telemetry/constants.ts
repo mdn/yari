@@ -19,12 +19,12 @@ export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 
 export const PLUS_COLLECTIONS = Object.freeze({
+  ACTIONS_NOTE_ADD: "collections_actions_note_add",
+  ACTIONS_NOTE_EDIT: "collections_actions_note_edit",
   ARTICLE_ACTIONS_SELECT_OPENED: "article_actions_collection_select_opened",
   ARTICLE_ACTIONS_NEW: "article_actions_new_collection",
   ARTICLE_ACTIONS_OPENED: "article_actions_collections_opened",
   BANNER_NEW: "collections_banner_new_collection",
-  ADD_NOTE: "collections_add_note",
-  EDIT_NOTE: "collections_edit_note",
   NEW_MODAL_SUBMIT_ARTICLE_ACTIONS:
     "new_collection_modal_submit_article_actions",
   NEW_MODAL_SUBMIT_COLLECTIONS_PAGE:
