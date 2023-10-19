@@ -1,18 +1,5 @@
 import { ViewportBreakpoint } from "./glean-context";
 
-export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
-  "article_actions_collection_select_opened";
-export const ARTICLE_ACTIONS_NEW_COLLECTION = "article_actions_new_collection";
-export const ARTICLE_ACTIONS_COLLECTIONS_OPENED =
-  "article_actions_collections_opened";
-export const COLLECTIONS_BANNER_NEW_COLLECTION =
-  "collections_banner_new_collection";
-export const NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS =
-  "new_collection_modal_submit_article_actions";
-export const NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE =
-  "new_collection_modal_submit_collections_page";
-export const NEW_COLLECTION_MODAL_UPGRADE_LINK =
-  "new_collection_modal_upgrade_link";
 export const OFFER_OVERVIEW_CLICK = "offer_overview_click";
 export const SIDEBAR_CLICK = "sidebar_click";
 export const SIDEBAR_CLICK_WITH_FILTER = "sidebar_click_with_filter";
@@ -32,8 +19,17 @@ export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 
 export const PLUS_COLLECTIONS = Object.freeze({
+  ARTICLE_ACTIONS_SELECT_OPENED: "article_actions_collection_select_opened",
+  ARTICLE_ACTIONS_NEW: "article_actions_new_collection",
+  ARTICLE_ACTIONS_OPENED: "article_actions_collections_opened",
+  BANNER_NEW: "collections_banner_new_collection",
   ADD_NOTE: "collections_add_note",
   EDIT_NOTE: "collections_edit_note",
+  NEW_MODAL_SUBMIT_ARTICLE_ACTIONS:
+    "new_collection_modal_submit_article_actions",
+  NEW_MODAL_SUBMIT_COLLECTIONS_PAGE:
+    "new_collection_modal_submit_collections_page",
+  NEW_MODAL_UPGRADE_LINK: "new_collection_modal_upgrade_link",
 });
 
 export const PLUS_UPDATES = Object.freeze({
