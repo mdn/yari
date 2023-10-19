@@ -31,6 +31,11 @@ export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 
+export const PLUS_COLLECTIONS = Object.freeze({
+  ADD_NOTE: "collections_add_note",
+  EDIT_NOTE: "collections_edit_note",
+});
+
 export const PLUS_UPDATES = Object.freeze({
   EVENT_COLLAPSE: "plus_updates_event_collapse",
   EVENT_EXPAND: "plus_updates_event_expand",
