@@ -275,7 +275,11 @@ export function getBrokenLinksFlaws(
           true
         );
       }
-    } else if (href.startsWith("/") && !href.startsWith("//")) {
+    } else if (
+      href.startsWith("/") &&
+      !href.startsWith("//") &&
+      !/^\/en-US\/blog(\/|$)/.test(href)
+    ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
       const found = Document.findByURL(hrefNormalized);
