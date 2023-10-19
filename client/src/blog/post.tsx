@@ -197,15 +197,11 @@ export function BlogPost(props: HydrationData) {
     <>
       {doc && blogMeta && (
         <main className="blog-post-container container">
-          <div className="sidebar-container">
-            <div className="toc-container">
-              <aside className="toc">
-                <nav>
-                  {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-                </nav>
-              </aside>
-              {PLACEMENT_ENABLED && !blogMeta?.sponsored && <SidePlacement />}
-            </div>
+          <div className="sidebar-container toc-container">
+            <aside className="toc">
+              <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+            </aside>
+            {PLACEMENT_ENABLED && !blogMeta?.sponsored && <SidePlacement />}
           </div>
           <article
             className="blog-post blog-container main-page-content"
