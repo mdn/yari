@@ -223,16 +223,15 @@ export class HTMLTool {
       knownIDs.add(id);
       $element.attr("id", id);
 
-      if (isDt) {
-        // Remove empty anchor links.
-        // This happens if the term already links to a page.
-        $element.find("a[data-link-to-id = true]:empty").remove();
-
-        // Link remaining anchor links to the term's ID.
-        $element
-          .find("a[data-link-to-id = true]")
-          .attr("href", "#" + id)
-          .removeAttr("data-link-to-id");
+      if (isDt && $element.find("a").length == 0) {
+        const codeChildren = $element.children("code");
+        if (codeChildren.length > 1)
+          throw new Error(
+            `found <dt> with more than one <code> child: ${$element.html()}`
+          );
+        $(codeChildren.first()).wrap(
+          `<a href="#${encodeURIComponent(id)}"></a>`
+        );
       }
     });
     return this;
