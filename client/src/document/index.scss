@@ -83,9 +83,10 @@
   }
 
   img {
-    background: var(--background-primary);
+    background: #fff;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
+    color: #000;
     display: inline-block;
     display: flex;
     height: auto;
