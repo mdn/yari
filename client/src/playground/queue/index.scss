@@ -49,6 +49,7 @@
     > summary {
       border-bottom: 1px solid var(--border-primary);
       padding-bottom: 0.5rem;
+
       &::before {
         content: "▼";
         font-size: 0.75rem;
@@ -91,8 +92,8 @@
 
     &.play-button {
       align-self: center;
-      width: fit-content;
       margin-bottom: 0.5rem;
+      width: fit-content;
     }
   }
 
@@ -132,9 +133,9 @@
           background-color: transparent;
           justify-self: center;
           margin: 0 auto;
-          text-transform: uppercase;
-          text-align: center;
           min-width: 6rem;
+          text-align: center;
+          text-transform: uppercase;
         }
       }
     }

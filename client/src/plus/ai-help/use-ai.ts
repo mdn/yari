@@ -152,11 +152,14 @@ function findPath(state: MessageTreeState, messageId: string) {
   const path: number[] = [];
   let limit = Object.keys(state.nodes).length;
   let iteration = 0;
+  const sameId = (c: MessageTreeNode): boolean => {
+    return c.messageId === id;
+  };
   while (iteration < limit) {
     iteration++;
     const isRoot = typeof pId !== "string";
     let siblings = isRoot ? state.root : state.nodes[pId as string]?.children;
-    let index = siblings?.findIndex((c) => c.messageId === id) ?? -1;
+    let index = siblings?.findIndex(sameId) ?? -1;
     if (index < 0) {
       return [];
     }

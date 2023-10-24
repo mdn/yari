@@ -40,9 +40,11 @@
         > li {
           display: flex;
           flex-direction: column;
+
           > ol {
-            width: 100%;
             margin-bottom: 0.5rem;
+            width: 100%;
+
             > li {
               align-items: center;
               display: flex;
@@ -50,10 +52,10 @@
               padding: 0.25rem 0.5rem;
 
               > a {
-                width: 100%;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                width: 100%;
               }
 
               &.ai-help-history-active {
@@ -65,8 +67,8 @@
 
           > time {
             display: block;
-            font-weight: bold;
             font-size: var(--type-smaller-font-size);
+            font-weight: bold;
             padding-left: 0.5rem;
           }
         }
@@ -155,6 +157,7 @@
 
       .ai-help-new-question-button {
         align-self: center;
+
         .button-wrap {
           width: max-content;
         }
@@ -294,10 +297,12 @@
         .glean-thumbs {
           justify-content: flex-end;
         }
+
         > a {
           color: var(--text-primary);
-          text-decoration: underline;
           padding-right: 0.5rem;
+          text-decoration: underline;
+
           &:hover {
             text-decoration: none;
           }

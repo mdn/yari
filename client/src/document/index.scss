@@ -703,11 +703,12 @@ pre {
     }
 
     > input {
-      opacity: 0;
-      width: 0;
       height: 0;
       margin: 0;
+      opacity: 0;
       position: absolute;
+      width: 0;
+
       &:not(:checked) ~ label {
         &::before {
           content: "+ queue";
@@ -716,11 +717,12 @@ pre {
 
       &:focus-visible ~ label,
       &:focus ~ label {
+        opacity: 1;
         outline-color: var(--accent-primary);
         outline-offset: 1px;
         outline-style: auto;
-        opacity: 1;
       }
+
       &:checked ~ label {
         color: var(--text-primary-blue);
         opacity: 1;

@@ -290,7 +290,7 @@ export function AIHelpHistory({
   currentChatId?: string;
   lastUpdate: Date;
 }) {
-  const { data, isLoading, isValidating, mutate } = useSWR(
+  const { data, mutate } = useSWR(
     `/api/v1/plus/ai/help/history/list`,
     async (url) => {
       const res = await (await fetch(url)).json();
@@ -303,7 +303,7 @@ export function AIHelpHistory({
 
   useEffect(() => {
     mutate();
-  }, [lastUpdate]);
+  }, [lastUpdate, mutate]);
 
   return (
     <aside className="ai-help-history">
