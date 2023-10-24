@@ -233,7 +233,7 @@
     "semver": "^7.5.4",
     "source-map-explorer": "^2.5.3",
     "source-map-loader": "^4.0.1",
-    "style-dictionary": "^3.8.0",
+    "style-dictionary": "^3.9.0",
     "style-loader": "^3.3.3",
     "stylelint": "^15.11.0",
     "stylelint-a11y": "^1.2.3",
