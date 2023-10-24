@@ -36,20 +36,39 @@
         padding: 0.25rem 0.5rem;
       }
 
-      li {
-        align-items: center;
-        display: flex;
-        padding: 0.25rem 0.5rem;
+      ol {
+        > li {
+          display: flex;
+          flex-direction: column;
+          > ol {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            > li {
+              align-items: center;
+              display: flex;
+              flex-direction: row;
+              padding: 0.25rem 0.5rem;
 
-        > a {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
+              > a {
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
 
-        &.ai-help-history-active {
-          background-color: var(--background-secondary);
-          border: 1px solid var(--border-primary);
+              &.ai-help-history-active {
+                background-color: var(--background-secondary);
+                border: 1px solid var(--border-primary);
+              }
+            }
+          }
+
+          > time {
+            display: block;
+            font-weight: bold;
+            font-size: var(--type-smaller-font-size);
+            padding-left: 0.5rem;
+          }
         }
       }
     }

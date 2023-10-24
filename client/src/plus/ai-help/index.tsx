@@ -42,6 +42,7 @@ import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue } from "../../playground/queue";
+import useSWR, { KeyedMutator } from "swr";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -170,42 +171,152 @@ export default function AiHelp() {
   );
 }
 
-function groupHistory(history) {
-  const today = "";
-  const yesterday = "";
-  const last30Days = "";
-  const groups = [];
+function monthYearLabel(date: Date): string {
+  const formattedDate = date.toLocaleString(undefined, {
+    month: "short",
+    year: "numeric",
+  });
+  return formattedDate;
 }
 
-export function AIHelpHistory({ currentChatId }: { currentChatId?: string }) {
-  const [history, setHistory] = useState<
-    { chat_id: string; question: string }[]
-  >([]);
+interface HistoryEntry {
+  chat_id: string;
+  label: string;
+  last: string;
+}
+interface HistoryEntries {
+  label: string;
+  entries: HistoryEntry[];
+}
 
-  useEffect(() => {
-    (async () => {
-      const res = await (
-        await fetch(`/api/v1/plus/ai/help/history/list`)
-      ).json();
-      setHistory(Array.isArray(res) ? res : []);
-    })();
-  }, []);
+function groupHistory(history) {
+  const now = new Date();
+  const today = new Date(now.toDateString());
+  const yesterday = new Date(
+    structuredClone(today).setDate(today.getDate() - 1)
+  );
+  const last30Days = new Date(
+    structuredClone(today).setDate(today.getDate() - 30)
+  );
+  const groups = [
+    { label: "Last 30 Days", d: last30Days },
+    { label: "Yesterday", d: yesterday },
+    { label: "Today", d: today },
+  ];
+  const grouped: HistoryEntries[] = [];
+
+  let { label = "unknown", d } = groups.pop() || {};
+  let current: HistoryEntries = { label, entries: [] };
+  for (const entry of history) {
+    let last = new Date(entry.last);
+    while (!d || last < d) {
+      if (!d) {
+        label = monthYearLabel(last);
+        break;
+      } else if (last < d) {
+        ({ label = "unknown", d } = groups.pop() || {});
+        continue;
+      }
+      break;
+    }
+    if (current.label !== label) {
+      grouped.push(current);
+      current = { label, entries: [entry] };
+    } else {
+      current.entries.push(entry);
+    }
+  }
+
+  if (current.entries.length) {
+    grouped.push(current);
+  }
+  return grouped;
+}
+
+function AIHelpHistorySubList({
+  currentChatId,
+  entries,
+  mutate,
+}: {
+  currentChatId?: string;
+  entries: HistoryEntries;
+  mutate: KeyedMutator<any[]>;
+}) {
   return (
-    <aside className="ai-help-history">
-      <header>History</header>
+    <>
+      <time>{entries.label}</time>
       <ol>
-        {history.map((h, index) => {
+        {entries.entries.map(({ chat_id, last, label }, index) => {
           return (
             <li
               key={index}
               className={`${
-                h.chat_id === currentChatId ? "ai-help-history-active" : ""
+                chat_id === currentChatId ? "ai-help-history-active" : ""
               }`}
             >
-              <a href={`./?c=${h.chat_id}`}>{h.question}</a>
-              {h.chat_id === currentChatId && (
-                <Button type="action" icon="trash" />
+              <a href={`./?c=${chat_id}`} title={last}>
+                {label}
+              </a>
+              {chat_id === currentChatId && (
+                <Button
+                  type="action"
+                  icon="trash"
+                  onClickHandler={async () => {
+                    if (
+                      window.confirm(
+                        "Do you want to permanently delete this Topic?"
+                      )
+                    ) {
+                      await fetch(`/api/v1/plus/ai/help/history/${chat_id}`, {
+                        method: "DELETE",
+                      });
+                      mutate();
+                    }
+                  }}
+                />
               )}
+            </li>
+          );
+        })}
+      </ol>
+    </>
+  );
+}
+
+export function AIHelpHistory({
+  currentChatId,
+  lastUpdate,
+}: {
+  currentChatId?: string;
+  lastUpdate: Date;
+}) {
+  const { data, isLoading, isValidating, mutate } = useSWR(
+    `/api/v1/plus/ai/help/history/list`,
+    async (url) => {
+      const res = await (await fetch(url)).json();
+      return Array.isArray(res) ? res : [];
+    },
+    {
+      fallbackData: [],
+    }
+  );
+
+  useEffect(() => {
+    mutate();
+  }, [lastUpdate]);
+
+  return (
+    <aside className="ai-help-history">
+      <header>History</header>
+      <ol>
+        {groupHistory(data).map((entries, index) => {
+          return (
+            <li key={index}>
+              <AIHelpHistorySubList
+                entries={entries}
+                currentChatId={currentChatId}
+                mutate={mutate}
+              />
             </li>
           );
         })}
@@ -215,7 +326,6 @@ export function AIHelpHistory({ currentChatId }: { currentChatId?: string }) {
 }
 
 function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
-  console.log(message);
   const [editing, setEditing] = useState(false);
   const [question, setQuestion] = useState(message.content);
   const { pos, total } = siblingCount(message.messageId);
@@ -306,6 +416,7 @@ export function AIHelpInner() {
     sendFeedback,
     nextPrev,
     siblingCount,
+    lastUpdate,
   } = useAiChat();
 
   const isQuotaLoading = quota === undefined;
@@ -336,7 +447,6 @@ export function AIHelpInner() {
     // - When the user loads the page (-> isQuotaLoading).
     // - When the user starts a "New chat" (-> hasConversation).
     const input = inputRef.current;
-    console.log(input);
     if (input) {
       window.setTimeout(() => input.focus());
     }
@@ -356,7 +466,7 @@ export function AIHelpInner() {
     <>
       {hasConversation && <PlayQueue />}
       {user?.experiments?.config.history && (
-        <AIHelpHistory currentChatId={chatId} />
+        <AIHelpHistory currentChatId={chatId} lastUpdate={lastUpdate} />
       )}
       <Container>
         {isQuotaLoading ? (

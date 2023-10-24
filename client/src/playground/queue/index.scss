@@ -10,7 +10,7 @@
     align-items: center;
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius) 0 0 var(--elem-radius);
+    border-radius: 1rem 0 0 1rem;
     display: flex;
     filter: drop-shadow(var(--shadow-02));
     justify-content: center;
@@ -47,6 +47,8 @@
     min-width: 12rem;
 
     > summary {
+      border-bottom: 1px solid var(--border-primary);
+      padding-bottom: 0.5rem;
       &::before {
         content: "▼";
         font-size: 0.75rem;
@@ -90,6 +92,7 @@
     &.play-button {
       align-self: center;
       width: fit-content;
+      margin-bottom: 0.5rem;
     }
   }
 
@@ -107,7 +110,7 @@
         align-items: center;
         color: var(--text-primary);
         display: flex;
-        padding: 0 1rem;
+        padding: 0.25rem 1rem;
         width: 100%;
 
         &:hover {
@@ -117,6 +120,7 @@
         .queue-ref {
           color: var(--text-primary);
           font-size: var(--type-smaller-font-size);
+          padding: 0 0.5rem;
 
           &:hover {
             color: var(--text-primary-blue);
@@ -129,6 +133,8 @@
           justify-self: center;
           margin: 0 auto;
           text-transform: uppercase;
+          text-align: center;
+          min-width: 6rem;
         }
       }
     }

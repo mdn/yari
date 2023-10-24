@@ -357,6 +357,7 @@ export function useAiChat({
   const [isLoading, setIsLoading] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
   const [datas, dispatchData] = useReducer(
     (state: any[], value: any) => (value === null ? [] : [...state, value]),
     []
@@ -493,6 +494,7 @@ export function useAiChat({
               ? MessageStatus.Complete
               : MessageStatus.Stopped;
           setIsResponding(false);
+          setLastUpdate(new Date());
           dispatchState({
             type: "update",
             messageId,
@@ -717,5 +719,6 @@ export function useAiChat({
     chatId,
     nextPrev,
     siblingCount,
+    lastUpdate,
   };
 }
