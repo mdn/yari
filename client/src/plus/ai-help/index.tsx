@@ -347,6 +347,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       <Button
         type="primary"
         onClickHandler={() => {
+          setEditing(false);
           submit(question, message.chatId, message.parentId, message.messageId);
         }}
       >
