@@ -177,6 +177,7 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
     "'unsafe-inline'",
     "'unsafe-eval'",
   ],
+  "img-src": ["'self'", "blob:", "https:", "data:"],
   "base-uri": ["'self'"],
   "worker-src": ["'self'"],
   "manifest-src": ["'self'"],

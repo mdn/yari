@@ -22,21 +22,54 @@
     grid-template-columns: minmax(auto, 1fr) minmax(0, 52rem) minmax(15rem, 1fr);
   }
 
-  > .sidebar-container {
+  @media screen and (min-width: $screen-xxl) {
+    grid-template-areas:
+      "toc post place"
+      "toc newsletter place";
+    grid-template-columns: minmax(15rem, 1fr) minmax(0, 52rem) minmax(
+        15rem,
+        1fr
+      );
+  }
+
+  > .toc-container {
     --offset: var(--top-nav-height);
     display: none;
 
-    .toc-container {
-      position: unset;
-      top: auto;
-    }
-
     @media screen and (min-width: $screen-lg) {
       display: flex;
+      flex-direction: column;
       grid-area: toc;
 
       .toc > nav {
         margin-top: 2rem;
+      }
+    }
+    @media screen and (min-width: $screen-xxl) {
+      display: contents;
+
+      .place.side,
+      .toc {
+        height: max-content;
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgb(0, 0, 0) 3rem calc(100% - 3rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+        max-height: calc(100vh - var(--offset));
+        overflow: auto;
+        position: sticky;
+        top: var(--offset);
+      }
+
+      .place.side {
+        grid-area: place;
+        margin-top: 0;
+
+        > .pong-box {
+          margin-top: 2rem;
+        }
       }
     }
   }

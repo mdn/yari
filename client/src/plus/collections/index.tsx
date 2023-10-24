@@ -21,10 +21,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Mandala from "../../ui/molecules/mandala";
 import { useGleanClick } from "../../telemetry/glean-context";
-import {
-  COLLECTIONS_BANNER_NEW_COLLECTION,
-  NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
-} from "../../telemetry/constants";
+import { PLUS_COLLECTIONS } from "../../telemetry/constants";
 import { camelWrap } from "../../utils";
 import { useFrequentlyViewed } from "./frequently-viewed";
 import { Icon } from "../../ui/atoms/icon";
@@ -89,7 +86,7 @@ function Overview() {
           </p>
           <Button
             onClickHandler={() => {
-              gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION);
+              gleanClick(PLUS_COLLECTIONS.BANNER_NEW);
               setShowCreate(true);
             }}
             isDisabled={isLoading}
@@ -99,7 +96,7 @@ function Overview() {
           <NewEditCollectionModal
             show={showCreate}
             setShow={setShowCreate}
-            source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
+            source={PLUS_COLLECTIONS.NEW_MODAL_SUBMIT_COLLECTIONS_PAGE}
           />
         </Container>
       </header>
@@ -205,7 +202,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           editingCollection={collection}
           show={showEdit}
           setShow={setShowEdit}
-          source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
+          source={PLUS_COLLECTIONS.NEW_MODAL_SUBMIT_COLLECTIONS_PAGE}
         />
         <MDNModal
           isOpen={showDelete}

@@ -222,6 +222,18 @@ export class HTMLTool {
       }
       knownIDs.add(id);
       $element.attr("id", id);
+
+      if (isDt) {
+        // Remove empty anchor links.
+        // This happens if the term already links to a page.
+        $element.find("a[data-link-to-id = true]:empty").remove();
+
+        // Link remaining anchor links to the term's ID.
+        $element
+          .find("a[data-link-to-id = true]")
+          .attr("href", "#" + id)
+          .removeAttr("data-link-to-id");
+      }
     });
     return this;
   }

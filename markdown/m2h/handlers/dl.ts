@@ -37,19 +37,22 @@ export function asDefinitionList(h, node) {
     paragraph.children[0].value = paragraph.children[0].value.slice(
       DEFINITION_PREFIX.length
     );
+
+    const [firstDtChild, ...dtChildren] = all(h, {
+      ...node,
+      children:
+        terms.length == 1 && terms[0].type == "paragraph"
+          ? terms[0].children
+          : terms,
+    });
+    if (firstDtChild) {
+      dtChildren.unshift(
+        h(node, "a", { "data-link-to-id": "true" }, [firstDtChild])
+      );
+    }
+
     return [
-      h(
-        node,
-        "dt",
-        {},
-        all(h, {
-          ...node,
-          children:
-            terms.length == 1 && terms[0].type == "paragraph"
-              ? terms[0].children
-              : terms,
-        })
-      ),
+      h(node, "dt", {}, dtChildren),
       h(
         node,
         "dd",
