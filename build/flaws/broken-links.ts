@@ -156,6 +156,10 @@ export function getBrokenLinksFlaws(
     a: cheerio.Cheerio<cheerio.Element>,
     href: string
   ) {
+    if (hash.startsWith(":~:")) {
+      // Ignore fragment directives.
+      return;
+    }
     if (hash !== hash.toLowerCase()) {
       addBrokenLink(
         a,
