@@ -30,6 +30,7 @@ interface PlacementRenderArgs {
   cta?: string;
   user: User;
   style: object;
+  version?: number;
 }
 
 const INTERSECTION_OPTIONS = {
@@ -42,9 +43,7 @@ function viewed(pong?: PlacementData) {
   pong?.view &&
     navigator.sendBeacon?.(
       `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
-        pong?.fallback
-          ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
-          : ""
+        pong?.version ? `&version=${pong.version}` : ""
       }`
     );
 }
@@ -262,7 +261,7 @@ export function PlacementInner({
   }, [isVisible, isIntersecting, sendViewed]);
 
   const { image, copy } = pong?.fallback || pong || {};
-  const { click } = pong || {};
+  const { click, version } = pong || {};
   return (
     <>
       {!isServer &&
@@ -278,6 +277,7 @@ export function PlacementInner({
           cta,
           user,
           style,
+          version,
         })}
     </>
   );
@@ -294,6 +294,7 @@ function RenderSideOrTopBanner({
   cta,
   user,
   style,
+  version = 1,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -305,7 +306,9 @@ function RenderSideOrTopBanner({
         <a
           className="pong"
           data-glean="pong: pong->click"
-          href={`/pong/click?code=${encodeURIComponent(click)}`}
+          href={`/pong/click?code=${encodeURIComponent(
+            click
+          )}&version=${version}`}
           target="_blank"
           rel="noreferrer"
         >
