@@ -31,6 +31,7 @@ interface PlacementRenderArgs {
   user: User;
   style: object;
   version?: number;
+  typ: string;
 }
 
 const INTERSECTION_OPTIONS = {
@@ -148,6 +149,7 @@ export function HpMainPlacement() {
     placementData: placementData?.hpMain,
     imageWidth: 970,
     imageHeight: 250,
+    typ: "hp-main",
   });
 }
 
@@ -157,6 +159,7 @@ export function HpFooterPlacement() {
     placementData: placementData?.hpFooter,
     imageWidth: 728,
     imageHeight: 90,
+    typ: "hp-footer",
   });
 }
 
@@ -164,10 +167,12 @@ function HpPlacement({
   placementData,
   imageWidth,
   imageHeight,
+  typ,
 }: {
   placementData?: PlacementData;
   imageWidth: number;
   imageHeight: number;
+  typ: string;
 }) {
   const { backgroundColor } = placementData?.colors || {};
   const css = Object.fromEntries(
@@ -185,18 +190,31 @@ function HpPlacement({
       imageHeight={imageHeight}
       style={css}
       renderer={RenderHpPlacement}
-      typ="hp-main"
+      typ={typ}
     ></PlacementInner>
   );
 }
 
 export function BottomBanner() {
-  return (
+  const placementData = usePlacement()?.hpFooter;
+  const { backgroundColor, textColor } = placementData?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-bottom-banner-background", backgroundColor],
+      ["--place-bottom-banner-color", textColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
+  return !placementData ? (
+    <section className="place bottom-banner"></section>
+  ) : (
     <PlacementInner
-      pong={{ status: Status.empty }}
+      pong={placementData}
+      imageWidth={728}
+      imageHeight={90}
+      style={css}
       renderer={RenderBottomBanner}
       typ="bottom-banner"
-    />
+    ></PlacementInner>
   );
 }
 
@@ -278,6 +296,7 @@ export function PlacementInner({
           user,
           style,
           version,
+          typ,
         })}
     </>
   );
@@ -295,6 +314,7 @@ function RenderSideOrTopBanner({
   user,
   style,
   version = 1,
+  typ,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -305,7 +325,7 @@ function RenderSideOrTopBanner({
       <p className="pong-box">
         <a
           className="pong"
-          data-glean="pong: pong->click"
+          data-glean={`pong: pong->click ${typ}`}
           href={`/pong/click?code=${encodeURIComponent(
             click
           )}&version=${version}`}
@@ -324,8 +344,10 @@ function RenderSideOrTopBanner({
         {cta && (
           <a
             className="pong-cta"
-            data-glean="pong: pong->click"
-            href={`/pong/click?code=${encodeURIComponent(click)}`}
+            data-glean={`pong: pong->click ${typ}`}
+            href={`/pong/click?code=${encodeURIComponent(
+              click
+            )}&version=${version}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -369,6 +391,8 @@ function RenderHpPlacement({
   imageHeight,
   copy,
   style,
+  version = 1,
+  typ,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -378,8 +402,10 @@ function RenderHpPlacement({
     >
       <a
         className="pong"
-        data-glean="pong: pong->click"
-        href={`/pong/click?code=${encodeURIComponent(click)}`}
+        data-glean={`pong: pong->click ${typ}`}
+        href={`/pong/click?code=${encodeURIComponent(
+          click
+        )}&version=${version}`}
         target="_blank"
         rel="noreferrer"
       >
@@ -394,6 +420,64 @@ function RenderHpPlacement({
   );
 }
 
-function RenderBottomBanner({ place }: PlacementRenderArgs) {
-  return <div ref={place} className="empty-place bottom-banner"></div>;
+function RenderBottomBanner({
+  place,
+  extraClassNames = [],
+  click,
+  image,
+  imageWidth,
+  imageHeight,
+  copy,
+  user,
+  style,
+  version = 1,
+  typ,
+}: PlacementRenderArgs) {
+  return (
+    <div className="bottom-banner-container" style={style}>
+      <section
+        ref={place}
+        className={["place", "bottom-banner", ...extraClassNames].join(" ")}
+      >
+        <a
+          className="pong"
+          data-glean={`pong: pong->click ${typ}`}
+          href={`/pong/click?code=${encodeURIComponent(
+            click
+          )}&version=${version}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img
+            src={`/pimg/${encodeURIComponent(image || "")}`}
+            alt={copy}
+            width={imageWidth}
+            height={imageHeight}
+          ></img>
+        </a>
+        <a
+          href="/en-US/advertising"
+          className="pong-note"
+          data-glean="pong: pong->about"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Mozilla ads
+        </a>
+        <a
+          className="no-pong"
+          data-glean={
+            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+          }
+          href={
+            user?.isSubscriber
+              ? "/en-US/plus/settings?ref=nope"
+              : "/en-US/plus?ref=nope#subscribe"
+          }
+        >
+          Don't want to see ads?
+        </a>
+      </section>
+    </div>
+  );
 }

@@ -227,3 +227,65 @@ div.empty-place {
   --place-top-cta-background: var(--place-top-cta-background-dark);
   --place-top-cta-color: var(--place-top-cta-color-dark);
 }
+
+.bottom-banner-container {
+  background-color: var(
+    --place-bottom-banner-background,
+    var(--background-primary)
+  );
+  color: var(--place-bottom-banner-color, var(--text-primary));
+  margin: 0;
+  width: 100%;
+
+  > section.place.bottom-banner {
+    display: grid;
+    grid-template-areas:
+      "pong note"
+      "pong no";
+    grid-template-columns: auto minmax(0, 15rem);
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 0 1rem;
+
+    .pong {
+      grid-area: pong;
+      justify-self: center;
+
+      a {
+        display: flex;
+
+        img {
+          height: auto;
+        }
+      }
+    }
+
+    .pong-note {
+      color: var(--place-bottom-banner-color);
+      font-size: 0.625rem;
+      grid-area: note;
+      margin-top: 0.5rem;
+      text-decoration: underline;
+    }
+
+    .no-pong {
+      color: var(--place-bottom-banner-color);
+      font-size: 0.625rem;
+      grid-area: no;
+      margin-top: auto;
+    }
+
+    @media screen and (max-width: $screen-lg) {
+      grid-template-areas:
+        "pong pong"
+        "note no";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 2rem;
+
+      .no-pong {
+        justify-self: end;
+        width: fit-content;
+      }
+    }
+  }
+}

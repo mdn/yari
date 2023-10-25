@@ -52,7 +52,7 @@ const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
   side: /\/[^/]+\/(play|docs\/|blog\/|search$)/i,
   top: /\/[^/]+\/(?!$|_homepage$).*/i,
   hpMain: /\/[^/]+\/($|_homepage$)/i,
-  hpFooter: /\/[^/]+\/($|_homepage$)/i,
+  hpFooter: /\/[^/]+\/($|_homepage$|docs\/)/i,
 };
 
 function placementTypes(pathname: string): string[] {
