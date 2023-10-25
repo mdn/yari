@@ -330,7 +330,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
   const [question, setQuestion] = useState(message.content);
   const { pos, total } = siblingCount(message.messageId);
   return editing ? (
-    <>
+    <div className="ai-help-message-content role-user">
       <input
         defaultValue={question}
         onChange={(e) => setQuestion(e.target.value)}
@@ -353,7 +353,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       >
         Submit
       </Button>
-    </>
+    </div>
   ) : (
     <>
       {total > 1 && (
@@ -512,7 +512,15 @@ export function AIHelpInner() {
                               siblingCount={siblingCount}
                             />
                           ) : (
-                            <>
+                            <div
+                              className={[
+                                "ai-help-message-content",
+                                !message.content && "empty",
+                                `role-${message.role}`,
+                              ]
+                                .filter(Boolean)
+                                .join(" ")}
+                            >
                               {message.content ? (
                                 <ReactMarkdown
                                   remarkPlugins={[remarkGfm]}
@@ -704,7 +712,7 @@ export function AIHelpInner() {
                                     </section>
                                   </>
                                 )}
-                            </>
+                            </div>
                           )}
                         </div>
                       </li>

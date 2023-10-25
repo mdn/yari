@@ -715,8 +715,11 @@ pre {
         }
       }
 
-      &:focus-visible ~ label,
       &:focus ~ label {
+        opacity: 1;
+      }
+
+      &:focus-visible ~ label {
         opacity: 1;
         outline-color: var(--accent-primary);
         outline-offset: 1px;
