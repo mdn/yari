@@ -251,12 +251,8 @@ div.empty-place {
       grid-area: pong;
       justify-self: center;
 
-      a {
-        display: flex;
-
-        img {
-          height: auto;
-        }
+      img {
+        height: auto;
       }
     }
 
