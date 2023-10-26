@@ -238,8 +238,8 @@ div.empty-place {
   width: 100%;
 
   > section.place.bottom-banner {
-    display: grid;
     column-gap: 3rem;
+    display: grid;
     grid-template-areas:
       "nope pong note"
       "nope pong no";
