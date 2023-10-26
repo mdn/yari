@@ -14,51 +14,54 @@ export function createPong2GetHandler(zoneKeys, coder) {
       });
 
     const requests = placements.map(async ({ name, zoneKey }) => {
-      const {
-        ads: [
-          {
-            description = null,
-            statlink,
-            statimp,
-            smallImage,
-            backgroundColor,
-            backgroundHoverColor,
-            callToAction,
-            ctaBackgroundColor,
-            ctaBackgroundHoverColor,
-            ctaTextColor,
-            ctaTextColorHover,
-            textColor,
-            textColorHover,
-          },
-        ] = [],
-      } = await (
+      const res = await (
         await fetch(
           `https://srv.buysellads.com/ads/${zoneKey}.json?forwardedip=${encodeURIComponent(
             anonymousIp
           )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
         )
       ).json();
+      const {
+        ads: [
+          {
+            statlink = null,
+            statimp,
+            Description,
+            Image,
+            ImageTitle,
+            BackgroundColorLight,
+            BackgroundColorDark,
+            CallToAction,
+            CtaBackgroundColorLight,
+            CtaBackgroundColorDark,
+            CtaTextColorLight,
+            CtaTextColorDark,
+            TextColorLight,
+            TextColorDark,
+          },
+        ] = [],
+      } = res;
       return {
         name,
         p:
-          description === null
+          statlink === null
             ? null
             : {
                 click: coder.encodeAndSign(statlink),
                 view: coder.encodeAndSign(statimp),
-                image: coder.encodeAndSign(smallImage),
-                copy: description && he.decode(description),
-                cta: callToAction && he.decode(callToAction),
+                image: coder.encodeAndSign(Image),
+                alt: ImageTitle && he.decode(ImageTitle),
+                copy: Description && he.decode(Description),
+                cta: CallToAction && he.decode(CallToAction),
                 colors: {
-                  textColor,
-                  backgroundColor,
-                  ctaTextColor,
-                  ctaBackgroundColor,
-                  textColorDark: textColorHover,
-                  backgroundColorDark: backgroundHoverColor,
-                  ctaTextColorDark: ctaTextColorHover,
-                  ctaBackgroundColorDark: ctaBackgroundHoverColor,
+                  textColor: TextColorLight,
+                  backgroundColor: BackgroundColorLight,
+                  ctaTextColor: CtaTextColorLight,
+                  ctaBackgroundColor: CtaBackgroundColorLight,
+                  textColorDark: TextColorDark,
+                  backgroundColorDark: BackgroundColorDark,
+                  ctaTextColorDark: CtaTextColorDark,
+                  ctaBackgroundColorDark: CtaBackgroundColorDark,
                 },
               },
       };
