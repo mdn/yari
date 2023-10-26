@@ -213,6 +213,14 @@ section.place.hp-main {
   }
 }
 
+div.empty-place {
+  &.bottom-banner {
+    height: 152px;
+    position: absolute;
+    width: 1px;
+  }
+}
+
 .dark .top-banner {
   --place-top-background: var(--place-top-background-dark);
   --place-top-color: var(--place-top-color-dark);

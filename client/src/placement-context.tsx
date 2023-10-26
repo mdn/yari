@@ -10,6 +10,7 @@ export enum Status {
   geoUnsupported = "geo_unsupported",
   capReached = "cap_reached",
   loading = "loading",
+  empty = "empty",
 }
 
 export interface Fallback {
@@ -22,8 +23,8 @@ export interface Fallback {
 
 export interface PlacementData {
   status: Status;
-  click: string;
-  view: string;
+  click?: string;
+  view?: string;
   copy?: string;
   image?: string;
   fallback?: Fallback;
@@ -38,6 +39,7 @@ export interface PlacementData {
     ctaTextColorDark?: string;
     ctaBackgroundColorDark?: string;
   };
+  version?: number;
 }
 
 type PlacementType = "side" | "top" | "hpMain" | "hpFooter";

@@ -118,6 +118,5 @@ export function splitQuery(term: string): string[] {
   return term
     .trim()
     .toLowerCase()
-    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
-    .split(/[ ,]+/);
+    .split(/[ ,.]+/);
 }
