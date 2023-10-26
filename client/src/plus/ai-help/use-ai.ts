@@ -575,7 +575,6 @@ export function useAiChat({
           content: messageTemplate(query),
         });
 
-      return;
       const eventSource = new SSE(`/api/v1/plus/ai/help`, {
         headers: {
           "Content-Type": "application/json",

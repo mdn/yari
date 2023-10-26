@@ -355,23 +355,25 @@
       width: 100%;
 
       &.role-user {
-        white-space: pre-wrap;
+        align-items: center;
         display: flex;
         flex-direction: row;
-        align-items: center;
         justify-content: space-between;
+        white-space: pre-wrap;
 
         .ai-help-message-nav {
           display: flex;
           justify-content: space-between;
+
           > span {
-            width: 4rem;
             text-align: center;
+            width: 4rem;
           }
         }
+
         .ai-help-user-message {
-          width: 100%;
           padding: 0 1rem;
+          width: 100%;
         }
       }
 

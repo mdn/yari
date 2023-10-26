@@ -42,7 +42,6 @@ import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue } from "../../playground/queue";
-import useSWR, { KeyedMutator } from "swr";
 import { AIHelpHistory } from "./history";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
