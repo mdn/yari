@@ -356,6 +356,23 @@
 
       &.role-user {
         white-space: pre-wrap;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .ai-help-message-nav {
+          display: flex;
+          justify-content: space-between;
+          > span {
+            width: 4rem;
+            text-align: center;
+          }
+        }
+        .ai-help-user-message {
+          width: 100%;
+          padding: 0 1rem;
+        }
       }
 
       p {

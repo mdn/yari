@@ -90,7 +90,7 @@ export default function MainMenu({ isOpenOnMobile }) {
           </a>
         </li>
         <li className="top-level-entry-container">
-          <a className="top-level-entry menu-link" href="/en-US/plus/ai-help/">
+          <a className="top-level-entry menu-link" href="/en-US/plus/ai-help">
             AI Help <sup className="new beta">Beta</sup>
           </a>
         </li>

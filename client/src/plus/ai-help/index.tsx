@@ -43,6 +43,7 @@ import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue } from "../../playground/queue";
 import useSWR, { KeyedMutator } from "swr";
+import { AIHelpHistory } from "./history";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -171,170 +172,65 @@ export default function AiHelp() {
   );
 }
 
-function monthYearLabel(date: Date): string {
-  const formattedDate = date.toLocaleString(undefined, {
-    month: "short",
-    year: "numeric",
-  });
-  return formattedDate;
-}
-
-interface HistoryEntry {
-  chat_id: string;
-  label: string;
-  last: string;
-}
-interface HistoryEntries {
-  label: string;
-  entries: HistoryEntry[];
-}
-
-function groupHistory(history) {
-  const now = new Date();
-  const today = new Date(now.toDateString());
-  const yesterday = new Date(
-    structuredClone(today).setDate(today.getDate() - 1)
-  );
-  const last30Days = new Date(
-    structuredClone(today).setDate(today.getDate() - 30)
-  );
-  const groups = [
-    { label: "Last 30 Days", d: last30Days },
-    { label: "Yesterday", d: yesterday },
-    { label: "Today", d: today },
-  ];
-  const grouped: HistoryEntries[] = [];
-
-  let { label = "unknown", d } = groups.pop() || {};
-  let current: HistoryEntries = { label, entries: [] };
-  for (const entry of history) {
-    let last = new Date(entry.last);
-    while (!d || last < d) {
-      if (!d) {
-        label = monthYearLabel(last);
-        break;
-      } else if (last < d) {
-        ({ label = "unknown", d } = groups.pop() || {});
-        continue;
-      }
-      break;
-    }
-    if (current.label !== label) {
-      grouped.push(current);
-      current = { label, entries: [entry] };
-    } else {
-      current.entries.push(entry);
-    }
-  }
-
-  if (current.entries.length) {
-    grouped.push(current);
-  }
-  return grouped;
-}
-
-function AIHelpHistorySubList({
-  currentChatId,
-  entries,
-  mutate,
-}: {
-  currentChatId?: string;
-  entries: HistoryEntries;
-  mutate: KeyedMutator<any[]>;
-}) {
-  return (
-    <>
-      <time>{entries.label}</time>
-      <ol>
-        {entries.entries.map(({ chat_id, last, label }, index) => {
-          return (
-            <li
-              key={index}
-              className={`${
-                chat_id === currentChatId ? "ai-help-history-active" : ""
-              }`}
-            >
-              <a href={`./?c=${chat_id}`} title={last}>
-                {label}
-              </a>
-              {chat_id === currentChatId && (
-                <Button
-                  type="action"
-                  icon="trash"
-                  onClickHandler={async () => {
-                    if (
-                      window.confirm(
-                        "Do you want to permanently delete this Topic?"
-                      )
-                    ) {
-                      await fetch(`/api/v1/plus/ai/help/history/${chat_id}`, {
-                        method: "DELETE",
-                      });
-                      mutate();
-                    }
-                  }}
-                />
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </>
-  );
-}
-
-export function AIHelpHistory({
-  currentChatId,
-  lastUpdate,
-}: {
-  currentChatId?: string;
-  lastUpdate: Date;
-}) {
-  const { data, mutate } = useSWR(
-    `/api/v1/plus/ai/help/history/list`,
-    async (url) => {
-      const res = await (await fetch(url)).json();
-      return Array.isArray(res) ? res : [];
-    },
-    {
-      fallbackData: [],
-    }
-  );
-
-  useEffect(() => {
-    mutate();
-  }, [lastUpdate, mutate]);
-
-  return (
-    <aside className="ai-help-history">
-      <header>History</header>
-      <ol>
-        {groupHistory(data).map((entries, index) => {
-          return (
-            <li key={index}>
-              <AIHelpHistorySubList
-                entries={entries}
-                currentChatId={currentChatId}
-                mutate={mutate}
-              />
-            </li>
-          );
-        })}
-      </ol>
-    </aside>
-  );
-}
-
 function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
   const [editing, setEditing] = useState(false);
   const [question, setQuestion] = useState(message.content);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { pos, total } = siblingCount(message.messageId);
+
+  useEffect(() => {
+    setQuestion(message.content);
+  }, [message.content]);
+
   return editing ? (
-    <div className="ai-help-message-content role-user">
-      <input
-        defaultValue={question}
+    <form
+      className="ai-help-input-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setEditing(false);
+        submit(question, message.chatId, message.parentId, message.messageId);
+      }}
+    >
+      <ExpandingTextarea
+        ref={inputRef}
+        enterKeyHint="send"
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            setEditing(false);
+            submit(
+              question,
+              message.chatId,
+              message.parentId,
+              message.messageId
+            );
+          }
+        }}
         onChange={(e) => setQuestion(e.target.value)}
-      ></input>
+        value={question}
+        rows={1}
+      />
+      {question ? (
+        <Button
+          type="action"
+          icon="cancel"
+          buttonType="reset"
+          title="Delete question"
+          onClickHandler={() => {
+            setQuestion("");
+          }}
+        >
+          <span className="visually-hidden">Reset question</span>
+        </Button>
+      ) : null}
+      <Button
+        type="action"
+        icon="send"
+        buttonType="submit"
+        title="Submit question"
+        isDisabled={!question}
+      >
+        <span className="visually-hidden">Submit question</span>
+      </Button>
       <Button
         type="action"
         onClickHandler={() => {
@@ -344,44 +240,39 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       >
         Cancel
       </Button>
-      <Button
-        type="primary"
-        onClickHandler={() => {
-          setEditing(false);
-          submit(question, message.chatId, message.parentId, message.messageId);
-        }}
-      >
-        Submit
-      </Button>
-    </div>
+    </form>
   ) : (
-    <>
+    <div className="ai-help-message-content role-user">
       {total > 1 && (
-        <>
+        <nav className="ai-help-message-nav">
           <Button
+            icon="previous"
             type="action"
+            isDisabled={pos === 1}
             onClickHandler={() => nextPrev(message.messageId, "prev")}
           >
-            &lt;
+            <span className="visually-hidden">Previous Question</span>
           </Button>
           <span>
             {pos} / {total}
           </span>
           <Button
+            isDisabled={pos === total}
+            icon="next"
             type="action"
             onClickHandler={() => nextPrev(message.messageId, "next")}
           >
-            &gt;
+            <span className="visually-hidden">Next Question</span>
           </Button>
-        </>
+        </nav>
       )}
-      <div>{message.content}</div>
+      <div className="ai-help-user-message">{message.content}</div>
       <Button
         type="action"
         icon="edit"
         onClickHandler={() => setEditing(true)}
       />
-    </>
+    </div>
   );
 }
 
@@ -495,226 +386,211 @@ export function AIHelpInner() {
                         <div className="ai-help-message-role">
                           <RoleIcon role={message.role} />
                         </div>
-                        <div
-                          className={[
-                            "ai-help-message-content",
-                            !message.content && "empty",
-                            `role-${message.role}`,
-                          ]
-                            .filter(Boolean)
-                            .join(" ")}
-                        >
-                          {message.role === "user" ? (
-                            <AIHelpUserQuestion
-                              message={message}
-                              submit={submit}
-                              nextPrev={nextPrev}
-                              siblingCount={siblingCount}
-                            />
-                          ) : (
-                            <div
-                              className={[
-                                "ai-help-message-content",
-                                !message.content && "empty",
-                                `role-${message.role}`,
-                              ]
-                                .filter(Boolean)
-                                .join(" ")}
-                            >
-                              {message.content ? (
-                                <ReactMarkdown
-                                  remarkPlugins={[remarkGfm]}
-                                  components={{
-                                    a: ({ node, ...props }) => {
-                                      if (isExternalUrl(props.href ?? "")) {
-                                        props = {
-                                          ...props,
-                                          className: "external",
-                                          rel: "noopener noreferrer",
-                                          target: "_blank",
-                                        };
-                                      }
-                                      // eslint-disable-next-line jsx-a11y/anchor-has-content
-                                      return <a {...props} />;
-                                    },
-                                    pre: ({
-                                      node,
-                                      className,
-                                      children,
-                                      ...props
-                                    }) => {
-                                      const code = Children.toArray(children)
-                                        .map(
-                                          (child) =>
-                                            /language-(\w+)/.exec(
-                                              (child as ReactElement)?.props
-                                                ?.className || ""
-                                            )?.[1]
-                                        )
-                                        .find(Boolean);
+                        {message.role === "user" ? (
+                          <AIHelpUserQuestion
+                            message={message}
+                            submit={submit}
+                            nextPrev={nextPrev}
+                            siblingCount={siblingCount}
+                          />
+                        ) : (
+                          <div
+                            className={[
+                              "ai-help-message-content",
+                              !message.content && "empty",
+                              `role-${message.role}`,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                          >
+                            {message.content ? (
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  a: ({ node, ...props }) => {
+                                    if (isExternalUrl(props.href ?? "")) {
+                                      props = {
+                                        ...props,
+                                        className: "external",
+                                        rel: "noopener noreferrer",
+                                        target: "_blank",
+                                      };
+                                    }
+                                    // eslint-disable-next-line jsx-a11y/anchor-has-content
+                                    return <a {...props} />;
+                                  },
+                                  pre: ({
+                                    node,
+                                    className,
+                                    children,
+                                    ...props
+                                  }) => {
+                                    const code = Children.toArray(children)
+                                      .map(
+                                        (child) =>
+                                          /language-(\w+)/.exec(
+                                            (child as ReactElement)?.props
+                                              ?.className || ""
+                                          )?.[1]
+                                      )
+                                      .find(Boolean);
 
-                                      if (!code) {
-                                        return (
-                                          <pre {...props} className={className}>
-                                            {children}
-                                          </pre>
-                                        );
-                                      }
-                                      sample += 1;
+                                    if (!code) {
                                       return (
-                                        <div className="code-example">
-                                          <div className="example-header play-collect">
-                                            <span className="language-name">
-                                              {code}
-                                            </span>
-                                            {message.status ===
-                                              MessageStatus.Complete && (
-                                              <div className="playlist">
-                                                <input
-                                                  type="checkbox"
-                                                  onChange={(e) => {
-                                                    e.target.dataset.queued = `${e.target.checked} `;
-                                                  }}
-                                                  id={`sample-${index}-${sample}`}
-                                                />
-                                                <label
-                                                  htmlFor={`sample-${index}-${sample}`}
-                                                ></label>
-                                                <button
-                                                  type="button"
-                                                  className="play-button external"
-                                                  title="Open in Playground"
-                                                  onClick={(e) => {
-                                                    try {
-                                                      (
-                                                        (
-                                                          e.target as HTMLElement
-                                                        ).previousElementSibling
-                                                          ?.previousElementSibling as HTMLInputElement
-                                                      ).click();
-                                                    } catch {}
-                                                    const code = collectCode();
-                                                    sessionStorage.setItem(
-                                                      SESSION_KEY,
-                                                      JSON.stringify(code)
-                                                    );
-                                                    const url = new URL(
-                                                      window?.location.href
-                                                    );
-                                                    url.pathname = `/${locale}/play`;
-                                                    url.hash = "";
-                                                    url.search = "";
-                                                    if (e.shiftKey === true) {
-                                                      window.location.href =
-                                                        url.href;
-                                                    } else {
-                                                      window.open(
-                                                        url,
-                                                        "_blank"
-                                                      );
-                                                    }
-                                                  }}
-                                                >
-                                                  play
-                                                </button>
-                                              </div>
-                                            )}
-                                          </div>
-                                          <pre className={`brush: ${code}`}>
-                                            {children}
-                                          </pre>
-                                        </div>
-                                      );
-                                    },
-                                    code: ({
-                                      inline,
-                                      className,
-                                      children,
-                                      ...props
-                                    }) => {
-                                      const match = /language-(\w+)/.exec(
-                                        className || ""
-                                      );
-                                      const lang = Prism.languages[match?.[1]];
-                                      return !inline && lang ? (
-                                        <code
-                                          {...props}
-                                          className={className}
-                                          dangerouslySetInnerHTML={{
-                                            __html: Prism.highlight(
-                                              String(children),
-                                              lang
-                                            ),
-                                          }}
-                                        />
-                                      ) : (
-                                        <code {...props} className={className}>
+                                        <pre {...props} className={className}>
                                           {children}
-                                        </code>
+                                        </pre>
                                       );
-                                    },
-                                  }}
-                                >
-                                  {message.content?.replace(
-                                    SORRY_BACKEND,
-                                    SORRY_FRONTEND
-                                  )}
-                                </ReactMarkdown>
-                              ) : (
-                                "Retrieving answer…"
-                              )}
-                              {message.status === "complete" &&
-                                !message.content?.includes(SORRY_BACKEND) && (
-                                  <>
-                                    {message.sources &&
-                                      message.sources.length > 0 && (
-                                        <>
-                                          <p>
-                                            MDN content that I've consulted that
-                                            you might want to check:
-                                          </p>
-                                          <ul>
-                                            {message.sources.map(
-                                              ({ url, title }, index) => (
-                                                <li key={index}>
-                                                  <a href={url}>{title}</a>
-                                                </li>
-                                              )
-                                            )}
-                                          </ul>
-                                        </>
-                                      )}
-                                    <section className="ai-help-feedback">
-                                      <GleanThumbs
-                                        feature="ai-help-answer"
-                                        question={"Was this answer useful?"}
-                                        upLabel={"Yes, this answer was useful."}
-                                        downLabel={
-                                          "No, this answer was not useful."
-                                        }
-                                        permanent={true}
-                                        callback={async (value) => {
-                                          user?.experiments?.active &&
-                                            message.messageId &&
-                                            (await sendFeedback(
-                                              message.messageId,
-                                              value
-                                            ));
+                                    }
+                                    sample += 1;
+                                    return (
+                                      <div className="code-example">
+                                        <div className="example-header play-collect">
+                                          <span className="language-name">
+                                            {code}
+                                          </span>
+                                          {message.status ===
+                                            MessageStatus.Complete && (
+                                            <div className="playlist">
+                                              <input
+                                                type="checkbox"
+                                                onChange={(e) => {
+                                                  e.target.dataset.queued = `${e.target.checked} `;
+                                                }}
+                                                id={`sample-${index}-${sample}`}
+                                              />
+                                              <label
+                                                htmlFor={`sample-${index}-${sample}`}
+                                              ></label>
+                                              <button
+                                                type="button"
+                                                className="play-button external"
+                                                title="Open in Playground"
+                                                onClick={(e) => {
+                                                  try {
+                                                    (
+                                                      (e.target as HTMLElement)
+                                                        .previousElementSibling
+                                                        ?.previousElementSibling as HTMLInputElement
+                                                    ).click();
+                                                  } catch {}
+                                                  const code = collectCode();
+                                                  sessionStorage.setItem(
+                                                    SESSION_KEY,
+                                                    JSON.stringify(code)
+                                                  );
+                                                  const url = new URL(
+                                                    window?.location.href
+                                                  );
+                                                  url.pathname = `/${locale}/play`;
+                                                  url.hash = "";
+                                                  url.search = "";
+                                                  if (e.shiftKey === true) {
+                                                    window.location.href =
+                                                      url.href;
+                                                  } else {
+                                                    window.open(url, "_blank");
+                                                  }
+                                                }}
+                                              >
+                                                play
+                                              </button>
+                                            </div>
+                                          )}
+                                        </div>
+                                        <pre className={`brush: ${code}`}>
+                                          {children}
+                                        </pre>
+                                      </div>
+                                    );
+                                  },
+                                  code: ({
+                                    inline,
+                                    className,
+                                    children,
+                                    ...props
+                                  }) => {
+                                    const match = /language-(\w+)/.exec(
+                                      className || ""
+                                    );
+                                    const lang = Prism.languages[match?.[1]];
+                                    return !inline && lang ? (
+                                      <code
+                                        {...props}
+                                        className={className}
+                                        dangerouslySetInnerHTML={{
+                                          __html: Prism.highlight(
+                                            String(children),
+                                            lang
+                                          ),
                                         }}
                                       />
-                                      <ReportIssueOnGitHubLink
-                                        messages={messages}
-                                        currentMessage={message}
-                                      >
-                                        Report an issue with this answer on
-                                        GitHub
-                                      </ReportIssueOnGitHubLink>
-                                    </section>
-                                  </>
+                                    ) : (
+                                      <code {...props} className={className}>
+                                        {children}
+                                      </code>
+                                    );
+                                  },
+                                }}
+                              >
+                                {message.content?.replace(
+                                  SORRY_BACKEND,
+                                  SORRY_FRONTEND
                                 )}
-                            </div>
-                          )}
-                        </div>
+                              </ReactMarkdown>
+                            ) : (
+                              "Retrieving answer…"
+                            )}
+                            {message.status === "complete" &&
+                              !message.content?.includes(SORRY_BACKEND) && (
+                                <>
+                                  {message.sources &&
+                                    message.sources.length > 0 && (
+                                      <>
+                                        <p>
+                                          MDN content that I've consulted that
+                                          you might want to check:
+                                        </p>
+                                        <ul>
+                                          {message.sources.map(
+                                            ({ url, title }, index) => (
+                                              <li key={index}>
+                                                <a href={url}>{title}</a>
+                                              </li>
+                                            )
+                                          )}
+                                        </ul>
+                                      </>
+                                    )}
+                                  <section className="ai-help-feedback">
+                                    <GleanThumbs
+                                      feature="ai-help-answer"
+                                      question={"Was this answer useful?"}
+                                      upLabel={"Yes, this answer was useful."}
+                                      downLabel={
+                                        "No, this answer was not useful."
+                                      }
+                                      permanent={true}
+                                      callback={async (value) => {
+                                        user?.experiments?.active &&
+                                          message.messageId &&
+                                          (await sendFeedback(
+                                            message.messageId,
+                                            value
+                                          ));
+                                      }}
+                                    />
+                                    <ReportIssueOnGitHubLink
+                                      messages={messages}
+                                      currentMessage={message}
+                                    >
+                                      Report an issue with this answer on GitHub
+                                    </ReportIssueOnGitHubLink>
+                                  </section>
+                                </>
+                              )}
+                          </div>
+                        )}
                       </li>
                     );
                   })}
