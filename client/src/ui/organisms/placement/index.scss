@@ -239,7 +239,7 @@ div.empty-place {
 
   > section.place.bottom-banner {
     display: grid;
-    gap: 3rem;
+    column-gap: 3rem;
     grid-template-areas:
       "nope pong note"
       "nope pong no";
@@ -270,6 +270,14 @@ div.empty-place {
       font-size: 0.625rem;
       grid-area: no;
       margin-top: auto;
+    }
+
+    @media screen and (max-width: $screen-xl) {
+      grid-template-areas:
+        "pong note"
+        "pong no";
+      grid-template-columns: auto max-content;
+      grid-template-rows: auto 2rem;
     }
 
     @media screen and (max-width: $screen-lg) {
