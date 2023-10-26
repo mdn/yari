@@ -204,9 +204,7 @@ export function BottomBanner() {
       ["--place-bottom-banner-color", textColor],
     ].filter(([_, v]) => Boolean(v))
   );
-  return !placementData ? (
-    <section className="place bottom-banner"></section>
-  ) : (
+  return placementData ? (
     <PlacementInner
       pong={placementData}
       imageWidth={728}
@@ -215,7 +213,7 @@ export function BottomBanner() {
       renderer={RenderBottomBanner}
       typ="bottom-banner"
     ></PlacementInner>
-  );
+  ) : null;
 }
 
 export function PlacementInner({

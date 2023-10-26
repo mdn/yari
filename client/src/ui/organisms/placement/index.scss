@@ -258,7 +258,7 @@ div.empty-place {
     }
 
     .pong-note {
-      color: var(--place-bottom-banner-color);
+      color: var(--place-bottom-banner-color, var(--text-primary));
       font-size: 0.625rem;
       grid-area: note;
       margin-top: 0.5rem;
@@ -266,7 +266,7 @@ div.empty-place {
     }
 
     .no-pong {
-      color: var(--place-bottom-banner-color);
+      color: var(--place-bottom-banner-color, var(--text-primary));
       font-size: 0.625rem;
       grid-area: no;
       margin-top: auto;
