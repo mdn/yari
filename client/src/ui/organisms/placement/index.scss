@@ -239,10 +239,11 @@ div.empty-place {
 
   > section.place.bottom-banner {
     display: grid;
+    gap: 3rem;
     grid-template-areas:
-      "pong note"
-      "pong no";
-    grid-template-columns: auto minmax(0, 15rem);
+      "nope pong note"
+      "nope pong no";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
     margin: 0 auto;
     max-width: var(--max-width);
     padding: 0 1rem;
