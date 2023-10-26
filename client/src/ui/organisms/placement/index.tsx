@@ -196,7 +196,7 @@ function HpPlacement({
 }
 
 export function BottomBanner() {
-  const placementData = usePlacement()?.hpFooter;
+  const placementData = usePlacement()?.bottom;
   const { backgroundColor, textColor } = placementData?.colors || {};
   const css = Object.fromEntries(
     [
