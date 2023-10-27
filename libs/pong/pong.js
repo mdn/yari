@@ -47,10 +47,10 @@ export function createPongGetHandler(client, coder) {
             return [p, null];
           }
           if (
-            (p === "side") ||
-            (p === "hpMain") ||
-            (p === "hpFooter") ||
-            (p === "bottom")
+            p === "side" ||
+            p === "hpMain" ||
+            p === "hpFooter" ||
+            p === "bottom"
           ) {
             const [{ contents, clickUrl, impressionUrl }] = v;
             const { colors } = contents?.[0]?.data?.customData || {};
