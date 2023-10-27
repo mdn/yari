@@ -1,0 +1,265 @@
+name: XYZ Build
+
+env:
+  DEFAULT_NOTES: ""
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ${DEFAULT_NOTES}
+
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      GCS_BUCKET:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    environment: xyz
+    runs-on: ubuntu-latest-4core
+
+    # Only run the scheduled workflows on the main repo.
+    if: github.repository == 'mdn/yari'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/content
+          path: mdn/content
+          # Yes, this means fetch EVERY COMMIT EVER.
+          # It's probably not sustainable in the far future (e.g. past 2021)
+          # but for now it's good enough. We'll need all the history
+          # so we can figure out each document's last-modified date.
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content
+          path: mdn/translated-content
+          # See matching warning for mdn/content checkout step
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
+
+      - name: Setup Node.js environment
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install all yarn packages
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print information about build
+        run: |
+          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
+      - name: Build everything
+        if: ${{ ! vars.SKIP_BUILD }}
+        env:
+          # Remember, the mdn/content repo got cloned into `pwd` into a
+          # sub-folder called "mdn/content"
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          BASE_URL: "https://developer.allizom.xyz"
+
+          # The default for this environment variable is geared for writers
+          # (aka. local development). Usually defaults are supposed to be for
+          # secure production but this is an exception and default
+          # is not insecure.
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.developer.allizom.xyz
+
+          # Use the stage version of interactive examples.
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+
+          # Now is not the time to worry about flaws.
+          BUILD_FLAW_LEVELS: "*:ignore"
+
+          # This is the Google Analytics account ID for developer.mozilla.org
+          # If it's used on other domains (e.g. stage or dev builds), it's OK
+          # because ultimately Google Analytics will filter it out since the
+          # origin domain isn't what that account expects.
+          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+
+          # This enables the Plus call-to-action banner and the Plus landing page
+          REACT_APP_ENABLE_PLUS: true
+
+          # This adds the ability to sign in (stage only for now)
+          REACT_APP_DISABLE_AUTH: false
+
+          # Use the stage version of interactive examples in react app
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+
+          # Firefox Accounts and SubPlat settings
+          REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
+
+          # No surveys.
+
+          # Telemetry.
+          REACT_APP_GLEAN_CHANNEL: xyz
+          REACT_APP_GLEAN_ENABLED: true
+
+          # Newsletter
+          REACT_APP_NEWSLETTER_ENABLED: false
+
+          # Placement
+          REACT_APP_PLACEMENT_ENABLED: true
+
+        run: |
+
+          # Info about which CONTENT_* environment variables were set and to what.
+          echo "CONTENT_ROOT=$CONTENT_ROOT"
+          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          echo "BLOG_ROOT=$BLOG_ROOT"
+          # Build the ServiceWorker first
+          yarn build:sw
+          yarn build:prepare
+
+          # (July 15, 2021) This is a temporary solution. This should become an
+          # integrated part of 'build:prepare'.
+          # See https://github.com/mdn/yari/issues/4217
+          yarn tool popularities
+
+          yarn tool sync-translated-content
+
+          # Build using one process per locale.
+          # Note: We have 4 cores, but 9 processes is a reasonable number.
+          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+          du -sh client/build
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
+          # Build the blog
+          yarn build:blog
+
+          # Generate whatsdeployed files.
+          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          install_components: "beta"
+
+      - name: Sync build with GCS bucket
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+
+      - name: Generate redirects map
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: cloud-function
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+        run: |
+          npm ci
+          npm run build-redirects
+
+      - name: Deploy Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        run: |-
+          for region in europe-west1 us-west1 asia-east1; do
+            gcloud beta functions deploy mdn-xyz-$region \
+            --gen2 \
+            --runtime=nodejs18 \
+            --region=$region \
+            --source=cloud-function \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point=mdnHandler \
+            --concurrency=100 \
+            --min-instances=1 \
+            --max-instances=100 \
+            --memory=2GB \
+            --timeout=60s \
+            --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
+            --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
+            --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
+            --set-env-vars="SENTRY_ENVIRONMENT=xyz" \
+            --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
+            --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
+            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
+            2>&1 | sed "s/^/[$region] /" &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+      - name: Invalidate CDN
+        if: ${{ github.event.inputs.invalidate }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async

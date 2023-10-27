@@ -46,7 +46,7 @@ const getHTMLPath = (folder: string) => path.join(folder, HTML_FILENAME);
 const getMarkdownPath = (folder: string) =>
   path.join(folder, MARKDOWN_FILENAME);
 
-export function updateWikiHistory(
+export async function updateWikiHistory(
   localeContentRoot: string,
   oldSlug: string,
   newSlug: string | null = null
@@ -81,7 +81,7 @@ export function updateWikiHistory(
       // trailing newline character. So always doing in automation removes
       // the risk of a conflict at the last line from two independent PRs
       // that edit this file.
-      toPrettyJSON(sorted)
+      await toPrettyJSON(sorted)
     );
   }
 }
@@ -146,7 +146,9 @@ export function saveFile(
   const folderPath = path.dirname(filePath);
   fs.mkdirSync(folderPath, { recursive: true });
 
-  const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
+  const combined = `---\n${yaml.dump(saveMetadata, {
+    quotingType: '"',
+  })}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -259,7 +261,7 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     );
   }
   // Use Boolean() because otherwise, `isTranslated` might become `undefined`
-  // rather than an actuall boolean value.
+  // rather than an actual boolean value.
   const isTranslated = Boolean(
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
@@ -353,7 +355,7 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
   };
 });
 
-export function update(url: string, rawBody: string, metadata) {
+export async function update(url: string, rawBody: string, metadata) {
   const folder = urlToFolderPath(url);
   const document = read(folder);
   const locale = document.metadata.locale;
@@ -383,7 +385,7 @@ export function update(url: string, rawBody: string, metadata) {
       frontMatterKeys
     );
     if (isNewSlug) {
-      updateWikiHistory(
+      await updateWikiHistory(
         path.join(root, metadata.locale.toLowerCase()),
         oldSlug,
         newSlug
@@ -400,7 +402,7 @@ export function update(url: string, rawBody: string, metadata) {
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
-      updateWikiHistory(
+      await updateWikiHistory(
         path.join(root, metadata.locale.toLowerCase()),
         oldChildSlug,
         newChildSlug
@@ -541,7 +543,7 @@ export function findChildren(url: string, recursive = false) {
   return childPaths.map((folder) => read(folder));
 }
 
-export function move(
+export async function move(
   oldSlug: string,
   newSlug: string,
   locale: string,
@@ -571,7 +573,7 @@ export function move(
   }
 
   doc.metadata.slug = newSlug;
-  update(oldUrl, doc.rawBody, doc.metadata);
+  await update(oldUrl, doc.rawBody, doc.metadata);
 
   return pairs;
 }
@@ -604,7 +606,7 @@ export function validate(slug: string, locale: string) {
   }
 }
 
-export function remove(
+export async function remove(
   slug: string,
   locale: string,
   { recursive = false, dry = false, redirect = "" } = {}
@@ -637,7 +639,10 @@ export function remove(
   const removed = [];
   for (const { metadata } of children) {
     const slug = metadata.slug;
-    updateWikiHistory(path.join(root, metadata.locale.toLowerCase()), slug);
+    await updateWikiHistory(
+      path.join(root, metadata.locale.toLowerCase()),
+      slug
+    );
     removed.push(buildURL(locale, slug));
   }
 
@@ -654,7 +659,7 @@ export function remove(
     Redirect.remove(locale, [url, ...removed]);
   }
 
-  updateWikiHistory(
+  await updateWikiHistory(
     path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );

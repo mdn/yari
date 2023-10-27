@@ -28,7 +28,7 @@ const ORPHANED = "orphaned";
 
 const DEFAULT_LOCALE_LC = DEFAULT_LOCALE.toLowerCase();
 
-export function syncAllTranslatedContent(locale: string) {
+export async function syncAllTranslatedContent(locale: string) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -56,7 +56,7 @@ export function syncAllTranslatedContent(locale: string) {
 
   for (const f of files) {
     const { conflicting, moved, followed, orphaned, redirect, renamed } =
-      syncTranslatedContent(f, locale);
+      await syncTranslatedContent(f, locale);
     if (conflicting) {
       stats.conflictingDocs += 1;
     }
@@ -101,7 +101,10 @@ function mdOrHtmlExists(folderPath: string) {
   );
 }
 
-export function syncTranslatedContent(inFilePath: string, locale: string) {
+export async function syncTranslatedContent(
+  inFilePath: string,
+  locale: string
+) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -206,7 +209,7 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
 
   const filePath = path.join(folderPath, fileName);
   log.log(`${inFilePath} → ${filePath}`);
-  Document.updateWikiHistory(
+  await Document.updateWikiHistory(
     path.join(CONTENT_TRANSLATED_ROOT, locale.toLowerCase()),
     oldMetadata.slug,
     metadata.slug
@@ -247,13 +250,13 @@ function moveContent(inFileDir: string, outFileDir: string) {
   }
 }
 
-export function syncTranslatedContentForAllLocales() {
+export async function syncTranslatedContentForAllLocales() {
   let moved = 0;
   for (const locale of VALID_LOCALES.keys()) {
     if (locale === DEFAULT_LOCALE_LC) {
       continue;
     }
-    const { movedDocs } = syncAllTranslatedContent(locale);
+    const { movedDocs } = await syncAllTranslatedContent(locale);
     moved += movedDocs;
   }
   return moved;

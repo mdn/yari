@@ -10,10 +10,7 @@ import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 import Maintenance from "../../molecules/maintenance";
-import {
-  TOP_NAV_ALREADY_SUBSCRIBER,
-  TOP_NAV_GET_MDN_PLUS,
-} from "../../../telemetry/constants";
+import { TOP_NAV_LOGIN, TOP_NAV_SIGNUP } from "../../../telemetry/constants";
 
 export const TopNavigationMain = () => {
   const userData = useUserData();
@@ -29,15 +26,11 @@ export const TopNavigationMain = () => {
       {(PLUS_IS_ENABLED &&
         !isServer &&
         userData &&
-        userData.isAuthenticated && (
-          <>
-            <UserMenu />
-          </>
-        )) ||
+        userData.isAuthenticated && <UserMenu />) ||
         (userData?.maintenance && <Maintenance />) || (
           <AuthContainer
-            signInGleanContext={TOP_NAV_ALREADY_SUBSCRIBER}
-            subscribeGleanContext={TOP_NAV_GET_MDN_PLUS}
+            logInGleanContext={TOP_NAV_LOGIN}
+            signUpGleanContext={TOP_NAV_SIGNUP}
           />
         )}
     </>

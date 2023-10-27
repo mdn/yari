@@ -126,12 +126,14 @@ test("content built foo page", () => {
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]')
+    .first()
+    .attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
   // building static assets for Dev or Stage, you don't know what domain is
@@ -176,8 +178,8 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -212,7 +214,7 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
-test("content built zh-CN page for hreflang tag testing", () => {
+test("content built zh-CN page for hreflang tag and copying image testing", () => {
   const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
@@ -232,8 +234,8 @@ test("content built zh-CN page for hreflang tag testing", () => {
   const $ = cheerio.load(html);
   // The built page should not have duplicate hreflang tags,
   // when zh-TW translation is also available.
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -241,6 +243,11 @@ test("content built zh-CN page for hreflang tag testing", () => {
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 测试网页 | MDN"
   );
+
+  // The image should be in the built folder,
+  // even though it's not referenced in the translated content.
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
 });
 
 test("content built zh-TW page with en-US fallback image", () => {
@@ -261,8 +268,8 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -271,8 +278,11 @@ test("content built zh-TW page with en-US fallback image", () => {
     "<foo>: 測試網頁 | MDN"
   );
   expect($("#content img").attr("src")).toBe(
-    "/en-US/docs/Web/Foo/screenshot.png"
+    "/zh-TW/docs/Web/Foo/screenshot.png"
   );
+
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
 });
 
 test("content built French Embeddable page", () => {
@@ -284,7 +294,7 @@ test("content built French Embeddable page", () => {
   expect(doc.flaws.translation_differences).toHaveLength(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
-    "Differences in the important macros (0 in common of 4 possible)"
+    "Differences in the important macros (0 in common of 5 possible)"
   );
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.suggestion).toBeFalsy();
@@ -1354,7 +1364,7 @@ test("img tags without 'src' should not crash", () => {
   expect(doc.flaws).toEqual({});
 });
 
-test("/Web/Embeddable should have 3 valid live samples", () => {
+test("/Web/Embeddable should have 4 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1365,15 +1375,16 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("iframe")).toHaveLength(3);
+  expect($("iframe")).toHaveLength(4);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws).toEqual({});
+  expect(doc.flaws.macros[0].name).toEqual("MacroDeprecatedError");
 
-  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  // Only the transplanted live sample has a file.
+  const builtFiles = fs.readdirSync(path.join(builtFolder, "legacy"));
   expect(
     builtFiles
       .filter((f) => f.includes("_sample_."))
@@ -1381,7 +1392,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
         const startOffset = "_sample_.".length;
         return f.substr(startOffset, f.length - startOffset - ".html".length);
       })
-  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
+  ).toEqual(expect.arrayContaining(["foo"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {

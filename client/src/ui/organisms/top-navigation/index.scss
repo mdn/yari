@@ -26,7 +26,6 @@
   border-bottom: 1px solid var(--border-primary);
   position: relative;
   width: 100%;
-  z-index: $bottom-layer;
 
   .main-menu-toggle {
     > .menu-toggle-icon {
@@ -61,7 +60,6 @@
 
   #menu-toggle:checked ~ & {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    z-index: var(--z-index-top);
 
     .container {
       height: auto;

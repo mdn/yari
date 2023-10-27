@@ -3,79 +3,14 @@ var locale = env.locale;
 var slug = env.slug;
 var baseURL = '/' + locale + '/docs/Mozilla/Add-ons/';
 
-function currentPageIsUnder(root) {
-  rootSlug = 'Mozilla/Add-ons/' + root;
-  if (slug && slug.indexOf(rootSlug) != -1) {
-    return 'open';
-  }
-  return '';
-}
-
 var text = mdn.localStringMap({
   'en-US': {
-    'WebExtensions': 'Browser extensions',
     'WebExtensions#Getting_started': 'Getting started',
-    'WebExtensions/What_are_WebExtensions': 'What are extensions?',
-    'WebExtensions/Your_first_WebExtension': 'Your first extension',
-    'WebExtensions/Your_second_WebExtension': 'Your second extension',
-    'WebExtensions/Anatomy_of_a_WebExtension': 'Anatomy of an extension',
-    'WebExtensions/Examples': 'Example extensions',
-    'WebExtensions/What_next_': 'What next?',
     'WebExtensions#Concepts': 'Concepts',
-    'WebExtensions/Using_the_JavaScript_APIs': 'Using the JavaScript APIs',
-    'WebExtensions/Content_scripts': 'Content scripts',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': 'Match patterns',
-    'WebExtensions/Working_with_files': 'Working with files',
-    'WebExtensions/Internationalization': 'Internationalization',
-    'WebExtensions/Content_Security_Policy': 'Content Security Policy',
-    'WebExtensions/Differences_between_API_implementations': 'Differences between API implementations',
-    'WebExtensions/Chrome_incompatibilities': 'Chrome incompatibilities',
-    'WebExtensions/Native_messaging': 'Native messaging',
     'WebExtensions#User_Interface': 'User interface',
-    'WebExtensions/user_interface': 'User Interface',
-    'WebExtensions/user_interface/Browser_action': 'Toolbar button',
-    'WebExtensions/user_interface/Page_actions': 'Address bar button',
-    'WebExtensions/user_interface/Sidebars': 'Sidebars',
-    'WebExtensions/user_interface/Context_menu_items': 'Context menu items',
-    'WebExtensions/user_interface/Options_pages': 'Options page',
-    'WebExtensions/user_interface/Extension_pages': 'Extension pages',
-    'WebExtensions/user_interface/Notifications': 'Notifications',
-    'WebExtensions/user_interface/Omnibox': 'Address bar suggestions',
-    'WebExtensions/user_interface/devtools_panels': 'Developer tools panels',
     'WebExtensions#How_to': 'How to',
-    'WebExtensions/Intercept_HTTP_requests': 'Intercept HTTP requests',
-    'WebExtensions/Modify_a_web_page': 'Modify a web page',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': 'Insert external content',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Share objects with page scripts',
-    'WebExtensions/Add_a_button_to_the_toolbar': 'Add a button to the toolbar',
-    'WebExtensions/Implement_a_settings_page': 'Implement a settings page',
-    'WebExtensions/Working_with_the_Tabs_API': 'Work with the Tabs API',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Work with the Bookmarks API',
-    'WebExtensions/Work_with_the_Cookies_API': 'Work with the Cookies API',
-    'WebExtensions/Work_with_contextual_identities': 'Work with contextual identities',
-    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
-    'WebExtensions/Extending_the_developer_tools': 'Extending the developer tools',
-    'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
-    'WebExtensions/Firefox_differentiators': 'Firefox differentiators',
-    'WebExtensions#Firefox_workflow': 'Firefox workflow',
-    'WebExtensions/Development_Tools': 'Developer tools',
-    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Choose a Firefox version',
-    'WebExtensions/User_experience_best_practices': 'User Experience',
-    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Prompt users for data and privacy consents',
-    'WebExtensions/Temporary_Installation_in_Firefox': 'Temporary Installation in Firefox',
-    'WebExtensions/Debugging': 'Debugging',
-    'WebExtensions/Testing_persistent_and_restart_features': 'Testing persistent and restart features',
-    'WebExtensions/Test_permission_requests': 'Test permission requests',
-    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Developing for Firefox for Android',
-    'WebExtensions/Getting_started_with_web-ext': 'Getting started with web-ext',
-    'WebExtensions/web-ext_command_reference': 'web-ext command reference',
-    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Extensions and the Add-on ID',
-    'WebExtensions/Request_the_right_permissions': 'Request the right permissions',
-    'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
-    'WebExtensions/API': 'JavaScript APIs',
-    'WebExtensions/manifest.json': 'Manifest keys',
-    'WebExtensions/manifest.json_intro': 'Introduction',
+    'WebExtensions#API': 'JavaScript APIs',
+    'WebExtensions#manifest.json': 'Manifest keys',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -85,72 +20,14 @@ var text = mdn.localStringMap({
     'Blog': 'Add-ons blog',
     'Forums': 'Add-ons forum',
     'Chat': 'Add-ons chat',
-    'Contact_us': 'Contact us'
   },
   'fr': {
-    'WebExtensions': 'WebExtensions',
     'WebExtensions#Getting_started': 'Commencer',
-    'WebExtensions/What_are_WebExtensions': 'Que sont les WebExtensions\xa0?',
-    'WebExtensions/Your_first_WebExtension': 'Votre première WebExtension',
-    'WebExtensions/Your_second_WebExtension': 'Votre deuxième WebExtension',
-    'WebExtensions/Anatomy_of_a_WebExtension': 'Anatomie d\'une WebExtension',
-    'WebExtensions/Examples': 'Exemples de WebExtensions',
-    'WebExtensions/What_next_': 'Que faire ensuite\xa0?',
     'WebExtensions#Concepts': 'Concepts',
-    'WebExtensions/Using_the_JavaScript_APIs': 'Utilisation des API JavaScript',
-    'WebExtensions/Content_scripts': 'Scripts de contenu',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': 'Motifs de correspondance',
-    'WebExtensions/Working_with_files': 'Travailler avec les fichiers',
-    'WebExtensions/Internationalization': 'Internationalisation',
-    'WebExtensions/Content_Security_Policy': 'Politique de sécurité du contenu',
-    'WebExtensions/Differences_between_API_implementations': 'Différences entre les implémentations de l\'API',
-    'WebExtensions/Chrome_incompatibilities': 'Incompatibilités avec Chrome',
-    'WebExtensions/Native_messaging': 'Messages natifs',
     'WebExtensions#User_Interface': 'Interface utilisateur',
-    'WebExtensions/user_interface': 'Interface utilisateur',
-    'WebExtensions/user_interface/Browser_action': 'Bouton de la barre d\'outils',
-    'WebExtensions/user_interface/Page_actions': 'Bouton de la barre d\'adresse',
-    'WebExtensions/user_interface/Sidebars': 'Barres latérales',
-    'WebExtensions/user_interface/Context_menu_items': 'Éléments du menu contextuel',
-    'WebExtensions/user_interface/Options_pages': 'Page d\'options',
-    'WebExtensions/user_interface/Extension_pages': 'Pages pour l\'extension',
-    'WebExtensions/user_interface/Notifications': 'Notifications',
-    'WebExtensions/user_interface/Omnibox': 'Suggestions de la barre d\'adresse',
-    'WebExtensions/user_interface/devtools_panels': 'Panneaux d\'outils de développement',
     'WebExtensions#How_to': 'Mode d\'emploi',
-    'WebExtensions/Intercept_HTTP_requests': 'Intercepter les requêtes HTTP',
-    'WebExtensions/Modify_a_web_page': 'Modifier une page web',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': 'Insérer un contenu externe',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Partager des objets avec des scripts de page',
-    'WebExtensions/Add_a_button_to_the_toolbar': 'Ajouter un bouton à la barre d\'outils',
-    'WebExtensions/Implement_a_settings_page': 'Mettre en place une page de paramètres',
-    'WebExtensions/Working_with_the_Tabs_API': 'Travailler avec l\'API Tabs',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Travailler avec l\'API Bookmarks',
-    'WebExtensions/Work_with_the_Cookies_API': 'Travailler avec l\'API Cookies',
-    'WebExtensions/Work_with_contextual_identities': 'Travailler avec des identités contextuelles',
-    'WebExtensions/Interact_with_the_clipboard': 'Interagir avec le presse-papier',
-    'WebExtensions/Extending_the_developer_tools': 'Extension des outils de développement',
-    'WebExtensions/Build_a_cross_browser_extension': 'Construire une extension pour les différents navigateurs',
-    'WebExtensions/Firefox_differentiators': 'Différences de Firefox',
-    'WebExtensions#Firefox_workflow': 'Procédé de production avec Firefox',
-    'WebExtensions/Development_Tools': 'Outils de développement',
-    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Choisir une version de Firefox',
-    'WebExtensions/User_experience_best_practices': 'Ergonomie\xa0: bonnes pratiques',
-    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Demande du consentement pour les données et la vie privée',
-    'WebExtensions/Temporary_Installation_in_Firefox': 'Installation temporaire dans Firefox',
-    'WebExtensions/Debugging': 'Débogage',
-    'WebExtensions/Testing_persistent_and_restart_features': 'Test des fonctionnalités persistantes et de redémarrage',
-    'WebExtensions/Test_permission_requests': 'Tester les demandes de permission',
-    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Écrire des extensions pour Firefox sur Android',
-    'WebExtensions/Getting_started_with_web-ext': 'Démarrer avec web-ext',
-    'WebExtensions/web-ext_command_reference': 'Référence de la commande web-ext',
-    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Les WebExtensions et l\'identifiant Add-on',
-    'WebExtensions/Request_the_right_permissions': 'Demander les bonnes permissions',
-    'WebExtensions/Best_practices_for_updating_your_extension': 'Bonnes pratiques pour la mise à jour de votre extension',
-    'WebExtensions/API': 'Les API JavaScript',
-    'WebExtensions/manifest.json': 'Clés de manifeste',
-    'WebExtensions/manifest.json_intro': 'Introduction',
+    'WebExtensions#API': 'Les API JavaScript',
+    'WebExtensions#manifest.json': 'Clés de manifeste',
     'extension_workshop': 'Atelier des extensions',
     'extension_workshop_develop': 'Développer',
     'extension_workshop_publish': 'Publier',
@@ -160,71 +37,14 @@ var text = mdn.localStringMap({
     'Blog': 'Blog sur les extensions',
     'Forums': 'Forum sur les extensions',
     'Chat': 'Discussion sur les extensions',
-    'Contact_us': 'Nous contacter'
   },
   'ja': {
-    'WebExtensions': 'ブラウザー拡張機能',
     'WebExtensions#Getting_started': '始めましょう',
-    'WebExtensions/What_are_WebExtensions': '拡張機能とは何か?',
-    'WebExtensions/Your_first_WebExtension': '初めての拡張機能',
-    'WebExtensions/Your_second_WebExtension': '2つめの拡張機能',
-    'WebExtensions/Anatomy_of_a_WebExtension': '拡張機能の中身',
-    'WebExtensions/Examples': '拡張機能の例',
-    'WebExtensions/What_next_': '次にどうするのか？',
     'WebExtensions#Concepts': '概念',
-    'WebExtensions/Using_the_JavaScript_APIs': 'JavaScript API 群の利用',
-    'WebExtensions/Content_scripts': 'コンテンツスクリプト',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': 'マッチパターン',
-    'WebExtensions/Working_with_files': 'ファイルの操作',
-    'WebExtensions/Internationalization': '多言語対応',
-    'WebExtensions/Content_Security_Policy': 'Content Security Policy',
-    'WebExtensions/Native_messaging': 'Native messaging',
-    'WebExtensions/Chrome_incompatibilities': 'Chrome との非互換性',
-    'WebExtensions/Differences_between_desktop_and_Android': 'デスクトップと Android の差',
     'WebExtensions#User_Interface': 'ユーザーインターフェイス',
-    'WebExtensions/user_interface': 'ユーザーインターフェイス',
-    'WebExtensions/user_interface/Browser_action': 'ブラウザーツールバーボタン',
-    'WebExtensions/user_interface/Page_actions': 'アドレスバーボタン',
-    'WebExtensions/user_interface/Sidebars': 'サイドバー',
-    'WebExtensions/user_interface/Context_menu_items': 'コンテキストメニュー項目',
-    'WebExtensions/user_interface/Options_pages': 'オプションページ',
-    'WebExtensions/user_interface/Extension_pages': 'ページ拡張',
-    'WebExtensions/user_interface/Notifications': '通知',
-    'WebExtensions/user_interface/Omnibox': 'Address bar suggestions',
-    'WebExtensions/user_interface/devtools_panels': '開発ツールパネル',
     'WebExtensions#How_to': '逆引きリファレンス',
-    'WebExtensions/Intercept_HTTP_requests': 'HTTP リクエストへの介入',
-    'WebExtensions/Modify_a_web_page': 'web ページの変更',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': '外部コンテンツの挿入',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Share objects with page scripts',
-    'WebExtensions/Add_a_button_to_the_toolbar': 'ツールバーボタンの追加',
-    'WebExtensions/Implement_a_settings_page': '設定画面の実装',
-    'WebExtensions/Working_with_the_Tabs_API': 'Tabs API 群の使い方',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Bookmark API 群の使い方',
-    'WebExtensions/Work_with_the_Cookies_API': 'Cookie API 群の使い方',
-    'WebExtensions/Work_with_contextual_identities': 'contextual identities の使い方',
-    'WebExtensions/Interact_with_the_clipboard': 'クリップボードとのやりとり',
-    'WebExtensions/Extending_the_developer_tools': 'developer tools の拡張',
-    'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
-    'WebExtensions/Firefox_differentiators': 'Firefox differentiators',
-    'WebExtensions#Firefox_workflow': 'Firefox でのワークフロー',
-    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Choose a Firefox version',
-    'WebExtensions/User_experience_best_practices': 'ユーザー体験の成功事例',
-    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Prompt users for data and privacy consents',
-    'WebExtensions/Temporary_Installation_in_Firefox': 'Firefox への一時的なインストール',
-    'WebExtensions/Debugging': 'デバッグ',
-    'WebExtensions/Testing_persistent_and_restart_features': 'テストの持続と再起動機能',
-    'WebExtensions/Test_permission_requests': 'Test permission requests',
-    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Firefox for Android の拡張機能開発',
-    'WebExtensions/Getting_started_with_web-ext': 'web-ext を使って始めよう',
-    'WebExtensions/web-ext_command_reference': 'web-ext コマンドリファレンス',
-    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Extensions と Add-on ID',
-    'WebExtensions/Request_the_right_permissions': '正しいパーミッションを要求する',
-    'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
-    'WebExtensions/API': 'JavaScript API 群',
-    'WebExtensions/manifest.json': 'Manifest keys',
-    'WebExtensions/manifest.json_intro': '序章',
+    'WebExtensions#API': 'JavaScript APIs',
+    'WebExtensions#manifest.json': 'Manifest keys',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -234,57 +54,14 @@ var text = mdn.localStringMap({
     'Blog': 'ブログ',
     'Forums': 'フォーラム',
     'Chat': 'Add-ons chat',
-    'Contact_us': 'コンタクト'
   },
   'ko': {
-    'WebExtensions': '브라우저 확장 기능',
     'WebExtensions#Getting_started': '시작하기',
-    'WebExtensions/What_are_WebExtensions': '확장 기능이 무엇인가요?',
-    'WebExtensions/Your_first_WebExtension': '첫 번째 확장 기능',
-    'WebExtensions/Your_second_WebExtension': '두 번째 확장 기능',
-    'WebExtensions/Anatomy_of_a_WebExtension': '확장 기능의 구조',
-    'WebExtensions/Examples': '확장 기능 예시',
-    'WebExtensions/What_next_': '다음은 무엇인가요?',
     'WebExtensions#Concepts': '개념',
-    'WebExtensions/Using_the_JavaScript_APIs': 'JavaScript API 사용하기',
-    'WebExtensions/Content_scripts': '컨텐츠 스크립트',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': '일치 패턴',
-    'WebExtensions/Working_with_files': '파일 작업',
-    'WebExtensions/Internationalization': '국제화',
-    'WebExtensions/Content_Security_Policy': '컨텐츠 보안 정책',
-    'WebExtensions/Native_messaging': '네이티브 메시징',
-    'WebExtensions/Differences_between_API_implementations': 'API 구현간의 차이점',
-    'WebExtensions/Chrome_incompatibilities': 'Chrome 비호환성',
     'WebExtensions#User_Interface': '사용자 인터페이스',
-    'WebExtensions/user_interface': '사용자 인터페이스',
-    'WebExtensions/user_interface/Browser_action': '도구 모음 버튼',
-    'WebExtensions/user_interface/Page_actions': '주소 표시줄 버튼',
-    'WebExtensions/user_interface/Sidebars': '사이드바',
-    'WebExtensions/user_interface/Context_menu_items': '컨텍스트 메뉴 항목',
-    'WebExtensions/user_interface/Options_pages': '옵션 페이지',
-    'WebExtensions/user_interface/Extension_pages': '확장 기능 페이지',
-    'WebExtensions/user_interface/Notifications': '알림',
-    'WebExtensions/user_interface/Omnibox': '주소 표시줄 제안',
-    'WebExtensions/user_interface/devtools_panels': '개발자 도구 패널',
     'WebExtensions#How_to': '방법',
-    'WebExtensions/Intercept_HTTP_requests': 'HTTP 요청 가로채기',
-    'WebExtensions/Modify_a_web_page': '웹 페이지 수정하기',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': '외부 컨텐츠 삽입하기',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Share objects with page scripts',
-    'WebExtensions/Add_a_button_to_the_toolbar': '도구 모음에 버튼 추가하기',
-    'WebExtensions/Implement_a_settings_page': '설정 페이지 구현하기',
-    'WebExtensions/Working_with_the_Tabs_API': 'Tabs API 사용하기',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Bookmarks API 사용하기',
-    'WebExtensions/Work_with_the_Cookies_API': 'Cookies API 사용하기',
-    'WebExtensions/Work_with_contextual_identities': 'contextual identities 사용하기',
-    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
-    'WebExtensions/Extending_the_developer_tools': 'Extending the developer tools',
-    'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
-    'WebExtensions/Firefox_differentiators': 'Firefox의 차별화',
-    'WebExtensions/API': 'JavaScript APIs',
-    'WebExtensions/manifest.json': 'Manifest 키',
-    'WebExtensions/manifest.json_intro': '소개',
+    'WebExtensions#API': 'JavaScript APIs',
+    'WebExtensions#manifest.json': 'Manifest 키',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -294,58 +71,14 @@ var text = mdn.localStringMap({
     'Blog': '부가 기능 블로그',
     'Forums': '부가 기능 포럼',
     'Chat': 'Add-ons chat',
-    'Contact_us': '연락하기'
   },
   'zh-CN': {
-    'WebExtensions': '浏览器扩展程序',
     'WebExtensions#Getting_started': '开始',
-    'WebExtensions/What_are_WebExtensions': '什么是扩展程序?',
-    'WebExtensions/Your_first_WebExtension': '你的第一个扩展程序',
-    'WebExtensions/Your_second_WebExtension': '你的第二个扩展程序',
-    'WebExtensions/Anatomy_of_a_WebExtension': '详解扩展程序',
-    'WebExtensions/Examples': '扩展程序示例',
-    'WebExtensions/What_next_': '接下来呢?',
     'WebExtensions#Concepts': '概念',
-    'WebExtensions/Using_the_JavaScript_APIs': '使用 JavaScript APIs',
-    'WebExtensions/Content_scripts': 'Content scripts',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': '匹配样式',
-    'WebExtensions/Working_with_files': '处理文件',
-    'WebExtensions/Internationalization': '国际化',
-    'WebExtensions/Content_Security_Policy': '内容安全举措',
-    'WebExtensions/Native_messaging': '本地消息',
-    'WebExtensions/Differences_between_API_implementations': 'API实现之间的差异',
-    'WebExtensions/Chrome_incompatibilities': 'Chrome不兼容',
     'WebExtensions#User_Interface': '用户界面',
-    'WebExtensions/user_interface': '用户界面',
-    'WebExtensions/user_interface/Browser_action': '工具栏按钮',
-    'WebExtensions/user_interface/Page_actions': '地址栏按钮',
-    'WebExtensions/user_interface/Sidebars': '侧边栏',
-    'WebExtensions/user_interface/Context_menu_items': '上下文菜单项',
-    'WebExtensions/user_interface/Options_pages': '选项页面',
-    'WebExtensions/user_interface/Extension_pages': '扩展页面',
-    'WebExtensions/user_interface/Notifications': '通知',
-    'WebExtensions/user_interface/Omnibox': '地址栏建议',
-    'WebExtensions/user_interface/devtools_panels': '开发人员工具面板',
     'WebExtensions#How_to': '怎么做',
-    'WebExtensions/Intercept_HTTP_requests': '拦截HTTP 请求',
-    'WebExtensions/Modify_a_web_page': '修改网页',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': '插入外部内容',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Share objects with page scripts',
-    'WebExtensions/Add_a_button_to_the_toolbar': '向工具栏添加按钮',
-    'WebExtensions/Implement_a_settings_page': '应用设置页面',
-    'WebExtensions/Working_with_the_Tabs_API': '使用Tabs API',
-    'WebExtensions/Work_with_the_Bookmarks_API': '使用Bookmarks API',
-    'WebExtensions/Work_with_the_Cookies_API': '使用Cookies API',
-    'WebExtensions/Work_with_contextual_identities': '使用上下文身份',
-    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
-    'WebExtensions/Extending_the_developer_tools': '扩展开发人员工具',
-    'WebExtensions/Build_a_cross_browser_extension': '构建跨浏览器扩展',
-    'WebExtensions#Porting': '移植',
-    'WebExtensions/Firefox_differentiators': 'Firefox的优势',
-    'WebExtensions/API': 'JavaScript APIs',
-    'WebExtensions/manifest.json': 'Manifest keys',
-    'WebExtensions/manifest.json_intro': '介绍',
+    'WebExtensions#API': 'JavaScript APIs',
+    'WebExtensions#manifest.json': 'Manifest keys',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -355,72 +88,14 @@ var text = mdn.localStringMap({
     'Blog': 'Add-ons博客',
     'Forums': 'Add-ons论坛',
     'Chat': 'Add-ons chat',
-    'Contact_us': '联系我们'
   },
   'pt-BR': {
-    'WebExtensions': 'Extensões do navegador',
     'WebExtensions#Getting_started': 'Começando',
-    'WebExtensions/What_are_WebExtensions': 'O que são extensões',
-    'WebExtensions/Your_first_WebExtension': 'Sua primeira extensão',
-    'WebExtensions/Your_second_WebExtension': 'Sua segunda extensão',
-    'WebExtensions/Anatomy_of_a_WebExtension': 'Anotomia de uma extensão',
-    'WebExtensions/Examples': 'Extensões de exemplo',
-    'WebExtensions/What_next_': 'Qual o proximo?',
     'WebExtensions#Concepts': 'Conceitos',
-    'WebExtensions/Using_the_JavaScript_APIs': 'Usando as APIs Javascript',
-    'WebExtensions/Content_scripts': 'Scripts de conteúdo',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': 'Padrões de correspondência',
-    'WebExtensions/Working_with_files': 'Trabalhando com arquivos',
-    'WebExtensions/Internationalization': 'Internacionalização',
-    'WebExtensions/Content_Security_Policy': 'Política de Segurança de Conteúdo',
-    'WebExtensions/Differences_between_API_implementations': 'Diferenças entre implementações de API',
-    'WebExtensions/Chrome_incompatibilities': 'Incompatibilidades do Chrome',
-    'WebExtensions/Native_messaging': 'Menssagens nativas',
     'WebExtensions#User_Interface': 'Interface de usuário',
-    'WebExtensions/user_interface': 'Interface de usuário',
-    'WebExtensions/user_interface/Browser_action': 'Botão da barra de ferramentas',
-    'WebExtensions/user_interface/Page_actions': 'Botão da barra de endereços',
-    'WebExtensions/user_interface/Sidebars': 'Barras Laterais',
-    'WebExtensions/user_interface/Context_menu_items': 'Itens do menu de contexto',
-    'WebExtensions/user_interface/Options_pages': 'Página de opções',
-    'WebExtensions/user_interface/Extension_pages': 'Páginas de extensão',
-    'WebExtensions/user_interface/Notifications': 'Notificações',
-    'WebExtensions/user_interface/Omnibox': 'Sugestões da barra de endereço',
-    'WebExtensions/user_interface/devtools_panels': 'Painéis de ferramentas do desenvolvedor',
     'WebExtensions#How_to': 'Como',
-    'WebExtensions/Intercept_HTTP_requests': 'Interceptar solicitações HTTP',
-    'WebExtensions/Modify_a_web_page': 'Modificar uma página da web',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': 'Insira conteúdo externo',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Compartilhe objetos com scripts da página',
-    'WebExtensions/Add_a_button_to_the_toolbar': 'Adicionar um botão à barra de ferramentas',
-    'WebExtensions/Implement_a_settings_page': 'Implementar uma página de configurações',
-    'WebExtensions/Working_with_the_Tabs_API': 'Trabalhe com a API Tabs',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Trabalhar com a API Bookmarks',
-    'WebExtensions/Work_with_the_Cookies_API': 'Trabalhe com a API de Cookies',
-    'WebExtensions/Work_with_contextual_identities': 'Trabalhe com identidades contextuais',
-    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
-    'WebExtensions/Extending_the_developer_tools': 'Extending the developer tools',
-    'WebExtensions/Build_a_cross_browser_extension': 'Crie uma extensão para vários navegadores',
-    'WebExtensions/Firefox_differentiators': 'Diferenciadores do Firefox',
-    'WebExtensions#Firefox_workflow': 'Fluxo de trabalho do Firefox',
-    'WebExtensions/Development_Tools': 'Ferramentas de desenvolvimento',
-    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Escolha uma versão do Firefox',
-    'WebExtensions/User_experience_best_practices': 'Experiência de usuário',
-    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Solicitar aos usuários dados e consentimentos de privacidade',
-    'WebExtensions/Temporary_Installation_in_Firefox': 'Instalação Temporária no Firefox',
-    'WebExtensions/Debugging': 'Debugging',
-    'WebExtensions/Testing_persistent_and_restart_features': 'Testando recursos persistentes e de reinicialização',
-    'WebExtensions/Test_permission_requests': 'Solicitações de permissão de teste',
-    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Desenvolvendo para Firefox para Android',
-    'WebExtensions/Getting_started_with_web-ext': 'Introdução ao web-ext',
-    'WebExtensions/web-ext_command_reference': 'Referência de comando web-ext',
-    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Extensões e o ID do complemento',
-    'WebExtensions/Request_the_right_permissions': 'Solicite as permissões corretas',
-    'WebExtensions/Best_practices_for_updating_your_extension': 'Práticas recomendadas para atualizar sua extensão',
-    'WebExtensions/API': 'APIs JavaScript',
-    'WebExtensions/manifest.json': 'Chaves Manifest',
-    'WebExtensions/manifest.json_intro': 'Introdução',
+    'WebExtensions#API': 'APIs JavaScript',
+    'WebExtensions#manifest.json': 'Chaves Manifest',
     'extension_workshop': 'Workshop de extensões',
     'extension_workshop_develop': 'Desenvolver',
     'extension_workshop_publish': 'Publicar',
@@ -430,72 +105,14 @@ var text = mdn.localStringMap({
     'Blog': 'Blog de complementos',
     'Forums': 'Fóruns complementares',
     'Chat': 'Add-ons chat',
-    'Contact_us': 'Contate-Nos'
   },
   'es': {
-    'WebExtensions': 'Extensiónes del navegador',
     'WebExtensions#Getting_started': 'Comenzar',
-    'WebExtensions/What_are_WebExtensions': '¿Qué son las extensiones?',
-    'WebExtensions/Your_first_WebExtension': 'Tu primera extensión',
-    'WebExtensions/Your_second_WebExtension': 'Tu segunda extensión',
-    'WebExtensions/Anatomy_of_a_WebExtension': 'Anatomía de una extensión',
-    'WebExtensions/Examples': 'Extensiones de ejemplo',
-    'WebExtensions/What_next_': '¿Qué sigue?',
     'WebExtensions#Concepts': 'Conceptos',
-    'WebExtensions/Using_the_JavaScript_APIs': 'Uso de las API de JavaScript',
-    'WebExtensions/Content_scripts': 'Guiones de contenido',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': 'Patrones de coincidencia',
-    'WebExtensions/Working_with_files': 'Trabajar con archivos',
-    'WebExtensions/Internationalization': 'Internacionalización',
-    'WebExtensions/Content_Security_Policy': 'Política de seguridad de contenido',
-    'WebExtensions/Differences_between_API_implementations': 'Diferencias entre implementaciones de API',
-    'WebExtensions/Chrome_incompatibilities': 'Incompatibilidades de Chrome',
-    'WebExtensions/Native_messaging': 'Mensajería nativa',
     'WebExtensions#User_Interface': 'Interfaz de usuario',
-    'WebExtensions/user_interface': 'Interfaz de usuario',
-    'WebExtensions/user_interface/Browser_action': 'Botón de la barra de herramientas',
-    'WebExtensions/user_interface/Page_actions': 'Botón de la barra de direcciones',
-    'WebExtensions/user_interface/Sidebars': 'Barras laterales',
-    'WebExtensions/user_interface/Context_menu_items': 'Elementos del menú contextual',
-    'WebExtensions/user_interface/Options_pages': 'Página de opciones',
-    'WebExtensions/user_interface/Extension_pages': 'Páginas de extensión',
-    'WebExtensions/user_interface/Notifications': 'Notificaciones',
-    'WebExtensions/user_interface/Omnibox': 'Sugerencias de la barra de direcciones',
-    'WebExtensions/user_interface/devtools_panels': 'Paneles de herramientas para desarrolladores',
     'WebExtensions#How_to': 'Cómo hacer',
-    'WebExtensions/Intercept_HTTP_requests': 'Interceptar solicitudes HTTP',
-    'WebExtensions/Modify_a_web_page': 'Modificar una página web',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': 'Insertar contenido externo',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Comparta objetos con scripts de página',
-    'WebExtensions/Add_a_button_to_the_toolbar': 'Agregar un botón a la barra de herramientas',
-    'WebExtensions/Implement_a_settings_page': 'Implementar una página de configuración',
-    'WebExtensions/Working_with_the_Tabs_API': 'Trabajar con la API de pestañas',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Trabajar con la API de marcadores',
-    'WebExtensions/Work_with_the_Cookies_API': 'Trabajar con la API de Cookies',
-    'WebExtensions/Work_with_contextual_identities': 'Trabajar con identidades contextuales',
-    'WebExtensions/Interact_with_the_clipboard': 'Interactuar con el portapapeles',
-    'WebExtensions/Extending_the_developer_tools': 'Extending the developer tools',
-    'WebExtensions/Build_a_cross_browser_extension': 'Cree una extensión multinavegador',
-    'WebExtensions/Firefox_differentiators': 'Diferenciadores de Firefox',
-    'WebExtensions#Firefox_workflow': 'Flujo de trabajo de Firefox',
-    'WebExtensions/Development_Tools': 'Herramientas de desarrollo',
-    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Elige una versión de Firefox',
-    'WebExtensions/User_experience_best_practices': 'Experiencia de usuario',
-    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Solicitar a los usuarios los consentimientos de datos y privacidad',
-    'WebExtensions/Temporary_Installation_in_Firefox': 'Instalación Temporal en Firefox',
-    'WebExtensions/Debugging': 'Depuración',
-    'WebExtensions/Testing_persistent_and_restart_features': 'Prueba de funciones persistentes y de reinicio',
-    'WebExtensions/Test_permission_requests': 'Probar solicitudes de permiso',
-    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Desarrollo para Firefox para Android',
-    'WebExtensions/Getting_started_with_web-ext': 'Introducción a la extensión web',
-    'WebExtensions/web-ext_command_reference': 'Referencia de comando para la extensión web',
-    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Extensiones y el complemento del ID',
-    'WebExtensions/Request_the_right_permissions': 'Solicitar los permisos adecuados',
-    'WebExtensions/Best_practices_for_updating_your_extension': 'Mejores prácticas para actualizar su extensión',
-    'WebExtensions/API': 'API de JavaScript',
-    'WebExtensions/manifest.json': 'Claves de manifiesto',
-    'WebExtensions/manifest.json_intro': 'Introducción',
+    'WebExtensions#API': 'API de JavaScript',
+    'WebExtensions#manifest.json': 'Claves de manifiesto',
     'extension_workshop': 'Taller de Extensión',
     'extension_workshop_develop': 'Desarrollar',
     'extension_workshop_publish': 'Publish',
@@ -505,72 +122,15 @@ var text = mdn.localStringMap({
     'Blog': 'Blog de complementos',
     'Forums': 'Foro de complementos',
     'Chat': 'Chat de complementos',
-    'Contact_us': 'Contáctenos',
   },
   'ru': {
-    'WebExtensions': 'Расширения браузера',
     'WebExtensions#Getting_started': 'Начало работы',
-    'WebExtensions/What_are_WebExtensions': 'Что такое расширение?',
-    'WebExtensions/Your_first_WebExtension': 'Ваше первое расширение',
-    'WebExtensions/Your_second_WebExtension': 'Ваше второе расширение',
-    'WebExtensions/Anatomy_of_a_WebExtension': 'Анатомия расширения',
-    'WebExtensions/Examples': 'Примеры расширений',
-    'WebExtensions/What_next_': 'Что дальше?',
     'WebExtensions#Concepts': 'Основные понятия',
-    'WebExtensions/Using_the_JavaScript_APIs': 'Использование JavaScript API',
-    'WebExtensions/Content_scripts': 'Встраиваемый скрипт',
-    'WebExtensions/Background_scripts': 'Background scripts',
-    'WebExtensions/Match_patterns': 'Шаблоны совпадения в расширении',
-    'WebExtensions/Working_with_files': 'Работа с файлами',
-    'WebExtensions/Internationalization': 'Интернационализация',
-    'WebExtensions/Content_Security_Policy': 'Политика защиты содержимого',
-    'WebExtensions/Differences_between_API_implementations': 'Различия между реализациями API',
-    'WebExtensions/Chrome_incompatibilities': 'Несовместимости c Chrome',
-    'WebExtensions/Native_messaging': 'Нативный обмен сообщениями',
     'WebExtensions#User_Interface': 'Пользовательский интерфейс',
-    'WebExtensions/user_interface': 'Пользовательский интерфейс',
-    'WebExtensions/user_interface/Browser_action': 'Кнопка в панели инструментов',
-    'WebExtensions/user_interface/Page_actions': 'Кнопка в адресной строке',
-    'WebExtensions/user_interface/Sidebars': 'Боковые панели',
-    'WebExtensions/user_interface/Context_menu_items': 'Контекстное меню',
-    'WebExtensions/user_interface/Options_pages': 'Страница настройки дополнения',
-    'WebExtensions/user_interface/Extension_pages': 'Страницы расширения',
-    'WebExtensions/user_interface/Notifications': 'Уведомления',
-    'WebExtensions/user_interface/Omnibox': 'Адресная строка',
-    'WebExtensions/user_interface/devtools_panels': 'Панели инструмента разработчика',
     'WebExtensions#How_to': 'How to',
-    'WebExtensions/Intercept_HTTP_requests': 'Перехват HTTP-запросов',
-    'WebExtensions/Modify_a_web_page': 'Модификация веб страницы',
-    'WebExtensions/Safely_inserting_external_content_into_a_page': 'Вставка внешнего содержимого',
-    'WebExtensions/Sharing_objects_with_page_scripts': 'Общий доступ к объектам с помощью скриптов страниц',
-    'WebExtensions/Add_a_button_to_the_toolbar': 'Добавить кнопку на панель инструментов',
-    'WebExtensions/Implement_a_settings_page': 'Реализация страницы настроек',
-    'WebExtensions/Working_with_the_Tabs_API': 'Работа с вкладками браузера',
-    'WebExtensions/Work_with_the_Bookmarks_API': 'Доступ и изменение закладок',
-    'WebExtensions/Work_with_the_Cookies_API': 'Доступ и изменение куки (cookies)',
-    'WebExtensions/Work_with_contextual_identities': 'Work with contextual identities',
-    'WebExtensions/Interact_with_the_clipboard': 'Работа с буфером обмена',
-    'WebExtensions/Extending_the_developer_tools': 'Extending the developer tools',
-    'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
-    'WebExtensions/Firefox_differentiators': 'Firefox differentiators',
     'WebExtensions#Firefox_workflow': 'Firefox workflow',
-    'WebExtensions/Development_Tools': 'Developer tools',
-    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Choose a Firefox version',
-    'WebExtensions/User_experience_best_practices': 'User Experience',
-    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Prompt users for data and privacy consents',
-    'WebExtensions/Temporary_Installation_in_Firefox': 'Temporary Installation in Firefox',
-    'WebExtensions/Debugging': 'Debugging',
-    'WebExtensions/Testing_persistent_and_restart_features': 'Testing persistent and restart features',
-    'WebExtensions/Test_permission_requests': 'Test permission requests',
-    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Developing for Firefox for Android',
-    'WebExtensions/Getting_started_with_web-ext': 'Getting started with web-ext',
-    'WebExtensions/web-ext_command_reference': 'web-ext command reference',
-    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Extensions and the Add-on ID',
-    'WebExtensions/Request_the_right_permissions': 'Request the right permissions',
-    'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
-    'WebExtensions/API': 'Обзор JavaScript API',
-    'WebExtensions/manifest.json': 'Manifest keys',
-    'WebExtensions/manifest.json_intro': 'Введение',
+    'WebExtensions#API': 'Обзор JavaScript API',
+    'WebExtensions#manifest.json': 'Manifest keys',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -580,101 +140,140 @@ var text = mdn.localStringMap({
     'Blog': 'Add-ons blog',
     'Forums': 'Add-ons forum',
     'Chat': 'Add-ons chat',
-    'Contact_us': 'Contact us'
   },
 });
+
+async function renderRootItem(slug) {
+  const [link, title] = await getPageLinkAndTitle(slug);
+
+  return `<li><a href="${link}"><strong>${title}</strong></a></li>`
+}
+
+async function renderItems(slugs) {
+  return (await Promise.all(slugs.map(renderItem))).join("\n");
+}
+
+async function renderItem(slug) {
+  const [link, title] = await getPageLinkAndTitle(slug);
+  
+  return `<li><a href="${link}">${title}</a></li>`;
+}
+
+async function getPageLinkAndTitle(slug) {
+  let link = `/${env.locale}${slug}`;
+  let page = await wiki.getPage(link);
+
+  if (!page.title && env.locale !== 'en-US') {
+    link = `/en-US${slug}`;
+    page = await wiki.getPage(link);
+  }
+
+  let title = page.short_title || page.title;
+  title = mdn.htmlEscape(title);
+
+  return [link, title];
+}
 
 %>
 
 <section id="Quick_links" data-macro="AddonSidebar">
   <ol>
-    <li><a href="<%=baseURL%>WebExtensions"><strong><%=text['WebExtensions']%></strong></a></li>
-    <li class="toggle">
+    <%- await renderRootItem("/docs/Mozilla/Add-ons/WebExtensions") %>
+    <li>
       <details>
         <summary><%=text['WebExtensions#Getting_started']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>WebExtensions/What_are_WebExtensions"><%=text['WebExtensions/What_are_WebExtensions']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Your_first_WebExtension"><%=text['WebExtensions/Your_first_WebExtension']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Your_second_WebExtension"><%=text['WebExtensions/Your_second_WebExtension']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Anatomy_of_a_WebExtension"><%=text['WebExtensions/Anatomy_of_a_WebExtension']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Examples"><%=text['WebExtensions/Examples']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/What_next_"><%=text['WebExtensions/What_next_']%></a></li>
+          <%- await renderItems([
+            "/docs/Mozilla/Add-ons/WebExtensions/What_are_WebExtensions",
+            "/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension",
+            "/docs/Mozilla/Add-ons/WebExtensions/Your_second_WebExtension",
+            "/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension",
+            "/docs/Mozilla/Add-ons/WebExtensions/Examples",
+            "/docs/Mozilla/Add-ons/WebExtensions/What_next_",
+          ]) %>
         </ol>
       </details>
     </li>
-    <li class="toggle">
+    <li>
       <details>
         <summary><%=text['WebExtensions#Concepts']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>WebExtensions/Using_the_JavaScript_APIs"><%=text['WebExtensions/Using_the_JavaScript_APIs']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Content_scripts"><%=text['WebExtensions/Content_scripts']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Background_scripts"><%=text['WebExtensions/Background_scripts']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Match_patterns"><%=text['WebExtensions/Match_patterns']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Working_with_files"><%=text['WebExtensions/Working_with_files']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Internationalization"><%=text['WebExtensions/Internationalization']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Content_Security_Policy"><%=text['WebExtensions/Content_Security_Policy']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Native_messaging"><%=text['WebExtensions/Native_messaging']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Differences_between_API_implementations"><%=text['WebExtensions/Differences_between_API_implementations']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Chrome_incompatibilities"><%=text['WebExtensions/Chrome_incompatibilities']%></a></li>
+          <%- await renderItems([
+            "/docs/Mozilla/Add-ons/WebExtensions/API",
+            "/docs/Mozilla/Add-ons/WebExtensions/Content_scripts",
+            "/docs/Mozilla/Add-ons/WebExtensions/Background_scripts",
+            "/docs/Mozilla/Add-ons/WebExtensions/Match_patterns",
+            "/docs/Mozilla/Add-ons/WebExtensions/Working_with_files",
+            "/docs/Mozilla/Add-ons/WebExtensions/Internationalization",
+            "/docs/Mozilla/Add-ons/WebExtensions/Content_Security_Policy",
+            "/docs/Mozilla/Add-ons/WebExtensions/Native_messaging",
+            "/docs/Mozilla/Add-ons/WebExtensions/Differences_between_API_implementations",
+            "/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities",
+          ]) %>
         </ol>
       </details>
     </li>
-    <li class="toggle">
+    <li>
       <details>
         <summary><%=text['WebExtensions#User_Interface']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface"><%=text['WebExtensions/user_interface']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Browser_action"><%=text['WebExtensions/user_interface/Browser_action']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Page_actions"><%=text['WebExtensions/user_interface/Page_actions']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Sidebars"><%=text['WebExtensions/user_interface/Sidebars']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Context_menu_items"><%=text['WebExtensions/user_interface/Context_menu_items']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Options_pages"><%=text['WebExtensions/user_interface/Options_pages']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Extension_pages"><%=text['WebExtensions/user_interface/Extension_pages']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Notifications"><%=text['WebExtensions/user_interface/Notifications']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/Omnibox"><%=text['WebExtensions/user_interface/Omnibox']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/user_interface/devtools_panels"><%=text['WebExtensions/user_interface/devtools_panels']%></a></li>
+          <%- await renderItems([
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Browser_action",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Page_actions",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Context_menu_items",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Options_pages",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Extension_pages",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Notifications",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Omnibox",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/devtools_panels",
+          ]) %>
         </ol>
       </details>
     </li>
-    <li class="toggle">
+    <li>
       <details>
         <summary><%=text['WebExtensions#How_to']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>WebExtensions/Intercept_HTTP_requests"><%=text['WebExtensions/Intercept_HTTP_requests']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Modify_a_web_page"><%=text['WebExtensions/Modify_a_web_page']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Safely_inserting_external_content_into_a_page"><%=text['WebExtensions/Safely_inserting_external_content_into_a_page']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Sharing_objects_with_page_scripts"><%=text['WebExtensions/Sharing_objects_with_page_scripts']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Add_a_button_to_the_toolbar"><%=text['WebExtensions/Add_a_button_to_the_toolbar']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Implement_a_settings_page"><%=text['WebExtensions/Implement_a_settings_page']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Working_with_the_Tabs_API"><%=text['WebExtensions/Working_with_the_Tabs_API']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Work_with_the_Bookmarks_API"><%=text['WebExtensions/Work_with_the_Bookmarks_API']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Work_with_the_Cookies_API"><%=text['WebExtensions/Work_with_the_Cookies_API']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Work_with_contextual_identities"><%=text['WebExtensions/Work_with_contextual_identities']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Interact_with_the_clipboard"><%=text['WebExtensions/Interact_with_the_clipboard']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Extending_the_developer_tools"><%=text['WebExtensions/Extending_the_developer_tools']%></a></li>
-          <li><a href="<%=baseURL%>WebExtensions/Build_a_cross_browser_extension"><%=text['WebExtensions/Build_a_cross_browser_extension']%></a></li>
+          <%- await renderItems([
+            "/docs/Mozilla/Add-ons/WebExtensions/Intercept_HTTP_requests",
+            "/docs/Mozilla/Add-ons/WebExtensions/Modify_a_web_page",
+            "/docs/Mozilla/Add-ons/WebExtensions/Safely_inserting_external_content_into_a_page",
+            "/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts",
+            "/docs/Mozilla/Add-ons/WebExtensions/Add_a_button_to_the_toolbar",
+            "/docs/Mozilla/Add-ons/WebExtensions/Implement_a_settings_page",
+            "/docs/Mozilla/Add-ons/WebExtensions/Working_with_the_Tabs_API",
+            "/docs/Mozilla/Add-ons/WebExtensions/Work_with_the_Bookmarks_API",
+            "/docs/Mozilla/Add-ons/WebExtensions/Work_with_the_Cookies_API",
+            "/docs/Mozilla/Add-ons/WebExtensions/Work_with_contextual_identities",
+            "/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard",
+            "/docs/Mozilla/Add-ons/WebExtensions/Extending_the_developer_tools",
+            "/docs/Mozilla/Add-ons/WebExtensions/Build_a_cross_browser_extension",
+          ]) %>
         </ol>
       </details>
     </li>
-    <li><a href="<%=baseURL%>WebExtensions/Firefox_differentiators"><%=text['WebExtensions/Firefox_differentiators']%></a></li>
-    <li class="toggle">
-      <details <%=currentPageIsUnder('WebExtensions/API')%>>
-        <summary><%=text['WebExtensions/API']%></summary>
+    <li>
+      <details>
+        <summary><%=text['WebExtensions#API']%></summary>
         <%-await template("WebExtAPISidebar", [])%>
       </details>
     </li>
-    <li class="toggle">
+    <li>
       <details>
-      <summary><%=text['WebExtensions/manifest.json']%></summary>
+      <summary><%=text['WebExtensions#manifest.json']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>WebExtensions/manifest.json"><%=text['WebExtensions/manifest.json_intro']%></a></li>
+          <%- await renderItems([
+            "/docs/Mozilla/Add-ons/WebExtensions/manifest.json",
+          ]) %>
         </ol>
       <%-
         await wiki.tree(baseURL + "WebExtensions/manifest.json", 1, 0, 0, 1)
       %>
       </details>
     </li>
-     <li class="toggle">
+     <li>
       <details>
         <summary><%=text['extension_workshop']%></summary>
         <ol>
@@ -685,8 +284,8 @@ var text = mdn.localStringMap({
         </ol>
       </details>
     </li>
-    <li><a href="<%=baseURL%>Contact_us"><strong><%=text['Contact_us']%></strong></a></li>
-    <li class="toggle">
+    <%- await renderRootItem("/docs/Mozilla/Add-ons/Contact_us") %>
+    <li>
       <details>
         <summary><%=text['Channels']%></summary>
         <ol>

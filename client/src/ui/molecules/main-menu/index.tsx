@@ -6,8 +6,10 @@ import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
+import { useLocale } from "../../../hooks";
 
 export default function MainMenu() {
+  const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
@@ -71,6 +73,21 @@ export default function MainMenu() {
             toggleMenu={toggleMenu}
           />
         )}
+        <li className="top-level-entry-container">
+          <a className="top-level-entry menu-link" href="/en-US/blog/">
+            Blog
+          </a>
+        </li>
+        <li className="top-level-entry-container">
+          <a className="top-level-entry menu-link" href={`/${locale}/play`}>
+            Play
+          </a>
+        </li>
+        <li className="top-level-entry-container">
+          <a className="top-level-entry menu-link" href="/en-US/plus/ai-help/">
+            AI Help <sup className="new beta">Beta</sup>
+          </a>
+        </li>
       </ul>
     </nav>
   );

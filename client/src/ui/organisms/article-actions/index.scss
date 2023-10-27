@@ -11,6 +11,10 @@
     text-transform: initial;
   }
 
+  .article-actions-toggle {
+    display: block;
+  }
+
   @media screen and (min-width: $screen-md) {
     display: block;
 
@@ -154,7 +158,7 @@
       bottom: auto;
       box-shadow: var(--shadow-02);
       left: var(--article-actions-position-left, initial);
-      max-height: calc(100vh - 12px - var(--main-document-header-height));
+      max-height: calc(100vh - 12px - var(--sticky-header-with-actions-height));
       padding: 0;
       position: absolute;
       right: 0;

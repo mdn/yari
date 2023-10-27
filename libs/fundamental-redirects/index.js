@@ -317,75 +317,6 @@ const SCL3_REDIRECT_PATTERNS = [
     "/docs/Web/API/CanvasRenderingContext2D.globalCompositeOperation",
     { permanent: true }
   ),
-  //##################################
-  // MOZILLADEMOS
-  //##################################
-  // canvas images
-  redirect(
-    /^samples\/canvas-tutorial\/images\/backdrop.png$/i,
-    "https://mdn.mozillademos.org/files/5395/backdrop.png",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/bg_gallery.png$/i,
-    "https://mdn.mozillademos.org/files/5415/bg_gallery.png",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_1.jpg$/i,
-    "https://mdn.mozillademos.org/files/5399/gallery_1.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_2.jpg$/i,
-    "https://mdn.mozillademos.org/files/5401/gallery_2.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_3.jpg$/i,
-    "https://mdn.mozillademos.org/files/5403/gallery_3.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_4.jpg$/i,
-    "https://mdn.mozillademos.org/files/5405/gallery_4.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_5.jpg$/i,
-    "https://mdn.mozillademos.org/files/5407/gallery_5.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_6.jpg$/i,
-    "https://mdn.mozillademos.org/files/5409/gallery_6.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_7.jpg$/i,
-    "https://mdn.mozillademos.org/files/5411/gallery_7.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/gallery_8.jpg$/i,
-    "https://mdn.mozillademos.org/files/5413/gallery_8.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/picture_frame.png$/i,
-    "https://mdn.mozillademos.org/files/242/Canvas_picture_frame.png",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/rhino.jpg$/i,
-    "https://mdn.mozillademos.org/files/5397/rhino.jpg",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/canvas-tutorial\/images\/wallpaper.png$/i,
-    "https://mdn.mozillademos.org/files/222/Canvas_createpattern.png",
-    { permanent: true }
-  ),
   // canvas example in samples/domref
   redirect(
     /^samples\/domref\/mozGetAsFile.html$/i,
@@ -682,7 +613,7 @@ const SCL3_REDIRECT_PATTERNS = [
   redirect(
     /^samples\/(?<sample_path>.*)$/i,
     ({ sample_path }) =>
-      `https://media.prod.mdn.mozit.cloud/samples/${sample_path}`,
+      `https://mdn.dev/archives/media/samples/${sample_path}`,
     { permanent: false }
   ),
   // Bug 887428 - Misprinted URL in promo materials
@@ -1231,6 +1162,15 @@ const MISC_REDIRECT_PATTERNS = [
     /^(?<prefix>AJAX|CSS|DOM|DragDrop|HTML|JavaScript|SVG|Tools|Using_files_from_web_applications|Web|XMLHttpRequest|Security)(?<subPath>\/.+?)?\/?$/i,
     ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
     { permanent: true }
+  ),
+  // Content archived as part of the GCP migration.
+  redirect(
+    /^(?<prefix>diagrams|presentations|samples)(?<subPath>\/.*)?$/i,
+    ({ prefix, subPath = "" }) =>
+      `https://mdn.dev/archives/media/${prefix}${subPath}`,
+    {
+      permanent: false,
+    }
   ),
 ];
 
