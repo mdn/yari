@@ -47,9 +47,9 @@ export function createPongGetHandler(client, coder) {
             return [p, null];
           }
           if (
-            (p === "side") |
-            (p === "hpMain") |
-            (p === "hpFooter") |
+            (p === "side") ||
+            (p === "hpMain") ||
+            (p === "hpFooter") ||
             (p === "bottom")
           ) {
             const [{ contents, clickUrl, impressionUrl }] = v;
