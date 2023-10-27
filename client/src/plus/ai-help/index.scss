@@ -151,8 +151,9 @@
 
     .ai-help-refine-or-new {
       display: flex;
+      flex-wrap: wrap-reverse;
       gap: 1rem;
-      justify-content: flex-end;
+      justify-content: center;
       width: 100%;
 
       .ai-help-new-question-button {
@@ -170,9 +171,11 @@
       border: var(--input-border-width) solid var(--border-primary);
       border-radius: 1rem;
       display: flex;
+      flex-grow: 1;
+      flex-wrap: wrap;
+      justify-content: center;
       padding: 0.5rem 1rem;
       position: relative;
-      width: 100%;
 
       &:focus-within {
         border-color: var(--category-color);
@@ -182,14 +185,19 @@
         outline: 0 none;
       }
 
+      .ai-help-input-actions {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
       textarea {
         border: none;
         color: var(--text-primary);
+        flex-grow: 1;
         height: 2rem;
         max-height: calc(30vh - var(--sticky-header-without-actions-height));
-        max-width: calc(100% - 3rem);
+        max-width: 100%;
         resize: none;
-        width: 100%;
 
         &:focus-visible {
           outline: none;
@@ -257,7 +265,8 @@
 
       border: 1px solid var(--border-primary);
       border-radius: var(--elem-radius);
-      display: flex;
+      display: grid;
+      grid-template-columns: max-content minmax(0, auto);
       padding: 1rem;
 
       &.role-user {

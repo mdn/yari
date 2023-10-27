@@ -208,37 +208,39 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         value={question}
         rows={1}
       />
-      {question ? (
+      <div className="ai-help-input-actions">
+        {question ? (
+          <Button
+            type="action"
+            icon="cancel"
+            buttonType="reset"
+            title="Delete question"
+            onClickHandler={() => {
+              setQuestion("");
+            }}
+          >
+            <span className="visually-hidden">Reset question</span>
+          </Button>
+        ) : null}
         <Button
           type="action"
-          icon="cancel"
-          buttonType="reset"
-          title="Delete question"
+          icon="send"
+          buttonType="submit"
+          title="Submit question"
+          isDisabled={!question}
+        >
+          <span className="visually-hidden">Submit question</span>
+        </Button>
+        <Button
+          type="action"
           onClickHandler={() => {
-            setQuestion("");
+            setEditing(false);
+            setQuestion(message.content);
           }}
         >
-          <span className="visually-hidden">Reset question</span>
+          Cancel
         </Button>
-      ) : null}
-      <Button
-        type="action"
-        icon="send"
-        buttonType="submit"
-        title="Submit question"
-        isDisabled={!question}
-      >
-        <span className="visually-hidden">Submit question</span>
-      </Button>
-      <Button
-        type="action"
-        onClickHandler={() => {
-          setEditing(false);
-          setQuestion(message.content);
-        }}
-      >
-        Cancel
-      </Button>
+      </div>
     </form>
   ) : (
     <div className="ai-help-message-content role-user">
@@ -681,44 +683,48 @@ export function AIHelpInner() {
                             : "Ask your question"
                         )}
                       />
-                      {!query && !hasConversation ? (
+                      <div className="ai-help-input-actions">
+                        {!query && !hasConversation ? (
+                          <Button
+                            type="action"
+                            icon="star"
+                            buttonType="reset"
+                            title="Delete question"
+                            onClickHandler={() => {
+                              unReset();
+                            }}
+                          >
+                            <span className="visually-hidden">
+                              Previous question
+                            </span>
+                          </Button>
+                        ) : query ? (
+                          <Button
+                            type="action"
+                            icon="cancel"
+                            buttonType="reset"
+                            title="Delete question"
+                            onClickHandler={() => {
+                              setQuery("");
+                            }}
+                          >
+                            <span className="visually-hidden">
+                              Reset question
+                            </span>
+                          </Button>
+                        ) : null}
                         <Button
                           type="action"
-                          icon="star"
-                          buttonType="reset"
-                          title="Delete question"
-                          onClickHandler={() => {
-                            unReset();
-                          }}
+                          icon="send"
+                          buttonType="submit"
+                          title="Submit question"
+                          isDisabled={!query}
                         >
                           <span className="visually-hidden">
-                            Previous question
+                            Submit question
                           </span>
                         </Button>
-                      ) : query ? (
-                        <Button
-                          type="action"
-                          icon="cancel"
-                          buttonType="reset"
-                          title="Delete question"
-                          onClickHandler={() => {
-                            setQuery("");
-                          }}
-                        >
-                          <span className="visually-hidden">
-                            Reset question
-                          </span>
-                        </Button>
-                      ) : null}
-                      <Button
-                        type="action"
-                        icon="send"
-                        buttonType="submit"
-                        title="Submit question"
-                        isDisabled={!query}
-                      >
-                        <span className="visually-hidden">Submit question</span>
-                      </Button>
+                      </div>
                     </form>
                   </div>
                   <div className="ai-help-footer-text">
