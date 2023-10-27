@@ -10,6 +10,7 @@ export enum Status {
   geoUnsupported = "geo_unsupported",
   capReached = "cap_reached",
   loading = "loading",
+  empty = "empty",
 }
 
 export interface Fallback {
@@ -22,8 +23,8 @@ export interface Fallback {
 
 export interface PlacementData {
   status: Status;
-  click: string;
-  view: string;
+  click?: string;
+  view?: string;
   copy?: string;
   image?: string;
   fallback?: Fallback;
@@ -38,9 +39,10 @@ export interface PlacementData {
     ctaTextColorDark?: string;
     ctaBackgroundColorDark?: string;
   };
+  version?: number;
 }
 
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter";
+type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   status: Status;
@@ -51,6 +53,7 @@ const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
   top: /\/[^/]+\/(?!$|_homepage$).*/i,
   hpMain: /\/[^/]+\/($|_homepage$)/i,
   hpFooter: /\/[^/]+\/($|_homepage$)/i,
+  bottom: /\/[^/]+\/docs\//i,
 };
 
 function placementTypes(pathname: string): string[] {

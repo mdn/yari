@@ -1,9 +1,17 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import Prism from "prismjs";
+import {
+  Children,
+  MutableRefObject,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Message, MessageRole, Quota, useAiChat } from "./use-ai";
-import { AiLoginBanner, AiUpsellBanner } from "./login-banner";
+import { AiLoginBanner, AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
@@ -22,6 +30,7 @@ import { isExternalUrl } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
+import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -219,6 +228,57 @@ export function AIHelpInner() {
                             // eslint-disable-next-line jsx-a11y/anchor-has-content
                             return <a {...props} />;
                           },
+                          pre: ({ node, className, children, ...props }) => {
+                            const code = Children.toArray(children)
+                              .map(
+                                (child) =>
+                                  /language-(\w+)/.exec(
+                                    (child as ReactElement)?.props?.className ||
+                                      ""
+                                  )?.[1]
+                              )
+                              .find(Boolean);
+
+                            if (!code) {
+                              return (
+                                <pre {...props} className={className}>
+                                  {children}
+                                </pre>
+                              );
+                            }
+                            return (
+                              <div className="code-example">
+                                <p className="example-header">
+                                  <span className="language-name">{code}</span>
+                                </p>
+                                <pre className={`brush: ${code}`}>
+                                  {children}
+                                </pre>
+                              </div>
+                            );
+                          },
+                          code: ({ inline, className, children, ...props }) => {
+                            const match = /language-(\w+)/.exec(
+                              className || ""
+                            );
+                            const lang = Prism.languages[match?.[1]];
+                            return !inline && lang ? (
+                              <code
+                                {...props}
+                                className={className}
+                                dangerouslySetInnerHTML={{
+                                  __html: Prism.highlight(
+                                    String(children),
+                                    lang
+                                  ),
+                                }}
+                              />
+                            ) : (
+                              <code {...props} className={className}>
+                                {children}
+                              </code>
+                            );
+                          },
                         }}
                       >
                         {message.content.replace(SORRY_BACKEND, SORRY_FRONTEND)}
@@ -399,8 +459,8 @@ export function AIHelpInner() {
                 </header>
                 <div className="modal-body">
                   <p>
-                    Our AI Help feature employs GPT-3.5, a Language Learning
-                    Model (LLM) developed by{" "}
+                    Our AI Help feature employs GPT-3.5, a Large Language Model
+                    (LLM) developed by{" "}
                     <a
                       href="https://platform.openai.com/docs/api-reference/models"
                       className="external"
@@ -566,7 +626,7 @@ function ReportIssueOnGitHubLink({
   const lastQuestion = questions.at(-1);
 
   const url = new URL("https://github.com/");
-  url.pathname = "/mdn/ai-feedback/issues/new";
+  url.pathname = `/${AI_FEEDBACK_GITHUB_REPO}/issues/new`;
 
   const sp = new URLSearchParams();
   sp.set("title", `[AI Help] Question: ${lastQuestion}`);
@@ -588,6 +648,7 @@ function ReportIssueOnGitHubLink({
   return (
     <a
       href={url.href}
+      className="external"
       title="This will take you to GitHub to file a new issue."
       target="_blank"
       rel="noopener noreferrer"

@@ -63,7 +63,6 @@
 
     <link rel="canonical" href="https://developer.mozilla.org" />
     <style media="print">
-      .mdn-cta-container,
       .article-actions-container,
       .main-menu-toggle,
       .document-toc-container,
@@ -109,8 +108,8 @@
         { capture: true }
       );
 
-      const c = { light: "#ffffff", dark: "#1b1b1b" };
       if (window && document.documentElement) {
+        const c = { light: "#ffffff", dark: "#1b1b1b" };
         try {
           const o = window.localStorage.getItem("theme");
           o &&
