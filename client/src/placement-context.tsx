@@ -39,9 +39,10 @@ export interface PlacementData {
     ctaTextColorDark?: string;
     ctaBackgroundColorDark?: string;
   };
+  version?: number;
 }
 
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter";
+type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   status: Status;
@@ -52,6 +53,7 @@ const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
   top: /\/[^/]+\/(?!$|_homepage$).*/i,
   hpMain: /\/[^/]+\/($|_homepage$)/i,
   hpFooter: /\/[^/]+\/($|_homepage$)/i,
+  bottom: /\/[^/]+\/docs\//i,
 };
 
 function placementTypes(pathname: string): string[] {
