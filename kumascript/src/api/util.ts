@@ -224,14 +224,10 @@ export class HTMLTool {
       $element.attr("id", id);
 
       if (isDt && $element.find("a").length == 0) {
-        const codeChildren = $element.children("code");
-        if (codeChildren.length > 1)
-          throw new Error(
-            `found <dt> with more than one <code> child: ${$element.html()}`
-          );
-        $(codeChildren.first()).wrap(
-          `<a href="#${encodeURIComponent(id)}"></a>`
-        );
+        $element
+          .children("code")
+          .first()
+          .wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
       }
     });
     return this;
