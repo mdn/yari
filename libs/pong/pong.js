@@ -7,6 +7,7 @@ const PLACEMENTS = {
   top: 585,
   hpMain: 3214,
   hpFooter: 2327,
+  bottom: 7748,
 };
 
 // Allow list for client sent keywords.
@@ -45,7 +46,12 @@ export function createPongGetHandler(client, coder) {
           if (v === null || v?.[0] === null) {
             return [p, null];
           }
-          if ((p === "side") | (p === "hpMain") | (p === "hpFooter")) {
+          if (
+            p === "side" ||
+            p === "hpMain" ||
+            p === "hpFooter" ||
+            p === "bottom"
+          ) {
             const [{ contents, clickUrl, impressionUrl }] = v;
             const { colors } = contents?.[0]?.data?.customData || {};
             return [
