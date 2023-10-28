@@ -60,9 +60,13 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
     html.style.backgroundColor = "";
 
     setTimeout(() => {
-      document.querySelector<HTMLMetaElement>(
+      const meta = document.querySelector<HTMLMetaElement>(
         'meta[name="theme-color"]'
-      )!.content = getComputedStyle(document.body).backgroundColor;
+      );
+      const color = getComputedStyle(document.body).backgroundColor;
+      if (meta && color) {
+        meta.content = color;
+      }
     }, 1);
 
     try {
