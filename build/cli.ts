@@ -307,9 +307,12 @@ async function buildDocuments(
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
+    const sortedMeta = meta
+      .slice()
+      .sort((a, b) => a.mdn_url.localeCompare(b.mdn_url));
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
-      JSON.stringify(meta)
+      JSON.stringify(sortedMeta)
     );
   }
 
