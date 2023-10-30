@@ -201,7 +201,9 @@ pre {
 }
 
 a {
-  color: var(--text-link);
+  &:link {
+    color: var(--text-link);
+  }
 
   &.external:after {
     background-color: var(--icon-primary);
