@@ -322,7 +322,7 @@ async function buildDocuments(
   );
   fs.writeFileSync(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
-    [...allBrowserCompat].join(" ")
+    [...allBrowserCompat].sort().join(" ")
   );
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
