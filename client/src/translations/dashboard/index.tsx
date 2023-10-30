@@ -408,6 +408,20 @@ function DocumentsTable({
     title: string;
     sortable?: boolean;
   }) {
+    function getClassName() {
+      const className = ["sortable"];
+
+      if (sort === id) {
+        className.push("active");
+      }
+
+      if (sortReverse) {
+        className.push("reverse");
+      }
+
+      return className.join(" ");
+    }
+
     function onClick() {
       if (sort === id) {
         setSearchParams(
@@ -424,15 +438,12 @@ function DocumentsTable({
       }
     }
 
-    return (
-      <th
-        onClick={sortable ? onClick : undefined}
-        className={`sortable ${sort === id ? "active" : ""} ${
-          sort === id && sortReverse ? "reverse" : ""
-        }`}
-      >
+    return sortable ? (
+      <th className={getClassName()} onClick={onClick}>
         {title}
       </th>
+    ) : (
+      <th>{title}</th>
     );
   }
 
