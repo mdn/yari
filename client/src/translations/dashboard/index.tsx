@@ -8,6 +8,7 @@ import {
 import useSWR from "swr";
 
 import { MainContentContainer } from "../../ui/atoms/page-content";
+import { Icon } from "../../ui/atoms/icon";
 import { useLocale } from "../../hooks";
 
 interface Data {
@@ -440,7 +441,7 @@ function DocumentsTable({
 
     return sortable ? (
       <th className={getClassName()} onClick={onClick}>
-        {title}
+        {title} <Icon name="small-arrow" />
       </th>
     ) : (
       <th>{title}</th>

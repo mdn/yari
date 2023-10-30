@@ -38,11 +38,14 @@
     }
 
     th.sortable.active {
-      background-color: rgb(237, 237, 237);
+      background-color: var(--background-secondary);
+      color: var(--text-primary);
     }
 
     th.sortable.active.reverse {
-      transform: rotate(-180deg);
+      .icon {
+        transform: rotate(-180deg);
+      }
     }
 
     td a .url-prefix {
