@@ -33,6 +33,10 @@
   table {
     width: 100%;
 
+    th.sortable {
+      cursor: ns-resize;
+    }
+
     th.sortable.active {
       background-color: rgb(237, 237, 237);
     }
@@ -107,14 +111,6 @@
 
     .documents {
       margin-left: 300px;
-
-      h4.subheader {
-        margin-top: 2px;
-      }
-
-      th.sortable {
-        cursor: ns-resize;
-      }
     }
   }
 }
