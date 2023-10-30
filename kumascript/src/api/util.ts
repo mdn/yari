@@ -223,11 +223,12 @@ export class HTMLTool {
       knownIDs.add(id);
       $element.attr("id", id);
 
-      if (isDt && $element.find("a").length == 0) {
-        $element
-          .children("code")
-          .first()
-          .wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
+      if (isDt) {
+        // Link the first element child to the ID.
+        const firstContent = $element.contents().first();
+        if (!firstContent.is("a") && firstContent.find("a").length === 0) {
+          $(firstContent).wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
+        }
       }
     });
     return this;
