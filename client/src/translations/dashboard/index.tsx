@@ -399,24 +399,34 @@ function DocumentsTable({
     return documentDetail;
   });
 
-  function TableHead({ id, title }: { id: string; title: string }) {
+  function TableHead({
+    id,
+    title,
+    sortable,
+  }: {
+    id: string;
+    title: string;
+    sortable?: boolean;
+  }) {
+    function onClick() {
+      if (sort === id) {
+        setSearchParams(
+          createSearchParams({
+            sort: id,
+            sortReverse: JSON.stringify(!sortReverse),
+            section: currentSection,
+          })
+        );
+      } else {
+        setSearchParams(
+          createSearchParams({ sort: id, section: currentSection })
+        );
+      }
+    }
+
     return (
       <th
-        onClick={() => {
-          if (sort === id) {
-            setSearchParams(
-              createSearchParams({
-                sort: id,
-                sortReverse: JSON.stringify(!sortReverse),
-                section: currentSection,
-              })
-            );
-          } else {
-            setSearchParams(
-              createSearchParams({ sort: id, section: currentSection })
-            );
-          }
-        }}
+        onClick={sortable ? onClick : undefined}
         className={`sortable ${sort === id ? "active" : ""} ${
           sort === id && sortReverse ? "reverse" : ""
         }`}
@@ -429,10 +439,11 @@ function DocumentsTable({
   return (
     <section id="documents-table">
       <h3>List of direct subpages</h3>
+
       <table>
         <thead>
           <tr>
-            <TableHead id="url" title="Slug" />
+            <TableHead id="url" title="Slug" sortable />
             <TableHead id="enMDNURL" title="English doc on MDN" />
             <TableHead
               id="enCommitGHURL"
@@ -444,14 +455,20 @@ function DocumentsTable({
               id="localCommitGHURL"
               title="Localized doc commit on GitHub"
             />
-            <TableHead id="popularityEn" title="Popularity rank (en-US)" />
+            <TableHead
+              id="popularityEn"
+              title="Popularity rank (en-US)"
+              sortable
+            />
             <TableHead
               id="popularityLocale"
               title={`Popularity rank (${locale})`}
+              sortable
             />
-            <TableHead id="dateDiff" title="Date delta" />
+            <TableHead id="dateDiff" title="Date delta" sortable />
           </tr>
         </thead>
+
         <tbody>
           {documents
             .sort((A, B) => {
