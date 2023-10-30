@@ -1,7 +1,11 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import {
+  DISABLE_AUTH,
+  DEFAULT_GEO_COUNTRY,
+  DEFAULT_GEO_COUNTRY_ISO,
+} from "./env";
 import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
 
 const DEPRECATED_LOCAL_STORAGE_KEYS = [
@@ -199,6 +203,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         email: data.email || null,
         geo: {
           country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+          country_iso:
+            (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
         },
         maintenance: data.maintenance,
         settings,

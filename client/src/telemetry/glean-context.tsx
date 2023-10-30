@@ -32,6 +32,7 @@ export type PageProps = {
   httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
+  geo_iso: string | undefined;
   userAgent: string | undefined;
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
@@ -116,6 +117,9 @@ function glean(): GleanAnalytics {
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
+      }
+      if (page.geo_iso) {
+        navigatorMetric.geo_iso.set(page.geo_iso);
       }
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
