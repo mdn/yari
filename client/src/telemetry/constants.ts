@@ -19,6 +19,11 @@ export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 
+export const MENU = Object.freeze({
+  CLICK_MENU: "menu_click_menu",
+  CLICK_SUBMENU: "menu_click_submenu",
+});
+
 export const PLUS_COLLECTIONS = Object.freeze({
   ACTIONS_NOTE_ADD: "collections_actions_note_add",
   ACTIONS_NOTE_EDIT: "collections_actions_note_edit",
