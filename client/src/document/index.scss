@@ -62,8 +62,11 @@
   }
 
   a:not(.button) {
-    color: var(--text-link);
     width: fit-content;
+
+    &:link {
+      color: var(--text-link);
+    }
 
     &:active {
       background-color: var(--text-link);
