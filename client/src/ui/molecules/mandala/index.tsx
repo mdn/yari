@@ -1,17 +1,9 @@
 import "./index.scss";
 
-function Mandala({
-  animateColors = false,
-  extraClasses = null,
-}: {
-  animateColors?: boolean;
-  extraClasses?: string | null;
-}) {
+function Mandala({ extraClasses = null }: { extraClasses?: string | null }) {
   return (
     <div
-      className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
-        extraClasses || ""
-      }`}
+      className={`mandala-container ${extraClasses || ""}`}
       aria-hidden="true"
     >
       <div className="mandala-translate">

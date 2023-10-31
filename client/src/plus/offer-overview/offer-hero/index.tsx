@@ -25,7 +25,7 @@ function OfferHero() {
         </div>
       </header>
       <div className="mandala-wrapper">
-        <Mandala animateColors={true} />
+        <Mandala />
       </div>
     </div>
   );
