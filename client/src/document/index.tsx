@@ -267,11 +267,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
-            <BottomBanner />
           </article>
         </MainContentContainer>
         <PlayQueue standalone={true} />
       </div>
+      <BottomBanner />
     </>
   );
 }

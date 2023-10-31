@@ -1,23 +1,12 @@
 // Source: https://github.com/supabase/supabase/blob/0f1254252f6b066e088a40617f239744e3a1e22b/packages/ui/src/components/Command/AiCommand.tsx
 // License: Apache 2.0 - https://github.com/supabase/supabase/blob/0f1254252f6b066e088a40617f239744e3a1e22b/LICENSE
-import type {
-  ChatCompletionResponseMessage,
-  CreateChatCompletionResponse,
-  CreateChatCompletionResponseChoicesInner,
-} from "openai";
+import type { OpenAI } from "openai";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
 import { useUserData } from "../../user-context";
-
-type CreateChatCompletionResponseChoicesInnerDelta = Omit<
-  CreateChatCompletionResponseChoicesInner,
-  "message"
-> & {
-  delta: Partial<ChatCompletionResponseMessage>;
-};
 
 export enum MessageRole {
   User = "user",
@@ -473,14 +462,13 @@ export function useAiChat({
           return;
         }
 
-        const completionResponse: CreateChatCompletionResponse = data;
+        const completionResponse: OpenAI.Chat.ChatCompletionChunk = data;
         const [
           {
             delta: { content },
             finish_reason,
           },
-        ] =
-          completionResponse.choices as CreateChatCompletionResponseChoicesInnerDelta[];
+        ] = completionResponse.choices;
 
         if (content) {
           dispatchState({
