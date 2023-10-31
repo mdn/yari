@@ -26,7 +26,7 @@ export const UserMenu = () => {
 
   const userMenuItems = {
     label: "My MDN Plus",
-    id: "my-mdn-plus",
+    id: "user-menu",
     items: [
       {
         label: userData.email || "",
