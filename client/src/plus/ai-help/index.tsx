@@ -10,15 +10,22 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { Message, MessageRole, Quota, useAiChat } from "./use-ai";
+import {
+  Message,
+  MessageRole,
+  MessageStatus,
+  Quota,
+  useAiChat,
+} from "./use-ai";
 import { AiLoginBanner, AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
-import { useScrollToTop, useViewedState } from "../../hooks";
+import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
+import { collectCode } from "../../document/code/playground";
 import "./index.scss";
 import { Avatar } from "../../ui/atoms/avatar";
 import { Button } from "../../ui/atoms/button";
@@ -31,6 +38,11 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
 import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
+import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
+import React from "react";
+import { SESSION_KEY } from "../../playground/utils";
+import { PlayQueue } from "../../playground/queue";
+import { AIHelpHistory } from "./history";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -68,13 +80,25 @@ export default function AiHelp() {
   const { setViewed } = useViewedState();
   useEffect(() => setViewed(FeatureId.PLUS_AI_HELP));
 
+  const {
+    active = null,
+    config: { gpt4 = false, full_doc = false, new_prompt = false } = {},
+  } = user?.experiments || {};
+  const activeExperimentsSting = [
+    gpt4 && "GPT-4",
+    full_doc && "Amplified Context",
+    new_prompt && "Optimized Prompts",
+  ]
+    .filter(Boolean)
+    .join(", ");
+
   return (
     <div className="ai-help">
       <header className="plus-header-mandala">
         <Container>
           <h1>
             <div className="mandala-icon-wrapper">
-              <Mandala rotate={true} />
+              <Mandala rotate={false} />
               <Icon name="chatgpt" />
             </div>
             <span>AI Help</span>
@@ -97,23 +121,153 @@ export default function AiHelp() {
           </p>
         </Container>
       </header>
-      <Container>
-        <div className="notecard experimental">
-          <p>
-            <strong>This is a beta feature.</strong>
-            <br />
-            May occasionally generate incorrect answers. Please always verify
-            information independently.
-            <br />
-            <a href="/en-US/blog/introducing-ai-help/">
-              <strong>Learn more</strong>
-            </a>
-          </p>
-        </div>
-      </Container>
-      <Container>
-        {user?.isAuthenticated ? <AIHelpInner /> : <AiLoginBanner />}
-      </Container>
+      <div className={`ai-help-main with-ai-help-history`}>
+        <Container>
+          <div className="notecard experimental">
+            {active ? (
+              <p>
+                <strong>Early Access:</strong> Experiments{" "}
+                {activeExperimentsSting ? `(${activeExperimentsSting}) ` : ""}
+                enabled! <br />
+                As part of these experiments we're recording your interactions!
+                <br />
+                Modify in <a href="/en-US/plus/settings">Settings</a>.
+              </p>
+            ) : active === false ? (
+              <p>
+                As an MDN Plus Supporter, you can test our AI Help optimizations
+                and have a direct say in our product's evolution. Activate and
+                provide feedback <a href="/en-US/plus/settings">here</a>.
+              </p>
+            ) : (
+              <p>
+                <strong>This is a beta feature.</strong>
+                <br />
+                May occasionally generate incorrect answers. Please always
+                verify information independently.
+                <br />
+                <a href="/en-US/blog/introducing-ai-help/">
+                  <strong>Learn more</strong>
+                </a>
+              </p>
+            )}
+          </div>
+        </Container>
+        {user?.isAuthenticated ? (
+          <AIHelpInner />
+        ) : (
+          <Container>
+            <AiLoginBanner />
+          </Container>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
+  const [editing, setEditing] = useState(false);
+  const [question, setQuestion] = useState(message.content);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { pos, total } = siblingCount(message.messageId);
+
+  useEffect(() => {
+    setQuestion(message.content);
+  }, [message.content]);
+
+  return editing ? (
+    <form
+      className="ai-help-input-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setEditing(false);
+        submit(question, message.chatId, message.parentId, message.messageId);
+      }}
+    >
+      <ExpandingTextarea
+        ref={inputRef}
+        enterKeyHint="send"
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            setEditing(false);
+            submit(
+              question,
+              message.chatId,
+              message.parentId,
+              message.messageId
+            );
+          }
+        }}
+        onChange={(e) => setQuestion(e.target.value)}
+        value={question}
+        rows={1}
+      />
+      <div className="ai-help-input-actions">
+        {question ? (
+          <Button
+            type="action"
+            icon="cancel"
+            buttonType="reset"
+            title="Delete question"
+            onClickHandler={() => {
+              setQuestion("");
+            }}
+          >
+            <span className="visually-hidden">Reset question</span>
+          </Button>
+        ) : null}
+        <Button
+          type="action"
+          icon="send"
+          buttonType="submit"
+          title="Submit question"
+          isDisabled={!question}
+        >
+          <span className="visually-hidden">Submit question</span>
+        </Button>
+        <Button
+          icon="return"
+          type="action"
+          onClickHandler={() => {
+            setEditing(false);
+            setQuestion(message.content);
+          }}
+        >
+          <span className="visually-hidden">Cancel editin</span>
+        </Button>
+      </div>
+    </form>
+  ) : (
+    <div className="ai-help-message-content role-user">
+      {total > 1 && (
+        <nav className="ai-help-message-nav">
+          <Button
+            icon="previous"
+            type="action"
+            isDisabled={pos === 1}
+            onClickHandler={() => nextPrev(message.messageId, "prev")}
+          >
+            <span className="visually-hidden">Previous Question</span>
+          </Button>
+          <span>
+            {pos} / {total}
+          </span>
+          <Button
+            isDisabled={pos === total}
+            icon="next"
+            type="action"
+            onClickHandler={() => nextPrev(message.messageId, "next")}
+          >
+            <span className="visually-hidden">Next Question</span>
+          </Button>
+        </nav>
+      )}
+      <div className="ai-help-user-message">{message.content}</div>
+      <Button
+        type="action"
+        icon="edit-query"
+        onClickHandler={() => setEditing(true)}
+      />
     </div>
   );
 }
@@ -123,8 +277,10 @@ const SORRY_FRONTEND =
   "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
 
 export function AIHelpInner() {
+  const user = useUserData();
+  const locale = useLocale();
   const formRef = useRef<HTMLFormElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
@@ -141,8 +297,14 @@ export function AIHelpInner() {
     messages,
     quota,
     reset,
+    unReset,
     stop,
     submit,
+    chatId,
+    sendFeedback,
+    nextPrev,
+    siblingCount,
+    lastUpdate,
   } = useAiChat();
 
   const isQuotaLoading = quota === undefined;
@@ -178,351 +340,509 @@ export function AIHelpInner() {
     }
   }, [isQuotaLoading, hasConversation]);
 
-  return isQuotaLoading ? (
-    <Loading />
-  ) : (
-    <section
-      className={["ai-help-inner", query.trim() && "has-input"]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {hasConversation && (
-        <div ref={bodyRef} className="ai-help-body">
-          <ul className="ai-help-messages">
-            {messages.map((message, index) => (
-              <li
-                key={index}
-                className={[
-                  "ai-help-message",
-                  `role-${message.role}`,
-                  `status-${message.status}`,
-                ].join(" ")}
-              >
-                <div className="ai-help-message-role">
-                  <RoleIcon role={message.role} />
-                </div>
-                <div
-                  className={[
-                    "ai-help-message-content",
-                    !message.content && "empty",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {message.role === "user" ? (
-                    message.content
-                  ) : (
-                    <>
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          a: ({ node, ...props }) => {
-                            if (isExternalUrl(props.href ?? "")) {
-                              props = {
-                                ...props,
-                                className: "external",
-                                rel: "noopener noreferrer",
-                                target: "_blank",
-                              };
-                            }
-                            // eslint-disable-next-line jsx-a11y/anchor-has-content
-                            return <a {...props} />;
-                          },
-                          pre: ({ node, className, children, ...props }) => {
-                            const code = Children.toArray(children)
-                              .map(
-                                (child) =>
-                                  /language-(\w+)/.exec(
-                                    (child as ReactElement)?.props?.className ||
-                                      ""
-                                  )?.[1]
-                              )
-                              .find(Boolean);
+  const submitQuestion = (parentId) => {
+    gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
+    if (query.trim()) {
+      submit(query.trim(), chatId, parentId);
+      setQuery("");
+      setIsExample(false);
+      setAutoScroll(true);
+    }
+  };
 
-                            if (!code) {
-                              return (
-                                <pre {...props} className={className}>
-                                  {children}
-                                </pre>
-                              );
-                            }
-                            return (
-                              <div className="code-example">
-                                <p className="example-header">
-                                  <span className="language-name">{code}</span>
-                                </p>
-                                <pre className={`brush: ${code}`}>
-                                  {children}
-                                </pre>
-                              </div>
-                            );
-                          },
-                          code: ({ inline, className, children, ...props }) => {
-                            const match = /language-(\w+)/.exec(
-                              className || ""
-                            );
-                            const lang = Prism.languages[match?.[1]];
-                            return !inline && lang ? (
-                              <code
-                                {...props}
-                                className={className}
-                                dangerouslySetInnerHTML={{
-                                  __html: Prism.highlight(
-                                    String(children),
-                                    lang
-                                  ),
+  return (
+    <>
+      {hasConversation && <PlayQueue />}
+      {!user?.settings?.noAIHelpHistory && (
+        <AIHelpHistory
+          currentChatId={chatId}
+          lastUpdate={lastUpdate}
+          isResponding={isResponding}
+          messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
+        />
+      )}
+      <Container>
+        {isQuotaLoading ? (
+          <Loading />
+        ) : (
+          <section
+            className={["ai-help-inner", query.trim() && "has-input"]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {hasConversation && (
+              <div ref={bodyRef} className="ai-help-body">
+                <ul className="ai-help-messages">
+                  {messages.map((message, index) => {
+                    let sample = 0;
+                    return (
+                      <li
+                        key={index}
+                        className={[
+                          "ai-help-message",
+                          `role-${message.role}`,
+                          `status-${message.status}`,
+                        ].join(" ")}
+                      >
+                        <div className="ai-help-message-role">
+                          <RoleIcon role={message.role} />
+                        </div>
+                        {message.role === "user" ? (
+                          <AIHelpUserQuestion
+                            message={message}
+                            submit={submit}
+                            nextPrev={nextPrev}
+                            siblingCount={siblingCount}
+                          />
+                        ) : (
+                          <div
+                            className={[
+                              "ai-help-message-content",
+                              !message.content && "empty",
+                              `role-${message.role}`,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                          >
+                            {message.content ? (
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  a: ({ node, ...props }) => {
+                                    if (isExternalUrl(props.href ?? "")) {
+                                      props = {
+                                        ...props,
+                                        className: "external",
+                                        rel: "noopener noreferrer",
+                                        target: "_blank",
+                                      };
+                                    }
+                                    // eslint-disable-next-line jsx-a11y/anchor-has-content
+                                    return <a {...props} />;
+                                  },
+                                  pre: ({
+                                    node,
+                                    className,
+                                    children,
+                                    ...props
+                                  }) => {
+                                    const code = Children.toArray(children)
+                                      .map(
+                                        (child) =>
+                                          /language-(\w+)/.exec(
+                                            (child as ReactElement)?.props
+                                              ?.className || ""
+                                          )?.[1]
+                                      )
+                                      .find(Boolean);
+
+                                    if (!code) {
+                                      return (
+                                        <pre {...props} className={className}>
+                                          {children}
+                                        </pre>
+                                      );
+                                    }
+                                    sample += 1;
+                                    return (
+                                      <div className="code-example">
+                                        <div className="example-header play-collect">
+                                          <span className="language-name">
+                                            {code}
+                                          </span>
+                                          {message.status ===
+                                            MessageStatus.Complete &&
+                                            [
+                                              "html",
+                                              "js",
+                                              "javascript",
+                                              "css",
+                                            ].includes(code.toLowerCase()) && (
+                                              <div className="playlist">
+                                                <input
+                                                  type="checkbox"
+                                                  onChange={(e) => {
+                                                    e.target.dataset.queued = `${e.target.checked} `;
+                                                  }}
+                                                  id={`sample-${index}-${sample}`}
+                                                />
+                                                <label
+                                                  htmlFor={`sample-${index}-${sample}`}
+                                                ></label>
+                                                <button
+                                                  type="button"
+                                                  className="play-button external"
+                                                  title="Open in Playground"
+                                                  onClick={(e) => {
+                                                    const input = (
+                                                      e.target as HTMLElement
+                                                    ).previousElementSibling
+                                                      ?.previousElementSibling as HTMLInputElement;
+                                                    const code =
+                                                      collectCode(input);
+                                                    sessionStorage.setItem(
+                                                      SESSION_KEY,
+                                                      JSON.stringify(code)
+                                                    );
+                                                    const url = new URL(
+                                                      window?.location.href
+                                                    );
+                                                    url.pathname = `/${locale}/play`;
+                                                    url.hash = "";
+                                                    url.search = "";
+                                                    if (e.shiftKey === true) {
+                                                      window.location.href =
+                                                        url.href;
+                                                    } else {
+                                                      window.open(
+                                                        url,
+                                                        "_blank"
+                                                      );
+                                                    }
+                                                  }}
+                                                >
+                                                  play
+                                                </button>
+                                              </div>
+                                            )}
+                                        </div>
+                                        <pre className={`brush: ${code}`}>
+                                          {children}
+                                        </pre>
+                                      </div>
+                                    );
+                                  },
+                                  code: ({
+                                    inline,
+                                    className,
+                                    children,
+                                    ...props
+                                  }) => {
+                                    const match = /language-(\w+)/.exec(
+                                      className || ""
+                                    );
+                                    const lang = Prism.languages[match?.[1]];
+                                    return !inline && lang ? (
+                                      <code
+                                        {...props}
+                                        className={className}
+                                        dangerouslySetInnerHTML={{
+                                          __html: Prism.highlight(
+                                            String(children),
+                                            lang
+                                          ),
+                                        }}
+                                      />
+                                    ) : (
+                                      <code {...props} className={className}>
+                                        {children}
+                                      </code>
+                                    );
+                                  },
                                 }}
-                              />
+                              >
+                                {message.content?.replace(
+                                  SORRY_BACKEND,
+                                  SORRY_FRONTEND
+                                )}
+                              </ReactMarkdown>
                             ) : (
-                              <code {...props} className={className}>
-                                {children}
-                              </code>
-                            );
-                          },
+                              "Retrieving answer…"
+                            )}
+                            {message.status === "complete" &&
+                              !message.content?.includes(SORRY_BACKEND) && (
+                                <>
+                                  {message.sources &&
+                                    message.sources.length > 0 && (
+                                      <>
+                                        <p>
+                                          MDN content that I've consulted that
+                                          you might want to check:
+                                        </p>
+                                        <ul>
+                                          {message.sources.map(
+                                            ({ url, title }, index) => (
+                                              <li key={index}>
+                                                <a href={url}>{title}</a>
+                                              </li>
+                                            )
+                                          )}
+                                        </ul>
+                                      </>
+                                    )}
+                                  <section className="ai-help-feedback">
+                                    <GleanThumbs
+                                      feature="ai-help-answer"
+                                      question={"Was this answer useful?"}
+                                      upLabel={"Yes, this answer was useful."}
+                                      downLabel={
+                                        "No, this answer was not useful."
+                                      }
+                                      permanent={true}
+                                      callback={async (value) => {
+                                        user?.experiments?.active &&
+                                          message.messageId &&
+                                          (await sendFeedback(
+                                            message.messageId,
+                                            value
+                                          ));
+                                      }}
+                                    />
+                                    <ReportIssueOnGitHubLink
+                                      messages={messages}
+                                      currentMessage={message}
+                                    >
+                                      Report an issue with this answer on GitHub
+                                    </ReportIssueOnGitHubLink>
+                                  </section>
+                                </>
+                              )}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+            {hasError && (
+              <NoteCard extraClasses="ai-help-error" type="error">
+                <h4>Error</h4>
+                <p>An error occurred. Please try again.</p>
+              </NoteCard>
+            )}
+            <div ref={footerRef} className="ai-help-footer">
+              {(isLoading || isResponding) && (
+                <div className="ai-help-footer-actions">
+                  <Button
+                    type="action"
+                    extraClasses="ai-help-stop-button"
+                    onClickHandler={() => {
+                      gleanClick(`${AI_HELP}: stop`);
+                      stop();
+                    }}
+                  >
+                    ⏹ Stop answering
+                  </Button>
+                  <Button
+                    type="action"
+                    isDisabled={autoScroll}
+                    extraClasses="ai-help-scroll-button"
+                    onClickHandler={() => setAutoScroll(true)}
+                  >
+                    ↓ Enable auto-scroll
+                  </Button>
+                </div>
+              )}
+              {isQuotaExceeded(quota) ? (
+                <AiUpsellBanner limit={quota.limit} />
+              ) : (
+                <>
+                  <div className="ai-help-refine-or-new">
+                    {hasConversation && (
+                      <Button
+                        type="action"
+                        icon="new_topic"
+                        isDisabled={isQuotaExceeded(quota)}
+                        extraClasses="ai-help-new-question-button"
+                        onClickHandler={() => {
+                          gleanClick(`${AI_HELP}: new`);
+                          setQuery("");
+                          setIsExample(false);
+                          reset();
+                          window.setTimeout(() => window.scrollTo(0, 0));
                         }}
                       >
-                        {message.content.replace(SORRY_BACKEND, SORRY_FRONTEND)}
-                      </ReactMarkdown>
-                      {message.status === "complete" &&
-                        !message.content.includes(SORRY_BACKEND) && (
-                          <>
-                            {message.sources && message.sources.length > 0 && (
-                              <>
-                                <p>
-                                  MDN content that I've consulted that you might
-                                  want to check:
-                                </p>
-                                <ul>
-                                  {message.sources.map(
-                                    ({ url, title }, index) => (
-                                      <li key={index}>
-                                        <a href={url}>{title}</a>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </>
-                            )}
-                            <section className="ai-help-feedback">
-                              <GleanThumbs
-                                feature="ai-help-answer"
-                                question={"Was this answer useful?"}
-                                upLabel={"Yes, this answer was useful."}
-                                downLabel={"No, this answer was not useful."}
-                                permanent={true}
-                              />
-                              <ReportIssueOnGitHubLink
-                                messages={messages}
-                                currentMessage={message}
-                              >
-                                Report an issue with this answer on GitHub
-                              </ReportIssueOnGitHubLink>
-                            </section>
-                          </>
-                        )}
-                    </>
-                  )}
-                </div>
-                {index === 0 && (
-                  <div className="ai-help-actions">
-                    <Button
-                      type="action"
-                      isDisabled={isQuotaExceeded(quota)}
-                      extraClasses="ai-help-reset-button"
-                      onClickHandler={() => {
-                        gleanClick(`${AI_HELP}: reset`);
-                        setQuery("");
-                        setIsExample(false);
-                        reset();
-                        window.setTimeout(() => window.scrollTo(0, 0));
+                        New Topic
+                      </Button>
+                    )}
+                    <form
+                      ref={formRef}
+                      className="ai-help-input-form"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        submitQuestion(messages.at(-1)?.messageId);
                       }}
                     >
-                      + New chat
-                    </Button>
+                      <ExpandingTextarea
+                        ref={inputRef}
+                        disabled={isLoading || isResponding}
+                        enterKeyHint="send"
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" && !event.shiftKey) {
+                            event.preventDefault();
+                            submitQuestion(messages.at(-1)?.messageId);
+                          }
+                        }}
+                        onChange={(event) => {
+                          setQuery(event.target.value);
+                          setIsExample(false);
+                        }}
+                        value={query}
+                        rows={1}
+                        placeholder={placeholder(
+                          isLoading
+                            ? "Requesting answer..."
+                            : isResponding
+                            ? "Receiving answer..."
+                            : hasConversation
+                            ? "Ask your follow up question"
+                            : "Ask your question"
+                        )}
+                      />
+                      <div className="ai-help-input-actions">
+                        {!query && !hasConversation ? (
+                          <Button
+                            type="action"
+                            icon="return"
+                            buttonType="reset"
+                            title="Delete question"
+                            onClickHandler={() => {
+                              unReset();
+                            }}
+                          >
+                            <span className="visually-hidden">
+                              Previous question
+                            </span>
+                          </Button>
+                        ) : query ? (
+                          <Button
+                            type="action"
+                            icon="cancel"
+                            buttonType="reset"
+                            title="Delete question"
+                            onClickHandler={() => {
+                              setQuery("");
+                            }}
+                          >
+                            <span className="visually-hidden">
+                              Reset question
+                            </span>
+                          </Button>
+                        ) : null}
+                        <Button
+                          type="action"
+                          icon="send"
+                          buttonType="submit"
+                          title="Submit question"
+                          isDisabled={!query}
+                        >
+                          <span className="visually-hidden">
+                            Submit question
+                          </span>
+                        </Button>
+                      </div>
+                    </form>
                   </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {hasError && (
-        <NoteCard extraClasses="ai-help-error" type="error">
-          <h4>Error</h4>
-          <p>An error occurred. Please try again.</p>
-        </NoteCard>
-      )}
-      <div ref={footerRef} className="ai-help-footer">
-        {(isLoading || isResponding) && (
-          <div className="ai-help-footer-actions">
-            <Button
-              type="action"
-              extraClasses="ai-help-stop-button"
-              onClickHandler={() => {
-                gleanClick(`${AI_HELP}: stop`);
-                stop();
-              }}
-            >
-              ⏹ Stop answering
-            </Button>
-            <Button
-              type="action"
-              isDisabled={autoScroll}
-              extraClasses="ai-help-scroll-button"
-              onClickHandler={() => setAutoScroll(true)}
-            >
-              ↓ Enable auto-scroll
-            </Button>
-          </div>
-        )}
-        {isQuotaExceeded(quota) ? (
-          <AiUpsellBanner limit={quota.limit} />
-        ) : (
-          <>
-            <form
-              ref={formRef}
-              className="ai-help-input-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                gleanClick(
-                  `${AI_HELP}: submit ${isExample ? "example" : "question"}`
-                );
-                if (query.trim()) {
-                  submit(query.trim());
-                  setQuery("");
-                  setIsExample(false);
-                  setAutoScroll(true);
-                }
-              }}
-            >
-              <input
-                ref={inputRef}
-                disabled={isLoading || isResponding}
-                type="text"
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                  setIsExample(false);
-                }}
-                value={query}
-                placeholder={placeholder(
-                  isLoading
-                    ? "Requesting answer..."
-                    : isResponding
-                    ? "Receiving answer..."
-                    : "Ask your question"
-                )}
-              />
-              <Button
-                type="action"
-                icon="send"
-                buttonType="submit"
-                title="Submit question"
-                isDisabled={!query}
-              >
-                <span className="visually-hidden">Submit question</span>
-              </Button>
-            </form>
-            <div className="ai-help-footer-text">
-              <span>
-                Results based on MDN's most recent documentation and powered by
-                GPT-3.5, an LLM by{" "}
-                <a
-                  href="https://platform.openai.com/docs/api-reference/models"
-                  className="external"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  OpenAI
-                </a>
-                . Please verify information independently as LLM responses may
-                not be 100% accurate. Read our{" "}
-                <Button
-                  type="link"
-                  onClickHandler={() => setShowDisclaimer(true)}
-                >
-                  full guidance
-                </Button>{" "}
-                for more details.
-              </span>
-              <MDNModal
-                isOpen={showDisclaimer}
-                onRequestClose={() => setShowDisclaimer(false)}
-              >
-                <header className="modal-header">
-                  <h2 className="modal-heading">AI Help Usage Guidance</h2>
-                  <Button
-                    onClickHandler={() => setShowDisclaimer(false)}
-                    type="action"
-                    icon="cancel"
-                    extraClasses="close-button"
-                  />
-                </header>
-                <div className="modal-body">
-                  <p>
-                    Our AI Help feature employs GPT-3.5, a Large Language Model
-                    (LLM) developed by{" "}
-                    <a
-                      href="https://platform.openai.com/docs/api-reference/models"
-                      className="external"
-                      target="_blank"
-                      rel="noreferrer noopener"
+                  <div className="ai-help-footer-text">
+                    <span>
+                      Results based on MDN's most recent documentation and
+                      powered by GPT-3.5, an LLM by{" "}
+                      <a
+                        href="https://platform.openai.com/docs/api-reference/models"
+                        className="external"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        OpenAI
+                      </a>
+                      . Please verify information independently as LLM responses
+                      may not be 100% accurate. Read our{" "}
+                      <Button
+                        type="link"
+                        onClickHandler={() => setShowDisclaimer(true)}
+                      >
+                        full guidance
+                      </Button>{" "}
+                      for more details.
+                    </span>
+                    <MDNModal
+                      isOpen={showDisclaimer}
+                      onRequestClose={() => setShowDisclaimer(false)}
                     >
-                      OpenAI
-                    </a>
-                    . While it's designed to offer helpful and relevant
-                    information drawn from MDN's comprehensive documentation,
-                    it's important to bear in mind that it is an LLM and may not
-                    produce perfectly accurate information in every
-                    circumstance.
-                  </p>
-                  <p>
-                    We strongly advise all users to cross-verify the information
-                    generated by this AI Help feature, particularly for complex
-                    or critical topics. While we strive for accuracy and
-                    relevance, the nature of AI means that responses may vary in
-                    precision.
-                  </p>
-                  <p>
-                    The AI Help feature provides links at the end of its
-                    responses to support further reading and verification within
-                    the MDN documentation. These links are intended to
-                    facilitate deeper understanding and context.
-                  </p>
-                  <p>
-                    As you use the AI Help feature, keep in mind its nature as
-                    an LLM. It's not perfect, but it's here to assist you as
-                    best as it can. We're excited to have you try AI Help, and
-                    we hope it makes your MDN experience even better.
-                  </p>
-                </div>
-              </MDNModal>
+                      <header className="modal-header">
+                        <h2 className="modal-heading">
+                          AI Help Usage Guidance
+                        </h2>
+                        <Button
+                          onClickHandler={() => setShowDisclaimer(false)}
+                          type="action"
+                          icon="cancel"
+                          extraClasses="close-button"
+                        />
+                      </header>
+                      <div className="modal-body">
+                        <p>
+                          Our AI Help feature employs GPT-3.5, a Large Language
+                          Model (LLM) developed by{" "}
+                          <a
+                            href="https://platform.openai.com/docs/api-reference/models"
+                            className="external"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            OpenAI
+                          </a>
+                          . While it's designed to offer helpful and relevant
+                          information drawn from MDN's comprehensive
+                          documentation, it's important to bear in mind that it
+                          is an LLM and may not produce perfectly accurate
+                          information in every circumstance.
+                        </p>
+                        <p>
+                          We strongly advise all users to cross-verify the
+                          information generated by this AI Help feature,
+                          particularly for complex or critical topics. While we
+                          strive for accuracy and relevance, the nature of AI
+                          means that responses may vary in precision.
+                        </p>
+                        <p>
+                          The AI Help feature provides links at the end of its
+                          responses to support further reading and verification
+                          within the MDN documentation. These links are intended
+                          to facilitate deeper understanding and context.
+                        </p>
+                        <p>
+                          As you use the AI Help feature, keep in mind its
+                          nature as an LLM. It's not perfect, but it's here to
+                          assist you as best as it can. We're excited to have
+                          you try AI Help, and we hope it makes your MDN
+                          experience even better.
+                        </p>
+                      </div>
+                    </MDNModal>
+                  </div>
+                </>
+              )}
             </div>
-          </>
+            {!hasConversation && !query && !isQuotaExceeded(quota) && (
+              <section className="ai-help-examples">
+                <header>Examples</header>
+                {EXAMPLES.map(({ category, query }, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={["ai-help-example", `category-${category}`].join(
+                      " "
+                    )}
+                    onClick={() => {
+                      gleanClick(`${AI_HELP}: example`);
+                      setQuery(query);
+                      setIsExample(true);
+                      inputRef.current?.focus();
+                      window.setTimeout(() => window.scrollTo(0, 0));
+                    }}
+                  >
+                    {query}
+                  </button>
+                ))}
+              </section>
+            )}
+            {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
+          </section>
         )}
-      </div>
-      {!hasConversation && !query && !isQuotaExceeded(quota) && (
-        <section className="ai-help-examples">
-          <header>Examples</header>
-          {EXAMPLES.map(({ category, query }, index) => (
-            <button
-              key={index}
-              type="button"
-              className={["ai-help-example", `category-${category}`].join(" ")}
-              onClick={() => {
-                gleanClick(`${AI_HELP}: example`);
-                setQuery(query);
-                setIsExample(true);
-                inputRef.current?.focus();
-                window.setTimeout(() => window.scrollTo(0, 0));
-              }}
-            >
-              {query}
-            </button>
-          ))}
-        </section>
-      )}
-      {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
-    </section>
+      </Container>
+    </>
   );
 }
 
@@ -548,7 +868,7 @@ function useAutoScroll(
     footerRef: MutableRefObject<HTMLElement | null>;
   }
 ) {
-  const [autoScroll, setAutoScroll] = useState(true);
+  const [autoScroll, setAutoScroll] = useState(false);
   const lastScrollY = useRef(0);
   const lastHeight = useRef(0);
 

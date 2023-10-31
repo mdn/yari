@@ -24,14 +24,11 @@ export default function Newsletter() {
 
   return (
     <section className="field-group">
-      <h2 id="newsletter">Newsletter</h2>
+      <h2 id="newsletter">Stay updated</h2>
       <ul>
         <li>
-          <h3>Receive updates from MDN Plus</h3>
-          <span>
-            Allow us to email you product updates, news about our latest
-            features, tips to get the most out of MDN Plus, and more.
-          </span>
+          <h3>MDN Plus Newsletter</h3>
+          <span>Allow us to email you product updates, news, and more.</span>
           {loading ? (
             <Spinner extraClasses="loading" />
           ) : (

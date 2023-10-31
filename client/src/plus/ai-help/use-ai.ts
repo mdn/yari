@@ -2,9 +2,11 @@
 // License: Apache 2.0 - https://github.com/supabase/supabase/blob/0f1254252f6b066e088a40617f239744e3a1e22b/LICENSE
 import type { OpenAI } from "openai";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
+import { useUserData } from "../../user-context";
 
 export enum MessageRole {
   User = "user",
@@ -23,30 +25,46 @@ export interface Message {
   content: string;
   status: MessageStatus;
   sources?: PageReference[];
+  chatId?: string;
+  messageId?: string;
+  parentId?: string;
 }
 
 interface NewMessageAction {
   type: "new";
-  message: Message;
+  parentId?: string;
+  chatId?: string;
+  request: Message;
+  response: Message;
 }
 
 interface UpdateMessageAction {
   type: "update";
+  messageId?;
   message: Partial<Message>;
 }
 
 interface AppendContentAction {
   type: "append-content";
+  messageId?;
   content: string;
 }
 
-interface SetSourcesAction {
-  type: "set-sources";
+interface SetMetadataAction {
+  type: "set-metadata";
   sources: PageReference[];
+  messageId: string;
+  chatId: string;
+  parentId?: string;
 }
 
 interface ResetAction {
   type: "reset";
+}
+
+interface SetStateAction {
+  type: "set-state";
+  treeState: MessageTreeState;
 }
 
 type MessageAction =
@@ -54,7 +72,8 @@ type MessageAction =
   | UpdateMessageAction
   | AppendContentAction
   | ResetAction
-  | SetSourcesAction;
+  | SetMetadataAction
+  | SetStateAction;
 
 interface PageReference {
   url: string;
@@ -68,44 +87,159 @@ export interface Quota {
   limit: number;
 }
 
-function messageReducer(state: Message[], messageAction: MessageAction) {
-  let newState = [...state];
-  const { type } = messageAction;
+export interface MessageTreeNode {
+  messageId?: string;
+  parentId?: string;
+  request: Message;
+  response: Message;
+  children: MessageTreeNode[];
+}
 
-  const index = state.length - 1;
+export interface MessageTreeState {
+  root: MessageTreeNode[];
+  nodes: Record<string, MessageTreeNode>;
+  currentNode?: MessageTreeNode;
+}
+
+export function stateToMessagePath(
+  state: MessageTreeState,
+  path: number[]
+): Message[] {
+  const [current = 0, ...tail] = path || [];
+  if (!state.root.length) {
+    return [];
+  }
+  return messagePath(state.root[current], tail);
+}
+
+function messagePath(node: MessageTreeNode, path: number[]): Message[] {
+  const [current = 0, ...tail] = path;
+  if (!node.children.length) {
+    return [node.request, node.response];
+  }
+  return [
+    node.request,
+    node.response,
+    ...messagePath(node.children[current], tail),
+  ];
+}
+
+function addSibling(state: MessageTreeState, messageId?: string) {
+  if (!messageId || !state.nodes[messageId].parentId) {
+    return [state.root.length];
+  }
+  const pId: string = state.nodes[messageId].parentId as string;
+  const index = state.nodes[pId].children.length;
+  const path = findPath(state, pId);
+  path.push(index);
+  return path;
+}
+
+function findPath(state: MessageTreeState, messageId: string) {
+  let id: string | undefined = messageId;
+  let node = state.nodes[id];
+  let pId: string | undefined = node.parentId;
+  const path: number[] = [];
+  let limit = Object.keys(state.nodes).length;
+  let iteration = 0;
+  const sameId = (c: MessageTreeNode): boolean => {
+    return c.messageId === id;
+  };
+  while (iteration < limit) {
+    iteration++;
+    const isRoot = typeof pId !== "string";
+    let siblings = isRoot ? state.root : state.nodes[pId as string]?.children;
+    let index = siblings?.findIndex(sameId) ?? -1;
+    if (index < 0) {
+      return [];
+    }
+    path.push(index);
+    if (isRoot) {
+      break;
+    }
+    id = pId;
+    pId = state.nodes[pId as string].parentId;
+  }
+  return path.reverse();
+}
+
+function messageReducer(state: MessageTreeState, messageAction: MessageAction) {
+  let newState = structuredClone(state);
+  const { type } = messageAction;
 
   switch (type) {
     case "new": {
-      const { message } = messageAction;
-      newState.push(message);
+      const { response, request, parentId } = messageAction;
+      const parent = parentId && newState.nodes[parentId];
+      const node: MessageTreeNode = {
+        parentId,
+        request,
+        response,
+        children: [],
+      };
+      if (parent) {
+        parent.children.push(node);
+      } else {
+        newState.root.push(node);
+      }
+      newState.currentNode = node;
       break;
     }
     case "update": {
       const { message } = messageAction;
-      newState[index] = {
-        ...state[index],
-        ...message,
-      };
+      const messageId = newState.currentNode?.messageId;
+      if (messageId) {
+        newState.nodes[messageId].response = {
+          ...newState.nodes[messageId].response,
+          ...message,
+        };
+      }
       break;
     }
     case "append-content": {
       const { content } = messageAction;
-      newState[index] = {
-        ...state[index],
-        content: state[index].content + content,
-      };
+      const messageId = newState.currentNode?.messageId;
+      if (messageId) {
+        newState.nodes[messageId].response = {
+          ...newState.nodes[messageId].response,
+          content: newState.nodes[messageId].response.content + content,
+        };
+      }
       break;
     }
-    case "set-sources": {
-      const { sources } = messageAction;
-      newState[index] = {
-        ...state[index],
-        sources,
-      };
+    case "set-metadata": {
+      const { sources, messageId, parentId, chatId } = messageAction;
+      if (newState.currentNode) {
+        Object.assign(newState.currentNode, {
+          messageId,
+          parentId,
+          response: {
+            ...newState.currentNode.response,
+            messageId,
+            parentId,
+            chatId,
+            sources,
+          },
+          request: {
+            ...newState.currentNode.request,
+            messageId,
+            parentId,
+          },
+        });
+        newState.nodes[messageId] = newState.currentNode;
+      }
+      break;
+    }
+    case "set-state": {
+      const { treeState } = messageAction;
+      newState = treeState;
       break;
     }
     case "reset": {
-      newState = [];
+      newState = {
+        root: [],
+        nodes: {},
+      };
       break;
     }
     default: {
@@ -117,7 +251,60 @@ function messageReducer(state: Message[], messageAction: MessageAction) {
 }
 
 interface Storage {
-  messages?: Message[];
+  treeState?: MessageTreeState;
+  chatId?: string;
+}
+
+class AiHelpHistory {
+  static async getMessages(chatId): Promise<Storage | undefined> {
+    const res = await (
+      await fetch(`/api/v1/plus/ai/help/history/${chatId}`)
+    ).json();
+    if (!res.chat_id) {
+      return;
+    }
+    // messages are ordered ascending.
+    const root: MessageTreeNode[] = [];
+    const nodes = {};
+    for (const message of res.messages || []) {
+      const node = {
+        messageId: message.metadata.message_id,
+        parentId: message.metadata.parent_id,
+        request: {
+          role: MessageRole.User,
+          content: message.user.content,
+          status: MessageStatus.Complete,
+          chatId: message.metadata.chat_id,
+          messageId: message.metadata.message_id,
+          parentId: message.metadata.parent_id,
+        },
+        response: {
+          role: MessageRole.Assistant,
+          content: message.assistant.content,
+          status: MessageStatus.Complete,
+          sources: message.metadata.sources,
+          chatId: message.metadata.chat_id,
+          messageId: message.metadata.message_id,
+          parentId: message.metadata.parent_id,
+        },
+        children: [],
+      };
+      if (!message.metadata.parent_id) {
+        root.push(node);
+      } else {
+        nodes[message.metadata.parent_id].children.push(node);
+      }
+      nodes[node.messageId] = node;
+    }
+    const storage = {
+      chatId,
+      treeState: {
+        root,
+        nodes,
+      },
+    };
+    return storage;
+  }
 }
 
 class AiHelpStorage {
@@ -137,12 +324,16 @@ class AiHelpStorage {
     );
   }
 
-  static getMessages(): Message[] {
-    return this.value?.messages ?? [];
+  static getMessages(): MessageTreeState | undefined {
+    return this.value?.treeState;
   }
 
-  static setMessages(messages: Message[]) {
-    this.mutate({ messages });
+  static get(): Storage {
+    return this.value;
+  }
+
+  static set(storage: Storage) {
+    this.mutate(storage);
   }
 }
 
@@ -154,29 +345,60 @@ export function useAiChat({
   messageTemplate = (message) => message,
 }: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
+  const user = useUserData();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
   const [datas, dispatchData] = useReducer(
     (state: any[], value: any) => (value === null ? [] : [...state, value]),
     []
   );
 
-  const [messages, dispatchMessage] = useReducer(
-    messageReducer,
-    undefined,
-    () => AiHelpStorage.getMessages()
-  );
+  const [chatId, setChatId] = useState<string | undefined>();
+  const [messageId, setMessageId] = useState<string | undefined>();
+  const [path, setPath] = useState<number[]>([]);
+  const [state, dispatchState] = useReducer(messageReducer, undefined, () => {
+    if (user?.settings?.noAIHelpHistory) {
+      const { treeState, chatId } = AiHelpStorage.get();
+      if (treeState && chatId) {
+        setChatId(chatId);
+        return treeState;
+      }
+    }
+    return {
+      root: [],
+      nodes: {},
+    };
+  });
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
   const remoteQuota = useRemoteQuota();
 
   useEffect(() => {
-    if (!isLoading && !isResponding && messages.length > 0) {
-      AiHelpStorage.setMessages(messages);
+    const convId = searchParams.get("c");
+    if (convId) {
+      (async () => {
+        const { treeState } = (await AiHelpHistory.getMessages(convId)) || {};
+        if (treeState) {
+          setChatId(convId);
+          dispatchState({
+            type: "set-state",
+            treeState,
+          });
+        }
+      })();
     }
-  }, [isLoading, isResponding, messages]);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!isLoading && !isResponding && state.root.length > 0) {
+      AiHelpStorage.set({ treeState: state, chatId });
+    }
+  }, [isLoading, isResponding, state, chatId]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
@@ -197,22 +419,25 @@ export function useAiChat({
         dispatchData(data);
         setIsLoading(false);
 
-        dispatchMessage({
-          type: "update",
-          message: {
-            status: MessageStatus.InProgress,
-          },
-        });
-
-        setIsResponding(true);
-
         if (data.type === "metadata") {
-          const { sources = undefined, quota = undefined } = data;
+          const {
+            sources = undefined,
+            quota = undefined,
+            chat_id,
+            message_id,
+            parent_id,
+          } = data;
+          setChatId(chat_id);
+          setMessageId(message_id);
+          setLastUpdate(new Date());
           // Sources.
           if (Array.isArray(sources)) {
-            dispatchMessage({
-              type: "set-sources",
+            dispatchState({
+              type: "set-metadata",
               sources: sources,
+              chatId: chat_id,
+              messageId: message_id,
+              parentId: parent_id,
             });
           }
           // Quota.
@@ -221,6 +446,16 @@ export function useAiChat({
           }
           return;
         }
+
+        dispatchState({
+          type: "update",
+          messageId,
+          message: {
+            status: MessageStatus.InProgress,
+          },
+        });
+
+        setIsResponding(true);
 
         if (!data.id) {
           console.warn("Received unsupported message", { data });
@@ -236,8 +471,9 @@ export function useAiChat({
         ] = completionResponse.choices;
 
         if (content) {
-          dispatchMessage({
+          dispatchState({
             type: "append-content",
+            messageId,
             content,
           });
         }
@@ -255,8 +491,10 @@ export function useAiChat({
               ? MessageStatus.Complete
               : MessageStatus.Stopped;
           setIsResponding(false);
-          dispatchMessage({
+          setLastUpdate(new Date());
+          dispatchState({
             type: "update",
+            messageId,
             message: {
               status,
             },
@@ -266,25 +504,51 @@ export function useAiChat({
         handleError(err);
       }
     },
-    [handleError]
+    [handleError, messageId]
   );
 
+  const sendFeedback = useCallback(
+    async (message_id: string, thumbs?: "up" | "down", feedback?: string) => {
+      await fetch("/api/v1/plus/ai/help/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          thumbs: thumbs && `thumbs_${thumbs}`,
+          feedback,
+          message_id,
+        }),
+      });
+    },
+    [chatId]
+  );
   const submit = useCallback(
-    (query: string) => {
-      dispatchMessage({
+    (query: string, chatId?: string, parentId?: string, messageId?: string) => {
+      let newPath = messageId
+        ? addSibling(state, messageId)
+        : parentId
+        ? [...findPath(state, parentId), 0]
+        : [0];
+      setPath(newPath);
+      dispatchState({
         type: "new",
-        message: {
+        chatId,
+        parentId,
+        request: {
           status: MessageStatus.Complete,
           role: MessageRole.User,
           content: query,
+          chatId,
+          parentId,
         },
-      });
-      dispatchMessage({
-        type: "new",
-        message: {
+        response: {
           status: MessageStatus.Pending,
           role: MessageRole.Assistant,
           content: "",
+          chatId,
+          parentId,
         },
       });
       setIsResponding(false);
@@ -292,8 +556,12 @@ export function useAiChat({
       setIsLoading(true);
 
       // We send all completed in the conversation + the question the user asked.
+      // Unless history is false, then we only send the query.
       // Note that `dispatchMessage()` above does not change `messages` here yet.
-      const completeMessagesAndUserQuery = messages
+      const completeMessagesAndUserQuery = stateToMessagePath(
+        state,
+        newPath.slice(0, -1)
+      )
         .filter(({ status }) => status === MessageStatus.Complete)
         .map(({ role, content }) => ({ role, content }))
         .concat({
@@ -301,13 +569,15 @@ export function useAiChat({
           content: messageTemplate(query),
         });
 
-      const eventSource = new SSE(`/api/v1/plus/ai/ask`, {
+      const eventSource = new SSE(`/api/v1/plus/ai/help`, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
         payload: JSON.stringify({
           messages: completeMessagesAndUserQuery,
+          chat_id: chatId,
+          parent_id: parentId,
         }),
       });
 
@@ -324,19 +594,26 @@ export function useAiChat({
 
       setIsLoading(true);
     },
-    [messages, messageTemplate, handleError, handleEventData]
+    [state, messageTemplate, handleError, handleEventData]
   );
 
+  useEffect(() => {
+    setMessages(stateToMessagePath(state, path));
+  }, [state, path, setMessages]);
+
   function useRemoteQuota() {
-    const { data } = useSWR<Quota>("/api/v1/plus/ai/ask/quota", async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
+    const { data } = useSWR<Quota>(
+      "/api/v1/plus/ai/help/quota",
+      async (url) => {
+        const response = await fetch(url);
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`${response.status} on ${url}: ${text}`);
+        }
+        const data = await response.json();
+        return data.quota;
       }
-      const data = await response.json();
-      return data.quota;
-    });
+    );
 
     return data;
   }
@@ -352,7 +629,7 @@ export function useAiChat({
 
   function stop() {
     resetLoadingState();
-    dispatchMessage({
+    dispatchState({
       type: "update",
       message: {
         status: MessageStatus.Stopped,
@@ -362,20 +639,82 @@ export function useAiChat({
 
   function reset() {
     resetLoadingState();
-    dispatchMessage({
+    setSearchParams((prev) => {
+      prev.delete("c");
+      return prev;
+    });
+    setMessages([]);
+    dispatchState({
       type: "reset",
     });
   }
+
+  function unReset() {
+    const { treeState } = AiHelpStorage.get();
+    if (treeState) {
+      dispatchState({
+        type: "set-state",
+        treeState,
+      });
+    }
+  }
+
+  const nextPrev = useCallback(
+    (messageId: string, dir: "next" | "prev") => {
+      const node = state.nodes[messageId];
+      const siblings = node.parentId
+        ? state.nodes[node.parentId].children
+        : state.root;
+      const index = siblings.findIndex((c) => c.messageId === messageId);
+      if (dir === "next" && index < siblings.length - 1) {
+        return setPath(
+          findPath(state, siblings[index + 1].messageId || messageId)
+        );
+      }
+      if (dir === "prev" && index > 0) {
+        return setPath(
+          findPath(state, siblings[index - 1].messageId || messageId)
+        );
+      }
+    },
+    [state]
+  );
+
+  const siblingCount = useCallback(
+    (messageId: string): { pos: number; total: number } => {
+      if (!messageId) {
+        return { pos: 1, total: 1 };
+      }
+      const node = state.nodes[messageId];
+      if (!node) {
+        return { pos: 1, total: 1 };
+      }
+      const siblings = node.parentId
+        ? state.nodes[node.parentId].children
+        : state.root;
+      const index = siblings.findIndex((c) => c.messageId === messageId);
+      return { pos: index + 1, total: siblings.length };
+    },
+    [state]
+  );
 
   return {
     submit,
     datas,
     stop,
     reset,
+    unReset,
     messages,
+    state,
+    path,
     isLoading,
     isResponding,
+    sendFeedback,
     hasError,
     quota,
+    chatId,
+    nextPrev,
+    siblingCount,
+    lastUpdate,
   };
 }

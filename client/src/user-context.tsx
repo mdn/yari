@@ -23,6 +23,12 @@ export type UserPlusSettings = {
   collectionLastModified: Date | null;
   mdnplusNewsletter: boolean | null;
   noAds: boolean | null;
+  noAIHelpHistory: boolean | null;
+};
+
+export type Experiments = {
+  active: boolean;
+  config: Record<string, boolean>;
 };
 
 export class OfflineSettingsData {
@@ -79,6 +85,7 @@ export type User = {
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
+  experiments?: Experiments;
   offlineSettings: null | OfflineSettingsData;
   mutate: () => void;
 };
@@ -180,6 +187,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
               null,
             mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
             noAds: data?.settings?.no_ads || null,
+            noAIHelpHistory: data?.settings?.no_ai_help_history || null,
           }
         : null;
 
@@ -202,6 +210,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         },
         maintenance: data.maintenance,
         settings,
+        experiments: data.experiments,
         offlineSettings: null,
         mutate,
       };

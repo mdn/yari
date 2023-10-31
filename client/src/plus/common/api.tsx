@@ -1,10 +1,51 @@
 export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
 export const SETTINGS_BASE_PATH = "/api/v1/plus/settings/";
 export const NEWSLETTER_BASE_PATH = "/api/v1/plus/newsletter/";
+export const EXPRERIMENTS_BASE_PATH = "/api/v1/plus/settings/experiments/";
 
 export type PLUS_SETTINGS = {
   col_in_search: boolean;
 };
+
+export interface ExperimentsConfig {
+  gpt4?: boolean | null;
+  full_doc?: boolean | null;
+  new_prompt?: boolean | null;
+  history?: boolean | null;
+}
+
+export interface ExperimentsRequest {
+  active?: boolean | null;
+  config?: ExperimentsConfig | null;
+}
+
+export async function getExperiments(): Promise<ExperimentsRequest> {
+  try {
+    const res = await fetch(EXPRERIMENTS_BASE_PATH, {});
+    const json: ExperimentsRequest = (await res.json()) || { active: false };
+    return json;
+  } catch {
+    return { active: false, config: null };
+  }
+}
+
+export async function setExperiments(
+  req: ExperimentsRequest
+): Promise<ExperimentsRequest> {
+  try {
+    const res = await fetch(EXPRERIMENTS_BASE_PATH, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(req),
+    });
+    const json: ExperimentsRequest = (await res.json()) || { active: false };
+    return json;
+  } catch {
+    return { active: false, config: null };
+  }
+}
 
 export async function toggleNewsletterSubscription(
   subscribed: boolean
@@ -26,6 +67,16 @@ export async function toggleNewsletterSubscription(
 export async function toggleNoAds(enabled: boolean) {
   return await fetch(SETTINGS_BASE_PATH, {
     body: JSON.stringify({ no_ads: enabled }),
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
+
+export async function toggleNoAIHelpHistory(enabled: boolean) {
+  return await fetch(SETTINGS_BASE_PATH, {
+    body: JSON.stringify({ no_ai_help_history: enabled }),
     method: "POST",
     headers: {
       "content-type": "application/json",

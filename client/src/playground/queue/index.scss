@@ -1,0 +1,143 @@
+//
+.play-queue-container {
+  position: fixed;
+  right: 0;
+  top: 50vh;
+  transform: translateY(-50%);
+  z-index: var(--z-index-modal-content);
+
+  details {
+    align-items: center;
+    background: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 1rem 0 0 1rem;
+    display: flex;
+    filter: drop-shadow(var(--shadow-02));
+    justify-content: center;
+    padding: 0.5rem 0;
+    width: fit-content;
+
+    > summary {
+      align-items: center;
+      color: var(--text-primary-blue);
+      cursor: pointer;
+      display: flex;
+      padding: 0 1rem;
+      width: 100%;
+
+      &::-webkit-details-marker,
+      &::marker {
+        display: none;
+      }
+
+      > div {
+        display: inline-block;
+        font-weight: bold;
+        margin: 0 auto;
+        text-transform: uppercase;
+      }
+
+      > .button.action {
+        --button-color: var(--text-primary-blue);
+      }
+    }
+  }
+
+  details[open] {
+    min-width: 12rem;
+
+    > summary {
+      border-bottom: 1px solid var(--border-primary);
+      padding-bottom: 0.5rem;
+
+      &::before {
+        content: "▼";
+        font-size: 0.75rem;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  details:not([open]) {
+    background-color: var(--text-primary-blue);
+    width: min-content;
+
+    > summary {
+      color: var(--mdn-color-white);
+      font-size: 0;
+      width: fit-content;
+
+      &::before {
+        content: "►";
+        font-size: 0.75rem;
+        margin-right: 0.5rem;
+      }
+
+      > div {
+        width: 1rem;
+
+        &::first-letter {
+          font-size: 1rem;
+        }
+      }
+
+      .button {
+        display: none;
+      }
+    }
+  }
+
+  button {
+    cursor: pointer;
+
+    &.play-button {
+      align-self: center;
+      margin-bottom: 0.5rem;
+      width: fit-content;
+    }
+  }
+
+  .play-queue-inner {
+    display: flex;
+    flex-direction: column;
+
+    > ul {
+      margin: 0 0 0.5rem;
+      max-height: 50vh;
+      overflow: scroll;
+      width: 100%;
+
+      > li {
+        align-items: center;
+        color: var(--text-primary);
+        display: flex;
+        padding: 0.25rem 1rem;
+        width: 100%;
+
+        &:hover {
+          background-color: var(--background-information);
+        }
+
+        .queue-ref {
+          color: var(--text-primary);
+          font-size: var(--type-smaller-font-size);
+          padding: 0 0.5rem;
+
+          &:hover {
+            color: var(--text-primary-blue);
+            text-decoration: underline;
+          }
+        }
+
+        > code {
+          background-color: transparent;
+          justify-self: center;
+          margin: 0 auto;
+          min-width: 6rem;
+          text-align: center;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}

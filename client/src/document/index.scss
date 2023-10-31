@@ -676,6 +676,7 @@ pre {
     font-size: smaller;
     margin: 0;
     opacity: 0.4;
+    text-transform: uppercase;
 
     &:hover,
     &:focus {
@@ -684,6 +685,61 @@ pre {
 
     &:first-child {
       margin-left: auto;
+    }
+  }
+
+  .playlist {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 1;
+
+    > label {
+      cursor: pointer;
+      font-size: smaller;
+      opacity: 0.4;
+      padding: 1px;
+      text-transform: uppercase;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
+    }
+
+    > input {
+      height: 0;
+      margin: 0;
+      opacity: 0;
+      position: absolute;
+      width: 0;
+
+      &:not(:checked) ~ label {
+        &::before {
+          content: "+ queue";
+        }
+      }
+
+      &:focus ~ label {
+        opacity: 1;
+      }
+
+      &:focus-visible ~ label {
+        opacity: 1;
+        outline-color: var(--accent-primary);
+        outline-offset: 1px;
+        outline-style: auto;
+      }
+
+      &:checked ~ label {
+        color: var(--text-primary-blue);
+        opacity: 1;
+
+        &::before {
+          color: var(--text-primary-blue);
+          content: "✓ queued";
+        }
+      }
     }
   }
 

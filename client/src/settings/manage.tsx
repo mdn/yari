@@ -22,16 +22,16 @@ export function Manage() {
 
   return (
     <section className="field-group">
-      <h2>Manage account</h2>
+      <h2>Manage Account</h2>
       <ul>
         {PLACEMENT_ENABLED && (
           <li>
-            <h3>Go ads free</h3>
+            <h3>Ad-Free Experience</h3>
             {isPlusSubscriber(user) ? (
               <>
                 <span>
-                  Turn off advertising on MDN. Read more about{" "}
-                  <a href="/en-US/advertising">ads on MDN</a>
+                  Opt out of ads on MDN.{" "}
+                  <a href="/en-US/advertising">Learn more</a> about MDN ads.
                 </span>
                 {saving ? (
                   <Spinner extraClasses="loading" />
@@ -70,7 +70,7 @@ export function Manage() {
 
         <li>
           <h3>Account</h3>
-          <span>Manage your account</span>
+          <span>Manage preferences for your account</span>
           <a
             rel="noreferrer noopener"
             target="_blank"
@@ -82,8 +82,8 @@ export function Manage() {
         </li>
         {user?.isSubscriber && (
           <li>
-            <h3>Subscription</h3>
-            <span>Manage your MDN Plus subscription</span>
+            <h3>MDN Plus Subscription</h3>
+            <span>Manage your payment details for MDN Plus.</span>
             <a
               rel="noreferrer noopener"
               target="_blank"
