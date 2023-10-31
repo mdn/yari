@@ -10,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
+import { useUserData } from "../../user-context";
 
 type CreateChatCompletionResponseChoicesInnerDelta = Omit<
   CreateChatCompletionResponseChoicesInner,
@@ -355,6 +356,7 @@ export function useAiChat({
   messageTemplate = (message) => message,
 }: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
+  const user = useUserData();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -370,14 +372,17 @@ export function useAiChat({
   const [messageId, setMessageId] = useState<string | undefined>();
   const [path, setPath] = useState<number[]>([]);
   const [state, dispatchState] = useReducer(messageReducer, undefined, () => {
-    const { treeState, chatId } = AiHelpStorage.get();
-    setChatId(chatId);
-    return (
-      treeState || {
-        root: [],
-        nodes: {},
+    if (user?.settings?.noAIHelpHistory) {
+      const { treeState, chatId } = AiHelpStorage.get();
+      if (treeState && chatId) {
+        setChatId(chatId);
+        return treeState;
       }
-    );
+    }
+    return {
+      root: [],
+      nodes: {},
+    };
   });
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -435,6 +440,7 @@ export function useAiChat({
           } = data;
           setChatId(chat_id);
           setMessageId(message_id);
+          setLastUpdate(new Date());
           // Sources.
           if (Array.isArray(sources)) {
             dispatchState({
@@ -695,7 +701,6 @@ export function useAiChat({
       if (!node) {
         return { pos: 1, total: 1 };
       }
-      console.log(state, node, messageId);
       const siblings = node.parentId
         ? state.nodes[node.parentId].children
         : state.root;

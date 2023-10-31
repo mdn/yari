@@ -82,18 +82,12 @@ export default function AiHelp() {
 
   const {
     active = null,
-    config: {
-      gpt4 = false,
-      full_doc = false,
-      new_prompt = false,
-      history = false,
-    } = {},
+    config: { gpt4 = false, full_doc = false, new_prompt = false } = {},
   } = user?.experiments || {};
   const activeExperimentsSting = [
     gpt4 && "GPT-4",
     full_doc && "Amplified Context",
     new_prompt && "Optimized Prompts",
-    history && "History",
   ]
     .filter(Boolean)
     .join(", ");
@@ -104,7 +98,7 @@ export default function AiHelp() {
         <Container>
           <h1>
             <div className="mandala-icon-wrapper">
-              <Mandala rotate={true} />
+              <Mandala rotate={false} />
               <Icon name="chatgpt" />
             </div>
             <span>AI Help</span>
@@ -127,17 +121,17 @@ export default function AiHelp() {
           </p>
         </Container>
       </header>
-      <div className="ai-help-main">
+      <div className={`ai-help-main with-ai-help-history`}>
         <Container>
           <div className="notecard experimental">
             {active ? (
               <p>
-                Experiments{" "}
+                <strong>Early Access:</strong> Experiments{" "}
                 {activeExperimentsSting ? `(${activeExperimentsSting}) ` : ""}
                 enabled! <br />
                 As part of these experiments we're recording your interactions!
                 <br />
-                Modify in <a href="/en-US/plus/settings">settings</a>.
+                Modify in <a href="/en-US/plus/settings">Settings</a>.
               </p>
             ) : active === false ? (
               <p>
@@ -232,13 +226,14 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
           <span className="visually-hidden">Submit question</span>
         </Button>
         <Button
+          icon="return"
           type="action"
           onClickHandler={() => {
             setEditing(false);
             setQuestion(message.content);
           }}
         >
-          Cancel
+          <span className="visually-hidden">Cancel editin</span>
         </Button>
       </div>
     </form>
@@ -270,7 +265,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       <div className="ai-help-user-message">{message.content}</div>
       <Button
         type="action"
-        icon="edit"
+        icon="edit-query"
         onClickHandler={() => setEditing(true)}
       />
     </div>
@@ -358,8 +353,13 @@ export function AIHelpInner() {
   return (
     <>
       {hasConversation && <PlayQueue />}
-      {user?.experiments?.config.history && (
-        <AIHelpHistory currentChatId={chatId} lastUpdate={lastUpdate} />
+      {!user?.settings?.noAIHelpHistory && (
+        <AIHelpHistory
+          currentChatId={chatId}
+          lastUpdate={lastUpdate}
+          isResponding={isResponding}
+          messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
+        />
       )}
       <Container>
         {isQuotaLoading ? (
@@ -451,53 +451,60 @@ export function AIHelpInner() {
                                             {code}
                                           </span>
                                           {message.status ===
-                                            MessageStatus.Complete && (
-                                            <div className="playlist">
-                                              <input
-                                                type="checkbox"
-                                                onChange={(e) => {
-                                                  e.target.dataset.queued = `${e.target.checked} `;
-                                                }}
-                                                id={`sample-${index}-${sample}`}
-                                              />
-                                              <label
-                                                htmlFor={`sample-${index}-${sample}`}
-                                              ></label>
-                                              <button
-                                                type="button"
-                                                className="play-button external"
-                                                title="Open in Playground"
-                                                onClick={(e) => {
-                                                  try {
-                                                    (
-                                                      (e.target as HTMLElement)
-                                                        .previousElementSibling
-                                                        ?.previousElementSibling as HTMLInputElement
-                                                    ).click();
-                                                  } catch {}
-                                                  const code = collectCode();
-                                                  sessionStorage.setItem(
-                                                    SESSION_KEY,
-                                                    JSON.stringify(code)
-                                                  );
-                                                  const url = new URL(
-                                                    window?.location.href
-                                                  );
-                                                  url.pathname = `/${locale}/play`;
-                                                  url.hash = "";
-                                                  url.search = "";
-                                                  if (e.shiftKey === true) {
-                                                    window.location.href =
-                                                      url.href;
-                                                  } else {
-                                                    window.open(url, "_blank");
-                                                  }
-                                                }}
-                                              >
-                                                play
-                                              </button>
-                                            </div>
-                                          )}
+                                            MessageStatus.Complete &&
+                                            [
+                                              "html",
+                                              "js",
+                                              "javascript",
+                                              "css",
+                                            ].includes(code.toLowerCase()) && (
+                                              <div className="playlist">
+                                                <input
+                                                  type="checkbox"
+                                                  onChange={(e) => {
+                                                    e.target.dataset.queued = `${e.target.checked} `;
+                                                  }}
+                                                  id={`sample-${index}-${sample}`}
+                                                />
+                                                <label
+                                                  htmlFor={`sample-${index}-${sample}`}
+                                                ></label>
+                                                <button
+                                                  type="button"
+                                                  className="play-button external"
+                                                  title="Open in Playground"
+                                                  onClick={(e) => {
+                                                    const input = (
+                                                      e.target as HTMLElement
+                                                    ).previousElementSibling
+                                                      ?.previousElementSibling as HTMLInputElement;
+                                                    const code =
+                                                      collectCode(input);
+                                                    sessionStorage.setItem(
+                                                      SESSION_KEY,
+                                                      JSON.stringify(code)
+                                                    );
+                                                    const url = new URL(
+                                                      window?.location.href
+                                                    );
+                                                    url.pathname = `/${locale}/play`;
+                                                    url.hash = "";
+                                                    url.search = "";
+                                                    if (e.shiftKey === true) {
+                                                      window.location.href =
+                                                        url.href;
+                                                    } else {
+                                                      window.open(
+                                                        url,
+                                                        "_blank"
+                                                      );
+                                                    }
+                                                  }}
+                                                >
+                                                  play
+                                                </button>
+                                              </div>
+                                            )}
                                         </div>
                                         <pre className={`brush: ${code}`}>
                                           {children}
@@ -635,7 +642,7 @@ export function AIHelpInner() {
                     {hasConversation && (
                       <Button
                         type="action"
-                        icon="add"
+                        icon="new_topic"
                         isDisabled={isQuotaExceeded(quota)}
                         extraClasses="ai-help-new-question-button"
                         onClickHandler={() => {
@@ -687,7 +694,7 @@ export function AIHelpInner() {
                         {!query && !hasConversation ? (
                           <Button
                             type="action"
-                            icon="star"
+                            icon="return"
                             buttonType="reset"
                             title="Delete question"
                             onClickHandler={() => {

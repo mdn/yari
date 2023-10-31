@@ -74,6 +74,16 @@ export async function toggleNoAds(enabled: boolean) {
   });
 }
 
+export async function toggleNoAIHelpHistory(enabled: boolean) {
+  return await fetch(SETTINGS_BASE_PATH, {
+    body: JSON.stringify({ no_ai_help_history: enabled }),
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
+
 export async function getNewsletterSubscription(): Promise<boolean | null> {
   try {
     const res = await fetch(NEWSLETTER_BASE_PATH);

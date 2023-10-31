@@ -86,7 +86,7 @@ function AIHelpHistorySubList({
               }`}
             >
               <a href={`./ai-help?c=${chat_id}`} title={last}>
-                {label}
+                {label || "New Topic"}
               </a>
               {chat_id === currentChatId && (
                 <Button
@@ -117,9 +117,13 @@ function AIHelpHistorySubList({
 export function AIHelpHistory({
   currentChatId,
   lastUpdate,
+  isResponding,
+  messageId,
 }: {
   currentChatId?: string;
   lastUpdate: Date;
+  isResponding: boolean;
+  messageId?: string;
 }) {
   const { data, mutate } = useSWR(
     `/api/v1/plus/ai/help/history/list`,
@@ -132,16 +136,40 @@ export function AIHelpHistory({
     }
   );
 
+  const firstTopic = data[0];
+
+  useEffect(() => {
+    if (
+      !isResponding &&
+      messageId &&
+      firstTopic?.chat_id === currentChatId &&
+      firstTopic?.label === ""
+    ) {
+      const update = async () => {
+        await (
+          await fetch(`/api/v1/plus/ai/help/history/summary/${messageId}`, {
+            method: "POST",
+          })
+        ).json();
+        mutate();
+      };
+      update();
+    }
+  }, [mutate, isResponding, currentChatId, messageId, firstTopic]);
   useEffect(() => {
     mutate();
   }, [lastUpdate, mutate]);
 
   return (
     <aside className="ai-help-history">
-      <header>History</header>
+      <details className="ai-help-history-details">
+        <summary>
+          <header>History</header>
+        </summary>
+      </details>
       <ol>
         {groupHistory(data).map((entries, index) => {
-          return (
+          return entries?.entries.length ? (
             <li key={index}>
               <AIHelpHistorySubList
                 entries={entries}
@@ -149,7 +177,7 @@ export function AIHelpHistory({
                 mutate={mutate}
               />
             </li>
-          );
+          ) : null;
         })}
       </ol>
     </aside>

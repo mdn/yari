@@ -77,11 +77,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
                 url.pathname = `/${locale}/play`;
                 url.hash = "";
                 url.search = "";
-                if (e.shiftKey) {
-                  window.location.href = url.href;
-                } else {
-                  window.open(url, "_blank");
-                }
+                window.open(url, "_blank");
               }}
             >
               PLAY

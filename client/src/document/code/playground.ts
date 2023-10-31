@@ -95,15 +95,17 @@ export function addBreakoutButton(
   });
 }
 
-export function collectCode(): EditorContent {
+export function collectCode(input?: HTMLInputElement): EditorContent {
   const selected = [
-    ...document.querySelectorAll(
-      ".example-header.play-collect > div > input:checked"
-    ),
+    ...document.querySelectorAll(".example-header.play-collect > div > input"),
   ]
+    .filter((i) => (i as HTMLInputElement).checked || i === input)
     .map((e) => e.parentElement?.parentElement?.nextElementSibling)
     .filter(Boolean);
 
+  if (selected.length > 1 && !input?.checked) {
+    input?.click?.();
+  }
   return {
     js: selected
       .map((pre) =>
@@ -164,18 +166,13 @@ export function addCollectButton(
   element.appendChild(playlist);
 
   button.addEventListener("click", (e) => {
-    check.checked = true;
-    const code = collectCode();
+    const code = collectCode(check);
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
     const url = new URL(window?.location.href);
     url.pathname = `/${locale}/play`;
     url.hash = "";
     url.search = "";
-    if (e.shiftKey === true) {
-      window.location.href = url.href;
-    } else {
-      window.open(url, "_blank");
-    }
+    window.open(url, "_blank");
   });
 }
 

@@ -123,29 +123,6 @@ export default function Experiments() {
                 )}
               </li>
             )}
-            {"history" in exConfig && (
-              <li>
-                <h3>Enable AI-Help history</h3>
-                <span>Allow to revisit past queries.</span>
-                {loading ? (
-                  <Spinner extraClasses="loading" />
-                ) : (
-                  <Switch
-                    name="mdn_plus_experiments_new_prompt"
-                    checked={Boolean(exConfig?.history)}
-                    toggle={async (e) => {
-                      setLoading(true);
-                      const { active, config } = await setExperiments({
-                        config: { history: Boolean(e.target.checked) },
-                      });
-                      setEnabled(active || false);
-                      setExConfig(config || {});
-                      setLoading(false);
-                    }}
-                  ></Switch>
-                )}
-              </li>
-            )}
           </>
         )}
       </ul>

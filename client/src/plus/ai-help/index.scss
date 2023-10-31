@@ -21,55 +21,101 @@
     padding-left: 1rem;
     padding-right: 1rem;
 
-    > .ai-help-history {
-      grid-column: left;
-      grid-row: 1/3;
-      height: fit-content;
-      overflow: hidden;
-      padding-top: 1rem;
-      position: sticky;
-      top: var(--sticky-header-without-actions-height);
-
-      header {
-        font-size: 1.5rem;
-        font-weight: bold;
-        padding: 0.25rem 0.5rem;
+    &.with-ai-help-history {
+      @media screen and (max-width: $screen-xxl) {
+        grid-template-columns: [left] minmax(0, 15rem) [center] minmax(0, 3fr);
+      }
+      @media screen and (max-width: $screen-md) {
+        grid-template-columns: [center] minmax(0, 3fr);
       }
 
-      ol {
-        > li {
-          display: flex;
-          flex-direction: column;
+      > .ai-help-history {
+        grid-column: left;
+        grid-row: 1/4;
+        height: fit-content;
+        overflow: hidden;
+        padding-top: 1rem;
+        position: sticky;
+        top: var(--sticky-header-without-actions-height);
 
-          > ol {
-            margin-bottom: 0.5rem;
-            width: 100%;
+        @media screen and (max-width: $screen-md) {
+          background-color: var(--background-primary);
+          grid-column: center;
+          grid-row: 2/3;
+          padding: 0 0.5rem;
+          z-index: var(--z-index-mid);
 
-            > li {
-              align-items: center;
-              display: flex;
-              flex-direction: row;
-              padding: 0.25rem 0.5rem;
+          > details {
+            ~ ol {
+              display: none;
+            }
 
-              > a {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 100%;
+            > summary {
+              &::after {
+                content: "◀";
+              }
+            }
+
+            &[open] {
+              ~ ol {
+                display: initial;
               }
 
-              &.ai-help-history-active {
-                background-color: var(--background-secondary);
-                border: 1px solid var(--border-primary);
+              > summary::after {
+                content: "▼";
               }
             }
           }
+        }
 
-          > time {
-            display: block;
-            font-size: var(--type-smaller-font-size);
+        summary {
+          list-style: none;
+
+          header {
+            display: inline-block;
+            font-size: 1.5rem;
             font-weight: bold;
-            padding-left: 0.5rem;
+            padding: 0.25rem 0.5rem;
+          }
+        }
+
+        ol {
+          > li {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 0 0.5rem;
+
+            > ol {
+              margin-bottom: 0.5rem;
+              width: 100%;
+
+              > li {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+                padding: 0.5rem;
+
+                > a {
+                  color: var(--text-primary);
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  width: 100%;
+                }
+
+                &.ai-help-history-active {
+                  background-color: var(--background-secondary);
+                  border: 1px solid var(--border-primary);
+                }
+              }
+            }
+
+            > time {
+              display: block;
+              font-size: var(--type-smaller-font-size);
+              font-weight: bold;
+              padding-left: 0.5rem;
+            }
           }
         }
       }
