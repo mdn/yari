@@ -119,7 +119,7 @@ function glean(): GleanAnalytics {
         navigatorMetric.geo.set(page.geo);
       }
       if (page.geo_iso) {
-        navigatorMetric.geo_iso.set(page.geo_iso);
+        navigatorMetric.geoIso.set(page.geo_iso);
       }
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
