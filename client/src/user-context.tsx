@@ -80,6 +80,7 @@ export type User = {
   email: string | null | undefined;
   geo: {
     country: string;
+    country_iso: string;
   };
   maintenance?: string;
   settings: null | UserPlusSettings;

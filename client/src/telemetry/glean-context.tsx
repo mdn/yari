@@ -208,6 +208,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
       geo: userData?.geo?.country,
+      geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
       viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
         ([_, width]) => width <= window.innerWidth
