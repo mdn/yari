@@ -1559,7 +1559,7 @@ test("basic markdown rendering", () => {
   expect($("article em")).toHaveLength(1);
   expect($("article ul li")).toHaveLength(6);
   expect($('article a[href^="/"]')).toHaveLength(2);
-  expect($('article a[href^="#"]')).toHaveLength(5);
+  expect($('article a[href^="#"]')).toHaveLength(6);
   expect($("article pre")).toHaveLength(4);
   expect($("article pre.notranslate")).toHaveLength(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);

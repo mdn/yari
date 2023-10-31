@@ -83,9 +83,14 @@
   }
 
   img {
-    background: var(--background-primary);
+    /* In dark mode, required for images with black text on transparent background. */
+    background: #fff;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
+    /* Required to prevent the border from scaling images, making them look blurry. */
+    box-sizing: content-box;
+    /* Required for alt texts. */
+    color: #1b1b1b;
     display: inline-block;
     display: flex;
     height: auto;
