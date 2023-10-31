@@ -40,7 +40,7 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
           href={menu.to}
           className="top-level-entry"
           onClick={() => {
-            gleanClick(`${MENU.CLICK_MENU}: ${menu.to}`);
+            gleanClick(`${MENU.CLICK_MENU}: ${menu.id} -> ${menu.to}`);
             // @ts-ignore
             document?.activeElement?.blur();
           }}

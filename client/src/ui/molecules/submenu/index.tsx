@@ -62,7 +62,9 @@ export const Submenu = ({
                     item.url.startsWith("https://") ? "external" : ""
                   }`}
                   onClick={() =>
-                    gleanClick(`${MENU.CLICK_SUBMENU}: ${item.url}`)
+                    gleanClick(
+                      `${MENU.CLICK_SUBMENU}: ${submenuId} -> ${item.url}`
+                    )
                   }
                 >
                   {item.hasIcon && <div className={item.iconClasses} />}
