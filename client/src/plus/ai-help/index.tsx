@@ -74,7 +74,7 @@ export default function AiHelp() {
         <Container>
           <h1>
             <div className="mandala-icon-wrapper">
-              <Mandala rotate={true} />
+              <Mandala />
               <Icon name="chatgpt" />
             </div>
             <span>AI Help</span>

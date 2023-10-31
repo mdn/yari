@@ -11,10 +11,6 @@
   display: flex;
   justify-content: center;
 
-  .mandala-rotate > .mandala-svg-container {
-    animation: rotation 500s linear infinite;
-  }
-
   svg {
     font-size: 1.5rem;
     font-weight: 300;
@@ -73,15 +69,6 @@
     }
   }
 
-  @keyframes rotation {
-    from {
-      transform: rotate(0deg);
-    }
-
-    to {
-      transform: rotate(360deg);
-    }
-  }
   @keyframes mandala-color-change {
     0% {
       fill: var(--mandala-primary);

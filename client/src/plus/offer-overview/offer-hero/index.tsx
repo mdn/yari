@@ -1,9 +1,7 @@
-import { DEV_MODE } from "../../../env";
 import Mandala from "../../../ui/molecules/mandala";
 import "./index.scss";
 
 function OfferHero() {
-  const animate = !DEV_MODE;
   return (
     <div className="dark offer-hero">
       <header className="container offer-hero-header">
@@ -27,7 +25,7 @@ function OfferHero() {
         </div>
       </header>
       <div className="mandala-wrapper">
-        <Mandala animate={animate} animateColors={animate} />
+        <Mandala animateColors={true} />
       </div>
     </div>
   );
