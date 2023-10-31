@@ -156,7 +156,7 @@
     "@types/async": "^3.2.22",
     "@types/cli-progress": "^3.11.4",
     "@types/imagemin": "^8.0.3",
-    "@types/jest": "^29.5.6",
+    "@types/jest": "^29.5.7",
     "@types/mdast": "^4.0.2",
     "@types/node": "^18.16.6",
     "@types/react": "^18.2.33",
