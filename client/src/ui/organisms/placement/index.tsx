@@ -8,11 +8,8 @@ import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import {
-  PlacementData,
-  Status,
-  usePlacement,
-} from "../../../placement-context";
+import { Status, usePlacement } from "../../../placement-context";
+import { Payload as PlacementData } from "../../../../../libs/pong/types";
 import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
@@ -24,6 +21,7 @@ interface PlacementRenderArgs {
   extraClassNames?: string[];
   click: string;
   image: string;
+  alt?: string;
   imageWidth: number;
   imageHeight: number;
   copy?: string;
@@ -276,8 +274,7 @@ export function PlacementInner({
     };
   }, [isVisible, isIntersecting, sendViewed]);
 
-  const { image, copy } = pong?.fallback || pong || {};
-  const { click, version } = pong || {};
+  const { image, copy, alt, click, version } = pong || {};
   return (
     <>
       {!isServer &&
@@ -287,6 +284,7 @@ export function PlacementInner({
           extraClassNames,
           click,
           image,
+          alt,
           imageWidth,
           imageHeight,
           copy,
@@ -305,6 +303,7 @@ function RenderSideOrTopBanner({
   extraClassNames = [],
   click,
   image,
+  alt,
   imageWidth,
   imageHeight,
   copy,
@@ -332,8 +331,8 @@ function RenderSideOrTopBanner({
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
-            aria-hidden="true"
-            alt=""
+            aria-hidden={!Boolean(alt)}
+            alt={alt || ""}
             width={imageWidth}
             height={imageHeight}
           ></img>
@@ -385,6 +384,7 @@ function RenderHpPlacement({
   extraClassNames = [],
   click,
   image,
+  alt,
   imageWidth,
   imageHeight,
   copy,
@@ -409,7 +409,7 @@ function RenderHpPlacement({
       >
         <img
           src={`/pimg/${encodeURIComponent(image || "")}`}
-          alt={copy}
+          alt={alt || copy}
           width={imageWidth}
           height={imageHeight}
         ></img>
@@ -423,6 +423,7 @@ function RenderBottomBanner({
   extraClassNames = [],
   click,
   image,
+  alt,
   imageWidth,
   imageHeight,
   copy,
@@ -448,7 +449,7 @@ function RenderBottomBanner({
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
-            alt={copy}
+            alt={alt || copy}
             width={imageWidth}
             height={imageHeight}
           ></img>

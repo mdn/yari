@@ -91,13 +91,14 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const { copy, image, click, view, cta, colors = {} } = v;
+          const { copy, image, alt, click, view, cta, colors = {} } = v;
           return [
             p,
             {
               status: "success",
               copy,
               image,
+              alt,
               cta,
               colors,
               click,
