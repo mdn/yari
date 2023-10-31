@@ -2326,11 +2326,6 @@
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.10.0.tgz#e2170dc2049b06e65bbe883adad0e8ddf8291278"
   integrity sha512-Lm+fYpMfZoEucJ7cMxgt4dYt8jLfbpwRCzAjm9UgSLOkmlqo9gupxt6YX3DY0Fk155NT9l17d/ydi+964uS9Lw==
 
-"@remix-run/router@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.10.0.tgz#e2170dc2049b06e65bbe883adad0e8ddf8291278"
-  integrity sha512-Lm+fYpMfZoEucJ7cMxgt4dYt8jLfbpwRCzAjm9UgSLOkmlqo9gupxt6YX3DY0Fk155NT9l17d/ydi+964uS9Lw==
-
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -11328,10 +11323,10 @@ open@^9.1.0:
     is-inside-container "^1.0.0"
     is-wsl "^2.2.0"
 
-openai@^4.14.1:
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.14.1.tgz#26ffa8e86a57da6595b46350355a754d934e61a1"
-  integrity sha512-aBb7DVdzSnEUBFHTbnVoitauefvjRuUHS5pa7lm1m5JmHifD+1Hff1RzxYC12ogugVcCmWT99NZNfzyD6n/0IQ==
+openai@^4.14.2:
+  version "4.14.2"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.14.2.tgz#edc09e986a922da22d14b96b547c29f435e724ae"
+  integrity sha512-JGlm7mMC7J+cyQZnQMOH7daD9cBqqWqLtlBsejElEkgoehPrYfdyxSxIGICz5xk4YimbwI5FlLATSVojLtCKXQ==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
@@ -12719,14 +12714,7 @@ react-router-dom@^6.17.0:
     "@remix-run/router" "1.10.0"
     react-router "6.17.0"
 
-react-router@6.17.0:
-  version "6.17.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.17.0.tgz#7b680c4cefbc425b57537eb9c73bedecbdc67c1e"
-  integrity sha512-YJR3OTJzi3zhqeJYADHANCGPUu9J+6fT5GLv82UWRGSxu6oJYCKVmxUcaBQuGm9udpWmPsvpme/CdHumqgsoaA==
-  dependencies:
-    "@remix-run/router" "1.10.0"
-
-react-router@^6.17.0:
+react-router@6.17.0, react-router@^6.17.0:
   version "6.17.0"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.17.0.tgz#7b680c4cefbc425b57537eb9c73bedecbdc67c1e"
   integrity sha512-YJR3OTJzi3zhqeJYADHANCGPUu9J+6fT5GLv82UWRGSxu6oJYCKVmxUcaBQuGm9udpWmPsvpme/CdHumqgsoaA==
