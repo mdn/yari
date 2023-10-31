@@ -4,6 +4,7 @@ export const OFFER_OVERVIEW_CLICK = "offer_overview_click";
 export const SIDEBAR_CLICK = "sidebar_click";
 export const SIDEBAR_CLICK_WITH_FILTER = "sidebar_click_with_filter";
 export const SIDEBAR_FILTER_FOCUS = "sidebar_filter_focus";
+export const TOC_CLICK = "toc_click";
 /** Replaced "top_nav_already_subscriber" in July 2023. */
 export const TOP_NAV_LOGIN = "top_nav: login";
 /** Replaced "top_nav_get_mdn_plus" in July 2023. */
