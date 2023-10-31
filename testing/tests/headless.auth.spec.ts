@@ -33,7 +33,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
-    await page.click("#user-menu-button");
+    await page.click("#my-mdn-plus-button");
     await page.click(".signout-form button[type='submit']");
     await page.waitForLoadState("networkidle");
 
@@ -51,7 +51,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await expect(page.locator(".user-menu")).toBeVisible();
 
     // open up user menu
-    await page.click("#user-menu-button");
+    await page.click("#my-mdn-plus-button");
     // Sign out
     await page.click(".signout-form button[type='submit']");
     await page.waitForLoadState("networkidle");
