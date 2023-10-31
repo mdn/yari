@@ -1,3 +1,5 @@
+import { MENU } from "../../../telemetry/constants";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import "./index.scss";
 
 export type SubmenuItem = {
@@ -32,6 +34,7 @@ export const Submenu = ({
   submenuId?: string;
   extraClasses?: string;
 }) => {
+  const gleanClick = useGleanClick();
   return (
     <ul
       id={submenuId}
@@ -58,6 +61,9 @@ export const Submenu = ({
                   className={`submenu-item ${
                     item.url.startsWith("https://") ? "external" : ""
                   }`}
+                  onClick={() =>
+                    gleanClick(`${MENU.CLICK_SUBMENU}: ${item.url}`)
+                  }
                 >
                   {item.hasIcon && <div className={item.iconClasses} />}
                   {item.dot && (
