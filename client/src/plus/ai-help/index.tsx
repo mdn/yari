@@ -471,7 +471,7 @@ export function AIHelpInner() {
                                                 ></label>
                                                 <button
                                                   type="button"
-                                                  className="play-button external"
+                                                  className="play-button"
                                                   title="Open in Playground"
                                                   onClick={(e) => {
                                                     const input = (

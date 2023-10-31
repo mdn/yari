@@ -73,9 +73,9 @@ export function addBreakoutButton(
   if (!element || element.querySelector(".play-button")) return;
   const button = document.createElement("button");
 
-  button.textContent = "Play";
+  button.textContent = "play";
 
-  button.setAttribute("class", "play-button external");
+  button.setAttribute("class", "play-button");
   button.type = "button";
   button.dataset.glean = `${PLAYGROUND}: breakout->${id}`;
   button.title = "Open in Playground";
@@ -156,7 +156,7 @@ export function addCollectButton(
 
   button.textContent = "play";
 
-  button.classList.add("play-button", "external");
+  button.classList.add("play-button");
   button.type = "button";
   button.setAttribute("data-play", id);
   button.title = "Open in Playground";
