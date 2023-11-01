@@ -714,10 +714,15 @@ pre {
       position: absolute;
       width: 0;
 
-      &:not(:checked) ~ label {
-        &::before {
-          content: "+ queue";
-        }
+      ~ label::before {
+        background-color: var(--icon-primary);
+        content: "";
+        display: inline-block;
+        height: 10px;
+        margin-right: 4px;
+        mask-image: url("../assets/icons/queue.svg");
+        mask-size: cover;
+        width: 10px;
       }
 
       &:focus ~ label {
@@ -734,11 +739,6 @@ pre {
       &:checked ~ label {
         color: var(--text-primary-blue);
         opacity: 1;
-
-        &::before {
-          color: var(--text-primary-blue);
-          content: "✓ queued";
-        }
       }
     }
   }

@@ -233,7 +233,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
             setQuestion(message.content);
           }}
         >
-          <span className="visually-hidden">Cancel editin</span>
+          <span className="visually-hidden">Cancel editing</span>
         </Button>
       </div>
     </form>
@@ -265,7 +265,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       <div className="ai-help-user-message">{message.content}</div>
       <Button
         type="action"
-        icon="edit-query"
+        icon="edit"
         onClickHandler={() => setEditing(true)}
       />
     </div>
@@ -286,12 +286,14 @@ export function AIHelpInner() {
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 
   const {
     isLoading,
     isResponding,
+    isInitializing,
     hasError,
     datas,
     messages,
@@ -334,11 +336,26 @@ export function AIHelpInner() {
     // Focus input:
     // - When the user loads the page (-> isQuotaLoading).
     // - When the user starts a "New chat" (-> hasConversation).
+    // Do not focus while we figure out wether we're loading history (-> isInitializing).
     const input = inputRef.current;
-    if (input) {
+    if (input && !isInitializing && !hasConversation) {
       window.setTimeout(() => input.focus());
     }
-  }, [isQuotaLoading, hasConversation]);
+  }, [isQuotaLoading, hasConversation, isInitializing]);
+
+  useEffect(() => {
+    const messageIds = new Set(messages.map((m) => m.messageId));
+    setQueuedExamples((old) => {
+      const fresh = new Set(
+        [...old].filter((id) => messageIds.has(id.split("--")[0]))
+      );
+      if (fresh.size !== old.size) {
+        window["playQueue"]?.();
+      }
+
+      return fresh;
+    });
+  }, [messages, setQueuedExamples]);
 
   const submitQuestion = (parentId) => {
     gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
@@ -370,8 +387,8 @@ export function AIHelpInner() {
               .filter(Boolean)
               .join(" ")}
           >
-            {hasConversation && (
-              <div ref={bodyRef} className="ai-help-body">
+            <div ref={bodyRef} className="ai-help-body">
+              {hasConversation && (
                 <ul className="ai-help-messages">
                   {messages.map((message, index) => {
                     let sample = 0;
@@ -443,6 +460,7 @@ export function AIHelpInner() {
                                         </pre>
                                       );
                                     }
+                                    const id = `${message.messageId}--${sample}`;
                                     sample += 1;
                                     return (
                                       <div className="code-example">
@@ -461,14 +479,30 @@ export function AIHelpInner() {
                                               <div className="playlist">
                                                 <input
                                                   type="checkbox"
-                                                  onChange={(e) => {
-                                                    e.target.dataset.queued = `${e.target.checked} `;
+                                                  checked={
+                                                    queuedExamples.has(id) ||
+                                                    false
+                                                  }
+                                                  onChange={() => {
+                                                    setQueuedExamples(
+                                                      (old) =>
+                                                        new Set(
+                                                          !old.has(id)
+                                                            ? [...old, id]
+                                                            : [...old].filter(
+                                                                (x) => x !== id
+                                                              )
+                                                        )
+                                                    );
+                                                    window["playQueue"]?.();
                                                   }}
-                                                  id={`sample-${index}-${sample}`}
+                                                  id={`sample-${id}`}
                                                 />
-                                                <label
-                                                  htmlFor={`sample-${index}-${sample}`}
-                                                ></label>
+                                                <label htmlFor={`sample-${id}`}>
+                                                  {queuedExamples.has(id)
+                                                    ? "queued"
+                                                    : "queue"}
+                                                </label>
                                                 <button
                                                   type="button"
                                                   className="play-button"
@@ -603,8 +637,8 @@ export function AIHelpInner() {
                     );
                   })}
                 </ul>
-              </div>
-            )}
+              )}
+            </div>
             {hasError && (
               <NoteCard extraClasses="ai-help-error" type="error">
                 <h4>Error</h4>
@@ -642,13 +676,14 @@ export function AIHelpInner() {
                     {hasConversation && (
                       <Button
                         type="action"
-                        icon="new_topic"
+                        icon="new-topic"
                         isDisabled={isQuotaExceeded(quota)}
                         extraClasses="ai-help-new-question-button"
                         onClickHandler={() => {
                           gleanClick(`${AI_HELP}: new`);
                           setQuery("");
                           setIsExample(false);
+                          setQueuedExamples(new Set());
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}
