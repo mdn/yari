@@ -4,6 +4,7 @@ export const OFFER_OVERVIEW_CLICK = "offer_overview_click";
 export const SIDEBAR_CLICK = "sidebar_click";
 export const SIDEBAR_CLICK_WITH_FILTER = "sidebar_click_with_filter";
 export const SIDEBAR_FILTER_FOCUS = "sidebar_filter_focus";
+export const TOC_CLICK = "toc_click";
 /** Replaced "top_nav_already_subscriber" in July 2023. */
 export const TOP_NAV_LOGIN = "top_nav: login";
 /** Replaced "top_nav_get_mdn_plus" in July 2023. */
@@ -21,6 +22,11 @@ export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
+
+export const MENU = Object.freeze({
+  CLICK_MENU: "menu_click_menu",
+  CLICK_SUBMENU: "menu_click_submenu",
+});
 
 export const PLUS_COLLECTIONS = Object.freeze({
   ACTIONS_NOTE_ADD: "collections_actions_note_add",

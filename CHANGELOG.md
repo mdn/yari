@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.33.0](https://github.com/mdn/yari/compare/v2.32.0...v2.33.0) (2023-10-31)
+
+
+### Features
+
+* **links:** distinguish visited links ([#9907](https://github.com/mdn/yari/issues/9907)) ([8f84da3](https://github.com/mdn/yari/commit/8f84da3bcc0bc6e1b87c15078c14a1d140925688))
+* **theme:** sync body background-color with theme-color meta tag ([#9325](https://github.com/mdn/yari/issues/9325)) ([5001b04](https://github.com/mdn/yari/commit/5001b04890f796b388024b2d23c4c5b0caf88f73))
+
+
+### Bug Fixes
+
+* **client:** rendering locale in column header on /translations/dashboard ([24bf873](https://github.com/mdn/yari/commit/24bf8738815cc0884eb47e3ae0f4ce1973906389))
+* correct some typos ([#9858](https://github.com/mdn/yari/issues/9858)) ([925538e](https://github.com/mdn/yari/commit/925538e166bd71d2befb3fb46741d7b6624a4978))
+* **docs:** link first child of every description term in post-processing ([#9862](https://github.com/mdn/yari/issues/9862)) ([0295813](https://github.com/mdn/yari/commit/029581391fa2a57f843d55f47390ec8c0c4b6732))
+* **images:** avoid blurry images ([#9591](https://github.com/mdn/yari/issues/9591)) ([0829b7e](https://github.com/mdn/yari/commit/0829b7ee43815d86f9c91ef6797cedc7d4f1e1f3))
+* **mandala:** remove rotation and color animation ([#9916](https://github.com/mdn/yari/issues/9916)) ([e687a03](https://github.com/mdn/yari/commit/e687a03e2354412f4dad45e80d4ebaa9d7926d5a))
+* **plus:** load stripe.js for fraud prevention ([#9318](https://github.com/mdn/yari/issues/9318)) ([88f000e](https://github.com/mdn/yari/commit/88f000e037fbad71ed2779159aa4e7f47568cadc))
+* **translations/dashboard:** fix Popularity rank column header ([#9908](https://github.com/mdn/yari/issues/9908)) ([24bf873](https://github.com/mdn/yari/commit/24bf8738815cc0884eb47e3ae0f4ce1973906389))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump {react-router,react-router-dom} from 6.16.0 to 6.17.0 ([#9832](https://github.com/mdn/yari/issues/9832)) ([fd72a19](https://github.com/mdn/yari/commit/fd72a19b394e9c4123b4670deae140b6549ec93f))
+* **deps-dev:** bump eslint-plugin-unicorn from 48.0.1 to 49.0.0 ([#9904](https://github.com/mdn/yari/issues/9904)) ([0de918b](https://github.com/mdn/yari/commit/0de918bcc291a48299dce76c8f251224705e86eb))
+* **deps-dev:** bump stylelint-scss from 5.2.1 to 5.3.0 ([#9905](https://github.com/mdn/yari/issues/9905)) ([5efd040](https://github.com/mdn/yari/commit/5efd04052a81c7d145dc8b7f1d212dbbfc5b0211))
+* **deps-dev:** bump the types group with 1 update ([#9913](https://github.com/mdn/yari/issues/9913)) ([3b2dc06](https://github.com/mdn/yari/commit/3b2dc06f522bbdf0e730fe054f588d3bbc46b204))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.29 to 2.7.30 in /client/pwa ([#9823](https://github.com/mdn/yari/issues/9823)) ([a19c79c](https://github.com/mdn/yari/commit/a19c79ced150ca79f54dbd55781488124b5e8b0d))
+* **deps:** bump openai from 3.3.0 to 4.14.0 ([#9888](https://github.com/mdn/yari/issues/9888)) ([607c938](https://github.com/mdn/yari/commit/607c9385f804bdb8c25e4a66870444516aa59b3f))
+* **deps:** bump openai from 4.14.0 to 4.14.1 ([#9903](https://github.com/mdn/yari/issues/9903)) ([101b682](https://github.com/mdn/yari/commit/101b68220aa0ec8d264d37fd7050669613e72655))
+* **deps:** bump openai from 4.14.1 to 4.14.2 ([#9914](https://github.com/mdn/yari/issues/9914)) ([b60d0c0](https://github.com/mdn/yari/commit/b60d0c0e4b204993b4ded647d0256e6692b92195))
+* **deps:** bump the dependencies group in /deployer with 3 updates ([#9900](https://github.com/mdn/yari/issues/9900)) ([fe6c535](https://github.com/mdn/yari/commit/fe6c535a812511c57faa6ce722bc66d50e7c6c76))
+* **deps:** bump the dependencies group in /testing/integration with 2 updates ([#9902](https://github.com/mdn/yari/issues/9902)) ([521b8af](https://github.com/mdn/yari/commit/521b8af6bb26cd0370f845fc32d6e63b88eb97ff))
+* **deps:** bump the sentry group with 2 updates ([#9901](https://github.com/mdn/yari/issues/9901)) ([881e66c](https://github.com/mdn/yari/commit/881e66c4c648f776d314ed8d2bfe1fdf2d61c5ef))
+* **deps:** bump the sentry group with 2 updates ([#9912](https://github.com/mdn/yari/issues/9912)) ([3c371ce](https://github.com/mdn/yari/commit/3c371ce6ae1cfdf853b309a9a1d6d150bb26f0ef))
+* **macros/MathMLRef:** update zh-CN translation ([#9915](https://github.com/mdn/yari/issues/9915)) ([d7f3e7d](https://github.com/mdn/yari/commit/d7f3e7d6859d4742a42481af842c045691ec8268))
+* **macros/Non-standard_Header:** remove "Firefox OS" ([#9827](https://github.com/mdn/yari/issues/9827)) ([fd2a66e](https://github.com/mdn/yari/commit/fd2a66e5eeed6174872e5ce98b8d114d621072a3))
+* **telemetry:** measure TOC clicks ([#9919](https://github.com/mdn/yari/issues/9919)) ([69a0276](https://github.com/mdn/yari/commit/69a02760b76e017bc7017252d9a60f598b154b56))
+
 ## [2.32.0](https://github.com/mdn/yari/compare/v2.31.0...v2.32.0) (2023-10-27)
 
 

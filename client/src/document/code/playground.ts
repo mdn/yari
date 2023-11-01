@@ -142,12 +142,13 @@ export function addCollectButton(
   playlist.classList.add("playlist");
   const checkLabel = document.createElement("label");
   checkLabel.htmlFor = checkId;
-  checkLabel.textContent = "";
+  checkLabel.textContent = "queue";
   const check = document.createElement("input");
   check.addEventListener("change", (e) => {
     const ct = e.currentTarget as HTMLInputElement | null;
     if (ct?.dataset) {
-      ct.dataset.queued = `${ct.checked} `;
+      checkLabel.textContent = ct.checked ? "queued" : "queue";
+      window["playQueue"]?.();
     }
   });
   check.type = "checkbox";

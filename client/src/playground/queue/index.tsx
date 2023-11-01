@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import "./index.scss";
 import { collectCode } from "../../document/code/playground";
 import { SESSION_KEY } from "../utils";
@@ -32,26 +32,13 @@ function PQEntry({ element, key }: { element: HTMLInputElement; key: number }) {
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const [queue, setQueue] = useState<HTMLInputElement[]>([]);
-  const observer = useRef<null | MutationObserver>(null);
-  useEffect(() => {
-    if (observer.current === null) {
-      const callback = (mutationList, observer) => {
-        for (const mutation of mutationList) {
-          if (mutation.type === "attributes") {
-            setQueue([
-              ...document.querySelectorAll(".playlist > input:checked"),
-            ] as HTMLInputElement[]);
-          }
-        }
-      };
-      const mObserver = new MutationObserver(callback);
-      mObserver.observe(document.body, {
-        subtree: true,
-        attributeFilter: ["data-queued"],
-      });
-      observer.current = mObserver;
-    }
+  const cb = useCallback(() => {
+    const elements = [
+      ...document.querySelectorAll(".playlist > input:checked"),
+    ] as HTMLInputElement[];
+    setQueue(elements);
   }, [setQueue]);
+  window["playQueue"] = cb;
   return queue.length ? (
     <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
       <aside>

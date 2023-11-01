@@ -162,11 +162,14 @@ export function AIHelpHistory({
 
   return (
     <aside className="ai-help-history">
-      <details className="ai-help-history-details">
-        <summary>
-          <header>History</header>
-        </summary>
-      </details>
+      <input
+        id="ai-help-history-toggle"
+        type="checkbox"
+        className="ai-help-history-details"
+      />
+      <label htmlFor="ai-help-history-toggle">
+        <span className="visually-hidden">toggle history menu</span>
+      </label>
       <ol>
         {groupHistory(data).map((entries, index) => {
           return entries?.entries.length ? (

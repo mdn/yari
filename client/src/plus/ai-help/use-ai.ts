@@ -349,6 +349,7 @@ export function useAiChat({
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const [isResponding, setIsResponding] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
@@ -598,7 +599,11 @@ export function useAiChat({
   );
 
   useEffect(() => {
-    setMessages(stateToMessagePath(state, path));
+    const messages = stateToMessagePath(state, path);
+    setMessages(messages);
+    if (messages.length) {
+      setIsInitializing(false);
+    }
   }, [state, path, setMessages]);
 
   function useRemoteQuota() {
@@ -709,6 +714,7 @@ export function useAiChat({
     path,
     isLoading,
     isResponding,
+    isInitializing,
     sendFeedback,
     hasError,
     quota,

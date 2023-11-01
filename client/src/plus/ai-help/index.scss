@@ -13,7 +13,7 @@
 
   > .ai-help-main {
     --ai-top: calc(var(--top-nav-height) + 1px + 1rem);
-    column-gap: 1rem;
+    column-gap: 3rem;
     display: grid;
     grid-template-columns: [left] 1fr [center] min(52rem, 100%) [right] 1fr;
     margin: 0 auto;
@@ -33,49 +33,58 @@
         grid-column: left;
         grid-row: 1/4;
         height: fit-content;
+        max-height: calc(100vh - var(--sticky-header-without-actions-height));
         overflow: hidden;
-        padding-top: 1rem;
+        overflow: auto;
         position: sticky;
         top: var(--sticky-header-without-actions-height);
 
-        @media screen and (max-width: $screen-md) {
-          background-color: var(--background-primary);
-          grid-column: center;
-          grid-row: 2/3;
-          padding: 0 0.5rem;
-          z-index: var(--z-index-mid);
+        > input {
+          height: 0;
+          margin: 0;
+          opacity: 0;
+          position: absolute;
+          width: 0;
 
-          > details {
+          ~ label {
+            background-color: var(--background-primary);
+            cursor: pointer;
+            display: block;
+            padding: 0.5rem;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: var(--z-index-mid);
+
+            &::before {
+              background-color: var(--icon-primary);
+              content: "";
+              display: inline-block;
+              display: block;
+              height: 13.5px;
+              margin: 0.5rem;
+              margin-left: 0;
+              mask-image: url("../../assets/icons/sidebar.svg");
+              mask-size: cover;
+              width: 16px;
+            }
+          }
+
+          &:focus-visible ~ label {
+            opacity: 1;
+            outline-color: var(--accent-primary);
+            outline-offset: 1px;
+            outline-style: auto;
+          }
+
+          &:checked {
+            ~ label::before {
+              mask-image: url("../../assets/icons/sidebar-filled.svg");
+            }
+
             ~ ol {
               display: none;
             }
-
-            > summary {
-              &::after {
-                content: "◀";
-              }
-            }
-
-            &[open] {
-              ~ ol {
-                display: initial;
-              }
-
-              > summary::after {
-                content: "▼";
-              }
-            }
-          }
-        }
-
-        summary {
-          list-style: none;
-
-          header {
-            display: inline-block;
-            font-size: 1.5rem;
-            font-weight: bold;
-            padding: 0.25rem 0.5rem;
           }
         }
 
@@ -101,6 +110,17 @@
                   text-overflow: ellipsis;
                   white-space: nowrap;
                   width: 100%;
+
+                  &::before {
+                    background-color: var(--icon-primary);
+                    content: "";
+                    display: inline-block;
+                    height: 10px;
+                    margin-right: 0.5rem;
+                    mask-image: url("../../assets/icons/new-topic.svg");
+                    mask-size: cover;
+                    width: 10px;
+                  }
                 }
 
                 &.ai-help-history-active {
@@ -115,6 +135,35 @@
               font-size: var(--type-smaller-font-size);
               font-weight: bold;
               padding-left: 0.5rem;
+            }
+          }
+        }
+        @media screen and (max-width: $screen-md) {
+          background-color: var(--background-primary);
+          grid-column: center;
+          grid-row: 2/3;
+          max-height: initial;
+          padding: 0 0.5rem;
+          position: initial;
+          z-index: var(--z-index-mid);
+
+          input {
+            ~ label::before {
+              mask-image: url("../../assets/icons/sidebar-filled.svg");
+            }
+
+            ~ ol {
+              display: none;
+            }
+          }
+
+          input:checked {
+            ~ label::before {
+              mask-image: url("../../assets/icons/sidebar.svg");
+            }
+
+            ~ ol {
+              display: initial;
             }
           }
         }
