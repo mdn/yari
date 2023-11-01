@@ -38,7 +38,9 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
     ] as HTMLInputElement[];
     setQueue(elements);
   }, [setQueue]);
-  window["playQueue"] = cb;
+  if (typeof window !== "undefined") {
+    window["playQueue"] = cb;
+  }
   return queue.length ? (
     <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
       <aside>
