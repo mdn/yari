@@ -16,7 +16,7 @@
   h6 {
     a:link,
     a:visited {
-      color: var(--text-primary);
+      color: inherit !important;
       text-decoration: none;
     }
 
@@ -154,7 +154,7 @@
       margin-top: 2rem;
 
       a[href^="#"] {
-        color: inherit;
+        color: inherit !important;
         position: relative;
         text-decoration: none;
 
