@@ -66,8 +66,8 @@ async function getTitle(pageSlug) {
 %>
 <section id="Quick_links" data-macro="SVGRef">
  <ol>
-  <li><a href="/<%=locale%>/docs/Web/SVG"><strong>SVG</strong></a></li>
-  <li class="no-link"><strong><%=text['Tutorials']%></strong></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/SVG">SVG</a></li>
+  <li class="section no-link"><%=text['Tutorials']%></li>
   <li class="toggle">
     <details>
       <summary><%=text['Introducing SVG from scratch']%></summary>
@@ -92,7 +92,7 @@ async function getTitle(pageSlug) {
       </ol>
     </details>
   </li>
-  <li class="no-link"><strong><%=text['Reference']%></strong></li>
+  <li class="section no-link"><%=text['Reference']%></li>
   <li class="toggle">
     <details>
       <summary><%=text['Elements']%></summary>
@@ -105,7 +105,7 @@ async function getTitle(pageSlug) {
       <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/SVG/Attribute'])%>
     </details>
   </li>
-  <li class="no-link"><strong><%=text['Guides']%></strong></li>
+  <li class="section no-link"><%=text['Guides']%></li>
   <li>
     <ol>
     <li><a href="/<%=locale%>/docs/Web/SVG/Applying_SVG_effects_to_HTML_content"><%=await getTitle("Applying_SVG_effects_to_HTML_content")%></a></li>

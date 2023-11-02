@@ -56,8 +56,8 @@ async function getTitle(pageSlug) {
 %>
 <section id="Quick_links" data-macro="MathMLRef">
  <ol>
-  <li><a href="/<%=locale%>/docs/Web/MathML"><strong>MathML</strong></a></li>
-  <li class="no-link"><strong><%=text['Guides']%></strong></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/MathML">MathML</a></li>
+  <li class="section no-link"><%=text['Guides']%></li>
   <li>
     <ol>
     <li><a href="/<%=locale%>/docs/Web/MathML/Authoring"><%=await getTitle("Authoring")%></a></li>
@@ -65,7 +65,7 @@ async function getTitle(pageSlug) {
     <li><a href="/<%=locale%>/docs/Web/MathML/Values"><%=await getTitle("Values")%></a></li>
     </ol>
   </li>
-  <li class="no-link"><strong><%=text['Reference']%></strong></li>
+  <li class="section no-link"><%=text['Reference']%></li>
   <li class="toggle">
     <details>
       <summary><%=text['Elements']%></summary>
@@ -79,7 +79,7 @@ async function getTitle(pageSlug) {
     </details>
   </li>
   <li><a href="/<%=locale%>/docs/Web/MathML/Attribute"><%=await getTitle("Attribute")%></a></li>
-  <li class="no-link"><strong><%=text['Examples']%></strong></li>
+  <li class="section no-link"><%=text['Examples']%></li>
   <li>
     <ol>
     <li><a href="/<%=locale%>/docs/Web/MathML/Examples/Deriving_the_Quadratic_Formula"><%=await getTitle("Examples/Deriving_the_Quadratic_Formula")%></a></li>

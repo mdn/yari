@@ -835,7 +835,7 @@ async function renderSubsection(subsection) {
 }
 
 async function renderSection(section) {
-  let output = `<li><a href="${baseURL}${section.link}"><strong>${l10nStrings[section.name]}</strong></a></li>`;
+  let output = `<li class="section"><a href="${baseURL}${section.link}">${l10nStrings[section.name]}</a></li>`;
 
   for (const subsection of section.subsections) {
     output += await renderSubsection(subsection);

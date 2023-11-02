@@ -315,8 +315,8 @@ var text = mdn.localStringMap({
 %>
 <section id="Quick_links" data-macro="HTMLSidebar">
  <ol>
-  <li><a href="/<%=locale%>/docs/Web/HTML"><strong>HTML</strong></a></li>
-  <li><a href="<%=learnBaseURL%>HTML"><strong><%=text['Tutorials']%></strong></a></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/HTML">HTML</a></li>
+  <li class="section"><a href="<%=learnBaseURL%>HTML"><%=text['Tutorials']%></a></li>
   <li><a href="<%=learnBaseURL%>Getting_started_with_the_web/HTML_basics"><%=text['HTML_basics']%></a></li>
   <li class="toggle">
     <details <%=state('Introduction_to_HTML')%>>
@@ -360,7 +360,7 @@ var text = mdn.localStringMap({
       </ol>
     </details>
   </li>
-  <li><strong><a href="/<%=locale%>/docs/Web/HTML/Reference"><%=text['Reference']%></a></strong></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/HTML/Reference"><%=text['Reference']%></a></li>
   <li class="toggle">
     <details <%=state('HTML_Elements')%>>
       <summary><%=text['HTML_Elements']%></summary>
@@ -400,7 +400,7 @@ var text = mdn.localStringMap({
       <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTML/Element/input'])%>
     </details>
   </li>
-  <li class="no-link"><strong><%=text['Guides']%></strong></li>
+  <li class="section no-link"><%=text['Guides']%></li>
   <li>
     <ol>
       <li><a href="/<%=locale%>/docs/Web/HTML/Content_categories"><%=text["Content_categories"]%></a></li>
