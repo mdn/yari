@@ -216,7 +216,7 @@ async function renderOutput() {
     const resultOpen         = item.defaultOpened ?? false;
 
     if (index === 1) {
-      output += `<li><strong>${text.Inheritance}</strong></li>`;
+      output += `<li class="no-link"><strong>${text.Inheritance}</strong></li>`;
     }
 
     const link = web.smartLink(`${slugStdlib}/${resultSubPath}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
@@ -233,7 +233,7 @@ async function renderOutput() {
     }
 
     if (index === 0 && group.length > 0) {
-      output += `<li><strong>${text.Related}</strong></li>`;
+      output += `<li class="no-link"><strong>${text.Related}</strong></li>`;
       for (const groupItem of group) {
         const link = web.smartLink(`${slugStdlib}/${groupItem.replace(".", "/")}`, null, `<code>${groupItem}</code>`, null, slugStdlib, "JSRef");
         output += `<li><strong>${link}</strong></li>`;

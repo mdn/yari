@@ -1182,7 +1182,7 @@ async function buildPropertylist(pages, title) {
   <%-await buildSublist(functions, 'Functions');%>
   <%-await buildSublist(types, 'Types');%>
 
-  <li><strong><%=text['Guides']%></strong></li>
+  <li class="no-link"><strong><%=text['Guides']%></strong></li>
   <li class="toggle">
       <details>
           <summary><%=text['Animations']%></summary>
@@ -1420,7 +1420,7 @@ async function buildPropertylist(pages, title) {
     </ol>
   </li>
 
-  <li><strong><%=text['Tools']%></strong></li>
+  <li class="no-link"><strong><%=text['Tools']%></strong></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
