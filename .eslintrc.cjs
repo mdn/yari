@@ -57,6 +57,7 @@ module.exports = {
           "warn",
           { ignoreRestSiblings: true },
         ],
+        "n/no-deprecated-api": "off",
         "n/no-extraneous-import": [
           "error",
           {
