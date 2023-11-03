@@ -38,135 +38,6 @@
         overflow: auto;
         position: sticky;
         top: var(--sticky-header-without-actions-height);
-
-        > input {
-          height: 0;
-          margin: 0;
-          opacity: 0;
-          position: absolute;
-          width: 0;
-
-          ~ label {
-            background-color: var(--background-primary);
-            cursor: pointer;
-            display: block;
-            padding: 0.5rem;
-            position: sticky;
-            top: 0;
-            width: 100%;
-            z-index: var(--z-index-mid);
-
-            &::before {
-              background-color: var(--icon-primary);
-              content: "";
-              display: inline-block;
-              display: block;
-              height: 13.5px;
-              margin: 0.5rem;
-              margin-left: 0;
-              mask-image: url("../../assets/icons/sidebar.svg");
-              mask-size: cover;
-              width: 16px;
-            }
-          }
-
-          &:focus-visible ~ label {
-            opacity: 1;
-            outline-color: var(--accent-primary);
-            outline-offset: 1px;
-            outline-style: auto;
-          }
-
-          &:checked {
-            ~ label::before {
-              mask-image: url("../../assets/icons/sidebar-filled.svg");
-            }
-
-            ~ ol {
-              display: none;
-            }
-          }
-        }
-
-        ol {
-          > li {
-            display: flex;
-            flex-direction: column;
-            padding: 1rem 0 0.5rem;
-
-            > ol {
-              margin-bottom: 0.5rem;
-              width: 100%;
-
-              > li {
-                align-items: center;
-                display: flex;
-                flex-direction: row;
-                padding: 0.5rem;
-
-                > a {
-                  color: var(--text-primary);
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  width: 100%;
-
-                  &::before {
-                    background-color: var(--icon-primary);
-                    content: "";
-                    display: inline-block;
-                    height: 10px;
-                    margin-right: 0.5rem;
-                    mask-image: url("../../assets/icons/new-topic.svg");
-                    mask-size: cover;
-                    width: 10px;
-                  }
-                }
-
-                &.ai-help-history-active {
-                  background-color: var(--background-secondary);
-                  border: 1px solid var(--border-primary);
-                }
-              }
-            }
-
-            > time {
-              display: block;
-              font-size: var(--type-smaller-font-size);
-              font-weight: bold;
-              padding-left: 0.5rem;
-            }
-          }
-        }
-        @media screen and (max-width: $screen-md) {
-          background-color: var(--background-primary);
-          grid-column: center;
-          grid-row: 2/3;
-          max-height: initial;
-          padding: 0 0.5rem;
-          position: initial;
-          z-index: var(--z-index-mid);
-
-          input {
-            ~ label::before {
-              mask-image: url("../../assets/icons/sidebar-filled.svg");
-            }
-
-            ~ ol {
-              display: none;
-            }
-          }
-
-          input:checked {
-            ~ label::before {
-              mask-image: url("../../assets/icons/sidebar.svg");
-            }
-
-            ~ ol {
-              display: initial;
-            }
-          }
-        }
       }
     }
 
@@ -310,10 +181,8 @@
           background: transparent;
         }
       }
-    }
 
-    &.has-input {
-      button {
+      .button:enabled {
         --button-color: var(--ai-help-icon);
       }
     }

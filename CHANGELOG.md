@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.33.1](https://github.com/mdn/yari/compare/v2.33.0...v2.33.1) (2023-11-03)
+
+
+### Bug Fixes
+
+* **links:** revert distinguish visited links ([3bae299](https://github.com/mdn/yari/commit/3bae2998df7296591368004fd06d5b6b5358bb2f))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump postcss-preset-env from 9.2.0 to 9.3.0 ([#9923](https://github.com/mdn/yari/issues/9923)) ([e095444](https://github.com/mdn/yari/commit/e0954449274a5225e56a6bd84afec280b14b378d))
+* **deps-dev:** bump react-router-dom from 6.17.0 to 6.18.0 ([#9925](https://github.com/mdn/yari/issues/9925)) ([cd21c6d](https://github.com/mdn/yari/commit/cd21c6dcc0d2855e9e38759300ac805368e50dd5))
+* **deps-dev:** bump stylelint-config-recommended-scss from 13.0.0 to 13.1.0 ([#9935](https://github.com/mdn/yari/issues/9935)) ([ca191b0](https://github.com/mdn/yari/commit/ca191b0211a7162e18f0504b2605a44eedbf880e))
+* **deps-dev:** bump the types group with 1 update ([#9928](https://github.com/mdn/yari/issues/9928)) ([414cc21](https://github.com/mdn/yari/commit/414cc21e5b1b06bbf828478d983f4c66ce7c15d5))
+* **deps:** bump @mdn/browser-compat-data from 5.3.27 to 5.3.28 ([#9926](https://github.com/mdn/yari/issues/9926)) ([48c8ce0](https://github.com/mdn/yari/commit/48c8ce03141eefde73bd8110772ddad90b45959f))
+* **deps:** bump @stripe/stripe-js from 2.1.10 to 2.1.11 ([#9933](https://github.com/mdn/yari/issues/9933)) ([8054bbd](https://github.com/mdn/yari/commit/8054bbd1f3fffba02eab8dd8928d856977baf7be))
+* **deps:** bump file-type from 18.5.0 to 18.6.0 ([#9924](https://github.com/mdn/yari/issues/9924)) ([ecd9779](https://github.com/mdn/yari/commit/ecd9779409c5de32d20839c45bb4c745350fd324))
+* **deps:** bump mdn-data from 2.1.0 to 2.2.0 ([#9934](https://github.com/mdn/yari/issues/9934)) ([32c0c00](https://github.com/mdn/yari/commit/32c0c00815ac5d1efeca63d17c236266906d4a17))
+* **macros/JsSidebar:** update zh-CN translation ([#9849](https://github.com/mdn/yari/issues/9849)) ([9867d52](https://github.com/mdn/yari/commit/9867d52abdebea25beb6e4d4878bd902a03664c4))
+* **macros/LearnSidebar:** add some pages under MathML ([#9937](https://github.com/mdn/yari/issues/9937)) ([060e53a](https://github.com/mdn/yari/commit/060e53a002761656bbad954a1675ee0a8b8ef109))
+* **macros/WebAssemblySidebar:** add zh-CN translation ([#9932](https://github.com/mdn/yari/issues/9932)) ([870285a](https://github.com/mdn/yari/commit/870285aed1e0218adbc4abf1660ccd519413496c))
+* **telemetry:** measure menu clicks ([#9918](https://github.com/mdn/yari/issues/9918)) ([c4c5d79](https://github.com/mdn/yari/commit/c4c5d79f201cd2fe3844414dcaf5edc8b9bd5246))
+
 ## [2.33.0](https://github.com/mdn/yari/compare/v2.32.0...v2.33.0) (2023-10-31)
 
 

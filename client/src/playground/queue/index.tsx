@@ -1,18 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./index.scss";
 import { collectCode } from "../../document/code/playground";
 import { SESSION_KEY } from "../utils";
-import { useLocale } from "../../hooks";
+import { useIsServer, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 
-function PQEntry({ element, key }: { element: HTMLInputElement; key: number }) {
-  const header = element.parentElement?.parentElement;
+function PQEntry({ id, key, lang }: QueueEntry) {
   const intoView = () => {
+    const element = document.getElementById(id);
+    const header = element?.parentElement?.parentElement;
     const top =
       (header?.getBoundingClientRect().top || 0) + window.scrollY - 130;
     window.scrollTo({ top, behavior: "smooth" });
   };
-  const lang = header?.firstChild?.textContent;
   return (
     <li key={key}>
       <button className="queue-ref" onClick={intoView}>
@@ -23,24 +23,49 @@ function PQEntry({ element, key }: { element: HTMLInputElement; key: number }) {
         type="action"
         buttonType="reset"
         icon="trash"
-        onClickHandler={() => element.click()}
+        onClickHandler={() => {
+          uncheck(id);
+          window["playQueue"]?.();
+        }}
       />
     </li>
   );
 }
 
+function uncheck(id: string) {
+  const el = document.getElementById(id) as HTMLInputElement | undefined;
+  if (el) {
+    el.checked = false;
+    return true;
+  }
+  return false;
+}
+
+interface QueueEntry {
+  key: number;
+  id: string;
+  lang?: string | null;
+}
+
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
-  const [queue, setQueue] = useState<HTMLInputElement[]>([]);
+  const isServer = useIsServer();
+  const [queue, setQueue] = useState<QueueEntry[]>([]);
   const cb = useCallback(() => {
     const elements = [
       ...document.querySelectorAll(".playlist > input:checked"),
     ] as HTMLInputElement[];
-    setQueue(elements);
+    setQueue(
+      elements.map((e, key) => {
+        return { key, id: e.id, lang: e?.firstChild?.textContent };
+      })
+    );
   }, [setQueue]);
-  if (typeof window !== "undefined") {
-    window["playQueue"] = cb;
-  }
+  useEffect(() => {
+    if (!isServer) {
+      window["playQueue"] = cb;
+    }
+  }, [cb, isServer]);
   return queue.length ? (
     <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
       <aside>
@@ -51,11 +76,14 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
               buttonType="reset"
               icon="cancel"
               type="action"
-              onClickHandler={() => queue.forEach((e) => e.click())}
+              onClickHandler={() => {
+                queue.forEach(({ id }) => uncheck(id));
+                setQueue([]);
+              }}
             ></Button>
           </summary>
           <div className="play-queue-inner">
-            <ul>{queue.map((el, key) => PQEntry({ element: el, key }))}</ul>
+            <ul>{queue.map(PQEntry)}</ul>
             <Button
               type="secondary"
               extraClasses="play-button"

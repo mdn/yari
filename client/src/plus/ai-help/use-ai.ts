@@ -379,6 +379,18 @@ export function useAiChat({
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
   const remoteQuota = useRemoteQuota();
 
+  const reset = useCallback(() => {
+    resetLoadingState();
+    setSearchParams((prev) => {
+      prev.delete("c");
+      return prev;
+    });
+    setMessages([]);
+    dispatchState({
+      type: "reset",
+    });
+  }, [setSearchParams]);
+
   useEffect(() => {
     const convId = searchParams.get("c");
     if (convId) {
@@ -393,7 +405,11 @@ export function useAiChat({
         }
       })();
     }
-  }, [searchParams]);
+    const r = searchParams.get("d") === "1";
+    if (r) {
+      reset();
+    }
+  }, [searchParams, reset]);
 
   useEffect(() => {
     if (!isLoading && !isResponding && state.root.length > 0) {
@@ -639,18 +655,6 @@ export function useAiChat({
       message: {
         status: MessageStatus.Stopped,
       },
-    });
-  }
-
-  function reset() {
-    resetLoadingState();
-    setSearchParams((prev) => {
-      prev.delete("c");
-      return prev;
-    });
-    setMessages([]);
-    dispatchState({
-      type: "reset",
     });
   }
 
