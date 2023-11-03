@@ -20,6 +20,7 @@ export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 
 export const MENU = Object.freeze({
+  CLICK_LINK: "menu_click_link",
   CLICK_MENU: "menu_click_menu",
   CLICK_SUBMENU: "menu_click_submenu",
 });
