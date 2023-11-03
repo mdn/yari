@@ -224,10 +224,11 @@ export class HTMLTool {
       $element.attr("id", id);
 
       if (isDt) {
-        $element
-          .find("a[data-link-to-id = true]")
-          .attr("href", "#" + id)
-          .removeAttr("data-link-to-id");
+        // Link the first element child to the ID.
+        const firstContent = $element.contents().first();
+        if (!firstContent.is("a") && firstContent.find("a").length === 0) {
+          $(firstContent).wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
+        }
       }
     });
     return this;

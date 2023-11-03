@@ -38,21 +38,19 @@ export function asDefinitionList(h, node) {
       DEFINITION_PREFIX.length
     );
 
-    const [firstDtChild, ...dtChildren] = all(h, {
-      ...node,
-      children:
-        terms.length == 1 && terms[0].type == "paragraph"
-          ? terms[0].children
-          : terms,
-    });
-    if (firstDtChild) {
-      dtChildren.unshift(
-        h(node, "a", { "data-link-to-id": "true" }, [firstDtChild])
-      );
-    }
-
     return [
-      h(node, "dt", {}, dtChildren),
+      h(
+        node,
+        "dt",
+        {},
+        all(h, {
+          ...node,
+          children:
+            terms.length == 1 && terms[0].type == "paragraph"
+              ? terms[0].children
+              : terms,
+        })
+      ),
       h(
         node,
         "dd",
