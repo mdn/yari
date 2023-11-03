@@ -349,13 +349,14 @@ export function AIHelpInner() {
       const fresh = new Set(
         [...old].filter((id) => messageIds.has(id.split("--")[0]))
       );
-      if (fresh.size !== old.size) {
-        window["playQueue"]?.();
-      }
 
       return fresh;
     });
   }, [messages, setQueuedExamples]);
+
+  useEffect(() => {
+    window["playQueue"]?.();
+  }, [queuedExamples]);
 
   const submitQuestion = (parentId) => {
     gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
@@ -369,7 +370,7 @@ export function AIHelpInner() {
 
   return (
     <>
-      {hasConversation && <PlayQueue />}
+      <PlayQueue />
       {!user?.settings?.noAIHelpHistory && (
         <AIHelpHistory
           currentChatId={chatId}
@@ -382,11 +383,7 @@ export function AIHelpInner() {
         {isQuotaLoading ? (
           <Loading />
         ) : (
-          <section
-            className={["ai-help-inner", query.trim() && "has-input"]
-              .filter(Boolean)
-              .join(" ")}
-          >
+          <section className="ai-help-inner">
             <div ref={bodyRef} className="ai-help-body">
               {hasConversation && (
                 <ul className="ai-help-messages">
@@ -494,7 +491,6 @@ export function AIHelpInner() {
                                                               )
                                                         )
                                                     );
-                                                    window["playQueue"]?.();
                                                   }}
                                                   id={`sample-${id}`}
                                                 />

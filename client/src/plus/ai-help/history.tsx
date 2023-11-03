@@ -1,6 +1,9 @@
 import useSWR, { KeyedMutator } from "swr";
 import { Button } from "../../ui/atoms/button";
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import "./history.scss";
 
 function monthYearLabel(date: Date): string {
   const formattedDate = date.toLocaleString(undefined, {
@@ -73,6 +76,7 @@ function AIHelpHistorySubList({
   entries: HistoryEntries;
   mutate: KeyedMutator<any[]>;
 }) {
+  const [, setSearchParams] = useSearchParams();
   return (
     <>
       <time>{entries.label}</time>
@@ -85,7 +89,18 @@ function AIHelpHistorySubList({
                 chat_id === currentChatId ? "ai-help-history-active" : ""
               }`}
             >
-              <a href={`./ai-help?c=${chat_id}`} title={last}>
+              <a
+                href={`./ai-help?c=${chat_id}`}
+                title={last}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSearchParams((old) => {
+                    const params = new URLSearchParams(old);
+                    params.set("c", chat_id);
+                    return params;
+                  });
+                }}
+              >
                 {label || "New Topic"}
               </a>
               {chat_id === currentChatId && (
@@ -102,6 +117,12 @@ function AIHelpHistorySubList({
                         method: "DELETE",
                       });
                       mutate();
+                      setSearchParams((old) => {
+                        const params = new URLSearchParams(old);
+                        params.delete("c");
+                        params.append("d", "1");
+                        return params;
+                      });
                     }
                   }}
                 />
@@ -161,15 +182,23 @@ export function AIHelpHistory({
   }, [lastUpdate, mutate]);
 
   return (
-    <aside className="ai-help-history">
+    <aside className="ai-help-history" tabIndex={-1}>
       <input
         id="ai-help-history-toggle"
         type="checkbox"
         className="ai-help-history-details"
       />
-      <label htmlFor="ai-help-history-toggle">
-        <span className="visually-hidden">toggle history menu</span>
-      </label>
+      <div className="ai-help-history-toggle">
+        <label
+          className="button action has-icon"
+          htmlFor="ai-help-history-toggle"
+        >
+          <span className="button-wrap">
+            <span className="icon icon-sidebar "></span>
+            <span className="visually-hidden">toggle history menu</span>
+          </span>
+        </label>
+      </div>
       <ol>
         {groupHistory(data).map((entries, index) => {
           return entries?.entries.length ? (
