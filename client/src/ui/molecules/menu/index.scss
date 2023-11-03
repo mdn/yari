@@ -1,4 +1,11 @@
 .top-level-entry-container {
+  &.active > a {
+    &:link,
+    &:visited {
+      color: var(--text-inactive);
+    }
+  }
+
   .top-level-entry-dot ~ .top-level-entry::after {
     background: var(--text-primary-blue);
     border: 1px solid var(--background-primary);
