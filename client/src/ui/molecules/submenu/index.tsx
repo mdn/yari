@@ -63,7 +63,11 @@ export const Submenu = ({
                   href={item.url}
                   className={`submenu-item ${
                     item.url.startsWith("https://") ? "external" : ""
-                  } ${pathname.startsWith(item.url) ? "active" : ""}`}
+                  } ${
+                    pathname.startsWith(item.url.split("#", 2)[0])
+                      ? "active"
+                      : ""
+                  }`}
                   onClick={() =>
                     gleanClick(
                       `${MENU.CLICK_SUBMENU}: ${menuEntry.id} -> ${item.url}`
