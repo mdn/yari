@@ -7,6 +7,8 @@ import { PlusMenu } from "../plus-menu";
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
 import { useLocale } from "../../../hooks";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { MENU } from "../../../telemetry/constants";
 
 export default function MainMenu({ isOpenOnMobile }) {
   const locale = useLocale();
@@ -96,9 +98,14 @@ function TopLevelMenuLink({
   to: string;
   children: React.ReactNode;
 }) {
+  const gleanClick = useGleanClick();
   return (
     <li className="top-level-entry-container">
-      <a className="top-level-entry menu-link" href={to}>
+      <a
+        className="top-level-entry menu-link"
+        href={to}
+        onClick={() => gleanClick(`${MENU.CLICK_LINK}: top-level -> ${to}`)}
+      >
         {children}
       </a>
     </li>
