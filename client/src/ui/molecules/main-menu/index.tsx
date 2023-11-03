@@ -79,22 +79,28 @@ export default function MainMenu({ isOpenOnMobile }) {
             toggleMenu={toggleMenu}
           />
         )}
-        <li className="top-level-entry-container">
-          <a className="top-level-entry menu-link" href="/en-US/blog/">
-            Blog
-          </a>
-        </li>
-        <li className="top-level-entry-container">
-          <a className="top-level-entry menu-link" href={`/${locale}/play`}>
-            Play
-          </a>
-        </li>
-        <li className="top-level-entry-container">
-          <a className="top-level-entry menu-link" href="/en-US/plus/ai-help/">
-            AI Help <sup className="new beta">Beta</sup>
-          </a>
-        </li>
+        <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
+        <TopLevelMenuLink to={`/${locale}/play`}>Play</TopLevelMenuLink>
+        <TopLevelMenuLink to="/en-US/plus/ai-help/">
+          AI Help <sup className="new beta">Beta</sup>
+        </TopLevelMenuLink>
       </ul>
     </nav>
+  );
+}
+
+function TopLevelMenuLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="top-level-entry-container">
+      <a className="top-level-entry menu-link" href={to}>
+        {children}
+      </a>
+    </li>
   );
 }
