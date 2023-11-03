@@ -20,6 +20,10 @@
   .submenu-item {
     border-radius: var(--elem-radius);
     padding: 0.75rem;
+
+    &.active {
+      color: var(--text-inactive);
+    }
   }
 
   /*
