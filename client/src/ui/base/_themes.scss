@@ -5,6 +5,7 @@
 @mixin light-theme {
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
+  --text-active: #{$mdn-theme-light-text-active};
   --text-inactive: #{$mdn-theme-light-text-inactive};
   --text-link: #{$mdn-theme-light-text-link};
   --text-invert: #{$mdn-theme-light-text-invert};
@@ -203,6 +204,7 @@
 @mixin dark-theme {
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
+  --text-active: #{$mdn-theme-dark-text-active};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
   --text-link: #{$mdn-theme-dark-text-link};
   --text-invert: #{$mdn-theme-dark-text-invert};
