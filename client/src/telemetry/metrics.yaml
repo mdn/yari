@@ -128,7 +128,7 @@ navigator:
       - page
       - action
     description: |
-      The navigators ISO 3166 country code based on geo ip.
+      The navigator's two-letter ISO 3166 country code based on geo ip.
     data_sensitivity:
       - web_activity
     bugs:
