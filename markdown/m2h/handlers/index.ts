@@ -114,14 +114,10 @@ export function buildLocalizedHandlers(locale: string): Handlers {
         return asDefinitionList(state, node);
       }
 
-      const name = "ordered" in node && node.ordered ? "ol" : "ul";
+      const name = node.ordered ? "ol" : "ul";
 
       const props: { start?: number } = {};
-      if (
-        "start" in node &&
-        typeof node.start === "number" &&
-        node.start !== 1
-      ) {
+      if (typeof node.start === "number" && node.start !== 1) {
         props.start = node.start;
       }
 
