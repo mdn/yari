@@ -65,7 +65,13 @@
     color: var(--text-link);
     width: fit-content;
 
-    &:active {
+    &:visited:not([href^="#"]) {
+      // Distinguish visited links (excl. anchor links).
+      color: revert;
+    }
+
+    &:active,
+    &:active:visited {
       background-color: var(--text-link);
       color: #fff;
 
