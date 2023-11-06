@@ -5,20 +5,16 @@ import { u } from "unist-builder";
  * Transform a Markdown code block into a <pre>.
  * Adding the highlight tags as classes prefixed by "brush:"
  */
-export function code(state: State, node: Node): ReturnType<Handler> {
-  const value = "value" in node && node.value ? node.value + "\n" : "";
-  const lang =
-    "lang" in node && typeof node.lang === "string"
-      ? node.lang.replace(/-nolint$/, "")
-      : "";
-  const meta = "meta" in node && typeof node.meta === "string" ? node.meta : "";
-  const metas = meta.split(" ");
+export function code(state: State, node: any): ReturnType<Handler> {
+  const value = node.value ? node.value + "\n" : "";
+  const lang = node.lang?.replace(/-nolint$/, "");
+  const meta = (node.meta || "").split(" ");
   const props: { className?: string | string[] } = {};
 
   if (lang) {
-    props.className = ["brush:", lang.toLowerCase(), ...metas];
+    props.className = ["brush:", lang.toLowerCase(), ...meta];
   } else if (meta) {
-    props.className = metas;
+    props.className = meta;
   }
 
   /*
