@@ -13,7 +13,7 @@ export function code(state: State, node: any): ReturnType<Handler> {
 
   if (lang) {
     props.className = ["brush:", lang.toLowerCase(), ...meta];
-  } else if (meta) {
+  } else if (node.meta) {
     props.className = meta;
   }
 
