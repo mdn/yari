@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 import { code } from "./code.js";
 import { asDefinitionList, isDefinitionList } from "./dl.js";
-import { Handlers, State } from "mdast-util-to-hast";
+import { Handler, Handlers, State } from "mdast-util-to-hast";
 
 /* A utilitary function which parses a JSON gettext file
   to return a Map with each localized string and its matching ID  */
@@ -63,7 +63,7 @@ export function buildLocalizedHandlers(locale: string): Handlers {
   return {
     code,
 
-    paragraph(state: State, node: any) {
+    paragraph(state: State, node: any): ReturnType<Handler> {
       const [child] = node.children;
       // Check for an unnecessarily nested KS-tag and unnest it
       if (
@@ -83,7 +83,7 @@ export function buildLocalizedHandlers(locale: string): Handlers {
       };
     },
 
-    blockquote(state: State, node: any) {
+    blockquote(state: State, node: any): ReturnType<Handler> {
       const type = getNotecardType(node, locale);
       if (type) {
         const isCallout = type == "callout";
@@ -109,7 +109,7 @@ export function buildLocalizedHandlers(locale: string): Handlers {
       };
     },
 
-    list(state: State, node: any) {
+    list(state: State, node: any): ReturnType<Handler> {
       if (isDefinitionList(node)) {
         return asDefinitionList(state, node);
       }
