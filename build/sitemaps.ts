@@ -1,4 +1,10 @@
-export function makeSitemapXML(locale, docs) {
+export function makeSitemapXML(
+  locale: string,
+  docs: { slug: string; modified: string }[]
+) {
+  docs = docs.slice();
+  docs.sort((a, b) => a.slug.localeCompare(b.slug));
+
   // Based on https://support.google.com/webmasters/answer/183668?hl=en
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -15,7 +21,10 @@ export function makeSitemapXML(locale, docs) {
   ].join("\n");
 }
 
-export function makeSitemapIndexXML(pathnames) {
+export function makeSitemapIndexXML(pathnames: string[]) {
+  pathnames = pathnames.slice();
+  pathnames.sort();
+
   // Based on https://support.google.com/webmasters/answer/75712
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
