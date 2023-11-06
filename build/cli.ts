@@ -316,6 +316,8 @@ async function buildDocuments(
     );
   }
 
+  // allBrowserCompat.txt is used by differy, see:
+  // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
     localeMeta.forEach(
