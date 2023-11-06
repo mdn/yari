@@ -114,6 +114,9 @@ export function stateToMessagePath(
 
 function messagePath(node: MessageTreeNode, path: number[]): Message[] {
   const [current = 0, ...tail] = path;
+  if (!node) {
+    return [];
+  }
   if (!node.children.length) {
     return [node.request, node.response];
   }
@@ -351,6 +354,7 @@ export function useAiChat({
   const [isLoading, setIsLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isResponding, setIsResponding] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [datas, dispatchData] = useReducer(
@@ -359,6 +363,7 @@ export function useAiChat({
   );
 
   const [chatId, setChatId] = useState<string | undefined>();
+  const [previousChatId, setPreviousChatId] = useState<string | undefined>();
   const [messageId, setMessageId] = useState<string | undefined>();
   const [path, setPath] = useState<number[]>([]);
   const [state, dispatchState] = useReducer(messageReducer, undefined, () => {
@@ -380,42 +385,54 @@ export function useAiChat({
   const remoteQuota = useRemoteQuota();
 
   const reset = useCallback(() => {
+    setPreviousChatId(chatId);
+    setChatId(undefined);
     resetLoadingState();
     setSearchParams((prev) => {
       prev.delete("c");
       return prev;
     });
+    setPath([]);
     setMessages([]);
     dispatchState({
       type: "reset",
     });
-  }, [setSearchParams]);
+  }, [setSearchParams, chatId]);
 
   useEffect(() => {
     const convId = searchParams.get("c");
-    if (convId) {
+    if (convId && convId !== chatId) {
       (async () => {
+        setIsHistoryLoading(true);
         const { treeState } = (await AiHelpHistory.getMessages(convId)) || {};
         if (treeState) {
+          setPreviousChatId(undefined);
           setChatId(convId);
+          setPath([]);
           dispatchState({
             type: "set-state",
             treeState,
           });
         }
+        setIsHistoryLoading(false);
       })();
     }
     const r = searchParams.get("d") === "1";
     if (r) {
       reset();
     }
-  }, [searchParams, reset]);
+  }, [searchParams, chatId, reset]);
 
   useEffect(() => {
-    if (!isLoading && !isResponding && state.root.length > 0) {
+    if (
+      !isLoading &&
+      !isResponding &&
+      state.root.length > 0 &&
+      user?.settings?.noAIHelpHistory
+    ) {
       AiHelpStorage.set({ treeState: state, chatId });
     }
-  }, [isLoading, isResponding, state, chatId]);
+  }, [isLoading, isResponding, state, chatId, user?.settings?.noAIHelpHistory]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
@@ -444,6 +461,7 @@ export function useAiChat({
             message_id,
             parent_id,
           } = data;
+          setPreviousChatId(undefined);
           setChatId(chat_id);
           setMessageId(message_id);
           setLastUpdate(new Date());
@@ -658,15 +676,24 @@ export function useAiChat({
     });
   }
 
-  function unReset() {
-    const { treeState } = AiHelpStorage.get();
-    if (treeState) {
-      dispatchState({
-        type: "set-state",
-        treeState,
+  const unReset = useCallback(() => {
+    if (user?.settings?.noAIHelpHistory) {
+      const { treeState, chatId } = AiHelpStorage.get();
+      setChatId(chatId);
+      if (treeState) {
+        dispatchState({
+          type: "set-state",
+          treeState,
+        });
+      }
+    } else if (previousChatId) {
+      setSearchParams((old) => {
+        const params = new URLSearchParams(old);
+        params.set("c", previousChatId);
+        return params;
       });
     }
-  }
+  }, [setSearchParams, previousChatId, user?.settings?.noAIHelpHistory]);
 
   const nextPrev = useCallback(
     (messageId: string, dir: "next" | "prev") => {
@@ -717,12 +744,14 @@ export function useAiChat({
     state,
     path,
     isLoading,
+    isHistoryLoading,
     isResponding,
     isInitializing,
     sendFeedback,
     hasError,
     quota,
     chatId,
+    previousChatId,
     nextPrev,
     siblingCount,
     lastUpdate,

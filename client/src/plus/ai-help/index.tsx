@@ -23,7 +23,6 @@ import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
 import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Icon } from "../../ui/atoms/icon";
-import Mandala from "../../ui/molecules/mandala";
 
 import { collectCode } from "../../document/code/playground";
 import "./index.scss";
@@ -94,13 +93,9 @@ export default function AiHelp() {
 
   return (
     <div className="ai-help">
-      <header className="plus-header-mandala">
-        <Container>
+      <div className={`ai-help-main with-ai-help-history`}>
+        <Container extraClasses="ai-help-header">
           <h1>
-            <div className="mandala-icon-wrapper">
-              <Mandala />
-              <Icon name="chatgpt" />
-            </div>
             <span>AI Help</span>
           </h1>
           <p>
@@ -120,8 +115,6 @@ export default function AiHelp() {
             </a>
           </p>
         </Container>
-      </header>
-      <div className={`ai-help-main with-ai-help-history`}>
         <Container>
           <div className="notecard experimental">
             {active ? (
@@ -292,6 +285,7 @@ export function AIHelpInner() {
 
   const {
     isLoading,
+    isHistoryLoading,
     isResponding,
     isInitializing,
     hasError,
@@ -303,6 +297,7 @@ export function AIHelpInner() {
     stop,
     submit,
     chatId,
+    previousChatId,
     sendFeedback,
     nextPrev,
     siblingCount,
@@ -380,7 +375,7 @@ export function AIHelpInner() {
         />
       )}
       <Container>
-        {isQuotaLoading ? (
+        {isQuotaLoading || isHistoryLoading ? (
           <Loading />
         ) : (
           <section className="ai-help-inner">
@@ -728,6 +723,7 @@ export function AIHelpInner() {
                             icon="return"
                             buttonType="reset"
                             title="Delete question"
+                            isDisabled={Boolean(!previousChatId)}
                             onClickHandler={() => {
                               unReset();
                             }}

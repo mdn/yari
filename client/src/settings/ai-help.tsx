@@ -44,6 +44,24 @@ export function ManageAIHelp() {
             ></Switch>
           )}
         </li>
+        <li>
+          <span>Some copy about deleting AI Help history 🤷</span>
+          <button
+            onClick={async () => {
+              if (
+                window.confirm(
+                  "Do you want to permanently delete your AI Help history?"
+                )
+              ) {
+                await fetch("/api/v1/plus/ai/help/history/list", {
+                  method: "DELETE",
+                });
+              }
+            }}
+          >
+            Delete
+          </button>
+        </li>
       </ul>
     </section>
   );

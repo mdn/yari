@@ -22,13 +22,6 @@
     padding-right: 1rem;
 
     &.with-ai-help-history {
-      @media screen and (max-width: $screen-xxl) {
-        grid-template-columns: [left] minmax(0, 15rem) [center] minmax(0, 3fr);
-      }
-      @media screen and (max-width: $screen-md) {
-        grid-template-columns: [center] minmax(0, 3fr);
-      }
-
       > .ai-help-history {
         grid-column: left;
         grid-row: 1/4;
@@ -39,11 +32,35 @@
         position: sticky;
         top: var(--sticky-header-without-actions-height);
       }
+      @media screen and (max-width: $screen-xxl) {
+        grid-template-columns: [left] minmax(0, 15rem) [center] minmax(0, 3fr);
+      }
+      @media screen and (max-width: $screen-md) {
+        grid-template-columns: [center] minmax(0, 3fr);
+
+        > .ai-help-history {
+          grid-column: center;
+          grid-row: initial;
+        }
+      }
     }
 
     > .container {
       grid-column: center;
       padding: var(--gutter);
+
+      &.ai-help-header {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 1rem;
+
+        > h1,
+        > p {
+          margin: 0;
+        }
+      }
 
       &:not(:last-of-type) {
         padding-bottom: 0;
@@ -157,6 +174,7 @@
       }
 
       textarea {
+        background-color: var(--background-primary);
         border: none;
         color: var(--text-primary);
         flex-grow: 1;
@@ -329,6 +347,7 @@
 
       &.role-user {
         align-items: center;
+        align-items: flex-start;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -345,7 +364,6 @@
         }
 
         .ai-help-user-message {
-          padding: 0 1rem;
           width: 100%;
         }
       }
