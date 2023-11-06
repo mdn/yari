@@ -121,6 +121,23 @@ navigator:
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2024-09-05
+  geo_iso:
+    type: string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The navigator's two-letter ISO 3166 country code based on geo ip.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1798296
+    data_reviews:
+      - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
   user_agent:
     type: string
     lifetime: application
