@@ -15,17 +15,30 @@ import { Doc } from "../../../libs/types/document";
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
 
+const UTM_PARAMETER_NAMES = [
+  "source",
+  "medium",
+  "campaign",
+  "term",
+  "content",
+] as const;
+type UTMParameters = Partial<
+  Record<(typeof UTM_PARAMETER_NAMES)[number], string>
+>;
+
 export type PageProps = {
   referrer: string | undefined;
   path: string | undefined;
   httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
+  geo_iso: string | undefined;
   userAgent: string | undefined;
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
   viewportHorizontalCoverage: number;
   isBaseline?: string;
+  utm: UTMParameters;
 };
 
 export type PageEventProps = {
@@ -98,9 +111,15 @@ function glean(): GleanAnalytics {
       if (page.isBaseline) {
         pageMetric.isBaseline.set(page.isBaseline);
       }
+      for (const param in page.utm) {
+        pageMetric.utm[param].set(page.utm[param]);
+      }
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
+      }
+      if (page.geo_iso) {
+        navigatorMetric.geoIso.set(page.geo_iso);
       }
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
@@ -189,6 +208,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
       geo: userData?.geo?.country,
+      geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
       viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
         ([_, width]) => width <= window.innerWidth
@@ -203,6 +223,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
           : doc.baseline.is_baseline
           ? "baseline"
           : "not_baseline",
+      utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
@@ -222,4 +243,12 @@ export function useGleanClick() {
       }),
     [glean, userData?.subscriptionType]
   );
+}
+
+function getUTMParameters(): UTMParameters {
+  const searchParams = new URLSearchParams(document.location.search);
+  return UTM_PARAMETER_NAMES.reduce((acc, name): UTMParameters => {
+    const param = searchParams.get(`utm_${name}`);
+    return param ? { ...acc, [name]: param } : acc;
+  }, {});
 }

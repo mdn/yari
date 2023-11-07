@@ -5,7 +5,7 @@ import caporal from "@caporal/core";
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { fdir } from "fdir";
 import frontmatter from "front-matter";
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
 import { DocFrontmatter } from "../libs/types/document.js";
 import {
@@ -48,10 +48,9 @@ export async function updateEmbeddings(directory: string) {
   const supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   // Open AI.
-  const configuration = new Configuration({
+  const openai = new OpenAI({
     apiKey: OPENAI_KEY,
   });
-  const openai = new OpenAIApi(configuration);
 
   const createEmbedding = async (content: string) => {
     // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
@@ -59,7 +58,7 @@ export async function updateEmbeddings(directory: string) {
 
     let embeddingResponse;
     try {
-      embeddingResponse = await openai.createEmbedding({
+      embeddingResponse = await openai.embeddings.create({
         model: "text-embedding-ada-002",
         input,
       });
@@ -75,7 +74,7 @@ export async function updateEmbeddings(directory: string) {
         `[!] Failed to create embedding (${status} ${statusText}): ${type} - ${message}`
       );
       // Try again with trimmed content.
-      embeddingResponse = await openai.createEmbedding({
+      embeddingResponse = await openai.embeddings.create({
         model: "text-embedding-ada-002",
         input: input.substring(0, 15000),
       });

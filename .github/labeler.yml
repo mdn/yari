@@ -1,22 +1,45 @@
+blog:
+  - "**/blog/**/*"
 browser-compat:
-  - "client/src/document/ingredients/browser-compatability-table/**/*"
+  - "**/browser-compatability-table/**/*"
 macros:
   - "kumascript/**/*"
+cloud-function:
+  - "cloud-function/**/*"
+copy:
+  - "copy/**/*"
 dependencies:
   - "**/poetry.lock"
   - "**/yarn.lock"
 deployer:
   - "deployer/**/*"
+filecheck:
+  - "filecheck/**/*"
 flaw-system:
   - "build/flaws/**/*"
 github-actions:
   - ".github/workflows/**/*"
 markdown:
   - "markdown/**/*"
+metrics:
+  - "**/telemetry/**/*"
+placement:
+  - "**/placement/**/*"
+  - "**/pong/**/*"
 plus:
-  - "client/src/plus/**/*"
+  - "**/plus/**/*"
+  - "**/plus-docs/**/*"
+plus:ai-help:
+  - "**/ai-help/**/*"
 plus:offline:
   - "client/pwa/src/**/*"
   - "client/src/offline-settings/**/*"
+plus:playground:
+  - "**/playground/**/*"
+plus:updates:
+  - "client/src/plus/updates/**/*"
 python:
   - "**/*.py"
+redirects:
+  - "cloud-function/src/middlewares/redirect-*"
+  - "libs/fundamental-redirects/**/*"
