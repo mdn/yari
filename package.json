@@ -127,7 +127,7 @@
     "rehype-sanitize": "^6.0.0",
     "rehype-stringify": "^9.0.4",
     "remark-gfm": "^3.0.1",
-    "remark-parse": "^10.0.2",
+    "remark-parse": "^11.0.0",
     "remark-rehype": "^10.1.0",
     "sanitize-filename": "^1.6.3",
     "send": "^0.18.0",
