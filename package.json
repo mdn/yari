@@ -16,7 +16,7 @@
     "ai-help": "ts-node scripts/ai-help.ts",
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
-    "build": "cross-env NODE_ENV=production ts-node build/cli.ts",
+    "build": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/cli.ts",
     "build:blog": "cross-env NODE_ENV=production ts-node build/build-blog.ts",
     "build:client": "cd client && cross-env NODE_ENV=production BABEL_ENV=production INLINE_RUNTIME_CHUNK=false node scripts/build.js",
     "build:dist": "tsc -p tsconfig.dist.json",
@@ -52,7 +52,7 @@
     "test:libs": "yarn jest --rootDir libs --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
-    "tool": "ts-node tool/cli.ts",
+    "tool": "NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "resolutions": {
