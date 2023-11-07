@@ -84,7 +84,7 @@ export default function MainMenu({ isOpenOnMobile }) {
         )}
         <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
         <TopLevelMenuLink to={`/${locale}/play`}>Play</TopLevelMenuLink>
-        <TopLevelMenuLink to="/en-US/plus/ai-help/">
+        <TopLevelMenuLink to="/en-US/plus/ai-help">
           AI Help <sup className="new beta">Beta</sup>
         </TopLevelMenuLink>
       </ul>
