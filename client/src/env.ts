@@ -78,6 +78,8 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+export const DEFAULT_GEO_COUNTRY_ISO =
+  process.env.REACT_APP_DEFAULT_GEO_COUNTRY_ISO || "US";
 
 export const BCD_BASE_URL =
   process.env.REACT_APP_BCD_BASE_URL ?? "https://bcd.developer.allizom.org";

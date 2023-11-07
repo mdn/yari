@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { PLACEMENT_ENABLED } from "./env";
 import { useUserData } from "./user-context";
 import { useLocation } from "react-router";
+import { Payload as PlacementData } from "../../libs/pong/types";
 
 export enum Status {
   success = "success",
@@ -13,35 +14,7 @@ export enum Status {
   empty = "empty",
 }
 
-export interface Fallback {
-  click: string;
-  view: string;
-  copy: string;
-  image: string;
-  by: string;
-}
-
-export interface PlacementData {
-  status: Status;
-  click?: string;
-  view?: string;
-  copy?: string;
-  image?: string;
-  fallback?: Fallback;
-  cta?: string;
-  colors?: {
-    textColor?: string;
-    backgroundColor?: string;
-    ctaTextColor?: string;
-    ctaBackgroundColor?: string;
-    textColorDark?: string;
-    backgroundColorDark?: string;
-    ctaTextColorDark?: string;
-    ctaBackgroundColorDark?: string;
-  };
-}
-
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter";
+type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   status: Status;
@@ -52,6 +25,7 @@ const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
   top: /\/[^/]+\/(?!$|_homepage$).*/i,
   hpMain: /\/[^/]+\/($|_homepage$)/i,
   hpFooter: /\/[^/]+\/($|_homepage$)/i,
+  bottom: /\/[^/]+\/docs\//i,
 };
 
 function placementTypes(pathname: string): string[] {
