@@ -206,6 +206,7 @@
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^22.1.0",
     "lint-staged": "^13.2.3",
+    "mdast-util-to-hast": "^13.0.2",
     "mini-css-extract-plugin": "^2.7.6",
     "node-dev": "^8.0.0",
     "peggy": "^3.0.2",
