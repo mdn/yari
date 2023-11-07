@@ -403,7 +403,7 @@ export async function buildPost(
   postProcessSmallerHeadingIDs($);
   wrapTables($);
   try {
-    const [sections] = extractSections($);
+    const [sections] = await extractSections($);
     doc.body = sections;
   } catch (error) {
     console.error(
