@@ -6,6 +6,7 @@ import { getSurveyState, writeSurveyState } from "./utils";
 import { useIsServer } from "../../../hooks";
 import { Icon } from "../../atoms/icon";
 import { useLocation } from "react-router";
+import { DEV_MODE, WRITER_MODE } from "../../../env";
 
 const FORCE_SURVEY_PREFIX = "#FORCE_SURVEY=";
 
@@ -18,7 +19,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
   const survey = React.useMemo(
     () =>
       SURVEYS.find((survey) => {
-        if (isServer) {
+        if (isServer || (WRITER_MODE && !DEV_MODE)) {
           return false;
         }
 

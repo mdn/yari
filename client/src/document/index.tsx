@@ -43,7 +43,7 @@ import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
-import { SidePlacement } from "../ui/organisms/placement";
+import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
 // import { useUIStatus } from "../ui-context";
 
@@ -192,7 +192,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   if (error) {
     return (
       <>
-        <div className="main-document-header-container">
+        <div className="sticky-header-container">
           <TopNavigation />
         </div>
         <MainContentContainer>
@@ -214,7 +214,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <div className="main-document-header-container">
+      <div className="sticky-header-container">
         <TopNavigation />
         <ArticleActionsContainer doc={doc} />
       </div>
@@ -270,6 +270,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </article>
         </MainContentContainer>
       </div>
+      <BottomBanner />
     </>
   );
 }
