@@ -6,18 +6,27 @@ import "./index.scss";
 
 interface MenuProps {
   menu: MenuEntry;
+  isActive?: boolean;
   isOpen: boolean;
   toggle: (id: string) => void;
 }
 
-export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
+export const Menu = ({
+  menu,
+  isActive = undefined,
+  isOpen,
+  toggle,
+}: MenuProps) => {
   const { pathname } = useLocation();
   const gleanClick = useGleanClick();
 
   const buttonId = `${menu.id}-button`;
   const submenuId = `${menu.id}-menu`;
 
-  const isActive = menu.to && pathname.startsWith(menu.to.split("#", 2)[0]);
+  isActive =
+    isActive ??
+    (typeof menu.to === "string" &&
+      pathname.startsWith(menu.to.split("#", 2)[0]));
   const hasAnyDot = menu.items.some((item) => item.dot);
 
   return (
