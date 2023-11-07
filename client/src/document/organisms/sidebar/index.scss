@@ -85,7 +85,7 @@
     z-index: var(--z-index-main-header);
 
     ~ .sidebar-inner-nav {
-      margin-top: 2.5rem; /* Reduce to 0.5rem once SidebarFilter feedback is removed. */
+      margin-top: 0.5rem;
     }
 
     @media screen and (max-width: $screen-md) {

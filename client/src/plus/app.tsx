@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import Notification from "../ui/atoms/notification";
-import { SubscribeLink } from "../ui/atoms/subscribe-link";
+import { SignUpLink } from "../ui/atoms/signup-link";
 
 import "./index.scss";
 
@@ -16,7 +16,7 @@ export default function App() {
       )}
 
       <p>
-        <SubscribeLink />
+        <SignUpLink />
       </p>
     </div>
   );
