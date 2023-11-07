@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { useGA } from "../../../../ga-context";
 import { Translation } from "../../../../../../libs/types/document";
@@ -24,23 +24,14 @@ export function LanguageMenu({
 }) {
   const menuId = "language-menu";
   const ga = useGA();
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  function translateURL(destinationLocale: string) {
-    return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
-  }
-
-  function changeLocale(event) {
-    event.preventDefault();
-
-    const preferredLocale = event.currentTarget.name;
+  const changeLocale: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
+    const preferredLocale = event.currentTarget.dataset.locale;
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
     if (preferredLocale !== locale) {
-      const localeURL = translateURL(preferredLocale);
       let cookieValueBefore = document.cookie
         .split("; ")
         .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
@@ -71,16 +62,10 @@ export function LanguageMenu({
         eventAction: `Change preferred language (cookie before: ${
           cookieValueBefore || "none"
         })`,
-        eventLabel: `${window.location.pathname} to ${localeURL}`,
+        eventLabel: `${window.location.pathname} to ${event.currentTarget.href}`,
       });
-
-      navigate(localeURL);
-      window.scrollTo(0, 0);
-
-      setIsOpen(false);
-      onClose();
     }
-  }
+  };
 
   const menuEntry = {
     label: "Languages",
@@ -122,16 +107,28 @@ export function LanguageMenu({
   );
 }
 
-function LanguageMenuItem({ translation, changeLocale, native }) {
+function LanguageMenuItem({
+  translation,
+  changeLocale,
+  native,
+}: {
+  translation: Translation;
+  changeLocale: React.MouseEventHandler<HTMLAnchorElement>;
+  native: string;
+}) {
+  const { pathname } = useLocation();
+  const locale = useLocale();
+
   return (
-    <button
+    <a
       aria-current={translation.native === native || undefined}
       key={translation.locale}
-      name={translation.locale}
+      data-locale={translation.locale}
       onClick={changeLocale}
+      href={pathname.replace(`/${locale}/`, `/${translation.locale}/`)}
       className="button submenu-item"
     >
       <span>{translation.native}</span>
-    </button>
+    </a>
   );
 }
