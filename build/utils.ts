@@ -1,7 +1,8 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
 import got from "got";
@@ -19,7 +20,6 @@ import {
   VALID_MIME_TYPES,
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
-import { spawnSync } from "node:child_process";
 import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
@@ -346,13 +346,12 @@ export function getSlugByBlogPostUrl(url: string): string | null {
   return url.match(POST_URL_RE)?.[1] || null;
 }
 
-export async function importJSON<T>(path: string): Promise<T> {
-  if (!path.startsWith(".")) {
-    path = `../node_modules/${path}`;
+export async function importJSON<T>(jsonPath: string): Promise<T> {
+  if (!jsonPath.startsWith(".")) {
+    jsonPath = path.join(cwd(), "node_modules", jsonPath);
   }
-  path = fileURLToPath(new URL(path, import.meta.url));
 
-  const json = await readFile(path, "utf-8");
+  const json = await readFile(jsonPath, "utf-8");
 
   return JSON.parse(json);
 }
