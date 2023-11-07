@@ -32,6 +32,7 @@ export type PageProps = {
   httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
+  geo_iso: string | undefined;
   userAgent: string | undefined;
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
@@ -116,6 +117,9 @@ function glean(): GleanAnalytics {
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
+      }
+      if (page.geo_iso) {
+        navigatorMetric.geoIso.set(page.geo_iso);
       }
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
@@ -204,6 +208,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
       geo: userData?.geo?.country,
+      geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
       viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
         ([_, width]) => width <= window.innerWidth
