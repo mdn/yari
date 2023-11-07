@@ -1,4 +1,3 @@
-import { useLocation } from "react-router";
 import { MENU } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import "./index.scss";
@@ -35,7 +34,6 @@ export const Submenu = ({
   submenuId?: string;
   extraClasses?: string;
 }) => {
-  const { pathname } = useLocation();
   const gleanClick = useGleanClick();
 
   return (
@@ -63,10 +61,6 @@ export const Submenu = ({
                   href={item.url}
                   className={`submenu-item ${
                     item.url.startsWith("https://") ? "external" : ""
-                  } ${
-                    pathname.startsWith(item.url.split("#", 2)[0])
-                      ? "active"
-                      : ""
                   }`}
                   onClick={() =>
                     gleanClick(
