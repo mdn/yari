@@ -3,7 +3,6 @@ import path from "node:path";
 
 import chalk from "chalk";
 import * as cheerio from "cheerio";
-import webFeatures from "web-features/index.json" assert { type: "json" };
 import * as Sentry from "@sentry/node";
 
 import {
@@ -12,7 +11,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc, WebFeature, WebFeatureStatus } from "../libs/types/document.js";
+import { Doc, WebFeatureStatus } from "../libs/types/document.js";
 import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
@@ -44,6 +43,7 @@ import {
   postProcessExternalLinks,
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
+import { getWebFeatureStatus } from "./web-features.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -380,7 +380,7 @@ export async function buildDocument(
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
-  doc.baseline = addBaseline(doc);
+  doc.baseline = await addBaseline(doc);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -484,7 +484,7 @@ export async function buildDocument(
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
   try {
-    const [sections, sectionFlaws] = extractSections($);
+    const [sections, sectionFlaws] = await extractSections($);
     doc.body = sections;
     if (sectionFlaws.length) {
       injectSectionFlaws(doc, sectionFlaws, options);
@@ -558,18 +558,11 @@ export async function buildDocument(
   return { doc: doc as Doc, liveSamples, fileAttachmentMap };
 }
 
-function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
+async function addBaseline(
+  doc: Partial<Doc>
+): Promise<WebFeatureStatus | undefined> {
   if (doc.browserCompat) {
-    for (const feature of Object.values<WebFeature>(webFeatures)) {
-      if (
-        feature.status &&
-        feature.compat_features?.some(
-          (query) => doc.browserCompat?.includes(query)
-        )
-      ) {
-        return feature.status;
-      }
-    }
+    return await getWebFeatureStatus(...doc.browserCompat);
   }
 }
 

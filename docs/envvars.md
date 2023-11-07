@@ -311,6 +311,14 @@ If the `/api/v1/whoami` does not include a `geo.country` value, fall back on
 this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
 included this value for `geo.country`.
 
+### `REACT_APP_DEFAULT_GEO_COUNTRY_ISO`
+
+**Default: `US`**
+
+If the `/api/v1/whoami` does not include a `geo.country_iso` value, fall back on
+this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
+included this value for `geo.country_iso`.
+
 ## Glean (Analytics)
 
 ### `REACT_APP_GLEAN_CHANNEL`

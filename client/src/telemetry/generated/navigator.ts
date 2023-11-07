@@ -21,6 +21,19 @@ export const geo = new StringMetricType({
 });
 
 /**
+ * The navigators ISO 3166 country code based on geo ip.
+ *
+ * Generated from `navigator.geo_iso`.
+ */
+export const geoIso = new StringMetricType({
+  category: "navigator",
+  name: "geo_iso",
+  sendInPings: ["action", "page"],
+  lifetime: "application",
+  disabled: false,
+});
+
+/**
  * The subscription type of the user. can be one of
  * 'core','mdn_plus_5m','mdn_plus_5y','mdn_plus_10m','mdn_plus_10y'
  *
