@@ -16,6 +16,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
 
   const { isViewed } = useViewedState();
 
+  // Avoid that "Plus" and "AI Help" are both active.
   const { pathname } = useLocation();
   const aiHelpUrl = `/${locale}/plus/ai-help`;
   const isActive =
