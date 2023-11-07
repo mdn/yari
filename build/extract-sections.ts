@@ -220,7 +220,7 @@ async function addSections(
       const iterable = [...(div.childNodes as cheerio.Element[])];
       let c = 0;
       let countSpecialDivsFound = 0;
-      iterable.forEach(async (child) => {
+      for (const child of iterable) {
         if (
           child.tagName === "div" &&
           child.attribs &&
@@ -250,7 +250,7 @@ async function addSections(
           section.append(child);
           c++;
         }
-      });
+      }
       if (c) {
         const [proseSections, proseFlaws] = _addSectionProse(section.clone());
         subSections.push(...proseSections);
