@@ -484,7 +484,7 @@ export async function buildDocument(
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
   try {
-    const [sections, sectionFlaws] = extractSections($);
+    const [sections, sectionFlaws] = await extractSections($);
     doc.body = sections;
     if (sectionFlaws.length) {
       injectSectionFlaws(doc, sectionFlaws, options);
