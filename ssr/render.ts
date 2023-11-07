@@ -233,10 +233,16 @@ export default function render(
     )
     .join("");
 
+  // Open Graph protocol expects `language_TERRITORY` format.
+  const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
+    "-",
+    "_"
+  );
+
   const og = new Map([
     ["title", escapedPageTitle],
     ["url", canonicalURL],
-    ["locale", locale || (doc && doc.locale) || "en-US"],
+    ["locale", ogLocale],
   ]);
 
   if (pageDescription) {
@@ -263,7 +269,7 @@ export default function render(
       ? "noindex, nofollow"
       : "index, follow";
   const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
-  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
+  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
   const ssr_data = [...translations, ...webfontTags, rssLink, robotsMeta];
   let html = buildHtml;
   html = html.replace(

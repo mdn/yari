@@ -25,7 +25,7 @@ export default function FeaturedArticles(props: HydrationData<any>) {
 
   return hyData?.featuredArticles.length ? (
     <div className="featured-articles">
-      <h2>Featured Articles</h2>
+      <h2>Featured articles</h2>
       <div className="tile-container">
         {hyData.featuredArticles.map((article) => {
           return (

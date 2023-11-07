@@ -5,7 +5,7 @@
   border: 5px solid $mdn-color-light-theme-violet-70;
   border-radius: 0.5rem;
   color: $mdn-color-neutral-90;
-  padding: 1em;
+  padding: 1rem;
 
   &::before {
     background: transparent url("../../../assets/icons/survey.svg") center
@@ -27,7 +27,16 @@
     cursor: pointer;
   }
 
+  details {
+    iframe {
+      margin: 0.9rem;
+      margin-bottom: 0;
+      width: calc(100% - 1.2rem);
+    }
+  }
+
   summary {
+    margin-top: 1rem;
     text-decoration: underline;
 
     &:focus,

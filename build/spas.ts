@@ -34,7 +34,7 @@ const FEATURED_ARTICLES = [
   "blog/regular-expressions-reference-updates/",
   "blog/aria-accessibility-html-landmark-roles/",
   "docs/Web/API/Performance_API",
-  "docs/Web/CSS/font-palette",
+  "docs/Web/CSS/CSS_nesting",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;

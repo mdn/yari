@@ -7,7 +7,6 @@ import {
 import { STATIC_ROOT } from "../libs/env/index.js";
 import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
 import { getLocale } from "../libs/locale-utils/index.js";
-import { devMiddlewares } from "./dev.js";
 
 // Lowercase every request because every possible file we might have
 // on disk is always in lowercase.
@@ -53,7 +52,6 @@ const originRequest = (req, res, next) => {
 };
 
 export const staticMiddlewares = [
-  ...devMiddlewares,
   slugRewrite,
   express.static(STATIC_ROOT, {
     setHeaders: (res) => {

@@ -1,4 +1,5 @@
 import { SSE } from "sse.js";
+import { AI_EXPLAIN } from "../../telemetry/constants";
 
 interface ExplainRequest {
   language: string | undefined;
@@ -25,7 +26,7 @@ function explain(
 function thumbs(upDown: string, title: string, callback: () => void): Element {
   const thumbs = document.createElement("button");
   thumbs.classList.add("icon", `icon-thumbs-${upDown}`);
-  thumbs.setAttribute("data-ai-explain", `thumbs_${upDown}`);
+  thumbs.dataset.glean = `${AI_EXPLAIN}: thumbs_${upDown}`;
   thumbs.addEventListener("click", callback);
   thumbs.title = title;
   return thumbs;
@@ -80,7 +81,7 @@ export function addExplainButton(
   button.textContent = "AI Explain";
   button.classList.add("ai-explain-button");
   button.type = "button";
-  button.setAttribute("data-ai-explain", "explain");
+  button.dataset.glean = `${AI_EXPLAIN}: explain`;
   button.title = "Explain (parts of) this example";
   buttonContainer.appendChild(button);
   const info = document.createElement("div");
@@ -90,7 +91,7 @@ export function addExplainButton(
   const infoToggle = document.createElement("button");
   infoToggle.classList.add("ai-explain-info-toggle", "icon", "icon-note-info");
   infoToggle.type = "button";
-  infoToggle.setAttribute("data-ai-explain", "info-toggle");
+  infoToggle.dataset.glean = `${AI_EXPLAIN}: info-toggle`;
   infoToggle.title = "Toggle AI Explain info";
   infoToggle.addEventListener("click", () =>
     info.classList.toggle("visually-hidden")

@@ -46,9 +46,10 @@ The placement handler uses the following environment variables:
 - `KEVEL_SITE_ID` (default: `0`) - Required for serving placements via Kevel.
 - `KEVEL_NETWORK_ID` (default: `0`) - Required for serving placements via Kevel.
 - `SIGN_SECRET` (default: `""`) - Required for serving placements.
-- `CARBON_ZONE_KEY` (default: `""`) - Required for serving placements via
-  Carbon.
-- `CARBON_FALLBACK_ENABLED` (default: `"false"`) - Whether fallback placements
-  should be served via Carbon.
+- `BSA_ZONE_KEYS` (default: `""`) - Required for serving placements via BSA.
+- `BSA_URL_PREFIX`(default: "https://localhost") - Where to show BSA placements
+  if enabled. Formatted like :
+  "placementname1:zonekey1;placementkey2:zonekey2...".
+- `BSA_ENABLED` (default: `"false"`) - Whether to use placements via BSA.
 
 You can override the defaults by adding a `.env` file with `KEY=value` lines.

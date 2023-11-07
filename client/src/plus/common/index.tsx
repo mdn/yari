@@ -1,4 +1,4 @@
-import SignInLink from "../../ui/atoms/signin-link";
+import LogInLink from "../../ui/atoms/login-link";
 import NoteCard from "../../ui/molecules/notecards";
 import { getCategoryByPathname } from "../../utils";
 
@@ -6,7 +6,7 @@ export function NotSignedIn() {
   return (
     <div className="container">
       <h3>You have not signed in</h3>
-      <SignInLink />
+      <LogInLink />
     </div>
   );
 }
@@ -15,7 +15,7 @@ export function NotSubscriber() {
   return (
     <>
       <h2>You are signed in but not an active subscriber</h2>
-      <SignInLink />
+      <LogInLink />
     </>
   );
 }

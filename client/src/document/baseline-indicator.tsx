@@ -1,4 +1,6 @@
 import { WebFeatureStatus } from "../../../libs/types/document";
+import { BASELINE } from "../telemetry/constants";
+import { useGleanClick } from "../telemetry/glean-context";
 import { Icon } from "../ui/atoms/icon";
 import "./baseline-indicator.scss";
 
@@ -9,6 +11,8 @@ const ENGINES = [
 ];
 
 export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
+  const gleanClick = useGleanClick();
+
   const supported = (browser: string) => {
     const version: string | boolean | undefined =
       status.support?.[browser.toLowerCase()];
@@ -37,6 +41,7 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
   return typeof status.is_baseline !== "undefined" ? (
     <details
       className={`baseline-indicator ${status.is_baseline ? "supported" : ""}`}
+      onToggle={(e) => e.currentTarget.open && gleanClick(BASELINE.TOGGLE_OPEN)}
     >
       <summary>
         <span
@@ -77,12 +82,20 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
         </p>
         <ul>
           <li>
-            <a href="/en-US/blog/baseline-unified-view-stable-web-features/">
+            <a
+              href="/en-US/blog/baseline-unified-view-stable-web-features/"
+              data-glean={BASELINE.LINK_LEARN_MORE}
+            >
               Learn more
             </a>
           </li>
           <li>
-            <a href="#browser_compatibility">See full compatibility</a>
+            <a
+              href="#browser_compatibility"
+              data-glean={BASELINE.LINK_BCD_TABLE}
+            >
+              See full compatibility
+            </a>
           </li>
         </ul>
       </div>

@@ -1,7 +1,6 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { SidebarFilterer } from "./SidebarFilterer";
 import { Button } from "../../../ui/atoms/button";
-import { GleanThumbs } from "../../../ui/atoms/thumbs";
 
 import "./filter.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
@@ -58,13 +57,6 @@ export function SidebarFilter() {
           <span className="visually-hidden">Clear filter input</span>
         </Button>
       </div>
-      {isActive && (
-        <div className="sidebar-filter-footer">
-          <div className="sidebar-filter-thumbs">
-            <GleanThumbs feature="sidebar-filter" />
-          </div>
-        </div>
-      )}
     </section>
   );
 }

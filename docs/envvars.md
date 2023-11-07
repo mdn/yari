@@ -233,6 +233,12 @@ automatically included in XHR calls on `http://localhost.org:3000`.
 Note that even if you set this, you can still continue to use
 `http://localhost:3000`.
 
+### `REACT_APP_AI_FEEDBACK_GITHUB_REPO`
+
+**Default: `mdn/private-ai-feedback`**
+
+The GitHub repository to use for reporting issues with AI Help answers.
+
 ### `REACT_APP_BCD_BASE_URL`
 
 **Default: `https://bcd.developer.allizom.org`**
@@ -304,6 +310,14 @@ Determines if the MDN++ SPA should be reachable or not.
 If the `/api/v1/whoami` does not include a `geo.country` value, fall back on
 this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
 included this value for `geo.country`.
+
+### `REACT_APP_DEFAULT_GEO_COUNTRY_ISO`
+
+**Default: `US`**
+
+If the `/api/v1/whoami` does not include a `geo.country_iso` value, fall back on
+this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
+included this value for `geo.country_iso`.
 
 ## Glean (Analytics)
 

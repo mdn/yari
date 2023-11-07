@@ -493,9 +493,9 @@ function checkItemList(
  * config.expected contains the expected results, and we use other bits
  * of config, most notably locale
  */
-function checkResult(html, config) {
+async function checkResult(html, config) {
   // Lint the HTML
-  expect(lintHTML(html)).toBeFalsy();
+  expect(await lintHTML(html)).toBeFalsy();
 
   const dom = JSDOM.fragment(html);
   // Check that all links reference the proper locale or use https
@@ -663,12 +663,12 @@ function testMacro(config) {
         throw new Error(`Unimplmeneted mock fixture ${name}`);
       });
       if (config.argument) {
-        return macro.call(config.argument).then(function (result) {
-          checkResult(result, config);
+        return macro.call(config.argument).then(async function (result) {
+          await checkResult(result, config);
         });
       }
-      return macro.call().then(function (result) {
-        checkResult(result, config);
+      return macro.call().then(async function (result) {
+        await checkResult(result, config);
       });
     });
   }

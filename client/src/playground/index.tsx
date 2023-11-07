@@ -26,8 +26,8 @@ const JS_DEFAULT = "";
 
 enum State {
   initial,
+  ready,
   remote,
-  modified,
 }
 
 enum DialogState {
@@ -85,10 +85,16 @@ export default function Playground() {
       }
       gleanClick(`${PLAYGROUND}: load-shared`);
 
-      return (await response.json()) || null;
+      const code = await response.json();
+      if (code) {
+        setState(State.remote);
+        return code;
+      }
+      return null;
     },
     {
-      fallbackData: (!gistId && load(SESSION_KEY)) || undefined,
+      fallbackData:
+        (!gistId && state === State.initial && load(SESSION_KEY)) || undefined,
     }
   );
   const htmlRef = useRef<EditorHandle | null>(null);
@@ -127,12 +133,11 @@ export default function Playground() {
     [getEditorContent]
   );
   useEffect(() => {
-    if (state === State.initial) {
+    if (state === State.initial || state === State.remote) {
       if (initialCode && Object.values(initialCode).some(Boolean)) {
         htmlRef.current?.setContent(initialCode?.html);
         cssRef.current?.setContent(initialCode?.css);
         jsRef.current?.setContent(initialCode?.js);
-        setState(State.remote);
         if (initialCode.src) {
           setCodeSrc(
             initialCode?.src &&
@@ -144,6 +149,7 @@ export default function Playground() {
         cssRef.current?.setContent(CSS_DEFAULT);
         jsRef.current?.setContent(JS_DEFAULT);
       }
+      setState(State.ready);
     }
   }, [initialCode, state]);
   useEffect(() => {

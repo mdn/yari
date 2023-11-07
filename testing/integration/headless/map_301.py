@@ -469,67 +469,6 @@ GITHUB_IO_URLS = list(
     )
 )
 
-# Converted from SCL3 Apache files - move to untrusted domain
-MOZILLADEMOS_URLS = list(
-    flatten(
-        (
-            # https://mdn.mozillademos.org/
-            url_test(
-                "/samples/canvas-tutorial/images/backdrop.png",
-                "https://mdn.mozillademos.org/files/5395/backdrop.png",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/bg_gallery.png",
-                "https://mdn.mozillademos.org/files/5415/bg_gallery.png",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_1.jpg",
-                "https://mdn.mozillademos.org/files/5399/gallery_1.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_2.jpg",
-                "https://mdn.mozillademos.org/files/5401/gallery_2.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_3.jpg",
-                "https://mdn.mozillademos.org/files/5403/gallery_3.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_4.jpg",
-                "https://mdn.mozillademos.org/files/5405/gallery_4.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_5.jpg",
-                "https://mdn.mozillademos.org/files/5407/gallery_5.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_6.jpg",
-                "https://mdn.mozillademos.org/files/5409/gallery_6.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_7.jpg",
-                "https://mdn.mozillademos.org/files/5411/gallery_7.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/gallery_8.jpg",
-                "https://mdn.mozillademos.org/files/5413/gallery_8.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/picture_frame.png",
-                "https://mdn.mozillademos.org/files/242/Canvas_picture_frame.png",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/rhino.jpg",
-                "https://mdn.mozillademos.org/files/5397/rhino.jpg",
-            ),
-            url_test(
-                "/samples/canvas-tutorial/images/wallpaper.png",
-                "https://mdn.mozillademos.org/files/222/Canvas_createpattern.png",
-            ),
-        )
-    )
-)
-
 # These are the remaining "samples/*" URL's, the ones that haven't been redirected
 # by any of the special cases, which we expect to be redirected to the media CDN.
 DEFAULT_SAMPLES_URLS = [

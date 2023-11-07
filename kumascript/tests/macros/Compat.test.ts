@@ -33,7 +33,7 @@ describeMacro("Compat", function () {
   itMacro("Outputs valid HTML", async (macro) => {
     macro.ctx.env["browser-compat"] = "api.feature";
     const result = await macro.call();
-    expect(lintHTML(result)).toBeFalsy();
+    expect(await lintHTML(result)).toBeFalsy();
   });
 
   itMacro("Accepts an array", async (macro) => {
@@ -41,6 +41,6 @@ describeMacro("Compat", function () {
     const result = await macro.call();
     const dom = JSDOM.fragment(result);
     assert.equal(dom.querySelectorAll("div.bc-data").length, 2);
-    expect(lintHTML(result)).toBeFalsy();
+    expect(await lintHTML(result)).toBeFalsy();
   });
 });

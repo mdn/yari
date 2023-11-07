@@ -92,7 +92,7 @@
       align-self: flex-start;
     }
 
-    @media screen and (max-width: #{$screen-lg -1}) {
+    @media screen and (max-width: #{$screen-lg - 1}) {
       &.button {
         --button-color: var(--text-secondary);
         --button-padding: 0;

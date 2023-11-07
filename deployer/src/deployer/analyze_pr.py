@@ -90,7 +90,7 @@ def post_about_deployment(build_directory: Path, **config):
     for doc in get_built_docs(build_directory):
         url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
         mdn_url = doc["mdn_url"]
-        links.append(f"- [{mdn_url}]({url})")
+        links.append(f"- [`{mdn_url}`]({url})")
     links.sort()
 
     if links:

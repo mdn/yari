@@ -1,3 +1,5 @@
+import { MENU } from "../../../telemetry/constants";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import { MenuEntry, Submenu } from "../submenu";
 import "./index.scss";
 
@@ -8,6 +10,8 @@ interface MenuProps {
 }
 
 export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
+  const gleanClick = useGleanClick();
+
   const buttonId = `${menu.id}-button`;
   const submenuId = `${menu.id}-menu`;
 
@@ -35,8 +39,11 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
         <a
           href={menu.to}
           className="top-level-entry"
-          // @ts-ignore
-          onClick={() => document?.activeElement?.blur()}
+          onClick={() => {
+            gleanClick(`${MENU.CLICK_MENU}: ${menu.id} -> ${menu.to}`);
+            // @ts-ignore
+            document?.activeElement?.blur();
+          }}
         >
           {menu.label}
         </a>

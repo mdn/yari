@@ -17,6 +17,19 @@
     }
   }
 
+  .search-widget:focus-within .search-input-field,
+  .search-input-field:focus,
+  .search-input-field:valid {
+    width: inherit;
+
+    /* When the search input has focus or has content,
+          show the clear search button */
+    ~ .button.clear-search-button {
+      display: block;
+      right: 2.8rem;
+    }
+  }
+
   .search-input-field {
     // make webkit play nice with search input types
     -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
@@ -45,18 +58,6 @@
     @media screen and (min-width: $screen-lg) {
       &:invalid {
         width: 1rem;
-      }
-    }
-
-    &:focus,
-    &:valid {
-      width: inherit;
-
-      /* When the search input has focus or has content,
-          show the clear search button */
-      ~ .button.clear-search-button {
-        display: block;
-        right: 2.8rem;
       }
     }
 

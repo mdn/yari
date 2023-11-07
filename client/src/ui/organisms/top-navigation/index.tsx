@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 const DARK_NAV_ROUTES = [/\/plus\/?$/i, "_homepage", /^\/?$/];
 const TRANSPARENT_NAV_ROUTES = []; //["_homepage", /\/?$/];
 
-export function TopNavigation({ extraClasses }: { extraClasses?: string }) {
+export function TopNavigation() {
   const location = useLocation();
   const [showMainMenu, setShowMainMenu] = useState(false);
 
@@ -30,9 +30,7 @@ export function TopNavigation({ extraClasses }: { extraClasses?: string }) {
 
   return (
     <header
-      className={`top-navigation ${extraClasses || ""} ${
-        showMainMenu ? "show-nav" : ""
-      }
+      className={`top-navigation ${showMainMenu ? "show-nav" : ""}
       ${dark ? " dark" : ""}
       ${transparent ? " is-transparent" : ""}`}
     >

@@ -447,7 +447,7 @@ function DocumentsTable({
             <TableHead id="popularityEn" title="Popularity rank (en-US)" />
             <TableHead
               id="popularityLocale"
-              title="Popularity rank ({locale})"
+              title={`Popularity rank (${locale})`}
             />
             <TableHead id="dateDiff" title="Date delta" />
           </tr>

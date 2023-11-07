@@ -1,4 +1,5 @@
 import { EditorContent, SESSION_KEY } from "../../playground/utils";
+import { PLAYGROUND } from "../../telemetry/constants";
 
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 
@@ -71,7 +72,7 @@ export function addBreakoutButton(
 
   button.setAttribute("class", "play-button external");
   button.type = "button";
-  button.setAttribute("data-play", id);
+  button.dataset.glean = `${PLAYGROUND}: breakout->${id}`;
   button.title = "Open in Playground";
   element.appendChild(button);
 

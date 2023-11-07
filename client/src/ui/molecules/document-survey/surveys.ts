@@ -27,6 +27,7 @@ enum SurveyBucket {
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
+  DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
 }
 
 enum SurveyKey {
@@ -41,18 +42,19 @@ enum SurveyKey {
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
+  DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
 }
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.BLOG_FEEDBACK_2023,
-    bucket: SurveyBucket.BLOG_FEEDBACK_2023,
+    key: SurveyKey.DISCOVERABILITY_AUG_2023,
+    bucket: SurveyBucket.DISCOVERABILITY_AUG_2023,
     show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7397017/MDN-Blog-user-feedback",
+    src: "https://survey.alchemer.com/s3/7457498/MDN-Discoverability-User-Satisfaction",
     teaser:
-      "We recently launched the MDN blog to enrich our platform with valuable content and enhance your experience. To ensure that we are meeting your needs, we would like to hear your thoughts and feedback through a short user satisfaction survey.",
-    question: "How satisfied are you with your experience of the MDN blog?",
-    ...survey_duration(SurveyBucket.BLOG_FEEDBACK_2023),
-    ...survey_rates(SurveyKey.BLOG_FEEDBACK_2023),
+      "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
+    question: "What’s your experience on MDN Web Docs?",
+    ...survey_duration(SurveyBucket.DISCOVERABILITY_AUG_2023),
+    ...survey_rates(SurveyKey.DISCOVERABILITY_AUG_2023),
   },
 ];

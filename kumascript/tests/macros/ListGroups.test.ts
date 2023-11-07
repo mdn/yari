@@ -84,8 +84,8 @@ function compareNode(actual, expected) {
 /**
  * This is the entry point for checking the result of a test.
  */
-function checkResult(html) {
-  expect(lintHTML(html)).toBeFalsy();
+async function checkResult(html) {
+  expect(await lintHTML(html)).toBeFalsy();
   const actualDOM = JSDOM.fragment(html);
   const actualNodes = actualDOM.querySelectorAll("*");
   const expectedDOM = JSDOM.fragment(expectedHTML);
@@ -98,8 +98,8 @@ function checkResult(html) {
 
 function testMacro() {
   itMacro("Test ListGroups macro", (macro) => {
-    return macro.call().then((result) => {
-      checkResult(result);
+    return macro.call().then(async (result) => {
+      await checkResult(result);
     });
   });
 }

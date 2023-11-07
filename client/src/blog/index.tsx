@@ -9,7 +9,6 @@ import { BlogPost, AuthorDateReadTime } from "./post";
 import { BlogImage, BlogPostMetadata } from "../../../libs/types/blog.js";
 
 import "./index.scss";
-import "./post.scss";
 import { Button } from "../ui/atoms/button";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 

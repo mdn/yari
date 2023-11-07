@@ -1,3 +1,4 @@
+/* global fetch */
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
@@ -6,6 +7,7 @@ const PLACEMENTS = {
   top: 585,
   hpMain: 3214,
   hpFooter: 2327,
+  bottom: 7748,
 };
 
 // Allow list for client sent keywords.
@@ -44,7 +46,12 @@ export function createPongGetHandler(client, coder) {
           if (v === null || v?.[0] === null) {
             return [p, null];
           }
-          if ((p === "side") | (p === "hpMain") | (p === "hpFooter")) {
+          if (
+            p === "side" ||
+            p === "hpMain" ||
+            p === "hpFooter" ||
+            p === "bottom"
+          ) {
             const [{ contents, clickUrl, impressionUrl }] = v;
             const { colors } = contents?.[0]?.data?.customData || {};
             return [
@@ -58,6 +65,7 @@ export function createPongGetHandler(client, coder) {
                 colors,
                 click: coder.encodeAndSign(clickUrl),
                 view: coder.encodeAndSign(impressionUrl),
+                version: 1,
               },
             ];
           } else if (p === "top") {
@@ -73,6 +81,7 @@ export function createPongGetHandler(client, coder) {
                 colors,
                 click: coder.encodeAndSign(clickUrl),
                 view: coder.encodeAndSign(impressionUrl),
+                version: 1,
               },
             ];
           }
@@ -80,5 +89,22 @@ export function createPongGetHandler(client, coder) {
         .filter(Boolean)
     );
     return { statusCode: 200, payload };
+  };
+}
+
+export function createPongClickHandler(coder) {
+  return async (params) => {
+    const click = coder.decodeAndVerify(params.get("code"));
+    const res = await fetch(click, { redirect: "manual" });
+    const status = res.status;
+    const location = res.headers.get("location");
+    return { status, location };
+  };
+}
+
+export function createPongViewedHandler(coder) {
+  return async (params) => {
+    const view = coder.decodeAndVerify(params.get("code"));
+    await fetch(view, { redirect: "manual" });
   };
 }

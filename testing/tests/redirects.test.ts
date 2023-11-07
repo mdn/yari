@@ -488,61 +488,6 @@ const GITHUB_IO_URLS = [].concat(
   )
 );
 
-const MOZILLADEMOS_URLS = [].concat(
-  url_test(
-    "/samples/canvas-tutorial/images/backdrop.png",
-    "https://mdn.mozillademos.org/files/5395/backdrop.png"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/bg_gallery.png",
-    "https://mdn.mozillademos.org/files/5415/bg_gallery.png"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_1.jpg",
-    "https://mdn.mozillademos.org/files/5399/gallery_1.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_2.jpg",
-    "https://mdn.mozillademos.org/files/5401/gallery_2.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_3.jpg",
-    "https://mdn.mozillademos.org/files/5403/gallery_3.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_4.jpg",
-    "https://mdn.mozillademos.org/files/5405/gallery_4.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_5.jpg",
-    "https://mdn.mozillademos.org/files/5407/gallery_5.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_6.jpg",
-    "https://mdn.mozillademos.org/files/5409/gallery_6.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_7.jpg",
-    "https://mdn.mozillademos.org/files/5411/gallery_7.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_8.jpg",
-    "https://mdn.mozillademos.org/files/5413/gallery_8.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/picture_frame.png",
-    "https://mdn.mozillademos.org/files/242/Canvas_picture_frame.png"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/rhino.jpg",
-    "https://mdn.mozillademos.org/files/5397/rhino.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/wallpaper.png",
-    "https://mdn.mozillademos.org/files/222/Canvas_createpattern.png"
-  )
-);
-
 const DEFAULT_SAMPLES_URLS = [].concat(
   url_test("/samples/cssref/background.html", null, { statusCode: 302 }),
   url_test("/samples/html/progress.html", null, { statusCode: 302 })
@@ -1322,12 +1267,6 @@ describe("scl3 redirects", () => {
 
 describe("github io redirects", () => {
   for (const [url, t] of GITHUB_IO_URLS) {
-    it(url, t);
-  }
-});
-
-describe("mozilla demos redirects", () => {
-  for (const [url, t] of MOZILLADEMOS_URLS) {
     it(url, t);
   }
 });

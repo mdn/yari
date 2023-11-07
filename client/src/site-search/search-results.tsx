@@ -159,7 +159,7 @@ export default function SearchResults() {
 
     return (
       <SearchErrorContainer>
-        <p>Something else when horribly wrong with the search</p>
+        <p>Something else went horribly wrong with the search</p>
         <p>
           <code>{error.toString()}</code>
         </p>
