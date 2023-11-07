@@ -30,11 +30,11 @@ jobs:
             ]
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: steps.release.outputs.release_created
 
       - name: Setup
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         if: steps.release.outputs.release_created
         with:
           node-version: 18

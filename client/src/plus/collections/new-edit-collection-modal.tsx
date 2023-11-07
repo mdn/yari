@@ -12,7 +12,7 @@ import {
   useCollectionEdit,
   useCollections,
 } from "./api";
-import { NEW_COLLECTION_MODAL_UPGRADE_LINK } from "../../telemetry/constants";
+import { PLUS_COLLECTIONS } from "../../telemetry/constants";
 import LimitedInput from "../../ui/atoms/form/limited-input";
 import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 
@@ -105,7 +105,7 @@ export default function NewEditCollectionModal({
             <div className="mdn-form-item is-button-row">
               <SignUpLink
                 toPlans={true}
-                gleanContext={NEW_COLLECTION_MODAL_UPGRADE_LINK}
+                gleanContext={PLUS_COLLECTIONS.NEW_MODAL_UPGRADE_LINK}
               />
             </div>
           </div>

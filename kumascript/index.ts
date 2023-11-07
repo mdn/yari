@@ -38,14 +38,14 @@ export async function render(
     invalidateCache = false,
   }: RenderOptions = {},
   doc?: Doc
-): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
+): Promise<[cheerio.CheerioAPI, SourceCodeError[], any]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
       renderCache.delete(urlLC);
     } else {
       const [renderedHtml, errors] = renderCache.get(urlLC);
-      return [cheerio.load(renderedHtml), errors];
+      return [cheerio.load(renderedHtml), errors, undefined];
     }
   }
 
@@ -135,5 +135,5 @@ export async function render(
       allErrors,
     ]);
   }
-  return [tool.cheerio(), allErrors];
+  return [tool.cheerio(), allErrors, metadata];
 }
