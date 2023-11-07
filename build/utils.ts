@@ -1,5 +1,8 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
 import got from "got";
@@ -17,7 +20,6 @@ import {
   VALID_MIME_TYPES,
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
-import { spawnSync } from "node:child_process";
 import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
@@ -311,6 +313,11 @@ export function makeTOC(doc) {
 }
 
 export function findPostFileBySlug(slug: string): string | null {
+  if (!BLOG_ROOT) {
+    console.warn("'BLOG_ROOT' not set in .env file");
+    return null;
+  }
+
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",
@@ -320,8 +327,12 @@ export function findPostFileBySlug(slug: string): string | null {
     if (status === 0) {
       const file = stdout.toString("utf-8").split("\n")[0];
       return file;
+    }
+    const message = stderr.toString();
+    if (message) {
+      console.error(`error running rg: ${message}`);
     } else {
-      console.error(`error running rg: ${stderr}`);
+      console.error(`Post ${slug} not found in ${BLOG_ROOT}`);
     }
   } catch {
     console.error("rg failed");
@@ -333,4 +344,14 @@ const POST_URL_RE = /^\/en-US\/blog\/([^/]+)\/?$/;
 
 export function getSlugByBlogPostUrl(url: string): string | null {
   return url.match(POST_URL_RE)?.[1] || null;
+}
+
+export async function importJSON<T>(jsonPath: string): Promise<T> {
+  if (!jsonPath.startsWith(".")) {
+    jsonPath = path.join(cwd(), "node_modules", jsonPath);
+  }
+
+  const json = await readFile(jsonPath, "utf-8");
+
+  return JSON.parse(json);
 }
