@@ -125,7 +125,7 @@
     "rehype-format": "^4.0.1",
     "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",
-    "rehype-stringify": "^9.0.4",
+    "rehype-stringify": "^10.0.0",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.2",
     "remark-rehype": "^10.1.0",
