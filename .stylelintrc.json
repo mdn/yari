@@ -14,6 +14,7 @@
     "declaration-property-value-disallowed-list": null,
     "font-family-no-missing-generic-family-keyword": null,
     "max-nesting-depth": null,
+    "media-query-no-invalid": null,
     "no-descending-specificity": null,
     "no-invalid-position-at-import-rule": null,
     "no-irregular-whitespace": null,

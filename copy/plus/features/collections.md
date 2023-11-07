@@ -8,7 +8,7 @@ title: Collections
 >
 > Collections allow you to save MDN articles and share your library across
 > devices. We also automatically save for you the pages you visit most
-> frequently. They wil help you find what you need quicker by showing first in
+> frequently. They will help you find what you need quicker by showing first in
 > your search results when looking for a relevant topic and you’ll be able to
 > curate the lists to your liking.
 

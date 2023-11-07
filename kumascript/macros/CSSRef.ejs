@@ -69,6 +69,10 @@ const text = mdn.localStringMap({
       'Box_model': 'Box model',
         'Introduction_to_the_CSS_basic_box_model': 'Introduction to the CSS basic box model',
         'Mastering_margin_collapsing': 'Mastering margin collapsing',
+      'Colors': 'Colors',
+        'Applying_color_to_HTML_elements_using_CSS': 'Applying color to HTML elements using CSS',
+        'Web_Accessibility_Understanding_Colors_and_Luminance': 'Web Accessibility: Understanding colors and luminance',
+        'Color_contrast': 'Web Accessibility: Color contrast',
       'Columns': 'Columns',
         'Basic_concepts_of_Multicol': 'Basic concepts of Multicol',
         'Styling_columns': 'Styling columns',
@@ -125,6 +129,10 @@ const text = mdn.localStringMap({
         'Using_media_queries': 'Using media queries',
         'Using_media_queries_for_accessibility': 'Using media queries for accessibility',
         'Testing_media_queries_programmatically': 'Testing media queries programmatically',
+      'Nesting': 'Nesting style rules',
+        'Using_CSS_nesting': 'Using CSS nesting',
+        'Nesting_and_specificity': 'Nesting and specificity',
+        'Nesting_at-rules': 'Nesting at-rules',
       'Positioning': 'Positioning',
         'Understanding_CSS_z-index': 'Understanding CSS z-index',
       'Scroll_snap': 'Scroll snap',
@@ -474,7 +482,7 @@ const text = mdn.localStringMap({
         'Understanding_CSS_z-index': 'CSS z-index 이해하기',
       'Scroll_snap': '스크롤 스냅',
         'Basic_concepts_of_scroll_snap': '스크롤 스냅 기본 개념',
-      'Shapes': '도형',      
+      'Shapes': '도형',
         'Overview_of_shapes': '도형의 기본 개념',
         'Shapes_from_box_values': 'CSS 박스 모델로 도형 만들기',
         'Basic_shapes': '기본 도형들',
@@ -705,20 +713,25 @@ const text = mdn.localStringMap({
     'CSS_basics': 'CSS 基础',
       'CSS_first_steps': 'CSS 第一步',
         'CSS_first_steps_overview': 'CSS 第一步概述',
-        'What_is_CSS':  '什么是 CSS?',
+        'What_is_CSS':  '什么是 CSS',
         'Getting_started_with_CSS': 'CSS 入门',
         'How_CSS_is_structured': 'CSS 的结构是怎样的',
         'How_CSS_works': 'CSS 是如何工作的',
         'Assessment_Styling_a_biography_page': '测验：为传记页面添加样式',
       'CSS_building_blocks': 'CSS 构建',
         'CSS_building_blocks_overview': 'CSS 构建基础概述',
-        'Cascade_and_inheritance': '级联与继承',
         'CSS_selectors': 'CSS 选择器',
+        'Type_Class_and_ID_Selectors': '类型、类和 ID 选择器',
+        'Attribute_selectors': '属性选择器',
+        'Pseudo-classes_and_pseudo-elements': '伪类与伪元素',
+        'Combinators': '关系选择器',
+        'Cascade_and_inheritance': '层叠、优先级与继承',
+        'Cascade_layers': '层叠层',
         'The_box_model': '盒子模型',
         'Backgrounds_and_borders': '背景和边框',
         'Handling_different_text_directions': '处理不同方向的文本',
-        'Overflowing_content': '溢出',
-        'CSS_values_and_units': 'CSS 值和单位',
+        'Overflowing_content': '溢出的内容',
+        'CSS_values_and_units': 'CSS 的值和单位',
         'Sizing_items_in_CSS': '在 CSS 中调整大小',
         'Images_media_and_form_elements': '图像、媒体和表单元素',
         'Styling_tables': '样式化表格',
@@ -736,11 +749,11 @@ const text = mdn.localStringMap({
         'Assessment_Typesetting_a_community_school_homepage': '测验：排版社区大学首页',
       'CSS_layout': 'CSS 布局概述',
         'CSS_layout_overview': 'CSS 布局概述',
-        'Layout_introduction' : 'CSS 布局简介',
+        'Introduction_to_CSS_layout' : 'CSS 布局简介',
         'Normal_Flow': '一般的流布局',
-        'Flexbox': '弹性盒子',
-        'Grids' : '网格',
-        'Floats': '浮动',
+        'Flexbox': '弹性盒布局',
+        'Grids' : '网格布局',
+        'Floats': '浮动布局',
         'Positioning': '定位',
         'Multiple-column_layout': '多栏式布局',
         'Responsive_design': '响应式布局',
@@ -756,95 +769,99 @@ const text = mdn.localStringMap({
         'Using_multiple_backgrounds': '多个背景的应用',
         'Resizing_background_images': '重设背景图片的大小',
       'Box_alignment': '盒子的对齐方式',
-        'Box_alignment_in_block_layout': '块布局中的对齐方式',
-        'Box_alignment_in_flexbox': 'Flex 布局中的对齐方式',
-        'Box_alignment_in_grid_layout': 'Grid 布局中的对齐方式',
-        'Box_alignment_in_multi-column_layout': '多栏式布局中的对齐方式',
-      'Box_model': '盒子模型',
-        'Introduction_to_the_CSS_basic_box_model': '盒子模型基础简介',
+        'Box_alignment_in_block_layout': '块布局中的盒对齐方式',
+        'Box_alignment_in_flexbox': '弹性盒布局中的盒对齐方式',
+        'Box_alignment_in_grid_layout': '网格布局中的盒对齐方式',
+        'Box_alignment_in_multi-column_layout': '多栏式布局中的盒对齐方式',
+      'Box_model': '盒模型',
+        'Introduction_to_the_CSS_basic_box_model': 'CSS 基本盒模型简介',
         'Mastering_margin_collapsing': '外边距重叠',
-      'Columns': '列',
-        'Basic_concepts_of_Multicol': '多列布局的基础概念',
-        'Styling_columns': '多列布局的样式',
-        'Spanning_and_balancing': '多列布局中的跨越与平衡',
-        'Handling_overflow_in_Multicol': '处理多列布局的溢出',
-        'Content_breaks_in_Multicol': '多列布局中的内容换行',
+      'Columns': '多栏式布局',
+        'Basic_concepts_of_Multicol': '多栏式布局的基础概念',
+        'Styling_columns': '多栏式布局的样式',
+        'Spanning_and_balancing': '多栏式布局中的跨列与平衡',
+        'Handling_overflow_in_Multicol': '处理多栏式布局的溢出',
+        'Content_breaks_in_Multicol': '多栏式布局中的内容换行',
       'Conditional_rules': '条件规则',
-        'Using_feature_queries': '运用查询特性',
+        'Using_feature_queries': '运用特性查询',
       'CSSOM_view': 'CSS 对象模型视图',
         'Coordinate_systems': '坐标系',
-      'Flexbox': 'Flex 布局',
-        'Basic_concepts_of_Flexbox': 'Flex 布局基础',
+      'Flexbox': '弹性盒布局',
+        'Basic_concepts_of_Flexbox': '弹性盒布局基础',
         'Comparison_with_other_layout_methods': '与其他布局的比较',
-        'Aligning_items_in_a_flex_container': 'Flex 容器中的对齐方式',
-        'Ordering_flex_items': 'Flex 布局中的排序方式',
-        'Controlling_flex_item_ratios': '控制 Flex 子元素在主轴上的比例',
-        'Mastering_wrapping_of_flex_items': '包装 Flex 布局中的元素',
-        'Typical_use_cases_of_Flexbox': '经典的 Flex 布局示例',
-        'Backwards_compatibility_of_Flexbox': 'Flex 布局的向下兼容性',
-      'Flow_layout': '流布局',
-        'Block_and_Inline_layout_in_normal_flow': '一般的流布局中的块和内联布局',
-        'In_flow_and_Out_of_flow': '应用或脱离流布局',
+        'Aligning_items_in_a_flex_container': '弹性盒容器中的对齐方式',
+        'Ordering_flex_items': '弹性盒布局中的排序方式',
+        'Controlling_flex_item_ratios': '控制弹性盒子元素在主轴上的比例',
+        'Mastering_wrapping_of_flex_items': '包装弹性盒布局中的元素',
+        'Typical_use_cases_of_Flexbox': '经典的弹性盒布局示例',
+        'Backwards_compatibility_of_Flexbox': '弹性盒布局的向下兼容性',
+      'Flow_layout': '流式布局',
+        'Block_and_Inline_layout_in_normal_flow': '一般的流式布局中的块式和行式布局',
+        'In_flow_and_Out_of_flow': '应用或脱离流式布局',
         'Formatting_contexts_explained': '格式化上下文简介',
-        'Flow_layout_and_writing_modes': '流布局和书写模式',
-        'Flow_layout_and_overflow': '流布局和溢出',
+        'Flow_layout_and_writing_modes': '流式布局和书写模式',
+        'Flow_layout_and_overflow': '流式布局和溢出',
       'Fonts': '字体',
         'OpenType_font_features_guide': 'OpenType 字体特性指南',
-        'Variable_fonts_guide': '可变字体',
-      'Grid': 'Grid 布局',
-        'Basics_concepts_of_grid_layout': 'Grid 布局基础概念',
+        'Variable_fonts_guide': '可变字体指南',
+      'Grid': '网格布局',
+        'Basics_concepts_of_grid_layout': '网格布局基础概念',
         'Relationship_to_other_layout_methods': '和其他布局方法的联系',
         'Line-based_placement': '基于网格线的定位',
-        'Grid_template_areas': 'Grid 模板区域',
+        'Grid_template_areas': '网格模板区域',
         'Layout_using_named_grid_lines': '使用命名线布局',
-        'Auto-placement_in_grid_layout': 'Grid 布局中的自动定位',
-        'Box_alignment_in_grid_layout': 'Grid 布局中的盒模型对齐',
+        'Auto-placement_in_grid_layout': '网格布局中的自动定位',
+        'Box_alignment_in_grid_layout': '网格布局中的盒模型对齐',
         'Grids_logical_values_and_writing_modes': '网格、逻辑值和书写模式',
-        'Grid_layout_and_accessibility': 'Grid 布局和无障碍',
-        'Grid_Layout_and_progressive_enhancement': 'Grid 布局和渐进增强',
-        'Realizing_common_layouts_using_grids': '运用 Grid 布局实现常见布局',
+        'Grid_layout_and_accessibility': '网格布局和无障碍',
+        'Grid_Layout_and_progressive_enhancement': '网格布局和渐进增强',
+        'Realizing_common_layouts_using_grids': '运用网格布局实现常见布局',
         'Subgrid': '子网格',
         'Masonry_layout': 'Masonry 布局',
       'Images': '图片',
         'Using_CSS_gradients': '使用 CSS 渐变',
       'Lists_and_counters': '列表和计数器',
-        'Using_CSS_counters': '运用 CSS 计数器',
-        'Consistent_list_indentation': '调整列表缩进',
+        'Using_CSS_counters': '使用 CSS 计数器',
+        'Consistent_list_indentation': '使列表缩进一致',
       'Logical_properties': '逻辑属性',
         'Basic_concepts': '基础概念',
         'Floating_and_positioning': '浮动和定位',
         'Margins_borders_padding': '内外边距和边框',
         'Sizing': '调整尺寸',
       'Media_queries': '媒体查询',
-        'Using_media_queries': '运用媒体查询',
+        'Using_media_queries': '使用媒体查询',
         'Using_media_queries_for_accessibility': '无障碍相关的媒体查询',
         'Testing_media_queries_programmatically': '运用编程方法测试媒体查询',
+      'Nesting': '嵌套样式规则',
+        'Using_CSS_nesting': '使用 CSS 嵌套',
+        'Nesting_and_specificity': '嵌套与优先级',
+        'Nesting_at-rules': '嵌套 @ 规则',
       'Positioning': '定位',
-        'Understanding_CSS_z-index': 'CSS z-index',
-      'Scroll_snap': 'Scroll snap',
-        'Basic_concepts_of_scroll_snap': 'scroll snap 基础概念',
+        'Understanding_CSS_z-index': '理解 CSS z-index',
+      'Scroll_snap': '滚动吸附',
+        'Basic_concepts_of_scroll_snap': '滚动吸附的基本概念',
       'Shapes': '形状',
         'Overview_of_shapes': '形状概述',
         'Shapes_from_box_values': '使用 box 值指定形状',
-        'Basic_shapes': '基础的形状',
+        'Basic_shapes': '基本形状',
         'Shapes_from_images': '从图片中指定形状',
       'Text': '文本',
         'Wrapping_and_breaking_text': '包装文本和文本断行',
       'Transforms': '变换',
-        'Using_transforms': '运用变换',
+        'Using_transforms': '使用变换',
       'Transitions': '过渡',
-        'Using_transitions': '运用过渡',
-    'Layout_cookbook': '布局的 cookbook',
+        'Using_transitions': '使用过渡',
+    'Layout_cookbook': '布局手册',
       'Media_objects': '媒体对象',
-      'Columns': '列',
+      'Columns': '多列',
       'Center_an_element': '居中一个元素',
-      'Sticky_footers': '固定的页脚',
-      'Split_navigation': '分块导航',
+      'Sticky_footers': '粘性页脚',
+      'Split_navigation': '分离式导航',
       'Breadcrumb_navigation': '面包屑导航',
       'List_group_with_badges': '带有图标的列表',
       'Pagination': '分页',
       'Card': '卡片',
-      'Grid_wrapper': 'Grid 布局包装器',
+      'Grid_wrapper': '网格布局包装器',
     'Tools': '工具',
       'Color_picker_tool': '取色器',
       'Box-shadow_generator': 'Box shadow 生成器',
@@ -904,6 +921,7 @@ const text = mdn.localStringMap({
 const locale = env.locale;
 const learnURL = `/${locale}/docs/Learn/`;
 const cssURL = `/${locale}/docs/Web/CSS/`;
+const accessibilityURL = `/${locale}/docs/Web/Accessibility/`;
 
 const htmlEscape = mdn.htmlEscape;
 const hasTag = page.hasTag;
@@ -984,7 +1002,7 @@ async function makePageLink(aPage) {
   const pageBadges = (await page.badges(aPage)).join("");
 
   let result = '<li>';
-  
+
   if (rtlLocales.indexOf(locale) != -1) {
     result += '<bdi>';
   }
@@ -1209,6 +1227,16 @@ async function buildPropertylist(pages, title) {
   </li>
   <li class="toggle">
       <details>
+          <summary><%=text['Colors']%></summary>
+          <ol>
+            <li><%-smartLink(`${cssURL}CSS_colors/Applying_color`, null, text['Applying_color_to_HTML_elements_using_CSS'], cssURL)%></li>
+            <li><%-smartLink(`${accessibilityURL}Understanding_Colors_and_Luminance`, null, text['Web_Accessibility_Understanding_Colors_and_Luminance'], accessibilityURL)%></li>
+            <li><%-smartLink(`${accessibilityURL}Understanding_WCAG/Perceivable/Color_contrast`, null, text['Color_contrast'], accessibilityURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
           <summary><%=text['Columns']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Multicol_Layout/Basic_concepts`, null, text['Basic_concepts_of_Multicol'], cssURL)%></li>
@@ -1326,6 +1354,16 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${cssURL}CSS_Media_Queries/Using_media_queries`, null, text['Using_media_queries'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Media_Queries/Using_Media_Queries_for_Accessibility`, null, text['Using_media_queries_for_accessibility'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Media_Queries/Testing_media_queries`, null, text['Testing_media_queries_programmatically'], cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['Nesting']%></summary>
+          <ol>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Using_CSS_nesting`, null, text['Using_CSS_nesting'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Nesting_at-rules`, null, text['Nesting_at-rules'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Nesting/Nesting_and_specificity`, null, text['Nesting_and_specificity'], cssURL)%></li>
           </ol>
       </details>
   </li>

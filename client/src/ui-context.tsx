@@ -74,9 +74,6 @@ export function UIProvider(props: any) {
     }
     dark.addEventListener("change", setDark);
     const light = window.matchMedia("(prefers-color-scheme: light)");
-    if (dark.matches) {
-      setColorScheme("dark");
-    }
     light.addEventListener("change", setLight);
     return () => {
       light.removeEventListener("change", setLight);
