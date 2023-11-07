@@ -35,7 +35,6 @@ export const Submenu = ({
   extraClasses?: string;
 }) => {
   const gleanClick = useGleanClick();
-
   return (
     <ul
       id={submenuId}
