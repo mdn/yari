@@ -69,6 +69,10 @@ const text = mdn.localStringMap({
       'Box_model': 'Box model',
         'Introduction_to_the_CSS_basic_box_model': 'Introduction to the CSS basic box model',
         'Mastering_margin_collapsing': 'Mastering margin collapsing',
+      'Colors': 'Colors',
+        'Applying_color_to_HTML_elements_using_CSS': 'Applying color to HTML elements using CSS',
+        'Web_Accessibility_Understanding_Colors_and_Luminance': 'Web Accessibility: Understanding colors and luminance',
+        'Color_contrast': 'Web Accessibility: Color contrast',
       'Columns': 'Columns',
         'Basic_concepts_of_Multicol': 'Basic concepts of Multicol',
         'Styling_columns': 'Styling columns',
@@ -917,6 +921,7 @@ const text = mdn.localStringMap({
 const locale = env.locale;
 const learnURL = `/${locale}/docs/Learn/`;
 const cssURL = `/${locale}/docs/Web/CSS/`;
+const accessibilityURL = `/${locale}/docs/Web/Accessibility/`;
 
 const htmlEscape = mdn.htmlEscape;
 const hasTag = page.hasTag;
@@ -1217,6 +1222,16 @@ async function buildPropertylist(pages, title) {
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Box_Model/Introduction_to_the_CSS_box_model`, null, text['Introduction_to_the_CSS_basic_box_model'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Box_Model/Mastering_margin_collapsing`, null, text['Mastering_margin_collapsing'], cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['Colors']%></summary>
+          <ol>
+            <li><%-smartLink(`${cssURL}CSS_colors/Applying_color`, null, text['Applying_color_to_HTML_elements_using_CSS'], cssURL)%></li>
+            <li><%-smartLink(`${accessibilityURL}Understanding_Colors_and_Luminance`, null, text['Web_Accessibility_Understanding_Colors_and_Luminance'], accessibilityURL)%></li>
+            <li><%-smartLink(`${accessibilityURL}Understanding_WCAG/Perceivable/Color_contrast`, null, text['Color_contrast'], accessibilityURL)%></li>
           </ol>
       </details>
   </li>

@@ -58,6 +58,17 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   if (window && html) {
     html.className = theme;
     html.style.backgroundColor = "";
+
+    setTimeout(() => {
+      const meta = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]'
+      );
+      const color = getComputedStyle(document.body).backgroundColor;
+      if (meta && color) {
+        meta.content = color;
+      }
+    }, 1);
+
     try {
       window.localStorage.setItem("theme", theme);
     } catch (err) {

@@ -233,10 +233,16 @@ export default function render(
     )
     .join("");
 
+  // Open Graph protocol expects `language_TERRITORY` format.
+  const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
+    "-",
+    "_"
+  );
+
   const og = new Map([
     ["title", escapedPageTitle],
     ["url", canonicalURL],
-    ["locale", locale || (doc && doc.locale) || "en-US"],
+    ["locale", ogLocale],
   ]);
 
   if (pageDescription) {
