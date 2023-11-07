@@ -1,6 +1,6 @@
 import { unified } from "unified";
 import parse from "remark-parse";
-import remark2rehype from "remark-rehype";
+import remarkRehype from "remark-rehype";
 import stringify from "rehype-stringify";
 import gfm from "remark-gfm";
 import raw from "rehype-raw";
@@ -18,7 +18,7 @@ function makeProcessor(options: ProcessorOptions) {
   const processor = unified()
     .use(parse)
     .use(gfm)
-    .use(remark2rehype, {
+    .use(remarkRehype, {
       handlers: localizedHandlers,
       allowDangerousHtml: true,
     })

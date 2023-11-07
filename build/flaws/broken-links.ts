@@ -154,6 +154,26 @@ export function getBrokenLinksFlaws(
     });
   }
 
+  function checkHash(
+    hash: string,
+    a: cheerio.Cheerio<cheerio.Element>,
+    href: string
+  ) {
+    if (hash.startsWith(":~:")) {
+      // Ignore fragment directives.
+      return;
+    }
+    if (hash !== hash.toLowerCase()) {
+      addBrokenLink(
+        a,
+        checked.get(href),
+        href,
+        href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+        "Anchor not lowercase"
+      );
+    }
+  }
+
   $("a[href]").each((i, element) => {
     const a = $(element);
     let href = a.attr("href");
@@ -278,7 +298,11 @@ export function getBrokenLinksFlaws(
           true
         );
       }
-    } else if (href.startsWith("/") && !href.startsWith("//")) {
+    } else if (
+      href.startsWith("/") &&
+      !href.startsWith("//") &&
+      !/^\/en-US\/blog(\/|$)/.test(href)
+    ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
       const found = Document.findByURL(hrefNormalized);
@@ -355,30 +379,13 @@ export function getBrokenLinksFlaws(
           href,
           found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
         );
-      } else if (
-        hrefSplit.length > 1 &&
-        hrefSplit[1] !== hrefSplit[1].toLowerCase()
-      ) {
+      } else if (hrefSplit.length > 1) {
         const hash = hrefSplit[1];
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-          "Anchor not lowercase"
-        );
+        checkHash(hash, a, href);
       }
     } else if (href.startsWith("#")) {
       const hash = href.split("#")[1];
-      if (hash !== hash.toLowerCase()) {
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-          "Anchor not lowercase"
-        );
-      }
+      checkHash(hash, a, href);
     }
   });
 

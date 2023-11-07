@@ -62,7 +62,7 @@
     padding-right: 1rem;
 
     .toc {
-      --offset: var(--sticky-header-height);
+      --offset: var(--sticky-header-with-actions-height);
 
       display: block;
       grid-area: toc;
