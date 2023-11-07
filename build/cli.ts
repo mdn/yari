@@ -139,7 +139,7 @@ async function buildDocuments(
     cliProgress.Presets.shades_grey
   );
 
-  const docPerLocale = {};
+  const docPerLocale: Record<string, { slug: string; modified: string }[]> = {};
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
@@ -307,12 +307,17 @@ async function buildDocuments(
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
+    const sortedMeta = meta
+      .slice()
+      .sort((a, b) => a.mdn_url.localeCompare(b.mdn_url));
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
-      JSON.stringify(meta)
+      JSON.stringify(sortedMeta)
     );
   }
 
+  // allBrowserCompat.txt is used by differy, see:
+  // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
     localeMeta.forEach(
@@ -322,7 +327,7 @@ async function buildDocuments(
   );
   fs.writeFileSync(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
-    [...allBrowserCompat].join(" ")
+    [...allBrowserCompat].sort().join(" ")
   );
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };

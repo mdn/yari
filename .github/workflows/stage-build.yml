@@ -116,7 +116,7 @@ jobs:
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
@@ -175,7 +175,7 @@ jobs:
           # secure production but this is an exception and default
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
-          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
 
           # Sign key for code samples
           BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
@@ -203,8 +203,8 @@ jobs:
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
-          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/?brand=mozilla
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0?brand=mozilla
           REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
@@ -347,6 +347,8 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
+            --set-env-vars="BSA_ENABLED=true" \
+            --set-env-vars="BSA_URL_PREFIX=https://developer.allizom.org/fr/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=stage" \
             --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
@@ -354,8 +356,7 @@ jobs:
             --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
             --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
             --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
-            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
-            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
+            --set-secrets="BSA_ZONE_KEYS=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-bsa-zone-keys/versions/latest" \
             2>&1 | sed "s/^/[$region] /" &
             pids+=($!)
           done
