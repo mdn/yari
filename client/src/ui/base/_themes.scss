@@ -177,6 +177,11 @@
   --updates-mandala: #{$mdn-color-light-theme-blue-30};
   --updates-icon: #{$mdn-color-light-theme-blue-50};
 
+  --ai-help-link: #{$mdn-color-light-theme-green-60};
+  --ai-help-header: #{$mdn-color-neutral-light-70};
+  --ai-help-mandala: #{$mdn-color-light-theme-green-30};
+  --ai-help-icon: #{$mdn-color-light-theme-green-50};
+
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
   --form-invalid-color: #{$mdn-color-light-theme-red-60};
@@ -369,6 +374,11 @@
   --updates-mandala: #{$mdn-color-dark-theme-blue-20};
   --updates-icon: #{$mdn-color-dark-theme-blue-30};
 
+  --ai-help-link: #{$mdn-color-dark-theme-green-30};
+  --ai-help-header: #{$mdn-color-black};
+  --ai-help-mandala: #{$mdn-color-dark-theme-green-20};
+  --ai-help-icon: #{$mdn-color-dark-theme-green-30};
+
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};
   --form-invalid-color: #{$mdn-color-light-theme-red-30};
@@ -398,12 +408,6 @@ body,
   --mdn-background-light: #{$mdn-theme-light-background-primary};
   --mdn-background-light-grey: #{$mdn-color-neutral-10};
   --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
-  --pride-0: #e50000;
-  --pride-1: #e68d00;
-  --pride-2: #e6d600;
-  --pride-3: #008100;
-  --pride-4: #004cff;
-  --pride-5: #760188;
 }
 
 .light {

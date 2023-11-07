@@ -3,6 +3,7 @@
 .auth-container {
   display: flex;
   flex-flow: column-reverse;
+  flex-shrink: 0;
   font-family: var(--font-body);
   font-size: var(--type-smaller-font-size);
   font-weight: var(--font-body-strong-weight);
@@ -11,6 +12,10 @@
   margin-bottom: 0.5rem;
   padding: 0;
   text-align: center;
+
+  li {
+    flex-shrink: 0;
+  }
 
   @media screen and (min-width: $screen-lg) {
     align-items: center;

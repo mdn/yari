@@ -47,6 +47,9 @@ export const DEV_MODE =
 export const KUMA_HOST =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 
+export const PLAYGROUND_BASE_HOST =
+  process.env.REACT_APP_PLAYGROUND_BASE_HOST || "mdnplay.dev";
+
 export const PLUS_IS_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
 );
@@ -71,10 +74,12 @@ export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
 export const FXA_MANAGE_SUBSCRIPTIONS_URL =
   process.env.REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL ||
-  "https://accounts.stage.mozaws.net/subscriptions/";
+  "https://accounts.stage.mozaws.net/subscriptions/?brand=mozilla";
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+export const DEFAULT_GEO_COUNTRY_ISO =
+  process.env.REACT_APP_DEFAULT_GEO_COUNTRY_ISO || "US";
 
 export const BCD_BASE_URL =
   process.env.REACT_APP_BCD_BASE_URL ?? "https://bcd.developer.allizom.org";
@@ -94,6 +99,9 @@ export const GLEAN_DEBUG = Boolean(
 export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
+
+export const AI_FEEDBACK_GITHUB_REPO =
+  process.env.REACT_APP_AI_FEEDBACK_GITHUB_REPO || "mdn/private-ai-feedback";
 
 export function survey_duration(surveyBucket: string): {
   start: number;

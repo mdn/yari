@@ -5,7 +5,6 @@ import { ANY_ATTACHMENT_EXT } from "./internal/constants/index.js";
 
 import { Origin } from "./env.js";
 import { proxyContent } from "./handlers/proxy-content.js";
-import { proxyKevel } from "./handlers/proxy-kevel.js";
 import { proxyApi } from "./handlers/proxy-api.js";
 import { handleStripePlans } from "./handlers/handle-stripe-plans.js";
 import { proxyTelemetry } from "./handlers/proxy-telemetry.js";
@@ -19,7 +18,10 @@ import { redirectLocale } from "./middlewares/redirect-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
+import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
+import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
+import { proxyPong } from "./handlers/proxy-pong.js";
 
 const router = Router();
 router.use(stripForwardedHostHeaders);
@@ -35,8 +37,14 @@ router.all(
   proxyApi
 );
 router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
-router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyKevel);
-router.all("/pimg/*", requireOrigin(Origin.main), proxyKevel);
+router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyPong);
+router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
+router.get(
+  ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
+  requireOrigin(Origin.play),
+  resolveRunnerHtml,
+  proxyRunner
+);
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
@@ -51,7 +59,7 @@ router.get(
 );
 router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
-  requireOrigin(Origin.main, Origin.liveSamples),
+  requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
   proxyContent
 );

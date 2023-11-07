@@ -6,8 +6,12 @@ import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
+import { useLocale } from "../../../hooks";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { MENU } from "../../../telemetry/constants";
 
 export default function MainMenu({ isOpenOnMobile }) {
+  const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
@@ -77,12 +81,33 @@ export default function MainMenu({ isOpenOnMobile }) {
             toggleMenu={toggleMenu}
           />
         )}
-        <li className="top-level-entry-container">
-          <a className="top-level-entry menu-link" href="/en-US/blog/">
-            Blog <sup className="new">New</sup>
-          </a>
-        </li>
+        <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
+        <TopLevelMenuLink to={`/${locale}/play`}>Play</TopLevelMenuLink>
+        <TopLevelMenuLink to="/en-US/plus/ai-help/">
+          AI Help <sup className="new beta">Beta</sup>
+        </TopLevelMenuLink>
       </ul>
     </nav>
+  );
+}
+
+function TopLevelMenuLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  const gleanClick = useGleanClick();
+  return (
+    <li className="top-level-entry-container">
+      <a
+        className="top-level-entry menu-link"
+        href={to}
+        onClick={() => gleanClick(`${MENU.CLICK_LINK}: top-level -> ${to}`)}
+      >
+        {children}
+      </a>
+    </li>
   );
 }

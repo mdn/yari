@@ -16,6 +16,14 @@ function PlusDocsNav() {
           title: "Overview",
         },
         {
+          slug: "plus/docs/features/ai-help",
+          title: "AI Help",
+        },
+        {
+          slug: "plus/docs/features/playground",
+          title: "Playground",
+        },
+        {
           slug: "plus/docs/features/updates",
           title: "Updates",
         },
@@ -85,6 +93,8 @@ function PlusDocs({ ...props }) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 
+  const sidebarHeader = <PlusDocsNav />;
+
   return (
     <StaticPage
       {...{
@@ -92,7 +102,7 @@ function PlusDocs({ ...props }) {
         locale,
         slug: `plus/docs/${slug}`,
         title: MDN_PLUS_TITLE,
-        sidebarHeader: <PlusDocsNav />,
+        sidebarHeader,
         fallbackData: props.hyData ? props : undefined,
       }}
     />

@@ -10,6 +10,7 @@ import { HTMLTool } from "./src/api/util.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
+  LEGACY_LIVE_SAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env/index.js";
 import { SourceCodeError } from "./src/errors.js";
@@ -37,14 +38,14 @@ export async function render(
     invalidateCache = false,
   }: RenderOptions = {},
   doc?: Doc
-): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
+): Promise<[cheerio.CheerioAPI, SourceCodeError[], any]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
       renderCache.delete(urlLC);
     } else {
       const [renderedHtml, errors] = renderCache.get(urlLC);
-      return [cheerio.load(renderedHtml), errors];
+      return [cheerio.load(renderedHtml), errors, undefined];
     }
   }
 
@@ -97,7 +98,10 @@ export async function render(
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },
-      live_samples: { base_url: LIVE_SAMPLES_BASE_URL || url },
+      live_samples: {
+        base_url: LIVE_SAMPLES_BASE_URL || url,
+        legacy_url: LEGACY_LIVE_SAMPLES_BASE_URL || url,
+      },
     },
     async (url) => {
       const [renderedHtml, errors] = await render(info.cleanURL(url), {
@@ -131,5 +135,5 @@ export async function render(
       allErrors,
     ]);
   }
-  return [tool.cheerio(), allErrors];
+  return [tool.cheerio(), allErrors, metadata];
 }

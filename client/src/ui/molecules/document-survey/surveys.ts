@@ -18,6 +18,7 @@ export interface Survey {
 }
 
 enum SurveyBucket {
+  BLOG_FEEDBACK_2023 = "BLOG_FEEDBACK_2023",
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
@@ -26,9 +27,11 @@ enum SurveyBucket {
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
+  DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
 }
 
 enum SurveyKey {
+  BLOG_FEEDBACK_2023 = "BLOG_FEEDBACK_2023",
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
@@ -39,19 +42,19 @@ enum SurveyKey {
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
+  DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
 }
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.WEB_SECURITY_2023,
-    bucket: SurveyBucket.WEB_SECURITY_2023,
-    show: (doc: Doc) => /en-US\/docs\/Web\/(API|HTTP)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7348686/MDN-Web-Security-short-survey",
+    key: SurveyKey.DISCOVERABILITY_AUG_2023,
+    bucket: SurveyBucket.DISCOVERABILITY_AUG_2023,
+    show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/7457498/MDN-Discoverability-User-Satisfaction",
     teaser:
-      "Are you a Developer concerned about web security? Participate in our survey and help us make the web platform more secure.",
-    question:
-      "As a developer, what are your biggest challenges concerning web security?",
-    ...survey_duration(SurveyBucket.WEB_SECURITY_2023),
-    ...survey_rates(SurveyKey.WEB_SECURITY_2023),
+      "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
+    question: "What’s your experience on MDN Web Docs?",
+    ...survey_duration(SurveyBucket.DISCOVERABILITY_AUG_2023),
+    ...survey_rates(SurveyKey.DISCOVERABILITY_AUG_2023),
   },
 ];
