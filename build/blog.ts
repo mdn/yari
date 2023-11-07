@@ -344,8 +344,18 @@ export async function buildBlogPosts(options: {
   }
 }
 
+interface BlogPostDoc {
+  url: string;
+  rawBody: string;
+  metadata: BlogPostMetadata & { locale: string };
+  isMarkdown: boolean;
+  fileInfo: {
+    path: string;
+  };
+}
+
 export async function buildPost(
-  document
+  document: BlogPostDoc
 ): Promise<{ doc: Doc; liveSamples: any }> {
   const { metadata } = document;
 
@@ -358,7 +368,7 @@ export async function buildPost(
   let $ = null;
   const liveSamples: LiveSample[] = [];
 
-  [$] = await kumascript.render(document.url, {}, document);
+  [$] = await kumascript.render(document.url, {}, document as any);
 
   const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
@@ -393,7 +403,7 @@ export async function buildPost(
   postProcessSmallerHeadingIDs($);
   wrapTables($);
   try {
-    const [sections] = extractSections($);
+    const [sections] = await extractSections($);
     doc.body = sections;
   } catch (error) {
     console.error(
@@ -401,8 +411,6 @@ export async function buildPost(
     );
     throw error;
   }
-
-  doc.modified = metadata.modified || null;
 
   doc.pageTitle = `${doc.title} | MDN Blog`;
 

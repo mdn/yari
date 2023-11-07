@@ -69,6 +69,8 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "assets.codepen.io",
   "production-assets.codepen.io",
 
+  "https://js.stripe.com",
+
   /*
    * Inline scripts (defined in `client/public/index.html`).
    *
@@ -104,6 +106,7 @@ export const CSP_DIRECTIVES = {
 
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
+    "https://api.stripe.com",
   ],
   "font-src": ["'self'"],
   "frame-src": [
@@ -122,6 +125,7 @@ export const CSP_DIRECTIVES = {
     "www.youtube-nocookie.com",
     "codepen.io",
     "survey.alchemer.com",
+    "https://js.stripe.com",
   ],
   "img-src": [
     "'self'",
@@ -177,6 +181,7 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
     "'unsafe-inline'",
     "'unsafe-eval'",
   ],
+  "img-src": ["'self'", "blob:", "https:", "data:"],
   "base-uri": ["'self'"],
   "worker-src": ["'self'"],
   "manifest-src": ["'self'"],

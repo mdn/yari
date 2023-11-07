@@ -4,12 +4,6 @@
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
-.main-document-header-container {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-main-header);
-}
-
 .main-page-content {
   overflow-wrap: break-word;
   padding: 3rem 1rem 1rem;
@@ -71,29 +65,18 @@
     color: var(--text-link);
     width: fit-content;
 
-    &:active {
+    &:visited:not([href^="#"]) {
+      // Distinguish visited links (excl. anchor links).
+      color: revert;
+    }
+
+    &:active,
+    &:active:visited {
       background-color: var(--text-link);
       color: #fff;
 
       code {
         background-color: transparent;
-        color: #fff;
-      }
-    }
-
-    &[id^="attr-"] {
-      &:link,
-      &:visited {
-        color: var(--text-link);
-        text-decoration: none;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-      }
-
-      &:active {
         color: #fff;
       }
     }
@@ -106,9 +89,14 @@
   }
 
   img {
+    /* In dark mode, required for images with black text on transparent background. */
     background: #fff;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
+    /* Required to prevent the border from scaling images, making them look blurry. */
+    box-sizing: content-box;
+    /* Required for alt texts. */
+    color: #1b1b1b;
     display: inline-block;
     display: flex;
     height: auto;
@@ -167,6 +155,34 @@
     dt {
       margin-bottom: 0.5rem;
       margin-top: 2rem;
+
+      a[href^="#"] {
+        color: inherit;
+        position: relative;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+
+        &::before {
+          color: var(--text-inactive);
+          content: "#";
+          display: inline-flex;
+          font-size: 0.7em;
+          line-height: 1;
+          margin-left: -0.8em;
+          text-decoration: none;
+          top: 0.5em;
+          visibility: hidden;
+          width: 0.8em;
+        }
+
+        &:hover::before {
+          visibility: visible;
+        }
+      }
     }
 
     dd {
@@ -177,6 +193,12 @@
         p {
           padding-left: 0;
         }
+      }
+
+      dl {
+        /* Nested definition list. */
+        border-left: 1px solid var(--border-primary);
+        padding-left: 1rem;
       }
     }
 
@@ -769,7 +791,7 @@ kbd {
 }
 
 .sidebar-container {
-  --offset: var(--sticky-header-height);
+  --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
 
   @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
@@ -798,6 +820,7 @@ kbd {
     }
   }
 
+  &.toc-container,
   .toc-container {
     .place {
       grid-area: toc;
@@ -807,7 +830,7 @@ kbd {
       display: flex;
       flex-direction: column;
       gap: 0;
-      height: calc(100vh - var(--sticky-header-height));
+      height: calc(100vh - var(--offset));
       mask-image: linear-gradient(
         to bottom,
         rgba(0, 0, 0, 0) 0%,
@@ -816,7 +839,7 @@ kbd {
       );
       overflow: auto;
       position: sticky;
-      top: var(--sticky-header-height);
+      top: var(--offset);
 
       .place {
         margin: 1rem 0;

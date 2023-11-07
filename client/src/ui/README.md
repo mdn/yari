@@ -46,7 +46,7 @@ is now manually kept in sync. In future we hope to automate this process.
 
 When we embarked on the redesign, the idea was to use
 [mdn-minimalist](https://github.com/mdn/mdn-minimalist) as the base and override
-what is different. In the end this prooved more cumbersome than we had hoped.
+what is different. In the end this proved more cumbersome than we had hoped.
 This means that either the `theme` folder will be removed in future or, the
 `client/src/ui/minimalist` folder.
 

@@ -37,6 +37,34 @@ page:
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2024-09-05
+  utm:
+    type: labeled_string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The UTM parameters of the page, used to attribute the source of traffic:
+      "source": which site sent the traffic
+      "medium": what type of link was used
+      "campaign": what specific campaign or experiment does this relate to
+      "term": here for completeness, the search term that was purchased/bid on
+      "content": what specifically was clicked to bring the user to the site
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - "https://mozilla-hub.atlassian.net/browse/MP-545"
+    data_reviews:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1851150"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
+    labels:
+      - source
+      - medium
+      - campaign
+      - term
+      - content
   http_status:
     type: string
     description: |
@@ -84,6 +112,23 @@ navigator:
       - action
     description: |
       The navigators ISO 3166 country name (not code) based on geo ip.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1798296
+    data_reviews:
+      - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
+  geo_iso:
+    type: string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The navigator's two-letter ISO 3166 country code based on geo ip.
     data_sensitivity:
       - web_activity
     bugs:
