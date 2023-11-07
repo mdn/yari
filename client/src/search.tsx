@@ -39,7 +39,7 @@ function quicksearchPing(input: string) {
 function useSearchIndex(): readonly [
   null | SearchIndex,
   null | Error,
-  () => void
+  () => void,
 ] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);

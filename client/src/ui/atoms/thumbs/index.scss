@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
+  height: 1.5rem;
 
   .confirmation {
     animation-duration: 2.5s;
@@ -38,6 +39,10 @@
 
   &:active {
     --button-bg-active: unset;
+  }
+
+  .icon {
+    background-color: var(--icon-secondary);
   }
 
   &:focus,

@@ -1,3 +1,8 @@
+<%
+// Condition for removal: no more use in translated-content
+mdn.deprecated();
+%>
+
 <% if ("es" == env.locale) { %>
 <%- await template("Cssxref", ["Media/Visual", "visual"]) %>
 <% } else if ("fr" == env.locale) { %>

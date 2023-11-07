@@ -159,7 +159,7 @@ export default function SearchResults() {
 
     return (
       <SearchErrorContainer>
-        <p>Something else when horribly wrong with the search</p>
+        <p>Something else went horribly wrong with the search</p>
         <p>
           <code>{error.toString()}</code>
         </p>
@@ -358,9 +358,9 @@ function Results({
                 LANGUAGES.has(document.locale) && (
                   <span
                     className="locale-indicator"
-                    title={`The linked document is in ${
-                      LANGUAGES.get(document.locale)?.English
-                    } which is different from your current locale.`}
+                    title={`The linked document is in ${LANGUAGES.get(
+                      document.locale
+                    )?.English} which is different from your current locale.`}
                   >
                     {LANGUAGES.get(document.locale)?.English}
                   </span>
