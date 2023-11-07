@@ -5,6 +5,7 @@ import { useIsServer, useLocale, useViewedState } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 import { MenuEntry } from "../submenu";
 import { FeatureId } from "../../../constants";
+import { useLocation } from "react-router";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const plusUrl = usePlusUrl();
@@ -14,6 +15,12 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const isAuthenticated = userData && userData.isAuthenticated;
 
   const { isViewed } = useViewedState();
+
+  const { pathname } = useLocation();
+  const aiHelpUrl = `/${locale}/plus/ai-help`;
+  const isActive =
+    pathname.startsWith(plusUrl.split("#", 2)[0]) &&
+    !pathname.startsWith(aiHelpUrl);
 
   const plusMenu: MenuEntry = {
     label: "Plus",
@@ -32,7 +39,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "AI Help (beta)",
-        url: `/${locale}/plus/ai-help`,
+        url: aiHelpUrl,
       },
       ...(!isServer && isAuthenticated
         ? [
@@ -75,5 +82,12 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   };
   const isOpen = visibleSubMenuId === plusMenu.id;
 
-  return <Menu menu={plusMenu} isOpen={isOpen} toggle={toggleMenu} />;
+  return (
+    <Menu
+      menu={plusMenu}
+      isActive={isActive}
+      isOpen={isOpen}
+      toggle={toggleMenu}
+    />
+  );
 };
