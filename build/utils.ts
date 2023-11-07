@@ -1,5 +1,8 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
 import got from "got";
@@ -12,14 +15,16 @@ import imageminSvgo from "imagemin-svgo";
 import { rgPath } from "@vscode/ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../libs/constants/index.js";
-import { Image } from "../content/index.js";
-import { spawnSync } from "node:child_process";
+import {
+  ANY_ATTACHMENT_REGEXP,
+  VALID_MIME_TYPES,
+} from "../libs/constants/index.js";
+import { FileAttachment } from "../content/index.js";
 import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
-export function humanFileSize(size) {
+export function humanFileSize(size: number) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
   const num = size / 1024 ** i;
@@ -43,14 +48,18 @@ export function humanFileSize(size) {
 // be able to process them and fix the problem we need to "temporarily"
 // pretend they were hosted on a remote working full domain.
 // See https://github.com/mdn/yari/issues/1103
-export function forceExternalURL(url) {
+export function forceExternalURL(url: string) {
   if (url.startsWith("/")) {
     return `https://mdn.mozillademos.org${url}`;
   }
   return url;
 }
 
-export async function downloadAndResizeImage(src, out, basePath) {
+export async function downloadAndResizeImage(
+  src: string,
+  out: string,
+  basePath: string
+) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
     timeout: { request: 10000 },
@@ -124,7 +133,7 @@ export async function downloadAndResizeImage(src, out, basePath) {
   return destination;
 }
 
-export function getImageminPlugin(fileName) {
+export function getImageminPlugin(fileName: string) {
   const extension = path.extname(fileName).toLowerCase();
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();
@@ -180,15 +189,12 @@ export function splitSections(rawHTML) {
  *
  * @param {Document} document
  */
-export function getAdjacentImages(documentDirectory) {
+export function getAdjacentFileAttachments(documentDirectory: string) {
   const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
   return dirents
     .filter((dirent) => {
       // This needs to match what we do in filecheck/checker.py
-      return (
-        !dirent.isDirectory() &&
-        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
-      );
+      return !dirent.isDirectory() && ANY_ATTACHMENT_REGEXP.test(dirent.name);
     })
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }
@@ -245,9 +251,9 @@ export function postLocalFileLinks($, doc) {
     const href = element.attribs.href;
 
     // This test is merely here to quickly bail if there's no hope to find the
-    // image as a local file link. There are a LOT of hyperlinks throughout
-    // the content and this simple if statement means we can skip 99% of the
-    // links, so it's presumed to be worth it.
+    // file attachment as a local file link. There are a LOT of hyperlinks
+    // throughout the content and this simple if statement means we can skip 99%
+    // of the links, so it's presumed to be worth it.
     if (
       !href ||
       /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
@@ -255,11 +261,11 @@ export function postLocalFileLinks($, doc) {
       return;
     }
     // There are a lot of links that don't match. E.g. `<a href="SubPage">`
-    // So we'll look-up a lot "false positives" that are not images.
+    // So we'll look-up a lot "false positives" that are not file attachments.
     // Thankfully, this lookup is fast.
     const url = `${doc.mdn_url}/${href}`;
-    const image = Image.findByURLWithFallback(url);
-    if (image) {
+    const fileAttachment = FileAttachment.findByURLWithFallback(url);
+    if (fileAttachment) {
       $(element).attr("href", url);
     }
   });
@@ -307,6 +313,11 @@ export function makeTOC(doc) {
 }
 
 export function findPostFileBySlug(slug: string): string | null {
+  if (!BLOG_ROOT) {
+    console.warn("'BLOG_ROOT' not set in .env file");
+    return null;
+  }
+
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",
@@ -316,8 +327,12 @@ export function findPostFileBySlug(slug: string): string | null {
     if (status === 0) {
       const file = stdout.toString("utf-8").split("\n")[0];
       return file;
+    }
+    const message = stderr.toString();
+    if (message) {
+      console.error(`error running rg: ${message}`);
     } else {
-      console.error(`error running rg: ${stderr}`);
+      console.error(`Post ${slug} not found in ${BLOG_ROOT}`);
     }
   } catch {
     console.error("rg failed");
@@ -329,4 +344,14 @@ const POST_URL_RE = /^\/en-US\/blog\/([^/]+)\/?$/;
 
 export function getSlugByBlogPostUrl(url: string): string | null {
   return url.match(POST_URL_RE)?.[1] || null;
+}
+
+export async function importJSON<T>(jsonPath: string): Promise<T> {
+  if (!jsonPath.startsWith(".")) {
+    jsonPath = path.join(cwd(), "node_modules", jsonPath);
+  }
+
+  const json = await readFile(jsonPath, "utf-8");
+
+  return JSON.parse(json);
 }

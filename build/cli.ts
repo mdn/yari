@@ -53,8 +53,8 @@ interface GlobalMetadata {
 }
 
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -67,12 +67,10 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = await translationsOf(document.metadata);
-      if (translations && translations.length > 0) {
-        document.translations = translations;
-      } else {
-        document.translations = [];
-      }
+      document.translations = translationsOf(
+        document.metadata.slug,
+        document.metadata.locale
+      );
     }
 
     return { document, doc: await buildDocument(document), skip: false };
@@ -141,7 +139,7 @@ async function buildDocuments(
     cliProgress.Presets.shades_grey
   );
 
-  const docPerLocale = {};
+  const docPerLocale: Record<string, { slug: string; modified: string }[]> = {};
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
@@ -170,15 +168,16 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
       document,
     } = result;
 
@@ -208,15 +207,31 @@ async function buildDocuments(
       )
     );
 
-    for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+    for (const { id, html, slug } of liveSamples) {
+      let liveSamplePath: string;
+      if (slug) {
+        // Since we no longer build all live samples we have to build live samples
+        // for foreign slugs. If slug is truthy it's a different slug than the current
+        // document. So we need to set up the folder.
+        console.warn(
+          `Building live sample from another page: ${id} in ${documentPath}`
+        );
+        const liveSampleBasePath = path.join(
+          BUILD_OUT_ROOT,
+          slugToFolder(slug)
+        );
+        liveSamplePath = path.join(liveSampleBasePath, `_sample_.${id}.html`);
+        fs.mkdirSync(liveSampleBasePath, { recursive: true });
+      } else {
+        liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+      }
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    for (const filePath of fileAttachments) {
+    for (const [basename, filePath] of fileAttachmentMap) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      fs.copyFileSync(filePath, path.join(outPath, basename));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -292,21 +307,27 @@ async function buildDocuments(
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
+    const sortedMeta = meta
+      .slice()
+      .sort((a, b) => a.mdn_url.localeCompare(b.mdn_url));
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
-      JSON.stringify(meta)
+      JSON.stringify(sortedMeta)
     );
   }
 
+  // allBrowserCompat.txt is used by differy, see:
+  // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
-    localeMeta.forEach((doc) =>
-      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    localeMeta.forEach(
+      (doc) =>
+        doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
     )
   );
   fs.writeFileSync(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
-    [...allBrowserCompat].join(" ")
+    [...allBrowserCompat].sort().join(" ")
   );
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };

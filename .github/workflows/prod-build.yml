@@ -42,6 +42,12 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
   workflow_call:
     secrets:
       GCP_PROJECT_NAME:
@@ -62,9 +68,9 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -75,7 +81,7 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -94,7 +100,7 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -102,7 +108,7 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
@@ -110,7 +116,7 @@ jobs:
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
@@ -118,6 +124,9 @@ jobs:
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
@@ -165,7 +174,11 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.mozilla.net
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
+
+          # Sign key for code samples
+          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -194,9 +207,9 @@ jobs:
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
-          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ
-          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/?brand=mozilla
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ?brand=mozilla
+          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/?brand=mozilla
 
           REACT_APP_MDN_PLUS_5M_PLAN: price_1KeG02JNcmPzuWtR1oBrw8o6
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
@@ -204,10 +217,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_DISCOVERABILITY_2023: 1681992000000 # (new Date("2023-04-20 12:00:00Z").getTime())
-          REACT_APP_SURVEY_END_DISCOVERABILITY_2023: 1682424000000 # (new Date("2023-04-25 12:00:00Z").getTime())
-          REACT_APP_SURVEY_RATE_FROM_DISCOVERABILITY_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_DISCOVERABILITY_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_DISCOVERABILITY_AUG_2023: 1691409600000 # new Date("2023-08-07 12:00:00Z").getTime()
+          REACT_APP_SURVEY_END_DISCOVERABILITY_AUG_2023: 1691841600000 # new Date("2023-08-12 12:00:00Z").getTime()
+          REACT_APP_SURVEY_RATE_FROM_DISCOVERABILITY_AUG_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_DISCOVERABILITY_AUG_2023: 0.10 # 10%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -219,10 +232,16 @@ jobs:
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
 
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
+
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
           SENTRY_ENVIRONMENT: prod
           SENTRY_RELEASE: ${{ github.sha }}
+
+          # AI Help.
+          REACT_APP_AI_FEEDBACK_GITHUB_REPO: mdn/ai-feedback
 
         run: |
 
@@ -286,8 +305,8 @@ jobs:
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -329,9 +348,10 @@ jobs:
             --min-instances=10 \
             --max-instances=1000 \
             --memory=2GB \
-            --timeout=30s \
+            --timeout=60s \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.mozilla.net" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
@@ -351,6 +371,14 @@ jobs:
             wait $pid
           done
 
+      - name: Update AI Help index
+        run: yarn ai-help update-index
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2
@@ -364,5 +392,5 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Invalidate Google Cloud CDN
-        if: ${{ ! vars.SKIP_INVALIDATE }}
+        if: ${{ github.event.inputs.invalidate }}
         run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async

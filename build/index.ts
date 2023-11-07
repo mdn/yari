@@ -1,7 +1,9 @@
+import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
-import webFeatures from "web-features/index.json" assert { type: "json" };
+import * as cheerio from "cheerio";
+import * as Sentry from "@sentry/node";
 
 import {
   MacroInvocationError,
@@ -9,12 +11,12 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc, WebFeature, WebFeatureStatus } from "../libs/types/document.js";
-import { Document, execGit } from "../content/index.js";
+import { Doc, WebFeatureStatus } from "../libs/types/document.js";
+import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
-import { FLAW_LEVELS } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants/index.js";
 import { extractSections } from "./extract-sections.js";
 import { extractSidebar } from "./extract-sidebar.js";
 import { extractSummary } from "./extract-summary.js";
@@ -33,7 +35,7 @@ import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
 import {
-  getAdjacentImages,
+  getAdjacentFileAttachments,
   injectLoadingLazyAttributes,
   injectNoTranslate,
   makeTOC,
@@ -41,6 +43,7 @@ import {
   postProcessExternalLinks,
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
+import { getWebFeatureStatus } from "./web-features.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -56,7 +59,7 @@ const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/con
 // Module-level cache
 const rootToGitBranchMap = new Map();
 
-function getCurrentGitBranch(root) {
+function getCurrentGitBranch(root: string) {
   if (!rootToGitBranchMap.has(root)) {
     // If this is running in a GitHub Action "PR Build" workflow the current
     // branch name will be set in `GITHUB_REF_NAME_SLUG`.
@@ -94,7 +97,7 @@ function getCurrentGitBranch(root) {
  * the content (metadata file).
  * If all is well, do nothing. Nothing is expected to return.
  */
-function validateSlug(slug) {
+function validateSlug(slug: string) {
   if (!slug) {
     throw new Error("slug is empty");
   }
@@ -116,7 +119,7 @@ function validateSlug(slug) {
  *
  * @param {Cheerio document instance} $
  */
-function injectNotecardOnWarnings($) {
+function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
   $("div.warning, div.note, div.blockIndicator")
     .addClass("notecard")
     .removeClass("blockIndicator");
@@ -126,7 +129,7 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder, filename) {
+function getGitHubURL(root: string, folder: string, filename: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
@@ -137,7 +140,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-export function getLastCommitURL(root, hash) {
+export function getLastCommitURL(root: string, hash: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
 }
@@ -157,7 +160,7 @@ function injectSource(doc, document, metadata) {
 export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
-  fileAttachments: any;
+  fileAttachmentMap: Map<string, string>;
   source?: {
     github_url: string;
   };
@@ -174,6 +177,15 @@ export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
+  Sentry.setContext("doc", {
+    path: document?.fileInfo?.path,
+    title: document?.metadata?.title,
+    url: document?.url,
+  });
+  Sentry.setTags({
+    doc_slug: document?.metadata?.slug,
+    doc_locale: document?.metadata?.locale,
+  });
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -199,14 +211,19 @@ export async function buildDocument(
   interface LiveSample {
     id: string;
     html: string;
+    slug?: string;
   }
 
   let flaws: any[] = [];
-  let $ = null;
+  let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
+  // this will get populated with the parent's frontmatter by kumascript if the document is localized:
+  let allMetadata = metadata;
 
   try {
-    [$, flaws] = await kumascript.render(document.url);
+    let kumascriptMetadata;
+    [$, flaws, kumascriptMetadata] = await kumascript.render(document.url);
+    allMetadata = { ...allMetadata, ...kumascriptMetadata };
   } catch (error) {
     if (
       error instanceof MacroInvocationError &&
@@ -226,14 +243,14 @@ export async function buildDocument(
     throw error;
   }
 
-  const liveSamplePages = kumascript.buildLiveSamplePages(
+  const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
     document.metadata.title,
     $,
     document.rawBody
   );
   for (const liveSamplePage of liveSamplePages) {
-    const { id, flaw } = liveSamplePage;
+    const { id, flaw, slug } = liveSamplePage;
     let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
@@ -280,7 +297,7 @@ export async function buildDocument(
         </html>
         `;
     }
-    liveSamples.push({ id: id.toLowerCase(), html });
+    liveSamples.push({ id: id.toLowerCase(), html, slug });
   }
 
   if (flaws.length) {
@@ -356,12 +373,14 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
-  const browserCompat = metadata["browser-compat"];
+
+  // metadata doesn't have a browser-compat key on translated docs:
+  const browserCompat = allMetadata["browser-compat"];
   doc.browserCompat =
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
-  doc.baseline = addBaseline(doc);
+  doc.baseline = await addBaseline(doc);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -375,15 +394,34 @@ export async function buildDocument(
   extractSidebar($, doc);
 
   // Check and scrutinize any local image references
-  const fileAttachments = checkImageReferences(doc, $, options, document);
+  const fileAttachmentMap = checkImageReferences(doc, $, options, document);
   // Not all images are referenced as `<img>` tags. Some are just sitting in the
   // current document's folder and they might be referenced in live samples.
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
-  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+  getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
+    (fp) => fileAttachmentMap.set(path.basename(fp), fp)
   );
+
+  if (doc.locale !== DEFAULT_LOCALE) {
+    // If it's not the default locale, we need to add the images
+    // from the default locale too.
+    const defaultLocaleDir = path.join(
+      CONTENT_ROOT,
+      DEFAULT_LOCALE.toLowerCase(),
+      slugToFolder(metadata.slug)
+    );
+
+    if (fs.existsSync(defaultLocaleDir)) {
+      getAdjacentFileAttachments(defaultLocaleDir).forEach((fp) => {
+        const basename = path.basename(fp);
+        if (!fileAttachmentMap.has(basename)) {
+          fileAttachmentMap.set(basename, fp);
+        }
+      });
+    }
+  }
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
@@ -406,12 +444,6 @@ export async function buildDocument(
     console.error(error);
     throw error;
   }
-
-  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
-  // that were used for that. If we don't do this, for example, the `pre` tags will be
-  // syntax highligted, which is a waste because they're going to be invisible
-  // anyway.
-  $("div.hidden").remove();
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
@@ -452,7 +484,7 @@ export async function buildDocument(
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
   try {
-    const [sections, sectionFlaws] = extractSections($);
+    const [sections, sectionFlaws] = await extractSections($);
     doc.body = sections;
     if (sectionFlaws.length) {
       injectSectionFlaws(doc, sectionFlaws, options);
@@ -523,21 +555,14 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachments };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
 }
 
-function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
+async function addBaseline(
+  doc: Partial<Doc>
+): Promise<WebFeatureStatus | undefined> {
   if (doc.browserCompat) {
-    for (const feature of Object.values<WebFeature>(webFeatures)) {
-      if (
-        feature.status &&
-        feature.compat_features?.some((query) =>
-          doc.browserCompat?.includes(query)
-        )
-      ) {
-        return feature.status;
-      }
-    }
+    return await getWebFeatureStatus(...doc.browserCompat);
   }
 }
 
@@ -547,7 +572,7 @@ interface BuiltLiveSamplePage {
   flaw: MacroLiveSampleError | null;
 }
 
-export async function buildLiveSamplePageFromURL(url) {
+export async function buildLiveSamplePageFromURL(url: string) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
   // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
@@ -561,12 +586,12 @@ export async function buildLiveSamplePageFromURL(url) {
     throw new Error(`No document found for ${documentURL}`);
   }
   const liveSamplePage = (
-    kumascript.buildLiveSamplePages(
+    (await kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
       (await kumascript.render(document.url))[0],
       document.rawBody
-    ) as BuiltLiveSamplePage[]
+    )) as BuiltLiveSamplePage[]
   ).find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {

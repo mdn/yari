@@ -64,6 +64,7 @@ section.place {
   }
 
   &.top {
+    align-items: center;
     display: grid;
     font-size: 0.625rem;
 
@@ -71,7 +72,6 @@ section.place {
     height: var(--top-banner-height);
     margin: 0 auto;
     width: 100%;
-    align-items: center;
 
     @media screen and (min-width: $screen-md) {
       grid-template-areas: "pong cta note" "pong cta no";
@@ -110,21 +110,21 @@ section.place {
         color: var(--place-top-cta-color);
         font-size: var(--type-smaller-font-size);
         grid-area: cta;
-        padding: 0.25rem 1rem;
-        text-align: center;
         height: fit-content;
         margin-right: auto;
+        padding: 0.25rem 1rem;
+        text-align: center;
       }
 
       .pong-note {
-        grid-area: note;
-        border: 1px solid var(--border-primary);
-        border-top: none;
-        padding: 0 0.5rem 0.125rem;
-        margin: 0 0 auto auto;
-        color: var(--background-secondary);
         background-color: var(--text-primary);
+        border: 1px solid var(--border-primary);
         border-radius: 0 0 0.5rem 0.5rem;
+        border-top: none;
+        color: var(--background-secondary);
+        grid-area: note;
+        margin: 0 0 auto auto;
+        padding: 0 0.5rem 0.125rem;
         text-decoration: none;
 
         &:hover,
@@ -136,9 +136,26 @@ section.place {
     }
 
     .no-pong {
-      grid-area: no;
       color: var(--place-top-color);
+      grid-area: no;
       margin: auto 0 0 2rem;
+      width: initial;
+    }
+  }
+}
+
+section.place.hp-main {
+  background-color: var(--place-hp-main-background);
+  margin: 0;
+  width: 100%;
+
+  a {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    img {
+      height: auto;
     }
   }
 }
@@ -170,9 +187,6 @@ section.place {
 
   border-bottom: 1px solid var(--border-primary);
   height: var(--top-banner-height);
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-top);
 
   &.fallback {
     position: initial;
@@ -199,9 +213,84 @@ section.place {
   }
 }
 
+div.empty-place {
+  &.bottom-banner {
+    height: 152px;
+    position: absolute;
+    width: 1px;
+  }
+}
+
 .dark .top-banner {
   --place-top-background: var(--place-top-background-dark);
   --place-top-color: var(--place-top-color-dark);
   --place-top-cta-background: var(--place-top-cta-background-dark);
   --place-top-cta-color: var(--place-top-cta-color-dark);
+}
+
+.bottom-banner-container {
+  background-color: var(
+    --place-bottom-banner-background,
+    var(--background-primary)
+  );
+  color: var(--place-bottom-banner-color, var(--text-primary));
+  margin: 0;
+  width: 100%;
+
+  > section.place.bottom-banner {
+    column-gap: 3rem;
+    display: grid;
+    grid-template-areas:
+      "nope pong note"
+      "nope pong no";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 0 1rem;
+
+    .pong {
+      grid-area: pong;
+      justify-self: center;
+
+      img {
+        height: auto;
+      }
+    }
+
+    .pong-note {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: note;
+      margin-top: 0.5rem;
+      text-decoration: underline;
+    }
+
+    .no-pong {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: no;
+      margin-top: auto;
+    }
+
+    @media screen and (max-width: $screen-xl) {
+      grid-template-areas:
+        "pong note"
+        "pong no";
+      grid-template-columns: auto max-content;
+      grid-template-rows: auto 2rem;
+    }
+
+    @media screen and (max-width: $screen-lg) {
+      grid-template-areas:
+        "pong pong"
+        "note no";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 2rem;
+
+      .no-pong {
+        justify-self: end;
+        width: fit-content;
+      }
+    }
+  }
 }

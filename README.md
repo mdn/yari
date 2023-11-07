@@ -19,8 +19,8 @@ Before you can start working with Yari, you need to:
     So for now let's make an exception. -->
 <!-- markdownlint-disable list-marker-space -->
 
-1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>=
-    16.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org), and
+    [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
     the MDN [content](https://github.com/mdn/content) and
@@ -105,6 +105,14 @@ All source code is [MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
 For content, see its
 [license](https://github.com/mdn/content/blob/main/LICENSE.md) in the
 [mdn/content repository](https://github.com/mdn/content).
+
+## Supported Platforms
+
+`yari` runs on Linux in CI, and when building for Production.
+
+We also support Windows and MacOS, however we don't aim to proactively catch
+issues with CI on those platforms. If bugs arise, we welcome issues being filed,
+or PRs being opened to fix them.
 
 ## How it works
 
