@@ -57,8 +57,8 @@ involved:
 
 Sign up for an MDN Plus account if you haven't already.
 
-1. Participate in discussions, share ideas, and seek help in the
-   [Playground forums](https://discord.gg/3Pb8cQrTfB).
+1. Participate in discussions, share ideas, and seek help on
+   [Discord](https://discord.gg/Gt4Qf6q67h).
 2. Contribute to the improvement of the Playground by reporting issues or
    suggesting new features.
 3. Showcase your projects, share your knowledge, and inspire others by
