@@ -67,7 +67,7 @@
 
     &:visited:not([href^="#"]) {
       // Distinguish visited links (excl. anchor links).
-      color: revert;
+      color: var(--text-visited);
     }
 
     &:active,

@@ -18,7 +18,6 @@ function makeProcessor(options: ProcessorOptions) {
   const processor = unified()
     .use(parse)
     .use(gfm)
-    // @ts-expect-error Need to investigate why types don't seem to match.
     .use(remarkRehype, {
       handlers: localizedHandlers,
       allowDangerousHtml: true,

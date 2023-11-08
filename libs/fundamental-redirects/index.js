@@ -1116,6 +1116,9 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
+  redirect(/^discord\/?$/i, "https://discord.gg/Gt4Qf6q67h", {
+    permanent: false,
+  }),
   redirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
     permanent: false,
   }),
