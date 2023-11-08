@@ -133,7 +133,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://discord.gg/hkGN8VKvvD"
+                href="/discord"
                 target="_blank"
                 rel="noopener noreferrer"
               >

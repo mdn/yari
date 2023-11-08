@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.34.1](https://github.com/mdn/yari/compare/v2.34.0...v2.34.1) (2023-11-08)
+
+
+### Bug Fixes
+
+* **links:** adopt visited link colors from Firefox ([#9961](https://github.com/mdn/yari/issues/9961)) ([29839fb](https://github.com/mdn/yari/commit/29839fbad99deafae9cb5728a6931ba6b50b79bc))
+* **node:** support v20 + suppress experimental warnings ([#9517](https://github.com/mdn/yari/issues/9517)) ([4401c3e](https://github.com/mdn/yari/commit/4401c3eb833cd1970a095730902f249ec7623711))
+
 ## [2.34.0](https://github.com/mdn/yari/compare/v2.33.1...v2.34.0) (2023-11-07)
 
 
