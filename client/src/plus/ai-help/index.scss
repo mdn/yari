@@ -143,7 +143,12 @@
         align-self: center;
 
         .button-wrap {
+          text-transform: none;
           width: max-content;
+
+          .icon {
+            margin-right: 0.2em;
+          }
         }
       }
     }
