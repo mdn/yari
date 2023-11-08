@@ -1,6 +1,8 @@
 @use "../../ui/vars" as *;
 
 .ai-help-history {
+  padding-right: 1rem;
+
   > input {
     height: 0;
     margin: 0;
@@ -72,11 +74,11 @@
               background-color: var(--icon-primary);
               content: "";
               display: inline-block;
-              height: 10px;
-              margin-right: 0.5rem;
+              height: 0.6em;
+              margin-right: 0.5em;
               mask-image: url("../../assets/icons/message.svg");
-              mask-size: cover;
-              width: 10px;
+              mask-size: contain;
+              width: 0.6em;
             }
           }
 
@@ -96,6 +98,7 @@
       }
     }
   }
+
   @media screen and (max-width: $screen-md) {
     background-color: var(--background-primary);
     grid-column: center;
