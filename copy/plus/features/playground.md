@@ -58,7 +58,7 @@ involved:
 Sign up for an MDN Plus account if you haven't already.
 
 1. Participate in discussions, share ideas, and seek help on
-   [Discord](https://discord.gg/Gt4Qf6q67h).
+   [Discord](/discord).
 2. Contribute to the improvement of the Playground by
    [reporting issues](https://github.com/mdn/yari/issues/new?template=bug-report.yml)
    or
