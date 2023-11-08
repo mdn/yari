@@ -4,6 +4,8 @@
 import * as cheerio from "cheerio";
 
 export function wrapTables($: cheerio.CheerioAPI) {
-  const figure = $('<figure class="table-container"></figure>');
+  const figure = $(
+    '<figure class="table-container"><figure class="table-container-inner"></figure>'
+  );
   $("table").wrap(figure);
 }
