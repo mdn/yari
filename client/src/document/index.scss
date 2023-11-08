@@ -562,18 +562,18 @@ pre {
 }
 
 .code-example {
-  color: var(--code-default);
+  --code-action-color: var(--text-secondary);
   margin-bottom: 2rem;
   position: relative;
 
   .example-header {
-    align-items: center;
     background-color: var(--background-secondary);
     border: 1px solid var(--border-primary);
     border-top-left-radius: var(--elem-radius);
     border-top-right-radius: var(--elem-radius);
     display: flex;
     flex-wrap: wrap;
+    font-size: var(--type-base-font-size-rem);
     gap: 1rem;
     margin: 0;
     padding: 0 1rem;
@@ -614,8 +614,8 @@ pre {
     }
 
     .language-name {
+      font-variant: small-caps;
       margin-right: auto;
-      text-transform: uppercase;
     }
   }
 
@@ -678,15 +678,14 @@ pre {
 
   .play-button,
   .ai-explain-button {
+    color: var(--code-action-color);
     cursor: pointer;
-    font-size: smaller;
+    font-variant: small-caps;
     margin: 0;
-    opacity: 0.4;
-    text-transform: uppercase;
 
     &:hover,
     &:focus {
-      opacity: 1;
+      opacity: 0.6;
     }
 
     &:first-child {
@@ -698,18 +697,16 @@ pre {
     align-items: center;
     display: flex;
     gap: 0.5rem;
-    opacity: 1;
 
     > label {
+      color: var(--code-action-color);
       cursor: pointer;
-      font-size: smaller;
-      opacity: 0.4;
+      font-variant: small-caps;
       padding: 1px;
-      text-transform: uppercase;
 
       &:hover,
       &:focus {
-        opacity: 1;
+        opacity: 0.6;
       }
     }
 
@@ -721,14 +718,15 @@ pre {
       width: 0;
 
       ~ label::before {
-        background-color: var(--icon-primary);
+        background-color: var(--code-action-color);
         content: "";
         display: inline-block;
-        height: 10px;
+        height: 1em;
         margin-right: 4px;
         mask-image: url("../assets/icons/queue.svg");
         mask-size: cover;
-        width: 10px;
+        vertical-align: middle;
+        width: 1em;
       }
 
       &:focus ~ label {
@@ -753,31 +751,30 @@ pre {
     animation: 1s ease-in 1 ai-explain-highlight-frames;
   }
 
-  .play-button::after {
-    background-color: var(--icon-primary);
+  .play-button::before {
+    background-color: var(--code-action-color);
     content: "";
     display: inline-block;
-    height: 10px;
-    margin-left: 4px;
+    height: 1em;
+    margin-right: 4px;
     mask-image: url("../assets/icons/play.svg");
     mask-size: cover;
-    width: 10px;
+    vertical-align: middle;
+    width: 1em;
   }
 
   .copy-icon {
-    border-radius: var(--elem-radius);
+    background-color: var(--code-action-color);
     cursor: pointer;
-    height: 1.25rem;
-    margin: 0;
+    height: 1em;
+    margin: 0.375rem 0;
     mask-image: url("../assets/clippy.svg");
     mask-size: cover;
-    opacity: 0.4;
-    padding: 0.25rem;
-    width: 1.25rem;
+    width: 1em;
 
     &:hover,
     &:focus {
-      opacity: 1;
+      opacity: 0.6;
     }
 
     &:first-child {
