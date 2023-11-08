@@ -14,6 +14,7 @@ export const LOCAL_RUMBA = "http://localhost:8000/";
 export enum Origin {
   main = "main",
   liveSamples = "liveSamples",
+  play = "play",
   unsafe = "unsafe",
 }
 
@@ -26,17 +27,7 @@ export enum Source {
 export const ORIGIN_MAIN: string = process.env["ORIGIN_MAIN"] || "localhost";
 export const ORIGIN_LIVE_SAMPLES: string =
   process.env["ORIGIN_LIVE_SAMPLES"] || "localhost";
-
-export function origin(req: Request): Origin {
-  switch (req.hostname) {
-    case ORIGIN_MAIN:
-      return Origin.main;
-    case ORIGIN_LIVE_SAMPLES:
-      return Origin.liveSamples;
-    default:
-      return Origin.unsafe;
-  }
-}
+export const ORIGIN_PLAY: string = process.env["ORIGIN_PLAY"] || "localhost";
 
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
@@ -44,10 +35,19 @@ export const SOURCE_API: string =
   process.env["SOURCE_API"] || "https://developer.allizom.org/";
 
 export function getOriginFromRequest(req: Request): Origin {
-  if (req.hostname === ORIGIN_MAIN && !req.path.includes("/_sample_.")) {
+  if (
+    req.hostname === ORIGIN_MAIN &&
+    !req.path.includes("/_sample_.") &&
+    !req.path.endsWith("/runner.html")
+  ) {
     return Origin.main;
-  } else if (req.hostname === ORIGIN_LIVE_SAMPLES) {
+  } else if (
+    req.hostname === ORIGIN_LIVE_SAMPLES &&
+    !req.path.endsWith("/runner.html")
+  ) {
     return Origin.liveSamples;
+  } else if (req.hostname.endsWith(ORIGIN_PLAY)) {
+    return Origin.play;
   } else {
     return Origin.unsafe;
   }
@@ -68,9 +68,13 @@ export function sourceUri(source: Source): string {
 export const KEVEL_SITE_ID = Number(process.env["KEVEL_SITE_ID"] ?? 0);
 export const KEVEL_NETWORK_ID = Number(process.env["KEVEL_NETWORK_ID"] ?? 0);
 export const SIGN_SECRET = process.env["SIGN_SECRET"] ?? "";
-export const CARBON_ZONE_KEY = process.env["CARBON_ZONE_KEY"] ?? "";
-export const CARBON_FALLBACK_ENABLED = Boolean(
-  JSON.parse(process.env["CARBON_FALLBACK_ENABLED"] || "false")
+export const BSA_ZONE_KEYS = Object.fromEntries(
+  (process.env["BSA_ZONE_KEYS"] ?? "").split(";").map((k) => k.split(":"))
+);
+export const BSA_URL_PREFIX =
+  process.env["BSA_URL_PREFIX"] ?? "https://localhost";
+export const BSA_ENABLED = Boolean(
+  JSON.parse(process.env["BSA_ENABLED"] || "false")
 );
 
 // HTTPS.

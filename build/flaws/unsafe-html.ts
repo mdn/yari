@@ -5,6 +5,8 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../../libs/env/index.js";
 import { findMatchesInText } from "../matches-in-text.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document.js";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs
@@ -23,10 +25,14 @@ if (INTERACTIVE_EXAMPLES_BASE_URL) {
   safeIFrameSrcs.push(INTERACTIVE_EXAMPLES_BASE_URL.toLowerCase());
 }
 
-function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
-  const flaws = [];
+function getAndMarkupUnsafeHTMLFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  { rawContent, fileInfo }
+) {
+  const flaws: Flaw[] = [];
 
-  function addFlaw(element, explanation) {
+  function addFlaw(element: cheerio.Element, explanation: string) {
     const id = `unsafe_html${flaws.length + 1}`;
     let html = $.html($(element));
     $(element).replaceWith($("<code>").addClass("unsafe-html").text(html));
@@ -37,14 +43,13 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
     }
     // Perhaps in the future we can make it possibly fixable to delete it.
     const fixable = false;
-    const suggestion = null;
 
     const flaw: Flaw = {
       explanation,
       id,
       fixable,
       html,
-      suggestion,
+      suggestion: null,
     };
     for (const { line, column } of findMatchesInText(html, rawContent)) {
       // This might not find anything because the HTML might have mutated
@@ -80,6 +85,8 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   });
 
   $("*").each((i, element) => {
+    if (!("tagName" in element)) return;
+
     const { tagName } = element;
     // E.g. `<script\x20type="text/javascript">javascript:alert(1);</script>`
     if (tagName.startsWith("script")) {

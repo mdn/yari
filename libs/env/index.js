@@ -64,6 +64,8 @@ export const ALWAYS_ALLOW_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
+export const SENTRY_DSN_BUILD = process.env.SENTRY_DSN_BUILD || "";
+
 // -------
 // content
 // -------
@@ -139,6 +141,11 @@ export const LIVE_SAMPLES_BASE_URL =
     ? process.env.BUILD_LIVE_SAMPLES_BASE_URL
     : SERVER_URL;
 
+export const LEGACY_LIVE_SAMPLES_BASE_URL =
+  process.env.BUILD_LEGACY_LIVE_SAMPLES_BASE_URL !== undefined
+    ? process.env.BUILD_LEGACY_LIVE_SAMPLES_BASE_URL
+    : LIVE_SAMPLES_BASE_URL || SERVER_URL;
+
 export const INTERACTIVE_EXAMPLES_BASE_URL =
   process.env.BUILD_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
@@ -155,3 +162,16 @@ export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
 export const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
 
 export const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
+
+// ----
+// tool
+// ----
+
+export const OPENAI_KEY = process.env.OPENAI_KEY || "";
+export const SUPABASE_URL = process.env.SUPABASE_URL || "";
+export const SUPABASE_SERVICE_ROLE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+
+export const SAMPLE_SIGN_KEY = process.env.BUILD_SAMPLE_SIGN_KEY
+  ? Buffer.from(process.env.BUILD_SAMPLE_SIGN_KEY, "base64")
+  : null;

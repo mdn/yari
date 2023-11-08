@@ -64,16 +64,18 @@ section.place {
   }
 
   &.top {
+    align-items: center;
     display: grid;
     font-size: 0.625rem;
 
-    grid-template-areas: "pong pong pong" "no space note";
+    grid-template-areas: "pong cta" "no note";
+    height: var(--top-banner-height);
     margin: 0 auto;
     width: 100%;
 
     @media screen and (min-width: $screen-md) {
-      grid-template-areas: "pong cta cta" "pong no note";
-      grid-template-columns: 1fr 10rem 4rem;
+      grid-template-areas: "pong cta note" "pong cta no";
+      grid-template-columns: fit-content(100%) auto fit-content(100%);
     }
 
     .pong-box {
@@ -85,7 +87,6 @@ section.place {
         color: var(--place-top-color);
         flex-direction: row;
         grid-area: pong;
-        max-width: 30rem;
         padding: 0.125rem;
         text-decoration: none;
 
@@ -109,50 +110,187 @@ section.place {
         color: var(--place-top-cta-color);
         font-size: var(--type-smaller-font-size);
         grid-area: cta;
-        margin: 0.125rem auto;
+        height: fit-content;
+        margin-right: auto;
         padding: 0.25rem 1rem;
         text-align: center;
-        width: 100%;
       }
 
       .pong-note {
-        color: var(--place-top-color);
+        background-color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0 0 0.5rem 0.5rem;
+        border-top: none;
+        color: var(--background-secondary);
         grid-area: note;
-        margin: auto 0.5rem 0 auto;
-        width: 4rem;
-        width: auto;
+        margin: 0 0 auto auto;
+        padding: 0 0.5rem 0.125rem;
+        text-decoration: none;
+
+        &:hover,
+        &:focus,
+        &:active {
+          text-decoration: underline;
+        }
       }
     }
 
     .no-pong {
       color: var(--place-top-color);
       grid-area: no;
-      margin: auto 0.5rem 0;
+      margin: auto 0 0 2rem;
+      width: initial;
+    }
+  }
+}
+
+section.place.hp-main {
+  background-color: var(--place-hp-main-background);
+  margin: 0;
+  width: 100%;
+
+  a {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    img {
+      height: auto;
     }
   }
 }
 
 .top-banner {
-  --place-top-background: var(--background-secondary);
-  --place-top-color: var(--text-primary);
-  --place-top-cta-background: var(--text-primary);
-  --place-top-cta-color: var(--background-secondary);
+  --place-top-background-light: var(--background-secondary);
+  --place-top-color-light: var(--text-primary);
+  --place-top-cta-background-light: var(--text-primary);
+  --place-top-cta-color-light: var(--background-secondary);
 
-  background-color: var(--place-top-background);
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-top);
+  --place-top-background-dark: var(--background-secondary);
+  --place-top-color-dark: var(--text-primary);
+  --place-top-cta-background-dark: var(--text-primary);
+  --place-top-cta-color-dark: var(--background-secondary);
 
-  &.empty {
-    height: 0;
+  --place-top-background: var(--place-top-background-light);
+  --place-top-color: var(--place-top-color-light);
+  --place-top-cta-background: var(--place-top-cta-background-light);
+  --place-top-cta-color: var(--place-top-cta-color-light);
+
+  @media (prefers-color-scheme: dark) {
+    --place-top-background: var(--place-top-background-dark);
+    --place-top-color: var(--place-top-color-dark);
+    --place-top-cta-background: var(--place-top-cta-background-dark);
+    --place-top-cta-color: var(--place-top-cta-color-dark);
   }
 
-  &.visible {
-    border: 1px solid var(--border-primary);
-    height: fit-content;
+  background-color: var(--place-top-background);
+
+  border-bottom: 1px solid var(--border-primary);
+  height: var(--top-banner-height);
+
+  &.fallback {
+    position: initial;
   }
 
   @media screen and (max-width: #{$screen-md - 1}) {
     display: none;
+  }
+
+  .fallback-copy {
+    font-size: 1rem;
+    grid-column: 1/4;
+    line-height: var(--top-banner-height);
+    margin: 0 auto;
+
+    a:not(.button) {
+      color: var(--apis-accent-color);
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+div.empty-place {
+  &.bottom-banner {
+    height: 152px;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+.dark .top-banner {
+  --place-top-background: var(--place-top-background-dark);
+  --place-top-color: var(--place-top-color-dark);
+  --place-top-cta-background: var(--place-top-cta-background-dark);
+  --place-top-cta-color: var(--place-top-cta-color-dark);
+}
+
+.bottom-banner-container {
+  background-color: var(
+    --place-bottom-banner-background,
+    var(--background-primary)
+  );
+  color: var(--place-bottom-banner-color, var(--text-primary));
+  margin: 0;
+  width: 100%;
+
+  > section.place.bottom-banner {
+    column-gap: 3rem;
+    display: grid;
+    grid-template-areas:
+      "nope pong note"
+      "nope pong no";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 0 1rem;
+
+    .pong {
+      grid-area: pong;
+      justify-self: center;
+
+      img {
+        height: auto;
+      }
+    }
+
+    .pong-note {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: note;
+      margin-top: 0.5rem;
+      text-decoration: underline;
+    }
+
+    .no-pong {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: no;
+      margin-top: auto;
+    }
+
+    @media screen and (max-width: $screen-xl) {
+      grid-template-areas:
+        "pong note"
+        "pong no";
+      grid-template-columns: auto max-content;
+      grid-template-rows: auto 2rem;
+    }
+
+    @media screen and (max-width: $screen-lg) {
+      grid-template-areas:
+        "pong pong"
+        "note no";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 2rem;
+
+      .no-pong {
+        justify-self: end;
+        width: fit-content;
+      }
+    }
   }
 }

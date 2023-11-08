@@ -54,7 +54,7 @@ export interface ContentStatus {
 
 export class MDNOfflineDB extends Dexie {
   // Declare implicit table properties.
-  // (just to inform Typescript. Instanciated by Dexie in stores() method)
+  // (just to inform Typescript. Instantiated by Dexie in stores() method)
   whoami!: Dexie.Table<Whoami, number>; // number = type of the primkey
   contentStatusHistory!: Dexie.Table<ContentStatus, number>;
 

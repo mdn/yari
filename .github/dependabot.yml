@@ -6,6 +6,16 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 35
+    groups:
+      sentry:
+        patterns:
+          - "@sentry/*"
+      types:
+        patterns:
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       # Temporarily disable updates to Dinocons
       - dependency-name: "@mdn/dinocons"
@@ -19,14 +29,46 @@ updates:
     directory: "/deployer"
     schedule:
       interval: "weekly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "pip"
     directory: "/testing/integration"
     schedule:
       interval: "weekly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: npm
     directory: "/client/pwa"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/cloud-function"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/lib/locale-utils"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/lib/pong"
     schedule:
       interval: daily
     open-pull-requests-limit: 10

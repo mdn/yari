@@ -2,6 +2,7 @@
 *~
 # exclude these files
 *.ejs
+CHANGELOG.md
 Dockerfile
 Makefile
 Procfile

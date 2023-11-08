@@ -6,7 +6,7 @@
     "stylelint-prettier/recommended",
     "stylelint-config-prettier"
   ],
-  "plugins": ["stylelint-scss"],
+  "plugins": ["stylelint-scss", "stylelint-order"],
   "rules": {
     "a11y/media-prefers-reduced-motion": null,
     "a11y/no-outline-none": null,
@@ -14,9 +14,33 @@
     "declaration-property-value-disallowed-list": null,
     "font-family-no-missing-generic-family-keyword": null,
     "max-nesting-depth": null,
+    "media-query-no-invalid": null,
     "no-descending-specificity": null,
     "no-invalid-position-at-import-rule": null,
     "no-irregular-whitespace": null,
+    "order/order": [
+      [
+        "custom-properties",
+        "dollar-variables",
+        {
+          "type": "at-rule",
+          "name": "extend"
+        },
+        {
+          "type": "at-rule",
+          "name": "include",
+          "hasBlock": false
+        },
+        "declarations",
+        {
+          "type": "at-rule",
+          "name": "include",
+          "hasBlock": true
+        },
+        "rules"
+      ]
+    ],
+    "order/properties-alphabetical-order": true,
     "property-no-vendor-prefix": null,
     "selector-class-pattern": null,
     "selector-max-compound-selectors": null,

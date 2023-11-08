@@ -1,12 +1,16 @@
 import React from "react";
-import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE, PLACEMENT_ENABLED } from "../env";
+import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
-import { useIsServer } from "../hooks";
+import { useIsServer, useLocale } from "../hooks";
 
-import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import {
+  useDocumentURL,
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -39,7 +43,8 @@ import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
-import { SidePlacement } from "../ui/organisms/placement";
+import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
+import { BaselineIndicator } from "./baseline-indicator";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -64,7 +69,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -108,14 +113,15 @@ export function Document(props /* TODO: define a TS interface for this */) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
-      refreshInterval: CRUD_MODE ? 500 : 0,
+      refreshInterval: WRITER_MODE ? 500 : 0,
     }
   );
 
   useIncrementFrequentlyViewed(doc);
-  useCopyExamplesToClipboard(doc);
+  useRunSample(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
@@ -183,7 +189,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   if (error) {
     return (
       <>
-        <div className="main-document-header-container">
+        <div className="sticky-header-container">
           <TopNavigation />
         </div>
         <MainContentContainer>
@@ -205,7 +211,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <div className="main-document-header-container">
+      <div className="sticky-header-container">
         <TopNavigation />
         <ArticleActionsContainer doc={doc} />
       </div>
@@ -234,7 +240,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
 
         <MainContentContainer>
-          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+          {!isServer && WRITER_MODE && !props.isPreview && doc.isActive && (
             <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
               <Toolbar
                 doc={doc}
@@ -251,13 +257,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </React.Suspense>
           )}
           <article className="main-page-content" lang={doc.locale}>
-            <h1>{doc.title}</h1>
+            <header>
+              <h1>{doc.title}</h1>
+              {doc.baseline && <BaselineIndicator status={doc.baseline} />}
+            </header>
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
           </article>
         </MainContentContainer>
       </div>
+      <BottomBanner />
     </>
   );
 }
