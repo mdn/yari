@@ -1,9 +1,6 @@
 import useSWR from "swr";
 import { DEV_MODE } from "../../env";
-import {
-  HydrationData,
-  isStaticPageData,
-} from "../../../../libs/types/hydration";
+import { HydrationData, isStaticPageData } from "../../types/hydration";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 

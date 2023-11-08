@@ -2,11 +2,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
 import { DEV_MODE } from "../../env";
-import {
-  HydrationData,
-  StaticPageData,
-} from "../../../../libs/types/hydration";
-import { NewsItem } from "../../../../libs/types/document";
+import { HydrationData, StaticPageData } from "../../types/hydration";
+import { NewsItem } from "../../../../libs/types";
 
 import "./index.scss";
 

@@ -24,11 +24,11 @@ import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
-import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
 import { DEFAULT_LOCALE } from "../../libs/constants";
+import { HydrationData, HydrationType } from "./types/hydration";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -118,10 +118,11 @@ function PageOrPageNotFound({ pageNotFound, children }) {
   );
 }
 
-export interface AppProps extends HydrationData {
+export interface AppProps<T extends HydrationType = HydrationType>
+  extends HydrationData<T> {
   doc?: any;
-  pageNotFound?: boolean;
   pageTitle?: string;
+  pageNotFound?: boolean;
   possibleLocales?: any;
   locale?: string;
   noIndexing?: boolean;

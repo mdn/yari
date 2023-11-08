@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
@@ -25,7 +24,6 @@ import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
-import got from "got";
 import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import cheerio from "cheerio";
 import { findByURL } from "../content/document.js";
@@ -79,7 +77,7 @@ async function buildContributorSpotlight(
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
-    const context: AppProps = { hyData };
+    const context: AppProps<ContributorDetails> = { hyData };
 
     const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
@@ -185,7 +183,7 @@ export async function buildSPAs(options: {
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context: AppProps = {
+        const context: AppProps<never> = {
           pageTitle,
           locale,
           noIndexing,
@@ -343,7 +341,9 @@ export async function buildSPAs(options: {
         latestNews,
         featuredArticles,
       };
-      const context: AppProps = { hyData };
+      const context: AppProps<StaticPageData> = {
+        hyData,
+      };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });

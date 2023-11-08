@@ -26,7 +26,7 @@ const LANGUAGE_TAGS = Object.freeze({
   "zh-TW": "zh-Hant",
 });
 
-function htmlEscape(s?: string) {
+function htmlEscape(s: string) {
   if (!s) {
     return s;
   }
@@ -150,10 +150,10 @@ export default function render(
     doc = null,
     pageNotFound = false,
     hyData = null,
-    pageTitle = null,
+    pageTitle = undefined,
     possibleLocales = null,
-    locale = null,
-    noIndexing = null,
+    locale = undefined,
+    noIndexing = undefined,
     image = null,
     blogMeta = null,
   }: AppProps = {}
@@ -165,7 +165,7 @@ export default function render(
   let canonicalURL = BASE_URL;
 
   let pageDescription = "";
-  let escapedPageTitle = htmlEscape(pageTitle);
+  let escapedPageTitle = htmlEscape(pageTitle ?? "");
 
   const hydrationData: AppProps = {};
   const translations: string[] = [];

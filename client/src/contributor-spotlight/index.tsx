@@ -3,10 +3,7 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { WRITER_MODE } from "../env";
-import {
-  HydrationData,
-  isContributorDetails,
-} from "../../../libs/types/hydration";
+import { HydrationData, isContributorDetails } from "../types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
 

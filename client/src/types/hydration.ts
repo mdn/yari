@@ -1,13 +1,11 @@
-import { DocParent } from "../../../libs/types/document";
-import { NewsItem } from "../homepage/latest-news";
-import { StaticPageDoc } from "../homepage/static-page";
+import { DocParent, NewsItem } from "../../../libs/types/document.js";
+import { StaticPageDoc } from "../homepage/static-page/index.js";
 
-type HydrationType = ContributorDetails | StaticPageData | StaticPageDoc;
+export type HydrationType = ContributorDetails | StaticPageData | StaticPageDoc;
 
-export interface HydrationData {
-  hyData?: HydrationType;
+export interface HydrationData<T extends HydrationType> {
+  hyData?: T;
 }
-
 export interface ContributorDetails {
   sections: string[];
   contributorName: string;
@@ -71,5 +69,5 @@ export interface FeaturedArticle {
   mdn_url: string;
   summary: string;
   title: string;
-  tag: DocParent | null;
+  tag?: DocParent | null;
 }

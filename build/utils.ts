@@ -21,7 +21,7 @@ import {
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
 import { BLOG_ROOT } from "../libs/env/index.js";
-import { Toc } from "../libs/types";
+import { Toc } from "../libs/types/document.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 

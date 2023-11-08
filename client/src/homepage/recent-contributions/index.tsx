@@ -2,10 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
 import { DEV_MODE } from "../../env";
-import {
-  HydrationData,
-  isStaticPageData,
-} from "../../../../libs/types/hydration";
+import { HydrationData, isStaticPageData } from "../../types/hydration";
 
 import "./index.scss";
 
