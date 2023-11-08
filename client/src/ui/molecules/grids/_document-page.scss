@@ -45,6 +45,7 @@
     .sidebar {
       align-self: start;
       grid-area: sidebar;
+      padding-top: unset;
     }
 
     .main-content {
@@ -61,15 +62,12 @@
     padding-right: 1rem;
 
     .toc {
-      --offset: var(--main-document-header-height);
-      --max-height: calc(100vh - var(--offset));
+      --offset: var(--sticky-header-with-actions-height);
 
       display: block;
       grid-area: toc;
-      max-height: var(--max-height);
-      overflow: auto;
-      position: sticky;
-      top: var(--offset);
+      height: fit-content;
+      padding-bottom: 0;
     }
 
     .in-nav-toc {

@@ -1,0 +1,361 @@
+@use "../../ui/vars" as *;
+
+.ai-help {
+  --category-color: var(--ai-help-icon);
+  --text-link: var(--ai-help-link);
+
+  > header {
+    --plus-header: var(--ai-help-header);
+    --plus-mandala: var(--ai-help-mandala);
+    --plus-icon: var(--ai-help-icon);
+    --plus-link: var(--ai-help-link);
+  }
+
+  > .container {
+    padding: var(--gutter);
+
+    &:not(:last-of-type) {
+      padding-bottom: 0;
+    }
+
+    .notecard {
+      margin-bottom: 0;
+      margin-top: 0;
+
+      a:link {
+        color: var(--text-link);
+
+        &:not(:hover) {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .ai-help-inner {
+    --input-border-width: 1px;
+    --input-padding-left: 1rem;
+    --input-padding-right: 3rem;
+
+    .ai-help-body,
+    .ai-help-footer {
+      padding: 0.5rem 0;
+    }
+
+    .ai-help-footer {
+      background-color: var(--background-primary);
+      bottom: 0;
+      mask-image: linear-gradient(
+        to top,
+        rgb(0, 0, 0) 0% calc(100% - 0.5rem),
+        rgba(0, 0, 0, 0) 100%
+      );
+      padding-top: 1rem;
+      position: sticky;
+
+      .ai-help-footer-actions {
+        padding-bottom: 0.5rem;
+      }
+
+      .ai-help-footer-text {
+        font-size: var(--type-tiny-font-size);
+        margin-left: calc(
+          var(--input-border-width) + var(--input-padding-left)
+        );
+        margin-top: 0.5rem;
+      }
+    }
+
+    .ai-help-input-form {
+      --input-height: 3rem;
+      position: relative;
+      width: 100%;
+
+      input {
+        background-color: var(--background-primary);
+        border: var(--input-border-width) solid var(--border-primary);
+        border-radius: var(--input-height);
+        color: var(--text-primary);
+        height: var(--input-height);
+        padding-left: var(--input-padding-left);
+        padding-right: var(--input-padding-right);
+        width: 100%;
+
+        &:focus {
+          border-color: var(--category-color);
+          box-shadow:
+            0 0 0 3px var(--blend-color),
+            0 0 0 3px var(--category-color);
+          outline: 0 none;
+        }
+      }
+
+      button {
+        --button-color: var(--icon-secondary);
+        --button-height: 2.5rem;
+        --button-padding: 0.5rem;
+        --icon-size: 1.5rem;
+
+        display: block;
+        position: absolute;
+        right: calc(0.5rem + var(--input-border-width));
+        top: 0.25rem;
+
+        &:hover {
+          background: transparent;
+        }
+      }
+    }
+
+    &.has-input {
+      button {
+        --button-color: var(--ai-help-icon);
+      }
+    }
+
+    .ai-help-examples {
+      background: var(--background-secondary);
+      border-radius: 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1rem 0;
+      padding: 1rem;
+
+      header {
+        font-weight: 500;
+        letter-spacing: var(--header-letter-spacing);
+        line-height: 175%;
+      }
+    }
+
+    .ai-help-example {
+      --category-color-engage: var(--border-primary);
+      background: var(--background-primary);
+      border-radius: 0.25rem;
+      box-shadow: inset 0.25rem 0 0 var(--category-color-engage);
+      cursor: pointer;
+      font-size: var(--type-smaller-font-size);
+      padding: 0.5rem 1rem;
+      text-align: left;
+
+      &:hover {
+        color: var(--ai-help-link);
+      }
+    }
+
+    .ai-help-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .ai-help-message {
+      border: 1px solid transparent;
+      display: flex;
+      padding: 1rem;
+
+      &:first-of-type {
+        background-color: var(--background-primary);
+        mask-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0% calc(100% - 0.5rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+        position: sticky;
+        top: calc(var(--top-nav-height) + 1px);
+        z-index: var(--z-index-nav-menu);
+
+        .ai-help-actions {
+          white-space: nowrap;
+        }
+      }
+
+      &.role-user {
+        color: var(--text-secondary);
+
+        .avatar-wrap {
+          border-radius: unset;
+          height: 1.5rem;
+          margin-left: unset;
+          margin-right: unset;
+          margin-top: 0.1rem; /* Align with text. */
+          position: unset;
+          width: 1.5rem;
+        }
+      }
+
+      &.role-assistant {
+        background-color: var(--background-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--elem-radius);
+
+        .ai-help-message-role {
+          --icon-size: 1.5rem;
+        }
+      }
+
+      .ai-help-message-role {
+        flex-shrink: 0;
+        width: 2.5rem;
+      }
+
+      .ai-help-feedback {
+        display: flex;
+        flex-direction: column;
+        font-size: var(--type-tiny-font-size);
+        gap: 0.5rem;
+        text-align: right;
+
+        .glean-thumbs {
+          justify-content: flex-end;
+        }
+      }
+
+      &.status-pending .ai-help-message-content,
+      &.status-in-progress .ai-help-message-content {
+        &.empty::after,
+        > :not(ol):not(ul):not(pre):not(div.code-example):last-child:after,
+        > ol:last-child li:last-child:after,
+        > pre:last-child code:after,
+        > ul:last-child li:last-child:after,
+        > div.code-example:last-child pre:last-child code:after {
+          animation: blink 1s steps(5, start) infinite;
+          content: "▋";
+          margin-left: 0.25rem;
+          vertical-align: baseline;
+
+          @keyframes blink {
+            to {
+              visibility: hidden;
+            }
+          }
+        }
+
+        &.empty::after {
+          margin-left: unset;
+        }
+      }
+
+      &.status-stopped .ai-help-message-content {
+        &.empty::after,
+        > :not(ol):not(ul):not(pre):last-child:after,
+        > ol:last-child li:last-child:after,
+        > pre:last-child code:after,
+        > ul:last-child li:last-child:after {
+          content: "…";
+          margin-left: 0.25rem;
+          vertical-align: baseline;
+        }
+
+        &.empty::after {
+          margin-left: unset;
+        }
+      }
+    }
+
+    .ai-help-message-content {
+      width: 100%;
+
+      p {
+        margin: 1rem 0;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &.example-header {
+          margin-bottom: 0;
+        }
+      }
+
+      ul,
+      ol {
+        margin: 1rem 0 2rem;
+        padding-left: 2rem;
+
+        li {
+          margin: 0.5rem 0;
+        }
+      }
+
+      ul {
+        list-style: disc;
+
+        ul {
+          list-style-type: circle;
+          margin: 0;
+          padding-left: 1rem;
+        }
+      }
+
+      ol {
+        list-style: decimal;
+
+        ol {
+          list-style: lower-roman;
+          margin: 0;
+        }
+      }
+
+      dd ol,
+      dd ul {
+        margin-bottom: 1rem;
+        padding-left: 3rem;
+      }
+
+      td ul,
+      td ol {
+        padding-left: 1rem;
+      }
+
+      dd li {
+        margin-bottom: 1rem;
+      }
+
+      td li {
+        margin-bottom: 0.5rem;
+      }
+
+      dl {
+        dt {
+          margin-bottom: 0.5rem;
+          margin-top: 2rem;
+        }
+
+        dd {
+          margin-bottom: 1rem;
+          margin-left: 1rem;
+
+          .notecard {
+            p {
+              padding-left: 0;
+            }
+          }
+        }
+
+        p {
+          margin: 0 0 1rem;
+        }
+      }
+    }
+
+    .ai-help-footer-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .ai-help-error {
+      margin: 0.5rem 0;
+    }
+  }
+}

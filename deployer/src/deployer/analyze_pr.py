@@ -90,7 +90,7 @@ def post_about_deployment(build_directory: Path, **config):
     for doc in get_built_docs(build_directory):
         url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
         mdn_url = doc["mdn_url"]
-        links.append(f"- [{mdn_url}]({url})")
+        links.append(f"- [`{mdn_url}`]({url})")
     links.sort()
 
     if links:
@@ -112,7 +112,6 @@ def mdn_url_to_dev_url(prefix, mdn_url):
 def post_about_dangerous_content(
     build_directory: Path, patch: Optional[PatchSet], **config
 ):
-
     OK_URL_PREFIXES = [
         "https://github.com/mdn/",
     ]
@@ -198,7 +197,6 @@ def post_about_dangerous_content(
 
 
 def post_about_flaws(build_directory: Path, **config):
-
     comments = []
 
     MAX_FLAW_EXPLANATION = 5

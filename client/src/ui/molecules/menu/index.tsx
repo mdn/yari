@@ -1,4 +1,5 @@
-import InternalLink from "../../atoms/internal-link";
+import { MENU } from "../../../telemetry/constants";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import { MenuEntry, Submenu } from "../submenu";
 import "./index.scss";
 
@@ -9,6 +10,8 @@ interface MenuProps {
 }
 
 export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
+  const gleanClick = useGleanClick();
+
   const buttonId = `${menu.id}-button`;
   const submenuId = `${menu.id}-menu`;
 
@@ -33,14 +36,17 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
       </button>
 
       {menu.to && (
-        <InternalLink
-          to={menu.to}
+        <a
+          href={menu.to}
           className="top-level-entry"
-          // @ts-ignore
-          onClick={() => document?.activeElement?.blur()}
+          onClick={() => {
+            gleanClick(`${MENU.CLICK_MENU}: ${menu.id} -> ${menu.to}`);
+            // @ts-ignore
+            document?.activeElement?.blur();
+          }}
         >
           {menu.label}
-        </InternalLink>
+        </a>
       )}
 
       <Submenu

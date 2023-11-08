@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useLocale } from "../../../hooks";
 import "./index.scss";
 import { useLocation } from "react-router-dom";
@@ -25,6 +24,16 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
+                className="icon icon-mastodon"
+                href="https://mozilla.social/@mdn"
+                target="_blank"
+                rel="me noopener noreferrer"
+              >
+                <span className="visually-hidden">MDN on Mastodon</span>
+              </a>
+            </li>
+            <li>
+              <a
                 className="icon icon-twitter"
                 href="https://twitter.com/mozdevnet"
                 target="_blank"
@@ -43,6 +52,15 @@ export function Footer() {
                 <span className="visually-hidden">MDN on GitHub</span>
               </a>
             </li>
+            <li>
+              <a
+                className="icon icon-feed"
+                href="/en-US/blog/rss.xml"
+                target="_blank"
+              >
+                <span className="visually-hidden">MDN Blog RSS Feed</span>
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -53,13 +71,7 @@ export function Footer() {
               <a href={`/en-US/about`}>About</a>
             </li>
             <li className="footer-nav-item">
-              <a
-                href="https://hacks.mozilla.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Hacks Blog
-              </a>
+              <a href={`/en-US/blog/`}>Blog</a>
             </li>
             <li className="footer-nav-item">
               <a
@@ -69,6 +81,9 @@ export function Footer() {
               >
                 Careers
               </a>
+            </li>
+            <li className="footer-nav-item">
+              <a href={`/en-US/advertising`}>Advertise with us</a>
             </li>
           </ul>
         </div>
@@ -118,7 +133,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://wiki.mozilla.org/Matrix"
+                href="/discord"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -148,6 +163,15 @@ export function Footer() {
                 </a>
               </li>
             )}
+            <li className="footer-nav-item">
+              <a
+                href="https://hacks.mozilla.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacks Blog
+              </a>
+            </li>
           </ul>
         </div>
 

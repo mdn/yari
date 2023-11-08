@@ -206,7 +206,11 @@ const CellText = React.memo(
     }
 
     return (
-      <div className="bcd-cell-text-wrapper">
+      <div
+        className={
+          timeline ? "bcd-timeline-cell-text-wrapper" : "bcd-cell-text-wrapper"
+        }
+      >
         <div className="bcd-cell-icons">
           <span className="icon-wrap">
             <abbr
@@ -225,10 +229,15 @@ const CellText = React.memo(
           <span
             className="bc-version-label"
             title={
-              browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+              browserReleaseDate && !timeline
+                ? `Released ${browserReleaseDate}`
+                : undefined
             }
           >
             {label}
+            {browserReleaseDate && timeline
+              ? ` (Released ${browserReleaseDate})`
+              : ""}
           </span>
         </div>
         <CellIcons support={support} />
@@ -285,7 +294,7 @@ function FlagsNote({
         </>
       )}
       {hasAddedVersion || hasRemovedVersion ? ": this" : "This"} feature is
-      behind the
+      behind the{" "}
       {flags.map((flag, i) => {
         const valueToSet = flag.value_to_set && (
           <>
@@ -296,7 +305,7 @@ function FlagsNote({
         return (
           <React.Fragment key={flag.name}>
             <code>{flag.name}</code>
-            {flag.type === "preference" && <> preferences{valueToSet}</>}
+            {flag.type === "preference" && <> preference{valueToSet}</>}
             {flag.type === "runtime_flag" && <> runtime flag{valueToSet}</>}
             {i < flags.length - 1 && " and the "}
           </React.Fragment>

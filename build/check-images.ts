@@ -4,20 +4,29 @@
 
 import path from "node:path";
 
-import sizeOf from "image-size";
+import imagesize from "image-size";
 
-import { Document, Image } from "../content";
-import { FLAW_LEVELS } from "../libs/constants";
-import { findMatchesInText } from "./matches-in-text";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import { Document, FileAttachment } from "../content/index.js";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
+import { findMatchesInText } from "./matches-in-text.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../libs/types/document.js";
+
+const { default: sizeOf } = imagesize;
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,
  * log them as flaws if they're not passing linting.
  *
  */
-export function checkImageReferences(doc, $, options, { url, rawContent }) {
-  const filePaths = new Set();
+export function checkImageReferences(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  { url, rawContent }
+): Map<string, string> {
+  // imageMap is a map of basename to full path
+  const imageMap = new Map<string, string>();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
@@ -119,11 +128,10 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
         } else {
-          const suggestion = null;
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
-            suggestion,
+            suggestion: null,
           });
         }
       }
@@ -133,39 +141,17 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
       // but all our images are going to be static.
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
-      // of the correct case because `Image.findByURL` operates case
-      // insensitively.
+      // of the correct case because `FileAttachment.findByURLWithFallback`
+      // operates case insensitively.
 
-      // What follows uses the same algorithm as Image.findByURLWithFallback
-      // but only adds a filePath if it exists for the DEFAULT_LOCALE
-      const filePath = Image.findByURL(finalSrc);
-      let enUSFallback = false;
-      if (
-        !filePath &&
-        doc.locale !== DEFAULT_LOCALE &&
-        !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
-      ) {
-        const enUSFinalSrc = finalSrc.replace(
-          new RegExp(`^/${doc.locale}/`, "i"),
-          `/${DEFAULT_LOCALE}/`
-        );
-        if (Image.findByURL(enUSFinalSrc)) {
-          // Use the en-US src instead
-          finalSrc = enUSFinalSrc;
-          // Note that this `<img src="...">` value can work if you use the
-          // en-US equivalent URL instead.
-          enUSFallback = true;
-        }
-      }
+      const filePath = FileAttachment.findByURLWithFallback(finalSrc);
+
       if (filePath) {
-        filePaths.add(filePath);
+        imageMap.set(path.basename(filePath), filePath);
       }
 
       if (checkImages) {
-        if (enUSFallback) {
-          // If it worked by switching to the en-US src, don't do anything more.
-          // Do nothing! I.e. don't try to perfect the spelling.
-        } else if (!filePath) {
+        if (!filePath) {
           // E.g. <img src="doesnotexist.png"
           addImageFlaw(img, src, {
             explanation:
@@ -216,7 +202,7 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
     }
   });
 
-  return filePaths;
+  return imageMap;
 }
 
 /**
@@ -231,13 +217,22 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-export function checkImageWidths(doc, $, options, { rawContent }) {
+export function checkImageWidths(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  { rawContent }
+) {
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
   const checked = new Map();
 
-  function addStyleFlaw($img, style, suggestion) {
+  function addStyleFlaw(
+    $img: cheerio.Cheerio<cheerio.Element>,
+    style: string,
+    suggestion: string
+  ) {
     if (!("image_widths" in doc.flaws)) {
       doc.flaws.image_widths = [];
     }
@@ -350,7 +345,7 @@ export function checkImageWidths(doc, $, options, { rawContent }) {
           );
         }
       } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
-        const filePath = Image.findByURLWithFallback(imgSrc);
+        const filePath = FileAttachment.findByURLWithFallback(imgSrc);
         if (filePath) {
           const dimensions = sizeOf(filePath);
           img.attr("width", `${dimensions.width}`);

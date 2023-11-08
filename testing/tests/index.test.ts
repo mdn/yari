@@ -2,14 +2,16 @@ import fs from "node:fs";
 import path from "node:path";
 
 import cheerio from "cheerio";
-import sizeOf from "image-size";
+import imagesize from "image-size";
+
+const { default: sizeOf } = imagesize;
 
 import type {
   BCDSection,
   Doc,
   ProseSection,
   SpecificationsSection,
-} from "../../libs/types/document";
+} from "../../libs/types/document.js";
 
 const buildRoot = path.join("client", "build");
 
@@ -75,92 +77,17 @@ test("content built foo page", () => {
   expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
-  expect(doc.flaws.macros).toHaveLength(7);
-  expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[0].line).toBe(8);
-  expect(doc.flaws.macros[0].column).toBe(7);
-  expect(doc.flaws.macros[0].sourceContext).toEqual(
-    expect.stringContaining("<li>{{CSSxRef('dumber')}}</li>")
-  );
-  expect(doc.flaws.macros[0].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[0].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[0].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[1].macroSource).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
-  expect(doc.flaws.macros[1].line).toBe(9);
-  expect(doc.flaws.macros[1].column).toBe(7);
-  expect(doc.flaws.macros[1].sourceContext).toEqual(
-    expect.stringContaining('<li>{{htmlattrxref("href", "anchor")}}</li>')
-  );
-  expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
-  expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("a");
-  expect(doc.flaws.macros[1].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[2].macroSource).toBe(
-    '{{CSSxRef("will-never-be-fixable")}}'
-  );
-  expect(doc.flaws.macros[2].line).toBe(10);
-  expect(doc.flaws.macros[2].column).toBe(7);
-  expect(doc.flaws.macros[2].sourceContext).toEqual(
-    expect.stringContaining('<li>{{CSSxRef("will-never-be-fixable")}}</li>')
-  );
-  expect(doc.flaws.macros[2].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[3].line).toBe(11);
-  expect(doc.flaws.macros[3].column).toBe(7);
-  expect(doc.flaws.macros[3].sourceContext).toEqual(
-    expect.stringContaining("<li>{{CSSxRef('dumber')}} second time!</li>")
-  );
-  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[3].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[4].errorStack).toEqual(
-    expect.stringContaining(
-      '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
-    )
-  );
-  expect(doc.flaws.macros[4].line).toBe(10);
-  expect(doc.flaws.macros[4].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[4].sourceContext).toEqual(
-    expect.stringContaining('<div>{{page("does-not-exist")}}</div>')
-  );
-  expect(doc.flaws.macros[4].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
-  expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[5].errorStack).toEqual(
-    expect.stringContaining(
-      "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
-    )
-  );
-  expect(doc.flaws.macros[5].line).toBe(11);
-  expect(doc.flaws.macros[5].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[5].sourceContext).toEqual(
-    expect.stringContaining(
-      `<div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
-    )
-  );
-  expect(doc.flaws.macros[5].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
+  expect(doc.flaws.macros).toHaveLength(1);
+  expect(doc.flaws.macros[0]).toMatchObject({
+    column: 4,
+    errorStack: expect.stringContaining("pages is not iterable"),
+    filepath: expect.stringContaining(
+      "testing/content/files/en-us/web/foo/index.html"
+    ),
+    line: 8,
+    macroName: "HTMLSidebar",
+    name: "MacroExecutionError",
+  });
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
@@ -195,15 +122,18 @@ test("content built foo page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 
   // The HTML should contain the Google Analytics snippet.
-  // The ID should match what's set in `testing/.env`.
+  // The ID should match what's set in `.env.testing`.
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]')).toHaveLength(3);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]')
+    .first()
+    .attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
   // building static assets for Dev or Stage, you don't know what domain is
@@ -248,10 +178,11 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(3);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: Une page de test | MDN"
@@ -283,6 +214,42 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
+test("content built zh-CN page for hreflang tag and copying image testing", () => {
+  const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
+  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(doc.flaws.translation_differences).toHaveLength(1);
+  expect(doc.title).toBe("<foo>: 测试网页");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].native).toBe("English (US)");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  // The built page should not have duplicate hreflang tags,
+  // when zh-TW translation is also available.
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
+  expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh_CN");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: 测试网页 | MDN"
+  );
+
+  // The image should be in the built folder,
+  // even though it's not referenced in the translated content.
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
+});
+
 test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
@@ -301,17 +268,21 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(3);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
-  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
+  expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh_TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
   );
   expect($("#content img").attr("src")).toBe(
-    "/en-US/docs/Web/Foo/screenshot.png"
+    "/zh-TW/docs/Web/Foo/screenshot.png"
   );
+
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
 });
 
 test("content built French Embeddable page", () => {
@@ -323,7 +294,7 @@ test("content built French Embeddable page", () => {
   expect(doc.flaws.translation_differences).toHaveLength(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
-    "Differences in the important macros (0 in common of 4 possible)"
+    "Differences in the important macros (0 in common of 5 possible)"
   );
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.suggestion).toBeFalsy();
@@ -489,7 +460,7 @@ test("content built bar page", () => {
   // expect(doc.popularity).toBe(0.51);
   // expect(doc.modified).toBeTruthy();
   expect(doc.source).toBeTruthy();
-  expect(doc.flaws.macros).toHaveLength(12);
+  expect(doc.flaws.macros).toHaveLength(10);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
   expect(doc.flaws.macros[0].line).toBe(9);
@@ -513,78 +484,59 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("Bob");
   expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("Blob");
   expect(doc.flaws.macros[4].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[4].macroSource).toBe(
-    '{{htmlattrxref("href", "bigfoot")}}'
-  );
+  expect(doc.flaws.macros[4].macroSource).toBe('{{jsxref("bigfoot")}}');
   expect(doc.flaws.macros[4].line).toBe(15);
   expect(doc.flaws.macros[4].column).toBe(6);
   expect(doc.flaws.macros[5].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[5].macroSource).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
+  expect(doc.flaws.macros[5].macroSource).toBe('{{jsxref("Stern_mode")}}');
   expect(doc.flaws.macros[5].line).toBe(16);
   expect(doc.flaws.macros[5].column).toBe(6);
   expect(doc.flaws.macros[5].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[5].redirectInfo.current).toBe("anchor");
-  expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("a");
-  expect(doc.flaws.macros[6].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("bigfoot")}}');
+  expect(doc.flaws.macros[5].redirectInfo.current).toBe("Stern_mode");
+  expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("Strict_mode");
+  expect(doc.flaws.macros[6].name).toBe("MacroRedirectedLinkError");
+  expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("Flag")}}');
   expect(doc.flaws.macros[6].line).toBe(18);
   expect(doc.flaws.macros[6].column).toBe(6);
+  expect(doc.flaws.macros[6].redirectInfo).toBeDefined();
+  expect(doc.flaws.macros[6].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[6].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[7].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[7].macroSource).toBe('{{jsxref("Stern_mode")}}');
+  expect(doc.flaws.macros[7].macroSource).toBe("{{ jsxref('Flag') }}");
   expect(doc.flaws.macros[7].line).toBe(19);
   expect(doc.flaws.macros[7].column).toBe(6);
   expect(doc.flaws.macros[7].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[7].redirectInfo.current).toBe("Stern_mode");
-  expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Strict_mode");
+  expect(doc.flaws.macros[7].redirectInfo.current).toBe("Flag");
+  expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[8].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[8].macroSource).toBe('{{jsxref("Flag")}}');
-  expect(doc.flaws.macros[8].line).toBe(21);
+  expect(doc.flaws.macros[8].macroSource).toBe('{{JSXref("Flag")}}');
+  expect(doc.flaws.macros[8].line).toBe(20);
   expect(doc.flaws.macros[8].column).toBe(6);
   expect(doc.flaws.macros[8].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[8].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[8].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[9].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[9].macroSource).toBe("{{ jsxref('Flag') }}");
-  expect(doc.flaws.macros[9].line).toBe(22);
+  expect(doc.flaws.macros[9].macroSource).toBe('{{JSXref("Flag")}}');
+  expect(doc.flaws.macros[9].line).toBe(21);
   expect(doc.flaws.macros[9].column).toBe(6);
   expect(doc.flaws.macros[9].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[9].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[9].redirectInfo.suggested).toBe("Boolean");
-  expect(doc.flaws.macros[10].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[10].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[10].line).toBe(23);
-  expect(doc.flaws.macros[10].column).toBe(6);
-  expect(doc.flaws.macros[10].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[10].redirectInfo.current).toBe("Flag");
-  expect(doc.flaws.macros[10].redirectInfo.suggested).toBe("Boolean");
-  expect(doc.flaws.macros[11].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[11].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[11].line).toBe(24);
-  expect(doc.flaws.macros[11].column).toBe(6);
-  expect(doc.flaws.macros[11].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[11].redirectInfo.current).toBe("Flag");
-  expect(doc.flaws.macros[11].redirectInfo.suggested).toBe("Boolean");
 
   const htmlFile = path.join(builtFolder, "index.html");
   expect(fs.existsSync(htmlFile)).toBeTruthy();
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("a[data-flaw-src]").length).toEqual(12);
+  expect($("a[data-flaw-src]").length).toEqual(10);
 
   const brokenLinks = $("a.page-not-created");
-  expect(brokenLinks.length).toEqual(4);
+  expect(brokenLinks.length).toEqual(3);
   expect(brokenLinks.eq(0).data("flaw-src")).toBe('{{CSSxRef("bigfoot")}}');
   expect(brokenLinks.eq(0).text()).toBe("bigfoot");
   expect(brokenLinks.eq(1).data("flaw-src")).toBe('{{DOMxRef("bigfoot")}}');
   expect(brokenLinks.eq(1).text()).toBe("bigfoot");
-  expect(brokenLinks.eq(2).data("flaw-src")).toBe(
-    '{{htmlattrxref("href", "bigfoot")}}'
-  );
-  expect(brokenLinks.eq(2).text()).toBe("href");
-  expect(brokenLinks.eq(3).data("flaw-src")).toBe('{{jsxref("bigfoot")}}');
-  expect(brokenLinks.eq(3).text()).toBe("bigfoot");
+  expect(brokenLinks.eq(2).data("flaw-src")).toBe('{{jsxref("bigfoot")}}');
+  expect(brokenLinks.eq(2).text()).toBe("bigfoot");
   brokenLinks.each((index, element) => {
     expect($(element).attr("title")).toMatch(
       /The documentation about this has not yet been written/
@@ -604,18 +556,6 @@ test("content built bar page", () => {
   expect(blobLinks.eq(0).data("flaw-src")).toBe('{{DOMxRef("Bob")}}');
   expect(blobLinks.eq(1).text()).toBe("Blob");
   expect(blobLinks.eq(1).data("flaw-src")).toBeFalsy();
-
-  const hrefLinks = $(
-    'a[href="/en-US/docs/Web/HTML/Element/a#attr-href"]:not([title])'
-  );
-  expect(hrefLinks.length).toEqual(2);
-  hrefLinks.each((index, element) => {
-    expect($(element).text()).toBe("href");
-  });
-  expect(hrefLinks.eq(0).data("flaw-src")).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
-  expect(hrefLinks.eq(1).data("flaw-src")).toBeFalsy();
 
   const strictModeLinks = $(
     'a[href="/en-US/docs/Web/JavaScript/Reference/Strict_mode"]:not([title])'
@@ -965,7 +905,7 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros).toHaveLength(2);
+  expect(doc.flaws).toEqual({});
 });
 
 test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
@@ -1216,27 +1156,6 @@ test("images that are in the folder but not in <img> tags", () => {
   expect(fs.existsSync(path.join(builtFolder, "image.png")));
 });
 
-test("chicken_and_egg page should build with flaws", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.macros).toHaveLength(1);
-  // The filepath will be that of the "egg" or the "chicken" page.
-  // Let's not try to predict which one exactly, because that'd mean this
-  // test would need to use the exact same sort order as the glob used
-  // when we ran "yarn build" to set up the build fixtures.
-  const flaw = doc.flaws.macros[0];
-  expect(flaw.name).toBe("MacroExecutionError");
-  expect(
-    flaw.errorStack.includes(
-      "documents form a circular dependency when rendering"
-    )
-  ).toBeTruthy();
-});
-
 test("404 page", () => {
   const builtFolder = path.join(buildRoot, "en-us", "_spas");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
@@ -1246,7 +1165,7 @@ test("404 page", () => {
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en_US");
 });
 
 test("plus page", () => {
@@ -1445,7 +1364,7 @@ test("img tags without 'src' should not crash", () => {
   expect(doc.flaws).toEqual({});
 });
 
-test("/Web/Embeddable should have 3 valid live samples", () => {
+test("/Web/Embeddable should have 4 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1456,15 +1375,16 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("iframe")).toHaveLength(3);
+  expect($("iframe")).toHaveLength(4);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws).toEqual({});
+  expect(doc.flaws.macros[0].name).toEqual("MacroDeprecatedError");
 
-  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  // Only the transplanted live sample has a file.
+  const builtFiles = fs.readdirSync(path.join(builtFolder, "legacy"));
   expect(
     builtFiles
       .filter((f) => f.includes("_sample_."))
@@ -1472,7 +1392,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
         const startOffset = "_sample_.".length;
         return f.substr(startOffset, f.length - startOffset - ".html".length);
       })
-  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
+  ).toEqual(expect.arrayContaining(["foo"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {
@@ -1639,7 +1559,7 @@ test("basic markdown rendering", () => {
   expect($("article em")).toHaveLength(1);
   expect($("article ul li")).toHaveLength(6);
   expect($('article a[href^="/"]')).toHaveLength(2);
-  expect($('article a[href^="#"]')).toHaveLength(5);
+  expect($('article a[href^="#"]')).toHaveLength(6);
   expect($("article pre")).toHaveLength(4);
   expect($("article pre.notranslate")).toHaveLength(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);

@@ -1,4 +1,4 @@
-const StyleDictionary = require("style-dictionary"); // eslint-disable-line n/no-unpublished-require
+import StyleDictionary from "style-dictionary"; // eslint-disable-line n/no-unpublished-import
 
 StyleDictionary.registerTransform({
   name: "value/rewrite",
@@ -45,7 +45,7 @@ StyleDictionary.registerTransform({
   },
 });
 
-module.exports = {
+export default {
   source: ["./client/src/ui/style-dictionary/**/*.json"],
   platforms: {
     scss: {

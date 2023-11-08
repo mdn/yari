@@ -6,21 +6,33 @@ import { eachLimit } from "async";
 import cliProgress from "cli-progress";
 import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
-import tempy from "tempy";
+import { temporaryDirectory } from "tempy";
 import * as cheerio from "cheerio";
-import FileType from "file-type";
+import { fileTypeFromFile } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquant from "imagemin-pngquant";
+import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import isSvg from "is-svg";
 
-import { MAX_FILE_SIZE } from "../libs/env";
+import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} from "../libs/constants";
+  createRegExpFromExtensions,
+  AUDIO_EXT,
+  VIDEO_EXT,
+  FONT_EXT,
+} from "../libs/constants/index.js";
+
+const { default: imageminPngquant } = imageminPngquantPkg;
+
+const BINARY_NON_IMAGE_FILE_REGEXP = createRegExpFromExtensions(
+  ...AUDIO_EXT,
+  ...VIDEO_EXT,
+  ...FONT_EXT
+);
 
 function formatSize(bytes: number): string {
   if (bytes > 1024 * 1024) {
@@ -76,6 +88,21 @@ export async function checkFile(
     throw new Error(`${filePath} is 0 bytes`);
   }
 
+  // Ensure that binary files contain what their extension indicates.
+  // Exclude images, as they're checked separately in checkCompression().
+  if (BINARY_NON_IMAGE_FILE_REGEXP.test(filePath)) {
+    const ext = filePath.split(".").pop();
+    const type = await fileTypeFromFile(filePath);
+    if (!type) {
+      throw new Error(`Failed to detect type of file attachment: ${filePath}`);
+    }
+    if (ext.toLowerCase() !== type.ext) {
+      throw new Error(
+        `Unexpected type '${type.mime}' (*.${type.ext}) detected for file attachment: ${filePath}.`
+      );
+    }
+  }
+
   // FileType can't check for .svg files.
   // So use special case for files called '*.svg'
   if (path.extname(filePath) === ".svg") {
@@ -104,7 +131,7 @@ export async function checkFile(
     });
   } else {
     // Check that the file extension matches the file header.
-    const fileType = await FileType.fromFile(filePath);
+    const fileType = await fileTypeFromFile(filePath);
     if (!fileType) {
       // This can easily happen if the .png (for example) file is actually just
       // a text file and not a binary.
@@ -175,7 +202,11 @@ export async function checkFile(
     );
   }
 
-  const tempdir = tempy.directory();
+  await checkCompression(filePath, options);
+}
+
+async function checkCompression(filePath: string, options: CheckerOptions) {
+  const tempdir = temporaryDirectory();
   const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];
@@ -187,9 +218,12 @@ export async function checkFile(
       plugins.push(imageminGifsicle());
     } else if (extension === ".svg") {
       plugins.push(imageminSvgo());
-    } else {
-      throw new Error(`No plugin for ${extension}`);
     }
+
+    if (!plugins.length) {
+      return;
+    }
+
     const files = await imagemin([filePath], {
       destination: tempdir,
       plugins,
@@ -223,7 +257,7 @@ export async function checkFile(
           filePath
         )} is too large (${formattedBefore} > ${formattedMax}), even after compressing to ${formattedAfter}.`
       );
-    } else if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
+    } else if (!options.saveCompression && sizeBefore > MAX_FILE_SIZE) {
       throw new FixableError(
         `${getRelativePath(
           filePath

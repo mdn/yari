@@ -9,11 +9,12 @@
   $1 - Item grouping type
        (valid values: 'alphabetically', 'no'; defaults to 'alphabetically')
   $2 - Array of strings used to filter the items by their status
-       (valid values: 'standard', 'experimental', "nonstandard', 'obsolete';
+       (valid values: 'standard', 'experimental', "nonstandard';
        defaults to ['standard', 'experimental'])
 */
 
 const data = require('mdn-data/css');
+
 let types = ["properties", "selectors", "types", "syntaxes", "at-rules",
              "descriptors", "units"];
 let groupingType = "alphabetically";

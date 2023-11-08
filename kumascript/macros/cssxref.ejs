@@ -31,7 +31,7 @@
 var lang = env.locale;
 var url = "";
 var urlWithoutAnchor = "";
-var str = ($1 || $0);
+var displayName = ($1 || $0);
 
 // Deal with CSS data types by removing <>
 var slug = $0.replace(/&lt;(.*)&gt;/g, '$1');
@@ -51,24 +51,25 @@ switch ($0) {
         break;
 }
 
-str = str.toLowerCase();
 const basePath = `/${lang}/docs/Web/CSS/`;
 urlWithoutAnchor = basePath + slug;
 url = urlWithoutAnchor + $2;
 
-const thisPage = (!$1 || !$2) ? wiki.getPage(urlWithoutAnchor) : null;
+const thisPage = (!$1 || !$2) ?
+  wiki.getPage(`/en-US/docs/Web/CSS/${slug}`) :
+  null;
 
 if (!$1) {
     // Append parameter brackets to CSS functions
-    if ((thisPage.pageType === "css-function") && !str.endsWith("()")) {
-        str += "()";
+    if ((thisPage.pageType === "css-function") && !displayName.endsWith("()")) {
+        displayName += "()";
     }
     // Enclose CSS data types in arrow brackets
-    if ((thisPage.pageType === "css-type") && !/^&lt;.+&gt;$/.test(str)) {
-        str = "&lt;" + str + "&gt;";
+    if ((thisPage.pageType === "css-type") && !/^&lt;.+&gt;$/.test(displayName)) {
+        displayName = "&lt;" + displayName + "&gt;";
     }
 }
 
-const entry = web.smartLink(url, "", `<code>${str}</code>`, $0, basePath);
+const entry = web.smartLink(url, "", `<code>${displayName}</code>`, $0, basePath);
 
 %><%- entry %>

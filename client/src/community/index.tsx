@@ -5,7 +5,7 @@ const STATS = [
   { id: 1, number: "2005", legend: "year founded" },
   { id: 2, number: "45k", legend: "total contributors" },
   { id: 3, number: "200", legend: "commits per week" },
-  { id: 4, number: ">95M", legend: "page views per month" },
+  { id: 4, number: ">80M", legend: "page views per month" },
 ];
 
 export function Contribute() {
@@ -93,21 +93,21 @@ export function Contribute() {
           an invaluable partner in the day-to-day work of making MDN. Read more
           about OWD’s activities in their{" "}
           <a
-            href="https://github.com/openwebdocs/project/tree/main/impact-report-2021"
+            href="https://openwebdocs.org/content/reports/2022/"
             target="_blank"
             rel="noreferrer noopener"
             className="external"
           >
-            2021 Impact and Transparency Report
+            2022 Impact and Transparency Report
           </a>{" "}
           and get continuous updates on their{" "}
           <a
-            href="https://twitter.com/openwebdocs"
+            href="https://front-end.social/@OpenWebDocs"
             target="_blank"
             rel="noreferrer noopener"
             className="external"
           >
-            Twitter
+            Mastodon
           </a>{" "}
           account.
         </p>

@@ -1,0 +1,16 @@
+@use "../../vars" as *;
+
+.auth-container {
+  .login-link {
+    align-items: center;
+    display: inline-flex;
+    font-weight: var(--font-body-strong-weight);
+    height: 2rem;
+    text-align: center;
+
+    &:link,
+    &:visited {
+      color: var(--text-secondary);
+    }
+  }
+}

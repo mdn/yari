@@ -1,4 +1,5 @@
-import Environment from "../src/environment";
+import { jest } from "@jest/globals";
+import Environment from "../src/environment.js";
 
 // We test using `with` because that is what EJS uses. But Jest
 // runs tests in strict mode, so we have to hide the with inside

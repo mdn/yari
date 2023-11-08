@@ -1,44 +1,48 @@
-const fs = require("fs");
-const path = require("path");
-const webpack = require("webpack");
-const resolve = require("resolve");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
-const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
-const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
-const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
-const ESLintPlugin = require("eslint-webpack-plugin");
-const paths = require("./paths");
-const modules = require("./modules");
-const getClientEnvironment = require("./env");
-const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
-const ForkTsCheckerWebpackPlugin =
-  process.env.TSC_COMPILE_ON_ERROR === "true"
-    ? require("react-dev-utils/ForkTsCheckerWarningWebpackPlugin")
-    : require("react-dev-utils/ForkTsCheckerWebpackPlugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const createEnvironmentHash = require("./webpack/persistentCache/createEnvironmentHash");
+import resolve from "resolve";
+import webpack from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import CaseSensitivePathsPlugin from "case-sensitive-paths-webpack-plugin";
+import InlineChunkHtmlPlugin from "react-dev-utils/InlineChunkHtmlPlugin.js";
+import TerserPlugin from "terser-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import { WebpackManifestPlugin } from "webpack-manifest-plugin";
+import InterpolateHtmlPlugin from "react-dev-utils/InterpolateHtmlPlugin.js";
+import WorkboxWebpackPlugin from "workbox-webpack-plugin";
+import ModuleScopePlugin from "react-dev-utils/ModuleScopePlugin.js";
+import getCSSModuleLocalIdent from "react-dev-utils/getCSSModuleLocalIdent.js";
+import ESLintPlugin from "eslint-webpack-plugin";
+import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+
+import paths from "./paths.js";
+import modules from "./modules.js";
+import getClientEnvironment from "./env.js";
+import createEnvironmentHash from "./webpack/persistentCache/createEnvironmentHash.js";
+
+const { default: ForkTsCheckerWebpackPlugin } = await import(
+  process.env.TSC_COMPILE_ON_ERROR === "true"
+    ? "react-dev-utils/ForkTsCheckerWarningWebpackPlugin.js"
+    : "react-dev-utils/ForkTsCheckerWebpackPlugin.js"
+);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 
-const reactRefreshRuntimeEntry = require.resolve("react-refresh/runtime");
-const reactRefreshWebpackPluginRuntimeEntry = require.resolve(
+const reactRefreshRuntimeEntry = resolve.sync("react-refresh/runtime");
+const reactRefreshWebpackPluginRuntimeEntry = resolve.sync(
   "@pmmmwh/react-refresh-webpack-plugin"
 );
-const babelRuntimeEntry = require.resolve("babel-preset-react-app");
-const babelRuntimeEntryHelpers = require.resolve(
+const babelRuntimeEntry = resolve.sync("babel-preset-react-app");
+const babelRuntimeEntryHelpers = resolve.sync(
   "@babel/runtime/helpers/esm/assertThisInitialized",
   { paths: [babelRuntimeEntry] }
 );
-const babelRuntimeRegenerator = require.resolve("@babel/runtime/regenerator", {
+const babelRuntimeRegenerator = resolve.sync("@babel/runtime/regenerator", {
   paths: [babelRuntimeEntry],
 });
 
@@ -49,9 +53,7 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
 
-const imageInlineSizeLimit = parseInt(
-  process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
-);
+const imageInlineSizeLimit = 0; // our CSP doesn't support inline images
 
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
@@ -76,7 +78,7 @@ const hasJsxRuntime = (() => {
   }
 
   try {
-    require.resolve("react/jsx-runtime");
+    resolve.sync("react/jsx-runtime");
     return true;
   } catch (e) {
     return false;
@@ -85,7 +87,7 @@ const hasJsxRuntime = (() => {
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function (webpackEnv) {
+function config(webpackEnv) {
   const isEnvDevelopment = webpackEnv === "development";
   const isEnvProduction = webpackEnv === "production";
 
@@ -105,7 +107,7 @@ module.exports = function (webpackEnv) {
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
     const loaders = [
-      isEnvDevelopment && require.resolve("style-loader"),
+      isEnvDevelopment && resolve.sync("style-loader"),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
         // css is located in `static/css`, use '../../' to locate index.html folder
@@ -115,14 +117,14 @@ module.exports = function (webpackEnv) {
           : {},
       },
       {
-        loader: require.resolve("css-loader"),
+        loader: resolve.sync("css-loader"),
         options: cssOptions,
       },
       {
         // Options for PostCSS as we reference these options twice
         // Adds vendor prefixing based on your specified browser support in
         // package.json
-        loader: require.resolve("postcss-loader"),
+        loader: resolve.sync("postcss-loader"),
         options: {
           postcssOptions: {
             // Necessary for external CSS imports to work
@@ -167,14 +169,14 @@ module.exports = function (webpackEnv) {
     if (preProcessor) {
       loaders.push(
         {
-          loader: require.resolve("resolve-url-loader"),
+          loader: resolve.sync("resolve-url-loader"),
           options: {
             sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
             root: paths.appSrc,
           },
         },
         {
-          loader: require.resolve(preProcessor),
+          loader: resolve.sync(preProcessor),
           options: {
             sourceMap: true,
           },
@@ -235,7 +237,7 @@ module.exports = function (webpackEnv) {
       store: "pack",
       buildDependencies: {
         defaultWebpack: ["webpack/lib/"],
-        config: [__filename],
+        config: [fileURLToPath(import.meta.url)],
         tsconfig: [paths.appTsConfig, paths.appJsConfig].filter((f) =>
           fs.existsSync(f)
         ),
@@ -344,7 +346,7 @@ module.exports = function (webpackEnv) {
           enforce: "pre",
           exclude: /@babel(?:\/|\\{1,2})runtime/,
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
-          loader: require.resolve("source-map-loader"),
+          loader: resolve.sync("source-map-loader"),
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -379,7 +381,7 @@ module.exports = function (webpackEnv) {
               test: /\.svg$/,
               use: [
                 {
-                  loader: require.resolve("@svgr/webpack"),
+                  loader: resolve.sync("@svgr/webpack"),
                   options: {
                     prettier: false,
                     svgo: false,
@@ -391,7 +393,7 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 {
-                  loader: require.resolve("file-loader"),
+                  loader: resolve.sync("file-loader"),
                   options: {
                     name: "static/media/[name].[hash].[ext]",
                   },
@@ -406,14 +408,14 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              loader: require.resolve("babel-loader"),
+              loader: resolve.sync("babel-loader"),
               options: {
-                customize: require.resolve(
+                customize: resolve.sync(
                   "babel-preset-react-app/webpack-overrides"
                 ),
                 presets: [
                   [
-                    require.resolve("babel-preset-react-app"),
+                    resolve.sync("babel-preset-react-app"),
                     {
                       runtime: hasJsxRuntime ? "automatic" : "classic",
                     },
@@ -423,7 +425,8 @@ module.exports = function (webpackEnv) {
                 plugins: [
                   isEnvDevelopment &&
                     shouldUseReactRefresh &&
-                    require.resolve("react-refresh/babel"),
+                    resolve.sync("react-refresh/babel"),
+                  resolve.sync("@babel/plugin-syntax-import-assertions"),
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -439,14 +442,14 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs)$/,
               exclude: /@babel(?:\/|\\{1,2})runtime/,
-              loader: require.resolve("babel-loader"),
+              loader: resolve.sync("babel-loader"),
               options: {
                 babelrc: false,
                 configFile: false,
                 compact: false,
                 presets: [
                   [
-                    require.resolve("babel-preset-react-app/dependencies"),
+                    resolve.sync("babel-preset-react-app/dependencies"),
                     { helpers: true },
                   ],
                 ],
@@ -726,8 +729,8 @@ module.exports = function (webpackEnv) {
         new ESLintPlugin({
           // Plugin options
           extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-          formatter: require.resolve("react-dev-utils/eslintFormatter"),
-          eslintPath: require.resolve("eslint"),
+          formatter: resolve.sync("react-dev-utils/eslintFormatter.js"),
+          eslintPath: resolve.sync("eslint"),
           failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
           context: paths.appSrc,
           cache: true,
@@ -737,9 +740,11 @@ module.exports = function (webpackEnv) {
           ),
           // ESLint class options
           cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
+          resolvePluginsRelativeTo: fileURLToPath(
+            new URL(".", import.meta.url)
+          ),
           baseConfig: {
-            extends: [require.resolve("eslint-config-react-app/base")],
+            extends: [resolve.sync("eslint-config-react-app/base")],
             rules: {
               ...(!hasJsxRuntime && {
                 "react/react-in-jsx-scope": "error",
@@ -752,4 +757,6 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
-};
+}
+
+export default config;

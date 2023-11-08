@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { Doc } from "../libs/types/document";
+import { Doc } from "../libs/types/document.js";
 
 /** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
@@ -39,5 +39,6 @@ export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
   });
 
   doc.sidebarHTML = search.html();
+  doc.sidebarMacro = search.attr("data-macro");
   search.remove();
 }

@@ -1,24 +1,22 @@
 /* eslint no-restricted-globals: ["off", "location"] */
 /// <reference lib="WebWorker" />
 
-import { cacheName, contentCache, openCache } from "./caches";
-import { respond } from "./fetcher";
-import { unpackAndCache } from "./unpack-cache";
+import { cacheName, contentCache, openCache } from "./caches.js";
+import { respond } from "./fetcher.js";
+import { unpackAndCache } from "./unpack-cache.js";
 import {
   ContentStatusPhase,
   getContentStatus,
   patchContentStatus,
   RemoteContentStatus,
   SwType,
-} from "./db";
-import { fetchWithExampleOverride } from "./fetcher";
+} from "./db.js";
+import { fetchWithExampleOverride } from "./fetcher.js";
 
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
 );
-export const LIVE_SAMPLES_URL = new URL(
-  "https://yari-demos.prod.mdn.mozit.cloud"
-);
+export const LIVE_SAMPLES_URL = new URL("https://live-samples.mdn.mozilla.net");
 export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
 
 const UPDATES_BASE_URL = `https://updates.${

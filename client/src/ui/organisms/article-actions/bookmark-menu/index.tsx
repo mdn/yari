@@ -18,12 +18,7 @@ import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 import NoteCard from "../../../molecules/notecards";
 import { useGleanClick } from "../../../../telemetry/glean-context";
-import {
-  ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
-  ARTICLE_ACTIONS_NEW_COLLECTION,
-  ARTICLE_ACTIONS_COLLECTIONS_OPENED,
-  NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS,
-} from "../../../../telemetry/constants";
+import { PLUS_COLLECTIONS } from "../../../../telemetry/constants";
 import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
 import { KeyedMutator } from "swr";
 
@@ -71,7 +66,7 @@ export default function BookmarkMenu({
         onClickHandler={() => {
           setShow((v) => !v);
           if (!show) {
-            gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
+            gleanClick(PLUS_COLLECTIONS.ARTICLE_ACTIONS_OPENED);
           }
         }}
       >
@@ -144,6 +139,8 @@ function BookmarkMenuDropdown({
     else if (savedItems?.length) {
       setFormItem(savedItems[0]);
       setSaved(true);
+    } else {
+      setSaved(false);
     }
   }, [item, savedItems, setSaved]);
 
@@ -156,7 +153,7 @@ function BookmarkMenuDropdown({
   const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === addValue) {
-      gleanClick(ARTICLE_ACTIONS_NEW_COLLECTION);
+      gleanClick(PLUS_COLLECTIONS.ARTICLE_ACTIONS_NEW);
       setDisableAutoClose(true);
       setShowNewCollection(true);
       changeHandler(e);
@@ -274,7 +271,9 @@ function BookmarkMenuDropdown({
                   onChange={collectionChangeHandler}
                   onFocus={() => {
                     if (!focusEventTriggered) {
-                      gleanClick(ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED);
+                      gleanClick(
+                        PLUS_COLLECTIONS.ARTICLE_ACTIONS_SELECT_OPENED
+                      );
                       setFocusEventTriggered(true);
                     }
                   }}
@@ -370,7 +369,7 @@ function BookmarkMenuDropdown({
               collection_id: collection_id || collections[0].id,
             });
           }}
-          source={NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS}
+          source={PLUS_COLLECTIONS.NEW_MODAL_SUBMIT_ARTICLE_ACTIONS}
         />
       )}
     </>

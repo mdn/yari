@@ -2,39 +2,34 @@
 
 var output = "";
 var pageModule = page;
-var hasTag = page.hasTag;
 var slug = env.slug;
 var locale = env.locale;
 var baseURL = "/" + locale + "/docs/";
 var baseAPIPage = baseURL + "Mozilla/Add-ons/WebExtensions/API";
 
 var htmlEscape = mdn.htmlEscape;
-var rtlLocales = ['ar', 'he', 'fa'];
+var rtlLocales = ["ar", "he", "fa"];
 
-let commonl10n = web.getJSONData('L10n-Common');
+let commonl10n = web.getJSONData("L10n-Common");
 
 let text = {
-    'translate': mdn.getLocalString(commonl10n, '[Translate]'),
-    'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
-    'Methods': mdn.getLocalString(commonl10n, 'Methods'),
-    'Properties': mdn.getLocalString(commonl10n, 'Properties'),
-    'Types': mdn.getLocalString(commonl10n, 'Types'),
-    'Events': mdn.getLocalString(commonl10n, 'Events'),
+  translate: mdn.getLocalString(commonl10n, "[Translate]"),
+  title: mdn.getLocalString(commonl10n, "TranslationCTA"),
+  Methods: mdn.getLocalString(commonl10n, "Methods"),
+  Properties: mdn.getLocalString(commonl10n, "Properties"),
+  Types: mdn.getLocalString(commonl10n, "Types"),
+  Events: mdn.getLocalString(commonl10n, "Events"),
 };
 
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-  ObsoleteBadge : await template("ObsoleteBadge"),
-}
-
-function buildSublist(pages, title, ignoreBadges) {
-  var result = '<li data-default-state="open"><a href="#"><strong>' + title + '</strong></a><ol>';
+async function buildSublist(pages, title, ignoreBadges) {
+  var result =
+    '<li data-default-state="open"><a href="#"><strong>' +
+    title +
+    "</strong></a><ol>";
 
   for (var i in pages) {
     var aPage = pages[i];
-    var url = aPage.url.replace('en-US', locale);
+    var url = aPage.url.replace("en-US", locale);
     var title = htmlEscape(aPage.title);
 
     var apiComponentName = title;
@@ -43,118 +38,107 @@ function buildSublist(pages, title, ignoreBadges) {
       apiComponentName = titlePieces[titlePieces.length - 1];
     }
 
-    if (locale != 'en-US') {
-        aPage.translations.forEach(function(translation) {
-            if(translation.locale === locale) {
-                url = translation.url;
-                title = htmlEscape(translation.title);
-            }
-        });
+    if (locale != "en-US") {
+      aPage.translations.forEach(function (translation) {
+        if (translation.locale === locale) {
+          url = translation.url;
+          title = htmlEscape(translation.title);
+        }
+      });
     }
 
-    result += '<li>';
+    result += "<li>";
 
-    var pageBadges = '';
+    let pageBadges = "";
     if (!ignoreBadges) {
-
-        if (hasTag(aPage, 'Experimental')) {
-            pageBadges += badges.ExperimentalBadge;
-        }
-
-        if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
-            pageBadges += badges.NonStandardBadge;
-        }
-
-        if (hasTag(aPage, 'Deprecated')) {
-            pageBadges += badges.DeprecatedBadge;
-        }
-
-        if (hasTag(aPage, 'Obsolete')) {
-            pageBadges += badges.ObsoleteBadge;
-            result += '<s class="obsoleteElement">';
-        }
+      pageBadges = (await page.badges(aPage)).join("");
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
-        result += '<bdi>';
+      result += "<bdi>";
     }
 
     if (slug == aPage.slug) {
-        result += '<em>' + pageBadges + ' <code>' + apiComponentName + '</code></em>'
+      result += `<em><code>${apiComponentName}</code> ${pageBadges}</em>`;
     } else {
-        result += pageBadges + '<a href="' + url + '"><code>' + apiComponentName + '</code></a>';
+      result += `<a href="${url}"><code>${apiComponentName}</code></a>${pageBadges}`;
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
-        result += '</bdi>';
+      result += "</bdi>";
     }
 
-    if (hasTag(aPage, 'Obsolete')) {
-        result += '</s>';
-    }
-
-    result += '</li>';
+    result += "</li>";
   }
 
-  result += '</ol></li>';
+  result += "</ol></li>";
 
   return result;
 }
 
 function classifyPages(subpages) {
-  var collection = {
-      properties: [],
-      methods: [],
-      events: [],
-      types: []
-  }
+  const collection = {
+    properties: [],
+    methods: [],
+    events: [],
+    types: [],
+  };
 
-  subpages.forEach(function(subpage) {
-    if (hasTag(subpage, "Property")) {
-      collection.properties.push(subpage);
+  for (const subpage of subpages) {
+    switch (subpage.pageType) {
+      case "webextension-api-property":
+        collection.properties.push(subpage);
+        break;
+      case "webextension-api-function":
+        collection.methods.push(subpage);
+        break;
+      case "webextension-api-type":
+        collection.types.push(subpage);
+        break;
+      case "webextension-api-event":
+        collection.events.push(subpage);
+        break;
     }
-    if (hasTag(subpage, "Method")) {
-      collection.methods.push(subpage);
-    }
-    if (hasTag(subpage, "Type")) {
-      collection.types.push(subpage);
-    }
-    if (hasTag(subpage, "Event")) {
-      collection.events.push(subpage);
-    }
-  });
+  }
 
   return collection;
 }
 
 async function buildSidebarForSingleAPI(apiPath) {
-  output+= '<ol>';
+  output += "<ol>";
 
   var subpages = await pageModule.subpagesExpand(apiPath);
 
   var pageCollection = classifyPages(subpages);
 
   if (pageCollection.methods.length > 0) {
-    output += buildSublist(pageCollection.methods, text["Methods"], true);
+    output += await buildSublist(pageCollection.methods, text["Methods"], true);
   }
   if (pageCollection.properties.length > 0) {
-    output += buildSublist(pageCollection.properties, text["Properties"], true);
+    output += await buildSublist(
+      pageCollection.properties,
+      text["Properties"],
+      true
+    );
   }
   if (pageCollection.types.length > 0) {
-    output += buildSublist(pageCollection.types, text["Types"], true);
+    output += await buildSublist(pageCollection.types, text["Types"], true);
   }
   if (pageCollection.events.length > 0) {
-    output += buildSublist(pageCollection.events, text["Events"], true);
+    output += await buildSublist(pageCollection.events, text["Events"], true);
   }
 
-output += '</ol>';
+  output += "</ol>";
 }
 
 async function buildSidebarForAllAPIs() {
   output = "<ol>";
-  var browserSupportURL = baseURL + "Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs";
+  var browserSupportURL =
+    baseURL +
+    "Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs";
   var browserSupportTitle = "Browser support for JavaScript APIs";
-  output +=  '<li><a href="' +  browserSupportURL + '">' + browserSupportTitle + '</a>';
+  output +=
+    '<li><a href="' + browserSupportURL + '">' + browserSupportTitle + "</a>";
 
   var subpages = await pageModule.subpagesExpand(baseAPIPage);
   for (var i = 0; i < subpages.length; i++) {
@@ -162,18 +146,21 @@ async function buildSidebarForAllAPIs() {
     var pieces = apiPage.url.split("/");
     var apiName = pieces.slice(-1);
     if (slug.indexOf(apiPage.slug) != -1) {
-      output +=  '<li class="webextension-api-sidebar"><a href="' +  apiPage.url + '">' + apiName + '</a>';
+      output +=
+        '<li class="webextension-api-sidebar"><a href="' +
+        apiPage.url +
+        '">' +
+        apiName +
+        "</a>";
       await buildSidebarForSingleAPI(baseURL + apiPage.slug);
+    } else {
+      output += '<li><a href="' + apiPage.url + '">' + apiName + "</a>";
     }
-    else {
-      output +=  '<li><a href="' +  apiPage.url + '">' + apiName + '</a>';
-    }
-    output += '</li>';
+    output += "</li>";
   }
 
-output += '</ol>';
+  output += "</ol>";
 }
-
 
 await buildSidebarForAllAPIs(baseURL);
 %>

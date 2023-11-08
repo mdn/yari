@@ -1,8 +1,11 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../env";
-import { HydrationData, isStaticPageData } from "../../types/hydration";
+import { DEV_MODE } from "../../env";
+import {
+  HydrationData,
+  isStaticPageData,
+} from "../../../../libs/types/hydration";
 
 import "./index.scss";
 
@@ -23,7 +26,7 @@ function RecentContributions(props: HydrationData) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: DEV_MODE,
       revalidateOnMount: !fallbackData,
     }
   );

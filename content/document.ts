@@ -6,18 +6,22 @@ import fm from "front-matter";
 import yaml from "js-yaml";
 import { fdir, PathsOutput } from "fdir";
 
-import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
+import {
+  CONTENT_TRANSLATED_ROOT,
+  CONTENT_ROOT,
+  ROOTS,
+} from "../libs/env/index.js";
 import {
   ACTIVE_LOCALES,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} from "../libs/constants";
-import { isValidLocale } from "../libs/locale-utils";
-import { getPopularities } from "./popularities";
-import { getWikiHistories } from "./wikihistories";
-import { getGitHistories } from "./githistories";
-import { childrenFoldersForPath } from "./document-paths";
+} from "../libs/constants/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import { getPopularities } from "./popularities.js";
+import { getWikiHistories } from "./wikihistories.js";
+import { getGitHistories } from "./githistories.js";
+import { childrenFoldersForPath } from "./document-paths.js";
 
 import {
   buildURL,
@@ -28,10 +32,11 @@ import {
   urlToFolderPath,
   toPrettyJSON,
   MEMOIZE_INVALIDATE,
-} from "./utils";
-export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
-import * as Redirect from "./redirect";
-import { DocFrontmatter } from "../libs/types";
+} from "./utils.js";
+import * as Redirect from "./redirect.js";
+import { DocFrontmatter } from "../libs/types/document.js";
+
+export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
 
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -41,7 +46,7 @@ const getHTMLPath = (folder: string) => path.join(folder, HTML_FILENAME);
 const getMarkdownPath = (folder: string) =>
   path.join(folder, MARKDOWN_FILENAME);
 
-export function updateWikiHistory(
+export async function updateWikiHistory(
   localeContentRoot: string,
   oldSlug: string,
   newSlug: string | null = null
@@ -76,7 +81,7 @@ export function updateWikiHistory(
       // trailing newline character. So always doing in automation removes
       // the risk of a conflict at the last line from two independent PRs
       // that edit this file.
-      toPrettyJSON(sorted)
+      await toPrettyJSON(sorted)
     );
   }
 }
@@ -138,7 +143,12 @@ export function saveFile(
     throw new Error("newSlug can not contain the '#' character");
   }
 
-  const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
+  const folderPath = path.dirname(filePath);
+  fs.mkdirSync(folderPath, { recursive: true });
+
+  const combined = `---\n${yaml.dump(saveMetadata, {
+    quotingType: '"',
+  })}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 
@@ -152,8 +162,6 @@ export function trimLineEndings(string) {
 export function createHTML(html: string, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
-  fs.mkdirSync(folderPath, { recursive: true });
-
   saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
   return folderPath;
 }
@@ -164,8 +172,6 @@ export function createMarkdown(
   root: string | null = null
 ) {
   const folderPath = getFolderPath(metadata, root);
-
-  fs.mkdirSync(folderPath, { recursive: true });
 
   saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
@@ -242,20 +248,20 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     locale = extractLocale(folder);
   }
 
-  if (filePath.includes(" ")) {
+  if (folder.includes(" ")) {
     throw new Error(
       `Folder contains whitespace which is not allowed (${util.inspect(
         filePath
       )})`
     );
   }
-  if (filePath.includes("\u200b")) {
+  if (folder.includes("\u200b")) {
     throw new Error(
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );
   }
   // Use Boolean() because otherwise, `isTranslated` might become `undefined`
-  // rather than an actuall boolean value.
+  // rather than an actual boolean value.
   const isTranslated = Boolean(
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
@@ -349,7 +355,7 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
   };
 });
 
-export function update(url: string, rawBody: string, metadata) {
+export async function update(url: string, rawBody: string, metadata) {
   const folder = urlToFolderPath(url);
   const document = read(folder);
   const locale = document.metadata.locale;
@@ -379,7 +385,7 @@ export function update(url: string, rawBody: string, metadata) {
       frontMatterKeys
     );
     if (isNewSlug) {
-      updateWikiHistory(
+      await updateWikiHistory(
         path.join(root, metadata.locale.toLowerCase()),
         oldSlug,
         newSlug
@@ -396,7 +402,7 @@ export function update(url: string, rawBody: string, metadata) {
       const oldChildSlug = metadata.slug;
       const newChildSlug = oldChildSlug.replace(oldSlug, newSlug);
       metadata.slug = newChildSlug;
-      updateWikiHistory(
+      await updateWikiHistory(
         path.join(root, metadata.locale.toLowerCase()),
         oldChildSlug,
         newChildSlug
@@ -439,7 +445,7 @@ export function findByURL(
   return doc;
 }
 
-export function findAll({
+export async function findAll({
   files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
@@ -510,7 +516,8 @@ export function findAll({
         return true;
       })
       .crawl(root);
-    filePaths.push(...(api.sync() as PathsOutput));
+    const output: PathsOutput = await api.withPromise();
+    filePaths.push(...output);
   }
   return {
     count: filePaths.length,
@@ -536,7 +543,7 @@ export function findChildren(url: string, recursive = false) {
   return childPaths.map((folder) => read(folder));
 }
 
-export function move(
+export async function move(
   oldSlug: string,
   newSlug: string,
   locale: string,
@@ -566,7 +573,7 @@ export function move(
   }
 
   doc.metadata.slug = newSlug;
-  update(oldUrl, doc.rawBody, doc.metadata);
+  await update(oldUrl, doc.rawBody, doc.metadata);
 
   return pairs;
 }
@@ -599,7 +606,7 @@ export function validate(slug: string, locale: string) {
   }
 }
 
-export function remove(
+export async function remove(
   slug: string,
   locale: string,
   { recursive = false, dry = false, redirect = "" } = {}
@@ -632,7 +639,10 @@ export function remove(
   const removed = [];
   for (const { metadata } of children) {
     const slug = metadata.slug;
-    updateWikiHistory(path.join(root, metadata.locale.toLowerCase()), slug);
+    await updateWikiHistory(
+      path.join(root, metadata.locale.toLowerCase()),
+      slug
+    );
     removed.push(buildURL(locale, slug));
   }
 
@@ -649,7 +659,7 @@ export function remove(
     Redirect.remove(locale, [url, ...removed]);
   }
 
-  updateWikiHistory(
+  await updateWikiHistory(
     path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );

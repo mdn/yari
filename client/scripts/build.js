@@ -1,6 +1,20 @@
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = "production";
-process.env.NODE_ENV = "production";
+// Ensure environment variables are read.
+import "../config/env.js";
+
+import path from "node:path";
+import chalk from "react-dev-utils/chalk.js";
+import fs from "fs-extra";
+import bfj from "bfj";
+import webpack from "webpack";
+import { checkBrowsers } from "react-dev-utils/browsersHelper.js";
+import checkRequiredFiles from "react-dev-utils/checkRequiredFiles.js";
+import formatWebpackMessages from "react-dev-utils/formatWebpackMessages.js";
+import printHostingInstructions from "react-dev-utils/printHostingInstructions.js";
+import FileSizeReporter from "react-dev-utils/FileSizeReporter.js";
+import printBuildError from "react-dev-utils/printBuildError.js";
+
+import configFactory from "../config/webpack.config.js";
+import paths from "../config/paths.js";
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -9,21 +23,7 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-// Ensure environment variables are read.
-require("../config/env");
-
-const path = require("path");
-const chalk = require("react-dev-utils/chalk");
-const fs = require("fs-extra");
-const bfj = require("bfj");
-const webpack = require("webpack");
-const configFactory = require("../config/webpack.config");
-const paths = require("../config/paths");
-const checkRequiredFiles = require("react-dev-utils/checkRequiredFiles");
-const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
-const printHostingInstructions = require("react-dev-utils/printHostingInstructions");
-const FileSizeReporter = require("react-dev-utils/FileSizeReporter");
-const printBuildError = require("react-dev-utils/printBuildError");
+const appPackage = JSON.parse(fs.readFileSync(paths.appPackageJson));
 
 const measureFileSizesBeforeBuild =
   FileSizeReporter.measureFileSizesBeforeBuild;
@@ -49,7 +49,6 @@ const config = configFactory("production");
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
-const { checkBrowsers } = require("react-dev-utils/browsersHelper");
 checkBrowsers(paths.appPath, isInteractive)
   .then(() => {
     // First, read the current file sizes in build directory.
@@ -94,7 +93,6 @@ checkBrowsers(paths.appPath, isInteractive)
       );
       console.log();
 
-      const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrlOrPath;
       const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);

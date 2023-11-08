@@ -7,6 +7,11 @@
   width: 100%;
 
   section {
+    --contrast-boost-bg: #191919;
+    --contrast-boost-shadow: 2px 2px 3px var(--contrast-boost-bg),
+      2px -2px 3px var(--contrast-boost-bg),
+      -2px -2px 3px var(--contrast-boost-bg),
+      -2px 2px 3px var(--contrast-boost-bg);
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -47,6 +52,11 @@
     p {
       font-weight: 300;
     }
+
+    h1,
+    p {
+      text-shadow: var(--contrast-boost-shadow);
+    }
   }
 
   .homepage-hero-bg {
@@ -79,6 +89,7 @@
       background-color: rgba(1, 1, 1, 0.5);
       border-radius: 10rem;
       padding: 2rem;
+      width: 100%;
 
       &:focus {
         border-color: var(--field-focus-border);
@@ -93,6 +104,7 @@
     .search-widget {
       display: flex;
       gap: 0;
+      width: 100%;
     }
 
     .search-results {

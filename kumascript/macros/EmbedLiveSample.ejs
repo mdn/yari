@@ -19,7 +19,7 @@
 // When there will be 0 use left on translated-content (May 2022: 203 occurrences for $4),
 // we will be able to simplify this macro (and likely the whole of MDN).
 if ($4 !== "" || $5 !== "" || $6 !== "") {
-  mdn.deprecated("The fourth to sixth parameters of 'EmbedLiveSample' are deprecated");
+  mdn.deprecatedParams("The fourth to sixth parameters of 'EmbedLiveSample' are deprecated");
 }
 
 var sampleIdOrOffset = $0 || $token.location.start.offset;
@@ -68,7 +68,8 @@ if (sampleSlug) {
       }
     }
 }
-var url = await template('LiveSampleURL', [sampleIdOrOffset, sampleUrl]);
+var id = web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset));
+var url = await template('LiveSampleURL', [id, sampleUrl]);
 
 if (hasScreenshot) {
 %><table class="sample-code-table"><%
@@ -85,12 +86,13 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="<%= className %>"<%
-%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
+%><div class="code-example"><p class="example-header"></p><iframe class="<%= className %>"<%
+%> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
-%>></iframe><%
+sandbox="allow-scripts allow-same-origin"
+%>></iframe></div><%
 if (hasScreenshot) { %></td></tr></tbody></table><% } %>

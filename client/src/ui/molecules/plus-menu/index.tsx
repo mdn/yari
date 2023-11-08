@@ -16,7 +16,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const { isViewed } = useViewedState();
 
   const plusMenu: MenuEntry = {
-    label: "MDN Plus",
+    label: "Plus",
     id: "mdn-plus",
     to: plusUrl,
     items: [
@@ -27,6 +27,13 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "Overview",
         url: plusUrl,
       },
+      {
+        description: "Get real-time assistance and support",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "AI Help (beta)",
+        url: `/${locale}/plus/ai-help`,
+      },
       ...(!isServer && isAuthenticated
         ? [
             {
@@ -35,13 +42,6 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
               iconClasses: "submenu-icon",
               label: "Collections",
               url: `/${locale}/plus/collections`,
-            },
-            {
-              description: "Updates from the pages you’re watching",
-              hasIcon: true,
-              iconClasses: "submenu-icon",
-              label: "Notifications",
-              url: `/${locale}/plus/notifications`,
             },
           ]
         : []),

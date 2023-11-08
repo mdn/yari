@@ -58,15 +58,3 @@ examples and large video files. You can also indicate you prefer offline content
 even when online.
 
 > NOTE: MDN Offline cannot be used while in a private or incognito window.
-
-### Collections
-
-Previously saved pages will appear as such, and you will be able to browse your
-**Collections**. However, editing a saved page (adding/removing) does not work
-without an active internet connection.
-
-### Notifications
-
-Previously received notifications will be displayed and can be read. However,
-notifications read while in offline mode will not be marked as read for later,
-and cannot be starred or deleted without an active internet connection.

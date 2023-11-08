@@ -1,4 +1,4 @@
-import { assert, itMacro, describeMacro } from "./utils";
+import { assert, itMacro, describeMacro } from "./utils.js";
 import { JSDOM } from "jsdom";
 
 const locales = {

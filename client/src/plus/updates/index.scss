@@ -8,11 +8,6 @@
     --plus-link: var(--updates-link);
   }
 
-  button.button[disabled],
-  input[disabled] {
-    cursor: not-allowed;
-  }
-
   .reset-filters {
     --button-action-transform: none;
 

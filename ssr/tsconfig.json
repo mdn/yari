@@ -1,6 +1,5 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": true
-  }
+  "extends": "../client/tsconfig.json",
+  "include": ["."],
+  "exclude": ["dist"]
 }

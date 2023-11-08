@@ -82,7 +82,9 @@ function Settings() {
   useEffect(() => {
     const mdnWorker = getMDNWorker();
     const isWorkerBusy = status?.phase
-      ? status?.phase !== ContentStatusPhase.IDLE
+      ? ![ContentStatusPhase.INITIAL, ContentStatusPhase.IDLE].includes(
+          status?.phase
+        )
       : false;
     mdnWorker.toggleKeepAlive(isWorkerBusy);
 

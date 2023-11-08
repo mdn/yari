@@ -1,6 +1,9 @@
 import useSWR from "swr";
-import { CRUD_MODE } from "../../env";
-import { HydrationData, isStaticPageData } from "../../types/hydration";
+import { DEV_MODE } from "../../env";
+import {
+  HydrationData,
+  isStaticPageData,
+} from "../../../../libs/types/hydration";
 
 import "./index.scss";
 
@@ -18,7 +21,7 @@ export default function FeaturedArticles(props: HydrationData) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: DEV_MODE,
       revalidateOnMount: !fallbackData,
     }
   );
@@ -26,7 +29,7 @@ export default function FeaturedArticles(props: HydrationData) {
   return isStaticPageData(hyData, "featuredArticles") &&
     hyData.featuredArticles.length ? (
     <div className="featured-articles">
-      <h2>Featured Articles</h2>
+      <h2>Featured articles</h2>
       <div className="tile-container">
         {hyData.featuredArticles.map((article) => {
           return (
