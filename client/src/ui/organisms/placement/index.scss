@@ -54,6 +54,18 @@ section.place {
       text-decoration: underline;
       width: max-content;
     }
+
+    a.pong-note {
+      &:link,
+      &:visited {
+        text-decoration: underline;
+      }
+
+      &:focus,
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 
   .no-pong {
