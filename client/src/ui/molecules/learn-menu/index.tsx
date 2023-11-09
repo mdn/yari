@@ -56,7 +56,7 @@ export const LearnMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Accessibility",
-        url: `/${locale}/docs/Web/Accessibility`,
+        url: `/${locale}/docs/Learn/Accessibility`,
       },
     ],
   };
