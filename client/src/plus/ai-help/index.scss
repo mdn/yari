@@ -50,14 +50,25 @@
       padding: var(--gutter);
 
       &.ai-help-header {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        margin-bottom: 1rem;
+        > h1 {
+          margin-bottom: 0.7rem;
 
-        > h1,
+          &::after {
+            background-color: var(--ai-help-icon);
+            content: "";
+            display: inline-block;
+            height: 1.1rem;
+            mask-image: url("../../assets/icons/ai-help.svg");
+            mask-position: center center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            vertical-align: top;
+            width: 1.25rem;
+          }
+        }
+
         > p {
+          color: var(--text-secondary);
           margin: 0;
         }
       }
@@ -111,11 +122,25 @@
       }
 
       .ai-help-footer-text {
+        align-items: center;
+        display: flex;
         font-size: var(--type-tiny-font-size);
-        margin-left: calc(
-          var(--input-border-width) + var(--input-padding-left)
-        );
+        gap: 1em;
         margin-top: 0.5rem;
+
+        @media screen and (max-width: $screen-md) {
+          flex-direction: column;
+        }
+
+        .feedback-link {
+          --text-link: var(--text-primary);
+          flex-shrink: 0;
+
+          @media screen and (min-width: $screen-md) {
+            --text-link: var(--text-secondary);
+            font-size: var(--type-smaller-font-size);
+          }
+        }
       }
 
       .ai-help-refine-button {

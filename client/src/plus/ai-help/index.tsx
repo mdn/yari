@@ -101,18 +101,6 @@ export default function AiHelp() {
           <p>
             Get answers using generative AI based on MDN content.
             <br />
-            <a
-              href={
-                user?.isAuthenticated
-                  ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
-                  : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
-              }
-              target="_blank"
-              rel="noreferrer noopener"
-              className="external"
-            >
-              We'd love to hear your feedback!
-            </a>
           </p>
         </Container>
         <Container>
@@ -307,6 +295,7 @@ export function AIHelpInner() {
   const isQuotaLoading = quota === undefined;
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
+  const gptVersion = user?.experiments?.config?.gpt4 ? "GPT-4" : "GPT-3.5";
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
@@ -764,7 +753,7 @@ export function AIHelpInner() {
                   <div className="ai-help-footer-text">
                     <span>
                       Results based on MDN's most recent documentation and
-                      powered by GPT-3.5, an LLM by{" "}
+                      powered by {gptVersion}, an LLM by{" "}
                       <a
                         href="https://platform.openai.com/docs/api-reference/models"
                         className="external"
@@ -800,8 +789,8 @@ export function AIHelpInner() {
                       </header>
                       <div className="modal-body">
                         <p>
-                          Our AI Help feature employs GPT-3.5, a Large Language
-                          Model (LLM) developed by{" "}
+                          Our AI Help feature employs {gptVersion}, a Large
+                          Language Model (LLM) developed by{" "}
                           <a
                             href="https://platform.openai.com/docs/api-reference/models"
                             className="external"
@@ -838,6 +827,18 @@ export function AIHelpInner() {
                         </p>
                       </div>
                     </MDNModal>
+                    <a
+                      href={
+                        user?.isAuthenticated
+                          ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
+                          : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
+                      }
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="feedback-link"
+                    >
+                      Report Feedback
+                    </a>
                   </div>
                 </>
               )}
