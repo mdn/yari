@@ -3,12 +3,12 @@ import { Menu } from "../menu";
 
 import "./index.scss";
 
-export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
+export const LearnMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
 
   const menu = {
-    id: "guides",
-    label: "Guides",
+    id: "learn",
+    label: "Learn",
     to: `/${locale}/docs/Learn`,
     items: [
       {
