@@ -537,17 +537,12 @@ export function AIHelpInner() {
                                       </div>
                                     );
                                   },
-                                  code: ({
-                                    inline,
-                                    className,
-                                    children,
-                                    ...props
-                                  }) => {
+                                  code: ({ className, children, ...props }) => {
                                     const match = /language-(\w+)/.exec(
                                       className || ""
                                     );
                                     const lang = Prism.languages[match?.[1]];
-                                    return !inline && lang ? (
+                                    return lang ? (
                                       <code
                                         {...props}
                                         className={className}
