@@ -2949,6 +2949,17 @@
     "@sentry/types" "8.29.0"
     "@sentry/utils" "8.29.0"
 
+"@sentry/browser@7.80.0":
+  version "7.80.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-7.80.0.tgz#385fb59ac1d52b67919087f3d7044575ae0abbdd"
+  integrity sha512-Ngwjc+yyf/aH5q7iQM1LeDNlhM1Ilt4ZLUogTghZR/guwNWmCtk3OHcjOLz7fxBBj9wGFUc2pHPyeYM6bQhrEw==
+  dependencies:
+    "@sentry-internal/tracing" "7.80.0"
+    "@sentry/core" "7.80.0"
+    "@sentry/replay" "7.80.0"
+    "@sentry/types" "7.80.0"
+    "@sentry/utils" "7.80.0"
+
 "@sentry/node@^8.29.0":
   version "8.29.0"
   resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.29.0.tgz#6e462b8802356a630c56733dc795a4035464c4ab"
@@ -2995,6 +3006,26 @@
     "@sentry/core" "8.29.0"
     "@sentry/types" "8.29.0"
     "@sentry/utils" "8.29.0"
+
+"@sentry/react@^7.80.0":
+  version "7.80.0"
+  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-7.80.0.tgz#ee589ff202174ced45e77dc2714237031ca9c726"
+  integrity sha512-xoX7fqgY0NZR9Fud/IJ4a3b8Z/HsdwU5SLILi46lV+CWaXS6eFM1E81jG2Vd2EeYIpkH+bMA//XHMEod8LAJcQ==
+  dependencies:
+    "@sentry/browser" "7.80.0"
+    "@sentry/types" "7.80.0"
+    "@sentry/utils" "7.80.0"
+    hoist-non-react-statics "^3.3.2"
+
+"@sentry/replay@7.80.0":
+  version "7.80.0"
+  resolved "https://registry.yarnpkg.com/@sentry/replay/-/replay-7.80.0.tgz#0626d85af1d8573038d52ae9e244e3e95fa47385"
+  integrity sha512-wWnpuJq3OaDLp1LutE4oxWXnau04fvwuzBjuaFvOXOV+pB/kn+pDPuVOC5+FH/RMRZ5ftwX5+dF6fojfcLVGCg==
+  dependencies:
+    "@sentry-internal/tracing" "7.80.0"
+    "@sentry/core" "7.80.0"
+    "@sentry/types" "7.80.0"
+    "@sentry/utils" "7.80.0"
 
 "@sentry/types@8.29.0":
   version "8.29.0"
@@ -8711,6 +8742,13 @@ history@^5.2.0:
   dependencies:
     "@babel/runtime" "^7.7.6"
 
+hoist-non-react-statics@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
+  integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
+  dependencies:
+    react-is "^16.7.0"
+
 hoopy@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/hoopy/-/hoopy-0.1.4.tgz#609207d661100033a9a9402ad3dea677381c1b1d"
@@ -13265,7 +13303,7 @@ react-dom@^18.3.1:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-is@^16.13.1:
+react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==

@@ -159,6 +159,12 @@ jobs:
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
+
+          # Sentry.
+          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_CLIENT }}
+          REACT_APP_SENTRY_ENVIRONMENT: test
+          REACT_APP_SENTRY_RELEASE: ${{ github.sha }}
+
         run: |
           set -eo pipefail
 
