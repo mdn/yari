@@ -98,10 +98,19 @@ export default function AiHelp() {
           <h1>
             <span>AI Help</span>
           </h1>
-          <p>
-            Get answers using generative AI based on MDN content.
-            <br />
-          </p>
+          <p>Get answers using generative AI based on MDN content.</p>
+          <a
+            href={
+              user?.isAuthenticated
+                ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
+                : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
+            }
+            target="_blank"
+            rel="noreferrer noopener"
+            className="feedback-link"
+          >
+            Report Feedback
+          </a>
         </Container>
         <Container>
           <div className="notecard experimental">
@@ -827,18 +836,6 @@ export function AIHelpInner() {
                         </p>
                       </div>
                     </MDNModal>
-                    <a
-                      href={
-                        user?.isAuthenticated
-                          ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
-                          : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
-                      }
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="feedback-link"
-                    >
-                      Report Feedback
-                    </a>
                   </div>
                 </>
               )}

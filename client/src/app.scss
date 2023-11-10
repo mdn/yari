@@ -354,7 +354,7 @@ sup.new {
 }
 
 .feedback-link::before {
-  background-color: var(--text-link);
+  background-color: var(--feedback-link-icon, var(--text-link));
   content: "";
   display: inline-flex;
   height: 1em;
