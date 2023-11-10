@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.35.0](https://github.com/mdn/yari/compare/v2.34.2...v2.35.0) (2023-11-10)
+
+
+### Features
+
+* **macro-usage-report:** add CSV output format ([#9996](https://github.com/mdn/yari/issues/9996)) ([85e9afa](https://github.com/mdn/yari/commit/85e9afaf136828618945551d99710b2fdbc5c7ee))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/core from 7.23.2 to 7.23.3 ([#9986](https://github.com/mdn/yari/issues/9986)) ([19c2d93](https://github.com/mdn/yari/commit/19c2d939ba81673bf2bdf0befbb0c584b7890eba))
+* **deps-dev:** bump @babel/eslint-parser from 7.22.15 to 7.23.3 ([#9991](https://github.com/mdn/yari/issues/9991)) ([e96005e](https://github.com/mdn/yari/commit/e96005e97a40d9dc411442d469bdadd35b8c914f))
+* **deps-dev:** bump @babel/preset-env from 7.23.2 to 7.23.3 ([#9987](https://github.com/mdn/yari/issues/9987)) ([2d059c8](https://github.com/mdn/yari/commit/2d059c82d2879aa3b084935deaeec8a9b0d3fb05))
+* **deps-dev:** bump eslint-plugin-n from 16.3.0 to 16.3.1 ([#9999](https://github.com/mdn/yari/issues/9999)) ([4d24433](https://github.com/mdn/yari/commit/4d24433a17762eed5a1994c6a0a231ccf6e65ab3))
+* **deps:** bump @mdn/browser-compat-data from 5.3.29 to 5.3.30 ([#10000](https://github.com/mdn/yari/issues/10000)) ([0d4d603](https://github.com/mdn/yari/commit/0d4d603de9b2ae344370c7adc2819d0182d891a1))
+* **deps:** bump markdown dependencies ([#9980](https://github.com/mdn/yari/issues/9980)) ([49979f1](https://github.com/mdn/yari/commit/49979f19c6d062fd6f725549295b62415f59de19))
+* **deps:** bump mdn-data from 2.2.0 to 2.3.0 ([#9989](https://github.com/mdn/yari/issues/9989)) ([696bd7e](https://github.com/mdn/yari/commit/696bd7ec19dd43ffa0a06ae43ea9c3cf741d64bd))
+* **deps:** bump openai from 4.16.1 to 4.17.0 ([#9990](https://github.com/mdn/yari/issues/9990)) ([7a66c1b](https://github.com/mdn/yari/commit/7a66c1bf664ad340018a0d3a8aa5a98d029c7d05))
+* **deps:** bump openai from 4.17.0 to 4.17.3 ([#9998](https://github.com/mdn/yari/issues/9998)) ([209ef20](https://github.com/mdn/yari/commit/209ef20fe1bc00ced7014c0973fb6c32e4b03755))
+* **deps:** bump the sentry group with 2 updates ([#9983](https://github.com/mdn/yari/issues/9983)) ([e094662](https://github.com/mdn/yari/commit/e094662180d23678189b8f0038331b9fca060d52))
+* **deps:** bump the sentry group with 2 updates ([#9997](https://github.com/mdn/yari/issues/9997)) ([c2264e4](https://github.com/mdn/yari/commit/c2264e41051ff80d01e16b580a8e0c177e9380da))
+* **deps:** bump web-specs from 2.72.0 to 2.73.0 ([#10001](https://github.com/mdn/yari/issues/10001)) ([4afa36d](https://github.com/mdn/yari/commit/4afa36d07bcfc9c54da77cb14d39a2725ca3ec66))
+* **flaws:** exclude /discord from broken-link flaw ([#10007](https://github.com/mdn/yari/issues/10007)) ([c72d8bc](https://github.com/mdn/yari/commit/c72d8bca2fdcab7aecb7ccad6b4ba2e38b62f6a5))
+* **footer:** update Careers link ([#9995](https://github.com/mdn/yari/issues/9995)) ([abc8f4e](https://github.com/mdn/yari/commit/abc8f4eedd1a616bbe6f428eb1687a9ac79cb2c3))
+* **macros/CSSRef:** add Border-radius generator ([#9994](https://github.com/mdn/yari/issues/9994)) ([b499b71](https://github.com/mdn/yari/commit/b499b719bb8ce11011252198127227652d10aa7b))
+* **macros:** delete {spec,spec2,SpecName} macros ([#9982](https://github.com/mdn/yari/issues/9982)) ([4cfbb82](https://github.com/mdn/yari/commit/4cfbb82c173883b46fca945dcaadf1c62d149717))
+
 ## [2.34.2](https://github.com/mdn/yari/compare/v2.34.1...v2.34.2) (2023-11-08)
 
 
