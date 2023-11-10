@@ -100,6 +100,11 @@ export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
 
+export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || "";
+export const SENTRY_ENVIRONMENT =
+  process.env.REACT_APP_SENTRY_ENVIRONMENT || "";
+export const SENTRY_RELEASE = process.env.REACT_APP_SENTRY_RELEASE || "";
+
 export const AI_FEEDBACK_GITHUB_REPO =
   process.env.REACT_APP_AI_FEEDBACK_GITHUB_REPO || "mdn/private-ai-feedback";
 
