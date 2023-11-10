@@ -414,7 +414,7 @@ function config(webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
-      // Treeshake Sentry.
+      // Treeshake Sentry (saves about 12 kB on the chunk).
       new webpack.DefinePlugin({
         __SENTRY_DEBUG__: false,
         __SENTRY_TRACING__: false,
