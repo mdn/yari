@@ -132,15 +132,11 @@ function formatCell(files: string[]): string {
   return `<span title="${files[0]} …">${files.length}</span>`;
 }
 
-async function writeMarkdownTable(
+function createTable(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
-  {
-    deprecatedMacros,
-  }: {
-    deprecatedMacros: string[];
-  }
+  deprecatedMacros: string[]
 ) {
   const columns = ["yari"];
   const paths = [MACROS_PATH];
@@ -153,31 +149,55 @@ async function writeMarkdownTable(
     }
   }
 
+  const table: any[][] = [["macro", ...columns]];
+
+  const macros = Object.keys(filesByMacro);
+  for (const macro of macros) {
+    const files = filesByMacro[macro];
+    const macroCell = deprecatedMacros.includes(macro) ? `${macro} 🗑` : macro;
+
+    table.push([
+      macroCell,
+      ...paths.map((path) => filterFilesByBase(files, path)),
+    ]);
+  }
+
+  return table;
+}
+
+function writeMarkdownTable(
+  filesByMacro: {
+    [macro: string]: Iterable<string>;
+  },
+  {
+    deprecatedMacros,
+  }: {
+    deprecatedMacros: string[];
+  }
+) {
+  const table = createTable(filesByMacro, deprecatedMacros);
+  const headerRow = table.shift();
+
+  process.stdout.write(`| ${headerRow.join(" | ")} |\n`);
   process.stdout.write(
-    `| macro |${columns.map((column) => ` ${column} `).join("|")}|\n`
-  );
-  process.stdout.write(
-    `|:----- |${columns
+    `|:----- |${headerRow
+      .slice(1)
       .map((column) => ` ${"-".repeat(column.length)}:`)
       .join("|")}|\n`
   );
 
-  const macros = Object.keys(filesByMacro);
-
-  for (const macro of macros) {
-    const files = filesByMacro[macro];
-    const macroCell = deprecatedMacros.includes(macro) ? `${macro} 🗑` : macro;
-
-    const cells = [
-      macroCell,
-      ...paths.map((path) => formatCell(filterFilesByBase(files, path))),
-    ];
-
-    process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
+  for (const row of table) {
+    process.stdout.write(
+      `| ${row
+        .map((cell) =>
+          Array.isArray(cell) ? ` ${formatCell(cell)} ` : ` ${cell} `
+        )
+        .join(" | ")} |\n`
+    );
   }
 }
 
-async function writeCsvTable(
+function writeCsvTable(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
@@ -187,34 +207,13 @@ async function writeCsvTable(
     deprecatedMacros: string[];
   }
 ) {
-  const columns = ["yari"];
-  const paths = [MACROS_PATH];
-
-  for (const locale of ACTIVE_LOCALES) {
-    const path = getPathByLocale(locale);
-    if (path) {
-      columns.push(locale);
-      paths.push(path);
-    }
-  }
-
-  process.stdout.write(
-    `macro,${columns.map((column) => ` ${column} `).join(",")}\n`
-  );
-
-  const macros = Object.keys(filesByMacro);
-
-  for (const macro of macros) {
-    const files = filesByMacro[macro];
-    const macroCell = deprecatedMacros.includes(macro) ? `${macro} 🗑` : macro;
-
-    const cells = [
-      macroCell,
-      ...paths.map((path) => filterFilesByBase(files, path).length),
-    ];
-
-    process.stdout.write(cells.join(","));
-    process.stdout.write("\n");
+  const table = createTable(filesByMacro, deprecatedMacros);
+  for (const row of table) {
+    process.stdout.write(
+      `${row
+        .map((cell) => (Array.isArray(cell) ? `${cell.length}` : `${cell}`))
+        .join(",")}\n`
+    );
   }
 }
 
