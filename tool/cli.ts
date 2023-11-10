@@ -85,7 +85,7 @@ interface DeleteActionParameters extends ActionParameters {
     locale: string;
   };
   options: {
-    nonRecursive: boolean;
+    recursive: boolean;
     redirect?: string;
     yes: boolean;
   };
@@ -339,18 +339,18 @@ program
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .option("-s, --non-recursive", "Do not delete children", { default: false })
+  .option("-r, --recursive", "Delete children", { default: false })
   .option(
     "--redirect <redirect>",
-    "Redirect document, and its children (if --non-recursive is false), to the URL <redirect>"
+    "Redirect document, and its children (if --recursive is true), to the URL <redirect>"
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
     tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
-      const { nonRecursive, redirect, yes } = options;
+      const { recursive, redirect, yes } = options;
       const changes = await Document.remove(slug, locale, {
-        recursive: !nonRecursive,
+        recursive,
         redirect,
         dry: true,
       });
@@ -360,7 +360,7 @@ program
         console.log(
           chalk.green(
             `Redirecting ${
-              nonRecursive ? "document" : "each document"
+              recursive ? "each document" : "document"
             } to: ${redirect}`
           )
         );
@@ -381,7 +381,7 @@ program
           });
       if (run) {
         const deletedDocs = await Document.remove(slug, locale, {
-          recursive: !nonRecursive,
+          recursive,
           redirect,
         });
         console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));

@@ -609,7 +609,7 @@ export function validate(slug: string, locale: string) {
 export async function remove(
   slug: string,
   locale: string,
-  { recursive = true, dry = false, redirect = "" } = {}
+  { recursive = false, dry = false, redirect = "" } = {}
 ) {
   const root = getRoot(locale, `cannot find root of locale: ${locale}`);
   const url = buildURL(locale, slug);
