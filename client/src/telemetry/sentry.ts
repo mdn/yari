@@ -19,6 +19,9 @@ function loadSentry(): Promise<any> {
 }
 
 export function initSentry() {
+  if (!SENTRY_DSN) {
+    return;
+  }
   let removeEventListener: (() => void) | null = null;
   const capturedMessages = new Set<string>();
   const errorHandler = (event: ErrorEvent) => {
