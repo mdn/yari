@@ -28,7 +28,7 @@ export default function WritersHomepage() {
             </p>
             <Search id="writers-hp-search" isHomepageSearch={true} />
           </section>
-          <Mandala rotate={true} extraClasses="homepage-hero-bg" />
+          <Mandala extraClasses="homepage-hero-bg" />
         </div>
 
         <div className="container">
