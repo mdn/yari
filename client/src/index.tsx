@@ -8,8 +8,8 @@ import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
 import { GleanProvider } from "./telemetry/glean-context";
 import { PlacementProvider } from "./placement-context";
-import { initSentry } from "./telemetry/sentry";
 import { SENTRY_DSN } from "./env";
+import { initSentry } from "./telemetry/sentry";
 
 // import * as serviceWorker from './serviceWorker';
 if (SENTRY_DSN) {
