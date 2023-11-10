@@ -9,7 +9,7 @@ function loadSentry(): Promise<any> {
     ).then((Sentry) => {
       Sentry.init({
         dsn: SENTRY_DSN,
-        release: SENTRY_RELEASE,
+        release: SENTRY_RELEASE || "dev",
         environment: SENTRY_ENVIRONMENT || "dev",
       });
       return Sentry;
