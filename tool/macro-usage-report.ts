@@ -177,6 +177,47 @@ async function writeMarkdownTable(
   }
 }
 
+async function writeCsvTable(
+  filesByMacro: {
+    [macro: string]: Iterable<string>;
+  },
+  {
+    deprecatedMacros,
+  }: {
+    deprecatedMacros: string[];
+  }
+) {
+  const columns = ["yari"];
+  const paths = [MACROS_PATH];
+
+  for (const locale of ACTIVE_LOCALES) {
+    const path = getPathByLocale(locale);
+    if (path) {
+      columns.push(locale);
+      paths.push(path);
+    }
+  }
+
+  process.stdout.write(
+    `macro,${columns.map((column) => ` ${column} `).join(",")}\n`
+  );
+
+  const macros = Object.keys(filesByMacro);
+
+  for (const macro of macros) {
+    const files = filesByMacro[macro];
+    const macroCell = deprecatedMacros.includes(macro) ? `${macro} 🗑` : macro;
+
+    const cells = [
+      macroCell,
+      ...paths.map((path) => filterFilesByBase(files, path).length),
+    ];
+
+    process.stdout.write(cells.join(","));
+    process.stdout.write("\n");
+  }
+}
+
 function writeJson(
   filesByMacro: {
     [macro: string]: Iterable<string>;
@@ -215,7 +256,7 @@ export async function macroUsageReport({
   unusedOnly,
 }: {
   deprecatedOnly: boolean;
-  format: "md-table" | "json";
+  format: "md-table" | "csv" | "json";
   unusedOnly: boolean;
 }) {
   const macros = await getMacros();
@@ -236,6 +277,9 @@ export async function macroUsageReport({
   switch (format) {
     case "md-table":
       return writeMarkdownTable(filesByMacro, { deprecatedMacros });
+
+    case "csv":
+      return writeCsvTable(filesByMacro, { deprecatedMacros });
 
     case "json":
       return writeJson(filesByMacro, { deprecatedMacros });
