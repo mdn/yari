@@ -20,13 +20,17 @@ function loadSentry(): Promise<any> {
 
 export function initSentry(dsn: string) {
   let removeEventListener: (() => void) | null = null;
+  const capturedMessages = new Set<string>();
   const errorHandler = (event: ErrorEvent) => {
     loadSentry().then((Sentry) => {
       if (removeEventListener) {
         removeEventListener();
         removeEventListener = null;
       }
-      Sentry.captureException(event);
+      if (!capturedMessages.has(event.message)) {
+        Sentry.captureException(event);
+        capturedMessages.add(event.message);
+      }
     });
   };
   window.addEventListener("error", errorHandler);
