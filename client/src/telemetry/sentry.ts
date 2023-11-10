@@ -1,23 +1,20 @@
-import {
-  BrowserClient,
-  Dedupe,
-  GlobalHandlers,
-  defaultStackParser,
-  getCurrentHub,
-  makeFetchTransport,
-} from "@sentry/browser";
-
 import { SENTRY_ENVIRONMENT, SENTRY_RELEASE } from "../env";
 
 export function initSentry(dsn: string) {
-  const client = new BrowserClient({
-    dsn,
-    release: SENTRY_RELEASE,
-    environment: SENTRY_ENVIRONMENT || "dev",
-    transport: makeFetchTransport,
-    stackParser: defaultStackParser,
-    integrations: [new GlobalHandlers(), new Dedupe()],
+  let events: ErrorEvent[] = [];
+  const errorHandler = (event: ErrorEvent) => {
+    events.push(event);
+  };
+  window.addEventListener("error", errorHandler);
+  import(/* webpackChunkName: "sentry" */ "@sentry/react").then((Sentry) => {
+    Sentry.init({
+      dsn,
+      release: SENTRY_RELEASE,
+      environment: SENTRY_ENVIRONMENT || "dev",
+    });
+    window.removeEventListener("error", errorHandler);
+    for (const event of events) {
+      Sentry.captureException(event);
+    }
   });
-
-  getCurrentHub().bindClient(client);
 }
