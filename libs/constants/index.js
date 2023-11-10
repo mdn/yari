@@ -106,6 +106,7 @@ export const CSP_DIRECTIVES = {
 
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
+    "*.sentry.io",
     "https://api.stripe.com",
   ],
   "font-src": ["'self'"],
