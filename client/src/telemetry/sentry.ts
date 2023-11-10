@@ -1,5 +1,7 @@
 import {
   BrowserClient,
+  Dedupe,
+  GlobalHandlers,
   defaultStackParser,
   getCurrentHub,
   makeFetchTransport,
@@ -14,7 +16,7 @@ export function initSentry(dsn: string) {
     environment: SENTRY_ENVIRONMENT || "dev",
     transport: makeFetchTransport,
     stackParser: defaultStackParser,
-    integrations: [],
+    integrations: [new GlobalHandlers(), new Dedupe()],
   });
 
   getCurrentHub().bindClient(client);
