@@ -169,11 +169,7 @@ function writeMarkdownTable(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
-  {
-    deprecatedMacros,
-  }: {
-    deprecatedMacros: string[];
-  }
+  deprecatedMacros: string[]
 ) {
   const table = createTable(filesByMacro, deprecatedMacros);
   const headerRow = table.shift();
@@ -201,11 +197,7 @@ function writeCsvTable(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
-  {
-    deprecatedMacros,
-  }: {
-    deprecatedMacros: string[];
-  }
+  deprecatedMacros: string[]
 ) {
   const table = createTable(filesByMacro, deprecatedMacros);
   for (const row of table) {
@@ -221,11 +213,7 @@ function writeJson(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
-  {
-    deprecatedMacros,
-  }: {
-    deprecatedMacros: string[];
-  }
+  deprecatedMacros: string[]
 ) {
   const result = {};
   const macros = Object.keys(filesByMacro);
@@ -275,12 +263,12 @@ export async function macroUsageReport({
 
   switch (format) {
     case "md-table":
-      return writeMarkdownTable(filesByMacro, { deprecatedMacros });
+      return writeMarkdownTable(filesByMacro, deprecatedMacros);
 
     case "csv":
-      return writeCsvTable(filesByMacro, { deprecatedMacros });
+      return writeCsvTable(filesByMacro, deprecatedMacros);
 
     case "json":
-      return writeJson(filesByMacro, { deprecatedMacros });
+      return writeJson(filesByMacro, deprecatedMacros);
   }
 }
