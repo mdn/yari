@@ -252,8 +252,10 @@ export async function buildBlogIndex(options: { verbose?: boolean }) {
   const jsonFilePath = path.join(outPath, "index.json");
 
   await fs.mkdir(outPath, { recursive: true });
-  await fs.writeFile(filePath, html);
-  await fs.writeFile(jsonFilePath, JSON.stringify(context));
+  await Promise.all([
+    fs.writeFile(filePath, html),
+    fs.writeFile(jsonFilePath, JSON.stringify(context)),
+  ]);
 
   if (options.verbose) {
     console.log("Wrote", filePath);
@@ -335,8 +337,10 @@ export async function buildBlogPosts(options: {
     const jsonFilePath = path.join(outPath, "index.json");
 
     await fs.mkdir(outPath, { recursive: true });
-    await fs.writeFile(filePath, html);
-    await fs.writeFile(jsonFilePath, JSON.stringify(context));
+    await Promise.all([
+      fs.writeFile(filePath, html),
+      fs.writeFile(jsonFilePath, JSON.stringify(context)),
+    ]);
 
     if (options.verbose) {
       console.log("Wrote", filePath);
