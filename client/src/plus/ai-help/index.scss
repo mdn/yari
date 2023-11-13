@@ -16,6 +16,7 @@
     column-gap: 1rem;
     display: grid;
     grid-template-columns: [left] 1fr [center] min(52rem, 100%) [right] 1fr;
+    grid-template-rows: auto auto 1fr;
     margin: 0 auto;
     max-width: var(--max-width);
     padding-left: 1rem;
