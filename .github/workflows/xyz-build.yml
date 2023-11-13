@@ -153,6 +153,11 @@ jobs:
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
 
+          # Sentry.
+          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_CLIENT }}
+          REACT_APP_SENTRY_ENVIRONMENT: xyz
+          REACT_APP_SENTRY_RELEASE: ${{ github.sha }}
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
