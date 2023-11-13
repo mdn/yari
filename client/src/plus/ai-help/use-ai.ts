@@ -259,17 +259,19 @@ interface Storage {
 }
 
 class AiHelpHistory {
-  static async getMessages(chatId): Promise<Storage | undefined> {
-    const res = await (
-      await fetch(`/api/v1/plus/ai/help/history/${chatId}`)
-    ).json();
-    if (!res.chat_id) {
-      return;
+  static async getMessages(chatId): Promise<Storage> {
+    const res = await fetch(`/api/v1/plus/ai/help/history/${chatId}`);
+    if (!res.ok) {
+      throw new Error(`${res.status}: ${res.statusText}`);
+    }
+    const data = await res.json();
+    if (!data.chat_id) {
+      throw new Error("no chat id");
     }
     // messages are ordered ascending.
     const root: MessageTreeNode[] = [];
     const nodes = {};
-    for (const message of res.messages || []) {
+    for (const message of data.messages || []) {
       const node = {
         messageId: message.metadata.message_id,
         parentId: message.metadata.parent_id,
@@ -390,6 +392,7 @@ export function useAiChat({
     resetLoadingState();
     setSearchParams((prev) => {
       prev.delete("c");
+      prev.delete("d");
       return prev;
     });
     setPath([]);
@@ -399,20 +402,39 @@ export function useAiChat({
     });
   }, [setSearchParams, chatId]);
 
+  const handleError = useCallback((err: any) => {
+    setIsLoading(false);
+    setIsResponding(false);
+    setHasError(true);
+    console.error(err);
+  }, []);
+
   useEffect(() => {
     const convId = searchParams.get("c");
     if (convId && convId !== chatId) {
       (async () => {
         setIsHistoryLoading(true);
-        const { treeState } = (await AiHelpHistory.getMessages(convId)) || {};
-        if (treeState) {
+        try {
+          const { treeState } = await AiHelpHistory.getMessages(convId);
+          if (treeState) {
+            setPreviousChatId(undefined);
+            setChatId(convId);
+            setPath([]);
+            dispatchState({
+              type: "set-state",
+              treeState,
+            });
+          } else {
+            throw new Error("no treeState");
+          }
+        } catch (e) {
           setPreviousChatId(undefined);
           setChatId(convId);
           setPath([]);
           dispatchState({
-            type: "set-state",
-            treeState,
+            type: "reset",
           });
+          handleError(e);
         }
         setIsHistoryLoading(false);
       })();
@@ -421,7 +443,7 @@ export function useAiChat({
     if (r) {
       reset();
     }
-  }, [searchParams, chatId, reset]);
+  }, [searchParams, chatId, reset, handleError]);
 
   useEffect(() => {
     if (
@@ -439,13 +461,6 @@ export function useAiChat({
       setQuota(remoteQuota);
     }
   }, [remoteQuota]);
-
-  const handleError = useCallback((err: any) => {
-    setIsLoading(false);
-    setIsResponding(false);
-    setHasError(true);
-    console.error(err);
-  }, []);
 
   const handleEventData = useCallback(
     (data: any) => {
