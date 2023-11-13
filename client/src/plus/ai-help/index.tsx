@@ -255,7 +255,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       <div className="ai-help-user-message">{message.content}</div>
       <Button
         type="action"
-        icon="edit"
+        icon="edit-filled"
         onClickHandler={() => setEditing(true)}
       />
     </div>

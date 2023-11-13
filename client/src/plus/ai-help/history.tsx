@@ -106,7 +106,7 @@ function AIHelpHistorySubList({
               {chat_id === currentChatId && (
                 <Button
                   type="action"
-                  icon="trash"
+                  icon="trash-filled"
                   onClickHandler={async () => {
                     if (
                       window.confirm(

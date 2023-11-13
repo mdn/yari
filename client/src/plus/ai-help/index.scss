@@ -369,6 +369,14 @@
     .ai-help-message-content {
       width: 100%;
 
+      .button.action.has-icon {
+        --button-color: var(--icon-secondary);
+
+        &:hover {
+          --button-color: var(--icon-primary);
+        }
+      }
+
       &.role-user {
         align-items: center;
         align-items: flex-start;
