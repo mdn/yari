@@ -50,8 +50,14 @@
       padding: var(--gutter);
 
       &.ai-help-header {
+        column-gap: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
         > h1 {
           margin-bottom: 0.7rem;
+          min-width: 100%;
 
           &::after {
             background-color: var(--ai-help-icon);
@@ -70,6 +76,11 @@
         > p {
           color: var(--text-secondary);
           margin: 0;
+        }
+
+        .feedback-link {
+          --feedback-link-icon: var(--icon-primary);
+          --text-link: var(--text-secondary);
         }
       }
 
@@ -122,25 +133,8 @@
       }
 
       .ai-help-footer-text {
-        align-items: center;
-        display: flex;
         font-size: var(--type-tiny-font-size);
-        gap: 1em;
         margin-top: 0.5rem;
-
-        @media screen and (max-width: $screen-md) {
-          flex-direction: column;
-        }
-
-        .feedback-link {
-          --text-link: var(--text-primary);
-          flex-shrink: 0;
-
-          @media screen and (min-width: $screen-md) {
-            --text-link: var(--text-secondary);
-            font-size: var(--type-smaller-font-size);
-          }
-        }
       }
 
       .ai-help-refine-button {
@@ -374,6 +368,14 @@
 
     .ai-help-message-content {
       width: 100%;
+
+      .button.action.has-icon {
+        --button-color: var(--icon-secondary);
+
+        &:hover {
+          --button-color: var(--icon-primary);
+        }
+      }
 
       &.role-user {
         align-items: center;
