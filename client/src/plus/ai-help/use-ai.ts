@@ -390,6 +390,7 @@ export function useAiChat({
     resetLoadingState();
     setSearchParams((prev) => {
       prev.delete("c");
+      prev.delete("d");
       return prev;
     });
     setPath([]);
