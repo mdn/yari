@@ -143,12 +143,15 @@
       }
 
       .ai-help-new-question-button {
+        // Revert effects of .button.action
         --button-bg: var(--button-primary-default);
         --button-bg-hover: var(--button-primary-hover);
         --button-bg-active: var(--button-primary-active);
-        --button-border-color: var(--button-primary-default);
         --button-color: var(--background-primary);
-        border: 1px solid var(--text-primary);
+
+        :hover {
+          --button-border-color: var(--button-bg-hover);
+        }
       }
     }
 
