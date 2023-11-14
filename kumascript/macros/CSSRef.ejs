@@ -159,11 +159,6 @@ const text = mdn.localStringMap({
       'Pagination': 'Pagination',
       'Card': 'Card',
       'Grid_wrapper': 'Grid wrapper',
-    'Tools': 'Tools',
-      'Color_picker_tool': 'Color picker',
-      'Box-shadow_generator': 'Box shadow generator',
-      'Border-radius_generator': 'Border radius generator',
-      'Border-image_generator' : 'Border image generator',
   },
   'fr': {
     'Learn_CSS': 'Apprendre CSS',
@@ -306,11 +301,6 @@ const text = mdn.localStringMap({
       'Pagination': 'Pagination',
       'Card': 'Carte',
       'Grid_wrapper': 'Conteneur de grille',
-    'Tools': 'Outils',
-      'Color_picker_tool': 'Sélecteur de couleurs',
-      'Border-radius_generator': 'Générateur de border-radius',
-      'Box-shadow_generator': 'Générateur d\'ombre de boîte',
-      'Border-image_generator' : 'Générateur d\'image de bordure',
   },
   'ja': {
     'Tutorials': 'チュートリアル',
@@ -506,11 +496,6 @@ const text = mdn.localStringMap({
       'Pagination': 'Pagination',
       'Card': '카드',
       'Grid_wrapper': '그리드 wrapper',
-    'Tools': '도구',
-      'Color_picker_tool': '색상 선택 도구',
-      'Border-radius_generator': 'Border-radius 생성기',
-      'Box-shadow_generator': '박스에 그림자 생성기',
-      'Border-image_generator' : '보더 이미지 생성기',
   },
   'pt-BR': {
     'Tutorials': 'Tutoriais',
@@ -706,11 +691,6 @@ const text = mdn.localStringMap({
       'Pagination': 'Постраничная навигация',
       'Card': 'Карточка',
       'Grid_wrapper': 'Обёртка сетки',
-    'Tools': 'Инструменты',
-      'Color_picker_tool': 'Инструмент выбора цвета',
-      'Border-radius_generator': 'Border-radius генератор',
-      'Box-shadow_generator': 'Генератор теней',
-      'Border-image_generator' : 'Генератор Border-image',
   },
   'zh-CN': {
     'Tutorials': '教程',
@@ -866,11 +846,6 @@ const text = mdn.localStringMap({
       'Pagination': '分页',
       'Card': '卡片',
       'Grid_wrapper': '网格布局包装器',
-    'Tools': '工具',
-      'Color_picker_tool': '取色器',
-      'Border-radius_generator': '圆角边框生成器',
-      'Box-shadow_generator': 'Box shadow 生成器',
-      'Border-image_generator' : '图片边框生成器',
   },
   'zh-TW': {
     'Tutorials': '教程',
@@ -1437,16 +1412,6 @@ async function buildPropertylist(pages, title) {
       <li><%-smartLink(`${cssURL}Layout_cookbook/Pagination`, null, text['Pagination'], cssURL)%></li>
       <li><%-smartLink(`${cssURL}Layout_cookbook/Card`, null, text['Card'], cssURL)%></li>
       <li><%-smartLink(`${cssURL}Layout_cookbook/Grid_wrapper`, null, text['Grid_wrapper'], cssURL)%></li>
-    </ol>
-  </li>
-
-  <li><strong><%=text['Tools']%></strong></li>
-  <li class="toggle">
-    <ol>
-      <li><%-smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
-      <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Box-shadow_generator`, null, text['Box-shadow_generator'], cssURL)%></li>
-      <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Border-image_generator`, null, text['Border-image_generator'], cssURL)%></li>
-      <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Border-radius_generator`, null, text['Border-radius_generator'], cssURL)%></li>
     </ol>
   </li>
 
