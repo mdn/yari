@@ -19,8 +19,12 @@ export function ManageAIHelp() {
       <h2>AI Help</h2>
       <ul>
         <li>
-          <h3>Disable AI Help history</h3>
-          <span>Some copy about disabling AI Help history 🤷</span>
+          <h3>Disable History</h3>
+          <span>
+            Choosing 'Disable history' will conceal your current history and
+            prevent any new items from being saved, without deleting what
+            exists.
+          </span>
           {saving ? (
             <Spinner extraClasses="loading" />
           ) : (
@@ -45,7 +49,11 @@ export function ManageAIHelp() {
           )}
         </li>
         <li>
-          <span>Some copy about deleting AI Help history 🤷</span>
+          <h3>Delete History</h3>
+          <span>
+            Activating 'Delete history' will permanently erase all of your AI
+            Help saved history.
+          </span>
           <button
             onClick={async () => {
               if (
