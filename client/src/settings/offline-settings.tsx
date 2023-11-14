@@ -142,25 +142,27 @@ function Settings() {
   return (
     <ul>
       <li>
-        <h3>MDN Offline Storage</h3>
-        <span>
-          Enable storage to allow MDN content download for offline reading.
-        </span>
-        {(saving === true && <Spinner extraClasses="loading" />) || (
-          <Switch
-            name="offline"
-            checked={settings?.offline || false}
-            toggle={(e) => {
-              const source = e.target.checked
-                ? TOGGLE_PLUS_OFFLINE_ENABLED
-                : TOGGLE_PLUS_OFFLINE_DISABLED;
-              gleanClick(source);
-              updateSettings({
-                offline: e.target.checked,
-              });
-            }}
-          ></Switch>
-        )}
+        <h3 id="offline-storage">MDN Offline Storage</h3>
+        <section className="setting-row" aria-labelledby="offline-storage">
+          <span>
+            Enable storage to allow MDN content download for offline reading.
+          </span>
+          {(saving === true && <Spinner extraClasses="loading" />) || (
+            <Switch
+              name="offline"
+              checked={settings?.offline || false}
+              toggle={(e) => {
+                const source = e.target.checked
+                  ? TOGGLE_PLUS_OFFLINE_ENABLED
+                  : TOGGLE_PLUS_OFFLINE_DISABLED;
+                gleanClick(source);
+                updateSettings({
+                  offline: e.target.checked,
+                });
+              }}
+            ></Switch>
+          )}
+        </section>
       </li>
       {settings?.offline && (
         <>
