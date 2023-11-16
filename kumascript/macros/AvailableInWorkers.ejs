@@ -7,6 +7,7 @@
 //      'dedicated': only in DedicatedWorker (and in Window)
 //      'dedicatedonly' only in DedicatedWorker
 //      'notservice': all workers but ServiceWorker (and in Window)
+//      'notservicenotwindow': all workers but ServiceWorker (and no window)
 //      'service': only in ServiceWorker (and in Window)
 //      'serviceonly': only in ServiceWorker
 //      null: (default) All workers (and Window)
@@ -46,6 +47,10 @@ const textNotService = mdn.localString({
   "zh-TW": `此功能可在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中使用。`,
 });
 
+const textNotServiceNotWindow = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
+});
+
 const textDedicated = mdn.localString({
   "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
 });
@@ -67,6 +72,7 @@ const workerType = $0 || 'default';
 const associatedText = {
   default: () => textDefault,
   notservice: () => textNotService,
+  notservicenotwindow: () => textNotServiceNotWindow,
   dedicated: () => textDedicated,
   dedicatedonly: () => textDedicatedOnly,
   service: () => textService,
