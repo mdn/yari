@@ -298,7 +298,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("/") &&
       !href.startsWith("//") &&
-      !/^\/(discord|en-US\/blog)(\/|$)/.test(href)
+      !/^\/en-US\/blog(\/|$)/.test(href)
     ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
