@@ -23,6 +23,13 @@ article.settings {
         grid-template-columns: 1fr minmax(5em);
         margin: 2em 0;
 
+        section.setting-row {
+          align-items: center;
+          display: flex;
+          gap: 1rem;
+          justify-content: space-between;
+        }
+
         p {
           margin: 0;
         }

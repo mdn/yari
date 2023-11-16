@@ -27,28 +27,34 @@ export default function Experiments() {
       <h2 id="experiments">Early Access</h2>
       <ul>
         <li>
-          <h3>In-Development Features</h3>
-          <span>
-            By enabling and testing these features, you consent to us recording
-            your interactions as feedback to refine our ongoing developments.
-          </span>
-          {loading ? (
-            <Spinner extraClasses="loading" />
-          ) : (
-            <Switch
-              name="mdn_plus_experiments"
-              checked={Boolean(enabled)}
-              toggle={async (e) => {
-                setLoading(true);
-                const { active, config } = await setExperiments({
-                  active: Boolean(e.target.checked),
-                });
-                setEnabled(active || false);
-                setExConfig(config || {});
-                setLoading(false);
-              }}
-            ></Switch>
-          )}
+          <h3 id="in-development-features">In-Development Features</h3>
+          <section
+            className="setting-row"
+            aria-labelledby="in-development-features"
+          >
+            <span>
+              By enabling and testing these features, you consent to us
+              recording your interactions as feedback to refine our ongoing
+              developments.
+            </span>
+            {loading ? (
+              <Spinner extraClasses="loading" />
+            ) : (
+              <Switch
+                name="mdn_plus_experiments"
+                checked={Boolean(enabled)}
+                toggle={async (e) => {
+                  setLoading(true);
+                  const { active, config } = await setExperiments({
+                    active: Boolean(e.target.checked),
+                  });
+                  setEnabled(active || false);
+                  setExConfig(config || {});
+                  setLoading(false);
+                }}
+              ></Switch>
+            )}
+          </section>
         </li>
         {enabled && (
           <>
