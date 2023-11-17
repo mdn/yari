@@ -134,7 +134,6 @@ export interface DocMetadata {
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
-  translation_of?: string;
   parents?: DocParent[];
   source: Source;
   contributors: string[];
