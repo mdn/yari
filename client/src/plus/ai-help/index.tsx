@@ -79,18 +79,6 @@ export default function AiHelp() {
   const { setViewed } = useViewedState();
   useEffect(() => setViewed(FeatureId.PLUS_AI_HELP));
 
-  const {
-    active = null,
-    config: { gpt4 = false, full_doc = false, new_prompt = false } = {},
-  } = user?.experiments || {};
-  const activeExperimentsSting = [
-    gpt4 && "GPT-4",
-    full_doc && "Amplified Context",
-    new_prompt && "Optimized Prompts",
-  ]
-    .filter(Boolean)
-    .join(", ");
-
   return (
     <div className="ai-help">
       <div className={`ai-help-main with-ai-help-history`}>
@@ -114,33 +102,16 @@ export default function AiHelp() {
         </Container>
         <Container>
           <div className="notecard experimental">
-            {active ? (
-              <p>
-                <strong>Early Access:</strong> Experiments{" "}
-                {activeExperimentsSting ? `(${activeExperimentsSting}) ` : ""}
-                enabled! <br />
-                As part of these experiments we're recording your interactions!
-                <br />
-                Modify in <a href="/en-US/plus/settings">Settings</a>.
-              </p>
-            ) : active === false ? (
-              <p>
-                As an MDN Plus Supporter, you can test our AI Help optimizations
-                and have a direct say in our product's evolution. Activate and
-                provide feedback <a href="/en-US/plus/settings">here</a>.
-              </p>
-            ) : (
-              <p>
-                <strong>This is a beta feature.</strong>
-                <br />
-                May occasionally generate incorrect answers. Please always
-                verify information independently.
-                <br />
-                <a href="/en-US/blog/introducing-ai-help/">
-                  <strong>Learn more</strong>
-                </a>
-              </p>
-            )}
+            <p>
+              <strong>This is a beta feature.</strong>
+              <br />
+              May occasionally generate incorrect answers. Please always verify
+              information independently.
+              <br />
+              <a href="/en-US/blog/introducing-ai-help/">
+                <strong>Learn more</strong>
+              </a>
+            </p>
           </div>
         </Container>
         {user?.isAuthenticated ? (
@@ -304,7 +275,7 @@ export function AIHelpInner() {
   const isQuotaLoading = quota === undefined;
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
-  const gptVersion = user?.experiments?.config?.gpt4 ? "GPT-4" : "GPT-3.5";
+  const gptVersion = "GPT-4";
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
