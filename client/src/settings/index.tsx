@@ -6,7 +6,6 @@ import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 import "./index.scss";
 import { Manage } from "./manage";
 import Newsletter from "./newsletter";
-import Experiments from "./experiments";
 import { ManageAIHelp } from "./ai-help";
 
 const OfflineSettings = React.lazy(() => import("./offline-settings"));
@@ -20,7 +19,6 @@ export function Settings() {
         <h1 className="slab-highlight _ify">{pageTitle} </h1>
         <Manage />
         <ManageAIHelp />
-        <Experiments />
         {NEWSLETTER_ENABLED && <Newsletter />}
         <OfflineSettings />
       </article>
