@@ -4,6 +4,11 @@
     &:visited {
       color: var(--text-active);
     }
+
+    &:hover,
+    &:active {
+      color: var(--category-color);
+    }
   }
 
   .top-level-entry-dot ~ .top-level-entry::after {
