@@ -125,6 +125,8 @@ const text = mdn.localStringMap({
         'Floating_and_positioning': 'Floating and positioning',
         'Margins_borders_and_padding': 'Margins, borders and padding',
         'Sizing': 'Sizing',
+      'Math_functions': 'Math functions',
+        'Using_CSS_math_functions': 'Using CSS math functions',
       'Media_queries': 'Media queries',
         'Using_media_queries': 'Using media queries',
         'Using_media_queries_for_accessibility': 'Using media queries for accessibility',
@@ -1344,6 +1346,14 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Floating_and_positioning`, null, text['Floating_and_positioning'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Margins_borders_padding`, null, text['Margins_borders_and_padding'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Logical_Properties_and_Values/Sizing`, null, text['Sizing'], cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
+          <summary><%=text['Math_functions']%></summary>
+          <ol>
+            <li><%-smartLink(`${cssURL}CSS_Math_Functions/Using_CSS_math_functions`, null, text['Using_CSS_math_functions'], cssURL)%></li>
           </ol>
       </details>
   </li>
