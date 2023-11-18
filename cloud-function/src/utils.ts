@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
 
+import {
+  ANY_ATTACHMENT_EXT,
+  createRegExpFromExtensions,
+} from "./internal/constants/index.js";
+
 import { DEFAULT_COUNTRY } from "./constants.js";
 
 export function getRequestCountry(req: Request): string {
@@ -45,8 +50,12 @@ export function isLiveSampleURL(url: string) {
 
 // These are the only extensions in client/build/*/docs/*.
 // `find client/build -type f | grep docs | xargs basename | sed 's/.*\.\([^.]*\)$/\1/' | sort | uniq`
-const ASSET_REGEXP = /\.(gif|html|jpeg|jpg|json|png|svg|txt|xml)$/i;
+const TEXT_EXT = ["html", "json", "svg", "txt", "xml"];
+const ANY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...ANY_ATTACHMENT_EXT,
+  ...TEXT_EXT
+);
 
 export function isAsset(url: string) {
-  return ASSET_REGEXP.test(url);
+  return ANY_ATTACHMENT_REGEXP.test(url);
 }

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
-import { Document, Redirect, Image } from "../../content/index.js";
+import { Document, Redirect, FileAttachment } from "../../content/index.js";
 import { findMatchesInText } from "../matches-in-text.js";
 import {
   DEFAULT_LOCALE,
@@ -151,6 +151,26 @@ export function getBrokenLinksFlaws(
     });
   }
 
+  function checkHash(
+    hash: string,
+    a: cheerio.Cheerio<cheerio.Element>,
+    href: string
+  ) {
+    if (hash.startsWith(":~:")) {
+      // Ignore fragment directives.
+      return;
+    }
+    if (hash !== hash.toLowerCase()) {
+      addBrokenLink(
+        a,
+        checked.get(href),
+        href,
+        href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
+        "Anchor not lowercase"
+      );
+    }
+  }
+
   $("a[href]").each((i, element) => {
     const a = $(element);
     let href = a.attr("href");
@@ -225,7 +245,10 @@ export function getBrokenLinksFlaws(
       // Note! If it's not known that the URL's domain can be turned into https://
       // we do nothing here. No flaw. It's unfortunate that we still have http://
       // links in our content but that's a reality of MDN being 15+ years old.
-    } else if (href.startsWith("https://developer.mozilla.org/")) {
+    } else if (
+      href.startsWith("https://developer.mozilla.org/") &&
+      !href.startsWith("https://developer.mozilla.org/en-US/blog/")
+    ) {
       // It might be a working 200 OK link but the link just shouldn't
       // have the full absolute URL part in it.
       const absoluteURL = new URL(href);
@@ -272,13 +295,17 @@ export function getBrokenLinksFlaws(
           true
         );
       }
-    } else if (href.startsWith("/") && !href.startsWith("//")) {
+    } else if (
+      href.startsWith("/") &&
+      !href.startsWith("//") &&
+      !/^\/(discord|en-US\/blog)(\/|$)/.test(href)
+    ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
-        // Before we give up, check if it's an image.
-        if (!Image.findByURLWithFallback(hrefNormalized)) {
+        // Before we give up, check if it's an attachment.
+        if (!FileAttachment.findByURLWithFallback(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);
@@ -340,30 +367,13 @@ export function getBrokenLinksFlaws(
           href,
           found.url + absoluteURL.search + absoluteURL.hash.toLowerCase()
         );
-      } else if (
-        hrefSplit.length > 1 &&
-        hrefSplit[1] !== hrefSplit[1].toLowerCase()
-      ) {
+      } else if (hrefSplit.length > 1) {
         const hash = hrefSplit[1];
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-          "Anchor not lowercase"
-        );
+        checkHash(hash, a, href);
       }
     } else if (href.startsWith("#")) {
       const hash = href.split("#")[1];
-      if (hash !== hash.toLowerCase()) {
-        addBrokenLink(
-          a,
-          checked.get(href),
-          href,
-          href.replace(`#${hash}`, `#${hash.toLowerCase()}`),
-          "Anchor not lowercase"
-        );
-      }
+      checkHash(hash, a, href);
     }
   });
 

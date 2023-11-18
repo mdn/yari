@@ -106,6 +106,14 @@ For content, see its
 [license](https://github.com/mdn/content/blob/main/LICENSE.md) in the
 [mdn/content repository](https://github.com/mdn/content).
 
+## Supported Platforms
+
+`yari` runs on Linux in CI, and when building for Production.
+
+We also support Windows and MacOS, however we don't aim to proactively catch
+issues with CI on those platforms. If bugs arise, we welcome issues being filed,
+or PRs being opened to fix them.
+
 ## How it works
 
 Yari does a number of things, the most important of which is to render and serve

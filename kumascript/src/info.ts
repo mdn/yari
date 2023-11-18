@@ -13,23 +13,16 @@ const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
   "apiref",
   "jsref",
   "compat",
-  "index",
   "page",
-  "obsolete_header",
   "deprecated_header",
   "previous",
   "previousmenu",
   "previousnext",
   "previousmenunext",
-  "wiki.localize",
   "quicklinkswithsubpages",
 ]);
 
-const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set([
-  "draft",
-  "glossary",
-  "anch",
-]);
+const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set(["glossary"]);
 
 function repairURL(url) {
   // Returns a lowercase URI with common irregularities repaired.
@@ -328,10 +321,6 @@ function postProcessSummaryHTMLSnippet(text, document) {
 
     if (MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT.has(macroName)) {
       output += token.args[0];
-    } else if (macroName === "interwiki") {
-      // Include the last one. E.g.
-      //   {{Interwiki("wikipedia","Flynn%27s_taxonomy","classification of computer")}}
-      output += token.args[token.args.length - 1];
     } else {
       output += `<code>${token.args[0]}</code>`;
     }

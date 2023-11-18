@@ -1,15 +1,22 @@
 import { Doc } from "./document.js";
 
-export interface Author {
+export interface AuthorFrontmatter {
   name?: string;
   link?: string;
+  avatar?: string;
+}
+
+export interface AuthorMetadata {
+  name?: string;
+  link?: string;
+  avatar_url?: string;
 }
 
 export interface BlogImage {
   file: string;
   alt?: string;
-  source?: Author;
-  creator?: Author;
+  source?: AuthorMetadata;
+  creator?: AuthorMetadata;
 }
 
 export interface BlogPostFrontmatter {
@@ -21,11 +28,26 @@ export interface BlogPostFrontmatter {
   sponsored?: boolean;
   published?: boolean;
   date: string;
-  author?: Author;
+  author?: AuthorFrontmatter | string;
+}
+
+export interface BlogPostLimitedMetadata {
+  slug: string;
+  title: string;
+}
+
+export interface BlogPostMetadataLinks {
+  previous?: BlogPostLimitedMetadata;
+  next?: BlogPostLimitedMetadata;
+}
+
+export interface BlogPostMetadata extends BlogPostFrontmatter {
+  author?: AuthorMetadata;
   readTime?: number;
+  links?: BlogPostMetadataLinks;
 }
 
 export interface BlogPostData {
   doc: Doc;
-  blogMeta: BlogPostFrontmatter;
+  blogMeta: BlogPostMetadata;
 }

@@ -315,7 +315,7 @@ export async function fixFixableFlaws(doc: Partial<Doc>, options, document) {
         )
       );
     } else {
-      Document.update(document.url, newRawBody, document.metadata);
+      await Document.update(document.url, newRawBody, document.metadata);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(

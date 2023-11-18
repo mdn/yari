@@ -66,5 +66,6 @@ export async function searchIndexRoute(req, res) {
   populateSearchIndex(searchIndex, locale);
   searchIndex.sort();
   console.timeEnd(label);
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.json(searchIndex.getItems()[locale]);
 }

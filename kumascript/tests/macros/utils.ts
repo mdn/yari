@@ -182,7 +182,7 @@ export function parsePagesFixture(file: URL) {
  * @param {boolean} fragment
  */
 let htmlValidator = null; // global cache
-export function lintHTML(html) {
+export async function lintHTML(html) {
   if (!htmlValidator) {
     htmlValidator = new HtmlValidate({
       extends: ["html-validate:recommended"],
@@ -194,7 +194,7 @@ export function lintHTML(html) {
       },
     });
   }
-  const report = htmlValidator.validateStringSync(html);
+  const report = await htmlValidator.validateString(html);
   if (report.valid) {
     return null;
   }
