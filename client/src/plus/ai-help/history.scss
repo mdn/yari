@@ -74,11 +74,11 @@
               background-color: var(--icon-primary);
               content: "";
               display: inline-block;
-              height: 0.6em;
+              height: var(--icon-size);
               margin-right: 0.5em;
               mask-image: url("../../assets/icons/message.svg");
               mask-size: contain;
-              width: 0.6em;
+              width: var(--icon-size);
             }
           }
 
