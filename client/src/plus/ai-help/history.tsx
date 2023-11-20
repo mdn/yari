@@ -157,26 +157,38 @@ export function AIHelpHistory({
     }
   );
 
-  const firstTopic = data[0];
+  const { chat_id: firstChatId = "", label: firstChatLabel = "" } =
+    data[0] ?? {};
 
   useEffect(() => {
     if (
       !isResponding &&
       messageId &&
-      firstTopic?.chat_id === currentChatId &&
-      firstTopic?.label === ""
+      firstChatId === currentChatId &&
+      firstChatLabel === ""
     ) {
       const update = async () => {
-        await (
-          await fetch(`/api/v1/plus/ai/help/history/summary/${messageId}`, {
+        const res = await fetch(
+          `/api/v1/plus/ai/help/history/summary/${messageId}`,
+          {
             method: "POST",
-          })
-        ).json();
-        mutate();
+          }
+        );
+        if (res.ok) {
+          await res.json();
+          mutate();
+        }
       };
       update();
     }
-  }, [mutate, isResponding, currentChatId, messageId, firstTopic]);
+  }, [
+    mutate,
+    isResponding,
+    currentChatId,
+    messageId,
+    firstChatId,
+    firstChatLabel,
+  ]);
   useEffect(() => {
     mutate();
   }, [lastUpdate, mutate]);
