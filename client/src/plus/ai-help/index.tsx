@@ -684,7 +684,7 @@ export function AIHelpInner() {
                         {!query && !hasConversation ? (
                           <Button
                             type="action"
-                            icon="return"
+                            icon={previousChatId ? "return" : "cancel"}
                             buttonType="reset"
                             title="Delete question"
                             isDisabled={Boolean(!previousChatId)}
