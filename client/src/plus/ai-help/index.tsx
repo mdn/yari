@@ -189,6 +189,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         <Button
           icon="return"
           type="action"
+          title="Cancel editing"
           onClickHandler={() => {
             setEditing(false);
             setQuestion(message.content);
