@@ -80,8 +80,9 @@
         }
 
         .feedback-link {
-          --feedback-link-icon: var(--icon-primary);
+          --feedback-link-icon: var(--icon-secondary);
           --text-link: var(--text-secondary);
+          font-size: var(--type-tiny-font-size);
         }
       }
 
@@ -228,7 +229,7 @@
         }
       }
 
-      .button:enabled {
+      .button[type="submit"]:enabled {
         --button-color: var(--ai-help-icon);
       }
     }
@@ -373,14 +374,6 @@
     .ai-help-message-content {
       width: 100%;
 
-      .button.action.has-icon {
-        --button-color: var(--icon-secondary);
-
-        &:hover {
-          --button-color: var(--icon-primary);
-        }
-      }
-
       &.role-user {
         align-items: center;
         align-items: flex-start;
@@ -499,6 +492,18 @@
 
     .ai-help-error {
       margin: 0.5rem 0;
+    }
+  }
+
+  .ai-help-message-content,
+  .ai-help-history {
+    .button.action.has-icon {
+      // Reduce button icon contrast to make it less prominent.
+      --button-color: var(--icon-secondary);
+
+      &:hover {
+        --button-color: var(--icon-primary);
+      }
     }
   }
 }

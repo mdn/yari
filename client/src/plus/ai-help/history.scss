@@ -65,20 +65,21 @@
 
           > a {
             color: var(--text-secondary);
+            mask-image: linear-gradient(to left, transparent, #000 25%);
             overflow: hidden;
-            text-overflow: ellipsis;
             white-space: nowrap;
             width: 100%;
 
             &::before {
-              background-color: var(--icon-primary);
+              background-color: var(--icon-secondary);
               content: "";
               display: inline-block;
-              height: 0.6em;
+              height: var(--icon-size);
               margin-right: 0.5em;
               mask-image: url("../../assets/icons/message.svg");
               mask-size: contain;
-              width: 0.6em;
+              vertical-align: middle;
+              width: var(--icon-size);
             }
           }
 
