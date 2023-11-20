@@ -229,7 +229,7 @@
         }
       }
 
-      .button:enabled {
+      .button[type="submit"]:enabled {
         --button-color: var(--ai-help-icon);
       }
     }
