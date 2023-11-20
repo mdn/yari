@@ -169,7 +169,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
             type="action"
             icon="cancel"
             buttonType="reset"
-            title="Delete question"
+            title="Clear question"
             onClickHandler={() => {
               setQuestion("");
             }}
@@ -688,7 +688,7 @@ export function AIHelpInner() {
                             type="action"
                             icon={previousChatId ? "return" : "cancel"}
                             buttonType="reset"
-                            title="Delete question"
+                            title="Clear question"
                             isDisabled={Boolean(!previousChatId)}
                             onClickHandler={() => {
                               unReset();
@@ -703,7 +703,7 @@ export function AIHelpInner() {
                             type="action"
                             icon="cancel"
                             buttonType="reset"
-                            title="Delete question"
+                            title="Clear question"
                             onClickHandler={() => {
                               setQuery("");
                             }}
