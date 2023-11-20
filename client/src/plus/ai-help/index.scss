@@ -82,6 +82,7 @@
         .feedback-link {
           --feedback-link-icon: var(--icon-primary);
           --text-link: var(--text-secondary);
+          font-size: var(--type-tiny-font-size);
         }
       }
 
