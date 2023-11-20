@@ -632,7 +632,9 @@ export function AIHelpInner() {
                       <Button
                         type="action"
                         icon="new-topic"
-                        isDisabled={isQuotaExceeded(quota)}
+                        isDisabled={
+                          isLoading || isResponding || isQuotaExceeded(quota)
+                        }
                         extraClasses="ai-help-new-question-button"
                         onClickHandler={() => {
                           gleanClick(`${AI_HELP}: new`);
@@ -684,7 +686,7 @@ export function AIHelpInner() {
                         {!query && !hasConversation ? (
                           <Button
                             type="action"
-                            icon="return"
+                            icon={previousChatId ? "return" : "cancel"}
                             buttonType="reset"
                             title="Delete question"
                             isDisabled={Boolean(!previousChatId)}
