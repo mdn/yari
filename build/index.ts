@@ -164,6 +164,7 @@ export interface BuiltDocument {
   source?: {
     github_url: string;
   };
+  plainHTML?: string;
 }
 
 interface DocumentOptions {
@@ -171,6 +172,7 @@ interface DocumentOptions {
   fixFlawsDryRun?: boolean;
   fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
+  plainHTML?: boolean;
 }
 
 export async function buildDocument(
@@ -445,6 +447,12 @@ export async function buildDocument(
     throw error;
   }
 
+  // Dump HTML for GPT context
+  let plainHTML;
+  if (documentOptions.plainHTML) {
+    plainHTML = $.html();
+  }
+
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
 
@@ -555,7 +563,7 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
 }
 
 async function addBaseline(

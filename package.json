@@ -14,6 +14,7 @@
   },
   "scripts": {
     "ai-help": "ts-node scripts/ai-help.ts",
+    "ai-help-macros": "ts-node scripts/ai-help-macros.ts",
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
     "build": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/cli.ts",
