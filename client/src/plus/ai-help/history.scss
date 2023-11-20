@@ -65,8 +65,8 @@
 
           > a {
             color: var(--text-secondary);
+            mask-image: linear-gradient(to left, transparent, #000 25%);
             overflow: hidden;
-            text-overflow: ellipsis;
             white-space: nowrap;
             width: 100%;
 
