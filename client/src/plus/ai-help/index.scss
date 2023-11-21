@@ -495,15 +495,12 @@
     }
   }
 
-  .ai-help-message-content,
-  .ai-help-history {
-    .button.action.has-icon {
-      // Reduce button icon contrast to make it less prominent.
-      --button-color: var(--icon-secondary);
+  .button.action.has-icon {
+    // Reduce button icon contrast to make it less prominent.
+    --button-color: var(--icon-secondary);
 
-      &:hover {
-        --button-color: var(--icon-primary);
-      }
+    &:hover {
+      --button-color: var(--icon-primary);
     }
   }
 }
