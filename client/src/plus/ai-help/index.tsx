@@ -565,12 +565,12 @@ export function AIHelpInner() {
                                   <section className="ai-help-feedback">
                                     <GleanThumbs
                                       feature="ai-help-answer"
+                                      featureKey={message.messageId}
                                       question={"Was this answer useful?"}
                                       upLabel={"Yes, this answer was useful."}
                                       downLabel={
                                         "No, this answer was not useful."
                                       }
-                                      permanent={true}
                                       callback={async (value) => {
                                         user?.experiments?.active &&
                                           message.messageId &&
