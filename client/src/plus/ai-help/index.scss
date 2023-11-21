@@ -11,6 +11,15 @@
     --plus-link: var(--ai-help-link);
   }
 
+  .button.action.has-icon {
+    // Reduce button icon contrast to make it less prominent.
+    --button-color: var(--icon-secondary);
+
+    &:hover {
+      --button-color: var(--icon-primary);
+    }
+  }
+
   > .ai-help-main {
     --ai-top: calc(var(--top-nav-height) + 1px + 1rem);
     column-gap: 1rem;
@@ -492,15 +501,6 @@
 
     .ai-help-error {
       margin: 0.5rem 0;
-    }
-  }
-
-  .button.action.has-icon {
-    // Reduce button icon contrast to make it less prominent.
-    --button-color: var(--icon-secondary);
-
-    &:hover {
-      --button-color: var(--icon-primary);
     }
   }
 }
