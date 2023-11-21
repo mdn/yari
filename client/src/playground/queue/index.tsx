@@ -22,7 +22,7 @@ function PQEntry({ id, key, lang }: QueueEntry) {
       <Button
         type="action"
         buttonType="reset"
-        icon="trash"
+        icon="trash-filled"
         onClickHandler={() => {
           uncheck(id);
           window["playQueue"]?.();
@@ -97,7 +97,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
                 window.open(url, "_blank");
               }}
             >
-              PLAY
+              Play
             </Button>
           </div>
         </details>

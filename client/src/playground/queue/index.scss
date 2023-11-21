@@ -19,7 +19,7 @@
 
     > summary {
       align-items: center;
-      color: var(--text-primary-blue);
+      color: var(--category-color);
       cursor: pointer;
       display: flex;
       padding: 0 1rem;
@@ -38,7 +38,7 @@
       }
 
       > .button.action {
-        --button-color: var(--text-primary-blue);
+        --button-color: var(--category-color);
       }
     }
   }
@@ -124,7 +124,7 @@
           padding: 0 0.5rem;
 
           &:hover {
-            color: var(--text-primary-blue);
+            color: var(--category-color);
             text-decoration: underline;
           }
         }

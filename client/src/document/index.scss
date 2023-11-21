@@ -741,8 +741,12 @@ pre {
       }
 
       &:checked ~ label {
-        color: var(--text-primary-blue);
+        color: var(--category-color);
         opacity: 1;
+      }
+
+      &:checked ~ label:before {
+        background-color: var(--category-color);
       }
     }
   }

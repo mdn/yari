@@ -87,18 +87,20 @@ export default function AiHelp() {
             <span>AI Help</span>
           </h1>
           <p>Get answers using generative AI based on MDN content.</p>
-          <a
-            href={
-              user?.isAuthenticated
-                ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
-                : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
-            }
-            target="_blank"
-            rel="noreferrer noopener"
-            className="feedback-link"
-          >
-            Report Feedback
-          </a>
+          <p>
+            <a
+              href={
+                user?.isAuthenticated
+                  ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
+                  : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
+              }
+              target="_blank"
+              rel="noreferrer noopener"
+              className="feedback-link"
+            >
+              Report Feedback
+            </a>
+          </p>
         </Container>
         <Container>
           <div className="notecard experimental">
@@ -189,13 +191,13 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         <Button
           icon="return"
           type="action"
-          title="Cancel editing"
+          title="Undo editing"
           onClickHandler={() => {
             setEditing(false);
             setQuestion(message.content);
           }}
         >
-          <span className="visually-hidden">Cancel editing</span>
+          <span className="visually-hidden">Undo editing</span>
         </Button>
       </div>
     </form>
