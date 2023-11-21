@@ -86,6 +86,7 @@ jobs:
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
+          lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
