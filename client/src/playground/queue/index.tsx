@@ -22,7 +22,7 @@ function PQEntry({ id, key, lang }: QueueEntry) {
       <Button
         type="action"
         buttonType="reset"
-        icon="trash"
+        icon="trash-filled"
         onClickHandler={() => {
           uncheck(id);
           window["playQueue"]?.();
