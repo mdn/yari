@@ -744,6 +744,10 @@ pre {
         color: var(--category-color);
         opacity: 1;
       }
+
+      &:checked ~ label:before {
+        background-color: var(--category-color);
+      }
     }
   }
 
