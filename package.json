@@ -149,7 +149,7 @@
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.40.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
-    "@supabase/supabase-js": "^2.38.4",
+    "@supabase/supabase-js": "^2.38.5",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.3.96",
     "@testing-library/react": "^14.1.2",
