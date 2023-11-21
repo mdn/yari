@@ -16,26 +16,40 @@ function getPreviouslySubmitted() {
   }
 }
 
-function isPreviouslySubmitted(feature: string): boolean {
+function isPreviouslySubmitted(feature: string, key?: string): boolean {
   try {
-    return feature in getPreviouslySubmitted();
+    const db = getPreviouslySubmitted();
+    if (key) {
+      return key in db[feature];
+    } else {
+      return feature in db;
+    }
   } catch (e) {
     return false;
   }
 }
 
-function markPreviouslySubmitted(feature: string, value: boolean) {
+function markPreviouslySubmitted(
+  feature: string,
+  value: boolean,
+  key?: string
+) {
   try {
-    window?.localStorage?.setItem(
-      LOCAL_STORAGE_KEY,
-      JSON.stringify({
-        ...getPreviouslySubmitted(),
-        [feature]: {
-          submitted_at: Date.now(),
-          value,
-        },
-      })
-    );
+    const db = getPreviouslySubmitted();
+
+    const state = {
+      submitted_at: Date.now(),
+      value,
+    };
+
+    db[feature] = key
+      ? {
+          ...db[feature],
+          [key]: state,
+        }
+      : state;
+
+    window?.localStorage?.setItem(LOCAL_STORAGE_KEY, JSON.stringify(db));
   } catch (e) {
     console.warn("Unable to write thumbs state to localStorage", e);
   }
@@ -43,6 +57,7 @@ function markPreviouslySubmitted(feature: string, value: boolean) {
 
 export function GleanThumbs({
   feature,
+  featureKey = undefined,
   question = "Is this feature useful?",
   confirmation = "Thank you for your feedback! ❤️",
   upLabel = "This feature is useful.",
@@ -51,6 +66,7 @@ export function GleanThumbs({
   callback,
 }: {
   feature: string;
+  featureKey?: string;
   question?: string;
   confirmation?: string;
   upLabel?: string;
@@ -63,15 +79,17 @@ export function GleanThumbs({
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    setPreviouslySubmitted(!permanent && isPreviouslySubmitted(feature));
-  }, [feature, permanent, setPreviouslySubmitted]);
+    setPreviouslySubmitted(
+      !permanent && isPreviouslySubmitted(feature, featureKey)
+    );
+  }, [feature, featureKey, permanent, setPreviouslySubmitted]);
 
   const handleThumbs = async (value: "up" | "down") => {
     gleanClick(`${THUMBS}: ${feature} -> ${value === "up" ? 1 : 0}`);
     await callback?.(value);
     setSubmitted(true);
     if (!permanent) {
-      markPreviouslySubmitted(feature, value === "up");
+      markPreviouslySubmitted(feature, value === "up", featureKey);
     }
   };
 
