@@ -741,7 +741,7 @@ pre {
       }
 
       &:checked ~ label {
-        color: var(--text-primary-blue);
+        color: var(--category-color);
         opacity: 1;
       }
     }
