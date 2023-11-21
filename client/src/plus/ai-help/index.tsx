@@ -189,13 +189,13 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         <Button
           icon="return"
           type="action"
-          title="Cancel editing"
+          title="Undo editing"
           onClickHandler={() => {
             setEditing(false);
             setQuestion(message.content);
           }}
         >
-          <span className="visually-hidden">Cancel editing</span>
+          <span className="visually-hidden">Undo editing</span>
         </Button>
       </div>
     </form>
