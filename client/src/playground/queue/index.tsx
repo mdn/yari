@@ -97,7 +97,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
                 window.open(url, "_blank");
               }}
             >
-              PLAY
+              Play
             </Button>
           </div>
         </details>
