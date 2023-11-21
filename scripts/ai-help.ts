@@ -56,7 +56,7 @@ export async function updateEmbeddings(directory: string) {
     // OpenAI recommends replacing newlines with spaces for best results (specific to embeddings)
     const input = content.replace(/\n/g, " ");
 
-    let embeddingResponse;
+    let embeddingResponse: OpenAI.Embeddings.CreateEmbeddingResponse;
     try {
       embeddingResponse = await openai.embeddings.create({
         model: "text-embedding-ada-002",
@@ -83,7 +83,7 @@ export async function updateEmbeddings(directory: string) {
     const {
       data: [{ embedding }],
       usage: { total_tokens },
-    } = embeddingResponse.data;
+    } = embeddingResponse;
 
     return {
       total_tokens,

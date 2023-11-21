@@ -213,7 +213,7 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
 interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
-    format: "md-table" | "json";
+    format: "md-table" | "csv" | "json";
     unusedOnly: boolean;
   };
 }
@@ -1227,7 +1227,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .option("--deprecated-only", "Only reports deprecated macros.")
   .option("--format <type>", "Format of the report.", {
     default: "md-table",
-    validator: ["json", "md-table"],
+    validator: ["json", "md-table", "csv"],
   })
   .option("--unused-only", "Only reports unused macros.")
   .action(

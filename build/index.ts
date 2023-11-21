@@ -562,7 +562,12 @@ async function addBaseline(
   doc: Partial<Doc>
 ): Promise<WebFeatureStatus | undefined> {
   if (doc.browserCompat) {
-    return await getWebFeatureStatus(...doc.browserCompat);
+    const filteredBrowserCompat = doc.browserCompat.filter(
+      (query) =>
+        // temporary blocklist while we wait for an updated baseline definition/designs
+        !["css.properties.grid-template-columns.subgrid"].includes(query)
+    );
+    return await getWebFeatureStatus(...filteredBrowserCompat);
   }
 }
 
