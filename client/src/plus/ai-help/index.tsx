@@ -256,6 +256,7 @@ export function AIHelpInner() {
   const gleanClick = useGleanClick();
 
   const {
+    isFinished,
     isLoading,
     isHistoryLoading,
     isResponding,
@@ -339,7 +340,7 @@ export function AIHelpInner() {
         <AIHelpHistory
           currentChatId={chatId}
           lastUpdate={lastUpdate}
-          isResponding={isResponding}
+          isFinished={isFinished}
           messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
         />
       )}

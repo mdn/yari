@@ -353,11 +353,16 @@ export function useAiChat({
   const user = useUserData();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingState, setLoadingState] = useState<
+    "idle" | "loading" | "responding" | "finished" | "failed"
+  >("idle");
+  const isLoading = loadingState === "loading";
+  const isResponding = loadingState === "responding";
+  const hasError = loadingState === "failed";
+  const isFinished = loadingState === "finished";
+
   const [isInitializing, setIsInitializing] = useState(true);
-  const [isResponding, setIsResponding] = useState(false);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [datas, dispatchData] = useReducer(
     (state: any[], value: any) => (value === null ? [] : [...state, value]),
@@ -403,11 +408,13 @@ export function useAiChat({
   }, [setSearchParams, chatId]);
 
   const handleError = useCallback((err: any) => {
-    setIsLoading(false);
-    setIsResponding(false);
-    setHasError(true);
+    setLoadingState("failed");
     console.error(err);
   }, []);
+
+  useEffect(() => {
+    console.log({ loadingState });
+  }, [loadingState]);
 
   useEffect(() => {
     const convId = searchParams.get("c");
@@ -466,7 +473,8 @@ export function useAiChat({
     (data: any) => {
       try {
         dispatchData(data);
-        setIsLoading(false);
+
+        setLoadingState("responding");
 
         if (data.type === "metadata") {
           const {
@@ -505,8 +513,6 @@ export function useAiChat({
           },
         });
 
-        setIsResponding(true);
-
         if (!data.id) {
           console.warn("Received unsupported message", { data });
           return;
@@ -540,7 +546,8 @@ export function useAiChat({
             finish_reason === "stop"
               ? MessageStatus.Complete
               : MessageStatus.Stopped;
-          setIsResponding(false);
+
+          setLoadingState("finished");
           setLastUpdate(new Date());
           dispatchState({
             type: "update",
@@ -601,9 +608,7 @@ export function useAiChat({
           parentId,
         },
       });
-      setIsResponding(false);
-      setHasError(false);
-      setIsLoading(true);
+      setLoadingState("loading");
 
       // We send all completed in the conversation + the question the user asked.
       // Unless history is false, then we only send the query.
@@ -641,8 +646,6 @@ export function useAiChat({
       eventSource.stream();
 
       eventSourceRef.current = eventSource;
-
-      setIsLoading(true);
     },
     [state, messageTemplate, handleError, handleEventData]
   );
@@ -675,9 +678,7 @@ export function useAiChat({
   function resetLoadingState() {
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
-    setIsLoading(false);
-    setIsResponding(false);
-    setHasError(false);
+    setLoadingState("idle");
     dispatchData(null);
   }
 
@@ -758,6 +759,7 @@ export function useAiChat({
     messages,
     state,
     path,
+    isFinished,
     isLoading,
     isHistoryLoading,
     isResponding,

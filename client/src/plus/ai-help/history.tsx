@@ -138,12 +138,12 @@ function AIHelpHistorySubList({
 export function AIHelpHistory({
   currentChatId,
   lastUpdate,
-  isResponding,
+  isFinished,
   messageId,
 }: {
   currentChatId?: string;
   lastUpdate: Date;
-  isResponding: boolean;
+  isFinished: boolean;
   messageId?: string;
 }) {
   const { data, mutate } = useSWR(
@@ -162,7 +162,7 @@ export function AIHelpHistory({
 
   useEffect(() => {
     if (
-      !isResponding &&
+      isFinished &&
       messageId &&
       firstChatId === currentChatId &&
       firstChatLabel === ""
@@ -183,7 +183,7 @@ export function AIHelpHistory({
     }
   }, [
     mutate,
-    isResponding,
+    isFinished,
     currentChatId,
     messageId,
     firstChatId,
