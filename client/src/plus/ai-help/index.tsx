@@ -42,6 +42,7 @@ import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue } from "../../playground/queue";
 import { AIHelpHistory } from "./history";
+import { useUIStatus } from "../../ui-context";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -250,7 +251,7 @@ export function AIHelpInner() {
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
+  const { queuedExamples, setQueuedExamples } = useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 

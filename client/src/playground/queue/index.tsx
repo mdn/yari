@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import "./index.scss";
 import { collectCode } from "../../document/code/playground";
 import { SESSION_KEY } from "../utils";
 import { useIsServer, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
+import { useUIStatus } from "../../ui-context";
+import { QueueEntry } from "../../types/playground";
 
 function PQEntry({ id, key, lang }: QueueEntry) {
   const intoView = () => {
@@ -41,12 +43,6 @@ function uncheck(id: string) {
   return false;
 }
 
-interface QueueEntry {
-  key: number;
-  id: string;
-  lang?: string | null;
-}
-
 const LANG_MAPPING = {
   javascript: "js",
 };
@@ -54,7 +50,7 @@ const LANG_MAPPING = {
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const isServer = useIsServer();
-  const [queue, setQueue] = useState<QueueEntry[]>([]);
+  const { queue, setQueue } = useUIStatus();
   const cb = useCallback(() => {
     const elements = [
       ...document.querySelectorAll(".playlist > input:checked"),
