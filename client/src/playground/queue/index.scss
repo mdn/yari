@@ -49,10 +49,10 @@
         border-bottom: 1px solid var(--border-primary);
         padding-bottom: 0.5rem;
 
-        &::before {
+        &::after {
           content: "▼";
           font-size: 0.75rem;
-          margin-right: 0.5rem;
+          margin-left: 0.5rem;
         }
       }
     }
@@ -66,10 +66,10 @@
         font-size: 0;
         width: fit-content;
 
-        &::before {
-          content: "►";
+        &::after {
+          content: "◀";
           font-size: 0.75rem;
-          margin-right: 0.5rem;
+          margin-left: 0.5rem;
         }
 
         > div {
