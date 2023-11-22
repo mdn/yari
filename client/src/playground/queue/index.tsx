@@ -47,6 +47,10 @@ interface QueueEntry {
   lang?: string | null;
 }
 
+const LANG_MAPPING = {
+  javascript: "js",
+};
+
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const isServer = useIsServer();
@@ -57,7 +61,13 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
     ] as HTMLInputElement[];
     setQueue(
       elements.map((e, key) => {
-        return { key, id: e.id, lang: e?.firstChild?.textContent };
+        const { id } = e;
+        const lang =
+          e
+            ?.closest(".example-header")
+            ?.querySelector(".language-name")
+            ?.textContent?.toLowerCase() ?? "";
+        return { key, id, lang: LANG_MAPPING[lang] ?? lang };
       })
     );
   }, [setQueue]);
