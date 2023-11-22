@@ -444,10 +444,9 @@ export function AIHelpInner() {
                                               <div className="playlist">
                                                 <input
                                                   type="checkbox"
-                                                  checked={
-                                                    queuedExamples.has(id) ||
-                                                    false
-                                                  }
+                                                  checked={queuedExamples.has(
+                                                    id
+                                                  )}
                                                   onChange={() => {
                                                     setQueuedExamples(
                                                       (old) =>
@@ -460,9 +459,9 @@ export function AIHelpInner() {
                                                         )
                                                     );
                                                   }}
-                                                  id={`sample-${id}`}
+                                                  id={id}
                                                 />
-                                                <label htmlFor={`sample-${id}`}>
+                                                <label htmlFor={id}>
                                                   {queuedExamples.has(id)
                                                     ? "queued"
                                                     : "queue"}

@@ -7,7 +7,13 @@ import { Button } from "../../ui/atoms/button";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 
-function PQEntry({ id, key, lang }: QueueEntry) {
+function PQEntry({
+  item: { id, key, lang },
+  unqueue,
+}: {
+  item: QueueEntry;
+  unqueue: () => void;
+}) {
   const intoView = () => {
     const element = document.getElementById(id);
     const header = element?.parentElement?.parentElement;
@@ -25,22 +31,10 @@ function PQEntry({ id, key, lang }: QueueEntry) {
         type="action"
         buttonType="reset"
         icon="trash-filled"
-        onClickHandler={() => {
-          uncheck(id);
-          window["playQueue"]?.();
-        }}
+        onClickHandler={() => unqueue()}
       />
     </li>
   );
-}
-
-function uncheck(id: string) {
-  const el = document.getElementById(id) as HTMLInputElement | undefined;
-  if (el) {
-    el.checked = false;
-    return true;
-  }
-  return false;
 }
 
 const LANG_MAPPING = {
@@ -50,7 +44,7 @@ const LANG_MAPPING = {
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const isServer = useIsServer();
-  const { queue, setQueue } = useUIStatus();
+  const { queue, setQueue, setQueuedExamples } = useUIStatus();
   const cb = useCallback(() => {
     const elements = [
       ...document.querySelectorAll(".playlist > input:checked"),
@@ -83,13 +77,26 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
               icon="cancel"
               type="action"
               onClickHandler={() => {
-                queue.forEach(({ id }) => uncheck(id));
+                setQueuedExamples(() => new Set());
                 setQueue([]);
               }}
             ></Button>
           </summary>
           <div className="play-queue-inner">
-            <ul>{queue.map(PQEntry)}</ul>
+            <ul>
+              {queue.map((item) => (
+                <PQEntry
+                  key={item.key}
+                  item={item}
+                  unqueue={() => {
+                    setQueuedExamples(
+                      (old) => new Set([...old].filter((x) => x !== item.id))
+                    );
+                    setQueue((old) => old.filter((x) => x.id !== item.id));
+                  }}
+                />
+              ))}
+            </ul>
             <Button
               type="secondary"
               extraClasses="play-button"
