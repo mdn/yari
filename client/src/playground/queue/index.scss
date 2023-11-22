@@ -33,8 +33,8 @@
       > div {
         display: inline-block;
         font-weight: bold;
-        margin: 0 auto;
         text-transform: uppercase;
+        width: 100%;
       }
 
       > .button.action {
@@ -47,7 +47,7 @@
 
       > summary {
         border-bottom: 1px solid var(--border-primary);
-        padding-bottom: 0.5rem;
+        padding: 0 1.5rem 0.5rem;
 
         &::after {
           content: "▼";
