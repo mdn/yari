@@ -241,6 +241,9 @@ const SORRY_BACKEND = "Sorry, I don't know how to help with that.";
 const SORRY_FRONTEND =
   "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
 
+const MESSAGE_SEARCHING = "Searching MDN content…";
+const MESSAGE_ANSWERING = "Answering…";
+
 export function AIHelpInner() {
   const user = useUserData();
   const locale = useLocale();
@@ -256,6 +259,7 @@ export function AIHelpInner() {
   const gleanClick = useGleanClick();
 
   const {
+    isFinished,
     isLoading,
     isHistoryLoading,
     isResponding,
@@ -339,7 +343,7 @@ export function AIHelpInner() {
         <AIHelpHistory
           currentChatId={chatId}
           lastUpdate={lastUpdate}
-          isResponding={isResponding}
+          isFinished={isFinished}
           messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
         />
       )}
@@ -543,8 +547,10 @@ export function AIHelpInner() {
                                   SORRY_FRONTEND
                                 )}
                               </ReactMarkdown>
+                            ) : isLoading ? (
+                              MESSAGE_SEARCHING
                             ) : (
-                              "Retrieving answer…"
+                              MESSAGE_ANSWERING
                             )}
                             {message.status === "complete" &&
                               !message.content?.includes(SORRY_BACKEND) && (
@@ -682,9 +688,9 @@ export function AIHelpInner() {
                         rows={1}
                         placeholder={placeholder(
                           isLoading
-                            ? "Requesting answer..."
+                            ? MESSAGE_SEARCHING
                             : isResponding
-                            ? "Receiving answer..."
+                            ? MESSAGE_ANSWERING
                             : hasConversation
                             ? "Ask your follow up question"
                             : "Ask your question"

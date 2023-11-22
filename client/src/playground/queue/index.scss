@@ -33,56 +33,56 @@
       > div {
         display: inline-block;
         font-weight: bold;
-        margin: 0 auto;
         text-transform: uppercase;
+        width: 100%;
       }
 
       > .button.action {
         --button-color: var(--category-color);
       }
     }
-  }
 
-  details[open] {
-    min-width: 12rem;
+    &[open] {
+      min-width: 12rem;
 
-    > summary {
-      border-bottom: 1px solid var(--border-primary);
-      padding-bottom: 0.5rem;
+      > summary {
+        border-bottom: 1px solid var(--border-primary);
+        padding: 0 1.5rem 0.5rem;
 
-      &::before {
-        content: "▼";
-        font-size: 0.75rem;
-        margin-right: 0.5rem;
-      }
-    }
-  }
-
-  details:not([open]) {
-    background-color: var(--text-primary-blue);
-    width: min-content;
-
-    > summary {
-      color: var(--mdn-color-white);
-      font-size: 0;
-      width: fit-content;
-
-      &::before {
-        content: "►";
-        font-size: 0.75rem;
-        margin-right: 0.5rem;
-      }
-
-      > div {
-        width: 1rem;
-
-        &::first-letter {
-          font-size: 1rem;
+        &::after {
+          content: "▼";
+          font-size: 0.75rem;
+          margin-left: 0.5rem;
         }
       }
+    }
 
-      .button {
-        display: none;
+    &:not([open]) {
+      background-color: var(--category-color);
+      width: min-content;
+
+      > summary {
+        color: var(--background-primary);
+        font-size: 0;
+        width: fit-content;
+
+        &::after {
+          content: "◀";
+          font-size: 0.75rem;
+          margin-left: 0.5rem;
+        }
+
+        > div {
+          width: 1rem;
+
+          &::first-letter {
+            font-size: 1rem;
+          }
+        }
+
+        .button {
+          display: none;
+        }
       }
     }
   }
@@ -104,7 +104,7 @@
     > ul {
       margin: 0 0 0.5rem;
       max-height: 50vh;
-      overflow: scroll;
+      overflow: auto;
       width: 100%;
 
       > li {
