@@ -37,35 +37,38 @@ function PQEntry({
   );
 }
 
-const LANG_MAPPING = {
-  javascript: "js",
-};
-
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const isServer = useIsServer();
-  const { queue, setQueue, setQueuedExamples } = useUIStatus();
+  const { queue, setQueue } = useUIStatus();
+
   const cb = useCallback(() => {
+    // Sync checkboxes to queue state.
+    const elements = getQueueCheckboxes();
+    setQueue(
+      elements
+        .filter((e) => e.checked)
+        .map((e) => createQueueEntry(e, elements))
+    );
+  }, [setQueue]);
+
+  useEffect(() => {
+    // Sync queue state to checkboxes.
+    const ids = queue.map((item) => item.id);
     const elements = [
       ...document.querySelectorAll(".playlist > input:checked"),
     ] as HTMLInputElement[];
-    setQueue(
-      elements.map((e, key) => {
-        const { id } = e;
-        const lang =
-          e
-            ?.closest(".example-header")
-            ?.querySelector(".language-name")
-            ?.textContent?.toLowerCase() ?? "";
-        return { key, id, lang: LANG_MAPPING[lang] ?? lang };
-      })
-    );
-  }, [setQueue]);
+    for (const element of elements) {
+      element.checked = ids.includes(element.id);
+    }
+  }, [queue]);
+
   useEffect(() => {
     if (!isServer) {
       window["playQueue"] = cb;
     }
   }, [cb, isServer]);
+
   return queue.length ? (
     <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
       <aside>
@@ -76,10 +79,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
               buttonType="reset"
               icon="cancel"
               type="action"
-              onClickHandler={() => {
-                setQueuedExamples(() => new Set());
-                setQueue([]);
-              }}
+              onClickHandler={() => setQueue([])}
             ></Button>
           </summary>
           <div className="play-queue-inner">
@@ -88,12 +88,9 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
                 <PQEntry
                   key={item.key}
                   item={item}
-                  unqueue={() => {
-                    setQueuedExamples(
-                      (old) => new Set([...old].filter((x) => x !== item.id))
-                    );
-                    setQueue((old) => old.filter((x) => x.id !== item.id));
-                  }}
+                  unqueue={() =>
+                    setQueue((old) => old.filter((x) => x.id !== item.id))
+                  }
                 />
               ))}
             </ul>
@@ -117,4 +114,35 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
       </aside>
     </div>
   ) : null;
+}
+
+function getQueueCheckboxes() {
+  return [
+    ...document.querySelectorAll(".playlist > input"),
+  ] as HTMLInputElement[];
+}
+
+const LANG_MAPPING = {
+  javascript: "js",
+};
+
+export function createQueueEntry(
+  elementOrId: HTMLInputElement | string,
+  elements?: HTMLInputElement[]
+) {
+  const e =
+    elementOrId instanceof HTMLInputElement
+      ? elementOrId
+      : (document.getElementById(elementOrId) as HTMLInputElement);
+  elements ??= getQueueCheckboxes();
+
+  const key = elements.indexOf(e);
+  const id = e.id;
+  const lang =
+    e
+      ?.closest(".example-header")
+      ?.querySelector(".language-name")
+      ?.textContent?.toLowerCase() ?? "";
+
+  return { key, id, lang: LANG_MAPPING[lang] ?? lang };
 }

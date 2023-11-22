@@ -11,7 +11,6 @@ interface UIStatus {
   colorScheme: Theme;
   setColorScheme: React.Dispatch<React.SetStateAction<Theme>>;
   queuedExamples: Set<string>;
-  setQueuedExamples: React.Dispatch<React.SetStateAction<Set<string>>>;
   queue: QueueEntry[];
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
 }
@@ -31,7 +30,6 @@ const UIContext = React.createContext<UIStatus>({
   colorScheme: "os-default",
   setColorScheme: () => {},
   queuedExamples: new Set<string>(),
-  setQueuedExamples: () => {},
   queue: [],
   setQueue: () => {},
 });
@@ -102,6 +100,10 @@ export function UIProvider(props: any) {
       : document.body.classList.remove("mobile-overlay-active");
   }, [mobileOverlays]);
 
+  React.useEffect(() => {
+    setQueuedExamples(new Set(queue.map((item) => item.id)));
+  }, [queue]);
+
   return (
     <UIContext.Provider
       value={{
@@ -113,7 +115,6 @@ export function UIProvider(props: any) {
         setColorScheme,
         // Playground.
         queuedExamples,
-        setQueuedExamples,
         queue,
         setQueue,
       }}
