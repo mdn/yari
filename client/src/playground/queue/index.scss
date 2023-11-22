@@ -59,11 +59,11 @@
   }
 
   details:not([open]) {
-    background-color: var(--text-primary-blue);
+    background-color: var(--category-color);
     width: min-content;
 
     > summary {
-      color: var(--mdn-color-white);
+      color: var(--background-primary);
       font-size: 0;
       width: fit-content;
 
