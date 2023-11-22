@@ -75,12 +75,6 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
         <details className="play-queue" open>
           <summary>
             <div>Queue</div>
-            <Button
-              buttonType="reset"
-              icon="cancel"
-              type="action"
-              onClickHandler={() => setQueue([])}
-            ></Button>
           </summary>
           <div className="play-queue-inner">
             <ul>
