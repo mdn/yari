@@ -42,6 +42,7 @@ import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue } from "../../playground/queue";
 import { AIHelpHistory } from "./history";
+import { useUIStatus } from "../../ui-context";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -242,6 +243,7 @@ const SORRY_FRONTEND =
 
 export function AIHelpInner() {
   const user = useUserData();
+  const { queuedExamples, setQueuedExamples } = useUIStatus();
   const locale = useLocale();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -250,7 +252,6 @@ export function AIHelpInner() {
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 
@@ -313,8 +314,8 @@ export function AIHelpInner() {
   useEffect(() => {
     const messageIds = new Set(messages.map((m) => m.messageId));
     setQueuedExamples((old) => {
-      const fresh = new Set(
-        [...old].filter((id) => messageIds.has(id.split("--")[0]))
+      const fresh = [...old].filter((item) =>
+        messageIds.has(item.id.split("--")[0])
       );
 
       return fresh;
@@ -444,25 +445,31 @@ export function AIHelpInner() {
                                                 <input
                                                   type="checkbox"
                                                   checked={
-                                                    queuedExamples.has(id) ||
-                                                    false
+                                                    queuedExamples.some(
+                                                      (item) => item.id === id
+                                                    ) || false
                                                   }
                                                   onChange={() => {
-                                                    setQueuedExamples(
-                                                      (old) =>
-                                                        new Set(
-                                                          !old.has(id)
-                                                            ? [...old, id]
-                                                            : [...old].filter(
-                                                                (x) => x !== id
-                                                              )
-                                                        )
+                                                    setQueuedExamples((old) =>
+                                                      !old.some(
+                                                        (item) => item.id === id
+                                                      )
+                                                        ? [
+                                                            ...old,
+                                                            { id, key: 0 },
+                                                          ]
+                                                        : [...old].filter(
+                                                            (item) =>
+                                                              item.id !== id
+                                                          )
                                                     );
                                                   }}
                                                   id={`sample-${id}`}
                                                 />
                                                 <label htmlFor={`sample-${id}`}>
-                                                  {queuedExamples.has(id)
+                                                  {queuedExamples.some(
+                                                    (item) => item.id === id
+                                                  )
                                                     ? "queued"
                                                     : "queue"}
                                                 </label>
@@ -643,7 +650,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: new`);
                           setQuery("");
                           setIsExample(false);
-                          setQueuedExamples(new Set());
+                          setQueuedExamples([]);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}

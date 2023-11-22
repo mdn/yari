@@ -1,44 +1,36 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import "./index.scss";
 import { collectCode } from "../../document/code/playground";
 import { SESSION_KEY } from "../utils";
 import { useIsServer, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
+import { useUIStatus } from "../../ui-context";
 
-function PQEntry({ id, key, lang }: QueueEntry) {
+function PQEntry({ item, toggle }: { item: QueueEntry; toggle: () => void }) {
   const intoView = () => {
-    const element = document.getElementById(id);
+    const element = document.getElementById(item.id);
     const header = element?.parentElement?.parentElement;
     const top =
       (header?.getBoundingClientRect().top || 0) + window.scrollY - 130;
     window.scrollTo({ top, behavior: "smooth" });
   };
   return (
-    <li key={key}>
+    <li key={item.key}>
       <button className="queue-ref" onClick={intoView}>
-        Example {key + 1}
+        Example {item.key + 1}
       </button>
-      <code>{lang}</code>
+      <code>{item.lang}</code>
       <Button
         type="action"
         buttonType="reset"
         icon="trash-filled"
         onClickHandler={() => {
-          uncheck(id);
+          toggle();
           window["playQueue"]?.();
         }}
       />
     </li>
   );
-}
-
-function uncheck(id: string) {
-  const el = document.getElementById(id) as HTMLInputElement | undefined;
-  if (el) {
-    el.checked = false;
-    return true;
-  }
-  return false;
 }
 
 interface QueueEntry {
@@ -50,7 +42,14 @@ interface QueueEntry {
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const isServer = useIsServer();
-  const [queue, setQueue] = useState<QueueEntry[]>([]);
+
+  const {
+    queuedExamples: queue,
+    setQueuedExamples: setQueue,
+    resetQueuedExamples,
+    removeQueuedExample,
+  } = useUIStatus();
+
   const cb = useCallback(() => {
     const elements = [
       ...document.querySelectorAll(".playlist > input:checked"),
@@ -77,13 +76,21 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
               icon="cancel"
               type="action"
               onClickHandler={() => {
-                queue.forEach(({ id }) => uncheck(id));
+                resetQueuedExamples();
                 setQueue([]);
               }}
             ></Button>
           </summary>
           <div className="play-queue-inner">
-            <ul>{queue.map(PQEntry)}</ul>
+            <ul>
+              {queue.map((item) => (
+                <PQEntry
+                  key={item.id}
+                  item={item}
+                  toggle={() => removeQueuedExample(item.id)}
+                />
+              ))}
+            </ul>
             <Button
               type="secondary"
               extraClasses="play-button"
