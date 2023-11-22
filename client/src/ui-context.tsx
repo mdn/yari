@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import Toast, { ToastData } from "./ui/atoms/toast";
 import { Theme } from "./types/theme";
-import { QueueEntry } from "./types/queue";
 
 interface UIStatus {
   toggleMobileOverlay: (id: Overlay, shown?: boolean) => void;
@@ -10,10 +9,6 @@ interface UIStatus {
   setToastData: React.Dispatch<React.SetStateAction<ToastData | null>>;
   colorScheme: Theme;
   setColorScheme: React.Dispatch<React.SetStateAction<Theme>>;
-  queuedExamples: QueueEntry[];
-  resetQueuedExamples: () => void;
-  setQueuedExamples: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
-  removeQueuedExample: (id: string) => void;
 }
 
 export enum Overlay {
@@ -30,10 +25,6 @@ const UIContext = React.createContext<UIStatus>({
   setToastData: () => {},
   colorScheme: "os-default",
   setColorScheme: () => {},
-  queuedExamples: [],
-  resetQueuedExamples: () => {},
-  setQueuedExamples: () => {},
-  removeQueuedExample: () => {},
 });
 
 export function UIProvider(props: any) {
@@ -44,13 +35,6 @@ export function UIProvider(props: any) {
   const [colorScheme, setColorScheme] = useState<Theme>(
     (initialTheme as Theme) || "os-default"
   );
-  const [queuedExamples, setQueuedExamples] = useState<QueueEntry[]>([]);
-
-  const resetQueuedExamples = () => setQueuedExamples([]);
-
-  const removeQueuedExample = (id: string) => {
-    setQueuedExamples((old) => [...old].filter((x) => x.id !== id));
-  };
 
   const toggleMobileOverlay = useCallback(
     (overlay: Overlay, shown?: boolean) => {
@@ -116,10 +100,6 @@ export function UIProvider(props: any) {
         setToastData,
         colorScheme,
         setColorScheme,
-        queuedExamples,
-        resetQueuedExamples,
-        setQueuedExamples,
-        removeQueuedExample,
       }}
     >
       {props.children}
