@@ -1,6 +1,7 @@
 @use "../../ui/vars" as *;
 
 .ai-help {
+  --background-toc-active: var(--ai-help-accent-background-color);
   --category-color: var(--ai-help-icon);
   --text-link: var(--ai-help-link);
 
