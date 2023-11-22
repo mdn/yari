@@ -1,11 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import "./index.scss";
 import { collectCode } from "../../document/code/playground";
 import { SESSION_KEY } from "../utils";
 import { useIsServer, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
+import { useUIStatus } from "../../ui-context";
+import { QueueEntry } from "../../types/playground";
 
-function PQEntry({ id, key, lang }: QueueEntry) {
+function PQEntry({
+  item: { id, key, lang },
+  unqueue,
+}: {
+  item: QueueEntry;
+  unqueue: () => void;
+}) {
   const intoView = () => {
     const element = document.getElementById(id);
     const header = element?.parentElement?.parentElement;
@@ -23,49 +31,44 @@ function PQEntry({ id, key, lang }: QueueEntry) {
         type="action"
         buttonType="reset"
         icon="trash-filled"
-        onClickHandler={() => {
-          uncheck(id);
-          window["playQueue"]?.();
-        }}
+        onClickHandler={() => unqueue()}
       />
     </li>
   );
 }
 
-function uncheck(id: string) {
-  const el = document.getElementById(id) as HTMLInputElement | undefined;
-  if (el) {
-    el.checked = false;
-    return true;
-  }
-  return false;
-}
-
-interface QueueEntry {
-  key: number;
-  id: string;
-  lang?: string | null;
-}
-
 export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
   const locale = useLocale();
   const isServer = useIsServer();
-  const [queue, setQueue] = useState<QueueEntry[]>([]);
+  const { queue, setQueue } = useUIStatus();
+
   const cb = useCallback(() => {
+    // Sync checkboxes to queue state.
+    const elements = getQueueCheckboxes();
+    setQueue(
+      elements
+        .filter((e) => e.checked)
+        .map((e) => createQueueEntry(e, elements))
+    );
+  }, [setQueue]);
+
+  useEffect(() => {
+    // Sync queue state to checkboxes.
+    const ids = queue.map((item) => item.id);
     const elements = [
       ...document.querySelectorAll(".playlist > input:checked"),
     ] as HTMLInputElement[];
-    setQueue(
-      elements.map((e, key) => {
-        return { key, id: e.id, lang: e?.firstChild?.textContent };
-      })
-    );
-  }, [setQueue]);
+    for (const element of elements) {
+      element.checked = ids.includes(element.id);
+    }
+  }, [queue]);
+
   useEffect(() => {
     if (!isServer) {
       window["playQueue"] = cb;
     }
   }, [cb, isServer]);
+
   return queue.length ? (
     <div className={`play-queue-container ${standalone ? "standalone" : ""}`}>
       <aside>
@@ -76,14 +79,21 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
               buttonType="reset"
               icon="cancel"
               type="action"
-              onClickHandler={() => {
-                queue.forEach(({ id }) => uncheck(id));
-                setQueue([]);
-              }}
+              onClickHandler={() => setQueue([])}
             ></Button>
           </summary>
           <div className="play-queue-inner">
-            <ul>{queue.map(PQEntry)}</ul>
+            <ul>
+              {queue.map((item) => (
+                <PQEntry
+                  key={item.key}
+                  item={item}
+                  unqueue={() =>
+                    setQueue((old) => old.filter((x) => x.id !== item.id))
+                  }
+                />
+              ))}
+            </ul>
             <Button
               type="secondary"
               extraClasses="play-button"
@@ -104,4 +114,35 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
       </aside>
     </div>
   ) : null;
+}
+
+function getQueueCheckboxes() {
+  return [
+    ...document.querySelectorAll(".playlist > input"),
+  ] as HTMLInputElement[];
+}
+
+const LANG_MAPPING = {
+  javascript: "js",
+};
+
+export function createQueueEntry(
+  elementOrId: HTMLInputElement | string,
+  elements?: HTMLInputElement[]
+) {
+  const e =
+    elementOrId instanceof HTMLInputElement
+      ? elementOrId
+      : (document.getElementById(elementOrId) as HTMLInputElement);
+  elements ??= getQueueCheckboxes();
+
+  const key = elements.indexOf(e);
+  const id = e.id;
+  const lang =
+    e
+      ?.closest(".example-header")
+      ?.querySelector(".language-name")
+      ?.textContent?.toLowerCase() ?? "";
+
+  return { key, id, lang: LANG_MAPPING[lang] ?? lang };
 }

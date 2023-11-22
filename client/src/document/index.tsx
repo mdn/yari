@@ -10,7 +10,6 @@ import {
   useDocumentURL,
   useCopyExamplesToClipboardAndAIExplain,
   useRunSample,
-  useCollectSample,
 } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
@@ -123,7 +122,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
-  useCollectSample(doc);
+  //useCollectSample(doc);
   useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
@@ -269,7 +268,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <Metadata doc={doc} locale={locale} />
           </article>
         </MainContentContainer>
-        <PlayQueue standalone={true} />
+        {false && <PlayQueue standalone={true} />}
       </div>
       <BottomBanner />
     </>

@@ -743,6 +743,10 @@ pre {
       &:checked ~ label {
         color: var(--category-color);
         opacity: 1;
+
+        &::before {
+          mask-image: url("../assets/icons/queued.svg");
+        }
       }
 
       &:checked ~ label:before {

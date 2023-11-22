@@ -40,8 +40,9 @@ import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
 import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 import React from "react";
 import { SESSION_KEY } from "../../playground/utils";
-import { PlayQueue } from "../../playground/queue";
+import { PlayQueue, createQueueEntry } from "../../playground/queue";
 import { AIHelpHistory } from "./history";
+import { useUIStatus } from "../../ui-context";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -250,7 +251,7 @@ export function AIHelpInner() {
   const [query, setQuery] = useState("");
   const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
+  const { queuedExamples, setQueue } = useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
 
@@ -312,18 +313,14 @@ export function AIHelpInner() {
 
   useEffect(() => {
     const messageIds = new Set(messages.map((m) => m.messageId));
-    setQueuedExamples((old) => {
-      const fresh = new Set(
-        [...old].filter((id) => messageIds.has(id.split("--")[0]))
+    setQueue((old) => {
+      const fresh = [...old].filter(({ id }) =>
+        messageIds.has(id.split("--")[0])
       );
 
       return fresh;
     });
-  }, [messages, setQueuedExamples]);
-
-  useEffect(() => {
-    window["playQueue"]?.();
-  }, [queuedExamples]);
+  }, [messages, setQueue]);
 
   const submitQuestion = (parentId) => {
     gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
@@ -424,7 +421,8 @@ export function AIHelpInner() {
                                         </pre>
                                       );
                                     }
-                                    const id = `${message.messageId}--${sample}`;
+                                    const key = sample;
+                                    const id = `${message.messageId}--${key}`;
                                     sample += 1;
                                     return (
                                       <div className="code-example">
@@ -443,25 +441,32 @@ export function AIHelpInner() {
                                               <div className="playlist">
                                                 <input
                                                   type="checkbox"
-                                                  checked={
-                                                    queuedExamples.has(id) ||
-                                                    false
-                                                  }
+                                                  checked={queuedExamples.has(
+                                                    id
+                                                  )}
                                                   onChange={() => {
-                                                    setQueuedExamples(
-                                                      (old) =>
-                                                        new Set(
-                                                          !old.has(id)
-                                                            ? [...old, id]
-                                                            : [...old].filter(
-                                                                (x) => x !== id
-                                                              )
-                                                        )
+                                                    setQueue((old) =>
+                                                      !old.some(
+                                                        (item) => item.id === id
+                                                      )
+                                                        ? [
+                                                            ...old,
+                                                            createQueueEntry(
+                                                              id
+                                                            ),
+                                                          ].sort(
+                                                            (a, b) =>
+                                                              a.key - b.key
+                                                          )
+                                                        : [...old].filter(
+                                                            (item) =>
+                                                              item.id !== id
+                                                          )
                                                     );
                                                   }}
-                                                  id={`sample-${id}`}
+                                                  id={id}
                                                 />
-                                                <label htmlFor={`sample-${id}`}>
+                                                <label htmlFor={id}>
                                                   {queuedExamples.has(id)
                                                     ? "queued"
                                                     : "queue"}
@@ -643,7 +648,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: new`);
                           setQuery("");
                           setIsExample(false);
-                          setQueuedExamples(new Set());
+                          setQueue([]);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}
