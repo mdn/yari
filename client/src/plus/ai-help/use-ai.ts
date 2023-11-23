@@ -413,10 +413,6 @@ export function useAiChat({
   }, []);
 
   useEffect(() => {
-    console.log({ loadingState });
-  }, [loadingState]);
-
-  useEffect(() => {
     const convId = searchParams.get("c");
     if (convId && convId !== chatId) {
       (async () => {
