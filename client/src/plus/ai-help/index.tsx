@@ -3,7 +3,9 @@ import {
   Children,
   MutableRefObject,
   ReactElement,
+  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -336,6 +338,20 @@ export function AIHelpInner() {
     }
   };
 
+  //
+
+  const lastUserQuestion = useMemo(
+    () => messages.filter((message) => message.role === "user").at(-1),
+    [messages]
+  );
+  const retryLastQuestion = useCallback(() => {
+    if (!lastUserQuestion) {
+      return;
+    }
+    const { content: question, chatId, parentId, messageId } = lastUserQuestion;
+    submit(question, chatId, parentId, messageId);
+  }, [lastUserQuestion, submit]);
+
   return (
     <>
       <PlayQueue />
@@ -357,6 +373,14 @@ export function AIHelpInner() {
                 <ul className="ai-help-messages">
                   {messages.map((message, index) => {
                     let sample = 0;
+                    if (
+                      !isLoading &&
+                      !isResponding &&
+                      message.status !== "complete"
+                    ) {
+                      return null;
+                    }
+
                     return (
                       <li
                         key={index}
@@ -611,7 +635,18 @@ export function AIHelpInner() {
             {hasError && (
               <NoteCard extraClasses="ai-help-error" type="error">
                 <h4>Error</h4>
-                <p>An error occurred. Please try again.</p>
+                <p>
+                  An error occurred.{" "}
+                  {lastUserQuestion && (
+                    <>
+                      Please{" "}
+                      <Button type="link" onClickHandler={retryLastQuestion}>
+                        try again
+                      </Button>
+                      .
+                    </>
+                  )}
+                </p>
               </NoteCard>
             )}
             <div ref={footerRef} className="ai-help-footer">
