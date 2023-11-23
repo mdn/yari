@@ -3367,13 +3367,14 @@
   resolved "https://registry.yarnpkg.com/@use-it/interval/-/interval-1.0.0.tgz#c42c68f22ca29a0dc929041746373d94496d2b3a"
   integrity sha512-WQFcnSt/xM/mS8ZtJ0ut5lhPrl+V0HDPPcI/J0eUClsfiD+/r8A7IeW/pVcfpSVGWRmN3+WnjNteWuKyWs2WZg==
 
-"@vscode/ripgrep@^1.15.7":
-  version "1.15.7"
-  resolved "https://registry.yarnpkg.com/@vscode/ripgrep/-/ripgrep-1.15.7.tgz#bee27fd60387fd74981c266f046532ea018be64e"
-  integrity sha512-3B5dqNljRLtNhKQ0ZOO8uFffF3TJ+ecnfN9PQH8iVvXtzlbPkh5R48/L2XRM+lFUm5mYCLbym/Ee+P19UePDDA==
+"@vscode/ripgrep@^1.15.9":
+  version "1.15.9"
+  resolved "https://registry.yarnpkg.com/@vscode/ripgrep/-/ripgrep-1.15.9.tgz#92279f7f28e1e49ad9a89603e10b17a4c7f9f5f1"
+  integrity sha512-4q2PXRvUvr3bF+LsfrifmUZgSPmCNcUZo6SbEAZgArIChchkezaxLoIeQMJe/z3CCKStvaVKpBXLxN3Z8lQjFQ==
   dependencies:
     https-proxy-agent "^7.0.2"
     proxy-from-env "^1.1.0"
+    yauzl "^2.9.2"
 
 "@webassemblyjs/ast@1.11.5", "@webassemblyjs/ast@^1.11.5":
   version "1.11.5"
@@ -15992,7 +15993,7 @@ yargs@^17.3.1:
     y18n "^5.0.5"
     yargs-parser "^21.0.0"
 
-yauzl@^2.4.2:
+yauzl@^2.4.2, yauzl@^2.9.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/yauzl/-/yauzl-2.10.0.tgz#c7eb17c93e112cb1086fa6d8e51fb0667b79a5f9"
   integrity sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==
