@@ -75,7 +75,7 @@ export function Footer() {
             </li>
             <li className="footer-nav-item">
               <a
-                href="https://www.mozilla.org/en-US/careers/listings/?team=Marketing"
+                href="https://www.mozilla.org/en-US/careers/listings/?team=ProdOps"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -133,7 +133,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://discord.gg/hkGN8VKvvD"
+                href="/discord"
                 target="_blank"
                 rel="noopener noreferrer"
               >

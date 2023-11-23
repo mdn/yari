@@ -57,6 +57,7 @@ jobs:
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
+          lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
       - uses: actions/checkout@v4
