@@ -32,7 +32,16 @@ const ExpandingTextarea = forwardRef(function ExpandingTextarea(
   );
   useEffect(() => {
     const node = textAreaRef.current;
-    if (value && node && node.scrollHeight > node.clientHeight) {
+
+    if (!node) {
+      return;
+    }
+
+    // Collapse.
+    node.style.height = "";
+
+    if (value && node.scrollHeight > node.clientHeight) {
+      // Expand.
       node.style.height = `${node.scrollHeight + 2}px`;
     }
   }, [value]);
