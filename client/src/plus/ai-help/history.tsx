@@ -29,11 +29,15 @@ function groupHistory(history) {
   const yesterday = new Date(
     structuredClone(today).setDate(today.getDate() - 1)
   );
+  const last7Days = new Date(
+    structuredClone(today).setDate(today.getDate() - 7)
+  );
   const last30Days = new Date(
     structuredClone(today).setDate(today.getDate() - 30)
   );
   const groups = [
     { label: "Last 30 Days", d: last30Days },
+    { label: "Last 7 Days", d: last7Days },
     { label: "Yesterday", d: yesterday },
     { label: "Today", d: today },
   ];
