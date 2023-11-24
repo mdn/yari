@@ -7,7 +7,16 @@ section.place {
   a:not(.button),
   a {
     color: var(--text-primary);
-    text-decoration: none;
+
+    &:link,
+    &:visited {
+      text-decoration: none;
+    }
+
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .pong-box {
@@ -44,6 +53,18 @@ section.place {
       margin: 1rem 0.25rem 0 auto;
       text-decoration: underline;
       width: max-content;
+    }
+
+    a.pong-note {
+      &:link,
+      &:visited {
+        text-decoration: underline;
+      }
+
+      &:focus,
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 
