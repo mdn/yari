@@ -8099,10 +8099,10 @@ html-url-attributes@^3.0.0:
   resolved "https://registry.yarnpkg.com/html-url-attributes/-/html-url-attributes-3.0.0.tgz#fc4abf0c3fb437e2329c678b80abb3c62cff6f08"
   integrity sha512-/sXbVCWayk6GDVg3ctOX6nxaVj7So40FcFAnWlWGNAB1LpYKcV5Cd10APjPjW80O7zYW2MsjBV4zZ7IZO5fVow==
 
-html-validate@^8.7.2:
-  version "8.7.2"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.7.2.tgz#4b9e24b44726d70e24bac9762fc5fe3ed323fbf6"
-  integrity sha512-0UD3VO0LBoavvmRcevf8uQ8UZGqh4moc1Stwvh0+rPsvax/PNs1mFA+3gb63zRShxrV24D8Mioj1EvLJj7Kq4g==
+html-validate@^8.7.3:
+  version "8.7.3"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.7.3.tgz#19bbf0f006dce09f7724d4b7d4f80fc53043e0e4"
+  integrity sha512-nDJmMTdH3hXv/nCOfedhgVsPivHjYHCiT9TSC3U/DCC10F8OJtBJEPHY/cU7MViwIdu3RfOmU4EoPE02ku/aug==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^4.1.0"
@@ -15372,10 +15372,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^2.74.0:
-  version "2.74.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.74.0.tgz#db1edd6c8af76e65a02e8ad5f0ed6254c61513ae"
-  integrity sha512-d+AXjG85/nLj78gMfMmIfvebrq1s5BeLmnFbIjFUIoHXv4aEHX+FAU++alJlyryIcnGM+erzXrYYsJjf5O+SPw==
+web-specs@^2.74.1:
+  version "2.74.1"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-2.74.1.tgz#59a160b4aa27f958ff3585b7efe08d5c0761ac47"
+  integrity sha512-OrXix5LVFhnJ1uvj00jy1vAOkUNzoVWKF7IqkTgqTI9CmYIdLxpknSvE/iqOOHUVNX90izUUj8lJVNjCdnWCuA==
 
 web-streams-polyfill@4.0.0-beta.3:
   version "4.0.0-beta.3"
