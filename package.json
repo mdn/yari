@@ -139,7 +139,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^0.4.1",
-    "web-specs": "^2.74.0"
+    "web-specs": "^2.74.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
@@ -195,7 +195,7 @@
     "file-loader": "^6.2.0",
     "foreman": "^3.0.1",
     "history": "^5.2.0",
-    "html-validate": "^8.7.2",
+    "html-validate": "^8.7.3",
     "html-webpack-plugin": "^5.5.3",
     "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
