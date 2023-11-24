@@ -3,6 +3,7 @@
 .ai-help {
   --background-toc-active: var(--ai-help-accent-background-color);
   --category-color: var(--ai-help-icon);
+  --category-color-background: var(--background-success);
   --text-link: var(--ai-help-link);
 
   > header {
@@ -117,6 +118,31 @@
 
   a:hover {
     text-decoration: underline;
+  }
+
+  .ai-help-banner {
+    background-color: var(--category-color-background);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.5rem;
+
+    .icon {
+      background-color: var(--ai-help-icon);
+      vertical-align: text-top;
+
+      &:first-of-type {
+        margin-right: 1rem;
+      }
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .auth-container {
+      margin-top: 1rem;
+    }
   }
 
   .ai-help-inner {

@@ -19,7 +19,7 @@ import {
   Quota,
   useAiChat,
 } from "./use-ai";
-import { AiLoginBanner, AiUpsellBanner } from "./banners";
+import { AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
@@ -45,6 +45,7 @@ import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue, createQueueEntry } from "../../playground/queue";
 import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
+import { AuthContainer } from "../../ui/molecules/auth-container";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -106,26 +107,36 @@ export default function AiHelp() {
           </p>
         </Container>
         <Container>
-          <div className="notecard experimental">
+          <div className="ai-help-banner">
             <p>
-              <strong>This is a beta feature.</strong>
-              <br />
-              May occasionally generate incorrect answers. Please always verify
-              information independently.
-              <br />
-              <a href="/en-US/blog/introducing-ai-help/">
-                <strong>Learn more</strong>
-              </a>
+              <Icon name="bell-ring" />
+              <strong>GPT-4 Turbo-powered AI Help.</strong>
             </p>
+            {user?.isAuthenticated ? (
+              <>
+                <p>
+                  Now with chat history, enhanced context, and optimised
+                  prompts.
+                </p>
+                <p>This is a beta feature.</p>
+              </>
+            ) : (
+              <>
+                <p>
+                  Discover AI powered assistance on MDN! Now enhanced with GPT-4
+                  Turbo, AI Help offers deeper insights and improved guidance.
+                  Perfect for learning and solving challenges on the go.
+                </p>
+                <p>This is a beta feature.</p>
+                <AuthContainer
+                  logInGleanContext={`${AI_HELP}: banner-login`}
+                  signUpGleanContext={`${AI_HELP}: banner-signup`}
+                />
+              </>
+            )}
           </div>
         </Container>
-        {user?.isAuthenticated ? (
-          <AIHelpInner />
-        ) : (
-          <Container>
-            <AiLoginBanner />
-          </Container>
-        )}
+        {user?.isAuthenticated && <AIHelpInner />}
       </div>
     </div>
   );
