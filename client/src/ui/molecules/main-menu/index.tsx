@@ -9,6 +9,7 @@ import { PLUS_IS_ENABLED } from "../../../env";
 import { useLocale } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { MENU } from "../../../telemetry/constants";
+import { useLocation } from "react-router";
 
 export default function MainMenu({ isOpenOnMobile }) {
   const locale = useLocale();
@@ -83,7 +84,7 @@ export default function MainMenu({ isOpenOnMobile }) {
         )}
         <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
         <TopLevelMenuLink to={`/${locale}/play`}>Play</TopLevelMenuLink>
-        <TopLevelMenuLink to="/en-US/plus/ai-help/">
+        <TopLevelMenuLink to="/en-US/plus/ai-help">
           AI Help <sup className="new beta">Beta</sup>
         </TopLevelMenuLink>
       </ul>
@@ -98,9 +99,13 @@ function TopLevelMenuLink({
   to: string;
   children: React.ReactNode;
 }) {
+  const { pathname } = useLocation();
   const gleanClick = useGleanClick();
+
+  const isActive = pathname.startsWith(to.split("#", 2)[0]);
+
   return (
-    <li className="top-level-entry-container">
+    <li className={`top-level-entry-container ${isActive ? "active" : ""}`}>
       <a
         className="top-level-entry menu-link"
         href={to}
