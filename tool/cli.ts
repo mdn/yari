@@ -334,6 +334,7 @@ program
   )
 
   .command("delete", "Delete content")
+  .alias("remove", "rm")
   .argument("<slug>", "Slug")
   .argument("[locale]", "Locale", {
     default: DEFAULT_LOCALE,
