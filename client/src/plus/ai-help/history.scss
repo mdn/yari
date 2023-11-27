@@ -58,6 +58,7 @@
         width: 100%;
 
         > li {
+          --icon-size: 0.6rem;
           align-items: center;
           display: flex;
           flex-direction: row;
