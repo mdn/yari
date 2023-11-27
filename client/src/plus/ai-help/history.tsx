@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import "./history.scss";
+import { useLocale } from "../../hooks";
+import { HighlightedIcon } from "../../ui/atoms/icon";
+import { useAIHelpSettings } from "./utils";
 
 function monthYearLabel(date: Date): string {
   const formattedDate = date.toLocaleString(undefined, {
@@ -139,17 +142,33 @@ function AIHelpHistorySubList({
   );
 }
 
-export function AIHelpHistory({
-  currentChatId,
-  lastUpdate,
-  isFinished,
-  messageId,
-}: {
+export function AIHelpHistory(props: HistoryProps) {
+  const { isHistoryEnabled } = useAIHelpSettings();
+
+  return (
+    <aside className="ai-help-history" tabIndex={-1}>
+      {isHistoryEnabled ? (
+        <AIHelpHistoryInner {...props} />
+      ) : (
+        <AIHelpHistoryActivation />
+      )}
+    </aside>
+  );
+}
+
+interface HistoryProps {
   currentChatId?: string;
   lastUpdate: Date;
   isFinished: boolean;
   messageId?: string;
-}) {
+}
+
+export function AIHelpHistoryInner({
+  currentChatId,
+  lastUpdate,
+  isFinished,
+  messageId,
+}: HistoryProps) {
   const { data, mutate } = useSWR(
     `/api/v1/plus/ai/help/history/list`,
     async (url) => {
@@ -198,7 +217,7 @@ export function AIHelpHistory({
   }, [lastUpdate, mutate]);
 
   return (
-    <aside className="ai-help-history" tabIndex={-1}>
+    <>
       <input
         id="ai-help-history-toggle"
         type="checkbox"
@@ -228,6 +247,36 @@ export function AIHelpHistory({
           ) : null;
         })}
       </ol>
+    </>
+  );
+}
+
+export function AIHelpHistoryActivation() {
+  const locale = useLocale();
+
+  return (
+    <aside className="ai-help-history-activation" tabIndex={-1}>
+      <section>
+        <p>
+          <HighlightedIcon name="history" />
+        </p>
+        <p>
+          <strong>Answer History</strong>
+        </p>
+        <p>
+          <span className="teaser">
+            You can now effortlessly revisit and continue past conversations
+          </span>
+        </p>
+        <p>
+          <Button
+            type="link"
+            href={`/${locale}/plus/settings#ai-help--history-enable`}
+          >
+            Enable History
+          </Button>
+        </p>
+      </section>
     </aside>
   );
 }

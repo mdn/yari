@@ -8,12 +8,12 @@ import { useGleanClick } from "../telemetry/glean-context";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
 import { useUserData } from "../user-context";
-import { useAiHelpSettings } from "../plus/ai-help/utils";
+import { useAIHelpSettings } from "../plus/ai-help/utils";
 
 export function ManageAIHelp() {
   const [saving, setSaving] = useState<boolean>(false);
   const user = useUserData();
-  const { isHistoryEnabled } = useAiHelpSettings();
+  const { isHistoryEnabled } = useAIHelpSettings();
   const gleanClick = useGleanClick();
 
   return (

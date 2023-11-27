@@ -4,7 +4,7 @@ export function isExternalUrl(url: string) {
   return url.startsWith("//") || !url.startsWith("/");
 }
 
-export function useAiHelpSettings() {
+export function useAIHelpSettings() {
   const user = useUserData();
   const isHistoryEnabled = user?.settings?.aiHelpHistory ?? false;
 

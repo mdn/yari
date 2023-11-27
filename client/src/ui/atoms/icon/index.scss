@@ -3,14 +3,15 @@ $icons: "add-filled", "add", "altname", "bell", "bell-filled", "bell-ring",
   "chrome", "critical", "deno", "deprecated", "desktop", "disabled", "edge",
   "edit", "edit-filled", "ellipses", "experimental", "external", "eye-filled",
   "eye", "feed", "filter", "footnote", "github-mark-small", "ie", "information",
-  "language", "mastodon", "menu-filled", "menu", "mobile", "more", "theme-dark",
-  "new-topic", "next", "no", "nodejs", "nonstandard", "note-info",
-  "note-warning", "note-deprecated", "opera", "padlock", "partial", "play",
-  "prefix", "preview", "previous", "queue", "queued", "quote", "return",
-  "safari", "samsunginternet", "search", "send", "server", "sidebar",
-  "simple-firefox", "small-arrow", "theme-light", "star-filled", "star",
-  "theme-os-default", "thumbs-down", "thumbs-up", "trash", "trash-filled",
-  "twitter", "unknown", "warning", "webview", "yes", "yes-circle";
+  "highlight", "history", "language", "mastodon", "menu-filled", "menu",
+  "mobile", "more", "theme-dark", "new-topic", "next", "no", "nodejs",
+  "nonstandard", "note-info", "note-warning", "note-deprecated", "opera",
+  "padlock", "partial", "play", "prefix", "preview", "previous", "queue",
+  "queued", "quote", "return", "safari", "samsunginternet", "search", "send",
+  "server", "sidebar", "simple-firefox", "small-arrow", "theme-light",
+  "star-filled", "star", "theme-os-default", "thumbs-down", "thumbs-up", "trash",
+  "trash-filled", "twitter", "unknown", "warning", "webview", "yes",
+  "yes-circle";
 
 .icon {
   --size: var(--icon-size, 1rem);
@@ -35,4 +36,20 @@ $icons: "add-filled", "add", "altname", "bell", "bell-filled", "bell-ring",
 svg.icon {
   background: transparent;
   color: var(--icon-primary);
+}
+
+.icons-highlighted {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > span {
+    line-height: 0;
+    height: var(--icon-size);
+    width: var(--icon-size);
+
+    &.icons-icon-wrapper {
+      margin-top: -0.1rem;
+    }
+  }
 }

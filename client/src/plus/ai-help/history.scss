@@ -130,3 +130,44 @@
     }
   }
 }
+
+.ai-help-history-activation {
+  border: 1px solid var(--border-primary);
+  border-radius: 0.25rem;
+  margin-top: 4rem;
+  padding: 0.25rem;
+
+  .icons-highlighted {
+    .icon {
+      background-color: var(--ai-help-icon);
+    }
+
+    .icons-icon-wrapper {
+      --padding: 0.25rem;
+      background-color: var(--category-color-background);
+      border-radius: 1rem;
+      height: calc(var(--icon-size) + 2 * var(--padding));
+      padding: var(--padding);
+      width: calc(var(--icon-size) + 2 * var(--padding));
+    }
+  }
+
+  p {
+    margin: 0.25rem auto;
+    text-align: center;
+
+    .teaser {
+      font-size: var(--type-smaller-font-size);
+    }
+
+    a[href] {
+      font-weight: var(--font-body-strong-weight);
+      text-decoration: underline;
+
+      &:active,
+      &:hover {
+        text-decoration: unset;
+      }
+    }
+  }
+}

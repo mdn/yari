@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
-import { useAiHelpSettings } from "./utils";
+import { useAIHelpSettings } from "./utils";
 
 export enum MessageRole {
   User = "user",
@@ -350,7 +350,7 @@ export function useAiChat({
   messageTemplate = (message) => message,
 }: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
-  const { isHistoryEnabled } = useAiHelpSettings();
+  const { isHistoryEnabled } = useAIHelpSettings();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingState, setLoadingState] = useState<
