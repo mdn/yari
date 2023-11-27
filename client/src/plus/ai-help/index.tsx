@@ -366,14 +366,12 @@ export function AIHelpInner() {
   return (
     <>
       <PlayQueue />
-      {!user?.settings?.noAIHelpHistory && (
-        <AIHelpHistory
-          currentChatId={chatId}
-          lastUpdate={lastUpdate}
-          isFinished={isFinished}
-          messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
-        />
-      )}
+      <AIHelpHistory
+        currentChatId={chatId}
+        lastUpdate={lastUpdate}
+        isFinished={isFinished}
+        messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
+      />
       <Container>
         {isQuotaLoading || isHistoryLoading ? (
           <Loading />

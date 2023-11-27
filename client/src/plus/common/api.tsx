@@ -74,9 +74,9 @@ export async function toggleNoAds(enabled: boolean) {
   });
 }
 
-export async function toggleNoAIHelpHistory(enabled: boolean) {
+export async function toggleAIHelpHistory(enabled: boolean) {
   return await fetch(SETTINGS_BASE_PATH, {
-    body: JSON.stringify({ no_ai_help_history: enabled }),
+    body: JSON.stringify({ no_ai_help_history: !enabled }),
     method: "POST",
     headers: {
       "content-type": "application/json",

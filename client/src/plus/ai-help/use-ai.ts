@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
-import { useUserData } from "../../user-context";
+import { useAIHelpSettings } from "./utils";
 
 export enum MessageRole {
   User = "user",
@@ -350,7 +350,7 @@ export function useAiChat({
   messageTemplate = (message) => message,
 }: UseAiChatOptions = {}) {
   const eventSourceRef = useRef<SSE>();
-  const user = useUserData();
+  const { isHistoryEnabled } = useAIHelpSettings();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingState, setLoadingState] = useState<
@@ -374,7 +374,7 @@ export function useAiChat({
   const [messageId, setMessageId] = useState<string | undefined>();
   const [path, setPath] = useState<number[]>([]);
   const [state, dispatchState] = useReducer(messageReducer, undefined, () => {
-    if (user?.settings?.noAIHelpHistory) {
+    if (!isHistoryEnabled) {
       const { treeState, chatId } = AiHelpStorage.get();
       if (treeState && chatId) {
         setChatId(chatId);
@@ -453,11 +453,11 @@ export function useAiChat({
       !isLoading &&
       !isResponding &&
       state.root.length > 0 &&
-      user?.settings?.noAIHelpHistory
+      !isHistoryEnabled
     ) {
       AiHelpStorage.set({ treeState: state, chatId });
     }
-  }, [isLoading, isResponding, state, chatId, user?.settings?.noAIHelpHistory]);
+  }, [isLoading, isResponding, state, chatId, isHistoryEnabled]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
@@ -689,7 +689,7 @@ export function useAiChat({
   }
 
   const unReset = useCallback(() => {
-    if (user?.settings?.noAIHelpHistory) {
+    if (!isHistoryEnabled) {
       const { treeState, chatId } = AiHelpStorage.get();
       setChatId(chatId);
       if (treeState) {
@@ -705,7 +705,7 @@ export function useAiChat({
         return params;
       });
     }
-  }, [setSearchParams, previousChatId, user?.settings?.noAIHelpHistory]);
+  }, [setSearchParams, previousChatId, isHistoryEnabled]);
 
   const nextPrev = useCallback(
     (messageId: string, dir: "next" | "prev") => {

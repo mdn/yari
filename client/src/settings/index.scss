@@ -23,7 +23,11 @@ article.settings {
         grid-template-columns: 1fr minmax(5em);
         margin: 2em 0;
 
-        section.setting-row {
+        section:target {
+          background-color: var(--background-information);
+        }
+
+        .setting-row {
           align-items: center;
           display: flex;
           gap: 1rem;
@@ -31,7 +35,7 @@ article.settings {
         }
 
         p {
-          margin: 0;
+          margin: 0 0 1rem;
         }
 
         span {

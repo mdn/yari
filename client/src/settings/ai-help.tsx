@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toggleNoAIHelpHistory } from "../plus/common/api";
+import { toggleAIHelpHistory } from "../plus/common/api";
 import {
   TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED,
   TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED,
@@ -8,10 +8,12 @@ import { useGleanClick } from "../telemetry/glean-context";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
 import { useUserData } from "../user-context";
+import { useAIHelpSettings } from "../plus/ai-help/utils";
 
 export function ManageAIHelp() {
   const [saving, setSaving] = useState<boolean>(false);
   const user = useUserData();
+  const { isHistoryEnabled } = useAIHelpSettings();
   const gleanClick = useGleanClick();
 
   return (
@@ -19,38 +21,48 @@ export function ManageAIHelp() {
       <h2>AI Help</h2>
       <ul>
         <li>
-          <h3 id="ai-help-history-disable">Disable History</h3>
           <section
-            className="setting-row"
-            aria-labelledby="ai-help-history-disable"
+            id="ai-help--history-enable"
+            aria-labelledby="ai-help-enable-history"
           >
-            <span>
-              Choosing 'Disable history' will conceal your current history and
-              prevent any new items from being saved, without deleting what
-              exists.
-            </span>
-            {saving ? (
-              <Spinner extraClasses="loading" />
-            ) : (
-              <Switch
-                name="no_ai_help_history"
-                checked={Boolean(user?.settings?.noAIHelpHistory)}
-                toggle={async (e) => {
-                  setSaving(true);
-                  const checked = Boolean(e.target.checked);
-                  const source = checked
-                    ? TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED
-                    : TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED;
-                  gleanClick(source);
-                  await toggleNoAIHelpHistory(checked);
-                  if (user?.settings) {
-                    user.settings.noAds = checked;
-                  }
-                  user?.mutate?.();
-                  setSaving(false);
-                }}
-              ></Switch>
-            )}
+            <h3 id="ai-help-enable-history">Enable History</h3>
+            <div className="setting-row">
+              <span>
+                <p>
+                  Enable History to securely store all your chat conversations
+                  for a period of up to 6 months. Please not that after six
+                  months, your chat history will be automatically deleted to
+                  maintain your privacy and data security.
+                </p>
+                <p>
+                  Disabling History will conceal your current history and
+                  prevent any new items from being saved, without deleting what
+                  exists.
+                </p>
+              </span>
+              {saving ? (
+                <Spinner extraClasses="loading" />
+              ) : (
+                <Switch
+                  name="ai_help_history_enabled"
+                  checked={isHistoryEnabled}
+                  toggle={async (e) => {
+                    setSaving(true);
+                    const { checked } = e.target;
+                    const source = checked
+                      ? TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED
+                      : TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED;
+                    gleanClick(source);
+                    await toggleAIHelpHistory(checked);
+                    if (user?.settings) {
+                      user.settings.aiHelpHistory = checked;
+                    }
+                    user?.mutate?.();
+                    setSaving(false);
+                  }}
+                ></Switch>
+              )}
+            </div>
           </section>
         </li>
         <li>
@@ -60,7 +72,7 @@ export function ManageAIHelp() {
             aria-labelledby="ai-help-history-delete"
           >
             <span>
-              Activating 'Delete history' will permanently erase all of your AI
+              Clicking on Delete History will permanently erase all of your AI
               Help saved history.
             </span>
             <button
@@ -76,7 +88,7 @@ export function ManageAIHelp() {
                 }
               }}
             >
-              Delete
+              Delete History
             </button>
           </section>
         </li>
