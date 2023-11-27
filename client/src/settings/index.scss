@@ -11,9 +11,16 @@ article.settings {
     margin-top: 0.5rem;
   }
 
-  .field-group {
-    margin: 2rem 0;
+  section {
+    padding: 1rem;
 
+    &.field-group,
+    &.setting-row {
+      padding: 0;
+    }
+  }
+
+  .field-group {
     ul {
       padding: 0;
 
@@ -21,10 +28,15 @@ article.settings {
         display: grid;
         gap: 0 1rem;
         grid-template-columns: 1fr minmax(5em);
-        margin: 2em 0;
 
+        section:hover,
         section:target {
           background-color: var(--background-information);
+          border-radius: 0.25rem;
+
+          &:target {
+            border: 1px solid var(--border-primary);
+          }
         }
 
         .setting-row {
@@ -36,6 +48,13 @@ article.settings {
 
         p {
           margin: 0 0 1rem;
+          &:first-child {
+            margin-top: 0;
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
 
         span {
