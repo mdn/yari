@@ -48,6 +48,7 @@ article.settings {
 
         p {
           margin: 0 0 1rem;
+
           &:first-child {
             margin-top: 0;
           }
@@ -75,6 +76,7 @@ article.settings {
         button,
         .manage {
           align-self: center;
+          background-color: var(--background-primary);
           border: 1px solid var(--text-primary);
           border-radius: var(--elem-radius);
           color: var(--text-link);
@@ -87,6 +89,10 @@ article.settings {
           padding: 0.5rem 1rem;
           text-align: center;
           width: max-content;
+
+          &:hover {
+            background-color: var(--background-secondary);
+          }
         }
 
         button[disabled] {
