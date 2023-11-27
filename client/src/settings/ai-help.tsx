@@ -28,9 +28,17 @@ export function ManageAIHelp() {
             <h3 id="ai-help-enable-history">Enable History</h3>
             <div className="setting-row">
               <span>
-                Enable history to automatically save your asked questions with
-                AI Help's answers. If you disable the history, your current
-                topics will be kept, but no new topics will be saved.
+                <p>
+                  Enable History to securely store all your chat conversations
+                  for a period of up to 6 months. Please not that after six
+                  months, your chat history will be automatically deleted to
+                  maintain your privacy and data security.
+                </p>
+                <p>
+                  Disabling History will conceal your current history and
+                  prevent any new items from being saved, without deleting what
+                  exists.
+                </p>
               </span>
               {saving ? (
                 <Spinner extraClasses="loading" />
@@ -64,7 +72,7 @@ export function ManageAIHelp() {
             aria-labelledby="ai-help-history-delete"
           >
             <span>
-              Activating 'Delete history' will permanently erase all of your AI
+              Clicking on Delete History will permanently erase all of your AI
               Help saved history.
             </span>
             <button
@@ -80,7 +88,7 @@ export function ManageAIHelp() {
                 }
               }}
             >
-              Delete
+              Delete History
             </button>
           </section>
         </li>
