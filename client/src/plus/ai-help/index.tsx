@@ -34,7 +34,7 @@ import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
-import { isExternalUrl } from "./utils";
+import { isExternalUrl, useAiHelpSettings as useAIHelpSettings } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
@@ -259,6 +259,7 @@ const MESSAGE_ANSWERING = "Answering…";
 
 export function AIHelpInner() {
   const user = useUserData();
+  const { isHistoryEnabled } = useAIHelpSettings();
   const locale = useLocale();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -366,7 +367,7 @@ export function AIHelpInner() {
   return (
     <>
       <PlayQueue />
-      {!user?.settings?.noAIHelpHistory && (
+      {isHistoryEnabled && (
         <AIHelpHistory
           currentChatId={chatId}
           lastUpdate={lastUpdate}
