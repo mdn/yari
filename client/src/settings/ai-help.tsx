@@ -74,6 +74,7 @@ export function ManageAIHelp() {
                 Help saved history.
               </span>
               <button
+                className="button"
                 onClick={async () => {
                   if (
                     window.confirm(
