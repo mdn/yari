@@ -74,12 +74,12 @@
               background-color: var(--icon-secondary);
               content: "";
               display: inline-block;
-              height: var(--icon-size);
+              height: 0.6em;
               margin-right: 0.5em;
               mask-image: url("../../assets/icons/message.svg");
               mask-size: contain;
               vertical-align: middle;
-              width: var(--icon-size);
+              width: 0.6em;
             }
           }
 
