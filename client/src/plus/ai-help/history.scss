@@ -58,6 +58,7 @@
         width: 100%;
 
         > li {
+          --icon-size: 0.6rem;
           align-items: center;
           display: flex;
           flex-direction: row;
@@ -74,12 +75,12 @@
               background-color: var(--icon-secondary);
               content: "";
               display: inline-block;
-              height: 0.6em;
+              height: var(--icon-size);
               margin-right: 0.5em;
               mask-image: url("../../assets/icons/message.svg");
               mask-size: contain;
               vertical-align: middle;
-              width: 0.6em;
+              width: var(--icon-size);
             }
           }
 
