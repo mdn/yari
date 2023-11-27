@@ -21,38 +21,40 @@ export function ManageAIHelp() {
       <h2>AI Help</h2>
       <ul>
         <li>
-          <h3 id="ai-help-history-enable">Enable History</h3>
           <section
-            className="setting-row"
-            aria-labelledby="ai-help-history-enable"
+            id="ai-help--history-enable"
+            aria-labelledby="ai-help-enable-history"
           >
-            <span>
-              Enable history to automatically save your asked questions with AI
-              Help's answers. If you disable the history, your current topics
-              will be kept, but no new topics will be saved.
-            </span>
-            {saving ? (
-              <Spinner extraClasses="loading" />
-            ) : (
-              <Switch
-                name="ai_help_history_enabled"
-                checked={isHistoryEnabled}
-                toggle={async (e) => {
-                  setSaving(true);
-                  const { checked } = e.target;
-                  const source = checked
-                    ? TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED
-                    : TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED;
-                  gleanClick(source);
-                  await toggleAIHelpHistory(checked);
-                  if (user?.settings) {
-                    user.settings.aiHelpHistory = checked;
-                  }
-                  user?.mutate?.();
-                  setSaving(false);
-                }}
-              ></Switch>
-            )}
+            <h3 id="ai-help-enable-history">Enable History</h3>
+            <div className="setting-row">
+              <span>
+                Enable history to automatically save your asked questions with
+                AI Help's answers. If you disable the history, your current
+                topics will be kept, but no new topics will be saved.
+              </span>
+              {saving ? (
+                <Spinner extraClasses="loading" />
+              ) : (
+                <Switch
+                  name="ai_help_history_enabled"
+                  checked={isHistoryEnabled}
+                  toggle={async (e) => {
+                    setSaving(true);
+                    const { checked } = e.target;
+                    const source = checked
+                      ? TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED
+                      : TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED;
+                    gleanClick(source);
+                    await toggleAIHelpHistory(checked);
+                    if (user?.settings) {
+                      user.settings.aiHelpHistory = checked;
+                    }
+                    user?.mutate?.();
+                    setSaving(false);
+                  }}
+                ></Switch>
+              )}
+            </div>
           </section>
         </li>
         <li>
