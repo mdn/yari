@@ -315,8 +315,14 @@
       border: 1px solid var(--border-primary);
       border-radius: var(--elem-radius);
       display: grid;
+      grid-auto-rows: auto;
       grid-template-columns: max-content minmax(0, auto);
       padding: 1rem;
+      row-gap: 1rem;
+
+      > * {
+        grid-column: 2;
+      }
 
       &.role-user {
         color: var(--text-secondary);
@@ -337,11 +343,13 @@
 
         .ai-help-message-role {
           --icon-size: 1.5rem;
+          margin-top: -0.1rem; /* Align with text. */
         }
       }
 
       .ai-help-message-role {
         flex-shrink: 0;
+        grid-column: 1;
         width: 2.5rem;
       }
 
@@ -365,6 +373,53 @@
             text-decoration: none;
           }
         }
+      }
+
+      .ai-help-message-progress {
+        color: var(--text-secondary);
+
+        &::before {
+          animation: pulse 1s infinite alternate;
+          background-color: var(--text-secondary);
+          content: "";
+          display: inline-block;
+          height: 1em;
+          margin-bottom: -0.15em;
+          margin-right: 0.4em;
+          mask-image: url("../../assets/icons/progress-helper.svg");
+          mask-position: center center;
+          mask-repeat: no-repeat;
+          mask-size: contain;
+          vertical-align: baseline;
+          width: 1em;
+
+          @keyframes pulse {
+            from {
+              opacity: 1;
+            }
+
+            to {
+              opacity: 0;
+            }
+          }
+        }
+
+        &.complete::before {
+          animation: none;
+          background-color: var(--ai-help-icon);
+          mask-image: url("../../assets/icons/progress-check.svg");
+        }
+
+        &.errored::before {
+          animation: none;
+          background-color: var(--icon-critical);
+        }
+      }
+
+      .ai-help-message-sources {
+        list-style: circle;
+        list-style-position: inside;
+        padding-left: 1.4em;
       }
 
       &.status-pending .ai-help-message-content,
