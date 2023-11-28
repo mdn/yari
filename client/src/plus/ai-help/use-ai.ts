@@ -7,6 +7,10 @@ import { useSearchParams } from "react-router-dom";
 import { SSE } from "sse.js";
 import useSWR from "swr";
 import { useAIHelpSettings } from "./utils";
+import { AIHelpLog } from "./rust-types";
+
+const RETRY_INTERVAL = 10000;
+const ERROR_TIMEOUT = 60000;
 
 export enum MessageRole {
   User = "user",
@@ -18,6 +22,7 @@ export enum MessageStatus {
   InProgress = "in-progress",
   Complete = "complete",
   Stopped = "stopped",
+  Errored = "errored",
 }
 
 export interface Message {
@@ -77,7 +82,6 @@ type MessageAction =
 
 interface PageReference {
   url: string;
-  slug: string;
   title: string;
 }
 
@@ -264,7 +268,7 @@ class AiHelpHistory {
     if (!res.ok) {
       throw new Error(`${res.status}: ${res.statusText}`);
     }
-    const data = await res.json();
+    const data = (await res.json()) as AIHelpLog;
     if (!data.chat_id) {
       throw new Error("no chat id");
     }
@@ -285,8 +289,13 @@ class AiHelpHistory {
         },
         response: {
           role: MessageRole.Assistant,
-          content: message.assistant.content,
-          status: MessageStatus.Complete,
+          content: message.assistant?.content || "",
+          status: message.assistant
+            ? MessageStatus.Complete
+            : Date.now() - Date.parse(message.metadata.created_at) >
+              ERROR_TIMEOUT
+            ? MessageStatus.Errored
+            : MessageStatus.InProgress,
           sources: message.metadata.sources,
           chatId: message.metadata.chat_id,
           messageId: message.metadata.message_id,
@@ -413,13 +422,34 @@ export function useAiChat({
   }, []);
 
   useEffect(() => {
+    let timeoutID;
     const convId = searchParams.get("c");
     if (convId && convId !== chatId) {
-      (async () => {
-        setIsHistoryLoading(true);
+      setIsHistoryLoading(true);
+      let updateHistory = () => {};
+      updateHistory = async () => {
+        resetLoadingState();
+        const currentConvId = searchParams.get("c");
+        if (!currentConvId || currentConvId !== convId) {
+          return window.clearTimeout(timeoutID);
+        }
         try {
           const { treeState } = await AiHelpHistory.getMessages(convId);
           if (treeState) {
+            window.clearTimeout(timeoutID);
+            if (
+              Object.values(treeState.nodes).some(
+                (node) => node.response.status === MessageStatus.InProgress
+              )
+            ) {
+              setLoadingState("responding");
+              timeoutID = window.setTimeout(
+                () => updateHistory(),
+                RETRY_INTERVAL
+              );
+            } else {
+              setLoadingState("finished");
+            }
             setPreviousChatId(undefined);
             setChatId(convId);
             setPath([]);
@@ -440,7 +470,8 @@ export function useAiChat({
           handleError(e);
         }
         setIsHistoryLoading(false);
-      })();
+      };
+      updateHistory();
     }
     const r = searchParams.get("d") === "1";
     if (r) {

@@ -180,16 +180,11 @@ export function AIHelpHistoryInner({
     }
   );
 
-  const { chat_id: firstChatId = "", label: firstChatLabel = "" } =
-    data[0] ?? {};
+  const { label: currentChatLabel = "" } =
+    data.find((chat) => chat.chat_id === currentChatId) ?? {};
 
   useEffect(() => {
-    if (
-      isFinished &&
-      messageId &&
-      firstChatId === currentChatId &&
-      firstChatLabel === ""
-    ) {
+    if (isFinished && messageId && currentChatLabel === "") {
       const update = async () => {
         const res = await fetch(
           `/api/v1/plus/ai/help/history/summary/${messageId}`,
@@ -204,14 +199,8 @@ export function AIHelpHistoryInner({
       };
       update();
     }
-  }, [
-    mutate,
-    isFinished,
-    currentChatId,
-    messageId,
-    firstChatId,
-    firstChatLabel,
-  ]);
+  }, [mutate, isFinished, currentChatId, messageId, currentChatLabel]);
+
   useEffect(() => {
     mutate();
   }, [lastUpdate, mutate]);

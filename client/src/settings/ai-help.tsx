@@ -23,9 +23,9 @@ export function ManageAIHelp() {
         <li>
           <section
             id="ai-help--history-enable"
-            aria-labelledby="ai-help-enable-history"
+            aria-labelledby="enable-history"
           >
-            <h3 id="ai-help-enable-history">Enable History</h3>
+            <h3 id="enable-history">Enable History</h3>
             <div className="setting-row">
               <span>
                 <p>
@@ -66,30 +66,30 @@ export function ManageAIHelp() {
           </section>
         </li>
         <li>
-          <h3 id="ai-help-history-delete">Delete History</h3>
-          <section
-            className="setting-row"
-            aria-labelledby="ai-help-history-delete"
-          >
-            <span>
-              Clicking on Delete History will permanently erase all of your AI
-              Help saved history.
-            </span>
-            <button
-              onClick={async () => {
-                if (
-                  window.confirm(
-                    "Do you want to permanently delete your AI Help history?"
-                  )
-                ) {
-                  await fetch("/api/v1/plus/ai/help/history/list", {
-                    method: "DELETE",
-                  });
-                }
-              }}
-            >
-              Delete History
-            </button>
+          <section aria-labelledby="delete-history">
+            <h3 id="delete-history">Delete History</h3>
+            <div className="setting-row">
+              <span>
+                Clicking on Delete History will permanently erase all of your AI
+                Help saved history.
+              </span>
+              <button
+                className="button"
+                onClick={async () => {
+                  if (
+                    window.confirm(
+                      "Do you want to permanently delete your AI Help history?"
+                    )
+                  ) {
+                    await fetch("/api/v1/plus/ai/help/history/list", {
+                      method: "DELETE",
+                    });
+                  }
+                }}
+              >
+                Delete History
+              </button>
+            </div>
           </section>
         </li>
       </ul>
