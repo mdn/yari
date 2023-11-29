@@ -384,8 +384,11 @@ export function AIHelpInner() {
               className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
+                const questionNumber = 1 + messages.length / 2; // 1, 2, 3, ...
                 gleanClick(
-                  `${AI_HELP}: submit ${isExample ? "example" : "question"}`
+                  `${AI_HELP}: submit ${
+                    isExample ? "example" : "question"
+                  } ${questionNumber}`
                 );
                 if (query.trim()) {
                   submit(query.trim());
