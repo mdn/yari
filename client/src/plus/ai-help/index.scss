@@ -19,6 +19,10 @@
 
     &:hover {
       --button-color: var(--icon-primary);
+
+      .icon-trash {
+        background-color: var(--text-primary-red);
+      }
     }
   }
 
