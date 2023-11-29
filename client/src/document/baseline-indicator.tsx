@@ -4,6 +4,11 @@ import { useGleanClick } from "../telemetry/glean-context";
 import { Icon } from "../ui/atoms/icon";
 import "./baseline-indicator.scss";
 
+type BaselineLevel = undefined | "no" | "low" | "high";
+
+const BASELINE_HIGH_CUTOFF = new Date();
+BASELINE_HIGH_CUTOFF.setMonth(BASELINE_HIGH_CUTOFF.getMonth() - 30);
+
 const ENGINES = [
   { name: "Blink", browsers: ["Chrome", "Edge"] },
   { name: "Gecko", browsers: ["Firefox"] },
@@ -12,6 +17,16 @@ const ENGINES = [
 
 export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
   const gleanClick = useGleanClick();
+
+  const since = status.since ? new Date(status.since) : undefined;
+  const level: BaselineLevel =
+    typeof status.is_baseline !== "undefined"
+      ? status.is_baseline && since
+        ? since < BASELINE_HIGH_CUTOFF
+          ? "high"
+          : "low"
+        : "no"
+      : undefined;
 
   const supported = (browser: string) => {
     const version: string | boolean | undefined =
@@ -38,23 +53,30 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
       })
       .join("");
 
-  return typeof status.is_baseline !== "undefined" ? (
+  return level ? (
     <details
-      className={`baseline-indicator ${status.is_baseline ? "supported" : ""}`}
+      className={`baseline-indicator ${level}`}
       onToggle={(e) => e.currentTarget.open && gleanClick(BASELINE.TOGGLE_OPEN)}
     >
       <summary>
         <span
           className="indicator"
           role="img"
-          aria-label={status.is_baseline ? "Baseline Check" : "Baseline Cross"}
+          aria-label={level !== "no" ? "Baseline Check" : "Baseline Cross"}
         />
         <h2>
-          Baseline:{" "}
-          <span className="not-bold">
-            {status.is_baseline ? "Widely supported" : "Not widely supported"}
-          </span>
+          {level !== "no" ? (
+            <>
+              Baseline{" "}
+              <span className="not-bold">
+                {level === "high" ? "Widely available" : since?.getFullYear()}
+              </span>
+            </>
+          ) : (
+            <span className="not-bold">Limited availability</span>
+          )}
         </h2>
+        {level === "low" && <div className="pill">Newly available</div>}
         <div className="browsers">
           {ENGINES.map(({ name, browsers }) => (
             <span key={name} className="engine" title={engineTitle(browsers)}>
@@ -76,15 +98,38 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
         <Icon name="chevron" />
       </summary>
       <div className="extra">
-        <p>
-          Baseline is determined by this web feature being supported on the
-          current and the previous major versions of major browsers.
-        </p>
+        {level === "high" ? (
+          <p>
+            This feature is well established and works across many devices and
+            browser versions. It’s been available across browsers since{" "}
+            {since?.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+            })}
+            .
+          </p>
+        ) : level === "low" ? (
+          <p>
+            Since{" "}
+            {since?.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+            })}
+            , this feature works across the latest devices and browser versions.
+            This feature might not work in older devices or browsers.
+          </p>
+        ) : (
+          <p>
+            This feature is not Baseline because it does not work in some of the
+            most widely-used browsers.
+          </p>
+        )}
         <ul>
           <li>
             <a
               href="/en-US/blog/baseline-unified-view-stable-web-features/"
               data-glean={BASELINE.LINK_LEARN_MORE}
+              target="_blank"
             >
               Learn more
             </a>
@@ -95,6 +140,17 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
               data-glean={BASELINE.LINK_BCD_TABLE}
             >
               See full compatibility
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://example.com"
+              data-glean={BASELINE.LINK_FEEDBACK}
+              className="feedback-link"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span className="visually-hidden">Feedback</span>
             </a>
           </li>
         </ul>
