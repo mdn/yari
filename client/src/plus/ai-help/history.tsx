@@ -113,7 +113,7 @@ function AIHelpHistorySubList({
               {chat_id === currentChatId && (
                 <Button
                   type="action"
-                  icon="trash-filled"
+                  icon="trash"
                   onClickHandler={async () => {
                     if (
                       window.confirm(

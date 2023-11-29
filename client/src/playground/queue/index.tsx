@@ -30,7 +30,7 @@ function PQEntry({
       <Button
         type="action"
         buttonType="reset"
-        icon="trash-filled"
+        icon="trash"
         onClickHandler={() => unqueue()}
       />
     </li>
