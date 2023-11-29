@@ -201,7 +201,7 @@ jobs:
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
