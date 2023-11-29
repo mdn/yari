@@ -22,8 +22,8 @@ const LOCALIZED_BCD_IDS = {
   fr: "compatibilité_des_navigateurs",
   ja: "ブラウザーの互換性",
   ko: "브라우저_호환성",
-  "pt-BR": "compatibilidade_de_navegadores",
-  ru: "cовместимость_с_браузерами",
+  "pt-BR": "compatibilidade_com_navegadores",
+  ru: "совместимость_с_браузерами",
   "zh-CN": "浏览器兼容性",
   "zh-TW": "瀏覽器相容性",
 };
