@@ -8,6 +8,8 @@ import { useLocale } from "../../hooks";
 import { HighlightedIcon } from "../../ui/atoms/icon";
 import { useAIHelpSettings } from "./utils";
 
+const DEFAULT_TOPIC_LABEL = "New Topic";
+
 function monthYearLabel(date: Date): string {
   const formattedDate = date.toLocaleString(undefined, {
     month: "short",
@@ -98,7 +100,7 @@ function AIHelpHistorySubList({
             >
               <a
                 href={`./ai-help?c=${chat_id}`}
-                title={last}
+                title={label || DEFAULT_TOPIC_LABEL}
                 onClick={(e) => {
                   e.preventDefault();
                   setSearchParams((old) => {
@@ -108,12 +110,12 @@ function AIHelpHistorySubList({
                   });
                 }}
               >
-                {label || "New Topic"}
+                {label || DEFAULT_TOPIC_LABEL}
               </a>
               {chat_id === currentChatId && (
                 <Button
                   type="action"
-                  icon="trash-filled"
+                  icon="trash"
                   onClickHandler={async () => {
                     if (
                       window.confirm(

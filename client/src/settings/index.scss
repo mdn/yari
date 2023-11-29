@@ -8,7 +8,7 @@ article.settings {
   width: min(90vw, 40em);
 
   h3 {
-    margin-top: 0.5rem;
+    margin-top: 0;
   }
 
   section {
@@ -29,13 +29,12 @@ article.settings {
         gap: 0 1rem;
         grid-template-columns: 1fr minmax(5em);
 
-        section:hover,
-        section:target {
-          background-color: var(--background-information);
-          border-radius: 0.25rem;
-
+        section {
+          margin: 0.125rem 0;
+          &:hover,
           &:target {
-            border: 1px solid var(--border-primary);
+            background-color: var(--background-information);
+            border-radius: 0.25rem;
           }
         }
 

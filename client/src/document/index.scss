@@ -578,6 +578,10 @@ pre {
     margin: 0;
     padding: 0 1rem;
 
+    &.active {
+      background-color: var(--background-toc-active);
+    }
+
     ~ pre,
     ~ iframe {
       border-top: none;

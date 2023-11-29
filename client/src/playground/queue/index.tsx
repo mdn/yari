@@ -14,15 +14,29 @@ function PQEntry({
   item: QueueEntry;
   unqueue: () => void;
 }) {
-  const intoView = () => {
+  const getHeader = () => {
     const element = document.getElementById(id);
-    const header = element?.parentElement?.parentElement;
+    return element?.parentElement?.parentElement;
+  };
+  const setActive = (value: boolean) => {
+    const header = getHeader();
+    if (header instanceof HTMLElement) {
+      header.classList.toggle("active", value);
+    }
+  };
+  const intoView = () => {
+    const header = getHeader();
     const top =
       (header?.getBoundingClientRect().top || 0) + window.scrollY - 130;
     window.scrollTo({ top, behavior: "smooth" });
   };
+
   return (
-    <li key={key}>
+    <li
+      key={key}
+      onMouseOver={() => setActive(true)}
+      onMouseOut={() => setActive(false)}
+    >
       <button className="queue-ref" onClick={intoView}>
         Example {key + 1}
       </button>
@@ -30,7 +44,7 @@ function PQEntry({
       <Button
         type="action"
         buttonType="reset"
-        icon="trash-filled"
+        icon="trash"
         onClickHandler={() => unqueue()}
       />
     </li>
