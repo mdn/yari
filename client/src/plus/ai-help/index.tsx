@@ -384,7 +384,9 @@ export function AIHelpInner() {
               className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
-                const questionNumber = 1 + messages.length / 2; // 1, 2, 3, ...
+                const questionNumber =
+                  1 +
+                  messages.filter((m) => m.role === MessageRole.User).length;
                 gleanClick(
                   `${AI_HELP}: submit ${
                     isExample ? "example" : "question"
