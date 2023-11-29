@@ -384,8 +384,13 @@ export function AIHelpInner() {
               className="ai-help-input-form"
               onSubmit={(event) => {
                 event.preventDefault();
+                const questionNumber =
+                  1 +
+                  messages.filter((m) => m.role === MessageRole.User).length;
                 gleanClick(
-                  `${AI_HELP}: submit ${isExample ? "example" : "question"}`
+                  `${AI_HELP}: submit ${
+                    isExample ? "example" : "question"
+                  } ${questionNumber}`
                 );
                 if (query.trim()) {
                   submit(query.trim());
