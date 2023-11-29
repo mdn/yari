@@ -3,7 +3,7 @@
 .ai-help {
   --background-toc-active: var(--ai-help-accent-background-color);
   --category-color: var(--ai-help-icon);
-  --category-color-background: var(--background-success);
+  --category-color-background: var(--ai-help-accent-background-color);
   --text-link: var(--ai-help-link);
 
   > header {
