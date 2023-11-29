@@ -191,14 +191,21 @@
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-50};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-50, 0.2)};
 
-  --baseline-supported-bg: #e6f4ea;
-  --baseline-supported-engine-bg: #ceead6;
-  --baseline-supported-img: url("../../assets/icons/baseline/check.svg");
-  --baseline-unsupported-bg: #f1f3f4;
-  --baseline-unsupported-engine-bg: #e3e6e8;
-  --baseline-unsupported-img: url("../../assets/icons/baseline/cross.svg");
-  --baseline-browser-supported-bg: #1e8e3e;
-  --baseline-browser-unsupported-bg: #666;
+  --baseline-high-bg: #e6f4ea;
+  --baseline-high-engine-bg: #ceead6;
+  --baseline-high-img: url("../../assets/icons/baseline/high.svg");
+  --baseline-high-check: #099949;
+  --baseline-low-bg: #e8f0fe;
+  --baseline-low-engine-bg: #d2e3fc;
+  --baseline-low-check: #1a73e8;
+  --baseline-low-img: url("../../assets/icons/baseline/low.svg");
+  --baseline-low-pill-bg: #3367d6;
+  --baseline-low-pill-color: #f1f3f4;
+  --baseline-limited-bg: #f1f3f4;
+  --baseline-limited-engine-bg: #e3e6e8;
+  --baseline-limited-img: url("../../assets/icons/baseline/limited.svg");
+  --baseline-limited-check: #1e8e3e;
+  --baseline-limited-cross: #ea8600;
 
   color-scheme: light;
 }
@@ -391,14 +398,21 @@
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-40};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-40, 0.2)};
 
-  --baseline-supported-bg: #0e2a10;
-  --baseline-supported-engine-bg: #031b05;
-  --baseline-supported-img: url("../../assets/icons/baseline/check-dark.svg");
-  --baseline-unsupported-bg: #282a2c;
-  --baseline-unsupported-engine-bg: #1d1e1f;
-  --baseline-unsupported-img: url("../../assets/icons/baseline/cross-dark.svg");
-  --baseline-browser-supported-bg: #5bb974;
-  --baseline-browser-unsupported-bg: #9aa0a6;
+  --baseline-high-bg: #0e2a10;
+  --baseline-high-engine-bg: #031b05;
+  --baseline-high-img: url("../../assets/icons/baseline/high-dark.svg");
+  --baseline-high-check: #099949;
+  --baseline-low-bg: #041e49;
+  --baseline-low-engine-bg: #020d20;
+  --baseline-low-check: #1a73e8;
+  --baseline-low-img: url("../../assets/icons/baseline/low-dark.svg");
+  --baseline-low-pill-bg: #3367d6;
+  --baseline-low-pill-color: #f1f3f4;
+  --baseline-limited-bg: #282a2c;
+  --baseline-limited-engine-bg: #1d1e1f;
+  --baseline-limited-img: url("../../assets/icons/baseline/limited-dark.svg");
+  --baseline-limited-check: #1e8e3e;
+  --baseline-limited-cross: #ea8600;
 
   color-scheme: dark;
 }
