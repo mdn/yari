@@ -547,7 +547,13 @@ export function AIHelpInner() {
   }, [messages, setQueue]);
 
   const submitQuestion = (parentId) => {
-    gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
+    const questionNumber =
+      1 + messages.filter((m) => m.role === MessageRole.User).length;
+    gleanClick(
+      `${AI_HELP}: submit ${
+        isExample ? "example" : "question"
+      } ${questionNumber}`
+    );
     if (query.trim()) {
       submit(query.trim(), chatId, parentId);
       setQuery("");
