@@ -293,7 +293,7 @@ jobs:
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-prod-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
@@ -311,7 +311,7 @@ jobs:
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-prod-prod-mdn-ingress@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
