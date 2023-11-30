@@ -47,6 +47,21 @@ section.place {
     }
   }
 
+  .pong-note {
+    text-decoration: none;
+
+    &:active,
+    &:link,
+    &:visited {
+      text-decoration: underline;
+    }
+
+    &:focus,
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .no-pong {
     color: var(--text-secondary);
     font-size: 0.6rem;
@@ -136,18 +151,6 @@ section.place {
         grid-area: note;
         margin: 0 0 auto auto;
         padding: 0 0.5rem 0.125rem;
-        text-decoration: none;
-
-        &:active,
-        &:link,
-        &:visited {
-          text-decoration: underline;
-        }
-
-        &:focus,
-        &:hover {
-          text-decoration: none;
-        }
       }
     }
 
