@@ -217,19 +217,18 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       viewportHorizontalCoverage: Math.round(
         (100 * window.innerWidth) / window.screen.width
       ),
-      isBaseline:
-        doc?.baseline?.is_baseline === undefined
-          ? undefined
-          : doc.baseline.is_baseline
-          ? "baseline"
-          : "not_baseline",
+      isBaseline: doc?.baseline?.baseline
+        ? `baseline_${doc.baseline.baseline}`
+        : doc?.baseline?.baseline === false
+        ? "not_baseline"
+        : undefined,
       utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.is_baseline]);
+  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.baseline]);
 }
 
 export function useGleanClick() {

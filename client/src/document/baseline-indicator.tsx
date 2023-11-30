@@ -1,14 +1,10 @@
-import { WebFeatureStatus } from "../../../libs/types/document";
 import { useLocale } from "../hooks";
 import { BASELINE } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
 import { Icon } from "../ui/atoms/icon";
 import "./baseline-indicator.scss";
 
-type BaselineLevel = undefined | "no" | "low" | "high";
-
-const BASELINE_HIGH_CUTOFF = new Date();
-BASELINE_HIGH_CUTOFF.setMonth(BASELINE_HIGH_CUTOFF.getMonth() - 30);
+import type { SupportStatus } from "../../../type-fixes/web-features";
 
 const ENGINES = [
   { name: "Blink", browsers: ["Chrome", "Edge"] },
@@ -28,28 +24,24 @@ const LOCALIZED_BCD_IDS = {
   "zh-TW": "瀏覽器相容性",
 };
 
-export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
+export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
 
   const bcdLink = `#${LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS["en-US"]}`;
 
-  const since = status.since ? new Date(status.since) : undefined;
-  const level: BaselineLevel =
-    typeof status.is_baseline !== "undefined"
-      ? status.is_baseline && since
-        ? since < BASELINE_HIGH_CUTOFF
-          ? "high"
-          : "low"
-        : "no"
-      : undefined;
+  const low_date = status.baseline_low_date
+    ? new Date(status.baseline_low_date)
+    : undefined;
+  const level = status.baseline
+    ? status.baseline
+    : status.baseline === false
+    ? "not"
+    : undefined;
 
   const supported = (browser: string) => {
-    const version: string | boolean | undefined =
-      status.support?.[browser.toLowerCase()];
-    return Boolean(
-      status.is_baseline || typeof version === "string" || version
-    );
+    const version: string | undefined = status.support?.[browser.toLowerCase()];
+    return Boolean(status.baseline || version);
   };
 
   const engineTitle = (browsers: string[]) =>
@@ -78,14 +70,16 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
         <span
           className="indicator"
           role="img"
-          aria-label={level !== "no" ? "Baseline Check" : "Baseline Cross"}
+          aria-label={level !== "not" ? "Baseline Check" : "Baseline Cross"}
         />
         <h2>
-          {level !== "no" ? (
+          {level !== "not" ? (
             <>
               Baseline{" "}
               <span className="not-bold">
-                {level === "high" ? "Widely available" : since?.getFullYear()}
+                {level === "high"
+                  ? "Widely available"
+                  : low_date?.getFullYear()}
               </span>
             </>
           ) : (
@@ -118,7 +112,7 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
           <p>
             This feature is well established and works across many devices and
             browser versions. It’s been available across browsers since{" "}
-            {since?.toLocaleDateString("en-US", {
+            {low_date?.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
             })}
@@ -127,7 +121,7 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
         ) : level === "low" ? (
           <p>
             Since{" "}
-            {since?.toLocaleDateString("en-US", {
+            {low_date?.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
             })}
