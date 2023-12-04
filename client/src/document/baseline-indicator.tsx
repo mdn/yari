@@ -7,7 +7,7 @@ import { useLocation } from "react-router";
 
 import "./baseline-indicator.scss";
 
-import type { SupportStatus } from "../../../type-fixes/web-features";
+import type { SupportStatus } from "../../../libs/types/web-features";
 
 const ENGINES = [
   { name: "Blink", browsers: ["Chrome", "Edge"] },
