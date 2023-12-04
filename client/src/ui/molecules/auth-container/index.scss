@@ -16,19 +16,6 @@
   }
 }
 
-/*.top-navigation-main {
-  .auth-container {
-    @media screen and (max-width: #{$screen-lg - 1}) {
-      align-items: center;
-      flex-flow: column-reverse;
-      gap: 0.5rem;
-      justify-content: flex-end;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-  }
-}*/
-
 .top-navigation-main {
   .auth-container {
     @media screen and (max-width: #{$screen-lg - 1}) {
