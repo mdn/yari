@@ -38,7 +38,6 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const bcdLink = `#${
     LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
   }`;
-  const feedbackLink = `${SURVEY_URL}?page=${pathname}`;
 
   const low_date = status.baseline_low_date
     ? new Date(status.baseline_low_date)
@@ -48,6 +47,8 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     : status.baseline === false
     ? "not"
     : undefined;
+
+  const feedbackLink = `${SURVEY_URL}?page=${pathname}&level=${level}`;
 
   const supported = (browser: string) => {
     const version: string | undefined = status.support?.[browser.toLowerCase()];
