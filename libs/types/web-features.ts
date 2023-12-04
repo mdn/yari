@@ -1,8 +1,7 @@
 export type Features = { [key: string]: FeatureData };
 
-// Types below copied from web-platform-dx/web-features GitHub repo,
-// with modifications to remove deprecated attributes:
-// https://github.com/web-platform-dx/web-features/blob/4840030477896714dcc713d05b70bbcc15aa20d2/index.ts#L8-L48
+// Types below copied from web-platform-dx/web-features GitHub repo:
+// https://github.com/web-platform-dx/web-features/blob/5ad19b0dec722eaf6484b7d569e62e64ad7bfef0/index.ts#L8-L44
 
 export interface FeatureData {
   /** Alias identifier */
@@ -12,7 +11,7 @@ export interface FeatureData {
     | specification_url
     | [specification_url, specification_url, ...specification_url[]];
   /** caniuse.com identifier */
-  caniuse?: string;
+  caniuse?: string | [string, string, ...string[]];
   /** Whether a feature is considered a "baseline" web platform feature and when it achieved that status */
   status?: SupportStatus;
   /** Sources of support data for this feature */
