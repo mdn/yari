@@ -640,7 +640,7 @@ export function AIHelpInner() {
                       stop();
                     }}
                   >
-                    ⏹ Stop answering
+                    ■ Stop answering
                   </Button>
                   <Button
                     type="action"
