@@ -683,6 +683,7 @@ export function AIHelpInner() {
                     >
                       <ExpandingTextarea
                         ref={inputRef}
+                        autoFocus={true}
                         disabled={isLoading || isResponding}
                         enterKeyHint="send"
                         onKeyDown={(event) => {
