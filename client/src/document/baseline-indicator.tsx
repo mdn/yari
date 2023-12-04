@@ -1,4 +1,5 @@
 import { WebFeatureStatus } from "../../../libs/types/document";
+import { useLocale } from "../hooks";
 import { BASELINE } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
 import { Icon } from "../ui/atoms/icon";
@@ -10,8 +11,23 @@ const ENGINES = [
   { name: "WebKit", browsers: ["Safari"] },
 ];
 
+const LOCALIZED_BCD_IDS = {
+  "en-US": "browser_compatibility",
+  es: "compatibilidad_con_navegadores",
+  fr: "compatibilité_des_navigateurs",
+  ja: "ブラウザーの互換性",
+  ko: "브라우저_호환성",
+  "pt-BR": "compatibilidade_com_navegadores",
+  ru: "совместимость_с_браузерами",
+  "zh-CN": "浏览器兼容性",
+  "zh-TW": "瀏覽器相容性",
+};
+
 export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
   const gleanClick = useGleanClick();
+  const locale = useLocale();
+
+  const bcdLink = `#${LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS["en-US"]}`;
 
   const supported = (browser: string) => {
     const version: string | boolean | undefined =
@@ -90,10 +106,7 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
             </a>
           </li>
           <li>
-            <a
-              href="#browser_compatibility"
-              data-glean={BASELINE.LINK_BCD_TABLE}
-            >
+            <a href={bcdLink} data-glean={BASELINE.LINK_BCD_TABLE}>
               See full compatibility
             </a>
           </li>
