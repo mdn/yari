@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { WebFeatureStatus } from "../../../libs/types/document";
 import { useLocale } from "../hooks";
 import { BASELINE } from "../telemetry/constants";
@@ -27,7 +28,9 @@ export function BaselineIndicator({ status }: { status: WebFeatureStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
 
-  const bcdLink = `#${LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS["en-US"]}`;
+  const bcdLink = `#${
+    LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
+  }`;
 
   const supported = (browser: string) => {
     const version: string | boolean | undefined =
