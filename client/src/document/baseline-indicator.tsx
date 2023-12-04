@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { useLocale } from "../hooks";
 import { BASELINE } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
@@ -28,7 +29,9 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
 
-  const bcdLink = `#${LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS["en-US"]}`;
+  const bcdLink = `#${
+    LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
+  }`;
 
   const low_date = status.baseline_low_date
     ? new Date(status.baseline_low_date)
