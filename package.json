@@ -210,7 +210,7 @@
     "mini-css-extract-plugin": "^2.7.6",
     "node-dev": "^8.0.0",
     "peggy": "^3.0.2",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.32",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^7.3.3",
     "postcss-normalize": "^10.0.1",
