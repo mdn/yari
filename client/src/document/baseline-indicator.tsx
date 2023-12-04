@@ -1,7 +1,10 @@
+import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { useLocale } from "../hooks";
 import { BASELINE } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
 import { Icon } from "../ui/atoms/icon";
+import { useLocation } from "react-router";
+
 import "./baseline-indicator.scss";
 
 import type { SupportStatus } from "../../../type-fixes/web-features";
@@ -24,11 +27,18 @@ const LOCALIZED_BCD_IDS = {
   "zh-TW": "瀏覽器相容性",
 };
 
+const SURVEY_URL =
+  "https://survey.alchemer.com/s3/7634825/MDN-baseline-feedback";
+
 export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
+  const { pathname } = useLocation();
 
-  const bcdLink = `#${LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS["en-US"]}`;
+  const bcdLink = `#${
+    LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
+  }`;
+  const feedbackLink = `${SURVEY_URL}?page=${pathname}`;
 
   const low_date = status.baseline_low_date
     ? new Date(status.baseline_low_date)
@@ -151,7 +161,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           </li>
           <li>
             <a
-              href="https://example.com"
+              href={feedbackLink}
               data-glean={BASELINE.LINK_FEEDBACK}
               className="feedback-link"
               target="_blank"
