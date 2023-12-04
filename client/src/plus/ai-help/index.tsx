@@ -47,6 +47,7 @@ import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpTeaser } from "./teaser";
+import { useDelayedArray } from "./hooks";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -247,6 +248,7 @@ function AIHelpAssistantResponse({
   messages: Message[];
 }) {
   const locale = useLocale();
+  const sources = useDelayedArray(message.sources, 250, 500);
 
   let sample = 0;
 
@@ -262,9 +264,9 @@ function AIHelpAssistantResponse({
       >
         Searching for MDN content
       </div>
-      {message.sources && message.sources.length > 0 && (
+      {sources && sources.length > 0 && (
         <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
+          {sources.map(({ url, title }, index) => (
             <li key={index}>
               <a href={url}>{title}</a>
             </li>
