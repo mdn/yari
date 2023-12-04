@@ -25,6 +25,9 @@ const LOCALIZED_BCD_IDS = {
   "zh-TW": "瀏覽器相容性",
 };
 
+const SURVEY_URL =
+  "https://survey.alchemer.com/s3/7634825/MDN-baseline-feedback";
+
 export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
@@ -32,6 +35,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const bcdLink = `#${
     LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
   }`;
+  const feedbackLink = `${SURVEY_URL}?page=${window.location.pathname}`;
 
   const low_date = status.baseline_low_date
     ? new Date(status.baseline_low_date)
@@ -154,7 +158,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           </li>
           <li>
             <a
-              href="https://example.com"
+              href={feedbackLink}
               data-glean={BASELINE.LINK_FEEDBACK}
               className="feedback-link"
               target="_blank"
