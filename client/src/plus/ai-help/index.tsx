@@ -47,6 +47,14 @@ import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpTeaser } from "./teaser";
+import { useHistorySearchQuery, useDelayedArray } from "./hooks";
+import {
+  SORRY_BACKEND,
+  SORRY_FRONTEND,
+  MESSAGE_SEARCHING,
+  MESSAGE_ANSWERING,
+  MESSAGE_FAILED,
+} from "./constants";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -247,6 +255,10 @@ function AIHelpAssistantResponse({
   messages: Message[];
 }) {
   const locale = useLocale();
+  const delayedSources = useDelayedArray(message.sources, 250, 500);
+
+  const sources =
+    message.status === MessageStatus.Pending ? delayedSources : message.sources;
 
   let sample = 0;
 
@@ -260,11 +272,11 @@ function AIHelpAssistantResponse({
           .filter(Boolean)
           .join(" ")}
       >
-        Searching for MDN content
+        {MESSAGE_SEARCHING}
       </div>
-      {message.sources && message.sources.length > 0 && (
+      {sources && sources.length > 0 && (
         <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
+          {sources.map(({ url, title }, index) => (
             <li key={index}>
               <a href={url}>{title}</a>
             </li>
@@ -284,8 +296,8 @@ function AIHelpAssistantResponse({
             .join(" ")}
         >
           {message.status === MessageStatus.Errored
-            ? "Error generating your answer"
-            : "Generating your answer"}
+            ? MESSAGE_FAILED
+            : MESSAGE_ANSWERING}
         </div>
       )}
       {message.content && (
@@ -440,13 +452,6 @@ function AIHelpAssistantResponse({
   );
 }
 
-const SORRY_BACKEND = "Sorry, I don't know how to help with that.";
-const SORRY_FRONTEND =
-  "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
-
-const MESSAGE_SEARCHING = "Searching MDN content…";
-const MESSAGE_ANSWERING = "Answering…";
-
 export function AIHelpInner() {
   const user = useUserData();
   const formRef = useRef<HTMLFormElement>(null);
@@ -486,6 +491,8 @@ export function AIHelpInner() {
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
   const gptVersion = "GPT-4";
+
+  useHistorySearchQuery(chatId && `?c=${chatId}`);
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
@@ -687,6 +694,7 @@ export function AIHelpInner() {
                     >
                       <ExpandingTextarea
                         ref={inputRef}
+                        autoFocus={true}
                         disabled={isLoading || isResponding}
                         enterKeyHint="send"
                         onKeyDown={(event) => {
