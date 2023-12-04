@@ -47,7 +47,7 @@ import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpTeaser } from "./teaser";
-import { useDelayedArray } from "./hooks";
+import { useHistorySearchQuery, useDelayedArray } from "./hooks";
 import {
   SORRY_BACKEND,
   SORRY_FRONTEND,
@@ -488,6 +488,8 @@ export function AIHelpInner() {
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
   const gptVersion = "GPT-4";
+
+  useHistorySearchQuery(chatId && `?c=${chatId}`);
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
