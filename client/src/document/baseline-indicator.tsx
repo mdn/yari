@@ -3,6 +3,8 @@ import { useLocale } from "../hooks";
 import { BASELINE } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
 import { Icon } from "../ui/atoms/icon";
+import { useLocation } from "react-router";
+
 import "./baseline-indicator.scss";
 
 import type { SupportStatus } from "../../../type-fixes/web-features";
@@ -31,11 +33,12 @@ const SURVEY_URL =
 export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
+  const { pathname } = useLocation();
 
   const bcdLink = `#${
     LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
   }`;
-  const feedbackLink = `${SURVEY_URL}?page=${window.location.pathname}`;
+  const feedbackLink = `${SURVEY_URL}?page=${pathname}`;
 
   const low_date = status.baseline_low_date
     ? new Date(status.baseline_low_date)
