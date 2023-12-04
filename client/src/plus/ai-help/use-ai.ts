@@ -501,8 +501,6 @@ export function useAiChat({
       try {
         dispatchData(data);
 
-        setLoadingState("responding");
-
         if (data.type === "metadata") {
           const {
             sources = undefined,
@@ -531,6 +529,8 @@ export function useAiChat({
           }
           return;
         }
+
+        setLoadingState("responding");
 
         dispatchState({
           type: "update",
