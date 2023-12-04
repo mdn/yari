@@ -48,6 +48,13 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpTeaser } from "./teaser";
 import { useDelayedArray } from "./hooks";
+import {
+  SORRY_BACKEND,
+  SORRY_FRONTEND,
+  MESSAGE_SEARCHING,
+  MESSAGE_ANSWERING,
+  MESSAGE_FAILED,
+} from "./constants";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -262,7 +269,7 @@ function AIHelpAssistantResponse({
           .filter(Boolean)
           .join(" ")}
       >
-        Searching for MDN content
+        {MESSAGE_SEARCHING}
       </div>
       {sources && sources.length > 0 && (
         <ul className="ai-help-message-sources">
@@ -286,8 +293,8 @@ function AIHelpAssistantResponse({
             .join(" ")}
         >
           {message.status === MessageStatus.Errored
-            ? "Error generating your answer"
-            : "Generating your answer"}
+            ? MESSAGE_FAILED
+            : MESSAGE_ANSWERING}
         </div>
       )}
       {message.content && (
@@ -441,13 +448,6 @@ function AIHelpAssistantResponse({
     </>
   );
 }
-
-const SORRY_BACKEND = "Sorry, I don't know how to help with that.";
-const SORRY_FRONTEND =
-  "Sorry, I don’t know how to help with that.\n\nPlease keep in mind that I am only limited to answer based on the MDN documentation.";
-
-const MESSAGE_SEARCHING = "Searching MDN content…";
-const MESSAGE_ANSWERING = "Answering…";
 
 export function AIHelpInner() {
   const user = useUserData();
