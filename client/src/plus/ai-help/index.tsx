@@ -45,8 +45,8 @@ import { SESSION_KEY } from "../../playground/utils";
 import { PlayQueue, createQueueEntry } from "../../playground/queue";
 import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
-import { AuthContainer } from "../../ui/molecules/auth-container";
 import { QueueEntry } from "../../types/playground";
+import { AIHelpTeaser } from "./teaser";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -86,59 +86,41 @@ export default function AiHelp() {
 
   return (
     <div className="ai-help">
-      <div className={`ai-help-main with-ai-help-history`}>
-        <Container extraClasses="ai-help-header">
-          <h1>
-            <span>AI Help</span>
-          </h1>
-          <p>Get answers using generative AI based on MDN content.</p>
+      {user?.isAuthenticated ? <AIHelpAuthenticated /> : <AIHelpTeaser />}
+    </div>
+  );
+}
+
+function AIHelpAuthenticated() {
+  return (
+    <div className={`ai-help-main with-ai-help-history`}>
+      <Container extraClasses="ai-help-header">
+        <h1>
+          <span>AI Help</span>
+        </h1>
+        <p>Get answers using generative AI based on MDN content.</p>
+        <p>
+          <a
+            href="https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="feedback-link"
+          >
+            Report Feedback
+          </a>
+        </p>
+      </Container>
+      <Container>
+        <div className="ai-help-banner">
           <p>
-            <a
-              href={
-                user?.isAuthenticated
-                  ? "https://survey.alchemer.com/s3/7418589/MDN-AI-Help-Feedback"
-                  : "https://survey.alchemer.com/s3/7405739/MDN-AI-Help"
-              }
-              target="_blank"
-              rel="noreferrer noopener"
-              className="feedback-link"
-            >
-              Report Feedback
-            </a>
+            <Icon name="bell-ring" />
+            <strong>GPT-4 Turbo-powered AI Help.</strong>
           </p>
-        </Container>
-        <Container>
-          <div className="ai-help-banner">
-            <p>
-              <Icon name="bell-ring" />
-              <strong>GPT-4 Turbo-powered AI Help.</strong>
-            </p>
-            {user?.isAuthenticated ? (
-              <>
-                <p>
-                  Now with chat history, enhanced context, and optimised
-                  prompts.
-                </p>
-                <p>This is a beta feature.</p>
-              </>
-            ) : (
-              <>
-                <p>
-                  Discover AI powered assistance on MDN! Now enhanced with GPT-4
-                  Turbo, AI Help offers deeper insights and improved guidance.
-                  Perfect for learning and solving challenges on the go.
-                </p>
-                <p>This is a beta feature.</p>
-                <AuthContainer
-                  logInGleanContext={`${AI_HELP}: banner-login`}
-                  signUpGleanContext={`${AI_HELP}: banner-signup`}
-                />
-              </>
-            )}
-          </div>
-        </Container>
-        {user?.isAuthenticated && <AIHelpInner />}
-      </div>
+          <p>Now with chat history, enhanced context, and optimised prompts.</p>
+          <p>This is a beta feature.</p>
+        </div>
+      </Container>
+      <AIHelpInner />
     </div>
   );
 }
