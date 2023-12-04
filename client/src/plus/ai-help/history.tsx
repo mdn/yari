@@ -7,6 +7,8 @@ import "./history.scss";
 import { useLocale } from "../../hooks";
 import { HighlightedIcon } from "../../ui/atoms/icon";
 import { useAIHelpSettings } from "./utils";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { AI_HELP } from "../../telemetry/constants";
 
 const DEFAULT_TOPIC_LABEL = "New Topic";
 
@@ -86,6 +88,8 @@ function AIHelpHistorySubList({
   mutate: KeyedMutator<any[]>;
 }) {
   const [, setSearchParams] = useSearchParams();
+  const gleanClick = useGleanClick();
+
   return (
     <>
       <time>{entries.label}</time>
@@ -103,6 +107,7 @@ function AIHelpHistorySubList({
                 title={label || DEFAULT_TOPIC_LABEL}
                 onClick={(e) => {
                   e.preventDefault();
+                  gleanClick(`${AI_HELP}: history item`);
                   setSearchParams((old) => {
                     const params = new URLSearchParams(old);
                     params.set("c", chat_id);
@@ -122,6 +127,7 @@ function AIHelpHistorySubList({
                         "Do you want to permanently delete this Topic?"
                       )
                     ) {
+                      gleanClick(`${AI_HELP}: history delete`);
                       await fetch(`/api/v1/plus/ai/help/history/${chat_id}`, {
                         method: "DELETE",
                       });
@@ -171,6 +177,7 @@ export function AIHelpHistoryInner({
   isFinished,
   messageId,
 }: HistoryProps) {
+  const gleanClick = useGleanClick();
   const { data, mutate } = useSWR(
     `/api/v1/plus/ai/help/history/list`,
     async (url) => {
@@ -211,6 +218,9 @@ export function AIHelpHistoryInner({
     <>
       <input
         id="ai-help-history-toggle"
+        onChange={(event) =>
+          gleanClick(`${AI_HELP}: history toggle ${event.target.checked}`)
+        }
         type="checkbox"
         className="ai-help-history-details"
       />
@@ -244,6 +254,7 @@ export function AIHelpHistoryInner({
 
 export function AIHelpHistoryActivation() {
   const locale = useLocale();
+  const gleanClick = useGleanClick();
 
   return (
     <aside className="ai-help-history-activation" tabIndex={-1}>
@@ -263,6 +274,7 @@ export function AIHelpHistoryActivation() {
           <Button
             type="link"
             href={`/${locale}/plus/settings#ai-help--history-enable`}
+            onClickHandler={() => gleanClick(`${AI_HELP}: history enable`)}
           >
             Enable History
           </Button>

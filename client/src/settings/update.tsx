@@ -83,7 +83,7 @@ export default function UpdateButton({
   return (
     <section aria-labelledby="update-status">
       <h3 id="update-status">Update status</h3>
-      <div className="field-group">
+      <div className="setting-row">
         <span>
           {current}
           {current && <br />}
