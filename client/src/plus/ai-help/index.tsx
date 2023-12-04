@@ -255,7 +255,10 @@ function AIHelpAssistantResponse({
   messages: Message[];
 }) {
   const locale = useLocale();
-  const sources = useDelayedArray(message.sources, 250, 500);
+  const delayedSources = useDelayedArray(message.sources, 250, 500);
+
+  const sources =
+    message.status === MessageStatus.Pending ? delayedSources : message.sources;
 
   let sample = 0;
 
