@@ -7,16 +7,7 @@ section.place {
   a:not(.button),
   a {
     color: var(--text-primary);
-
-    &:link,
-    &:visited {
-      text-decoration: none;
-    }
-
-    &:focus,
-    &:hover {
-      text-decoration: underline;
-    }
+    text-decoration: none;
   }
 
   .pong-box {
@@ -54,17 +45,25 @@ section.place {
       text-decoration: underline;
       width: max-content;
     }
+  }
 
-    a.pong-note {
-      &:link,
-      &:visited {
-        text-decoration: underline;
-      }
+  &.top .pong-note,
+  .no-pong {
+    text-decoration: none;
 
-      &:focus,
-      &:hover {
-        text-decoration: none;
-      }
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.side .pong-note,
+  &.bottom-banner .pong-note {
+    text-decoration: underline;
+
+    &:focus,
+    &:hover {
+      text-decoration: none;
     }
   }
 
@@ -74,7 +73,6 @@ section.place {
     margin-bottom: 0.5rem;
     max-width: 12rem;
     padding: 0;
-    text-decoration: underline;
     width: 100%;
   }
 
@@ -146,13 +144,6 @@ section.place {
         grid-area: note;
         margin: 0 0 auto auto;
         padding: 0 0.5rem 0.125rem;
-        text-decoration: none;
-
-        &:hover,
-        &:focus,
-        &:active {
-          text-decoration: underline;
-        }
       }
     }
 
@@ -283,7 +274,6 @@ div.empty-place {
       font-size: 0.625rem;
       grid-area: note;
       margin-top: 0.5rem;
-      text-decoration: underline;
     }
 
     .no-pong {
