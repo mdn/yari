@@ -1,4 +1,4 @@
-import type { SupportStatus } from "../../type-fixes/web-features.js";
+import type { SupportStatus } from "./web-features.js";
 
 export interface Source {
   folder: string;
