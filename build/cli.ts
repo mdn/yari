@@ -365,10 +365,13 @@ async function buildDocuments(
     [...allBrowserCompat].sort().join(" ")
   );
 
-  fs.writeFileSync(
-    path.join(BUILD_OUT_ROOT, "build.json"),
-    JSON.stringify(buildMetadata)
-  );
+  for (const [locale, meta] of Object.entries(buildMetadata)) {
+    // have to write per-locale because we build each locale concurrently
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
+      JSON.stringify(meta)
+    );
+  }
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
