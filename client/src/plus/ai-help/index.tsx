@@ -487,7 +487,6 @@ export function AIHelpInner() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
-  const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const { queuedExamples, setQueue } = useUIStatus();
   const { hash } = useLocation();
@@ -564,11 +563,9 @@ export function AIHelpInner() {
   }, [messages, setQueue]);
 
   const submitQuestion = (parentId) => {
-    gleanClick(`${AI_HELP}: submit ${isExample ? "example" : "question"}`);
     if (query.trim()) {
       submit(query.trim(), chatId, parentId);
       setQuery("");
-      setIsExample(false);
       setAutoScroll(true);
     }
   };
@@ -697,7 +694,6 @@ export function AIHelpInner() {
                         onClickHandler={() => {
                           gleanClick(`${AI_HELP}: new`);
                           setQuery("");
-                          setIsExample(false);
                           setQueue([]);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
@@ -725,10 +721,7 @@ export function AIHelpInner() {
                             submitQuestion(messages.at(-1)?.messageId);
                           }
                         }}
-                        onChange={(event) => {
-                          setQuery(event.target.value);
-                          setIsExample(false);
-                        }}
+                        onChange={(event) => setQuery(event.target.value)}
                         value={query}
                         rows={1}
                         placeholder={placeholder(
@@ -881,7 +874,6 @@ export function AIHelpInner() {
                     onClick={() => {
                       gleanClick(`${AI_HELP}: example`);
                       setQuery(query);
-                      setIsExample(true);
                       inputRef.current?.focus();
                       window.setTimeout(() => window.scrollTo(0, 0));
                     }}

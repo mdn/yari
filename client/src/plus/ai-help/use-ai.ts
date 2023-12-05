@@ -8,6 +8,8 @@ import { SSE } from "sse.js";
 import useSWR from "swr";
 import { useAIHelpSettings } from "./utils";
 import { AIHelpLog } from "./rust-types";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { AI_HELP } from "../../telemetry/constants";
 
 const RETRY_INTERVAL = 10000;
 const ERROR_TIMEOUT = 60000;
@@ -358,6 +360,7 @@ export interface UseAiChatOptions {
 export function useAiChat({
   messageTemplate = (message) => message,
 }: UseAiChatOptions = {}) {
+  const gleanClick = useGleanClick();
   const eventSourceRef = useRef<SSE>();
   const { isHistoryEnabled } = useAIHelpSettings();
 
@@ -616,6 +619,7 @@ export function useAiChat({
         ? [...findPath(state, parentId), 0]
         : [0];
       setPath(newPath);
+      gleanClick(`${AI_HELP}: submit question ${newPath.length}`);
       dispatchState({
         type: "new",
         chatId,
