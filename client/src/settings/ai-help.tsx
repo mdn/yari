@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { toggleAIHelpHistory } from "../plus/common/api";
-import {
-  TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED,
-  TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED,
-} from "../telemetry/constants";
+import { SETTINGS } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
@@ -49,9 +46,7 @@ export function ManageAIHelp() {
                   toggle={async (e) => {
                     setSaving(true);
                     const { checked } = e.target;
-                    const source = checked
-                      ? TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED
-                      : TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED;
+                    const source = `${SETTINGS}: ai_help history toggle -> ${checked}`;
                     gleanClick(source);
                     await toggleAIHelpHistory(checked);
                     if (user?.settings) {
@@ -76,11 +71,13 @@ export function ManageAIHelp() {
               <button
                 className="button"
                 onClick={async () => {
-                  if (
-                    window.confirm(
-                      "Do you want to permanently delete your AI Help history?"
-                    )
-                  ) {
+                  const confirmed = window.confirm(
+                    "Do you want to permanently delete your AI Help history?"
+                  );
+                  gleanClick(
+                    `${SETTINGS}: ai_help history delete -> ${confirmed}`
+                  );
+                  if (confirmed) {
                     await fetch("/api/v1/plus/ai/help/history/list", {
                       method: "DELETE",
                     });

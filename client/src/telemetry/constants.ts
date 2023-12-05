@@ -22,6 +22,7 @@ export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
+export const SETTINGS = "settings";
 
 export const MENU = Object.freeze({
   CLICK_LINK: "menu_click_link",

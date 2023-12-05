@@ -6,6 +6,7 @@ import { useIsServer, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
+import { PLAYGROUND } from "../../telemetry/constants";
 
 function PQEntry({
   item: { id, key, lang },
@@ -37,7 +38,11 @@ function PQEntry({
       onMouseOver={() => setActive(true)}
       onMouseOut={() => setActive(false)}
     >
-      <button className="queue-ref" onClick={intoView}>
+      <button
+        className="queue-ref"
+        onClick={intoView}
+        data-glean={`${PLAYGROUND}: queue item`}
+      >
         Example {key + 1}
       </button>
       <code>{lang}</code>
@@ -46,6 +51,7 @@ function PQEntry({
         buttonType="reset"
         icon="trash"
         onClickHandler={() => unqueue()}
+        data-glean={`${PLAYGROUND}: queue dequeue`}
       />
     </li>
   );
@@ -105,6 +111,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
             <Button
               type="secondary"
               extraClasses="play-button"
+              data-glean={`${PLAYGROUND}: queue play`}
               onClickHandler={(e) => {
                 const code = collectCode();
                 sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));

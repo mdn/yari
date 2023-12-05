@@ -122,12 +122,11 @@ function AIHelpHistorySubList({
                   type="action"
                   icon="trash"
                   onClickHandler={async () => {
-                    if (
-                      window.confirm(
-                        "Do you want to permanently delete this Topic?"
-                      )
-                    ) {
-                      gleanClick(`${AI_HELP}: history delete`);
+                    const confirmed = window.confirm(
+                      "Do you want to permanently delete this Topic?"
+                    );
+                    gleanClick(`${AI_HELP}: history delete -> ${confirmed}`);
+                    if (confirmed) {
                       await fetch(`/api/v1/plus/ai/help/history/${chat_id}`, {
                         method: "DELETE",
                       });
@@ -219,7 +218,7 @@ export function AIHelpHistoryInner({
       <input
         id="ai-help-history-toggle"
         onChange={(event) =>
-          gleanClick(`${AI_HELP}: history toggle ${event.target.checked}`)
+          gleanClick(`${AI_HELP}: history toggle -> ${event.target.checked}`)
         }
         type="checkbox"
         className="ai-help-history-details"
