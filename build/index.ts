@@ -11,7 +11,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc, WebFeatureStatus } from "../libs/types/document.js";
+import { Doc } from "../libs/types/document.js";
 import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
@@ -382,7 +382,7 @@ export async function buildDocument(
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
-  doc.baseline = await addBaseline(doc);
+  doc.baseline = addBaseline(doc);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -566,16 +566,9 @@ export async function buildDocument(
   return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
 }
 
-async function addBaseline(
-  doc: Partial<Doc>
-): Promise<WebFeatureStatus | undefined> {
+function addBaseline(doc: Partial<Doc>) {
   if (doc.browserCompat) {
-    const filteredBrowserCompat = doc.browserCompat.filter(
-      (query) =>
-        // temporary blocklist while we wait for an updated baseline definition/designs
-        !["css.properties.grid-template-columns.subgrid"].includes(query)
-    );
-    return await getWebFeatureStatus(...filteredBrowserCompat);
+    return getWebFeatureStatus(...doc.browserCompat);
   }
 }
 

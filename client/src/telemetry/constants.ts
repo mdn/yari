@@ -69,4 +69,5 @@ export const BASELINE = Object.freeze({
   TOGGLE_OPEN: "baseline_toggle_open",
   LINK_LEARN_MORE: "baseline_link_learn_more",
   LINK_BCD_TABLE: "baseline_link_bcd_table",
+  LINK_FEEDBACK: "baseline_link_feedback",
 });
