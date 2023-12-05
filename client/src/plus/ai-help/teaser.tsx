@@ -1,9 +1,9 @@
 import { AI_HELP } from "../../telemetry/constants";
 import Container from "../../ui/atoms/container";
 import { AuthContainer } from "../../ui/molecules/auth-container";
-import contextImage from "../../../public/assets/ai-help/context.svg";
-import historyImage from "../../../public/assets/ai-help/history.svg";
-import turboImage from "../../../public/assets/ai-help/turbo.svg";
+import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
+import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
+import { ReactComponent as TurboSVG } from "../../../public/assets/ai-help/turbo.svg";
 
 import "./teaser.scss";
 
@@ -30,21 +30,21 @@ export function AIHelpTeaser() {
           <h2>New Additions</h2>
           <div className="ai-help-new-additions">
             <figure>
-              <img src={historyImage} alt="" />
+              <HistorySVG />
               <figcaption>
                 <h3>History</h3>
                 <p>Save your history to revisit your chats at anytime</p>
               </figcaption>
             </figure>
             <figure>
-              <img src={contextImage} alt="" />
+              <ContextSVG />
               <figcaption>
                 <h3>Enhanced Context</h3>
                 <p>Ask queries about browser compatibility data</p>
               </figcaption>
             </figure>
             <figure>
-              <img src={turboImage} alt="" />
+              <TurboSVG />
               <figcaption>
                 <h3>Turbo-Powered</h3>
                 <p>Now based on GPT-4 Turbo for peak performance</p>

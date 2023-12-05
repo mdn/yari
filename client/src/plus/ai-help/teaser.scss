@@ -66,11 +66,12 @@
       figure {
         align-items: center;
         display: flex;
+        text-align: center;
 
         gap: 1.5rem;
         margin-top: 1rem;
 
-        img {
+        svg {
           height: 3rem;
         }
 
@@ -84,7 +85,7 @@
           // Desktop.
           display: block;
 
-          img {
+          svg {
             height: 5rem;
             margin: 0 auto;
           }
@@ -98,6 +99,8 @@
           // Mobile.
 
           figcaption {
+            text-align: left;
+
             h3 {
               margin: 0;
             }
