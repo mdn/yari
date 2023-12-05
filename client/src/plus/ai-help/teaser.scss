@@ -66,13 +66,14 @@
       figure {
         align-items: center;
         display: flex;
-        text-align: center;
 
         gap: 1.5rem;
         margin-top: 1rem;
+        text-align: center;
 
         svg {
           height: 3rem;
+          width: 3rem;
         }
 
         figcaption {
@@ -88,6 +89,7 @@
           svg {
             height: 5rem;
             margin: 0 auto;
+            width: 5rem;
           }
 
           figcaption {
