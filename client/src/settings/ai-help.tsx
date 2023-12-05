@@ -30,7 +30,7 @@ export function ManageAIHelp() {
               <span>
                 <p>
                   Enable History to securely store all your chat conversations
-                  for a period of up to 6 months. Please not that after six
+                  for a period of up to 6 months. Please note that after six
                   months, your chat history will be automatically deleted to
                   maintain your privacy and data security.
                 </p>
