@@ -1,2 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
   <polygon points="8.375 4.75 7.625 4.75 7.625 6.737 6.21 9.25 9.79 9.25 8.375 6.737 8.375 4.75" fill="#3b8ac9"/><path d="M8,0a8,8,0,1,0,8,8A8,8,0,0,0,8,0Zm4.25,11.5a.75.75,0,0,1-.75.75h-7a.75.75,0,0,1-.75-.75v-.9375L6.125,6.3438V4.75H5.5V3.25h5v1.5H9.875V6.3438l2.375,4.2187Z" fill="currentColor"/></svg>
