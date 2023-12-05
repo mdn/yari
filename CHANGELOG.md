@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.37.0](https://github.com/mdn/yari/compare/v2.36.1...v2.37.0) (2023-12-05)
+
+
+### Features
+
+* **baseline:** update widget to reflect new definition ([#10128](https://github.com/mdn/yari/issues/10128)) ([8372e0b](https://github.com/mdn/yari/commit/8372e0b94c7de22ebfe467890c64e445bd84c3f3))
+
 ## [2.36.1](https://github.com/mdn/yari/compare/v2.36.0...v2.36.1) (2023-12-05)
 
 
