@@ -148,7 +148,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
         <ul>
           <li>
             <a
-              href="/en-US/blog/baseline-unified-view-stable-web-features/"
+              href="/en-US/blog/baseline-evolution-on-mdn/"
               data-glean={BASELINE.LINK_LEARN_MORE}
               target="_blank"
             >
