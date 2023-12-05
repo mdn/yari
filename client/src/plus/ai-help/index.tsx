@@ -36,7 +36,7 @@ import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
 import { isExternalUrl } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
-import { AI_HELP } from "../../telemetry/constants";
+import { AI_HELP, PLAYGROUND } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
 import { AI_FEEDBACK_GITHUB_REPO } from "../../env";
 import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
@@ -113,6 +113,7 @@ function AIHelpAuthenticated() {
             target="_blank"
             rel="noreferrer noopener"
             className="feedback-link"
+            data-glean={`${AI_HELP}: feedback`}
           >
             Report Feedback
           </a>
@@ -134,6 +135,7 @@ function AIHelpAuthenticated() {
 }
 
 function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
+  const gleanClick = useGleanClick();
   const [editing, setEditing] = useState(false);
   const [question, setQuestion] = useState(message.content);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -148,6 +150,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
+        gleanClick(`${AI_HELP}: edit submit`);
         setEditing(false);
         submit(question, message.chatId, message.parentId, message.messageId);
       }}
@@ -157,6 +160,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         enterKeyHint="send"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
+            gleanClick(`${AI_HELP}: edit submit`);
             setEditing(false);
             submit(
               question,
@@ -178,6 +182,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
             buttonType="reset"
             title="Clear question"
             onClickHandler={() => {
+              gleanClick(`${AI_HELP}: edit clear`);
               setQuestion("");
             }}
           >
@@ -198,6 +203,7 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
           type="action"
           title="Undo editing"
           onClickHandler={() => {
+            gleanClick(`${AI_HELP}: edit cancel`);
             setEditing(false);
             setQuestion(message.content);
           }}
@@ -214,7 +220,10 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
             icon="previous"
             type="action"
             isDisabled={pos === 1}
-            onClickHandler={() => nextPrev(message.messageId, "prev")}
+            onClickHandler={() => {
+              gleanClick(`${AI_HELP}: question prev`);
+              nextPrev(message.messageId, "prev");
+            }}
           >
             <span className="visually-hidden">Previous Question</span>
           </Button>
@@ -225,7 +234,10 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
             isDisabled={pos === total}
             icon="next"
             type="action"
-            onClickHandler={() => nextPrev(message.messageId, "next")}
+            onClickHandler={() => {
+              gleanClick(`${AI_HELP}: question next`);
+              nextPrev(message.messageId, "next");
+            }}
           >
             <span className="visually-hidden">Next Question</span>
           </Button>
@@ -235,7 +247,10 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       <Button
         type="action"
         icon="edit-filled"
-        onClickHandler={() => setEditing(true)}
+        onClickHandler={() => {
+          gleanClick(`${AI_HELP}: edit start`);
+          setEditing(true);
+        }}
       />
     </div>
   );
@@ -254,6 +269,7 @@ function AIHelpAssistantResponse({
   thumbsCallback: (thumb: "up" | "down") => Promise<void>;
   messages: Message[];
 }) {
+  const gleanClick = useGleanClick();
   const locale = useLocale();
   const delayedSources = useDelayedArray(message.sources, 250, 500);
 
@@ -278,7 +294,12 @@ function AIHelpAssistantResponse({
         <ul className="ai-help-message-sources">
           {sources.map(({ url, title }, index) => (
             <li key={index}>
-              <a href={url}>{title}</a>
+              <a
+                href={url}
+                onClick={() => gleanClick(`${AI_HELP}: link source`)}
+              >
+                {title}
+              </a>
             </li>
           ))}
         </ul>
@@ -314,7 +335,8 @@ function AIHelpAssistantResponse({
             remarkPlugins={[remarkGfm]}
             components={{
               a: ({ node, ...props }) => {
-                if (isExternalUrl(props.href ?? "")) {
+                const isExternal = isExternalUrl(props.href ?? "");
+                if (isExternal) {
                   props = {
                     ...props,
                     className: "external",
@@ -322,6 +344,10 @@ function AIHelpAssistantResponse({
                     target: "_blank",
                   };
                 }
+                props.onClick = () =>
+                  gleanClick(
+                    `${AI_HELP}: link ${isExternal ? "external" : "internal"}`
+                  );
                 // eslint-disable-next-line jsx-a11y/anchor-has-content
                 return <a {...props} />;
               },
@@ -356,6 +382,7 @@ function AIHelpAssistantResponse({
                           <div className="playlist">
                             <input
                               type="checkbox"
+                              data-glean={`${PLAYGROUND}: queue->${id}`}
                               checked={queuedExamples.has(id)}
                               onChange={() => {
                                 setQueue((old) =>
@@ -373,6 +400,7 @@ function AIHelpAssistantResponse({
                             </label>
                             <button
                               type="button"
+                              data-glean={`${PLAYGROUND}: breakout->${id}`}
                               className="play-button"
                               title="Open in Playground"
                               onClick={(e) => {
@@ -459,7 +487,6 @@ export function AIHelpInner() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
-  const [isExample, setIsExample] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const { queuedExamples, setQueue } = useUIStatus();
   const { hash } = useLocation();
@@ -536,17 +563,9 @@ export function AIHelpInner() {
   }, [messages, setQueue]);
 
   const submitQuestion = (parentId) => {
-    const questionNumber =
-      1 + messages.filter((m) => m.role === MessageRole.User).length;
-    gleanClick(
-      `${AI_HELP}: submit ${
-        isExample ? "example" : "question"
-      } ${questionNumber}`
-    );
     if (query.trim()) {
       submit(query.trim(), chatId, parentId);
       setQuery("");
-      setIsExample(false);
       setAutoScroll(true);
     }
   };
@@ -675,7 +694,6 @@ export function AIHelpInner() {
                         onClickHandler={() => {
                           gleanClick(`${AI_HELP}: new`);
                           setQuery("");
-                          setIsExample(false);
                           setQueue([]);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
@@ -703,10 +721,7 @@ export function AIHelpInner() {
                             submitQuestion(messages.at(-1)?.messageId);
                           }
                         }}
-                        onChange={(event) => {
-                          setQuery(event.target.value);
-                          setIsExample(false);
-                        }}
+                        onChange={(event) => setQuery(event.target.value)}
                         value={query}
                         rows={1}
                         placeholder={placeholder(
@@ -742,6 +757,7 @@ export function AIHelpInner() {
                             buttonType="reset"
                             title="Clear question"
                             onClickHandler={() => {
+                              gleanClick(`${AI_HELP}: clear`);
                               setQuery("");
                             }}
                           >
@@ -858,7 +874,6 @@ export function AIHelpInner() {
                     onClick={() => {
                       gleanClick(`${AI_HELP}: example`);
                       setQuery(query);
-                      setIsExample(true);
                       inputRef.current?.focus();
                       window.setTimeout(() => window.scrollTo(0, 0));
                     }}

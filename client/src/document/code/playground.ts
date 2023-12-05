@@ -153,6 +153,7 @@ export function addCollectButton(
   });
   check.type = "checkbox";
   check.id = checkId;
+  check.dataset.glean = `${PLAYGROUND}: queue->${id}`;
   const button = document.createElement("button");
 
   button.textContent = "play";
@@ -160,6 +161,7 @@ export function addCollectButton(
   button.classList.add("play-button");
   button.type = "button";
   button.setAttribute("data-play", id);
+  button.dataset.glean = `${PLAYGROUND}: breakout->${id}`;
   button.title = "Open in Playground";
   playlist.appendChild(check);
   playlist.appendChild(checkLabel);
