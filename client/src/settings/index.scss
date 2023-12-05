@@ -20,7 +20,7 @@ article.settings {
       li {
         display: grid;
         gap: 0 1rem;
-        grid-template-columns: 1fr minmax(5em);
+        grid-template-columns: 1fr 5em;
         margin: 2em 0;
 
         h3 {
