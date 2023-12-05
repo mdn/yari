@@ -113,6 +113,8 @@
         padding: 0.25rem 1rem;
         width: 100%;
 
+        &:active,
+        &:focus-within,
         &:hover {
           background-color: var(--background-toc-active);
         }
@@ -122,8 +124,10 @@
           font-size: var(--type-smaller-font-size);
           padding: 0 0.5rem;
 
+          &:active,
+          &:focus,
           &:hover {
-            color: var(--category-color);
+            color: var(--text-link);
             text-decoration: underline;
           }
         }
