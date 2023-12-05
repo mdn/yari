@@ -678,7 +678,7 @@ export function useAiChat({
 
       eventSourceRef.current = eventSource;
     },
-    [state, messageTemplate, handleError, handleEventData]
+    [state, gleanClick, messageTemplate, handleError, handleEventData]
   );
 
   useEffect(() => {
