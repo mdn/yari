@@ -46,7 +46,7 @@ import { PlayQueue, createQueueEntry } from "../../playground/queue";
 import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
-import { AIHelpTeaser } from "./teaser";
+import { AIHelpLanding } from "./landing";
 import { useHistorySearchQuery, useDelayedArray } from "./hooks";
 import {
   SORRY_BACKEND,
@@ -94,7 +94,7 @@ export default function AiHelp() {
 
   return (
     <div className="ai-help">
-      {user?.isAuthenticated ? <AIHelpAuthenticated /> : <AIHelpTeaser />}
+      {user?.isAuthenticated ? <AIHelpAuthenticated /> : <AIHelpLanding />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 @use "../../ui/vars" as *;
 
-.ai-help .ai-help-teaser {
+.ai-help .ai-help-landing {
   margin: 2rem 0;
 
   h2 {
@@ -19,7 +19,7 @@
     justify-content: flex-start;
   }
 
-  .ai-help-teaser-top {
+  .ai-help-landing-top {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -44,9 +44,14 @@
         font-style: unset;
       }
     }
+
+    img {
+      border-radius: 1rem;
+      box-shadow: 0 3px 22px rgba(43, 42, 51, 0.1019607843);
+    }
   }
 
-  .ai-help-teaser-features {
+  .ai-help-landing-features {
     background-color: var(--background-secondary);
     margin: 4rem 0;
     padding: 1rem 0;
@@ -112,7 +117,7 @@
     }
   }
 
-  .ai-help-teaser-bottom {
+  .ai-help-landing-bottom {
     margin-bottom: 4rem;
 
     ul.highlights {

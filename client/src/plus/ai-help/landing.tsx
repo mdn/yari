@@ -1,5 +1,6 @@
 import { AI_HELP } from "../../telemetry/constants";
 import Container from "../../ui/atoms/container";
+import ThemedPicture from "../../ui/atoms/themed-picture";
 import { AuthContainer } from "../../ui/molecules/auth-container";
 import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
 import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
@@ -7,15 +8,12 @@ import { ReactComponent as TurboSVG } from "../../../public/assets/ai-help/turbo
 import screenshotDark from "../../../public/assets/ai-help/ai_help_dark.png";
 import screenshotLight from "../../../public/assets/ai-help/ai_help_light.png";
 
-import "./teaser.scss";
-import { useScheme } from "../../hooks";
+import "./landing.scss";
 
-export function AIHelpTeaser() {
-  const scheme = useScheme();
-
+export function AIHelpLanding() {
   return (
-    <div className="ai-help-teaser">
-      <Container extraClasses="ai-help-teaser-top">
+    <div className="ai-help-landing">
+      <Container extraClasses="ai-help-landing-top">
         <div>
           <h1>
             Utilise AI Help to <em>boost</em> your productivity
@@ -24,13 +22,14 @@ export function AIHelpTeaser() {
           <Login placement="top" />
         </div>
         <figure>
-          <img
-            src={scheme === "dark" ? screenshotDark : screenshotLight}
+          <ThemedPicture
+            srcDark={screenshotDark}
+            srcLight={screenshotLight}
             alt="Screenshot of AI Help"
           />
         </figure>
       </Container>
-      <div className="ai-help-teaser-features">
+      <div className="ai-help-landing-features">
         <Container>
           <h2>New Additions</h2>
           <div className="ai-help-new-additions">
@@ -58,7 +57,7 @@ export function AIHelpTeaser() {
           </div>
         </Container>
       </div>
-      <Container extraClasses="ai-help-teaser-bottom">
+      <Container extraClasses="ai-help-landing-bottom">
         <h2>Boost Your Productivity with AI-Assisted Help on MDN</h2>
         <ul className="highlights">
           <li>
