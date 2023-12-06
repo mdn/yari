@@ -188,8 +188,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       const settings: UserPlusSettings | null = data?.settings
         ? {
             aiHelpHistory:
-              typeof data?.settings?.no_ai_help_history === "boolean"
-                ? !data.settings.no_ai_help_history
+              typeof data?.settings?.ai_help_history === "boolean"
+                ? data.settings.ai_help_history
                 : null,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
