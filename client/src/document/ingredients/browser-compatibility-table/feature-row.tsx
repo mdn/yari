@@ -3,7 +3,7 @@ import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
-  getCurrentSupport,
+  getFirst,
   hasMore,
   hasNoteworthyNotes,
   isFullySupportedWithoutLimitation,
@@ -23,7 +23,7 @@ function getSupportClassName(
   }
 
   let { flags, version_added, version_removed, partial_implementation } =
-    getCurrentSupport(support)!;
+    getFirst(support)!;
 
   let className;
   if (version_added === null) {
@@ -51,7 +51,7 @@ function getSupportBrowserReleaseDate(
   if (!support) {
     return undefined;
   }
-  return getCurrentSupport(support)!.release_date;
+  return getFirst(support)!.release_date;
 }
 
 function StatusIcons({ status }: { status: BCD.StatusBlock }) {
@@ -127,11 +127,11 @@ const CellText = React.memo(
     browser,
     timeline = false,
   }: {
-    support: BCD.SupportStatement | undefined;
+    support: SupportStatementExtended | undefined;
     browser: BCD.BrowserStatement;
     timeline?: boolean;
   }) => {
-    const currentSupport = getCurrentSupport(support);
+    const currentSupport = getFirst(support);
 
     const added = currentSupport?.version_added ?? null;
     const lastVersion = currentSupport?.version_last ?? null;
@@ -258,7 +258,7 @@ function Icon({ name }: { name: string }) {
 }
 
 function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
-  const supportItem = getCurrentSupport(support);
+  const supportItem = getFirst(support);
   if (!supportItem) {
     return null;
   }
