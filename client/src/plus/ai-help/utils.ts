@@ -1,14 +1,7 @@
 import { useUserData } from "../../user-context";
 
 export function isExternalUrl(url: string) {
-  return !isInternalUrl(url);
-}
-
-export function isInternalUrl(url: string) {
-  return (
-    !url.startsWith("//") &&
-    (url.startsWith("/") || url.startsWith("https://developer.mozilla.org/"))
-  );
+  return url.startsWith("//") || !url.startsWith("/");
 }
 
 export function useAIHelpSettings() {
