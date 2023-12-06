@@ -6,6 +6,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 import "./app.scss";
 
 import { WRITER_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
+import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { TopNavigation } from "./ui/organisms/top-navigation";
@@ -26,7 +27,6 @@ const Contribute = React.lazy(() => import("./community"));
 const ContributorSpotlight = React.lazy(
   () => import("./contributor-spotlight")
 );
-const Document = React.lazy(() => import("./document"));
 const Homepage = React.lazy(() => import("./homepage"));
 const Newsletter = React.lazy(() => import("./newsletter"));
 const PageNotFound = React.lazy(() => import("./page-not-found"));
@@ -282,9 +282,7 @@ export function App(appProps: HydrationData) {
               element={
                 <PageOrPageNotFound pageNotFound={pageNotFound}>
                   <DocumentLayout>
-                    <React.Suspense fallback={<LoadingFallback />}>
-                      <Document {...appProps} />
-                    </React.Suspense>
+                    <Document {...appProps} />
                   </DocumentLayout>
                 </PageOrPageNotFound>
               }

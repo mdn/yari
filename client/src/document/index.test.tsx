@@ -1,7 +1,7 @@
 import { Route, Routes, MemoryRouter } from "react-router-dom";
 import { render, waitFor } from "@testing-library/react";
 
-import Document from "./index";
+import { Document } from "./index";
 
 declare var global: Window;
 
