@@ -64,7 +64,9 @@ export class HTTPError extends Error {
   }
 }
 
-export function Document(props /* TODO: define a TS interface for this */) {
+export default function Document(
+  props /* TODO: define a TS interface for this */
+) {
   const ga = useGA();
   const isServer = useIsServer();
 
