@@ -7,14 +7,18 @@ import { Button } from "../../ui/atoms/button";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { PLAYGROUND } from "../../telemetry/constants";
+import { useGleanClick } from "../../telemetry/glean-context";
 
 function PQEntry({
+  gleanContext,
   item: { id, key, lang },
   unqueue,
 }: {
+  gleanContext: string;
   item: QueueEntry;
   unqueue: () => void;
 }) {
+  const gleanClick = useGleanClick();
   const getHeader = () => {
     const element = document.getElementById(id);
     return element?.parentElement?.parentElement;
@@ -40,8 +44,10 @@ function PQEntry({
     >
       <button
         className="queue-ref"
-        onClick={intoView}
-        data-glean={`${PLAYGROUND}: queue item`}
+        onClick={() => {
+          gleanClick(`${gleanContext}: queue item -> ${id}`);
+          intoView();
+        }}
       >
         Example {key + 1}
       </button>
@@ -50,16 +56,25 @@ function PQEntry({
         type="action"
         buttonType="reset"
         icon="trash"
-        onClickHandler={() => unqueue()}
-        data-glean={`${PLAYGROUND}: queue dequeue`}
+        onClickHandler={() => {
+          gleanClick(`${gleanContext}: queue dequeue -> ${id}`);
+          unqueue();
+        }}
       />
     </li>
   );
 }
 
-export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
+export function PlayQueue({
+  gleanContext = PLAYGROUND,
+  standalone = false,
+}: {
+  gleanContext?: string;
+  standalone?: boolean;
+}) {
   const locale = useLocale();
   const isServer = useIsServer();
+  const gleanClick = useGleanClick();
   const { queue, setQueue } = useUIStatus();
 
   const cb = useCallback(() => {
@@ -100,6 +115,7 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
             <ul>
               {queue.map((item) => (
                 <PQEntry
+                  gleanContext={gleanContext}
                   key={item.key}
                   item={item}
                   unqueue={() =>
@@ -111,8 +127,8 @@ export function PlayQueue({ standalone = false }: { standalone?: boolean }) {
             <Button
               type="secondary"
               extraClasses="play-button"
-              data-glean={`${PLAYGROUND}: queue play`}
               onClickHandler={(e) => {
+                gleanClick(`${gleanContext}: queue play ${queue.length}`);
                 const code = collectCode();
                 sessionStorage.setItem(SESSION_KEY, JSON.stringify(code));
                 const url = new URL(window?.location.href);
