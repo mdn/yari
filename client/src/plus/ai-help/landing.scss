@@ -44,6 +44,11 @@
         font-style: unset;
       }
     }
+
+    img {
+      border-radius: 1rem;
+      box-shadow: 0 3px 22px rgba(43, 42, 51, 0.1019607843);
+    }
   }
 
   .ai-help-landing-features {
