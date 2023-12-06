@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.37.0](https://github.com/mdn/yari/compare/v2.36.1...v2.37.0) (2023-12-05)
+
+
+### Features
+
+* **baseline:** update widget to reflect new definition ([#10128](https://github.com/mdn/yari/issues/10128)) ([8372e0b](https://github.com/mdn/yari/commit/8372e0b94c7de22ebfe467890c64e445bd84c3f3))
+
+## [2.36.1](https://github.com/mdn/yari/compare/v2.36.0...v2.36.1) (2023-12-05)
+
+
+### Bug Fixes
+
+* **baseline:** bcd link not localized ([#10124](https://github.com/mdn/yari/issues/10124)) ([0761a86](https://github.com/mdn/yari/commit/0761a86627c713c15fea4b3df19f2ca61c2c46e4))
+* **macros/EmbedLiveSample:** un-deprecate the 6th parameter (allowed features) ([#10106](https://github.com/mdn/yari/issues/10106)) ([012f5e4](https://github.com/mdn/yari/commit/012f5e433a6d3e0b81261cf53d351915eb5107b8))
+* **macros/GamesSidebar:** update WebVR -&gt; WebXR in string map ([#10126](https://github.com/mdn/yari/issues/10126)) ([0670f6a](https://github.com/mdn/yari/commit/0670f6a7677bb1ceaeaa69a4d8c48472af3717cc))
+
+
+### Miscellaneous
+
+* **advertising:** update form link ([#10109](https://github.com/mdn/yari/issues/10109)) ([02af588](https://github.com/mdn/yari/commit/02af588c5865a075369d81141b8eb9ad7b58482c))
+* **deps-dev:** bump browserslist from 4.22.1 to 4.22.2 ([#10115](https://github.com/mdn/yari/issues/10115)) ([8221634](https://github.com/mdn/yari/commit/82216341c2e38b6b03ec78df5cf74ef3cff699fa))
+* **deps-dev:** bump eslint from 8.54.0 to 8.55.0 ([#10116](https://github.com/mdn/yari/issues/10116)) ([8ab0321](https://github.com/mdn/yari/commit/8ab0321bfefb70db132bb31cfc877284cba6ffc6))
+* **deps-dev:** bump postcss from 8.4.31 to 8.4.32 ([#10119](https://github.com/mdn/yari/issues/10119)) ([051dcaf](https://github.com/mdn/yari/commit/051dcaf80cbe6ddb4007d2c4633fe95d7fbdb6b0))
+* **deps-dev:** bump prettier-plugin-packagejson from 2.4.6 to 2.4.7 ([#10117](https://github.com/mdn/yari/issues/10117)) ([6780a5a](https://github.com/mdn/yari/commit/6780a5a524739548be1d227e74b80452d53f9253))
+* **deps-dev:** bump react-router-dom from 6.20.0 to 6.20.1 ([#10120](https://github.com/mdn/yari/issues/10120)) ([6e6ab9e](https://github.com/mdn/yari/commit/6e6ab9e2dbd3d4201132180e9ec35d50cfee169b))
+* **deps-dev:** bump tailwindcss from 3.3.5 to 3.3.6 ([#10133](https://github.com/mdn/yari/issues/10133)) ([bfb7e6e](https://github.com/mdn/yari/commit/bfb7e6eb84eb0a59cc696ca7e7e22eab155eeebc))
+* **deps-dev:** bump the types group with 1 update ([#10113](https://github.com/mdn/yari/issues/10113)) ([68116f9](https://github.com/mdn/yari/commit/68116f940edd5a01667087e54f8a2d1ebc8c4511))
+* **deps-dev:** bump the types group with 1 update ([#10132](https://github.com/mdn/yari/issues/10132)) ([8eca5fe](https://github.com/mdn/yari/commit/8eca5fe429249906d6250327a4eb86c92b44e769))
+* **deps:** bump @mdn/browser-compat-data from 5.4.2 to 5.4.3 ([#10121](https://github.com/mdn/yari/issues/10121)) ([42d1752](https://github.com/mdn/yari/commit/42d17520d2fee32059bc3516ce4ddd5ab0e6a344))
+* **deps:** bump @mdn/browser-compat-data from 5.4.3 to 5.4.4 ([#10134](https://github.com/mdn/yari/issues/10134)) ([18d9592](https://github.com/mdn/yari/commit/18d95921979099f2b67b4d5fd8da84165426fbbc))
+* **deps:** bump @webref/css from 6.7.1 to 6.9.2 ([#10110](https://github.com/mdn/yari/issues/10110)) ([300e93e](https://github.com/mdn/yari/commit/300e93eb908684dfbcb4e3354bc8b2558eacf046))
+* **deps:** bump the dependencies group in /deployer with 1 update ([#10118](https://github.com/mdn/yari/issues/10118)) ([fd6147c](https://github.com/mdn/yari/commit/fd6147c71d1263b36ef2e37412668d994c166409))
+* **deps:** bump the sentry group with 2 updates ([#10131](https://github.com/mdn/yari/issues/10131)) ([21e2b32](https://github.com/mdn/yari/commit/21e2b32ded390b2a9001d825e0fe52485f57a3ae))
+* **deps:** bump web-specs from 2.74.1 to 2.75.1 ([#10108](https://github.com/mdn/yari/issues/10108)) ([a72963c](https://github.com/mdn/yari/commit/a72963cd842b55fa3a9f1a8d38424796f43dba8d))
+* **macros/CSSRef:** update "Using CSS math functions" slug ([#10112](https://github.com/mdn/yari/issues/10112)) ([d417c47](https://github.com/mdn/yari/commit/d417c478ab8832ec91698205182b9a98e155ff7e))
+* **macros/LearnSidebar:** update zh-CN translation ([#10100](https://github.com/mdn/yari/issues/10100)) ([8a3f78a](https://github.com/mdn/yari/commit/8a3f78aa0eb7d283f04508caafdfe020c3cee0f0))
+* **placement:** switch to BSA ([#10011](https://github.com/mdn/yari/issues/10011)) ([ea98829](https://github.com/mdn/yari/commit/ea98829430afe16a445b49ce2ef937afd869a8af))
+* **web-features:** pin package version ([#10123](https://github.com/mdn/yari/issues/10123)) ([aab3559](https://github.com/mdn/yari/commit/aab3559f1610d500890f711f14bb562f5c1ccb38))
+
 ## [2.36.0](https://github.com/mdn/yari/compare/v2.35.1...v2.36.0) (2023-11-30)
 
 

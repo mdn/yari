@@ -1,3 +1,5 @@
+import type { SupportStatus } from "./web-features.js";
+
 export interface Source {
   folder: string;
   github_url: string;
@@ -146,7 +148,7 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
-  baseline?: WebFeatureStatus;
+  baseline?: SupportStatus;
   hash?: string;
 }
 
@@ -217,21 +219,4 @@ export interface NewsItem {
     url: string;
   };
   published_at: string;
-}
-
-export interface WebFeature {
-  compat_features?: string[];
-  status?: WebFeatureStatus;
-  spec?: unknown;
-}
-
-export interface WebFeatureStatus {
-  is_baseline?: boolean;
-  since?: string;
-  support?: {
-    chrome?: string | boolean;
-    edge?: string | boolean;
-    firefox?: string | boolean;
-    safari?: string | boolean;
-  };
 }

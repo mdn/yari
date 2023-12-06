@@ -26,7 +26,7 @@ import {
   BuiltDocument,
   renderContributorsTxt,
 } from "./index.js";
-import { DocMetadata, Flaws } from "../libs/types/document.js";
+import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
@@ -50,6 +50,10 @@ export interface InteractiveDocumentBuild {
 
 interface GlobalMetadata {
   [locale: string]: Array<DocMetadata>;
+}
+
+interface BuildMetadata {
+  [locale: string]: any;
 }
 
 async function buildDocumentInteractive(
@@ -132,6 +136,33 @@ async function buildDocuments(
   }
 
   const metadata: GlobalMetadata = {};
+  const buildMetadata: BuildMetadata = {};
+
+  function updateBaselineBuildMetadata(doc: Doc) {
+    if (typeof doc.baseline?.baseline === "undefined") {
+      return;
+    }
+
+    if (typeof buildMetadata[doc.locale] === "undefined") {
+      buildMetadata[doc.locale] = {};
+    }
+    if (typeof buildMetadata[doc.locale].baseline === "undefined") {
+      buildMetadata[doc.locale].baseline = {
+        total: 0,
+        high: 0,
+        highPaths: [],
+        low: 0,
+        lowPaths: [],
+        not: 0,
+        notPaths: [],
+      };
+    }
+
+    buildMetadata[doc.locale].baseline.total++;
+    const key = doc.baseline.baseline || "not";
+    buildMetadata[doc.locale].baseline[key]++;
+    buildMetadata[doc.locale].baseline[`${key}Paths`].push(doc.mdn_url);
+  }
 
   const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -186,6 +217,10 @@ async function buildDocuments(
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
+    }
+
+    if (builtDocument.baseline) {
+      updateBaselineBuildMetadata(builtDocument);
     }
 
     if (!noHTML) {
@@ -329,6 +364,14 @@ async function buildDocuments(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
     [...allBrowserCompat].sort().join(" ")
   );
+
+  for (const [locale, meta] of Object.entries(buildMetadata)) {
+    // have to write per-locale because we build each locale concurrently
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
+      JSON.stringify(meta)
+    );
+  }
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
