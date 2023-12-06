@@ -4,10 +4,15 @@ import { AuthContainer } from "../../ui/molecules/auth-container";
 import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
 import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
 import { ReactComponent as TurboSVG } from "../../../public/assets/ai-help/turbo.svg";
+import screenshotDark from "../../../public/assets/ai-help/ai_help_dark.png";
+import screenshotLight from "../../../public/assets/ai-help/ai_help_light.png";
 
 import "./teaser.scss";
+import { useScheme } from "../../hooks";
 
 export function AIHelpTeaser() {
+  const scheme = useScheme();
+
   return (
     <div className="ai-help-teaser">
       <Container extraClasses="ai-help-teaser-top">
@@ -20,7 +25,7 @@ export function AIHelpTeaser() {
         </div>
         <figure>
           <img
-            src="/assets/plus-docs/ai-help/ask-question.png"
+            src={scheme === "dark" ? screenshotDark : screenshotLight}
             alt="Screenshot of AI Help"
           />
         </figure>
