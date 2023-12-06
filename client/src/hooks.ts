@@ -4,6 +4,7 @@ import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
 import { FeatureId } from "./constants";
 import { OFFLINE_SETTINGS_KEY, useUserData } from "./user-context";
+import { Scheme } from "./types/theme";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -51,6 +52,55 @@ export function useOnClickOutside(ref, handler) {
     // ... passing it into this hook.
     [ref, handler]
   );
+}
+
+function getCurrentScheme(): Scheme {
+  const { classList } = document.documentElement;
+
+  const themes: Scheme[] = ["dark", "light"];
+  for (const theme of themes) {
+    if (classList.contains(theme)) {
+      return theme;
+    }
+  }
+
+  if (window.matchMedia) {
+    for (const theme of themes) {
+      if (window.matchMedia(`(prefers-color-scheme: ${theme})`).matches) {
+        return theme;
+      }
+    }
+  }
+
+  // Fallback.
+  return "light";
+}
+
+export function useScheme() {
+  const isServer = useIsServer();
+  const [scheme, setScheme] = useState<Scheme>();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    const updateScheme = () => setScheme(getCurrentScheme());
+
+    // Update once.
+    updateScheme();
+
+    // Listen for changes.
+    const observer = new MutationObserver(updateScheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [isServer]);
+
+  return scheme;
 }
 
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
