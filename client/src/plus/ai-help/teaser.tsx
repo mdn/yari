@@ -1,5 +1,6 @@
 import { AI_HELP } from "../../telemetry/constants";
 import Container from "../../ui/atoms/container";
+import ThemedPicture from "../../ui/atoms/themed-picture";
 import { AuthContainer } from "../../ui/molecules/auth-container";
 import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
 import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
@@ -8,11 +9,8 @@ import screenshotDark from "../../../public/assets/ai-help/ai_help_dark.png";
 import screenshotLight from "../../../public/assets/ai-help/ai_help_light.png";
 
 import "./teaser.scss";
-import { useScheme } from "../../hooks";
 
 export function AIHelpTeaser() {
-  const scheme = useScheme();
-
   return (
     <div className="ai-help-teaser">
       <Container extraClasses="ai-help-teaser-top">
@@ -24,8 +22,9 @@ export function AIHelpTeaser() {
           <Login placement="top" />
         </div>
         <figure>
-          <img
-            src={scheme === "dark" ? screenshotDark : screenshotLight}
+          <ThemedPicture
+            srcDark={screenshotDark}
+            srcLight={screenshotLight}
             alt="Screenshot of AI Help"
           />
         </figure>
