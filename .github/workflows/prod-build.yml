@@ -352,7 +352,7 @@ jobs:
             --min-instances=10 \
             --max-instances=1000 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \

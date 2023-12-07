@@ -114,7 +114,6 @@
         width: 100%;
 
         &:active,
-        &:focus-within,
         &:hover {
           background-color: var(--background-toc-active);
         }
@@ -125,7 +124,6 @@
           padding: 0 0.5rem;
 
           &:active,
-          &:focus,
           &:hover {
             color: var(--text-link);
             text-decoration: underline;

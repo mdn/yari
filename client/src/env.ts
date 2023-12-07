@@ -99,6 +99,9 @@ export const GLEAN_DEBUG = Boolean(
 export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
+export const GLEAN_LOG_CLICK = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_LOG_CLICK || "false")
+);
 
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || "";
 export const SENTRY_ENVIRONMENT =
