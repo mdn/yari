@@ -8,10 +8,8 @@ import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
 import { GleanProvider } from "./telemetry/glean-context";
 import { PlacementProvider } from "./placement-context";
-import { initSentry } from "./telemetry/sentry";
 
 // import * as serviceWorker from './serviceWorker';
-initSentry();
 
 const container = document.getElementById("root");
 if (!container) {

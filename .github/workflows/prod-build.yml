@@ -237,9 +237,6 @@ jobs:
           REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
 
           # Sentry.
-          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_CLIENT }}
-          REACT_APP_SENTRY_ENVIRONMENT: prod
-          REACT_APP_SENTRY_RELEASE: ${{ github.sha }}
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
           SENTRY_ENVIRONMENT: prod
           SENTRY_RELEASE: ${{ github.sha }}
