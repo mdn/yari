@@ -55,6 +55,7 @@ import {
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
 } from "./constants";
+import InternalLink from "../../ui/atoms/internal-link";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -296,12 +297,13 @@ function AIHelpAssistantResponse({
         <ul className="ai-help-message-sources">
           {sources.map(({ url, title }, index) => (
             <li key={index}>
-              <a
-                href={url}
+              <InternalLink
+                to={url}
                 onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
+                target="_blank"
               >
                 {title}
-              </a>
+              </InternalLink>
             </li>
           ))}
         </ul>
@@ -343,21 +345,25 @@ function AIHelpAssistantResponse({
                     ""
                   );
                 }
+
                 const isExternal = isExternalUrl(props.href ?? "");
+
                 if (isExternal) {
-                  props = {
-                    ...props,
-                    className: "external",
-                    rel: "noopener noreferrer",
-                    target: "_blank",
-                  };
+                  props.className = "external";
+                  props.rel = "noopener noreferrer";
                 }
+
+                // Measure.
                 props.onClick = () =>
                   gleanClick(
                     `${AI_HELP}: link ${
                       isExternal ? "external" : "internal"
                     } -> ${props.href}`
                   );
+
+                // Always open in new tab.
+                props.target = "_blank";
+
                 // eslint-disable-next-line jsx-a11y/anchor-has-content
                 return <a {...props} />;
               },

@@ -246,11 +246,14 @@ export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
   return React.useCallback(
-    (source: string) =>
+    (source: string) => {
+      console.log({ gleanClick: source });
+
       glean.click({
         source,
         subscriptionType: userData?.subscriptionType || "none",
-      }),
+      });
+    },
     [glean, userData?.subscriptionType]
   );
 }
