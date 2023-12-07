@@ -239,7 +239,7 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
