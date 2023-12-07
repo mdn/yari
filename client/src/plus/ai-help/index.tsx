@@ -753,7 +753,7 @@ export function AIHelpInner() {
                         {!query && !hasConversation ? (
                           <Button
                             type="action"
-                            icon={previousChatId ? "topic return" : "cancel"}
+                            icon={previousChatId ? "return" : "cancel"}
                             buttonType="reset"
                             title={
                               previousChatId
@@ -764,7 +764,7 @@ export function AIHelpInner() {
                             onClickHandler={() => {
                               gleanClick(
                                 `${AI_HELP}: ${
-                                  previousChatId ? "return" : "cancel"
+                                  previousChatId ? "topic return" : "cancel"
                                 }`
                               );
                               unReset();
