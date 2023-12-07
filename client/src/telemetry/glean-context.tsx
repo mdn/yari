@@ -4,7 +4,13 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { DEV_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import {
+  DEV_MODE,
+  GLEAN_CHANNEL,
+  GLEAN_DEBUG,
+  GLEAN_LOG_CLICK,
+  GLEAN_ENABLED,
+} from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
@@ -247,7 +253,9 @@ export function useGleanClick() {
   const glean = useGlean();
   return React.useCallback(
     (source: string) => {
-      console.log({ gleanClick: source });
+      if (GLEAN_LOG_CLICK && !source.includes("pong")) {
+        console.log({ gleanClick: source });
+      }
 
       glean.click({
         source,
