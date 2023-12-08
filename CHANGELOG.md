@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.37.1](https://github.com/mdn/yari/compare/v2.37.0...v2.37.1) (2023-12-08)
+
+
+### Bug Fixes
+
+* **auth-container:** always show login/signup in row ([#10125](https://github.com/mdn/yari/issues/10125)) ([233bed6](https://github.com/mdn/yari/commit/233bed6bc9bfb633d73d6519d121d08b748b7be2))
+* **css:** remove unused minmax function ([#10138](https://github.com/mdn/yari/issues/10138)) ([d8e84b5](https://github.com/mdn/yari/commit/d8e84b5bb069a3781800a1f6769a33ff3581e2b0))
+* **workflows:** use Node.js version from .nvmrc file ([#10153](https://github.com/mdn/yari/issues/10153)) ([97405ae](https://github.com/mdn/yari/commit/97405ae42d0151faea6b6bfc73af1fc55fbebe5f))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump html-webpack-plugin from 5.5.3 to 5.5.4 ([#10149](https://github.com/mdn/yari/issues/10149)) ([abaa08d](https://github.com/mdn/yari/commit/abaa08dd85b4d17633e110fd00faa9f8c4387f91))
+* **deps-dev:** bump style-dictionary from 3.9.0 to 3.9.1 ([#10151](https://github.com/mdn/yari/issues/10151)) ([012c696](https://github.com/mdn/yari/commit/012c6965fd5e6f349a5a4b7cdbcf36e5c76241b4))
+* **deps-dev:** bump the types group with 1 update ([#10141](https://github.com/mdn/yari/issues/10141)) ([3f6a506](https://github.com/mdn/yari/commit/3f6a506cf24ed72ceca016295a74013e90d9891c))
+* **deps-dev:** bump typescript from 5.3.2 to 5.3.3 in /client/pwa ([#10148](https://github.com/mdn/yari/issues/10148)) ([4de571e](https://github.com/mdn/yari/commit/4de571eacd725a585196eddacfdc87bfd0f9fe0f))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.31 to 2.7.32 in /client/pwa ([#10135](https://github.com/mdn/yari/issues/10135)) ([1c0a83b](https://github.com/mdn/yari/commit/1c0a83b2f83e6ba27406c2070b3aa780e441f87e))
+* **deps:** bump @codemirror/state from 6.3.2 to 6.3.3 ([#10142](https://github.com/mdn/yari/issues/10142)) ([88dd100](https://github.com/mdn/yari/commit/88dd100a5b570a5a62dac476b9da6dc23c8210c9))
+* **deps:** bump @webref/css from 6.9.2 to 6.10.0 ([#10146](https://github.com/mdn/yari/issues/10146)) ([480edc5](https://github.com/mdn/yari/commit/480edc598def290a7f12de6a812e07f01b026ade))
+* **deps:** bump actions/setup-python from 4 to 5 ([#10144](https://github.com/mdn/yari/issues/10144)) ([b19c7da](https://github.com/mdn/yari/commit/b19c7dacc4b8da4fe18162d192b3ddbfccc2d286))
+* **deps:** bump the sentry group with 2 updates ([#10145](https://github.com/mdn/yari/issues/10145)) ([379b281](https://github.com/mdn/yari/commit/379b2818b9360b971c800682d352978b63329b94))
+
 ## [2.37.0](https://github.com/mdn/yari/compare/v2.36.1...v2.37.0) (2023-12-05)
 
 
