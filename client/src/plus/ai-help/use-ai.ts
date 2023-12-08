@@ -323,36 +323,6 @@ class AiHelpHistory {
   }
 }
 
-class AiHelpStorage {
-  static KEY = "ai-help";
-
-  private static get value(): Storage {
-    return JSON.parse(window.localStorage.getItem(this.KEY) ?? "{}");
-  }
-
-  private static mutate(partial: Partial<Storage>) {
-    window.localStorage.setItem(
-      this.KEY,
-      JSON.stringify({
-        ...this.value,
-        ...partial,
-      })
-    );
-  }
-
-  static getMessages(): MessageTreeState | undefined {
-    return this.value?.treeState;
-  }
-
-  static get(): Storage {
-    return this.value;
-  }
-
-  static set(storage: Storage) {
-    this.mutate(storage);
-  }
-}
-
 export interface UseAiChatOptions {
   messageTemplate?: (message: string) => string;
 }
@@ -386,13 +356,6 @@ export function useAiChat({
   const [messageId, setMessageId] = useState<string | undefined>();
   const [path, setPath] = useState<number[]>([]);
   const [state, dispatchState] = useReducer(messageReducer, undefined, () => {
-    if (!isHistoryEnabled) {
-      const { treeState, chatId } = AiHelpStorage.get();
-      if (treeState && chatId) {
-        setChatId(chatId);
-        return treeState;
-      }
-    }
     return {
       root: [],
       nodes: {},
@@ -481,17 +444,6 @@ export function useAiChat({
       reset();
     }
   }, [searchParams, chatId, reset, handleError]);
-
-  useEffect(() => {
-    if (
-      !isLoading &&
-      !isResponding &&
-      state.root.length > 0 &&
-      !isHistoryEnabled
-    ) {
-      AiHelpStorage.set({ treeState: state, chatId });
-    }
-  }, [isLoading, isResponding, state, chatId, isHistoryEnabled]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
@@ -724,23 +676,14 @@ export function useAiChat({
   }
 
   const unReset = useCallback(() => {
-    if (!isHistoryEnabled) {
-      const { treeState, chatId } = AiHelpStorage.get();
-      setChatId(chatId);
-      if (treeState) {
-        dispatchState({
-          type: "set-state",
-          treeState,
-        });
-      }
-    } else if (previousChatId) {
+    if (previousChatId) {
       setSearchParams((old) => {
         const params = new URLSearchParams(old);
         params.set("c", previousChatId);
         return params;
       });
     }
-  }, [setSearchParams, previousChatId, isHistoryEnabled]);
+  }, [setSearchParams, previousChatId]);
 
   const nextPrev = useCallback(
     (messageId: string, dir: "next" | "prev") => {

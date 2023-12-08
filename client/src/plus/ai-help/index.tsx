@@ -34,7 +34,7 @@ import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
-import { isExternalUrl } from "./utils";
+import { isExternalUrl, useAIHelpSettings } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
@@ -54,6 +54,8 @@ import {
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
+  MESSAGE_ANSWERED,
+  MESSAGE_SEARCHED,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 
@@ -291,7 +293,9 @@ function AIHelpAssistantResponse({
           .filter(Boolean)
           .join(" ")}
       >
-        {MESSAGE_SEARCHING}
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
       </div>
       {sources && sources.length > 0 && (
         <ul className="ai-help-message-sources">
@@ -322,7 +326,9 @@ function AIHelpAssistantResponse({
         >
           {message.status === MessageStatus.Errored
             ? MESSAGE_FAILED
-            : MESSAGE_ANSWERING}
+            : message.status === MessageStatus.InProgress
+            ? MESSAGE_ANSWERING
+            : MESSAGE_ANSWERED}
         </div>
       )}
       {message.content && (
@@ -503,6 +509,7 @@ function AIHelpAssistantResponse({
 
 export function AIHelpInner() {
   const user = useUserData();
+  const { isHistoryEnabled } = useAIHelpSettings();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -540,7 +547,9 @@ export function AIHelpInner() {
   const hasConversation = messages.length > 0;
   const gptVersion = "GPT-4";
 
-  useHistorySearchQuery(chatId && `?c=${chatId}`);
+  useHistorySearchQuery(
+    isHistoryEnabled && chatId ? `?c=${chatId}` : undefined
+  );
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
