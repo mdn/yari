@@ -6,7 +6,6 @@ import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR from "swr";
-import { useAIHelpSettings } from "./utils";
 import { AIHelpLog } from "./rust-types";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
@@ -332,7 +331,6 @@ export function useAiChat({
 }: UseAiChatOptions = {}) {
   const gleanClick = useGleanClick();
   const eventSourceRef = useRef<SSE>();
-  const { isHistoryEnabled } = useAIHelpSettings();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingState, setLoadingState] = useState<
