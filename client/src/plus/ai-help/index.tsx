@@ -54,6 +54,8 @@ import {
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
+  MESSAGE_ANSWERED,
+  MESSAGE_SEARCHED,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 
@@ -291,7 +293,9 @@ function AIHelpAssistantResponse({
           .filter(Boolean)
           .join(" ")}
       >
-        {MESSAGE_SEARCHING}
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
       </div>
       {sources && sources.length > 0 && (
         <ul className="ai-help-message-sources">
@@ -322,7 +326,9 @@ function AIHelpAssistantResponse({
         >
           {message.status === MessageStatus.Errored
             ? MESSAGE_FAILED
-            : MESSAGE_ANSWERING}
+            : message.status === MessageStatus.InProgress
+            ? MESSAGE_ANSWERING
+            : MESSAGE_ANSWERED}
         </div>
       )}
       {message.content && (
