@@ -7,7 +7,6 @@
 
 * **auth-container:** always show login/signup in row ([#10125](https://github.com/mdn/yari/issues/10125)) ([233bed6](https://github.com/mdn/yari/commit/233bed6bc9bfb633d73d6519d121d08b748b7be2))
 * **css:** remove unused minmax function ([#10138](https://github.com/mdn/yari/issues/10138)) ([d8e84b5](https://github.com/mdn/yari/commit/d8e84b5bb069a3781800a1f6769a33ff3581e2b0))
-* remove minmax function ([d8e84b5](https://github.com/mdn/yari/commit/d8e84b5bb069a3781800a1f6769a33ff3581e2b0))
 * **workflows:** use Node.js version from .nvmrc file ([#10153](https://github.com/mdn/yari/issues/10153)) ([97405ae](https://github.com/mdn/yari/commit/97405ae42d0151faea6b6bfc73af1fc55fbebe5f))
 
 
