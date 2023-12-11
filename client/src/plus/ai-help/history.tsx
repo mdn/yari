@@ -229,8 +229,9 @@ export function AIHelpHistoryInner({
           htmlFor="ai-help-history-toggle"
         >
           <span className="button-wrap">
-            <span className="icon icon-sidebar "></span>
-            <span className="visually-hidden">toggle history menu</span>
+            <span className="icon icon-sidebar"></span>
+            <span className="show-history">Show History</span>
+            <span className="hide-history">Hide History</span>
           </span>
         </label>
       </div>
