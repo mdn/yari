@@ -485,18 +485,25 @@ export function useAiChat({
             }
 
             // Add sources one by one.
-
             let delay = 0;
-            const timers = sources.map((_, index) => {
-              const handler = () => setSources(sources.slice(0, index));
-              // Delay randomly between 250-750ms.
-              delay += 250 + 500 * Math.random();
+            const timeouts: number[] = [];
+            sources.forEach((_, index) => {
+              const handler = () => setSources(sources.slice(0, index + 1));
 
-              return window.setTimeout(handler, delay);
+              if (index === 0) {
+                // Add first source immediately.
+                handler();
+              } else {
+                // Delay other sources randomly for 250-1000ms.
+                delay += 250 + 750 * Math.random();
+
+                const timeout = window.setTimeout(handler, delay);
+                timeouts.push(timeout);
+              }
             });
 
             flushSources.current = () => {
-              timers.forEach((timer) => window.clearTimeout(timer));
+              timeouts.forEach((timer) => window.clearTimeout(timer));
               setSources(sources);
               flushSources.current = undefined;
             };

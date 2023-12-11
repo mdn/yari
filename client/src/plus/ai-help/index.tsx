@@ -160,7 +160,7 @@ function AIHelpUserQuestion({
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
-        if (canEdit) {
+        if (canEdit && question) {
           gleanClick(`${AI_HELP}: edit submit`);
           setEditing(false);
           submit(question, message.chatId, message.parentId, message.messageId);
@@ -173,7 +173,7 @@ function AIHelpUserQuestion({
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            if (canEdit) {
+            if (canEdit && question) {
               gleanClick(`${AI_HELP}: edit submit`);
               setEditing(false);
               submit(
