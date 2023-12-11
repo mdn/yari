@@ -265,13 +265,11 @@ function AIHelpAssistantResponse({
   message,
   queuedExamples,
   setQueue,
-  thumbsCallback,
   messages,
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
-  thumbsCallback: (thumb: "up" | "down") => Promise<void>;
   messages: Message[];
 }) {
   const gleanClick = useGleanClick();
@@ -490,7 +488,6 @@ function AIHelpAssistantResponse({
                     question={"Was this answer useful?"}
                     upLabel={"Yes, this answer was useful."}
                     downLabel={"No, this answer was not useful."}
-                    callback={thumbsCallback}
                   />
                   <ReportIssueOnGitHubLink
                     messages={messages}
