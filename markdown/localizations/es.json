@@ -5,9 +5,21 @@
         "msgid": "card_note_label",
         "msgstr": ["Nota:"]
       },
+      "card_tip_label": {
+        "msgid": "card_tip_label",
+        "msgstr": ["Consejo:"]
+      },
+      "card_important_label": {
+        "msgid": "card_important_label",
+        "msgstr": ["Importante:"]
+      },
       "card_warning_label": {
         "msgid": "card_warning_label",
         "msgstr": ["Advertencia:"]
+      },
+      "card_caution_label": {
+        "msgid": "card_caution_label",
+        "msgstr": ["Precaución:"]
       },
       "card_callout_label": {
         "msgid": "card_callout_label",
