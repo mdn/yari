@@ -4,17 +4,16 @@
 // Parameters:
 //
 //  $0 - workerType (optional):
-//      'only_dedicated_and_window': only in DedicatedWorker (and in Window)
-//      'only_dedicated' only in DedicatedWorker
-//      'except_service': all workers but ServiceWorker (and in Window)
-//      'except_service_and_window': all workers but ServiceWorker (and no window)
-//      'only_service_and_window': only in ServiceWorker (and in Window)
-//      'only_service': only in ServiceWorker
+//      'window_and_dedicated': only in DedicatedWorker (and in Window)
+//      'dedicated': only in DedicatedWorker
+//      'window_and_worker_except_service': all workers but ServiceWorker (and in Window)
+//      'worker_except_service': all workers but ServiceWorker (and no window)
+//      'window_and_service': only in ServiceWorker (and in Window)
+//      'service':  only in ServiceWorker
 //      null: (default) All workers (and Window)
 //
-//
 //  {{AvailableInWorkers}}
-//  {{AvailableInWorkers("notservice")}}
+//  {{AvailableInWorkers("worker_except_service")}}
 //
 
 const locale = env.locale;
@@ -71,12 +70,12 @@ const workerType = $0 || 'default';
 
 const associatedText = {
   default: () => textDefault,
-  only_service: () => textNotService,
-  except_service_and_window: () => textNotServiceNotWindow,
-  only_dedicated_and_window: () => textDedicated,
-  only_dedicated: () => textDedicatedOnly,
-  only_service_and_window: () => textService,
-  only_service: () => textServiceOnly,
+  window_and_worker_except_service: () => textNotService,
+  worker_except_service: () => textNotServiceNotWindow,
+  window_and_dedicated: () => textDedicated,
+  dedicated: () => textDedicatedOnly,
+  window_and_service: () => textService,
+  service: () => textServiceOnly,
 };
 
 if (!associatedText[workerType]) {
