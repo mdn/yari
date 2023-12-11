@@ -544,23 +544,6 @@ export function useAiChat({
     [handleError, messageId]
   );
 
-  const sendFeedback = useCallback(
-    async (message_id: string, thumbs?: "up" | "down", feedback?: string) => {
-      await fetch("/api/v1/plus/ai/help/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          thumbs: thumbs && `thumbs_${thumbs}`,
-          feedback,
-          message_id,
-        }),
-      });
-    },
-    [chatId]
-  );
   const submit = useCallback(
     (query: string, chatId?: string, parentId?: string, messageId?: string) => {
       let newPath = messageId
@@ -736,7 +719,6 @@ export function useAiChat({
     isHistoryLoading,
     isResponding,
     isInitializing,
-    sendFeedback,
     hasError,
     quota,
     chatId,

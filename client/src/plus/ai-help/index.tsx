@@ -505,7 +505,6 @@ function AIHelpAssistantResponse({
 }
 
 export function AIHelpInner() {
-  const user = useUserData();
   const { isHistoryEnabled } = useAIHelpSettings();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -533,7 +532,6 @@ export function AIHelpInner() {
     submit,
     chatId,
     previousChatId,
-    sendFeedback,
     nextPrev,
     siblingCount,
     lastUpdate,
