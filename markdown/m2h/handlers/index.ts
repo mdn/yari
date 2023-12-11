@@ -27,35 +27,55 @@ function getL10nCardMap(locale = DEFAULT_LOCALE) {
 
   Object.keys(listMsgObj).forEach((msgName) => {
     l10nCardMap.set(
-      listMsgObj[msgName]["msgstr"][0],
-      listMsgObj[msgName]["msgid"]
+      listMsgObj[msgName]["msgid"],
+      listMsgObj[msgName]["msgstr"][0]
     );
   });
   return l10nCardMap;
 }
 
 function getNotecardType(node, locale) {
+  const types = ["note", "warning", "callout"];
+
   if (!node.children) {
     return null;
   }
   const [child] = node.children;
-  if (!child || !child.children) {
+  if (!child?.children) {
     return null;
   }
   const [grandChild] = child.children;
-  if (grandChild.type != "strong" || !grandChild.children) {
-    return null;
+
+  const l10nCardMap = getL10nCardMap(locale);
+
+  // GFM proposed notecard syntax -- https://github.com/orgs/community/discussions/16925
+  if (grandChild.type === "text") {
+    const firstLine = grandChild.value.split("\n")[0];
+    const match = firstLine.match(
+      new RegExp(`\\[!(${types.map((t) => t.toUpperCase()).join("|")})\\]`)
+    );
+    if (match) {
+      const type = match[1].toLowerCase();
+      const magicKeyword = l10nCardMap.get(`card_${type}_label`);
+      return { type, isGFM: true, magicKeyword };
+    }
   }
 
-  // E.g. in en-US magicKeyword === Note:
-  const magicKeyword = grandChild.children[0].value;
-  const l10nCardMap = getL10nCardMap(locale);
-  let type;
-  if (l10nCardMap.has(magicKeyword)) {
-    const msgId = l10nCardMap.get(magicKeyword);
-    type = msgId.split("_")[1];
+  if (grandChild.type === "strong" && grandChild.children) {
+    // E.g. in en-US magicKeyword === Note:
+    const magicKeyword = grandChild.children[0].value;
+
+    for (const entry of l10nCardMap.entries()) {
+      if (entry[1] === magicKeyword) {
+        const type = entry[0].split("_")[1];
+        return types.includes(type)
+          ? { type, isGFM: false, magicKeyword }
+          : null;
+      }
+    }
   }
-  return type == "warning" || type == "note" || type == "callout" ? type : null;
+
+  return null;
 }
 
 export function buildLocalizedHandlers(locale: string): Handlers {
@@ -86,18 +106,44 @@ export function buildLocalizedHandlers(locale: string): Handlers {
     blockquote(state: State, node: any): ReturnType<Handler> {
       const type = getNotecardType(node, locale);
       if (type) {
-        const isCallout = type == "callout";
-        if (isCallout) {
-          if (node.children[0].children.length <= 1) {
-            node.children.splice(0, 1);
-          } else {
-            node.children[0].children.splice(0, 1);
+        const isCallout = type.type == "callout";
+
+        if (type.isGFM) {
+          // Handle GFM proposed syntax
+          node.children[0].children[0].value =
+            node.children[0].children[0].value.replace(/\[!\w+\]\n/, "");
+
+          // If the type isn't a callout, add the magic keyword
+          if (!isCallout) {
+            node.children[0].children.unshift({
+              type: "strong",
+              children: [
+                {
+                  type: "text",
+                  value: type.magicKeyword,
+                },
+              ],
+            });
+            node.children[0].children[1].value =
+              " " + node.children[0].children[1].value;
+          }
+        } else {
+          // Remove "Callout:" text
+          if (isCallout) {
+            if (node.children[0].children.length <= 1) {
+              node.children.splice(0, 1);
+            } else {
+              node.children[0].children.splice(0, 1);
+            }
           }
         }
+
         return {
           type: "element",
           tagName: "div",
-          properties: { className: isCallout ? [type] : ["notecard", type] },
+          properties: {
+            className: isCallout ? [type.type] : ["notecard", type.type],
+          },
           children: state.wrap(state.all(node), true),
         };
       }
