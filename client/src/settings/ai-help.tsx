@@ -26,10 +26,11 @@ export function ManageAIHelp() {
             <div className="setting-row">
               <span>
                 <p>
-                  Enable History to securely store all your chat conversations
-                  for a period of up to 6 months. Please note that after six
-                  months, your chat history will be automatically deleted to
-                  maintain your privacy and data security.
+                  By Enabling History you allow us to securely store all your
+                  chat conversations for a period of up to six months. Please
+                  note that after six months, your chat history will be
+                  automatically deleted to maintain your privacy and data
+                  security.
                 </p>
                 <p>
                   Disabling History will conceal your current history and
