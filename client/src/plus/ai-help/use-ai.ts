@@ -9,6 +9,7 @@ import useSWR from "swr";
 import { AIHelpLog } from "./rust-types";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
+import { useAIHelpSettings } from "./utils";
 
 const RETRY_INTERVAL = 10000;
 const ERROR_TIMEOUT = 60000;
@@ -336,6 +337,7 @@ export function useAiChat({
   const [loadingState, setLoadingState] = useState<
     "idle" | "loading" | "responding" | "finished" | "failed"
   >("idle");
+  const { isHistoryEnabled } = useAIHelpSettings();
   const isLoading = loadingState === "loading";
   const isResponding = loadingState === "responding";
   const hasError = loadingState === "failed";
@@ -386,6 +388,9 @@ export function useAiChat({
   }, []);
 
   useEffect(() => {
+    if (!isHistoryEnabled) {
+      return;
+    }
     let timeoutID;
     const convId = searchParams.get("c");
     if (convId && convId !== chatId) {
@@ -441,7 +446,7 @@ export function useAiChat({
     if (r) {
       reset();
     }
-  }, [searchParams, chatId, reset, handleError]);
+  }, [isHistoryEnabled, searchParams, chatId, reset, handleError]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
