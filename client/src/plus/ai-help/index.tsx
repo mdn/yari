@@ -34,7 +34,7 @@ import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
-import { isExternalUrl, useAIHelpSettings } from "./utils";
+import { isExternalUrl } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
@@ -47,7 +47,7 @@ import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
-import { useHistorySearchQuery, useDelayedArray } from "./hooks";
+import { useDelayedArray } from "./hooks";
 import {
   SORRY_BACKEND,
   SORRY_FRONTEND,
@@ -505,7 +505,6 @@ function AIHelpAssistantResponse({
 }
 
 export function AIHelpInner() {
-  const { isHistoryEnabled } = useAIHelpSettings();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -541,10 +540,6 @@ export function AIHelpInner() {
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
   const gptVersion = "GPT-4";
-
-  useHistorySearchQuery(
-    isHistoryEnabled && chatId ? `?c=${chatId}` : undefined
-  );
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;

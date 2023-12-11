@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router";
 
 export function useDelayedArray<T>(
   value: T[] | undefined,
@@ -33,20 +32,4 @@ export function useDelayedArray<T>(
   }, [value, minDelay, randomDelay, setValue]);
 
   return delayedArray;
-}
-
-export function useHistorySearchQuery(query: string | undefined) {
-  const { pathname, search } = useLocation();
-  const lastQuery = useRef<string>();
-
-  useEffect(() => {
-    if (!query || query === lastQuery.current) {
-      return;
-    }
-
-    lastQuery.current = query;
-    if (search !== query) {
-      window.history.replaceState({ search: query }, "", `${pathname}${query}`);
-    }
-  }, [query, pathname, search]);
 }
