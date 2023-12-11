@@ -5,7 +5,7 @@ export function useDelayedArray<T>(
   minDelay: number,
   randomDelay: number = 0
 ): T[] | undefined {
-  const [delayedArray, setValue] = useState<T[]>();
+  const [result, setResult] = useState<T[]>();
   const last = useRef<T[]>();
 
   useEffect(() => {
@@ -18,23 +18,23 @@ export function useDelayedArray<T>(
     last.current = current;
 
     if (!current) {
-      setValue(current);
+      setResult(current);
       return;
     }
 
     let delay = 0;
 
     const timers = current.map((_, index) => {
-      const handler = () => setValue(current.slice(0, index));
+      const handler = () => setResult(current.slice(0, index));
       delay += minDelay + randomDelay * Math.random();
       return window.setTimeout(handler, delay);
     });
 
     return () => {
       timers.forEach((timer) => window.clearTimeout(timer));
-      setValue(current);
+      setResult(current);
     };
-  }, [value, minDelay, randomDelay, setValue]);
+  }, [value, minDelay, randomDelay, setResult]);
 
-  return delayedArray;
+  return result;
 }
