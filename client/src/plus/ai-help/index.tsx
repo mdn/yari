@@ -139,7 +139,13 @@ function AIHelpAuthenticated() {
   );
 }
 
-function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
+function AIHelpUserQuestion({
+  message,
+  canEdit,
+  submit,
+  nextPrev,
+  siblingCount,
+}) {
   const gleanClick = useGleanClick();
   const [editing, setEditing] = useState(false);
   const [question, setQuestion] = useState(message.content);
@@ -155,9 +161,11 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
-        gleanClick(`${AI_HELP}: edit submit`);
-        setEditing(false);
-        submit(question, message.chatId, message.parentId, message.messageId);
+        if (canEdit) {
+          gleanClick(`${AI_HELP}: edit submit`);
+          setEditing(false);
+          submit(question, message.chatId, message.parentId, message.messageId);
+        }
       }}
     >
       <ExpandingTextarea
@@ -165,14 +173,17 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         enterKeyHint="send"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
-            gleanClick(`${AI_HELP}: edit submit`);
-            setEditing(false);
-            submit(
-              question,
-              message.chatId,
-              message.parentId,
-              message.messageId
-            );
+            event.preventDefault();
+            if (canEdit) {
+              gleanClick(`${AI_HELP}: edit submit`);
+              setEditing(false);
+              submit(
+                question,
+                message.chatId,
+                message.parentId,
+                message.messageId
+              );
+            }
           }
         }}
         onChange={(e) => setQuestion(e.target.value)}
@@ -180,32 +191,36 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         rows={1}
       />
       <div className="ai-help-input-actions">
-        {question ? (
-          <Button
-            type="action"
-            icon="cancel"
-            buttonType="reset"
-            title="Clear question"
-            onClickHandler={() => {
-              gleanClick(`${AI_HELP}: edit clear`);
-              setQuestion("");
-            }}
-          >
-            <span className="visually-hidden">Clear question</span>
-          </Button>
-        ) : null}
+        {canEdit && (
+          <>
+            {question && (
+              <Button
+                type="action"
+                icon="cancel"
+                buttonType="reset"
+                title="Clear question"
+                onClickHandler={() => {
+                  gleanClick(`${AI_HELP}: edit clear`);
+                  setQuestion("");
+                }}
+              >
+                <span className="visually-hidden">Clear question</span>
+              </Button>
+            )}
+            <Button
+              type="action"
+              icon="send"
+              buttonType="submit"
+              title="Submit question"
+              isDisabled={!question}
+            >
+              <span className="visually-hidden">Submit question</span>
+            </Button>
+          </>
+        )}
         <Button
           type="action"
-          icon="send"
-          buttonType="submit"
-          title="Submit question"
-          isDisabled={!question}
-        >
-          <span className="visually-hidden">Submit question</span>
-        </Button>
-        <Button
           icon="return"
-          type="action"
           title="Undo editing"
           onClickHandler={() => {
             gleanClick(`${AI_HELP}: edit cancel`);
@@ -249,14 +264,16 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         </nav>
       )}
       <div className="ai-help-user-message">{message.content}</div>
-      <Button
-        type="action"
-        icon="edit-filled"
-        onClickHandler={() => {
-          gleanClick(`${AI_HELP}: edit start`);
-          setEditing(true);
-        }}
-      />
+      {canEdit && (
+        <Button
+          type="action"
+          icon="edit-filled"
+          onClickHandler={() => {
+            gleanClick(`${AI_HELP}: edit start`);
+            setEditing(true);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -636,6 +653,7 @@ export function AIHelpInner() {
                           <AIHelpUserQuestion
                             message={message}
                             submit={submit}
+                            canEdit={!isQuotaExceeded(quota)}
                             nextPrev={nextPrev}
                             siblingCount={siblingCount}
                           />
