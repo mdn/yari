@@ -27,10 +27,11 @@ article.settings {
       li {
         display: grid;
         gap: 0 1rem;
-        grid-template-columns: 1fr minmax(5em);
+        grid-template-columns: 1fr 5em;
 
         section {
           margin: 0.125rem 0;
+
           &:hover,
           &:target {
             background-color: var(--background-information);
