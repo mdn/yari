@@ -1,6 +1,8 @@
 @use "../../ui/vars" as *;
 
 .ai-help-history {
+  // Align first item with AI Help subtitle.
+  margin-top: 1.75rem;
   padding-right: 1rem;
 
   > input {
@@ -45,6 +47,14 @@
         display: none;
       }
     }
+
+    &:not(:checked) {
+      ~ .ai-help-history-toggle {
+        @media screen and (min-width: $screen-md) {
+          display: none;
+        }
+      }
+    }
   }
 
   ol {
@@ -62,6 +72,7 @@
           align-items: center;
           display: flex;
           flex-direction: row;
+          min-height: 3rem;
           padding: 0.5rem;
 
           > a {
@@ -70,18 +81,6 @@
             overflow: hidden;
             white-space: nowrap;
             width: 100%;
-
-            &::before {
-              background-color: var(--icon-secondary);
-              content: "";
-              display: inline-block;
-              height: var(--icon-size);
-              margin-right: 0.5em;
-              mask-image: url("../../assets/icons/message.svg");
-              mask-size: contain;
-              vertical-align: middle;
-              width: var(--icon-size);
-            }
           }
 
           &.ai-help-history-active {
@@ -96,6 +95,19 @@
         display: block;
         font-size: var(--type-smaller-font-size);
         padding-left: 0.5rem;
+
+        &::before {
+          --icon-size: 0.6rem;
+          background-color: var(--icon-secondary);
+          content: "";
+          display: inline-block;
+          height: var(--icon-size);
+          margin-right: 0.5em;
+          mask-image: url("../../assets/icons/message.svg");
+          mask-size: contain;
+          vertical-align: middle;
+          width: var(--icon-size);
+        }
       }
     }
   }
@@ -132,9 +144,10 @@
 }
 
 .ai-help-history-activation {
-  border: 1px solid var(--border-primary);
+  background-color: var(--background-secondary);
   border-radius: 0.25rem;
-  margin-top: 4rem;
+  // Align "Answer History" with "GPT-4 Turbo-powered AI Help".
+  margin-top: 3.5rem;
   padding: 0.25rem;
 
   .icons-highlighted {

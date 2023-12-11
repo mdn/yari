@@ -9,6 +9,7 @@ import useSWR from "swr";
 import { AIHelpLog } from "./rust-types";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
+import { useAIHelpSettings } from "./utils";
 
 const RETRY_INTERVAL = 10000;
 const ERROR_TIMEOUT = 60000;
@@ -336,6 +337,7 @@ export function useAiChat({
   const [loadingState, setLoadingState] = useState<
     "idle" | "loading" | "responding" | "finished" | "failed"
   >("idle");
+  const { isHistoryEnabled } = useAIHelpSettings();
   const isLoading = loadingState === "loading";
   const isResponding = loadingState === "responding";
   const hasError = loadingState === "failed";
@@ -363,6 +365,7 @@ export function useAiChat({
 
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
   const remoteQuota = useRemoteQuota();
+  const flushSources = useRef<() => void>();
 
   const reset = useCallback(() => {
     setPreviousChatId(chatId);
@@ -386,6 +389,9 @@ export function useAiChat({
   }, []);
 
   useEffect(() => {
+    if (!isHistoryEnabled) {
+      return;
+    }
     let timeoutID;
     const convId = searchParams.get("c");
     if (convId && convId !== chatId) {
@@ -441,7 +447,7 @@ export function useAiChat({
     if (r) {
       reset();
     }
-  }, [searchParams, chatId, reset, handleError]);
+  }, [isHistoryEnabled, searchParams, chatId, reset, handleError]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
@@ -468,13 +474,32 @@ export function useAiChat({
           setLastUpdate(new Date());
           // Sources.
           if (Array.isArray(sources)) {
-            dispatchState({
-              type: "set-metadata",
-              sources: sources,
-              chatId: chat_id,
-              messageId: message_id,
-              parentId: parent_id,
+            function setSources(sources) {
+              dispatchState({
+                type: "set-metadata",
+                sources: sources,
+                chatId: chat_id,
+                messageId: message_id,
+                parentId: parent_id,
+              });
+            }
+
+            // Add sources one by one.
+
+            let delay = 0;
+            const timers = sources.map((_, index) => {
+              const handler = () => setSources(sources.slice(0, index));
+              // Delay randomly between 250-750ms.
+              delay += 250 + 500 * Math.random();
+
+              return window.setTimeout(handler, delay);
             });
+
+            flushSources.current = () => {
+              timers.forEach((timer) => window.clearTimeout(timer));
+              setSources(sources);
+              flushSources.current = undefined;
+            };
           }
           // Quota.
           if (typeof quota !== "undefined") {
@@ -484,6 +509,8 @@ export function useAiChat({
         }
 
         setLoadingState("responding");
+
+        flushSources.current?.();
 
         dispatchState({
           type: "update",

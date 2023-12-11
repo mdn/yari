@@ -34,7 +34,7 @@ import { GleanThumbs } from "../../ui/atoms/thumbs";
 import NoteCard from "../../ui/molecules/notecards";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocation } from "react-router-dom";
-import { isExternalUrl, useAIHelpSettings } from "./utils";
+import { isExternalUrl } from "./utils";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import MDNModal from "../../ui/atoms/modal";
@@ -47,7 +47,6 @@ import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
-import { useHistorySearchQuery, useDelayedArray } from "./hooks";
 import {
   SORRY_BACKEND,
   SORRY_FRONTEND,
@@ -139,7 +138,13 @@ function AIHelpAuthenticated() {
   );
 }
 
-function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
+function AIHelpUserQuestion({
+  message,
+  canEdit,
+  submit,
+  nextPrev,
+  siblingCount,
+}) {
   const gleanClick = useGleanClick();
   const [editing, setEditing] = useState(false);
   const [question, setQuestion] = useState(message.content);
@@ -155,9 +160,11 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
-        gleanClick(`${AI_HELP}: edit submit`);
-        setEditing(false);
-        submit(question, message.chatId, message.parentId, message.messageId);
+        if (canEdit) {
+          gleanClick(`${AI_HELP}: edit submit`);
+          setEditing(false);
+          submit(question, message.chatId, message.parentId, message.messageId);
+        }
       }}
     >
       <ExpandingTextarea
@@ -165,14 +172,17 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         enterKeyHint="send"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
-            gleanClick(`${AI_HELP}: edit submit`);
-            setEditing(false);
-            submit(
-              question,
-              message.chatId,
-              message.parentId,
-              message.messageId
-            );
+            event.preventDefault();
+            if (canEdit) {
+              gleanClick(`${AI_HELP}: edit submit`);
+              setEditing(false);
+              submit(
+                question,
+                message.chatId,
+                message.parentId,
+                message.messageId
+              );
+            }
           }
         }}
         onChange={(e) => setQuestion(e.target.value)}
@@ -180,32 +190,36 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         rows={1}
       />
       <div className="ai-help-input-actions">
-        {question ? (
-          <Button
-            type="action"
-            icon="cancel"
-            buttonType="reset"
-            title="Clear question"
-            onClickHandler={() => {
-              gleanClick(`${AI_HELP}: edit clear`);
-              setQuestion("");
-            }}
-          >
-            <span className="visually-hidden">Clear question</span>
-          </Button>
-        ) : null}
+        {canEdit && (
+          <>
+            {question && (
+              <Button
+                type="action"
+                icon="cancel"
+                buttonType="reset"
+                title="Clear question"
+                onClickHandler={() => {
+                  gleanClick(`${AI_HELP}: edit clear`);
+                  setQuestion("");
+                }}
+              >
+                <span className="visually-hidden">Clear question</span>
+              </Button>
+            )}
+            <Button
+              type="action"
+              icon="send"
+              buttonType="submit"
+              title="Submit question"
+              isDisabled={!question}
+            >
+              <span className="visually-hidden">Submit question</span>
+            </Button>
+          </>
+        )}
         <Button
           type="action"
-          icon="send"
-          buttonType="submit"
-          title="Submit question"
-          isDisabled={!question}
-        >
-          <span className="visually-hidden">Submit question</span>
-        </Button>
-        <Button
           icon="return"
-          type="action"
           title="Undo editing"
           onClickHandler={() => {
             gleanClick(`${AI_HELP}: edit cancel`);
@@ -249,14 +263,16 @@ function AIHelpUserQuestion({ message, submit, nextPrev, siblingCount }) {
         </nav>
       )}
       <div className="ai-help-user-message">{message.content}</div>
-      <Button
-        type="action"
-        icon="edit-filled"
-        onClickHandler={() => {
-          gleanClick(`${AI_HELP}: edit start`);
-          setEditing(true);
-        }}
-      />
+      {canEdit && (
+        <Button
+          type="action"
+          icon="edit-filled"
+          onClickHandler={() => {
+            gleanClick(`${AI_HELP}: edit start`);
+            setEditing(true);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -274,10 +290,6 @@ function AIHelpAssistantResponse({
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
-  const delayedSources = useDelayedArray(message.sources, 250, 500);
-
-  const sources =
-    message.status === MessageStatus.Pending ? delayedSources : message.sources;
 
   let sample = 0;
 
@@ -295,9 +307,9 @@ function AIHelpAssistantResponse({
           ? MESSAGE_SEARCHING
           : MESSAGE_SEARCHED}
       </div>
-      {sources && sources.length > 0 && (
+      {message.sources && message.sources.length > 0 && (
         <ul className="ai-help-message-sources">
-          {sources.map(({ url, title }, index) => (
+          {message.sources.map(({ url, title }, index) => (
             <li key={index}>
               <InternalLink
                 to={url}
@@ -505,7 +517,6 @@ function AIHelpAssistantResponse({
 }
 
 export function AIHelpInner() {
-  const { isHistoryEnabled } = useAIHelpSettings();
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -541,10 +552,6 @@ export function AIHelpInner() {
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
   const gptVersion = "GPT-4";
-
-  useHistorySearchQuery(
-    isHistoryEnabled && chatId ? `?c=${chatId}` : undefined
-  );
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
@@ -641,6 +648,7 @@ export function AIHelpInner() {
                           <AIHelpUserQuestion
                             message={message}
                             submit={submit}
+                            canEdit={!isQuotaExceeded(quota)}
                             nextPrev={nextPrev}
                             siblingCount={siblingCount}
                           />
