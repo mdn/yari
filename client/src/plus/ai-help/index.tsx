@@ -127,7 +127,7 @@ function AIHelpAuthenticated() {
         <div className="ai-help-banner">
           <p>
             <Icon name="bell-ring" />
-            <strong>GPT-4 Turbo-powered AI Help.</strong>
+            <strong>GPT-4-powered AI Help.</strong>
           </p>
           <p>Now with chat history, enhanced context, and optimised prompts.</p>
           <p>This is a beta feature.</p>
