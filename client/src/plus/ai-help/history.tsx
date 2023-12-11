@@ -256,29 +256,29 @@ export function AIHelpHistoryActivation() {
   const gleanClick = useGleanClick();
 
   return (
-    <aside className="ai-help-history-activation" tabIndex={-1}>
-      <section>
-        <p>
-          <HighlightedIcon name="history" />
-        </p>
-        <p>
-          <strong>Answer History</strong>
-        </p>
-        <p>
-          <span className="teaser">
-            You can now effortlessly revisit and continue past conversations
-          </span>
-        </p>
-        <p>
-          <Button
-            type="link"
-            href={`/${locale}/plus/settings#ai-help--history-enable`}
-            onClickHandler={() => gleanClick(`${AI_HELP}: history enable`)}
-          >
-            Enable History
-          </Button>
-        </p>
-      </section>
-    </aside>
+    <section className="ai-help-history-activation">
+      <figure>
+        <HighlightedIcon name="history" />
+        <figcaption>
+          <p>
+            <strong>Answer History</strong>
+          </p>
+          <p>
+            <span className="teaser">
+              You can now effortlessly revisit and continue past conversations
+            </span>
+          </p>
+          <p>
+            <Button
+              type="link"
+              href={`/${locale}/plus/settings#ai-help--history-enable`}
+              onClickHandler={() => gleanClick(`${AI_HELP}: history enable`)}
+            >
+              Enable History
+            </Button>
+          </p>
+        </figcaption>
+      </figure>
+    </section>
   );
 }

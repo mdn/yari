@@ -183,4 +183,29 @@
       }
     }
   }
+
+  @media screen and (max-width: $screen-md) {
+    margin: 0.5rem;
+    padding: 1rem 1.5rem;
+
+    figure {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+
+      .icons-highlighted {
+        margin-top: -0.75rem;
+      }
+
+      p {
+        margin: 0.25rem;
+        text-align: left;
+      }
+
+      a[href] {
+        display: inline-block;
+      }
+    }
+  }
 }
