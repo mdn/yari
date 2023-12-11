@@ -63,7 +63,6 @@ export function GleanThumbs({
   upLabel = "This feature is useful.",
   downLabel = "This feature is not useful.",
   permanent = false,
-  callback,
 }: {
   feature: string;
   featureKey?: string;
@@ -72,7 +71,6 @@ export function GleanThumbs({
   upLabel?: string;
   downLabel?: string;
   permanent?: boolean;
-  callback?: (thumb: "up" | "down") => Promise<void>;
 }) {
   const [previouslySubmitted, setPreviouslySubmitted] = useState(true);
   const [submitted, setSubmitted] = useState(false);
@@ -86,7 +84,6 @@ export function GleanThumbs({
 
   const handleThumbs = async (value: "up" | "down") => {
     gleanClick(`${THUMBS}: ${feature} -> ${value === "up" ? 1 : 0}`);
-    await callback?.(value);
     setSubmitted(true);
     if (!permanent) {
       markPreviouslySubmitted(feature, value === "up", featureKey);

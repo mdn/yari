@@ -25,9 +25,9 @@ import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
+import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
-import { TopBanner } from "./banner";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -53,7 +53,7 @@ function Layout({ pageType, children }) {
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        <TopBanner />
+        <TopPlacement />
         {pageType !== "document-page" && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />

@@ -30,11 +30,6 @@ export type UserPlusSettings = {
   noAds: boolean | null;
 };
 
-export type Experiments = {
-  active: boolean;
-  config: Record<string, boolean>;
-};
-
 export class OfflineSettingsData {
   offline: boolean;
   preferOnline: boolean;
@@ -90,7 +85,6 @@ export type User = {
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
-  experiments?: Experiments;
   offlineSettings: null | OfflineSettingsData;
   mutate: () => void;
 };
@@ -220,7 +214,6 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         },
         maintenance: data.maintenance,
         settings,
-        experiments: data.experiments,
         offlineSettings: null,
         mutate,
       };
