@@ -1,6 +1,8 @@
 @use "../../ui/vars" as *;
 
 .ai-help-history {
+  // Align first item with AI Help subtitle.
+  margin-top: 1.75rem;
   padding-right: 1rem;
 
   > input {
@@ -43,6 +45,14 @@
 
       ~ ol {
         display: none;
+      }
+    }
+
+    &:not(:checked) {
+      ~ .ai-help-history-toggle {
+        @media screen and (min-width: $screen-md) {
+          display: none;
+        }
       }
     }
   }
