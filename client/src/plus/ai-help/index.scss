@@ -124,13 +124,22 @@
     text-decoration: underline;
   }
 
-  .ai-help-banner {
+  .ai-help-banner,
+  .login-banner {
     background-color: var(--category-color-background);
+    border: none;
     border-radius: 0.25rem;
+    padding: 1rem 1.5rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .ai-help-banner {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding: 1rem 1.5rem;
 
     .icon {
       background-color: var(--ai-help-icon);
@@ -139,10 +148,6 @@
       &:first-of-type {
         margin-right: 1rem;
       }
-    }
-
-    p {
-      margin: 0;
     }
 
     .auth-container {
