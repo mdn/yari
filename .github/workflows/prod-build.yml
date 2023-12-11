@@ -259,16 +259,7 @@ jobs:
 
           yarn tool sync-translated-content
 
-          # Build using one process per locale.
-          # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
-            pids+=($!)
-          done
-
-          for pid in "${pids[@]}"; do
-            wait $pid
-          done
+          yarn build --locale en-us
 
           du -sh client/build
 
