@@ -11,11 +11,16 @@ export function useDelayedArray<T>(
   useEffect(() => {
     const current = value;
 
-    if (!current || current?.length === last.current?.length) {
+    if (current?.length === last.current?.length) {
       return;
     }
 
     last.current = current;
+
+    if (!current) {
+      setValue(current);
+      return;
+    }
 
     let delay = 0;
 
