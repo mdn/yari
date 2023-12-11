@@ -70,18 +70,6 @@
             overflow: hidden;
             white-space: nowrap;
             width: 100%;
-
-            &::before {
-              background-color: var(--icon-secondary);
-              content: "";
-              display: inline-block;
-              height: var(--icon-size);
-              margin-right: 0.5em;
-              mask-image: url("../../assets/icons/message.svg");
-              mask-size: contain;
-              vertical-align: middle;
-              width: var(--icon-size);
-            }
           }
 
           &.ai-help-history-active {
@@ -96,6 +84,19 @@
         display: block;
         font-size: var(--type-smaller-font-size);
         padding-left: 0.5rem;
+
+        &::before {
+          --icon-size: 0.6rem;
+          background-color: var(--icon-secondary);
+          content: "";
+          display: inline-block;
+          height: var(--icon-size);
+          margin-right: 0.5em;
+          mask-image: url("../../assets/icons/message.svg");
+          mask-size: contain;
+          vertical-align: middle;
+          width: var(--icon-size);
+        }
       }
     }
   }
