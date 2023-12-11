@@ -654,11 +654,6 @@ export function AIHelpInner() {
                             message={message}
                             queuedExamples={queuedExamples}
                             setQueue={setQueue}
-                            thumbsCallback={async (value) => {
-                              user?.experiments?.active &&
-                                message.messageId &&
-                                (await sendFeedback(message.messageId, value));
-                            }}
                             messages={messages}
                           />
                         )}
