@@ -39,13 +39,13 @@ svg.icon {
 }
 
 .icons-highlighted {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
 
   > span {
-    line-height: 0;
     height: var(--icon-size);
+    line-height: 0;
     width: var(--icon-size);
 
     &.icons-icon-wrapper {
