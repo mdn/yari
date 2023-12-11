@@ -13,6 +13,7 @@
     width: 0;
 
     ~ .ai-help-history-toggle {
+      --button-action-transform: none;
       background-color: var(--background-primary);
       display: block;
       padding: 0.5rem;
@@ -39,8 +40,26 @@
     }
 
     &:checked {
-      ~ .ai-help-history-toggle > label .icon-sidebar {
-        mask-image: url("../../assets/icons/sidebar-filled.svg");
+      // Means hidden on desktop, show on mobile.
+      ~ .ai-help-history-toggle > label {
+        .icon-sidebar {
+          mask-image: url("../../assets/icons/sidebar-filled.svg");
+        }
+
+        .show-history {
+          display: none;
+        }
+
+        @media screen and (min-width: $screen-md) {
+          .hide-history {
+            display: none;
+          }
+
+          .show-history {
+            // Show on desktop.
+            display: inherit;
+          }
+        }
       }
 
       ~ ol {
@@ -49,8 +68,14 @@
     }
 
     &:not(:checked) {
+      // I.e. shown on desktop, hidden on mobile.
       ~ .ai-help-history-toggle {
+        > label .hide-history {
+          display: none;
+        }
+
         @media screen and (min-width: $screen-md) {
+          // Hiding doesn't make sense on desktop.
           display: none;
         }
       }
