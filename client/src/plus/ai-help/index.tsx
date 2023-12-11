@@ -47,7 +47,6 @@ import { AIHelpHistory } from "./history";
 import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
-import { useDelayedArray } from "./hooks";
 import {
   SORRY_BACKEND,
   SORRY_FRONTEND,
@@ -291,10 +290,6 @@ function AIHelpAssistantResponse({
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
-  const delayedSources = useDelayedArray(message.sources, 250, 500);
-
-  const sources =
-    message.status === MessageStatus.Pending ? delayedSources : message.sources;
 
   let sample = 0;
 
@@ -312,9 +307,9 @@ function AIHelpAssistantResponse({
           ? MESSAGE_SEARCHING
           : MESSAGE_SEARCHED}
       </div>
-      {sources && sources.length > 0 && (
+      {message.sources && message.sources.length > 0 && (
         <ul className="ai-help-message-sources">
-          {sources.map(({ url, title }, index) => (
+          {message.sources.map(({ url, title }, index) => (
             <li key={index}>
               <InternalLink
                 to={url}

@@ -365,6 +365,7 @@ export function useAiChat({
 
   const [quota, setQuota] = useState<Quota | null | undefined>(undefined);
   const remoteQuota = useRemoteQuota();
+  const flushSources = useRef<() => void>();
 
   const reset = useCallback(() => {
     setPreviousChatId(chatId);
@@ -473,13 +474,32 @@ export function useAiChat({
           setLastUpdate(new Date());
           // Sources.
           if (Array.isArray(sources)) {
-            dispatchState({
-              type: "set-metadata",
-              sources: sources,
-              chatId: chat_id,
-              messageId: message_id,
-              parentId: parent_id,
+            function setSources(sources) {
+              dispatchState({
+                type: "set-metadata",
+                sources: sources,
+                chatId: chat_id,
+                messageId: message_id,
+                parentId: parent_id,
+              });
+            }
+
+            // Add sources one by one.
+
+            let delay = 0;
+            const timers = sources.map((_, index) => {
+              const handler = () => setSources(sources.slice(0, index));
+              // Delay randomly between 250-750ms.
+              delay += 250 + 500 * Math.random();
+
+              return window.setTimeout(handler, delay);
             });
+
+            flushSources.current = () => {
+              timers.forEach((timer) => window.clearTimeout(timer));
+              setSources(sources);
+              flushSources.current = undefined;
+            };
           }
           // Quota.
           if (typeof quota !== "undefined") {
@@ -489,6 +509,8 @@ export function useAiChat({
         }
 
         setLoadingState("responding");
+
+        flushSources.current?.();
 
         dispatchState({
           type: "update",
