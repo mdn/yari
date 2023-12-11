@@ -301,7 +301,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
@@ -319,7 +319,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
