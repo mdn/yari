@@ -355,7 +355,7 @@ function AIHelpAssistantResponse({
             remarkPlugins={[remarkGfm]}
             components={{
               a: ({ node, ...props }) => {
-                if (props.href?.startsWith("https://developer.mozilla.org")) {
+                if (props.href?.startsWith("https://developer.mozilla.org/")) {
                   props.href = props.href.replace(
                     "https://developer.mozilla.org",
                     ""
