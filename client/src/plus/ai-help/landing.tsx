@@ -4,7 +4,7 @@ import ThemedPicture from "../../ui/atoms/themed-picture";
 import { AuthContainer } from "../../ui/molecules/auth-container";
 import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
 import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
-import { ReactComponent as TurboSVG } from "../../../public/assets/ai-help/turbo.svg";
+import { ReactComponent as GPT4SVG } from "../../../public/assets/ai-help/gpt-4.svg";
 import screenshotDark from "../../../public/assets/ai-help/ai_help_dark.png";
 import screenshotLight from "../../../public/assets/ai-help/ai_help_light.png";
 
@@ -48,10 +48,10 @@ export function AIHelpLanding() {
               </figcaption>
             </figure>
             <figure>
-              <TurboSVG />
+              <GPT4SVG />
               <figcaption>
-                <h3>Turbo-Powered</h3>
-                <p>Now based on GPT-4 Turbo for peak performance</p>
+                <h3>GPT-4-Powered</h3>
+                <p>Now based on GPT-4 for peak performance</p>
               </figcaption>
             </figure>
           </div>
