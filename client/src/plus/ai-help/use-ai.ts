@@ -370,7 +370,8 @@ export function useAiChat({
   const flushSources = useRef<() => void>();
 
   const handleError = useCallback((err: any) => {
-    stopStream();
+    eventSourceRef.current?.close();
+    eventSourceRef.current = undefined;
     setLoadingState("failed");
     console.error(err);
   }, []);
@@ -691,13 +692,9 @@ export function useAiChat({
     return data;
   }
 
-  function stopStream() {
+  function resetLoadingState() {
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
-  }
-
-  function resetLoadingState() {
-    stopStream();
     setLoadingState("idle");
     dispatchData(null);
   }
