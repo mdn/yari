@@ -9,6 +9,7 @@ export default function ThemedPicture({
   srcLight: string;
   srcDark: string;
 } & React.ImgHTMLAttributes<HTMLImageElement>) {
+  // Cannot use `colorScheme` from UIContext, because it always returns "dark".
   const theme = useTheme();
   return (
     <picture>
