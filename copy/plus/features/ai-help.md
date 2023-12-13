@@ -43,14 +43,10 @@ suggested questions or input your own.
 AI Help will search MDN and display the consulted pages in real time with
 summary links.
 
-<!-- 2 -->
-
 ![Screenshot of logged-in AI Help page, AI Help Search highlighted, questions inserted and answer generated](/assets/plus-docs/ai-help/example-question-answering.png)
 
 You’ll be able to **Edit** your question by using the edit option, and AI Help
 will provide you with a new answer.
-
-<!-- 3 -->
 
 ![Screenshot of logged-in AI Help page, AI Help Edit option opened and highlighted, on the same question as above](/assets/plus-docs/ai-help/example-question-editing.png)
 
@@ -58,14 +54,10 @@ will provide you with a new answer.
 
 Enable chat history to save your interactions and come back later to them.
 
-<!-- 4 -->
-
 ![Screenshot of same logged-in AI Help page, AI Help Chat History highlighted with click on button ‘Enable History’](/assets/plus-docs/ai-help/history-banner.png)
 
 You can also manage your history directly from your Account Settings, and
 disable or delete it at any time.
-
-<!-- 5 -->
 
 ![Screenshot of Account Settings page, with Chat History Enable and Delete highlighted’](/assets/plus-docs/ai-help/history-settings.png)
 
@@ -74,11 +66,7 @@ disable or delete it at any time.
 Select code examples and test them in the MDN Playground for a quick check of
 code accuracy and a seamless coding experience.
 
-<!-- 6 -->
-
 ![Screenshot of an AI Help answer with code examples that are being added to a list for sending them to the Playground](/assets/plus-docs/ai-help/code-examples-queue.png)
-
-<!-- 7 -->
 
 ![Screenshot with code examples opened in the Playground](/assets/plus-docs/ai-help/code-examples-playground.png)
 
@@ -86,22 +74,16 @@ code accuracy and a seamless coding experience.
 
 You can rate answers using the thumbs-up/down mechanism.
 
-<!-- 8 -->
-
 ![Screenshot with thumbs up/down highlighted](/assets/plus-docs/ai-help/rate-answers.png)
 
 If you think an answer is incorrect or unhelpful, file an issue using the
 provided template, and one of our engineers will look into it and get back to
 you quickly.
 
-<!-- 9 -->
-
 ![Screenshot with Github issue template open](/assets/plus-docs/ai-help/issue-template.png)
 
 You can also use the dedicated feedback link on the AI Help page for general
 feedback about the feature.
-
-<!-- 10 -->
 
 ![Screenshot with the general feedback link highlighted](/assets/plus-docs/ai-help/report-feedback.png)
 
