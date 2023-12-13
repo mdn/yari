@@ -447,7 +447,7 @@ export async function buildDocument(
     throw error;
   }
 
-  // Dump HTML for GPT context
+  // Dump HTML for GPT context.
   let plainHTML;
   if (documentOptions.plainHTML) {
     plainHTML = $.html();

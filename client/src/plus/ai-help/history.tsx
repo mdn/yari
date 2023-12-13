@@ -123,7 +123,7 @@ function AIHelpHistorySubList({
                   icon="trash"
                   onClickHandler={async () => {
                     const confirmed = window.confirm(
-                      "Do you want to permanently delete this Topic?"
+                      "Do you want to permanently delete this topic?"
                     );
                     gleanClick(
                       `${AI_HELP}: history delete -> ${Number(confirmed)}`

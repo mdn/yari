@@ -43,7 +43,6 @@
         grid-row: 1/4;
         height: fit-content;
         max-height: calc(100vh - var(--sticky-header-without-actions-height));
-        overflow: hidden;
         overflow: auto;
         position: sticky;
         top: var(--sticky-header-without-actions-height);

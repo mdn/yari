@@ -143,11 +143,15 @@ export function addCollectButton(
   const checkLabel = document.createElement("label");
   checkLabel.htmlFor = checkId;
   checkLabel.textContent = "queue";
+  checkLabel.title = "Add to Playground Queue";
   const check = document.createElement("input");
   check.addEventListener("change", (e) => {
     const ct = e.currentTarget as HTMLInputElement | null;
     if (ct?.dataset) {
       checkLabel.textContent = ct.checked ? "queued" : "queue";
+      checkLabel.title = ct.checked
+        ? "Remove from Playground Queue"
+        : "Add to Playground Queue";
       window["playQueue"]?.();
     }
   });

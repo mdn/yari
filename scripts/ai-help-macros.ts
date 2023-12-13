@@ -27,9 +27,6 @@ import {
 
 const { program } = caporal;
 
-// const MAX_TABLE_LENGTH = 10000;
-// const IGNORE_SECTIONS = ["Specifications", "Browser compatibility", "See also"];
-
 interface IndexedDoc {
   id: number;
   mdn_url: string;
