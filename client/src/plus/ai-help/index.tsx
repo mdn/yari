@@ -129,7 +129,7 @@ function AIHelpAuthenticated() {
             <Icon name="bell-ring" />
             <strong>GPT-4-powered AI Help.</strong>
           </p>
-          <p>Now with chat history, enhanced context, and optimised prompts.</p>
+          <p>Now with chat history, enhanced context, and optimized prompts.</p>
           <p>This is a beta feature.</p>
         </div>
       </Container>
