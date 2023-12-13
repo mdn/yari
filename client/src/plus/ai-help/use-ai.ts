@@ -471,7 +471,7 @@ export function useAiChat({
     }, EVENT_TIMEOUT);
 
     return () => window.clearTimeout(timeoutID);
-  }, [lastEvent, loadingState, handleError]);
+  }, [lastEvent, loadingState, handleError, gleanClick]);
 
   const handleEventData = useCallback(
     (data: any) => {
