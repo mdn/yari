@@ -16,7 +16,7 @@ export function AIHelpLanding() {
       <Container extraClasses="ai-help-landing-top">
         <div>
           <h1>
-            Utilise AI Help to <em>boost</em> your productivity
+            Utilize AI Help to <em>boost</em> your productivity
           </h1>
           <p>Receive MDN-sourced answers complete with consulted links</p>
           <Login placement="top" />
