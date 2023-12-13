@@ -369,12 +369,16 @@ export function useAiChat({
   const remoteQuota = useRemoteQuota();
   const flushSources = useRef<() => void>();
 
-  const handleError = useCallback((err: any) => {
-    eventSourceRef.current?.close();
-    eventSourceRef.current = undefined;
-    setLoadingState("failed");
-    console.error(err);
-  }, []);
+  const handleError = useCallback(
+    (err: any) => {
+      gleanClick(`${AI_HELP}: error`);
+      eventSourceRef.current?.close();
+      eventSourceRef.current = undefined;
+      setLoadingState("failed");
+      console.error(err);
+    },
+    [gleanClick]
+  );
 
   const reset = useCallback(() => {
     setPreviousChatId(chatId);
