@@ -29,7 +29,7 @@ export default function OfflineSettings({ ...appProps }) {
 
   return (
     <section className="field-group">
-      <h2>MDN Offline</h2>
+      <h2>Offline Access</h2>
       {user?.isSubscriber ? (
         serviceWorkerAvailable ? (
           <Settings />
@@ -142,8 +142,10 @@ function Settings() {
   return (
     <ul>
       <li>
-        <h3>Enable offline storage</h3>
-        <span>Allow MDN content to be downloaded for offline access</span>
+        <h3>MDN Offline Storage</h3>
+        <span>
+          Enable storage to allow MDN content download for offline reading.
+        </span>
         {(saving === true && <Spinner extraClasses="loading" />) || (
           <Switch
             name="offline"
