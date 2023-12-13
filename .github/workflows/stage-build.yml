@@ -342,7 +342,7 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=240s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
