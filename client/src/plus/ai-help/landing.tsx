@@ -5,8 +5,8 @@ import { AuthContainer } from "../../ui/molecules/auth-container";
 import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
 import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
 import { ReactComponent as GPT4SVG } from "../../../public/assets/ai-help/gpt-4.svg";
-import screenshotDark from "../../../public/assets/ai-help/ai_help_dark.png";
-import screenshotLight from "../../../public/assets/ai-help/ai_help_light.png";
+import screenshotDark from "../../../public/assets/ai-help/ai-help_dark.png";
+import screenshotLight from "../../../public/assets/ai-help/ai-help_light.png";
 
 import "./landing.scss";
 
