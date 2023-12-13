@@ -5,8 +5,8 @@ import { AuthContainer } from "../../ui/molecules/auth-container";
 import { ReactComponent as ContextSVG } from "../../../public/assets/ai-help/context.svg";
 import { ReactComponent as HistorySVG } from "../../../public/assets/ai-help/history.svg";
 import { ReactComponent as GPT4SVG } from "../../../public/assets/ai-help/gpt-4.svg";
-import screenshotDark from "../../../public/assets/ai-help/ai_help_dark.png";
-import screenshotLight from "../../../public/assets/ai-help/ai_help_light.png";
+import screenshotDark from "../../../public/assets/ai-help/ai-help_dark.png";
+import screenshotLight from "../../../public/assets/ai-help/ai-help_light.png";
 
 import "./landing.scss";
 
@@ -16,7 +16,7 @@ export function AIHelpLanding() {
       <Container extraClasses="ai-help-landing-top">
         <div>
           <h1>
-            Utilise AI Help to <em>boost</em> your productivity
+            Utilize AI Help to <em>boost</em> your productivity
           </h1>
           <p>Receive MDN-sourced answers complete with consulted links</p>
           <Login placement="top" />
