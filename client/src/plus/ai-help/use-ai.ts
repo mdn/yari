@@ -10,6 +10,7 @@ import { AIHelpLog } from "./rust-types";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import { useAIHelpSettings } from "./utils";
+import { EVENT_TIMEOUT } from "./constants";
 
 const RETRY_INTERVAL = 10000;
 const ERROR_TIMEOUT = 60000;
@@ -345,6 +346,7 @@ export function useAiChat({
 
   const [isInitializing, setIsInitializing] = useState(true);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [lastEvent, setLastEvent] = useState<Date>();
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [datas, dispatchData] = useReducer(
     (state: any[], value: any) => (value === null ? [] : [...state, value]),
@@ -367,6 +369,11 @@ export function useAiChat({
   const remoteQuota = useRemoteQuota();
   const flushSources = useRef<() => void>();
 
+  const handleError = useCallback((err: any) => {
+    setLoadingState("failed");
+    console.error(err);
+  }, []);
+
   const reset = useCallback(() => {
     setPreviousChatId(chatId);
     setChatId(undefined);
@@ -382,11 +389,6 @@ export function useAiChat({
       type: "reset",
     });
   }, [setSearchParams, chatId]);
-
-  const handleError = useCallback((err: any) => {
-    setLoadingState("failed");
-    console.error(err);
-  }, []);
 
   useEffect(() => {
     if (!isHistoryEnabled) {
@@ -455,9 +457,24 @@ export function useAiChat({
     }
   }, [remoteQuota]);
 
+  useEffect(() => {
+    if (loadingState !== "responding") {
+      return;
+    }
+
+    // Assume we have a timeout if we receive no event in some time.
+    const timeoutID = window.setTimeout(() => {
+      gleanClick(`${AI_HELP}: timeout`);
+      handleError("AI Help response timed out.");
+    }, EVENT_TIMEOUT);
+
+    return () => window.clearTimeout(timeoutID);
+  }, [lastEvent, loadingState, handleError]);
+
   const handleEventData = useCallback(
     (data: any) => {
       try {
+        setLastEvent(new Date());
         dispatchData(data);
 
         if (data.type === "metadata") {
