@@ -162,7 +162,6 @@ function glean(): GleanAnalytics {
   window?.addEventListener("click", (ev) => {
     handleLinkClick(ev, gleanClick);
     handleButtonClick(ev, gleanClick);
-    handleCheckboxClick(ev, gleanClick);
     handleSidebarClick(ev, gleanClick);
   });
 
@@ -176,16 +175,6 @@ function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
   const button = ev?.target;
   if (button instanceof HTMLButtonElement && button.dataset.glean) {
     click(button.dataset.glean);
-  }
-}
-function handleCheckboxClick(ev: MouseEvent, click: (source: string) => void) {
-  const input = ev?.target;
-  if (
-    input instanceof HTMLInputElement &&
-    input.type.toLowerCase() === "checkbox" &&
-    input.dataset.glean
-  ) {
-    click(`${input.dataset.glean} -> ${input.checked}`);
   }
 }
 
