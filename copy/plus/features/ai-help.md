@@ -8,11 +8,10 @@ title: AI Help
 
 AI Help, available for both free and paid MDN Plus subscribers, utilizes GPT-4
 Turbo technology from OpenAI to enhance the MDN experience. It offers quick and
-effective access to MDN's broad database, including 12,000 English and 48,000
-localized pages. It specializes in searching and summarizing MDN content to
-directly address your queries. Additionally, for web development queries not
-covered in MDN, AI Help draws on its external knowledge, always indicating when
-the sources are from outside MDN.
+effective access to MDN's broad database. It specializes in searching and
+summarizing MDN content to directly address your queries. Additionally, for web
+development queries not covered in MDN, AI Help draws on its external knowledge,
+always indicating when the sources are from outside MDN.
 
 ## Key Features
 
