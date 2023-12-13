@@ -66,7 +66,7 @@ export function AIHelpLanding() {
             them at your preferred pace for a comprehensive understanding.
           </li>
           <li>
-            <em>Summarised Insights</em>: We provide quick, concise summary of
+            <em>Summarized Insights</em>: We provide quick, concise summary of
             your questions, making it easy to grasp key points without extensive
             reading.
           </li>
