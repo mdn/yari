@@ -104,11 +104,13 @@ export async function getCSSSyntax(
     // Add parent values.
     values = { ...values, ...spec.values };
     // Add child values.
-    Object.values(spec.values).forEach((value) => {
-      if ("values" in value && Array.isArray(value.values)) {
-        values = { ...byName(value.values), ...values };
+    [...Object.values(spec.properties), ...Object.values(spec.values)].forEach(
+      (value) => {
+        if ("values" in value && Array.isArray(value.values)) {
+          values = { ...byName(value.values), ...values };
+        }
       }
-    });
+    );
   }
 
   /**

@@ -48,5 +48,9 @@ describe("CSSSyntax", () => {
     expect(await render("Web/CSS/alpha-value", "css-type")).toMatchSnapshot(
       "alpha-value"
     );
+    // Note that Web/CSS/content-replacement doesn't really exist.
+    expect(
+      await render("Web/CSS/content-replacement", "css-type")
+    ).toMatchSnapshot("content-replacement");
   });
 });
