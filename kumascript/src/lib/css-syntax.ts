@@ -101,7 +101,14 @@ export async function getCSSSyntax(
   // get all the value syntaxes
   let values = {};
   for (const spec of Object.values(parsedWebRef)) {
+    // Add parent values.
     values = { ...values, ...spec.values };
+    // Add child values.
+    Object.values(spec.values).forEach((value) => {
+      if ("values" in value && Array.isArray(value.values)) {
+        values = { ...byName(value.values), ...values };
+      }
+    });
   }
 
   /**
@@ -540,8 +547,12 @@ async function getParsedWebRef(): Promise<WebRefObjectData> {
 
 function byName<T extends Named>(items: T[]): Record<string, T> {
   return Object.fromEntries(
-    items.map((item) => [item.name.replace(/(^<|>$)/g, ""), item])
+    items.map((item) => [normalizeName(item.name), item])
   );
+}
+
+function normalizeName(name: string): string {
+  return name.replace(/(^<|>$)/g, "");
 }
 
 async function getRawWebRefData(): Promise<WebRefArrayData> {
