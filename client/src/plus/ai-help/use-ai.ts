@@ -296,9 +296,9 @@ class AiHelpHistory {
           status: message.assistant
             ? MessageStatus.Complete
             : Date.now() - Date.parse(message.metadata.created_at) >
-              ERROR_TIMEOUT
-            ? MessageStatus.Errored
-            : MessageStatus.InProgress,
+                ERROR_TIMEOUT
+              ? MessageStatus.Errored
+              : MessageStatus.InProgress,
           sources: message.metadata.sources,
           chatId: message.metadata.chat_id,
           messageId: message.metadata.message_id,
@@ -606,8 +606,8 @@ export function useAiChat({
       let newPath = messageId
         ? addSibling(state, messageId)
         : parentId
-        ? [...findPath(state, parentId), 0]
-        : [0];
+          ? [...findPath(state, parentId), 0]
+          : [0];
       setPath(newPath);
       gleanClick(`${AI_HELP}: submit question ${newPath.length}`);
       dispatchState({

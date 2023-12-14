@@ -83,8 +83,8 @@ export function CollectionComponent() {
               {itemLoading
                 ? "Loading..."
                 : itemError
-                ? "Error (try again)"
-                : "Show more"}
+                  ? "Error (try again)"
+                  : "Show more"}
             </Button>
           </div>
         )}

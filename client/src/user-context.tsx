@@ -256,12 +256,12 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   const userData = isLoading
     ? getSessionStorageData()
     : error || !data
-    ? {
-        ...getSessionStorageData(),
-        ...data,
-        maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
-      }
-    : data;
+      ? {
+          ...getSessionStorageData(),
+          ...data,
+          maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
+        }
+      : data;
 
   return (
     <UserDataContext.Provider value={userData}>

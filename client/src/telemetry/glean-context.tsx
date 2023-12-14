@@ -226,8 +226,8 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       isBaseline: doc?.baseline?.baseline
         ? `baseline_${doc.baseline.baseline}`
         : doc?.baseline?.baseline === false
-        ? "not_baseline"
-        : undefined,
+          ? "not_baseline"
+          : undefined,
       utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {

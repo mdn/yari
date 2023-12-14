@@ -45,8 +45,8 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const level = status.baseline
     ? status.baseline
     : status.baseline === false
-    ? "not"
-    : undefined;
+      ? "not"
+      : undefined;
 
   const feedbackLink = `${SURVEY_URL}?page=${encodeURIComponent(
     pathname
@@ -67,10 +67,10 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
             ? `Supported in ${browser}`
             : `Not widely supported in ${browser}`
           : current === previous
-          ? ` and ${browser}`
-          : current
-          ? `, and supported in ${browser}`
-          : `, and not widely supported in ${browser}`;
+            ? ` and ${browser}`
+            : current
+              ? `, and supported in ${browser}`
+              : `, and not widely supported in ${browser}`;
       })
       .join("");
 

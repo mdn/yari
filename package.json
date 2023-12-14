@@ -216,7 +216,7 @@
     "postcss-loader": "^7.3.3",
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^9.3.0",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.1",
     "prettier-plugin-packagejson": "^2.4.7",
     "prompts": "^2.4.2",
     "react": "^18.2.0",
