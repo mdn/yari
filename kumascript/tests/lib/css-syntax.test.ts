@@ -25,6 +25,9 @@ describe("CSSSyntax", () => {
   });
 
   it("renders function", async () => {
+    expect(
+      await render("Web/CSS/basic-shape/polygon", "css-function")
+    ).toMatchSnapshot("polygon");
     expect(await render("Web/CSS/sin", "css-function")).toMatchSnapshot("sin");
   });
 
