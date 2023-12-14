@@ -10,12 +10,11 @@ import {
   isNotSupportedAtAll,
   isTruthy,
   versionIsPreview,
-  SupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 
 function getSupportClassName(
-  support: SupportStatementExtended | undefined,
+  support: BCD.SupportStatement | undefined,
   browser: BCD.BrowserStatement
 ): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
   if (!support) {
