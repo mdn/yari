@@ -1,0 +1,236 @@
+@use "../../ui/vars" as *;
+
+.ai-help-history {
+  // Align first item with AI Help subtitle.
+  margin-top: 1.75rem;
+  padding-right: 1rem;
+
+  > input {
+    height: 0;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    width: 0;
+
+    ~ .ai-help-history-toggle {
+      --button-action-transform: none;
+      background-color: var(--background-primary);
+      display: block;
+      padding: 0.5rem;
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: var(--z-index-mid);
+
+      > label {
+        cursor: pointer;
+        width: fit-content;
+
+        .icon-sidebar {
+          mask-image: url("../../assets/icons/sidebar.svg");
+        }
+      }
+    }
+
+    &:focus-visible ~ .ai-help-history-toggle > label {
+      opacity: 1;
+      outline-color: var(--accent-primary);
+      outline-offset: 1px;
+      outline-style: auto;
+    }
+
+    &:checked {
+      // Means hidden on desktop, show on mobile.
+      ~ .ai-help-history-toggle > label {
+        .icon-sidebar {
+          mask-image: url("../../assets/icons/sidebar-filled.svg");
+        }
+
+        .show-history {
+          display: none;
+        }
+
+        @media screen and (min-width: $screen-md) {
+          .hide-history {
+            display: none;
+          }
+
+          .show-history {
+            // Show on desktop.
+            display: inherit;
+          }
+        }
+      }
+
+      ~ ol {
+        display: none;
+      }
+    }
+
+    &:not(:checked) {
+      // Means hidden on mobile, show on desktop.
+      ~ .ai-help-history-toggle {
+        > label .hide-history {
+          display: none;
+        }
+
+        @media screen and (min-width: $screen-md) {
+          // Hiding doesn't make sense on desktop.
+          display: none;
+        }
+      }
+    }
+  }
+
+  ol {
+    > li {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 0 0.5rem;
+
+      > ol {
+        margin-bottom: 0.5rem;
+        width: 100%;
+
+        > li {
+          --icon-size: 0.6rem;
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          min-height: 3rem;
+          padding: 0.5rem;
+
+          > a {
+            color: var(--text-secondary);
+            mask-image: linear-gradient(to left, transparent, #000 3ch);
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          &.ai-help-history-active {
+            background-color: var(--background-secondary);
+            border-radius: var(--elem-radius);
+          }
+        }
+      }
+
+      > time {
+        color: var(--text-secondary);
+        display: block;
+        font-size: var(--type-smaller-font-size);
+        padding-left: 0.5rem;
+
+        &::before {
+          --icon-size: 0.6rem;
+          background-color: var(--icon-secondary);
+          content: "";
+          display: inline-block;
+          height: var(--icon-size);
+          margin-right: 0.5em;
+          mask-image: url("../../assets/icons/message.svg");
+          mask-size: contain;
+          vertical-align: middle;
+          width: var(--icon-size);
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: $screen-md) {
+    background-color: var(--background-primary);
+    grid-column: center;
+    grid-row: 2/3;
+    max-height: initial;
+    padding: 0 0.5rem;
+    position: initial;
+    z-index: var(--z-index-mid);
+
+    input {
+      ~ .ai-help-history-toggle > label .icon-sidebar {
+        mask-image: url("../../assets/icons/sidebar-filled.svg");
+      }
+
+      ~ ol {
+        display: none;
+      }
+    }
+
+    input:checked {
+      ~ .ai-help-history-toggle > label .icon-sidebar {
+        mask-image: url("../../assets/icons/sidebar.svg");
+      }
+
+      ~ ol {
+        display: initial;
+      }
+    }
+  }
+}
+
+.ai-help-history-activation {
+  background-color: var(--background-secondary);
+  border-radius: 0.25rem;
+  // Align "Answer History" with "GPT-4-powered AI Help".
+  margin-top: 3.5rem;
+  padding: 0.25rem;
+
+  .icons-highlighted {
+    .icon {
+      background-color: var(--ai-help-icon);
+    }
+
+    .icons-icon-wrapper {
+      --padding: 0.25rem;
+      background-color: var(--category-color-background);
+      border-radius: 1rem;
+      height: calc(var(--icon-size) + 2 * var(--padding));
+      padding: var(--padding);
+      width: calc(var(--icon-size) + 2 * var(--padding));
+    }
+  }
+
+  p {
+    margin: 0.25rem auto;
+    text-align: center;
+
+    .teaser {
+      font-size: var(--type-smaller-font-size);
+    }
+
+    a[href] {
+      font-weight: var(--font-body-strong-weight);
+      text-decoration: underline;
+
+      &:active,
+      &:hover {
+        text-decoration: unset;
+      }
+    }
+  }
+
+  @media screen and (max-width: $screen-md) {
+    margin: 0.5rem;
+    padding: 1rem 1.5rem;
+
+    figure {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+
+      .icons-highlighted {
+        margin-top: -0.75rem;
+      }
+
+      p {
+        margin: 0.25rem;
+        text-align: left;
+      }
+
+      a[href] {
+        display: inline-block;
+      }
+    }
+  }
+}

@@ -77,7 +77,11 @@ async function buildDocumentInteractive(
       );
     }
 
-    return { document, doc: await buildDocument(document), skip: false };
+    return {
+      document,
+      doc: await buildDocument(document, { plainHTML: true }),
+      skip: false,
+    };
   } catch (e) {
     if (!interactive) {
       throw e;
@@ -208,7 +212,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap, plainHTML },
       document,
     } = result;
 
@@ -228,6 +232,10 @@ async function buildDocuments(
         path.join(outPath, "index.html"),
         renderHTML(document.url, { doc: builtDocument })
       );
+    }
+
+    if (plainHTML) {
+      fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of

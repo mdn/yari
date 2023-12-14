@@ -8,12 +8,19 @@ article.settings {
   width: min(90vw, 40em);
 
   h3 {
-    margin-top: 0.5rem;
+    margin-top: 0;
+  }
+
+  section {
+    padding: 1rem;
+
+    &.field-group,
+    &.setting-row {
+      padding: 0;
+    }
   }
 
   .field-group {
-    margin: 2rem 0;
-
     ul {
       padding: 0;
 
@@ -21,14 +28,34 @@ article.settings {
         display: grid;
         gap: 0 1rem;
         grid-template-columns: 1fr 5em;
-        margin: 2em 0;
 
-        h3 {
-          font-weight: 600;
+        section {
+          margin: 0.125rem 0;
+
+          &:hover,
+          &:target {
+            background-color: var(--background-information);
+            border-radius: 0.25rem;
+          }
+        }
+
+        .setting-row {
+          align-items: center;
+          display: flex;
+          gap: 1rem;
+          justify-content: space-between;
         }
 
         p {
-          margin: 0;
+          margin: 0 0 1rem;
+
+          &:first-child {
+            margin-top: 0;
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
 
         span {
@@ -49,6 +76,7 @@ article.settings {
         button,
         .manage {
           align-self: center;
+          background-color: var(--background-primary);
           border: 1px solid var(--text-primary);
           border-radius: var(--elem-radius);
           color: var(--text-link);
@@ -61,6 +89,10 @@ article.settings {
           padding: 0.5rem 1rem;
           text-align: center;
           width: max-content;
+
+          &:hover {
+            background-color: var(--background-secondary);
+          }
         }
 
         button[disabled] {

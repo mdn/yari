@@ -24,6 +24,7 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
+  aiHelpHistory: boolean | null;
   collectionLastModified: Date | null;
   mdnplusNewsletter: boolean | null;
   noAds: boolean | null;
@@ -180,6 +181,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         data?.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data?.settings
         ? {
+            aiHelpHistory:
+              typeof data?.settings?.ai_help_history === "boolean"
+                ? data.settings.ai_help_history
+                : null,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,

@@ -27,23 +27,31 @@ export default function Newsletter() {
       <h2 id="newsletter">Stay updated</h2>
       <ul>
         <li>
-          <h3>MDN Plus Newsletter</h3>
-          <span>Allow us to email you product updates, news, and more.</span>
-          {loading ? (
-            <Spinner extraClasses="loading" />
-          ) : (
-            <Switch
-              name="mdn_plus_newsletter"
-              checked={Boolean(enabled)}
-              toggle={async (e) => {
-                setLoading(true);
-                setEnabled(
-                  await toggleNewsletterSubscription(Boolean(e.target.checked))
-                );
-                setLoading(false);
-              }}
-            ></Switch>
-          )}
+          <section aria-labelledby="mdn-plus-newsletter">
+            <h3 id="mdn-plus-newsletter">MDN Plus Newsletter</h3>
+            <div className="setting-row">
+              <span>
+                Allow us to email you product updates, news, and more.
+              </span>
+              {loading ? (
+                <Spinner extraClasses="loading" />
+              ) : (
+                <Switch
+                  name="mdn_plus_newsletter"
+                  checked={Boolean(enabled)}
+                  toggle={async (e) => {
+                    setLoading(true);
+                    setEnabled(
+                      await toggleNewsletterSubscription(
+                        Boolean(e.target.checked)
+                      )
+                    );
+                    setLoading(false);
+                  }}
+                ></Switch>
+              )}
+            </div>
+          </section>
         </li>
       </ul>
     </section>

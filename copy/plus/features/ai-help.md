@@ -6,45 +6,83 @@ title: AI Help
 
 > Get real-time assistance and support
 
-The AI Help feature is an interactive interface developed by MDN in
-collaboration with Supabase and OpenAI. It uses GPT-3.5 to provide interactive
-and timely guidance on coding tasks, programming concepts and assistance
-debugging errors. Whether a beginner or an experienced developer, AI Help
-enhances your learning experience and improves productivity using comprehensive
-MDN references, guides, and resources that document the web for its contextual
-help.
+AI Help, available for both free and paid MDN Plus subscribers, utilizes GPT-4
+Turbo technology from OpenAI to enhance the MDN experience. It offers quick and
+effective access to MDN's broad database. It specializes in searching and
+summarizing MDN content to directly address your queries. Additionally, for web
+development queries not covered in MDN, AI Help draws on its external knowledge,
+always indicating when the sources are from outside MDN.
 
-## Using the AI Help feature
+## Key Features
 
-You can navigate to [AI Help](/en-US/plus/ai-help) from the menu bar at the top
-of MDN pages. Type a question about web development in the text input field,
-press Enter, or click the "send" button. The AI Help service processes your
-query and generates a response with an explanation, code examples where
-appropriate, and links to resources on MDN to find out more. appropriate, and
-links to resources on MDN to find out more.
+- **Asking Questions**: You can ask your web development related questions
+  directly on MDN, in AI Help.
+- **Content Search**: AI Help locates relevant articles from MDN's pages and
+  presents them to you.
+- **Summary Generation**: It offers concise summaries as answers to your
+  questions, providing the option to explore the sources directly, read the
+  summary, or both.
+- **Code Testing**: When articles include code examples, you can test the code
+  directly in the [MDN Playground](/en-US/play), allowing you to immediately
+  check the code accuracy.
 
-![Screenshot with asking a question](/assets/plus-docs/ai-help/ask-question.png)
+## How to Use AI Help
 
-In addition to asking questions, you can also use AI Help to do the following:
+Navigate to [AI Help](/en-US/plus/ai-help) via the top menu bar on MDN pages.
 
-1. **Natural language search**: AI Help searches the MDN documentation for you
-   and helps you quickly find what you are looking for without you having to
-   browse through all MDN’s pages. It also summarizes the information in a
-   concise and easy to read way.
+If you're not logged in or don't have an MDN Plus account, you'll be prompted to
+sign up or log in using your Mozilla Account.
 
-![Screenshot with code example](/assets/plus-docs/ai-help/code-example.png)
+![Screenshot of AI Help page as non-logged in user, AI Help button highlighted as well as the Log in/Sign up options](/assets/plus-docs/ai-help/login-signup.png)
 
-2. **Find code examples**: AI Help offers practical coding examples to assist
-   developers in understanding and implementing various programming concepts,
-   syntax, APIs, and frameworks. When asking questions or seeking guidance on a
-   particular topic, AI Help provides code snippets illustrating how to use the
-   queried feature with modern language idioms in your applications.
+Once logged in, you'll access AI Help's main page where you can select from the
+suggested questions or input your own.
 
-![Screenshot with contextual documentation example](/assets/plus-docs/ai-help/context.png)
+AI Help will search MDN and display the consulted pages in real time with
+summary links.
 
-3. **Related MDN pages**: AI Help creates responses with links to relevant MDN
-   documentation pages where possible. The MDN resources it suggests allow you
-   to explore the topics you're interested in, including examples and references
-   written by subject matter experts.
+![Screenshot of logged-in AI Help page, AI Help Search highlighted, questions inserted and answer generated](/assets/plus-docs/ai-help/example-question-answering.png)
 
-![Screenshot highlighting links to MDN pages at the end of the answer](/assets/plus-docs/ai-help/sources.png)
+You’ll be able to **Edit** your question by using the edit option, and AI Help
+will provide you with a new answer.
+
+![Screenshot of logged-in AI Help page, AI Help Edit option opened and highlighted, on the same question as above](/assets/plus-docs/ai-help/example-question-editing.png)
+
+### Chat History
+
+Enable chat history to save your interactions and come back later to them.
+
+![Screenshot of same logged-in AI Help page, AI Help Chat History highlighted with click on button ‘Enable History’](/assets/plus-docs/ai-help/history-banner.png)
+
+You can also manage your history directly from your Account Settings, and
+disable or delete it at any time.
+
+![Screenshot of Account Settings page, with Chat History Enable and Delete highlighted’](/assets/plus-docs/ai-help/history-settings.png)
+
+### Code Testing
+
+Select code examples and test them in the MDN Playground for a quick check of
+code accuracy and a seamless coding experience.
+
+![Screenshot of an AI Help answer with code examples that are being added to a list for sending them to the Playground](/assets/plus-docs/ai-help/code-examples-queue.png)
+
+![Screenshot with code examples opened in the Playground](/assets/plus-docs/ai-help/code-examples-playground.png)
+
+### Feedback
+
+You can rate answers using the thumbs-up/down mechanism.
+
+![Screenshot with thumbs up/down highlighted](/assets/plus-docs/ai-help/rate-answers.png)
+
+If you think an answer is incorrect or unhelpful, file an issue using the
+provided template, and one of our engineers will look into it and get back to
+you quickly.
+
+![Screenshot with Github issue template open](/assets/plus-docs/ai-help/issue-template.png)
+
+You can also use the dedicated feedback link on the AI Help page for general
+feedback about the feature.
+
+![Screenshot with the general feedback link highlighted](/assets/plus-docs/ai-help/report-feedback.png)
+
+Thank you for using AI Help to enhance your MDN experience!
