@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.38.1](https://github.com/mdn/yari/compare/v2.38.0...v2.38.1) (2023-12-14)
+
+
+### Bug Fixes
+
+* **macros/CSSSupport:** support nested @webref/css values ([#10183](https://github.com/mdn/yari/issues/10183)) ([b783aa9](https://github.com/mdn/yari/commit/b783aa99d3d503ab3e5da979078acd5e92e807c5))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump prettier from 3.0.3 to 3.1.1 ([#10165](https://github.com/mdn/yari/issues/10165)) ([5c3841a](https://github.com/mdn/yari/commit/5c3841a5b6517a58dbf95ed2a8ca1f5f30a46538))
+* **deps-dev:** bump react-router-dom from 6.20.1 to 6.21.0 ([#10182](https://github.com/mdn/yari/issues/10182)) ([1b9286d](https://github.com/mdn/yari/commit/1b9286df28b9385f602c38310c4efe4304bded35))
+* **deps:** bump the sentry group with 2 updates ([#10180](https://github.com/mdn/yari/issues/10180)) ([8eda044](https://github.com/mdn/yari/commit/8eda044995f91c1a95fb001338f0126a5bd59ec9))
+* **pong:** set forwardedip/useragent on click/view requests ([#10185](https://github.com/mdn/yari/issues/10185)) ([323197b](https://github.com/mdn/yari/commit/323197bfd1c179d9954f9fc9068be1d580cf9dde))
+
 ## [2.38.0](https://github.com/mdn/yari/compare/v2.37.1...v2.38.0) (2023-12-14)
 
 
