@@ -44,12 +44,12 @@ import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-vie
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
 import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
+import PageNotFound from "../page-not-found";
 import { PlayQueue } from "../playground/queue";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
-const PageNotFound = React.lazy(() => import("../page-not-found"));
 const Toolbar = React.lazy(() => import("./toolbar"));
 
 export class HTTPError extends Error {

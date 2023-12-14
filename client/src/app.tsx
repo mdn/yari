@@ -18,6 +18,7 @@ import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { HydrationData } from "../../libs/types/hydration";
+import PageNotFound from "./page-not-found";
 import { TopPlacement } from "./ui/organisms/placement";
 
 const About = React.lazy(() => import("./about"));
@@ -29,7 +30,6 @@ const ContributorSpotlight = React.lazy(
 );
 const Homepage = React.lazy(() => import("./homepage"));
 const Newsletter = React.lazy(() => import("./newsletter"));
-const PageNotFound = React.lazy(() => import("./page-not-found"));
 const Playground = React.lazy(() => import("./playground"));
 const SiteSearch = React.lazy(() => import("./site-search"));
 
