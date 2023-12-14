@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
 import sanitizeFilename from "sanitize-filename";
 
+import bcd from "@mdn/browser-compat-data" assert { type: "json" };
+
 import {
   buildDocument,
   buildLiveSamplePageFromURL,
@@ -52,10 +54,6 @@ import {
   findPostBySlug,
   findPostPathBySlug,
 } from "../build/blog.js";
-
-const { default: bcd } = await import("@mdn/browser-compat-data", {
-  assert: { type: "json" },
-});
 
 async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
