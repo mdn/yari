@@ -4,8 +4,9 @@ import { DEV_MODE } from "../../env";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { Toc } from "../../../../libs/types/document";
-import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
+
+const PageNotFound = React.lazy(() => import("../../page-not-found"));
 
 interface StaticPageDoc {
   id: string;

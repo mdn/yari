@@ -10,7 +10,7 @@ import { ManageAIHelp } from "./ai-help";
 
 const OfflineSettings = React.lazy(() => import("./offline-settings"));
 
-export function Settings() {
+export default function Settings() {
   const pageTitle = "Settings";
   return (
     <>

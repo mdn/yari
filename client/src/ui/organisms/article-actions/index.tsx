@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Button } from "../../atoms/button";
 import { LanguageMenu } from "./language-menu";
 
@@ -7,12 +9,12 @@ import { useUserData } from "../../../user-context";
 import { Doc, DocMetadata } from "../../../../../libs/types/document";
 
 import "./index.scss";
-
-import BookmarkMenu from "./bookmark-menu";
 import { Overlay, useUIStatus } from "../../../ui-context";
 import { useEffect, useState } from "react";
 import { KeyedMutator } from "swr";
 import { Item } from "../../../plus/collections/api";
+
+const BookmarkMenu = React.lazy(() => import("./bookmark-menu"));
 
 export const ArticleActions = ({
   doc,

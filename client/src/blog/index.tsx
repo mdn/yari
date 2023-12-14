@@ -16,7 +16,7 @@ interface BlogIndexData {
   posts: BlogPostMetadata[];
 }
 
-export function Blog(appProps: HydrationData) {
+export default function Blog(appProps: HydrationData) {
   return (
     <Routes>
       <Route path="/" element={<BlogIndex {...appProps} />} />

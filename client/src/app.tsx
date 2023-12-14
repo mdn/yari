@@ -6,34 +6,37 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 import "./app.scss";
 
 import { WRITER_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
-import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { TopNavigation } from "./ui/organisms/top-navigation";
-import { SiteSearch } from "./site-search";
-import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
-import { About } from "./about";
 import { getCategoryByPathname } from "./utils";
-import { Contribute } from "./community";
-import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
-import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
-import { Blog } from "./blog";
-import { Newsletter } from "./newsletter";
+
+const About = React.lazy(() => import("./about"));
+const Advertising = React.lazy(() => import("./advertising"));
+const Blog = React.lazy(() => import("./blog"));
+const Contribute = React.lazy(() => import("./community"));
+const ContributorSpotlight = React.lazy(
+  () => import("./contributor-spotlight")
+);
+const Homepage = React.lazy(() => import("./homepage"));
+const Newsletter = React.lazy(() => import("./newsletter"));
+const PageNotFound = React.lazy(() => import("./page-not-found"));
+const Playground = React.lazy(() => import("./playground"));
+const SiteSearch = React.lazy(() => import("./site-search"));
 
 const AllFlaws = React.lazy(() => import("./flaws"));
+const Sitemap = React.lazy(() => import("./sitemap"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
-const Sitemap = React.lazy(() => import("./sitemap"));
-const Playground = React.lazy(() => import("./playground"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
@@ -109,9 +112,9 @@ function DocumentLayout({ children }) {
 
 function PageOrPageNotFound({ pageNotFound, children }) {
   return pageNotFound ? (
-    <StandardLayout>
+    <LazyStandardLayout>
       <PageNotFound />
-    </StandardLayout>
+    </LazyStandardLayout>
   ) : (
     children
   );
@@ -149,9 +152,9 @@ export function App(appProps: HydrationData) {
       </LazyStandardLayout>
     ) : (
       <PageOrPageNotFound pageNotFound={pageNotFound}>
-        <StandardLayout>
+        <LazyStandardLayout>
           <Homepage {...appProps} />
-        </StandardLayout>
+        </LazyStandardLayout>
       </PageOrPageNotFound>
     );
 
@@ -167,9 +170,9 @@ export function App(appProps: HydrationData) {
       <Route
         path="/en-US/blog/*"
         element={
-          <StandardLayout extraClasses="blog">
+          <LazyStandardLayout extraClasses="blog">
             <Blog {...appProps} />
-          </StandardLayout>
+          </LazyStandardLayout>
         }
       />
       <Route
@@ -205,9 +208,9 @@ export function App(appProps: HydrationData) {
                 <Route
                   path="/_404/*"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <PageNotFound />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
 
@@ -221,9 +224,9 @@ export function App(appProps: HydrationData) {
                 <Route
                   path="/_homepage/*"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <Homepage />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
 
@@ -249,18 +252,18 @@ export function App(appProps: HydrationData) {
             <Route
               path="/search"
               element={
-                <StandardLayout>
+                <LazyStandardLayout>
                   <SiteSearch />
-                </StandardLayout>
+                </LazyStandardLayout>
               }
             />
             {PLUS_IS_ENABLED && (
               <Route
                 path="/plus/*"
                 element={
-                  <StandardLayout extraClasses="plus">
+                  <LazyStandardLayout extraClasses="plus">
                     <Plus {...appProps} />
-                  </StandardLayout>
+                  </LazyStandardLayout>
                 }
               />
             )}
@@ -268,9 +271,9 @@ export function App(appProps: HydrationData) {
               <Route
                 path="/advertising/*"
                 element={
-                  <StandardLayout>
+                  <LazyStandardLayout>
                     <Advertising {...appProps} />
-                  </StandardLayout>
+                  </LazyStandardLayout>
                 }
               />
             )}
@@ -287,41 +290,41 @@ export function App(appProps: HydrationData) {
             <Route
               path="/about/*"
               element={
-                <StandardLayout>
+                <LazyStandardLayout>
                   <About />
-                </StandardLayout>
+                </LazyStandardLayout>
               }
             />
             <Route
               path="/community/*"
               element={
-                <StandardLayout>
+                <LazyStandardLayout>
                   <Contribute />
-                </StandardLayout>
+                </LazyStandardLayout>
               }
             />
             <Route
               path="/community/spotlight/*"
               element={
-                <StandardLayout>
+                <LazyStandardLayout>
                   <ContributorSpotlight {...appProps} />
-                </StandardLayout>
+                </LazyStandardLayout>
               }
             />
             <Route
               path="/newsletter"
               element={
-                <StandardLayout>
+                <LazyStandardLayout>
                   <Newsletter />
-                </StandardLayout>
+                </LazyStandardLayout>
               }
             />
             <Route
               path="*"
               element={
-                <StandardLayout>
+                <LazyStandardLayout>
                   <PageNotFound />
-                </StandardLayout>
+                </LazyStandardLayout>
               }
             />
           </Routes>

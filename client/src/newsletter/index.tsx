@@ -7,7 +7,7 @@ import { useUserData } from "../user-context";
 
 import "./index.scss";
 
-export function Newsletter() {
+export default function Newsletter() {
   return (
     <MainContentContainer className="section-newsletter">
       <SignUpForm />

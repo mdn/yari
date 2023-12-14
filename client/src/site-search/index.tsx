@@ -10,7 +10,7 @@ import { SidePlacement } from "../ui/organisms/placement";
 const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
 
-export function SiteSearch() {
+export default function SiteSearch() {
   const isServer = useIsServer();
   const ga = useGA();
   const [searchParams] = useSearchParams();

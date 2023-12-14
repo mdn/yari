@@ -4,18 +4,18 @@ import { Routes, Route } from "react-router-dom";
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { MainContentContainer } from "../ui/atoms/page-content";
-import { PageNotFound } from "../page-not-found";
 import { MDN_PLUS_TITLE } from "../constants";
-import { Settings } from "../settings";
-import PlusDocs from "./plus-docs";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { DocParent } from "../../../libs/types/document";
 
 import "./index.scss";
-import OfferOverview from "./offer-overview";
 
 const AiHelp = React.lazy(() => import("./ai-help"));
 const Collections = React.lazy(() => import("./collections"));
+const OfferOverview = React.lazy(() => import("./offer-overview"));
+const PageNotFound = React.lazy(() => import("../page-not-found"));
+const PlusDocs = React.lazy(() => import("./plus-docs"));
+const Settings = React.lazy(() => import("../settings"));
 const Updates = React.lazy(() => import("./updates"));
 
 interface LayoutProps {

@@ -29,7 +29,6 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
-import { PageNotFound } from "../page-not-found";
 
 import "./index.scss";
 
@@ -49,8 +48,9 @@ import { PlayQueue } from "../playground/queue";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
-const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
+const PageNotFound = React.lazy(() => import("../page-not-found"));
+const Toolbar = React.lazy(() => import("./toolbar"));
 
 export class HTTPError extends Error {
   public readonly status: number;

@@ -23,7 +23,9 @@ type ContributorDetails = {
   quote: string;
 };
 
-export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
+export default function ContributorSpotlight(
+  props: HydrationData<ContributorDetails>
+) {
   const locale = useLocale();
   const { "*": slug } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;

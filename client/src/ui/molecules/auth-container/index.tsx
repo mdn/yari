@@ -3,7 +3,7 @@ import { SignUpLink } from "../../atoms/signup-link";
 
 import "./index.scss";
 
-export const AuthContainer = ({ logInGleanContext, signUpGleanContext }) => {
+export function AuthContainer({ logInGleanContext, signUpGleanContext }) {
   return (
     <ul className="auth-container">
       <li>
@@ -14,4 +14,4 @@ export const AuthContainer = ({ logInGleanContext, signUpGleanContext }) => {
       </li>
     </ul>
   );
-};
+}
