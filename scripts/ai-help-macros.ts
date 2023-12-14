@@ -348,8 +348,8 @@ function buildBCDSupportString(
               item.release_date ? ` (released ${item.release_date})` : ""
             }`
           : isNotSupportedAtAll(item)
-          ? "No support"
-          : null,
+            ? "No support"
+            : null,
       ]
         .flat()
         .filter((x) => Boolean(x));

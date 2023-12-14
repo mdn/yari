@@ -337,8 +337,8 @@ function AIHelpAssistantResponse({
           {message.status === MessageStatus.Errored
             ? MESSAGE_FAILED
             : message.status === MessageStatus.InProgress
-            ? MESSAGE_ANSWERING
-            : MESSAGE_ANSWERED}
+              ? MESSAGE_ANSWERING
+              : MESSAGE_ANSWERED}
         </div>
       )}
       {message.content && (
@@ -756,10 +756,10 @@ export function AIHelpInner() {
                           isLoading
                             ? MESSAGE_SEARCHING
                             : isResponding
-                            ? MESSAGE_ANSWERING
-                            : hasConversation
-                            ? "Ask your follow up question"
-                            : "Ask your question"
+                              ? MESSAGE_ANSWERING
+                              : hasConversation
+                                ? "Ask your follow up question"
+                                : "Ask your question"
                         )}
                       />
                       <div className="ai-help-input-actions">
