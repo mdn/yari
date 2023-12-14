@@ -31,7 +31,7 @@ always indicating when the sources are from outside MDN.
 Navigate to [AI Help](/en-US/plus/ai-help) via the top menu bar on MDN pages.
 
 If you're not logged in or don't have an MDN Plus account, you'll be prompted to
-sign up or log in using your Mozilla Account.<!-- 1 -->
+sign up or log in using your Mozilla Account.
 
 ![Screenshot of AI Help page as non-logged in user, AI Help button highlighted as well as the Log in/Sign up options](/assets/plus-docs/ai-help/login-signup.png)
 
