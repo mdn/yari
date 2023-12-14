@@ -15303,7 +15303,7 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
-web-features@0.5.0-alpha.2:
+web-features@^0.5.0-alpha.2:
   version "0.5.0-alpha.2"
   resolved "https://registry.yarnpkg.com/web-features/-/web-features-0.5.0-alpha.2.tgz#b95e614ce80fe0a0b728eeb4532bec14e6c3d422"
   integrity sha512-yYIOX1EAp7SOhVKefA3kMkQLH78hfoMeJ8UjatXRzxB2O9vt134Xto1m8OrJdHCAq1h+yZJQIxZiX/PXv7XlPQ==

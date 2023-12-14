@@ -48,7 +48,9 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     ? "not"
     : undefined;
 
-  const feedbackLink = `${SURVEY_URL}?page=${pathname}&level=${level}`;
+  const feedbackLink = `${SURVEY_URL}?page=${encodeURIComponent(
+    pathname
+  )}&level=${level}`;
 
   const supported = (browser: string) => {
     const version: string | undefined = status.support?.[browser.toLowerCase()];
@@ -119,20 +121,20 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
         <Icon name="chevron" />
       </summary>
       <div className="extra">
-        {level === "high" ? (
+        {level === "high" && low_date ? (
           <p>
             This feature is well established and works across many devices and
             browser versions. It’s been available across browsers since{" "}
-            {low_date?.toLocaleDateString("en-US", {
+            {low_date.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
             })}
             .
           </p>
-        ) : level === "low" ? (
+        ) : level === "low" && low_date ? (
           <p>
             Since{" "}
-            {low_date?.toLocaleDateString("en-US", {
+            {low_date.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
             })}
@@ -151,6 +153,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
               href="/en-US/blog/baseline-evolution-on-mdn/"
               data-glean={BASELINE.LINK_LEARN_MORE}
               target="_blank"
+              className="learn-more"
             >
               Learn more
             </a>
@@ -168,7 +171,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
               target="_blank"
               rel="noreferrer"
             >
-              <span className="visually-hidden">Feedback</span>
+              Report feedback
             </a>
           </li>
         </ul>
