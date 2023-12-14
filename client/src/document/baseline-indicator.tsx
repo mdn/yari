@@ -171,7 +171,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
               target="_blank"
               rel="noreferrer"
             >
-              Give feedback
+              Report feedback
             </a>
           </li>
         </ul>
