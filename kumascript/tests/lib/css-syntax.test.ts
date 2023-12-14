@@ -42,5 +42,8 @@ describe("CSSSyntax", () => {
 
   it("renders type", async () => {
     expect(await render("Web/CSS/ratio", "css-type")).toMatchSnapshot("ratio");
+    expect(await render("Web/CSS/alpha-value", "css-type")).toMatchSnapshot(
+      "alpha-value"
+    );
   });
 });
