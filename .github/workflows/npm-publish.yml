@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v4
         if: steps.release.outputs.release_created
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
           registry-url: "https://registry.npmjs.org"
 

@@ -119,7 +119,7 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
@@ -131,7 +131,7 @@ jobs:
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -294,7 +294,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
@@ -312,7 +312,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
@@ -342,7 +342,7 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
@@ -369,6 +369,13 @@ jobs:
         run: yarn ai-help update-index
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
+      - name: Update AI Help index with macros
+        run: yarn ai-help-macros update-index
+        env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
