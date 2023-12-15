@@ -308,22 +308,16 @@ name causing the problem.
 
 1. To fix problems with `gifsicle`:
 
-   ```shell
    brew install automake autoconf libtool
-   ```
 
 1. To fix problems with `pngquant-bin`:
 
-   ```shell
    brew install pkg-config
-   ```
 
 1. To fix problems with `mozjpeg`:
 
-   ```shell
-   brew install libpng
-   sudo ln -s /opt/homebrew/Cellar/libpng/1.6.40/lib/libpng16.a /usr/local/lib/libpng16.a
-   ```
+   brew install libpng sudo ln -s
+   /opt/homebrew/Cellar/libpng/1.6.40/lib/libpng16.a /usr/local/lib/libpng16.a
 
 You may need to adjust the path to `libpng16.a` depending on the version of
 `libpng` you have installed.
