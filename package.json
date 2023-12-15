@@ -70,7 +70,7 @@
     "@fast-csv/parse": "^4.3.6",
     "@mdn/bcd-utils-api": "^0.0.5",
     "@mdn/browser-compat-data": "^5.4.5",
-    "@mozilla/glean": "2.0.5",
+    "@mozilla/glean": "3.0.0",
     "@sentry/integrations": "^7.88.0",
     "@sentry/node": "^7.88.0",
     "@stripe/stripe-js": "^2.2.1",
