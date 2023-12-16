@@ -14,7 +14,7 @@ function parse(value) {
   try {
     JSON.parse(value);
   } catch (e) {
-    throw new Error(`Error parsing value '${value}' in .env file`, {
+    throw new Error(`Error parsing value '${value}' in .env file: `, {
       cause: e,
     });
   }
