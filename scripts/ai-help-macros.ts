@@ -308,7 +308,7 @@ ${Object.entries(data.__compat.support)
     ([browser, support]) =>
       `<tr><td>${bcd.browsers[browser].name}</td><td>${buildBCDSupportString(
         bcd.browsers[browser],
-        support
+        support as SimpleSupportStatement[]
       )}</td></tr>`
   )
   .join("\n")}
