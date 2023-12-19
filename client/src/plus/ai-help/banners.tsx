@@ -18,7 +18,7 @@ export function AiHelpBanner() {
         <strong>
           {isSubscriber
             ? "GPT-4-powered AI Help."
-            : "Supercharge your AI Help help experience with our paid subscriptions."}
+            : "Supercharge your AI Help experience with our paid subscriptions."}
         </strong>
       </p>
       <p>
