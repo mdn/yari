@@ -1,6 +1,38 @@
+import { useMemo } from "react";
 import { AI_HELP } from "../../telemetry/constants";
+import { Icon } from "../../ui/atoms/icon";
 import { SignUpLink } from "../../ui/atoms/signup-link";
+import { useUserData } from "../../user-context";
 import { PlusLoginBanner } from "../common/login-banner";
+import { isPlusSubscriber } from "../../utils";
+
+export function AiHelpBanner() {
+  const user = useUserData();
+
+  const isSubscriber = useMemo(() => isPlusSubscriber(user), [user]);
+
+  return (
+    <div className="ai-help-banner">
+      <p>
+        <Icon name="bell-ring" />
+        <strong>
+          {isSubscriber
+            ? "GPT-4-powered AI Help."
+            : "Supercharge your AI Help help experience with our paid subscriptions."}
+        </strong>
+      </p>
+      <p>
+        {isSubscriber
+          ? "Now with chat history, enhanced context, and optimized prompts."
+          : "Upgrade to MDN Plus 5 or MDN Supporter 10 to unlock the potential of GPT-4-powered AI Help."}
+      </p>
+      <p>This is a beta feature.</p>
+      {!isSubscriber && (
+        <SignUpLink gleanContext={`${AI_HELP}: upsell-banner`} toPlans={true} />
+      )}
+    </div>
+  );
+}
 
 export function AiLoginBanner() {
   return (
