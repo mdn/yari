@@ -16,7 +16,7 @@ import {
   BUILD_OUT_ROOT,
   SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
-import { VALID_LOCALES } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -79,7 +79,9 @@ async function buildDocumentInteractive(
 
     return {
       document,
-      doc: await buildDocument(document, { plainHTML: true }),
+      doc: await buildDocument(document, {
+        plainHTML: document.metadata.locale === DEFAULT_LOCALE,
+      }),
       skip: false,
     };
   } catch (e) {
