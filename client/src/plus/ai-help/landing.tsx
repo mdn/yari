@@ -51,7 +51,7 @@ export function AIHelpLanding() {
               <GPT4SVG />
               <figcaption>
                 <h3>GPT-4-Powered</h3>
-                <p>Now based on GPT-4 for peak performance</p>
+                <p>Unlock GPT-4's potential with our paid subscriptions</p>
               </figcaption>
             </figure>
           </div>
