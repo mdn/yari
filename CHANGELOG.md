@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.38.2](https://github.com/mdn/yari/compare/v2.38.1...v2.38.2) (2023-12-19)
+
+
+### Bug Fixes
+
+* **ai-help:** avoid plainHTML for other locales ([#10206](https://github.com/mdn/yari/issues/10206)) ([fa38994](https://github.com/mdn/yari/commit/fa38994b16af3ece7523ac0e6e58b10884d95072))
+* **ai-help:** use GPT-3.5 for free users ([#10205](https://github.com/mdn/yari/issues/10205)) ([23b78d9](https://github.com/mdn/yari/commit/23b78d9a001bb5a50e318cb1c02a3ff695392ebc))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @supabase/supabase-js from 2.39.0 to 2.39.1 ([#10201](https://github.com/mdn/yari/issues/10201)) ([cbe98fe](https://github.com/mdn/yari/commit/cbe98fe00720a7f01004ccbd2ba32c5cc6ff5216))
+* **deps-dev:** bump @swc/core from 1.3.100 to 1.3.101 ([#10196](https://github.com/mdn/yari/issues/10196)) ([24e5d79](https://github.com/mdn/yari/commit/24e5d79c44fcd27d11000d4994161e3fd597a837))
+* **deps-dev:** bump eslint from 8.55.0 to 8.56.0 ([#10195](https://github.com/mdn/yari/issues/10195)) ([f41d7a6](https://github.com/mdn/yari/commit/f41d7a608a61db9fd79e80791ee7de732f9bc203))
+* **deps-dev:** bump eslint-plugin-import from 2.29.0 to 2.29.1 ([#10189](https://github.com/mdn/yari/issues/10189)) ([e7ed9fc](https://github.com/mdn/yari/commit/e7ed9fc91f22653f82a9edcb52350b776d1c47a8))
+* **deps-dev:** bump tailwindcss from 3.3.6 to 3.3.7 ([#10202](https://github.com/mdn/yari/issues/10202)) ([9345064](https://github.com/mdn/yari/commit/9345064f6ad374d6002b5ced25b6a99f71a766b5))
+* **deps-dev:** bump the dependencies group in /testing/integration with 1 update ([#10198](https://github.com/mdn/yari/issues/10198)) ([f91600b](https://github.com/mdn/yari/commit/f91600bfcb262a4b63d1fb2d143a3428d712cf3e))
+* **deps-dev:** bump the types group with 1 update ([#10192](https://github.com/mdn/yari/issues/10192)) ([e48f570](https://github.com/mdn/yari/commit/e48f5700a9a787a174ec5dc758c47f4d4389a725))
+* **deps:** bump @mdn/browser-compat-data from 5.4.5 to 5.5.0 ([#10193](https://github.com/mdn/yari/issues/10193)) ([ad64d39](https://github.com/mdn/yari/commit/ad64d391d36f4ae1cbbd13bea1e517d17800b803))
+* **deps:** bump openai from 4.21.0 to 4.22.0 ([#10190](https://github.com/mdn/yari/issues/10190)) ([e81dedc](https://github.com/mdn/yari/commit/e81dedc1819e9cad504b761e45e1ee94c413f7a8))
+* **deps:** bump openai from 4.22.0 to 4.23.0 ([#10194](https://github.com/mdn/yari/issues/10194)) ([0bc0169](https://github.com/mdn/yari/commit/0bc0169b4d6ab4b4ed563b80977595cbcacfda30))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#10197](https://github.com/mdn/yari/issues/10197)) ([4913773](https://github.com/mdn/yari/commit/4913773d169151afaca73bf4cb66123c250c7fe5))
+* **deps:** bump the sentry group with 2 updates ([#10188](https://github.com/mdn/yari/issues/10188)) ([2863745](https://github.com/mdn/yari/commit/2863745a8db5727b29e618f790f166d0850866ca))
+* **deps:** bump web-features from 0.5.0-alpha.2 to 0.5.0 ([#10204](https://github.com/mdn/yari/issues/10204)) ([cae6fb7](https://github.com/mdn/yari/commit/cae6fb72b9b1e3989d2b37c602ab1149bd997b74))
+
 ## [2.38.1](https://github.com/mdn/yari/compare/v2.38.0...v2.38.1) (2023-12-14)
 
 
