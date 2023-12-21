@@ -21,8 +21,10 @@ var featureList = Object.keys(features).sort();
 var output = '';
 
 for (featureName of featureList) {
-  output += `<h2>${featureName}</h2>`;
-  output += await template("compat", [`webextensions.api.${featureName}`, 2, true]);
+  output += `<h2>${featureName}</h2>
+  <div class="bc-data" data-query="webextensions.api.${featureName}" data-depth="2" data-multiple="false">
+    If you're able to see this, something went wrong on this page.
+  </div>`;
 }
 
 %>
