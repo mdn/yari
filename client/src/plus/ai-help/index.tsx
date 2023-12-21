@@ -19,7 +19,7 @@ import {
   Quota,
   useAiChat,
 } from "./use-ai";
-import { AiUpsellBanner } from "./banners";
+import { AiHelpBanner, AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
@@ -57,6 +57,7 @@ import {
   MESSAGE_SEARCHED,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
+import { isPlusSubscriber } from "../../utils";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -124,14 +125,7 @@ function AIHelpAuthenticated() {
         </p>
       </Container>
       <Container>
-        <div className="ai-help-banner">
-          <p>
-            <Icon name="bell-ring" />
-            <strong>GPT-4-powered AI Help.</strong>
-          </p>
-          <p>Now with chat history, enhanced context, and optimized prompts.</p>
-          <p>This is a beta feature.</p>
-        </div>
+        <AiHelpBanner />
       </Container>
       <AIHelpInner />
     </div>
@@ -526,6 +520,7 @@ export function AIHelpInner() {
   const { queuedExamples, setQueue } = useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
+  const user = useUserData();
 
   const {
     isFinished,
@@ -551,7 +546,7 @@ export function AIHelpInner() {
   const isQuotaLoading = quota === undefined;
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
-  const gptVersion = "GPT-4";
+  const gptVersion = isPlusSubscriber(user) ? "GPT-4" : "GPT-3.5";
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
