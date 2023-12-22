@@ -31,6 +31,7 @@ import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
+import { macroRenderTimes } from "../kumascript/src/render.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -403,6 +404,42 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
+function nsToMs(bigint: bigint) {
+  return Number(bigint / BigInt(1_000)) / 1_000;
+}
+
+function formatMacroRenderReport(header = "Macro render report") {
+  const out = ["\n"];
+  out.push(header);
+
+  // Prepare data.
+  const stats = Object.entries(macroRenderTimes).map(([name, times]) => {
+    const sortedTimes = times.slice().sort(compareBigInt);
+    return {
+      name,
+      min: sortedTimes.at(0),
+      max: sortedTimes.at(-1),
+      count: times.length,
+      sum: times.reduce((acc, value) => acc + value, BigInt(0)),
+    };
+  });
+
+  // Sort by total render time.
+  stats.sort(({ sum: a }, { sum: b }) => Number(b - a));
+
+  // Format data.
+  out.push(
+    ["name", "count", "min (ms)", "avg (ms)", "max (ms)", "sum (ms)"].join(",")
+  );
+  for (const { name, min, max, count, sum } of stats) {
+    const avg = sum / BigInt(count);
+    out.push([name, count, ...[min, avg, max, sum].map(nsToMs)].join(","));
+  }
+
+  out.push("\n");
+  return out.join("\n");
+}
+
 interface BuildArgsAndOptions {
   args: {
     files?: string[];
@@ -561,6 +598,7 @@ program
         }
         console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
         console.log(formatTotalFlaws(totalFlaws));
+        console.log(formatMacroRenderReport());
       }
     } catch (error) {
       // So you get a stacktrace in the CLI output
@@ -571,3 +609,12 @@ program
   });
 
 program.run();
+function compareBigInt(a: bigint, b: bigint): number {
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
