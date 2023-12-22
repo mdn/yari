@@ -115,7 +115,7 @@
     "mdast-util-from-markdown": "^2.0.0",
     "mdast-util-phrasing": "^4.0.0",
     "mdn-data": "^2.3.0",
-    "open": "^9.1.0",
+    "open": "^10.0.1",
     "open-editor": "^4.1.1",
     "openai": "^4.24.1",
     "prism-svelte": "^0.5.0",
