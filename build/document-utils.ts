@@ -18,20 +18,17 @@ const TRANSFORM_STRINGS = new Map(
 /**
  * Temporary fix for long titles in breadcrumbs
  * @see https://github.com/mdn/yari-private/issues/612
- * @param {String} title : the title of the document
+ * @param title : the title of the document
  * @returns transformed title or original title as a string
  */
-function transformTitle(title) {
+function transformTitle(title: string) {
   // if the title contains a string like `<input>: The Input (Form Input) element`,
   // return only the `<input>` portion of the title
-  if (/<\w+>/g.test(title)) {
-    return /<\w+>/g.exec(title)[0];
-  }
-
+  const htmlTagTopic = /^<\w+>/.exec(title)?.[0];
   // if the above did not match, see if it is one of the strings in the
   // transformStrings object and return the relevant replacement or
   // the unmodified title string
-  return TRANSFORM_STRINGS.get(title) || title;
+  return htmlTagTopic ?? TRANSFORM_STRINGS.get(title) ?? title;
 }
 
 /**
@@ -64,13 +61,13 @@ export function addBreadcrumbData(url, document) {
     }
   }
 
-  if (!document.shortTitle) {
-    document.shortTitle = transformTitle(document.title);
+  if (!document.short_title) {
+    document.short_title = transformTitle(document.title);
   }
 
   parents.push({
     uri: url,
-    title: document.shortTitle,
+    title: document.short_title,
   });
   document.parents = parents;
 }

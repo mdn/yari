@@ -72,15 +72,26 @@
   --gutter: 1rem; /* Space between content and browser window */
   --top-navigation-height: 4rem;
   --top-navigation-offset: -4rem;
+  --top-banner-inner-height: 3.125rem;
+  // top-banner-inner-height + 2 * padding;
+  --top-banner-height: calc(var(--top-banner-inner-height) + 2 * 0.125rem);
+  // + border
+  --top-banner-outer-height: calc(var(--top-banner-height) + 2 * 1px);
 
-  --z-index-back: -1;
-  --z-index-top: 9999;
+  /* Z-Indexes
+     Keep this in order, and avoid reusing variables so elements each
+     exist on a distinct layer - we hit a lot of bugs if they don't */
   --z-index-a11y: 10000;
+  --z-index-modal-content: 801;
+  --z-index-modal-overlay: 800;
+  --z-index-main-header: 700;
+  --z-index-sidebar-mobile: 600;
   --z-index-mid: 500;
   --z-index-nav-menu: 200;
   --z-index-search-results: 101;
   --z-index-low: 100;
   --z-index-search-results-home: 99;
+  --z-index-back: -1;
 
   /* Features */
   --elem-radius: 0.25rem;
@@ -88,10 +99,14 @@
   --form-elem-height: 2rem;
 
   /* Major Components */
-  --sticky-header-height: 0;
   --top-nav-height: 4rem;
-  --main-document-header-height: 6rem;
+  --article-actions-container-height: 2rem;
   --icon-size: 1rem;
+  --sticky-header-without-actions-height: calc(var(--top-nav-height) + 1px);
+  --sticky-header-with-actions-height: calc(
+    var(--sticky-header-without-actions-height) +
+      var(--article-actions-container-height) + 1px
+  );
 }
 
 @media screen and (min-width: $screen-md) {
@@ -108,7 +123,11 @@
 }
 
 :target {
-  scroll-margin-top: var(--sticky-header-height);
+  scroll-margin-top: var(--sticky-header-with-actions-height);
+}
+
+.sticky-header-container.without-actions ~ * :target {
+  scroll-margin-top: var(--sticky-header-without-actions-height);
 }
 
 body {
@@ -194,6 +213,11 @@ a {
     mask-size: cover;
     width: 10px;
   }
+}
+
+button.button[disabled],
+input[disabled] {
+  cursor: not-allowed;
 }
 
 .expand-this-link:after {
@@ -304,4 +328,39 @@ u {
   .icon {
     background-color: CanvasText !important;
   }
+}
+
+sup.new {
+  background: var(--new-background);
+  border-radius: 1em;
+  color: var(--new-color);
+  display: inline-block;
+  font-size: 0.45rem;
+  font-weight: bold;
+  line-height: 1.7;
+  padding: 0 0.4em;
+  text-rendering: optimizeLegibility;
+  text-transform: uppercase;
+
+  &.beta {
+    background: var(--new-background-beta, var(--new-background));
+  }
+}
+
+.sticky-header-container {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-main-header);
+}
+
+.feedback-link::before {
+  background-color: var(--feedback-link-icon, var(--text-link));
+  content: "";
+  display: inline-flex;
+  height: 1em;
+  margin-right: 0.4em;
+  mask-image: url("./assets/icons/feedback.svg");
+  mask-size: cover;
+  vertical-align: middle;
+  width: 1em;
 }

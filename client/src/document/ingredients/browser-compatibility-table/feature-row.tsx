@@ -294,7 +294,7 @@ function FlagsNote({
         </>
       )}
       {hasAddedVersion || hasRemovedVersion ? ": this" : "This"} feature is
-      behind the
+      behind the{" "}
       {flags.map((flag, i) => {
         const valueToSet = flag.value_to_set && (
           <>
@@ -305,7 +305,7 @@ function FlagsNote({
         return (
           <React.Fragment key={flag.name}>
             <code>{flag.name}</code>
-            {flag.type === "preference" && <> preferences{valueToSet}</>}
+            {flag.type === "preference" && <> preference{valueToSet}</>}
             {flag.type === "runtime_flag" && <> runtime flag{valueToSet}</>}
             {i < flags.length - 1 && " and the "}
           </React.Fragment>
@@ -388,11 +388,11 @@ function getNotes(
                 label: "Full support",
               }
             : isNotSupportedAtAll(item)
-            ? {
-                iconName: "footnote",
-                label: "No support",
-              }
-            : null,
+              ? {
+                  iconName: "footnote",
+                  label: "No support",
+                }
+              : null,
         ]
           .flat()
           .filter(isTruthy);

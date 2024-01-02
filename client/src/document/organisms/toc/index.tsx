@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import "./index.scss";
 import { Toc } from "../../../../../libs/types/document";
 import { useFirstVisibleElement } from "../../hooks";
-import { Placement } from "./placement";
-import { PLACEMENT_ENABLED } from "../../../env";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { TOC_CLICK } from "../../../telemetry/constants";
 
 export function TOC({ toc }: { toc: Toc[] }) {
   const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
@@ -12,7 +12,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
   const observedElements = React.useCallback(() => {
     const mainElement = document.querySelector("main") ?? document;
     const elements = mainElement.querySelectorAll(
-      "h1, h1 ~ *:not(section), h2, h2 ~ *:not(section), h3, h3 ~ *:not(section)"
+      "h1, h1 ~ *:not(section), h2:not(.document-toc-heading), h2:not(.document-toc-heading) ~ *:not(section), h3, h3 ~ *:not(section)"
     );
     return Array.from(elements);
   }, []);
@@ -61,7 +61,6 @@ export function TOC({ toc }: { toc: Toc[] }) {
           </ul>
         </section>
       </div>
-      {PLACEMENT_ENABLED && <Placement />}
     </>
   );
 }
@@ -72,14 +71,17 @@ function TOCItem({
   sub,
   currentViewedTocItem,
 }: Toc & { currentViewedTocItem: string }) {
+  const gleanClick = useGleanClick();
+  const href = `#${id.toLowerCase()}`;
   return (
     <li className={`document-toc-item ${sub ? "document-toc-item-sub" : ""}`}>
       <a
         className="document-toc-link"
         key={id}
         aria-current={currentViewedTocItem === id.toLowerCase() || undefined}
-        href={`#${id.toLowerCase()}`}
+        href={href}
         dangerouslySetInnerHTML={{ __html: text }}
+        onClick={() => gleanClick(`${TOC_CLICK}: ${href}`)}
       />
     </li>
   );

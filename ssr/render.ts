@@ -3,9 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { renderToString } from "react-dom/server";
+import { HydrationData } from "../libs/types/hydration";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
+import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT, BASE_URL } from "../libs/env";
 
 const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 
@@ -142,16 +143,6 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
-interface HydrationData {
-  doc?: any;
-  pageNotFound?: boolean;
-  hyData?: any;
-  pageTitle?: any;
-  possibleLocales?: any;
-  locale?: any;
-  noIndexing?: any;
-}
-
 export default function render(
   renderApp,
   {
@@ -162,19 +153,24 @@ export default function render(
     possibleLocales = null,
     locale = null,
     noIndexing = null,
+    image = null,
+    blogMeta = null,
   }: HydrationData = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
   const rendered = renderToString(renderApp);
 
-  let canonicalURL = "https://developer.mozilla.org";
+  let canonicalURL = BASE_URL;
 
   let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
 
   const hydrationData: HydrationData = {};
   const translations: string[] = [];
+  if (blogMeta) {
+    hydrationData.blogMeta = blogMeta;
+  }
   if (pageNotFound) {
     escapedPageTitle = `🤷🏽‍♀️ Page not found | ${
       escapedPageTitle || "MDN Web Docs"
@@ -237,14 +233,24 @@ export default function render(
     )
     .join("");
 
+  // Open Graph protocol expects `language_TERRITORY` format.
+  const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
+    "-",
+    "_"
+  );
+
   const og = new Map([
     ["title", escapedPageTitle],
     ["url", canonicalURL],
-    ["locale", locale || (doc && doc.locale) || "en-US"],
+    ["locale", ogLocale],
   ]);
 
   if (pageDescription) {
     og.set("description", pageDescription);
+  }
+
+  if (image) {
+    og.set("image", image);
   }
 
   const root = `<div id="root">${rendered}</div><script type="application/json" id="hydration">${
@@ -263,7 +269,8 @@ export default function render(
       ? "noindex, nofollow"
       : "index, follow";
   const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
-  const ssr_data = [...translations, ...webfontTags, robotsMeta];
+  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
+  const ssr_data = [...translations, ...webfontTags, rssLink, robotsMeta];
   let html = buildHtml;
   html = html.replace(
     '<html lang="en"',

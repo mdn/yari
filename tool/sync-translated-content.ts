@@ -28,7 +28,7 @@ const ORPHANED = "orphaned";
 
 const DEFAULT_LOCALE_LC = DEFAULT_LOCALE.toLowerCase();
 
-export function syncAllTranslatedContent(locale: string) {
+export async function syncAllTranslatedContent(locale: string) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -56,7 +56,7 @@ export function syncAllTranslatedContent(locale: string) {
 
   for (const f of files) {
     const { conflicting, moved, followed, orphaned, redirect, renamed } =
-      syncTranslatedContent(f, locale);
+      await syncTranslatedContent(f, locale);
     if (conflicting) {
       stats.conflictingDocs += 1;
     }
@@ -94,15 +94,17 @@ function resolve(slug: string) {
   return doc?.metadata.slug ?? slug;
 }
 
-function mdOrHtmlExists(filePath: string) {
-  const dir = path.dirname(filePath);
+function mdOrHtmlExists(folderPath: string) {
   return (
-    fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
-    fs.existsSync(path.join(dir, HTML_FILENAME))
+    fs.existsSync(path.join(folderPath, MARKDOWN_FILENAME)) ||
+    fs.existsSync(path.join(folderPath, HTML_FILENAME))
   );
 }
 
-export function syncTranslatedContent(inFilePath: string, locale: string) {
+export async function syncTranslatedContent(
+  inFilePath: string,
+  locale: string
+) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -156,19 +158,16 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     metadata.slug = metadata.slug.substring(0, hash);
   };
 
-  const getFilePath = () => {
-    const folderPath = path.join(
+  const getFileDir = () => {
+    return path.join(
       CONTENT_TRANSLATED_ROOT,
       locale,
       slugToFolder(metadata.slug)
     );
-
-    const filePath = path.join(folderPath, fileName);
-    return filePath;
   };
 
   dehash();
-  let filePath = getFilePath();
+  let folderPath = getFileDir();
 
   status.orphaned = !mdOrHtmlExists(
     path.join(CONTENT_ROOT, DEFAULT_LOCALE_LC, slugToFolder(metadata.slug))
@@ -183,22 +182,23 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     status.followed = false;
     metadata.slug = `${ORPHANED}/${metadata.slug}`;
     status.moved = true;
-    filePath = getFilePath();
-    if (mdOrHtmlExists(filePath)) {
+    folderPath = getFileDir();
+    if (mdOrHtmlExists(folderPath)) {
+      const filePath = path.join(folderPath, fileName);
       log.log(`${inFilePath} → ${filePath}`);
       throw new Error(`file: ${filePath} already exists!`);
     }
-  } else if (status.moved && mdOrHtmlExists(filePath)) {
+  } else if (status.moved && mdOrHtmlExists(folderPath)) {
     console.log(`unrooting ${inFilePath} (conflicting translation)`);
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
-    filePath = getFilePath();
-    if (mdOrHtmlExists(filePath)) {
+    folderPath = getFileDir();
+    if (mdOrHtmlExists(folderPath)) {
       metadata.slug = `${metadata.slug}_${crypto
         .createHash("md5")
         .update(oldMetadata.slug)
         .digest("hex")}`;
-      filePath = getFilePath();
+      folderPath = getFileDir();
     }
   }
 
@@ -207,14 +207,15 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     buildURL(VALID_LOCALES.get(locale), metadata.slug),
   ];
 
+  const filePath = path.join(folderPath, fileName);
   log.log(`${inFilePath} → ${filePath}`);
-  Document.updateWikiHistory(
+  await Document.updateWikiHistory(
     path.join(CONTENT_TRANSLATED_ROOT, locale.toLowerCase()),
     oldMetadata.slug,
     metadata.slug
   );
   if (status.moved) {
-    moveContent(path.dirname(inFilePath), path.dirname(filePath));
+    moveContent(path.dirname(inFilePath), folderPath);
     metadata.original_slug = oldMetadata.slug;
   }
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
@@ -249,13 +250,13 @@ function moveContent(inFileDir: string, outFileDir: string) {
   }
 }
 
-export function syncTranslatedContentForAllLocales() {
+export async function syncTranslatedContentForAllLocales() {
   let moved = 0;
   for (const locale of VALID_LOCALES.keys()) {
     if (locale === DEFAULT_LOCALE_LC) {
       continue;
     }
-    const { movedDocs } = syncAllTranslatedContent(locale);
+    const { movedDocs } = await syncAllTranslatedContent(locale);
     moved += movedDocs;
   }
   return moved;

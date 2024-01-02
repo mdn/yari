@@ -30,14 +30,14 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
     await page.click("#my-mdn-plus-button");
     await page.click(".signout-form button[type='submit']");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/"));
+    expect(page.url()).toBe(testURL("/en-US/"));
   });
 
   test("Signing out", async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
     // open up user menu
@@ -56,6 +56,6 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click(".signout-form button[type='submit']");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/"));
+    expect(page.url()).toBe(testURL("/en-US/"));
   });
 });

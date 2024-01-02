@@ -3,6 +3,7 @@ import { Icon } from "../icon";
 import InternalLink from "../internal-link";
 
 import "./index.scss";
+import { FormMethod } from "react-router-dom";
 
 type ButtonProps = {
   title?: string;
@@ -25,6 +26,7 @@ type ButtonProps = {
    * Should the button be disabled? This is optional with a default of false
    */
   isDisabled?: boolean;
+  formMethod?: FormMethod | "dialog";
   onClickHandler?: (event: React.MouseEvent<Element>) => void;
   onFocusHandler?: (event: React.FocusEvent<Element>) => void;
 
@@ -52,6 +54,7 @@ export const Button = ({
   size,
   state,
   value,
+  formMethod,
   children,
   ...passthroughAttrs
 }: ButtonProps) => {
@@ -122,6 +125,7 @@ export const Button = ({
       onFocus={onFocusHandler}
       value={value}
       name={name}
+      formMethod={formMethod}
       {...passthroughAttrs}
     >
       <span className="button-wrap">{renderContent()}</span>

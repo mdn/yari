@@ -1,3 +1,5 @@
+import type { SupportStatus } from "./web-features.js";
+
 import { InteractiveEditorHeights } from "../../client/src/document/ingredients/interactive-example.js";
 
 export interface Source {
@@ -127,7 +129,7 @@ export type Toc = {
 
 export interface DocMetadata {
   title: string;
-  shortTitle: string;
+  short_title: string;
   locale: string;
   native: string;
   pageTitle: string;
@@ -148,6 +150,7 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
+  baseline?: SupportStatus;
   hash?: string;
 }
 

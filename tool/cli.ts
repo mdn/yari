@@ -41,6 +41,7 @@ import {
   MacroInvocationError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
+import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -212,8 +213,18 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
 interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
-    format: "md-table" | "json";
+    format: "md-table" | "csv" | "json";
     unusedOnly: boolean;
+  };
+}
+
+interface WhatsdeployedActionParameters extends ActionParameters {
+  args: {
+    directory: string;
+  };
+  options: {
+    output: string;
+    dryRun: boolean;
   };
 }
 
@@ -225,7 +236,11 @@ function tryOrExit<T extends ActionParameters>(
       await f({ options, ...args } as T);
     } catch (e) {
       const error = e as Error;
-      if (options.verbose || options.v) {
+      if (
+        options.verbose ||
+        options.v ||
+        (error instanceof Error && !error.message)
+      ) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -334,12 +349,12 @@ program
     tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
-      const changes = Document.remove(slug, locale, {
+      const changes = await Document.remove(slug, locale, {
         recursive,
         redirect,
         dry: true,
       });
-      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.green(`Will delete ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
         console.log(
@@ -365,11 +380,40 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, {
+        const deletedDocs = await Document.remove(slug, locale, {
           recursive,
           redirect,
         });
-        console.log(chalk.green(`Moved ${removed.length} documents.`));
+        console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));
+
+        // find references to the deleted document in content
+        console.log("Checking references...");
+        const referringFiles = [];
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const deleted of deletedDocs) {
+            const url = `/${locale}/docs/${deleted}`;
+            if (rawBody.includes(url)) {
+              referringFiles.push(`${document.url}`);
+            }
+          }
+        }
+
+        if (referringFiles.length) {
+          console.warn(
+            chalk.yellow(
+              `\n${referringFiles.length} files are referring to the deleted document. ` +
+                `Please update the following files to remove the links:\n\t${referringFiles.join(
+                  "\n\t"
+                )}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the deleted document.")
+          );
+        }
       }
     })
   )
@@ -393,7 +437,7 @@ program
     tryOrExit(async ({ args, options }: MoveActionParameters) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
-      const changes = Document.move(oldSlug, newSlug, locale, {
+      const changes = await Document.move(oldSlug, newSlug, locale, {
         dry: true,
       });
       console.log(
@@ -415,7 +459,7 @@ program
             default: true,
           });
       if (run) {
-        const moved = Document.move(oldSlug, newSlug, locale);
+        const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
     })
@@ -674,7 +718,7 @@ program
             redirectedDocs,
             renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(locale);
+          } = await syncAllTranslatedContent(locale);
           console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -706,7 +750,7 @@ program
     tryOrExit(async ({ args, options }: FixFlawsActionParameters) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
-      const allDocs = Document.findAll({
+      const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
       for (const document of allDocs.iterDocs()) {
@@ -771,7 +815,7 @@ program
       if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
         throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
       }
-      const documents = Document.findAll();
+      const documents = await Document.findAll();
       if (!documents.count) {
         throw new Error("No documents to analyze");
       }
@@ -1001,7 +1045,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           .map((m) => `"${m}"`)
           .join(", ")} within content folder(s) matching "${foldersearch}"`
       );
-      const documents = Document.findAll({
+      const documents = await Document.findAll({
         folderSearch: foldersearch,
       });
       if (!documents.count) {
@@ -1073,7 +1117,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 console.log(`${flaw.macroSource} --> ${suggestion}`);
               }
               console.groupEnd();
-              Document.update(
+              await Document.update(
                 document.url,
                 document.rawBody,
                 document.metadata
@@ -1094,7 +1138,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
-          Document.update(document.url, newRawHTML, document.metadata);
+          await Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
         } else {
@@ -1183,13 +1227,32 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .option("--deprecated-only", "Only reports deprecated macros.")
   .option("--format <type>", "Format of the report.", {
     default: "md-table",
-    validator: ["json", "md-table"],
+    validator: ["json", "md-table", "csv"],
   })
   .option("--unused-only", "Only reports unused macros.")
   .action(
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
       const { deprecatedOnly, format, unusedOnly } = options;
       return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
+  )
+
+  .command(
+    "whatsdeployed",
+    "Create a whatsdeployed.json file by asking git for the date and commit hash of HEAD."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: process.cwd(),
+  })
+  .option("--output <output>", "Name of JSON file to create.", {
+    default: "whatsdeployed.json",
+  })
+  .option("--dry-run", "Prints the result without writing the file")
+  .action(
+    tryOrExit(async ({ args, options }: WhatsdeployedActionParameters) => {
+      const { directory } = args;
+      const { output, dryRun } = options;
+      return whatsdeployed(directory, output, dryRun);
     })
   );
 

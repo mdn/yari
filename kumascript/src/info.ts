@@ -4,6 +4,7 @@ import * as Parser from "./parser.js";
 import { Document, Redirect } from "../../content/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import { m2hSync } from "../../markdown/index.js";
+import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/utils.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -11,23 +12,16 @@ const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
   "apiref",
   "jsref",
   "compat",
-  "index",
   "page",
-  "obsolete_header",
   "deprecated_header",
   "previous",
   "previousmenu",
   "previousnext",
   "previousmenunext",
-  "wiki.localize",
   "quicklinkswithsubpages",
 ]);
 
-const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set([
-  "draft",
-  "glossary",
-  "anch",
-]);
+const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set(["glossary"]);
 
 function repairURL(url) {
   // Returns a lowercase URI with common irregularities repaired.
@@ -196,7 +190,7 @@ export const info = {
       locale,
       slug,
       title,
-      shortTitle: document.metadata["short-title"],
+      short_title: document.metadata["short-title"],
       status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
@@ -261,8 +255,12 @@ export const info = {
     };
   },
 
-  hasPage(url) {
-    return Boolean(Document.findByURL(info.cleanURL(url)));
+  hasPage(url): boolean {
+    if (Document.findByURL(info.cleanURL(url))) {
+      return true;
+    }
+    const slug = getSlugByBlogPostUrl(url);
+    return Boolean(slug) && Boolean(findPostFileBySlug(slug));
   },
 };
 
@@ -319,10 +317,6 @@ function postProcessSummaryHTMLSnippet(text, document) {
 
     if (MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT.has(macroName)) {
       output += token.args[0];
-    } else if (macroName === "interwiki") {
-      // Include the last one. E.g.
-      //   {{Interwiki("wikipedia","Flynn%27s_taxonomy","classification of computer")}}
-      output += token.args[token.args.length - 1];
     } else {
       output += `<code>${token.args[0]}</code>`;
     }

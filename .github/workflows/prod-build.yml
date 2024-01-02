@@ -42,17 +42,36 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    environment: prod
+    runs-on: ubuntu-latest-4core
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
           path: mdn/content
@@ -61,6 +80,14 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          lfs: true
+          token: ${{ secrets.MDN_STUDIO_PAT }}
 
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
@@ -74,41 +101,52 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
+        if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: Install Python poetry
+        if: ${{ ! vars.SKIP_BUILD }}
         uses: snok/install-poetry@v1
 
       - name: Install deployer
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           cd deployer
           poetry install
 
       - name: Display Python & Poetry version
+        if: ${{ ! vars.SKIP_BUILD }}
         run: |
           python --version
           poetry --version
@@ -123,18 +161,25 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          BASE_URL: "https://developer.mozilla.org"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.prod.mdn.mozit.cloud
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
+
+          # Sign key for code samples
+          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -155,14 +200,17 @@ jobs:
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
 
+          # Browser-compat data.
+          REACT_APP_BCD_BASE_URL: https://bcd.developer.mozilla.org
+
           # Offline updates
           REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
-          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ
-          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/?brand=mozilla
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ?brand=mozilla
+          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/?brand=mozilla
 
           REACT_APP_MDN_PLUS_5M_PLAN: price_1KeG02JNcmPzuWtR1oBrw8o6
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
@@ -170,10 +218,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_FIREFOX_WEB_COMPAT_2023: 1675252800000 # (new Date("2023-02-01 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_END_FIREFOX_WEB_COMPAT_2023: 1675944000000 # (new Date("2023-02-09 12:00:00Z")).getTime()
-          REACT_APP_SURVEY_RATE_FROM_FIREFOX_WEB_COMPAT_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_FIREFOX_WEB_COMPAT_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_DISCOVERABILITY_AUG_2023: 1691409600000 # new Date("2023-08-07 12:00:00Z").getTime()
+          REACT_APP_SURVEY_END_DISCOVERABILITY_AUG_2023: 1691841600000 # new Date("2023-08-12 12:00:00Z").getTime()
+          REACT_APP_SURVEY_RATE_FROM_DISCOVERABILITY_AUG_2023: 0.0
+          REACT_APP_SURVEY_RATE_TILL_DISCOVERABILITY_AUG_2023: 0.10 # 10%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -184,6 +232,17 @@ jobs:
 
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
+
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
+
+          # Sentry.
+          SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
+          SENTRY_ENVIRONMENT: prod
+          SENTRY_RELEASE: ${{ github.sha }}
+
+          # AI Help.
+          REACT_APP_AI_FEEDBACK_GITHUB_REPO: mdn/ai-feedback
 
         run: |
 
@@ -200,77 +259,133 @@ jobs:
 
           yarn tool sync-translated-content
 
-          # Spread the work across 2 processes. Why 2? Because that's
-          # what you get in the default GitHub-hosted Linux runners.
-          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build --locale     en-us --locale     ja --locale     fr &
-          build1=$!
-          yarn build --not-locale en-us --not-locale ja --not-locale fr &
-          build2=$!
+          # Build using one process per locale.
+          # Note: We have 4 cores, but 9 processes is a reasonable number.
+          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            pids+=($!)
+          done
 
-          # You must explicitly specify the job you're waiting-on to ensure
-          # that the exit status of the wait command reflects the exit status
-          # of the job it's waiting-on.
-          wait $build1
-          wait $build2
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
 
           du -sh client/build
 
           # Generate sitemap index file
           yarn build --sitemap-index
 
-      - name: Deploy with deployer
+          # Build the blog
+          yarn build:blog
+
+          # Generate whatsdeployed files.
+          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+
+      - name: Update search index
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
-          GITHUB_SHA: ${{ env.GITHUB_SHA }}
-          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
-          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
-
-          # Set the CONTENT_ROOT first
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-
-          DEPLOYER_BUCKET_NAME: mdn-content-prod
-          DEPLOYER_DISTRIBUTION_ID: E2ZY2DGUN70EMI
-
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
-
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
-
-          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_SITE_ID }}
-          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_PROD_KEVEL_NETWORK_ID }}
-          SIGN_SECRET: ${{ secrets.DEPLOYER_PROD_SIGN_SECRET }}
-
         run: |
-
-          # Info about which CONTENT_* environment variables were set and to what.
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-
           cd deployer
-
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
-          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
-
-          poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+      - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/auth@v2
         with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          token_format: access_token
+          service_account: deploy-prod-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
-      - name: Invalidate CDN
+      - name: Setup gcloud
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Sync build
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+
+      - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          service_account: deploy-prod-prod-mdn-ingress@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: "beta"
+
+      - name: Generate redirects map
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: cloud-function
         env:
-          DISTRIBUTION: E2ZY2DGUN70EMI
-          PATHS: /*
-        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+        run: |-
+          npm ci
+          npm run build-redirects
+
+      - name: Deploy Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        run: |-
+          for region in europe-west1 us-west1 asia-east1; do
+            gcloud beta functions deploy mdn-prod-prod-$region \
+            --gen2 \
+            --runtime=nodejs18 \
+            --region=$region \
+            --source=cloud-function \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point=mdnHandler \
+            --concurrency=100 \
+            --min-instances=10 \
+            --max-instances=1000 \
+            --memory=2GB \
+            --timeout=120s \
+            --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
+            --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
+            --set-env-vars="BSA_ENABLED=true" \
+            --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
+            --set-env-vars="SENTRY_ENVIRONMENT=prod" \
+            --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
+            --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/prod-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/prod-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/prod-sign-secret/versions/latest" \
+            --set-secrets="BSA_ZONE_KEYS=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/prod-bsa-zone-keys/versions/latest" \
+            2>&1 | sed "s/^/[$region] /" &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+      - name: Update AI Help index
+        run: yarn ai-help update-index
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
+      - name: Update AI Help index with macros
+        run: yarn ai-help-macros update-index
+        env:
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
       - name: Slack Notification
         if: failure()
@@ -283,3 +398,7 @@ jobs:
           SLACK_MESSAGE: "Build failed :collision:"
           SLACK_FOOTER: "Powered by prod-build.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Invalidate Google Cloud CDN
+        if: ${{ github.event.inputs.invalidate }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async

@@ -23,6 +23,7 @@ export const RETIRED_LOCALES = new Map(
     "ms",
     "my",
     "nl",
+    "pl",
     "pt-PT",
     "sv-SE",
     "th",
@@ -68,6 +69,8 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "assets.codepen.io",
   "production-assets.codepen.io",
 
+  "https://js.stripe.com",
+
   /*
    * Inline scripts (defined in `client/public/index.html`).
    *
@@ -79,9 +82,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
 
   // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
-  // - Current hash:
   "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
+  // - Current hash:
+  "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -93,28 +96,36 @@ export const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "developer.allizom.org", // required for glean to work on localhost:5042
+
+    "bcd.developer.allizom.org",
+    "bcd.developer.mozilla.org",
+
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
+    "https://api.stripe.com",
   ],
   "font-src": ["'self'"],
   "frame-src": [
     "'self'",
 
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
     "mdn.github.io",
-    "yari-demos.prod.mdn.mozit.cloud",
-    "mdn.mozillademos.org",
-    "yari-demos.stage.mdn.mozit.cloud",
+    "live-samples.mdn.mozilla.net",
+    "live-samples.mdn.allizom.net",
+    "live-samples.developer.allizom.xyz",
+    "*.mdnplay.dev",
+    "*.mdnyalp.dev",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
     "survey.alchemer.com",
+    "https://js.stripe.com",
   ],
   "img-src": [
     "'self'",
@@ -128,14 +139,12 @@ export const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
-    "mdn.mozillademos.org",
-    "media.prod.mdn.mozit.cloud",
-    "media.stage.mdn.mozit.cloud",
+    "mdn.dev",
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
+    "upload.wikimedia.org",
 
     "www.google-analytics.com",
     "www.gstatic.com",
@@ -152,6 +161,63 @@ export const cspToString = (csp) =>
     .join(" ");
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
+
+const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
+  "'self'",
+  "https:",
+  "'unsafe-eval'",
+  "'unsafe-inline'",
+  "'wasm-unsafe-eval'",
+];
+
+export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
+  "default-src": ["'self'", "https:"],
+  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "style-src": [
+    "'report-sample'",
+    "'self'",
+    "https:",
+    "'unsafe-inline'",
+    "'unsafe-eval'",
+  ],
+  "img-src": ["'self'", "blob:", "https:", "data:"],
+  "base-uri": ["'self'"],
+  "worker-src": ["'self'"],
+  "manifest-src": ["'self'"],
+});
+
+// Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
+export const AUDIO_EXT = ["mp3", "ogg"];
+export const FONT_EXT = ["woff2"];
+export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
+export const ANY_IMAGE_EXT = ["svg", ...BINARY_IMAGE_EXT];
+export const VIDEO_EXT = ["mp4", "webm"];
+
+export const BINARY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...BINARY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export const ANY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...ANY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export function createRegExpFromExtensions(...extensions) {
+  return new RegExp(`\\.(${extensions.join("|")})$`, "i");
+}
+
+export const ANY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...ANY_ATTACHMENT_EXT
+);
+export const BINARY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...BINARY_ATTACHMENT_EXT
+);
 
 // -----
 // build
@@ -202,9 +268,18 @@ export const MARKDOWN_FILENAME = "index.md";
 // ---------
 
 export const VALID_MIME_TYPES = new Set([
+  "audio/mp4",
+  "audio/mpeg",
+  "audio/ogg",
+  "audio/webm",
+  "font/woff2",
   "image/png",
   "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
   "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/ogg",
+  "video/webm",
 ]);
 
 export const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent

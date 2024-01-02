@@ -9,7 +9,11 @@ import got from "got";
 
 import { m2h } from "../markdown/index.js";
 
-import { VALID_LOCALES, MDN_PLUS_TITLE } from "../libs/constants/index.js";
+import {
+  VALID_LOCALES,
+  MDN_PLUS_TITLE,
+  DEFAULT_LOCALE,
+} from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -21,20 +25,24 @@ import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
-import { splitSections } from "./utils.js";
+import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
+import { findPostBySlug } from "./blog.js";
 
 const FEATURED_ARTICLES = [
-  "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
-  "Web/CSS/CSS_Container_Queries",
-  "Web/API/Performance_API",
-  "Web/CSS/font-palette",
+  "blog/regular-expressions-reference-updates/",
+  "blog/aria-accessibility-html-landmark-roles/",
+  "docs/Web/API/Performance_API",
+  "docs/Web/CSS/CSS_nesting",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-async function buildContributorSpotlight(locale, options) {
+async function buildContributorSpotlight(
+  locale: string,
+  options: { verbose?: boolean }
+) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
@@ -45,7 +53,7 @@ async function buildContributorSpotlight(locale, options) {
     );
 
     const frontMatter = frontmatter<DocFrontmatter>(markdown);
-    const contributorHTML = await m2h(frontMatter.body, locale);
+    const contributorHTML = await m2h(frontMatter.body, { locale });
 
     const { sections } = splitSections(contributorHTML);
 
@@ -64,7 +72,7 @@ async function buildContributorSpotlight(locale, options) {
     const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
-      locale,
+      locale.toLowerCase(),
       `${prefix}/${hyData.folderName}`
     );
     const filePath = path.join(outPath, "index.html");
@@ -90,13 +98,20 @@ async function buildContributorSpotlight(locale, options) {
   }
 }
 
-export async function buildSPAs(options) {
+export async function buildSPAs(options: {
+  quiet?: boolean;
+  verbose?: boolean;
+}) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
+  const url = `/${DEFAULT_LOCALE}/404.html`;
   const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+  const outPath = path.join(
+    BUILD_OUT_ROOT,
+    DEFAULT_LOCALE.toLowerCase(),
+    "_spas"
+  );
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
   buildCount++;
@@ -116,8 +131,14 @@ export async function buildSPAs(options) {
       }
 
       const SPAs = [
+        { prefix: "play", pageTitle: "Playground | MDN" },
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
+        {
+          prefix: "plus/ai-help",
+          pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
         {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
@@ -142,9 +163,12 @@ export async function buildSPAs(options) {
         { prefix: "community", pageTitle: "Contribute to MDN" },
         {
           prefix: "advertising",
-          pageTitle: "Experimenting with advertising on MDN",
+          pageTitle: "Advertise with us",
         },
-        { prefix: "advertising/with_us", pageTitle: "Advertise with us" },
+        {
+          prefix: "newsletter",
+          pageTitle: "Stay Informed with MDN",
+        },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
@@ -176,7 +200,11 @@ export async function buildSPAs(options) {
    * @param {string} slug
    * @param {string} title
    */
-  async function buildStaticPages(dirpath, slug, title = "MDN") {
+  async function buildStaticPages(
+    dirpath: string,
+    slug: string,
+    title = "MDN"
+  ) {
     const crawler = new fdir()
       .withFullPaths()
       .withErrors()
@@ -188,7 +216,7 @@ export async function buildSPAs(options) {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
-      const locale = "en-us";
+      const locale = DEFAULT_LOCALE.toLowerCase();
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
@@ -244,11 +272,12 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const locale of fs.readdirSync(root)) {
+    for (const localeLC of fs.readdirSync(root)) {
+      const locale = VALID_LOCALES.get(localeLC) || localeLC;
       if (!isValidLocale(locale)) {
         continue;
       }
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+      if (!fs.statSync(path.join(root, localeLC)).isDirectory()) {
         continue;
       }
 
@@ -259,19 +288,37 @@ export async function buildSPAs(options) {
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
-            const document =
-              findByURL(`/${locale}/docs/${url}`) ||
-              findByURL(`/en-US/docs/${url}`);
-            if (document) {
-              const {
-                doc: { mdn_url, summary, title, parents },
-              } = await buildDocument(document);
-              return {
-                mdn_url,
-                summary,
-                title,
-                tag: parents.length > 2 ? parents[1] : null,
-              };
+            const segment = url.split("/")[0];
+            if (segment === "docs") {
+              const document =
+                findByURL(`/${locale}/${url}`) ||
+                findByURL(`/${DEFAULT_LOCALE}/${url}`);
+              if (document) {
+                const {
+                  doc: { mdn_url, summary, title, parents },
+                } = await buildDocument(document);
+                return {
+                  mdn_url,
+                  summary,
+                  title,
+                  tag: parents.length > 2 ? parents[1] : null,
+                };
+              }
+            } else if (segment === "blog") {
+              const post = await findPostBySlug(
+                getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+              );
+              if (post) {
+                const {
+                  doc: { title },
+                  blogMeta: { description, slug },
+                } = post;
+                return {
+                  mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+                  summary: description,
+                  title,
+                };
+              }
             }
           })
         )
@@ -286,7 +333,7 @@ export async function buildSPAs(options) {
       };
       const context = { hyData };
       const html = renderHTML(url, context);
-      const outPath = path.join(BUILD_OUT_ROOT, locale);
+      const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
       fs.writeFileSync(filePath, html);
@@ -364,23 +411,43 @@ async function fetchLatestNews() {
 
   items.push(
     {
-      title: "Experimenting with advertising on MDN",
-      url: "/en-US/advertising",
-      author: "Mozilla",
-      published_at: new Date("2023-02-15 15:00Z").toString(),
+      title: "Responsibly empowering developers with AI on MDN",
+      url: `https://blog.mozilla.org/en/products/mdn/responsibly-empowering-developers-with-ai-on-mdn/`,
+      author: "Steve Teixeira",
+      published_at: new Date("Thu, 06 Jul 2023 14:41:20 +0000").toString(),
       source: {
-        name: "developer.mozilla.org",
-        url: "/",
+        name: "blog.mozilla.org",
+        url: `https://blog.mozilla.org/en/latest/`,
       },
     },
     {
-      title: "A shared and open roadmap for MDN",
-      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
-      author: "Mozilla",
-      published_at: new Date("2023-02-08").toString(),
+      title: "Introducing AI Help: Your Trusted Companion for Web Development",
+      url: `/${DEFAULT_LOCALE}/blog/introducing-ai-help/`,
+      author: "Hermina Condei",
+      published_at: new Date("2023-06-27").toString(),
       source: {
-        name: "blog.mozilla.org",
-        url: "https://blog.mozilla.org/",
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
+      title: "Introducing the MDN Playground: Bring your code to life!",
+      url: `/${DEFAULT_LOCALE}/blog/introducing-the-mdn-playground/`,
+      author: "Florian Dieminger",
+      published_at: new Date("2023-06-22").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
+      },
+    },
+    {
+      title: "Introducing Baseline: a unified view of stable web features",
+      url: `/${DEFAULT_LOCALE}/blog/baseline-unified-view-stable-web-features/`,
+      author: "Hermina Condei",
+      published_at: new Date("2023-05-10").toString(),
+      source: {
+        name: "developer.mozilla.org",
+        url: `/${DEFAULT_LOCALE}/blog/`,
       },
     }
   );

@@ -78,8 +78,8 @@ describeMacro("HTTPSidebar", function () {
 
   itMacro("Creates a sidebar object for en-US", function (macro) {
     macro.ctx.env.locale = "en-US";
-    return macro.call().then(function (result) {
-      expect(lintHTML(result)).toBeFalsy();
+    return macro.call().then(async function (result) {
+      expect(await lintHTML(result)).toBeFalsy();
       const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
@@ -87,8 +87,8 @@ describeMacro("HTTPSidebar", function () {
 
   itMacro("Creates a sidebar object for es", function (macro) {
     macro.ctx.env.locale = "es";
-    return macro.call().then(function (result) {
-      expect(lintHTML(result)).toBeFalsy();
+    return macro.call().then(async function (result) {
+      expect(await lintHTML(result)).toBeFalsy();
       const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "es");
     });

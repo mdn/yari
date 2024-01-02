@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
+import { WRITER_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -20,24 +20,26 @@ import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
-import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
+import { HydrationData } from "../../libs/types/hydration";
+import { TopPlacement } from "./ui/organisms/placement";
+import { Blog } from "./blog";
+import { Newsletter } from "./newsletter";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
+const Playground = React.lazy(() => import("./playground"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
-
-  const isServer = useIsServer();
 
   React.useEffect(() => {
     setCategory(getCategoryByPathname(pathname));
@@ -46,13 +48,17 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {!isServer && <Banner />}
       <div
         className={`page-wrapper  ${
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {pageType !== "document-page" && <TopNavigation />}
+        <TopPlacement />
+        {pageType !== "document-page" && (
+          <div className="sticky-header-container without-actions">
+            <TopNavigation />
+          </div>
+        )}
         {children}
       </div>
       <Footer />
@@ -76,7 +82,10 @@ function LazyStandardLayout(props: {
   extraClasses?: string;
   children: React.ReactNode;
 }) {
-  return (
+  const isServer = useIsServer();
+  return isServer ? (
+    <LoadingFallback />
+  ) : (
     <React.Suspense fallback={<LoadingFallback />}>
       <StandardLayout {...props}></StandardLayout>
     </React.Suspense>
@@ -108,9 +117,18 @@ function PageOrPageNotFound({ pageNotFound, children }) {
   );
 }
 
-export function App(appProps) {
+export function App(appProps: HydrationData) {
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+  const pageNotFound = React.useMemo(
+    () =>
+      (appProps.pageNotFound || false) && initialPathname.current === pathname,
+    [appProps.pageNotFound, pathname]
+  );
+
   usePing();
-  useGleanPage();
+  useGleanPage(pageNotFound, appProps.doc);
+
   const localeMatch = useMatch("/:locale/*");
 
   useEffect(() => {
@@ -119,25 +137,13 @@ export function App(appProps) {
     document.documentElement.setAttribute("lang", locale);
   }, [appProps.locale, localeMatch]);
 
-  const [pageNotFound, setPageNotFound] = React.useState<boolean>(
-    appProps.pageNotFound
-  );
-  const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
-
-  React.useEffect(() => {
-    setPageNotFound(
-      appProps.pageNotFound && initialPathname.current === pathname
-    );
-  }, [appProps.pageNotFound, pathname]);
-
   const isServer = useIsServer();
 
-  // When preparing a build for use in the NPM package, CRUD_MODE is always true.
+  // When preparing a build for use in the NPM package, WRITER_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
-  // is true. So you have to have `isServer && CRUD_MODE` at the same time.
+  // is true. So you have to have `isServer && WRITER_MODE` at the same time.
   const homePage =
-    !isServer && CRUD_MODE ? (
+    !isServer && WRITER_MODE ? (
       <LazyStandardLayout>
         <WritersHomepage />
       </LazyStandardLayout>
@@ -159,10 +165,18 @@ export function App(appProps) {
        */}
       <Route path="/" element={homePage} />
       <Route
+        path="/en-US/blog/*"
+        element={
+          <StandardLayout extraClasses="blog">
+            <Blog {...appProps} />
+          </StandardLayout>
+        }
+      />
+      <Route
         path="/:locale/*"
         element={
           <Routes>
-            {CRUD_MODE && (
+            {WRITER_MODE && (
               <>
                 <Route
                   path="/_flaws"
@@ -200,7 +214,7 @@ export function App(appProps) {
                 {/*
                 This route exclusively exists for development on the <Homepage>
                 component itself.
-                Normally, you get to the home page by NOT being in CRUD_MODE, but
+                Normally, you get to the home page by NOT being in WRITER_MODE, but
                 if you want to use the hot-reloading app, it might be convenient
                 to be able to run it locally
                  */}
@@ -224,6 +238,14 @@ export function App(appProps) {
               </>
             )}
             <Route path="/" element={homePage} />
+            <Route
+              path="/play"
+              element={
+                <LazyStandardLayout>
+                  <Playground />
+                </LazyStandardLayout>
+              }
+            />
             <Route
               path="/search"
               element={
@@ -283,6 +305,14 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <ContributorSpotlight {...appProps} />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/newsletter"
+              element={
+                <StandardLayout>
+                  <Newsletter />
                 </StandardLayout>
               }
             />

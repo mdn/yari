@@ -1,12 +1,16 @@
 import React from "react";
-import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../env";
+import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
-import { useIsServer } from "../hooks";
+import { useIsServer, useLocale } from "../hooks";
 
-import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import {
+  useDocumentURL,
+  useCopyExamplesToClipboardAndAIExplain,
+  useRunSample,
+} from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -38,6 +42,10 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
+import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
+import { BaselineIndicator } from "./baseline-indicator";
+import { PlayQueue } from "../playground/queue";
 import { InteractiveExample } from "./ingredients/interactive-example";
 // import { useUIStatus } from "../ui-context";
 
@@ -45,7 +53,7 @@ import { InteractiveExample } from "./ingredients/interactive-example";
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
   public readonly status: number;
   public readonly url: string;
   public readonly text: string;
@@ -63,7 +71,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -107,13 +115,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
-      refreshInterval: CRUD_MODE ? 500 : 0,
+      refreshInterval: WRITER_MODE ? 500 : 0,
     }
   );
+
   useIncrementFrequentlyViewed(doc);
-  useCopyExamplesToClipboard(doc);
+  useRunSample(doc);
+  //useCollectSample(doc);
+  useCopyExamplesToClipboardAndAIExplain(doc);
+  useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -180,7 +192,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   if (error) {
     return (
       <>
-        <div className="main-document-header-container">
+        <div className="sticky-header-container">
           <TopNavigation />
         </div>
         <MainContentContainer>
@@ -202,7 +214,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <div className="main-document-header-container">
+      <div className="sticky-header-container">
         <TopNavigation />
         <ArticleActionsContainer doc={doc} />
       </div>
@@ -220,14 +232,18 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )
       )}
       <div className="main-wrapper">
-        <RenderSideBar doc={doc} />
-
-        <aside className="toc">
-          <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
-        </aside>
+        <div className="sidebar-container">
+          <RenderSideBar doc={doc} />
+          <div className="toc-container">
+            <aside className="toc">
+              <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+            </aside>
+            {PLACEMENT_ENABLED && <SidePlacement />}
+          </div>
+        </div>
 
         <MainContentContainer>
-          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+          {!isServer && WRITER_MODE && !props.isPreview && doc.isActive && (
             <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
               <Toolbar
                 doc={doc}
@@ -244,18 +260,23 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </React.Suspense>
           )}
           <article className="main-page-content" lang={doc.locale}>
-            <h1>{doc.title}</h1>
+            <header>
+              <h1>{doc.title}</h1>
+              {doc.baseline && <BaselineIndicator status={doc.baseline} />}
+            </header>
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
           </article>
         </MainContentContainer>
+        {false && <PlayQueue standalone={true} />}
       </div>
+      <BottomBanner />
     </>
   );
 }
 
-function RenderDocumentBody({ doc }) {
+export function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       return (
