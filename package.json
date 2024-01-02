@@ -235,7 +235,7 @@
     "sass-loader": "^13.3.3",
     "semver": "^7.5.4",
     "source-map-explorer": "^2.5.3",
-    "source-map-loader": "^4.0.1",
+    "source-map-loader": "^4.0.2",
     "style-dictionary": "^3.9.1",
     "style-loader": "^3.3.3",
     "stylelint": "^15.11.0",
