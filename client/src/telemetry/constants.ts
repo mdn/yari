@@ -13,11 +13,16 @@ export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
 export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
 export const TOGGLE_PLUS_ADS_FREE_DISABLED = "toggle_plus_ads_free_disabled";
 export const TOGGLE_PLUS_ADS_FREE_ENABLED = "toggle_plus_ads_free_enabled";
+export const TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED =
+  "toggle_plus_ai_help_history_disabled";
+export const TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED =
+  "toggle_plus_ai_help_history_enabled";
 export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
 export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
+export const SETTINGS = "settings";
 
 export const MENU = Object.freeze({
   CLICK_LINK: "menu_click_link",
@@ -64,4 +69,5 @@ export const BASELINE = Object.freeze({
   TOGGLE_OPEN: "baseline_toggle_open",
   LINK_LEARN_MORE: "baseline_link_learn_more",
   LINK_BCD_TABLE: "baseline_link_bcd_table",
+  LINK_FEEDBACK: "baseline_link_feedback",
 });

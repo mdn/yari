@@ -11,7 +11,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc, WebFeatureStatus } from "../libs/types/document.js";
+import { Doc } from "../libs/types/document.js";
 import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
@@ -164,6 +164,7 @@ export interface BuiltDocument {
   source?: {
     github_url: string;
   };
+  plainHTML?: string;
 }
 
 interface DocumentOptions {
@@ -171,6 +172,7 @@ interface DocumentOptions {
   fixFlawsDryRun?: boolean;
   fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
+  plainHTML?: boolean;
 }
 
 export async function buildDocument(
@@ -380,7 +382,7 @@ export async function buildDocument(
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
-  doc.baseline = await addBaseline(doc);
+  doc.baseline = addBaseline(doc);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -443,6 +445,12 @@ export async function buildDocument(
   } catch (error) {
     console.error(error);
     throw error;
+  }
+
+  // Dump HTML for GPT context.
+  let plainHTML;
+  if (documentOptions.plainHTML) {
+    plainHTML = $.html();
   }
 
   // Apply syntax highlighting all <pre> tags.
@@ -555,14 +563,12 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
 }
 
-async function addBaseline(
-  doc: Partial<Doc>
-): Promise<WebFeatureStatus | undefined> {
+function addBaseline(doc: Partial<Doc>) {
   if (doc.browserCompat) {
-    return await getWebFeatureStatus(...doc.browserCompat);
+    return getWebFeatureStatus(...doc.browserCompat);
   }
 }
 

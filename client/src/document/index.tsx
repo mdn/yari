@@ -45,6 +45,7 @@ import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-vie
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
 import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
+import { PlayQueue } from "../playground/queue";
 import { AppProps } from "../app";
 // import { useUIStatus } from "../ui-context";
 
@@ -122,6 +123,7 @@ export function Document(props: AppProps) {
 
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
+  //useCollectSample(doc);
   useCopyExamplesToClipboardAndAIExplain(doc);
   useInteractiveExamplesTelemetry();
 
@@ -267,6 +269,7 @@ export function Document(props: AppProps) {
             <Metadata doc={doc} locale={locale} />
           </article>
         </MainContentContainer>
+        {false && <PlayQueue standalone={true} />}
       </div>
       <BottomBanner />
     </>

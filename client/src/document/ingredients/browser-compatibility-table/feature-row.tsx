@@ -388,11 +388,11 @@ function getNotes(
                 label: "Full support",
               }
             : isNotSupportedAtAll(item)
-            ? {
-                iconName: "footnote",
-                label: "No support",
-              }
-            : null,
+              ? {
+                  iconName: "footnote",
+                  label: "No support",
+                }
+              : null,
         ]
           .flat()
           .filter(isTruthy);

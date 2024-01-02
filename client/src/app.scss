@@ -352,3 +352,15 @@ sup.new {
   top: 0;
   z-index: var(--z-index-main-header);
 }
+
+.feedback-link::before {
+  background-color: var(--feedback-link-icon, var(--text-link));
+  content: "";
+  display: inline-flex;
+  height: 1em;
+  margin-right: 0.4em;
+  mask-image: url("./assets/icons/feedback.svg");
+  mask-size: cover;
+  vertical-align: middle;
+  width: 1em;
+}

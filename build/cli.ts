@@ -16,7 +16,7 @@ import {
   BUILD_OUT_ROOT,
   SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
-import { VALID_LOCALES } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -26,7 +26,7 @@ import {
   BuiltDocument,
   renderContributorsTxt,
 } from "./index.js";
-import { DocMetadata, Flaws } from "../libs/types/document.js";
+import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
@@ -52,6 +52,10 @@ interface GlobalMetadata {
   [locale: string]: Array<DocMetadata>;
 }
 
+interface BuildMetadata {
+  [locale: string]: any;
+}
+
 async function buildDocumentInteractive(
   documentPath: string,
   interactive: boolean,
@@ -73,7 +77,13 @@ async function buildDocumentInteractive(
       );
     }
 
-    return { document, doc: await buildDocument(document), skip: false };
+    return {
+      document,
+      doc: await buildDocument(document, {
+        plainHTML: document.metadata.locale === DEFAULT_LOCALE,
+      }),
+      skip: false,
+    };
   } catch (e) {
     if (!interactive) {
       throw e;
@@ -132,6 +142,33 @@ async function buildDocuments(
   }
 
   const metadata: GlobalMetadata = {};
+  const buildMetadata: BuildMetadata = {};
+
+  function updateBaselineBuildMetadata(doc: Doc) {
+    if (typeof doc.baseline?.baseline === "undefined") {
+      return;
+    }
+
+    if (typeof buildMetadata[doc.locale] === "undefined") {
+      buildMetadata[doc.locale] = {};
+    }
+    if (typeof buildMetadata[doc.locale].baseline === "undefined") {
+      buildMetadata[doc.locale].baseline = {
+        total: 0,
+        high: 0,
+        highPaths: [],
+        low: 0,
+        lowPaths: [],
+        not: 0,
+        notPaths: [],
+      };
+    }
+
+    buildMetadata[doc.locale].baseline.total++;
+    const key = doc.baseline.baseline || "not";
+    buildMetadata[doc.locale].baseline[key]++;
+    buildMetadata[doc.locale].baseline[`${key}Paths`].push(doc.mdn_url);
+  }
 
   const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -177,7 +214,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap, plainHTML },
       document,
     } = result;
 
@@ -188,11 +225,19 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
+    if (builtDocument.baseline) {
+      updateBaselineBuildMetadata(builtDocument);
+    }
+
     if (!noHTML) {
       fs.writeFileSync(
         path.join(outPath, "index.html"),
         renderHTML(document.url, { doc: builtDocument })
       );
+    }
+
+    if (plainHTML) {
+      fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
@@ -329,6 +374,14 @@ async function buildDocuments(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
     [...allBrowserCompat].sort().join(" ")
   );
+
+  for (const [locale, meta] of Object.entries(buildMetadata)) {
+    // have to write per-locale because we build each locale concurrently
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
+      JSON.stringify(meta)
+    );
+  }
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
