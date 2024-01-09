@@ -2452,10 +2452,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@stripe/stripe-js@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-2.2.2.tgz#9c1318a3e09a6df0a667d54d7f6edb917670109d"
-  integrity sha512-LvFZRZEBoMe6vXC6RoOAIbXWo/0JDdndq43ekL9M6affcM7PtF5KALmwt91BazW7q49sbSl0l7TunWhhSwEW4w==
+"@stripe/stripe-js@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-2.3.0.tgz#607f91b75990eb660b9a7a4a8a7c282f5babd3fc"
+  integrity sha512-iTwzjw1ORUR+1pH21+C/M05w+Jh5hAuE4QUei7Gnku65N7QpEaHtyVszYMYDBs6iNyLrD1tfQTSrjD6NkOA/ww==
 
 "@supabase/functions-js@^2.1.5":
   version "2.1.5"
