@@ -73,7 +73,7 @@
     "@mozilla/glean": "2.0.5",
     "@sentry/integrations": "^7.92.0",
     "@sentry/node": "^7.92.0",
-    "@stripe/stripe-js": "^2.2.2",
+    "@stripe/stripe-js": "^2.3.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.9",
     "@webref/css": "^6.10.1",
