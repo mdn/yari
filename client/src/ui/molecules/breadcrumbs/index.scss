@@ -11,11 +11,8 @@
 
   li {
     display: none;
-    hyphens: auto;
-
-    // only show first and last on mobile
-    &:first-child,
-    &:last-child {
+    // only show last two items on small sizes (size < 426px)
+    &:nth-last-child(-n + 2) {
       display: inline-flex;
     }
 
