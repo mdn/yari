@@ -1,6 +1,9 @@
 import { unified } from "unified";
 import parse from "remark-parse";
+import rehypeParse from "rehype-parse";
+import rehypeRemark from "rehype-remark";
 import remarkRehype from "remark-rehype";
+import remarkStringify from "remark-stringify";
 import stringify from "rehype-stringify";
 import gfm from "remark-gfm";
 import raw from "rehype-raw";
@@ -8,6 +11,7 @@ import format from "rehype-format";
 
 import { buildLocalizedHandlers } from "./handlers/index.js";
 import { decodeKS, encodeKS } from "../utils/index.js";
+import remarkGfm from "remark-gfm";
 
 interface ProcessorOptions {
   locale?: string;
@@ -43,4 +47,14 @@ export function m2hSync(md: string, options: ProcessorOptions) {
 
   const file = processor.processSync(ksEncoded);
   return decodeKS(String(file));
+}
+
+export function h2mSync(html: string) {
+  const file = unified()
+    .use(rehypeParse)
+    .use(rehypeRemark)
+    .use(remarkGfm)
+    .use(remarkStringify)
+    .processSync(html);
+  return String(file);
 }

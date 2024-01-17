@@ -24,6 +24,7 @@ import {
   SimpleSupportStatement,
   VersionValue,
 } from "@mdn/browser-compat-data/types";
+import { h2mSync } from "../markdown/index.js";
 
 const { program } = caporal;
 
@@ -71,6 +72,7 @@ export async function updateEmbeddings(
         input,
       });
     } catch (e: any) {
+      console.log(e);
       const {
         data: {
           error: { message, type },
@@ -270,7 +272,7 @@ async function* builtDocs(directory: string) {
       $(".bc-data[data-query]").each((_, el) => {
         $(el).replaceWith(buildBCDTable($(el).data("query") as string));
       });
-      const html = $.html();
+      const html = h2mSync($.html());
 
       // reformat text version, used for embedding
       $("title").remove();
