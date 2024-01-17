@@ -6,244 +6,699 @@ const baseURL = `/${locale}/docs/MDN/`;
 
 const text = mdn.localStringMap({
   "en-US": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "es": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "fr": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Règles de la communauté",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "ja": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "ko": {
-    "MDN_project": "MDN 웹 문서 프로젝트",
-    "Community_guide": "커뮤니티 지침",
-      "Comm_overview": "커뮤니티 개요",
-      "Contributing": "MDN에 기역하기",
-      "Open_source": "오픈소스 에절",
-      "Communication": "Communication channels",
-      "Discuss": "논의",
-      "Learn": "Learn forum",
-      "Issues": "문제",
-      "PRs": "Pull requests",
-      "Content": "콘텐츠 레포지토리 지침",
-      "Users": "사용자와 팀",
-    "Writing_guide": "MDN Web Docs 지침",
-      "Write_overview": "MDN Web Docs에 대해",
-      "What_write": "MDN Web Docs 내용",
-      "Style_guide": "MDN Web Docs 작성 안내서",
-      "Howto": "How-to 안내서",
-      "Structures": "페이지 구조",
-      "Attrib": "귀속과 저작권",
-      "Exper": "Experimental, deprecated 그리고 obsolete",
+    "mdn_project": "MDN 웹 문서 프로젝트",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "커뮤니티 지침",
+      "community_guidelines_overview": "커뮤니티 개요",
+      "contributing_to_mdn_web_docs": "MDN에 기역하기",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "오픈소스 에절",
+      "communication_channels": "Communication channels",
+      "discussions": "논의",
+      "learn_forum": "Learn forum",
+      "issues": "문제",
+      "prs": "Pull request guidelines",
+      "mdn_content": "콘텐츠 레포지토리 지침",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "사용자와 팀",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "pt-BR": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "ru": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "zh-CN": {
-    "MDN_project": "MDN Web 文档项目",
-    "Community_guide": "社区指南",
-      "Comm_overview": "概览",
-      "Contributing": "为 MDN 做贡献",
-      "Open_source": "开源规约",
-      "Communication": "沟通渠道",
-      "Discuss": "讨论",
-      "Learn": "学习论坛",
-      "Issues": "议题指南",
-      "PRs": "拉取请求指南",
-      "Content": "content 仓库指南",
-      "Users": "角色和团队",
-    "Writing_guide": "撰写指南",
-      "Write_overview": "概览",
-      "What_write": "MDN 收录规则",
-      "Style_guide": "写作风格指南",
-      "Howto": "MDN 写作指南",
-      "Structures": "页面结构",
-      "Attrib": "署名和版权",
-      "Exper": "实验性的、弃用的和过时的",
+    "mdn_project": "MDN Web 文档项目",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "社区指南",
+      "community_guidelines_overview": "概览",
+      "contributing_to_mdn_web_docs": "为 MDN 做贡献",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "开源规约",
+      "communication_channels": "沟通渠道",
+      "discussions": "讨论",
+      "learn_forum": "学习论坛",
+      "issues": "议题指南",
+      "prs": "拉取请求指南",
+      "mdn_content": "content 仓库指南",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "角色和团队",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "撰写指南",
+      "write_overview": "概览",
+      "what_we_write": "MDN 收录规则",
+      "writing_style_guide": "写作风格指南",
+      "how_to_guides": "MDN 写作指南",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "页面结构",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "署名和版权",
+      "statuses": "实验性的、弃用的和过时的",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   },
   "zh-TW": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "mdn_project": "The MDN Web Docs Project",
+    "history": "History",
+      "at_ten": "MDN at 10",
+      "history_of_mdn": "The history of MDN",
+    "advisory_board": "Advisory Board",
+      "mdn_product_advisory_board": "MDN Product Advisory Board",
+      "product_advisory_board_charter_&_membership": "Product Advisory Board Charter & Membership",
+    "community_guidelines": "Community guidelines",
+      "community_guidelines_overview": "Overview",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+        "contributing_to_mdn_web_docs_overview": "Overview",
+        "getting_started": "Getting started with MDN Web Docs",
+        "our_repositories": "MDN Web Docs Repositories",
+        "translated_content": "MDN Web Docs Localization",
+        "security_vulnerability_response": "Security vulnerability response steps",
+      "open_source_etiquette": "Open source etiquette",
+      "communication_channels": "Communication channels",
+      "discussions": "Community discussions",
+      "learn_forum": "Learn forum",
+      "issues": "Issue guidelines",
+      "prs": "Pull request guidelines",
+      "mdn_content": "Contributing to MDN Web Docs",
+        "contributing_mdn_content": "Contributing to MDN Web Docs content",
+        "contributing_mdn_content_issues": "Using issues on MDN Web Docs",
+        "contributing_mdn_content_prs": "Pull request etiquette and process for MDN Web Docs",
+      "roles_and_teams": "MDN Web Docs roles and teams",
+    "contributing_to_mdn": "Contributing to MDN",
+      "contributing_to_mdn_overview": "Overview",
+      "documentation_processes": "Documentation processes",
+      "mdn_workstream_assessment": "MDN Workstream assessment and project setup process",
+    "writing_guide": "Writing guidelines",
+      "write_overview": "Overview",
+      "what_we_write": "What we write",
+      "writing_style_guide": "Writing style guide",
+      "how_to_guides": "How-to guides",
+         "how_to_guides_overview": "Overview",
+         "how_to_images_media": "How to add images and media",
+         "how_to_crud_pages": "How to create, move, delete, and edit pages",
+         "how_to_css_property": "How to document a CSS property",
+         "how_to_http_header": "How to document an HTTP header",
+         "how_to_web_errors": "How to document web errors",
+         "how_to_research": "How to research a technology",
+         "how_to_use_structured_data": "How to use structured data",
+         "how_to_api_ref": "How to write an API reference",
+         "how_to_glossary": "How to write an entry in the glossary",
+         "how_to_markdown": "How to write in Markdown",
+      "page_structures": "Page structures",
+        "page_structures_overview": "Overview",
+        "page_structures_banners_notices": "Banners and notices",
+        "page_structures_code_examples": "Code examples",
+        "page_structures_compatibility_tables": "Compatibility tables and the browser compatibility data repository (BCD)",
+        "page_structures_live_examples": "Live examples",
+        "page_structures_page_types": "Page types",
+        "page_structures_quicklinks": "Sidebars and other link macros",
+        "page_structures_specification_tables": "Specification tables",
+        "page_structures_syntax_sections": "Syntax sections",
+        "page_structures_using_macros": "Using macros",
+      "attribution": "Attribution and copyright",
+      "statuses": "Experimental, deprecated and obsolete",
+    "changelog": "Changelog",
+    "kitchensink": "The MDN Content Kitchensink"
   }
 });
 
 %>
 
 <section id="Quick_links" data-macro="MDNSidebar">
-    <ol>
-        <li>
-            <a href="<%=baseURL%>"><%=text['MDN_project']%></a>
-        </li>
+  <ol>
+    <li>
+      <a href="<%=baseURL%>"><%=text['mdn_project']%></a>
+    </li>
 
-        <li class="toggle">
-            <details>
-                <summary><%=text['Community_guide']%></summary>
-                <ol>
-                    <li><a href="<%=baseURL%>Community"><%=text['Comm_overview']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Contributing"><%=text['Contributing']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Open_source_etiquette"><%=text['Open_source']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Communication_channels"><%=text['Communication']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Discussions"><%=text['Discuss']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Learn_forum"><%=text['Learn']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Issues"><%=text['Issues']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Pull_requests"><%=text['PRs']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Mdn_content"><%=text['Content']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Users_teams"><%=text['Users']%></a></li>
-                </ol>
-            </details>
-        </li>
+    <li class="toggle">
+      <details>
+        <summary><%=text['history']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>At_ten"><%=text['at_ten']%></a></li>
+          <li><a href="<%=baseURL%>At_ten/History_of_MDN"><%=text['history_of_mdn']%></a></li>
+        </ol>
+      </details>
+    </li>
 
-        <li class="toggle">
+    <li class="toggle">
+      <details>
+        <summary><%=text['advisory_board']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>MDN_Product_Advisory_Board"><%=text['mdn_product_advisory_board']%></a></li>
+          <li><a href="<%=baseURL%>MDN_Product_Advisory_Board/Membership"><%=text['product_advisory_board_charter_&_membership']%></a></li>
+        </ol>
+      </details>
+    </li>
+
+    <li class="toggle">
+      <details>
+        <summary><%=text['community_guidelines']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Community"><%=text['community_guidelines_overview']%></a></li>
+          <li class="toggle">
             <details>
-                <summary><%=text['Writing_guide']%></summary>
-                <ol>
-                    <li><a href="<%=baseURL%>Writing_guidelines"><%=text['Write_overview']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/What_we_write"><%=text['What_write']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Writing_style_guide"><%=text['Style_guide']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Howto"><%=text['Howto']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Page_structures"><%=text['Structures']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Attrib_copyright_license"><%=text['Attrib']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Experimental_deprecated_obsolete"><%=text['Exper']%></a></li>
-                </ol>
+              <summary><%=text['contributing_to_mdn_web_docs']%></summary>
+              <ol>
+                <li><a href="<%=baseURL%>Community/Contributing"><%=text['contributing_to_mdn_web_docs_overview']%></a></li>
+                <li><a href="<%=baseURL%>Community/Contributing/Getting_started"><%=text['getting_started']%></a></li>
+                <li><a href="<%=baseURL%>Community/Contributing/Our_repositories"><%=text['our_repositories']%></a></li>
+                <li><a href="<%=baseURL%>Community/Contributing/Translated_content"><%=text['translated_content']%></a></li>
+                <li><a href="<%=baseURL%>Community/Contributing/Security_vulnerability_response"><%=text['security_vulnerability_response']%></a></li>
+              </ol>
             </details>
-        </li>
-    </ol>
+          </li>
+          <li><a href="<%=baseURL%>Community/Open_source_etiquette"><%=text['open_source_etiquette']%></a></li>
+          <li><a href="<%=baseURL%>Community/Communication_channels"><%=text['communication_channels']%></a></li>
+          <li><a href="<%=baseURL%>Community/Discussions"><%=text['discussions']%></a></li>
+          <li><a href="<%=baseURL%>Community/Learn_forum"><%=text['learn_forum']%></a></li>
+          <li><a href="<%=baseURL%>Community/Issues"><%=text['issues']%></a></li>
+          <li><a href="<%=baseURL%>Community/Pull_requests"><%=text['prs']%></a></li>
+          <li class="toggle">
+            <details>
+              <summary><%=text['mdn_content']%></summary>
+              <ol>
+                <li><a href="<%=baseURL%>Community/Mdn_content"><%=text['contributing_mdn_content']%></a></li>
+                <li><a href="<%=baseURL%>Community/Mdn_content/Issues"><%=text['contributing_mdn_content_issues']%></a></li>
+                <li><a href="<%=baseURL%>Community/Mdn_content/Pull_requests"><%=text['contributing_mdn_content_prs']%></a></li>
+              </ol>
+            </details>
+          </li>
+          <li><a href="<%=baseURL%>Community/Users_teams"><%=text['roles_and_teams']%></a></li>
+        </ol>
+      </details>
+    </li>
+
+    <li class="toggle">
+      <details>
+        <summary><%=text['contributing_to_mdn']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Contribute"><%=text['contributing_to_mdn_overview']%></a></li>
+          <li><a href="<%=baseURL%>Contribute/Processes"><%=text['documentation_processes']%></a></li>
+          <li><a href="<%=baseURL%>Contribute/Processes/Workstream_assessment_project"><%=text['mdn_workstream_assessment']%></a></li>
+        </ol>
+      </details>
+    </li>
+
+    <li class="toggle">
+      <details>
+        <summary><%=text['writing_guide']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Writing_guidelines"><%=text['write_overview']%></a></li>
+          <li><a href="<%=baseURL%>Writing_guidelines/What_we_write"><%=text['what_we_write']%></a></li>
+          <li><a href="<%=baseURL%>Writing_guidelines/Writing_style_guide"><%=text['writing_style_guide']%></a></li>
+          <li class="toggle">
+            <details>
+              <summary><%=text['how_to_guides']%></summary>
+              <ol>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto"><%=text['how_to_guides_overview']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Images_media"><%=text['how_to_images_media']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Creating_moving_deleting"><%=text['how_to_crud_pages']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Document_a_CSS_property"><%=text['how_to_css_property']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Document_an_HTTP_header"><%=text['how_to_http_header']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Document_web_errors"><%=text['how_to_web_errors']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Research_technology"><%=text['how_to_research']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/JSON_Structured_data"><%=text['how_to_use_structured_data']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Write_an_api_reference"><%=text['how_to_api_ref']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Write_a_new_entry_in_the_glossary"><%=text['how_to_glossary']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Howto/Markdown_in_MDN"><%=text['how_to_markdown']%></a></li>
+              </ol>
+            </details>
+          </li>
+          <li class="toggle">
+            <details>
+              <summary><%=text['page_structures']%></summary>
+              <ol>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures"><%=text['page_structures_overview']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Banners_and_notices"><%=text['page_structures_banners_notices']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Code_examples"><%=text['page_structures_code_examples']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Compatibility_tables"><%=text['page_structures_compatibility_tables']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Live_samples"><%=text['page_structures_live_examples']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Page_types"><%=text['page_structures_page_types']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Quicklinks"><%=text['page_structures_quicklinks']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Specification_tables"><%=text['page_structures_specification_tables']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Syntax_sections"><%=text['page_structures_syntax_sections']%></a></li>
+                <li><a href="<%=baseURL%>Writing_guidelines/Page_structures/Macros"><%=text['page_structures_using_macros']%></a></li>
+              </ol>
+            </details>
+          </li>
+          <li><a href="<%=baseURL%>Writing_guidelines/Attrib_copyright_license"><%=text['attribution']%></a></li>
+          <li><a href="<%=baseURL%>Writing_guidelines/Experimental_deprecated_obsolete"><%=text['statuses']%></a></li>
+        </ol>
+      </details>
+    </li>
+    <li><a href="<%=baseURL%>Changelog"><%=text['changelog']%></a></li>
+    <li><a href="<%=baseURL%>Kitchensink"><%=text['kitchensink']%></a></li>
+  </ol>
 </section>
