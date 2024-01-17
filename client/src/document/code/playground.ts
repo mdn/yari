@@ -137,6 +137,13 @@ export function addCollectButton(
     return;
   }
   if (!element || element.querySelector(".play-button")) return;
+  if (
+    [...(element.nextElementSibling?.classList.values() || [])].filter((c) =>
+      ["js", "javascript", "css", "html"].includes(c)
+    ).length === 0
+  ) {
+    return;
+  }
   const checkId = crypto.randomUUID();
   const playlist = document.createElement("div");
   playlist.classList.add("playlist");
