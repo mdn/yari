@@ -3,16 +3,16 @@ import { JSDOM } from "jsdom";
 
 const locales = {
   "en-US": {
-    About_MDN: "Community guidelines",
+    community_guidelines: "Community guidelines",
   },
   fr: {
-    About_MDN: "Règles de la communauté",
+    community_guidelines: "Règles de la communauté",
   },
 };
 
 function checkSidebarDom(dom, locale) {
   const summaries = dom.querySelectorAll("summary");
-  assert.equal(summaries[0].textContent, locales[locale].About_MDN);
+  assert.equal(summaries[2].textContent, locales[locale].community_guidelines);
 }
 
 describeMacro("MDNSidebar", function () {
