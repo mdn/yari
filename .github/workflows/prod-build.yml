@@ -384,8 +384,9 @@ jobs:
         run: yarn ai-help-macros update-index
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          PGHOST: ${{ secrets.SUPABASE_HOST }}
+          PGUSER: ${{ secrets.SUPABASE_USER }}
+          PGPASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
 
       - name: Slack Notification
         if: failure()

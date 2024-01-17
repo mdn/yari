@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
 import caporal from "@caporal/core";
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import pg from "pg";
+import pgvector from "pgvector/pg";
 import { fdir } from "fdir";
 import OpenAI from "openai";
 import { load as cheerio } from "cheerio";
@@ -56,7 +57,14 @@ export async function updateEmbeddings(
   }
 
   // Supabase.
-  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+  const pgClient = new pg.Client({
+    port: 5432,
+    database: "postgres",
+  });
+
+  await pgClient.connect();
+  await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
+  await pgvector.registerType(pgClient);
 
   // Open AI.
   const openai = new OpenAI({
@@ -72,14 +80,11 @@ export async function updateEmbeddings(
       });
     } catch (e: any) {
       const {
-        data: {
-          error: { message, type },
-        },
+        error: { message, type },
         status,
-        statusText,
       } = e.response;
       console.error(
-        `[!] Failed to create embedding (${status} ${statusText}): ${type} - ${message}`
+        `[!] Failed to create embedding (${status}): ${type} - ${message}`
       );
       // Try again with trimmed content.
       embeddingResponse = await openai.embeddings.create({
@@ -100,7 +105,7 @@ export async function updateEmbeddings(
   };
 
   console.log(`Retrieving all indexed documents...`);
-  const existingDocs = await fetchAllExistingDocs(supabaseClient);
+  const existingDocs = await fetchAllExistingDocs(pgClient);
   console.log(`-> Done.`);
 
   const existingDocByUrl = new Map<string, IndexedDoc>(
@@ -162,23 +167,41 @@ export async function updateEmbeddings(
         const { total_tokens, embedding } = await createEmbedding(text);
 
         // Create/update document record.
-        await supabaseClient
-          .from("mdn_doc_macro")
-          .upsert(
-            {
-              mdn_url,
-              title,
-              hash,
-              html,
-              token_count: total_tokens,
-              embedding,
-              text_hash,
-            },
-            { onConflict: "mdn_url" }
-          )
-          .select()
-          .single()
-          .throwOnError();
+        const query = {
+          name: "upsert-embedding-doc",
+          text: `
+            INSERT INTO mdn_doc_macro(
+                    mdn_url,
+                    title,
+                    hash,
+                    html,
+                    token_count,
+                    embedding,
+                    text_hash
+                )
+            VALUES($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (mdn_url) DO
+            UPDATE
+            SET mdn_url = $1,
+                title = $2,
+                hash = $3,
+                html = $4,
+                token_count = $5,
+                embedding = $6,
+                text_hash = $7
+          `,
+          values: [
+            mdn_url,
+            title,
+            hash,
+            html,
+            total_tokens,
+            pgvector.toSql(embedding),
+            text_hash,
+          ],
+          rowMode: "array",
+        };
+
+        await pgClient.query(query);
       } catch (err: any) {
         console.error(`!> [${mdn_url}] Failed to update document.`);
         const context = err?.response?.data ?? err?.response ?? err;
@@ -192,20 +215,22 @@ export async function updateEmbeddings(
         );
 
         // Create/update document record.
-        await supabaseClient
-          .from("mdn_doc_macro")
-          .upsert(
-            {
-              mdn_url,
-              title,
-              hash,
-              html,
-            },
-            { onConflict: "mdn_url" }
-          )
-          .select()
-          .single()
-          .throwOnError();
+        const query = {
+          name: "upsert-doc",
+          text: `
+            INSERT INTO mdn_doc_macro(mdn_url, title, hash, html)
+            VALUES($1, $2, $3, $4) ON CONFLICT (mdn_url) DO
+            UPDATE
+            SET mdn_url = $1,
+                title = $2,
+                hash = $3,
+                html = $4
+          `,
+          values: [mdn_url, title, hash, html],
+          rowMode: "array",
+        };
+
+        await pgClient.query(query);
       } catch (err: any) {
         console.error(`!> [${mdn_url}] Failed to update document.`);
         const context = err?.response?.data ?? err?.response ?? err;
@@ -219,14 +244,18 @@ export async function updateEmbeddings(
     console.log(`Applying deletions...`);
     for (const { id, mdn_url } of deletions) {
       console.log(`-> [${mdn_url}] Deleting indexed document...`);
-      await supabaseClient
-        .from("mdn_doc_macro")
-        .delete()
-        .eq("id", id)
-        .throwOnError();
+      const query = {
+        name: "delete-doc",
+        text: `DELETE from mdn_doc_macro WHERE id = $1`,
+        values: [id],
+        rowMode: "array",
+      };
+
+      await pgClient.query(query);
     }
     console.log(`-> Done.`);
   }
+  pgClient.end();
 }
 
 async function formatDocs(directory: string) {
@@ -449,24 +478,44 @@ export function isNotSupportedAtAll(support: SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
 
-async function fetchAllExistingDocs(supabase: SupabaseClient) {
+async function fetchAllExistingDocs(pgClient) {
   const PAGE_SIZE = 1000;
-  const selectDocs = () =>
-    supabase
-      .from("mdn_doc_macro")
-      .select("id, mdn_url, title, hash, token_count, text_hash")
-      .order("id")
-      .limit(PAGE_SIZE);
+  const selectDocs = async (lastId) => {
+    const query = {
+      name: "fetch-all-doc",
+      text: `
+        SELECT id,
+            mdn_url,
+            title,
+            hash,
+            token_count,
+            text_hash
+        from mdn_doc_macro
+        WHERE id > $1
+        ORDER BY id ASC
+        LIMIT $2
+      `,
+      values: [lastId, PAGE_SIZE],
+      rowMode: "array",
+    };
+    const result = await pgClient.query(query);
+    return result.rows.map(
+      ([id, mdn_url, title, hash, token_count, text_hash]) => {
+        return { id, mdn_url, title, hash, token_count, text_hash };
+      }
+    );
+  };
 
-  let { data } = await selectDocs().throwOnError();
-  let allData = data;
-  while (data.length === PAGE_SIZE) {
-    const lastItem = data[data.length - 1];
-    ({ data } = await selectDocs().gt("id", lastItem.id).throwOnError());
-    allData = [...allData, ...data];
+  const allDocs = [];
+  let docs = await selectDocs(0);
+  allDocs.push(...docs);
+  while (docs.length === PAGE_SIZE) {
+    const lastItem = docs[docs.length - 1];
+    docs = await selectDocs(lastItem.id);
+    allDocs.push(...docs);
   }
 
-  return allData;
+  return allDocs;
 }
 
 // CLI.
