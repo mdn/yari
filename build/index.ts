@@ -568,7 +568,28 @@ export async function buildDocument(
 
 function addBaseline(doc: Partial<Doc>) {
   if (doc.browserCompat) {
-    return getWebFeatureStatus(...doc.browserCompat);
+    const filteredBrowserCompat = doc.browserCompat.filter(
+      (query) =>
+        // temporary blocklist while we wait for per-key baseline statuses
+        // or another solution to the baseline/bcd table discrepancy problem
+        ![
+          "api.Clipboard.read",
+          "api.Clipboard.readText",
+          "api.Clipboard.write",
+          "api.Clipboard.writeText",
+          "api.ClipboardEvent",
+          "api.ClipboardEvent.ClipboardEvent",
+          "api.ClipboardEvent.clipboardData",
+          "api.ClipboardItem",
+          "api.ClipboardItem.ClipboardItem",
+          "api.ClipboardItem.getType",
+          "api.ClipboardItem.presentationStyle",
+          "api.ClipboardItem.types",
+          "api.Navigator.clipboard",
+          "api.Permissions.permission_clipboard-read",
+        ].includes(query)
+    );
+    return getWebFeatureStatus(...filteredBrowserCompat);
   }
 }
 
