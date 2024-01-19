@@ -9,12 +9,7 @@ import OpenAI from "openai";
 import { load as cheerio } from "cheerio";
 
 import { DocMetadata } from "../libs/types/document.js";
-import {
-  BUILD_OUT_ROOT,
-  OPENAI_KEY,
-  SUPABASE_SERVICE_ROLE_KEY,
-  SUPABASE_URL,
-} from "../libs/env/index.js";
+import { BUILD_OUT_ROOT, OPENAI_KEY, PG_URI } from "../libs/env/index.js";
 import {
   getBCDDataForPath,
   SimpleSupportStatementExtended,
@@ -50,16 +45,13 @@ export async function updateEmbeddings(
   directory: string,
   updateFormatting: boolean
 ) {
-  if (!OPENAI_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    throw Error(
-      "Please set these environment variables: OPENAI_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY"
-    );
+  if (!OPENAI_KEY || !PG_URI) {
+    throw Error("Please set these environment variables: OPENAI_KEY, PG_URI");
   }
 
   // Postgres.
   const pgClient = new pg.Client({
-    port: 5432,
-    database: "postgres",
+    connectionString: PG_URI,
   });
 
   await pgClient.connect();
