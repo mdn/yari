@@ -56,7 +56,7 @@ export async function updateEmbeddings(
     );
   }
 
-  // Supabase.
+  // Postgres.
   const pgClient = new pg.Client({
     port: 5432,
     database: "postgres",
@@ -78,11 +78,7 @@ export async function updateEmbeddings(
         model: "text-embedding-ada-002",
         input,
       });
-    } catch (e: any) {
-      const {
-        error: { message, type },
-        status,
-      } = e.response;
+    } catch ({ error: { message, type }, status }: any) {
       console.error(
         `[!] Failed to create embedding (${status}): ${type} - ${message}`
       );
