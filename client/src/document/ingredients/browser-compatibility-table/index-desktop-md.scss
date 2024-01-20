@@ -1,6 +1,7 @@
 @media screen and (min-width: $screen-md) {
   .table-container {
-    width: calc(100% + 6rem);
+    margin: 0;
+    width: 100%;
   }
 
   .bc-table {
