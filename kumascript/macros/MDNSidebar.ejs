@@ -207,12 +207,12 @@ const sections = [
   },
 ];
 
-const baseURL = `/${env.locale}/docs/MDN/`;
-
+const sidebarURL = `/docs/MDN/`;
+const baseURL = `/${env.locale}${sidebarURL}`;
 async function getTitle(pageSlug) {
   let page = await wiki.getPage(`${baseURL}${pageSlug}`);
   if (!page.title) {
-    page = await wiki.getPage(`/en-US/${baseURL}${pageSlug}`);
+    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
   }
   return page.title;
 }
@@ -236,6 +236,7 @@ async function renderSection(section) {
 }
 
 async function renderSidebar(macroName) {
+ try {
   let output = '<section id="Quick_links" data-macro="MDNSidebar"><ol>';
   for (const section of sections) {
     if (section.subSections) {
@@ -246,6 +247,9 @@ async function renderSidebar(macroName) {
   }
   output += "</ol></section>";
   return output;
+  } catch (e) {
+    console.warn("error");
+  }
 }
 
 const output = await renderSidebar();
