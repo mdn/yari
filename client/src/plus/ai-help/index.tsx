@@ -276,11 +276,15 @@ function AIHelpAssistantResponse({
   queuedExamples,
   setQueue,
   messages,
+  highlightedExample,
+  setHighlightedExample
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
   messages: Message[];
+  highlightedExample: string | null;
+  setHighlightedExample : React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
@@ -400,7 +404,7 @@ function AIHelpAssistantResponse({
                 sample += 1;
                 return (
                   <div className="code-example">
-                    <div className="example-header play-collect">
+                    <div className={`example-header play-collect ${highlightedExample === id ? 'active' : ''}`}>
                       <span className="language-name">{code}</span>
                       {message.status === MessageStatus.Complete &&
                         ["html", "js", "javascript", "css"].includes(
@@ -517,6 +521,7 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [highlightedExample, setHighlightedExample] = useState<string | null>(null);
   const { queuedExamples, setQueue } = useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
@@ -611,7 +616,7 @@ export function AIHelpInner() {
 
   return (
     <>
-      <PlayQueue gleanContext={AI_HELP} />
+      <PlayQueue gleanContext={AI_HELP} setHighlightedExample={setHighlightedExample} />
       <AIHelpHistory
         currentChatId={chatId}
         lastUpdate={lastUpdate}
@@ -653,6 +658,8 @@ export function AIHelpInner() {
                             queuedExamples={queuedExamples}
                             setQueue={setQueue}
                             messages={messages}
+                            highlightedExample={highlightedExample}
+                            setHighlightedExample={setHighlightedExample}
                           />
                         )}
                       </li>
@@ -718,6 +725,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: topic new`);
                           setQuery("");
                           setQueue([]);
+                          setHighlightedExample(null);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}

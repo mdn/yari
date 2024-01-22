@@ -13,10 +13,12 @@ function PQEntry({
   gleanContext,
   item: { id, key, lang },
   unqueue,
+  setHighlightedExample
 }: {
   gleanContext: string;
   item: QueueEntry;
   unqueue: () => void;
+  setHighlightedExample?: (value: string | null) => void;
 }) {
   const gleanClick = useGleanClick();
   const getHeader = () => {
@@ -24,9 +26,12 @@ function PQEntry({
     return element?.parentElement?.parentElement;
   };
   const setActive = (value: boolean) => {
-    const header = getHeader();
-    if (header instanceof HTMLElement) {
-      header.classList.toggle("active", value);
+    if (setHighlightedExample) {
+      if (value) {
+        setHighlightedExample(id);
+      } else {
+        setHighlightedExample(null);
+      }
     }
   };
   const intoView = () => {
@@ -39,8 +44,8 @@ function PQEntry({
   return (
     <li
       key={key}
-      onMouseOver={() => setActive(true)}
-      onMouseOut={() => setActive(false)}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
     >
       <button
         className="queue-ref"
@@ -68,9 +73,11 @@ function PQEntry({
 export function PlayQueue({
   gleanContext = PLAYGROUND,
   standalone = false,
+  setHighlightedExample = () => {},
 }: {
   gleanContext?: string;
   standalone?: boolean;
+  setHighlightedExample?: (value: string | null) => void;
 }) {
   const locale = useLocale();
   const isServer = useIsServer();
@@ -121,6 +128,7 @@ export function PlayQueue({
                   unqueue={() =>
                     setQueue((old) => old.filter((x) => x.id !== item.id))
                   }
+                  setHighlightedExample={setHighlightedExample}
                 />
               ))}
             </ul>
