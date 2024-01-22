@@ -167,7 +167,7 @@ function AIHelpUserQuestion({
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            if (canEdit && question) {
+            if (canEdit && question?.trim()) {
               gleanClick(`${AI_HELP}: edit submit`);
               setEditing(false);
               submit(
