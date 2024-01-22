@@ -11,9 +11,9 @@
     "paths": {
       "front-matter": ["./type-fixes/front-matter.js"],
       "@mdn/browser-compat-data/types": [
-        "./node_modules/@mdn/browser-compat-data/types.d.ts"
+        "./node_modules/@mdn/browser-compat-data/types.d.ts",
       ],
-      "web-features": ["./type-fixes/web-features.js"]
+      "web-features": ["./type-fixes/web-features.js"],
     },
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
@@ -21,11 +21,11 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "ES2020"
+    "target": "ES2020",
   },
   "ts-node": {
     "esm": true,
-    "swc": true
+    "swc": true,
   },
-  "exclude": ["client", "ssr"]
+  "exclude": ["client", "ssr"],
 }

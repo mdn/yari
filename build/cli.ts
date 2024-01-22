@@ -365,9 +365,8 @@ async function buildDocuments(
   // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
-    localeMeta.forEach(
-      (doc) =>
-        doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    localeMeta.forEach((doc) =>
+      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
     )
   );
   fs.writeFileSync(

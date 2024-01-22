@@ -358,9 +358,9 @@ function Results({
                 LANGUAGES.has(document.locale) && (
                   <span
                     className="locale-indicator"
-                    title={`The linked document is in ${LANGUAGES.get(
-                      document.locale
-                    )?.English} which is different from your current locale.`}
+                    title={`The linked document is in ${
+                      LANGUAGES.get(document.locale)?.English
+                    } which is different from your current locale.`}
                   >
                     {LANGUAGES.get(document.locale)?.English}
                   </span>
