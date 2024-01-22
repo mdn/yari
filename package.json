@@ -148,7 +148,7 @@
     "@babel/preset-env": "^7.23.8",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
-    "@playwright/test": "^1.41.0",
+    "@playwright/test": "^1.41.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@supabase/supabase-js": "^2.39.3",
     "@svgr/webpack": "^8.1.0",
