@@ -19,14 +19,18 @@ function PQEntry({
   unqueue: () => void;
 }) {
   const gleanClick = useGleanClick();
+  const { setHighlightedExample } = useUIStatus();
   const getHeader = () => {
     const element = document.getElementById(id);
     return element?.parentElement?.parentElement;
   };
   const setActive = (value: boolean) => {
-    const header = getHeader();
-    if (header instanceof HTMLElement) {
-      header.classList.toggle("active", value);
+    if (setHighlightedExample) {
+      if (value) {
+        setHighlightedExample(id);
+      } else {
+        setHighlightedExample(null);
+      }
     }
   };
   const intoView = () => {
@@ -39,8 +43,8 @@ function PQEntry({
   return (
     <li
       key={key}
-      onMouseOver={() => setActive(true)}
-      onMouseOut={() => setActive(false)}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
     >
       <button
         className="queue-ref"
