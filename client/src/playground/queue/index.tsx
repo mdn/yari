@@ -13,14 +13,13 @@ function PQEntry({
   gleanContext,
   item: { id, key, lang },
   unqueue,
-  setHighlightedExample
 }: {
   gleanContext: string;
   item: QueueEntry;
   unqueue: () => void;
-  setHighlightedExample?: (value: string | null) => void;
 }) {
   const gleanClick = useGleanClick();
+  const { setHighlightedExample } = useUIStatus();
   const getHeader = () => {
     const element = document.getElementById(id);
     return element?.parentElement?.parentElement;
@@ -73,11 +72,9 @@ function PQEntry({
 export function PlayQueue({
   gleanContext = PLAYGROUND,
   standalone = false,
-  setHighlightedExample = () => {},
 }: {
   gleanContext?: string;
   standalone?: boolean;
-  setHighlightedExample?: (value: string | null) => void;
 }) {
   const locale = useLocale();
   const isServer = useIsServer();
@@ -128,7 +125,6 @@ export function PlayQueue({
                   unqueue={() =>
                     setQueue((old) => old.filter((x) => x.id !== item.id))
                   }
-                  setHighlightedExample={setHighlightedExample}
                 />
               ))}
             </ul>

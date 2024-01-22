@@ -126,6 +126,20 @@ export function collectCode(input?: HTMLInputElement): EditorContent {
   };
 }
 
+export function highlight(
+  header: Element,
+  highlightedExample: string | null
+) {
+  // highlight the header if it's the one we're mouse-overing 
+  // on the corresponding item in the queue
+  const id = header.querySelector('[type="checkbox"]')?.id;
+  if (highlightedExample === id) {
+    header.classList.add("active");
+  } else {
+    header.classList.remove("active");
+  }
+}
+
 export function addCollectButton(
   element: Element | null,
   id: string,

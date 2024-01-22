@@ -9,8 +9,10 @@ import {
   addCollectButton,
   getCodeAndNodesForIframe,
   getCodeAndNodesForIframeBySampleClass,
+  highlight,
 } from "./code/playground";
 import { addCopyToClipboardButton } from "./code/copy";
+import { useUIStatus } from "../ui-context";
 
 export function useDocumentURL() {
   const locale = useLocale();
@@ -25,6 +27,8 @@ export function useDocumentURL() {
 export function useCollectSample(doc: any) {
   const isServer = useIsServer();
   const locale = useLocale();
+  const { highlightedExample } = useUIStatus();
+
 
   useEffect(() => {
     if (isServer) {
@@ -40,8 +44,9 @@ export function useCollectSample(doc: any) {
       )
       .forEach((header) => {
         addCollectButton(header, "collect", locale);
+        highlight(header, highlightedExample);
       });
-  }, [doc, isServer, locale]);
+  }, [doc, isServer, locale, highlightedExample]);
 }
 
 export function useRunSample(doc: Doc | undefined) {

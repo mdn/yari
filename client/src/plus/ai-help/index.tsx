@@ -276,18 +276,15 @@ function AIHelpAssistantResponse({
   queuedExamples,
   setQueue,
   messages,
-  highlightedExample,
-  setHighlightedExample
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
   messages: Message[];
-  highlightedExample: string | null;
-  setHighlightedExample : React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
+  const { highlightedExample } = useUIStatus();
 
   let sample = 0;
 
@@ -521,8 +518,7 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const [highlightedExample, setHighlightedExample] = useState<string | null>(null);
-  const { queuedExamples, setQueue } = useUIStatus();
+  const { queuedExamples, setQueue, setHighlightedExample } = useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
   const user = useUserData();
@@ -616,7 +612,7 @@ export function AIHelpInner() {
 
   return (
     <>
-      <PlayQueue gleanContext={AI_HELP} setHighlightedExample={setHighlightedExample} />
+      <PlayQueue gleanContext={AI_HELP} />
       <AIHelpHistory
         currentChatId={chatId}
         lastUpdate={lastUpdate}
@@ -658,8 +654,6 @@ export function AIHelpInner() {
                             queuedExamples={queuedExamples}
                             setQueue={setQueue}
                             messages={messages}
-                            highlightedExample={highlightedExample}
-                            setHighlightedExample={setHighlightedExample}
                           />
                         )}
                       </li>
