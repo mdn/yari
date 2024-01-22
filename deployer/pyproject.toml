@@ -13,7 +13,7 @@ click = "^8.1.7"
 boto3 = "^1.34.23"
 python-decouple = "^3.8"
 requests = {extras = ["security"], version = "^2.31.0"}
-elasticsearch-dsl = "^7.4.1"
+elasticsearch-dsl = "^8.12.0"
 selectolax = "^0.3.18"
 PyGithub = "^1.59"
 unidiff = "^0.7.5"
