@@ -150,8 +150,12 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
           {Object.entries(result.tests)
             .filter(
               ([_, test]) =>
-                test.result !==
-                "contribute-json-only-required-on-mozilla-properties"
+                ![
+                  "contribute-json-only-required-on-mozilla-properties",
+                  "x-xss-protection-enabled-mode-block",
+                  "x-xss-protection-disabled",
+                  "x-xss-protection-not-implemented",
+                ].includes(test.result)
             )
             .sort(([aName], [bName]) =>
               (TEST_MAP[aName]?.name || aName).localeCompare(
