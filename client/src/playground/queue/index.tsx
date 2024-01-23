@@ -19,17 +19,17 @@ function PQEntry({
   unqueue: () => void;
 }) {
   const gleanClick = useGleanClick();
-  const { setHighlightedExample } = useUIStatus();
+  const { setHighlightedQueueExample } = useUIStatus();
   const getHeader = () => {
     const element = document.getElementById(id);
     return element?.parentElement?.parentElement;
   };
   const setActive = (value: boolean) => {
-    if (setHighlightedExample) {
+    if (setHighlightedQueueExample) {
       if (value) {
-        setHighlightedExample(id);
+        setHighlightedQueueExample(id);
       } else {
-        setHighlightedExample(null);
+        setHighlightedQueueExample(null);
       }
     }
   };

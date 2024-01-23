@@ -284,7 +284,7 @@ function AIHelpAssistantResponse({
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
-  const { highlightedExample } = useUIStatus();
+  const { highlightedQueueExample } = useUIStatus();
 
   let sample = 0;
 
@@ -403,7 +403,7 @@ function AIHelpAssistantResponse({
                   <div className="code-example">
                     <div
                       className={`example-header play-collect ${
-                        highlightedExample === id ? "active" : ""
+                        highlightedQueueExample === id ? "active" : ""
                       }`}
                     >
                       <span className="language-name">{code}</span>
@@ -522,7 +522,8 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const { queuedExamples, setQueue, setHighlightedExample } = useUIStatus();
+  const { queuedExamples, setQueue, setHighlightedQueueExample } =
+    useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
   const user = useUserData();
@@ -723,7 +724,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: topic new`);
                           setQuery("");
                           setQueue([]);
-                          setHighlightedExample(null);
+                          setHighlightedQueueExample(null);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}

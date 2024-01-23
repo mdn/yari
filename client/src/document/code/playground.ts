@@ -126,11 +126,14 @@ export function collectCode(input?: HTMLInputElement): EditorContent {
   };
 }
 
-export function highlight(header: Element, highlightedExample: string | null) {
-  // highlight the header if it's the one we're mouse-overing
-  // on the corresponding item in the queue
+export function highlight(
+  header: Element,
+  highlightedQueueExample: string | null
+) {
+  // Highlight the header if it's the one we're mouse-overing
+  // on the corresponding item in the queue.
   const id = header.querySelector('[type="checkbox"]')?.id;
-  if (highlightedExample === id) {
+  if (highlightedQueueExample === id) {
     header.classList.add("active");
   } else {
     header.classList.remove("active");

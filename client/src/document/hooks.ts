@@ -27,7 +27,7 @@ export function useDocumentURL() {
 export function useCollectSample(doc: any) {
   const isServer = useIsServer();
   const locale = useLocale();
-  const { highlightedExample } = useUIStatus();
+  const { highlightedQueueExample } = useUIStatus();
 
   useEffect(() => {
     if (isServer) {
@@ -43,9 +43,9 @@ export function useCollectSample(doc: any) {
       )
       .forEach((header) => {
         addCollectButton(header, "collect", locale);
-        highlight(header, highlightedExample);
+        highlight(header, highlightedQueueExample);
       });
-  }, [doc, isServer, locale, highlightedExample]);
+  }, [doc, isServer, locale, highlightedQueueExample]);
 }
 
 export function useRunSample(doc: Doc | undefined) {
