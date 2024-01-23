@@ -136,7 +136,7 @@ export async function updateEmbeddings(
   }
 
   console.log(
-    `-> ${updates.length} of ${seenUrls.size} documents were changed (or added).`
+    `-> ${updates.length} (${formattingUpdates.length}) of ${seenUrls.size} documents were changed or added (or formatted).`
   );
   const deletions: IndexedDoc[] = [...existingDocByUrl.entries()]
     .filter(([key]) => !seenUrls.has(key))
