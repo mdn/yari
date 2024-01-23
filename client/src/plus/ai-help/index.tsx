@@ -401,7 +401,11 @@ function AIHelpAssistantResponse({
                 sample += 1;
                 return (
                   <div className="code-example">
-                    <div className={`example-header play-collect ${highlightedExample === id ? 'active' : ''}`}>
+                    <div
+                      className={`example-header play-collect ${
+                        highlightedExample === id ? "active" : ""
+                      }`}
+                    >
                       <span className="language-name">{code}</span>
                       {message.status === MessageStatus.Complete &&
                         ["html", "js", "javascript", "css"].includes(

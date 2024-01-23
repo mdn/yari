@@ -29,7 +29,6 @@ export function useCollectSample(doc: any) {
   const locale = useLocale();
   const { highlightedExample } = useUIStatus();
 
-
   useEffect(() => {
     if (isServer) {
       return;

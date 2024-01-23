@@ -13,8 +13,8 @@ interface UIStatus {
   queuedExamples: Set<string>;
   queue: QueueEntry[];
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
-  highlightedExample: null | string,
-  setHighlightedExample: (value: string | null) => void,
+  highlightedExample: null | string;
+  setHighlightedExample: (value: string | null) => void;
 }
 
 export enum Overlay {
@@ -33,9 +33,9 @@ const UIContext = React.createContext<UIStatus>({
   setColorScheme: () => {},
   queuedExamples: new Set<string>(),
   queue: [],
-  setQueue: () => { },
+  setQueue: () => {},
   highlightedExample: null,
-  setHighlightedExample: () => { },
+  setHighlightedExample: () => {},
 });
 
 export function UIProvider(props: any) {
@@ -48,7 +48,9 @@ export function UIProvider(props: any) {
   );
   const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
   const [queue, setQueue] = useState<QueueEntry[]>([]);
-  const [highlightedExample, setHighlightedExample] = useState<string | null>(null);
+  const [highlightedExample, setHighlightedExample] = useState<string | null>(
+    null
+  );
 
   const toggleMobileOverlay = useCallback(
     (overlay: Overlay, shown?: boolean) => {
@@ -123,7 +125,7 @@ export function UIProvider(props: any) {
         queue,
         setQueue,
         highlightedExample,
-        setHighlightedExample
+        setHighlightedExample,
       }}
     >
       {props.children}
