@@ -98,20 +98,7 @@ export async function getCSSSyntax(
   // get the contents of webref
   const parsedWebRef = await getParsedWebRef();
 
-  // get all the value syntaxes
-  let values = {};
-  for (const spec of Object.values(parsedWebRef)) {
-    // Add parent values.
-    values = { ...values, ...spec.values };
-    // Add child values.
-    [...Object.values(spec.properties), ...Object.values(spec.values)].forEach(
-      (value) => {
-        if ("values" in value && Array.isArray(value.values)) {
-          values = { ...byName(value.values), ...values };
-        }
-      }
-    );
-  }
+  const values = await getAllValueSyntaxes();
 
   /**
    * Get the spec shortnames for an item, given:
@@ -529,22 +516,52 @@ export async function getCSSSyntax(
   return output;
 }
 
+let parsedWebRefCache: null | Promise<WebRefObjectData> = null;
 async function getParsedWebRef(): Promise<WebRefObjectData> {
-  const rawItems = await getRawWebRefData();
+  if (!parsedWebRefCache) {
+    parsedWebRefCache = getRawWebRefData().then((rawItems) =>
+      Object.fromEntries(
+        Object.entries(rawItems).map(
+          ([name, { spec, properties, atrules, values }]) => [
+            name,
+            {
+              spec,
+              properties: byName(properties),
+              atrules: byName(atrules),
+              values: byName(values),
+            },
+          ]
+        )
+      )
+    );
+  }
 
-  return Object.fromEntries(
-    Object.entries(rawItems).map(
-      ([name, { spec, properties, atrules, values }]) => [
-        name,
-        {
-          spec,
-          properties: byName(properties),
-          atrules: byName(atrules),
-          values: byName(values),
-        },
-      ]
-    )
-  );
+  return parsedWebRefCache;
+}
+
+let valueSyntaxesCache = null;
+async function getAllValueSyntaxes() {
+  if (!valueSyntaxesCache) {
+    valueSyntaxesCache = getParsedWebRef().then((parsedWebRef) => {
+      let values = {};
+      for (const spec of Object.values(parsedWebRef)) {
+        // Add parent values.
+        values = { ...values, ...spec.values };
+        // Add child values.
+        [
+          ...Object.values(spec.properties),
+          ...Object.values(spec.values),
+        ].forEach((value) => {
+          if ("values" in value && Array.isArray(value.values)) {
+            values = { ...byName(value.values), ...values };
+          }
+        });
+      }
+      return values;
+    });
+  }
+
+  return valueSyntaxesCache;
 }
 
 function byName<T extends Named>(items: T[]): Record<string, T> {

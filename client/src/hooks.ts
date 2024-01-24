@@ -255,3 +255,17 @@ export function useIsIntersecting(
   }, [node, options]);
   return isIntersectingState;
 }
+
+export const useScrollToAnchor = () => {
+  const scrolledRef = React.useRef(false);
+  const { hash } = useLocation();
+  React.useEffect(() => {
+    if (hash && !scrolledRef.current) {
+      const element = document.getElementById(hash.replace("#", ""));
+      if (element) {
+        element.scrollIntoView({ behavior: "instant" });
+        scrolledRef.current = true;
+      }
+    }
+  });
+};

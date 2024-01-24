@@ -5,8 +5,8 @@
     "noEmit": false,
     "preserveConstEnums": true,
     "strictNullChecks": false,
-    "target": "ES2021"
+    "target": "ES2021",
   },
   "include": ["src"],
-  "exclude": []
+  "exclude": [],
 }

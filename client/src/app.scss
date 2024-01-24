@@ -122,11 +122,13 @@
   }
 }
 
-:target {
+:target,
+section[id] {
   scroll-margin-top: var(--sticky-header-with-actions-height);
 }
 
-.sticky-header-container.without-actions ~ * :target {
+.sticky-header-container.without-actions ~ * :target,
+.sticky-header-container.without-actions ~ * section[id] {
   scroll-margin-top: var(--sticky-header-without-actions-height);
 }
 
