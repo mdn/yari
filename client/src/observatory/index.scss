@@ -147,24 +147,6 @@
     border-spacing: 0;
     overflow: hidden;
 
-    td {
-      overflow-wrap: anywhere;
-    }
-
-    th,
-    td {
-      border: none;
-      padding: 1.5rem;
-
-      :first-child {
-        margin-top: 0;
-      }
-
-      :last-child {
-        margin-bottom: 0;
-      }
-    }
-
     &.overall {
       th {
         background: var(--observatory-table-bg);
@@ -210,19 +192,6 @@
           text-decoration: none;
         }
       }
-
-      .icon {
-        height: 1.4rem;
-        width: 1.4rem;
-      }
-
-      .icon-alert-circle {
-        background-color: var(--observatory-alert);
-      }
-
-      .icon-check-circle {
-        background-color: var(--observatory-check);
-      }
     }
 
     &.headers {
@@ -232,6 +201,46 @@
           width: 30%;
         }
       }
+    }
+
+    &.cookies {
+      th,
+      td {
+        &:nth-of-type(n + 3) {
+          text-align: center;
+        }
+      }
+    }
+
+    td {
+      overflow-wrap: anywhere;
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 1.5rem;
+
+      :first-child {
+        margin-top: 0;
+      }
+
+      :last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .icon {
+      height: 1.3rem;
+      width: 1.3rem;
+    }
+
+    .icon-alert-circle {
+      background-color: var(--observatory-alert);
+    }
+
+    .icon-check-circle {
+      background-color: var(--observatory-check);
     }
   }
 

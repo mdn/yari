@@ -39,9 +39,8 @@ export interface ObservatoryScanResult {
 export type ObservatoryTestResult = Record<string, ObservatoryIndividualTest>;
 
 export interface ObservatoryIndividualTest {
+  data: null | ObservatoryCookiesData;
   expectation: string;
-  name: string;
-  output: any;
   pass: boolean;
   result: string;
   score_description: string;
@@ -53,4 +52,18 @@ export interface ObservatoryHistoryResult {
   grade: string;
   id: number;
   score: number;
+}
+
+export type ObservatoryCookiesData = Record<
+  string,
+  ObservatoryIndividualCookie
+>;
+
+export interface ObservatoryIndividualCookie {
+  domain: string;
+  expires: number;
+  httponly: boolean;
+  path: string;
+  samesite: string;
+  secure: boolean;
 }

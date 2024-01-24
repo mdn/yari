@@ -1,5 +1,4 @@
 import { ObservatoryResult } from "./types";
-import useSWRImmutable from "swr/immutable";
 import { useParams } from "react-router";
 import ObservatoryRecommendations from "./recommendations";
 import { Icon } from "../ui/atoms/icon";
@@ -69,6 +68,7 @@ export default function ObservatoryResults() {
           <ObservatoryRecommendations result={result} host={host} />
           <ObservatoryTests result={result} />
           <ObservatoryHistory result={result} />
+          <ObservatoryCookies result={result} />
           <ObservatoryHeaders result={result} />
         </>
       ) : isLoading ? (
@@ -220,6 +220,73 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
       </table>
     </>
   ) : null;
+}
+
+function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
+  const cookies = result.tests.cookies?.data;
+  return cookies && Object.keys(cookies).length !== 0 ? (
+    <>
+      <h2>Cookies</h2>
+      <table className="fancy cookies">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Expires</th>
+            <th>Path</th>
+            <th>Secure</th>
+            <th>HttpOnly</th>
+            <th>SameSite</th>
+            <th>Prefixed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(cookies).map(([key, value]) => (
+            <tr key={key}>
+              <td>{key}</td>
+              <td>
+                {new Date(value.expires * 1000).toLocaleString([], {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </td>
+              <td>
+                <code>{value.path}</code>
+              </td>
+              <td>
+                <Icon name={value.secure ? "check-circle" : "alert-circle"} />
+                <span className="visually-hidden">
+                  {value.secure ? "True" : "False"}
+                </span>
+              </td>
+              <td>
+                <Icon name={value.httponly ? "check-circle" : "alert-circle"} />
+                <span className="visually-hidden">
+                  {value.httponly ? "True" : "False"}
+                </span>
+              </td>
+              <td>{value.samesite && <code>{value.samesite}</code>}</td>
+              <td>
+                {[key]
+                  .map(
+                    (x) => x.startsWith("__Host") || x.startsWith("__Secure")
+                  )
+                  .map((x) => (
+                    <>
+                      <Icon name={x ? "check-circle" : "alert-circle"} />
+                      <span className="visually-hidden">
+                        {x ? "True" : "False"}
+                      </span>
+                    </>
+                  ))}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  ) : (
+    []
+  );
 }
 
 function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
