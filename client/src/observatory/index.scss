@@ -145,7 +145,6 @@
   table {
     border-collapse: separate;
     border-spacing: 0;
-    overflow: hidden;
 
     &.overall {
       th {
@@ -173,7 +172,8 @@
           width: 30%;
         }
 
-        &:nth-of-type(n + 2):nth-of-type(-n + 3) {
+        &:nth-of-type(n + 2):nth-of-type(-n + 3),
+        &:last-of-type {
           text-align: center;
         }
       }

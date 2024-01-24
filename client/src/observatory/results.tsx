@@ -6,51 +6,64 @@ import { SidePlacement } from "../ui/organisms/placement";
 import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
 import { useResult } from ".";
+import { InfoTooltip } from "../document/molecules/tooltip";
 
-const TEST_MAP: Record<string, { name?: string; url: string }> = {
+const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
   "content-security-policy": {
     name: "Content Security Policy",
     url: "https://infosec.mozilla.org/guidelines/web_security#content-security-policy",
+    info: "Content Security Policy (CSP) can prevent a wide range of cross-site scripting (XSS) and clickjacking attacks against your website.",
   },
   contribute: {
     name: "Contribute.json",
     url: "https://infosec.mozilla.org/guidelines/web_security#contributejson",
+    info: "Having a contribute.json file on the root your website allows Mozilla's information security team to more quickly triage incoming security bugs.",
   },
   cookies: {
     url: "https://infosec.mozilla.org/guidelines/web_security#cookies",
+    info: "Using cookies attributes such as Secure and HttpOnly can protect users from having their personal information stolen.",
   },
   "cross-origin-resource-sharing": {
     name: "Cross-origin Resource Sharing",
     url: "https://infosec.mozilla.org/guidelines/web_security#cross-origin-resource-sharing",
+    info: "Incorrectly configured CORS settings can allow foreign sites to read your site's contents, possibly allowing them access to private user information.",
   },
   "public-key-pinning": {
     name: "HTTP Public Key Pinning",
     url: "https://infosec.mozilla.org/guidelines/web_security#http-public-key-pinning",
+    info: "HTTP Public Key Pinning (HPKP) binds a site to a specific combination of certificate authorities and/or keys, protecting against the unauthorized issuance of certificates.",
   },
   redirection: {
     url: "https://infosec.mozilla.org/guidelines/web_security#http-redirections",
+    info: "Properly configured redirections from HTTP to HTTPS allow browsers to correctly apply HTTP Strict Transport Security (HSTS) settings.",
   },
   "referrer-policy": {
     name: "Referrer Policy",
     url: "https://infosec.mozilla.org/guidelines/web_security#referrer-policy",
+    info: "Referrer Policy can protect the privacy of your users by restricting the contents of the HTTP Referer header.",
   },
   "strict-transport-security": {
     name: "HTTP Strict Transport Security",
     url: "https://infosec.mozilla.org/guidelines/web_security#http-strict-transport-security",
+    info: "HTTP Strict Transport Security (HSTS) instructs web browsers to visit your site only over HTTPS.",
   },
   "subresource-integrity": {
     name: "Subresource Integrity",
     url: "https://infosec.mozilla.org/guidelines/web_security#subresource-integrity",
+    info: "Subresource Integrity protects against JavaScript files and stylesheets stored on content delivery networks (CDNs) from being maliciously modified.",
   },
   "x-content-type-options": {
     url: "https://infosec.mozilla.org/guidelines/web_security#x-content-type-options",
+    info: "X-Content-Type-Options instructs browsers to not guess the MIME types of files that the web server is delivering.",
   },
   "x-frame-options": {
     url: "https://infosec.mozilla.org/guidelines/web_security#x-frame-options",
+    info: "X-Frame-Options controls whether your site can be framed, protecting against clickjacking attacks. It has been superseded by Content Security Policy's frame-ancestors directive, but should still be used for now.",
   },
   "x-xss-protection": {
     name: "X-XSS-Protection",
     url: "https://infosec.mozilla.org/guidelines/web_security.html#x-xss-protection",
+    info: "X-XSS-Protection protects against reflected cross-site scripting (XSS) attacks in IE and Chrome, but has been superseded by Content Security Policy. It can still be used to protect users of older web browsers.",
   },
 };
 
@@ -144,6 +157,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
             <th>Result</th>
             <th>Impact</th>
             <th>Details</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -183,6 +197,11 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                 </td>
                 <td>{test.score_modifier}</td>
                 <td>{test.score_description}</td>
+                <td>
+                  {TEST_MAP[name]?.info && (
+                    <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
+                  )}
+                </td>
               </tr>
             ))}
         </tbody>
