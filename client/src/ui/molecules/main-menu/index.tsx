@@ -6,14 +6,12 @@ import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
-import { useLocale } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { MENU } from "../../../telemetry/constants";
 import { useLocation } from "react-router";
 import { ToolsMenu } from "../tools-menu";
 
 export default function MainMenu({ isOpenOnMobile }) {
-  const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
