@@ -67,6 +67,8 @@ export default function ObservatoryResults() {
   const { host } = useParams();
   const { data: result, isLoading, error } = useResult(host);
 
+  document.title = `Scan results for ${host} | MDN Observatory`;
+
   return (
     <div className="observatory-results">
       <h1>Security Report Summary</h1>
