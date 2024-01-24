@@ -45,6 +45,7 @@ export interface ObservatoryIndividualTest {
   result: string;
   score_description: string;
   score_modifier: number;
+  policy?: ObservatoryCSPPolicy;
 }
 
 export interface ObservatoryHistoryResult {
@@ -66,4 +67,18 @@ export interface ObservatoryIndividualCookie {
   path: string;
   samesite: string;
   secure: boolean;
+}
+
+export interface ObservatoryCSPPolicy {
+  antiClickjacking: boolean;
+  defaultNone: boolean;
+  insecureBaseUri: boolean;
+  insecureFormAction: boolean;
+  insecureSchemeActive: boolean;
+  insecureSchemePassive: boolean;
+  strictDynamic: boolean;
+  unsafeEval: boolean;
+  unsafeInline: boolean;
+  unsafeInlineStyle: boolean;
+  unsafeObjects: boolean;
 }

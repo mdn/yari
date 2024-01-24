@@ -15,7 +15,7 @@
       justify-content: center;
       margin: 0 auto;
 
-      * {
+      > * {
         grid-column: 1;
       }
 
@@ -105,7 +105,7 @@
     margin: 0 auto;
     padding: 1.5rem 1rem;
 
-    * {
+    > * {
       grid-column: 1;
     }
 
@@ -207,6 +207,15 @@
       th,
       td {
         &:nth-of-type(n + 3) {
+          text-align: center;
+        }
+      }
+    }
+
+    &.csp {
+      th,
+      td {
+        &:nth-of-type(n + 2) {
           text-align: center;
         }
       }

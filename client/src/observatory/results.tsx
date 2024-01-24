@@ -7,6 +7,7 @@ import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
 import { useResult } from ".";
 import { InfoTooltip } from "../document/molecules/tooltip";
+import ObservatoryCSP from "./csp";
 
 const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
   "content-security-policy": {
@@ -80,6 +81,7 @@ export default function ObservatoryResults() {
           <SidePlacement />
           <ObservatoryRecommendations result={result} host={host} />
           <ObservatoryTests result={result} />
+          <ObservatoryCSP result={result} />
           <ObservatoryHistory result={result} />
           <ObservatoryCookies result={result} />
           <ObservatoryHeaders result={result} />
