@@ -29,11 +29,6 @@ const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
     url: "https://infosec.mozilla.org/guidelines/web_security#cross-origin-resource-sharing",
     info: "Incorrectly configured CORS settings can allow foreign sites to read your site's contents, possibly allowing them access to private user information.",
   },
-  "public-key-pinning": {
-    name: "HTTP Public Key Pinning",
-    url: "https://infosec.mozilla.org/guidelines/web_security#http-public-key-pinning",
-    info: "HTTP Public Key Pinning (HPKP) binds a site to a specific combination of certificate authorities and/or keys, protecting against the unauthorized issuance of certificates.",
-  },
   redirection: {
     url: "https://infosec.mozilla.org/guidelines/web_security#http-redirections",
     info: "Properly configured redirections from HTTP to HTTPS allow browsers to correctly apply HTTP Strict Transport Security (HSTS) settings.",
@@ -180,32 +175,34 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                 { sensitivity: "base" }
               )
             )
-            .map(([name, test]) => (
-              <tr key={name}>
-                <td>
-                  <a href={TEST_MAP[name]?.url}>
-                    {TEST_MAP[name]?.name ||
-                      name
-                        .split("-")
-                        .map((x) => x[0].toUpperCase() + x.slice(1))
-                        .join("-")}
-                  </a>
-                </td>
-                <td>
-                  <Icon name={test.pass ? "check-circle" : "alert-circle"} />
-                  <span className="visually-hidden">
-                    {test.pass ? "Passed" : "Failed"}
-                  </span>
-                </td>
-                <td>{test.score_modifier}</td>
-                <td>{test.score_description}</td>
-                <td>
-                  {TEST_MAP[name]?.info && (
-                    <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
-                  )}
-                </td>
-              </tr>
-            ))}
+            .map(([name, test]) =>
+              TEST_MAP[name] ? (
+                <tr key={name}>
+                  <td>
+                    <a href={TEST_MAP[name].url}>
+                      {TEST_MAP[name].name ||
+                        name
+                          .split("-")
+                          .map((x) => x[0].toUpperCase() + x.slice(1))
+                          .join("-")}
+                    </a>
+                  </td>
+                  <td>
+                    <Icon name={test.pass ? "check-circle" : "alert-circle"} />
+                    <span className="visually-hidden">
+                      {test.pass ? "Passed" : "Failed"}
+                    </span>
+                  </td>
+                  <td>{test.score_modifier}</td>
+                  <td>{test.score_description}</td>
+                  <td>
+                    {TEST_MAP[name].info && (
+                      <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
+                    )}
+                  </td>
+                </tr>
+              ) : null
+            )}
         </tbody>
       </table>
     </>
