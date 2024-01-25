@@ -63,6 +63,11 @@
         display: flex;
         height: 3rem;
 
+        @media screen and (min-width: $screen-md) {
+          // Avoid input field "sticking" to ad.
+          max-width: 75%;
+        }
+
         :focus-visible {
           outline-offset: -2px;
           outline-width: 3px;
