@@ -119,7 +119,7 @@ function ObservatoryRating({
           <tr>
             <td>
               <div
-                className={`grade grade-${result.scan.grade[0].toLowerCase()}`}
+                className={`grade grade-${result.scan.grade[0]?.toLowerCase()}`}
               >
                 {result.scan.grade}
               </div>
@@ -146,7 +146,7 @@ function ObservatoryRating({
 }
 
 function ObservatoryTests({ result }: { result: ObservatoryResult }) {
-  return (
+  return Object.keys(result.tests).length !== 0 ? (
     <>
       <h2>Test Scores</h2>
       <table className="fancy tests">
@@ -181,11 +181,11 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
               TEST_MAP[name] ? (
                 <tr key={name}>
                   <td>
-                    <a href={TEST_MAP[name].url}>
-                      {TEST_MAP[name].name ||
+                    <a href={TEST_MAP[name]?.url}>
+                      {TEST_MAP[name]?.name ||
                         name
                           .split("-")
-                          .map((x) => x[0].toUpperCase() + x.slice(1))
+                          .map((x) => x[0]?.toUpperCase() + x.slice(1))
                           .join("-")}
                     </a>
                   </td>
@@ -198,7 +198,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                   <td>{test.score_modifier}</td>
                   <td>{test.score_description}</td>
                   <td>
-                    {TEST_MAP[name].info && (
+                    {TEST_MAP[name]?.info && (
                       <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
                     )}
                   </td>
@@ -208,7 +208,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
         </tbody>
       </table>
     </>
-  );
+  ) : null;
 }
 
 function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
@@ -243,7 +243,7 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
 }
 
 function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
-  const cookies = result.tests.cookies?.data;
+  const cookies = result.tests["cookies"]?.data;
   return cookies && Object.keys(cookies).length !== 0 ? (
     <>
       <h2>Cookies</h2>

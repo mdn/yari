@@ -10,13 +10,16 @@ export default function ObservatoryRecommendations({
   host: string;
 }) {
   const { trigger } = useUpdateResult(host);
-  return (
+  const tests = result.tests;
+  return tests && Object.keys(tests).length !== 0 ? (
     <>
       <h2>Recommendation</h2>
       <div id="recommendations" className="box">
         {[
           "cross-origin-resource-sharing-implemented-with-universal-access",
-        ].includes(result.tests["cross-origin-resource-sharing"].result) && (
+        ].includes(
+          result.tests["cross-origin-resource-sharing"]?.result || ""
+        ) && (
           <div className="recommendation">
             <p>
               Your site is configured with extremely broad resource sharing
@@ -39,7 +42,7 @@ export default function ObservatoryRecommendations({
           </div>
         )}
         {["hsts-not-implemented-no-https", "hsts-invalid-cert"].includes(
-          result.tests["strict-transport-security"].result
+          result.tests["strict-transport-security"]?.result || ""
         ) && (
           <div className="recommendation">
             <p>Wondering where to start?</p>
@@ -75,7 +78,7 @@ export default function ObservatoryRecommendations({
           "redirection-missing",
           "redirection-not-to-https",
           "redirection-invalid-cert",
-        ].includes(result.tests.redirection.result) && (
+        ].includes(result.tests["redirection"]?.result || "") && (
           <div className="recommendation">
             <p>
               We noticed that your site is accessible over HTTPS, but still
@@ -103,7 +106,7 @@ export default function ObservatoryRecommendations({
           "hsts-implemented-max-age-less-than-six-months",
           "hsts-not-implemented",
           "hsts-header-invalid",
-        ].includes(result.tests["strict-transport-security"].result) && (
+        ].includes(result.tests["strict-transport-security"]?.result || "") && (
           <div className="recommendation">
             <p>
               Fantastic work using HTTPS! Did you know that you can ensure users
@@ -133,7 +136,7 @@ export default function ObservatoryRecommendations({
           "cookies-without-secure-flag",
           "cookies-session-without-httponly-flag",
           "cookies-session-without-secure-flag",
-        ].includes(result.tests.cookies.result) && (
+        ].includes(result.tests["cookies"]?.result || "") && (
           <div className="recommendation">
             <p>
               You're doing a great job with HTTPS and HTTP Strict Transport
@@ -158,7 +161,7 @@ export default function ObservatoryRecommendations({
         {[
           "x-frame-options-not-implemented",
           "x-frame-options-header-invalid",
-        ].includes(result.tests["x-frame-options"].result) && (
+        ].includes(result.tests["x-frame-options"]?.result || "") && (
           <div className="recommendation">
             <p>What’s a good next step?</p>
             <p>
@@ -184,7 +187,7 @@ export default function ObservatoryRecommendations({
         {[
           "x-content-type-options-not-implemented",
           "x-content-type-options-header-invalid",
-        ].includes(result.tests["x-content-type-options"].result) && (
+        ].includes(result.tests["x-content-type-options"]?.result || "") && (
           <div className="recommendation">
             <p>You’re halfway finished! Nice job!</p>
             <p>
@@ -213,7 +216,7 @@ export default function ObservatoryRecommendations({
           "csp-implemented-with-unsafe-inline",
           "csp-not-implemented",
           "csp-header-invalid",
-        ].includes(result.tests["content-security-policy"].result) && (
+        ].includes(result.tests["content-security-policy"]?.result || "") && (
           <div className="recommendation">
             <p>You’re doing a wonderful job so far!</p>
             <p>
@@ -236,7 +239,7 @@ export default function ObservatoryRecommendations({
           </div>
         )}
         {["sri-not-implemented-but-external-scripts-loaded-securely"].includes(
-          result.tests["subresource-integrity"].result
+          result.tests["subresource-integrity"]?.result || ""
         ) && (
           <div className="recommendation">
             <p>
@@ -265,7 +268,7 @@ export default function ObservatoryRecommendations({
           "referrer-policy-not-implemented",
           "referrer-policy-unsafe",
           "referrer-policy-headeer-invalid",
-        ].includes(result.tests["referrer-policy"].result) && (
+        ].includes(result.tests["referrer-policy"]?.result || "") && (
           <div className="recommendation">
             <p>You’re on the home stretch!</p>
             <p>
@@ -288,7 +291,7 @@ export default function ObservatoryRecommendations({
           </div>
         )}
         {["csp-implemented-with-unsafe-inline-in-style-src-only"].includes(
-          result.tests["content-security-policy"].result
+          result.tests["content-security-policy"]?.result || ""
         ) && (
           <div className="recommendation">
             <p>Almost there!</p>
@@ -332,6 +335,20 @@ export default function ObservatoryRecommendations({
           <p>
             Once you've successfully completed your change, click Rescan for the
             next piece of advice.
+          </p>
+          <Button onClickHandler={() => trigger(result.scan.hidden)}>
+            Rescan
+          </Button>
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <div id="recommendations" className="box">
+        <div className="rescan">
+          <p>
+            Oops, it looks like we can't load these test results, you should
+            Rescan.
           </p>
           <Button onClickHandler={() => trigger(result.scan.hidden)}>
             Rescan
