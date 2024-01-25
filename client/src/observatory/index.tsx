@@ -7,6 +7,7 @@ import "./index.scss";
 import { ObservatoryResult } from "./types";
 import useSWRImmutable from "swr/immutable";
 import { OBSERVATORY_API_URL } from "../env";
+import { PageNotFound } from "../page-not-found";
 
 export default function Observatory() {
   return (
@@ -14,6 +15,7 @@ export default function Observatory() {
       <Routes>
         <Route path="/" element={<ObservatoryLanding />} />
         <Route path="/:host" element={<ObservatoryResults />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );
