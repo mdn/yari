@@ -189,12 +189,25 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                           .join("-")}
                     </a>
                   </td>
-                  <td>
-                    <Icon name={test.pass ? "check-circle" : "alert-circle"} />
-                    <span className="visually-hidden">
-                      {test.pass ? "Passed" : "Failed"}
-                    </span>
-                  </td>
+                  {[
+                    "referrer-policy-not-implemented",
+                    "referrer-policy-no-referrer-when-downgrade",
+                    "sri-not-implemented-response-not-html",
+                    "sri-not-implemented-but-no-scripts-loaded",
+                    "sri-not-implemented-but-all-scripts-loaded-from-secure-origin",
+                    "cookies-not-found",
+                  ].includes(test.result) ? (
+                    <td>-</td>
+                  ) : (
+                    <td>
+                      <Icon
+                        name={test.pass ? "check-circle" : "alert-circle"}
+                      />
+                      <span className="visually-hidden">
+                        {test.pass ? "Passed" : "Failed"}
+                      </span>
+                    </td>
+                  )}
                   <td>{test.score_modifier}</td>
                   <td>{test.score_description}</td>
                   <td>
