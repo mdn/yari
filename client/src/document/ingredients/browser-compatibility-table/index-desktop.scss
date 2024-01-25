@@ -32,13 +32,13 @@
     }
   }
 
-  .table-container {
+  .bc-table-outer {
     margin: 0 -3rem;
     overflow: auto;
-    width: 100vw;
+    width: 100vw !important;
   }
 
-  .table-container-inner {
+  .bc-table-inner {
     min-width: max-content;
     padding: 0 3rem;
     position: relative;

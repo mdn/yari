@@ -175,8 +175,8 @@ export default function BrowserCompatibilityTable({
         >
           Report problems with this compatibility data on GitHub
         </a>
-        <figure className="table-container">
-          <figure className="table-container-inner">
+        <figure className="table-container bc-table-outer">
+          <figure className="bc-table-inner">
             <table key="bc-table" className="bc-table bc-table-web">
               <Headers
                 platforms={platforms}
