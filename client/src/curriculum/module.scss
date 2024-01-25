@@ -1,0 +1,219 @@
+@use "../ui/vars" as *;
+
+.curriculum-content-container {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    a:link,
+    a:visited {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
+    }
+
+    a[href^="#"] {
+      &::before {
+        color: var(--text-inactive);
+        content: "#";
+        display: inline-block;
+        font-size: 0.7em;
+        line-height: 1;
+        margin-left: -0.8em;
+        text-decoration: none;
+        visibility: hidden;
+        width: 0.8em;
+      }
+
+      &:hover {
+        &::before {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  .sidebar,
+  .toc,
+  .curriculum-content {
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+  }
+
+  .sidebar {
+    align-self: start;
+    grid-area: sidebar;
+
+    li {
+      margin-left: 1rem;
+    }
+  }
+
+  .curriculum-content {
+    grid-area: main;
+
+    blockquote.curriculum-notes {
+      border: 0px;
+      border-radius: var(--elem-radius);
+      background-color: #fcefe299;
+      padding: 1rem 2rem;
+      margin: 1rem;
+    }
+
+    p.curriculum-outcomes {
+      display: flex;
+      font-weight: var(--font-body-strong-weight);
+      margin-bottom: 0.5rem;
+      &::before {
+        content: url("../assets/icons/cur-resources.svg");
+        margin-right: 1rem;
+        width: 24px;
+        height: 24px;
+        display: block;
+      }
+    }
+
+    li {
+      list-style-type: disc;
+      list-style-position: inside;
+      margin-left: 1rem;
+    }
+
+    p.curriculum-resources {
+      margin-bottom: 0.5rem;
+      + ul > li {
+        list-style-type: none;
+
+        &:not(.external)::before {
+          content: url("../assets/icons/cur-mdn-resource.svg");
+          margin-right: 0.5rem;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+        &.external {
+          &::before {
+            content: url("../assets/icons/cur-ext-resource.svg");
+            margin-right: 0.5rem;
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: grid;
+    gap: 3rem;
+    grid-template-areas: "sidebar main";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    padding-left: 1.5rem;
+    padding-right: 3rem;
+  }
+
+  @media screen and (min-width: $screen-xl) {
+    display: grid;
+    gap: 3rem;
+    grid-template-areas: "sidebar main toc";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    .toc {
+      --offset: var(--sticky-header-with-actions-height);
+
+      display: block;
+      grid-area: toc;
+      height: fit-content;
+      padding-bottom: 0;
+    }
+
+    .in-nav-toc {
+      display: none;
+    }
+  }
+
+  .sidebar-container {
+    --offset: var(--sticky-header-with-actions-height);
+    --max-height: calc(100vh - var(--offset));
+
+    @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    max-height: var(--max-height);
+    position: sticky;
+    top: var(--offset);
+    z-index: var(--z-index-sidebar-mobile);
+
+    @media screen and (min-width: $screen-md) {
+      z-index: auto;
+
+      .sidebar {
+        mask-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0% calc(100% - 3rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+      }
+
+      @media screen and not (min-height: $screen-height-place-limit) {
+        overflow: auto;
+      }
+    }
+
+    &.toc-container,
+    .toc-container {
+      grid-area: toc;
+      .place {
+        grid-area: toc;
+        margin: 0;
+      }
+      @media screen and (min-width: $screen-xl) {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        height: calc(100vh - var(--offset));
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgb(0, 0, 0) 3rem calc(100% - 3rem),
+          rgba(0, 0, 0, 0) 100%
+        );
+        overflow: auto;
+        position: sticky;
+        top: var(--offset);
+
+        .place {
+          margin: 1rem 0;
+          padding-bottom: 3rem;
+        }
+      }
+      @media screen and (max-width: #{$screen-md - 1}) {
+        .place {
+          display: none;
+        }
+      }
+    }
+    @media screen and (min-width: $screen-xl) {
+      display: contents;
+
+      .sidebar {
+        mask-image: none;
+      }
+    }
+  }
+}

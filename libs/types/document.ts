@@ -1,3 +1,4 @@
+import { SidebarEntry } from "./curriculum.js";
 import type { SupportStatus } from "./web-features.js";
 
 export interface Source {
@@ -155,6 +156,7 @@ export interface DocMetadata {
 export interface Doc extends DocMetadata {
   sidebarHTML: string;
   sidebarMacro?: string;
+  sidebar: SidebarEntry[];
   toc: Toc[];
   body: Section[];
 }

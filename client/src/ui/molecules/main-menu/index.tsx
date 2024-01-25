@@ -82,6 +82,7 @@ export default function MainMenu({ isOpenOnMobile }) {
             toggleMenu={toggleMenu}
           />
         )}
+        <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>
         <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
         <TopLevelMenuLink to={`/${locale}/play`}>Play</TopLevelMenuLink>
         <TopLevelMenuLink to="/en-US/plus/ai-help">

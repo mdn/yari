@@ -72,13 +72,13 @@ function TOCItem({
   currentViewedTocItem,
 }: Toc & { currentViewedTocItem: string }) {
   const gleanClick = useGleanClick();
-  const href = `#${id.toLowerCase()}`;
+  const href = id && `#${id.toLowerCase()}`;
   return (
     <li className={`document-toc-item ${sub ? "document-toc-item-sub" : ""}`}>
       <a
         className="document-toc-link"
         key={id}
-        aria-current={currentViewedTocItem === id.toLowerCase() || undefined}
+        aria-current={currentViewedTocItem === id?.toLowerCase() || undefined}
         href={href}
         dangerouslySetInnerHTML={{ __html: text }}
         onClick={() => gleanClick(`${TOC_CLICK}: ${href}`)}

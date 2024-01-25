@@ -21,7 +21,7 @@ export interface PlacementContextData
 }
 
 const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
-  side: /\/[^/]+\/(play|docs\/|blog\/|search$)/i,
+  side: /\/[^/]+\/(play|docs\/|blog\/|curriculum\/|search$)/i,
   top: /\/[^/]+\/(?!$|_homepage$).*/i,
   hpMain: /\/[^/]+\/($|_homepage$)/i,
   hpFooter: /\/[^/]+\/($|_homepage$)/i,
