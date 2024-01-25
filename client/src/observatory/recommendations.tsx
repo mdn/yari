@@ -1,6 +1,7 @@
 import { useUpdateResult } from ".";
 import { Button } from "../ui/atoms/button";
 import { ObservatoryResult } from "./types";
+import { Link } from "./utils";
 
 export default function ObservatoryRecommendations({
   result,
@@ -356,18 +357,5 @@ export default function ObservatoryRecommendations({
         </div>
       </div>
     </>
-  );
-}
-
-function Link({ href, children }: { href: string; children: any }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={`${href.startsWith("/") ? "" : "external"}`}
-    >
-      {children}
-    </a>
   );
 }

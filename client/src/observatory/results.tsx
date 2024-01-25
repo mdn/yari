@@ -8,6 +8,7 @@ import NoteCard from "../ui/molecules/notecards";
 import { useResult } from ".";
 import { InfoTooltip } from "../document/molecules/tooltip";
 import ObservatoryCSP from "./csp";
+import { Link } from "./utils";
 
 const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
   "content-security-policy": {
@@ -181,13 +182,13 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
               TEST_MAP[name] ? (
                 <tr key={name}>
                   <td>
-                    <a href={TEST_MAP[name]?.url}>
+                    <Link href={TEST_MAP[name]?.url}>
                       {TEST_MAP[name]?.name ||
                         name
                           .split("-")
                           .map((x) => x[0]?.toUpperCase() + x.slice(1))
                           .join("-")}
-                    </a>
+                    </Link>
                   </td>
                   {[
                     "referrer-policy-not-implemented",
