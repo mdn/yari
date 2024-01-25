@@ -5,7 +5,7 @@ import { useUpdateResult } from ".";
 import { SidePlacement } from "../ui/organisms/placement";
 
 export default function ObservatoryLanding() {
-  document.title = "MDN Observatory";
+  document.title = "Observatory | MDN";
 
   const defaultForm: ObservatoryAnalyzeRequest = {
     host: "",
