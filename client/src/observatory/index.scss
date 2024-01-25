@@ -32,6 +32,10 @@
       }
     }
 
+    h1 {
+      margin-bottom: unset;
+    }
+
     h1 .accent {
       color: var(--observatory-accent);
     }
