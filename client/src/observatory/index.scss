@@ -59,6 +59,11 @@
         display: flex;
         height: 3rem;
 
+        :focus-visible {
+          outline-offset: -2px;
+          outline-width: 3px;
+        }
+
         input {
           background: var(--observatory-bg);
           border: 1px solid var(--observatory-bg-secondary);
