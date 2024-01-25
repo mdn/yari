@@ -11,7 +11,7 @@
     .inner {
       column-gap: 3rem;
       display: grid;
-      grid-template-columns: minmax(min-content, 46rem) max-content;
+      grid-template-columns: minmax(min-content, 46rem) 10rem;
       justify-content: center;
       margin: 0 auto;
 
