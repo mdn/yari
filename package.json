@@ -109,7 +109,7 @@
     "inquirer": "^9.2.12",
     "is-svg": "^5.0.0",
     "js-yaml": "^4.1.0",
-    "loglevel": "^1.8.1",
+    "loglevel": "^1.9.1",
     "lru-cache": "^10.1.0",
     "md5-file": "^5.0.0",
     "mdast-util-from-markdown": "^2.0.0",
