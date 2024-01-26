@@ -45,6 +45,8 @@
     }
 
     form {
+      --border-radius: 0.5rem;
+
       .progress,
       .error {
         align-items: center;
@@ -56,17 +58,21 @@
 
       .progress {
         background: var(--observatory-bg-secondary);
+        border-radius: var(--border-radius);
         color: var(--observatory-accent);
+      }
+
+      @media screen and (min-width: $screen-md) {
+        .progress,
+        .input-group {
+          // Avoid input field / progress "sticking" to ad.
+          max-width: 75%;
+        }
       }
 
       .input-group {
         display: flex;
         height: 3rem;
-
-        @media screen and (min-width: $screen-md) {
-          // Avoid input field "sticking" to ad.
-          max-width: 75%;
-        }
 
         :focus-visible {
           outline-offset: -2px;
@@ -75,16 +81,16 @@
 
         input {
           border: 1px solid var(--observatory-border-accent);
-          border-bottom-left-radius: 0.5rem;
-          border-top-left-radius: 0.5rem;
+          border-bottom-left-radius: var(--border-radius);
+          border-top-left-radius: var(--border-radius);
           flex-grow: 1;
           padding: 0 0.75rem;
         }
 
         button {
           background: var(--button-primary-default);
-          border-bottom-right-radius: 0.5rem;
-          border-top-right-radius: 0.5rem;
+          border-bottom-right-radius: var(--border-radius);
+          border-top-right-radius: var(--border-radius);
           color: var(--background-primary);
           cursor: pointer;
           font: var(--type-emphasis-m);
