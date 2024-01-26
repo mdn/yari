@@ -4,6 +4,10 @@
   background: var(--observatory-bg);
   //min-height: 80vh;
 
+  .accent {
+    color: var(--observatory-accent);
+  }
+
   .observatory-header {
     background: var(--background-primary);
     padding: 1.5rem 1rem;
@@ -34,10 +38,6 @@
 
     h1 {
       margin-bottom: unset;
-    }
-
-    h1 .accent {
-      color: var(--observatory-accent);
     }
 
     p {
@@ -112,6 +112,30 @@
         margin: 0;
         margin-right: 0.5rem;
         width: 1.25rem;
+      }
+    }
+  }
+
+  .observatory-footer {
+    margin: 0 auto;
+    max-width: 60rem;
+    padding: 2rem 0;
+
+    h2 {
+      margin-top: unset;
+    }
+
+    figure {
+      align-items: start;
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+
+      figcaption {
+        p {
+          margin: 0;
+        }
       }
     }
   }

@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useUpdateResult } from ".";
 import { SidePlacement } from "../ui/organisms/placement";
 
+import { ReactComponent as AssessmentSVG } from "../../public/assets/observatory/assessment.svg";
+import { ReactComponent as ScanningSVG } from "../../public/assets/observatory/scanning.svg";
+import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/security.svg";
+import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
+import Container from "../ui/atoms/container";
+
 export default function ObservatoryLanding() {
   document.title = "Observatory | MDN";
 
@@ -28,53 +34,126 @@ export default function ObservatoryLanding() {
   };
 
   return (
-    <section className="observatory-header">
-      <div className="inner">
-        <h1>
-          <span className="accent">Scan</span> a website for free
-        </h1>
-        <p>
-          Empowering over 240,000 websites, the Mozilla Observatory educates
-          developers, system administrators, and security professionals in
-          configuring sites securely.
-        </p>
-        <form onSubmit={submit}>
-          {error && !isMutating && (
-            <div className="error">Error: {error.message}</div>
-          )}
-          {isMutating ? (
-            <div className="progress">Scanning...</div>
-          ) : (
-            <div className="input-group">
-              <label htmlFor="host" className="visually-hidden">
-                Domain
-              </label>
+    <>
+      <section className="observatory-header">
+        <div className="inner">
+          <h1>
+            <span className="accent">Scan</span> a website for free
+          </h1>
+          <p>
+            Empowering over 240,000 websites, the Mozilla Observatory educates
+            developers, system administrators, and security professionals in
+            configuring sites securely.
+          </p>
+          <form onSubmit={submit}>
+            {error && !isMutating && (
+              <div className="error">Error: {error.message}</div>
+            )}
+            {isMutating ? (
+              <div className="progress">Scanning...</div>
+            ) : (
+              <div className="input-group">
+                <label htmlFor="host" className="visually-hidden">
+                  Domain
+                </label>
+                <input
+                  placeholder="Enter the website’s address"
+                  type="text"
+                  name="host"
+                  id="host"
+                  value={form.host}
+                  onChange={(e) => setForm({ ...form, host: e.target.value })}
+                />
+                <button type="submit" disabled={form.host.trim().length === 0}>
+                  Scan
+                </button>
+              </div>
+            )}
+            <label>
               <input
-                placeholder="Enter the website’s address"
-                type="text"
-                name="host"
-                id="host"
-                value={form.host}
-                onChange={(e) => setForm({ ...form, host: e.target.value })}
+                type="checkbox"
+                name="hidden"
+                checked={form.hidden}
+                onChange={(e) => setForm({ ...form, hidden: e.target.checked })}
+                disabled={isMutating}
               />
-              <button type="submit" disabled={form.host.trim().length === 0}>
-                Scan
-              </button>
-            </div>
-          )}
-          <label>
-            <input
-              type="checkbox"
-              name="hidden"
-              checked={form.hidden}
-              onChange={(e) => setForm({ ...form, hidden: e.target.checked })}
-              disabled={isMutating}
-            />
-            Don’t include my site in the public results
-          </label>
-        </form>
-        <SidePlacement />
-      </div>
-    </section>
+              Don’t include my site in the public results
+            </label>
+          </form>
+          <SidePlacement />
+        </div>
+      </section>
+      <section className="observatory-footer">
+        <Container>
+          <h2>
+            MDN <span className="accent">HTTP Observatory</span>
+          </h2>
+          <p>
+            The MDN HTTP Observatory is practical tool designed to enhance web
+            security by analyzing how well websites adhere to various security
+            best practices
+          </p>
+
+          <figure>
+            <AssessmentSVG />
+
+            <figcaption>
+              <p>
+                Developed by Mozilla, the tool performs an in-depth assessment
+                of a site’s HTTP headers and other key security configurations.
+              </p>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <ScanningSVG />
+
+            <figcaption>
+              <p>
+                Through its automated scanning process, it provides developers
+                and website administrators with detailed, actionable feedback,
+                focusing on identifying and addressing potential
+                vulnerabilities.
+              </p>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <SecuritySVG />
+
+            <figcaption>
+              <p>
+                The tool is instrumental in helping developers and website
+                administrators to strengthen their sites against common security
+                threats. The ratings and recommendations are based on
+                well-established web security trends and guidelines, and are
+                shaped by Mozilla's expertise and experience in the field.
+              </p>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <MdnSVG />
+
+            <figcaption>
+              <p>
+                As in any area of web development, there may be multiple valid
+                approaches, and our suggestions are guided by our commitment to
+                a safer and more secure internet. The MDN HTTP Observatory
+                ensures easy access to security insights, enabling the
+                development of more secure and resilient websites in a
+                constantly advancing digital environment.
+              </p>
+            </figcaption>
+          </figure>
+
+          <p>
+            The MDN HTTP Observatory ensures easy access to security insights,
+            enabling the development of more secure and resilient websites in a
+            constantly advancing digital environment.
+          </p>
+        </Container>
+      </section>
+    </>
   );
 }
