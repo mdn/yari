@@ -51,6 +51,7 @@
       .error {
         align-items: center;
         background: var(--observatory-alert);
+        border-radius: var(--border-radius);
         display: flex;
         height: 3rem;
         justify-content: center;
@@ -58,12 +59,12 @@
 
       .progress {
         background: var(--observatory-bg-secondary);
-        border-radius: var(--border-radius);
         color: var(--observatory-accent);
       }
 
       @media screen and (min-width: $screen-md) {
         .progress,
+        .error,
         .input-group {
           // Avoid input field / progress "sticking" to ad.
           max-width: 75%;
@@ -134,8 +135,8 @@
     figure {
       align-items: start;
       display: grid;
-      grid-template-columns: 2rem 1fr;
       gap: 1.5rem;
+      grid-template-columns: 2rem 1fr;
       margin-top: 1.5rem;
 
       figcaption {
