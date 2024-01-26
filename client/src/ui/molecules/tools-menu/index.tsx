@@ -21,7 +21,7 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
         description: "Scan a website for free",
         hasIcon: true,
         iconClasses: "submenu-icon",
-        label: "Observatory",
+        label: "HTTP Observatory",
         url: `/${locale}/observatory`,
       },
     ],

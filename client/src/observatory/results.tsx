@@ -68,7 +68,7 @@ export default function ObservatoryResults() {
   const { host } = useParams();
   const { data: result, isLoading, error } = useResult(host);
 
-  document.title = `Scan results for ${host} | Observatory | MDN`;
+  document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
 
   return (
     <div className="observatory-results">

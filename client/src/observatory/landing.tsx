@@ -11,7 +11,7 @@ import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.sv
 import Container from "../ui/atoms/container";
 
 export default function ObservatoryLanding() {
-  document.title = "Observatory | MDN";
+  document.title = "HTTP Observatory | MDN";
 
   const defaultForm: ObservatoryAnalyzeRequest = {
     host: "",
