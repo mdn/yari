@@ -37,13 +37,12 @@ export default function ObservatoryLanding() {
     <>
       <section className="observatory-header">
         <div className="inner">
-          <h1>
-            <span className="accent">Scan</span> a website for free
-          </h1>
+          <h1>HTTP Observatory</h1>
           <p>
-            Empowering over 240,000 websites, the Mozilla Observatory educates
-            developers, system administrators, and security professionals in
-            configuring sites securely.
+            Launched in 2016, the HTTP Observatory is designed to enhance web
+            security by analyzing website compliance with security best
+            practices. To date, it has delivered insights and recommendations to
+            over 6.5 million websites via 47 million scans.
           </p>
           <form onSubmit={submit}>
             {error && !isMutating && (
@@ -57,7 +56,7 @@ export default function ObservatoryLanding() {
                   Domain
                 </label>
                 <input
-                  placeholder="Enter the website’s address"
+                  placeholder="Scan a website for free (e.g. mozilla.org)"
                   type="text"
                   name="host"
                   id="host"
