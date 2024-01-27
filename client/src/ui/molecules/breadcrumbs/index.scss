@@ -6,11 +6,15 @@
   margin-right: auto;
 
   ol {
+    display: flex;
+    flex-wrap: wrap;
     line-height: 1.2;
+    padding-top: 6px;
   }
 
   li {
     display: none;
+    padding-bottom: 6px;
     // only show last two items on small sizes (size < 426px)
     &:nth-last-child(-n + 2) {
       display: inline-flex;
