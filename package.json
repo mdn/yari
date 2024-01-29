@@ -35,7 +35,7 @@
     "jest": "node --experimental-vm-modules --expose-gc ./node_modules/.bin/jest --logHeapUsage",
     "m2h": "ts-node markdown/m2h/cli.ts",
     "prepack": "yarn build:dist",
-    "prepare": "husky install && yarn install:all && yarn install:all:npm",
+    "prepare": "(husky || true) && yarn install:all && yarn install:all:npm",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
