@@ -79,7 +79,7 @@ export default function ObservatoryResults() {
       <Container extraClasses="observatory-wrapper">
         <section className="header">
           <section className="heading-and-actions">
-            <h1>Security Report Summary</h1>
+            <h1>HTTP Observatory Report</h1>
             <section className="actions">
               <Button href="../">Scan another site</Button>
             </section>
