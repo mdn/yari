@@ -178,17 +178,19 @@
 
   .observatory-results {
     .heading-and-actions {
-      align-items: flex-start;
+      align-items: center;
       display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
       justify-content: space-between;
       margin-bottom: 3rem;
 
-      @media screen and (max-width: $screen-lg) {
-        flex-direction: column;
+      h1 {
+        align-self: flex-start;
+      }
 
-        .actions {
-          align-self: flex-end;
-        }
+      .actions {
+        align-self: center;
       }
     }
 
