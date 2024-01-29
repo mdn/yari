@@ -244,9 +244,12 @@
 
     &.overall {
       th {
-        background: var(--observatory-table-bg);
-        color: var(--observatory-color-secondary);
-        padding-bottom: 0;
+        background: var(--observatory-bg-secondary);
+        color: var(--observatory-accent);
+      }
+
+      td {
+        padding: 0.5rem 1.5rem;
       }
     }
 
