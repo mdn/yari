@@ -72,7 +72,6 @@ export async function updateEmbeddings(
         input,
       });
     } catch (e: any) {
-      console.log(e);
       const {
         data: {
           error: { message, type },
