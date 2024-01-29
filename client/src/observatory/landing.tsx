@@ -35,9 +35,9 @@ export default function ObservatoryLanding() {
 
   return (
     <>
-      <section className="observatory-header">
-        <div className="inner">
-          <section>
+      <section className="observatory-landing">
+        <Container extraClasses="observatory-wrapper">
+          <section className="header">
             <h1>HTTP Observatory</h1>
             <p>
               Launched in 2016, the HTTP Observatory is designed to enhance web
@@ -87,9 +87,9 @@ export default function ObservatoryLanding() {
             </form>
           </section>
           <SidePlacement />
-        </div>
+        </Container>
       </section>
-      <section className="observatory-footer">
+      <section className="observatory-landing-footer">
         <Container>
           <h2>
             MDN <span className="accent">HTTP Observatory</span>

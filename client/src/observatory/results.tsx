@@ -9,6 +9,7 @@ import { useResult } from ".";
 import { InfoTooltip } from "../document/molecules/tooltip";
 import ObservatoryCSP from "./csp";
 import { Link } from "./utils";
+import Container from "../ui/atoms/container";
 
 const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
   "content-security-policy": {
@@ -70,28 +71,36 @@ export default function ObservatoryResults() {
 
   document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
 
+  const hasData = host && result;
+
   return (
     <div className="observatory-results">
-      <h1>Security Report Summary</h1>
-      {host && result ? (
-        <>
-          <ObservatoryRating result={result} host={host} />
-          <SidePlacement />
-          <ObservatoryRecommendations result={result} host={host} />
-          <ObservatoryTests result={result} />
-          <ObservatoryCSP result={result} />
-          <ObservatoryHistory result={result} />
-          <ObservatoryCookies result={result} />
-          <ObservatoryHeaders result={result} />
-        </>
-      ) : isLoading ? (
-        <Loading />
-      ) : (
-        <NoteCard type="error">
-          <h4>Error</h4>
-          <p>{error ? error.message : "An error occurred."}</p>
-        </NoteCard>
-      )}
+      <Container extraClasses="observatory-wrapper">
+        <section className="header">
+          <h1>Security Report Summary</h1>
+          {hasData ? (
+            <ObservatoryRating result={result} host={host} />
+          ) : isLoading ? (
+            <Loading />
+          ) : (
+            <NoteCard type="error">
+              <h4>Error</h4>
+              <p>{error ? error.message : "An error occurred."}</p>
+            </NoteCard>
+          )}
+        </section>
+        {hasData && (
+          <section className="footer">
+            <ObservatoryRecommendations result={result} host={host} />
+            <ObservatoryTests result={result} />
+            <ObservatoryCSP result={result} />
+            <ObservatoryHistory result={result} />
+            <ObservatoryCookies result={result} />
+            <ObservatoryHeaders result={result} />
+          </section>
+        )}
+        <SidePlacement />
+      </Container>
     </div>
   );
 }
@@ -106,42 +115,44 @@ function ObservatoryRating({
   return (
     <>
       <h2>Overall Rating</h2>
-      <table className="overall">
-        <thead>
-          <tr>
-            <th>Grade</th>
-            <th>Score</th>
-            <th>Tests Passed</th>
-            <th>Scan Time</th>
-            <th>Website</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div
-                className={`grade grade-${result.scan.grade[0]?.toLowerCase()}`}
-              >
-                {result.scan.grade}
-              </div>
-              {/* {["a", "b", "c", "d", "e", "f"].map(grade => <><div className={`grade grade-${grade[0]}`}>
+      <figure className="scroll-container">
+        <table className="overall">
+          <thead>
+            <tr>
+              <th>Grade</th>
+              <th>Score</th>
+              <th>Tests Passed</th>
+              <th>Scan Time</th>
+              <th>Website</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div
+                  className={`grade grade-${result.scan.grade[0]?.toLowerCase()}`}
+                >
+                  {result.scan.grade}
+                </div>
+                {/* {["a", "b", "c", "d", "e", "f"].map(grade => <><div className={`grade grade-${grade[0]}`}>
                 {grade.toUpperCase()}
               </div></>)} */}
-            </td>
-            <td>{result.scan.score}/100</td>
-            <td>
-              {result.scan.tests_passed}/{result.scan.tests_quantity}
-            </td>
-            <td>
-              {new Date(result.scan.end_time).toLocaleString([], {
-                dateStyle: "medium",
-                timeStyle: "medium",
-              })}
-            </td>
-            <td>{host}</td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+              <td>{result.scan.score}/100</td>
+              <td>
+                {result.scan.tests_passed}/{result.scan.tests_quantity}
+              </td>
+              <td>
+                {new Date(result.scan.end_time).toLocaleString([], {
+                  dateStyle: "medium",
+                  timeStyle: "medium",
+                })}
+              </td>
+              <td>{host}</td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
     </>
   );
 }
@@ -150,77 +161,79 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
   return Object.keys(result.tests).length !== 0 ? (
     <>
       <h2>Test Scores</h2>
-      <table className="fancy tests">
-        <thead>
-          <tr>
-            <th>Test</th>
-            <th>Result</th>
-            <th>Impact</th>
-            <th>Details</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(result.tests)
-            .filter(
-              ([_, test]) =>
-                ![
-                  "contribute-json-only-required-on-mozilla-properties",
-                  "x-xss-protection-enabled-mode-block",
-                  "x-xss-protection-disabled",
-                  "x-xss-protection-not-implemented",
-                ].includes(test.result)
-            )
-            .sort(([aName], [bName]) =>
-              (TEST_MAP[aName]?.name || aName).localeCompare(
-                TEST_MAP[bName]?.name || bName,
-                undefined,
-                { sensitivity: "base" }
+      <figure className="scroll-container">
+        <table className="fancy tests">
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>Result</th>
+              <th>Impact</th>
+              <th>Details</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(result.tests)
+              .filter(
+                ([_, test]) =>
+                  ![
+                    "contribute-json-only-required-on-mozilla-properties",
+                    "x-xss-protection-enabled-mode-block",
+                    "x-xss-protection-disabled",
+                    "x-xss-protection-not-implemented",
+                  ].includes(test.result)
               )
-            )
-            .map(([name, test]) =>
-              TEST_MAP[name] ? (
-                <tr key={name}>
-                  <td>
-                    <Link href={TEST_MAP[name]?.url}>
-                      {TEST_MAP[name]?.name ||
-                        name
-                          .split("-")
-                          .map((x) => x[0]?.toUpperCase() + x.slice(1))
-                          .join("-")}
-                    </Link>
-                  </td>
-                  {[
-                    "referrer-policy-not-implemented",
-                    "referrer-policy-no-referrer-when-downgrade",
-                    "sri-not-implemented-response-not-html",
-                    "sri-not-implemented-but-no-scripts-loaded",
-                    "sri-not-implemented-but-all-scripts-loaded-from-secure-origin",
-                    "cookies-not-found",
-                  ].includes(test.result) ? (
-                    <td>-</td>
-                  ) : (
+              .sort(([aName], [bName]) =>
+                (TEST_MAP[aName]?.name || aName).localeCompare(
+                  TEST_MAP[bName]?.name || bName,
+                  undefined,
+                  { sensitivity: "base" }
+                )
+              )
+              .map(([name, test]) =>
+                TEST_MAP[name] ? (
+                  <tr key={name}>
                     <td>
-                      <Icon
-                        name={test.pass ? "check-circle" : "alert-circle"}
-                      />
-                      <span className="visually-hidden">
-                        {test.pass ? "Passed" : "Failed"}
-                      </span>
+                      <Link href={TEST_MAP[name]?.url}>
+                        {TEST_MAP[name]?.name ||
+                          name
+                            .split("-")
+                            .map((x) => x[0]?.toUpperCase() + x.slice(1))
+                            .join("-")}
+                      </Link>
                     </td>
-                  )}
-                  <td>{test.score_modifier}</td>
-                  <td>{test.score_description}</td>
-                  <td>
-                    {TEST_MAP[name]?.info && (
-                      <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
+                    {[
+                      "referrer-policy-not-implemented",
+                      "referrer-policy-no-referrer-when-downgrade",
+                      "sri-not-implemented-response-not-html",
+                      "sri-not-implemented-but-no-scripts-loaded",
+                      "sri-not-implemented-but-all-scripts-loaded-from-secure-origin",
+                      "cookies-not-found",
+                    ].includes(test.result) ? (
+                      <td>-</td>
+                    ) : (
+                      <td>
+                        <Icon
+                          name={test.pass ? "check-circle" : "alert-circle"}
+                        />
+                        <span className="visually-hidden">
+                          {test.pass ? "Passed" : "Failed"}
+                        </span>
+                      </td>
                     )}
-                  </td>
-                </tr>
-              ) : null
-            )}
-        </tbody>
-      </table>
+                    <td>{test.score_modifier}</td>
+                    <td>{test.score_description}</td>
+                    <td>
+                      {TEST_MAP[name]?.info && (
+                        <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
+                      )}
+                    </td>
+                  </tr>
+                ) : null
+              )}
+          </tbody>
+        </table>
+      </figure>
     </>
   ) : null;
 }
@@ -229,29 +242,31 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
   return result.history.length ? (
     <>
       <h2>Grade History</h2>
-      <table className="fancy">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Score</th>
-            <th>Grade</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[...result.history].reverse().map(({ end_time, score, grade }) => (
-            <tr key={end_time}>
-              <td>
-                {new Date(end_time).toLocaleString([], {
-                  dateStyle: "full",
-                  timeStyle: "medium",
-                })}
-              </td>
-              <td>{score}</td>
-              <td>{grade}</td>
+      <figure className="scroll-container">
+        <table className="fancy">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Score</th>
+              <th>Grade</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {[...result.history].reverse().map(({ end_time, score, grade }) => (
+              <tr key={end_time}>
+                <td>
+                  {new Date(end_time).toLocaleString([], {
+                    dateStyle: "full",
+                    timeStyle: "medium",
+                  })}
+                </td>
+                <td>{score}</td>
+                <td>{grade}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </figure>
     </>
   ) : null;
 }
@@ -261,62 +276,66 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
   return cookies && Object.keys(cookies).length !== 0 ? (
     <>
       <h2>Cookies</h2>
-      <table className="fancy cookies">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Expires</th>
-            <th>Path</th>
-            <th>Secure</th>
-            <th>HttpOnly</th>
-            <th>SameSite</th>
-            <th>Prefixed</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(cookies).map(([key, value]) => (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>
-                {new Date(value.expires * 1000).toLocaleString([], {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
-              </td>
-              <td>
-                <code>{value.path}</code>
-              </td>
-              <td>
-                <Icon name={value.secure ? "check-circle" : "alert-circle"} />
-                <span className="visually-hidden">
-                  {value.secure ? "True" : "False"}
-                </span>
-              </td>
-              <td>
-                <Icon name={value.httponly ? "check-circle" : "alert-circle"} />
-                <span className="visually-hidden">
-                  {value.httponly ? "True" : "False"}
-                </span>
-              </td>
-              <td>{value.samesite && <code>{value.samesite}</code>}</td>
-              <td>
-                {[key]
-                  .map(
-                    (x) => x.startsWith("__Host") || x.startsWith("__Secure")
-                  )
-                  .map((x) => (
-                    <>
-                      <Icon name={x ? "check-circle" : "alert-circle"} />
-                      <span className="visually-hidden">
-                        {x ? "True" : "False"}
-                      </span>
-                    </>
-                  ))}
-              </td>
+      <figure className="scroll-container">
+        <table className="fancy cookies">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Expires</th>
+              <th>Path</th>
+              <th>Secure</th>
+              <th>HttpOnly</th>
+              <th>SameSite</th>
+              <th>Prefixed</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Object.entries(cookies).map(([key, value]) => (
+              <tr key={key}>
+                <td>{key}</td>
+                <td>
+                  {new Date(value.expires * 1000).toLocaleString([], {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </td>
+                <td>
+                  <code>{value.path}</code>
+                </td>
+                <td>
+                  <Icon name={value.secure ? "check-circle" : "alert-circle"} />
+                  <span className="visually-hidden">
+                    {value.secure ? "True" : "False"}
+                  </span>
+                </td>
+                <td>
+                  <Icon
+                    name={value.httponly ? "check-circle" : "alert-circle"}
+                  />
+                  <span className="visually-hidden">
+                    {value.httponly ? "True" : "False"}
+                  </span>
+                </td>
+                <td>{value.samesite && <code>{value.samesite}</code>}</td>
+                <td>
+                  {[key]
+                    .map(
+                      (x) => x.startsWith("__Host") || x.startsWith("__Secure")
+                    )
+                    .map((x) => (
+                      <>
+                        <Icon name={x ? "check-circle" : "alert-circle"} />
+                        <span className="visually-hidden">
+                          {x ? "True" : "False"}
+                        </span>
+                      </>
+                    ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </figure>
     </>
   ) : (
     []
@@ -327,24 +346,26 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
   return (
     <>
       <h2>Raw Server Headers</h2>
-      <table className="fancy headers">
-        <thead>
-          <tr>
-            <th>Header</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(result.scan.response_headers).map(
-            ([header, value]) => (
-              <tr key={header}>
-                <td>{header}</td>
-                <td>{value}</td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+      <figure className="scroll-container">
+        <table className="fancy headers">
+          <thead>
+            <tr>
+              <th>Header</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(result.scan.response_headers).map(
+              ([header, value]) => (
+                <tr key={header}>
+                  <td>{header}</td>
+                  <td>{value}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </figure>
     </>
   );
 }
