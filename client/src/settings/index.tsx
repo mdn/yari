@@ -7,11 +7,13 @@ import "./index.scss";
 import { Manage } from "./manage";
 import Newsletter from "./newsletter";
 import { ManageAIHelp } from "./ai-help";
+import { useScrollToAnchor } from "../hooks";
 
 const OfflineSettings = React.lazy(() => import("./offline-settings"));
 
 export function Settings() {
   const pageTitle = "Settings";
+  useScrollToAnchor();
   return (
     <>
       <OfflineStatusBar />
