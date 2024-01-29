@@ -42,6 +42,7 @@ interface Doc {
   title: string;
   hash: string;
   html: string;
+  markdown: string;
   text?: string;
   text_hash?: string;
 }
@@ -114,7 +115,7 @@ export async function updateEmbeddings(
   const updates: Doc[] = [];
   const formattingUpdates: Doc[] = [];
 
-  for await (const { mdn_url, title, hash, html, text } of builtDocs(
+  for await (const { mdn_url, title, hash, html, markdown, text } of builtDocs(
     directory
   )) {
     seenUrls.add(mdn_url);
@@ -130,6 +131,7 @@ export async function updateEmbeddings(
         title,
         hash,
         html,
+        markdown,
         text,
         text_hash,
       });
@@ -139,6 +141,7 @@ export async function updateEmbeddings(
         title,
         hash,
         html,
+        markdown,
       });
     }
   }
@@ -155,7 +158,15 @@ export async function updateEmbeddings(
 
   if (updates.length > 0 || formattingUpdates.length > 0) {
     console.log(`Applying updates...`);
-    for (const { mdn_url, title, hash, html, text, text_hash } of updates) {
+    for (const {
+      mdn_url,
+      title,
+      hash,
+      html,
+      markdown,
+      text,
+      text_hash,
+    } of updates) {
       try {
         console.log(`-> [${mdn_url}] Updating document...`);
 
@@ -171,6 +182,7 @@ export async function updateEmbeddings(
               title,
               hash,
               html,
+              markdown,
               token_count: total_tokens,
               embedding,
               text_hash,
@@ -186,7 +198,7 @@ export async function updateEmbeddings(
         console.error(context);
       }
     }
-    for (const { mdn_url, title, hash, html } of formattingUpdates) {
+    for (const { mdn_url, title, hash, html, markdown } of formattingUpdates) {
       try {
         console.log(
           `-> [${mdn_url}] Updating document without generating new embedding...`
@@ -201,6 +213,7 @@ export async function updateEmbeddings(
               title,
               hash,
               html,
+              markdown,
             },
             { onConflict: "mdn_url" }
           )
@@ -231,8 +244,8 @@ export async function updateEmbeddings(
 }
 
 async function formatDocs(directory: string) {
-  for await (const { html, text } of builtDocs(directory)) {
-    console.log(html, text);
+  for await (const { html, markdown, text } of builtDocs(directory)) {
+    console.log(html, markdown, text);
   }
 }
 
@@ -271,7 +284,8 @@ async function* builtDocs(directory: string) {
       $(".bc-data[data-query]").each((_, el) => {
         $(el).replaceWith(buildBCDTable($(el).data("query") as string));
       });
-      const html = h2mSync($.html());
+      const html = $.html();
+      const markdown = h2mSync(html);
 
       // reformat text version, used for embedding
       $("title").remove();
@@ -283,6 +297,7 @@ async function* builtDocs(directory: string) {
         title,
         hash,
         html,
+        markdown,
         text,
       };
     } catch (e) {
