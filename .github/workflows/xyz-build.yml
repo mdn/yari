@@ -33,7 +33,7 @@ permissions:
 jobs:
   build:
     environment: xyz
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
