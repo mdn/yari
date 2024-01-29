@@ -1,7 +1,6 @@
 @use "../ui/vars" as *;
 
 .observatory {
-  --max-width: 60rem;
   background: var(--observatory-bg);
 
   .accent {
@@ -36,6 +35,10 @@
         margin: 0 auto;
       }
 
+      @media screen and (min-width: $screen-md) {
+        margin: 0;
+      }
+
       @media screen and (min-width: 20rem) and (max-width: $screen-md) {
         max-width: 20rem;
         min-height: 10rem;
@@ -56,7 +59,14 @@
 
     @media screen and (min-width: $screen-md) {
       grid-template-areas: "header pong" "main main" "footer footer";
-      grid-template-columns: minmax(min-content, 46rem) 12rem;
+      grid-template-columns: minmax(0, 1fr) 12rem;
+    }
+
+    @media screen and (min-width: $screen-xl) {
+      grid-template-areas: "sidebar header pong" "sidebar main nothing" "sidebar footer nothing";
+      grid-template-columns: 15rem minmax(0, 1fr) 15rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
   }
 
