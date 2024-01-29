@@ -31,7 +31,28 @@
 
     section.place.side {
       grid-area: pong;
-      margin: 0 auto;
+
+      @media screen and (max-width: $screen-md) {
+        margin: 0 auto;
+        margin-bottom: 3rem;
+      }
+
+      @media screen and (min-width: 20rem) and (max-width: $screen-md) {
+        max-width: 20rem;
+        min-height: 10rem;
+
+        .pong-box {
+          width: 100%;
+        }
+
+        .pong-box .pong {
+          flex-direction: row;
+        }
+
+        .pong-note {
+          margin-top: 0;
+        }
+      }
     }
 
     @media screen and (min-width: $screen-md) {
