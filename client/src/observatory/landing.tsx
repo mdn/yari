@@ -91,15 +91,6 @@ export default function ObservatoryLanding() {
       </section>
       <section className="observatory-landing-footer">
         <Container>
-          <h2>
-            MDN <span className="accent">HTTP Observatory</span>
-          </h2>
-          <p>
-            The MDN HTTP Observatory is practical tool designed to enhance web
-            security by analyzing how well websites adhere to various security
-            best practices
-          </p>
-
           <figure>
             <AssessmentSVG />
 
