@@ -1,8 +1,6 @@
 @use "../ui/vars" as *;
 
 .observatory {
-  background: var(--observatory-bg);
-
   .accent {
     color: var(--observatory-accent);
   }
@@ -162,8 +160,8 @@
   }
 
   .observatory-landing-footer {
+    background: var(--observatory-bg);
     margin: 0 auto;
-    max-width: var(--max-width);
 
     h2 {
       margin-top: unset;
@@ -360,6 +358,7 @@
   }
 
   #recommendations {
+    background-color: var(--background-secondary);
     .recommendation {
       display: none;
 
