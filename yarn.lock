@@ -1815,12 +1815,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
-"@fast-csv/parse@^4.3.6":
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/@fast-csv/parse/-/parse-4.3.6.tgz#ee47d0640ca0291034c7aa94039a744cfb019264"
-  integrity sha512-uRsLYksqpbDmWaSmzvJcuApSEe38+6NQZBUsuAyMZKqHxH0g1wcJgsKUvN3WC8tewaqFjBMMGrkHmC+T7k8LvA==
+"@fast-csv/parse@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@fast-csv/parse/-/parse-5.0.0.tgz#091665753f9e58f0dda6a55ae30f582526042903"
+  integrity sha512-ecF8tCm3jVxeRjEB6VPzmA+1wGaJ5JgaUX2uesOXdXD6qQp0B3EdshOIed4yT1Xlj/F2f8v4zHSo0Oi31L697g==
   dependencies:
-    "@types/node" "^14.0.1"
     lodash.escaperegexp "^4.1.2"
     lodash.groupby "^4.6.0"
     lodash.isfunction "^3.0.9"
@@ -3045,11 +3044,6 @@
   version "13.9.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.9.3.tgz#6356df2647de9eac569f9a52eda3480fa9e70b4d"
   integrity sha512-01s+ac4qerwd6RHD+mVbOEsraDHSgUaefQlEdBbUolnQFjKwCr7luvAlEwW1RFojh67u0z4OUTjPn9LEl4zIkA==
-
-"@types/node@^14.0.1":
-  version "14.18.32"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.32.tgz#8074f7106731f1a12ba993fe8bad86ee73905014"
-  integrity sha512-Y6S38pFr04yb13qqHf8uk1nHE3lXgQ30WZbv1mLliV9pt0NjvqdWttLcrOYLnXbOafknVYRHZGoMSpR9UwfYow==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
