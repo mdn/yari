@@ -34,7 +34,6 @@
 
       @media screen and (max-width: $screen-md) {
         margin: 0 auto;
-        margin-bottom: 3rem;
       }
 
       @media screen and (min-width: 20rem) and (max-width: $screen-md) {
@@ -203,7 +202,7 @@
       font-weight: 600;
       letter-spacing: 0.03125rem;
       margin-bottom: 1rem;
-      margin-top: 0;
+      margin-top: 1.5rem;
     }
   }
 
@@ -220,7 +219,7 @@
 
   .box,
   .scroll-container {
-    margin-bottom: 3.75rem;
+    margin-bottom: 1.5rem;
   }
 
   .scroll-container {
