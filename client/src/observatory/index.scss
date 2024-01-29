@@ -244,8 +244,8 @@
 
     &.overall {
       th {
-        background: var(--observatory-bg-secondary);
-        color: var(--observatory-accent);
+        background: var(--background-secondary);
+        color: var(--text-secondary);
       }
 
       td {
@@ -255,8 +255,8 @@
 
     &.fancy {
       th {
-        background: var(--observatory-bg-secondary);
-        color: var(--observatory-accent);
+        background: var(--background-secondary);
+        color: var(--text-secondary);
       }
 
       tr:nth-child(2n) {
