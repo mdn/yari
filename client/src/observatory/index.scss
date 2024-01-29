@@ -177,8 +177,23 @@
   }
 
   .observatory-results {
-    h1 {
+    .heading-and-actions {
+      align-items: start;
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 3rem;
+
+      @media screen and (max-width: $screen-lg) {
+        flex-direction: column;
+
+        .actions {
+          align-self: flex-end;
+        }
+      }
+    }
+
+    h1 {
+      margin-bottom: unset;
     }
 
     h2 {

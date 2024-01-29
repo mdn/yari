@@ -10,6 +10,7 @@ import { InfoTooltip } from "../document/molecules/tooltip";
 import ObservatoryCSP from "./csp";
 import { Link } from "./utils";
 import Container from "../ui/atoms/container";
+import { Button } from "../ui/atoms/button";
 
 const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
   "content-security-policy": {
@@ -77,7 +78,12 @@ export default function ObservatoryResults() {
     <div className="observatory-results">
       <Container extraClasses="observatory-wrapper">
         <section className="header">
-          <h1>Security Report Summary</h1>
+          <section className="heading-and-actions">
+            <h1>Security Report Summary</h1>
+            <section className="actions">
+              <Button href="../">Scan another site</Button>
+            </section>
+          </section>
           {hasData ? (
             <ObservatoryRating result={result} host={host} />
           ) : isLoading ? (
