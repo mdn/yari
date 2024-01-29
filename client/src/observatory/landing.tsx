@@ -152,12 +152,6 @@ export default function ObservatoryLanding() {
               </p>
             </figcaption>
           </figure>
-
-          <p>
-            The MDN HTTP Observatory ensures easy access to security insights,
-            enabling the development of more secure and resilient websites in a
-            constantly advancing digital environment.
-          </p>
         </Container>
       </section>
     </>
