@@ -120,7 +120,9 @@ function ObservatoryRating({
 }) {
   return (
     <>
-      <h2>Overall Rating</h2>
+      <h2>
+        Scan results for <span className="host">{host}</span>
+      </h2>
       <figure className="scroll-container">
         <table className="overall">
           <thead>
@@ -129,7 +131,6 @@ function ObservatoryRating({
               <th>Score</th>
               <th>Tests Passed</th>
               <th>Scan Time</th>
-              <th>Website</th>
             </tr>
           </thead>
           <tbody>
@@ -154,7 +155,6 @@ function ObservatoryRating({
                   timeStyle: "medium",
                 })}
               </td>
-              <td>{host}</td>
             </tr>
           </tbody>
         </table>
