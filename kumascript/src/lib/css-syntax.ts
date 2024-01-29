@@ -32,18 +32,21 @@ export async function getCSSSyntax(
       fragment: "asterisk",
       tooltip: localString({
         "en-US": "Asterisk: the entity may occur zero, one or several times",
+        "zh-CN": "星号：该实体可以出现零次、一次或多次",
       }),
     },
     "+": {
       fragment: "plus",
       tooltip: localString({
         "en-US": "Plus: the entity may occur one or several times",
+        "zh-CN": "加号：该实体可以出现一次或多次",
       }),
     },
     "?": {
       fragment: "question_mark",
       tooltip: localString({
         "en-US": "Question mark: the entity is optional",
+        "zh-CN": "问号：该实体是可选的",
       }),
     },
     "{}": {
@@ -51,6 +54,8 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity, or a single integer defining the exact number required",
+        "zh-CN":
+          "花括号：包含两个整数，定义实体的最少和最多出现次数；或包含单个整数，定义所需的确切数量",
       }),
     },
     "#": {
@@ -58,12 +63,14 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Hash mark: the entity is repeated one or several times, each occurence separated by a comma",
+        "zh-CN": "井号：该实体重复一次或多次，每个实体由逗号分隔",
       }),
     },
     "!": {
       fragment: "exclamation_point_!",
       tooltip: localString({
         "en-US": "Exclamation point: the group must produce at least one value",
+        "zh-CN": "感叹号：该组必须产生至少一个值",
       }),
     },
     "[]": {
@@ -71,12 +78,15 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Brackets: enclose several entities, combinators, and multipliers to transform them as a single component",
+        "zh-CN":
+          "方括号：将多个实体、组合符号和数量符号组合在一起，将它们转换为单个组件",
       }),
     },
     "|": {
       fragment: "single_bar",
       tooltip: localString({
         "en-US": "Single bar: exactly one of the entities must be present",
+        "zh-CN": "“互斥”组合符：必须恰好存在其中的一个实体",
       }),
     },
     "||": {
@@ -84,6 +94,7 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Double bar: one or several of the entities must be present, in any order",
+        "zh-CN": "“或”组合符：必须存在一个或多个实体，顺序不限",
       }),
     },
     "&&": {
@@ -91,6 +102,7 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Double ampersand: all of the entities must be present, in any order",
+        "zh-CN": "“与”组合符：必须存在所有实体，顺序不限",
       }),
     },
   };
@@ -98,20 +110,7 @@ export async function getCSSSyntax(
   // get the contents of webref
   const parsedWebRef = await getParsedWebRef();
 
-  // get all the value syntaxes
-  let values = {};
-  for (const spec of Object.values(parsedWebRef)) {
-    // Add parent values.
-    values = { ...values, ...spec.values };
-    // Add child values.
-    [...Object.values(spec.properties), ...Object.values(spec.values)].forEach(
-      (value) => {
-        if ("values" in value && Array.isArray(value.values)) {
-          values = { ...byName(value.values), ...values };
-        }
-      }
-    );
-  }
+  const values = await getAllValueSyntaxes();
 
   /**
    * Get the spec shortnames for an item, given:
@@ -529,22 +528,52 @@ export async function getCSSSyntax(
   return output;
 }
 
+let parsedWebRefCache: null | Promise<WebRefObjectData> = null;
 async function getParsedWebRef(): Promise<WebRefObjectData> {
-  const rawItems = await getRawWebRefData();
+  if (!parsedWebRefCache) {
+    parsedWebRefCache = getRawWebRefData().then((rawItems) =>
+      Object.fromEntries(
+        Object.entries(rawItems).map(
+          ([name, { spec, properties, atrules, values }]) => [
+            name,
+            {
+              spec,
+              properties: byName(properties),
+              atrules: byName(atrules),
+              values: byName(values),
+            },
+          ]
+        )
+      )
+    );
+  }
 
-  return Object.fromEntries(
-    Object.entries(rawItems).map(
-      ([name, { spec, properties, atrules, values }]) => [
-        name,
-        {
-          spec,
-          properties: byName(properties),
-          atrules: byName(atrules),
-          values: byName(values),
-        },
-      ]
-    )
-  );
+  return parsedWebRefCache;
+}
+
+let valueSyntaxesCache = null;
+async function getAllValueSyntaxes() {
+  if (!valueSyntaxesCache) {
+    valueSyntaxesCache = getParsedWebRef().then((parsedWebRef) => {
+      let values = {};
+      for (const spec of Object.values(parsedWebRef)) {
+        // Add parent values.
+        values = { ...values, ...spec.values };
+        // Add child values.
+        [
+          ...Object.values(spec.properties),
+          ...Object.values(spec.values),
+        ].forEach((value) => {
+          if ("values" in value && Array.isArray(value.values)) {
+            values = { ...byName(value.values), ...values };
+          }
+        });
+      }
+      return values;
+    });
+  }
+
+  return valueSyntaxesCache;
 }
 
 function byName<T extends Named>(items: T[]): Record<string, T> {
