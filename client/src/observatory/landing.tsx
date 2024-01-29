@@ -37,48 +37,55 @@ export default function ObservatoryLanding() {
     <>
       <section className="observatory-header">
         <div className="inner">
-          <h1>HTTP Observatory</h1>
-          <p>
-            Launched in 2016, the HTTP Observatory is designed to enhance web
-            security by analyzing website compliance with security best
-            practices. To date, it has delivered insights and recommendations to
-            over 6.5 million websites via 47 million scans.
-          </p>
-          <form onSubmit={submit}>
-            {error && !isMutating && (
-              <div className="error">Error: {error.message}</div>
-            )}
-            {isMutating ? (
-              <div className="progress">Scanning...</div>
-            ) : (
-              <div className="input-group">
-                <label htmlFor="host" className="visually-hidden">
-                  Domain
-                </label>
+          <section>
+            <h1>HTTP Observatory</h1>
+            <p>
+              Launched in 2016, the HTTP Observatory is designed to enhance web
+              security by analyzing website compliance with security best
+              practices. To date, it has delivered insights and recommendations
+              to over 6.5 million websites via 47 million scans.
+            </p>
+            <form onSubmit={submit}>
+              {error && !isMutating && (
+                <div className="error">Error: {error.message}</div>
+              )}
+              {isMutating ? (
+                <div className="progress">Scanning...</div>
+              ) : (
+                <div className="input-group">
+                  <label htmlFor="host" className="visually-hidden">
+                    Domain
+                  </label>
+                  <input
+                    placeholder="Scan a website for free (e.g. mozilla.org)"
+                    type="text"
+                    name="host"
+                    id="host"
+                    value={form.host}
+                    onChange={(e) => setForm({ ...form, host: e.target.value })}
+                  />
+                  <button
+                    type="submit"
+                    disabled={form.host.trim().length === 0}
+                  >
+                    Scan
+                  </button>
+                </div>
+              )}
+              <label>
                 <input
-                  placeholder="Scan a website for free (e.g. mozilla.org)"
-                  type="text"
-                  name="host"
-                  id="host"
-                  value={form.host}
-                  onChange={(e) => setForm({ ...form, host: e.target.value })}
+                  type="checkbox"
+                  name="hidden"
+                  checked={form.hidden}
+                  onChange={(e) =>
+                    setForm({ ...form, hidden: e.target.checked })
+                  }
+                  disabled={isMutating}
                 />
-                <button type="submit" disabled={form.host.trim().length === 0}>
-                  Scan
-                </button>
-              </div>
-            )}
-            <label>
-              <input
-                type="checkbox"
-                name="hidden"
-                checked={form.hidden}
-                onChange={(e) => setForm({ ...form, hidden: e.target.checked })}
-                disabled={isMutating}
-              />
-              Don’t include my site in the public results
-            </label>
-          </form>
+                Don’t include my site in the public results
+              </label>
+            </form>
+          </section>
           <SidePlacement />
         </div>
       </section>

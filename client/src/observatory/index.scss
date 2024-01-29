@@ -13,25 +13,21 @@
     padding: 1.5rem 1rem;
 
     .inner {
-      column-gap: 3rem;
       display: grid;
-      grid-template-columns: minmax(min-content, 46rem) 10rem;
+      grid-template-areas: "header";
       justify-content: center;
       margin: 0 auto;
 
-      > * {
-        grid-column: 1;
+      @media screen and (min-width: $screen-md) {
+        grid-template-areas: "header pong";
+        grid-template-columns: minmax(min-content, 46rem) 12rem;
       }
 
       section.place.side {
-        grid-column: 2;
-        grid-row: 1 / span 4;
-        margin: 0;
+        grid-area: pong;
 
-        @media screen and (max-width: $screen-lg) {
-          grid-column: 1;
-          grid-row: auto;
-          justify-self: end;
+        @media screen and (max-width: $screen-md) {
+          display: none;
         }
       }
     }
