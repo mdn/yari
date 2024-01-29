@@ -162,9 +162,16 @@
   .observatory-landing-footer {
     background: var(--observatory-bg);
     margin: 0 auto;
+    margin-bottom: 3rem;
 
     h2 {
       margin-top: unset;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
     figure {
@@ -172,7 +179,6 @@
       display: grid;
       gap: 1.5rem;
       grid-template-columns: 2rem 1fr;
-      margin-top: 1.5rem;
 
       figcaption {
         p {
@@ -359,6 +365,7 @@
 
   #recommendations {
     background-color: var(--background-secondary);
+
     .recommendation {
       display: none;
 
