@@ -1,4 +1,14 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+# Check if commit signing is enabled
+if [ "$(git config commit.gpgSign)" != "true" ]; then
+    echo "ERROR: Commit signing is NOT enabled!"
+    echo "Please note that we require that all commits are signed."
+    echo "Please see the documentation about signed commits and how to sign yours on GitHub:"
+    echo "- https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification"
+    echo "- https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits"
+    exit 1
+fi
+
 yarn install --ignore-scripts && yarn lint-staged
