@@ -4,5 +4,10 @@
     { "type": "fix", "section": "Bug Fixes", "hidden": false },
     { "type": "enhance", "section": "Enhancements", "hidden": false },
     { "type": "chore", "section": "Miscellaneous", "hidden": false }
-  ]
+  ],
+  "packages": {
+    ".": {
+      "release-type": "node"
+    }
+  }
 }
