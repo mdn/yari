@@ -1,21 +1,21 @@
 @use "../ui/vars" as *;
 
 .observatory {
-  background: var(--observatory-bg);
   --max-width: 60rem;
+  background: var(--observatory-bg);
 
   .accent {
     color: var(--observatory-accent);
   }
 
   .observatory-wrapper {
-    max-width: var(--max-width);
-    padding: 1.5rem 1rem;
+    column-gap: 3rem;
 
     display: grid;
-    column-gap: 3rem;
     grid-template-areas: "header" "pong" "main" "footer";
     grid-template-columns: 1fr;
+    max-width: var(--max-width);
+    padding: 1.5rem 1rem;
 
     section.header {
       grid-area: header;
@@ -272,7 +272,7 @@
     }
 
     td {
-      overflow-wrap: break-word;
+      overflow-wrap: anywhere;
     }
 
     th,
