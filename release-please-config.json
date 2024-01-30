@@ -1,6 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "bootstrap-sha": "79980295f3bc209d006d14c8555ac1cbf430edb4",
   "release-type": "node",
   "changelog-sections": [
     { "type": "feat", "section": "Features", "hidden": false },
@@ -8,6 +7,7 @@
     { "type": "enhance", "section": "Enhancements", "hidden": false },
     { "type": "chore", "section": "Miscellaneous", "hidden": false }
   ],
+  "include-component-in-tag": false,
   "packages": {
     ".": {}
   }
