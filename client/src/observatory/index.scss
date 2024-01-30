@@ -77,7 +77,6 @@
 
     p {
       color: var(--observatory-color-secondary);
-      text-wrap: balance;
     }
 
     form {
@@ -96,15 +95,6 @@
       .progress {
         background: var(--observatory-bg-secondary);
         color: var(--observatory-accent);
-      }
-
-      @media screen and (min-width: $screen-md) {
-        .progress,
-        .error,
-        .input-group {
-          // Avoid input field / progress "sticking" to ad.
-          max-width: 75%;
-        }
       }
 
       .input-group {
