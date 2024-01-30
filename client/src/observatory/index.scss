@@ -1,6 +1,8 @@
 @use "../ui/vars" as *;
 
 .observatory {
+  --border-radius: 0.5rem;
+
   .accent {
     color: var(--observatory-accent);
   }
@@ -80,8 +82,6 @@
     }
 
     form {
-      --border-radius: 0.5rem;
-
       .progress,
       .error {
         align-items: center;
@@ -151,7 +151,7 @@
 
   .footer {
     background: var(--observatory-bg);
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius);
     margin: 1rem 0;
     padding: 1rem;
 
@@ -214,7 +214,7 @@
   .box {
     background: var(--observatory-table-bg);
     border: 1px solid var(--observatory-border);
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius);
 
     @media screen and (max-width: $screen-md) {
       width: calc(100% - 2rem);
