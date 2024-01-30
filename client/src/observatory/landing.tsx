@@ -87,64 +87,63 @@ export default function ObservatoryLanding() {
             </form>
           </section>
           <SidePlacement />
-        </Container>
-      </section>
-      <section className="observatory-landing-footer">
-        <Container extraClasses="observatory-wrapper">
-          <section className="main">
-            <figure>
-              <AssessmentSVG />
+          <section className="footer">
+            <section className="about">
+              <figure>
+                <AssessmentSVG />
 
-              <figcaption>
-                <p>
-                  Developed by Mozilla, the tool performs an in-depth assessment
-                  of a site’s HTTP headers and other key security
-                  configurations.
-                </p>
-              </figcaption>
-            </figure>
+                <figcaption>
+                  <p>
+                    Developed by Mozilla, the tool performs an in-depth
+                    assessment of a site’s HTTP headers and other key security
+                    configurations.
+                  </p>
+                </figcaption>
+              </figure>
 
-            <figure>
-              <ScanningSVG />
+              <figure>
+                <ScanningSVG />
 
-              <figcaption>
-                <p>
-                  Through its automated scanning process, it provides developers
-                  and website administrators with detailed, actionable feedback,
-                  focusing on identifying and addressing potential
-                  vulnerabilities.
-                </p>
-              </figcaption>
-            </figure>
+                <figcaption>
+                  <p>
+                    Through its automated scanning process, it provides
+                    developers and website administrators with detailed,
+                    actionable feedback, focusing on identifying and addressing
+                    potential vulnerabilities.
+                  </p>
+                </figcaption>
+              </figure>
 
-            <figure>
-              <SecuritySVG />
+              <figure>
+                <SecuritySVG />
 
-              <figcaption>
-                <p>
-                  The tool is instrumental in helping developers and website
-                  administrators to strengthen their sites against common
-                  security threats. The ratings and recommendations are based on
-                  well-established web security trends and guidelines, and are
-                  shaped by Mozilla's expertise and experience in the field.
-                </p>
-              </figcaption>
-            </figure>
+                <figcaption>
+                  <p>
+                    The tool is instrumental in helping developers and website
+                    administrators to strengthen their sites against common
+                    security threats. The ratings and recommendations are based
+                    on well-established web security trends and guidelines, and
+                    are shaped by Mozilla's expertise and experience in the
+                    field.
+                  </p>
+                </figcaption>
+              </figure>
 
-            <figure>
-              <MdnSVG />
+              <figure>
+                <MdnSVG />
 
-              <figcaption>
-                <p>
-                  As in any area of web development, there may be multiple valid
-                  approaches, and our suggestions are guided by our commitment
-                  to a safer and more secure internet. The MDN HTTP Observatory
-                  ensures easy access to security insights, enabling the
-                  development of more secure and resilient websites in a
-                  constantly advancing digital environment.
-                </p>
-              </figcaption>
-            </figure>
+                <figcaption>
+                  <p>
+                    As in any area of web development, there may be multiple
+                    valid approaches, and our suggestions are guided by our
+                    commitment to a safer and more secure internet. The MDN HTTP
+                    Observatory ensures easy access to security insights,
+                    enabling the development of more secure and resilient
+                    websites in a constantly advancing digital environment.
+                  </p>
+                </figcaption>
+              </figure>
+            </section>
           </section>
         </Container>
       </section>

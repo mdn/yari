@@ -149,16 +149,17 @@
     }
   }
 
-  .observatory-landing-footer {
+  .footer {
     background: var(--observatory-bg);
-    margin: 0 auto;
-    margin-bottom: 3rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
 
     h2 {
       margin-top: unset;
     }
 
-    .main {
+    .about {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
