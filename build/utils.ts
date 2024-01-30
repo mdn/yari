@@ -259,6 +259,10 @@ export function postProcessCurriculumLinks($, url) {
     const $a = $(element);
     $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
   });
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href").replace(/\d+-/g, ""));
+  });
 }
 
 /**

@@ -1,15 +1,33 @@
 import useSWR from "swr";
+import { Route, Routes } from "react-router-dom";
+
 import { HydrationData } from "../../../libs/types/hydration";
 import { ModuleData } from "../../../libs/types/curriculum";
 import { HTTPError, RenderDocumentBody } from "../document";
 import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
 import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
-
-import "./module.scss";
 import { Sidebar } from "./sidebar";
+import { ModulesListList } from "./modules";
+import { CurriculumModuleOverview } from "./overview";
+import { CurriculumModule } from "./module";
 
-export function CurriculumModule(props: HydrationData) {
+import "./index.scss";
+
+export function Curriculum(appProps: HydrationData) {
+  return (
+    <Routes>
+      <Route path="/" element={<CurriculumLanding {...appProps} />} />
+      <Route
+        path="/:module"
+        element={<CurriculumModuleOverview {...appProps} />}
+      />
+      <Route path="/*" element={<CurriculumModule {...appProps} />} />
+    </Routes>
+  );
+}
+
+export function CurriculumLanding(props: HydrationData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<ModuleData>(
     dataURL,
@@ -31,7 +49,7 @@ export function CurriculumModule(props: HydrationData) {
     {
       fallbackData: props as ModuleData,
       revalidateOnFocus: WRITER_MODE,
-      revalidateOnMount: !props.curriculumMeta,
+      revalidateOnMount: !props.blogMeta,
     }
   );
   const { doc, curriculumMeta } = data || props || {};
@@ -56,6 +74,10 @@ export function CurriculumModule(props: HydrationData) {
               {curriculumMeta?.topic && <p>{curriculumMeta.topic}</p>}
             </header>
             <RenderDocumentBody doc={doc} />
+            <section className="modules">
+              <h2>Modules:</h2>
+              <ModulesListList modules={doc.modules} />
+            </section>
           </article>
         </main>
       )}

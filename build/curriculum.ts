@@ -22,44 +22,65 @@ import {
   CurriculumFrontmatter,
   ModuleData,
   ModuleMetaData,
-  SidebarEntry,
+  ModuleIndexEntry,
 } from "../libs/types/curriculum.js";
 import frontmatter from "front-matter";
 import { HydrationData } from "../libs/types/hydration.js";
 import { memoize, slugToFolder } from "../content/utils.js";
 import { renderHTML } from "../ssr/dist/main.js";
 
-async function allFiles(): Promise<string[]> {
+export const allFiles = memoize(async () => {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
     .filter((filePath) => filePath.endsWith(".md"))
     .crawl(path.join(CURRICULUM_ROOT, "curriculum"));
-  return await api.withPromise();
-}
+  return (await api.withPromise()).sort();
+});
 
 export const buildIndex = memoize(async () => {
   const files = await allFiles();
   const modules = await Promise.all(
     files.map(
       async (file) =>
-        (await readModule(file, { previousNext: false, sidebar: false })).meta
+        (await readModule(file, { previousNext: false, withIndex: false })).meta
     )
   );
   return modules;
 });
 
-export async function buildSidebar(): Promise<SidebarEntry[]> {
+export function fileToSlug(file) {
+  return file
+    .replace(`${CURRICULUM_ROOT}/`, "")
+    .replace(/(\d+-|\.md$|\/0?-?README)/g, "");
+}
+
+export async function slugToFile(slug) {
+  const all = await allFiles();
+  const re = new RegExp(
+    path.join(
+      CURRICULUM_ROOT,
+      "curriculum",
+      `${slug
+        .split("/")
+        .map((x) => String.raw`(\d+-)?${x}`)
+        .join("/")}.md`
+    )
+  );
+  return all.find((x) => {
+    return re.test(x);
+  });
+}
+
+export async function buildModuleIndex(
+  mapper: (x: ModuleMetaData) => Partial<ModuleMetaData> = (x) => x
+): Promise<ModuleIndexEntry[]> {
   const index = await buildIndex();
 
-  const s = index.reduce((sidebar, { url, title, slug }) => {
-    const currentLvl = slug.split("/").length;
+  const s = index.reduce((sidebar, meta) => {
+    const currentLvl = meta.slug.split("/").length;
     const last = sidebar.length ? sidebar[sidebar.length - 1] : null;
-    const entry = {
-      url,
-      title,
-      slug,
-    };
+    const entry = mapper(meta);
     if (currentLvl > 2) {
       if (last) {
         last.children.push(entry);
@@ -74,27 +95,52 @@ export async function buildSidebar(): Promise<SidebarEntry[]> {
   return s;
 }
 
+export async function buildSidebar(): Promise<ModuleIndexEntry[]> {
+  const index = await buildModuleIndex(({ url, slug, title }) => {
+    return { url, slug, title };
+  });
+
+  return index;
+}
+
 async function readModule(
   file: string,
   options?: {
     previousNext?: boolean;
-    sidebar?: boolean;
+    withIndex?: boolean;
   }
-): Promise<{ meta: ModuleMetaData; body: string; sidebar: any }> {
+): Promise<{
+  meta: ModuleMetaData;
+  body: string;
+  sidebar?: ModuleIndexEntry[];
+  modules?: ModuleIndexEntry[];
+}> {
   const raw = await fs.readFile(file, "utf-8");
   const { attributes, body: rawBody } = frontmatter<CurriculumFrontmatter>(raw);
   const filename = file.replace(CURRICULUM_ROOT, "").replace(/^\/?/, "");
   const title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim();
   const body = rawBody.replace(/^[\w\n]*#+(.*\n)/, "");
 
-  const slug = filename.replace(/\.md$/, "").replace("/0-README", "");
+  const slug = fileToSlug(file);
   const url = `/${DEFAULT_LOCALE}/${slug}/`;
 
-  const sidebar = options?.sidebar && (await buildSidebar());
+  const sidebar = options?.withIndex && (await buildSidebar());
+
+  // For module overview and landing page set modules.
+  let modules: ModuleIndexEntry[] | undefined;
+  if (options?.withIndex) {
+    const index = await buildModuleIndex();
+    if (slug === "curriculum") {
+      modules = index?.filter((x) => x.children?.length);
+    } else {
+      modules = index?.find((x) => x.slug === slug)?.children;
+    }
+  }
 
   return {
     meta: { filename, slug, url, title, ...attributes },
     sidebar,
+    modules,
     body,
   };
 }
@@ -102,21 +148,18 @@ async function readModule(
 export async function findModuleBySlug(
   slug: string
 ): Promise<ModuleData | null> {
-  let slugPath = `${slug}.md`.split("/");
-  let file = path.join(CURRICULUM_ROOT, "curriculum", ...slugPath);
+  let file = await slugToFile(slug);
+  if (!file) {
+    file = await slugToFile(`${slug}${slug ? "/" : ""}README`);
+  }
   let module;
   try {
-    module = await readModule(file, { sidebar: true });
-  } catch {
-    slugPath = `${slug}/0-README.md`.split("/");
-    file = path.join(CURRICULUM_ROOT, "curriculum", ...slugPath);
-    try {
-      module = await readModule(file, { sidebar: true });
-    } catch {
-      console.error(`No file found for ${slug}`);
-    }
+    module = await readModule(file, { withIndex: true });
+  } catch (e) {
+    console.error(`No file found for ${slug}`, e);
+    return;
   }
-  const { body, meta, sidebar } = module;
+  const { body, meta, sidebar, modules } = module;
 
   const d = {
     url: meta.url,
@@ -127,6 +170,7 @@ export async function findModuleBySlug(
       path: file,
     },
     sidebar,
+    modules,
   };
 
   const doc = await buildModule(d);
@@ -134,7 +178,7 @@ export async function findModuleBySlug(
 }
 
 export async function buildModule(document: any): Promise<Doc> {
-  const { metadata, sidebar } = document;
+  const { metadata, sidebar, modules } = document;
 
   const doc = { locale: DEFAULT_LOCALE } as Partial<Doc>;
   let $ = null;
@@ -172,11 +216,12 @@ export async function buildModule(document: any): Promise<Doc> {
     throw error;
   }
 
-  doc.pageTitle = `${doc.title} | MDN Blog`;
+  doc.pageTitle = `${doc.title} | MDN Curriculum`;
 
   doc.noIndexing = false;
   doc.toc = makeTOC(doc, true);
   doc.sidebar = sidebar;
+  doc.modules = modules;
 
   return doc as Doc;
 }
@@ -190,7 +235,9 @@ export async function buildCurriculum(options: {
   for (const file of await allFiles()) {
     console.log(`building: ${file}`);
 
-    const { meta, body, sidebar } = await readModule(file, { sidebar: true });
+    const { meta, body, sidebar, modules } = await readModule(file, {
+      withIndex: true,
+    });
 
     const url = meta.url;
     const renderUrl = url.replace(/\/$/, "");
@@ -202,10 +249,12 @@ export async function buildCurriculum(options: {
       fileInfo: {
         path: file,
       },
+      sidebar,
+      modules,
     };
     const builtDoc = await buildModule(renderDoc);
     const { doc } = {
-      doc: { ...builtDoc, summary: meta.summary, mdn_url: url, sidebar },
+      doc: { ...builtDoc, summary: meta.summary, mdn_url: url },
     };
 
     const context: HydrationData = {
@@ -268,7 +317,7 @@ function setCurriculumTypes($) {
 
     if (p) {
       const notes = $(p);
-      if (notes.text() === "Notes:") {
+      if (/Notes?:/.test(notes.text())) {
         bq.addClass("curriculum-notes");
       }
     }

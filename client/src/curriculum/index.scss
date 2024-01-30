@@ -1,0 +1,9 @@
+.curriculum-content-container {
+  .curriculum-content {
+    .modules {
+      input[type="radio"]:not(:checked) ~ ol {
+        display: none;
+      }
+    }
+  }
+}

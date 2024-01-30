@@ -5,11 +5,10 @@ import { HTTPError, RenderDocumentBody } from "../document";
 import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
 import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
-
-import "./module.scss";
 import { Sidebar } from "./sidebar";
+import { ModulesList } from "./modules";
 
-export function CurriculumModule(props: HydrationData) {
+export function CurriculumModuleOverview(props: HydrationData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<ModuleData>(
     dataURL,
@@ -31,7 +30,7 @@ export function CurriculumModule(props: HydrationData) {
     {
       fallbackData: props as ModuleData,
       revalidateOnFocus: WRITER_MODE,
-      revalidateOnMount: !props.curriculumMeta,
+      revalidateOnMount: !props.blogMeta,
     }
   );
   const { doc, curriculumMeta } = data || props || {};
@@ -56,6 +55,10 @@ export function CurriculumModule(props: HydrationData) {
               {curriculumMeta?.topic && <p>{curriculumMeta.topic}</p>}
             </header>
             <RenderDocumentBody doc={doc} />
+            <section>
+              <h2>Module Contents:</h2>
+              <ModulesList modules={doc.modules} />
+            </section>
           </article>
         </main>
       )}

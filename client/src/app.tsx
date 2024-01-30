@@ -28,7 +28,7 @@ import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
-import { CurriculumModule } from "./curriculum/module";
+import { Curriculum } from "./curriculum";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -168,8 +168,8 @@ export function App(appProps: HydrationData) {
       <Route
         path="/en-US/curriculum/*"
         element={
-          <StandardLayout extraClasses="blog">
-            <CurriculumModule {...appProps} />
+          <StandardLayout extraClasses="curriculum">
+            <Curriculum {...appProps} />
           </StandardLayout>
         }
       />
