@@ -147,33 +147,33 @@
         width: 1.25rem;
       }
     }
-  }
 
-  .footer {
-    background: var(--observatory-bg);
-    border-radius: var(--border-radius);
-    margin: 1rem 0;
-    padding: 1rem;
+    .footer {
+      background: var(--observatory-bg);
+      border-radius: var(--border-radius);
+      margin: 1rem 0;
+      padding: 1rem;
 
-    h2 {
-      margin-top: unset;
-    }
+      h2 {
+        margin-top: unset;
+      }
 
-    .about {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+      .about {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-    figure {
-      align-items: start;
-      display: grid;
-      gap: 1.5rem;
-      grid-template-columns: 2rem 1fr;
+      figure {
+        align-items: start;
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 2rem 1fr;
 
-      figcaption {
-        p {
-          margin: 0;
+        figcaption {
+          p {
+            margin: 0;
+          }
         }
       }
     }
