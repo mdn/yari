@@ -218,7 +218,7 @@
     "peggy": "^3.0.2",
     "postcss": "^8.4.33",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-loader": "^8.0.0",
+    "postcss-loader": "^8.1.0",
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^9.3.0",
     "prettier": "^3.2.4",
