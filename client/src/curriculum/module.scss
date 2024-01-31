@@ -63,14 +63,13 @@
     grid-area: main;
 
     > header {
-      align-items: center;
       column-gap: 1.5rem;
       display: grid;
-      grid-template-areas: "icon heading" "nothing category";
+      grid-template-areas: "icon heading" "icon category";
       justify-content: flex-start;
-      justify-items: flex-start;
 
       .topic-icon {
+        align-self: flex-start;
         grid-area: icon;
         height: 4rem;
         width: 4rem;
@@ -86,6 +85,7 @@
         font-size: var(--type-smaller-font-size);
         grid-area: category;
         margin: 0;
+        margin-top: 0.5rem;
 
         &::before {
           content: "Category: ";
