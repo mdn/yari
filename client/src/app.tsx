@@ -34,6 +34,7 @@ const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 const Playground = React.lazy(() => import("./playground"));
+const Observatory = React.lazy(() => import("./observatory"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
@@ -243,6 +244,14 @@ export function App(appProps: HydrationData) {
               element={
                 <LazyStandardLayout>
                   <Playground />
+                </LazyStandardLayout>
+              }
+            />
+            <Route
+              path="observatory/*"
+              element={
+                <LazyStandardLayout>
+                  <Observatory />
                 </LazyStandardLayout>
               }
             />
