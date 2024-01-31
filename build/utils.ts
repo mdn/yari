@@ -240,6 +240,32 @@ export function postProcessExternalLinks($) {
 }
 
 /**
+ * For every `<a href="... curriculum ... .md ...">` remove the ".md"
+ *
+ * @param {Cheerio document instance} $
+ * @param {current url} url
+ */
+export function postProcessCurriculumLinks($, url) {
+  $("a[href^=./]").each((_, element) => {
+    // Expand relative links (TODO: fix)
+    const $a = $(element);
+    $a.attr("href", $a.attr("href").replace(/^\.\//, `${url}`));
+  });
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "$1/$2"));
+  });
+  $("a[href^=/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
+  });
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href").replace(/\d+-/g, ""));
+  });
+}
+
+/**
  * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
  * `<a href="$CURRENT_PATH/THING">`
  *
@@ -294,16 +320,17 @@ export function postProcessSmallerHeadingIDs($) {
  *
  * @param {Document} doc
  */
-export function makeTOC(doc) {
+export function makeTOC(doc, withH3 = false) {
   return doc.body
     .map((section) => {
       if (
-        (section.type === "prose" ||
+        ((section.type === "prose" ||
           section.type === "browser_compatibility" ||
           section.type === "specifications") &&
-        section.value.id &&
-        section.value.title &&
-        !section.value.isH3
+          section.value.id &&
+          section.value.title &&
+          !section.value.isH3) ||
+        withH3
       ) {
         return { text: section.value.title, id: section.value.id };
       }

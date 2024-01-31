@@ -218,6 +218,20 @@
   --baseline-limited-check: #1e8e3e;
   --baseline-limited-cross: #ea8600;
 
+  --cur-bg-color: #fcefe2;
+  --cur-bg-color-topic-standards: #d5f4f5;
+  --cur-bg-color-topic-styling: #eff5d5;
+  --cur-bg-color-topic-scripting: #fff8d6;
+  --cur-bg-color-topic-tooling: #d5e4f5;
+  --cur-bg-color-topic-practices: #f5dfd5;
+  --cur-category-color: #e3642a;
+  --cur-color: #fcefe2;
+  --cur-color-topic-standards: #187b7f;
+  --cur-color-topic-styling: #187f22;
+  --cur-color-topic-scripting: #7f6f16;
+  --cur-color-topic-tooling: #182f7f;
+  --cur-color-topic-practices: #a25e3f;
+
   color-scheme: light;
 }
 
@@ -435,6 +449,20 @@
   --baseline-limited-img: url("../../assets/icons/baseline/limited-dark.svg");
   --baseline-limited-check: #1e8e3e;
   --baseline-limited-cross: #ea8600;
+
+  --cur-color: #fcefe2;
+  --cur-color-topic-standards: #d5f4f5;
+  --cur-color-topic-styling: #eff5d5;
+  --cur-color-topic-scripting: #fff8d6;
+  --cur-color-topic-tooling: #d5e4f5;
+  --cur-color-topic-practices: #f5dfd5;
+  --cur-bg-color: #fcefe2;
+  --cur-bg-color-topic-standards: #187b7f;
+  --cur-bg-color-topic-styling: #187f22;
+  --cur-bg-color-topic-scripting: #7f6f16;
+  --cur-bg-color-topic-tooling: #182f7f;
+  --cur-bg-color-topic-practices: #a25e3f;
+  --cur-category-color: #e3642a;
 
   color-scheme: dark;
 }

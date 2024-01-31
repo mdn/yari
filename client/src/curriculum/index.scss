@@ -1,0 +1,62 @@
+.curriculum {
+  --background-toc-active: var(--cur-bg-color);
+  --category-color: var(--cur-category-color);
+
+  --cur-bg-color-topic: var(--cur-bg-color);
+  --cur-color-topic: var(--cur-color);
+
+  .topic-standards {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-standards);
+    --cur-color-topic: var(--cur-color-topic-standards);
+  }
+
+  .topic-styling {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-styling);
+    --cur-color-topic: var(--cur-color-topic-styling);
+  }
+
+  .topic-scripting {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-scripting);
+    --cur-color-topic: var(--cur-color-topic-scripting);
+  }
+
+  .topic-tooling {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-tooling);
+    --cur-color-topic: var(--cur-color-topic-tooling);
+  }
+
+  .topic-practices {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-practices);
+    --cur-color-topic: var(--cur-color-topic-practices);
+  }
+
+  .curriculum-content {
+    .modules {
+      input[type="radio"]:not(:checked) ~ ol {
+        display: none;
+      }
+    }
+  }
+
+  .article-actions-container {
+    // Duplicated from ../ui/molecules/grids/document-page.scss
+    display: flex;
+  }
+
+  .sidebar {
+    > ol:first-of-type > li:first-of-type {
+      font-size: var(--type-base-font-size-rem);
+      font-weight: bold;
+    }
+
+    li > em {
+      background-color: var(--background-toc-active);
+      border-left: 2px solid var(--category-color);
+      display: inline-block;
+      font-style: normal;
+      font-weight: 600;
+      padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+      width: 100%;
+    }
+  }
+}

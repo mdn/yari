@@ -89,6 +89,12 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
+
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
       # trigger we rely on the inputs and only the inputs. That way, the user can
@@ -169,6 +175,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.allizom.org"
 
           # The default for this environment variable is geared for writers
@@ -270,6 +277,9 @@ jobs:
 
           # Build the blog
           yarn build:blog
+
+          # Build the curriculum
+          yarn build:curriculum
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json

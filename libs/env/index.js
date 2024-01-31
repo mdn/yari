@@ -82,6 +82,8 @@ export const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
 
 export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
 
+export const CURRICULUM_ROOT = correctPathFromEnv("CURRICULUM_ROOT");
+
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.
 // E.g. `'https://github.com/' + REPOSITORY_URLS[document.fileInfo.root]`
@@ -98,12 +100,20 @@ if (CONTENT_TRANSLATED_ROOT) {
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
-function correctContentPathFromEnv(envVarName) {
+function correctPathFromEnv(envVarName) {
   let pathName = process.env[envVarName];
   if (!pathName) {
     return;
   }
   pathName = fs.realpathSync(pathName);
+  return pathName;
+}
+
+function correctContentPathFromEnv(envVarName) {
+  let pathName = correctPathFromEnv(envVarName);
+  if (!pathName) {
+    return;
+  }
   if (
     path.basename(pathName) !== "files" &&
     fs.existsSync(path.join(pathName, "files"))
