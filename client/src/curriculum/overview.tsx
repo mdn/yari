@@ -3,13 +3,13 @@ import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
 import { HTTPError, RenderDocumentBody } from "../document";
 import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
-import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
-import { Sidebar } from "./sidebar";
 import { ModulesList } from "./modules-list";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { topic2css, useDocTitle } from "./utils";
+
+import "./overview.scss";
 
 export function CurriculumModuleOverview(
   props: HydrationData<any, CurriculumDoc>
@@ -49,20 +49,12 @@ export function CurriculumModuleOverview(
             <ArticleActionsContainer doc={doc} />
           </div>
           <main
-            className={`curriculum-content-container container topic-${topic2css(doc.topic)}`}
+            className={`curriculum-content-container curriculum-overview container topic-${topic2css(doc.topic)}`}
           >
             <div className="sidebar-container">
               <div className="toc-container">
-                <aside className="toc">
-                  <nav>
-                    {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-                  </nav>
-                </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
-              {doc.sidebar && (
-                <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
-              )}
             </div>
             <article className="curriculum-content" lang={doc?.locale}>
               <header>

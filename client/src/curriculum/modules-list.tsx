@@ -30,8 +30,10 @@ export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
             className={`module-list-item topic-${topic2css(c.topic)}`}
           >
             <header>
-              {c.topic && <TopicIcon topic={c.topic} />}
-              <a href={c.url}>{c.title}</a>
+              <a href={c.url}>
+                {c.topic && <TopicIcon topic={c.topic} />}
+                <span>{c.title}</span>
+              </a>
             </header>
             <section>
               <p>{c.summary}</p>
