@@ -1,6 +1,6 @@
 .curriculum {
-  --background-toc-active: #fcefe2;
-  --category-color: #e3642a;
+  --background-toc-active: var(--cur-bg-color);
+  --category-color: var(--cur-category-color);
 
   --cur-bg-color-topic: var(--cur-bg-color);
   --cur-color-topic: var(--cur-color);
