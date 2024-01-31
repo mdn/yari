@@ -62,9 +62,32 @@
   .curriculum-content {
     grid-area: main;
 
-    .topic-icon {
-      height: 4rem;
-      width: 4rem;
+    header {
+      align-items: center;
+      display: grid;
+      grid-template-areas: "icon heading" "nothing category";
+      justify-content: flex-start;
+      justify-items: flex-start;
+
+      .topic-icon {
+        background-color: #eee;
+        grid-area: icon;
+        height: 4rem;
+        width: 4rem;
+      }
+      h1 {
+        grid-area: heading;
+        margin-bottom: 0rem;
+      }
+      p {
+        font-weight: 400;
+        grid-area: category;
+        margin: 0;
+
+        &::before {
+          content: "Category: ";
+        }
+      }
     }
 
     blockquote.curriculum-notes {
