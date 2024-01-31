@@ -1,4 +1,6 @@
 .curriculum-content-container {
+  --background-toc-active: #fcefe2;
+  --category-color: #e3642a;
   --cur-color: #fcefe2;
   --cur-color-topic-standards: #d5f4f5;
   --cur-color-topic-styling: #fff8d6;
@@ -18,13 +20,13 @@
       flex-direction: column;
 
       > header {
+        align-items: center;
         display: flex;
         flex-direction: column;
-        align-items: center;
 
         .topic-icon {
-          width: 6rem;
           height: 6rem;
+          width: 6rem;
         }
       }
     }
