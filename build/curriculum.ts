@@ -32,6 +32,8 @@ import {
 import frontmatter from "front-matter";
 import { HydrationData } from "../libs/types/hydration.js";
 import { memoize, slugToFolder } from "../content/utils.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 
 export const allFiles = memoize(async () => {

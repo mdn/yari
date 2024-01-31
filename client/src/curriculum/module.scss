@@ -69,6 +69,7 @@
       justify-content: flex-start;
 
       .topic-icon {
+        --background-primary: var(--cur-bg-color-topic);
         align-self: flex-start;
         grid-area: icon;
         height: 4rem;

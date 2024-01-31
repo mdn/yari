@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { Route, Routes } from "react-router-dom";
 
+import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
 import { HTTPError, RenderDocumentBody } from "../document";
@@ -13,6 +14,8 @@ import { CurriculumModuleOverview } from "./overview";
 import { CurriculumModule } from "./module";
 
 import "./index.scss";
+import "./no-side.scss";
+
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { topic2css, useDocTitle } from "./utils";
@@ -25,7 +28,7 @@ export function Curriculum(appProps: HydrationData) {
         path="/:module"
         element={<CurriculumModuleOverview {...appProps} />}
       />
-      <Route path="/*" element={<CurriculumModule {...appProps} />} />
+      <Route path="/:module/*" element={<CurriculumModule {...appProps} />} />
     </Routes>
   );
 }
@@ -66,29 +69,22 @@ export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
             <ArticleActionsContainer doc={doc} />
           </div>
           <main
-            className={`curriculum-content-container container topic-${topic2css(doc.topic)}`}
+            className={`curriculum-content-container container curriculum-no-side topic-${topic2css(doc.topic)}`}
           >
             <div className="sidebar-container">
               <div className="toc-container">
-                <aside className="toc">
-                  <nav>
-                    {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-                  </nav>
-                </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
-              {doc.sidebar && (
-                <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
-              )}
             </div>
             <article className="curriculum-content" lang={doc?.locale}>
               <header>
+                <LandingSVG />
                 <h1>{doc?.title}</h1>
                 {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
               <section className="modules">
-                <h2>Modules:</h2>
+                <h2>Modules</h2>
                 {doc.modules && <ModulesListList modules={doc.modules} />}
               </section>
             </article>

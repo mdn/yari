@@ -3,15 +3,25 @@ import { TopicIcon } from "./topic-icon";
 import { topic2css } from "./utils";
 
 import "./modules-list.scss";
+import { useState } from "react";
 
 export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
+  const [tab, setTab] = useState(1);
   return (
-    <ol>
+    <ol className="modules-list-list">
+      <hr />
       {modules.map((c, i) => {
         return (
           <li>
+            <input
+              className="visually-hidden"
+              id={`module-${i}`}
+              name="selected"
+              type="radio"
+              checked={i === tab}
+              onChange={() => setTab(i)}
+            />
             <label htmlFor={`module-${i}`}>{c.title}</label>
-            <input id={`module-${i}`} name="selected" type="radio" />
             {c.children && <ModulesList modules={c.children} />}
           </li>
         );
@@ -22,7 +32,7 @@ export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
 
 export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
   return (
-    <ol>
+    <ol className="modules-list">
       {modules.map((c, j) => {
         return (
           <li
@@ -30,8 +40,10 @@ export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
             className={`module-list-item topic-${topic2css(c.topic)}`}
           >
             <header>
-              {c.topic && <TopicIcon topic={c.topic} />}
-              <a href={c.url}>{c.title}</a>
+              <a href={c.url}>
+                {c.topic && <TopicIcon topic={c.topic} />}
+                <span>{c.title}</span>
+              </a>
             </header>
             <section>
               <p>{c.summary}</p>
