@@ -18,15 +18,15 @@ enum Topic {
 export function TopicIcon({ topic }: { topic: Topic }) {
   switch (topic) {
     case Topic.WebStandards:
-      return <StandardsSVG className="topic-icon" />;
+      return <StandardsSVG className="topic-icon topic-standards" />;
     case Topic.Styling:
-      return <StylingSVG className="topic-icon" />;
+      return <StylingSVG className="topic-icon topic-styling" />;
     case Topic.Scripting:
-      return <ScriptingSVG className="topic-icon" />;
+      return <ScriptingSVG className="topic-icon topic-scripting" />;
     case Topic.Tooling:
-      return <ToolingSVG className="topic-icon" />;
+      return <ToolingSVG className="topic-icon topic-tooling" />;
     case Topic.BestPractices:
-      return <PracticesSVG className="topic-icon" />;
+      return <PracticesSVG className="topic-icon topic-practices" />;
     default:
       return <></>;
   }

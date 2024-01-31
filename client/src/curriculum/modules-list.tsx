@@ -22,11 +22,15 @@ export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
     <ol>
       {modules.map((c, j) => {
         return (
-          <li key={j}>
-            {c.topic && <TopicIcon topic={c.topic} />}
-            <a href={c.url}>{c.title}</a>
-            <p>{c.summary}</p>
-            <p>{c.topic}</p>
+          <li key={j} className="module-list-item">
+            <header>
+              {c.topic && <TopicIcon topic={c.topic} />}
+              <a href={c.url}>{c.title}</a>
+            </header>
+            <section>
+              <p>{c.summary}</p>
+              <p>{c.topic}</p>
+            </section>
           </li>
         );
       })}

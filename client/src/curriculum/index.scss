@@ -1,8 +1,31 @@
 .curriculum-content-container {
+  --cur-color: #fcefe2;
+  --cur-color-topic-standards: #d5f4f5;
+  --cur-color-topic-styling: #fff8d6;
+  --cur-color-topic-scripting: #eff5d5;
+  --cur-color-topic-tooling: #d5e4f5;
+  --cur-color-topic-practices: #f5dfd5;
+
   .curriculum-content {
     .modules {
       input[type="radio"]:not(:checked) ~ ol {
         display: none;
+      }
+    }
+
+    .module-list-item {
+      display: flex;
+      flex-direction: column;
+
+      > header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .topic-icon {
+          width: 6rem;
+          height: 6rem;
+        }
       }
     }
   }
