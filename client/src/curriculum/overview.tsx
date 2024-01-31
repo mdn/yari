@@ -64,7 +64,7 @@ export function CurriculumModuleOverview(
                 {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
-              <section>
+              <section className="module-contents">
                 <h2>Module Contents:</h2>
                 {doc.modules && <ModulesList modules={doc.modules} />}
               </section>

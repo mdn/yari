@@ -1,0 +1,86 @@
+.curriculum-content-container {
+  .curriculum-content {
+    .modules {
+      input[type="radio"]:not(:checked) ~ ol {
+        display: none;
+      }
+    }
+
+    .module-contents {
+      h2 {
+        width: 100%;
+      }
+
+      ol {
+        display: flex;
+        flex-wrap: wrap;
+
+        .module-list-item {
+          --cur-bg-color-topic: var(--cur-bg-color);
+          --cur-color-topic: var(--cur-color);
+          border: 0;
+          border-radius: var(--elem-radius);
+          box-shadow: var(--shadow-02);
+          display: flex;
+          flex-direction: column;
+          margin: 0.5rem;
+          max-width: 100%;
+          min-width: 10rem;
+          width: 30%;
+
+          &.topic-standards {
+            --cur-bg-color-topic: var(--cur-bg-color-topic-standards);
+            --cur-color-topic: var(--cur-color-topic-standards);
+          }
+
+          &.topic-styling {
+            --cur-bg-color-topic: var(--cur-bg-color-topic-styling);
+            --cur-color-topic: var(--cur-color-topic-styling);
+          }
+
+          &.topic-scripting {
+            --cur-bg-color-topic: var(--cur-bg-color-topic-scripting);
+            --cur-color-topic: var(--cur-color-topic-scripting);
+          }
+
+          &.topic-tooling {
+            --cur-bg-color-topic: var(--cur-bg-color-topic-tooling);
+            --cur-color-topic: var(--cur-color-topic-tooling);
+          }
+
+          &.topic-practices {
+            --cur-bg-color-topic: var(--cur-bg-color-topic-practices);
+            --cur-color-topic: var(--cur-color-topic-practices);
+          }
+
+          > header {
+            align-items: center;
+            background-color: var(--cur-bg-color-topic);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+
+            .topic-icon {
+              height: 6rem;
+              width: 6rem;
+            }
+          }
+
+          > section {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            font-size: var(--type-smaller-font-size);
+            height: 100%;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+
+            p:last-child {
+              color: var(--cur-color-topic);
+            }
+          }
+        }
+      }
+    }
+  }
+}

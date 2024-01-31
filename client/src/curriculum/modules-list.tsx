@@ -1,5 +1,6 @@
 import { ModuleIndexEntry } from "../../../libs/types/curriculum";
 import { TopicIcon } from "./topic-icon";
+import { topic2css } from "./utils";
 
 export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
   return (
@@ -22,7 +23,10 @@ export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
     <ol>
       {modules.map((c, j) => {
         return (
-          <li key={j} className="module-list-item">
+          <li
+            key={j}
+            className={`module-list-item topic-${topic2css(c.topic)}`}
+          >
             <header>
               {c.topic && <TopicIcon topic={c.topic} />}
               <a href={c.url}>{c.title}</a>
