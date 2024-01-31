@@ -59,7 +59,9 @@ export function CurriculumModuleOverview(
                 </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
-              {doc.sidebar && <Sidebar sidebar={doc.sidebar} />}
+              {doc.sidebar && (
+                <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
+              )}
             </div>
             <article className="curriculum-content" lang={doc?.locale}>
               <header>

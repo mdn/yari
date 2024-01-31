@@ -37,4 +37,16 @@
       }
     }
   }
+
+  .sidebar {
+    li > em {
+      background-color: var(--background-toc-active);
+      border-left: 2px solid var(--category-color);
+      display: inline-block;
+      font-style: normal;
+      font-weight: 600;
+      padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+      width: 100%;
+    }
+  }
 }
