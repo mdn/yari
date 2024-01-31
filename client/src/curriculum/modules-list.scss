@@ -58,11 +58,19 @@
             background-color: var(--cur-bg-color-topic);
             display: flex;
             flex-direction: column;
-            padding: 2rem;
+            height: 20rem;
+            padding: 1rem;
 
             .topic-icon {
               height: 6rem;
               width: 6rem;
+            }
+
+            > a {
+              color: var(--text-primary);
+              font-weight: var(--font-body-strong-weight);
+              margin-top: 1rem;
+              text-align: center;
             }
           }
 
@@ -73,10 +81,11 @@
             font-size: var(--type-smaller-font-size);
             height: 100%;
             justify-content: space-between;
-            padding: 0.5rem 2rem;
+            padding: 0.5rem 1rem;
 
             p:last-child {
               color: var(--cur-color-topic);
+              text-align: center;
             }
           }
         }

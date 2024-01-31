@@ -48,7 +48,7 @@ export const buildIndex = memoize(async () => {
   const modules = await Promise.all(
     files.map(
       async (file) =>
-        (await readModule(file, { previousNext: false, withIndex: false })).meta
+        (await readModule(file, { previousNext: false, forIndex: true })).meta
     )
   );
   return modules;
@@ -152,13 +152,13 @@ async function readModule(
   file: string,
   options?: {
     previousNext?: boolean;
-    withIndex?: boolean;
+    forIndex?: boolean;
   }
 ): Promise<ReadCurriculum> {
   const raw = await fs.readFile(file, "utf-8");
   const { attributes, body: rawBody } = frontmatter<CurriculumFrontmatter>(raw);
   const filename = file.replace(CURRICULUM_ROOT, "").replace(/^\/?/, "");
-  const title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim();
+  let title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim();
   const body = rawBody.replace(/^[\w\n]*#+(.*\n)/, "");
 
   const slug = fileToSlug(file);
@@ -170,7 +170,7 @@ async function readModule(
   // For module overview and landing page set modules.
   let modules: ModuleIndexEntry[];
   let prevNext: PrevNext;
-  if (options?.withIndex) {
+  if (!options?.forIndex) {
     if (attributes.template === Template.landing) {
       modules = (await buildModuleIndex())?.filter((x) => x.children?.length);
     } else if (attributes.template === Template.overview) {
@@ -184,6 +184,8 @@ async function readModule(
 
     sidebar = await buildSidebar();
     parents = await buildParents(url);
+  } else {
+    title = title.replace(/^\d+\s+/, "");
   }
 
   return {
@@ -211,7 +213,7 @@ export async function findModuleBySlug(
   }
   let module;
   try {
-    module = await readModule(file, { withIndex: true });
+    module = await readModule(file, { forIndex: false });
   } catch (e) {
     console.error(`No file found for ${slug}`, e);
     return;
@@ -294,7 +296,7 @@ export async function buildCurriculum(options: {
     console.log(`building: ${file}`);
 
     const { meta, body } = await readModule(file, {
-      withIndex: true,
+      forIndex: false,
     });
 
     const url = meta.url;
