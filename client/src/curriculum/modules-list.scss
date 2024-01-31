@@ -1,3 +1,5 @@
+@use "../ui/vars" as *;
+
 .curriculum-content-container {
   .curriculum-content {
     .modules {
@@ -10,63 +12,146 @@
       h2 {
         width: 100%;
       }
+    }
 
-      ol {
-        display: flex;
-        flex-wrap: wrap;
+    ol.modules-list-list {
+      display: grid;
+      grid-template-areas:
+        "a b c spacer"
+        "h h h h"
+        "x x x x";
+      grid-template-columns: max-content max-content max-content auto;
+      margin: 0;
+      padding: 0;
 
-        .module-list-item {
-          border: 0;
-          border-radius: var(--elem-radius);
-          box-shadow: var(--shadow-02);
-          display: flex;
-          flex-direction: column;
-          margin: 0.5rem;
-          max-width: 100%;
-          min-width: 10rem;
-          width: 30%;
-          height: 100%;
+      hr {
+        border: none;
+        border-top: 1px solid var(--text-primary);
+        grid-area: h;
+        margin: 0 0 1.5rem;
+        width: 100%;
+      }
 
-          > header {
-            a {
-              align-items: center;
-              background-color: var(--cur-bg-color-topic);
-              display: flex;
-              flex-direction: column;
-              height: 12rem;
-              padding: 1rem;
+      li {
+        display: contents;
 
-              .topic-icon {
-                height: 5rem;
-                width: 5rem;
-              }
+        > input:checked + label {
+          text-decoration-color: var(--cur-color);
+          text-decoration-line: underline;
+          text-decoration-thickness: 0.25rem;
+          text-underline-offset: 0.4rem;
+        }
 
-              > span {
-                color: var(--text-primary);
-                font-weight: var(--font-body-strong-weight);
-                margin: auto;
-                text-align: center;
-              }
-            }
+        > label {
+          color: var(--text-secondary);
+          cursor: pointer;
+        }
+
+        &:nth-child(2) {
+          > label,
+          > input {
+            grid-area: a;
           }
+        }
 
-          > section {
+        &:nth-child(3) {
+          > label,
+          > input {
+            grid-area: b;
+            margin-left: 2rem;
+          }
+        }
+
+        &:nth-child(4) {
+          > label,
+          > input {
+            grid-area: c;
+            margin-left: 2rem;
+          }
+        }
+
+        > ol {
+          grid-area: x;
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    ol.modules-list {
+      container-name: module-list;
+      container-type: inline-size;
+      display: grid;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+      @media screen and (min-width: $screen-sm) {
+        grid-template-columns: 1fr;
+      }
+      @media screen and (min-width: $screen-md) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media screen and (min-width: $screen-xl) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      @container module-list (width >= 25rem) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @container module-list (width >= 38rem) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .module-list-item {
+        border: 0;
+        border-radius: var(--elem-radius);
+        box-shadow: var(--shadow-02);
+        display: flex;
+        flex-direction: column;
+        justify-self: center;
+        max-width: 20rem;
+        width: 100%;
+
+        > header {
+          a {
             align-items: center;
+            background-color: var(--cur-bg-color-topic);
             display: flex;
             flex-direction: column;
-            font-size: var(--type-smaller-font-size);
-            height: 11rem;
-            justify-content: space-between;
-            padding: 0.5rem 1rem;
+            height: 12rem;
+            padding: 1rem 2rem;
 
-            p {
-              margin: 0;
+            .topic-icon {
+              height: 5rem;
+              width: 5rem;
             }
 
-            p:last-child {
-              color: var(--cur-color-topic);
+            > span {
+              color: var(--text-primary);
+              font-weight: var(--font-body-strong-weight);
+              margin: auto;
               text-align: center;
             }
+          }
+        }
+
+        > section {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+          font-size: var(--type-smaller-font-size);
+          height: 11rem;
+          justify-content: space-between;
+          padding: 1rem 1.5rem;
+
+          p {
+            margin: 0;
+          }
+
+          p:last-child {
+            color: var(--cur-color-topic);
+            text-align: center;
           }
         }
       }

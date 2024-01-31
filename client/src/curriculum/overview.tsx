@@ -9,6 +9,7 @@ import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { topic2css, useDocTitle } from "./utils";
 
+import "./no-side.scss";
 import "./overview.scss";
 
 export function CurriculumModuleOverview(
@@ -40,6 +41,7 @@ export function CurriculumModuleOverview(
   );
   const { doc }: { doc?: CurriculumDoc } = data || props || {};
   useDocTitle(doc);
+  const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (
     <>
       {doc && (
@@ -49,16 +51,21 @@ export function CurriculumModuleOverview(
             <ArticleActionsContainer doc={doc} />
           </div>
           <main
-            className={`curriculum-content-container curriculum-overview container topic-${topic2css(doc.topic)}`}
+            className={`curriculum-content-container curriculum-no-side container topic-${topic2css(doc.topic)}`}
           >
             <div className="sidebar-container">
               <div className="toc-container">
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
             </div>
-            <article className="curriculum-content" lang={doc?.locale}>
+            <article
+              className="curriculum-content curriculum-overview"
+              lang={doc?.locale}
+            >
               <header>
-                <h1>{doc?.title}</h1>
+                <h1>
+                  <span>{coloredTitle}</span> {restTitle.join(" ")}
+                </h1>
                 {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
