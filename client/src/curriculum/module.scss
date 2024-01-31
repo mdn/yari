@@ -73,6 +73,10 @@
       border-radius: var(--elem-radius);
       margin: 1rem;
       padding: 1rem 2rem;
+
+      > :last-child {
+        margin-bottom: 0;
+      }
     }
 
     p.curriculum-outcomes {
