@@ -89,10 +89,15 @@
       }
     }
 
+    ol,
+    ul {
+      margin: 1rem 0 2rem;
+      padding-left: 2rem;
+    }
+
     li {
-      list-style-position: inside;
       list-style-type: disc;
-      margin-left: 1rem;
+      margin: 0.5rem 0;
     }
 
     p.curriculum-resources {
