@@ -44,6 +44,11 @@
   }
 
   .sidebar {
+    > ol:first-of-type > li:first-of-type {
+      font-size: var(--type-base-font-size-rem);
+      font-weight: bold;
+    }
+
     li > em {
       background-color: var(--background-toc-active);
       border-left: 2px solid var(--category-color);
