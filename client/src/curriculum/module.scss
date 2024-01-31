@@ -130,24 +130,27 @@
     p.curriculum-resources {
       margin-bottom: 0.5rem;
 
-      + ul > li {
-        list-style-type: none;
+      + ul {
+        padding-left: 0.25rem;
+        > li {
+          list-style-type: none;
 
-        &:not(.external)::before {
-          content: url("../assets/icons/cur-mdn-resource.svg");
-          display: inline-block;
-          height: 1em;
-          margin-right: 0.5rem;
-          width: 1em;
-        }
-
-        &.external {
           &::before {
-            content: url("../assets/icons/cur-ext-resource.svg");
             display: inline-block;
-            height: 1em;
-            margin-right: 0.5rem;
-            width: 1em;
+            height: 1.5rem;
+            margin-right: 0.25rem;
+            width: 1.5rem;
+            vertical-align: bottom;
+          }
+
+          &:not(.external)::before {
+            content: url("../assets/icons/cur-mdn-resource.svg");
+          }
+
+          &.external {
+            &::before {
+              content: url("../assets/icons/cur-ext-resource.svg");
+            }
           }
         }
       }
