@@ -2,6 +2,8 @@ import { ModuleIndexEntry } from "../../../libs/types/curriculum";
 import { TopicIcon } from "./topic-icon";
 import { topic2css } from "./utils";
 
+import "./modules-list.scss";
+
 export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
   return (
     <ol>
