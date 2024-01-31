@@ -2,6 +2,34 @@
   --background-toc-active: #fcefe2;
   --category-color: #e3642a;
 
+  --cur-bg-color-topic: var(--cur-bg-color);
+  --cur-color-topic: var(--cur-color);
+
+  .topic-standards {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-standards);
+    --cur-color-topic: var(--cur-color-topic-standards);
+  }
+
+  .topic-styling {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-styling);
+    --cur-color-topic: var(--cur-color-topic-styling);
+  }
+
+  .topic-scripting {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-scripting);
+    --cur-color-topic: var(--cur-color-topic-scripting);
+  }
+
+  .topic-tooling {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-tooling);
+    --cur-color-topic: var(--cur-color-topic-tooling);
+  }
+
+  .topic-practices {
+    --cur-bg-color-topic: var(--cur-bg-color-topic-practices);
+    --cur-color-topic: var(--cur-color-topic-practices);
+  }
+
   .curriculum-content {
     .modules {
       input[type="radio"]:not(:checked) ~ ol {

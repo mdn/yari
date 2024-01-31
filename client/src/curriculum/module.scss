@@ -62,7 +62,7 @@
   .curriculum-content {
     grid-area: main;
 
-    header {
+    > header {
       align-items: center;
       column-gap: 1.5rem;
       display: grid;

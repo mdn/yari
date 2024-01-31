@@ -9,6 +9,7 @@ import { Sidebar } from "./sidebar";
 import { ModulesList } from "./modules-list";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
+import { topic2css } from "./utils";
 
 export function CurriculumModuleOverview(
   props: HydrationData<any, CurriculumDoc>
@@ -46,7 +47,9 @@ export function CurriculumModuleOverview(
             <TopNavigation />
             <ArticleActionsContainer doc={doc} />
           </div>
-          <main className="curriculum-content-container container">
+          <main
+            className={`curriculum-content-container container topic-${topic2css(doc.topic)}`}
+          >
             <div className="sidebar-container">
               <div className="toc-container">
                 <aside className="toc">

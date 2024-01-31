@@ -10,6 +10,7 @@ import { Sidebar } from "./sidebar";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { TopicIcon } from "./topic-icon";
+import { topic2css } from "./utils";
 
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -45,7 +46,9 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
             <TopNavigation />
             <ArticleActionsContainer doc={doc} />
           </div>
-          <main className="curriculum-content-container container">
+          <main
+            className={`curriculum-content-container container topic-${topic2css(doc.topic)}`}
+          >
             <div className="sidebar-container">
               <div className="toc-container">
                 <aside className="toc">

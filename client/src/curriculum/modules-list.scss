@@ -16,8 +16,6 @@
         flex-wrap: wrap;
 
         .module-list-item {
-          --cur-bg-color-topic: var(--cur-bg-color);
-          --cur-color-topic: var(--cur-color);
           border: 0;
           border-radius: var(--elem-radius);
           box-shadow: var(--shadow-02);
@@ -27,31 +25,6 @@
           max-width: 100%;
           min-width: 10rem;
           width: 30%;
-
-          &.topic-standards {
-            --cur-bg-color-topic: var(--cur-bg-color-topic-standards);
-            --cur-color-topic: var(--cur-color-topic-standards);
-          }
-
-          &.topic-styling {
-            --cur-bg-color-topic: var(--cur-bg-color-topic-styling);
-            --cur-color-topic: var(--cur-color-topic-styling);
-          }
-
-          &.topic-scripting {
-            --cur-bg-color-topic: var(--cur-bg-color-topic-scripting);
-            --cur-color-topic: var(--cur-color-topic-scripting);
-          }
-
-          &.topic-tooling {
-            --cur-bg-color-topic: var(--cur-bg-color-topic-tooling);
-            --cur-color-topic: var(--cur-color-topic-tooling);
-          }
-
-          &.topic-practices {
-            --cur-bg-color-topic: var(--cur-bg-color-topic-practices);
-            --cur-color-topic: var(--cur-color-topic-practices);
-          }
 
           > header {
             align-items: center;
