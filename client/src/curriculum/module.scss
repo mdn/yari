@@ -73,11 +73,11 @@
         grid-area: icon;
         height: 4rem;
         width: 4rem;
-      }
 
-      h1 {
-        grid-area: heading;
-        margin-bottom: 0;
+        + h1 {
+          grid-area: heading;
+          margin-bottom: 0;
+        }
       }
 
       p {
