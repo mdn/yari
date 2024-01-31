@@ -1,4 +1,4 @@
-import { Doc } from "./document.js";
+import { Doc, DocParent } from "./document.js";
 
 export enum Topic {
   WebStandards = "Web Standards & Semantics",
@@ -7,6 +7,13 @@ export enum Topic {
   BestPractices = "Best Practices",
   Tooling = "Tooling",
   None = "",
+}
+
+export enum Template {
+  module = "module",
+  overview = "overview",
+  landing = "landing",
+  about = "about",
 }
 
 export interface ModuleIndexEntry {
@@ -18,9 +25,14 @@ export interface ModuleIndexEntry {
   children?: ModuleIndexEntry[];
 }
 
+export interface PrevNext {
+  next?: ModuleIndexEntry;
+  prev?: ModuleIndexEntry;
+}
+
 export interface CurriculumFrontmatter {
   summary?: string;
-  icon?: string;
+  template?: Template;
   topic?: Topic;
 }
 
@@ -29,9 +41,34 @@ export interface ModuleMetaData extends CurriculumFrontmatter {
   filename: string;
   slug: string;
   title: string;
+  sidebar: ModuleIndexEntry[];
+  modules: ModuleIndexEntry[];
+  parents: DocParent[];
+  prevNext?: PrevNext;
+}
+
+export interface CurriculumDoc extends Doc {
+  sidebar?: ModuleIndexEntry[];
+  modules?: ModuleIndexEntry[];
+  prevNext?: PrevNext;
+  topic?: Topic;
 }
 
 export interface ModuleData {
-  doc: Doc;
-  curriculumMeta: ModuleMetaData;
+  doc: CurriculumDoc;
+}
+
+export interface ReadCurriculum {
+  meta: ModuleMetaData;
+  body: string;
+}
+
+export interface BuildData {
+  url: string;
+  rawBody: string;
+  metadata: { locale: string } & ModuleMetaData;
+  isMarkdown: true;
+  fileInfo: {
+    path: string;
+  };
 }

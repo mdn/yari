@@ -55,7 +55,7 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && (
+        {pageType !== "document-page" && pageType !== "curriculum" && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
           </div>
@@ -168,9 +168,9 @@ export function App(appProps: HydrationData) {
       <Route
         path="/en-US/curriculum/*"
         element={
-          <StandardLayout extraClasses="curriculum">
+          <Layout pageType="curriculum">
             <Curriculum {...appProps} />
-          </StandardLayout>
+          </Layout>
         }
       />
       <Route

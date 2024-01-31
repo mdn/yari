@@ -1,4 +1,5 @@
 import { ModuleIndexEntry } from "../../../libs/types/curriculum";
+import { TopicIcon } from "./topic-icon";
 
 export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
   return (
@@ -22,6 +23,7 @@ export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
       {modules.map((c, j) => {
         return (
           <li key={j}>
+            {c.topic && <TopicIcon topic={c.topic} />}
             <a href={c.url}>{c.title}</a>
             <p>{c.summary}</p>
             <p>{c.topic}</p>

@@ -62,52 +62,60 @@
   .curriculum-content {
     grid-area: main;
 
+    .topic-icon {
+      height: 4rem;
+      width: 4rem;
+    }
+
     blockquote.curriculum-notes {
-      border: 0px;
-      border-radius: var(--elem-radius);
       background-color: #fcefe299;
-      padding: 1rem 2rem;
+      border: 0;
+      border-radius: var(--elem-radius);
       margin: 1rem;
+      padding: 1rem 2rem;
     }
 
     p.curriculum-outcomes {
       display: flex;
       font-weight: var(--font-body-strong-weight);
       margin-bottom: 0.5rem;
+
       &::before {
         content: url("../assets/icons/cur-resources.svg");
+        display: block;
+        height: 24px;
         margin-right: 1rem;
         width: 24px;
-        height: 24px;
-        display: block;
       }
     }
 
     li {
-      list-style-type: disc;
       list-style-position: inside;
+      list-style-type: disc;
       margin-left: 1rem;
     }
 
     p.curriculum-resources {
       margin-bottom: 0.5rem;
+
       + ul > li {
         list-style-type: none;
 
         &:not(.external)::before {
           content: url("../assets/icons/cur-mdn-resource.svg");
-          margin-right: 0.5rem;
           display: inline-block;
-          width: 1em;
           height: 1em;
+          margin-right: 0.5rem;
+          width: 1em;
         }
+
         &.external {
           &::before {
             content: url("../assets/icons/cur-ext-resource.svg");
-            margin-right: 0.5rem;
             display: inline-block;
-            width: 1em;
             height: 1em;
+            margin-right: 0.5rem;
+            width: 1em;
           }
         }
       }
@@ -178,6 +186,7 @@
     &.toc-container,
     .toc-container {
       grid-area: toc;
+
       .place {
         grid-area: toc;
         margin: 0;

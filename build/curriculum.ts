@@ -1,6 +1,6 @@
 import { fdir } from "fdir";
 import { BUILD_OUT_ROOT, CURRICULUM_ROOT } from "../libs/env/index.js";
-import { Doc } from "../libs/types/document.js";
+import { Doc, DocParent } from "../libs/types/document.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import * as kumascript from "../kumascript/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
@@ -23,6 +23,11 @@ import {
   ModuleData,
   ModuleMetaData,
   ModuleIndexEntry,
+  PrevNext,
+  Template,
+  CurriculumDoc,
+  ReadCurriculum,
+  BuildData,
 } from "../libs/types/curriculum.js";
 import frontmatter from "front-matter";
 import { HydrationData } from "../libs/types/hydration.js";
@@ -103,18 +108,53 @@ export async function buildSidebar(): Promise<ModuleIndexEntry[]> {
   return index;
 }
 
+export async function buildPrevNext(slug: string): Promise<PrevNext> {
+  const index = await buildIndex();
+  const i = index.findIndex((x) => x.slug === slug);
+  return {
+    prev: i > 0 ? index[i - 1] : undefined,
+    next: i < index.length - 2 ? index[i + 1] : undefined,
+  };
+}
+
+function breadPath(url: string, cur: ModuleIndexEntry[]): DocParent[] | null {
+  for (const entry of cur) {
+    if (entry.url === url) {
+      return [{ uri: entry.url, title: entry.title }];
+    }
+    if (entry.children?.length) {
+      const found = breadPath(url, entry.children);
+      if (found) {
+        return [{ uri: entry.url, title: entry.title }, ...found];
+      }
+    }
+  }
+  return null;
+}
+
+export async function buildParents(url: string): Promise<DocParent[]> {
+  const index = await buildModuleIndex(({ url, title }) => {
+    return { url, title };
+  });
+  const parents = breadPath(url, index);
+  if (parents) {
+    const { url, title } = index[0];
+    if (parents[0]?.uri !== url) {
+      return [{ uri: url, title }, ...parents];
+    }
+    return parents;
+  }
+
+  return [];
+}
+
 async function readModule(
   file: string,
   options?: {
     previousNext?: boolean;
     withIndex?: boolean;
   }
-): Promise<{
-  meta: ModuleMetaData;
-  body: string;
-  sidebar?: ModuleIndexEntry[];
-  modules?: ModuleIndexEntry[];
-}> {
+): Promise<ReadCurriculum> {
   const raw = await fs.readFile(file, "utf-8");
   const { attributes, body: rawBody } = frontmatter<CurriculumFrontmatter>(raw);
   const filename = file.replace(CURRICULUM_ROOT, "").replace(/^\/?/, "");
@@ -124,23 +164,40 @@ async function readModule(
   const slug = fileToSlug(file);
   const url = `/${DEFAULT_LOCALE}/${slug}/`;
 
-  const sidebar = options?.withIndex && (await buildSidebar());
+  let sidebar: ModuleIndexEntry[];
+  let parents: DocParent[];
 
   // For module overview and landing page set modules.
-  let modules: ModuleIndexEntry[] | undefined;
+  let modules: ModuleIndexEntry[];
+  let prevNext: PrevNext;
   if (options?.withIndex) {
-    const index = await buildModuleIndex();
-    if (slug === "curriculum") {
-      modules = index?.filter((x) => x.children?.length);
-    } else {
-      modules = index?.find((x) => x.slug === slug)?.children;
+    if (attributes.template === Template.landing) {
+      modules = (await buildModuleIndex())?.filter((x) => x.children?.length);
+    } else if (attributes.template === Template.overview) {
+      modules = (await buildModuleIndex())?.find(
+        (x) => x.slug === slug
+      )?.children;
     }
+    if (attributes.template === Template.module) {
+      prevNext = await buildPrevNext(slug);
+    }
+
+    sidebar = await buildSidebar();
+    parents = await buildParents(url);
   }
 
   return {
-    meta: { filename, slug, url, title, ...attributes },
-    sidebar,
-    modules,
+    meta: {
+      filename,
+      slug,
+      url,
+      title,
+      sidebar,
+      modules,
+      parents,
+      prevNext,
+      ...attributes,
+    },
     body,
   };
 }
@@ -159,9 +216,9 @@ export async function findModuleBySlug(
     console.error(`No file found for ${slug}`, e);
     return;
   }
-  const { body, meta, sidebar, modules } = module;
+  const { body, meta } = module;
 
-  const d = {
+  const d: BuildData = {
     url: meta.url,
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...meta },
@@ -169,18 +226,16 @@ export async function findModuleBySlug(
     fileInfo: {
       path: file,
     },
-    sidebar,
-    modules,
   };
 
   const doc = await buildModule(d);
-  return { doc, curriculumMeta: meta };
+  return { doc };
 }
 
-export async function buildModule(document: any): Promise<Doc> {
-  const { metadata, sidebar, modules } = document;
+export async function buildModule(document: BuildData): Promise<Doc> {
+  const { metadata } = document;
 
-  const doc = { locale: DEFAULT_LOCALE } as Partial<Doc>;
+  const doc = { locale: DEFAULT_LOCALE } as Partial<CurriculumDoc>;
   let $ = null;
 
   [$] = await kumascript.render(document.url, {}, document as any);
@@ -220,8 +275,11 @@ export async function buildModule(document: any): Promise<Doc> {
 
   doc.noIndexing = false;
   doc.toc = makeTOC(doc, true);
-  doc.sidebar = sidebar;
-  doc.modules = modules;
+  doc.sidebar = metadata.sidebar;
+  doc.modules = metadata.modules;
+  doc.prevNext = metadata.prevNext;
+  doc.parents = metadata.parents;
+  doc.topic = metadata.topic;
 
   return doc as Doc;
 }
@@ -235,13 +293,13 @@ export async function buildCurriculum(options: {
   for (const file of await allFiles()) {
     console.log(`building: ${file}`);
 
-    const { meta, body, sidebar, modules } = await readModule(file, {
+    const { meta, body } = await readModule(file, {
       withIndex: true,
     });
 
     const url = meta.url;
     const renderUrl = url.replace(/\/$/, "");
-    const renderDoc = {
+    const renderDoc: BuildData = {
       url: renderUrl,
       rawBody: body,
       metadata: { locale, ...meta },
@@ -249,8 +307,6 @@ export async function buildCurriculum(options: {
       fileInfo: {
         path: file,
       },
-      sidebar,
-      modules,
     };
     const builtDoc = await buildModule(renderDoc);
     const { doc } = {
