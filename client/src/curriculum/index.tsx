@@ -15,7 +15,7 @@ import { CurriculumModule } from "./module";
 import "./index.scss";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
-import { topic2css } from "./utils";
+import { topic2css, useDocTitle } from "./utils";
 
 export function Curriculum(appProps: HydrationData) {
   return (
@@ -56,6 +56,7 @@ export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
     }
   );
   const { doc }: { doc?: CurriculumDoc } = data || props || {};
+  useDocTitle(doc);
   return (
     <>
       {doc && (

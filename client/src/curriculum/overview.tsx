@@ -9,7 +9,7 @@ import { Sidebar } from "./sidebar";
 import { ModulesList } from "./modules-list";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
-import { topic2css } from "./utils";
+import { topic2css, useDocTitle } from "./utils";
 
 export function CurriculumModuleOverview(
   props: HydrationData<any, CurriculumDoc>
@@ -39,6 +39,7 @@ export function CurriculumModuleOverview(
     }
   );
   const { doc }: { doc?: CurriculumDoc } = data || props || {};
+  useDocTitle(doc);
   return (
     <>
       {doc && (

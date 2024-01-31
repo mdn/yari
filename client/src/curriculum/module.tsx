@@ -10,7 +10,7 @@ import { Sidebar } from "./sidebar";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { TopicIcon } from "./topic-icon";
-import { topic2css } from "./utils";
+import { topic2css, useDocTitle } from "./utils";
 
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -38,6 +38,8 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
     }
   );
   const { doc }: { doc?: CurriculumDoc } = data || props || {};
+  useDocTitle(doc);
+
   return (
     <>
       {doc && (
