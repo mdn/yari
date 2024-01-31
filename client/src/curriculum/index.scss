@@ -38,6 +38,11 @@
     }
   }
 
+  .article-actions-container {
+    // Duplicated from ../ui/molecules/grids/document-page.scss
+    display: flex;
+  }
+
   .sidebar {
     li > em {
       background-color: var(--background-toc-active);
