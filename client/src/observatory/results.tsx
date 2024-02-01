@@ -1,6 +1,6 @@
 import { ObservatoryResult } from "./types";
 import { useParams } from "react-router";
-import ObservatoryRecommendations from "./recommendations";
+import ObservatoryRecommendations, { RECOMMENDATIONS } from "./recommendations";
 import { Icon } from "../ui/atoms/icon";
 import { SidePlacement } from "../ui/organisms/placement";
 import { Loading } from "../ui/atoms/loading";
@@ -189,12 +189,35 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                     "x-xss-protection-not-implemented",
                   ].includes(test.result)
               )
-              .sort(([aName], [bName]) =>
-                (TEST_MAP[aName]?.name || aName).localeCompare(
-                  TEST_MAP[bName]?.name || bName,
-                  undefined,
-                  { sensitivity: "base" }
-                )
+              .sort(
+                (
+                  [aName, { result: aResult, score_modifier: aScore }],
+                  [bName, { result: bResult, score_modifier: bScore }]
+                ) => {
+                  const aIndex = RECOMMENDATIONS.findIndex(([results]) =>
+                    results.includes(aResult)
+                  );
+                  const bIndex = RECOMMENDATIONS.findIndex(([results]) =>
+                    results.includes(bResult)
+                  );
+                  const scoreDiff = aScore - bScore;
+                  // sort by order in RECOMMENDATIONS
+                  return aIndex !== -1 && bIndex !== -1
+                    ? aIndex - bIndex
+                    : aIndex !== -1
+                      ? -1
+                      : bIndex !== -1
+                        ? 1
+                        : // then by score
+                          scoreDiff !== 0
+                          ? scoreDiff
+                          : // then by test name
+                            (TEST_MAP[aName]?.name || aName).localeCompare(
+                              TEST_MAP[bName]?.name || bName,
+                              undefined,
+                              { sensitivity: "base" }
+                            );
+                }
               )
               .map(([name, test]) =>
                 TEST_MAP[name] ? (
