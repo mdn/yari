@@ -110,7 +110,19 @@ export async function buildSidebar(): Promise<ModuleIndexEntry[]> {
   return index;
 }
 
-export async function buildPrevNext(slug: string): Promise<PrevNext> {
+export async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
+  const index = (await buildModuleIndex()).filter((x) => x?.children?.length);
+  const i = index.findIndex((x) => x.slug === slug);
+  const prev = i > 0 ? index[i - 1] : undefined;
+  const next = i < index.length - 1 ? index[i + 1] : undefined;
+
+  prev && delete prev.children;
+  next && delete next.children;
+
+  return { prev, next };
+}
+
+export async function buildPrevNextModule(slug: string): Promise<PrevNext> {
   const index = await buildIndex();
   const i = index.findIndex((x) => x.slug === slug);
   return {
@@ -181,7 +193,9 @@ async function readModule(
       )?.children;
     }
     if (attributes.template === Template.module) {
-      prevNext = await buildPrevNext(slug);
+      prevNext = await buildPrevNextModule(slug);
+    } else if (attributes.template === Template.overview) {
+      prevNext = await buildPrevNextOverview(slug);
     }
 
     sidebar = await buildSidebar();

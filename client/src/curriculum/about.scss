@@ -1,0 +1,44 @@
+.curriculum-content-container {
+  .curriculum-content.curriculum-about {
+    // Workaround so last toc item works.
+    margin-bottom: 5rem;
+
+    h2#motivation + div {
+      li {
+        list-style-image: url("../assets/icons/cur-bullet.svg");
+      }
+    }
+
+    h3 {
+      align-items: center;
+      display: flex;
+      gap: 1.25rem;
+
+      &::before {
+        display: inline-block;
+        height: 2.5rem;
+        width: 2.5rem;
+      }
+
+      &#students::before {
+        content: url("../assets/icons/cur-about-students.svg");
+      }
+
+      &#educators::before {
+        content: url("../assets/icons/cur-about-educators.svg");
+      }
+
+      &#whats_covered::before {
+        content: url("../assets/icons/cur-about-covered.svg");
+      }
+
+      &#level_of_detail::before {
+        content: url("../assets/icons/cur-about-detail.svg");
+      }
+
+      &#what_is_not_covered::before {
+        content: url("../assets/icons/cur-about-not.svg");
+      }
+    }
+  }
+}

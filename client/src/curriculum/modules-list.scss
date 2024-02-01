@@ -6,6 +6,7 @@
 
   .curriculum-content {
     .modules {
+      input[type="radio"]:not(:checked) ~ a,
       input[type="radio"]:not(:checked) ~ ol {
         display: none;
       }
@@ -20,9 +21,11 @@
     ol.modules-list-list {
       display: grid;
       grid-template-areas:
-        "a b c spacer"
-        "h h h h"
-        "x x x x";
+        "a   b   c   spacer"
+        "hr  hr  hr  hr"
+        "mod mod mod mod"
+        "t   t   t   t";
+
       grid-template-columns: max-content max-content max-content auto;
       margin: 0;
       padding: 0;
@@ -30,7 +33,7 @@
       hr {
         border: none;
         border-top: 1px solid var(--text-primary);
-        grid-area: h;
+        grid-area: hr;
         margin: 0 0 1.5rem;
         width: 100%;
       }
@@ -74,9 +77,15 @@
         }
 
         > ol {
-          grid-area: x;
+          grid-area: mod;
           margin: 0;
           padding: 0;
+        }
+
+        > a {
+          grid-area: t;
+          margin-top: 2rem;
+          width: fit-content;
         }
       }
     }

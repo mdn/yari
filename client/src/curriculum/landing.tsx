@@ -1,20 +1,22 @@
 import useSWR from "swr";
+
+import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
 import { HTTPError, RenderDocumentBody } from "../document";
 import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
-import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
-import "./module.scss";
-import { Sidebar } from "./sidebar";
+import { ModulesListList } from "./modules-list";
+
+import "./index.scss";
+import "./no-side.scss";
+import "./landing.scss";
+
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
-import { TopicIcon } from "./topic-icon";
 import { topic2css, useDocTitle } from "./utils";
-import { SidebarContainer } from "../document/organisms/sidebar";
-import { PrevNext } from "./prev-next";
 
-export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
+export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
   const { data } = useSWR<ModuleData>(
     dataURL,
@@ -36,12 +38,11 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
     {
       fallbackData: props as ModuleData,
       revalidateOnFocus: WRITER_MODE,
-      revalidateOnMount: !props.curriculumMeta,
+      revalidateOnMount: !props.blogMeta,
     }
   );
   const { doc }: { doc?: CurriculumDoc } = data || props || {};
   useDocTitle(doc);
-
   return (
     <>
       {doc && (
@@ -50,39 +51,23 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
             <TopNavigation />
             <ArticleActionsContainer doc={doc} />
           </div>
-          <main
-            className={`curriculum-content-container container topic-${topic2css(doc.topic)}`}
-          >
+          <main className="curriculum-content-container container curriculum-no-side curriculum-landing">
             <div className="sidebar-container">
-              <SidebarContainer doc={doc} label="Related Topics">
-                {doc.sidebar && (
-                  <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
-                )}
-              </SidebarContainer>
               <div className="toc-container">
-                <aside className="toc">
-                  <nav>
-                    {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-                  </nav>
-                </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
-              {doc.sidebar && (
-                <Sidebar
-                  extraClasses="sidebar"
-                  current={doc.mdn_url}
-                  sidebar={doc.sidebar}
-                />
-              )}
             </div>
             <article className="curriculum-content" lang={doc?.locale}>
               <header>
-                {doc.topic && <TopicIcon topic={doc.topic} />}
+                <LandingSVG />
                 <h1>{doc?.title}</h1>
                 {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
-              <PrevNext doc={doc} />
+              <section className="modules">
+                <h2>Modules</h2>
+                {doc.modules && <ModulesListList modules={doc.modules} />}
+              </section>
             </article>
           </main>
         </>

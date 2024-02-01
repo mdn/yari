@@ -4,6 +4,7 @@ import { topic2css } from "./utils";
 
 import "./modules-list.scss";
 import { useState } from "react";
+import { Button } from "../ui/atoms/button";
 
 export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
   const [tab, setTab] = useState(1);
@@ -22,7 +23,14 @@ export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
               onChange={() => setTab(i)}
             />
             <label htmlFor={`module-${i}`}>{c.title}</label>
-            {c.children && <ModulesList modules={c.children} />}
+            {c.children && (
+              <>
+                <ModulesList modules={c.children} />
+                <Button type="primary" target="_self" href={c.children[0].url}>
+                  Let's Begin
+                </Button>
+              </>
+            )}
           </li>
         );
       })}

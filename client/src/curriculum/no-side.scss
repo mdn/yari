@@ -1,5 +1,25 @@
 @use "../ui/vars" as *;
 
+.curriculum-content-container {
+  .curriculum-content.curriculum-about,
+  .curriculum-content.curriculum-overview {
+    > header > h1 {
+      margin-bottom: 1rem;
+
+      > span {
+        color: var(--cur-color);
+      }
+    }
+
+    .module-contents {
+      > h2 {
+        margin-bottom: 2rem;
+        margin-top: 4rem;
+      }
+    }
+  }
+}
+
 .curriculum-content-container.curriculum-no-side {
   @media screen and (min-width: $screen-md) {
     display: grid;
