@@ -208,18 +208,18 @@
   --baseline-limited-cross: #ea8600;
 
   --cur-bg-color: #fcefe2;
-  --cur-bg-color-topic-standards: #d5f4f5;
-  --cur-bg-color-topic-styling: #eff5d5;
-  --cur-bg-color-topic-scripting: #fff8d6;
-  --cur-bg-color-topic-tooling: #d5e4f5;
-  --cur-bg-color-topic-practices: #f5dfd5;
+  --cur-bg-color-topic-standards: #{$mdn-color-light-theme-red-10};
+  --cur-bg-color-topic-styling: #{$mdn-color-light-theme-blue-10};
+  --cur-bg-color-topic-scripting: #{$mdn-color-light-theme-yellow-10};
+  --cur-bg-color-topic-tooling: #{$mdn-color-light-theme-green-10};
+  --cur-bg-color-topic-practices: #{$mdn-color-light-theme-violet-10};
   --cur-category-color: #e3642a;
   --cur-color: #d47d55;
-  --cur-color-topic-standards: #187b7f;
-  --cur-color-topic-styling: #187f22;
-  --cur-color-topic-scripting: #7f6f16;
-  --cur-color-topic-tooling: #182f7f;
-  --cur-color-topic-practices: #a25e3f;
+  --cur-color-topic-standards: #{$mdn-color-light-theme-red-60};
+  --cur-color-topic-styling: #{$mdn-color-light-theme-blue-60};
+  --cur-color-topic-scripting: #{$mdn-color-light-theme-yellow-60};
+  --cur-color-topic-tooling: #{$mdn-color-light-theme-green-60};
+  --cur-color-topic-practices: #{$mdn-color-light-theme-violet-60};
 
   color-scheme: light;
 }
@@ -428,18 +428,18 @@
   --baseline-limited-check: #1e8e3e;
   --baseline-limited-cross: #ea8600;
 
-  --cur-color: #fcefe2;
-  --cur-color-topic-standards: #d5f4f5;
-  --cur-color-topic-styling: #eff5d5;
-  --cur-color-topic-scripting: #fff8d6;
-  --cur-color-topic-tooling: #d5e4f5;
-  --cur-color-topic-practices: #f5dfd5;
-  --cur-bg-color: #d47d55;
-  --cur-bg-color-topic-standards: #187b7f;
-  --cur-bg-color-topic-styling: #187f22;
-  --cur-bg-color-topic-scripting: #7f6f16;
-  --cur-bg-color-topic-tooling: #182f7f;
-  --cur-bg-color-topic-practices: #a25e3f;
+  --cur-color: #e3642a;
+  --cur-color-topic-standards: #{$mdn-color-light-theme-red-30};
+  --cur-color-topic-styling: #{$mdn-color-light-theme-blue-30};
+  --cur-color-topic-scripting: #{$mdn-color-light-theme-yellow-40};
+  --cur-color-topic-tooling: #{$mdn-color-light-theme-green-40};
+  --cur-color-topic-practices: #{$mdn-color-light-theme-violet-40};
+  --cur-bg-color: #664b33;
+  --cur-bg-color-topic-standards: #{$mdn-color-light-theme-red-70};
+  --cur-bg-color-topic-styling: #{$mdn-color-light-theme-blue-70};
+  --cur-bg-color-topic-scripting: #{$mdn-color-light-theme-yellow-70};
+  --cur-bg-color-topic-tooling: #{$mdn-color-light-theme-green-70};
+  --cur-bg-color-topic-practices: #{$mdn-color-light-theme-violet-70};
   --cur-category-color: #e3642a;
 
   color-scheme: dark;
