@@ -1,5 +1,4 @@
 import { DocParent } from "../../../../../libs/types/document";
-import { PreloadingDocumentLink } from "../../../document/preloading";
 import { BREADCRUMB_CLICK } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
