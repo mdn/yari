@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useMemo, useState } from "react";
 import { useUpdateResult } from ".";
 import { Button } from "../ui/atoms/button";
 import { ObservatoryResult } from "./types";
@@ -312,41 +312,77 @@ export default function ObservatoryRecommendations({
     () => Object.values(result.tests).map((t) => t.result),
     [result.tests]
   );
+  const filteredRecs = useMemo(
+    () =>
+      RECOMMENDATIONS.filter(([results]) =>
+        results.some((result) => allResults.includes(result))
+      ),
+    [allResults]
+  );
+  const [activeRec, setActiveRec] = useState(0);
+
   return tests && Object.keys(tests).length !== 0 ? (
     <>
-      <h2>Recommendation</h2>
+      <h2>Recommendations</h2>
       <figure className="scroll-container">
         <div id="recommendations" className="box">
-          {RECOMMENDATIONS.filter(([results]) =>
-            results.some((result) => allResults.includes(result))
-          ).map(([_, recommendation]) => (
-            <div className="recommendation">{recommendation}</div>
-          ))}
-          <div className="recommendation">
-            <p>
-              <em>
-                &#x1F389;&#x1F389;&#x1F389;&nbsp; We don't have any!
-                &nbsp;&#x1F389;&#x1F389;&#x1F389;
-              </em>
-            </p>
-            <p>
-              Make sure to check back occasionally to ensure that your website
-              is keeping up with the latest in web security standards.
-            </p>
-            <p>
-              In the meantime, thanks for everything you're doing to keep the
-              internet a safe, secure, and private place!
-            </p>
-          </div>
-          <div className="rescan">
-            <p>
-              Once you've successfully completed your change, click Rescan for
-              the next piece of advice.
-            </p>
-            <Button onClickHandler={() => trigger(result.scan.hidden)}>
-              Rescan
-            </Button>
-          </div>
+          {filteredRecs.length ? (
+            filteredRecs.map(([results, recommendation], index) => (
+              <div
+                className={`recommendation ${activeRec === index ? "active" : ""}`}
+                key={results[0]}
+              >
+                {recommendation}
+              </div>
+            ))
+          ) : (
+            <div className="recommendation active">
+              <p>
+                <em>
+                  &#x1F389;&#x1F389;&#x1F389;&nbsp; We don't have any!
+                  &nbsp;&#x1F389;&#x1F389;&#x1F389;
+                </em>
+              </p>
+              <p>
+                Make sure to check back occasionally to ensure that your website
+                is keeping up with the latest in web security standards.
+              </p>
+              <p>
+                In the meantime, thanks for everything you're doing to keep the
+                internet a safe, secure, and private place!
+              </p>
+            </div>
+          )}
+          {Boolean(filteredRecs.length) && (
+            <div className="footer">
+              <div className="page-controls">
+                <Button
+                  icon="chevron"
+                  type="action"
+                  extraClasses="previous"
+                  onClickHandler={() => setActiveRec((x) => x - 1)}
+                  isDisabled={activeRec <= 0}
+                  title="Previous"
+                >
+                  <span className="visually-hidden">Previous</span>
+                </Button>
+                Recommendation {activeRec + 1} of {filteredRecs.length}
+                <Button
+                  icon="chevron"
+                  type="action"
+                  extraClasses="next"
+                  onClickHandler={() => setActiveRec((x) => x + 1)}
+                  isDisabled={activeRec + 1 >= filteredRecs.length}
+                  title="Next"
+                >
+                  <span className="visually-hidden">Next</span>
+                </Button>
+              </div>
+              <Button onClickHandler={() => trigger(result.scan.hidden)}>
+                Rescan
+              </Button>
+            </div>
+          )}
         </div>
       </figure>
     </>
@@ -354,7 +390,7 @@ export default function ObservatoryRecommendations({
     <>
       <figure className="scroll-container">
         <div id="recommendations" className="box">
-          <div className="rescan">
+          <div className="footer">
             <p>
               Oops, it looks like we can't load these test results, you should
               Rescan.

@@ -360,7 +360,7 @@
     .recommendation {
       display: none;
 
-      &:first-child {
+      &.active {
         display: block;
       }
 
@@ -373,14 +373,32 @@
       }
     }
 
-    .rescan {
-      align-items: center;
-      display: flex;
-      gap: 1.5rem;
+    .footer {
+      &,
+      .page-controls {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .page-controls {
+        font-size: var(--type-smaller-font-size);
+        margin: 0 auto;
+      }
 
       p {
         margin: 0;
         margin-right: auto;
+      }
+
+      .previous .icon {
+        transform: rotate(90deg);
+      }
+
+      .next .icon {
+        transform: rotate(-90deg);
       }
     }
   }
