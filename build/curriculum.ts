@@ -242,7 +242,8 @@ export async function buildModule(document: BuildData): Promise<Doc> {
   const doc = { locale: DEFAULT_LOCALE } as Partial<CurriculumDoc>;
   let $ = null;
 
-  [$] = await kumascript.render(document.url, {}, document as any);
+  const renderUrl = document.url.replace(/\/$/, "");
+  [$] = await kumascript.render(renderUrl, {}, document as any);
 
   $("[data-token]").removeAttr("data-token");
   $("[data-flaw-src]").removeAttr("data-flaw-src");
@@ -301,10 +302,8 @@ export async function buildCurriculum(options: {
       forIndex: false,
     });
 
-    const url = meta.url;
-    const renderUrl = url.replace(/\/$/, "");
     const renderDoc: BuildData = {
-      url: renderUrl,
+      url: meta.url,
       rawBody: body,
       metadata: { locale, ...meta },
       isMarkdown: true,
@@ -314,7 +313,7 @@ export async function buildCurriculum(options: {
     };
     const builtDoc = await buildModule(renderDoc);
     const { doc } = {
-      doc: { ...builtDoc, summary: meta.summary, mdn_url: url },
+      doc: { ...builtDoc, summary: meta.summary, mdn_url: meta.url },
     };
 
     const context: HydrationData = {

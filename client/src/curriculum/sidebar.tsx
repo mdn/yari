@@ -3,13 +3,18 @@ import { ModuleIndexEntry } from "../../../libs/types/curriculum";
 import "./module.scss";
 export function Sidebar({
   current = "",
+  extraClasses = "",
   sidebar = [],
 }: {
   current: string;
+  extraClasses?: string;
   sidebar: ModuleIndexEntry[];
 }) {
   return (
-    <aside className="sidebar" data-current={current}>
+    <aside
+      className={`curriculum-sidebar ${extraClasses}`}
+      data-current={current}
+    >
       <ol>
         {sidebar.map((o, i) => (
           <li key={i}>
