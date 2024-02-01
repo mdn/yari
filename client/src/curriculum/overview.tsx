@@ -11,6 +11,7 @@ import { topic2css, useDocTitle } from "./utils";
 
 import "./no-side.scss";
 import "./overview.scss";
+import { PrevNext } from "./prev-next";
 
 export function CurriculumModuleOverview(
   props: HydrationData<any, CurriculumDoc>
@@ -72,6 +73,7 @@ export function CurriculumModuleOverview(
                 <h2>Module Contents:</h2>
                 {doc.modules && <ModulesList modules={doc.modules} />}
               </section>
+              <PrevNext doc={doc} />
             </article>
           </main>
         </>

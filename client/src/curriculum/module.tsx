@@ -12,7 +12,7 @@ import { ArticleActionsContainer } from "../ui/organisms/article-actions-contain
 import { TopicIcon } from "./topic-icon";
 import { topic2css, useDocTitle } from "./utils";
 import { SidebarContainer } from "../document/organisms/sidebar";
-import { Button } from "../ui/atoms/button";
+import { PrevNext } from "./prev-next";
 
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -82,28 +82,7 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
                 {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
-              <section className="curriculum-prev-next">
-                {doc.prevNext?.prev && (
-                  <Button
-                    type="primary"
-                    target="_self"
-                    icon="cur-prev"
-                    href={doc.prevNext?.prev?.url}
-                  >
-                    Previous: {doc.prevNext?.prev?.title}
-                  </Button>
-                )}
-                {doc.prevNext?.next && (
-                  <Button
-                    type="primary"
-                    target="_self"
-                    icon="cur-next"
-                    href={doc.prevNext?.next?.url}
-                  >
-                    Next: {doc.prevNext?.next?.title}
-                  </Button>
-                )}
-              </section>
+              <PrevNext doc={doc} />
             </article>
           </main>
         </>
