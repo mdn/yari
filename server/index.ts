@@ -53,7 +53,7 @@ import {
   findPostBySlug,
   findPostPathBySlug,
 } from "../build/blog.js";
-import { buildIndex, findModuleBySlug } from "../build/curriculum.js";
+import { findModuleBySlug } from "../build/curriculum.js";
 
 async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
