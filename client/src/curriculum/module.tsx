@@ -11,6 +11,8 @@ import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { TopicIcon } from "./topic-icon";
 import { topic2css, useDocTitle } from "./utils";
+import { SidebarContainer } from "../document/organisms/sidebar";
+import { Button } from "../ui/atoms/button";
 
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -52,6 +54,11 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
             className={`curriculum-content-container container topic-${topic2css(doc.topic)}`}
           >
             <div className="sidebar-container">
+              <SidebarContainer doc={doc} label="Related Topics">
+                {doc.sidebar && (
+                  <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
+                )}
+              </SidebarContainer>
               <div className="toc-container">
                 <aside className="toc">
                   <nav>
@@ -61,7 +68,11 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
               {doc.sidebar && (
-                <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
+                <Sidebar
+                  extraClasses="sidebar"
+                  current={doc.mdn_url}
+                  sidebar={doc.sidebar}
+                />
               )}
             </div>
             <article className="curriculum-content" lang={doc?.locale}>
@@ -71,16 +82,24 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
                 {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
-              <section>
+              <section className="curriculum-prev-next">
                 {doc.prevNext?.prev && (
-                  <a href={doc.prevNext?.prev?.url}>
+                  <Button
+                    type="primary"
+                    target="_self"
+                    href={doc.prevNext?.prev?.url}
+                  >
                     Previous: {doc.prevNext?.prev?.title}
-                  </a>
+                  </Button>
                 )}
                 {doc.prevNext?.next && (
-                  <a href={doc.prevNext?.next?.url}>
+                  <Button
+                    type="primary"
+                    target="_self"
+                    href={doc.prevNext?.next?.url}
+                  >
                     Next: {doc.prevNext?.next?.title}
-                  </a>
+                  </Button>
                 )}
               </section>
             </article>

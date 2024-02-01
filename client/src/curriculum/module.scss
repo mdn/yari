@@ -43,14 +43,14 @@
     }
   }
 
-  .sidebar,
+  .curriculum-sidebar,
   .toc,
   .curriculum-content {
     padding-bottom: 3rem;
     padding-top: 3rem;
   }
 
-  .sidebar {
+  > .sidebar-container > .curriculum-sidebar {
     align-self: start;
     grid-area: sidebar;
 
@@ -139,27 +139,20 @@
       margin-bottom: 0.5rem;
 
       + ul {
-        padding-left: 0.25rem;
+        padding-left: 2rem;
 
         > li {
-          list-style-type: none;
-
-          &::before {
-            display: inline-block;
-            height: 1.5rem;
-            margin-right: 0.25rem;
-            vertical-align: bottom;
-            width: 1.5rem;
+          // This is hacky but works here
+          &::first-line {
+            vertical-align: super;
           }
 
-          &:not(.external)::before {
-            content: url("../assets/icons/cur-mdn-resource.svg");
+          &:not(.external) {
+            list-style-image: url("../assets/icons/cur-mdn-resource.svg");
           }
 
           &.external {
-            &::before {
-              content: url("../assets/icons/cur-ext-resource.svg");
-            }
+            list-style-image: url("../assets/icons/cur-ext-resource.svg");
           }
         }
       }
@@ -214,7 +207,7 @@
     @media screen and (min-width: $screen-md) {
       z-index: auto;
 
-      .sidebar {
+      .curriculum-sidebar {
         mask-image: linear-gradient(
           to bottom,
           rgb(0, 0, 0) 0% calc(100% - 3rem),
@@ -255,10 +248,17 @@
           padding-bottom: 3rem;
         }
       }
-      @media screen and (max-width: #{$screen-md - 1}) {
-        .place {
-          display: none;
-        }
+    }
+
+    @media screen and (max-width: #{$screen-md - 1}) {
+      .toc-container {
+        display: none;
+      }
+    }
+
+    @media screen and (min-width: #{$screen-md}) {
+      #sidebar-quicklinks {
+        display: none;
       }
     }
     @media screen and (min-width: $screen-xl) {
@@ -267,6 +267,18 @@
       .sidebar {
         mask-image: none;
       }
+    }
+  }
+
+  .curriculum-prev-next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+    justify-content: space-between;
+    width: 100%;
+
+    a {
+      margin: 0.5rem 0;
     }
   }
 }

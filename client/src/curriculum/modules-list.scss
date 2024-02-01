@@ -1,6 +1,9 @@
 @use "../ui/vars" as *;
 
 .curriculum-content-container {
+  --module-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
+    -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
+
   .curriculum-content {
     .modules {
       input[type="radio"]:not(:checked) ~ ol {
@@ -106,7 +109,7 @@
       .module-list-item {
         border: 0;
         border-radius: var(--elem-radius);
-        box-shadow: var(--shadow-02);
+        box-shadow: var(--module-shadow);
         display: flex;
         flex-direction: column;
         justify-self: center;
