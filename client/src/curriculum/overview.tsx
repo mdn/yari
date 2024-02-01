@@ -66,7 +66,6 @@ export function CurriculumModuleOverview(
                 <h1>
                   <span>{coloredTitle}</span> {restTitle.join(" ")}
                 </h1>
-                {doc?.topic && <p>{doc.topic}</p>}
               </header>
               <RenderDocumentBody doc={doc} />
               <section className="module-contents">

@@ -87,6 +87,7 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
                   <Button
                     type="primary"
                     target="_self"
+                    icon="cur-prev"
                     href={doc.prevNext?.prev?.url}
                   >
                     Previous: {doc.prevNext?.prev?.title}
@@ -96,6 +97,7 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
                   <Button
                     type="primary"
                     target="_self"
+                    icon="cur-next"
                     href={doc.prevNext?.next?.url}
                   >
                     Next: {doc.prevNext?.next?.title}

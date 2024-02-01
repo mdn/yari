@@ -8,10 +8,13 @@ import { SidePlacement } from "../ui/organisms/placement";
 
 import "./index.scss";
 import "./no-side.scss";
+import "./about.scss";
 
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { topic2css, useDocTitle } from "./utils";
+import { SidebarContainer } from "../document/organisms/sidebar";
+import { TOC } from "../document/organisms/toc";
 
 export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -40,6 +43,7 @@ export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   );
   const { doc }: { doc?: CurriculumDoc } = data || props || {};
   useDocTitle(doc);
+  const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (
     <>
       {doc && (
@@ -52,14 +56,26 @@ export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
             className={`curriculum-content-container container curriculum-no-side topic-${topic2css(doc.topic)}`}
           >
             <div className="sidebar-container">
+              <SidebarContainer doc={doc} label="Related Topics">
+                <></>
+              </SidebarContainer>
               <div className="toc-container">
+                <aside className="toc">
+                  <nav>
+                    {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+                  </nav>
+                </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
             </div>
-            <article className="curriculum-content" lang={doc?.locale}>
+            <article
+              className="curriculum-content curriculum-about"
+              lang={doc?.locale}
+            >
               <header>
-                <h1>{doc?.title}</h1>
-                {doc?.topic && <p>{doc.topic}</p>}
+                <h1>
+                  <span>{coloredTitle}</span> {restTitle.join(" ")}
+                </h1>
               </header>
               <RenderDocumentBody doc={doc} />
             </article>
