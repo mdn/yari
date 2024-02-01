@@ -14,7 +14,7 @@ import "./landing.scss";
 
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
-import { topic2css, useDocTitle } from "./utils";
+import { useDocTitle } from "./utils";
 
 export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;

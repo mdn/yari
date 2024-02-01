@@ -1,7 +1,5 @@
-import useSWR from "swr";
 import { Route, Routes } from "react-router-dom";
 
-import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumModuleOverview } from "./overview";
 import { CurriculumModule } from "./module";
