@@ -245,11 +245,11 @@ export function postProcessExternalLinks($) {
  * @param {Cheerio document instance} $
  * @param {current url} url
  */
-export function postProcessCurriculumLinks($, url) {
+export function postProcessCurriculumLinks($, toUrl) {
   $("a[href^=./]").each((_, element) => {
     // Expand relative links (TODO: fix)
     const $a = $(element);
-    $a.attr("href", $a.attr("href").replace(/^\.\//, `${url}`));
+    $a.attr("href", toUrl($a.attr("href")));
   });
   $("a[href^=/en-US/curriculum]").each((_, element) => {
     const $a = $(element);

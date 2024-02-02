@@ -61,7 +61,7 @@ export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
                   if (i === 0) {
                     return <Header section={section} h1={doc?.title} />;
                   }
-                  if (section.value.id === "about_curriculum") {
+                  if (section.value.id === "about_the_curriculum") {
                     return About({ section });
                   }
                   if (section.value.id === "modules") {
