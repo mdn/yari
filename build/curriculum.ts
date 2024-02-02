@@ -262,7 +262,7 @@ export async function buildModule(document: BuildData): Promise<Doc> {
   $("[data-token]").removeAttr("data-token");
   $("[data-flaw-src]").removeAttr("data-flaw-src");
 
-  doc.title = metadata.title || "";
+  doc.title = (metadata.title || "").replace(/^\d+\s+/, "");
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES_RAW[DEFAULT_LOCALE]?.native;
@@ -274,7 +274,13 @@ export async function buildModule(document: BuildData): Promise<Doc> {
   syntaxHighlight($, doc);
   injectNoTranslate($);
   injectLoadingLazyAttributes($);
-  postProcessCurriculumLinks($, document.url);
+  postProcessCurriculumLinks($, (p: string) => {
+    const [head, hash] = p.split("#");
+    const slug = fileToSlug(
+      path.normalize(path.join(path.dirname(document.fileInfo.path), head))
+    ).replace(/\/$/, "");
+    return `/${DEFAULT_LOCALE}/${slug}/${hash ? `#${hash}` : ""}`;
+  });
   postProcessExternalLinks($);
   postLocalFileLinks($, doc);
   postProcessSmallerHeadingIDs($);
@@ -293,7 +299,9 @@ export async function buildModule(document: BuildData): Promise<Doc> {
   doc.pageTitle = `${doc.title} | MDN Curriculum`;
 
   doc.noIndexing = false;
-  doc.toc = makeTOC(doc, true);
+  doc.toc = makeTOC(doc, true).map(({ text, id }) => {
+    return { text: text.replace(/^[\d.]+\s+/, ""), id };
+  });
   doc.sidebar = metadata.sidebar;
   doc.modules = metadata.modules;
   doc.prevNext = metadata.prevNext;

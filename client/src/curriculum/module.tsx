@@ -63,7 +63,9 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
               <div className="toc-container">
                 <aside className="toc">
                   <nav>
-                    {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+                    {doc.toc && !!doc.toc.length && (
+                      <TOC toc={doc.toc} title="In this module" />
+                    )}
                   </nav>
                 </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}

@@ -16,6 +16,7 @@ import { topic2css, useDocTitle } from "./utils";
 import { SidebarContainer } from "../document/organisms/sidebar";
 import { TOC } from "../document/organisms/toc";
 import { RenderCurriculumBody } from "./body";
+import { Sidebar } from "./sidebar";
 
 export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -58,16 +59,27 @@ export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
           >
             <div className="sidebar-container">
               <SidebarContainer doc={doc} label="Related Topics">
-                <></>
+                {doc.sidebar && (
+                  <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
+                )}
               </SidebarContainer>
               <div className="toc-container">
                 <aside className="toc">
                   <nav>
-                    {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+                    {doc.toc && !!doc.toc.length && (
+                      <TOC toc={doc.toc} title="In this module" />
+                    )}
                   </nav>
                 </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
+              {doc.sidebar && (
+                <Sidebar
+                  extraClasses="sidebar"
+                  current={doc.mdn_url}
+                  sidebar={doc.sidebar}
+                />
+              )}
             </div>
             <article
               className="curriculum-content curriculum-about"

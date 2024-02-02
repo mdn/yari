@@ -156,4 +156,117 @@
       }
     }
   }
+
+  .landing-ladder {
+    background-color: var(--background-secondary);
+    margin: 0;
+    max-width: 100%;
+
+    > div {
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+      padding: 2rem;
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+      width: 100%;
+
+      > svg {
+        #text69 {
+          font: var(--type-heading-h2);
+        }
+      }
+    }
+  }
+
+  #don’t_know_where_to_start {
+    margin: 1rem auto 5rem;
+    text-decoration-color: var(--cur-color);
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.25rem;
+    text-underline-offset: 1rem;
+    width: fit-content;
+
+    ~ div {
+      > ul {
+        display: grid;
+        gap: 3rem 8rem;
+        grid-template-areas:
+          "beginner advanced"
+          "employ educator";
+        margin: 0 auto;
+        max-width: 52rem;
+
+        > li {
+          align-items: center;
+          display: grid;
+          gap: 1rem 2rem;
+          grid-template-areas:
+            "i h"
+            "i p"
+            "i c";
+
+          &::before {
+            align-self: start;
+            display: inline-block;
+            grid-area: i;
+            height: 5rem;
+            width: 5rem;
+          }
+
+          &:nth-child(1)::before {
+            content: url("../assets/icons/cur-landing-started-beginner.svg");
+          }
+
+          &:nth-child(2)::before {
+            content: url("../assets/icons/cur-landing-started-advanced.svg");
+          }
+
+          &:nth-child(3)::before {
+            content: url("../assets/icons/cur-landing-started-employment.svg");
+          }
+
+          &:nth-child(4)::before {
+            content: url("../assets/icons/cur-landing-started-educator.svg");
+          }
+
+          h3 {
+            font-weight: var(--font-body-strong-weight);
+            margin-top: 0;
+          }
+
+          a {
+            --button-bg: var(--button-primary-default);
+            --button-bg-hover: var(--button-primary-hover);
+            --button-bg-active: var(--button-primary-active);
+            --button-border-color: var(--button-primary-default);
+            --button-focus-effect: var(--focus-effect);
+            --button-height: var(--form-elem-height, 2rem);
+            --button-color: var(--background-primary);
+            --button-font: var(--type-emphasis-m);
+            --button-padding: 0.5rem;
+            --button-radius: var(--elem-radius, 0.25rem);
+            align-items: center;
+            background-color: var(--button-bg);
+            border: 1px solid var(--button-border-color);
+            border-radius: var(--button-radius);
+            color: var(--button-color);
+            cursor: pointer;
+            display: flex;
+            font: var(--button-font);
+            gap: 0.25rem;
+            height: var(--button-height);
+            justify-content: center;
+            padding-left: var(--button-padding);
+            padding-right: var(--button-padding);
+            position: relative;
+            width: fit-content;
+
+            &:hover {
+              background-color: var(--button-bg-hover, var(--button-bg));
+            }
+          }
+        }
+      }
+    }
+  }
 }
