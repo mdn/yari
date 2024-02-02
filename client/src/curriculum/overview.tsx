@@ -13,6 +13,8 @@ import "./no-side.scss";
 import "./overview.scss";
 import { PrevNext } from "./prev-next";
 import { RenderCurriculumBody } from "./body";
+import { SidebarContainer } from "../document/organisms/sidebar";
+import { Sidebar } from "./sidebar";
 
 export function CurriculumModuleOverview(
   props: HydrationData<any, CurriculumDoc>
@@ -56,9 +58,21 @@ export function CurriculumModuleOverview(
             className={`curriculum-content-container curriculum-no-side container topic-${topic2css(doc.topic)}`}
           >
             <div className="sidebar-container">
+              <SidebarContainer doc={doc} label="Related Topics">
+                {doc.sidebar && (
+                  <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
+                )}
+              </SidebarContainer>
               <div className="toc-container">
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
+              {doc.sidebar && (
+                <Sidebar
+                  extraClasses="sidebar"
+                  current={doc.mdn_url}
+                  sidebar={doc.sidebar}
+                />
+              )}
             </div>
             <article
               className="curriculum-content curriculum-overview"
