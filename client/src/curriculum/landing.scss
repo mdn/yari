@@ -81,6 +81,7 @@
 
       h2 {
         grid-area: h2;
+        margin: 1rem 0;
       }
 
       > div {
@@ -123,6 +124,7 @@
         }
 
         p {
+          align-items: center;
           display: inline-grid;
           grid-template-columns: auto auto;
 
