@@ -246,7 +246,7 @@ export function postProcessExternalLinks($) {
  * @param {current url} url
  */
 export function postProcessCurriculumLinks($, toUrl) {
-  $("a[href^=./]").each((_, element) => {
+  $("a[href^=.]").each((_, element) => {
     // Expand relative links (TODO: fix)
     const $a = $(element);
     $a.attr("href", toUrl($a.attr("href")));
@@ -261,7 +261,8 @@ export function postProcessCurriculumLinks($, toUrl) {
   });
   $("a[href^=/en-US/curriculum]").each((_, element) => {
     const $a = $(element);
-    $a.attr("href", $a.attr("href").replace(/\d+-/g, ""));
+    const [head, hash] = $a.attr("href").split("#");
+    $a.attr("href", `${head.replace(/\d+-/g, "")}${hash ? `#${hash}` : ""}`);
   });
 }
 

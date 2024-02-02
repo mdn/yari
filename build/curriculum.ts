@@ -275,10 +275,11 @@ export async function buildModule(document: BuildData): Promise<Doc> {
   injectNoTranslate($);
   injectLoadingLazyAttributes($);
   postProcessCurriculumLinks($, (p: string) => {
+    const [head, hash] = p.split("#");
     const slug = fileToSlug(
-      path.normalize(path.join(path.dirname(document.fileInfo.path), p))
+      path.normalize(path.join(path.dirname(document.fileInfo.path), head))
     ).replace(/\/$/, "");
-    return `/${DEFAULT_LOCALE}/${slug}/`;
+    return `/${DEFAULT_LOCALE}/${slug}/${hash ? `#${hash}` : ""}`;
   });
   postProcessExternalLinks($);
   postLocalFileLinks($, doc);
