@@ -59,7 +59,7 @@
     }
   }
 
-  .curriculum-content.curriculum-module {
+  &:not(.curriculum-landing) .curriculum-content {
     grid-area: main;
 
     > header {
@@ -164,7 +164,7 @@
     }
   }
 
-  &.curriculum-module {
+  &:not(.curriculum-landing) {
     @media screen and (min-width: $screen-md) {
       display: grid;
       gap: 3rem;
