@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
-import { HTTPError, RenderDocumentBody } from "../document";
+import { HTTPError } from "../document";
 import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
 import { SidePlacement } from "../ui/organisms/placement";
 
@@ -15,6 +15,7 @@ import { ArticleActionsContainer } from "../ui/organisms/article-actions-contain
 import { topic2css, useDocTitle } from "./utils";
 import { SidebarContainer } from "../document/organisms/sidebar";
 import { TOC } from "../document/organisms/toc";
+import { RenderCurriculumBody } from "./body";
 
 export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   const dataURL = `./index.json`;
@@ -77,7 +78,7 @@ export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
                   <span>{coloredTitle}</span> {restTitle.join(" ")}
                 </h1>
               </header>
-              <RenderDocumentBody doc={doc} />
+              <RenderCurriculumBody doc={doc} />
             </article>
           </main>
         </>
