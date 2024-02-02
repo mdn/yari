@@ -175,14 +175,6 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
           </thead>
           <tbody>
             {Object.entries(result.tests)
-              .filter(
-                ([_, test]) =>
-                  ![
-                    "x-xss-protection-enabled-mode-block",
-                    "x-xss-protection-disabled",
-                    "x-xss-protection-not-implemented",
-                  ].includes(test.result)
-              )
               .sort(
                 (
                   [aName, { result: aResult, score_modifier: aScore }],
