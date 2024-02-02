@@ -157,6 +157,27 @@
     }
   }
 
+  .landing-ladder {
+    background-color: var(--background-secondary);
+    margin: 0;
+    max-width: 100%;
+
+    > div {
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+      padding: 2rem;
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+      width: 100%;
+
+      > svg {
+        #text69 {
+          font: var(--type-heading-h2);
+        }
+      }
+    }
+  }
+
   #don’t_know_where_to_start {
     margin: 1rem auto 5rem;
     text-decoration-color: var(--cur-color);

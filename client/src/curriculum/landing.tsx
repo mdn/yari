@@ -1,6 +1,7 @@
 import useSWR from "swr";
 
 import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
+import { ReactComponent as LandingLadderSVG } from "../../public/assets/curriculum/cur-landing-ladder.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
 import { HTTPError } from "../document";
@@ -67,16 +68,23 @@ export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
                   if (section.value.id === "modules") {
                     const { title, titleAsText, id } = section.value as any;
                     return (
-                      <section className="modules">
-                        <DisplayH2
-                          id={id}
-                          title={title}
-                          titleAsText={titleAsText}
-                        />
-                        {doc.modules && (
-                          <ModulesListList modules={doc.modules} />
-                        )}
-                      </section>
+                      <>
+                        <section className="modules">
+                          <DisplayH2
+                            id={id}
+                            title={title}
+                            titleAsText={titleAsText}
+                          />
+                          {doc.modules && (
+                            <ModulesListList modules={doc.modules} />
+                          )}
+                        </section>
+                        <section className="landing-ladder">
+                          <div>
+                            <LandingLadderSVG />
+                          </div>
+                        </section>
+                      </>
                     );
                   }
                   return null;
