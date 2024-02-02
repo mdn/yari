@@ -18,11 +18,6 @@ const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
     url: "https://infosec.mozilla.org/guidelines/web_security#content-security-policy",
     info: "Content Security Policy (CSP) can prevent a wide range of cross-site scripting (XSS) and clickjacking attacks against your website.",
   },
-  contribute: {
-    name: "Contribute.json",
-    url: "https://infosec.mozilla.org/guidelines/web_security#contributejson",
-    info: "Having a contribute.json file on the root your website allows Mozilla's information security team to more quickly triage incoming security bugs.",
-  },
   cookies: {
     url: "https://infosec.mozilla.org/guidelines/web_security#cookies",
     info: "Using cookies attributes such as Secure and HttpOnly can protect users from having their personal information stolen.",
@@ -183,7 +178,6 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
               .filter(
                 ([_, test]) =>
                   ![
-                    "contribute-json-only-required-on-mozilla-properties",
                     "x-xss-protection-enabled-mode-block",
                     "x-xss-protection-disabled",
                     "x-xss-protection-not-implemented",
