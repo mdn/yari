@@ -324,13 +324,12 @@ export function makeTOC(doc, withH3 = false) {
   return doc.body
     .map((section) => {
       if (
-        ((section.type === "prose" ||
+        (section.type === "prose" ||
           section.type === "browser_compatibility" ||
           section.type === "specifications") &&
-          section.value.id &&
-          section.value.title &&
-          !section.value.isH3) ||
-        withH3
+        section.value.id &&
+        section.value.title &&
+        (!section.value.isH3 || withH3)
       ) {
         return { text: section.value.title, id: section.value.id };
       }
