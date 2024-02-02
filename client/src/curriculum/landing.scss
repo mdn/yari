@@ -1,5 +1,157 @@
-.curriculum-landing {
-  header > svg {
-    width: 50%;
+@use "../ui/vars" as *;
+
+.curriculum-content-container.curriculum-landing {
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+  width: 100%;
+
+  > article {
+    > header,
+    > section {
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+      width: 100%;
+    }
+  }
+
+  .curriculum-content {
+    ol.modules-list {
+      @media screen and (min-width: $screen-sm) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media screen and (min-width: $screen-md) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @media screen and (min-width: $screen-lg) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+    }
+  }
+
+  header.landing-header {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    > svg {
+      width: 40%;
+    }
+
+    > section {
+      max-width: 30rem;
+      min-width: 20rem;
+      padding-right: 1rem;
+      width: 60%;
+
+      h1 {
+        color: var(--cur-color-topic);
+        margin-bottom: 1rem;
+      }
+
+      h2 {
+        margin-bottom: 2rem;
+        margin-top: 1rem;
+      }
+
+      p:last-child {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .landing-about-container {
+    background-color: var(--cur-bg-color);
+    margin: 0;
+    max-width: 100%;
+
+    .landing-about {
+      display: grid;
+      grid-template-areas:
+        "li li "
+        "h2 p "
+        "h2 p "
+        "h2 p ";
+      grid-template-columns: 1fr 1fr;
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+
+      h2 {
+        grid-area: h2;
+      }
+
+      > div {
+        display: contents;
+
+        ul {
+          align-items: center;
+          background-color: var(--background-primary);
+          box-shadow: var(--module-shadow);
+          display: flex;
+          grid-area: li;
+          height: 5rem;
+          justify-content: space-around;
+          margin: auto;
+          transform: translateY(-1rem);
+          width: 100%;
+
+          > li {
+            align-items: center;
+            display: inline-flex;
+            gap: 2rem;
+
+            &::before {
+              height: 4rem;
+              width: 4rem;
+            }
+
+            &:nth-child(1)::before {
+              content: url("../assets/icons/cur-landing-about-beginner.svg");
+            }
+
+            &:nth-child(2)::before {
+              content: url("../assets/icons/cur-landing-about-pace.svg");
+            }
+
+            &:nth-child(3)::before {
+              content: url("../assets/icons/cur-landing-about-free.svg");
+            }
+          }
+        }
+
+        p {
+          display: inline-grid;
+          grid-template-columns: auto auto;
+
+          &::before {
+            display: block;
+            height: 4rem;
+            width: 4rem;
+          }
+
+          &:nth-child(2)::before {
+            content: url("../assets/icons/cur-landing-about-bullet.svg");
+          }
+
+          &:nth-child(3)::before {
+            content: url("../assets/icons/cur-landing-about-bullet.svg");
+          }
+
+          a {
+            color: var(--text-primary);
+            font-weight: var(--font-body-strong-weight);
+            text-decoration: underline;
+
+            &:hover,
+            &:active {
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
   }
 }
