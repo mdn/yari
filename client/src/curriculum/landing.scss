@@ -71,13 +71,22 @@
     .landing-about {
       display: grid;
       grid-template-areas:
-        "li li "
-        "h2 p "
-        "h2 p "
-        "h2 p ";
-      grid-template-columns: 1fr 1fr;
+        "li"
+        "h2"
+        "p"
+        "p"
+        "p";
+      grid-template-columns: 1fr;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
+      @media screen and (min-width: $screen-md) {
+        grid-template-areas:
+          "li li "
+          "h2 p "
+          "h2 p "
+          "h2 p ";
+        grid-template-columns: 1fr 1fr;
+      }
 
       h2 {
         grid-area: h2;
@@ -92,10 +101,12 @@
           background-color: var(--background-primary);
           box-shadow: var(--module-shadow);
           display: flex;
+          flex-wrap: wrap;
           grid-area: li;
-          height: 5rem;
           justify-content: space-around;
           margin: auto;
+          min-height: 5rem;
+          padding: 1rem;
           transform: translateY(-1rem);
           width: 100%;
 
@@ -191,10 +202,17 @@
         display: grid;
         gap: 3rem 8rem;
         grid-template-areas:
-          "beginner advanced"
-          "employ educator";
+          "beginner"
+          "advanced"
+          "employ"
+          "educator";
         margin: 0 auto;
         max-width: 52rem;
+        @media screen and (min-width: $screen-md) {
+          grid-template-areas:
+            "beginner advanced"
+            "employ educator";
+        }
 
         > li {
           align-items: center;
