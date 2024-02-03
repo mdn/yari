@@ -42,10 +42,10 @@
     }
 
     > section {
-      max-width: 30rem;
-      min-width: 20rem;
+      margin-right: auto;
+      min-width: min(30rem, 90vw);
       padding-right: 1rem;
-      width: 60%;
+      width: 30rem;
 
       h1 {
         color: var(--cur-color-topic);
@@ -100,15 +100,19 @@
           align-items: center;
           background-color: var(--background-primary);
           box-shadow: var(--module-shadow);
-          display: flex;
-          flex-wrap: wrap;
+          display: grid;
+          gap: 1rem;
           grid-area: li;
+          grid-template-columns: auto;
           justify-content: space-around;
           margin: auto;
           min-height: 5rem;
           padding: 1rem;
           transform: translateY(-1rem);
           width: 100%;
+          @media screen and (min-width: $screen-md) {
+            grid-template-columns: auto auto auto;
+          }
 
           > li {
             align-items: center;
@@ -174,6 +178,9 @@
     max-width: 100%;
 
     > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
       padding: 2rem;
@@ -182,15 +189,37 @@
       width: 100%;
 
       > svg {
+        &:nth-child(1) {
+          min-width: min(18rem, 90vw);
+          transform: translateX(2vw);
+          width: 38%;
+        }
+
+        &:nth-child(2) {
+          min-width: min(32rem, 90vw);
+          transform: translateX(-2vw);
+          width: 62%;
+        }
+
         #text69 {
           font: var(--type-heading-h2);
+        }
+
+        text {
+          fill: var(--text-primary);
+        }
+
+        .color {
+          fill: var(--cur-color);
         }
       }
     }
   }
 
   #don’t_know_where_to_start {
+    line-height: 3rem;
     margin: 1rem auto 5rem;
+    text-align: center;
     text-decoration-color: var(--cur-color);
     text-decoration-line: underline;
     text-decoration-thickness: 0.25rem;
@@ -272,11 +301,13 @@
             display: flex;
             font: var(--button-font);
             gap: 0.25rem;
-            height: var(--button-height);
             justify-content: center;
+            min-height: var(--button-height);
+            padding: 0.5rem;
             padding-left: var(--button-padding);
             padding-right: var(--button-padding);
             position: relative;
+            text-align: center;
             width: fit-content;
 
             &:hover {

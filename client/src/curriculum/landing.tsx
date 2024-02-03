@@ -1,7 +1,8 @@
 import useSWR from "swr";
 
 import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
-import { ReactComponent as LandingLadderSVG } from "../../public/assets/curriculum/cur-landing-ladder.svg";
+import { ReactComponent as LandingLadderSVG1 } from "../../public/assets/curriculum/cur-landing-ladder-1.svg";
+import { ReactComponent as LandingLadderSVG2 } from "../../public/assets/curriculum/cur-landing-ladder-2.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
 import { HTTPError } from "../document";
@@ -81,7 +82,8 @@ export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
                         </section>
                         <section className="landing-ladder">
                           <div>
-                            <LandingLadderSVG />
+                            <LandingLadderSVG1 />
+                            <LandingLadderSVG2 />
                           </div>
                         </section>
                       </>
