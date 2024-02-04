@@ -229,7 +229,7 @@
     ~ div {
       > ul {
         display: grid;
-        gap: 3rem 8rem;
+        gap: 5rem 8rem;
         grid-template-areas:
           "beginner"
           "advanced"
@@ -246,18 +246,25 @@
         > li {
           align-items: center;
           display: grid;
-          gap: 1rem 2rem;
-          grid-template-areas:
-            "i h"
-            "i p"
-            "i c";
+          gap: 1rem;
+          @media screen and (min-width: $screen-sm) {
+            align-items: start;
+            gap: 1rem 2rem;
+            grid-template-areas:
+              "i h"
+              "i p"
+              "i c";
+            grid-template-rows: 4rem auto max-content;
+          }
 
           &::before {
             align-self: start;
             display: inline-block;
-            grid-area: i;
             height: 5rem;
             width: 5rem;
+            @media screen and (min-width: $screen-sm) {
+              grid-area: i;
+            }
           }
 
           &:nth-child(1)::before {

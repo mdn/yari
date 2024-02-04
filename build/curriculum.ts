@@ -201,7 +201,7 @@ async function readModule(
     sidebar = await buildSidebar();
     parents = await buildParents(url);
   } else {
-    title = title.replace(/^\d+\s+/, "");
+    title = title.replace(/^\d+\s+/, "").replace(/ modules$/, "");
   }
 
   return {
