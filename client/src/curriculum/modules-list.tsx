@@ -27,7 +27,7 @@ export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
               <>
                 <ModulesList modules={c.children} />
                 <Button type="primary" target="_self" href={c.children[0].url}>
-                  Let's Begin
+                  Let's begin
                 </Button>
               </>
             )}
