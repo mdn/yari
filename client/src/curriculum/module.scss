@@ -1,277 +1,60 @@
 @use "../ui/vars" as *;
 
 .curriculum-content-container {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    a:link,
-    a:visited {
-      color: var(--text-primary);
-      text-decoration: none;
-    }
+  &.curriculum-module {
+    .curriculum-content {
+      > header {
+        column-gap: 1.5rem;
+        display: grid;
+        grid-template-areas: "icon heading" "icon category";
+        justify-content: flex-start;
 
-    a:hover,
-    a:focus {
-      text-decoration: underline;
-    }
+        .topic-icon {
+          --background-primary: var(--cur-bg-color-topic);
+          align-self: flex-start;
+          grid-area: icon;
+          height: 4rem;
+          width: 4rem;
 
-    a:active {
-      background-color: transparent;
-    }
-
-    a[href^="#"] {
-      &::before {
-        color: var(--text-inactive);
-        content: "#";
-        display: inline-block;
-        font-size: 0.7em;
-        line-height: 1;
-        margin-left: -0.8em;
-        text-decoration: none;
-        visibility: hidden;
-        width: 0.8em;
-      }
-
-      &:hover {
-        &::before {
-          visibility: visible;
-        }
-      }
-    }
-  }
-
-  .curriculum-sidebar,
-  .toc,
-  .curriculum-content {
-    padding-bottom: 3rem;
-    padding-top: 3rem;
-  }
-
-  > .sidebar-container > .curriculum-sidebar {
-    align-self: start;
-    grid-area: sidebar;
-
-    li li {
-      margin-left: 1rem;
-    }
-  }
-
-  &:not(.curriculum-landing) .curriculum-content {
-    grid-area: main;
-
-    > header {
-      column-gap: 1.5rem;
-      display: grid;
-      grid-template-areas: "icon heading" "icon category";
-      justify-content: flex-start;
-
-      .topic-icon {
-        --background-primary: var(--cur-bg-color-topic);
-        align-self: flex-start;
-        grid-area: icon;
-        height: 4rem;
-        width: 4rem;
-
-        + h1 {
-          grid-area: heading;
-          margin-bottom: 0;
-        }
-      }
-
-      p {
-        color: var(--cur-color-topic);
-        font-size: var(--type-smaller-font-size);
-        grid-area: category;
-        margin: 0;
-        margin-top: 0.5rem;
-
-        &::before {
-          content: "Category: ";
-        }
-      }
-    }
-
-    section h2:first-of-type {
-      margin-top: 2rem;
-    }
-
-    blockquote.curriculum-notes {
-      background-color: #fcefe299;
-      border: 0;
-      border-radius: var(--elem-radius);
-      margin: 1rem;
-      padding: 1rem 2rem;
-
-      > :last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    p.curriculum-outcomes {
-      display: flex;
-      font-weight: var(--font-body-strong-weight);
-      margin-bottom: 0.5rem;
-
-      &::before {
-        content: url("../assets/icons/cur-resources.svg");
-        display: block;
-        height: 24px;
-        margin-right: 0.5rem;
-        width: 24px;
-      }
-    }
-
-    ol,
-    ul {
-      margin: 1rem 0 2rem;
-      padding-left: 2rem;
-
-      ol,
-      ul {
-        margin: 0;
-      }
-    }
-
-    li {
-      list-style-type: disc;
-      margin: 0.5rem 0;
-    }
-
-    p.curriculum-resources {
-      margin-bottom: 0.5rem;
-
-      + ul {
-        padding-left: 2rem;
-
-        > li {
-          // This is hacky but works here
-          &::first-line {
-            vertical-align: super;
-          }
-
-          &:not(.external) {
-            list-style-image: url("../assets/icons/cur-mdn-resource.svg");
-          }
-
-          &.external {
-            list-style-image: url("../assets/icons/cur-ext-resource.svg");
+          + h1 {
+            grid-area: heading;
+            margin-bottom: 0;
           }
         }
-      }
-    }
-  }
 
-  &:not(.curriculum-landing) {
-    @media screen and (min-width: $screen-md) {
-      display: grid;
-      gap: 3rem;
-      grid-template-areas: "sidebar main";
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-      padding-left: 1.5rem;
-      padding-right: 3rem;
-    }
-
-    @media screen and (min-width: $screen-xl) {
-      display: grid;
-      gap: 3rem;
-      grid-template-areas: "sidebar main toc";
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
-      padding-left: 1rem;
-      padding-right: 1rem;
-
-      .toc {
-        --offset: var(--sticky-header-with-actions-height);
-
-        display: block;
-        grid-area: toc;
-        height: fit-content;
-        padding-bottom: 0;
-      }
-
-      .in-nav-toc {
-        display: none;
-      }
-    }
-
-    .sidebar-container {
-      --offset: var(--sticky-header-with-actions-height);
-      --max-height: calc(100vh - var(--offset));
-
-      @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
-        display: flex;
-        flex-direction: column;
-      }
-
-      max-height: var(--max-height);
-      position: sticky;
-      top: var(--offset);
-      z-index: var(--z-index-sidebar-mobile);
-
-      @media screen and (min-width: $screen-md) {
-        z-index: auto;
-
-        .curriculum-sidebar {
-          mask-image: linear-gradient(
-            to bottom,
-            rgb(0, 0, 0) 0% calc(100% - 3rem),
-            rgba(0, 0, 0, 0) 100%
-          );
-        }
-
-        @media screen and not (min-height: $screen-height-place-limit) {
-          overflow: auto;
-        }
-      }
-
-      &.toc-container,
-      .toc-container {
-        grid-area: toc;
-
-        .place {
-          grid-area: toc;
+        p {
+          color: var(--cur-color-topic);
+          font-size: var(--type-smaller-font-size);
+          grid-area: category;
           margin: 0;
-        }
-        @media screen and (min-width: $screen-xl) {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-          height: calc(100vh - var(--offset));
-          mask-image: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0) 0%,
-            rgb(0, 0, 0) 3rem calc(100% - 3rem),
-            rgba(0, 0, 0, 0) 100%
-          );
-          overflow: auto;
-          position: sticky;
-          top: var(--offset);
+          margin-top: 0.5rem;
 
-          .place {
-            margin: 1rem 0;
-            padding-bottom: 3rem;
+          &::before {
+            content: "Category: ";
           }
         }
       }
 
-      @media screen and (max-width: #{$screen-md - 1}) {
-        .toc-container {
-          display: none;
-        }
-      }
+      p.curriculum-resources {
+        margin-bottom: 0.5rem;
 
-      @media screen and (min-width: #{$screen-md}) {
-        #sidebar-quicklinks {
-          display: none;
-        }
-      }
-      @media screen and (min-width: $screen-xl) {
-        display: contents;
+        + ul {
+          padding-left: 2rem;
 
-        .sidebar {
-          mask-image: none;
+          > li {
+            // This is hacky but works here
+            &::first-line {
+              vertical-align: super;
+            }
+
+            &:not(.external) {
+              list-style-image: url("../assets/icons/cur-mdn-resource.svg");
+            }
+
+            &.external {
+              list-style-image: url("../assets/icons/cur-ext-resource.svg");
+            }
+          }
         }
       }
     }

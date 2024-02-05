@@ -1,11 +1,13 @@
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
-import "./module.scss";
 import { TopicIcon } from "./topic-icon";
 import { PrevNext } from "./prev-next";
 import { RenderCurriculumBody } from "./body";
 import { CurriculumLayout } from "./layout";
 import { topic2css, useCurriculumDoc } from "./utils";
+
+import "./index.scss";
+import "./module.scss";
 
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props as CurriculumData);
