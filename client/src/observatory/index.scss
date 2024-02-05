@@ -37,6 +37,10 @@
 
       @media screen and (min-width: $screen-md) {
         margin: 0;
+
+        .pong-box {
+          align-self: flex-end;
+        }
       }
 
       @media screen and (min-width: 20rem) and (max-width: $screen-md) {
