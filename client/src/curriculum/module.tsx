@@ -1,5 +1,5 @@
 import { HydrationData } from "../../../libs/types/hydration";
-import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
+import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import "./module.scss";
 import { TopicIcon } from "./topic-icon";
 import { PrevNext } from "./prev-next";
@@ -8,8 +8,7 @@ import { CurriculumLayout } from "./layout";
 import { topic2css, useCurriculumDoc } from "./utils";
 
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
-  const doc = useCurriculumDoc(props as ModuleData);
-  console.log(doc);
+  const doc = useCurriculumDoc(props as CurriculumData);
   return (
     <CurriculumLayout
       doc={doc}

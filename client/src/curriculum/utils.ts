@@ -1,7 +1,7 @@
 // Using this import fails the build...
 
 import { useEffect } from "react";
-import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
+import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { HydrationData } from "../../../libs/types/hydration";
 import useSWR from "swr";
 import { HTTPError } from "../document";
@@ -46,7 +46,7 @@ export function useDocTitle(doc?: CurriculumDoc) {
   }, [doc]);
 }
 
-export function useCurriculumDoc(appProps: ModuleData) {
+export function useCurriculumDoc(appProps: CurriculumData) {
   const dataURL = `./index.json`;
   const { data } = useSWR<CurriculumDoc>(
     dataURL,

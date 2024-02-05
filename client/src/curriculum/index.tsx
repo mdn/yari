@@ -7,7 +7,6 @@ import { CurriculumAbout } from "./about";
 import { CurriculumLanding } from "./landing";
 
 import "./index.scss";
-import "./no-side.scss";
 
 export function Curriculum(appProps: HydrationData) {
   return (

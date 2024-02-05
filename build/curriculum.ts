@@ -20,7 +20,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import {
   CurriculumFrontmatter,
-  ModuleData,
+  CurriculumData,
   ModuleMetaData,
   ModuleIndexEntry,
   PrevNext,
@@ -222,7 +222,7 @@ async function readModule(
 
 export async function findModuleBySlug(
   slug: string
-): Promise<ModuleData | null> {
+): Promise<CurriculumData | null> {
   let file = await slugToFile(slug);
   if (!file) {
     file = await slugToFile(`${slug}${slug ? "/" : ""}README`);
@@ -318,8 +318,6 @@ export async function buildCurriculum(options: {
   const locale = DEFAULT_LOCALE;
 
   for (const file of await allFiles()) {
-    console.log(`building: ${file}`);
-
     const { meta, body } = await readModule(file, {
       forIndex: false,
     });

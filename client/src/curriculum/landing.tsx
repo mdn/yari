@@ -2,7 +2,7 @@ import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur
 import { ReactComponent as LandingLadderSVG1 } from "../../public/assets/curriculum/cur-landing-ladder-1.svg";
 import { ReactComponent as LandingLadderSVG2 } from "../../public/assets/curriculum/cur-landing-ladder-2.svg";
 import { HydrationData } from "../../../libs/types/hydration";
-import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
+import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
 import { useCurriculumDoc, useDocTitle } from "./utils";
 import { RenderCurriculumBody } from "./body";
@@ -14,7 +14,7 @@ import "./index.scss";
 import "./landing.scss";
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
-  const doc = useCurriculumDoc(appProps as ModuleData);
+  const doc = useCurriculumDoc(appProps as CurriculumData);
   return (
     <CurriculumLayout
       doc={doc}
