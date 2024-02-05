@@ -113,11 +113,12 @@
     padding-top: 3rem;
   }
 
-  &.curriculum-about,
-  &.curriculum-overview {
+  &.with-sidebar {
     .curriculum-content {
+      grid-area: main;
+
       > header > h1 {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
 
         > span {
           color: var(--cur-color);
@@ -130,14 +131,6 @@
           margin-top: 4rem;
         }
       }
-    }
-  }
-
-  &.curriculum-module,
-  &.curriculum-about,
-  &.curriculum-overview {
-    .curriculum-content {
-      grid-area: main;
 
       section h2:first-of-type {
         margin-top: 2rem;

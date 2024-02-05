@@ -34,6 +34,7 @@ export function CurriculumLayout({
           className={[
             "curriculum-content-container",
             "container",
+            ...(withSidebar ? ["with-sidebar"] : []),
             ...extraClasses,
           ].join(" ")}
         >
