@@ -32,7 +32,8 @@
       grid-area: pong;
 
       @media screen and (max-width: $screen-md) {
-        margin: 0 auto;
+        justify-self: flex-end;
+        margin: 0;
       }
 
       @media screen and (min-width: $screen-md) {
