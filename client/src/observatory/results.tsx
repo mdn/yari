@@ -12,18 +12,14 @@ import { Link } from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 
-const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
+const TEST_MAP: Record<string, { name: string; url: string; info: string }> = {
   "content-security-policy": {
     name: "Content Security Policy",
     url: "https://infosec.mozilla.org/guidelines/web_security#content-security-policy",
     info: "Content Security Policy (CSP) can prevent a wide range of cross-site scripting (XSS) and clickjacking attacks against your website.",
   },
-  contribute: {
-    name: "Contribute.json",
-    url: "https://infosec.mozilla.org/guidelines/web_security#contributejson",
-    info: "Having a contribute.json file on the root your website allows Mozilla's information security team to more quickly triage incoming security bugs.",
-  },
   cookies: {
+    name: "Cookies",
     url: "https://infosec.mozilla.org/guidelines/web_security#cookies",
     info: "Using cookies attributes such as Secure and HttpOnly can protect users from having their personal information stolen.",
   },
@@ -33,6 +29,7 @@ const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
     info: "Incorrectly configured CORS settings can allow foreign sites to read your site's contents, possibly allowing them access to private user information.",
   },
   redirection: {
+    name: "Redirection",
     url: "https://infosec.mozilla.org/guidelines/web_security#http-redirections",
     info: "Properly configured redirections from HTTP to HTTPS allow browsers to correctly apply HTTP Strict Transport Security (HSTS) settings.",
   },
@@ -52,10 +49,12 @@ const TEST_MAP: Record<string, { name?: string; url: string; info: string }> = {
     info: "Subresource Integrity protects against JavaScript files and stylesheets stored on content delivery networks (CDNs) from being maliciously modified.",
   },
   "x-content-type-options": {
+    name: "X-Content-Type-Options",
     url: "https://infosec.mozilla.org/guidelines/web_security#x-content-type-options",
     info: "X-Content-Type-Options instructs browsers to not guess the MIME types of files that the web server is delivering.",
   },
   "x-frame-options": {
+    name: "X-Frame-Options",
     url: "https://infosec.mozilla.org/guidelines/web_security#x-frame-options",
     info: "X-Frame-Options controls whether your site can be framed, protecting against clickjacking attacks. It has been superseded by Content Security Policy's frame-ancestors directive, but should still be used for now.",
   },
@@ -180,15 +179,6 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
           </thead>
           <tbody>
             {Object.entries(result.tests)
-              .filter(
-                ([_, test]) =>
-                  ![
-                    "contribute-json-only-required-on-mozilla-properties",
-                    "x-xss-protection-enabled-mode-block",
-                    "x-xss-protection-disabled",
-                    "x-xss-protection-not-implemented",
-                  ].includes(test.result)
-              )
               .sort(
                 (
                   [aName, { result: aResult, score_modifier: aScore }],
@@ -219,17 +209,12 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                             );
                 }
               )
-              .map(([name, test]) =>
-                TEST_MAP[name] ? (
+              .map(([name, test]) => {
+                const mappedTest = TEST_MAP[name];
+                return mappedTest ? (
                   <tr key={name}>
                     <td>
-                      <Link href={TEST_MAP[name]?.url}>
-                        {TEST_MAP[name]?.name ||
-                          name
-                            .split("-")
-                            .map((x) => x[0]?.toUpperCase() + x.slice(1))
-                            .join("-")}
-                      </Link>
+                      <Link href={mappedTest.url}>{mappedTest.name}</Link>
                     </td>
                     {[
                       "referrer-policy-not-implemented",
@@ -253,13 +238,13 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                     <td>{test.score_modifier}</td>
                     <td>{test.score_description}</td>
                     <td>
-                      {TEST_MAP[name]?.info && (
-                        <InfoTooltip>{TEST_MAP[name]?.info}</InfoTooltip>
+                      {mappedTest.info && (
+                        <InfoTooltip>{mappedTest.info}</InfoTooltip>
                       )}
                     </td>
                   </tr>
-                ) : null
-              )}
+                ) : null;
+              })}
           </tbody>
         </table>
       </figure>
