@@ -35,7 +35,7 @@ jobs:
         uses: actions/cache@v3
         if: steps.release.outputs.release_created
         with:
-          key: ripgrep-${{ hashFiles('yarn.lock') }}
+          key: vscode-ripgrep-bin-${{ hashFiles('yarn.lock') }}
           path: node_modules/@vscode/ripgrep/bin/
 
       - name: Install

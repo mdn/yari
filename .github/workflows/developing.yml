@@ -24,7 +24,7 @@ jobs:
       - name: Cache @vscode/ripgrep bin
         uses: actions/cache@v3
         with:
-          key: ripgrep-${{ hashFiles('yarn.lock') }}
+          key: vscode-ripgrep-bin-${{ hashFiles('yarn.lock') }}
           path: node_modules/@vscode/ripgrep/bin/
 
       - name: Install all yarn packages
