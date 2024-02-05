@@ -26,6 +26,12 @@ jobs:
             client/pwa/yarn.lock
             libs/**/*.js
 
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v3
+        with:
+          key: ripgrep-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
       - name: Install all yarn packages (ROOT)
         run: yarn --frozen-lockfile
         env:

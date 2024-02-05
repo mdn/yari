@@ -31,6 +31,13 @@ jobs:
           cache: yarn
           registry-url: "https://registry.npmjs.org"
 
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v3
+        if: steps.release.outputs.release_created
+        with:
+          key: ripgrep-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
       - name: Install
         if: steps.release.outputs.release_created
         run: yarn --frozen-lockfile
