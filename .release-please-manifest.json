@@ -1,8 +1,3 @@
 {
-  "changelog-sections": [
-    { "type": "feat", "section": "Features", "hidden": false },
-    { "type": "fix", "section": "Bug Fixes", "hidden": false },
-    { "type": "enhance", "section": "Enhancements", "hidden": false },
-    { "type": "chore", "section": "Miscellaneous", "hidden": false }
-  ]
+  ".": "2.39.0"
 }
