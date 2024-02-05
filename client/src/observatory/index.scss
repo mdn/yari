@@ -32,21 +32,9 @@
       grid-area: pong;
 
       @media screen and (max-width: #{$screen-md - 0.02}) {
-        justify-self: flex-end;
         margin: 0;
-      }
-
-      @media screen and (min-width: $screen-md) {
-        margin: 0;
-
-        .pong-box {
-          align-self: flex-end;
-        }
-      }
-
-      @media screen and (min-width: 20rem) and (max-width: #{$screen-md - 0.02}) {
-        max-width: 20rem;
         min-height: 10rem;
+        min-width: 100%;
 
         .pong-box {
           width: 100%;
@@ -59,6 +47,15 @@
         .pong-note {
           margin-top: 0;
         }
+      }
+
+      @media screen and (min-width: $screen-md) {
+        justify-self: flex-end;
+        margin: 0;
+      }
+
+      @media screen and (min-width: $screen-xl) {
+        justify-self: unset;
       }
     }
 
