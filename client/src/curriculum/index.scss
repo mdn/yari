@@ -60,3 +60,25 @@
     }
   }
 }
+
+.curriculum-content-container {
+  &.curriculum-about,
+  &.curriculum-overview {
+    .curriculum-content {
+      > header > h1 {
+        margin-bottom: 1rem;
+
+        > span {
+          color: var(--cur-color);
+        }
+      }
+
+      .module-contents {
+        > h2 {
+          margin-bottom: 2rem;
+          margin-top: 4rem;
+        }
+      }
+    }
+  }
+}
