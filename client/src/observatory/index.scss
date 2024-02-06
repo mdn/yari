@@ -72,11 +72,11 @@
     }
 
     @media screen and (min-width: $screen-xl) {
+      column-gap: 3rem;
       grid-template-areas: "sidebar header pong" "sidebar main nothing" "sidebar footer nothing";
       grid-template-columns: 1fr minmax(0, 832px) 1fr;
       padding-left: 1rem;
       padding-right: 1rem;
-      column-gap: 3rem;
     }
   }
 
@@ -92,19 +92,37 @@
     }
 
     form {
-      .progress,
-      .error {
+      .progress {
         align-items: center;
-        background: var(--observatory-alert);
+        background: var(--observatory-bg-secondary);
         border-radius: var(--border-radius);
+        color: var(--observatory-accent);
         display: flex;
         height: 3rem;
         justify-content: center;
       }
 
-      .progress {
-        background: var(--observatory-bg-secondary);
-        color: var(--observatory-accent);
+      .error {
+        color: var(--form-invalid-color);
+        margin-bottom: 0.5rem;
+
+        &::before {
+          background-color: var(--form-invalid-color);
+          content: "";
+          display: inline-block;
+          height: 1.3em;
+          margin-bottom: 0.2em;
+          margin-right: 0.3em;
+          mask-image: url("../assets/icons/alert-circle.svg");
+          mask-position: center;
+          mask-repeat: no-repeat;
+          vertical-align: middle;
+          width: 1.3em;
+        }
+
+        + .input-group {
+          --observatory-border-accent: var(--form-invalid-color);
+        }
       }
 
       .input-group {
@@ -234,10 +252,10 @@
 
   @media screen and (max-width: #{$screen-md - 0.02}) {
     .scroll-container {
-      overflow-x: auto;
-      width: 100vw;
       margin-left: -1rem;
+      overflow-x: auto;
       padding: 0 1rem;
+      width: 100vw;
     }
   }
 
