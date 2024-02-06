@@ -31,6 +31,7 @@ create table
     title text not null,
     mdn_url text not null,
     html text null,
+    markdown text null,
     token_count integer null,
     embedding extensions.vector null,
     text_hash text null,
