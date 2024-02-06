@@ -19,14 +19,24 @@ export default function ObservatoryLanding() {
   };
 
   const [form, setForm] = useState(defaultForm);
-  const { trigger, isMutating, data, error } = useUpdateResult(form.host);
+  const [cleanHostname, setCleanHostname] = useState(form.host);
+  const { trigger, isMutating, data, error } = useUpdateResult(cleanHostname);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isMutating && data?.scan.state === "FINISHED") {
-      navigate(`./${form.host}`);
+    try {
+      const url = new URL(form.host);
+      setCleanHostname(url.hostname.trim() || form.host);
+    } catch {
+      setCleanHostname(form.host);
     }
-  }, [isMutating, data, navigate, form.host]);
+  }, [form.host]);
+
+  useEffect(() => {
+    if (!isMutating && data?.scan.state === "FINISHED") {
+      navigate(`./${cleanHostname}`);
+    }
+  }, [isMutating, data, navigate, cleanHostname]);
 
   const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
