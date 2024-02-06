@@ -20,7 +20,13 @@ export default function ObservatoryLanding() {
 
   const [form, setForm] = useState(defaultForm);
   const [cleanHostname, setCleanHostname] = useState(form.host);
-  const { trigger, isMutating, data, error } = useUpdateResult(cleanHostname);
+  const {
+    trigger,
+    isMutating,
+    data,
+    error: updateError,
+  } = useUpdateResult(cleanHostname);
+  const [error, setError] = useState<Error>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,9 +44,18 @@ export default function ObservatoryLanding() {
     }
   }, [isMutating, data, navigate, cleanHostname]);
 
+  useEffect(() => {
+    setError(updateError);
+  }, [updateError]);
+
   const submit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    trigger(form.hidden);
+    setError(undefined);
+    if (form.host.trim().length === 0) {
+      setError(new Error("please enter a hostname"));
+    } else {
+      trigger(form.hidden);
+    }
   };
 
   return (
@@ -74,10 +89,7 @@ export default function ObservatoryLanding() {
                     value={form.host}
                     onChange={(e) => setForm({ ...form, host: e.target.value })}
                   />
-                  <button
-                    type="submit"
-                    disabled={form.host.trim().length === 0}
-                  >
+                  <button type="submit" disabled={isMutating}>
                     Scan
                   </button>
                 </div>
