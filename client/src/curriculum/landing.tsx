@@ -4,7 +4,7 @@ import { ReactComponent as LandingLadderSVG2 } from "../../public/assets/curricu
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
-import { useCurriculumDoc, useDocTitle } from "./utils";
+import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
 import { useMemo } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";

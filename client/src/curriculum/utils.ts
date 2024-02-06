@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
-import { HydrationData } from "../../../libs/types/hydration";
 import useSWR from "swr";
 import { HTTPError } from "../document";
 import { WRITER_MODE } from "../env";

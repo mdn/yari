@@ -208,6 +208,7 @@
   --baseline-limited-cross: #ea8600;
 
   --cur-bg-color: #fcefe2;
+  --cur-bg-large-color: #fcefe2;
   --cur-bg-color-topic-standards: #{$mdn-color-light-theme-red-50}30;
   --cur-bg-color-topic-styling: #{$mdn-color-light-theme-blue-50}30;
   --cur-bg-color-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
@@ -431,15 +432,16 @@
   --cur-color: #e3642a;
   --cur-color-topic-standards: #{$mdn-color-light-theme-red-30};
   --cur-color-topic-styling: #{$mdn-color-light-theme-blue-30};
-  --cur-color-topic-scripting: #{$mdn-color-light-theme-yellow-40};
-  --cur-color-topic-tooling: #{$mdn-color-light-theme-green-40};
-  --cur-color-topic-practices: #{$mdn-color-light-theme-violet-40};
+  --cur-color-topic-scripting: #cfc23f;
+  --cur-color-topic-tooling: #ce93fa;
+  --cur-color-topic-practices: #55ab2d;
   --cur-bg-color: #664b33;
-  --cur-bg-color-topic-standards: #{$mdn-color-light-theme-red-50}30;
-  --cur-bg-color-topic-styling: #{$mdn-color-light-theme-blue-50}30;
-  --cur-bg-color-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
-  --cur-bg-color-topic-tooling: #{$mdn-color-light-theme-green-50}30;
-  --cur-bg-color-topic-practices: #{$mdn-color-light-theme-violet-50}30;
+  --cur-bg-large-color: #b25c35;
+  --cur-bg-color-topic-standards: #994b53;
+  --cur-bg-color-topic-styling: #4e609e;
+  --cur-bg-color-topic-scripting: #7d683d;
+  --cur-bg-color-topic-tooling: #584280;
+  --cur-bg-color-topic-practices: #3d7c4b;
   --cur-category-color: #e3642a;
 
   color-scheme: dark;

@@ -1,6 +1,6 @@
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
-import { topic2css, useCurriculumDoc, useDocTitle } from "./utils";
+import { topic2css, useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
 import { CurriculumLayout } from "./layout";
 
