@@ -8,20 +8,20 @@
   }
 
   .observatory-wrapper {
-    column-gap: 3rem;
-
     display: grid;
-    grid-template-areas: "header" "pong" "main" "footer";
-    grid-template-columns: 1fr;
+    grid-template-areas: "header header header" ". pong ." "main main main" ". footer .";
+    grid-template-columns: 1rem 1fr 1rem;
     max-width: var(--max-width);
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 0;
 
     section.header {
       grid-area: header;
+      padding: 0 1rem;
     }
 
     section.main {
       grid-area: main;
+      padding: 0 1rem;
     }
 
     section.footer {
@@ -62,13 +62,21 @@
     @media screen and (min-width: $screen-md) {
       grid-template-areas: "header pong" "main main" "footer footer";
       grid-template-columns: minmax(0, 1fr) 12rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+
+      section.header,
+      section.main {
+        padding: 0;
+      }
     }
 
     @media screen and (min-width: $screen-xl) {
       grid-template-areas: "sidebar header pong" "sidebar main nothing" "sidebar footer nothing";
-      grid-template-columns: 15rem minmax(0, 1fr) 15rem;
+      grid-template-columns: 1fr minmax(0, 832px) 1fr;
       padding-left: 1rem;
       padding-right: 1rem;
+      column-gap: 3rem;
     }
   }
 
@@ -217,10 +225,6 @@
     background: var(--observatory-table-bg);
     border: 1px solid var(--observatory-border);
     border-radius: var(--border-radius);
-
-    @media screen and (max-width: $screen-md) {
-      width: calc(100% - 2rem);
-    }
   }
 
   .box,
@@ -228,16 +232,19 @@
     margin-bottom: 1.5rem;
   }
 
-  .scroll-container {
-    @media screen and (max-width: $screen-md) {
+  @media screen and (max-width: #{$screen-md - 0.02}) {
+    .scroll-container {
       overflow-x: auto;
       width: 100vw;
+      margin-left: -1rem;
+      padding: 0 1rem;
     }
   }
 
   table {
     border-collapse: separate;
     border-spacing: 0;
+    min-width: calc($screen-sm - 2rem);
 
     &.overall {
       th {
@@ -262,6 +269,8 @@
     }
 
     &.tests {
+      min-width: calc($screen-md - 2rem);
+
       th,
       td {
         &:first-of-type {

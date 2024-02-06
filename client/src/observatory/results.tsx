@@ -95,7 +95,7 @@ export default function ObservatoryResults() {
           )}
         </section>
         {hasData && (
-          <section className="footer">
+          <section className="main">
             <ObservatoryRecommendations result={result} host={host} />
             <ObservatoryTests result={result} />
             <ObservatoryCSP result={result} />
