@@ -10,7 +10,6 @@
     > header,
     > section {
       margin: 0 auto 3rem;
-      margin-bottom: 4rem;
       max-width: min(var(--max-width), 74rem);
       padding-left: var(--gutter);
       padding-right: var(--gutter);
@@ -52,6 +51,7 @@
     }
 
     > section {
+      margin-bottom: 4rem;
       margin-right: auto;
       min-width: min(30rem, 90vw);
       padding-right: 1rem;
@@ -312,9 +312,9 @@
 
         > li {
           align-items: center;
+          color: var(--text-secondary);
           display: grid;
           gap: 1rem;
-          color: var(--text-secondary);
           @media screen and (min-width: $screen-sm) {
             align-items: start;
             gap: 1rem 2rem;
@@ -368,9 +368,9 @@
           }
 
           h3 {
+            color: var(--text-primary);
             font-weight: var(--font-body-strong-weight);
             margin-top: 0;
-            color: var(--text-primary);
           }
 
           a {

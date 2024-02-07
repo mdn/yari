@@ -34,16 +34,18 @@ export function CurriculumLayout({
           className={[
             "curriculum-content-container",
             "container",
-            ...(withSidebar ? ["with-sidebar"] : []),
+            ...(withSidebar ? ["with-sidebar", "main-wrapper"] : []),
             ...extraClasses,
           ].join(" ")}
         >
-          {withSidebar && (
+          {withSidebar && doc.sidebar && (
             <div className="sidebar-container">
-              <SidebarContainer doc={doc} label="Related Topics">
-                {doc.sidebar && (
-                  <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
-                )}
+              <SidebarContainer
+                doc={doc}
+                label="Related Topics"
+                tocTitle="In this module"
+              >
+                <Sidebar current={doc.mdn_url} sidebar={doc.sidebar} />
               </SidebarContainer>
               <div className="toc-container">
                 <aside className="toc">
@@ -55,13 +57,6 @@ export function CurriculumLayout({
                 </aside>
                 {PLACEMENT_ENABLED && <SidePlacement />}
               </div>
-              {doc.sidebar && (
-                <Sidebar
-                  extraClasses="sidebar"
-                  current={doc.mdn_url}
-                  sidebar={doc.sidebar}
-                />
-              )}
             </div>
           )}
           <article className="curriculum-content" lang={doc?.locale}>
