@@ -126,28 +126,33 @@ function ObservatoryRating({
         <table className="overall">
           <thead>
             <tr>
-              <th>Grade</th>
-              <th>Score</th>
-              <th>Tests Passed</th>
+              {result.scan.state === "FINISHED" && (
+                <>
+                  <th>Grade</th>
+                  <th>Score</th>
+                  <th>Tests Passed</th>
+                </>
+              )}
               <th>Scan Time</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>
-                <div
-                  className={`grade grade-${result.scan.grade[0]?.toLowerCase()}`}
-                >
-                  {result.scan.grade}
-                </div>
-                {/* {["a", "b", "c", "d", "e", "f"].map(grade => <><div className={`grade grade-${grade[0]}`}>
-                {grade.toUpperCase()}
-              </div></>)} */}
-              </td>
-              <td>{result.scan.score}/100</td>
-              <td>
-                {result.scan.tests_passed}/{result.scan.tests_quantity}
-              </td>
+              {result.scan.state === "FINISHED" && (
+                <>
+                  <td>
+                    <div
+                      className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
+                    >
+                      {result.scan.grade}
+                    </div>
+                  </td>
+                  <td>{result.scan.score}/100</td>
+                  <td>
+                    {result.scan.tests_passed}/{result.scan.tests_quantity}
+                  </td>
+                </>
+              )}
               <td>
                 {new Date(result.scan.end_time).toLocaleString([], {
                   dateStyle: "medium",
@@ -357,7 +362,7 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
 }
 
 function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
-  return (
+  return result.scan.response_headers ? (
     <>
       <h2>Raw Server Headers</h2>
       <figure className="scroll-container">
@@ -381,5 +386,5 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
         </table>
       </figure>
     </>
-  );
+  ) : null;
 }
