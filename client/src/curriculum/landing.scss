@@ -34,19 +34,25 @@
   header.landing-header {
     display: flex;
     flex-direction: row-reverse;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     justify-content: space-between;
 
     > svg {
-      width: 40%;
       z-index: 1;
+      width: 100%;
+      @media screen and (min-width: $screen-sm) {
+        width: 40%;
+      }
 
       #icons-bg {
         fill: var(--cur-bg-color);
       }
 
       .laptop {
-        fill: var(--cur-color);
+        fill: var(--cur-category-color);
+        .dark & {
+          fill: var(--cur-bg-large-color);
+        }
       }
     }
 
@@ -190,6 +196,7 @@
             display: block;
             height: 4rem;
             width: 4rem;
+            align-self: start;
           }
 
           &:nth-child(2) {
@@ -296,26 +303,41 @@
     ~ div {
       > ul {
         display: grid;
-        gap: 5rem 8rem;
-        grid-template-areas:
-          "beginner"
-          "advanced"
-          "employ"
-          "educator";
+        gap: 1rem;
+        grid-template-areas: "beginner advanced employ educator";
         margin: 0 auto;
         max-width: 52rem;
+        overflow: scroll;
+        scroll-snap-type: inline mandatory;
         @media screen and (min-width: $screen-md) {
+          gap: 5rem 8rem;
           grid-template-areas:
             "beginner advanced"
             "employ educator";
         }
 
         > li {
+          scroll-snap-align: center;
           align-items: center;
           color: var(--text-secondary);
           display: grid;
           gap: 1rem;
+          grid-template-areas:
+            "i h"
+            "p p"
+            "c c";
+          grid-template-rows: 4rem minmax(7rem, max-content) max-content;
+          grid-template-columns: 3rem 1fr;
+          height: max-content;
+          background-color: var(--cur-bg-large-color);
+          padding: 1rem 0.5rem;
+          border-radius: var(--elem-radius);
+          width: 80vw;
+
           @media screen and (min-width: $screen-sm) {
+            width: initial;
+            background-color: initial;
+            padding: 0;
             align-items: start;
             gap: 1rem 2rem;
             grid-template-areas:
@@ -323,15 +345,19 @@
               "i p"
               "i c";
             grid-template-rows: 4rem auto max-content;
+            grid-template-columns: auto auto;
+            height: initial;
           }
 
           &::before {
             align-self: start;
             display: inline-block;
-            height: 5rem;
-            width: 5rem;
+            height: 3rem;
+            width: 3rem;
             @media screen and (min-width: $screen-sm) {
               grid-area: i;
+              height: 5rem;
+              width: 5rem;
             }
           }
 
@@ -373,6 +399,11 @@
             margin-top: 0;
           }
 
+          em {
+            grid-area: p;
+            align-self: start;
+          }
+
           a {
             --button-bg: var(--button-primary-default);
             --button-bg-hover: var(--button-primary-hover);
@@ -401,6 +432,11 @@
             text-align: center;
             width: fit-content;
 
+            grid-area: c;
+            justify-self: center;
+            @media screen and (min-width: $screen-sm) {
+              justify-self: start;
+            }
             &:hover {
               background-color: var(--button-bg-hover, var(--button-bg));
             }

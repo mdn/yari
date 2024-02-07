@@ -47,12 +47,10 @@
 
       hr {
         border: none;
+        border-top: 1px solid var(--text-secondary);
         grid-area: hr;
         margin: 0 0 1.5rem;
         width: 100%;
-        @media screen and (min-width: $screen-md) {
-          border-top: 1px solid var(--text-primary);
-        }
       }
 
       li {
@@ -127,15 +125,18 @@
       display: grid;
       flex-wrap: wrap;
       gap: 1rem;
+      grid-template-columns: 1fr 1fr 1fr;
       margin: 0;
+      overflow: scroll;
       padding: 0;
+      scroll-snap-type: inline mandatory;
       @media screen and (min-width: $screen-sm) {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
       }
       @media screen and (min-width: $screen-md) {
         grid-template-columns: 1fr 1fr;
       }
-      @media screen and (min-width: $screen-xl) {
+      @media screen and (min-width: $screen-xxl) {
         grid-template-columns: 1fr 1fr 1fr;
       }
 
@@ -154,6 +155,8 @@
         flex-direction: column;
         justify-self: center;
         max-width: 20rem;
+        min-width: 15rem;
+        scroll-snap-align: center;
         width: 100%;
 
         .dark & {
