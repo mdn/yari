@@ -39,7 +39,7 @@ export default function ObservatoryLanding() {
   }, [form.host]);
 
   useEffect(() => {
-    if (!isMutating && data?.scan.state === "FINISHED") {
+    if (!isMutating && data) {
       navigate(`./${cleanHostname}`);
     }
   }, [isMutating, data, navigate, cleanHostname]);

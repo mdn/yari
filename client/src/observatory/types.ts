@@ -20,17 +20,17 @@ export interface ObservatoryResult {
 export interface ObservatoryScanResult {
   algorithm_version: number;
   end_time: number;
-  error: any;
-  grade: string;
+  error?: string;
+  grade?: string;
   hidden: boolean;
   id: number;
-  likelihood_indicator: string;
-  response_headers: Record<string, string>;
-  score: number;
+  likelihood_indicator?: string;
+  response_headers?: Record<string, string>;
+  score?: number;
   site_id: number;
   start_time: number;
   state: ObservatoryScanState;
-  status_code: number;
+  status_code?: number;
   tests_failed: number;
   tests_passed: number;
   tests_quantity: number;
