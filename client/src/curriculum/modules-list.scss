@@ -62,7 +62,7 @@
 
         > input:checked + label::before {
           position: absolute;
-          transform: translate3d(-0.3rem, 0.75rem, 0);
+          transform: translate3d(-0.75rem, 0.75rem, 0);
         }
 
         > label {
@@ -203,13 +203,6 @@
           p:last-child {
             color: var(--cur-color-topic);
           }
-        }
-      }
-
-      + a.button {
-        > span {
-          padding-left: 1rem;
-          padding-right: 1rem;
         }
       }
     }
