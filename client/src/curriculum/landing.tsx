@@ -1,102 +1,56 @@
-import useSWR from "swr";
-
 import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
 import { ReactComponent as LandingLadderSVG1 } from "../../public/assets/curriculum/cur-landing-ladder-1.svg";
 import { ReactComponent as LandingLadderSVG2 } from "../../public/assets/curriculum/cur-landing-ladder-2.svg";
 import { HydrationData } from "../../../libs/types/hydration";
-import { CurriculumDoc, ModuleData } from "../../../libs/types/curriculum";
-import { HTTPError } from "../document";
-import { WRITER_MODE } from "../env";
+import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
-
-import "./index.scss";
-import "./no-side.scss";
-import "./landing.scss";
-
-import { TopNavigation } from "../ui/organisms/top-navigation";
-import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
-import { useDocTitle } from "./utils";
+import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
 import { useMemo } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";
+import { CurriculumLayout } from "./layout";
 
-export function CurriculumLanding(props: HydrationData<any, CurriculumDoc>) {
-  const dataURL = `./index.json`;
-  const { data } = useSWR<ModuleData>(
-    dataURL,
-    async (url) => {
-      const response = await fetch(url);
+import "./index.scss";
+import "./landing.scss";
 
-      if (!response.ok) {
-        switch (response.status) {
-          case 404:
-            throw new HTTPError(response.status, url, "Page not found");
-        }
-
-        const text = await response.text();
-        throw new HTTPError(response.status, url, text);
-      }
-
-      return await response.json();
-    },
-    {
-      fallbackData: props as ModuleData,
-      revalidateOnFocus: WRITER_MODE,
-      revalidateOnMount: !props.blogMeta,
-    }
-  );
-  const { doc }: { doc?: CurriculumDoc } = data || props || {};
-  useDocTitle(doc);
+export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
+  const doc = useCurriculumDoc(appProps as CurriculumData);
   return (
-    <>
-      {doc && (
-        <>
-          <div className="sticky-header-container">
-            <TopNavigation />
-            <ArticleActionsContainer doc={doc} />
-          </div>
-          <main className="curriculum-content-container container curriculum-landing">
-            <article className="curriculum-content" lang={doc?.locale}>
-              <RenderCurriculumBody
-                doc={doc}
-                renderer={(section, i) => {
-                  if (i === 0) {
-                    return <Header section={section} h1={doc?.title} />;
-                  }
-                  if (section.value.id === "about_the_curriculum") {
-                    return About({ section });
-                  }
-                  if (section.value.id === "modules") {
-                    const { title, titleAsText, id } = section.value as any;
-                    return (
-                      <>
-                        <section className="modules">
-                          <DisplayH2
-                            id={id}
-                            title={title}
-                            titleAsText={titleAsText}
-                          />
-                          {doc.modules && (
-                            <ModulesListList modules={doc.modules} />
-                          )}
-                        </section>
-                        <section className="landing-ladder">
-                          <div>
-                            <LandingLadderSVG1 />
-                            <LandingLadderSVG2 />
-                          </div>
-                        </section>
-                      </>
-                    );
-                  }
-                  return null;
-                }}
-              />
-            </article>
-          </main>
-        </>
-      )}
-    </>
+    <CurriculumLayout
+      doc={doc}
+      withSidebar={false}
+      extraClasses={["curriculum-landing"]}
+    >
+      <RenderCurriculumBody
+        doc={doc}
+        renderer={(section, i) => {
+          if (i === 0) {
+            return <Header section={section} h1={doc?.title} />;
+          }
+          if (section.value.id === "about_the_curriculum") {
+            return About({ section });
+          }
+          if (section.value.id === "modules") {
+            const { title, titleAsText, id } = section.value as any;
+            return (
+              <>
+                <section className="modules">
+                  <DisplayH2 id={id} title={title} titleAsText={titleAsText} />
+                  {doc.modules && <ModulesListList modules={doc.modules} />}
+                </section>
+                <section className="landing-ladder">
+                  <div>
+                    <LandingLadderSVG1 />
+                    <LandingLadderSVG2 />
+                  </div>
+                </section>
+              </>
+            );
+          }
+          return null;
+        }}
+      />
+    </CurriculumLayout>
   );
 }
 

@@ -1,3 +1,5 @@
+@use "../ui/vars" as *;
+
 .curriculum {
   --background-toc-active: var(--cur-bg-color);
   --category-color: var(--cur-category-color);
@@ -57,6 +59,129 @@
       font-weight: 600;
       padding: 0.25rem 0.25rem 0.25rem 0.5rem;
       width: 100%;
+    }
+  }
+}
+
+.curriculum-content-container {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    a:link,
+    a:visited {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
+    }
+
+    a[href^="#"] {
+      &::before {
+        color: var(--text-inactive);
+        content: "#";
+        display: inline-block;
+        font-size: 0.7em;
+        line-height: 1;
+        margin-left: -0.8em;
+        text-decoration: none;
+        visibility: hidden;
+        width: 0.8em;
+      }
+
+      &:hover {
+        &::before {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  &,
+  .button {
+    --button-padding: 1rem;
+  }
+
+  .curriculum-sidebar,
+  .toc,
+  .curriculum-content {
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+  }
+
+  &.with-sidebar {
+    .curriculum-content {
+      grid-area: main;
+
+      > header > h1 {
+        margin-bottom: 2rem;
+
+        > span {
+          color: var(--cur-color);
+        }
+      }
+
+      .module-contents {
+        > h2 {
+          margin-bottom: 2rem;
+          margin-top: 4rem;
+        }
+      }
+
+      section h2:first-of-type {
+        margin-top: 2rem;
+      }
+
+      blockquote.curriculum-notes {
+        background-color: #fcefe299;
+        border: 0;
+        border-radius: var(--elem-radius);
+        margin: 1rem;
+        padding: 1rem 2rem;
+
+        > :last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      p.curriculum-outcomes {
+        display: flex;
+        font-weight: var(--font-body-strong-weight);
+        margin-bottom: 0.5rem;
+
+        &::before {
+          content: url("../assets/icons/cur-resources.svg");
+          display: block;
+          height: 24px;
+          margin-right: 0.5rem;
+          width: 24px;
+        }
+      }
+
+      ol,
+      ul {
+        margin: 1rem 0 2rem;
+        padding-left: 2rem;
+
+        ol,
+        ul {
+          margin: 0;
+        }
+      }
+
+      li {
+        list-style-type: disc;
+        margin: 0.5rem 0;
+      }
     }
   }
 }

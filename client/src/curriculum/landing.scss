@@ -39,9 +39,19 @@
 
     > svg {
       width: 40%;
+      z-index: 1;
+
+      #icons-bg {
+        fill: var(--cur-bg-color);
+      }
+
+      .laptop {
+        fill: var(--cur-color);
+      }
     }
 
     > section {
+      margin-bottom: 4rem;
       margin-right: auto;
       min-width: min(30rem, 90vw);
       padding-right: 1rem;
@@ -57,15 +67,16 @@
         margin-top: 1rem;
       }
 
-      p:last-child {
+      p {
         color: var(--text-secondary);
       }
     }
   }
 
   .landing-about-container {
-    background-color: var(--cur-bg-color);
+    background-color: var(--cur-bg-large-color);
     margin: 0;
+    margin-top: -6rem;
     max-width: 100%;
 
     .landing-about {
@@ -73,24 +84,26 @@
       grid-template-areas:
         "li"
         "h2"
-        "p"
-        "p"
-        "p";
+        "p1"
+        "p2"
+        "p3";
       grid-template-columns: 1fr;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
       @media screen and (min-width: $screen-md) {
         grid-template-areas:
           "li li "
-          "h2 p "
-          "h2 p "
-          "h2 p ";
+          "h2 . "
+          ".  p1 "
+          ".  p2"
+          ".  p3";
         grid-template-columns: 1fr 1fr;
       }
 
       h2 {
         grid-area: h2;
-        margin: 1rem 0;
+        margin: 1rem 0 0;
+        text-align: center;
       }
 
       > div {
@@ -99,48 +112,78 @@
         ul {
           align-items: center;
           background-color: var(--background-primary);
+          border-radius: var(--elem-radius);
           box-shadow: var(--module-shadow);
           display: grid;
           gap: 1rem;
           grid-area: li;
           grid-template-columns: auto;
-          justify-content: space-around;
+          justify-content: center;
           margin: auto;
           min-height: 5rem;
           padding: 1rem;
           transform: translateY(-1rem);
           width: 100%;
-          @media screen and (min-width: $screen-md) {
+          @media screen and (min-width: $screen-sm) {
             grid-template-columns: auto auto auto;
+            justify-content: start;
+          }
+          @media screen and (min-width: $screen-lg) {
+            justify-content: center;
           }
 
           > li {
-            align-items: center;
-            display: inline-flex;
-            gap: 2rem;
+            margin: 0 1rem;
+            text-align: center;
+            @media screen and (min-width: $screen-sm) {
+              width: max-content;
+            }
+            @media screen and (min-width: $screen-md) {
+              align-items: center;
+              display: inline-flex;
+              gap: 1rem;
+            }
 
             &::before {
-              height: 4rem;
-              width: 4rem;
+              display: block;
+              height: 3rem;
+              margin: 0 auto;
+              width: 3rem;
+              @media screen and (min-width: $screen-md) {
+                display: initial;
+                margin: 0;
+              }
             }
 
             &:nth-child(1)::before {
-              content: url("../assets/icons/cur-landing-about-beginner.svg");
+              content: url("../assets/icons/cur-landing-about-beginner.svg#light");
+
+              .dark & {
+                content: url("../assets/icons/cur-landing-about-beginner.svg#dark");
+              }
             }
 
             &:nth-child(2)::before {
               content: url("../assets/icons/cur-landing-about-pace.svg");
+
+              .dark & {
+                content: url("../assets/icons/cur-landing-about-pace.svg#dark");
+              }
             }
 
             &:nth-child(3)::before {
               content: url("../assets/icons/cur-landing-about-free.svg");
+
+              .dark & {
+                content: url("../assets/icons/cur-landing-about-free.svg#dark");
+              }
             }
           }
         }
 
         p {
           align-items: center;
-          display: inline-grid;
+          display: grid;
           grid-template-columns: auto auto;
 
           &::before {
@@ -149,22 +192,43 @@
             width: 4rem;
           }
 
-          &:nth-child(2)::before {
-            content: url("../assets/icons/cur-landing-about-bullet.svg");
+          &:nth-child(2) {
+            grid-area: p1;
+
+            &::before {
+              content: url("../assets/icons/cur-landing-about-bullet.svg#light");
+
+              .dark & {
+                content: url("../assets/icons/cur-landing-about-bullet.svg#dark");
+              }
+            }
           }
 
-          &:nth-child(3)::before {
-            content: url("../assets/icons/cur-landing-about-bullet.svg");
+          &:nth-child(3) {
+            grid-area: p2;
+
+            &::before {
+              content: url("../assets/icons/cur-landing-about-bullet.svg#light");
+
+              .dark & {
+                content: url("../assets/icons/cur-landing-about-bullet.svg#dark");
+              }
+            }
           }
 
-          a {
-            color: var(--text-primary);
-            font-weight: var(--font-body-strong-weight);
-            text-decoration: underline;
+          &:nth-child(4) {
+            grid-area: p3;
 
-            &:hover,
-            &:active {
-              text-decoration: none;
+            a {
+              color: var(--text-primary);
+              font-weight: var(--font-body-strong-weight);
+              margin-left: 4rem;
+              text-decoration: underline;
+
+              &:hover,
+              &:active {
+                text-decoration: none;
+              }
             }
           }
         }
@@ -216,15 +280,18 @@
     }
   }
 
-  #don’t_know_where_to_start {
+  #don’t_know_where_toget_started {
     line-height: 3rem;
     margin: 1rem auto 5rem;
     text-align: center;
-    text-decoration-color: var(--cur-color);
-    text-decoration-line: underline;
-    text-decoration-thickness: 0.25rem;
-    text-underline-offset: 1rem;
     width: fit-content;
+
+    &::after {
+      content: url("../assets/icons/cur-started-underline.svg");
+      position: absolute;
+      transform: translate3d(-6em, 1.25rem, 0);
+      width: 6em;
+    }
 
     ~ div {
       > ul {
@@ -245,6 +312,7 @@
 
         > li {
           align-items: center;
+          color: var(--text-secondary);
           display: grid;
           gap: 1rem;
           @media screen and (min-width: $screen-sm) {
@@ -268,22 +336,39 @@
           }
 
           &:nth-child(1)::before {
-            content: url("../assets/icons/cur-landing-started-beginner.svg");
+            content: url("../assets/icons/cur-landing-started-beginner.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-beginner.svg#dark");
+            }
           }
 
           &:nth-child(2)::before {
-            content: url("../assets/icons/cur-landing-started-advanced.svg");
+            content: url("../assets/icons/cur-landing-started-advanced.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-advanced.svg#dark");
+            }
           }
 
           &:nth-child(3)::before {
-            content: url("../assets/icons/cur-landing-started-employment.svg");
+            content: url("../assets/icons/cur-landing-started-employment.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-employment.svg#dark");
+            }
           }
 
           &:nth-child(4)::before {
-            content: url("../assets/icons/cur-landing-started-educator.svg");
+            content: url("../assets/icons/cur-landing-started-educator.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-educator.svg#dark");
+            }
           }
 
           h3 {
+            color: var(--text-primary);
             font-weight: var(--font-body-strong-weight);
             margin-top: 0;
           }
@@ -297,7 +382,6 @@
             --button-height: var(--form-elem-height, 2rem);
             --button-color: var(--background-primary);
             --button-font: var(--type-emphasis-m);
-            --button-padding: 0.5rem;
             --button-radius: var(--elem-radius, 0.25rem);
             align-items: center;
             background-color: var(--button-bg);

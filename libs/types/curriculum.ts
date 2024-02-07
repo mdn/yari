@@ -54,7 +54,7 @@ export interface CurriculumDoc extends Doc {
   topic?: Topic;
 }
 
-export interface ModuleData {
+export interface CurriculumData {
   doc: CurriculumDoc;
 }
 

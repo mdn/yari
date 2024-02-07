@@ -1,8 +1,14 @@
 @use "../ui/vars" as *;
 
+.curriculum-content-container.with-sidebar,
 .curriculum-content-container {
   --module-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
     -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
+
+  .dark & {
+    --module-shadow: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
+      -4px 4px 8px 0 rgb(36, 36, 36);
+  }
 
   .curriculum-content {
     .modules {
@@ -21,12 +27,10 @@
     ol.modules-list-list {
       display: grid;
       grid-template-areas:
-        "a"
-        "b"
-        "c"
-        "hr"
-        "mod"
-        "t";
+        "a   b   c"
+        "hr  hr  hr"
+        "mod mod mod"
+        "t   t   t";
 
       grid-template-columns: auto;
       margin: 0;
@@ -54,11 +58,9 @@
       li {
         display: contents;
 
-        > input:checked + label {
-          text-decoration-color: var(--cur-color);
-          text-decoration-line: underline;
-          text-decoration-thickness: 0.25rem;
-          text-underline-offset: 0.4rem;
+        > input:checked + label::before {
+          position: absolute;
+          transform: translate3d(-0.75rem, 0.75rem, 0);
         }
 
         > label {
@@ -71,6 +73,10 @@
           > input {
             grid-area: a;
           }
+
+          > input:checked + label::before {
+            content: url("../assets/icons/cur-modules-underline-1.svg");
+          }
         }
 
         &:nth-child(3) {
@@ -81,6 +87,10 @@
               margin-left: 2rem;
             }
           }
+
+          > input:checked + label::before {
+            content: url("../assets/icons/cur-modules-underline-2.svg");
+          }
         }
 
         &:nth-child(4) {
@@ -90,6 +100,10 @@
             @media screen and (min-width: $screen-md) {
               margin-left: 2rem;
             }
+          }
+
+          > input:checked + label::before {
+            content: url("../assets/icons/cur-modules-underline-3.svg");
           }
         }
 
@@ -142,18 +156,22 @@
         max-width: 20rem;
         width: 100%;
 
+        .dark & {
+          background-color: #000;
+        }
+
         > header {
           a {
             align-items: center;
             background-color: var(--cur-bg-color-topic);
             display: flex;
             flex-direction: column;
-            height: 12rem;
+            height: 10rem;
             padding: 1rem 2rem;
 
             .topic-icon {
-              height: 5rem;
-              width: 5rem;
+              height: 4rem;
+              width: 4rem;
             }
 
             > span {
@@ -175,6 +193,7 @@
           padding: 1rem 1.5rem;
 
           p {
+            color: var(--text-secondary);
             margin: 0;
             text-align: center;
           }

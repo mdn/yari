@@ -252,7 +252,6 @@ app.get(
   ],
   async (req, res) => {
     const { slug = "" } = req.params;
-    console.log(slug);
     const data = await findModuleBySlug(slug);
     if (!data) {
       return res.status(404).send("Nothing here 🤷‍♂️");
