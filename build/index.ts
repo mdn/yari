@@ -573,6 +573,7 @@ function addBaseline(doc: Partial<Doc>) {
         // temporary blocklist while we wait for per-key baseline statuses
         // or another solution to the baseline/bcd table discrepancy problem
         ![
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
           "api.Clipboard.read",
           "api.Clipboard.readText",
           "api.Clipboard.write",
@@ -587,6 +588,15 @@ function addBaseline(doc: Partial<Doc>) {
           "api.ClipboardItem.types",
           "api.Navigator.clipboard",
           "api.Permissions.permission_clipboard-read",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
+          "api.CustomElementRegistry",
+          "api.CustomElementRegistry.builtin_element_support",
+          "api.CustomElementRegistry.define",
+          "api.Window.customElements",
+          "css.selectors.defined",
+          "css.selectors.host",
+          "css.selectors.host-context",
+          "css.selectors.part",
         ].includes(query)
     );
     return getWebFeatureStatus(...filteredBrowserCompat);
