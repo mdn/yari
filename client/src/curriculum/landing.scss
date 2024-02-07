@@ -10,6 +10,7 @@
     > header,
     > section {
       margin: 0 auto 3rem;
+      margin-bottom: 4rem;
       max-width: min(var(--max-width), 74rem);
       padding-left: var(--gutter);
       padding-right: var(--gutter);
@@ -40,6 +41,14 @@
     > svg {
       width: 40%;
       z-index: 1;
+
+      #icons-bg {
+        fill: var(--cur-bg-color);
+      }
+
+      .laptop {
+        fill: var(--cur-color);
+      }
     }
 
     > section {
@@ -94,6 +103,7 @@
       h2 {
         grid-area: h2;
         margin: 1rem 0 0;
+        text-align: center;
       }
 
       > div {
@@ -270,15 +280,18 @@
     }
   }
 
-  #don’t_know_where_to_start {
+  #don’t_know_where_toget_started {
     line-height: 3rem;
     margin: 1rem auto 5rem;
     text-align: center;
-    text-decoration-color: var(--cur-color);
-    text-decoration-line: underline;
-    text-decoration-thickness: 0.25rem;
-    text-underline-offset: 1rem;
     width: fit-content;
+
+    &::after {
+      content: url("../assets/icons/cur-started-underline.svg");
+      position: absolute;
+      transform: translate3d(-6em, 1.25rem, 0);
+      width: 6em;
+    }
 
     ~ div {
       > ul {
@@ -322,19 +335,35 @@
           }
 
           &:nth-child(1)::before {
-            content: url("../assets/icons/cur-landing-started-beginner.svg");
+            content: url("../assets/icons/cur-landing-started-beginner.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-beginner.svg#dark");
+            }
           }
 
           &:nth-child(2)::before {
-            content: url("../assets/icons/cur-landing-started-advanced.svg");
+            content: url("../assets/icons/cur-landing-started-advanced.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-advanced.svg#dark");
+            }
           }
 
           &:nth-child(3)::before {
-            content: url("../assets/icons/cur-landing-started-employment.svg");
+            content: url("../assets/icons/cur-landing-started-employment.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-employment.svg#dark");
+            }
           }
 
           &:nth-child(4)::before {
-            content: url("../assets/icons/cur-landing-started-educator.svg");
+            content: url("../assets/icons/cur-landing-started-educator.svg#light");
+
+            .dark & {
+              content: url("../assets/icons/cur-landing-started-educator.svg#dark");
+            }
           }
 
           h3 {

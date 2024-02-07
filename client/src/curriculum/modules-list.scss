@@ -27,12 +27,10 @@
     ol.modules-list-list {
       display: grid;
       grid-template-areas:
-        "a"
-        "b"
-        "c"
-        "hr"
-        "mod"
-        "t";
+        "a   b   c"
+        "hr  hr  hr"
+        "mod mod mod"
+        "t   t   t";
 
       grid-template-columns: auto;
       margin: 0;
