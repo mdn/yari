@@ -256,16 +256,16 @@
         &:nth-child(1) {
           min-width: min(18rem, 90vw);
           transform: translateX(2vw);
-          width: 38%;
+          width: 42%;
         }
 
         &:nth-child(2) {
           min-width: min(32rem, 90vw);
-          transform: translateX(-2vw);
-          width: 62%;
+          transform: translateX(-5vw);
+          width: 58%;
         }
 
-        #text69 {
+        #text29 {
           font: var(--type-heading-h2);
         }
 
@@ -280,7 +280,7 @@
     }
   }
 
-  #don’t_know_where_toget_started {
+  #dont_know_where_toget_started {
     line-height: 3rem;
     margin: 1rem auto 5rem;
     text-align: center;
