@@ -314,6 +314,7 @@
           align-items: center;
           display: grid;
           gap: 1rem;
+          color: var(--text-secondary);
           @media screen and (min-width: $screen-sm) {
             align-items: start;
             gap: 1rem 2rem;
@@ -369,6 +370,7 @@
           h3 {
             font-weight: var(--font-body-strong-weight);
             margin-top: 0;
+            color: var(--text-primary);
           }
 
           a {
