@@ -13,7 +13,6 @@
     "yari-tool": "tool/cli.js"
   },
   "scripts": {
-    "ai-help": "ts-node scripts/ai-help.ts",
     "ai-help-macros": "ts-node scripts/ai-help-macros.ts",
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
@@ -157,7 +156,6 @@
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.41.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
-    "@supabase/supabase-js": "^2.39.3",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.4.0",
     "@testing-library/react": "^14.2.1",
