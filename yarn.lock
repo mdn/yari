@@ -5660,10 +5660,12 @@ devlop@^1.0.0, devlop@^1.1.0:
   dependencies:
     dequal "^2.0.0"
 
-dexie@^3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.4.tgz#b22a9729be1102acb2eee16102ea6e2bc76454cf"
-  integrity sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==
+dexie@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.5.tgz#f68e34b98e0e5e3412cf86b540a2cc6cbf9b0266"
+  integrity sha512-MA7vYQvXxWN2+G50D0GLS4FqdYUyRYQsN0FikZIVebOmRoNCSCL9+eUbIF80dqrfns3kmY+83+hE2GN9CnAGyA==
+  dependencies:
+    karma-safari-launcher "^1.0.0"
 
 didyoumean@^1.2.2:
   version "1.2.2"
@@ -9611,6 +9613,11 @@ junk@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/junk/-/junk-3.1.0.tgz#31499098d902b7e98c5d9b9c80f43457a88abfa1"
   integrity sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==
+
+karma-safari-launcher@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/karma-safari-launcher/-/karma-safari-launcher-1.0.0.tgz#96982a2cc47d066aae71c553babb28319115a2ce"
+  integrity sha512-qmypLWd6F2qrDJfAETvXDfxHvKDk+nyIjpH9xIeI3/hENr0U3nuqkxaftq73PfXZ4aOuOChA6SnLW4m4AxfRjQ==
 
 keyv@3.0.0:
   version "3.0.0"
