@@ -597,6 +597,13 @@ function addBaseline(doc: Partial<Doc>) {
           "css.selectors.host",
           "css.selectors.host-context",
           "css.selectors.part",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
+          "api.Element.input_event",
+          "api.InputEvent.InputEvent",
+          "api.InputEvent.data",
+          "api.InputEvent.dataTransfer",
+          "api.InputEvent.getTargetRanges",
+          "api.InputEvent.inputType",
         ].includes(query)
     );
     return getWebFeatureStatus(...filteredBrowserCompat);
