@@ -120,7 +120,6 @@
         > ol {
           grid-area: mod;
           margin: 0;
-          padding: 0;
         }
 
         > a {
@@ -139,8 +138,12 @@
       gap: 1rem;
       grid-template-columns: 1fr 1fr 1fr;
       margin: 0;
+      padding: 0.5rem;
       overflow: scroll;
-      padding: 0;
+      @media screen and (min-width: $screen-md) {
+        padding: 0;
+        overflow: inherit;
+      }
       scroll-snap-type: inline mandatory;
 
       :focus-visible {
@@ -156,6 +159,11 @@
         justify-self: center;
         max-width: 20rem;
         min-width: 15rem;
+        padding: 0;
+        overflow: auto;
+        @media screen and (min-width: $screen-md) {
+          min-width: initial;
+        }
         scroll-snap-align: center;
         width: 100%;
 

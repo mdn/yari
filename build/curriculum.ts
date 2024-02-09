@@ -84,19 +84,19 @@ export async function buildModuleIndex(
 ): Promise<ModuleIndexEntry[]> {
   const index = await buildIndex();
 
-  const s = index.reduce((sidebar, meta) => {
+  const s = index.reduce((item, meta) => {
     const currentLvl = meta.slug.split("/").length;
-    const last = sidebar.length ? sidebar[sidebar.length - 1] : null;
+    const last = item.length ? item[item.length - 1] : null;
     const entry = mapper(meta);
     if (currentLvl > 2) {
       if (last) {
         last.children.push(entry);
-        return sidebar;
+        return item;
       }
     }
 
-    sidebar.push({ children: [], ...entry });
-    return sidebar;
+    item.push({ children: [], ...entry });
+    return item;
   }, []);
 
   return s;
@@ -201,7 +201,10 @@ async function readModule(
     sidebar = await buildSidebar();
     parents = await buildParents(url);
   } else {
-    title = title.replace(/^\d+\s+/, "").replace(/ modules$/, "");
+    title = title
+      .replace(/^\d+\s+/, "") // Strip number prefix.
+      .replace(/ modules$/, "") // Strip "modules" suffix.
+      .replace(/Extension \d+:/, ""); // Strip "Extension" prefix.
   }
 
   return {

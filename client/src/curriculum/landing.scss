@@ -19,6 +19,7 @@
 
   .curriculum-content {
     padding-top: 0;
+
     ol.modules-list {
       @media screen and (min-width: $screen-sm) {
         grid-template-columns: 1fr 1fr;
@@ -41,13 +42,13 @@
     }
 
     > svg {
-      grid-area: svg;
-      z-index: 1;
-      width: 100%;
-      max-width: 28rem;
-      justify-self: end;
       align-self: end;
+      grid-area: svg;
+      justify-self: end;
       margin-bottom: 3rem;
+      max-width: 28rem;
+      width: 100%;
+      z-index: 1;
       @media screen and (min-width: $screen-md) {
         margin-bottom: 0;
       }
@@ -58,21 +59,22 @@
 
       .laptop {
         fill: var(--cur-category-color);
+
         .dark & {
-          fill: var(--cur-bg-large-color);
+          fill: var(--cur-bg-color-orange);
         }
       }
     }
 
     > section {
       grid-area: copy;
+      margin-right: auto;
+      margin-top: 3rem;
+      max-width: 30rem;
+      padding-right: 1rem;
       @media screen and (min-width: $screen-md) {
         margin-bottom: 4rem;
       }
-      margin-top: 3rem;
-      margin-right: auto;
-      padding-right: 1rem;
-      max-width: 30rem;
 
       h1 {
         color: var(--cur-color-topic);
@@ -101,9 +103,6 @@
 
   .landing-about-container {
     background-color: var(--cur-bg-large-color);
-    .dark & {
-      background-color: var(--cur-bg-color-grey);
-    }
     margin: 0;
     margin-top: -6rem;
     max-width: 100%;
@@ -139,9 +138,11 @@
         display: contents;
 
         ul {
+          align-items: start;
           background-color: var(--background-primary);
           border-radius: var(--elem-radius);
           box-shadow: var(--module-shadow);
+          color: var(--text-secondary);
           display: grid;
           grid-area: li;
           grid-template-columns: auto auto auto;
@@ -150,12 +151,10 @@
           min-height: 5rem;
           padding: 1rem;
           transform: translateY(-1rem);
-          color: var(--text-secondary);
           width: 100%;
-          align-items: start;
           @media screen and (min-width: $screen-sm) {
-            gap: 1rem;
             align-items: center;
+            gap: 1rem;
           }
           @media screen and (min-width: $screen-md) {
             justify-content: start;
@@ -216,15 +215,15 @@
 
         p {
           align-items: center;
-          display: grid;
           color: var(--text-secondary);
+          display: grid;
           grid-template-columns: auto auto;
 
           &::before {
+            align-self: start;
             display: block;
             height: 4rem;
             width: 4rem;
-            align-self: start;
           }
 
           &:nth-child(2) {
@@ -279,6 +278,8 @@
     > div {
       display: grid;
       grid-template-areas: "a" "b";
+      grid-template-columns: auto;
+      grid-template-rows: auto auto;
       justify-content: center;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
@@ -293,24 +294,29 @@
 
       > svg {
         &:nth-child(1) {
+          font-size: 2rem;
           grid-area: a;
           transform: translateX(2vw);
+          width: 100%;
         }
 
         &:nth-child(2) {
-          grid-area: b;
           display: none;
+          grid-area: b;
+          transform: translateX(-5vw);
+          width: 100%;
           @media screen and (min-width: $screen-md) {
             display: initial;
           }
-          transform: translateX(-5vw);
         }
+
         &:nth-child(3) {
           grid-area: b;
+          max-width: 100%;
+          width: 100%;
           @media screen and (min-width: $screen-md) {
             display: none;
           }
-          max-width: 100%;
         }
 
         #text29 {
@@ -318,7 +324,7 @@
         }
 
         text {
-          fill: var(--text-primary);
+          fill: var(--text-secondary);
         }
 
         .color {
@@ -362,8 +368,9 @@
         }
 
         > li {
-          scroll-snap-align: center;
           align-items: center;
+          background-color: var(--cur-bg-large-color);
+          border-radius: var(--elem-radius);
           color: var(--text-secondary);
           display: grid;
           gap: 1rem;
@@ -371,27 +378,26 @@
             "i h"
             "p p"
             "c c";
-          grid-template-rows: 4rem minmax(7rem, max-content) max-content;
           grid-template-columns: 3rem 1fr;
+          grid-template-rows: 4rem minmax(7rem, max-content) max-content;
           height: max-content;
-          background-color: var(--cur-bg-large-color);
           padding: 1rem 0.5rem;
-          border-radius: var(--elem-radius);
+          scroll-snap-align: center;
           width: 80vw;
 
           @media screen and (min-width: $screen-md) {
-            width: initial;
-            background-color: initial;
-            padding: 0;
             align-items: start;
+            background-color: initial;
             gap: 1rem 2rem;
             grid-template-areas:
               "i h"
               "i p"
               "i c";
-            grid-template-rows: 4rem auto max-content;
             grid-template-columns: auto auto;
+            grid-template-rows: 4rem auto max-content;
             height: initial;
+            padding: 0;
+            width: initial;
           }
 
           &::before {
@@ -445,8 +451,8 @@
           }
 
           em {
-            grid-area: p;
             align-self: start;
+            grid-area: p;
           }
 
           a {
@@ -468,7 +474,10 @@
             display: flex;
             font: var(--button-font);
             gap: 0.25rem;
+
+            grid-area: c;
             justify-content: center;
+            justify-self: center;
             min-height: var(--button-height);
             padding: 0.5rem;
             padding-left: var(--button-padding);
@@ -476,12 +485,10 @@
             position: relative;
             text-align: center;
             width: fit-content;
-
-            grid-area: c;
-            justify-self: center;
             @media screen and (min-width: $screen-md) {
               justify-self: start;
             }
+
             &:hover {
               background-color: var(--button-bg-hover, var(--button-bg));
             }
