@@ -32,6 +32,4 @@ export const FAKE_V1_API: boolean;
 export const SENTRY_DSN_BUILD: string;
 export const OPENAI_KEY: string;
 export const PG_URI: string;
-export const SUPABASE_URL: string;
-export const SUPABASE_SERVICE_ROLE_KEY: string;
 export const SAMPLE_SIGN_KEY: Buffer;
