@@ -18,6 +18,7 @@
   }
 
   .curriculum-content {
+    padding-top: 0;
     ol.modules-list {
       @media screen and (min-width: $screen-sm) {
         grid-template-columns: 1fr 1fr;
@@ -32,16 +33,23 @@
   }
 
   header.landing-header {
-    display: flex;
-    flex-direction: row-reverse;
-    flex-wrap: wrap-reverse;
-    justify-content: space-between;
+    display: grid;
+    grid-template-areas: "copy" "svg";
+    @media screen and (min-width: $screen-md) {
+      grid-template-areas: "copy svg";
+      grid-template-columns: 30rem auto;
+    }
 
     > svg {
+      grid-area: svg;
       z-index: 1;
       width: 100%;
-      @media screen and (min-width: $screen-sm) {
-        width: 40%;
+      max-width: 28rem;
+      justify-self: end;
+      align-self: end;
+      margin-bottom: 3rem;
+      @media screen and (min-width: $screen-md) {
+        margin-bottom: 0;
       }
 
       #icons-bg {
@@ -57,20 +65,32 @@
     }
 
     > section {
-      margin-bottom: 4rem;
+      grid-area: copy;
+      @media screen and (min-width: $screen-md) {
+        margin-bottom: 4rem;
+      }
+      margin-top: 3rem;
       margin-right: auto;
-      min-width: min(30rem, 90vw);
       padding-right: 1rem;
-      width: 30rem;
+      max-width: 30rem;
 
       h1 {
         color: var(--cur-color-topic);
-        margin-bottom: 1rem;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        @media screen and (min-width: $screen-md) {
+          font-size: 2.5rem;
+        }
       }
 
       h2 {
-        margin-bottom: 2rem;
-        margin-top: 1rem;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
+        @media screen and (min-width: $screen-md) {
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
       }
 
       p {
@@ -119,7 +139,6 @@
         display: contents;
 
         ul {
-          align-items: center;
           background-color: var(--background-primary);
           border-radius: var(--elem-radius);
           box-shadow: var(--module-shadow);
@@ -133,9 +152,13 @@
           transform: translateY(-1rem);
           color: var(--text-secondary);
           width: 100%;
+          align-items: start;
           @media screen and (min-width: $screen-sm) {
-            justify-content: start;
             gap: 1rem;
+            align-items: center;
+          }
+          @media screen and (min-width: $screen-md) {
+            justify-content: start;
           }
           @media screen and (min-width: $screen-lg) {
             justify-content: center;

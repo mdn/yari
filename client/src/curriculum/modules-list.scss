@@ -47,7 +47,7 @@
 
       hr {
         border: none;
-        border-top: 1px solid var(--text-secondary);
+        border-top: 1px solid var(--text-inactive);
         grid-area: hr;
         margin: 0 0 1.5rem;
         width: 100%;
@@ -56,11 +56,15 @@
       li {
         display: contents;
 
-        > input:checked + label::before {
-          height: 0;
-          position: absolute;
-          transform: translate3d(-0.75rem, 0.75rem, 0);
-          width: 0;
+        > input:checked + label {
+          color: var(--text-primary);
+
+          &::before {
+            height: 0;
+            position: absolute;
+            transform: translate3d(-0.75rem, 0.75rem, 0);
+            width: 0;
+          }
         }
 
         > input:checked:focus-visible + label {
@@ -70,7 +74,7 @@
         }
 
         > label {
-          color: var(--text-secondary);
+          color: var(--text-inactive);
           cursor: pointer;
         }
 

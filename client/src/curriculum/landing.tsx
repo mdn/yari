@@ -72,12 +72,12 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
   return (
     <header className="landing-header">
-      <LandingSVG />
       <section>
         <h1>{h1}</h1>
         <h2>{section.value.title}</h2>
         <div dangerouslySetInnerHTML={html}></div>
       </section>
+      <LandingSVG />
     </header>
   );
 }
