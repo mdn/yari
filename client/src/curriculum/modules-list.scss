@@ -138,13 +138,13 @@
       gap: 1rem;
       grid-template-columns: 1fr 1fr 1fr;
       margin: 0;
-      padding: 0.5rem;
       overflow: scroll;
-      @media screen and (min-width: $screen-md) {
-        padding: 0;
-        overflow: inherit;
-      }
+      padding: 0.5rem;
       scroll-snap-type: inline mandatory;
+      @media screen and (min-width: $screen-md) {
+        overflow: inherit;
+        padding: 0;
+      }
 
       :focus-visible {
         outline-offset: -2px;
@@ -159,13 +159,13 @@
         justify-self: center;
         max-width: 20rem;
         min-width: 15rem;
-        padding: 0;
         overflow: auto;
+        padding: 0;
+        scroll-snap-align: center;
+        width: 100%;
         @media screen and (min-width: $screen-md) {
           min-width: initial;
         }
-        scroll-snap-align: center;
-        width: 100%;
 
         .dark & {
           background-color: #000;
