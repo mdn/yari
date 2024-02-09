@@ -1,6 +1,7 @@
 import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
 import { ReactComponent as LandingLadderSVG1 } from "../../public/assets/curriculum/cur-landing-ladder-1.svg";
 import { ReactComponent as LandingLadderSVG2 } from "../../public/assets/curriculum/cur-landing-ladder-2.svg";
+import { ReactComponent as LandingLadderSVG2Small } from "../../public/assets/curriculum/cur-landing-ladder-2-small.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
@@ -25,7 +26,13 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
         doc={doc}
         renderer={(section, i) => {
           if (i === 0) {
-            return <Header section={section} h1={doc?.title} />;
+            return (
+              <Header
+                section={section}
+                key={section.value.id}
+                h1={doc?.title}
+              />
+            );
           }
           if (section.value.id === "about_the_curriculum") {
             return About({ section });
@@ -34,14 +41,18 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
             const { title, titleAsText, id } = section.value as any;
             return (
               <>
-                <section className="modules">
+                <section key={`${section.value.id}-1`} className="modules">
                   <DisplayH2 id={id} title={title} titleAsText={titleAsText} />
                   {doc.modules && <ModulesListList modules={doc.modules} />}
                 </section>
-                <section className="landing-ladder">
+                <section
+                  key={`${section.value.id}-2`}
+                  className="landing-ladder"
+                >
                   <div>
                     <LandingLadderSVG1 />
                     <LandingLadderSVG2 />
+                    <LandingLadderSVG2Small />
                   </div>
                 </section>
               </>
@@ -75,7 +86,7 @@ function About({ section }) {
   const { title, content, titleAsText, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
   return (
-    <section className="landing-about-container">
+    <section key={id} className="landing-about-container">
       <div className="landing-about">
         <DisplayH2 id={id} title={title} titleAsText={titleAsText} />
         <div dangerouslySetInnerHTML={html}></div>

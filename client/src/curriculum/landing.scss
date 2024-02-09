@@ -81,6 +81,9 @@
 
   .landing-about-container {
     background-color: var(--cur-bg-large-color);
+    .dark & {
+      background-color: var(--cur-bg-color-grey);
+    }
     margin: 0;
     margin-top: -6rem;
     max-width: 100%;
@@ -121,27 +124,28 @@
           border-radius: var(--elem-radius);
           box-shadow: var(--module-shadow);
           display: grid;
-          gap: 1rem;
           grid-area: li;
-          grid-template-columns: auto;
+          grid-template-columns: auto auto auto;
           justify-content: center;
           margin: auto;
           min-height: 5rem;
           padding: 1rem;
           transform: translateY(-1rem);
+          color: var(--text-secondary);
           width: 100%;
           @media screen and (min-width: $screen-sm) {
-            grid-template-columns: auto auto auto;
             justify-content: start;
+            gap: 1rem;
           }
           @media screen and (min-width: $screen-lg) {
             justify-content: center;
           }
 
           > li {
-            margin: 0 1rem;
+            margin: 0 0.5rem;
             text-align: center;
             @media screen and (min-width: $screen-sm) {
+              margin: 0 1rem;
               width: max-content;
             }
             @media screen and (min-width: $screen-md) {
@@ -190,6 +194,7 @@
         p {
           align-items: center;
           display: grid;
+          color: var(--text-secondary);
           grid-template-columns: auto auto;
 
           &::before {
@@ -249,8 +254,8 @@
     max-width: 100%;
 
     > div {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-areas: "a" "b";
       justify-content: center;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
@@ -258,18 +263,31 @@
       padding-left: var(--gutter);
       padding-right: var(--gutter);
       width: 100%;
+      @media screen and (min-width: $screen-md) {
+        grid-template-areas: "a b";
+        grid-template-columns: 1fr 1.4fr;
+      }
 
       > svg {
         &:nth-child(1) {
-          min-width: min(18rem, 90vw);
+          grid-area: a;
           transform: translateX(2vw);
-          width: 42%;
         }
 
         &:nth-child(2) {
-          min-width: min(32rem, 90vw);
+          grid-area: b;
+          display: none;
+          @media screen and (min-width: $screen-md) {
+            display: initial;
+          }
           transform: translateX(-5vw);
-          width: 58%;
+        }
+        &:nth-child(3) {
+          grid-area: b;
+          @media screen and (min-width: $screen-md) {
+            display: none;
+          }
+          max-width: 100%;
         }
 
         #text29 {
@@ -310,10 +328,14 @@
         overflow: scroll;
         scroll-snap-type: inline mandatory;
         @media screen and (min-width: $screen-md) {
-          gap: 5rem 8rem;
+          gap: 5rem 4rem;
           grid-template-areas:
             "beginner advanced"
             "employ educator";
+          grid-template-columns: auto auto;
+        }
+        @media screen and (min-width: $screen-lg) {
+          gap: 5rem 8rem;
         }
 
         > li {
@@ -334,7 +356,7 @@
           border-radius: var(--elem-radius);
           width: 80vw;
 
-          @media screen and (min-width: $screen-sm) {
+          @media screen and (min-width: $screen-md) {
             width: initial;
             background-color: initial;
             padding: 0;
@@ -354,7 +376,7 @@
             display: inline-block;
             height: 3rem;
             width: 3rem;
-            @media screen and (min-width: $screen-sm) {
+            @media screen and (min-width: $screen-md) {
               grid-area: i;
               height: 5rem;
               width: 5rem;
@@ -434,7 +456,7 @@
 
             grid-area: c;
             justify-self: center;
-            @media screen and (min-width: $screen-sm) {
+            @media screen and (min-width: $screen-md) {
               justify-self: start;
             }
             &:hover {

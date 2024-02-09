@@ -13,7 +13,7 @@ export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
       <hr />
       {modules.map((c, i) => {
         return (
-          <li>
+          <li key={`mll-${i}`}>
             <input
               className="visually-hidden"
               id={`module-${i}`}
@@ -44,7 +44,7 @@ export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
       {modules.map((c, j) => {
         return (
           <li
-            key={j}
+            key={`ml-${j}`}
             className={`module-list-item topic-${topic2css(c.topic)}`}
           >
             <header>
