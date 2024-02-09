@@ -17,13 +17,13 @@ export function Sidebar({
     >
       <ol>
         {sidebar.map((o, i) => (
-          <li key={i}>
+          <li key={`sb-${i}`}>
             <SidebarLink current={current} url={o.url} title={o.title} />
             {o.children && (
               <ol>
                 {o.children.map((c, j) => {
                   return (
-                    <li key={`${i}-${j}`}>
+                    <li key={`sb-${i}-${j}`}>
                       <SidebarLink
                         current={current}
                         url={c.url}

@@ -47,24 +47,34 @@
 
       hr {
         border: none;
+        border-top: 1px solid var(--text-inactive);
         grid-area: hr;
         margin: 0 0 1.5rem;
         width: 100%;
-        @media screen and (min-width: $screen-md) {
-          border-top: 1px solid var(--text-primary);
-        }
       }
 
       li {
         display: contents;
 
-        > input:checked + label::before {
-          position: absolute;
-          transform: translate3d(-0.75rem, 0.75rem, 0);
+        > input:checked + label {
+          color: var(--text-primary);
+
+          &::before {
+            height: 0;
+            position: absolute;
+            transform: translate3d(-0.75rem, 0.75rem, 0);
+            width: 0;
+          }
+        }
+
+        > input:checked:focus-visible + label {
+          outline-color: var(--accent-primary);
+          outline-offset: 1px;
+          outline-style: auto;
         }
 
         > label {
-          color: var(--text-secondary);
+          color: var(--text-inactive);
           cursor: pointer;
         }
 
@@ -75,7 +85,7 @@
           }
 
           > input:checked + label::before {
-            content: url("../assets/icons/cur-modules-underline-1.svg");
+            content: url("../assets/icons/cur-modules-underline.svg#1");
           }
         }
 
@@ -89,7 +99,7 @@
           }
 
           > input:checked + label::before {
-            content: url("../assets/icons/cur-modules-underline-2.svg");
+            content: url("../assets/icons/cur-modules-underline.svg#2");
           }
         }
 
@@ -103,14 +113,13 @@
           }
 
           > input:checked + label::before {
-            content: url("../assets/icons/cur-modules-underline-3.svg");
+            content: url("../assets/icons/cur-modules-underline.svg#3");
           }
         }
 
         > ol {
           grid-area: mod;
           margin: 0;
-          padding: 0;
         }
 
         > a {
@@ -127,23 +136,18 @@
       display: grid;
       flex-wrap: wrap;
       gap: 1rem;
+      grid-template-columns: 1fr 1fr 1fr;
       margin: 0;
-      padding: 0;
-      @media screen and (min-width: $screen-sm) {
-        grid-template-columns: 1fr;
-      }
+      overflow: scroll;
+      padding: 0.5rem;
+      scroll-snap-type: inline mandatory;
       @media screen and (min-width: $screen-md) {
-        grid-template-columns: 1fr 1fr;
-      }
-      @media screen and (min-width: $screen-xl) {
-        grid-template-columns: 1fr 1fr 1fr;
+        overflow: inherit;
+        padding: 0;
       }
 
-      @container module-list (width >= 25rem) {
-        grid-template-columns: 1fr 1fr;
-      }
-      @container module-list (width >= 38rem) {
-        grid-template-columns: 1fr 1fr 1fr;
+      :focus-visible {
+        outline-offset: -2px;
       }
 
       .module-list-item {
@@ -154,7 +158,14 @@
         flex-direction: column;
         justify-self: center;
         max-width: 20rem;
+        min-width: 15rem;
+        overflow: auto;
+        padding: 0;
+        scroll-snap-align: center;
         width: 100%;
+        @media screen and (min-width: $screen-md) {
+          min-width: initial;
+        }
 
         .dark & {
           background-color: #000;
@@ -169,9 +180,23 @@
             height: 10rem;
             padding: 1rem 2rem;
 
-            .topic-icon {
+            .dark & {
+              background-color: var(--cur-bg-color-grey);
+            }
+
+            svg.topic-icon {
               height: 4rem;
               width: 4rem;
+
+              .dark & {
+                circle {
+                  fill: var(--cur-bg-color-topic);
+                }
+
+                path {
+                  fill: #000;
+                }
+              }
             }
 
             > span {
@@ -200,8 +225,25 @@
 
           p:last-child {
             color: var(--cur-color-topic);
+            font-weight: 600;
           }
         }
+      }
+      @media screen and (min-width: $screen-sm) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media screen and (min-width: $screen-md) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media screen and (min-width: $screen-xxl) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      @container module-list (width >= 25rem) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @container module-list (width >= 38rem) {
+        grid-template-columns: 1fr 1fr 1fr;
       }
     }
   }

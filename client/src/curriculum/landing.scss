@@ -18,6 +18,8 @@
   }
 
   .curriculum-content {
+    padding-top: 0;
+
     ol.modules-list {
       @media screen and (min-width: $screen-sm) {
         grid-template-columns: 1fr 1fr;
@@ -32,39 +34,65 @@
   }
 
   header.landing-header {
-    display: flex;
-    flex-direction: row-reverse;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-areas: "copy" "svg";
+    @media screen and (min-width: $screen-md) {
+      grid-template-areas: "copy svg";
+      grid-template-columns: 30rem auto;
+    }
 
     > svg {
-      width: 40%;
+      align-self: end;
+      grid-area: svg;
+      justify-self: end;
+      margin-bottom: 3rem;
+      max-width: 28rem;
+      width: 100%;
       z-index: 1;
+      @media screen and (min-width: $screen-md) {
+        margin-bottom: 0;
+      }
 
       #icons-bg {
         fill: var(--cur-bg-color);
       }
 
       .laptop {
-        fill: var(--cur-color);
+        fill: var(--cur-category-color);
+
+        .dark & {
+          fill: var(--cur-bg-color-orange);
+        }
       }
     }
 
     > section {
-      margin-bottom: 4rem;
+      grid-area: copy;
       margin-right: auto;
-      min-width: min(30rem, 90vw);
+      margin-top: 3rem;
+      max-width: 30rem;
       padding-right: 1rem;
-      width: 30rem;
+      @media screen and (min-width: $screen-md) {
+        margin-bottom: 4rem;
+      }
 
       h1 {
         color: var(--cur-color-topic);
-        margin-bottom: 1rem;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        @media screen and (min-width: $screen-md) {
+          font-size: 2.5rem;
+        }
       }
 
       h2 {
-        margin-bottom: 2rem;
-        margin-top: 1rem;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
+        @media screen and (min-width: $screen-md) {
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
       }
 
       p {
@@ -110,14 +138,14 @@
         display: contents;
 
         ul {
-          align-items: center;
+          align-items: start;
           background-color: var(--background-primary);
           border-radius: var(--elem-radius);
           box-shadow: var(--module-shadow);
+          color: var(--text-secondary);
           display: grid;
-          gap: 1rem;
           grid-area: li;
-          grid-template-columns: auto;
+          grid-template-columns: auto auto auto;
           justify-content: center;
           margin: auto;
           min-height: 5rem;
@@ -125,7 +153,10 @@
           transform: translateY(-1rem);
           width: 100%;
           @media screen and (min-width: $screen-sm) {
-            grid-template-columns: auto auto auto;
+            align-items: center;
+            gap: 1rem;
+          }
+          @media screen and (min-width: $screen-md) {
             justify-content: start;
           }
           @media screen and (min-width: $screen-lg) {
@@ -133,9 +164,10 @@
           }
 
           > li {
-            margin: 0 1rem;
+            margin: 0 0.5rem;
             text-align: center;
             @media screen and (min-width: $screen-sm) {
+              margin: 0 1rem;
               width: max-content;
             }
             @media screen and (min-width: $screen-md) {
@@ -183,10 +215,12 @@
 
         p {
           align-items: center;
+          color: var(--text-secondary);
           display: grid;
           grid-template-columns: auto auto;
 
           &::before {
+            align-self: start;
             display: block;
             height: 4rem;
             width: 4rem;
@@ -242,8 +276,10 @@
     max-width: 100%;
 
     > div {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-areas: "a" "b";
+      grid-template-columns: auto;
+      grid-template-rows: auto auto;
       justify-content: center;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
@@ -251,18 +287,36 @@
       padding-left: var(--gutter);
       padding-right: var(--gutter);
       width: 100%;
+      @media screen and (min-width: $screen-md) {
+        grid-template-areas: "a b";
+        grid-template-columns: 1fr 1.4fr;
+      }
 
       > svg {
         &:nth-child(1) {
-          min-width: min(18rem, 90vw);
+          font-size: 2rem;
+          grid-area: a;
           transform: translateX(2vw);
-          width: 42%;
+          width: 100%;
         }
 
         &:nth-child(2) {
-          min-width: min(32rem, 90vw);
+          display: none;
+          grid-area: b;
           transform: translateX(-5vw);
-          width: 58%;
+          width: 100%;
+          @media screen and (min-width: $screen-md) {
+            display: initial;
+          }
+        }
+
+        &:nth-child(3) {
+          grid-area: b;
+          max-width: 100%;
+          width: 100%;
+          @media screen and (min-width: $screen-md) {
+            display: none;
+          }
         }
 
         #text29 {
@@ -270,7 +324,7 @@
         }
 
         text {
-          fill: var(--text-primary);
+          fill: var(--text-secondary);
         }
 
         .color {
@@ -296,42 +350,65 @@
     ~ div {
       > ul {
         display: grid;
-        gap: 5rem 8rem;
-        grid-template-areas:
-          "beginner"
-          "advanced"
-          "employ"
-          "educator";
+        gap: 1rem;
+        grid-template-areas: "beginner advanced employ educator";
         margin: 0 auto;
         max-width: 52rem;
+        overflow: scroll;
+        scroll-snap-type: inline mandatory;
         @media screen and (min-width: $screen-md) {
+          gap: 5rem 4rem;
           grid-template-areas:
             "beginner advanced"
             "employ educator";
+          grid-template-columns: auto auto;
+        }
+        @media screen and (min-width: $screen-lg) {
+          gap: 5rem 8rem;
         }
 
         > li {
           align-items: center;
+          background-color: var(--cur-bg-large-color);
+          border-radius: var(--elem-radius);
           color: var(--text-secondary);
           display: grid;
           gap: 1rem;
-          @media screen and (min-width: $screen-sm) {
+          grid-template-areas:
+            "i h"
+            "p p"
+            "c c";
+          grid-template-columns: 3rem 1fr;
+          grid-template-rows: 4rem minmax(7rem, max-content) max-content;
+          height: max-content;
+          padding: 1rem 0.5rem;
+          scroll-snap-align: center;
+          width: 80vw;
+
+          @media screen and (min-width: $screen-md) {
             align-items: start;
+            background-color: initial;
             gap: 1rem 2rem;
             grid-template-areas:
               "i h"
               "i p"
               "i c";
+            grid-template-columns: auto auto;
             grid-template-rows: 4rem auto max-content;
+            height: initial;
+            padding: 0;
+            width: initial;
           }
 
           &::before {
             align-self: start;
             display: inline-block;
-            height: 5rem;
-            width: 5rem;
-            @media screen and (min-width: $screen-sm) {
+            height: 3rem;
+            width: 3rem;
+            @media screen and (min-width: $screen-md) {
               grid-area: i;
+              height: 5rem;
+              width: 5rem;
             }
           }
 
@@ -373,6 +450,11 @@
             margin-top: 0;
           }
 
+          em {
+            align-self: start;
+            grid-area: p;
+          }
+
           a {
             --button-bg: var(--button-primary-default);
             --button-bg-hover: var(--button-primary-hover);
@@ -392,7 +474,10 @@
             display: flex;
             font: var(--button-font);
             gap: 0.25rem;
+
+            grid-area: c;
             justify-content: center;
+            justify-self: center;
             min-height: var(--button-height);
             padding: 0.5rem;
             padding-left: var(--button-padding);
@@ -400,6 +485,9 @@
             position: relative;
             text-align: center;
             width: fit-content;
+            @media screen and (min-width: $screen-md) {
+              justify-self: start;
+            }
 
             &:hover {
               background-color: var(--button-bg-hover, var(--button-bg));
