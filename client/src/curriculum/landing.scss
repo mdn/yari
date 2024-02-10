@@ -58,11 +58,7 @@
       }
 
       .laptop {
-        fill: var(--cur-category-color);
-
-        .dark & {
-          fill: var(--cur-bg-color-orange);
-        }
+        fill: var(--cur-color-landing-laptop);
       }
     }
 
@@ -141,7 +137,7 @@
           align-items: start;
           background-color: var(--background-primary);
           border-radius: var(--elem-radius);
-          box-shadow: var(--module-shadow);
+          box-shadow: var(--cur-shadow);
           color: var(--text-secondary);
           display: grid;
           grid-area: li;
@@ -188,27 +184,15 @@
             }
 
             &:nth-child(1)::before {
-              content: url("../assets/icons/cur-landing-about-beginner.svg#light");
-
-              .dark & {
-                content: url("../assets/icons/cur-landing-about-beginner.svg#dark");
-              }
+              content: var(--cur-landing-about-beginner);
             }
 
             &:nth-child(2)::before {
-              content: url("../assets/icons/cur-landing-about-pace.svg");
-
-              .dark & {
-                content: url("../assets/icons/cur-landing-about-pace.svg#dark");
-              }
+              content: var(--cur-landing-about-pace);
             }
 
             &:nth-child(3)::before {
-              content: url("../assets/icons/cur-landing-about-free.svg");
-
-              .dark & {
-                content: url("../assets/icons/cur-landing-about-free.svg#dark");
-              }
+              content: var(--cur-landing-about-free);
             }
           }
         }
@@ -230,11 +214,7 @@
             grid-area: p1;
 
             &::before {
-              content: url("../assets/icons/cur-landing-about-bullet.svg#light");
-
-              .dark & {
-                content: url("../assets/icons/cur-landing-about-bullet.svg#dark");
-              }
+              content: var(--cur-landing-about-bullet);
             }
           }
 
@@ -242,11 +222,7 @@
             grid-area: p2;
 
             &::before {
-              content: url("../assets/icons/cur-landing-about-bullet.svg#light");
-
-              .dark & {
-                content: url("../assets/icons/cur-landing-about-bullet.svg#dark");
-              }
+              content: var(--cur-landing-about-bullet);
             }
           }
 
@@ -413,35 +389,19 @@
           }
 
           &:nth-child(1)::before {
-            content: url("../assets/icons/cur-landing-started-beginner.svg#light");
-
-            .dark & {
-              content: url("../assets/icons/cur-landing-started-beginner.svg#dark");
-            }
+            content: var(--cur-landing-started-beginner);
           }
 
           &:nth-child(2)::before {
-            content: url("../assets/icons/cur-landing-started-advanced.svg#light");
-
-            .dark & {
-              content: url("../assets/icons/cur-landing-started-advanced.svg#dark");
-            }
+            content: var(--cur-landing-started-advanced);
           }
 
           &:nth-child(3)::before {
-            content: url("../assets/icons/cur-landing-started-employment.svg#light");
-
-            .dark & {
-              content: url("../assets/icons/cur-landing-started-employment.svg#dark");
-            }
+            content: var(--cur-landing-started-employment);
           }
 
           &:nth-child(4)::before {
-            content: url("../assets/icons/cur-landing-started-educator.svg#light");
-
-            .dark & {
-              content: url("../assets/icons/cur-landing-started-educator.svg#dark");
-            }
+            content: var(--cur-landing-started-educator);
           }
 
           h3 {

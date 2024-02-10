@@ -232,6 +232,40 @@
   --cur-color-topic-scripting: #{$mdn-color-light-theme-yellow-60};
   --cur-color-topic-tooling: #{$mdn-color-light-theme-green-60};
   --cur-color-topic-practices: #{$mdn-color-light-theme-violet-60};
+  --cur-color-landing-laptop: #e3642a;
+  --cur-bg-color-list-item-body: #fff;
+  --cur-color-list-item-icon-topic-standards: #{$mdn-color-light-theme-red-60};
+  --cur-color-list-item-icon-topic-styling: #{$mdn-color-light-theme-blue-60};
+  --cur-color-list-item-icon-topic-scripting: #{$mdn-color-light-theme-yellow-60};
+  --cur-color-list-item-icon-topic-tooling: #{$mdn-color-light-theme-green-60};
+  --cur-color-list-item-icon-topic-practices: #{$mdn-color-light-theme-violet-60};
+  --cur-bg-color-list-item-icon-topic-standards: #fff;
+  --cur-bg-color-list-item-icon-topic-styling: #fff;
+  --cur-bg-color-list-item-icon-topic-scripting: #fff;
+  --cur-bg-color-list-item-icon-topic-tooling: #fff;
+  --cur-bg-color-list-item-icon-topic-practices: #fff;
+  --cur-bg-color-list-item-topic-standards: #{$mdn-color-light-theme-red-50}30;
+  --cur-bg-color-list-item-topic-styling: #{$mdn-color-light-theme-blue-50}30;
+  --cur-bg-color-list-item-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
+  --cur-bg-color-list-item-topic-tooling: #{$mdn-color-light-theme-green-50}30;
+  --cur-bg-color-list-item-topic-practices: #{$mdn-color-light-theme-violet-50}30;
+  --cur-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
+    -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
+
+  --cur-landing-about-beginner: url("../../assets/icons/cur-landing-about-beginner.svg#light");
+  --cur-landing-about-pace: url("../../assets/icons/cur-landing-about-pace.svg#light");
+  --cur-landing-about-free: url("../../assets/icons/cur-landing-about-free.svg#light");
+  --cur-landing-about-bullet: url("../../assets/icons/cur-landing-about-bullet.svg#light");
+  --cur-landing-started-beginner: url("../../assets/icons/cur-landing-started-beginner.svg#small-light");
+  --cur-landing-started-advanced: url("../../assets/icons/cur-landing-started-advanced.svg#small-light");
+  --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#small-light");
+  --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#small-light");
+  @media screen and (min-width: $screen-md) {
+    --cur-landing-started-beginner: url("../../assets/icons/cur-landing-started-beginner.svg#light");
+    --cur-landing-started-advanced: url("../../assets/icons/cur-landing-started-advanced.svg#light");
+    --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#light");
+    --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#light");
+  }
 
   color-scheme: light;
 }
@@ -467,6 +501,40 @@
   --cur-category-color: #e3642a;
   --cur-bg-color-grey: #1f1c1a;
   --cur-bg-color-orange: #b25c35;
+  --cur-color-landing-laptop: #b25c35;
+  --cur-bg-color-list-item-body: #000;
+  --cur-color-list-item-icon-topic-standards: #000;
+  --cur-color-list-item-icon-topic-styling: #000;
+  --cur-color-list-item-icon-topic-scripting: #000;
+  --cur-color-list-item-icon-topic-tooling: #000;
+  --cur-color-list-item-icon-topic-practices: #000;
+  --cur-bg-color-list-item-topic-standards: #343434;
+  --cur-bg-color-list-item-topic-styling: #343434;
+  --cur-bg-color-list-item-topic-scripting: #343434;
+  --cur-bg-color-list-item-topic-tooling: #343434;
+  --cur-bg-color-list-item-topic-practices: #343434;
+  --cur-bg-color-list-item-icon-topic-standards: #994b53;
+  --cur-bg-color-list-item-icon-topic-styling: #4e609e;
+  --cur-bg-color-list-item-icon-topic-scripting: #7d683d;
+  --cur-bg-color-list-item-icon-topic-tooling: #584280;
+  --cur-bg-color-list-item-icon-topic-practices: #3d7c4b;
+  --cur-shadow: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
+    -4px 4px 8px 0 rgb(36, 36, 36);
+
+  --cur-landing-about-beginner: url("../../assets/icons/cur-landing-about-beginner.svg#dark");
+  --cur-landing-about-pace: url("../../assets/icons/cur-landing-about-pace.svg#dark");
+  --cur-landing-about-free: url("../../assets/icons/cur-landing-about-free.svg#dark");
+  --cur-landing-about-bullet: url("../../assets/icons/cur-landing-about-bullet.svg#dark");
+  --cur-landing-started-beginner: url("../../assets/icons/cur-landing-started-beginner.svg#small-dark");
+  --cur-landing-started-advanced: url("../../assets/icons/cur-landing-started-advanced.svg#small-dark");
+  --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#small-dark");
+  --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#small-dark");
+  @media screen and (min-width: $screen-md) {
+    --cur-landing-started-beginner: url("../../assets/icons/cur-landing-started-beginner.svg#dark");
+    --cur-landing-started-advanced: url("../../assets/icons/cur-landing-started-advanced.svg#dark");
+    --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#dark");
+    --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#dark");
+  }
 
   color-scheme: dark;
 }

@@ -2,14 +2,6 @@
 
 .curriculum-content-container.with-sidebar,
 .curriculum-content-container {
-  --module-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
-    -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
-
-  .dark & {
-    --module-shadow: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
-      -4px 4px 8px 0 rgb(36, 36, 36);
-  }
-
   .curriculum-content {
     .modules {
       input[type="radio"]:not(:checked) ~ a,
@@ -151,9 +143,10 @@
       }
 
       .module-list-item {
+        background-color: var(--cur-bg-color-list-item-body);
         border: 0;
         border-radius: var(--elem-radius);
-        box-shadow: var(--module-shadow);
+        box-shadow: var(--cur-shadow);
         display: flex;
         flex-direction: column;
         justify-self: center;
@@ -167,35 +160,25 @@
           min-width: initial;
         }
 
-        .dark & {
-          background-color: #000;
-        }
-
         > header {
           a {
             align-items: center;
-            background-color: var(--cur-bg-color-topic);
+            background-color: var(--cur-bg-color-list-item-header);
             display: flex;
             flex-direction: column;
             height: 10rem;
             padding: 1rem 2rem;
 
-            .dark & {
-              background-color: var(--cur-bg-color-grey);
-            }
-
             svg.topic-icon {
               height: 4rem;
               width: 4rem;
 
-              .dark & {
-                circle {
-                  fill: var(--cur-bg-color-topic);
-                }
+              circle {
+                fill: var(--cur-bg-color-list-item-icon);
+              }
 
-                path {
-                  fill: #000;
-                }
+              path {
+                fill: var(--cur-color-list-item-icon);
               }
             }
 
