@@ -28,7 +28,10 @@ export function CurriculumLayout({
       <>
         <div className="sticky-header-container">
           <TopNavigation />
-          <ArticleActionsContainer doc={doc} />
+          <ArticleActionsContainer
+            doc={doc}
+            withSidebar={withSidebar && Boolean(doc.sidebar)}
+          />
         </div>
         <main
           className={[
