@@ -5,9 +5,17 @@
       --path: #E3642A;
     }
 
+    .small.light {
+      --circle: #FFF;
+    }
+
     .dark {
       --circle: #B25C354D;
       --path: #E3642A;
+    }
+
+    .small.dark {
+      --circle: #000;
     }
   </style>
   <defs>
@@ -22,4 +30,8 @@
   <use href="#i" class="light" />
   <view id="dark" viewBox="0 82 82 82" />
   <use y="82" href="#i" class="dark" />
+  <view id="small-light" viewBox="0 164 82 82" />
+  <use y="164" href="#i" class="small light" />
+  <view id="small-dark" viewBox="0 246 82 82" />
+  <use y="246" href="#i" class="small dark" />
 </svg>

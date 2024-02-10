@@ -10,26 +10,61 @@
   .topic-standards {
     --cur-bg-color-topic: var(--cur-bg-color-topic-standards);
     --cur-color-topic: var(--cur-color-topic-standards);
+    --cur-bg-color-list-item-header: var(
+      --cur-bg-color-list-item-topic-standards
+    );
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-standards);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-standards
+    );
   }
 
   .topic-styling {
     --cur-bg-color-topic: var(--cur-bg-color-topic-styling);
     --cur-color-topic: var(--cur-color-topic-styling);
+    --cur-bg-color-list-item-header: var(
+      --cur-bg-color-list-item-topic-styling
+    );
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-styling);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-styling
+    );
   }
 
   .topic-scripting {
     --cur-bg-color-topic: var(--cur-bg-color-topic-scripting);
     --cur-color-topic: var(--cur-color-topic-scripting);
+    --cur-bg-color-list-item-header: var(
+      --cur-bg-color-list-item-topic-scripting
+    );
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-scripting);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-scripting
+    );
   }
 
   .topic-tooling {
     --cur-bg-color-topic: var(--cur-bg-color-topic-tooling);
     --cur-color-topic: var(--cur-color-topic-tooling);
+    --cur-bg-color-list-item-header: var(
+      --cur-bg-color-list-item-topic-tooling
+    );
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-tooling);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-tooling
+    );
   }
 
   .topic-practices {
     --cur-bg-color-topic: var(--cur-bg-color-topic-practices);
     --cur-color-topic: var(--cur-color-topic-practices);
+    --cur-bg-color-list-item-header: var(
+      --cur-bg-color-list-item-topic-practices
+    );
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-practices);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-practices
+    );
   }
 
   .curriculum-content {
