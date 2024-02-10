@@ -17,22 +17,40 @@ export function Sidebar({
     >
       <ol>
         {sidebar.map((o, i) => (
-          <li key={`sb-${i}`}>
-            <SidebarLink current={current} url={o.url} title={o.title} />
-            {o.children && (
-              <ol>
-                {o.children.map((c, j) => {
-                  return (
-                    <li key={`sb-${i}-${j}`}>
-                      <SidebarLink
-                        current={current}
-                        url={c.url}
-                        title={c.title}
-                      />
-                    </li>
-                  );
-                })}
-              </ol>
+          <li
+            className={o.children && o.children?.length ? "toggle" : ""}
+            key={`sb-${i}`}
+          >
+            {o.children && o.children?.length ? (
+              <details
+                open={
+                  o.children.some((c) => c.url === current) || o.url === current
+                }
+              >
+                <summary>{o.title}</summary>
+                <ol>
+                  <li>
+                    <SidebarLink
+                      current={current}
+                      url={o.url}
+                      title={o.title}
+                    />
+                  </li>
+                  {o.children.map((c, j) => {
+                    return (
+                      <li key={`sb-${i}-${j}`}>
+                        <SidebarLink
+                          current={current}
+                          url={c.url}
+                          title={c.title}
+                        />
+                      </li>
+                    );
+                  })}
+                </ol>
+              </details>
+            ) : (
+              <SidebarLink current={current} url={o.url} title={o.title} />
             )}
           </li>
         ))}
