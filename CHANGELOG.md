@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.39.2](https://github.com/mdn/yari/compare/v2.39.1...v2.39.2) (2024-02-09)
+
+
+### Bug Fixes
+
+* **baseline:** blocklist some bcd keys from input-event ([#10493](https://github.com/mdn/yari/issues/10493)) ([c2a9ffc](https://github.com/mdn/yari/commit/c2a9ffc81b0265a2d58f8c8fbd62f01e94c987d5))
+
+
+### Miscellaneous
+
+* **ai-help:** remove old index script ([#10484](https://github.com/mdn/yari/issues/10484)) ([bacf525](https://github.com/mdn/yari/commit/bacf52544c1529b5f640837a740038c8011ccd6b))
+* **deps-dev:** bump postcss from 8.4.34 to 8.4.35 ([#10481](https://github.com/mdn/yari/issues/10481)) ([1140572](https://github.com/mdn/yari/commit/1140572b0228774efeac6bac5b4b75531ddd3800))
+* **deps-dev:** bump the types group with 1 update ([#10480](https://github.com/mdn/yari/issues/10480)) ([8b573ed](https://github.com/mdn/yari/commit/8b573edc92c78c45333b533f67b281a5d3ccb3e0))
+* **deps:** bump @mdn/browser-compat-data from 5.5.9 to 5.5.10 ([#10489](https://github.com/mdn/yari/issues/10489)) ([4cab20b](https://github.com/mdn/yari/commit/4cab20b642906a289d7c6fba19bd8a2219c63a5e))
+* **deps:** bump @webref/css from 6.11.0 to 6.11.1 ([#10491](https://github.com/mdn/yari/issues/10491)) ([e047988](https://github.com/mdn/yari/commit/e047988aa60c515ff18ad47d10e02b2c5ab76136))
+* **deps:** bump dexie from 3.2.4 to 3.2.5 ([#10490](https://github.com/mdn/yari/issues/10490)) ([a38c494](https://github.com/mdn/yari/commit/a38c4944308962ea18256e18a69a63b80a27a6eb))
+* **deps:** bump dexie from 3.2.4 to 3.2.5 in /client/pwa ([#10488](https://github.com/mdn/yari/issues/10488)) ([5253e44](https://github.com/mdn/yari/commit/5253e44ec8c4282480e09b00aa69cefaeb656592))
+* **deps:** bump openai from 4.26.1 to 4.27.0 ([#10492](https://github.com/mdn/yari/issues/10492)) ([2ef9ba3](https://github.com/mdn/yari/commit/2ef9ba302eb7da6c273f3a84ebeaf383fd75aa59))
+
 ## [2.39.1](https://github.com/mdn/yari/compare/v2.39.0...v2.39.1) (2024-02-07)
 
 
