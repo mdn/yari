@@ -27,13 +27,13 @@ export function Sidebar({
                   o.children.some((c) => c.url === current) || o.url === current
                 }
               >
-                <summary>{o.title}</summary>
+                <summary>{o.title} module</summary>
                 <ol>
                   <li>
                     <SidebarLink
                       current={current}
                       url={o.url}
-                      title={o.title}
+                      title={`${o.title} overview`}
                     />
                   </li>
                   {o.children.map((c, j) => {
