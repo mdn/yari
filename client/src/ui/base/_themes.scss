@@ -219,12 +219,17 @@
   --baseline-limited-cross: #ea8600;
 
   --cur-bg-color: #fcefe2;
+  --cur-bg-color-note: rgba(252, 239, 226, 0.5);
   --cur-bg-large-color: #fcefe2;
   --cur-bg-color-topic-standards: #{$mdn-color-light-theme-red-50}30;
   --cur-bg-color-topic-styling: #{$mdn-color-light-theme-blue-50}30;
   --cur-bg-color-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
   --cur-bg-color-topic-tooling: #{$mdn-color-light-theme-green-50}30;
   --cur-bg-color-topic-practices: #{$mdn-color-light-theme-violet-50}30;
+  --cur-bg-color-landing: #fff;
+  --cur-bg-color-landing-about-ul: #fff;
+  --cur-bg-color-landing-top-icon: #fcefe2;
+  --cur-bg-color-landing-ladder-floor: #fcefe2;
   --cur-category-color: #e3642a;
   --cur-color: #d47d55;
   --cur-color-topic-standards: #{$mdn-color-light-theme-red-60};
@@ -251,6 +256,8 @@
   --cur-bg-color-list-item-topic-practices: #{$mdn-color-light-theme-violet-50}30;
   --cur-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
     -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
+  --cur-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
+    0 -2px 4px 0 rgba(178, 92, 53, 0.06);
 
   --cur-landing-about-beginner: url("../../assets/icons/cur-landing-about-beginner.svg#light");
   --cur-landing-about-pace: url("../../assets/icons/cur-landing-about-pace.svg#light");
@@ -265,6 +272,7 @@
     --cur-landing-started-advanced: url("../../assets/icons/cur-landing-started-advanced.svg#light");
     --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#light");
     --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#light");
+    --cur-module-mdn-resource: url("../../assets/icons/cur-mdn-resource.svg#light");
   }
 
   color-scheme: light;
@@ -492,12 +500,17 @@
   --cur-color-topic-tooling: #ce93fa;
   --cur-color-topic-practices: #55ab2d;
   --cur-bg-color: #664b33;
+  --cur-bg-color-note: #664b33;
   --cur-bg-large-color: #343434;
   --cur-bg-color-topic-standards: #994b53;
   --cur-bg-color-topic-styling: #4e609e;
   --cur-bg-color-topic-scripting: #7d683d;
   --cur-bg-color-topic-tooling: #584280;
   --cur-bg-color-topic-practices: #3d7c4b;
+  --cur-bg-color-landing: #0e0b0a;
+  --cur-bg-color-landing-about-ul: #000;
+  --cur-bg-color-landing-top-icon: rgba(178, 92, 53, 0.3);
+  --cur-bg-color-landing-ladder-floor: rgba(137, 91, 51, 1);
   --cur-category-color: #e3642a;
   --cur-bg-color-grey: #1f1c1a;
   --cur-bg-color-orange: #b25c35;
@@ -508,17 +521,19 @@
   --cur-color-list-item-icon-topic-scripting: #000;
   --cur-color-list-item-icon-topic-tooling: #000;
   --cur-color-list-item-icon-topic-practices: #000;
-  --cur-bg-color-list-item-topic-standards: #343434;
-  --cur-bg-color-list-item-topic-styling: #343434;
-  --cur-bg-color-list-item-topic-scripting: #343434;
-  --cur-bg-color-list-item-topic-tooling: #343434;
-  --cur-bg-color-list-item-topic-practices: #343434;
+  --cur-bg-color-list-item-topic-standards: #1f1c1a;
+  --cur-bg-color-list-item-topic-styling: #1f1c1a;
+  --cur-bg-color-list-item-topic-scripting: #1f1c1a;
+  --cur-bg-color-list-item-topic-tooling: #1f1c1a;
+  --cur-bg-color-list-item-topic-practices: #1f1c1a;
   --cur-bg-color-list-item-icon-topic-standards: #994b53;
   --cur-bg-color-list-item-icon-topic-styling: #4e609e;
   --cur-bg-color-list-item-icon-topic-scripting: #7d683d;
   --cur-bg-color-list-item-icon-topic-tooling: #584280;
   --cur-bg-color-list-item-icon-topic-practices: #3d7c4b;
   --cur-shadow: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
+    -4px 4px 8px 0 rgb(36, 36, 36);
+  --cur-shadow-landing-about-ul: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
     -4px 4px 8px 0 rgb(36, 36, 36);
 
   --cur-landing-about-beginner: url("../../assets/icons/cur-landing-about-beginner.svg#dark");
@@ -534,6 +549,7 @@
     --cur-landing-started-advanced: url("../../assets/icons/cur-landing-started-advanced.svg#dark");
     --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#dark");
     --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#dark");
+    --cur-module-mdn-resource: url("../../assets/icons/cur-mdn-resource.svg#dark");
   }
 
   color-scheme: dark;

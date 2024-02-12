@@ -62,7 +62,11 @@ export function CurriculumLayout({
               </div>
             </div>
           )}
-          <article className="curriculum-content" lang={doc?.locale}>
+          <article
+            id="content"
+            className="curriculum-content"
+            lang={doc?.locale}
+          >
             {children}
           </article>
         </main>

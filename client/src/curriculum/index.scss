@@ -177,7 +177,7 @@
       }
 
       blockquote.curriculum-notes {
-        background-color: #fcefe299;
+        background-color: var(--cur-bg-color-note);
         border: 0;
         border-radius: var(--elem-radius);
         margin: 1rem;

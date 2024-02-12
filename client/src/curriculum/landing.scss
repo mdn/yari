@@ -1,6 +1,7 @@
 @use "../ui/vars" as *;
 
 .curriculum-content-container.curriculum-landing {
+  background-color: var(--cur-bg-color-landing);
   margin: 0;
   max-width: 100%;
   padding: 0;
@@ -54,7 +55,7 @@
       }
 
       #icons-bg {
-        fill: var(--cur-bg-color);
+        fill: var(--cur-bg-color-landing-top-icon);
       }
 
       .laptop {
@@ -135,9 +136,9 @@
 
         ul {
           align-items: start;
-          background-color: var(--background-primary);
+          background-color: var(--cur-bg-color-landing-about-ul);
           border-radius: var(--elem-radius);
-          box-shadow: var(--cur-shadow);
+          box-shadow: var(--cur-shadow-landing-about-ul);
           color: var(--text-secondary);
           display: grid;
           grid-area: li;

@@ -49,7 +49,7 @@
             }
 
             &:not(.external) {
-              list-style-image: url("../assets/icons/cur-mdn-resource.svg");
+              list-style-image: var(--cur-module-mdn-resource);
             }
 
             &.external {
