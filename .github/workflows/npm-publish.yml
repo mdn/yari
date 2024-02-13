@@ -18,8 +18,6 @@ jobs:
       - name: Release
         uses: google-github-actions/release-please-action@v4
         id: release
-        with:
-          release-type: node
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +30,13 @@ jobs:
           node-version-file: ".nvmrc"
           cache: yarn
           registry-url: "https://registry.npmjs.org"
+
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        if: steps.release.outputs.release_created
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
 
       - name: Install
         if: steps.release.outputs.release_created
