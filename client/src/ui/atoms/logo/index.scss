@@ -9,38 +9,9 @@
     margin-top: 0.3rem;
   }
 
-  #pride-gradient {
-    :nth-child(1) {
-      stop-color: var(--pride-0);
-    }
-
-    :nth-child(2) {
-      stop-color: var(--pride-1);
-    }
-
-    :nth-child(3) {
-      stop-color: var(--pride-2);
-    }
-
-    :nth-child(4) {
-      stop-color: var(--pride-3);
-    }
-
-    :nth-child(5) {
-      stop-color: var(--pride-4);
-    }
-
-    :nth-child(6) {
-      stop-color: var(--pride-5);
-    }
-  }
-
-  .logo-m {
-    fill: url("#pride-gradient-v");
-  }
-
+  .logo-m,
   .logo-_ {
-    fill: url("#pride-gradient-h");
+    fill: var(--text-link);
   }
 
   .logo-text {

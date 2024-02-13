@@ -58,6 +58,17 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   if (window && html) {
     html.className = theme;
     html.style.backgroundColor = "";
+
+    setTimeout(() => {
+      const meta = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]'
+      );
+      const color = getComputedStyle(document.body).backgroundColor;
+      if (meta && color) {
+        meta.content = color;
+      }
+    }, 1);
+
     try {
       window.localStorage.setItem("theme", theme);
     } catch (err) {
@@ -109,4 +120,14 @@ export function charSlice(string: string, start?: number, end?: number) {
 
 export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
+}
+
+/**
+ * Used by quicksearch and sidebar filters.
+ */
+export function splitQuery(term: string): string[] {
+  return term
+    .trim()
+    .toLowerCase()
+    .split(/[ ,.]+/);
 }

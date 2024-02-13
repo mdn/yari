@@ -77,6 +77,30 @@
     }
   }
 
+  .sidebar-actions {
+    height: 0;
+    padding-bottom: 4rem;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-main-header);
+
+    ~ .sidebar-inner-nav {
+      margin-top: 0.5rem;
+    }
+
+    @media screen and (max-width: $screen-md) {
+      height: unset;
+      margin-top: unset;
+      padding-bottom: unset;
+      position: unset;
+      top: unset;
+
+      ~ .sidebar-inner-nav {
+        margin-top: unset;
+      }
+    }
+  }
+
   /* This is for sidebars where there is no sub-heading
    * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress
    */

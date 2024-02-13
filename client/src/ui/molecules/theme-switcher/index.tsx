@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import "./index.scss";
 import { switchTheme } from "../../../utils";
 import { Theme } from "../../../types/theme";
+import { useUIStatus } from "../../../ui-context";
 
 type ThemeButton = {
   id: Theme;
@@ -17,6 +18,8 @@ type ThemeButton = {
 export const ThemeSwitcher = () => {
   const menuId = "themes-menu";
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const { setColorScheme } = useUIStatus();
   const [activeTheme, setActiveTheme] = React.useState<Theme>("os-default");
 
   function ThemeButton({ id, label }: ThemeButton) {
@@ -27,6 +30,7 @@ export const ThemeSwitcher = () => {
         `}
         icon={`theme-${id}`}
         onClickHandler={() => {
+          setColorScheme(id);
           switchTheme(id, setActiveTheme);
           setIsOpen(false);
         }}
@@ -54,10 +58,8 @@ export const ThemeSwitcher = () => {
       console.warn("Unable to read theme from localStorage", e);
     }
 
-    if (theme) {
-      switchTheme(theme, setActiveTheme);
-    }
-  }, [activeTheme]);
+    switchTheme(theme ?? "os-default", setActiveTheme);
+  }, []);
 
   return (
     <DropdownMenuWrapper

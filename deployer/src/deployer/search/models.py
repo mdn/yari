@@ -45,7 +45,7 @@ yari_word_delimiter = token_filter(
     "yari_word_delimiter",
     type="word_delimiter",
     # When it splits on 'Array.prototype.forEach' it first of all becomes
-    # 'array', 'protoype', and 'foreach'. But also, still includes
+    # 'array', 'prototype', and 'foreach'. But also, still includes
     # as a word 'array.prototype.foreach'.
     # With this configuration we'll get good matches for both
     # 'array foreach' and if people type the full 'array.prototype.foreach'.

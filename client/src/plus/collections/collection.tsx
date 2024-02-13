@@ -22,6 +22,8 @@ import {
   FrequentlyViewedCollection,
   useFrequentlyViewed,
 } from "./frequently-viewed";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { PLUS_COLLECTIONS } from "../../telemetry/constants";
 dayjs.extend(relativeTime);
 
 export function CollectionComponent() {
@@ -81,8 +83,8 @@ export function CollectionComponent() {
               {itemLoading
                 ? "Loading..."
                 : itemError
-                ? "Error (try again)"
-                : "Show more"}
+                  ? "Error (try again)"
+                  : "Show more"}
             </Button>
           </div>
         )}
@@ -174,6 +176,7 @@ function ItemComponent({
   const [note, setNote] = useState<string>();
 
   const locale = useLocale();
+  const gleanClick = useGleanClick();
 
   useEffect(() => {
     const slicedNote = item.notes && charSlice(item.notes, 0, 180);
@@ -255,7 +258,10 @@ function ItemComponent({
               <Button
                 icon="edit"
                 type="action"
-                onClickHandler={openBookmarkMenu}
+                onClickHandler={(e) => {
+                  gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_EDIT);
+                  return openBookmarkMenu(e);
+                }}
               >
                 <span className="visually-hidden">Edit note</span>
               </Button>
@@ -294,7 +300,10 @@ function ItemComponent({
           extraClasses="add-note"
           icon="edit"
           type="action"
-          onClickHandler={openBookmarkMenu}
+          onClickHandler={(e) => {
+            gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_ADD);
+            return openBookmarkMenu(e);
+          }}
         >
           Add note
         </Button>
