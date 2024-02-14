@@ -35,12 +35,12 @@ export interface Message {
   sources?: PageReference[];
   chatId?: string;
   messageId?: string;
-  parentId?: string;
+  parentId?: string | null;
 }
 
 interface NewMessageAction {
   type: "new";
-  parentId?: string;
+  parentId?: string | null;
   chatId?: string;
   request: Message;
   response: Message;
@@ -63,7 +63,7 @@ interface SetMetadataAction {
   sources: PageReference[];
   messageId: string;
   chatId: string;
-  parentId?: string;
+  parentId?: string | null;
 }
 
 interface ResetAction {
@@ -96,7 +96,7 @@ export interface Quota {
 
 export interface MessageTreeNode {
   messageId?: string;
-  parentId?: string;
+  parentId?: string | null;
   request: Message;
   response: Message;
   children: MessageTreeNode[];
@@ -113,8 +113,8 @@ export function stateToMessagePath(
   path: number[],
   traverseWithDefault: boolean = false
 ): Message[] {
-  const [current = 0, ...tail] = path || [];
-  if (!state.root.length) {
+  const [current = traverseWithDefault ? 0 : null, ...tail] = path || [];
+  if (!state.root.length || current === null) {
     return [];
   }
   return messagePath(state.root[current], tail, traverseWithDefault);
@@ -151,9 +151,9 @@ function addSibling(state: MessageTreeState, messageId?: string) {
 }
 
 function findPath(state: MessageTreeState, messageId: string) {
-  let id: string | undefined = messageId;
+  let id: string | undefined | null = messageId;
   let node = state.nodes[id];
-  let pId: string | undefined = node.parentId;
+  let pId: string | undefined | null = node.parentId;
   const path: number[] = [];
   let limit = Object.keys(state.nodes).length;
   let iteration = 0;
@@ -270,6 +270,53 @@ interface Storage {
   chatId?: string;
 }
 
+export function apiDataToStorage(data: AIHelpLog, chatId: string): Storage {
+  const root: MessageTreeNode[] = [];
+  const nodes = {};
+  for (const message of data.messages || []) {
+    const node = {
+      messageId: message.metadata.message_id,
+      parentId: message.metadata.parent_id,
+      request: {
+        role: MessageRole.User,
+        content: message.user.content,
+        status: MessageStatus.Complete,
+        chatId: message.metadata.chat_id,
+        messageId: message.metadata.message_id,
+        parentId: message.metadata.parent_id,
+      },
+      response: {
+        role: MessageRole.Assistant,
+        content: message.assistant?.content || "",
+        status: message.assistant
+          ? MessageStatus.Complete
+          : Date.now() - Date.parse(message.metadata.created_at) > ERROR_TIMEOUT
+            ? MessageStatus.Errored
+            : MessageStatus.InProgress,
+        sources: message.metadata.sources,
+        chatId: message.metadata.chat_id,
+        messageId: message.metadata.message_id,
+        parentId: message.metadata.parent_id,
+      },
+      children: [],
+    };
+    if (!message.metadata.parent_id) {
+      root.push(node);
+    } else {
+      nodes[message.metadata.parent_id].children.push(node);
+    }
+    nodes[node.messageId] = node;
+  }
+  const storage = {
+    chatId,
+    treeState: {
+      root,
+      nodes,
+    },
+  };
+  return storage;
+}
+
 class AiHelpHistory {
   static async getMessages(chatId): Promise<Storage> {
     const res = await fetch(`/api/v1/plus/ai/help/history/${chatId}`);
@@ -281,50 +328,7 @@ class AiHelpHistory {
       throw new Error("no chat id");
     }
     // messages are ordered ascending.
-    const root: MessageTreeNode[] = [];
-    const nodes = {};
-    for (const message of data.messages || []) {
-      const node = {
-        messageId: message.metadata.message_id,
-        parentId: message.metadata.parent_id,
-        request: {
-          role: MessageRole.User,
-          content: message.user.content,
-          status: MessageStatus.Complete,
-          chatId: message.metadata.chat_id,
-          messageId: message.metadata.message_id,
-          parentId: message.metadata.parent_id,
-        },
-        response: {
-          role: MessageRole.Assistant,
-          content: message.assistant?.content || "",
-          status: message.assistant
-            ? MessageStatus.Complete
-            : Date.now() - Date.parse(message.metadata.created_at) >
-                ERROR_TIMEOUT
-              ? MessageStatus.Errored
-              : MessageStatus.InProgress,
-          sources: message.metadata.sources,
-          chatId: message.metadata.chat_id,
-          messageId: message.metadata.message_id,
-          parentId: message.metadata.parent_id,
-        },
-        children: [],
-      };
-      if (!message.metadata.parent_id) {
-        root.push(node);
-      } else {
-        nodes[message.metadata.parent_id].children.push(node);
-      }
-      nodes[node.messageId] = node;
-    }
-    const storage = {
-      chatId,
-      treeState: {
-        root,
-        nodes,
-      },
-    };
+    const storage = apiDataToStorage(data, chatId);
     return storage;
   }
 }
@@ -607,7 +611,12 @@ export function useAiChat({
   );
 
   const submit = useCallback(
-    (query: string, chatId?: string, parentId?: string, messageId?: string) => {
+    (
+      query: string,
+      chatId?: string,
+      parentId?: string | null,
+      messageId?: string
+    ) => {
       let newPath = messageId
         ? addSibling(state, messageId)
         : parentId
