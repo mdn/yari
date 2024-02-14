@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.39.3](https://github.com/mdn/yari/compare/v2.39.2...v2.39.3) (2024-02-14)
+
+
+### Bug Fixes
+
+* **macros/CSS_Ref:** fix special cases ([#10241](https://github.com/mdn/yari/issues/10241)) ([3cc3204](https://github.com/mdn/yari/commit/3cc32040d7ee25f8ab2dc4702fdf3e5362722455))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.4.0 to 1.4.1 ([#10508](https://github.com/mdn/yari/issues/10508)) ([52e49e2](https://github.com/mdn/yari/commit/52e49e27c26c0c63d3ba8f40215eb6e5790d9fbc))
+* **deps-dev:** bump diff from 5.1.0 to 5.2.0 ([#10509](https://github.com/mdn/yari/issues/10509)) ([7937e60](https://github.com/mdn/yari/commit/7937e604466f5ef83ca2fca77e0c604b47d767de))
+* **deps-dev:** bump eslint-plugin-jest from 27.6.3 to 27.8.0 ([#10513](https://github.com/mdn/yari/issues/10513)) ([f56840a](https://github.com/mdn/yari/commit/f56840ad4c6a8a41615a68618372f0c14fb85c9c))
+* **deps-dev:** bump husky from 9.0.10 to 9.0.11 ([#10518](https://github.com/mdn/yari/issues/10518)) ([02d1832](https://github.com/mdn/yari/commit/02d1832d8e43456f6d949b7aa961a63a2a093087))
+* **deps:** bump dotenv from 16.4.1 to 16.4.2 ([#10499](https://github.com/mdn/yari/issues/10499)) ([e3e3f72](https://github.com/mdn/yari/commit/e3e3f72952ca793478cb173a1c32792f28781178))
+* **deps:** bump dotenv from 16.4.2 to 16.4.3 ([#10510](https://github.com/mdn/yari/issues/10510)) ([7a76dab](https://github.com/mdn/yari/commit/7a76dabf0984c0ffa48954b9c4a5629f4bb07a4d))
+* **deps:** bump dotenv from 16.4.3 to 16.4.4 ([#10515](https://github.com/mdn/yari/issues/10515)) ([1493eb6](https://github.com/mdn/yari/commit/1493eb68dac74f83bfa297c9c9f1f1c9f3e11ae0))
+* **deps:** bump openai from 4.27.0 to 4.28.0 ([#10505](https://github.com/mdn/yari/issues/10505)) ([7fc08f4](https://github.com/mdn/yari/commit/7fc08f4a130403f0a2d2ad1e6ec70d836ddce936))
+* **deps:** bump pgvector from 0.1.7 to 0.1.8 ([#10498](https://github.com/mdn/yari/issues/10498)) ([bb646a5](https://github.com/mdn/yari/commit/bb646a578a5c706e835bab7dcfaaa73ab557fad9))
+* **deps:** bump pytest from 7.4.4 to 8.0.0 in /testing/integration ([#10500](https://github.com/mdn/yari/issues/10500)) ([524b202](https://github.com/mdn/yari/commit/524b2023d8c88f09596ac9d362c95a2b48a23a9c))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#10501](https://github.com/mdn/yari/issues/10501)) ([06cd562](https://github.com/mdn/yari/commit/06cd562a408dbfa8b0f45e096fd6f6ee9579b336))
+* **deps:** bump the sentry group with 2 updates ([#10512](https://github.com/mdn/yari/issues/10512)) ([46820bc](https://github.com/mdn/yari/commit/46820bcdbca00e4005ea80982876744ead07895d))
+* **deps:** bump web-specs from 2.79.0 to 3.0.0 ([#10478](https://github.com/mdn/yari/issues/10478)) ([ce83ddc](https://github.com/mdn/yari/commit/ce83ddcd242989ae79a8acc8fa39dec56cd2bd0e))
+* **macros:** Mark 'unimplemented_inline' as deprecated ([#10486](https://github.com/mdn/yari/issues/10486)) ([9d136b0](https://github.com/mdn/yari/commit/9d136b07dceb4418fefd621a79235858d422e61a))
+
 ## [2.39.2](https://github.com/mdn/yari/compare/v2.39.1...v2.39.2) (2024-02-09)
 
 
