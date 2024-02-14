@@ -1,4 +1,3 @@
-import { jest } from "@jest/globals";
 import { MessageRole, apiDataToStorage, stateToMessagePath } from "./use-ai";
 import { AIHelpLog, MetaType } from "./rust-types";
 
