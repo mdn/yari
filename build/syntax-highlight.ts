@@ -120,7 +120,7 @@ export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
     $pre.wrapAll(`<div class='code-example'></div>`);
     if (!$pre.hasClass("hidden")) {
       $(
-        `<p class='example-header'><span class="language-name">${name}</span></p>`
+        `<div class='example-header'><span class="language-name">${name}</span></div>`
       ).insertBefore($pre);
     }
     const grammar = Prism.languages[name];

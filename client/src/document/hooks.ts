@@ -6,10 +6,13 @@ import { initPlayIframe } from "../playground/utils";
 // import { addExplainButton } from "./code/ai-explain";
 import {
   addBreakoutButton,
+  addCollectButton,
   getCodeAndNodesForIframe,
   getCodeAndNodesForIframeBySampleClass,
+  highlight,
 } from "./code/playground";
 import { addCopyToClipboardButton } from "./code/copy";
+import { useUIStatus } from "../ui-context";
 
 export function useDocumentURL() {
   const locale = useLocale();
@@ -19,6 +22,30 @@ export function useDocumentURL() {
   // on any URL. We can't keep that if we're going to compare the current
   // pathname with the document's mdn_url.
   return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
+}
+
+export function useCollectSample(doc: any) {
+  const isServer = useIsServer();
+  const locale = useLocale();
+  const { highlightedQueueExample } = useUIStatus();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    if (!doc) {
+      return;
+    }
+    document
+      .querySelectorAll(
+        "section > *:not(#syntax) ~ * .example-header:not(.play-sample)"
+      )
+      .forEach((header) => {
+        addCollectButton(header, "collect", locale);
+        highlight(header, highlightedQueueExample);
+      });
+  }, [doc, isServer, locale, highlightedQueueExample]);
 }
 
 export function useRunSample(doc: Doc | undefined) {

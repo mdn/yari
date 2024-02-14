@@ -13,6 +13,7 @@ import {
   SupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
+import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
@@ -388,11 +389,11 @@ function getNotes(
                 label: "Full support",
               }
             : isNotSupportedAtAll(item)
-            ? {
-                iconName: "footnote",
-                label: "No support",
-              }
-            : null,
+              ? {
+                  iconName: "footnote",
+                  label: "No support",
+                }
+              : null,
         ]
           .flat()
           .filter(isTruthy);
@@ -525,8 +526,12 @@ export const FeatureRow = React.memo(
     let titleNode: string | React.ReactNode;
 
     if (compat.mdn_url && depth > 0) {
+      const href = compat.mdn_url.replace(
+        `/${DEFAULT_LOCALE}/docs`,
+        `/${locale}/docs`
+      );
       titleNode = (
-        <a href={compat.mdn_url} className="bc-table-row-header">
+        <a href={href} className="bc-table-row-header">
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>

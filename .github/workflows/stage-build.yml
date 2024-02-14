@@ -62,7 +62,7 @@ permissions:
 jobs:
   build:
     environment: stage
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -86,6 +86,7 @@ jobs:
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
+          lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
@@ -118,7 +119,7 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
@@ -130,7 +131,7 @@ jobs:
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -285,7 +286,7 @@ jobs:
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-stage-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
@@ -293,7 +294,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
@@ -303,7 +304,7 @@ jobs:
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-stage-nonprod-mdn-ingre@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
@@ -311,7 +312,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
@@ -341,14 +342,13 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="BSA_ENABLED=true" \
-            --set-env-vars="BSA_URL_PREFIX=https://developer.allizom.org/fr/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=stage" \
             --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
@@ -365,13 +365,11 @@ jobs:
             wait $pid
           done
 
-      - name: Update AI Help index
-        run: yarn ai-help update-index
+      - name: Update AI Help index with macros
+        run: yarn ai-help-macros update-index
         env:
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          PG_URI: ${{ secrets.PG_URI }}
 
       - name: Slack Notification
         if: failure()
