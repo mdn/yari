@@ -27,14 +27,14 @@
       grid-template-columns: auto;
       margin: 0;
       padding: 0;
-      @media screen and (min-width: $screen-md) {
+      @media screen and (min-width: $screen-sm) {
         grid-template-areas:
           "a   b   c   spacer"
           "hr  hr  hr  hr"
           "mod mod mod mod"
           "t   t   t   t";
 
-        grid-template-columns: max-content max-content max-content auto;
+        grid-template-columns: auto auto auto 1fr;
       }
 
       hr {
@@ -85,7 +85,7 @@
           > label,
           > input {
             grid-area: b;
-            @media screen and (min-width: $screen-md) {
+            @media screen and (min-width: $screen-sm) {
               margin-left: 2rem;
             }
           }
@@ -99,7 +99,7 @@
           > label,
           > input {
             grid-area: c;
-            @media screen and (min-width: $screen-md) {
+            @media screen and (min-width: $screen-sm) {
               margin-left: 2rem;
             }
           }
@@ -219,13 +219,6 @@
         grid-template-columns: 1fr 1fr;
       }
       @media screen and (min-width: $screen-xxl) {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-
-      @container module-list (width >= 25rem) {
-        grid-template-columns: 1fr 1fr;
-      }
-      @container module-list (width >= 38rem) {
         grid-template-columns: 1fr 1fr 1fr;
       }
     }

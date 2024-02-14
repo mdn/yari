@@ -110,9 +110,7 @@ export async function buildSidebar(): Promise<ModuleIndexEntry[]> {
   return index;
 }
 
-export async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
-  const index = (await buildModuleIndex()).filter((x) => x?.children?.length);
-  const i = index.findIndex((x) => x.slug === slug);
+function prevNextFromIndex(i, index): PrevNext {
   const prev = i > 0 ? index[i - 1] : undefined;
   const next = i < index.length - 1 ? index[i + 1] : undefined;
 
@@ -122,13 +120,16 @@ export async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
   return { prev, next };
 }
 
+export async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
+  const index = (await buildModuleIndex()).filter((x) => x?.children?.length);
+  const i = index.findIndex((x) => x.slug === slug);
+  return prevNextFromIndex(i, index);
+}
+
 export async function buildPrevNextModule(slug: string): Promise<PrevNext> {
   const index = await buildIndex();
   const i = index.findIndex((x) => x.slug === slug);
-  return {
-    prev: i > 0 ? index[i - 1] : undefined,
-    next: i < index.length - 2 ? index[i + 1] : undefined,
-  };
+  return prevNextFromIndex(i, index);
 }
 
 function breadPath(url: string, cur: ModuleIndexEntry[]): DocParent[] | null {
