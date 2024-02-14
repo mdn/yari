@@ -110,27 +110,32 @@ export interface MessageTreeState {
 
 export function stateToMessagePath(
   state: MessageTreeState,
-  path: number[]
+  path: number[],
+  lazy: boolean = false
 ): Message[] {
   const [current = 0, ...tail] = path || [];
   if (!state.root.length) {
     return [];
   }
-  return messagePath(state.root[current], tail);
+  return messagePath(state.root[current], tail, lazy);
 }
 
-function messagePath(node: MessageTreeNode, path: number[]): Message[] {
-  const [current = 0, ...tail] = path;
+function messagePath(
+  node: MessageTreeNode,
+  path: number[],
+  lazy: boolean = false
+): Message[] {
+  const [current = null, ...tail] = path;
   if (!node) {
     return [];
   }
-  if (!node.children.length) {
+  if (!node.children.length || (!lazy && current === null)) {
     return [node.request, node.response];
   }
   return [
     node.request,
     node.response,
-    ...messagePath(node.children[current], tail),
+    ...messagePath(node.children[current || 0], tail, lazy),
   ];
 }
 
@@ -672,7 +677,7 @@ export function useAiChat({
   );
 
   useEffect(() => {
-    const messages = stateToMessagePath(state, path);
+    const messages = stateToMessagePath(state, path, true);
     setMessages(messages);
     if (messages.length) {
       setIsInitializing(false);
