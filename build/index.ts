@@ -524,26 +524,7 @@ export async function buildDocument(
 
   doc.modified = metadata.modified || null;
 
-  const otherTranslations = document.translations || [];
-  if (!otherTranslations.length && metadata.translation_of) {
-    // If built just-in-time, we won't have a record of all the other translations
-    // available. But if the current document has a translation_of, we can
-    // at least use that.
-    const translationOf = Document.findByURL(
-      `/en-US/docs/${metadata.translation_of}`
-    );
-    if (translationOf) {
-      otherTranslations.push({
-        locale: "en-US",
-        title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us")?.native,
-      });
-    }
-  }
-
-  if (otherTranslations.length) {
-    doc.other_translations = otherTranslations;
-  }
+  doc.other_translations = document.translations || [];
 
   injectSource(doc, document, metadata);
 
