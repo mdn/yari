@@ -111,31 +111,31 @@ export interface MessageTreeState {
 export function stateToMessagePath(
   state: MessageTreeState,
   path: number[],
-  lazy: boolean = false
+  traverseWithDefault: boolean = false
 ): Message[] {
   const [current = 0, ...tail] = path || [];
   if (!state.root.length) {
     return [];
   }
-  return messagePath(state.root[current], tail, lazy);
+  return messagePath(state.root[current], tail, traverseWithDefault);
 }
 
 function messagePath(
   node: MessageTreeNode,
   path: number[],
-  lazy: boolean = false
+  traverseWithDefault: boolean = false
 ): Message[] {
-  const [current = null, ...tail] = path;
+  const [current = traverseWithDefault ? 0 : null, ...tail] = path;
   if (!node) {
     return [];
   }
-  if (!node.children.length || (!lazy && current === null)) {
+  if (!node.children.length || current === null) {
     return [node.request, node.response];
   }
   return [
     node.request,
     node.response,
-    ...messagePath(node.children[current || 0], tail, lazy),
+    ...messagePath(node.children[current], tail, traverseWithDefault),
   ];
 }
 
