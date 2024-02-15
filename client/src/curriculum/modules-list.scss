@@ -116,8 +116,12 @@
 
         > a {
           grid-area: t;
+          margin-left: 0.5rem;
           margin-top: 2rem;
           width: fit-content;
+          @media screen and (min-width: $screen-md) {
+            margin-left: 0;
+          }
         }
       }
     }
