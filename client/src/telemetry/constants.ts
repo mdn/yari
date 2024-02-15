@@ -73,3 +73,5 @@ export const BASELINE = Object.freeze({
   LINK_BCD_TABLE: "baseline_link_bcd_table",
   LINK_FEEDBACK: "baseline_link_feedback",
 });
+
+export const CLIENT_SIDE_NAVIGATION = "client_side_nav";
