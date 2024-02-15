@@ -153,7 +153,34 @@
     padding-top: 3rem;
   }
 
+  .curriculum-content {
+    a:not(.button) {
+      color: var(--text-link);
+      width: fit-content;
+
+      &:visited:not([href^="#"]) {
+        // Distinguish visited links (excl. anchor links).
+        color: var(--text-visited);
+      }
+
+      &:active,
+      &:active:visited {
+        background-color: var(--text-link);
+        color: #fff;
+
+        code {
+          background-color: transparent;
+          color: #fff;
+        }
+      }
+    }
+  }
+
   &.with-sidebar {
+    > .sidebar-container {
+      padding-top: 4rem;
+    }
+
     .curriculum-content {
       grid-area: main;
 
