@@ -112,7 +112,7 @@ export default function ObservatoryLanding() {
           <section className="footer">
             <section className="about">
               <figure>
-                <AssessmentSVG />
+                <AssessmentSVG role="none" />
 
                 <figcaption>
                   <p>
@@ -124,7 +124,7 @@ export default function ObservatoryLanding() {
               </figure>
 
               <figure>
-                <ScanningSVG />
+                <ScanningSVG role="none" />
 
                 <figcaption>
                   <p>
@@ -137,7 +137,7 @@ export default function ObservatoryLanding() {
               </figure>
 
               <figure>
-                <SecuritySVG />
+                <SecuritySVG role="none" />
 
                 <figcaption>
                   <p>
@@ -152,7 +152,7 @@ export default function ObservatoryLanding() {
               </figure>
 
               <figure>
-                <MdnSVG />
+                <MdnSVG role="none" />
 
                 <figcaption>
                   <p>
