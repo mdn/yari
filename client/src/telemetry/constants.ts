@@ -24,6 +24,8 @@ export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
 
+export const A11Y_MENU = "a11y_menu";
+
 export const MENU = Object.freeze({
   CLICK_LINK: "menu_click_link",
   CLICK_MENU: "menu_click_menu",
