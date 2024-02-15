@@ -689,6 +689,7 @@ export function AIHelpInner() {
                 <div className="ai-help-footer-actions">
                   <Button
                     type="action"
+                    isDisabled={!isResponding}
                     extraClasses="ai-help-stop-button"
                     onClickHandler={() => {
                       gleanClick(`${AI_HELP}: stop`);
