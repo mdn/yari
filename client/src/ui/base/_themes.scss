@@ -238,6 +238,7 @@
   --cur-color-topic-tooling: #{$mdn-color-light-theme-green-60};
   --cur-color-topic-practices: #{$mdn-color-light-theme-violet-60};
   --cur-color-landing-laptop: #e3642a;
+  --cur-border-color-list-item: #f2f1f1;
   --cur-bg-color-list-item-body: #fff;
   --cur-color-list-item-icon-topic-standards: #{$mdn-color-light-theme-red-60};
   --cur-color-list-item-icon-topic-styling: #{$mdn-color-light-theme-blue-60};
@@ -273,6 +274,12 @@
     --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#light");
     --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#light");
     --cur-module-mdn-resource: url("../../assets/icons/cur-mdn-resource.svg#light");
+    --cur-bullet: url("../../assets/icons/cur-bullet.svg#light");
+    --cur-about-covered: url("../../assets/icons/cur-about-covered.svg#light");
+    --cur-about-detail: url("../../assets/icons/cur-about-detail.svg#light");
+    --cur-about-educators: url("../../assets/icons/cur-about-educators.svg#light");
+    --cur-about-not: url("../../assets/icons/cur-about-not.svg#light");
+    --cur-about-students: url("../../assets/icons/cur-about-students.svg#light");
   }
 
   color-scheme: light;
@@ -516,25 +523,26 @@
   --cur-bg-color-orange: #b25c35;
   --cur-color-landing-laptop: #b25c35;
   --cur-bg-color-list-item-body: #000;
+  --cur-border-color-list-item: #4e4e4e;
   --cur-color-list-item-icon-topic-standards: #000;
   --cur-color-list-item-icon-topic-styling: #000;
   --cur-color-list-item-icon-topic-scripting: #000;
   --cur-color-list-item-icon-topic-tooling: #000;
   --cur-color-list-item-icon-topic-practices: #000;
-  --cur-bg-color-list-item-topic-standards: #1f1c1a;
-  --cur-bg-color-list-item-topic-styling: #1f1c1a;
-  --cur-bg-color-list-item-topic-scripting: #1f1c1a;
-  --cur-bg-color-list-item-topic-tooling: #1f1c1a;
-  --cur-bg-color-list-item-topic-practices: #1f1c1a;
+  --cur-bg-color-list-item-topic-standards: #343434;
+  --cur-bg-color-list-item-topic-styling: #343434;
+  --cur-bg-color-list-item-topic-scripting: #343434;
+  --cur-bg-color-list-item-topic-tooling: #343434;
+  --cur-bg-color-list-item-topic-practices: #343434;
   --cur-bg-color-list-item-icon-topic-standards: #994b53;
   --cur-bg-color-list-item-icon-topic-styling: #4e609e;
   --cur-bg-color-list-item-icon-topic-scripting: #7d683d;
   --cur-bg-color-list-item-icon-topic-tooling: #3d7c4b;
   --cur-bg-color-list-item-icon-topic-practices: #584280;
-  --cur-shadow: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
-    -4px 4px 8px 0 rgb(36, 36, 36);
-  --cur-shadow-landing-about-ul: 4px 4px 8px 0 rgba(36, 36, 36, 0.15),
-    -4px 4px 8px 0 rgb(36, 36, 36);
+  --cur-shadow: 2px 2px 5px 0 rgba(36, 36, 36, 0.15),
+    -2px 2px 8px 0 rgba(87, 87, 87, 0.15);
+  --cur-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
+    0 -2px 4px 0 rgba(178, 92, 53, 0.06);
 
   --cur-landing-about-beginner: url("../../assets/icons/cur-landing-about-beginner.svg#dark");
   --cur-landing-about-pace: url("../../assets/icons/cur-landing-about-pace.svg#dark");
@@ -550,6 +558,12 @@
     --cur-landing-started-employment: url("../../assets/icons/cur-landing-started-employment.svg#dark");
     --cur-landing-started-educator: url("../../assets/icons/cur-landing-started-educator.svg#dark");
     --cur-module-mdn-resource: url("../../assets/icons/cur-mdn-resource.svg#dark");
+    --cur-bullet: url("../../assets/icons/cur-bullet.svg#dark");
+    --cur-about-covered: url("../../assets/icons/cur-about-covered.svg#dark");
+    --cur-about-detail: url("../../assets/icons/cur-about-detail.svg#dark");
+    --cur-about-educators: url("../../assets/icons/cur-about-educators.svg#dark");
+    --cur-about-not: url("../../assets/icons/cur-about-not.svg#dark");
+    --cur-about-students: url("../../assets/icons/cur-about-students.svg#dark");
   }
 
   color-scheme: dark;

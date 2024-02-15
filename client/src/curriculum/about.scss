@@ -5,7 +5,7 @@
 
     h2#motivation + div {
       li {
-        list-style-image: url("../assets/icons/cur-bullet.svg");
+        list-style-image: var(--cur-bullet);
       }
     }
 
@@ -21,23 +21,23 @@
       }
 
       &#students::before {
-        content: url("../assets/icons/cur-about-students.svg");
+        content: var(--cur-about-students);
       }
 
       &#educators::before {
-        content: url("../assets/icons/cur-about-educators.svg");
+        content: var(--cur-about-educators);
       }
 
       &#whats_covered::before {
-        content: url("../assets/icons/cur-about-covered.svg");
+        content: var(--cur-about-covered);
       }
 
       &#level_of_detail::before {
-        content: url("../assets/icons/cur-about-detail.svg");
+        content: var(--cur-about-detail);
       }
 
       &#what_is_not_covered::before {
-        content: url("../assets/icons/cur-about-not.svg");
+        content: var(--cur-about-not);
       }
     }
   }

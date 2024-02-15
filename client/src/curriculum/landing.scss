@@ -445,6 +445,7 @@
             padding-right: var(--button-padding);
             position: relative;
             text-align: center;
+            text-decoration: none;
             width: fit-content;
             @media screen and (min-width: $screen-md) {
               justify-self: start;

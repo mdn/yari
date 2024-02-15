@@ -116,8 +116,12 @@
 
         > a {
           grid-area: t;
+          margin-left: 0.5rem;
           margin-top: 2rem;
           width: fit-content;
+          @media screen and (min-width: $screen-md) {
+            margin-left: 0;
+          }
         }
       }
     }
@@ -144,7 +148,7 @@
 
       .module-list-item {
         background-color: var(--cur-bg-color-list-item-body);
-        border: 0;
+        border: 1px solid var(--cur-border-color-list-item);
         border-radius: var(--elem-radius);
         box-shadow: var(--cur-shadow);
         display: flex;
@@ -160,6 +164,10 @@
           min-width: initial;
         }
 
+        &:hover {
+          border-color: rgba(227, 100, 42, 0.7);
+        }
+
         > header {
           a {
             align-items: center;
@@ -168,6 +176,11 @@
             flex-direction: column;
             height: 10rem;
             padding: 1rem 2rem;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
 
             svg.topic-icon {
               height: 4rem;

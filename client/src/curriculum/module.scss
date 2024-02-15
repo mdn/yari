@@ -44,9 +44,6 @@
 
           > li {
             // This is hacky but works here
-            &::first-line {
-              vertical-align: super;
-            }
 
             &:not(.external) {
               list-style-image: var(--cur-module-mdn-resource);

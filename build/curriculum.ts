@@ -400,7 +400,7 @@ function setCurriculumTypes($) {
 
     if (p) {
       const notes = $(p);
-      if (/Notes?:/.test(notes.text())) {
+      if (/((general )?notes?):/i.test(notes.text())) {
         bq.addClass("curriculum-notes");
       }
     }
