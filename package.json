@@ -73,12 +73,12 @@
     "@mdn/bcd-utils-api": "^0.0.5",
     "@mdn/browser-compat-data": "^5.5.10",
     "@mozilla/glean": "2.0.5",
-    "@sentry/integrations": "^7.101.0",
-    "@sentry/node": "^7.101.0",
+    "@sentry/integrations": "^7.101.1",
+    "@sentry/node": "^7.101.1",
     "@stripe/stripe-js": "^2.4.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.9",
-    "@webref/css": "^6.11.1",
+    "@webref/css": "^6.11.2",
     "accept-language-parser": "^1.5.0",
     "async": "^3.2.5",
     "chalk": "^5.3.0",
@@ -146,7 +146,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^0.5.1",
-    "web-specs": "^3.0.0"
+    "web-specs": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -177,7 +177,7 @@
     "babel-preset-react-app": "^10.0.1",
     "bfj": "^8.0.0",
     "braces": "^3.0.2",
-    "browserslist": "^4.22.3",
+    "browserslist": "^4.23.0",
     "camelcase": "^8.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "cross-env": "^7.0.3",
