@@ -152,6 +152,16 @@
     .auth-container {
       margin-top: 1rem;
     }
+
+    &.disabled {
+      background-color: var(--background-secondary);
+
+      margin-bottom: 2.25rem;
+
+      .button {
+        display: none;
+      }
+    }
   }
 
   .ai-help-inner {

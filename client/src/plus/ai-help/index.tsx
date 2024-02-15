@@ -622,7 +622,7 @@ export function AIHelpInner() {
         messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
       />
       <Container>
-        <AiHelpBanner />
+        <AiHelpBanner isDisabled={isQuotaExceeded(quota)} />
         {isQuotaLoading || isHistoryLoading ? (
           <Loading />
         ) : (
