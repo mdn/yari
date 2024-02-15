@@ -148,7 +148,7 @@
 
       .module-list-item {
         background-color: var(--cur-bg-color-list-item-body);
-        border: 0;
+        border: 1px solid var(--cur-border-color-list-item);
         border-radius: var(--elem-radius);
         box-shadow: var(--cur-shadow);
         display: flex;
@@ -162,6 +162,9 @@
         width: 100%;
         @media screen and (min-width: $screen-md) {
           min-width: initial;
+        }
+        &:hover {
+          border-color: rgba(227, 100, 42, 0.7);
         }
 
         > header {
