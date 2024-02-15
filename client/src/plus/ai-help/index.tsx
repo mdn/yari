@@ -124,9 +124,6 @@ function AIHelpAuthenticated() {
           </a>
         </p>
       </Container>
-      <Container>
-        <AiHelpBanner />
-      </Container>
       <AIHelpInner />
     </div>
   );
@@ -625,6 +622,7 @@ export function AIHelpInner() {
         messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
       />
       <Container>
+        <AiHelpBanner />
         {isQuotaLoading || isHistoryLoading ? (
           <Loading />
         ) : (
