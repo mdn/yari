@@ -47,7 +47,7 @@ export function SiteSearch() {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [query, page, ga]);
+  }, [query, page, ga, gleanClick]);
 
   return (
     <div className="main-wrapper site-search">
