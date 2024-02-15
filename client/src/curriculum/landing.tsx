@@ -77,7 +77,7 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
         <h2>{section.value.title}</h2>
         <div dangerouslySetInnerHTML={html}></div>
       </section>
-      <LandingSVG />
+      <LandingSVG aria-label="woman in chair" role="img" />
     </header>
   );
 }

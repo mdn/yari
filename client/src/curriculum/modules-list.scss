@@ -163,6 +163,7 @@
         @media screen and (min-width: $screen-md) {
           min-width: initial;
         }
+
         &:hover {
           border-color: rgba(227, 100, 42, 0.7);
         }
@@ -175,6 +176,11 @@
             flex-direction: column;
             height: 10rem;
             padding: 1rem 2rem;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
 
             svg.topic-icon {
               height: 4rem;

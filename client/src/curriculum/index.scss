@@ -99,43 +99,45 @@
 }
 
 .curriculum-content-container {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    a:link,
-    a:visited {
-      color: var(--text-primary);
-      text-decoration: none;
-    }
-
-    a:hover,
-    a:focus {
-      text-decoration: underline;
-    }
-
-    a:active {
-      background-color: transparent;
-    }
-
-    a[href^="#"] {
-      &::before {
-        color: var(--text-inactive);
-        content: "#";
-        display: inline-block;
-        font-size: 0.7em;
-        line-height: 1;
-        margin-left: -0.8em;
+  > .curriculum-content {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      a:link,
+      a:visited {
+        color: var(--text-primary);
         text-decoration: none;
-        visibility: hidden;
-        width: 0.8em;
       }
 
-      &:hover {
+      a:hover,
+      a:focus {
+        text-decoration: underline;
+      }
+
+      a:active {
+        background-color: transparent;
+      }
+
+      a[href^="#"] {
         &::before {
-          visibility: visible;
+          color: var(--text-inactive);
+          content: "#";
+          display: inline-block;
+          font-size: 0.7em;
+          line-height: 1;
+          margin-left: -0.8em;
+          text-decoration: none;
+          visibility: hidden;
+          width: 0.8em;
+        }
+
+        &:hover {
+          &::before {
+            visibility: visible;
+          }
         }
       }
     }
@@ -154,24 +156,22 @@
   }
 
   .curriculum-content {
-    a:not(.button) {
+    a {
       color: var(--text-link);
-      width: fit-content;
+
+      &:link,
+      &:visited {
+        text-decoration: underline;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
 
       &:visited:not([href^="#"]) {
         // Distinguish visited links (excl. anchor links).
         color: var(--text-visited);
-      }
-
-      &:active,
-      &:active:visited {
-        background-color: var(--text-link);
-        color: #fff;
-
-        code {
-          background-color: transparent;
-          color: #fff;
-        }
       }
     }
   }
