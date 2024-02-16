@@ -32,3 +32,4 @@ export const SENTRY_DSN_BUILD: string;
 export const OPENAI_KEY: string;
 export const PG_URI: string;
 export const SAMPLE_SIGN_KEY: Buffer;
+export const DEV_MODE: boolean;
