@@ -467,25 +467,38 @@ async function fetchLatestNews() {
 }
 
 async function fetchHacksNews(): Promise<NewsItem[]> {
-  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
+  try {
+    const xml = await got(
+      "https://hacks.mozilla.org/category/mdn/feed/"
+    ).text();
 
-  const $ = cheerio.load(xml, { xmlMode: true });
+    const $ = cheerio.load(xml, { xmlMode: true });
 
-  const items: NewsItem[] = [];
-  $("item").each((i, item) => {
-    const $item = $(item);
+    const items: NewsItem[] = [];
+    $("item").each((i, item) => {
+      const $item = $(item);
 
-    items.push({
-      title: $item.find("title").text(),
-      url: $item.find("guid").text(),
-      author: $item.find("dc\\:creator").text(),
-      published_at: $item.find("pubDate").text(),
-      source: {
-        name: "hacks.mozilla.org",
-        url: "https://hacks.mozilla.org/category/mdn/",
-      },
+      items.push({
+        title: $item.find("title").text(),
+        url: $item.find("guid").text(),
+        author: $item.find("dc\\:creator").text(),
+        published_at: $item.find("pubDate").text(),
+        source: {
+          name: "hacks.mozilla.org",
+          url: "https://hacks.mozilla.org/category/mdn/",
+        },
+      });
     });
-  });
 
-  return items;
+    return items;
+  } catch (e) {
+    const msg = "Couldn't fetch hacks.mozilla.org feed!";
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }
