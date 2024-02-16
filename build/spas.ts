@@ -415,10 +415,6 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
-
-  const $ = cheerio.load(xml, { xmlMode: true });
-
   const items: NewsItem[] = [];
 
   items.push(
@@ -461,9 +457,21 @@ async function fetchLatestNews() {
         name: "developer.mozilla.org",
         url: `/${DEFAULT_LOCALE}/blog/`,
       },
-    }
+    },
+    ...(await fetchHacksNews())
   );
 
+  return {
+    items,
+  };
+}
+
+async function fetchHacksNews(): Promise<NewsItem[]> {
+  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
+
+  const $ = cheerio.load(xml, { xmlMode: true });
+
+  const items: NewsItem[] = [];
   $("item").each((i, item) => {
     const $item = $(item);
 
@@ -479,7 +487,5 @@ async function fetchLatestNews() {
     });
   });
 
-  return {
-    items,
-  };
+  return items;
 }
