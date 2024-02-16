@@ -12288,10 +12288,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-packagejson@^2.4.10:
-  version "2.4.10"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-packagejson/-/prettier-plugin-packagejson-2.4.10.tgz#6ce4aac8d305102f1ff8354f33767f0f001fef0e"
-  integrity sha512-qFzOfQDHi1tzvVJRuZ2jh1j6IFV5MURh5m5WDt+qfEMOf4SSL5RpwSysiX8u0W1PJYsM0vKJGNULt43wwteKiQ==
+prettier-plugin-packagejson@^2.4.11:
+  version "2.4.11"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-packagejson/-/prettier-plugin-packagejson-2.4.11.tgz#90a3211bcda4deb1f05c91d6315dc3bc11e7de03"
+  integrity sha512-zmOmM96GkAjT2zUdHSQJnpyVpbisBkewDluo2NLHjI/JN7uOCZlEzWVaMhdqyZ8LVdQDfzamvbvSw4swd3Az1A==
   dependencies:
     sort-package-json "2.7.0"
     synckit "0.9.0"
