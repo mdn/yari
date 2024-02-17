@@ -313,6 +313,9 @@ export function makeTOC(doc) {
 }
 
 export function findPostFileBySlug(slug: string): string | null {
+  if (!BLOG_ROOT) {
+    return null;
+  }
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",
