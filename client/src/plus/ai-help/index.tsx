@@ -154,7 +154,7 @@ function AIHelpUserQuestion({
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
-        if (canEdit && question) {
+        if (canEdit && question?.trim()) {
           gleanClick(`${AI_HELP}: edit submit`);
           setEditing(false);
           submit(question, message.chatId, message.parentId, message.messageId);
@@ -167,7 +167,7 @@ function AIHelpUserQuestion({
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            if (canEdit && question) {
+            if (canEdit && question?.trim()) {
               gleanClick(`${AI_HELP}: edit submit`);
               setEditing(false);
               submit(
@@ -205,7 +205,7 @@ function AIHelpUserQuestion({
               icon="send"
               buttonType="submit"
               title="Submit question"
-              isDisabled={!question}
+              isDisabled={!question.trim()}
             >
               <span className="visually-hidden">Submit question</span>
             </Button>
@@ -284,6 +284,7 @@ function AIHelpAssistantResponse({
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
+  const { highlightedQueueExample } = useUIStatus();
 
   let sample = 0;
 
@@ -400,7 +401,11 @@ function AIHelpAssistantResponse({
                 sample += 1;
                 return (
                   <div className="code-example">
-                    <div className="example-header play-collect">
+                    <div
+                      className={`example-header play-collect ${
+                        highlightedQueueExample === id ? "active" : ""
+                      }`}
+                    >
                       <span className="language-name">{code}</span>
                       {message.status === MessageStatus.Complete &&
                         ["html", "js", "javascript", "css"].includes(
@@ -517,7 +522,8 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const { queuedExamples, setQueue } = useUIStatus();
+  const { queuedExamples, setQueue, setHighlightedQueueExample } =
+    useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
   const user = useUserData();
@@ -718,6 +724,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: topic new`);
                           setQuery("");
                           setQueue([]);
+                          setHighlightedQueueExample(null);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}
@@ -803,7 +810,7 @@ export function AIHelpInner() {
                           icon="send"
                           buttonType="submit"
                           title="Submit question"
-                          isDisabled={!query}
+                          isDisabled={!query.trim()}
                         >
                           <span className="visually-hidden">
                             Submit question
