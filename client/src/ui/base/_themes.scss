@@ -229,7 +229,7 @@
   --cur-bg-color-landing: #fff;
   --cur-bg-color-landing-about-ul: #fff;
   --cur-bg-color-landing-top-icon: #fcefe2;
-  --cur-bg-color-landing-ladder-floor: #fcefe2;
+  --cur-bg-color-landing-stairway-floor: #fcefe2;
   --cur-category-color: #e3642a;
   --cur-color: #d47d55;
   --cur-color-topic-standards: #{$mdn-color-light-theme-red-60};
@@ -239,6 +239,7 @@
   --cur-color-topic-practices: #{$mdn-color-light-theme-violet-60};
   --cur-color-landing-laptop: #e3642a;
   --cur-border-color-list-item: #f2f1f1;
+  --cur-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
   --cur-bg-color-list-item-body: #fff;
   --cur-color-list-item-icon-topic-standards: #{$mdn-color-light-theme-red-60};
   --cur-color-list-item-icon-topic-styling: #{$mdn-color-light-theme-blue-60};
@@ -517,13 +518,14 @@
   --cur-bg-color-landing: #0e0b0a;
   --cur-bg-color-landing-about-ul: #000;
   --cur-bg-color-landing-top-icon: rgba(178, 92, 53, 0.3);
-  --cur-bg-color-landing-ladder-floor: rgba(137, 91, 51, 1);
+  --cur-bg-color-landing-stairway-floor: rgba(137, 91, 51, 1);
   --cur-category-color: #e3642a;
   --cur-bg-color-grey: #1f1c1a;
   --cur-bg-color-orange: #b25c35;
   --cur-color-landing-laptop: #b25c35;
   --cur-bg-color-list-item-body: #000;
   --cur-border-color-list-item: #4e4e4e;
+  --cur-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
   --cur-color-list-item-icon-topic-standards: #000;
   --cur-color-list-item-icon-topic-styling: #000;
   --cur-color-list-item-icon-topic-scripting: #000;

@@ -1,7 +1,7 @@
 import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
-import { ReactComponent as LandingLadderSVG1 } from "../../public/assets/curriculum/cur-landing-ladder-1.svg";
-import { ReactComponent as LandingLadderSVG2 } from "../../public/assets/curriculum/cur-landing-ladder-2.svg";
-import { ReactComponent as LandingLadderSVG2Small } from "../../public/assets/curriculum/cur-landing-ladder-2-small.svg";
+import { ReactComponent as LandingStairwaySVG1 } from "../../public/assets/curriculum/cur-landing-stairway-1.svg";
+import { ReactComponent as LandingStairwaySVG2 } from "../../public/assets/curriculum/cur-landing-stairway-2.svg";
+import { ReactComponent as LandingStairwaySVG2Small } from "../../public/assets/curriculum/cur-landing-stairway-2-small.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
@@ -47,11 +47,11 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
                 </section>
                 <section
                   key={`${section.value.id}-2`}
-                  className="landing-ladder"
+                  className="landing-stairway"
                 >
                   <div>
                     <div id="lad1-container">
-                      <LandingLadderSVG1 />
+                      <LandingStairwaySVG1 />
                       <p id="lad1">
                         <span id="lad1_how_can">How can you</span>
                         <span id="lad1_boost" className="color">
@@ -62,8 +62,8 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
                       </p>
                     </div>
                     <div id="lad2-container">
-                      <LandingLadderSVG2 />
-                      <LandingLadderSVG2Small />
+                      <LandingStairwaySVG2 />
+                      <LandingStairwaySVG2Small />
                       <p id="lad2">
                         <span id="stair-1">
                           Learn about research collaboration and other essential

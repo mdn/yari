@@ -162,6 +162,10 @@
       &:link,
       &:visited {
         text-decoration: underline;
+
+        &.button {
+          text-decoration: none;
+        }
       }
 
       &:hover,

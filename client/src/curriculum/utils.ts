@@ -1,11 +1,10 @@
-// Using this import fails the build...
-
 import { useEffect } from "react";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import useSWR from "swr";
 import { HTTPError } from "../document";
 import { WRITER_MODE } from "../env";
 
+// Using this import fails the build...
 //import { Topic } from "../../../libs/types/curriculum";
 export enum Topic {
   WebStandards = "Web Standards & Semantics",

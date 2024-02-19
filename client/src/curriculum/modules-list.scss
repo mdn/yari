@@ -118,7 +118,6 @@
           grid-area: t;
           margin-left: 0.5rem;
           margin-top: 2rem;
-          text-decoration: none;
           width: fit-content;
           @media screen and (min-width: $screen-md) {
             margin-left: 0;
@@ -166,7 +165,7 @@
         }
 
         &:hover {
-          border-color: rgba(227, 100, 42, 0.7);
+          border-color: var(--cur-border-color-list-item-hover);
         }
 
         > header {
@@ -227,9 +226,6 @@
         }
       }
       @media screen and (min-width: $screen-sm) {
-        grid-template-columns: 1fr 1fr;
-      }
-      @media screen and (min-width: $screen-md) {
         grid-template-columns: 1fr 1fr;
       }
       @media screen and (min-width: $screen-xxl) {

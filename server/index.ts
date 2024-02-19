@@ -53,7 +53,7 @@ import {
   findPostBySlug,
   findPostPathBySlug,
 } from "../build/blog.js";
-import { findModuleBySlug } from "../build/curriculum.js";
+import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
 async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
@@ -237,14 +237,6 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
-//app.get("/:locale/curriculum/index.json", async (req, res) => {
-//  const data = await buildIndex();
-//  if (!data) {
-//    return res.status(404).send("Nothing here 🤷‍♂️");
-//  }
-//  return res.json(data);
-//});
-
 app.get(
   [
     "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
@@ -252,7 +244,7 @@ app.get(
   ],
   async (req, res) => {
     const { slug = "" } = req.params;
-    const data = await findModuleBySlug(slug);
+    const data = await findCurriculumPageBySlug(slug);
     if (!data) {
       return res.status(404).send("Nothing here 🤷‍♂️");
     }

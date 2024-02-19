@@ -5,17 +5,7 @@ import { ReactComponent as StylingSVG } from "../../public/assets/curriculum/cur
 import { ReactComponent as PracticesSVG } from "../../public/assets/curriculum/cur-topic-practices.svg";
 
 import "./topic-icon.scss";
-
-// Using this import fails the build...
-//import { Topic } from "../../../libs/types/curriculum";
-enum Topic {
-  WebStandards = "Web Standards & Semantics",
-  Styling = "Styling",
-  Scripting = "Scripting",
-  BestPractices = "Best Practices",
-  Tooling = "Tooling",
-  None = "",
-}
+import { Topic } from "./utils";
 
 export function TopicIcon({ topic }: { topic: Topic }) {
   switch (topic) {
