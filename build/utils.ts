@@ -24,6 +24,10 @@ import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
+export function escapeRegExp(str: string) {
+  return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+}
+
 export function humanFileSize(size: number) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));

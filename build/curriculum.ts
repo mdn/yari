@@ -6,6 +6,7 @@ import * as kumascript from "../kumascript/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { syntaxHighlight } from "./syntax-highlight.js";
 import {
+  escapeRegExp,
   injectLoadingLazyAttributes,
   injectNoTranslate,
   makeTOC,
@@ -67,15 +68,15 @@ export function fileToSlug(file) {
     .replace(/(\d+-|\.md$|\/0?-?README)/g, "");
 }
 
-export async function slugToFile(slug) {
+export async function slugToFile(slug: string) {
   const all = await allFiles();
   const re = new RegExp(
     path.join(
-      CURRICULUM_ROOT,
+      escapeRegExp(CURRICULUM_ROOT),
       "curriculum",
       `${slug
         .split("/")
-        .map((x) => String.raw`(\d+-)?${x}`)
+        .map((x) => String.raw`(\d+-)?${escapeRegExp(x)}`)
         .join("/")}.md`
     )
   );
@@ -246,7 +247,7 @@ export async function findCurriculumPageBySlug(
   try {
     module = await readCurriculumPage(file, { forIndex: false });
   } catch (e) {
-    console.error(`No file found for ${slug}`, e);
+    console.error(`No file found for ${slug}: ${e}`);
     return;
   }
   const { body, meta } = module;
