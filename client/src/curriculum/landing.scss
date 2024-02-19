@@ -247,7 +247,7 @@
     }
   }
 
-  .landing-ladder {
+  .landing-stairway {
     background-color: var(--background-secondary);
     margin: 0;
     max-width: 100%;
@@ -274,7 +274,7 @@
         grid-template-columns: 1fr 1.4fr;
       }
 
-      > #lad1-container {
+      > #stairway1-container {
         --fs: clamp(1rem, calc(3 * calc(100vw / 100)), 1.75rem);
         @media screen and (min-width: $screen-lg) {
           --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
@@ -289,7 +289,7 @@
           width: 100%;
         }
 
-        #lad1 {
+        #stairway1 {
           font-size: var(--fs);
           left: 32%;
           position: absolute;
@@ -307,7 +307,7 @@
         }
       }
 
-      > #lad2-container {
+      > #stairway2-container {
         --fs: clamp(0.825rem, calc(1.25 * calc(100vw / 100)), 1rem);
         @media screen and (min-width: $screen-md) {
           --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
@@ -316,7 +316,7 @@
         position: relative;
         transform: translateX(-5vw);
 
-        #lad2 {
+        #stairway2 {
           font-size: var(--fs);
           height: 100%;
           left: 0;

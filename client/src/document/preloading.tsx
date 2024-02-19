@@ -1,5 +1,3 @@
-import { Link, LinkProps } from "react-router-dom";
-
 const prefetches = new Set<string>();
 
 export function preload(url: string) {
