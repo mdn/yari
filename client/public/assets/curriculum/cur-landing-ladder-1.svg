@@ -38,18 +38,5 @@
     d="M124.61 323.5s-1.823.791-1 .5c.39-.138.924-1.515 2-2 1.513-.682 3.108-1 3.108-1l.002 8h-4.5z" />
   <path fill="#83BB9E"
     d="m121.109 326.5-.5 1 29.61-.5s.5 1.195.5 2-.5 2-.5 2h-31s-.385-.579-.5-1c-.154-.565-.138-.931 0-1.5.231-.949 2.39-2 2.39-2" />
-  <path stroke="#000" stroke-width=".5" d="M150.219 327h-21.5v-5" /><text>
-    <tspan x="194.219" y="124">
-      How can you
-    </tspan>
-    <tspan x="194.219" y="164">
-      <tspan class="color">boost your employability </tspan>
-    </tspan>
-    <tspan x="194.219" y="204">
-      with the MDN
-    </tspan>
-    <tspan x="194.219" y="244">
-      Curriculum?
-    </tspan>
-  </text>
+  <path stroke="#000" stroke-width=".5" d="M150.219 327h-21.5v-5" />
 </svg>

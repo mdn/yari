@@ -253,6 +253,7 @@
     max-width: 100%;
 
     > div {
+      color: var(--text-secondary);
       display: grid;
       grid-template-areas: "a" "b";
       grid-template-columns: auto;
@@ -264,48 +265,139 @@
       padding-left: var(--gutter);
       padding-right: var(--gutter);
       width: 100%;
+
       @media screen and (min-width: $screen-md) {
         grid-template-areas: "a b";
         grid-template-columns: 1fr 1.4fr;
       }
 
-      > svg {
-        &:nth-child(1) {
-          font-size: 2rem;
-          grid-area: a;
-          transform: translateX(2vw);
+      > #lad1-container {
+        --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
+        grid-area: a;
+        margin: 0;
+        position: relative;
+        transform: translateX(2vw);
+        width: 100%;
+
+        svg {
           width: 100%;
         }
 
-        &:nth-child(2) {
-          display: none;
-          grid-area: b;
-          transform: translateX(-5vw);
-          width: 100%;
+        #lad1 {
+          font-size: var(--fs);
+          left: 32%;
+          position: absolute;
+          top: 18%;
+
+          > span {
+            display: block;
+            line-height: calc(1.25 * var(--fs));
+            text-wrap: nowrap;
+          }
+
+          .color {
+            color: var(--cur-color);
+          }
+        }
+      }
+
+      > #lad2-container {
+        --fs: clamp(0.825rem, calc(1.25 * calc(100vw / 100)), 1rem);
+        @media screen and (min-width: $screen-md) {
+          --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
+        }
+        grid-area: b;
+        position: relative;
+        transform: translateX(-5vw);
+
+        #lad2 {
+          font-size: var(--fs);
+          height: 100%;
+          left: 0;
+          margin: 0;
+          overflow: scroll;
+          position: absolute;
+          top: 0;
+          width: calc(100% + 5vw);
+
+          > span {
+            display: block;
+            line-height: calc(1.25 * var(--fs));
+            max-width: 10rem;
+            position: absolute;
+            text-wrap: nowrap;
+            text-wrap: wrap;
+            @media screen and (min-width: $screen-md) {
+              max-width: initial;
+              text-wrap: nowrap;
+            }
+          }
+
+          #stair-1 {
+            left: 47%;
+            top: 36%;
+          }
+
+          #stair-2 {
+            left: 33%;
+            top: 52%;
+          }
+
+          #stair-3 {
+            left: 23%;
+            top: 71%;
+          }
+
+          #stair-4 {
+            left: 8%;
+            top: 86%;
+          }
           @media screen and (min-width: $screen-md) {
-            display: initial;
+            #stair-1 {
+              left: 35%;
+              top: 53%;
+            }
+
+            #stair-2 {
+              left: 27%;
+              top: 65%;
+            }
+
+            #stair-3 {
+              left: 13%;
+              top: 77%;
+            }
+
+            #stair-4 {
+              left: 0%;
+              top: 90%;
+            }
           }
         }
 
-        &:nth-child(3) {
-          grid-area: b;
-          max-width: 100%;
-          width: 100%;
-          @media screen and (min-width: $screen-md) {
+        svg {
+          &:nth-child(1) {
             display: none;
+            grid-area: b;
+            width: 100%;
+            @media screen and (min-width: $screen-md) {
+              display: initial;
+            }
           }
-        }
 
-        #text29 {
-          font: var(--type-heading-h2);
-        }
+          &:nth-child(2) {
+            grid-area: b;
+            max-width: 100%;
+            width: 100%;
+            @media screen and (min-width: $screen-md) {
+              display: none;
+            }
+          }
 
-        text {
-          fill: var(--text-secondary);
-        }
-
-        .color {
-          fill: var(--cur-color);
+          text {
+            fill: var(--text-secondary);
+            opacity: 0.5;
+          }
         }
       }
     }
