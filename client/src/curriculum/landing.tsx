@@ -50,9 +50,37 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
                   className="landing-ladder"
                 >
                   <div>
-                    <LandingLadderSVG1 />
-                    <LandingLadderSVG2 />
-                    <LandingLadderSVG2Small />
+                    <div id="lad1-container">
+                      <LandingLadderSVG1 />
+                      <p id="lad1">
+                        <span id="lad1_how_can">How can you</span>
+                        <span id="lad1_boost" className="color">
+                          boost your employability{" "}
+                        </span>
+                        <span id="lad1_with">with the MDN</span>
+                        <span id="lad1_cur">Curriculum?</span>
+                      </p>
+                    </div>
+                    <div id="lad2-container">
+                      <LandingLadderSVG2 />
+                      <LandingLadderSVG2Small />
+                      <p id="lad2">
+                        <span id="stair-1">
+                          Learn about research collaboration and other essential
+                          soft skills.
+                        </span>
+                        <span id="stair-2">
+                          Balance between modern tooling and long-term best
+                          practices.
+                        </span>
+                        <span id="stair-3">
+                          Get access to hight-quality recommended resources.
+                        </span>
+                        <span id="stair-4">
+                          Get guidance from trusted voices.
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </section>
               </>

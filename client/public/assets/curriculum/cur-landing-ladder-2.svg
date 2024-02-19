@@ -52,11 +52,5 @@
       <stop offset=".4" stop-color="var(--cur-bg-color)" stop-opacity=".289" />
       <stop offset=".6" stop-color="var(--cur-bg-color)" stop-opacity="0" />
     </linearGradient>
-  </defs><text x="756.338" y="220">
-    Learn about research collaboration and other essential soft skills</text><text x="681.211" y="265">
-    Balance between modern tooling and long-term best practices</text><text x="565.347" y="310">
-    Get access to hight-quality recommened resrouces
-  </text><text x="461.71" y="355">
-    Get guidance from trusted voices
-  </text>
+  </defs>
 </svg>

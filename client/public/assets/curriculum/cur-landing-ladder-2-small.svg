@@ -52,24 +52,5 @@
       <stop offset=".4" stop-color="var(--cur-bg-color)" stop-opacity=".289" />
       <stop offset=".6" stop-color="var(--cur-bg-color)" stop-opacity="0" />
     </linearGradient>
-  </defs><text fill="var(--text-primary)">
-    <tspan x="32" y="420">
-      Get Guidance from
-      <tspan x="32" y="440">trusted voices.</tspan>
-    </tspan>
-    <tspan x="87" y="350">
-      Get access to high-
-      <tspan x="87" y="370">qualtiy resources.</tspan>
-    </tspan>
-    <tspan x="125" y="260">
-      Balance knowledge of modern
-      <tspan x="125" y="280">tooling with long-testm best</tspan>
-      <tspan x="125" y="300">practices.</tspan>
-    </tspan>
-    <tspan x="176" y="180">
-      Learn about research,
-      <tspan x="176" y="200">collaboration, and other</tspan>
-      <tspan x="176" y="220">essential soft skills.</tspan>
-    </tspan>
-  </text>
+  </defs>
 </svg>
