@@ -274,6 +274,10 @@
         grid-template-columns: 1fr 1.4fr;
       }
 
+      svg {
+        width: 100%;
+      }
+
       > #stairway1-container {
         --fs: clamp(1rem, calc(3 * calc(100vw / 100)), 1.75rem);
         @media screen and (min-width: $screen-lg) {
@@ -284,10 +288,6 @@
         position: relative;
         transform: translateX(2vw);
         width: 100%;
-
-        svg {
-          width: 100%;
-        }
 
         #stairway1 {
           font-size: var(--fs);
@@ -380,20 +380,18 @@
           }
         }
 
-        svg {
-          &:nth-child(1) {
+        > svg {
+          &#stairway2large {
             display: none;
             grid-area: b;
-            width: 100%;
             @media screen and (min-width: $screen-md) {
               display: initial;
             }
           }
 
-          &:nth-child(2) {
+          &#stairway2small {
             grid-area: b;
             max-width: 100%;
-            width: 100%;
             @media screen and (min-width: $screen-md) {
               display: none;
             }

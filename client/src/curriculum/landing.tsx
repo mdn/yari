@@ -50,21 +50,32 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
                   className="landing-stairway"
                 >
                   <div>
-                    <div id="lad1-container">
-                      <LandingStairwaySVG1 />
-                      <p id="lad1">
-                        <span id="lad1_how_can">How can you</span>
-                        <span id="lad1_boost" className="color">
+                    <div id="stairway1-container">
+                      <LandingStairwaySVG1
+                        aria-label="woman presenting the following text"
+                        role="img"
+                      />
+                      <p id="stairway1">
+                        <span id="stairway1_how_can">How can you</span>
+                        <span id="stairway1_boost" className="color">
                           boost your employability{" "}
                         </span>
-                        <span id="lad1_with">with the MDN</span>
-                        <span id="lad1_cur">Curriculum?</span>
+                        <span id="stairway1_with">with the MDN</span>
+                        <span id="stairway1_cur">Curriculum?</span>
                       </p>
                     </div>
-                    <div id="lad2-container">
-                      <LandingStairwaySVG2 />
-                      <LandingStairwaySVG2Small />
-                      <p id="lad2">
+                    <div id="stairway2-container">
+                      <LandingStairwaySVG2
+                        aria-label="woman on top of a stairway with a flag"
+                        role="img"
+                        id="stairway2large"
+                      />
+                      <LandingStairwaySVG2Small
+                        aria-label="woman on top of a stairway with a flag"
+                        role="img"
+                        id="stairway2small"
+                      />
+                      <p id="stairway2">
                         <span id="stair-1">
                           Learn about research collaboration and other essential
                           soft skills.
