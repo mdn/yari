@@ -267,12 +267,18 @@
       width: 100%;
 
       @media screen and (min-width: $screen-md) {
+        grid-template-columns: min(100%, 34rem);
+      }
+      @media screen and (min-width: $screen-lg) {
         grid-template-areas: "a b";
         grid-template-columns: 1fr 1.4fr;
       }
 
       > #lad1-container {
-        --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
+        --fs: clamp(1rem, calc(3 * calc(100vw / 100)), 1.75rem);
+        @media screen and (min-width: $screen-lg) {
+          --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
+        }
         grid-area: a;
         margin: 0;
         position: relative;
@@ -315,7 +321,6 @@
           height: 100%;
           left: 0;
           margin: 0;
-          overflow: scroll;
           position: absolute;
           top: 0;
           width: calc(100% + 5vw);
@@ -392,11 +397,6 @@
             @media screen and (min-width: $screen-md) {
               display: none;
             }
-          }
-
-          text {
-            fill: var(--text-secondary);
-            opacity: 0.5;
           }
         }
       }
@@ -509,6 +509,7 @@
           }
 
           a {
+            // Mimic the button in content as we only have an <a>
             --button-bg: var(--button-primary-default);
             --button-bg-hover: var(--button-primary-hover);
             --button-bg-active: var(--button-primary-active);
