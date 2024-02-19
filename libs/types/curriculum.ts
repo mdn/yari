@@ -16,18 +16,18 @@ export enum Template {
   about = "about",
 }
 
-export interface ModuleIndexEntry {
+export interface CurriculumIndexEntry {
   url: string;
   title: string;
   slug: string;
   summary?: string;
   topic?: Topic;
-  children?: ModuleIndexEntry[];
+  children?: CurriculumIndexEntry[];
 }
 
 export interface PrevNext {
-  next?: ModuleIndexEntry;
-  prev?: ModuleIndexEntry;
+  next?: CurriculumIndexEntry;
+  prev?: CurriculumIndexEntry;
 }
 
 export interface CurriculumFrontmatter {
@@ -36,20 +36,20 @@ export interface CurriculumFrontmatter {
   topic?: Topic;
 }
 
-export interface ModuleMetaData extends CurriculumFrontmatter {
+export interface CurriculumMetaData extends CurriculumFrontmatter {
   url: string;
   filename: string;
   slug: string;
   title: string;
-  sidebar: ModuleIndexEntry[];
-  modules: ModuleIndexEntry[];
+  sidebar: CurriculumIndexEntry[];
+  modules: CurriculumIndexEntry[];
   parents: DocParent[];
   prevNext?: PrevNext;
 }
 
 export interface CurriculumDoc extends Doc {
-  sidebar?: ModuleIndexEntry[];
-  modules?: ModuleIndexEntry[];
+  sidebar?: CurriculumIndexEntry[];
+  modules?: CurriculumIndexEntry[];
   prevNext?: PrevNext;
   topic?: Topic;
 }
@@ -59,14 +59,14 @@ export interface CurriculumData {
 }
 
 export interface ReadCurriculum {
-  meta: ModuleMetaData;
+  meta: CurriculumMetaData;
   body: string;
 }
 
-export interface BuildData {
+export interface CurriculumBuildData {
   url: string;
   rawBody: string;
-  metadata: { locale: string } & ModuleMetaData;
+  metadata: { locale: string } & CurriculumMetaData;
   isMarkdown: true;
   fileInfo: {
     path: string;

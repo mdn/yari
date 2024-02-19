@@ -246,19 +246,26 @@ export function postProcessExternalLinks($) {
  * @param {current url} url
  */
 export function postProcessCurriculumLinks($, toUrl) {
+  // expand relative links
   $("a[href^=.]").each((_, element) => {
-    // Expand relative links (TODO: fix)
     const $a = $(element);
     $a.attr("href", toUrl($a.attr("href")));
   });
+
+  // remove trailing .md for /en-US/curriculum/*
   $("a[href^=/en-US/curriculum]").each((_, element) => {
     const $a = $(element);
     $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "$1/$2"));
   });
+
+  // remove trailing .md and add locale for /curriculum/*
   $("a[href^=/curriculum]").each((_, element) => {
     const $a = $(element);
     $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
   });
+
+  // remove leading numbers for /en-US/curriculum/*
+  // /en-US/curriculum/2-core/ -> /en-US/curriculum/core/
   $("a[href^=/en-US/curriculum]").each((_, element) => {
     const $a = $(element);
     const [head, hash] = $a.attr("href").split("#");

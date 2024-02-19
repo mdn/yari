@@ -1,4 +1,4 @@
-import { ModuleIndexEntry } from "../../../libs/types/curriculum";
+import { CurriculumIndexEntry } from "../../../libs/types/curriculum";
 import { TopicIcon } from "./topic-icon";
 import { topic2css } from "./utils";
 
@@ -6,7 +6,11 @@ import "./modules-list.scss";
 import { useState } from "react";
 import { Button } from "../ui/atoms/button";
 
-export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
+export function ModulesListList({
+  modules,
+}: {
+  modules: CurriculumIndexEntry[];
+}) {
   const [tab, setTab] = useState(1);
   return (
     <ol className="modules-list-list">
@@ -38,7 +42,7 @@ export function ModulesListList({ modules }: { modules: ModuleIndexEntry[] }) {
   );
 }
 
-export function ModulesList({ modules }: { modules: ModuleIndexEntry[] }) {
+export function ModulesList({ modules }: { modules: CurriculumIndexEntry[] }) {
   return (
     <ol className="modules-list">
       {modules.map((c, j) => {

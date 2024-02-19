@@ -29,21 +29,3 @@ export function preloadSupported() {
   );
   return _isSupported;
 }
-
-export function PreloadingDocumentLink(props: LinkProps) {
-  return (
-    <Link
-      {...props}
-      onMouseOver={(event) => {
-        if (preloadSupported()) {
-          preload(`${props.to}/index.json`);
-        }
-        if (props.onMouseOver) {
-          props.onMouseOver(event);
-        }
-      }}
-    >
-      {props.children}
-    </Link>
-  );
-}

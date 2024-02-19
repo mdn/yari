@@ -1,4 +1,4 @@
-import { ModuleIndexEntry } from "../../../libs/types/curriculum";
+import { CurriculumIndexEntry } from "../../../libs/types/curriculum";
 
 import "./module.scss";
 export function Sidebar({
@@ -8,7 +8,7 @@ export function Sidebar({
 }: {
   current: string;
   extraClasses?: string;
-  sidebar: ModuleIndexEntry[];
+  sidebar: CurriculumIndexEntry[];
 }) {
   return (
     <aside

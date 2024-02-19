@@ -21,13 +21,13 @@ import fs from "node:fs/promises";
 import {
   CurriculumFrontmatter,
   CurriculumData,
-  ModuleMetaData,
-  ModuleIndexEntry,
+  CurriculumMetaData,
+  CurriculumIndexEntry,
   PrevNext,
   Template,
   CurriculumDoc,
   ReadCurriculum,
-  BuildData,
+  CurriculumBuildData,
 } from "../libs/types/curriculum.js";
 import frontmatter from "front-matter";
 import { HydrationData } from "../libs/types/hydration.js";
@@ -50,7 +50,12 @@ export const buildIndex = memoize(async () => {
   const modules = await Promise.all(
     files.map(
       async (file) =>
-        (await readModule(file, { previousNext: false, forIndex: true })).meta
+        (
+          await readCurriculumPage(file, {
+            previousNext: false,
+            forIndex: true,
+          })
+        ).meta
     )
   );
   return modules;
@@ -79,9 +84,9 @@ export async function slugToFile(slug) {
   });
 }
 
-export async function buildModuleIndex(
-  mapper: (x: ModuleMetaData) => Partial<ModuleMetaData> = (x) => x
-): Promise<ModuleIndexEntry[]> {
+export async function buildCurriculumIndex(
+  mapper: (x: CurriculumMetaData) => Partial<CurriculumMetaData> = (x) => x
+): Promise<CurriculumIndexEntry[]> {
   const index = await buildIndex();
 
   const s = index.reduce((item, meta) => {
@@ -102,8 +107,8 @@ export async function buildModuleIndex(
   return s;
 }
 
-export async function buildSidebar(): Promise<ModuleIndexEntry[]> {
-  const index = await buildModuleIndex(({ url, slug, title }) => {
+async function buildCurriculumSidebar(): Promise<CurriculumIndexEntry[]> {
+  const index = await buildCurriculumIndex(({ url, slug, title }) => {
     return { url, slug, title };
   });
 
@@ -120,19 +125,24 @@ function prevNextFromIndex(i, index): PrevNext {
   return { prev, next };
 }
 
-export async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
-  const index = (await buildModuleIndex()).filter((x) => x?.children?.length);
+async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
+  const index = (await buildCurriculumIndex()).filter(
+    (x) => x?.children?.length
+  );
   const i = index.findIndex((x) => x.slug === slug);
   return prevNextFromIndex(i, index);
 }
 
-export async function buildPrevNextModule(slug: string): Promise<PrevNext> {
+async function buildPrevNextModule(slug: string): Promise<PrevNext> {
   const index = await buildIndex();
   const i = index.findIndex((x) => x.slug === slug);
   return prevNextFromIndex(i, index);
 }
 
-function breadPath(url: string, cur: ModuleIndexEntry[]): DocParent[] | null {
+function breadPath(
+  url: string,
+  cur: CurriculumIndexEntry[]
+): DocParent[] | null {
   for (const entry of cur) {
     if (entry.url === url) {
       return [{ uri: entry.url, title: entry.title }];
@@ -147,8 +157,8 @@ function breadPath(url: string, cur: ModuleIndexEntry[]): DocParent[] | null {
   return null;
 }
 
-export async function buildParents(url: string): Promise<DocParent[]> {
-  const index = await buildModuleIndex(({ url, title }) => {
+async function buildParents(url: string): Promise<DocParent[]> {
+  const index = await buildCurriculumIndex(({ url, title }) => {
     return { url, title };
   });
   const parents = breadPath(url, index);
@@ -163,7 +173,7 @@ export async function buildParents(url: string): Promise<DocParent[]> {
   return [];
 }
 
-async function readModule(
+async function readCurriculumPage(
   file: string,
   options?: {
     previousNext?: boolean;
@@ -179,17 +189,18 @@ async function readModule(
   const slug = fileToSlug(file);
   const url = `/${DEFAULT_LOCALE}/${slug}/`;
 
-  let sidebar: ModuleIndexEntry[];
+  let sidebar: CurriculumIndexEntry[];
   let parents: DocParent[];
 
-  // For module overview and landing page set modules.
-  let modules: ModuleIndexEntry[];
+  let modules: CurriculumIndexEntry[];
   let prevNext: PrevNext;
   if (!options?.forIndex) {
     if (attributes.template === Template.landing) {
-      modules = (await buildModuleIndex())?.filter((x) => x.children?.length);
+      modules = (await buildCurriculumIndex())?.filter(
+        (x) => x.children?.length
+      );
     } else if (attributes.template === Template.overview) {
-      modules = (await buildModuleIndex())?.find(
+      modules = (await buildCurriculumIndex())?.find(
         (x) => x.slug === slug
       )?.children;
     }
@@ -199,7 +210,7 @@ async function readModule(
       prevNext = await buildPrevNextOverview(slug);
     }
 
-    sidebar = await buildSidebar();
+    sidebar = await buildCurriculumSidebar();
     parents = await buildParents(url);
   } else {
     title = title
@@ -224,7 +235,7 @@ async function readModule(
   };
 }
 
-export async function findModuleBySlug(
+export async function findCurriculumPageBySlug(
   slug: string
 ): Promise<CurriculumData | null> {
   let file = await slugToFile(slug);
@@ -233,14 +244,14 @@ export async function findModuleBySlug(
   }
   let module;
   try {
-    module = await readModule(file, { forIndex: false });
+    module = await readCurriculumPage(file, { forIndex: false });
   } catch (e) {
     console.error(`No file found for ${slug}`, e);
     return;
   }
   const { body, meta } = module;
 
-  const d: BuildData = {
+  const d: CurriculumBuildData = {
     url: meta.url,
     rawBody: body,
     metadata: { locale: DEFAULT_LOCALE, ...meta },
@@ -250,11 +261,13 @@ export async function findModuleBySlug(
     },
   };
 
-  const doc = await buildModule(d);
+  const doc = await buildCurriculumPage(d);
   return { doc };
 }
 
-export async function buildModule(document: BuildData): Promise<Doc> {
+export async function buildCurriculumPage(
+  document: CurriculumBuildData
+): Promise<Doc> {
   const { metadata } = document;
 
   const doc = { locale: DEFAULT_LOCALE } as Partial<CurriculumDoc>;
@@ -322,11 +335,11 @@ export async function buildCurriculum(options: {
   const locale = DEFAULT_LOCALE;
 
   for (const file of await allFiles()) {
-    const { meta, body } = await readModule(file, {
+    const { meta, body } = await readCurriculumPage(file, {
       forIndex: false,
     });
 
-    const renderDoc: BuildData = {
+    const renderDoc: CurriculumBuildData = {
       url: meta.url,
       rawBody: body,
       metadata: { locale, ...meta },
@@ -335,7 +348,7 @@ export async function buildCurriculum(options: {
         path: file,
       },
     };
-    const builtDoc = await buildModule(renderDoc);
+    const builtDoc = await buildCurriculumPage(renderDoc);
     const { doc } = {
       doc: { ...builtDoc, summary: meta.summary, mdn_url: meta.url },
     };
