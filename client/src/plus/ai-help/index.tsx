@@ -287,7 +287,6 @@ function AIHelpAssistantResponse({
   const gleanClick = useGleanClick();
   const locale = useLocale();
   const { highlightedQueueExample } = useUIStatus();
-  message.status = MessageStatus.Errored.toString() as MessageStatus;
 
   let sample = 0;
 
