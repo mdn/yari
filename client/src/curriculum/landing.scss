@@ -299,6 +299,7 @@
             display: block;
             line-height: calc(1.25 * var(--fs));
             text-wrap: nowrap;
+            width: max-content;
           }
 
           .color {
@@ -330,7 +331,6 @@
             line-height: calc(1.25 * var(--fs));
             max-width: 10rem;
             position: absolute;
-            text-wrap: nowrap;
             text-wrap: wrap;
             @media screen and (min-width: $screen-md) {
               max-width: initial;
