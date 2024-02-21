@@ -1,5 +1,50 @@
 # Changelog
 
+## [2.39.4](https://github.com/mdn/yari/compare/v2.39.3...v2.39.4) (2024-02-21)
+
+
+### Bug Fixes
+
+* **ai-help:** send correct context when editing question ([#10511](https://github.com/mdn/yari/issues/10511)) ([c49c125](https://github.com/mdn/yari/commit/c49c125e3cd217595095d5a2c755a6535ead43b7))
+* **bcd:** re-surface "see bug xxxxx" notes ([#10549](https://github.com/mdn/yari/issues/10549)) ([6da4660](https://github.com/mdn/yari/commit/6da4660634350f39e3adfa0afcf15e1fcf838bc1))
+* locale missing page - no data due to missing await ([#10550](https://github.com/mdn/yari/issues/10550)) ([d022ba5](https://github.com/mdn/yari/commit/d022ba56efbbacdc302996991e2c50ed0cb077d9))
+
+
+### Miscellaneous
+
+* **ai-help:** update Usage Guidance copy ([#10531](https://github.com/mdn/yari/issues/10531)) ([475fe4e](https://github.com/mdn/yari/commit/475fe4e26ec5d4e65243bbc84dff10d753f51c04))
+* **build:** remove the translation_of metadata ([#10037](https://github.com/mdn/yari/issues/10037)) ([e457ab8](https://github.com/mdn/yari/commit/e457ab8bee5c90d743d226e7a713f51d4b2cf9b4))
+* **deps-dev:** bump @swc/core from 1.4.1 to 1.4.2 ([#10547](https://github.com/mdn/yari/issues/10547)) ([ee212ec](https://github.com/mdn/yari/commit/ee212ecc1f48aed98a2ba5fd292765b84f67ab04))
+* **deps-dev:** bump browserslist from 4.22.3 to 4.23.0 ([#10526](https://github.com/mdn/yari/issues/10526)) ([7bf19e8](https://github.com/mdn/yari/commit/7bf19e80d7f5150be919b5e529cdfe5fcd41c19c))
+* **deps-dev:** bump eslint-plugin-jest from 27.8.0 to 27.9.0 ([#10544](https://github.com/mdn/yari/issues/10544)) ([5e74f17](https://github.com/mdn/yari/commit/5e74f17be451042495b705a73f3ed0e19e0d41d3))
+* **deps-dev:** bump postcss-preset-env from 9.3.0 to 9.4.0 ([#10555](https://github.com/mdn/yari/issues/10555)) ([aa8384d](https://github.com/mdn/yari/commit/aa8384d6c48eb19e3d321abcb05ec38db5f458a8))
+* **deps-dev:** bump prettier-plugin-packagejson from 2.4.10 to 2.4.11 ([#10534](https://github.com/mdn/yari/issues/10534)) ([e14678d](https://github.com/mdn/yari/commit/e14678d3b32a7c22bde1f2d1a8a294077a6c3644))
+* **deps-dev:** bump react-router-dom from 6.22.0 to 6.22.1 ([#10546](https://github.com/mdn/yari/issues/10546)) ([5aa121f](https://github.com/mdn/yari/commit/5aa121fa363d14d09ee1b079acf8aa73b704c470))
+* **deps-dev:** bump sass from 1.70.0 to 1.71.0 ([#10536](https://github.com/mdn/yari/issues/10536)) ([b41eac2](https://github.com/mdn/yari/commit/b41eac27929ade4cd85a76a873f24944a005cdb0))
+* **deps-dev:** bump sass from 1.71.0 to 1.71.1 ([#10565](https://github.com/mdn/yari/issues/10565)) ([74c1448](https://github.com/mdn/yari/commit/74c1448abe481aea8ca40b1559c00e8e5410e07c))
+* **deps-dev:** bump sass-loader from 14.1.0 to 14.1.1 ([#10558](https://github.com/mdn/yari/issues/10558)) ([20075de](https://github.com/mdn/yari/commit/20075de977828a2dc4d9a822bef4af6d91f4c924))
+* **deps-dev:** bump swr from 2.2.4 to 2.2.5 ([#10538](https://github.com/mdn/yari/issues/10538)) ([4cc6e36](https://github.com/mdn/yari/commit/4cc6e3688b8ec80e91bc9d15be01c65523e96164))
+* **deps-dev:** bump the types group with 1 update ([#10542](https://github.com/mdn/yari/issues/10542)) ([6b95d7c](https://github.com/mdn/yari/commit/6b95d7ce3980ae332d75da3058b9f275f5e187f6))
+* **deps-dev:** bump the types group with 1 update ([#10552](https://github.com/mdn/yari/issues/10552)) ([f553b79](https://github.com/mdn/yari/commit/f553b79b3645c620ae69cad6b0ad8b61a2bc6b84))
+* **deps-dev:** bump webpack from 5.90.1 to 5.90.2 ([#10537](https://github.com/mdn/yari/issues/10537)) ([c976a8c](https://github.com/mdn/yari/commit/c976a8c6a46adfee78c42b6a960d157d4f3f7b08))
+* **deps-dev:** bump webpack from 5.90.1 to 5.90.2 in /client/pwa ([#10539](https://github.com/mdn/yari/issues/10539)) ([b485006](https://github.com/mdn/yari/commit/b485006bdae9dcddb7fbef4feac33b74d16063e9))
+* **deps-dev:** bump webpack from 5.90.2 to 5.90.3 ([#10553](https://github.com/mdn/yari/issues/10553)) ([52b9751](https://github.com/mdn/yari/commit/52b97510c87e23d611611e3e7e6d0d002b5435e2))
+* **deps-dev:** bump webpack from 5.90.2 to 5.90.3 in /client/pwa ([#10551](https://github.com/mdn/yari/issues/10551)) ([c326deb](https://github.com/mdn/yari/commit/c326debb90ad94e768ff4bd4dbc491cf36f9cc99))
+* **deps:** bump @codemirror/lang-javascript from 6.2.1 to 6.2.2 ([#10563](https://github.com/mdn/yari/issues/10563)) ([7052044](https://github.com/mdn/yari/commit/7052044cbcd0b3cbcd40003776327277ebc3a287))
+* **deps:** bump @codemirror/state from 6.4.0 to 6.4.1 ([#10559](https://github.com/mdn/yari/issues/10559)) ([5a8debb](https://github.com/mdn/yari/commit/5a8debb77a0eb010a040ba726a0181dd88f4544b))
+* **deps:** bump @mdn/browser-compat-data from 5.5.10 to 5.5.11 ([#10566](https://github.com/mdn/yari/issues/10566)) ([ab04c11](https://github.com/mdn/yari/commit/ab04c1104bd988f3a8a86bcfbd8b09e85254f929))
+* **deps:** bump @webref/css from 6.11.1 to 6.11.2 ([#10525](https://github.com/mdn/yari/issues/10525)) ([0759aff](https://github.com/mdn/yari/commit/0759aff7075500244df4a2dc335c9a0797d0325f))
+* **deps:** bump cryptography from 42.0.0 to 42.0.2 in /deployer ([#10540](https://github.com/mdn/yari/issues/10540)) ([dbd7f1c](https://github.com/mdn/yari/commit/dbd7f1ccf8cba54510a5288465b799771c789aea))
+* **deps:** bump cryptography from 42.0.2 to 42.0.4 in /deployer ([#10568](https://github.com/mdn/yari/issues/10568)) ([da1b839](https://github.com/mdn/yari/commit/da1b8398dd624400c6e72c30e199afaa053ada34))
+* **deps:** bump dotenv from 16.4.4 to 16.4.5 ([#10554](https://github.com/mdn/yari/issues/10554)) ([e42b736](https://github.com/mdn/yari/commit/e42b73663541d7ee707eebcd8bb8567f0556e9b3))
+* **deps:** bump inquirer from 9.2.14 to 9.2.15 ([#10556](https://github.com/mdn/yari/issues/10556)) ([cc69204](https://github.com/mdn/yari/commit/cc692045f5533ade6974da4f86cd1b8dc2b637b6))
+* **deps:** bump the dependencies group in /deployer with 3 updates ([#10541](https://github.com/mdn/yari/issues/10541)) ([50d18a1](https://github.com/mdn/yari/commit/50d18a10fe2c8eb0901df1950fe385056929f030))
+* **deps:** bump the dependencies group in /testing/integration with 2 updates ([#10548](https://github.com/mdn/yari/issues/10548)) ([2f4a09d](https://github.com/mdn/yari/commit/2f4a09d0021817207f1dc3a1dea368267ab49d28))
+* **deps:** bump the sentry group with 2 updates ([#10523](https://github.com/mdn/yari/issues/10523)) ([5edaf3c](https://github.com/mdn/yari/commit/5edaf3c2ae90085c343aca7917e6632630415bbb))
+* **deps:** bump the sentry group with 2 updates ([#10561](https://github.com/mdn/yari/issues/10561)) ([a8be690](https://github.com/mdn/yari/commit/a8be690e6f6802d8fcae9c336fdc4ee026d7e858))
+* **deps:** bump web-specs from 3.0.0 to 3.1.0 ([#10524](https://github.com/mdn/yari/issues/10524)) ([5aee08a](https://github.com/mdn/yari/commit/5aee08ae17675693180f4a0c0803c7d173e682ef))
+* **deps:** bump web-specs from 3.1.0 to 3.3.0 ([#10557](https://github.com/mdn/yari/issues/10557)) ([d4cd051](https://github.com/mdn/yari/commit/d4cd0514c8f8a25f7df11f7e0ca91c52a4006c16))
+
 ## [2.39.3](https://github.com/mdn/yari/compare/v2.39.2...v2.39.3) (2024-02-14)
 
 
