@@ -8,7 +8,7 @@ const LANGUAGES = new Map(
   })
 );
 
-type Translation = {
+export type Translation = {
   locale: string;
   title: string;
   native: string;

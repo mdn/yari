@@ -219,3 +219,27 @@ export interface NewsItem {
   };
   published_at: string;
 }
+
+export interface UnbuiltDocument {
+  metadata: DocFrontmatter & {
+    frontMatterKeys: string[];
+    locale: string;
+    popularity: number;
+    modified: any;
+    hash: any;
+    contributors: any;
+  };
+  url: string;
+  rawContent: string;
+  rawBody: string;
+  isMarkdown: boolean;
+  isTranslated: boolean;
+  isActive: boolean;
+  fileInfo: {
+    folder: string;
+    path: string;
+    frontMatterOffset: number;
+    root: string;
+  };
+  translations?: Translation[];
+}
