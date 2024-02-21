@@ -12,7 +12,7 @@ import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { NEWSLETTER_ENABLED } from "../../../env";
 
-export const UserMenu = () => {
+export default function UserMenu() {
   const userData = useUserData();
   const locale = useLocale();
   const isServer = useIsServer();
@@ -101,4 +101,4 @@ export const UserMenu = () => {
       </DropdownMenu>
     </DropdownMenuWrapper>
   );
-};
+}

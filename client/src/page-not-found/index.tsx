@@ -13,7 +13,7 @@ const FallbackLink = React.lazy(() => import("./fallback-link"));
 // Otherwise, you can use http://localhost:5042/en-US/docs/Whatever/you/like
 // (note the :5042 port) and that'll test it a bit more realistically.
 
-export function PageNotFound() {
+export default function PageNotFound() {
   const location = useLocation();
   const [url, setURL] = React.useState("");
 

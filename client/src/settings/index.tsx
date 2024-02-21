@@ -11,7 +11,7 @@ import { useScrollToAnchor } from "../hooks";
 
 const OfflineSettings = React.lazy(() => import("./offline-settings"));
 
-export function Settings() {
+export default function Settings() {
   const pageTitle = "Settings";
   useScrollToAnchor();
   return (

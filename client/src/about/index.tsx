@@ -2,7 +2,7 @@ import { useLocale } from "../hooks";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import "./index.scss";
 
-export function About() {
+export default function About() {
   const locale = useLocale();
   return (
     <div className="about">

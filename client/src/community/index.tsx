@@ -8,7 +8,7 @@ const STATS = [
   { id: 4, number: ">80M", legend: "page views per month" },
 ];
 
-export function Contribute() {
+export default function Contribute() {
   return (
     <main className="contribute">
       <div className="stats-container dark">
