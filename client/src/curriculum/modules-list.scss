@@ -185,14 +185,6 @@
             svg.topic-icon {
               height: 4rem;
               width: 4rem;
-
-              circle {
-                fill: var(--cur-bg-color-list-item-icon);
-              }
-
-              path {
-                fill: var(--cur-color-list-item-icon);
-              }
             }
 
             > span {
