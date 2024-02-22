@@ -111,7 +111,7 @@ export default class Templates {
       throw new ReferenceError(`Unknown macro ${name}`);
     }
     try {
-      const cacheKey = `${args.env.locale}:${name}:${JSON.stringify(args.$$)}`;
+      const cacheKey = `${args?.env?.locale}:${name}:${JSON.stringify(args.$$)}`;
 
       let output = RENDER_CACHE.get(cacheKey);
 
@@ -131,7 +131,7 @@ export default class Templates {
       return output;
     } catch (error) {
       console.error(
-        `The ${name} macro on ${args.env.url} failed to render.`,
+        `The ${name} macro on ${args?.env?.url} failed to render.`,
         error
       );
       throw error;
