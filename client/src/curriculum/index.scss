@@ -13,7 +13,10 @@
     --cur-bg-color-list-item-header: var(
       --cur-bg-color-list-item-topic-standards
     );
-    --cur-bg-color-topic-icon: var(--cur-bg-color-topic-icon-topic-standards);
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-standards);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-standards
+    );
   }
 
   .topic-styling {
@@ -22,7 +25,10 @@
     --cur-bg-color-list-item-header: var(
       --cur-bg-color-list-item-topic-styling
     );
-    --cur-bg-color-topic-icon: var(--cur-bg-color-topic-icon-topic-styling);
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-styling);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-styling
+    );
   }
 
   .topic-scripting {
@@ -31,7 +37,10 @@
     --cur-bg-color-list-item-header: var(
       --cur-bg-color-list-item-topic-scripting
     );
-    --cur-bg-color-topic-icon: var(--cur-bg-color-topic-icon-topic-scripting);
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-scripting);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-scripting
+    );
   }
 
   .topic-tooling {
@@ -40,7 +49,10 @@
     --cur-bg-color-list-item-header: var(
       --cur-bg-color-list-item-topic-tooling
     );
-    --cur-bg-color-topic-icon: var(--cur-bg-color-topic-icon-topic-tooling);
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-tooling);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-tooling
+    );
   }
 
   .topic-practices {
@@ -49,7 +61,10 @@
     --cur-bg-color-list-item-header: var(
       --cur-bg-color-list-item-topic-practices
     );
-    --cur-bg-color-topic-icon: var(--cur-bg-color-topic-icon-topic-practices);
+    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-practices);
+    --cur-bg-color-list-item-icon: var(
+      --cur-bg-color-list-item-icon-topic-practices
+    );
   }
 
   .curriculum-content {
