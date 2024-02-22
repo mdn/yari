@@ -615,6 +615,13 @@ export function AIHelpInner() {
     submit(question, chatId, parentId, messageId);
   }, [lastUserQuestion, submit]);
 
+  const isOffTopic = (message: Message) => {
+    return (
+      message.role === MessageRole.Assistant &&
+      message.content?.startsWith("I'm sorry, but I can't")
+    );
+  };
+
   return (
     <>
       <PlayQueue gleanContext={AI_HELP} />
@@ -640,26 +647,40 @@ export function AIHelpInner() {
                           "ai-help-message",
                           `role-${message.role}`,
                           `status-${message.status}`,
-                        ].join(" ")}
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
                       >
-                        <div className="ai-help-message-role">
-                          <RoleIcon role={message.role} />
-                        </div>
-                        {message.role === "user" ? (
-                          <AIHelpUserQuestion
-                            message={message}
-                            submit={submit}
-                            canEdit={!isQuotaExceeded(quota)}
-                            nextPrev={nextPrev}
-                            siblingCount={siblingCount}
-                          />
+                        {isOffTopic(message) ? (
+                          <NoteCard extraClasses="ai-help-error" type="error">
+                            <h4>Error</h4>
+                            <p>
+                              AI Help cannot answer questions outside of web
+                              development.
+                            </p>
+                          </NoteCard>
                         ) : (
-                          <AIHelpAssistantResponse
-                            message={message}
-                            queuedExamples={queuedExamples}
-                            setQueue={setQueue}
-                            messages={messages}
-                          />
+                          <>
+                            <div className="ai-help-message-role">
+                              <RoleIcon role={message.role} />
+                            </div>
+                            {message.role === "user" ? (
+                              <AIHelpUserQuestion
+                                message={message}
+                                submit={submit}
+                                canEdit={!isQuotaExceeded(quota)}
+                                nextPrev={nextPrev}
+                                siblingCount={siblingCount}
+                              />
+                            ) : (
+                              <AIHelpAssistantResponse
+                                message={message}
+                                queuedExamples={queuedExamples}
+                                setQueue={setQueue}
+                                messages={messages}
+                              />
+                            )}
+                          </>
                         )}
                       </li>
                     );
