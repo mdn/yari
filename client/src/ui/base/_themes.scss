@@ -230,11 +230,16 @@
   --cur-border-color-list-item: #f2f1f1;
   --cur-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
   --cur-bg-color-list-item-body: #fff;
-  --cur-bg-color-topic-icon-topic-standards: #fff;
-  --cur-bg-color-topic-icon-topic-styling: #fff;
-  --cur-bg-color-topic-icon-topic-scripting: #fff;
-  --cur-bg-color-topic-icon-topic-tooling: #fff;
-  --cur-bg-color-topic-icon-topic-practices: #fff;
+  --cur-color-list-item-icon-topic-standards: #{$mdn-color-light-theme-red-60};
+  --cur-color-list-item-icon-topic-styling: #{$mdn-color-light-theme-blue-60};
+  --cur-color-list-item-icon-topic-scripting: #{$mdn-color-light-theme-yellow-60};
+  --cur-color-list-item-icon-topic-tooling: #{$mdn-color-light-theme-green-60};
+  --cur-color-list-item-icon-topic-practices: #{$mdn-color-light-theme-violet-60};
+  --cur-bg-color-list-item-icon-topic-standards: #fff;
+  --cur-bg-color-list-item-icon-topic-styling: #fff;
+  --cur-bg-color-list-item-icon-topic-scripting: #fff;
+  --cur-bg-color-list-item-icon-topic-tooling: #fff;
+  --cur-bg-color-list-item-icon-topic-practices: #fff;
   --cur-bg-color-list-item-topic-standards: #{$mdn-color-light-theme-red-50}30;
   --cur-bg-color-list-item-topic-styling: #{$mdn-color-light-theme-blue-50}30;
   --cur-bg-color-list-item-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
@@ -504,11 +509,16 @@
   --cur-bg-color-list-item-topic-scripting: #343434;
   --cur-bg-color-list-item-topic-tooling: #343434;
   --cur-bg-color-list-item-topic-practices: #343434;
-  --cur-bg-color-topic-icon-topic-standards: #804248;
-  --cur-bg-color-topic-icon-topic-styling: #425080;
-  --cur-bg-color-topic-icon-topic-scripting: #806a42;
-  --cur-bg-color-topic-icon-topic-tooling: #428050;
-  --cur-bg-color-topic-icon-topic-practices: #584280;
+  --cur-color-list-item-icon-topic-standards: #f2919c;
+  --cur-color-list-item-icon-topic-styling: #91a6f2;
+  --cur-color-list-item-icon-topic-scripting: #f2cf8f;
+  --cur-color-list-item-icon-topic-tooling: #8ff2a4;
+  --cur-color-list-item-icon-topic-practices: #c891f2;
+  --cur-bg-color-list-item-icon-topic-standards: #804248;
+  --cur-bg-color-list-item-icon-topic-styling: #425080;
+  --cur-bg-color-list-item-icon-topic-scripting: #806a42;
+  --cur-bg-color-list-item-icon-topic-tooling: #428050;
+  --cur-bg-color-list-item-icon-topic-practices: #584280;
   --cur-shadow: 2px 2px 5px 0 rgba(36, 36, 36, 0.15),
     -2px 2px 8px 0 rgba(87, 87, 87, 0.15);
   --cur-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
