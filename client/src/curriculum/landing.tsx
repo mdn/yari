@@ -43,7 +43,7 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
               <>
                 <section key={`${section.value.id}-1`} className="modules">
                   <DisplayH2 id={id} title={title} titleAsText={titleAsText} />
-                  {doc.modules && <ModulesListList modules={doc.modules} />}
+                  {doc?.modules && <ModulesListList modules={doc.modules} />}
                 </section>
                 <section
                   key={`${section.value.id}-2`}

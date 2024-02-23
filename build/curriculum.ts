@@ -1,4 +1,9 @@
+import path from "node:path";
+import fs from "node:fs/promises";
+
 import { fdir } from "fdir";
+import frontmatter from "front-matter";
+
 import { BUILD_OUT_ROOT, CURRICULUM_ROOT } from "../libs/env/index.js";
 import { Doc, DocParent } from "../libs/types/document.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
@@ -17,8 +22,6 @@ import {
 } from "./utils.js";
 import { wrapTables } from "./wrap-tables.js";
 import { extractSections } from "./extract-sections.js";
-import path from "node:path";
-import fs from "node:fs/promises";
 import {
   CurriculumFrontmatter,
   CurriculumData,
@@ -30,12 +33,12 @@ import {
   ReadCurriculum,
   CurriculumBuildData,
 } from "../libs/types/curriculum.js";
-import frontmatter from "front-matter";
 import { HydrationData } from "../libs/types/hydration.js";
 import { memoize, slugToFolder } from "../content/utils.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
+import { CheerioAPI } from "cheerio";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -62,7 +65,7 @@ export const buildIndex = memoize(async () => {
   return modules;
 });
 
-export function fileToSlug(file) {
+export function fileToSlug(file: string) {
   return file
     .replace(`${CURRICULUM_ROOT}/`, "")
     .replace(/(\d+-|\.md$|\/0?-?README)/g, "");
@@ -116,7 +119,7 @@ async function buildCurriculumSidebar(): Promise<CurriculumIndexEntry[]> {
   return index;
 }
 
-function prevNextFromIndex(i, index): PrevNext {
+function prevNextFromIndex(i: number, index): PrevNext {
   const prev = i > 0 ? index[i - 1] : undefined;
   const next = i < index.length - 1 ? index[i + 1] : undefined;
 
@@ -239,16 +242,14 @@ async function readCurriculumPage(
 export async function findCurriculumPageBySlug(
   slug: string
 ): Promise<CurriculumData | null> {
-  let file = await slugToFile(slug);
-  if (!file) {
-    file = await slugToFile(`${slug}${slug ? "/" : ""}README`);
-  }
-  let module;
+  const file =
+    (await slugToFile(slug)) || (await slugToFile(path.join(slug, "README")));
+  let module: ReadCurriculum;
   try {
     module = await readCurriculumPage(file, { forIndex: false });
   } catch (e) {
     console.error(`No file found for ${slug}: ${e}`);
-    return;
+    return null;
   }
   const { body, meta } = module;
 
@@ -272,10 +273,9 @@ export async function buildCurriculumPage(
   const { metadata } = document;
 
   const doc = { locale: DEFAULT_LOCALE } as Partial<CurriculumDoc>;
-  let $ = null;
 
   const renderUrl = document.url.replace(/\/$/, "");
-  [$] = await kumascript.render(renderUrl, {}, document as any);
+  const [$] = await kumascript.render(renderUrl, {}, document as any);
 
   $("[data-token]").removeAttr("data-token");
   $("[data-flaw-src]").removeAttr("data-flaw-src");
@@ -369,7 +369,7 @@ export async function buildCurriculum(options: {
 
     await fs.mkdir(outPath, { recursive: true });
 
-    const html = renderHTML(`/${locale}/${meta.slug}/`, context);
+    const html: string = renderHTML(`/${locale}/${meta.slug}/`, context);
 
     const filePath = path.join(outPath, "index.html");
     const jsonFilePath = path.join(outPath, "index.json");
@@ -384,7 +384,7 @@ export async function buildCurriculum(options: {
   }
 }
 
-function setCurriculumTypes($) {
+function setCurriculumTypes($: CheerioAPI) {
   $("p").each((_, child) => {
     const p = $(child);
     const text = p.text();

@@ -11,20 +11,16 @@ export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props as CurriculumData);
   const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (
-    <>
-      {doc && (
-        <CurriculumLayout
-          doc={doc}
-          extraClasses={["curriculum-about", `topic-${topic2css(doc.topic)}`]}
-        >
-          <header>
-            <h1>
-              <span>{coloredTitle}</span> {restTitle.join(" ")}
-            </h1>
-          </header>
-          <RenderCurriculumBody doc={doc} />
-        </CurriculumLayout>
-      )}
-    </>
+    <CurriculumLayout
+      doc={doc}
+      extraClasses={["curriculum-about", `topic-${topic2css(doc?.topic)}`]}
+    >
+      <header>
+        <h1>
+          <span>{coloredTitle}</span> {restTitle.join(" ")}
+        </h1>
+      </header>
+      <RenderCurriculumBody doc={doc} />
+    </CurriculumLayout>
   );
 }

@@ -44,7 +44,9 @@ export function useDocTitle(doc?: CurriculumDoc) {
   }, [doc]);
 }
 
-export function useCurriculumDoc(appProps: CurriculumData) {
+export function useCurriculumDoc(
+  appProps: CurriculumData
+): CurriculumDoc | undefined {
   const dataURL = `./index.json`;
   const { data } = useSWR<CurriculumDoc>(
     dataURL,

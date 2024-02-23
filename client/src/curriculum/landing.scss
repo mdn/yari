@@ -309,7 +309,7 @@
       }
 
       > #stairway2-container {
-        --fs: clamp(0.825rem, calc(1.25 * calc(100vw / 100)), 1rem);
+        --fs: clamp(0.75rem, calc(1.25 * calc(100vw / 100)), 1rem);
         @media screen and (min-width: $screen-md) {
           --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
         }

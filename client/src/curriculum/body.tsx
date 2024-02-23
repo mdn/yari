@@ -6,10 +6,10 @@ export function RenderCurriculumBody({
   doc,
   renderer = () => null,
 }: {
-  doc: CurriculumDoc;
+  doc?: CurriculumDoc;
   renderer?: (section: Section, i: number) => null | JSX.Element;
 }) {
-  return doc.body.map((section, i) => {
+  return doc?.body.map((section, i) => {
     return (
       renderer(section, i) || (
         <Prose key={section.value.id} section={section.value} />
