@@ -290,33 +290,7 @@ function AIHelpAssistantResponse({
 
   return (
     <>
-      <div
-        className={[
-          "ai-help-message-progress",
-          message.status !== MessageStatus.Pending && "complete",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {message.status === MessageStatus.Pending
-          ? MESSAGE_SEARCHING
-          : MESSAGE_SEARCHED}
-      </div>
-      {message.sources && message.sources.length > 0 && (
-        <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
-            <li key={index}>
-              <InternalLink
-                to={url}
-                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
-                target="_blank"
-              >
-                {title}
-              </InternalLink>
-            </li>
-          ))}
-        </ul>
-      )}
+      <AIHelpAssistantResponseSources message={message} />
       {(message.content ||
         message.status === MessageStatus.InProgress ||
         message.status === MessageStatus.Errored) && (
@@ -510,6 +484,46 @@ function AIHelpAssistantResponse({
               </>
             )}
         </div>
+      )}
+    </>
+  );
+}
+
+function AIHelpAssistantResponseSources({
+  message,
+}: {
+  message: Pick<Message, "status" | "sources">;
+}) {
+  const gleanClick = useGleanClick();
+
+  return (
+    <>
+      <div
+        className={[
+          "ai-help-message-progress",
+          message.status !== MessageStatus.Pending && "complete",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
+      </div>
+      {message.sources && message.sources.length > 0 && (
+        <ul className="ai-help-message-sources">
+          {message.sources.map(({ url, title }, index) => (
+            <li key={index}>
+              <InternalLink
+                to={url}
+                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
+                target="_blank"
+              >
+                {title}
+              </InternalLink>
+            </li>
+          ))}
+        </ul>
       )}
     </>
   );
