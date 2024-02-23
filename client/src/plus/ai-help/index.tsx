@@ -331,11 +331,7 @@ function AIHelpAssistantResponse({
             .filter(Boolean)
             .join(" ")}
         >
-          {message.status === MessageStatus.Errored
-            ? MESSAGE_FAILED
-            : message.status === MessageStatus.InProgress
-              ? MESSAGE_ANSWERING
-              : MESSAGE_ANSWERED}
+          {messageForStatus(message.status)}
         </div>
       )}
       {message.content && (
@@ -515,6 +511,19 @@ function AIHelpAssistantResponse({
       )}
     </>
   );
+}
+
+function messageForStatus(status: MessageStatus) {
+  switch (status) {
+    case MessageStatus.Errored:
+      return MESSAGE_FAILED;
+
+    case MessageStatus.InProgress:
+      return MESSAGE_ANSWERING;
+
+    default:
+      return MESSAGE_ANSWERED;
+  }
 }
 
 export function AIHelpInner() {
