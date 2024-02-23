@@ -6,7 +6,7 @@ import frontmatter from "front-matter";
 
 import { BUILD_OUT_ROOT, CURRICULUM_ROOT } from "../libs/env/index.js";
 import { Doc, DocParent } from "../libs/types/document.js";
-import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { CURRICULUM_TITLE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import * as kumascript from "../kumascript/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { syntaxHighlight } from "./syntax-highlight.js";
@@ -314,7 +314,9 @@ export async function buildCurriculumPage(
     throw error;
   }
 
-  doc.pageTitle = `${doc.title} | MDN Curriculum`;
+  doc.pageTitle = doc.title
+    ? `${doc.title} | ${CURRICULUM_TITLE}`
+    : CURRICULUM_TITLE;
 
   doc.noIndexing = false;
   doc.toc = makeTOC(doc, true).map(({ text, id }) => {
