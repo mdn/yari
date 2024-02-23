@@ -293,7 +293,7 @@ function AIHelpAssistantResponse({
       <div
         className={[
           "ai-help-message-progress",
-          message.status !== MessageStatus.Pending && "complete",
+          message.status === MessageStatus.Pending && "active",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -323,8 +323,10 @@ function AIHelpAssistantResponse({
         <div
           className={[
             "ai-help-message-progress",
+            message.status === MessageStatus.InProgress && "active",
             message.status === MessageStatus.Complete && "complete",
             message.status === MessageStatus.Errored && "errored",
+            message.status === MessageStatus.Stopped && "stopped",
           ]
             .filter(Boolean)
             .join(" ")}

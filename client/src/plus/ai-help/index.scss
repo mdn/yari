@@ -383,7 +383,6 @@
         color: var(--text-secondary);
 
         &::before {
-          animation: pulse 1s infinite alternate;
           background-color: var(--text-secondary);
           content: "";
           display: inline-block;
@@ -408,14 +407,16 @@
           }
         }
 
+        &.active::before {
+          animation: pulse 1s infinite alternate;
+        }
+
         &.complete::before {
-          animation: none;
           background-color: var(--ai-help-icon);
           mask-image: url("../../assets/icons/progress-check.svg");
         }
 
         &.errored::before {
-          animation: none;
           background-color: var(--icon-critical);
         }
       }
