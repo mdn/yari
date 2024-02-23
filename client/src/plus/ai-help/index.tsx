@@ -55,6 +55,7 @@ import {
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
+  MESSAGE_STOPPED,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
@@ -517,6 +518,9 @@ function messageForStatus(status: MessageStatus) {
   switch (status) {
     case MessageStatus.Errored:
       return MESSAGE_FAILED;
+
+    case MessageStatus.Stopped:
+      return MESSAGE_STOPPED;
 
     case MessageStatus.InProgress:
       return MESSAGE_ANSWERING;
