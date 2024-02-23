@@ -48,7 +48,7 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND,
+  SORRY_BACKEND_PREFIX,
   SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
@@ -288,9 +288,13 @@ function AIHelpAssistantResponse({
 
   let sample = 0;
 
+  const isOffTopic =
+    message.role === MessageRole.Assistant &&
+    message.content?.startsWith(SORRY_BACKEND_PREFIX);
+
   return (
     <>
-      <AIHelpAssistantResponseSources message={message} />
+      {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
       {(message.content ||
         message.status === MessageStatus.InProgress ||
         message.status === MessageStatus.Errored) && (
@@ -320,153 +324,163 @@ function AIHelpAssistantResponse({
             .filter(Boolean)
             .join(" ")}
         >
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              a: ({ node, ...props }) => {
-                if (props.href?.startsWith("https://developer.mozilla.org/")) {
-                  props.href = props.href.replace(
-                    "https://developer.mozilla.org",
-                    ""
-                  );
-                }
+          {isOffTopic ? (
+            <>{SORRY_FRONTEND}</>
+          ) : (
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ node, ...props }) => {
+                  if (
+                    props.href?.startsWith("https://developer.mozilla.org/")
+                  ) {
+                    props.href = props.href.replace(
+                      "https://developer.mozilla.org",
+                      ""
+                    );
+                  }
 
-                const isExternal = isExternalUrl(props.href ?? "");
+                  const isExternal = isExternalUrl(props.href ?? "");
 
-                if (isExternal) {
-                  props.className = "external";
-                  props.rel = "noopener noreferrer";
-                }
+                  if (isExternal) {
+                    props.className = "external";
+                    props.rel = "noopener noreferrer";
+                  }
 
-                // Measure.
-                props.onClick = () =>
-                  gleanClick(
-                    `${AI_HELP}: link ${
-                      isExternal ? "external" : "internal"
-                    } -> ${props.href}`
-                  );
+                  // Measure.
+                  props.onClick = () =>
+                    gleanClick(
+                      `${AI_HELP}: link ${
+                        isExternal ? "external" : "internal"
+                      } -> ${props.href}`
+                    );
 
-                // Always open in new tab.
-                props.target = "_blank";
+                  // Always open in new tab.
+                  props.target = "_blank";
 
-                // eslint-disable-next-line jsx-a11y/anchor-has-content
-                return <a {...props} />;
-              },
-              pre: ({ node, className, children, ...props }) => {
-                const code = Children.toArray(children)
-                  .map(
-                    (child) =>
-                      /language-(\w+)/.exec(
-                        (child as ReactElement)?.props?.className || ""
-                      )?.[1]
-                  )
-                  .find(Boolean);
+                  // eslint-disable-next-line jsx-a11y/anchor-has-content
+                  return <a {...props} />;
+                },
+                pre: ({ node, className, children, ...props }) => {
+                  const code = Children.toArray(children)
+                    .map(
+                      (child) =>
+                        /language-(\w+)/.exec(
+                          (child as ReactElement)?.props?.className || ""
+                        )?.[1]
+                    )
+                    .find(Boolean);
 
-                if (!code) {
+                  if (!code) {
+                    return (
+                      <pre {...props} className={className}>
+                        {children}
+                      </pre>
+                    );
+                  }
+                  const key = sample;
+                  const id = `${message.messageId}--${key}`;
+                  const isQueued = queuedExamples.has(id);
+                  sample += 1;
                   return (
-                    <pre {...props} className={className}>
-                      {children}
-                    </pre>
-                  );
-                }
-                const key = sample;
-                const id = `${message.messageId}--${key}`;
-                const isQueued = queuedExamples.has(id);
-                sample += 1;
-                return (
-                  <div className="code-example">
-                    <div
-                      className={`example-header play-collect ${
-                        highlightedQueueExample === id ? "active" : ""
-                      }`}
-                    >
-                      <span className="language-name">{code}</span>
-                      {message.status === MessageStatus.Complete &&
-                        ["html", "js", "javascript", "css"].includes(
-                          code.toLowerCase()
-                        ) && (
-                          <div className="playlist">
-                            <input
-                              type="checkbox"
-                              checked={isQueued}
-                              onChange={() => {
-                                gleanClick(
-                                  `${AI_HELP}: example ${
-                                    isQueued ? "dequeue" : "queue"
-                                  } -> ${id}`
-                                );
-                                setQueue((old) =>
-                                  !old.some((item) => item.id === id)
-                                    ? [...old, createQueueEntry(id)].sort(
-                                        (a, b) => a.key - b.key
-                                      )
-                                    : [...old].filter((item) => item.id !== id)
-                                );
-                              }}
-                              id={id}
-                            />
-                            <label htmlFor={id}>
-                              {isQueued ? "queued" : "queue"}
-                            </label>
-                            <button
-                              type="button"
-                              className="play-button"
-                              title="Open in Playground"
-                              onClick={(e) => {
-                                gleanClick(`${AI_HELP}: example play -> ${id}`);
-                                const input = (e.target as HTMLElement)
-                                  .previousElementSibling
-                                  ?.previousElementSibling as HTMLInputElement;
-                                const code = collectCode(input);
-                                sessionStorage.setItem(
-                                  SESSION_KEY,
-                                  JSON.stringify(code)
-                                );
-                                const url = new URL(window?.location.href);
-                                url.pathname = `/${locale}/play`;
-                                url.hash = "";
-                                url.search = "";
-                                if (e.shiftKey === true) {
-                                  window.location.href = url.href;
-                                } else {
-                                  window.open(url, "_blank");
-                                }
-                              }}
-                            >
-                              play
-                            </button>
-                          </div>
-                        )}
+                    <div className="code-example">
+                      <div
+                        className={`example-header play-collect ${
+                          highlightedQueueExample === id ? "active" : ""
+                        }`}
+                      >
+                        <span className="language-name">{code}</span>
+                        {message.status === MessageStatus.Complete &&
+                          ["html", "js", "javascript", "css"].includes(
+                            code.toLowerCase()
+                          ) && (
+                            <div className="playlist">
+                              <input
+                                type="checkbox"
+                                checked={isQueued}
+                                onChange={() => {
+                                  gleanClick(
+                                    `${AI_HELP}: example ${
+                                      isQueued ? "dequeue" : "queue"
+                                    } -> ${id}`
+                                  );
+                                  setQueue((old) =>
+                                    !old.some((item) => item.id === id)
+                                      ? [...old, createQueueEntry(id)].sort(
+                                          (a, b) => a.key - b.key
+                                        )
+                                      : [...old].filter(
+                                          (item) => item.id !== id
+                                        )
+                                  );
+                                }}
+                                id={id}
+                              />
+                              <label htmlFor={id}>
+                                {isQueued ? "queued" : "queue"}
+                              </label>
+                              <button
+                                type="button"
+                                className="play-button"
+                                title="Open in Playground"
+                                onClick={(e) => {
+                                  gleanClick(
+                                    `${AI_HELP}: example play -> ${id}`
+                                  );
+                                  const input = (e.target as HTMLElement)
+                                    .previousElementSibling
+                                    ?.previousElementSibling as HTMLInputElement;
+                                  const code = collectCode(input);
+                                  sessionStorage.setItem(
+                                    SESSION_KEY,
+                                    JSON.stringify(code)
+                                  );
+                                  const url = new URL(window?.location.href);
+                                  url.pathname = `/${locale}/play`;
+                                  url.hash = "";
+                                  url.search = "";
+                                  if (e.shiftKey === true) {
+                                    window.location.href = url.href;
+                                  } else {
+                                    window.open(url, "_blank");
+                                  }
+                                }}
+                              >
+                                play
+                              </button>
+                            </div>
+                          )}
+                      </div>
+                      <pre className={`brush: ${code}`}>{children}</pre>
                     </div>
-                    <pre className={`brush: ${code}`}>{children}</pre>
-                  </div>
-                );
-              },
-              code: ({ className, children, ...props }) => {
-                const match = /language-(\w+)/.exec(className || "");
-                const lang = Prism.languages[match?.[1]];
-                return lang ? (
-                  <code
-                    {...props}
-                    className={className}
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(String(children), lang),
-                    }}
-                  />
-                ) : (
-                  <code {...props} className={className}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
-            {message.content?.replace(SORRY_BACKEND, SORRY_FRONTEND)}
-          </ReactMarkdown>
-          {message.status === "complete" &&
-            !message.content?.includes(SORRY_BACKEND) && (
-              <>
-                <section className="ai-help-feedback">
+                  );
+                },
+                code: ({ className, children, ...props }) => {
+                  const match = /language-(\w+)/.exec(className || "");
+                  const lang = Prism.languages[match?.[1]];
+                  return lang ? (
+                    <code
+                      {...props}
+                      className={className}
+                      dangerouslySetInnerHTML={{
+                        __html: Prism.highlight(String(children), lang),
+                      }}
+                    />
+                  ) : (
+                    <code {...props} className={className}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+          )}
+          {(message.status === "complete" || isOffTopic) && (
+            <>
+              <section className="ai-help-feedback">
+                {!isOffTopic && (
                   <GleanThumbs
                     feature="ai-help-answer"
                     featureKey={message.messageId}
@@ -474,15 +488,20 @@ function AIHelpAssistantResponse({
                     upLabel={"Yes, this answer was useful."}
                     downLabel={"No, this answer was not useful."}
                   />
-                  <ReportIssueOnGitHubLink
-                    messages={messages}
-                    currentMessage={message}
-                  >
-                    Report an issue with this answer on GitHub
-                  </ReportIssueOnGitHubLink>
-                </section>
-              </>
-            )}
+                )}
+                <ReportIssueOnGitHubLink
+                  messages={messages}
+                  currentMessage={{
+                    ...message,
+                    content: SORRY_FRONTEND,
+                    sources: [],
+                  }}
+                >
+                  Report an issue with this answer on GitHub
+                </ReportIssueOnGitHubLink>
+              </section>
+            </>
+          )}
         </div>
       )}
     </>
@@ -629,13 +648,6 @@ export function AIHelpInner() {
     submit(question, chatId, parentId, messageId);
   }, [lastUserQuestion, submit]);
 
-  const isOffTopic = (message: Message) => {
-    return (
-      message.role === MessageRole.Assistant &&
-      message.content?.startsWith("I'm sorry, but I can't")
-    );
-  };
-
   return (
     <>
       <PlayQueue gleanContext={AI_HELP} />
@@ -665,37 +677,27 @@ export function AIHelpInner() {
                           .filter(Boolean)
                           .join(" ")}
                       >
-                        {isOffTopic(message) ? (
-                          <NoteCard extraClasses="ai-help-error" type="error">
-                            <h4>Error</h4>
-                            <p>
-                              AI Help cannot answer questions outside of web
-                              development.
-                            </p>
-                          </NoteCard>
-                        ) : (
-                          <>
-                            <div className="ai-help-message-role">
-                              <RoleIcon role={message.role} />
-                            </div>
-                            {message.role === "user" ? (
-                              <AIHelpUserQuestion
-                                message={message}
-                                submit={submit}
-                                canEdit={!isQuotaExceeded(quota)}
-                                nextPrev={nextPrev}
-                                siblingCount={siblingCount}
-                              />
-                            ) : (
-                              <AIHelpAssistantResponse
-                                message={message}
-                                queuedExamples={queuedExamples}
-                                setQueue={setQueue}
-                                messages={messages}
-                              />
-                            )}
-                          </>
-                        )}
+                        <>
+                          <div className="ai-help-message-role">
+                            <RoleIcon role={message.role} />
+                          </div>
+                          {message.role === "user" ? (
+                            <AIHelpUserQuestion
+                              message={message}
+                              submit={submit}
+                              canEdit={!isQuotaExceeded(quota)}
+                              nextPrev={nextPrev}
+                              siblingCount={siblingCount}
+                            />
+                          ) : (
+                            <AIHelpAssistantResponse
+                              message={message}
+                              queuedExamples={queuedExamples}
+                              setQueue={setQueue}
+                              messages={messages}
+                            />
+                          )}
+                        </>
                       </li>
                     );
                   })}
