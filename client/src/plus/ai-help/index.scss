@@ -457,9 +457,10 @@
         > ol:last-child li:last-child:after,
         > pre:last-child code:after,
         > ul:last-child li:last-child:after {
-          content: "…";
-          margin-left: 0.25rem;
-          vertical-align: baseline;
+          color: var(--text-muted);
+          content: "■\00a0Stopped answering";
+          display: block;
+          margin-top: 1.7rem;
         }
 
         &.empty::after {
