@@ -10,6 +10,7 @@
   --text-link: #{$mdn-theme-light-text-link};
   --text-visited: #551a8b; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1787-1790
   --text-invert: #{$mdn-theme-light-text-invert};
+  --text-muted: #{$mdn-theme-light-text-muted};
 
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
@@ -218,6 +219,7 @@
   --text-link: #{$mdn-theme-dark-text-link};
   --text-visited: #ffadff; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1794-1797
   --text-invert: #{$mdn-theme-dark-text-invert};
+  --text-muted: #{$mdn-theme-dark-text-muted};
 
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
