@@ -3,6 +3,7 @@ import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import useSWR from "swr";
 import { HTTPError } from "../document";
 import { WRITER_MODE } from "../env";
+import { CURRICULUM_TITLE } from "../../../libs/constants";
 
 // Using this import fails the build...
 //import { Topic } from "../../../libs/types/curriculum";
@@ -31,16 +32,15 @@ export function topic2css(topic?: Topic) {
   }
 }
 
-const TITLE_SUFFIX = "MDN Curriculum";
 export function useDocTitle(doc?: CurriculumDoc) {
   useEffect(() => {
     if (!doc) {
       return;
     }
     document.title =
-      doc.title && doc.title !== TITLE_SUFFIX
-        ? `${doc.title} | MDN Curriculum`
-        : "MDN Curriculum";
+      doc.title && doc.title !== CURRICULUM_TITLE
+        ? `${doc.title} | ${CURRICULUM_TITLE}`
+        : CURRICULUM_TITLE;
   }, [doc]);
 }
 

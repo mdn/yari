@@ -219,3 +219,13 @@ export interface NewsItem {
   };
   published_at: string;
 }
+
+export interface BuildData {
+  url: string;
+  rawBody: string;
+  metadata: { locale: string };
+  isMarkdown: true;
+  fileInfo: {
+    path: string;
+  };
+}

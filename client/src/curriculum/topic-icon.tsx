@@ -5,14 +5,13 @@ import { ReactComponent as StylingSVG } from "../../public/assets/curriculum/cur
 import { ReactComponent as PracticesSVG } from "../../public/assets/curriculum/cur-topic-practices.svg";
 
 import "./topic-icon.scss";
-import { Topic } from "./utils";
+import { Topic, topic2css } from "./utils";
 
 export function TopicIcon({ topic }: { topic: Topic }) {
+  const className = `topic-icon ${topic2css(topic)}`;
   switch (topic) {
     case Topic.WebStandards:
-      return (
-        <StandardsSVG role="none" className="topic-icon topic-standards" />
-      );
+      return <StandardsSVG role="none" className={className} />;
     case Topic.Styling:
       return <StylingSVG role="none" className="topic-icon topic-styling" />;
     case Topic.Scripting:

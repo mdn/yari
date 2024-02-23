@@ -1,4 +1,4 @@
-import { Doc, DocParent } from "./document.js";
+import { BuildData, Doc, DocParent } from "./document.js";
 
 export enum Topic {
   WebStandards = "Web Standards & Semantics",
@@ -19,7 +19,7 @@ export enum Template {
 export interface CurriculumIndexEntry {
   url: string;
   title: string;
-  slug: string;
+  slug?: string;
   summary?: string;
   topic?: Topic;
   children?: CurriculumIndexEntry[];
@@ -63,12 +63,6 @@ export interface ReadCurriculum {
   body: string;
 }
 
-export interface CurriculumBuildData {
-  url: string;
-  rawBody: string;
+export interface CurriculumBuildData extends BuildData {
   metadata: { locale: string } & CurriculumMetaData;
-  isMarkdown: true;
-  fileInfo: {
-    path: string;
-  };
 }

@@ -61,6 +61,12 @@ jobs:
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
       - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
+
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -189,6 +195,9 @@ jobs:
 
           # Build the blog
           yarn build:blog
+
+          # Build the curriculum
+          yarn build:curriculum
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json

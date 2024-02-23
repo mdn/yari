@@ -89,11 +89,11 @@ export async function slugToFile(slug: string) {
 }
 
 export async function buildCurriculumIndex(
-  mapper: (x: CurriculumMetaData) => Partial<CurriculumMetaData> = (x) => x
+  mapper: (x: CurriculumMetaData) => CurriculumIndexEntry = (x) => x
 ): Promise<CurriculumIndexEntry[]> {
-  const index = await buildIndex();
+  const index: CurriculumMetaData[] = await buildIndex();
 
-  const s = index.reduce((item, meta) => {
+  const curriculumIndex = index.reduce<CurriculumIndexEntry[]>((item, meta) => {
     const currentLvl = meta.slug.split("/").length;
     const last = item.length ? item[item.length - 1] : null;
     const entry = mapper(meta);
@@ -108,7 +108,7 @@ export async function buildCurriculumIndex(
     return item;
   }, []);
 
-  return s;
+  return curriculumIndex;
 }
 
 async function buildCurriculumSidebar(): Promise<CurriculumIndexEntry[]> {
@@ -269,20 +269,20 @@ export async function findCurriculumPageBySlug(
 
 export async function buildCurriculumPage(
   document: CurriculumBuildData
-): Promise<Doc> {
+): Promise<CurriculumDoc> {
   const { metadata } = document;
 
   const doc = { locale: DEFAULT_LOCALE } as Partial<CurriculumDoc>;
 
   const renderUrl = document.url.replace(/\/$/, "");
-  const [$] = await kumascript.render(renderUrl, {}, document as any);
+  const [$] = await kumascript.render(renderUrl, {}, document);
 
   $("[data-token]").removeAttr("data-token");
   $("[data-flaw-src]").removeAttr("data-flaw-src");
 
   doc.title = (metadata.title || "").replace(/^\d+\s+/, "");
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale as string;
+  doc.locale = metadata.locale;
   doc.native = LANGUAGES_RAW[DEFAULT_LOCALE]?.native;
 
   if ($("math").length > 0) {
@@ -292,8 +292,8 @@ export async function buildCurriculumPage(
   syntaxHighlight($, doc);
   injectNoTranslate($);
   injectLoadingLazyAttributes($);
-  postProcessCurriculumLinks($, (p: string) => {
-    const [head, hash] = p.split("#");
+  postProcessCurriculumLinks($, (p: string | undefined) => {
+    const [head, hash] = p?.split("#") || [];
     const slug = fileToSlug(
       path.normalize(path.join(path.dirname(document.fileInfo.path), head))
     ).replace(/\/$/, "");
