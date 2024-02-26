@@ -5,8 +5,8 @@
 .curriculum-content-container {
   .curriculum-content {
     .modules {
-      input[type="radio"]:not(:checked) ~ a,
-      input[type="radio"]:not(:checked) ~ ol {
+      input[type="radio"]:not(:checked) ~ a.lets-begin,
+      input[type="radio"]:not(:checked) ~ ol.modules-list {
         display: none;
       }
     }
@@ -112,7 +112,7 @@
           margin: 0;
         }
 
-        > a {
+        > a.lets-begin {
           grid-area: cta;
           margin-left: 0.5rem;
           margin-top: 2rem;

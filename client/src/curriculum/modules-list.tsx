@@ -35,9 +35,10 @@ export function ModulesListList({
               <>
                 <ModulesList modules={modulesList.children} />
                 <Button
+                  extraClasses={"lets-begin"}
                   type="primary"
                   target="_self"
-                  href={modulesList.children[0].url}
+                  href={modulesList.children[0]?.url}
                 >
                   Let's begin
                 </Button>
