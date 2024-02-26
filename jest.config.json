@@ -11,6 +11,7 @@
       {
         "babelConfig": true,
         "isolatedModules": true,
+        "tsconfig": { "moduleResolution": "node" },
         "useESM": true
       }
     ]

@@ -15,9 +15,13 @@ export function ModulesListList({
   return (
     <ol className="modules-list-list">
       <hr />
-      {modules.map((c, i) => {
+      {modules.map((modulesList, i) => {
         return (
-          <li key={`mll-${i}`}>
+          <li
+            id={`modules-${i}`}
+            className="modules-list-list-item"
+            key={`mll-${i}`}
+          >
             <input
               className="visually-hidden"
               id={`module-${i}`}
@@ -26,11 +30,16 @@ export function ModulesListList({
               checked={i === tab}
               onChange={() => setTab(i)}
             />
-            <label htmlFor={`module-${i}`}>{c.title}</label>
-            {c.children && (
+            <label htmlFor={`module-${i}`}>{modulesList.title}</label>
+            {modulesList.children?.length && (
               <>
-                <ModulesList modules={c.children} />
-                <Button type="primary" target="_self" href={c.children[0].url}>
+                <ModulesList modules={modulesList.children} />
+                <Button
+                  extraClasses={"lets-begin"}
+                  type="primary"
+                  target="_self"
+                  href={modulesList.children[0]?.url}
+                >
                   Let's begin
                 </Button>
               </>
@@ -45,21 +54,21 @@ export function ModulesListList({
 export function ModulesList({ modules }: { modules: CurriculumIndexEntry[] }) {
   return (
     <ol className="modules-list">
-      {modules.map((c, j) => {
+      {modules.map((module, j) => {
         return (
           <li
             key={`ml-${j}`}
-            className={`module-list-item topic-${topic2css(c.topic)}`}
+            className={`module-list-item topic-${topic2css(module.topic)}`}
           >
             <header>
-              <a href={c.url}>
-                {c.topic && <TopicIcon topic={c.topic} />}
-                <span>{c.title}</span>
+              <a href={module.url}>
+                {module.topic && <TopicIcon topic={module.topic} />}
+                <span>{module.title}</span>
               </a>
             </header>
             <section>
-              <p>{c.summary}</p>
-              <p>{c.topic}</p>
+              <p>{module.summary}</p>
+              <p>{module.topic}</p>
             </section>
           </li>
         );

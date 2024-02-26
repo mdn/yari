@@ -16,33 +16,34 @@ export function Sidebar({
       data-current={current}
     >
       <ol>
-        {sidebar.map((o, i) => (
+        {sidebar.map((entry, i) => (
           <li
-            className={o.children && o.children?.length ? "toggle" : ""}
+            className={entry.children && entry.children?.length ? "toggle" : ""}
             key={`sb-${i}`}
           >
-            {o.children && o.children?.length ? (
+            {entry.children && entry.children?.length ? (
               <details
                 open={
-                  o.children.some((c) => c.url === current) || o.url === current
+                  entry.children.some((c) => c.url === current) ||
+                  entry.url === current
                 }
               >
-                <summary>{o.title} module</summary>
+                <summary>{entry.title} module</summary>
                 <ol>
                   <li>
                     <SidebarLink
                       current={current}
-                      url={o.url}
-                      title={`${o.title} overview`}
+                      url={entry.url}
+                      title={`${entry.title} overview`}
                     />
                   </li>
-                  {o.children.map((c, j) => {
+                  {entry.children.map((subEntry, j) => {
                     return (
                       <li key={`sb-${i}-${j}`}>
                         <SidebarLink
                           current={current}
-                          url={c.url}
-                          title={c.title}
+                          url={subEntry.url}
+                          title={subEntry.title}
                         />
                       </li>
                     );
@@ -50,7 +51,11 @@ export function Sidebar({
                 </ol>
               </details>
             ) : (
-              <SidebarLink current={current} url={o.url} title={o.title} />
+              <SidebarLink
+                current={current}
+                url={entry.url}
+                title={entry.title}
+              />
             )}
           </li>
         ))}

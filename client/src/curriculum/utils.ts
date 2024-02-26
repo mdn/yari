@@ -3,9 +3,11 @@ import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import useSWR from "swr";
 import { HTTPError } from "../document";
 import { WRITER_MODE } from "../env";
+import { CURRICULUM_TITLE } from "../../../libs/constants";
 
 // Using this import fails the build...
-//import { Topic } from "../../../libs/types/curriculum";
+// Therefore we're copying until further investigation.
+// import { Topic } from "../../../libs/types/curriculum";
 export enum Topic {
   WebStandards = "Web Standards & Semantics",
   Styling = "Styling",
@@ -31,20 +33,21 @@ export function topic2css(topic?: Topic) {
   }
 }
 
-const TITLE_SUFFIX = "MDN Curriculum";
 export function useDocTitle(doc?: CurriculumDoc) {
   useEffect(() => {
     if (!doc) {
       return;
     }
     document.title =
-      doc.title && doc.title !== TITLE_SUFFIX
-        ? `${doc.title} | MDN Curriculum`
-        : "MDN Curriculum";
+      doc.title && doc.title !== CURRICULUM_TITLE
+        ? `${doc.title} | ${CURRICULUM_TITLE}`
+        : CURRICULUM_TITLE;
   }, [doc]);
 }
 
-export function useCurriculumDoc(appProps: CurriculumData) {
+export function useCurriculumDoc(
+  appProps?: CurriculumData
+): CurriculumDoc | undefined {
   const dataURL = `./index.json`;
   const { data } = useSWR<CurriculumDoc>(
     dataURL,
@@ -64,7 +67,7 @@ export function useCurriculumDoc(appProps: CurriculumData) {
       return (await response.json())?.doc;
     },
     {
-      fallbackData: appProps?.doc as CurriculumDoc,
+      fallbackData: appProps?.doc,
       revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !appProps?.doc?.modified,
     }

@@ -14,28 +14,21 @@ export function CurriculumModuleOverview(
   const doc = useCurriculumDoc(props as CurriculumData);
   const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (
-    <>
-      {doc && (
-        <CurriculumLayout
-          doc={doc}
-          extraClasses={[
-            "curriculum-overview",
-            `topic-${topic2css(doc.topic)}`,
-          ]}
-        >
-          <header>
-            <h1>
-              <span>{coloredTitle}</span> {restTitle.join(" ")}
-            </h1>
-          </header>
-          <RenderCurriculumBody doc={doc} />
-          <section className="module-contents">
-            <h2>Module Contents</h2>
-            {doc.modules && <ModulesList modules={doc.modules} />}
-          </section>
-          <PrevNext doc={doc} />
-        </CurriculumLayout>
-      )}
-    </>
+    <CurriculumLayout
+      doc={doc}
+      extraClasses={["curriculum-overview", `topic-${topic2css(doc?.topic)}`]}
+    >
+      <header>
+        <h1>
+          <span>{coloredTitle}</span> {restTitle.join(" ")}
+        </h1>
+      </header>
+      <RenderCurriculumBody doc={doc} />
+      <section className="module-contents">
+        <h2>Module Contents</h2>
+        {doc?.modules && <ModulesList modules={doc.modules} />}
+      </section>
+      <PrevNext doc={doc} />
+    </CurriculumLayout>
   );
 }

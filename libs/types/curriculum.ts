@@ -1,4 +1,4 @@
-import { Doc, DocParent } from "./document.js";
+import { BuildData, Doc, DocParent } from "./document.js";
 
 export enum Topic {
   WebStandards = "Web Standards & Semantics",
@@ -16,10 +16,13 @@ export enum Template {
   about = "about",
 }
 
-export interface CurriculumIndexEntry {
+export interface CurriculumCoreMetaData {
   url: string;
   title: string;
-  slug: string;
+}
+
+export interface CurriculumIndexEntry extends CurriculumCoreMetaData {
+  slug?: string;
   summary?: string;
   topic?: Topic;
   children?: CurriculumIndexEntry[];
@@ -36,11 +39,11 @@ export interface CurriculumFrontmatter {
   topic?: Topic;
 }
 
-export interface CurriculumMetaData extends CurriculumFrontmatter {
-  url: string;
+export interface CurriculumMetaData
+  extends CurriculumFrontmatter,
+    CurriculumCoreMetaData {
   filename: string;
   slug: string;
-  title: string;
   sidebar: CurriculumIndexEntry[];
   modules: CurriculumIndexEntry[];
   parents: DocParent[];
@@ -55,7 +58,7 @@ export interface CurriculumDoc extends Doc {
 }
 
 export interface CurriculumData {
-  doc: CurriculumDoc;
+  doc?: CurriculumDoc;
 }
 
 export interface ReadCurriculum {
@@ -63,12 +66,6 @@ export interface ReadCurriculum {
   body: string;
 }
 
-export interface CurriculumBuildData {
-  url: string;
-  rawBody: string;
+export interface CurriculumBuildData extends BuildData {
   metadata: { locale: string } & CurriculumMetaData;
-  isMarkdown: true;
-  fileInfo: {
-    path: string;
-  };
 }

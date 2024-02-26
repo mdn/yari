@@ -259,6 +259,7 @@ export const VALID_FLAW_CHECKS = new Set([
 // ------
 
 export const MDN_PLUS_TITLE = "MDN Plus";
+export const CURRICULUM_TITLE = "MDN Curriculum";
 
 // -------
 // content

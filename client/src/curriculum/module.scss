@@ -1,55 +1,52 @@
 @use "../ui/vars" as *;
 
-.curriculum-content-container.with-sidebar,
-.curriculum-content-container {
-  &.curriculum-module {
-    .curriculum-content {
-      > header {
-        column-gap: 1.5rem;
-        display: grid;
-        grid-template-areas: "icon heading" "icon category";
-        justify-content: flex-start;
+.curriculum-content-container.curriculum-module {
+  .curriculum-content {
+    > header {
+      column-gap: 1.5rem;
+      display: grid;
+      grid-template-areas: "icon heading" "icon category";
+      justify-content: flex-start;
 
-        .topic-icon {
-          --background-primary: var(--cur-bg-color-topic);
-          align-self: flex-start;
-          grid-area: icon;
-          height: 4rem;
-          width: 4rem;
+      .topic-icon {
+        --background-primary: var(--cur-bg-color-topic);
+        align-self: flex-start;
+        grid-area: icon;
+        height: 4rem;
+        width: 4rem;
 
-          + h1 {
-            grid-area: heading;
-            margin-bottom: 0;
-          }
-        }
-
-        p {
-          color: var(--cur-color-topic);
-          font-size: var(--type-smaller-font-size);
-          grid-area: category;
-          margin: 0;
-          margin-top: 0.5rem;
-
-          &::before {
-            content: "Category: ";
-          }
+        + h1 {
+          grid-area: heading;
+          margin-bottom: 0;
         }
       }
 
-      p.curriculum-resources {
-        margin-bottom: 0.5rem;
+      p {
+        color: var(--cur-color-topic);
+        font-size: var(--type-smaller-font-size);
+        grid-area: category;
+        margin: 0;
+        margin-top: 0.5rem;
 
-        + ul {
-          padding-left: 2rem;
+        &::before {
+          content: "Category: ";
+        }
+      }
+    }
 
-          > li {
-            &:not(.external) {
-              list-style-image: var(--cur-module-mdn-resource);
-            }
+    p.curriculum-resources {
+      margin-bottom: 0.5rem;
 
-            &.external {
-              list-style-image: url("../assets/icons/cur-ext-resource.svg");
-            }
+      + ul {
+        padding-left: 2rem;
+
+        > li {
+          &:not(.external) {
+            list-style-image: var(--cur-module-mdn-resource);
+          }
+
+          &.external {
+            list-style-image: url("../assets/icons/cur-ext-resource.svg");
           }
         }
       }

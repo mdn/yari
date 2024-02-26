@@ -245,11 +245,11 @@ export function postProcessExternalLinks($) {
 
 /**
  * For every `<a href="... curriculum ... .md ...">` remove the ".md"
- *
- * @param {Cheerio document instance} $
- * @param {current url} url
  */
-export function postProcessCurriculumLinks($, toUrl) {
+export function postProcessCurriculumLinks(
+  $: cheerio.CheerioAPI,
+  toUrl: (x?: string) => string
+) {
   // expand relative links
   $("a[href^=.]").each((_, element) => {
     const $a = $(element);
@@ -259,20 +259,20 @@ export function postProcessCurriculumLinks($, toUrl) {
   // remove trailing .md for /en-US/curriculum/*
   $("a[href^=/en-US/curriculum]").each((_, element) => {
     const $a = $(element);
-    $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "$1/$2"));
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "$1/$2"));
   });
 
   // remove trailing .md and add locale for /curriculum/*
   $("a[href^=/curriculum]").each((_, element) => {
     const $a = $(element);
-    $a.attr("href", $a.attr("href").replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
   });
 
   // remove leading numbers for /en-US/curriculum/*
   // /en-US/curriculum/2-core/ -> /en-US/curriculum/core/
   $("a[href^=/en-US/curriculum]").each((_, element) => {
     const $a = $(element);
-    const [head, hash] = $a.attr("href").split("#");
+    const [head, hash] = $a.attr("href")?.split("#") || [];
     $a.attr("href", `${head.replace(/\d+-/g, "")}${hash ? `#${hash}` : ""}`);
   });
 }

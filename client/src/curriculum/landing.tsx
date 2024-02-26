@@ -13,6 +13,7 @@ import { CurriculumLayout } from "./layout";
 
 import "./index.scss";
 import "./landing.scss";
+import { ProseSection } from "../../../libs/types/document";
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -38,17 +39,14 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
             return About({ section });
           }
           if (section.value.id === "modules") {
-            const { title, titleAsText, id } = section.value as any;
+            const { title, id } = (section as ProseSection).value;
             return (
               <>
-                <section key={`${section.value.id}-1`} className="modules">
-                  <DisplayH2 id={id} title={title} titleAsText={titleAsText} />
-                  {doc.modules && <ModulesListList modules={doc.modules} />}
+                <section key={`${id}-1`} className="modules">
+                  {title && <DisplayH2 id={id} title={title} />}
+                  {doc?.modules && <ModulesListList modules={doc.modules} />}
                 </section>
-                <section
-                  key={`${section.value.id}-2`}
-                  className="landing-stairway"
-                >
+                <section key={`${id}-2`} className="landing-stairway">
                   <div>
                     <div id="stairway1-container">
                       <LandingStairwaySVG1
@@ -122,12 +120,12 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
 }
 
 function About({ section }) {
-  const { title, content, titleAsText, id } = section.value;
+  const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
   return (
     <section key={id} className="landing-about-container">
       <div className="landing-about">
-        <DisplayH2 id={id} title={title} titleAsText={titleAsText} />
+        <DisplayH2 id={id} title={title} />
         <div dangerouslySetInnerHTML={html}></div>
       </div>
     </section>
