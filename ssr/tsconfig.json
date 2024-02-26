@@ -1,5 +1,9 @@
 {
   "extends": "../client/tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true
+  },
   "include": ["."],
   "exclude": ["dist"]
 }
