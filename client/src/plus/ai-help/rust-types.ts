@@ -13,9 +13,9 @@ export interface AIHelpMeta {
   type: MetaType;
   chat_id: string;
   message_id: string;
-  parent_id?: string;
+  parent_id?: string | null;
   sources: RefDoc[];
-  quota?: AIHelpLimit;
+  quota?: AIHelpLimit | null;
   created_at: string;
 }
 
