@@ -5,7 +5,7 @@ import { fdir } from "fdir";
 import frontmatter from "front-matter";
 
 import { BUILD_OUT_ROOT, CURRICULUM_ROOT } from "../libs/env/index.js";
-import { Doc, DocParent } from "../libs/types/document.js";
+import { DocParent } from "../libs/types/document.js";
 import { CURRICULUM_TITLE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import * as kumascript from "../kumascript/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
@@ -40,7 +40,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
 
-export const allFiles = memoize(async () => {
+export const allFiles: () => string[] = memoize(async () => {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
@@ -49,7 +49,7 @@ export const allFiles = memoize(async () => {
   return (await api.withPromise()).sort();
 });
 
-export const buildIndex = memoize(async () => {
+export const buildIndex: () => CurriculumMetaData[] = memoize(async () => {
   const files = await allFiles();
   const modules = await Promise.all(
     files.map(
@@ -119,12 +119,15 @@ async function buildCurriculumSidebar(): Promise<CurriculumIndexEntry[]> {
   return index;
 }
 
-function prevNextFromIndex(i: number, index): PrevNext {
+function prevNextFromIndex(
+  i: number,
+  index: CurriculumMetaData[] | CurriculumIndexEntry[]
+): PrevNext {
   const prev = i > 0 ? index[i - 1] : undefined;
   const next = i < index.length - 1 ? index[i + 1] : undefined;
 
-  prev && delete prev.children;
-  next && delete next.children;
+  "children" in prev && delete prev.children;
+  "children" in next && delete next.children;
 
   return { prev, next };
 }
@@ -187,7 +190,7 @@ async function readCurriculumPage(
   const raw = await fs.readFile(file, "utf-8");
   const { attributes, body: rawBody } = frontmatter<CurriculumFrontmatter>(raw);
   const filename = file.replace(CURRICULUM_ROOT, "").replace(/^\/?/, "");
-  let title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim();
+  let title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim() || "";
   const body = rawBody.replace(/^[\w\n]*#+(.*\n)/, "");
 
   const slug = fileToSlug(file);
@@ -280,7 +283,7 @@ export async function buildCurriculumPage(
   $("[data-token]").removeAttr("data-token");
   $("[data-flaw-src]").removeAttr("data-flaw-src");
 
-  doc.title = (metadata.title || "").replace(/^\d+\s+/, "");
+  doc.title = metadata.title.replace(/^\d+\s+/, "");
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
   doc.native = LANGUAGES_RAW[DEFAULT_LOCALE]?.native;
@@ -328,7 +331,7 @@ export async function buildCurriculumPage(
   doc.parents = metadata.parents;
   doc.topic = metadata.topic;
 
-  return doc as Doc;
+  return doc as CurriculumDoc;
 }
 
 export async function buildCurriculum(options: {

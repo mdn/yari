@@ -187,7 +187,12 @@
 
     .curriculum-content {
       grid-area: main;
+    }
+  }
 
+  &.curriculum-overview,
+  &.curriculum-module {
+    .curriculum-content {
       > header > h1 {
         margin-bottom: 2rem;
 

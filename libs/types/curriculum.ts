@@ -16,9 +16,12 @@ export enum Template {
   about = "about",
 }
 
-export interface CurriculumIndexEntry {
+export interface CurriculumCoreMetaData {
   url: string;
   title: string;
+}
+
+export interface CurriculumIndexEntry extends CurriculumCoreMetaData {
   slug?: string;
   summary?: string;
   topic?: Topic;
@@ -36,11 +39,11 @@ export interface CurriculumFrontmatter {
   topic?: Topic;
 }
 
-export interface CurriculumMetaData extends CurriculumFrontmatter {
-  url: string;
+export interface CurriculumMetaData
+  extends CurriculumFrontmatter,
+    CurriculumCoreMetaData {
   filename: string;
   slug: string;
-  title: string;
   sidebar: CurriculumIndexEntry[];
   modules: CurriculumIndexEntry[];
   parents: DocParent[];
@@ -55,7 +58,7 @@ export interface CurriculumDoc extends Doc {
 }
 
 export interface CurriculumData {
-  doc: CurriculumDoc;
+  doc?: CurriculumDoc;
 }
 
 export interface ReadCurriculum {

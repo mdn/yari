@@ -6,7 +6,8 @@ import { WRITER_MODE } from "../env";
 import { CURRICULUM_TITLE } from "../../../libs/constants";
 
 // Using this import fails the build...
-//import { Topic } from "../../../libs/types/curriculum";
+// Therefore we're copying until further investigation.
+// import { Topic } from "../../../libs/types/curriculum";
 export enum Topic {
   WebStandards = "Web Standards & Semantics",
   Styling = "Styling",
@@ -45,7 +46,7 @@ export function useDocTitle(doc?: CurriculumDoc) {
 }
 
 export function useCurriculumDoc(
-  appProps: CurriculumData
+  appProps?: CurriculumData
 ): CurriculumDoc | undefined {
   const dataURL = `./index.json`;
   const { data } = useSWR<CurriculumDoc>(
@@ -66,7 +67,7 @@ export function useCurriculumDoc(
       return (await response.json())?.doc;
     },
     {
-      fallbackData: appProps?.doc as CurriculumDoc,
+      fallbackData: appProps?.doc,
       revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !appProps?.doc?.modified,
     }

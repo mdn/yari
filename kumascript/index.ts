@@ -14,7 +14,7 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env/index.js";
 import { SourceCodeError } from "./src/errors.js";
-import { BuildData, Doc } from "../libs/types/document.js";
+import { BuildData } from "../libs/types/document.js";
 export { buildLiveSamplePages } from "./src/live-sample.js";
 
 const DEPENDENCY_LOOP_INTRO =

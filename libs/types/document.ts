@@ -179,7 +179,6 @@ export interface ProseSection {
     title: string | null;
     isH3: boolean;
     content?: string;
-    titleAsText?: string;
   };
 }
 

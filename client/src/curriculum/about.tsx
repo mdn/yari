@@ -1,5 +1,5 @@
 import { HydrationData } from "../../../libs/types/hydration";
-import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
+import { CurriculumDoc } from "../../../libs/types/curriculum";
 import { topic2css, useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
 import { CurriculumLayout } from "./layout";
@@ -8,7 +8,7 @@ import "./index.scss";
 import "./about.scss";
 
 export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
-  const doc = useCurriculumDoc(props as CurriculumData);
+  const doc = useCurriculumDoc(props);
   const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (
     <CurriculumLayout
