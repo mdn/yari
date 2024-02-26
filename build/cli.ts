@@ -17,8 +17,6 @@ import {
   SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
 import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import options from "./build-options.js";
 import {

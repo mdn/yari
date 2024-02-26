@@ -18,8 +18,6 @@ import {
   AuthorFrontmatter,
   AuthorMetadata,
 } from "../libs/types/blog.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import {
   findPostFileBySlug,
