@@ -17,7 +17,7 @@ import {
   SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
 import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
-import { renderHTML } from "../ssr/dist/main.js";
+import { renderHTML } from "../ssr/index.js";
 import options from "./build-options.js";
 import {
   buildDocument,

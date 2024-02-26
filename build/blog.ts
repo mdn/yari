@@ -18,7 +18,7 @@ import {
   AuthorFrontmatter,
   AuthorMetadata,
 } from "../libs/types/blog.js";
-import { renderHTML } from "../ssr/dist/main.js";
+import { renderHTML } from "../ssr/index.js";
 import {
   findPostFileBySlug,
   injectLoadingLazyAttributes,
