@@ -49,7 +49,10 @@ module.exports = {
     {
       files: ["**/*.ts", "**/*.tsx"],
       parser: "@typescript-eslint/parser",
-      extends: ["plugin:@typescript-eslint/recommended"],
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        //"plugin:@typescript-eslint/stylistic",
+      ],
       rules: {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-var-requires": "off",
