@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.39.5](https://github.com/mdn/yari/compare/v2.39.4...v2.39.5) (2024-02-26)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @typescript-eslint/* from 5.62.0 to 7.0.2 ([#10592](https://github.com/mdn/yari/issues/10592)) ([e9e1932](https://github.com/mdn/yari/commit/e9e19321f3e999feb0c23fe0ef015131b75abf68))
+* **deps-dev:** bump eslint from 8.56.0 to 8.57.0 ([#10588](https://github.com/mdn/yari/issues/10588)) ([6e46748](https://github.com/mdn/yari/commit/6e46748bab07a0b39f8b686640203a4f0c369738))
+* **deps-dev:** bump eslint-plugin-jsx-a11y from 6.7.1 to 6.8.0 ([#9929](https://github.com/mdn/yari/issues/9929)) ([367f373](https://github.com/mdn/yari/commit/367f37392a2cab4d32f013a8d5b59b2df5f8579d))
+* **deps-dev:** bump fork-ts-checker-webpack-plugin from 6.5.0 to 9.0.2 ([#10591](https://github.com/mdn/yari/issues/10591)) ([0117ac1](https://github.com/mdn/yari/commit/0117ac173c4c32155ad168c45b0a50306259af20))
+* **deps-dev:** bump html-validate from 8.10.0 to 8.11.0 ([#10584](https://github.com/mdn/yari/issues/10584)) ([5cd05b4](https://github.com/mdn/yari/commit/5cd05b4237d4d063fb4877502cdd2c9c28b6fd9a))
+* **deps-dev:** bump html-validate from 8.9.1 to 8.10.0 ([#10569](https://github.com/mdn/yari/issues/10569)) ([daa4ef2](https://github.com/mdn/yari/commit/daa4ef28b9f5546c482d1cc0efbfe25c0a142045))
+* **deps-dev:** bump peggy from 3.0.2 to 4.0.0 ([#10516](https://github.com/mdn/yari/issues/10516)) ([bad77c6](https://github.com/mdn/yari/commit/bad77c63eb99fc5fb2461e35bf1b70e6eab24ce7))
+* **deps-dev:** bump peggy from 4.0.0 to 4.0.2 ([#10594](https://github.com/mdn/yari/issues/10594)) ([349a46a](https://github.com/mdn/yari/commit/349a46a26c79d41b3f27ad6cb53c22b5b9356a68))
+* **deps-dev:** bump prettier-plugin-packagejson from 2.4.11 to 2.4.12 ([#10578](https://github.com/mdn/yari/issues/10578)) ([9a7fc22](https://github.com/mdn/yari/commit/9a7fc22252c8b1d784d04e0dff618d8ec46b13c1))
+* **deps-dev:** bump the types group with 1 update ([#10577](https://github.com/mdn/yari/issues/10577)) ([950a0b1](https://github.com/mdn/yari/commit/950a0b182dfe05affdb5d7d92da6875492f49eb1))
+* **deps-dev:** bump typescript from 5.1.6 to 5.3.3 ([#10147](https://github.com/mdn/yari/issues/10147)) ([640513a](https://github.com/mdn/yari/commit/640513a2ce14bf4ef72dea707941b16dcdc4bcae))
+* **deps-dev:** bump webpack-dev-server from 4.15.1 to 5.0.2 ([#10543](https://github.com/mdn/yari/issues/10543)) ([4c8bbf7](https://github.com/mdn/yari/commit/4c8bbf78e7e399fb3cc0546a31fa10fb0170b813))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.34 to 2.7.35 in /client/pwa ([#10583](https://github.com/mdn/yari/issues/10583)) ([2ec94d5](https://github.com/mdn/yari/commit/2ec94d5782fa175100ee17423d574e3ff4a8ed58))
+* **deps:** bump @mozilla/glean from 2.0.5 to 4.0.0 ([#10383](https://github.com/mdn/yari/issues/10383)) ([8f04cd7](https://github.com/mdn/yari/commit/8f04cd78ec22c4e0266d77e5ba2b9075f72ce116))
+* **deps:** bump @stripe/stripe-js from 2.4.0 to 3.0.5 ([#10570](https://github.com/mdn/yari/issues/10570)) ([c76d886](https://github.com/mdn/yari/commit/c76d886719d515611ef597016f2e4b03cf30d96e))
+* **deps:** bump @webref/css from 6.11.2 to 6.12.0 ([#10585](https://github.com/mdn/yari/issues/10585)) ([5fb4e32](https://github.com/mdn/yari/commit/5fb4e32fff73e2f80236b34f98633cab01576dc7))
+* **deps:** bump mdn-data from 2.4.0 to 2.4.1 ([#10586](https://github.com/mdn/yari/issues/10586)) ([0e6ef4c](https://github.com/mdn/yari/commit/0e6ef4c8032f5e8eb9904adc34a03a3df36a9328))
+* **deps:** bump open from 10.0.3 to 10.0.4 ([#10587](https://github.com/mdn/yari/issues/10587)) ([39a28c4](https://github.com/mdn/yari/commit/39a28c418ee8a3ff30b5f22c270d2a358e621733))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#10581](https://github.com/mdn/yari/issues/10581)) ([4a2fffe](https://github.com/mdn/yari/commit/4a2fffe67b008b248bfb72f1aefa889609e031a2))
+* **deps:** bump the dependencies group in /testing/integration with 1 update ([#10582](https://github.com/mdn/yari/issues/10582)) ([81c193c](https://github.com/mdn/yari/commit/81c193c433b914ef1ff28eed915a19eacfe59994))
+* **deps:** bump the sentry group with 2 updates ([#10576](https://github.com/mdn/yari/issues/10576)) ([bb90578](https://github.com/mdn/yari/commit/bb90578608ef0a1f207fae98202be40c285ef3ca))
+* **deps:** bump web-specs from 3.3.0 to 3.3.1 ([#10590](https://github.com/mdn/yari/issues/10590)) ([5f35595](https://github.com/mdn/yari/commit/5f35595bb7d4ba0f632b84237e4c24258b4ee058))
+* **macros/Firefox_for_developers:** remove the parameter and add zh-CN translation ([#10034](https://github.com/mdn/yari/issues/10034)) ([c8c3908](https://github.com/mdn/yari/commit/c8c39081c3d7cbd98e4c12e66e11d3d6a4fef1f9))
+* **macros:** mark DOMAttributeMethods as deprecated ([#10529](https://github.com/mdn/yari/issues/10529)) ([006eb85](https://github.com/mdn/yari/commit/006eb85729f34721eea92e5f2146f83dd5c37438))
+
 ## [2.39.4](https://github.com/mdn/yari/compare/v2.39.3...v2.39.4) (2024-02-21)
 
 
