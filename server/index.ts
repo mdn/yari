@@ -44,7 +44,7 @@ import { router as translationsRouter } from "./translations.js";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
 import { MEMOIZE_INVALIDATE, getRoot } from "../content/utils.js";
 
-import { renderHTML } from "../ssr/index.js";
+import { renderHTML } from "../ssr/dist/main.js";
 import {
   allPostFrontmatter,
   findPostLiveSampleBySlug,

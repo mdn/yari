@@ -22,7 +22,7 @@ import {
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
-import { renderHTML } from "../ssr/index.js";
+import { renderHTML } from "../ssr/dist/main.js";
 import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
