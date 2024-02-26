@@ -126,8 +126,8 @@ function prevNextFromIndex(
   const prev = i > 0 ? index[i - 1] : undefined;
   const next = i < index.length - 1 ? index[i + 1] : undefined;
 
-  "children" in prev && delete prev.children;
-  "children" in next && delete next.children;
+  prev && "children" in prev && delete prev.children;
+  next && "children" in next && delete next.children;
 
   return { prev, next };
 }
