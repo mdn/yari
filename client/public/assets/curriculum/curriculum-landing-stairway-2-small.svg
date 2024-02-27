@@ -47,10 +47,10 @@
     d="m209.035 105.5-6.315 14.537-19.472-1.558m68.42-41.01s-4.329 7.422-8.947 9.864c-2.291 1.212-6.315 2.077-6.315 2.077m14.726-25.45c.527 2.078-3.685 2.078-2.105 3.116s2.105 2.596 2.105 2.596" />
   <defs>
     <linearGradient id="smallm" x1="223.161" x2="224.806" y1="3.935" y2="84.43" gradientUnits="userSpaceOnUse">
-      <stop stop-color="var(--cur-bg-color)" />
-      <stop offset=".2" stop-color="var(--cur-bg-color)" stop-opacity=".567" />
-      <stop offset=".4" stop-color="var(--cur-bg-color)" stop-opacity=".289" />
-      <stop offset=".6" stop-color="var(--cur-bg-color)" stop-opacity="0" />
+      <stop stop-color="var(--curriculum-bg-color)" />
+      <stop offset=".2" stop-color="var(--curriculum-bg-color)" stop-opacity=".567" />
+      <stop offset=".4" stop-color="var(--curriculum-bg-color)" stop-opacity=".289" />
+      <stop offset=".6" stop-color="var(--curriculum-bg-color)" stop-opacity="0" />
     </linearGradient>
   </defs>
 </svg>

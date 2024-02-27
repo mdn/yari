@@ -73,7 +73,7 @@
           }
 
           > input:checked + label::before {
-            content: url("../assets/icons/cur-modules-underline.svg#1");
+            content: url("../assets/icons/curriculum-modules-underline.svg#1");
           }
         }
 
@@ -88,7 +88,7 @@
           }
 
           > input:checked + label::before {
-            content: url("../assets/icons/cur-modules-underline.svg#2");
+            content: url("../assets/icons/curriculum-modules-underline.svg#2");
           }
         }
 
@@ -103,7 +103,7 @@
           }
 
           > input:checked + label::before {
-            content: url("../assets/icons/cur-modules-underline.svg#3");
+            content: url("../assets/icons/curriculum-modules-underline.svg#3");
           }
         }
 
@@ -147,10 +147,10 @@
       }
 
       li.module-list-item {
-        background-color: var(--cur-bg-color-list-item-body);
-        border: 1px solid var(--cur-border-color-list-item);
+        background-color: var(--curriculum-bg-color-list-item-body);
+        border: 1px solid var(--curriculum-border-color-list-item);
         border-radius: var(--elem-radius);
-        box-shadow: var(--cur-shadow);
+        box-shadow: var(--curriculum-shadow);
         display: flex;
         flex-direction: column;
         justify-self: center;
@@ -166,13 +166,13 @@
         }
 
         &:hover {
-          border-color: var(--cur-border-color-list-item-hover);
+          border-color: var(--curriculum-border-color-list-item-hover);
         }
 
         > header {
           a {
             align-items: center;
-            background-color: var(--cur-bg-color-list-item-header);
+            background-color: var(--curriculum-bg-color-list-item-header);
             display: flex;
             flex-direction: column;
             height: 10rem;
@@ -188,11 +188,11 @@
               width: 4rem;
 
               circle {
-                fill: var(--cur-bg-color-list-item-icon);
+                fill: var(--curriculum-bg-color-list-item-icon);
               }
 
               path {
-                fill: var(--cur-color-list-item-icon);
+                fill: var(--curriculum-color-list-item-icon);
               }
             }
 
@@ -221,7 +221,7 @@
           }
 
           p:last-child {
-            color: var(--cur-color-topic);
+            color: var(--curriculum-color-topic);
             font-weight: 600;
           }
         }

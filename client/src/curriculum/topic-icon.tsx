@@ -1,8 +1,8 @@
-import { ReactComponent as ScriptingSVG } from "../../public/assets/curriculum/cur-topic-scripting.svg";
-import { ReactComponent as ToolingSVG } from "../../public/assets/curriculum/cur-topic-tooling.svg";
-import { ReactComponent as StandardsSVG } from "../../public/assets/curriculum/cur-topic-standards.svg";
-import { ReactComponent as StylingSVG } from "../../public/assets/curriculum/cur-topic-styling.svg";
-import { ReactComponent as PracticesSVG } from "../../public/assets/curriculum/cur-topic-practices.svg";
+import { ReactComponent as ScriptingSVG } from "../../public/assets/curriculum/curriculum-topic-scripting.svg";
+import { ReactComponent as ToolingSVG } from "../../public/assets/curriculum/curriculum-topic-tooling.svg";
+import { ReactComponent as StandardsSVG } from "../../public/assets/curriculum/curriculum-topic-standards.svg";
+import { ReactComponent as StylingSVG } from "../../public/assets/curriculum/curriculum-topic-styling.svg";
+import { ReactComponent as PracticesSVG } from "../../public/assets/curriculum/curriculum-topic-practices.svg";
 
 import "./topic-icon.scss";
 import { Topic, topic2css } from "./utils";

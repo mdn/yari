@@ -1,69 +1,79 @@
 @use "../ui/vars" as *;
 
 .curriculum {
-  --background-toc-active: var(--cur-bg-color);
-  --category-color: var(--cur-category-color);
+  --background-toc-active: var(--curriculum-bg-color);
+  --category-color: var(--curriculum-category-color);
 
-  --cur-bg-color-topic: var(--cur-bg-color);
-  --cur-color-topic: var(--cur-color);
+  --curriculum-bg-color-topic: var(--curriculum-bg-color);
+  --curriculum-color-topic: var(--curriculum-color);
 
   .topic-standards {
-    --cur-bg-color-topic: var(--cur-bg-color-topic-standards);
-    --cur-color-topic: var(--cur-color-topic-standards);
-    --cur-bg-color-list-item-header: var(
-      --cur-bg-color-list-item-topic-standards
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-standards);
+    --curriculum-color-topic: var(--curriculum-color-topic-standards);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-standards
     );
-    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-standards);
-    --cur-bg-color-list-item-icon: var(
-      --cur-bg-color-list-item-icon-topic-standards
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-standards
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-standards
     );
   }
 
   .topic-styling {
-    --cur-bg-color-topic: var(--cur-bg-color-topic-styling);
-    --cur-color-topic: var(--cur-color-topic-styling);
-    --cur-bg-color-list-item-header: var(
-      --cur-bg-color-list-item-topic-styling
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-styling);
+    --curriculum-color-topic: var(--curriculum-color-topic-styling);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-styling
     );
-    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-styling);
-    --cur-bg-color-list-item-icon: var(
-      --cur-bg-color-list-item-icon-topic-styling
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-styling
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-styling
     );
   }
 
   .topic-scripting {
-    --cur-bg-color-topic: var(--cur-bg-color-topic-scripting);
-    --cur-color-topic: var(--cur-color-topic-scripting);
-    --cur-bg-color-list-item-header: var(
-      --cur-bg-color-list-item-topic-scripting
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-scripting);
+    --curriculum-color-topic: var(--curriculum-color-topic-scripting);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-scripting
     );
-    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-scripting);
-    --cur-bg-color-list-item-icon: var(
-      --cur-bg-color-list-item-icon-topic-scripting
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-scripting
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-scripting
     );
   }
 
   .topic-tooling {
-    --cur-bg-color-topic: var(--cur-bg-color-topic-tooling);
-    --cur-color-topic: var(--cur-color-topic-tooling);
-    --cur-bg-color-list-item-header: var(
-      --cur-bg-color-list-item-topic-tooling
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-tooling);
+    --curriculum-color-topic: var(--curriculum-color-topic-tooling);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-tooling
     );
-    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-tooling);
-    --cur-bg-color-list-item-icon: var(
-      --cur-bg-color-list-item-icon-topic-tooling
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-tooling
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-tooling
     );
   }
 
   .topic-practices {
-    --cur-bg-color-topic: var(--cur-bg-color-topic-practices);
-    --cur-color-topic: var(--cur-color-topic-practices);
-    --cur-bg-color-list-item-header: var(
-      --cur-bg-color-list-item-topic-practices
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-practices);
+    --curriculum-color-topic: var(--curriculum-color-topic-practices);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-practices
     );
-    --cur-color-list-item-icon: var(--cur-color-list-item-icon-topic-practices);
-    --cur-bg-color-list-item-icon: var(
-      --cur-bg-color-list-item-icon-topic-practices
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-practices
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-practices
     );
   }
 
@@ -197,7 +207,7 @@
         margin-bottom: 2rem;
 
         > span {
-          color: var(--cur-color);
+          color: var(--curriculum-color);
         }
       }
 
@@ -213,7 +223,7 @@
       }
 
       blockquote.curriculum-notes {
-        background-color: var(--cur-bg-color-note);
+        background-color: var(--curriculum-bg-color-note);
         border: 0;
         border-radius: var(--elem-radius);
         margin: 1rem;
@@ -230,7 +240,7 @@
         margin-bottom: 0.5rem;
 
         &::before {
-          content: url("../assets/icons/cur-resources.svg");
+          content: url("../assets/icons/curriculum-resources.svg");
           display: block;
           height: 24px;
           margin-right: 0.5rem;

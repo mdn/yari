@@ -1,7 +1,7 @@
-import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur-landing-top.svg";
-import { ReactComponent as LandingStairwaySVG1 } from "../../public/assets/curriculum/cur-landing-stairway-1.svg";
-import { ReactComponent as LandingStairwaySVG2 } from "../../public/assets/curriculum/cur-landing-stairway-2.svg";
-import { ReactComponent as LandingStairwaySVG2Small } from "../../public/assets/curriculum/cur-landing-stairway-2-small.svg";
+import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/curriculum-landing-top.svg";
+import { ReactComponent as LandingStairwaySVG1 } from "../../public/assets/curriculum/curriculum-landing-stairway-1.svg";
+import { ReactComponent as LandingStairwaySVG2 } from "../../public/assets/curriculum/curriculum-landing-stairway-2.svg";
+import { ReactComponent as LandingStairwaySVG2Small } from "../../public/assets/curriculum/curriculum-landing-stairway-2-small.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";

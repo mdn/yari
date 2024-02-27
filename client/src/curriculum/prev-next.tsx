@@ -8,12 +8,22 @@ export function PrevNext({ doc }: { doc?: CurriculumDoc }) {
   return (
     <section className="curriculum-prev-next">
       {prev && (
-        <Button type="primary" target="_self" icon="cur-prev" href={prev?.url}>
+        <Button
+          type="primary"
+          target="_self"
+          icon="curriculum-prev"
+          href={prev?.url}
+        >
           Previous: {prev?.title}
         </Button>
       )}
       {next && (
-        <Button type="primary" target="_self" icon="cur-next" href={next?.url}>
+        <Button
+          type="primary"
+          target="_self"
+          icon="curriculum-next"
+          href={next?.url}
+        >
           Next: {next?.title}
         </Button>
       )}

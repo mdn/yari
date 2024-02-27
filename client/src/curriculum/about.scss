@@ -5,7 +5,7 @@
 
     h2#motivation + div {
       li {
-        list-style-image: var(--cur-bullet);
+        list-style-image: var(--curriculum-bullet);
       }
     }
 
@@ -21,23 +21,23 @@
       }
 
       &#students::before {
-        content: var(--cur-about-students);
+        content: var(--curriculum-about-students);
       }
 
       &#educators::before {
-        content: var(--cur-about-educators);
+        content: var(--curriculum-about-educators);
       }
 
       &#whats_covered::before {
-        content: var(--cur-about-covered);
+        content: var(--curriculum-about-covered);
       }
 
       &#level_of_detail::before {
-        content: var(--cur-about-detail);
+        content: var(--curriculum-about-detail);
       }
 
       &#what_is_not_covered::before {
-        content: var(--cur-about-not);
+        content: var(--curriculum-about-not);
       }
     }
   }
