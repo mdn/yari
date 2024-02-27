@@ -104,6 +104,10 @@ export const CSP_DIRECTIVES = {
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
+    "stage.observatory.mdn.nonprod.webservices.mozgcp.net",
+    "prod.observatory.mdn.prod.webservices.mozgcp.net",
+    "http-observatory.security.mozilla.org",
+
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
     "https://api.stripe.com",

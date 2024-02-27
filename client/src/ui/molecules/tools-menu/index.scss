@@ -1,0 +1,11 @@
+@use "../../vars" as *;
+
+@media screen and (min-width: $screen-lg) {
+  #tools-button {
+    display: flex;
+
+    &::after {
+      display: none;
+    }
+  }
+}

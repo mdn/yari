@@ -1,9 +1,7 @@
 @use "../../../ui/vars" as *;
 
 .info-tooltip {
-  align-items: center;
   cursor: pointer;
-  display: inline-flex;
   position: relative;
 
   .icon {
@@ -19,6 +17,7 @@
     color: var(--text-primary);
     font-size: smaller;
     left: 50%;
+    margin-top: 0.25rem;
     max-width: min(100vw, 20rem);
     padding: 0.5rem;
     position: absolute;
