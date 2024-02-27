@@ -94,10 +94,10 @@ export async function buildCurriculumIndex(
   const index: CurriculumMetaData[] = await buildIndex();
 
   const curriculumIndex = index.reduce<CurriculumIndexEntry[]>((item, meta) => {
-    const currentLvl = meta.slug.split("/").length;
+    const currentLevel = meta.slug.split("/").length;
     const last = item.length ? item[item.length - 1] : null;
     const entry = mapper(meta);
-    if (currentLvl > 2) {
+    if (currentLevel > 2) {
       if (last) {
         last.children.push(entry);
         return item;
@@ -119,17 +119,18 @@ async function buildCurriculumSidebar(): Promise<CurriculumIndexEntry[]> {
   return index;
 }
 
+// This consumes (as in modifies) index.
 function prevNextFromIndex(
   i: number,
   index: CurriculumMetaData[] | CurriculumIndexEntry[]
 ): PrevNext {
-  const prev = i > 0 ? index[i - 1] : undefined;
-  const next = i < index.length - 1 ? index[i + 1] : undefined;
+  const prevEntry = i > 0 ? index[i - 1] : undefined;
+  const nextEntry = i < index.length - 1 ? index[i + 1] : undefined;
 
-  prev && "children" in prev && delete prev.children;
-  next && "children" in next && delete next.children;
+  prevEntry && "children" in prevEntry && delete prevEntry.children;
+  nextEntry && "children" in nextEntry && delete nextEntry.children;
 
-  return { prev, next };
+  return { prev: prevEntry, next: nextEntry };
 }
 
 async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
@@ -146,16 +147,16 @@ async function buildPrevNextModule(slug: string): Promise<PrevNext> {
   return prevNextFromIndex(i, index);
 }
 
-function breadPath(
+function breadcrumbPath(
   url: string,
-  cur: CurriculumIndexEntry[]
+  entries: CurriculumIndexEntry[]
 ): DocParent[] | null {
-  for (const entry of cur) {
+  for (const entry of entries) {
     if (entry.url === url) {
       return [{ uri: entry.url, title: entry.title }];
     }
     if (entry.children?.length) {
-      const found = breadPath(url, entry.children);
+      const found = breadcrumbPath(url, entry.children);
       if (found) {
         return [{ uri: entry.url, title: entry.title }, ...found];
       }
@@ -168,16 +169,14 @@ async function buildParents(url: string): Promise<DocParent[]> {
   const index = await buildCurriculumIndex(({ url, title }) => {
     return { url, title };
   });
-  const parents = breadPath(url, index);
-  if (parents) {
+  const parents = breadcrumbPath(url, index);
+  if (!parents) {
     const { url, title } = index[0];
     if (parents[0]?.uri !== url) {
       return [{ uri: url, title }, ...parents];
     }
     return parents;
   }
-
-  return [];
 }
 
 async function readCurriculumPage(
@@ -202,18 +201,18 @@ async function readCurriculumPage(
   let modules: CurriculumIndexEntry[];
   let prevNext: PrevNext;
   if (!options?.forIndex) {
-    if (attributes.template === Template.landing) {
+    if (attributes.template === Template.Landing) {
       modules = (await buildCurriculumIndex())?.filter(
         (x) => x.children?.length
       );
-    } else if (attributes.template === Template.overview) {
+    } else if (attributes.template === Template.Overview) {
       modules = (await buildCurriculumIndex())?.find(
         (x) => x.slug === slug
       )?.children;
     }
-    if (attributes.template === Template.module) {
+    if (attributes.template === Template.Module) {
       prevNext = await buildPrevNextModule(slug);
-    } else if (attributes.template === Template.overview) {
+    } else if (attributes.template === Template.Overview) {
       prevNext = await buildPrevNextOverview(slug);
     }
 

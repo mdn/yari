@@ -1,7 +1,7 @@
 @use "../ui/vars" as *;
 
 .curriculum-content-container.curriculum-landing {
-  background-color: var(--cur-bg-color-landing);
+  background-color: var(--curriculum-bg-color-landing);
   margin: 0;
   max-width: 100%;
   padding: 0;
@@ -55,11 +55,11 @@
       }
 
       #icons-bg {
-        fill: var(--cur-bg-color-landing-top-icon);
+        fill: var(--curriculum-bg-color-landing-top-icon);
       }
 
       .laptop {
-        fill: var(--cur-color-landing-laptop);
+        fill: var(--curriculum-color-landing-laptop);
       }
     }
 
@@ -74,7 +74,7 @@
       }
 
       h1 {
-        color: var(--cur-color-topic);
+        color: var(--curriculum-color-topic);
         font-size: 2rem;
         margin-bottom: 0.5rem;
         @media screen and (min-width: $screen-md) {
@@ -99,7 +99,7 @@
   }
 
   .landing-about-container {
-    background-color: var(--cur-bg-large-color);
+    background-color: var(--curriculum-bg-large-color);
     margin: 0;
     margin-top: -6rem;
     max-width: 100%;
@@ -136,9 +136,9 @@
 
         ul {
           align-items: start;
-          background-color: var(--cur-bg-color-landing-about-ul);
+          background-color: var(--curriculum-bg-color-landing-about-ul);
           border-radius: var(--elem-radius);
-          box-shadow: var(--cur-shadow-landing-about-ul);
+          box-shadow: var(--curriculum-shadow-landing-about-ul);
           color: var(--text-secondary);
           display: grid;
           grid-area: li;
@@ -185,15 +185,15 @@
             }
 
             &:nth-child(1)::before {
-              content: var(--cur-landing-about-beginner);
+              content: var(--curriculum-landing-about-beginner);
             }
 
             &:nth-child(2)::before {
-              content: var(--cur-landing-about-pace);
+              content: var(--curriculum-landing-about-pace);
             }
 
             &:nth-child(3)::before {
-              content: var(--cur-landing-about-free);
+              content: var(--curriculum-landing-about-free);
             }
           }
         }
@@ -215,7 +215,7 @@
             grid-area: p1;
 
             &::before {
-              content: var(--cur-landing-about-bullet);
+              content: var(--curriculum-landing-about-bullet);
             }
           }
 
@@ -223,7 +223,7 @@
             grid-area: p2;
 
             &::before {
-              content: var(--cur-landing-about-bullet);
+              content: var(--curriculum-landing-about-bullet);
             }
           }
 
@@ -303,7 +303,7 @@
           }
 
           .color {
-            color: var(--cur-color);
+            color: var(--curriculum-color);
           }
         }
       }
@@ -408,7 +408,7 @@
     width: fit-content;
 
     &::after {
-      content: url("../assets/icons/cur-started-underline.svg");
+      content: url("../assets/icons/curriculum-started-underline.svg");
       position: absolute;
       transform: translate3d(-6em, 1.25rem, 0);
       width: 6em;
@@ -436,7 +436,7 @@
 
         > li {
           align-items: center;
-          background-color: var(--cur-bg-large-color);
+          background-color: var(--curriculum-bg-large-color);
           border-radius: var(--elem-radius);
           color: var(--text-secondary);
           display: grid;
@@ -480,19 +480,19 @@
           }
 
           &:nth-child(1)::before {
-            content: var(--cur-landing-started-beginner);
+            content: var(--curriculum-landing-started-beginner);
           }
 
           &:nth-child(2)::before {
-            content: var(--cur-landing-started-advanced);
+            content: var(--curriculum-landing-started-advanced);
           }
 
           &:nth-child(3)::before {
-            content: var(--cur-landing-started-employment);
+            content: var(--curriculum-landing-started-employment);
           }
 
           &:nth-child(4)::before {
-            content: var(--cur-landing-started-educator);
+            content: var(--curriculum-landing-started-educator);
           }
 
           h3 {

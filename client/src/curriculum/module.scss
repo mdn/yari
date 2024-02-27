@@ -9,7 +9,7 @@
       justify-content: flex-start;
 
       .topic-icon {
-        --background-primary: var(--cur-bg-color-topic);
+        --background-primary: var(--curriculum-bg-color-topic);
         align-self: flex-start;
         grid-area: icon;
         height: 4rem;
@@ -22,7 +22,7 @@
       }
 
       p {
-        color: var(--cur-color-topic);
+        color: var(--curriculum-color-topic);
         font-size: var(--type-smaller-font-size);
         grid-area: category;
         margin: 0;
@@ -42,11 +42,11 @@
 
         > li {
           &:not(.external) {
-            list-style-image: var(--cur-module-mdn-resource);
+            list-style-image: var(--curriculum-module-mdn-resource);
           }
 
           &.external {
-            list-style-image: url("../assets/icons/cur-ext-resource.svg");
+            list-style-image: url("../assets/icons/curriculum-ext-resource.svg");
           }
         }
       }

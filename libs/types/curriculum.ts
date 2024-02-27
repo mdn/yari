@@ -10,10 +10,10 @@ export enum Topic {
 }
 
 export enum Template {
-  module = "module",
-  overview = "overview",
-  landing = "landing",
-  about = "about",
+  Module = "module",
+  Overview = "overview",
+  Landing = "landing",
+  About = "about",
 }
 
 export interface CurriculumCoreMetaData {
