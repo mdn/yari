@@ -138,6 +138,9 @@ export function useStickyHeaderHeight() {
     const header = document.getElementsByClassName(
       "sticky-header-container"
     )?.[0];
+    if (!header) {
+      return;
+    }
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { height } = entry.contentRect;

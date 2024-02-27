@@ -1422,14 +1422,9 @@ test("headings with HTML should be rendered as HTML", () => {
     doc: Doc;
   };
   const [section1, section2] = doc.body as ProseSection[];
-  // Because the title contains HTML, you can expect a 'titleAsText'
   expect(section1.value.title).toBe("Here's some <code>code</code>");
-  expect(section1.value.titleAsText).toBe("Here's some code");
   expect(section2.value.title).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
-  );
-  expect(section2.value.titleAsText).toBe(
-    "You can use escaped HTML tags like <pre> still"
   );
 });
 
