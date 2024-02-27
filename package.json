@@ -256,7 +256,7 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^7.0.2",
+    "typescript-eslint": "^7.1.0",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.2",
