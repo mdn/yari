@@ -281,7 +281,7 @@ export async function buildBlogPosts(options: {
 
     const url = `/${locale}/blog/${blogMeta.slug}/`;
     const renderUrl = `/${locale}/blog/${blogMeta.slug}`;
-    const renderDoc = {
+    const renderDoc: BlogPostDoc = {
       url: renderUrl,
       rawBody: body,
       metadata: { locale, ...blogMeta },
@@ -348,7 +348,7 @@ export interface BlogPostDoc {
   url: string;
   rawBody: string;
   metadata: BlogPostMetadata & { locale: string };
-  isMarkdown: boolean;
+  isMarkdown: true;
   fileInfo: {
     path: string;
   };
