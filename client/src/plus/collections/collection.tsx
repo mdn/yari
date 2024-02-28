@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import useSWR, { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 import { useScrollToTop, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
@@ -25,6 +26,11 @@ import {
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_COLLECTIONS } from "../../telemetry/constants";
 dayjs.extend(relativeTime);
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 export function CollectionComponent() {
   const { collectionId } = useParams();
@@ -83,8 +89,8 @@ export function CollectionComponent() {
               {itemLoading
                 ? "Loading..."
                 : itemError
-                ? "Error (try again)"
-                : "Show more"}
+                  ? "Error (try again)"
+                  : "Show more"}
             </Button>
           </div>
         )}
@@ -170,7 +176,7 @@ function ItemComponent({
 }: {
   addNoteEnabled?: boolean;
   item: Item | FrequentlyViewedItem;
-  mutate?: KeyedMutator<Item[][]>;
+  mutate?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) {
   const [slicedNote, setSlicedNote] = useState<string>();
   const [note, setNote] = useState<string>();

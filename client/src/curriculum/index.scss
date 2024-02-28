@@ -1,0 +1,268 @@
+@use "../ui/vars" as *;
+
+.curriculum {
+  --background-toc-active: var(--curriculum-bg-color);
+  --category-color: var(--curriculum-category-color);
+
+  --curriculum-bg-color-topic: var(--curriculum-bg-color);
+  --curriculum-color-topic: var(--curriculum-color);
+
+  .topic-standards {
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-standards);
+    --curriculum-color-topic: var(--curriculum-color-topic-standards);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-standards
+    );
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-standards
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-standards
+    );
+  }
+
+  .topic-styling {
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-styling);
+    --curriculum-color-topic: var(--curriculum-color-topic-styling);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-styling
+    );
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-styling
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-styling
+    );
+  }
+
+  .topic-scripting {
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-scripting);
+    --curriculum-color-topic: var(--curriculum-color-topic-scripting);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-scripting
+    );
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-scripting
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-scripting
+    );
+  }
+
+  .topic-tooling {
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-tooling);
+    --curriculum-color-topic: var(--curriculum-color-topic-tooling);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-tooling
+    );
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-tooling
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-tooling
+    );
+  }
+
+  .topic-practices {
+    --curriculum-bg-color-topic: var(--curriculum-bg-color-topic-practices);
+    --curriculum-color-topic: var(--curriculum-color-topic-practices);
+    --curriculum-bg-color-list-item-header: var(
+      --curriculum-bg-color-list-item-topic-practices
+    );
+    --curriculum-color-list-item-icon: var(
+      --curriculum-color-list-item-icon-topic-practices
+    );
+    --curriculum-bg-color-list-item-icon: var(
+      --curriculum-bg-color-list-item-icon-topic-practices
+    );
+  }
+
+  .curriculum-content {
+    .modules {
+      input[type="radio"]:not(:checked) ~ ol {
+        display: none;
+      }
+    }
+  }
+
+  .article-actions-container {
+    // Duplicated from ../ui/molecules/grids/document-page.scss
+    display: flex;
+  }
+
+  .sidebar {
+    > ol:first-of-type > li:first-of-type {
+      font-size: var(--type-base-font-size-rem);
+      font-weight: bold;
+    }
+
+    li > em {
+      background-color: var(--background-toc-active);
+      border-left: 2px solid var(--category-color);
+      display: inline-block;
+      font-style: normal;
+      font-weight: 600;
+      padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+      width: 100%;
+    }
+  }
+}
+
+.curriculum-content-container {
+  > .curriculum-content {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      a:link,
+      a:visited {
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      a:hover,
+      a:focus {
+        text-decoration: underline;
+      }
+
+      a:active {
+        background-color: transparent;
+      }
+
+      a[href^="#"] {
+        &::before {
+          color: var(--text-inactive);
+          content: "#";
+          display: inline-block;
+          font-size: 0.7em;
+          line-height: 1;
+          margin-left: -0.8em;
+          text-decoration: none;
+          visibility: hidden;
+          width: 0.8em;
+        }
+
+        &:hover {
+          &::before {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+
+  &,
+  .button {
+    --button-padding: 1rem;
+  }
+
+  .curriculum-sidebar,
+  .toc,
+  .curriculum-content {
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+  }
+
+  .curriculum-content {
+    a {
+      color: var(--text-link);
+
+      &:link,
+      &:visited {
+        text-decoration: underline;
+
+        &.button {
+          text-decoration: none;
+        }
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+
+      &:visited:not([href^="#"]) {
+        // Distinguish visited links (excl. anchor links).
+        color: var(--text-visited);
+      }
+    }
+  }
+
+  &.with-sidebar {
+    > .sidebar-container {
+      padding-top: 4rem;
+    }
+
+    .curriculum-content {
+      grid-area: main;
+    }
+  }
+
+  &.curriculum-overview,
+  &.curriculum-module {
+    .curriculum-content {
+      > header > h1 {
+        margin-bottom: 2rem;
+
+        > span {
+          color: var(--curriculum-color);
+        }
+      }
+
+      .module-contents {
+        > h2 {
+          margin-bottom: 2rem;
+          margin-top: 4rem;
+        }
+      }
+
+      section h2:first-of-type {
+        margin-top: 2rem;
+      }
+
+      blockquote.curriculum-notes {
+        background-color: var(--curriculum-bg-color-note);
+        border: 0;
+        border-radius: var(--elem-radius);
+        margin: 1rem;
+        padding: 0.5rem 2rem;
+
+        > :last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      p.curriculum-outcomes {
+        display: flex;
+        font-weight: var(--font-body-strong-weight);
+        margin-bottom: 0.5rem;
+
+        &::before {
+          content: url("../assets/icons/curriculum-resources.svg");
+          display: block;
+          height: 24px;
+          margin-right: 0.5rem;
+          width: 24px;
+        }
+      }
+
+      ol,
+      ul {
+        margin: 1rem 0 2rem;
+        padding-left: 2rem;
+
+        ol,
+        ul {
+          margin: 0;
+        }
+      }
+
+      li {
+        list-style-type: disc;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}

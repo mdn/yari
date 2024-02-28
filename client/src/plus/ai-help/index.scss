@@ -1,7 +1,9 @@
 @use "../../ui/vars" as *;
 
 .ai-help {
+  --background-toc-active: var(--ai-help-accent-background-color);
   --category-color: var(--ai-help-icon);
+  --category-color-background: var(--ai-help-accent-background-color);
   --text-link: var(--ai-help-link);
 
   > header {
@@ -11,22 +13,107 @@
     --plus-link: var(--ai-help-link);
   }
 
-  > .container {
-    padding: var(--gutter);
+  .button.action.has-icon {
+    // Reduce button icon contrast to make it less prominent.
+    --button-color: var(--icon-secondary);
 
-    &:not(:last-of-type) {
-      padding-bottom: 0;
+    &:hover {
+      --button-color: var(--icon-primary);
+
+      .icon-trash {
+        background-color: var(--text-primary-red);
+      }
+    }
+  }
+
+  > .ai-help-main {
+    --ai-top: calc(var(--top-nav-height) + 1px + 1rem);
+    column-gap: 1rem;
+    display: grid;
+    grid-template-columns: [left] 1fr [center] min(52rem, 100%) [right] 1fr;
+    grid-template-rows: auto auto 1fr;
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    &.with-ai-help-history {
+      > .ai-help-history {
+        grid-column: left;
+        grid-row: 1/4;
+        height: fit-content;
+        max-height: calc(100vh - var(--sticky-header-without-actions-height));
+        overflow: auto;
+        position: sticky;
+        top: var(--sticky-header-without-actions-height);
+      }
+      @media screen and (max-width: $screen-xxl) {
+        grid-template-columns: [left] minmax(0, 15rem) [center] minmax(0, 3fr);
+      }
+      @media screen and (max-width: $screen-md) {
+        grid-template-columns: [center] minmax(0, 3fr);
+
+        > .ai-help-history {
+          grid-column: center;
+          grid-row: initial;
+        }
+      }
     }
 
-    .notecard {
-      margin-bottom: 0;
-      margin-top: 0;
+    > .container {
+      grid-column: center;
+      padding: var(--gutter);
 
-      a:link {
-        color: var(--text-link);
+      &.ai-help-header {
+        column-gap: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
 
-        &:not(:hover) {
-          text-decoration: underline;
+        > h1 {
+          margin-bottom: 0.7rem;
+          min-width: 100%;
+
+          &::after {
+            background-color: var(--ai-help-icon);
+            content: "";
+            display: inline-block;
+            height: 1.1rem;
+            mask-image: url("../../assets/icons/ai-help.svg");
+            mask-position: center center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            vertical-align: top;
+            width: 1.25rem;
+          }
+        }
+
+        > p {
+          color: var(--text-secondary);
+          margin: 0;
+        }
+
+        .feedback-link {
+          --feedback-link-icon: var(--icon-secondary);
+          --text-link: var(--text-secondary);
+          font-size: var(--type-tiny-font-size);
+        }
+      }
+
+      &:not(:last-of-type) {
+        padding-bottom: 0;
+      }
+
+      .notecard {
+        margin-bottom: 0;
+        margin-top: 0;
+
+        a:link {
+          color: var(--text-link);
+
+          &:not(:hover) {
+            text-decoration: underline;
+          }
         }
       }
     }
@@ -34,6 +121,37 @@
 
   a:hover {
     text-decoration: underline;
+  }
+
+  .ai-help-banner,
+  .login-banner {
+    background-color: var(--category-color-background);
+    border: none;
+    border-radius: 0.25rem;
+    padding: 1rem 1.5rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .ai-help-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .icon {
+      background-color: var(--ai-help-icon);
+      vertical-align: text-top;
+
+      &:first-of-type {
+        margin-right: 1rem;
+      }
+    }
+
+    .auth-container {
+      margin-top: 1rem;
+    }
   }
 
   .ai-help-inner {
@@ -62,57 +180,103 @@
       }
 
       .ai-help-footer-text {
+        color: var(--text-secondary);
         font-size: var(--type-tiny-font-size);
-        margin-left: calc(
-          var(--input-border-width) + var(--input-padding-left)
-        );
         margin-top: 0.5rem;
+      }
+
+      .ai-help-refine-button {
+        border: 1px solid var(--text-primary);
+      }
+
+      .ai-help-new-question-button {
+        // Revert effects of .button.action
+        --button-bg: var(--button-primary-default);
+        --button-bg-hover: var(--button-primary-hover);
+        --button-bg-active: var(--button-primary-active);
+        --button-color: var(--background-primary);
+
+        :hover {
+          --button-border-color: var(--button-bg-hover);
+          --button-color: var(--background-primary);
+        }
+      }
+    }
+
+    .ai-help-refine-or-new {
+      display: flex;
+      flex-wrap: wrap-reverse;
+      gap: 1rem;
+      justify-content: center;
+      width: 100%;
+
+      .ai-help-new-question-button {
+        align-self: center;
+
+        .button-wrap {
+          text-transform: none;
+          width: max-content;
+
+          .icon {
+            margin-right: 0.2em;
+          }
+        }
       }
     }
 
     .ai-help-input-form {
       --input-height: 3rem;
+      background-color: var(--background-primary);
+      border: var(--input-border-width) solid var(--border-primary);
+      border-radius: 1rem;
+      display: flex;
+      flex-grow: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0.5rem 1rem;
       position: relative;
-      width: 100%;
 
-      input {
+      &:focus-within {
+        border-color: var(--category-color);
+        box-shadow:
+          0 0 0 3px var(--blend-color),
+          0 0 0 3px var(--category-color);
+        outline: 0 none;
+      }
+
+      .ai-help-input-actions {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      textarea {
         background-color: var(--background-primary);
-        border: var(--input-border-width) solid var(--border-primary);
-        border-radius: var(--input-height);
+        border: none;
         color: var(--text-primary);
-        height: var(--input-height);
-        padding-left: var(--input-padding-left);
-        padding-right: var(--input-padding-right);
-        width: 100%;
+        flex-grow: 1;
+        height: 2rem;
+        max-height: calc(30vh - var(--sticky-header-without-actions-height));
+        max-width: 100%;
+        resize: none;
 
-        &:focus {
-          border-color: var(--category-color);
-          box-shadow:
-            0 0 0 3px var(--blend-color),
-            0 0 0 3px var(--category-color);
-          outline: 0 none;
+        &:focus-visible {
+          outline: none;
         }
       }
 
       button {
         --button-color: var(--icon-secondary);
-        --button-height: 2.5rem;
         --button-padding: 0.5rem;
         --icon-size: 1.5rem;
-
-        display: block;
-        position: absolute;
-        right: calc(0.5rem + var(--input-border-width));
-        top: 0.25rem;
+        align-self: end;
+        margin-left: auto;
 
         &:hover {
           background: transparent;
         }
       }
-    }
 
-    &.has-input {
-      button {
+      .button[type="submit"]:enabled {
         --button-color: var(--ai-help-icon);
       }
     }
@@ -155,24 +319,15 @@
     }
 
     .ai-help-message {
-      border: 1px solid transparent;
-      display: flex;
+      border-radius: var(--elem-radius);
+      display: grid;
+      grid-auto-rows: auto;
+      grid-template-columns: max-content minmax(0, auto);
       padding: 1rem;
+      row-gap: 1rem;
 
-      &:first-of-type {
-        background-color: var(--background-primary);
-        mask-image: linear-gradient(
-          to bottom,
-          rgb(0, 0, 0) 0% calc(100% - 0.5rem),
-          rgba(0, 0, 0, 0) 100%
-        );
-        position: sticky;
-        top: calc(var(--top-nav-height) + 1px);
-        z-index: var(--z-index-nav-menu);
-
-        .ai-help-actions {
-          white-space: nowrap;
-        }
+      > * {
+        grid-column: 2;
       }
 
       &.role-user {
@@ -190,17 +345,15 @@
       }
 
       &.role-assistant {
-        background-color: var(--background-secondary);
-        border: 1px solid var(--border-primary);
-        border-radius: var(--elem-radius);
-
         .ai-help-message-role {
           --icon-size: 1.5rem;
+          margin-top: -0.1rem; /* Align with text. */
         }
       }
 
       .ai-help-message-role {
         flex-shrink: 0;
+        grid-column: 1;
         width: 2.5rem;
       }
 
@@ -214,6 +367,72 @@
         .glean-thumbs {
           justify-content: flex-end;
         }
+
+        > a {
+          color: var(--text-primary);
+          padding-right: 0.5rem;
+          text-decoration: underline;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+
+      .ai-help-message-progress {
+        color: var(--text-secondary);
+
+        &::before {
+          animation: pulse 1s infinite alternate;
+          background-color: var(--text-secondary);
+          content: "";
+          display: inline-block;
+          height: 1em;
+          margin-bottom: -0.15em;
+          margin-right: 0.4em;
+          mask-image: url("../../assets/icons/progress-helper.svg");
+          mask-position: center center;
+          mask-repeat: no-repeat;
+          mask-size: contain;
+          vertical-align: baseline;
+          width: 1em;
+
+          @keyframes pulse {
+            from {
+              opacity: 1;
+            }
+
+            to {
+              opacity: 0;
+            }
+          }
+        }
+
+        &.complete::before {
+          animation: none;
+          background-color: var(--ai-help-icon);
+          mask-image: url("../../assets/icons/progress-check.svg");
+        }
+
+        &.errored {
+          background-color: var(--background-critical);
+          border: 0;
+          border-radius: var(--elem-radius);
+          color: var(--icon-critical);
+          padding: 0.5rem 1rem;
+
+          &::before {
+            animation: none;
+            background-color: var(--icon-critical);
+            mask-image: url("../../assets/icons/alert-circle.svg");
+          }
+        }
+      }
+
+      .ai-help-message-sources {
+        list-style: circle;
+        list-style-position: inside;
+        padding-left: 1.4em;
       }
 
       &.status-pending .ai-help-message-content,
@@ -260,6 +479,38 @@
 
     .ai-help-message-content {
       width: 100%;
+
+      &.role-user {
+        align-items: center;
+        align-items: flex-start;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        white-space: pre-wrap;
+
+        .ai-help-message-nav {
+          display: flex;
+          justify-content: space-between;
+
+          > span {
+            text-align: center;
+            white-space: nowrap;
+          }
+        }
+
+        .ai-help-user-message {
+          width: 100%;
+        }
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        font: unset;
+        font-weight: 500;
+      }
 
       p {
         margin: 1rem 0;

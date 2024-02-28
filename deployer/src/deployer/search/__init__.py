@@ -216,6 +216,11 @@ def to_search(file, _index=None):
         # other SPAs like the home page. Skip these.
         return
     doc = data["doc"]
+
+    if doc["mdn_url"].startswith("/en-US/curriculum/"):
+        # Skip curriculum content for now.
+        return
+
     locale, slug = doc["mdn_url"].split("/docs/", 1)
     if slug.endswith("/Index"):
         # We have a lot of pages that uses the `{{Index(...)}}` kumascript macro
