@@ -276,11 +276,13 @@ function AIHelpAssistantResponse({
   queuedExamples,
   setQueue,
   messages,
+  retryLastQuestion,
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
   messages: Message[];
+  retryLastQuestion: () => void;
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
@@ -307,11 +309,19 @@ function AIHelpAssistantResponse({
             .filter(Boolean)
             .join(" ")}
         >
-          {message.status === MessageStatus.Errored
-            ? MESSAGE_FAILED
-            : message.status === MessageStatus.InProgress
-              ? MESSAGE_ANSWERING
-              : MESSAGE_ANSWERED}
+          {message.status === MessageStatus.Errored ? (
+            <>
+              {MESSAGE_FAILED} Please{" "}
+              <Button type="link" onClickHandler={retryLastQuestion}>
+                try again
+              </Button>
+              .
+            </>
+          ) : message.status === MessageStatus.InProgress ? (
+            MESSAGE_ANSWERING
+          ) : (
+            MESSAGE_ANSWERED
+          )}
         </div>
       )}
       {message.content && (
@@ -695,6 +705,7 @@ export function AIHelpInner() {
                               queuedExamples={queuedExamples}
                               setQueue={setQueue}
                               messages={messages}
+                              retryLastQuestion={retryLastQuestion}
                             />
                           )}
                         </>
