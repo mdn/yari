@@ -5,7 +5,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { AIHelpLog } from "./rust-types";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
@@ -384,6 +384,7 @@ export function useAiChat({
       eventSourceRef.current?.close();
       eventSourceRef.current = undefined;
       setLoadingState("failed");
+      mutate("/api/v1/plus/ai/help/quota");
       console.error(err);
     },
     [gleanClick]
