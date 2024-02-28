@@ -136,11 +136,6 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn build:prepare
 
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
-
           yarn tool sync-translated-content
 
           # Spread the work across 2 processes. Why 2? Because that's what you
