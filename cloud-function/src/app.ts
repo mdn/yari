@@ -74,7 +74,7 @@ router.get(
   proxyContent
 );
 router.get(
-  "/[^/]+/blog($|/*)",
+  ["/[^/]+/blog($|/*)", "/[^/]+/curriculum($|/*)"],
   requireOrigin(Origin.main),
   redirectLocale,
   redirectEnforceTrailingSlash,

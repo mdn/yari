@@ -416,8 +416,17 @@
           mask-image: url("../../assets/icons/progress-check.svg");
         }
 
-        &.errored::before {
-          background-color: var(--icon-critical);
+        &.errored {
+          background-color: var(--background-critical);
+          border: 0;
+          border-radius: var(--elem-radius);
+          color: var(--icon-critical);
+          padding: 0.5rem 1rem;
+
+          &::before {
+            background-color: var(--icon-critical);
+            mask-image: url("../../assets/icons/alert-circle.svg");
+          }
         }
       }
 

@@ -277,17 +277,43 @@ function AIHelpAssistantResponse({
   queuedExamples,
   setQueue,
   messages,
+  retryLastQuestion,
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
   messages: Message[];
+  retryLastQuestion: () => void;
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
   const { highlightedQueueExample } = useUIStatus();
 
   let sample = 0;
+
+  function messageForStatus(status: MessageStatus) {
+    switch (status) {
+      case MessageStatus.Errored:
+        return (
+          <>
+            {MESSAGE_FAILED} Please{" "}
+            <Button type="link" onClickHandler={retryLastQuestion}>
+              try again
+            </Button>
+            .
+          </>
+        );
+
+      case MessageStatus.Stopped:
+        return MESSAGE_STOPPED;
+
+      case MessageStatus.InProgress:
+        return MESSAGE_ANSWERING;
+
+      default:
+        return MESSAGE_ANSWERED;
+    }
+  }
 
   return (
     <>
@@ -514,22 +540,6 @@ function AIHelpAssistantResponse({
   );
 }
 
-function messageForStatus(status: MessageStatus) {
-  switch (status) {
-    case MessageStatus.Errored:
-      return MESSAGE_FAILED;
-
-    case MessageStatus.Stopped:
-      return MESSAGE_STOPPED;
-
-    case MessageStatus.InProgress:
-      return MESSAGE_ANSWERING;
-
-    default:
-      return MESSAGE_ANSWERED;
-  }
-}
-
 export function AIHelpInner() {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -674,6 +684,7 @@ export function AIHelpInner() {
                             queuedExamples={queuedExamples}
                             setQueue={setQueue}
                             messages={messages}
+                            retryLastQuestion={retryLastQuestion}
                           />
                         )}
                       </li>

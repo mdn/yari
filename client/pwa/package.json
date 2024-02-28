@@ -12,7 +12,7 @@
     "dev": "webpack-cli --watch"
   },
   "dependencies": {
-    "@zip.js/zip.js": "2.7.34",
+    "@zip.js/zip.js": "2.7.35",
     "dexie": "3.2.5"
   },
   "devDependencies": {
