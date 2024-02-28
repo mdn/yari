@@ -154,7 +154,7 @@ test.describe("Basic viewing of functional pages", () => {
     // Click the parent page in the breadcrumbs
     await page.click(".breadcrumbs-container a");
     expect(await page.innerText("h1")).toBe("Web technology for developers");
-    expect(page.url()).toBe(testURL("/en-US/docs/Web"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/"));
     await page.goBack();
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
   });

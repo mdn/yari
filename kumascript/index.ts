@@ -14,7 +14,7 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env/index.js";
 import { SourceCodeError } from "./src/errors.js";
-import { BlogPostDoc } from "../build/blog.js";
+import { BuildData } from "../libs/types/document.js";
 export { buildLiveSamplePages } from "./src/live-sample.js";
 
 const DEPENDENCY_LOOP_INTRO =
@@ -37,7 +37,7 @@ export async function render(
     selective_mode = false,
     invalidateCache = false,
   }: RenderOptions = {},
-  blogPost?: BlogPostDoc
+  doc?: BuildData
 ): Promise<[cheerio.CheerioAPI, SourceCodeError[], any]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
@@ -58,7 +58,7 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document =
-    blogPost ||
+    doc ||
     (invalidateCache
       ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
       : Document.findByURL(url));

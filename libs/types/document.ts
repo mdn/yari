@@ -179,7 +179,6 @@ export interface ProseSection {
     title: string | null;
     isH3: boolean;
     content?: string;
-    titleAsText?: string;
   };
 }
 
@@ -218,6 +217,16 @@ export interface NewsItem {
     url: string;
   };
   published_at: string;
+}
+
+export interface BuildData {
+  url: string;
+  rawBody: string;
+  metadata: { locale: string };
+  isMarkdown: true;
+  fileInfo: {
+    path: string;
+  };
 }
 
 export interface UnbuiltDocument {
