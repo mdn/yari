@@ -12,7 +12,10 @@ export function Curriculum(appProps: HydrationData) {
   return (
     <Routes>
       <Route path="/" element={<CurriculumLanding {...appProps} />} />
-      <Route path="/about/" element={<CurriculumAbout {...appProps} />} />
+      <Route
+        path="/about-curriculum/"
+        element={<CurriculumAbout {...appProps} />}
+      />
       <Route
         path="/:module/"
         element={<CurriculumModuleOverview {...appProps} />}

@@ -170,13 +170,15 @@ async function buildParents(url: string): Promise<DocParent[]> {
     return { url, title };
   });
   const parents = breadcrumbPath(url, index);
-  if (!parents) {
+  if (parents) {
     const { url, title } = index[0];
     if (parents[0]?.uri !== url) {
       return [{ uri: url, title }, ...parents];
     }
     return parents;
   }
+
+  return [];
 }
 
 async function readCurriculumPage(

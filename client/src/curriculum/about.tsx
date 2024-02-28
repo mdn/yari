@@ -13,7 +13,11 @@ export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   return (
     <CurriculumLayout
       doc={doc}
-      extraClasses={["curriculum-about", `topic-${topic2css(doc?.topic)}`]}
+      extraClasses={[
+        "curriculum-about",
+        "curriculum-module",
+        `topic-${topic2css(doc?.topic)}`,
+      ]}
     >
       <header>
         <h1>
