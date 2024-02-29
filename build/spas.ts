@@ -408,33 +408,35 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const items: NewsItem[] = await Promise.all(
-    LATEST_NEWS.map(async (itemOrUrl) => {
-      if (typeof itemOrUrl !== "string") {
-        return itemOrUrl;
-      }
-      const url = itemOrUrl;
-      const post = await findPostBySlug(
-        getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
-      );
-      if (post) {
-        const {
-          doc: { title },
-          blogMeta: { author, date, slug },
-        } = post;
-        return {
-          title,
-          url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
-          author: author?.name || "The MDN Team",
-          published_at: new Date(date).toString(),
-          source: {
-            name: "developer.mozilla.org",
-            url: `/${DEFAULT_LOCALE}/blog/`,
-          },
-        };
-      }
-    })
-  );
+  const items: NewsItem[] = (
+    await Promise.all(
+      LATEST_NEWS.map(async (itemOrUrl) => {
+        if (typeof itemOrUrl !== "string") {
+          return itemOrUrl;
+        }
+        const url = itemOrUrl;
+        const post = await findPostBySlug(
+          getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+        );
+        if (post) {
+          const {
+            doc: { title },
+            blogMeta: { author, date, slug },
+          } = post;
+          return {
+            title,
+            url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+            author: author?.name || "The MDN Team",
+            published_at: new Date(date).toString(),
+            source: {
+              name: "developer.mozilla.org",
+              url: `/${DEFAULT_LOCALE}/blog/`,
+            },
+          };
+        }
+      })
+    )
+  ).filter(Boolean);
 
   return {
     items,
