@@ -4,11 +4,7 @@ interface HydrationData<T = any, S = any> {
   hyData?: T;
   doc?: S;
   blogMeta?: BlogPostMetadata | null;
-  pageNotFound?: boolean;
-  pageTitle?: any;
-  possibleLocales?: any;
-  locale?: any;
-  noIndexing?: any;
+  pageTitle?: string;
   image?: string | null;
 }
 

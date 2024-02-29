@@ -7,6 +7,7 @@ import { HydrationData } from "../libs/types/hydration";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT, BASE_URL } from "../libs/env";
+import { AppProps } from "../client/src/app";
 
 const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 
@@ -149,13 +150,13 @@ export default function render(
     doc = null,
     pageNotFound = false,
     hyData = null,
-    pageTitle = null,
+    pageTitle = undefined,
     possibleLocales = null,
-    locale = null,
-    noIndexing = null,
+    locale = undefined,
+    noIndexing = undefined,
     image = null,
     blogMeta = null,
-  }: HydrationData = {}
+  }: AppProps = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -164,9 +165,9 @@ export default function render(
   let canonicalURL = BASE_URL;
 
   let pageDescription = "";
-  let escapedPageTitle = htmlEscape(pageTitle);
+  let escapedPageTitle = htmlEscape(pageTitle ?? "");
 
-  const hydrationData: HydrationData = {};
+  const hydrationData: AppProps = {};
   const translations: string[] = [];
   if (blogMeta) {
     hydrationData.blogMeta = blogMeta;

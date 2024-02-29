@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
@@ -26,9 +25,20 @@ import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
+import cheerio from "cheerio";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
+import { AppProps } from "../client/src/app.js";
+import {
+  ContributorDetails,
+  FeaturedArticle,
+  FeaturedContributor,
+  LatestNews,
+  RecentContributors,
+  StaticPageData,
+} from "../client/src/types/hydration.js";
+import { StaticPageDoc } from "../client/src/homepage/static-page/index.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -42,7 +52,7 @@ const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 async function buildContributorSpotlight(
   locale: string,
   options: { verbose?: boolean }
-) {
+): Promise<FeaturedContributor | undefined> {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
@@ -57,7 +67,7 @@ async function buildContributorSpotlight(
 
     const { sections } = splitSections(contributorHTML);
 
-    const hyData = {
+    const hyData: ContributorDetails = {
       sections: sections,
       contributorName: frontMatter.attributes.contributor_name,
       folderName: frontMatter.attributes.folder_name,
@@ -67,7 +77,7 @@ async function buildContributorSpotlight(
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
-    const context = { hyData };
+    const context: AppProps<ContributorDetails> = { hyData };
 
     const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
@@ -173,7 +183,7 @@ export async function buildSPAs(options: {
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context = {
+        const context: AppProps<never> = {
           pageTitle,
           locale,
           noIndexing,
@@ -225,13 +235,13 @@ export async function buildSPAs(options: {
       const { sections, toc } = splitSections(rawHTML);
 
       const url = `/${locale}/${slug}/${page}`;
-      const hyData = {
+      const hyData: StaticPageDoc = {
         id: page,
         ...frontMatter.attributes,
         sections,
         toc,
       };
-      const context = {
+      const context: AppProps = {
         hyData,
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
       };
@@ -287,7 +297,7 @@ export async function buildSPAs(options: {
 
       const featuredArticles = (
         await Promise.all(
-          FEATURED_ARTICLES.map(async (url) => {
+          FEATURED_ARTICLES.map(async (url): Promise<FeaturedArticle> => {
             const segment = url.split("/")[0];
             if (segment === "docs") {
               const document =
@@ -325,13 +335,15 @@ export async function buildSPAs(options: {
       ).filter(Boolean);
 
       const url = `/${locale}/`;
-      const hyData = {
+      const hyData: StaticPageData = {
         recentContributions,
         featuredContributor,
         latestNews,
         featuredArticles,
       };
-      const context = { hyData };
+      const context: AppProps<StaticPageData> = {
+        hyData,
+      };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
@@ -358,6 +370,21 @@ export async function buildSPAs(options: {
   }
 }
 
+interface GitHubIssues {
+  items: GitHubIssue[];
+}
+
+export interface GitHubIssue {
+  number: number;
+  title: string;
+  updated_at: string;
+  url: string;
+  pull_request: {
+    html_url: string;
+  };
+  // Complete list of types can be found at https://docs.github.com/en/rest/issues/issues
+}
+
 async function fetchGitHubPRs(repo, count = 5) {
   const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
   const pullRequestsQuery = [
@@ -368,9 +395,7 @@ async function fetchGitHubPRs(repo, count = 5) {
     "sort:updated",
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
-  const pullRequestsData = (await got(pullRequestUrl).json()) as {
-    items: any[];
-  };
+  const pullRequestsData = (await got(pullRequestUrl).json()) as GitHubIssues;
   const prDataRepo = pullRequestsData.items.map((item) => ({
     ...item,
     repo: { name: repo, url: `https://github.com/${repo}` },
@@ -378,7 +403,7 @@ async function fetchGitHubPRs(repo, count = 5) {
   return prDataRepo;
 }
 
-async function fetchRecentContributions() {
+async function fetchRecentContributions(): Promise<RecentContributors> {
   const repos = ["mdn/content", "mdn/translated-content"];
   const countPerRepo = 5;
   const pullRequests = (
@@ -402,7 +427,7 @@ async function fetchRecentContributions() {
   };
 }
 
-async function fetchLatestNews() {
+async function fetchLatestNews(): Promise<LatestNews> {
   const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
 
   const $ = cheerio.load(xml, { xmlMode: true });

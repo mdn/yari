@@ -4,6 +4,7 @@ import StaticPage from "../../homepage/static-page";
 import { useUserData } from "../../user-context";
 import "./index.scss";
 import { useLocale } from "../../hooks";
+import { AppProps } from "../../app";
 
 function PlusDocsNav() {
   const userData = useUserData();
@@ -89,7 +90,7 @@ function RelatedTopics({
   );
 }
 
-function PlusDocs({ ...props }) {
+function PlusDocs({ ...props }: AppProps) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 

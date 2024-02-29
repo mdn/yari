@@ -7,9 +7,9 @@ import { Toc } from "../../../../libs/types/document";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
 
-interface StaticPageDoc {
+export interface StaticPageDoc {
   id: string;
-  title: string;
+  title?: string;
   sections: string[];
   toc: Toc[];
 }
@@ -51,7 +51,7 @@ function StaticPage({
   );
 
   React.useEffect(() => {
-    document.title = hyData ? `${hyData.title} | ${title}` : title;
+    document.title = hyData?.title ? `${hyData.title} | ${title}` : title;
   }, [hyData, title]);
 
   if (error) {

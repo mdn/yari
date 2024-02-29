@@ -13,6 +13,7 @@ import { DocParent } from "../../../libs/types/document";
 
 import "./index.scss";
 import OfferOverview from "./offer-overview";
+import { AppProps } from "../app";
 
 const AiHelp = React.lazy(() => import("./ai-help"));
 const Collections = React.lazy(() => import("./collections"));
@@ -56,7 +57,7 @@ function Layout({
     </>
   );
 }
-export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
+export function Plus({ pageTitle, ...props }: AppProps) {
   React.useEffect(() => {
     document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
@@ -99,7 +100,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         path="/settings"
         element={
           <Layout>
-            <Settings {...props} />
+            <Settings />
           </Layout>
         }
       />

@@ -24,11 +24,12 @@ import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
-import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
 import { Curriculum } from "./curriculum";
+import { DEFAULT_LOCALE } from "../../libs/constants";
+import { HydrationData, HydrationType } from "./types/hydration";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -118,7 +119,17 @@ function PageOrPageNotFound({ pageNotFound, children }) {
   );
 }
 
-export function App(appProps: HydrationData) {
+export interface AppProps<T extends HydrationType = HydrationType>
+  extends HydrationData<T> {
+  doc?: any;
+  pageTitle?: string;
+  pageNotFound?: boolean;
+  possibleLocales?: any;
+  locale?: string;
+  noIndexing?: boolean;
+}
+
+export function App(appProps: AppProps) {
   const { pathname } = useLocation();
   const initialPathname = React.useRef(pathname);
   const pageNotFound = React.useMemo(
@@ -135,7 +146,7 @@ export function App(appProps: HydrationData) {
   useEffect(() => {
     const locale = localeMatch?.params.locale || appProps.locale;
 
-    document.documentElement.setAttribute("lang", locale);
+    document.documentElement.setAttribute("lang", locale || DEFAULT_LOCALE);
   }, [appProps.locale, localeMatch]);
 
   const isServer = useIsServer();

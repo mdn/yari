@@ -46,6 +46,7 @@ import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry 
 import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
 import { PlayQueue } from "../playground/queue";
+import { AppProps } from "../app";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -64,7 +65,7 @@ export class HTTPError extends Error {
   }
 }
 
-export function Document(props /* TODO: define a TS interface for this */) {
+export function Document(props: AppProps) {
   const ga = useGA();
   const isServer = useIsServer();
 
@@ -242,7 +243,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
 
         <MainContentContainer>
-          {!isServer && WRITER_MODE && !props.isPreview && doc.isActive && (
+          {!isServer && WRITER_MODE && doc.isActive && (
             <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
               <Toolbar
                 doc={doc}

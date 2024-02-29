@@ -21,6 +21,7 @@ import {
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
 import { BLOG_ROOT } from "../libs/env/index.js";
+import { Toc } from "../libs/types/document.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
@@ -156,10 +157,10 @@ export function getImageminPlugin(fileName: string) {
 
 export function splitSections(rawHTML) {
   const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
-  const blocks = [];
-  const toc = [];
+  const blocks: cheerio.Cheerio<cheerio.Element>[] = [];
+  const toc: Toc[] = [];
 
-  const section = cheerio
+  const section: cheerio.Cheerio<cheerio.Element> = cheerio
     .load("<div></div>", { decodeEntities: false })("div")
     .eq(0);
 
