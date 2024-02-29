@@ -166,7 +166,11 @@ function getPageTitle(page) {
 }
 
 async function smartLinkWithBadges(url, content) {
-  const aPage = await wiki.getPage(url);
+  let aPage = await wiki.getPage(url);
+  if (!aPage.title && env.locale !== 'en-US') {
+    const originalUrl = url.replace(`/${env.locale}/`, "/en-US/");
+    aPage = await wiki.getPage(originalUrl);
+  }
   const link = web.smartLink(url, null, content, APIHref, null, "APIRef");
   const badges = (await page.badges(aPage)).join("");
   return link + badges;
