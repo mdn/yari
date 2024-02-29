@@ -32,8 +32,6 @@ export function checkImageReferences(
 
   const checked = new Map<string, number>();
 
-  const isMarkdown = doc.isMarkdown;
-
   function addImageFlaw(
     $img,
     src,
@@ -51,7 +49,7 @@ export function checkImageReferences(
     // (addImageFlaw) is called two times. We can then assume the
     // findMatchesInText() will find it two times too. For each call,
     // we need to match the call based in counting matches from findMatchesInText().
-    const matches = isMarkdown
+    const matches = doc.isMarkdown
       ? findMatchesInMarkdown(src, rawContent, { type: "image" })
       : findMatchesInText(src, rawContent, { attribute: "src" });
     const checkedBefore = checked.get(src) ?? 0;
