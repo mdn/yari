@@ -9,14 +9,14 @@ export function findMatchesInText(
   needle: string,
   haystack: string,
   { attribute = null } = {}
-): Array<Match> {
+): Match[] {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
   const escaped = needle.replace(ESCAPE_CHARS_RE, "\\$&");
   const rex = attribute
     ? new RegExp(`${attribute}=['"](${escaped})['"]`, "g")
     : new RegExp(`(${escaped})`, "g");
-  const matches: Array<Match> = [];
+  const matches: Match[] = [];
   for (const match of haystack.matchAll(rex)) {
     const left = haystack.slice(0, match.index);
     const line = (left.match(/\n/g) || []).length + 1;
@@ -33,8 +33,8 @@ export function findMatchesInMarkdown(
   url: string,
   rawContent: string,
   { type }: { type: "link" | "image" }
-): Array<Match> {
-  const matches: Array<Match> = [];
+): Match[] {
+  const matches: Match[] = [];
   const attributeType = type === "link" ? "href" : "src";
   const tree = fromMarkdown(rawContent);
   // Find all the links and images in the markdown
