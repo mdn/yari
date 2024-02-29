@@ -36,7 +36,7 @@ const FEATURED_ARTICLES = [
   "docs/Web/CSS/color_value",
 ];
 
-const LATEST_NEWS: NewsItem[] = [
+const LATEST_NEWS: (string | NewsItem)[] = [
   {
     title: "Responsibly empowering developers with AI on MDN",
     url: `https://blog.mozilla.org/en/products/mdn/responsibly-empowering-developers-with-ai-on-mdn/`,
@@ -47,36 +47,9 @@ const LATEST_NEWS: NewsItem[] = [
       url: `https://blog.mozilla.org/en/latest/`,
     },
   },
-  {
-    title: "Introducing AI Help: Your Trusted Companion for Web Development",
-    url: `/${DEFAULT_LOCALE}/blog/introducing-ai-help/`,
-    author: "Hermina Condei",
-    published_at: new Date("2023-06-27").toString(),
-    source: {
-      name: "developer.mozilla.org",
-      url: `/${DEFAULT_LOCALE}/blog/`,
-    },
-  },
-  {
-    title: "Introducing the MDN Playground: Bring your code to life!",
-    url: `/${DEFAULT_LOCALE}/blog/introducing-the-mdn-playground/`,
-    author: "Florian Dieminger",
-    published_at: new Date("2023-06-22").toString(),
-    source: {
-      name: "developer.mozilla.org",
-      url: `/${DEFAULT_LOCALE}/blog/`,
-    },
-  },
-  {
-    title: "Introducing Baseline: a unified view of stable web features",
-    url: `/${DEFAULT_LOCALE}/blog/baseline-unified-view-stable-web-features/`,
-    author: "Hermina Condei",
-    published_at: new Date("2023-05-10").toString(),
-    source: {
-      name: "developer.mozilla.org",
-      url: `/${DEFAULT_LOCALE}/blog/`,
-    },
-  },
+  "blog/introducing-ai-help/",
+  "blog/introducing-the-mdn-playground/",
+  "blog/baseline-unified-view-stable-web-features/",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
@@ -445,7 +418,33 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const items: NewsItem[] = LATEST_NEWS;
+  const items: NewsItem[] = await Promise.all(
+    LATEST_NEWS.map(async (itemOrUrl) => {
+      if (typeof itemOrUrl !== "string") {
+        return itemOrUrl;
+      }
+      const url = itemOrUrl;
+      const post = await findPostBySlug(
+        getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+      );
+      if (post) {
+        const {
+          doc: { title },
+          blogMeta: { author, date, slug },
+        } = post;
+        return {
+          title,
+          url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+          author: author?.name || "The MDN Team",
+          published_at: new Date(date).toString(),
+          source: {
+            name: "developer.mozilla.org",
+            url: `/${DEFAULT_LOCALE}/blog/`,
+          },
+        };
+      }
+    })
+  );
 
   return {
     items,
