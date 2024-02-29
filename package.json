@@ -36,7 +36,7 @@
     "lint-staged": "lint-staged",
     "m2h": "ts-node markdown/m2h/cli.ts",
     "prepack": "yarn build:dist",
-    "prepare": "(husky || true) && yarn install:all && yarn install:all:npm",
+    "prepare": "(husky || echo \"\") && yarn install:all && yarn install:all:npm",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "start": "ts-node scripts/start.ts",
