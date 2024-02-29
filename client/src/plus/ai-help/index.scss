@@ -187,6 +187,10 @@
 
       .ai-help-footer-actions {
         padding-bottom: 0.5rem;
+
+        button:disabled {
+          visibility: hidden;
+        }
       }
 
       .ai-help-footer-text {
