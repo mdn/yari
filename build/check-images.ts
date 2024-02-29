@@ -33,8 +33,8 @@ export function checkImageReferences(
   const checked = new Map<string, number>();
 
   function addImageFlaw(
-    $img,
-    src,
+    $img: cheerio.Cheerio<cheerio.Element>,
+    src: string,
     {
       explanation,
       externalImage = false,
