@@ -1,3 +1,5 @@
+import type { SupportStatus } from "./web-features.js";
+
 export interface Source {
   folder: string;
   github_url: string;
@@ -134,7 +136,6 @@ export interface DocMetadata {
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
-  translation_of?: string;
   parents?: DocParent[];
   source: Source;
   contributors: string[];
@@ -146,7 +147,7 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
-  baseline?: WebFeatureStatus;
+  baseline?: SupportStatus;
   hash?: string;
 }
 
@@ -178,7 +179,6 @@ export interface ProseSection {
     title: string | null;
     isH3: boolean;
     content?: string;
-    titleAsText?: string;
   };
 }
 
@@ -219,19 +219,12 @@ export interface NewsItem {
   published_at: string;
 }
 
-export interface WebFeature {
-  compat_features?: string[];
-  status?: WebFeatureStatus;
-  spec?: unknown;
-}
-
-export interface WebFeatureStatus {
-  is_baseline?: boolean;
-  since?: string;
-  support?: {
-    chrome?: string | boolean;
-    edge?: string | boolean;
-    firefox?: string | boolean;
-    safari?: string | boolean;
+export interface BuildData {
+  url: string;
+  rawBody: string;
+  metadata: { locale: string };
+  isMarkdown: true;
+  fileInfo: {
+    path: string;
   };
 }

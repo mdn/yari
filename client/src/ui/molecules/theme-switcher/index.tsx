@@ -58,10 +58,8 @@ export const ThemeSwitcher = () => {
       console.warn("Unable to read theme from localStorage", e);
     }
 
-    if (theme) {
-      switchTheme(theme, setActiveTheme);
-    }
-  }, [activeTheme]);
+    switchTheme(theme ?? "os-default", setActiveTheme);
+  }, []);
 
   return (
     <DropdownMenuWrapper

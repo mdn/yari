@@ -11,7 +11,6 @@ from .map_301 import (
     LEGACY_URLS,
     MARIONETTE_URLS,
     MISC_REDIRECT_URLS,
-    MOZILLADEMOS_URLS,
     REDIRECT_URLS,
     SCL3_REDIRECT_URLS,
     WEBEXT_URLS,
@@ -34,14 +33,6 @@ def test_redirects(url, base_url):
     "url", GITHUB_IO_URLS, ids=[item["url"] for item in GITHUB_IO_URLS]
 )
 def test_github_redirects(url, base_url):
-    url["base_url"] = base_url
-    assert_valid_url(**url)
-
-
-@pytest.mark.parametrize(
-    "url", MOZILLADEMOS_URLS, ids=[item["url"] for item in MOZILLADEMOS_URLS]
-)
-def test_mozillademos_redirects(url, base_url):
     url["base_url"] = base_url
     assert_valid_url(**url)
 

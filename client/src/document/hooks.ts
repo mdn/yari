@@ -6,10 +6,13 @@ import { initPlayIframe } from "../playground/utils";
 // import { addExplainButton } from "./code/ai-explain";
 import {
   addBreakoutButton,
+  addCollectButton,
   getCodeAndNodesForIframe,
   getCodeAndNodesForIframeBySampleClass,
+  highlight,
 } from "./code/playground";
 import { addCopyToClipboardButton } from "./code/copy";
+import { useUIStatus } from "../ui-context";
 
 export function useDocumentURL() {
   const locale = useLocale();
@@ -19,6 +22,30 @@ export function useDocumentURL() {
   // on any URL. We can't keep that if we're going to compare the current
   // pathname with the document's mdn_url.
   return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
+}
+
+export function useCollectSample(doc: any) {
+  const isServer = useIsServer();
+  const locale = useLocale();
+  const { highlightedQueueExample } = useUIStatus();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    if (!doc) {
+      return;
+    }
+    document
+      .querySelectorAll(
+        "section > *:not(#syntax) ~ * .example-header:not(.play-sample)"
+      )
+      .forEach((header) => {
+        addCollectButton(header, "collect", locale);
+        highlight(header, highlightedQueueExample);
+      });
+  }, [doc, isServer, locale, highlightedQueueExample]);
 }
 
 export function useRunSample(doc: Doc | undefined) {
@@ -103,64 +130,34 @@ export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
  * Provides the height of the sticky header.
  */
 export function useStickyHeaderHeight() {
-  function determineStickyHeaderHeight(): number {
-    if (typeof getComputedStyle !== "function") {
-      // SSR.
-      return 0;
-    }
-    const sidebar = document.querySelector(".sidebar-container");
-
-    if (sidebar) {
-      return parseFloat(getComputedStyle(sidebar).top);
-    }
-
-    const styles = getComputedStyle(document.documentElement);
-    const stickyHeaderHeight = styles
-      .getPropertyValue("--sticky-header-height")
-      .trim();
-
-    if (stickyHeaderHeight.endsWith("rem")) {
-      const fontSize = styles.fontSize.trim();
-      if (fontSize.endsWith("px")) {
-        return parseFloat(stickyHeaderHeight) * parseFloat(fontSize);
-      } else {
-        console.warn(
-          `[useStickyHeaderHeight] fontSize has unexpected unit: ${fontSize}`
-        );
-        return 0;
-      }
-    } else if (stickyHeaderHeight.endsWith("px")) {
-      return parseFloat(stickyHeaderHeight);
-    } else {
-      console.warn(
-        `[useStickyHeaderHeight] --sticky-header-height has unexpected unit: ${stickyHeaderHeight}`
-      );
-      return 0;
-    }
-  }
-
-  const [height, setHeight] = useState<number>(determineStickyHeaderHeight());
+  const [height, setHeight] = useState<number>(0);
 
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Unfortunately we cannot observe the CSS variable using MutationObserver,
-    // but we know that it may change when the width of the window changes.
-
-    const debouncedListener = () => {
-      if (timeout.current) {
-        window.clearTimeout(timeout.current);
+    const header = document.getElementsByClassName(
+      "sticky-header-container"
+    )?.[0];
+    if (!header) {
+      return;
+    }
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { height } = entry.contentRect;
+        if (timeout.current) {
+          window.clearTimeout(timeout.current);
+        }
+        timeout.current = setTimeout(() => {
+          setHeight(height);
+          timeout.current = null;
+        }, 250);
       }
-      timeout.current = setTimeout(() => {
-        setHeight(determineStickyHeaderHeight());
-        timeout.current = null;
-      }, 250);
-    };
+    });
 
-    window.addEventListener("resize", debouncedListener);
+    resizeObserver.observe(header);
 
-    return () => window.removeEventListener("resize", debouncedListener);
-  }, []);
+    return () => resizeObserver.disconnect();
+  }, [setHeight]);
 
   return height;
 }

@@ -69,6 +69,8 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "assets.codepen.io",
   "production-assets.codepen.io",
 
+  "https://js.stripe.com",
+
   /*
    * Inline scripts (defined in `client/public/index.html`).
    *
@@ -80,9 +82,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
 
   // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
-  // - Current hash:
   "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
+  // - Current hash:
+  "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -94,6 +96,8 @@ export const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "developer.allizom.org", // required for glean to work on localhost:5042
+
     "bcd.developer.allizom.org",
     "bcd.developer.mozilla.org",
 
@@ -102,6 +106,7 @@ export const CSP_DIRECTIVES = {
 
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
+    "https://api.stripe.com",
   ],
   "font-src": ["'self'"],
   "frame-src": [
@@ -120,6 +125,7 @@ export const CSP_DIRECTIVES = {
     "www.youtube-nocookie.com",
     "codepen.io",
     "survey.alchemer.com",
+    "https://js.stripe.com",
   ],
   "img-src": [
     "'self'",
@@ -175,6 +181,7 @@ export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
     "'unsafe-inline'",
     "'unsafe-eval'",
   ],
+  "img-src": ["'self'", "blob:", "https:", "data:"],
   "base-uri": ["'self'"],
   "worker-src": ["'self'"],
   "manifest-src": ["'self'"],
@@ -248,6 +255,7 @@ export const VALID_FLAW_CHECKS = new Set([
 // ------
 
 export const MDN_PLUS_TITLE = "MDN Plus";
+export const CURRICULUM_TITLE = "MDN Curriculum";
 
 // -------
 // content

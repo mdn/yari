@@ -158,8 +158,8 @@ export function ToggleDocumentFlaws({
       el.href = !allFlaws
         ? "/favicon-48x48-flawless.png"
         : allFlaws === allFixableFlaws
-        ? "/favicon-48x48-flaws-fixable.png"
-        : "/favicon-48x48-flaws.png";
+          ? "/favicon-48x48-flaws-fixable.png"
+          : "/favicon-48x48-flaws.png";
     }
   }, [doc.flaws]);
 

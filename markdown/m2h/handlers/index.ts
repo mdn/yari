@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 import { code } from "./code.js";
 import { asDefinitionList, isDefinitionList } from "./dl.js";
-import { one, all, wrap } from "./mdast-util-to-hast-utils.js";
+import { Handler, Handlers, State } from "mdast-util-to-hast";
 
 /* A utilitary function which parses a JSON gettext file
   to return a Map with each localized string and its matching ID  */
@@ -58,12 +58,12 @@ function getNotecardType(node, locale) {
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
-export function buildLocalizedHandlers(locale: string) {
+export function buildLocalizedHandlers(locale: string): Handlers {
   /* This is only used for the Notecard parsing where the "magit" word depends on the locale */
   return {
     code,
 
-    paragraph(h, node) {
+    paragraph(state: State, node: any): ReturnType<Handler> {
       const [child] = node.children;
       // Check for an unnecessarily nested KS-tag and unnest it
       if (
@@ -72,13 +72,18 @@ export function buildLocalizedHandlers(locale: string) {
         child.value.startsWith("{{") &&
         child.value.endsWith("}}")
       ) {
-        return one(h, child, node);
+        return state.one(child, node);
       }
 
-      return h(node, "p", all(h, node));
+      return {
+        type: "element",
+        tagName: "p",
+        properties: {},
+        children: state.all(node),
+      };
     },
 
-    blockquote(h, node) {
+    blockquote(state: State, node: any): ReturnType<Handler> {
       const type = getNotecardType(node, locale);
       if (type) {
         const isCallout = type == "callout";
@@ -89,19 +94,24 @@ export function buildLocalizedHandlers(locale: string) {
             node.children[0].children.splice(0, 1);
           }
         }
-        return h(
-          node,
-          "div",
-          { className: isCallout ? [type] : ["notecard", type] },
-          wrap(all(h, node), true)
-        );
+        return {
+          type: "element",
+          tagName: "div",
+          properties: { className: isCallout ? [type] : ["notecard", type] },
+          children: state.wrap(state.all(node), true),
+        };
       }
-      return h(node, "blockquote", wrap(all(h, node), true));
+      return {
+        type: "element",
+        tagName: "blockquote",
+        properties: {},
+        children: state.wrap(state.all(node), true),
+      };
     },
 
-    list(h, node) {
+    list(state: State, node: any): ReturnType<Handler> {
       if (isDefinitionList(node)) {
-        return asDefinitionList(h, node);
+        return asDefinitionList(state, node);
       }
 
       const name = node.ordered ? "ol" : "ul";
@@ -112,14 +122,24 @@ export function buildLocalizedHandlers(locale: string) {
       }
 
       // This removes directly descendent paragraphs
-      const items = all(h, node).map((item) => ({
+      const items = state.all(node).map((item) => ({
         ...item,
-        children: item.children.flatMap((child) =>
-          child.tagName == "p" ? child.children : [child]
-        ),
+        children:
+          "children" in item
+            ? item.children.flatMap((child) =>
+                "tagName" in child && child.tagName == "p"
+                  ? child.children
+                  : [child]
+              )
+            : [],
       }));
 
-      return h(node, name, props, wrap(items, true));
+      return {
+        type: "element",
+        tagName: name,
+        properties: props,
+        children: state.wrap(items, true),
+      };
     },
   };
 }

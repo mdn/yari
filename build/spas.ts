@@ -31,10 +31,10 @@ import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 
 const FEATURED_ARTICLES = [
-  "blog/regular-expressions-reference-updates/",
-  "blog/aria-accessibility-html-landmark-roles/",
-  "docs/Web/API/Performance_API",
-  "docs/Web/CSS/font-palette",
+  "blog/learn-javascript-console-methods/",
+  "blog/introduction-to-web-sustainability/",
+  "docs/Web/API/CSS_Custom_Highlight_API",
+  "docs/Web/CSS/color_value",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
