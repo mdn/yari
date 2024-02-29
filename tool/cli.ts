@@ -808,7 +808,7 @@ program
 
   .command(
     "popularities",
-    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
+    "Convert Glean-derived page view CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
     default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
