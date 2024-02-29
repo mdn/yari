@@ -681,6 +681,9 @@ describeMacro("APIRef", function () {
       expect(page).toEqual("/en-US/docs/Web/API/TestInterface");
       return subpagesFixture;
     });
+    macro.ctx.wiki.getPage = jest.fn((url) => {
+      return subpagesFixture.find((doc) => doc.url === url) ?? {};
+    });
   });
 
   // Test with current page as main interface page
