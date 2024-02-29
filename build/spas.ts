@@ -36,20 +36,10 @@ const FEATURED_ARTICLES = [
   "docs/Web/CSS/color_value",
 ];
 
-const LATEST_NEWS: (string | NewsItem)[] = [
-  {
-    title: "Responsibly empowering developers with AI on MDN",
-    url: `https://blog.mozilla.org/en/products/mdn/responsibly-empowering-developers-with-ai-on-mdn/`,
-    author: "Steve Teixeira",
-    published_at: new Date("Thu, 06 Jul 2023 14:41:20 +0000").toString(),
-    source: {
-      name: "blog.mozilla.org",
-      url: `https://blog.mozilla.org/en/latest/`,
-    },
-  },
-  "blog/introducing-ai-help/",
-  "blog/introducing-the-mdn-playground/",
-  "blog/baseline-unified-view-stable-web-features/",
+const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-curriculum-launch/",
+  "blog/baseline-evolution-on-mdn/",
+  "blog/mdn-observatory/",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
