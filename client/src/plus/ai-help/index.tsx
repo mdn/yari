@@ -154,7 +154,7 @@ function AIHelpUserQuestion({
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
-        if (canEdit && question) {
+        if (canEdit && question?.trim()) {
           gleanClick(`${AI_HELP}: edit submit`);
           setEditing(false);
           submit(question, message.chatId, message.parentId, message.messageId);
@@ -167,7 +167,7 @@ function AIHelpUserQuestion({
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            if (canEdit && question) {
+            if (canEdit && question?.trim()) {
               gleanClick(`${AI_HELP}: edit submit`);
               setEditing(false);
               submit(
@@ -205,7 +205,7 @@ function AIHelpUserQuestion({
               icon="send"
               buttonType="submit"
               title="Submit question"
-              isDisabled={!question}
+              isDisabled={!question.trim()}
             >
               <span className="visually-hidden">Submit question</span>
             </Button>
@@ -276,14 +276,17 @@ function AIHelpAssistantResponse({
   queuedExamples,
   setQueue,
   messages,
+  retryLastQuestion,
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
   messages: Message[];
+  retryLastQuestion: () => void;
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
+  const { highlightedQueueExample } = useUIStatus();
 
   let sample = 0;
 
@@ -328,11 +331,19 @@ function AIHelpAssistantResponse({
             .filter(Boolean)
             .join(" ")}
         >
-          {message.status === MessageStatus.Errored
-            ? MESSAGE_FAILED
-            : message.status === MessageStatus.InProgress
-              ? MESSAGE_ANSWERING
-              : MESSAGE_ANSWERED}
+          {message.status === MessageStatus.Errored ? (
+            <>
+              {MESSAGE_FAILED} Please{" "}
+              <Button type="link" onClickHandler={retryLastQuestion}>
+                try again
+              </Button>
+              .
+            </>
+          ) : message.status === MessageStatus.InProgress ? (
+            MESSAGE_ANSWERING
+          ) : (
+            MESSAGE_ANSWERED
+          )}
         </div>
       )}
       {message.content && (
@@ -400,7 +411,11 @@ function AIHelpAssistantResponse({
                 sample += 1;
                 return (
                   <div className="code-example">
-                    <div className="example-header play-collect">
+                    <div
+                      className={`example-header play-collect ${
+                        highlightedQueueExample === id ? "active" : ""
+                      }`}
+                    >
                       <span className="language-name">{code}</span>
                       {message.status === MessageStatus.Complete &&
                         ["html", "js", "javascript", "css"].includes(
@@ -517,7 +532,8 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const { queuedExamples, setQueue } = useUIStatus();
+  const { queuedExamples, setQueue, setHighlightedQueueExample } =
+    useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
   const user = useUserData();
@@ -653,6 +669,7 @@ export function AIHelpInner() {
                             queuedExamples={queuedExamples}
                             setQueue={setQueue}
                             messages={messages}
+                            retryLastQuestion={retryLastQuestion}
                           />
                         )}
                       </li>
@@ -718,6 +735,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: topic new`);
                           setQuery("");
                           setQueue([]);
+                          setHighlightedQueueExample(null);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}
@@ -803,7 +821,7 @@ export function AIHelpInner() {
                           icon="send"
                           buttonType="submit"
                           title="Submit question"
-                          isDisabled={!query}
+                          isDisabled={!query.trim()}
                         >
                           <span className="visually-hidden">
                             Submit question
@@ -851,8 +869,9 @@ export function AIHelpInner() {
                       </header>
                       <div className="modal-body">
                         <p>
-                          Our AI Help feature employs {gptVersion}, a Large
-                          Language Model (LLM) developed by{" "}
+                          Our AI Help feature integrates GPT-3.5 for MDN Plus
+                          free users and GPT-4 for paying subscribers,
+                          leveraging Large Language Models (LLMs) developed by{" "}
                           <a
                             href="https://platform.openai.com/docs/api-reference/models"
                             className="external"
@@ -861,31 +880,29 @@ export function AIHelpInner() {
                           >
                             OpenAI
                           </a>
-                          . While it's designed to offer helpful and relevant
-                          information drawn from MDN's comprehensive
-                          documentation, it's important to bear in mind that it
-                          is an LLM and may not produce perfectly accurate
-                          information in every circumstance.
+                          . This tool is designed to enhance your experience by
+                          providing relevant insights from MDN's extensive
+                          documentation. However, given the nature of LLMs, it's
+                          crucial to approach the generated information with a
+                          discerning eye, especially for complex or critical
+                          subjects.
                         </p>
                         <p>
-                          We strongly advise all users to cross-verify the
-                          information generated by this AI Help feature,
-                          particularly for complex or critical topics. While we
-                          strive for accuracy and relevance, the nature of AI
-                          means that responses may vary in precision.
+                          We encourage users to verify the AI Help's output. For
+                          convenience and accuracy, links for further reading
+                          and verification are provided at the beginning of
+                          responses, directing you to the relevant MDN
+                          documentation. This ensures immediate access to deeper
+                          insights and broader context.
                         </p>
                         <p>
-                          The AI Help feature provides links at the end of its
-                          responses to support further reading and verification
-                          within the MDN documentation. These links are intended
-                          to facilitate deeper understanding and context.
-                        </p>
-                        <p>
-                          As you use the AI Help feature, keep in mind its
-                          nature as an LLM. It's not perfect, but it's here to
-                          assist you as best as it can. We're excited to have
-                          you try AI Help, and we hope it makes your MDN
-                          experience even better.
+                          Remember, while AI Help aims to be a valuable
+                          resource, its responses, influenced by the
+                          complexities of AI, might not always hit the mark with
+                          absolute precision. We invite you to explore this
+                          feature, designed to complement your MDN exploration.
+                          Your feedback is invaluable as we continue to refine
+                          AI Help to better serve your needs.
                         </p>
                       </div>
                     </MDNModal>

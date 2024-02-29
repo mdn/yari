@@ -27,6 +27,7 @@ import { Advertising } from "./advertising";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
+import { Curriculum } from "./curriculum";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { HydrationData, HydrationType } from "./types/hydration";
 
@@ -55,7 +56,7 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && (
+        {pageType !== "document-page" && pageType !== "curriculum" && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
           </div>
@@ -175,6 +176,14 @@ export function App(appProps: AppProps) {
         time it hits any React code.
        */}
       <Route path="/" element={homePage} />
+      <Route
+        path="/en-US/curriculum/*"
+        element={
+          <Layout pageType="curriculum">
+            <Curriculum {...appProps} />
+          </Layout>
+        }
+      />
       <Route
         path="/en-US/blog/*"
         element={

@@ -26,6 +26,12 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "yarn"
 
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
         env:
