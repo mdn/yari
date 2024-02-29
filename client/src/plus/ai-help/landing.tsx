@@ -34,21 +34,21 @@ export function AIHelpLanding() {
           <h2>New Additions</h2>
           <div className="ai-help-new-additions">
             <figure>
-              <HistorySVG />
+              <HistorySVG role="none" />
               <figcaption>
                 <h3>History</h3>
                 <p>Save your history to revisit your chats at anytime</p>
               </figcaption>
             </figure>
             <figure>
-              <ContextSVG />
+              <ContextSVG role="none" />
               <figcaption>
                 <h3>Enhanced Context</h3>
                 <p>Ask queries about browser compatibility data</p>
               </figcaption>
             </figure>
             <figure>
-              <GPT4SVG />
+              <GPT4SVG role="none" />
               <figcaption>
                 <h3>GPT-4-Powered</h3>
                 <p>Unlock GPT-4's potential with our paid subscriptions</p>

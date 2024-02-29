@@ -1,5 +1,49 @@
 # Changelog
 
+## [2.41.0](https://github.com/mdn/yari/compare/v2.40.0...v2.41.0) (2024-02-28)
+
+
+### Features
+
+* **macros/MDNSidebar:** add Feature status page ([#10409](https://github.com/mdn/yari/issues/10409)) ([a3f8d7e](https://github.com/mdn/yari/commit/a3f8d7e373b203f646f67776d81c34febec05cd7))
+
+
+### Bug Fixes
+
+* **curriculum:** fix feedback changes ([#10610](https://github.com/mdn/yari/issues/10610)) ([5cd436c](https://github.com/mdn/yari/commit/5cd436c9a1b7465d2e9dc60994c500fb070be352))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @playwright/test from 1.41.2 to 1.42.0 ([#10607](https://github.com/mdn/yari/issues/10607)) ([2392be0](https://github.com/mdn/yari/commit/2392be0e1328db6f6dfad9746f23cef857d241a1))
+* **deps-dev:** bump mini-css-extract-plugin from 2.8.0 to 2.8.1 ([#10606](https://github.com/mdn/yari/issues/10606)) ([967fdc5](https://github.com/mdn/yari/commit/967fdc5772b8acdb006fdff00f5bbd29e4c6a319))
+* **deps:** bump mdn-data from 2.4.1 to 2.4.2 ([#10605](https://github.com/mdn/yari/issues/10605)) ([39ea592](https://github.com/mdn/yari/commit/39ea5924a4f1abe4f420f02aab38a3676d2c1f62))
+* **macros/PreviousMenuNext:** add zh translation ([#10603](https://github.com/mdn/yari/issues/10603)) ([1751cc1](https://github.com/mdn/yari/commit/1751cc1aa75b859fd668c32b5dca35d85d323878))
+
+## [2.40.0](https://github.com/mdn/yari/compare/v2.39.5...v2.40.0) (2024-02-27)
+
+
+### Features
+
+* **curriculum:** integrate MDN Curriculum ([#10433](https://github.com/mdn/yari/issues/10433)) ([5fd4800](https://github.com/mdn/yari/commit/5fd48005e3d9cac2ff0cb821eb69242fffcc5ce4))
+
+
+### Bug Fixes
+
+* **ai-help:** improve generation error message ([#10424](https://github.com/mdn/yari/issues/10424)) ([f1c13d8](https://github.com/mdn/yari/commit/f1c13d8afd87f3741ce53df101be27d79700799e))
+* **build:** add CURRICULUM_ROOT to prod ([b189a17](https://github.com/mdn/yari/commit/b189a17a1b049a2bd87233a530fad24d51674c34))
+* **curriculum:** add CURRICULUM_ROOT ([#10602](https://github.com/mdn/yari/issues/10602)) ([b189a17](https://github.com/mdn/yari/commit/b189a17a1b049a2bd87233a530fad24d51674c34))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump html-validate from 8.11.0 to 8.11.1 ([#10599](https://github.com/mdn/yari/issues/10599)) ([3032272](https://github.com/mdn/yari/commit/30322723f1ef0a72462ee395aa5cecdfc8d04dc2))
+* **deps-dev:** bump the types group with 1 update ([#10596](https://github.com/mdn/yari/issues/10596)) ([67f06c6](https://github.com/mdn/yari/commit/67f06c6abcbf70afa486db5909627102e1143485))
+* **deps-dev:** bump typescript-eslint from 7.0.2 to 7.1.0 ([#10598](https://github.com/mdn/yari/issues/10598)) ([ec31aab](https://github.com/mdn/yari/commit/ec31aab383104378441a4a5c21b294bd589888e5))
+* **deps:** bump @mdn/browser-compat-data from 5.5.11 to 5.5.12 ([#10597](https://github.com/mdn/yari/issues/10597)) ([7678024](https://github.com/mdn/yari/commit/7678024a37cc93a3eaa74188e19df7d52b2db4e6))
+* **deps:** bump @stripe/stripe-js from 3.0.5 to 3.0.6 ([#10600](https://github.com/mdn/yari/issues/10600)) ([715be74](https://github.com/mdn/yari/commit/715be74b7abe5cf19abb09f96d1a981b75dc0703))
+* **deps:** bump the sentry group with 2 updates ([#10595](https://github.com/mdn/yari/issues/10595)) ([a2a1f1b](https://github.com/mdn/yari/commit/a2a1f1b1ebbe6e25d4601603c1abe4dceb15b879))
+
 ## [2.39.5](https://github.com/mdn/yari/compare/v2.39.4...v2.39.5) (2024-02-26)
 
 
