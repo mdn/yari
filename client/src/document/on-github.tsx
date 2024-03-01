@@ -6,7 +6,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
       <SourceOnGitHubLink doc={doc}>
         View this page on GitHub
       </SourceOnGitHubLink>
-      . |{" "}
+      . •{" "}
       <NewIssueOnGitHubLink doc={doc}>
         Report a problem with this content
       </NewIssueOnGitHubLink>
