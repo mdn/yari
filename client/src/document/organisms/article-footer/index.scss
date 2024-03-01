@@ -18,8 +18,52 @@
       padding: 0;
     }
 
+    .feedback {
+      border: none;
+      margin: 0;
+      padding: 0;
+
+      label {
+        display: block;
+      }
+
+      .button-container {
+        // Ensure both buttons take minimal width.
+        display: inline-flex;
+        gap: 0.75rem;
+        margin: 0.5rem 0;
+      }
+
+      button {
+        // Ensure both buttons have same size.
+        flex: 1;
+        min-width: 0;
+
+        &:not(:hover) {
+          --button-bg: var(--background-secondary);
+          --button-color: var(--text-primary);
+        }
+
+        &.yes {
+          --button-bg-hover: var(--text-primary-green);
+        }
+
+        &.no {
+          --button-bg-hover: var(--text-primary-red);
+        }
+      }
+
+      .button-wrap {
+        display: flex;
+        // Increase space between icon and button label.
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+    }
+
     .last-modified-date {
       margin-bottom: 0;
+      margin-top: 3rem;
     }
   }
 }

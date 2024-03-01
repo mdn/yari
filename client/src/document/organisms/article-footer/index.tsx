@@ -1,6 +1,10 @@
+import { useState } from "react";
+import { Button } from "../../../ui/atoms/button";
 import { OnGitHubLink } from "../../on-github";
 
 import "./index.scss";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { ARTICLE_FEEDBACK } from "../../../telemetry/constants";
 
 export function LastModified({ value, locale }) {
   if (!value) {
@@ -32,6 +36,8 @@ export function ArticleFooter({ doc, locale }) {
     <aside className="article-footer">
       <div className="article-footer-content-container">
         <h2>Help improve MDN</h2>
+
+        <Feedback />
         <Contribute />
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} /> by{" "}
@@ -40,6 +46,46 @@ export function ArticleFooter({ doc, locale }) {
         {doc.isActive && <OnGitHubLink doc={doc} />}
       </div>
     </aside>
+  );
+}
+
+function Feedback() {
+  const [voted, setVoted] = useState<boolean>();
+  const gleanClick = useGleanClick();
+
+  function vote(value: boolean) {
+    setVoted(value);
+    gleanClick(`${ARTICLE_FEEDBACK}: vote -> ${Number(value)}`);
+  }
+
+  const hasVoted = typeof voted === "boolean";
+
+  return (
+    <fieldset className="feedback">
+      {!hasVoted ? (
+        <>
+          <label>Was this page helpful to you?</label>
+          <div className="button-container">
+            <Button
+              icon="thumbs-up"
+              extraClasses="yes"
+              onClickHandler={() => vote(true)}
+            >
+              Yes
+            </Button>
+            <Button
+              icon="thumbs-down"
+              extraClasses="no"
+              onClickHandler={() => vote(false)}
+            >
+              No
+            </Button>
+          </div>
+        </>
+      ) : (
+        <span>Thank you for your feedback! ❤️</span>
+      )}
+    </fieldset>
   );
 }
 
