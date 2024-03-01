@@ -11,7 +11,7 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { AI_HELP } from "../../telemetry/constants";
 import { useAIHelpSettings } from "./utils";
 import { EVENT_TIMEOUT } from "./constants";
-import { QUOTA_PATH } from "../common/api";
+import { AI_HELP_QUOTA_PATH } from "../common/api";
 
 const RETRY_INTERVAL = 10000;
 const ERROR_TIMEOUT = 60000;
@@ -385,7 +385,7 @@ export function useAiChat({
       eventSourceRef.current?.close();
       eventSourceRef.current = undefined;
       setLoadingState("failed");
-      mutate(QUOTA_PATH);
+      mutate(AI_HELP_QUOTA_PATH);
       console.error(err);
     },
     [gleanClick]
@@ -696,7 +696,7 @@ export function useAiChat({
   }, [state, path, setMessages]);
 
   function useRemoteQuota() {
-    const { data } = useSWR<Quota>(QUOTA_PATH, async (url) => {
+    const { data } = useSWR<Quota>(AI_HELP_QUOTA_PATH, async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
         const text = await response.text();
