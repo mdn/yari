@@ -29,6 +29,7 @@ create table
     id bigserial,
     hash text null,
     title text not null,
+    title_short text not null,
     mdn_url text not null,
     html text null,
     markdown text null,

@@ -82,6 +82,8 @@ export const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
 
 export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
 
+export const CURRICULUM_ROOT = correctPathFromEnv("CURRICULUM_ROOT");
+
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.
 // E.g. `'https://github.com/' + REPOSITORY_URLS[document.fileInfo.root]`
@@ -98,12 +100,20 @@ if (CONTENT_TRANSLATED_ROOT) {
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
-function correctContentPathFromEnv(envVarName) {
+function correctPathFromEnv(envVarName) {
   let pathName = process.env[envVarName];
   if (!pathName) {
     return;
   }
   pathName = fs.realpathSync(pathName);
+  return pathName;
+}
+
+function correctContentPathFromEnv(envVarName) {
+  let pathName = correctPathFromEnv(envVarName);
+  if (!pathName) {
+    return;
+  }
   if (
     path.basename(pathName) !== "files" &&
     fs.existsSync(path.join(pathName, "files"))
@@ -169,10 +179,19 @@ export const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
 
 export const OPENAI_KEY = process.env.OPENAI_KEY || "";
 export const PG_URI = process.env.PG_URI || "";
-export const SUPABASE_URL = process.env.SUPABASE_URL || "";
-export const SUPABASE_SERVICE_ROLE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 export const SAMPLE_SIGN_KEY = process.env.BUILD_SAMPLE_SIGN_KEY
   ? Buffer.from(process.env.BUILD_SAMPLE_SIGN_KEY, "base64")
   : null;
+
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));

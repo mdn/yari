@@ -1,5 +1,4 @@
 import { DocParent } from "../../../../../libs/types/document";
-import { PreloadingDocumentLink } from "../../../document/preloading";
 import { BREADCRUMB_CLICK } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
@@ -25,8 +24,8 @@ export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
 
           return (
             <li key={parent.uri} property="itemListElement" typeof="ListItem">
-              <PreloadingDocumentLink
-                to={parent.uri}
+              <a
+                href={parent.uri}
                 className={isLast ? "breadcrumb-current-page" : "breadcrumb"}
                 property="item"
                 typeof="WebPage"
@@ -40,7 +39,7 @@ export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
                 }
               >
                 <span property="name">{parent.title}</span>
-              </PreloadingDocumentLink>
+              </a>
               <meta property="position" content={`${currentCrumb}`} />
             </li>
           );

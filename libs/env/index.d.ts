@@ -15,6 +15,7 @@ export const CONTENT_ROOT: string;
 export const CONTENT_TRANSLATED_ROOT: string;
 export const CONTRIBUTOR_SPOTLIGHT_ROOT: string;
 export const BLOG_ROOT: string;
+export const CURRICULUM_ROOT: string;
 export const REPOSITORY_URLS: {
   [path: string]: string;
 };
@@ -31,6 +32,5 @@ export const FAKE_V1_API: boolean;
 export const SENTRY_DSN_BUILD: string;
 export const OPENAI_KEY: string;
 export const PG_URI: string;
-export const SUPABASE_URL: string;
-export const SUPABASE_SERVICE_ROLE_KEY: string;
 export const SAMPLE_SIGN_KEY: Buffer;
+export const DEV_MODE: boolean;
