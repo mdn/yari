@@ -346,159 +346,149 @@ function AIHelpAssistantResponse({
             .filter(Boolean)
             .join(" ")}
         >
-          {isOffTopic ? (
-            <>{SORRY_FRONTEND}</>
-          ) : (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                a: ({ node, ...props }) => {
-                  if (
-                    props.href?.startsWith("https://developer.mozilla.org/")
-                  ) {
-                    props.href = props.href.replace(
-                      "https://developer.mozilla.org",
-                      ""
-                    );
-                  }
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ node, ...props }) => {
+                if (props.href?.startsWith("https://developer.mozilla.org/")) {
+                  props.href = props.href.replace(
+                    "https://developer.mozilla.org",
+                    ""
+                  );
+                }
 
-                  const isExternal = isExternalUrl(props.href ?? "");
+                const isExternal = isExternalUrl(props.href ?? "");
 
-                  if (isExternal) {
-                    props.className = "external";
-                    props.rel = "noopener noreferrer";
-                  }
+                if (isExternal) {
+                  props.className = "external";
+                  props.rel = "noopener noreferrer";
+                }
 
-                  // Measure.
-                  props.onClick = () =>
-                    gleanClick(
-                      `${AI_HELP}: link ${
-                        isExternal ? "external" : "internal"
-                      } -> ${props.href}`
-                    );
+                // Measure.
+                props.onClick = () =>
+                  gleanClick(
+                    `${AI_HELP}: link ${
+                      isExternal ? "external" : "internal"
+                    } -> ${props.href}`
+                  );
 
-                  // Always open in new tab.
-                  props.target = "_blank";
+                // Always open in new tab.
+                props.target = "_blank";
 
-                  // eslint-disable-next-line jsx-a11y/anchor-has-content
-                  return <a {...props} />;
-                },
-                pre: ({ node, className, children, ...props }) => {
-                  const code = Children.toArray(children)
-                    .map(
-                      (child) =>
-                        /language-(\w+)/.exec(
-                          (child as ReactElement)?.props?.className || ""
-                        )?.[1]
-                    )
-                    .find(Boolean);
+                // eslint-disable-next-line jsx-a11y/anchor-has-content
+                return <a {...props} />;
+              },
+              pre: ({ node, className, children, ...props }) => {
+                const code = Children.toArray(children)
+                  .map(
+                    (child) =>
+                      /language-(\w+)/.exec(
+                        (child as ReactElement)?.props?.className || ""
+                      )?.[1]
+                  )
+                  .find(Boolean);
 
-                  if (!code) {
-                    return (
-                      <pre {...props} className={className}>
-                        {children}
-                      </pre>
-                    );
-                  }
-                  const key = sample;
-                  const id = `${message.messageId}--${key}`;
-                  const isQueued = queuedExamples.has(id);
-                  sample += 1;
+                if (!code) {
                   return (
-                    <div className="code-example">
-                      <div
-                        className={`example-header play-collect ${
-                          highlightedQueueExample === id ? "active" : ""
-                        }`}
-                      >
-                        <span className="language-name">{code}</span>
-                        {message.status === MessageStatus.Complete &&
-                          ["html", "js", "javascript", "css"].includes(
-                            code.toLowerCase()
-                          ) && (
-                            <div className="playlist">
-                              <input
-                                type="checkbox"
-                                checked={isQueued}
-                                onChange={() => {
-                                  gleanClick(
-                                    `${AI_HELP}: example ${
-                                      isQueued ? "dequeue" : "queue"
-                                    } -> ${id}`
-                                  );
-                                  setQueue((old) =>
-                                    !old.some((item) => item.id === id)
-                                      ? [...old, createQueueEntry(id)].sort(
-                                          (a, b) => a.key - b.key
-                                        )
-                                      : [...old].filter(
-                                          (item) => item.id !== id
-                                        )
-                                  );
-                                }}
-                                id={id}
-                              />
-                              <label htmlFor={id}>
-                                {isQueued ? "queued" : "queue"}
-                              </label>
-                              <button
-                                type="button"
-                                className="play-button"
-                                title="Open in Playground"
-                                onClick={(e) => {
-                                  gleanClick(
-                                    `${AI_HELP}: example play -> ${id}`
-                                  );
-                                  const input = (e.target as HTMLElement)
-                                    .previousElementSibling
-                                    ?.previousElementSibling as HTMLInputElement;
-                                  const code = collectCode(input);
-                                  sessionStorage.setItem(
-                                    SESSION_KEY,
-                                    JSON.stringify(code)
-                                  );
-                                  const url = new URL(window?.location.href);
-                                  url.pathname = `/${locale}/play`;
-                                  url.hash = "";
-                                  url.search = "";
-                                  if (e.shiftKey === true) {
-                                    window.location.href = url.href;
-                                  } else {
-                                    window.open(url, "_blank");
-                                  }
-                                }}
-                              >
-                                play
-                              </button>
-                            </div>
-                          )}
-                      </div>
-                      <pre className={`brush: ${code}`}>{children}</pre>
-                    </div>
-                  );
-                },
-                code: ({ className, children, ...props }) => {
-                  const match = /language-(\w+)/.exec(className || "");
-                  const lang = Prism.languages[match?.[1]];
-                  return lang ? (
-                    <code
-                      {...props}
-                      className={className}
-                      dangerouslySetInnerHTML={{
-                        __html: Prism.highlight(String(children), lang),
-                      }}
-                    />
-                  ) : (
-                    <code {...props} className={className}>
+                    <pre {...props} className={className}>
                       {children}
-                    </code>
+                    </pre>
                   );
-                },
-              }}
-            >
-              {message.content}
-            </ReactMarkdown>
-          )}
+                }
+                const key = sample;
+                const id = `${message.messageId}--${key}`;
+                const isQueued = queuedExamples.has(id);
+                sample += 1;
+                return (
+                  <div className="code-example">
+                    <div
+                      className={`example-header play-collect ${
+                        highlightedQueueExample === id ? "active" : ""
+                      }`}
+                    >
+                      <span className="language-name">{code}</span>
+                      {message.status === MessageStatus.Complete &&
+                        ["html", "js", "javascript", "css"].includes(
+                          code.toLowerCase()
+                        ) && (
+                          <div className="playlist">
+                            <input
+                              type="checkbox"
+                              checked={isQueued}
+                              onChange={() => {
+                                gleanClick(
+                                  `${AI_HELP}: example ${
+                                    isQueued ? "dequeue" : "queue"
+                                  } -> ${id}`
+                                );
+                                setQueue((old) =>
+                                  !old.some((item) => item.id === id)
+                                    ? [...old, createQueueEntry(id)].sort(
+                                        (a, b) => a.key - b.key
+                                      )
+                                    : [...old].filter((item) => item.id !== id)
+                                );
+                              }}
+                              id={id}
+                            />
+                            <label htmlFor={id}>
+                              {isQueued ? "queued" : "queue"}
+                            </label>
+                            <button
+                              type="button"
+                              className="play-button"
+                              title="Open in Playground"
+                              onClick={(e) => {
+                                gleanClick(`${AI_HELP}: example play -> ${id}`);
+                                const input = (e.target as HTMLElement)
+                                  .previousElementSibling
+                                  ?.previousElementSibling as HTMLInputElement;
+                                const code = collectCode(input);
+                                sessionStorage.setItem(
+                                  SESSION_KEY,
+                                  JSON.stringify(code)
+                                );
+                                const url = new URL(window?.location.href);
+                                url.pathname = `/${locale}/play`;
+                                url.hash = "";
+                                url.search = "";
+                                if (e.shiftKey === true) {
+                                  window.location.href = url.href;
+                                } else {
+                                  window.open(url, "_blank");
+                                }
+                              }}
+                            >
+                              play
+                            </button>
+                          </div>
+                        )}
+                    </div>
+                    <pre className={`brush: ${code}`}>{children}</pre>
+                  </div>
+                );
+              },
+              code: ({ className, children, ...props }) => {
+                const match = /language-(\w+)/.exec(className || "");
+                const lang = Prism.languages[match?.[1]];
+                return lang ? (
+                  <code
+                    {...props}
+                    className={className}
+                    dangerouslySetInnerHTML={{
+                      __html: Prism.highlight(String(children), lang),
+                    }}
+                  />
+                ) : (
+                  <code {...props} className={className}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {isOffTopic ? SORRY_FRONTEND : message.content}
+          </ReactMarkdown>
           {(message.status === "complete" || isOffTopic) && (
             <>
               <section className="ai-help-feedback">
