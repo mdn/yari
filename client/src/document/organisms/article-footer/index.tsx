@@ -27,10 +27,10 @@ export function Authors({ url }) {
   return <a href={`${url}/contributors.txt`}>MDN contributors</a>;
 }
 
-export function Metadata({ doc, locale }) {
+export function ArticleFooter({ doc, locale }) {
   return (
-    <aside className="metadata">
-      <div className="metadata-content-container">
+    <aside className="article-footer">
+      <div className="article-footer-content-container">
         {doc.isActive && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} /> by{" "}

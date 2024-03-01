@@ -1,6 +1,6 @@
 @use "../../../ui/vars" as *;
 
-.main-page-content .metadata {
+.main-page-content .article-footer {
   background-color: var(--background-secondary);
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
@@ -15,7 +15,7 @@
   }
 }
 
-.metadata-content-container {
+.article-footer-content-container {
   margin: 0 auto;
   max-width: 1440px;
   width: 100%;

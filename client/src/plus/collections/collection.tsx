@@ -11,7 +11,7 @@ import { camelWrap, charSlice, getCategoryByPathname } from "../../utils";
 import { FrequentlyViewedItem, Item, useCollection, useItems } from "./api";
 import NoteCard from "../../ui/molecules/notecards";
 import { DocMetadata } from "../../../../libs/types/document";
-import { Authors, LastModified } from "../../document/organisms/metadata";
+import { Authors, LastModified } from "../../document/organisms/article-footer";
 import { ArticleActions } from "../../ui/organisms/article-actions";
 import { MDN_PLUS_TITLE } from "../../constants";
 
