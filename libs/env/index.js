@@ -183,3 +183,15 @@ export const PG_URI = process.env.PG_URI || "";
 export const SAMPLE_SIGN_KEY = process.env.BUILD_SAMPLE_SIGN_KEY
   ? Buffer.from(process.env.BUILD_SAMPLE_SIGN_KEY, "base64")
   : null;
+
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));
