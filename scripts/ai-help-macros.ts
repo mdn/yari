@@ -28,6 +28,7 @@ interface IndexedDoc {
   id: number;
   mdn_url: string;
   title: string;
+  title_short: string;
   token_count: number | null;
   hash: string;
   text_hash: string;
@@ -36,6 +37,7 @@ interface IndexedDoc {
 interface Doc {
   mdn_url: string;
   title: string;
+  title_short: string;
   hash: string;
   html: string;
   markdown: string;
@@ -108,9 +110,15 @@ export async function updateEmbeddings(
   const updates: Doc[] = [];
   const formattingUpdates: Doc[] = [];
 
-  for await (const { mdn_url, title, hash, html, markdown, text } of builtDocs(
-    directory
-  )) {
+  for await (const {
+    mdn_url,
+    title,
+    title_short,
+    hash,
+    html,
+    markdown,
+    text,
+  } of builtDocs(directory)) {
     seenUrls.add(mdn_url);
 
     // Check for existing document in DB and compare checksums.
@@ -122,6 +130,7 @@ export async function updateEmbeddings(
       updates.push({
         mdn_url,
         title,
+        title_short,
         hash,
         html,
         markdown,
@@ -132,6 +141,7 @@ export async function updateEmbeddings(
       formattingUpdates.push({
         mdn_url,
         title,
+        title_short,
         hash,
         html,
         markdown,
@@ -154,6 +164,7 @@ export async function updateEmbeddings(
     for (const {
       mdn_url,
       title,
+      title_short,
       hash,
       html,
       markdown,
@@ -173,6 +184,7 @@ export async function updateEmbeddings(
             INSERT INTO mdn_doc_macro(
                     mdn_url,
                     title,
+                    title_short,
                     hash,
                     html,
                     markdown,
@@ -180,20 +192,22 @@ export async function updateEmbeddings(
                     embedding,
                     text_hash
                 )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (mdn_url) DO
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
-                hash = $3,
-                html = $4,
-                markdown = $5,
-                token_count = $6,
-                embedding = $7,
-                text_hash = $8
+                title_short = $3,
+                hash = $4,
+                html = $5,
+                markdown = $6,
+                token_count = $7,
+                embedding = $8,
+                text_hash = $9
           `,
           values: [
             mdn_url,
             title,
+            title_short,
             hash,
             html,
             markdown,
@@ -211,7 +225,14 @@ export async function updateEmbeddings(
         console.error(context);
       }
     }
-    for (const { mdn_url, title, hash, html, markdown } of formattingUpdates) {
+    for (const {
+      mdn_url,
+      title,
+      title_short,
+      hash,
+      html,
+      markdown,
+    } of formattingUpdates) {
       try {
         console.log(
           `-> [${mdn_url}] Updating document without generating new embedding...`
@@ -221,16 +242,17 @@ export async function updateEmbeddings(
         const query = {
           name: "upsert-doc",
           text: `
-            INSERT INTO mdn_doc_macro(mdn_url, title, hash, html, markdown)
-            VALUES($1, $2, $3, $4, $5) ON CONFLICT (mdn_url) DO
+            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, html, markdown)
+            VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
-                hash = $3,
-                html = $4,
-                markdown = $5
+                title_short = $3,
+                hash = $4,
+                html = $5,
+                markdown = $6
           `,
-          values: [mdn_url, title, hash, html, markdown],
+          values: [mdn_url, title, title_short, hash, html, markdown],
           rowMode: "array",
         };
 
@@ -286,7 +308,9 @@ async function* builtDocs(directory: string) {
   for await (const metadataPath of builtPaths(directory)) {
     try {
       const raw = await readFile(metadataPath, "utf-8");
-      const { title, mdn_url, hash } = JSON.parse(raw) as DocMetadata;
+      const { title, short_title, mdn_url, hash } = JSON.parse(
+        raw
+      ) as DocMetadata;
 
       const plainPath = path.join(path.dirname(metadataPath), "plain.html");
       const plainHTML = await readFile(plainPath, "utf-8");
@@ -314,6 +338,7 @@ async function* builtDocs(directory: string) {
       yield {
         mdn_url,
         title,
+        title_short: short_title || title,
         hash,
         html,
         markdown,

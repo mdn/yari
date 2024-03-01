@@ -18,6 +18,7 @@ import {
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
+  DEV_MODE,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
@@ -373,14 +374,25 @@ async function fetchGitHubPRs(repo, count = 5) {
     "sort:updated",
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
-  const pullRequestsData = (await got(pullRequestUrl).json()) as {
-    items: any[];
-  };
-  const prDataRepo = pullRequestsData.items.map((item) => ({
-    ...item,
-    repo: { name: repo, url: `https://github.com/${repo}` },
-  }));
-  return prDataRepo;
+  try {
+    const pullRequestsData = (await got(pullRequestUrl).json()) as {
+      items: any[];
+    };
+    const prDataRepo = pullRequestsData.items.map((item) => ({
+      ...item,
+      repo: { name: repo, url: `https://github.com/${repo}` },
+    }));
+    return prDataRepo;
+  } catch (e) {
+    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }
 
 async function fetchRecentContributions() {
