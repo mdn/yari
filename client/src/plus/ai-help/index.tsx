@@ -702,28 +702,26 @@ export function AIHelpInner() {
                           `status-${message.status}`,
                         ].join(" ")}
                       >
-                        <>
-                          <div className="ai-help-message-role">
-                            <RoleIcon role={message.role} />
-                          </div>
-                          {message.role === "user" ? (
-                            <AIHelpUserQuestion
-                              message={message}
-                              submit={submit}
-                              canEdit={!isQuotaExceeded(quota)}
-                              nextPrev={nextPrev}
-                              siblingCount={siblingCount}
-                            />
-                          ) : (
-                            <AIHelpAssistantResponse
-                              message={message}
-                              queuedExamples={queuedExamples}
-                              setQueue={setQueue}
-                              messages={messages}
-                              retryLastQuestion={retryLastQuestion}
-                            />
-                          )}
-                        </>
+                        <div className="ai-help-message-role">
+                          <RoleIcon role={message.role} />
+                        </div>
+                        {message.role === "user" ? (
+                          <AIHelpUserQuestion
+                            message={message}
+                            submit={submit}
+                            canEdit={!isQuotaExceeded(quota)}
+                            nextPrev={nextPrev}
+                            siblingCount={siblingCount}
+                          />
+                        ) : (
+                          <AIHelpAssistantResponse
+                            message={message}
+                            queuedExamples={queuedExamples}
+                            setQueue={setQueue}
+                            messages={messages}
+                            retryLastQuestion={retryLastQuestion}
+                          />
+                        )}
                       </li>
                     );
                   })}
