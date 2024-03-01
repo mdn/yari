@@ -700,9 +700,7 @@ export function AIHelpInner() {
                           "ai-help-message",
                           `role-${message.role}`,
                           `status-${message.status}`,
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
+                        ].join(" ")}
                       >
                         <>
                           <div className="ai-help-message-role">
