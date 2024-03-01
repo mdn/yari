@@ -48,7 +48,7 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND,
+  SORRY_BACKEND_PREFIX,
   SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
@@ -288,6 +288,10 @@ function AIHelpAssistantResponse({
 
   let sample = 0;
 
+  const isOffTopic =
+    message.role === MessageRole.Assistant &&
+    message.content?.startsWith(SORRY_BACKEND_PREFIX);
+
   function messageForStatus(status: MessageStatus) {
     switch (status) {
       case MessageStatus.Errored:
@@ -314,33 +318,7 @@ function AIHelpAssistantResponse({
 
   return (
     <>
-      <div
-        className={[
-          "ai-help-message-progress",
-          message.status === MessageStatus.Pending && "active",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {message.status === MessageStatus.Pending
-          ? MESSAGE_SEARCHING
-          : MESSAGE_SEARCHED}
-      </div>
-      {message.sources && message.sources.length > 0 && (
-        <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
-            <li key={index}>
-              <InternalLink
-                to={url}
-                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
-                target="_blank"
-              >
-                {title}
-              </InternalLink>
-            </li>
-          ))}
-        </ul>
-      )}
+      {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
       {(message.content ||
         message.status === MessageStatus.InProgress ||
         message.status === MessageStatus.Errored) && (
@@ -509,12 +487,12 @@ function AIHelpAssistantResponse({
               },
             }}
           >
-            {message.content?.replace(SORRY_BACKEND, SORRY_FRONTEND)}
+            {isOffTopic ? SORRY_FRONTEND : message.content}
           </ReactMarkdown>
-          {message.status === "complete" &&
-            !message.content?.includes(SORRY_BACKEND) && (
-              <>
-                <section className="ai-help-feedback">
+          {(message.status === "complete" || isOffTopic) && (
+            <>
+              <section className="ai-help-feedback">
+                {!isOffTopic && (
                   <GleanThumbs
                     feature="ai-help-answer"
                     featureKey={message.messageId}
@@ -522,16 +500,65 @@ function AIHelpAssistantResponse({
                     upLabel={"Yes, this answer was useful."}
                     downLabel={"No, this answer was not useful."}
                   />
-                  <ReportIssueOnGitHubLink
-                    messages={messages}
-                    currentMessage={message}
-                  >
-                    Report an issue with this answer on GitHub
-                  </ReportIssueOnGitHubLink>
-                </section>
-              </>
-            )}
+                )}
+                <ReportIssueOnGitHubLink
+                  messages={messages}
+                  currentMessage={{
+                    ...message,
+                    ...(isOffTopic
+                      ? {
+                          content: SORRY_FRONTEND,
+                          sources: [],
+                        }
+                      : {}),
+                  }}
+                >
+                  Report an issue with this answer on GitHub
+                </ReportIssueOnGitHubLink>
+              </section>
+            </>
+          )}
         </div>
+      )}
+    </>
+  );
+}
+
+function AIHelpAssistantResponseSources({
+  message,
+}: {
+  message: Pick<Message, "status" | "sources">;
+}) {
+  const gleanClick = useGleanClick();
+
+  return (
+    <>
+      <div
+        className={[
+          "ai-help-message-progress",
+          message.status !== MessageStatus.Pending && "complete",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
+      </div>
+      {message.sources && message.sources.length > 0 && (
+        <ul className="ai-help-message-sources">
+          {message.sources.map(({ url, title }, index) => (
+            <li key={index}>
+              <InternalLink
+                to={url}
+                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
+                target="_blank"
+              >
+                {title}
+              </InternalLink>
+            </li>
+          ))}
+        </ul>
       )}
     </>
   );
