@@ -74,6 +74,16 @@
         gap: 0.5rem;
         padding: 1rem;
       }
+
+      .radio-container {
+        align-items: center;
+        display: flex;
+        gap: 0.25rem;
+
+        label {
+          padding: 0.5rem 0;
+        }
+      }
     }
 
     .last-modified-date {
