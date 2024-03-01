@@ -3,56 +3,15 @@ import { Doc } from "../../../libs/types/document";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h3>Found a content problem with this page?</h3>
-      <ul>
-        <li>
-          <EditOnGitHubLink doc={doc}>Edit the page on GitHub</EditOnGitHubLink>
-          .
-        </li>
-        <li>
-          <NewIssueOnGitHubLink doc={doc}>
-            Report the content issue
-          </NewIssueOnGitHubLink>
-          .
-        </li>
-        <li>
-          <SourceOnGitHubLink doc={doc}>
-            View the source on GitHub
-          </SourceOnGitHubLink>
-          .
-        </li>
-      </ul>
-      Want to get more involved?{" "}
-      <a
-        href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
-        title={`This will take you to our contribution guidelines on GitHub.`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn how to contribute
-      </a>
+      <SourceOnGitHubLink doc={doc}>
+        View this page on GitHub
+      </SourceOnGitHubLink>
+      . |{" "}
+      <NewIssueOnGitHubLink doc={doc}>
+        Report a problem with this content
+      </NewIssueOnGitHubLink>
       .
     </div>
-  );
-}
-
-function EditOnGitHubLink({
-  doc,
-  children,
-}: {
-  doc: Doc;
-  children: React.ReactNode;
-}) {
-  const { github_url } = doc.source;
-  return (
-    <a
-      href={github_url.replace("/blob/", "/edit/")}
-      title={`This will take you to GitHub, where you'll need to sign in first.`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
   );
 }
 
