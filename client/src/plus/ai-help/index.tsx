@@ -489,6 +489,11 @@ function AIHelpAssistantResponse({
           >
             {isOffTopic ? SORRY_FRONTEND : message.content}
           </ReactMarkdown>
+          {message.status === "stopped" && (
+            <section className="stopped-message">
+              {"■\u00a0Stopped answering"}
+            </section>
+          )}
           {(message.status === "complete" || isOffTopic) && (
             <>
               <section className="ai-help-feedback">
