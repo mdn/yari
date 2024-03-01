@@ -6,13 +6,15 @@ import { useUserData } from "../../user-context";
 import { PlusLoginBanner } from "../common/login-banner";
 import { isPlusSubscriber } from "../../utils";
 
-export function AiHelpBanner() {
+export function AiHelpBanner({
+  isDisabled = false,
+}: { isDisabled?: boolean } = {}) {
   const user = useUserData();
 
   const isSubscriber = useMemo(() => isPlusSubscriber(user), [user]);
 
   return (
-    <div className="ai-help-banner">
+    <div className={`ai-help-banner ${isDisabled ? "disabled" : ""}`}>
       <p>
         <Icon name="bell-ring" />
         <strong>
