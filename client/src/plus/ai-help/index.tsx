@@ -55,6 +55,7 @@ import {
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
+  MESSAGE_STOPPED,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
@@ -123,9 +124,6 @@ function AIHelpAuthenticated() {
             Report Feedback
           </a>
         </p>
-      </Container>
-      <Container>
-        <AiHelpBanner />
       </Container>
       <AIHelpInner />
     </div>
@@ -294,6 +292,30 @@ function AIHelpAssistantResponse({
     message.role === MessageRole.Assistant &&
     message.content?.startsWith(SORRY_BACKEND_PREFIX);
 
+  function messageForStatus(status: MessageStatus) {
+    switch (status) {
+      case MessageStatus.Errored:
+        return (
+          <>
+            {MESSAGE_FAILED} Please{" "}
+            <Button type="link" onClickHandler={retryLastQuestion}>
+              try again
+            </Button>
+            .
+          </>
+        );
+
+      case MessageStatus.Stopped:
+        return MESSAGE_STOPPED;
+
+      case MessageStatus.InProgress:
+        return MESSAGE_ANSWERING;
+
+      default:
+        return MESSAGE_ANSWERED;
+    }
+  }
+
   return (
     <>
       {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
@@ -303,25 +325,15 @@ function AIHelpAssistantResponse({
         <div
           className={[
             "ai-help-message-progress",
+            message.status === MessageStatus.InProgress && "active",
             message.status === MessageStatus.Complete && "complete",
             message.status === MessageStatus.Errored && "errored",
+            message.status === MessageStatus.Stopped && "stopped",
           ]
             .filter(Boolean)
             .join(" ")}
         >
-          {message.status === MessageStatus.Errored ? (
-            <>
-              {MESSAGE_FAILED} Please{" "}
-              <Button type="link" onClickHandler={retryLastQuestion}>
-                try again
-              </Button>
-              .
-            </>
-          ) : message.status === MessageStatus.InProgress ? (
-            MESSAGE_ANSWERING
-          ) : (
-            MESSAGE_ANSWERED
-          )}
+          {messageForStatus(message.status)}
         </div>
       )}
       {message.content && (
@@ -668,6 +680,7 @@ export function AIHelpInner() {
         messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
       />
       <Container>
+        <AiHelpBanner isDisabled={isQuotaExceeded(quota)} />
         {isQuotaLoading || isHistoryLoading ? (
           <Loading />
         ) : (
@@ -737,6 +750,7 @@ export function AIHelpInner() {
                 <div className="ai-help-footer-actions">
                   <Button
                     type="action"
+                    isDisabled={!isResponding}
                     extraClasses="ai-help-stop-button"
                     onClickHandler={() => {
                       gleanClick(`${AI_HELP}: stop`);
