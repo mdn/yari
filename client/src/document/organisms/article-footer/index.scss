@@ -9,8 +9,14 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
-  margin: 2rem 0;
+  margin: 0;
   padding: 1rem;
+
+  @media screen and (max-width: $screen-md) {
+    margin: 3rem;
+    // Reduce space to article content.
+    margin-top: 0;
+  }
 
   .article-footer-content-container {
     margin: 0 auto;

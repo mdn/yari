@@ -254,6 +254,8 @@
 
   @media screen and (min-width: $screen-sm) {
     padding: 3rem;
+    // Reduce space to article footer.
+    padding-bottom: 0;
   }
 
   @media screen and (min-width: $screen-md) {
