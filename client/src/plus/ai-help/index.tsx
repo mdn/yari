@@ -541,7 +541,7 @@ function AIHelpAssistantResponseSources({
       <div
         className={[
           "ai-help-message-progress",
-          message.status !== MessageStatus.Pending && "complete",
+          message.status === MessageStatus.Pending ? "active" : "complete",
         ]
           .filter(Boolean)
           .join(" ")}
