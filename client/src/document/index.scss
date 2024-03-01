@@ -259,7 +259,8 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    margin-bottom: 0.5rem;
+    // Reduce space to article footer.
+    margin-bottom: 0;
     padding: 0;
   }
 }
