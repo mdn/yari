@@ -83,7 +83,7 @@ function Feedback() {
           </div>
         </>
       ) : (
-        <span>Thank you for your feedback! ❤️</span>
+        <span className="thank-you">Thank you for your feedback! ❤️</span>
       )}
     </fieldset>
   );

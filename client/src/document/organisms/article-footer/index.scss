@@ -31,6 +31,11 @@
         display: block;
       }
 
+      .thank-you {
+        display: block;
+        margin-bottom: calc(3rem + 2px);
+      }
+
       .button-container {
         // Ensure both buttons take minimal width.
         display: inline-flex;
