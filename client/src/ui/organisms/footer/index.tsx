@@ -34,7 +34,7 @@ export function Footer() {
             </li>
             <li>
               <a
-                className="icon icon-twitter"
+                className="icon icon-x"
                 href="https://twitter.com/mozdevnet"
                 target="_blank"
                 rel="noopener noreferrer"
