@@ -515,8 +515,12 @@ function AIHelpAssistantResponse({
                   messages={messages}
                   currentMessage={{
                     ...message,
-                    content: SORRY_FRONTEND,
-                    sources: [],
+                    ...(isOffTopic
+                      ? {
+                          content: SORRY_FRONTEND,
+                          sources: [],
+                        }
+                      : {}),
                   }}
                 >
                   Report an issue with this answer on GitHub
