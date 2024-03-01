@@ -171,8 +171,8 @@ export async function checkFile(
   const docFilePath = (await fse.exists(htmlFilePath))
     ? htmlFilePath
     : (await fse.exists(mdFilePath))
-    ? mdFilePath
-    : null;
+      ? mdFilePath
+      : null;
   if (!docFilePath) {
     throw new FixableError(
       `${getRelativePath(

@@ -19,6 +19,7 @@ import {
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
+  DEV_MODE,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
@@ -31,10 +32,10 @@ import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 
 const FEATURED_ARTICLES = [
-  "blog/regular-expressions-reference-updates/",
-  "blog/aria-accessibility-html-landmark-roles/",
-  "docs/Web/API/Performance_API",
-  "docs/Web/CSS/CSS_nesting",
+  "blog/learn-javascript-console-methods/",
+  "blog/introduction-to-web-sustainability/",
+  "docs/Web/API/CSS_Custom_Highlight_API",
+  "docs/Web/CSS/color_value",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
@@ -368,14 +369,25 @@ async function fetchGitHubPRs(repo, count = 5) {
     "sort:updated",
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
-  const pullRequestsData = (await got(pullRequestUrl).json()) as {
-    items: any[];
-  };
-  const prDataRepo = pullRequestsData.items.map((item) => ({
-    ...item,
-    repo: { name: repo, url: `https://github.com/${repo}` },
-  }));
-  return prDataRepo;
+  try {
+    const pullRequestsData = (await got(pullRequestUrl).json()) as {
+      items: any[];
+    };
+    const prDataRepo = pullRequestsData.items.map((item) => ({
+      ...item,
+      repo: { name: repo, url: `https://github.com/${repo}` },
+    }));
+    return prDataRepo;
+  } catch (e) {
+    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }
 
 async function fetchRecentContributions() {
@@ -403,10 +415,6 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
-
-  const $ = cheerio.load(xml, { xmlMode: true });
-
   const items: NewsItem[] = [];
 
   items.push(
@@ -449,25 +457,48 @@ async function fetchLatestNews() {
         name: "developer.mozilla.org",
         url: `/${DEFAULT_LOCALE}/blog/`,
       },
-    }
+    },
+    ...(await fetchHacksNews())
   );
-
-  $("item").each((i, item) => {
-    const $item = $(item);
-
-    items.push({
-      title: $item.find("title").text(),
-      url: $item.find("guid").text(),
-      author: $item.find("dc\\:creator").text(),
-      published_at: $item.find("pubDate").text(),
-      source: {
-        name: "hacks.mozilla.org",
-        url: "https://hacks.mozilla.org/category/mdn/",
-      },
-    });
-  });
 
   return {
     items,
   };
+}
+
+async function fetchHacksNews(): Promise<NewsItem[]> {
+  try {
+    const xml = await got(
+      "https://hacks.mozilla.org/category/mdn/feed/"
+    ).text();
+
+    const $ = cheerio.load(xml, { xmlMode: true });
+
+    const items: NewsItem[] = [];
+    $("item").each((i, item) => {
+      const $item = $(item);
+
+      items.push({
+        title: $item.find("title").text(),
+        url: $item.find("guid").text(),
+        author: $item.find("dc\\:creator").text(),
+        published_at: $item.find("pubDate").text(),
+        source: {
+          name: "hacks.mozilla.org",
+          url: "https://hacks.mozilla.org/category/mdn/",
+        },
+      });
+    });
+
+    return items;
+  } catch (e) {
+    const msg = "Couldn't fetch hacks.mozilla.org feed!";
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }

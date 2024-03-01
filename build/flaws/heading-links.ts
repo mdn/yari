@@ -1,4 +1,4 @@
-import { findMatchesInText } from "../matches-in-text.js";
+import { findMatchesInText } from "../matches.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";

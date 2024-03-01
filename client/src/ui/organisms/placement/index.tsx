@@ -116,8 +116,8 @@ export function TopPlacement() {
     isServer || placementData?.status === Status.loading
       ? "loading"
       : placementData?.top
-      ? "visible"
-      : "fallback";
+        ? "visible"
+        : "fallback";
 
   return (
     <div className={`top-banner ${status}`} style={css}>
