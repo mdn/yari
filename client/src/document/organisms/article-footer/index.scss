@@ -1,6 +1,6 @@
 @use "../../../ui/vars" as *;
 
-.main-page-content .article-footer {
+.article-footer {
   background-color: var(--background-secondary);
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
@@ -8,18 +8,18 @@
   margin: 2rem 0;
   padding: 1rem;
 
-  h2 {
-    margin-top: 0;
-    padding: 0;
-  }
-}
+  .article-footer-content-container {
+    margin: 0 auto;
+    max-width: 1440px;
+    width: 100%;
 
-.article-footer-content-container {
-  margin: 0 auto;
-  max-width: 1440px;
-  width: 100%;
+    h2 {
+      margin-top: 0;
+      padding: 0;
+    }
 
-  .last-modified-date {
-    margin-bottom: 0;
+    .last-modified-date {
+      margin-bottom: 0;
+    }
   }
 }
