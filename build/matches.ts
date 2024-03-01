@@ -1,3 +1,4 @@
+import "mdast-util-directive";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
@@ -39,7 +40,7 @@ export function findMatchesInMarkdown(
   const tree = fromMarkdown(rawContent);
   // Find all the links and images in the markdown
   // we should also find any HTML elements that contain links or images
-  visit(tree, [type, "html"], (node: any) => {
+  visit(tree, [type, "html"], (node) => {
     if (node.type === "html") {
       const matchesInHtml = findMatchesInText(url, node.value, {
         attribute: attributeType,
@@ -53,7 +54,7 @@ export function findMatchesInMarkdown(
         return { line, column };
       });
       matches.push(...correctedMatches);
-    } else if (node.url === url) {
+    } else if (node.type == type && node.url === url) {
       // else this would be a markdown link or image
       const { line, column } = node.position.start;
       matches.push({ line, column });
