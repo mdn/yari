@@ -211,7 +211,6 @@
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^24.0.0",
     "lint-staged": "^13.2.3",
-    "mdast-util-directive": "^3.0.0",
     "mdast-util-to-hast": "^13.1.0",
     "mini-css-extract-plugin": "^2.8.1",
     "node-dev": "^8.0.0",
