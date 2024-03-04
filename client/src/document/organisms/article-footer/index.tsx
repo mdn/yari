@@ -68,11 +68,7 @@ export function ArticleFooter({ doc, locale }) {
         <div className="svg-container">
           <ArticleFooterSVG role="none" />
         </div>
-        <h2>
-          {view !== ArticleFooterView.Feedback
-            ? "Help improve MDN"
-            : "Tell us more:"}
-        </h2>
+        <h2>Help improve MDN</h2>
 
         <fieldset className="feedback">
           {view === ArticleFooterView.Vote ? (
