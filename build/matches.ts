@@ -1,4 +1,3 @@
-import "mdast-util-directive";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
