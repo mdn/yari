@@ -80,17 +80,9 @@
         align-items: center;
         display: flex;
         gap: 0.25rem;
-      }
 
-      > * {
-        margin: 0.75rem 0;
-
-        &:first-child {
-          margin-top: 0;
-        }
-
-        &:last-child {
-          margin-bottom: 0;
+        label {
+          padding: 0.5rem 0;
         }
       }
     }
