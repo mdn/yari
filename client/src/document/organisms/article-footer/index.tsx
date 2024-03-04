@@ -125,7 +125,7 @@ export function ArticleFooter({ doc, locale }) {
           )}
         </fieldset>
 
-        {view !== ArticleFooterView.Feedback && <Contribute />}
+        <Contribute />
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} /> by{" "}
           <Authors url={doc.mdn_url} />.
