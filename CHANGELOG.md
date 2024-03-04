@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.42.0](https://github.com/mdn/yari/compare/v2.41.0...v2.42.0) (2024-03-01)
+
+
+### Features
+
+* **ai-help:** index short_title ([#10579](https://github.com/mdn/yari/issues/10579)) ([6939552](https://github.com/mdn/yari/commit/69395528f0943a99cc0fd033407b72830fb58f4f))
+* **ai-help:** show canned answer without sources for off-topic questions ([#10575](https://github.com/mdn/yari/issues/10575)) ([fcd236a](https://github.com/mdn/yari/commit/fcd236a8565e506ae255483984315b81950d738d))
+
+
+### Bug Fixes
+
+* **ai-help:** hide "Stop answering" before we respond ([#10530](https://github.com/mdn/yari/issues/10530)) ([ad5f5a4](https://github.com/mdn/yari/commit/ad5f5a44dc0ce4285bb6c0471f89fa5b566235a2))
+* **ai-help:** refetch quota after an ai error ([#10615](https://github.com/mdn/yari/issues/10615)) ([aa6b141](https://github.com/mdn/yari/commit/aa6b141a34e0542ee458ed0aeffcc3c434801188))
+* **ai-help:** remove decorative images from a11y tree ([#10520](https://github.com/mdn/yari/issues/10520)) ([575420c](https://github.com/mdn/yari/commit/575420cf6100a94e3263d9834652a255660d9d1a))
+* **build:** check for bad_src flaws in markdown files ([#8133](https://github.com/mdn/yari/issues/8133)) ([a76cc0e](https://github.com/mdn/yari/commit/a76cc0e2c43463b5bed3d48d0d0af94a9bbabc47))
+* **modal:** make close button visible ([#10604](https://github.com/mdn/yari/issues/10604)) ([2e06a1a](https://github.com/mdn/yari/commit/2e06a1ad8adc5d97dc1d8b264ad06bd3f3cdcd36))
+
+
+### Enhancements
+
+* **ai-help:** disable top banner if quota banner is visible ([#10532](https://github.com/mdn/yari/issues/10532)) ([0b03586](https://github.com/mdn/yari/commit/0b03586af5d87eb86f2301c6309ed01c7c970250))
+* **ai-help:** improve stopped state ([#10580](https://github.com/mdn/yari/issues/10580)) ([8c988be](https://github.com/mdn/yari/commit/8c988be94b8e89d26c0a847a3f98d443b7ab0421))
+* **build/spas:** allow yarn dev without internet if DEV_MODE is enabled ([#10533](https://github.com/mdn/yari/issues/10533)) ([78a9500](https://github.com/mdn/yari/commit/78a95005b171b67dca006a51c2e54c245d281a95))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/core from 7.23.9 to 7.24.0 ([#10621](https://github.com/mdn/yari/issues/10621)) ([514592d](https://github.com/mdn/yari/commit/514592d2cf4381811bee58abc095a8026ff55c10))
+* **deps-dev:** bump @babel/preset-env from 7.23.9 to 7.24.0 ([#10619](https://github.com/mdn/yari/issues/10619)) ([0fc068f](https://github.com/mdn/yari/commit/0fc068f84de542231ff50a1f1b28feff6f9e1a0a))
+* **deps-dev:** bump postcss-loader from 8.1.0 to 8.1.1 ([#10620](https://github.com/mdn/yari/issues/10620)) ([266d4d8](https://github.com/mdn/yari/commit/266d4d82ddd1a8f5214d081c6fa763f46d3b75d7))
+* **deps-dev:** bump the types group with 1 update ([#10627](https://github.com/mdn/yari/issues/10627)) ([27ea44f](https://github.com/mdn/yari/commit/27ea44fbad8e30194d8e36c04bbf01bb265fb68e))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.35 to 2.7.36 in /client/pwa ([#10623](https://github.com/mdn/yari/issues/10623)) ([aa34dab](https://github.com/mdn/yari/commit/aa34dabf46529798152e5c7869097d6fea0372a7))
+* **deps:** bump @webref/css from 6.12.0 to 6.12.1 ([#10622](https://github.com/mdn/yari/issues/10622)) ([4f68cf5](https://github.com/mdn/yari/commit/4f68cf545249e3800a3d8e05644fb4be441eb895))
+* **deps:** bump express from 4.18.2 to 4.18.3 ([#10628](https://github.com/mdn/yari/issues/10628)) ([368c2c4](https://github.com/mdn/yari/commit/368c2c40d229e5c6cd2261633e6cfadb7495f101))
+* **deps:** bump openai from 4.28.0 to 4.28.4 ([#10618](https://github.com/mdn/yari/issues/10618)) ([2873cd9](https://github.com/mdn/yari/commit/2873cd9e83052b587a4dc430781a2374517e21bd))
+* **deps:** bump sse.js from 2.2.0 to 2.3.0 ([#10631](https://github.com/mdn/yari/issues/10631)) ([4b89823](https://github.com/mdn/yari/commit/4b898230f7a66296c51da3b697de04264614ff49))
+* **deps:** bump the sentry group with 2 updates ([#10626](https://github.com/mdn/yari/issues/10626)) ([5bd14de](https://github.com/mdn/yari/commit/5bd14de55ea0e3b95ae7505e81e83570ed9dbd06))
+* **deps:** bump web-specs from 3.3.1 to 3.4.0 ([#10629](https://github.com/mdn/yari/issues/10629)) ([e9a2722](https://github.com/mdn/yari/commit/e9a272284bc04227be3566e8af0ad0b44af70f1e))
+* **featured-articles:** update links for 2024 Q1 ([#10613](https://github.com/mdn/yari/issues/10613)) ([4725d59](https://github.com/mdn/yari/commit/4725d59fe89060595b83f4554d37da3ef24e3977))
+* **footer:** replace Twitter with X logo ([#10438](https://github.com/mdn/yari/issues/10438)) ([a940648](https://github.com/mdn/yari/commit/a94064884b5027b43035450ab6bacd8232d29fbc))
+* **macros/CSSRef:** add Containment guides ([#10611](https://github.com/mdn/yari/issues/10611)) ([c207fcc](https://github.com/mdn/yari/commit/c207fcce4016beaa40f612871ab1458de0499db3))
+
 ## [2.41.0](https://github.com/mdn/yari/compare/v2.40.0...v2.41.0) (2024-02-28)
 
 
