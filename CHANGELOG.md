@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.42.1](https://github.com/mdn/yari/compare/v2.42.0...v2.42.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* **build/matches:** remove unnecessary type imports ([#10634](https://github.com/mdn/yari/issues/10634)) ([7a31bf6](https://github.com/mdn/yari/commit/7a31bf6297f0f7ea309f831ef34318abb80b287c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @playwright/test from 1.42.0 to 1.42.1 ([#10641](https://github.com/mdn/yari/issues/10641)) ([83a4b83](https://github.com/mdn/yari/commit/83a4b83c89e7a50bbe51695c5f4f63003e50974a))
+* **deps-dev:** bump eslint-plugin-react from 7.33.2 to 7.34.0 ([#10639](https://github.com/mdn/yari/issues/10639)) ([ae23d61](https://github.com/mdn/yari/commit/ae23d61db80f0b41069755e6c47d42bdb4063981))
+* **deps-dev:** bump html-validate from 8.11.1 to 8.12.0 ([#10640](https://github.com/mdn/yari/issues/10640)) ([fc9bcec](https://github.com/mdn/yari/commit/fc9bcece20e5878cb2190a03304de1d69e4e6c3e))
+* **deps:** bump @mdn/browser-compat-data from 5.5.12 to 5.5.13 ([#10642](https://github.com/mdn/yari/issues/10642)) ([bce0c1f](https://github.com/mdn/yari/commit/bce0c1fde52e6b17ac8ccb922d3bdabeedc861d9))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#10637](https://github.com/mdn/yari/issues/10637)) ([2493ab5](https://github.com/mdn/yari/commit/2493ab5129a07d91c9d73c842be6d77dc2aa0223))
+* **deps:** bump the dependencies group in /testing/integration with 1 update ([#10635](https://github.com/mdn/yari/issues/10635)) ([be0f9eb](https://github.com/mdn/yari/commit/be0f9eb2cfb06623bbdb51a79247089a23527fef))
+* **deps:** bump the sentry group with 2 updates ([#10636](https://github.com/mdn/yari/issues/10636)) ([8b8d421](https://github.com/mdn/yari/commit/8b8d421d5778d4d87344ebdb0d38560772180d98))
+* **macro:** Add ko DOMAttributeMethods ([9658fca](https://github.com/mdn/yari/commit/9658fcaba5bd7a7ecae28eb5129d9171c70e9d16))
+* **macros/DOMAttributeMethods:** add ko locale ([#10502](https://github.com/mdn/yari/issues/10502)) ([9658fca](https://github.com/mdn/yari/commit/9658fcaba5bd7a7ecae28eb5129d9171c70e9d16))
+
 ## [2.42.0](https://github.com/mdn/yari/compare/v2.41.0...v2.42.0) (2024-03-01)
 
 
