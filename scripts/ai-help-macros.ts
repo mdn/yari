@@ -31,6 +31,7 @@ interface IndexedDoc {
   title_short: string;
   token_count: number | null;
   hash: string;
+  markdown_hash: string;
   text_hash: string;
 }
 
@@ -40,6 +41,7 @@ interface Doc {
   title_short: string;
   hash: string;
   markdown: string;
+  markdown_hash: string;
   text?: string;
   text_hash?: string;
 }
@@ -123,6 +125,9 @@ export async function updateEmbeddings(
     const existingDoc = existingDocByUrl.get(mdn_url);
 
     const text_hash = createHash("sha256").update(text).digest("base64");
+    const markdown_hash = createHash("sha256")
+      .update(markdown)
+      .digest("base64");
 
     if (existingDoc?.text_hash !== text_hash) {
       updates.push({
@@ -131,16 +136,21 @@ export async function updateEmbeddings(
         title_short,
         hash,
         markdown,
+        markdown_hash,
         text,
         text_hash,
       });
-    } else if (updateFormatting || existingDoc?.hash !== hash) {
+    } else if (
+      updateFormatting ||
+      existingDoc?.markdown_hash !== markdown_hash
+    ) {
       formattingUpdates.push({
         mdn_url,
         title,
         title_short,
         hash,
         markdown,
+        markdown_hash,
       });
     }
   }
@@ -163,6 +173,7 @@ export async function updateEmbeddings(
       title_short,
       hash,
       markdown,
+      markdown_hash,
       text,
       text_hash,
     } of updates) {
@@ -182,20 +193,22 @@ export async function updateEmbeddings(
                     title_short,
                     hash,
                     markdown,
+                    markdown_hash,
                     token_count,
                     embedding,
                     text_hash
                 )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (mdn_url) DO
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
                 hash = $4,
                 markdown = $5,
-                token_count = $6,
-                embedding = $7,
-                text_hash = $8
+                markdown_hash = $6,
+                token_count = $7,
+                embedding = $8,
+                text_hash = $9
           `,
           values: [
             mdn_url,
@@ -203,6 +216,7 @@ export async function updateEmbeddings(
             title_short,
             hash,
             markdown,
+            markdown_hash,
             total_tokens,
             pgvector.toSql(embedding),
             text_hash,
@@ -223,6 +237,7 @@ export async function updateEmbeddings(
       title_short,
       hash,
       markdown,
+      markdown_hash,
     } of formattingUpdates) {
       try {
         console.log(
@@ -233,16 +248,17 @@ export async function updateEmbeddings(
         const query = {
           name: "upsert-doc",
           text: `
-            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, markdown)
-            VALUES($1, $2, $3, $4, $5) ON CONFLICT (mdn_url) DO
+            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, markdown, markdown_hash)
+            VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
                 hash = $4,
-                markdown = $5
+                markdown = $5,
+                markdown_hash = $6
           `,
-          values: [mdn_url, title, title_short, hash, markdown],
+          values: [mdn_url, title, title_short, hash, markdown, markdown_hash],
           rowMode: "array",
         };
 
@@ -509,6 +525,7 @@ async function fetchAllExistingDocs(pgClient) {
             title,
             hash,
             token_count,
+            markdown_hash,
             text_hash
         from mdn_doc_macro
         WHERE id > $1
@@ -520,8 +537,16 @@ async function fetchAllExistingDocs(pgClient) {
     };
     const result = await pgClient.query(query);
     return result.rows.map(
-      ([id, mdn_url, title, hash, token_count, text_hash]) => {
-        return { id, mdn_url, title, hash, token_count, text_hash };
+      ([id, mdn_url, title, hash, token_count, markdown_hash, text_hash]) => {
+        return {
+          id,
+          mdn_url,
+          title,
+          hash,
+          token_count,
+          markdown_hash,
+          text_hash,
+        };
       }
     );
   };
