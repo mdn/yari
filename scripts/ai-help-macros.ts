@@ -28,7 +28,6 @@ interface IndexedDoc {
   id: number;
   mdn_url: string;
   title: string;
-  title_short: string;
   token_count: number | null;
   hash: string;
   markdown_hash: string;
@@ -514,7 +513,7 @@ export function isNotSupportedAtAll(support: SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
 
-async function fetchAllExistingDocs(pgClient) {
+async function fetchAllExistingDocs(pgClient): Promise<IndexedDoc[]> {
   const PAGE_SIZE = 1000;
   const selectDocs = async (lastId) => {
     const query = {
