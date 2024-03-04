@@ -32,6 +32,7 @@
     .feedback {
       border: none;
       margin: 0;
+      margin-bottom: 0.25rem;
       padding: 0;
 
       > label {
@@ -83,6 +84,10 @@
         gap: 0.25rem;
         margin: 0.25rem 0;
       }
+    }
+
+    .contribute {
+      margin-top: 0.25rem;
     }
 
     .last-modified-date {
