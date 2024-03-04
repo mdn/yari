@@ -39,7 +39,6 @@ interface Doc {
   title: string;
   title_short: string;
   hash: string;
-  html: string;
   markdown: string;
   text?: string;
   text_hash?: string;
@@ -115,7 +114,6 @@ export async function updateEmbeddings(
     title,
     title_short,
     hash,
-    html,
     markdown,
     text,
   } of builtDocs(directory)) {
@@ -132,7 +130,6 @@ export async function updateEmbeddings(
         title,
         title_short,
         hash,
-        html,
         markdown,
         text,
         text_hash,
@@ -143,7 +140,6 @@ export async function updateEmbeddings(
         title,
         title_short,
         hash,
-        html,
         markdown,
       });
     }
@@ -166,7 +162,6 @@ export async function updateEmbeddings(
       title,
       title_short,
       hash,
-      html,
       markdown,
       text,
       text_hash,
@@ -186,30 +181,27 @@ export async function updateEmbeddings(
                     title,
                     title_short,
                     hash,
-                    html,
                     markdown,
                     token_count,
                     embedding,
                     text_hash
                 )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
                 hash = $4,
-                html = $5,
-                markdown = $6,
-                token_count = $7,
-                embedding = $8,
-                text_hash = $9
+                markdown = $5,
+                token_count = $6,
+                embedding = $7,
+                text_hash = $8
           `,
           values: [
             mdn_url,
             title,
             title_short,
             hash,
-            html,
             markdown,
             total_tokens,
             pgvector.toSql(embedding),
@@ -230,7 +222,6 @@ export async function updateEmbeddings(
       title,
       title_short,
       hash,
-      html,
       markdown,
     } of formattingUpdates) {
       try {
@@ -242,17 +233,16 @@ export async function updateEmbeddings(
         const query = {
           name: "upsert-doc",
           text: `
-            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, html, markdown)
-            VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (mdn_url) DO
+            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, markdown)
+            VALUES($1, $2, $3, $4, $5) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
                 hash = $4,
-                html = $5,
-                markdown = $6
+                markdown = $5
           `,
-          values: [mdn_url, title, title_short, hash, html, markdown],
+          values: [mdn_url, title, title_short, hash, markdown],
           rowMode: "array",
         };
 
@@ -285,8 +275,8 @@ export async function updateEmbeddings(
 }
 
 async function formatDocs(directory: string) {
-  for await (const { html, markdown, text } of builtDocs(directory)) {
-    console.log(html, markdown, text);
+  for await (const { markdown, text } of builtDocs(directory)) {
+    console.log(markdown, text);
   }
 }
 
@@ -340,7 +330,6 @@ async function* builtDocs(directory: string) {
         title,
         title_short: short_title || title,
         hash,
-        html,
         markdown,
         text,
       };
