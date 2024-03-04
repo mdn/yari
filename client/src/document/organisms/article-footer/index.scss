@@ -2,10 +2,6 @@
 
 .article-footer {
   background-color: var(--background-secondary);
-  background-image: url("../../../assets/article-footer/article-footer.svg");
-  background-position: top right;
-  background-repeat: no-repeat;
-  background-size: 35%;
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
@@ -19,6 +15,11 @@
   }
 
   .article-footer-inner {
+    background-image: url("../../../assets/article-footer/article-footer.svg");
+    background-position: top right;
+    background-repeat: no-repeat;
+    background-size: 25%;
+
     margin: 0 auto;
     max-width: 1440px;
     width: 100%;
