@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 import { OnGitHubLink } from "../../on-github";
-
+import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-footer/article-footer.svg";
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { ARTICLE_FEEDBACK as ARTICLE_FOOTER } from "../../../telemetry/constants";
@@ -65,6 +65,9 @@ export function ArticleFooter({ doc, locale }) {
   return (
     <aside className="article-footer">
       <div className="article-footer-inner">
+        <div className="svg-container">
+          <ArticleFooterSVG />
+        </div>
         <h2>
           {view !== ArticleFooterView.Feedback
             ? "Help improve MDN"

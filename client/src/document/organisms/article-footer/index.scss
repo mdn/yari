@@ -15,14 +15,21 @@
   }
 
   .article-footer-inner {
-    background-image: url("../../../assets/article-footer/article-footer.svg");
-    background-position: top right;
-    background-repeat: no-repeat;
-    background-size: 25%;
-
     margin: 0 auto;
     max-width: 1440px;
     width: 100%;
+
+    .svg-container {
+      position: relative;
+
+      svg {
+        height: auto;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 25%;
+      }
+    }
 
     h2 {
       margin-top: 0;
