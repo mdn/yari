@@ -64,7 +64,7 @@ export function ArticleFooter({ doc, locale }) {
 
   return (
     <aside className="article-footer">
-      <div className="article-footer-content-container">
+      <div className="article-footer-inner">
         <h2>
           {view !== ArticleFooterView.Feedback
             ? "Help improve MDN"
