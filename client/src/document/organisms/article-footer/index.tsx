@@ -66,7 +66,7 @@ export function ArticleFooter({ doc, locale }) {
     <aside className="article-footer">
       <div className="article-footer-inner">
         <div className="svg-container">
-          <ArticleFooterSVG />
+          <ArticleFooterSVG role="none" />
         </div>
         <h2>
           {view !== ArticleFooterView.Feedback
