@@ -29,7 +29,6 @@ interface IndexedDoc {
   mdn_url: string;
   title: string;
   token_count: number | null;
-  hash: string;
   markdown_hash: string;
   text_hash: string;
 }
@@ -38,7 +37,6 @@ interface Doc {
   mdn_url: string;
   title: string;
   title_short: string;
-  hash: string;
   markdown: string;
   markdown_hash: string;
   text?: string;
@@ -110,14 +108,9 @@ export async function updateEmbeddings(
   const updates: Doc[] = [];
   const formattingUpdates: Doc[] = [];
 
-  for await (const {
-    mdn_url,
-    title,
-    title_short,
-    hash,
-    markdown,
-    text,
-  } of builtDocs(directory)) {
+  for await (const { mdn_url, title, title_short, markdown, text } of builtDocs(
+    directory
+  )) {
     seenUrls.add(mdn_url);
 
     // Check for existing document in DB and compare checksums.
@@ -133,7 +126,6 @@ export async function updateEmbeddings(
         mdn_url,
         title,
         title_short,
-        hash,
         markdown,
         markdown_hash,
         text,
@@ -147,7 +139,6 @@ export async function updateEmbeddings(
         mdn_url,
         title,
         title_short,
-        hash,
         markdown,
         markdown_hash,
       });
@@ -170,7 +161,6 @@ export async function updateEmbeddings(
       mdn_url,
       title,
       title_short,
-      hash,
       markdown,
       markdown_hash,
       text,
@@ -190,30 +180,27 @@ export async function updateEmbeddings(
                     mdn_url,
                     title,
                     title_short,
-                    hash,
                     markdown,
                     markdown_hash,
                     token_count,
                     embedding,
                     text_hash
                 )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
-                hash = $4,
-                markdown = $5,
-                markdown_hash = $6,
-                token_count = $7,
-                embedding = $8,
-                text_hash = $9
+                markdown = $4,
+                markdown_hash = $5,
+                token_count = $6,
+                embedding = $7,
+                text_hash = $8
           `,
           values: [
             mdn_url,
             title,
             title_short,
-            hash,
             markdown,
             markdown_hash,
             total_tokens,
@@ -234,7 +221,6 @@ export async function updateEmbeddings(
       mdn_url,
       title,
       title_short,
-      hash,
       markdown,
       markdown_hash,
     } of formattingUpdates) {
@@ -247,17 +233,16 @@ export async function updateEmbeddings(
         const query = {
           name: "upsert-doc",
           text: `
-            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, markdown, markdown_hash)
-            VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (mdn_url) DO
+            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, markdown, markdown_hash)
+            VALUES($1, $2, $3, $4, $5) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
-                hash = $4,
-                markdown = $5,
-                markdown_hash = $6
+                markdown = $4,
+                markdown_hash = $5
           `,
-          values: [mdn_url, title, title_short, hash, markdown, markdown_hash],
+          values: [mdn_url, title, title_short, markdown, markdown_hash],
           rowMode: "array",
         };
 
@@ -522,7 +507,6 @@ async function fetchAllExistingDocs(pgClient): Promise<IndexedDoc[]> {
         SELECT id,
             mdn_url,
             title,
-            hash,
             token_count,
             markdown_hash,
             text_hash
@@ -536,12 +520,11 @@ async function fetchAllExistingDocs(pgClient): Promise<IndexedDoc[]> {
     };
     const result = await pgClient.query(query);
     return result.rows.map(
-      ([id, mdn_url, title, hash, token_count, markdown_hash, text_hash]) => {
+      ([id, mdn_url, title, token_count, markdown_hash, text_hash]) => {
         return {
           id,
           mdn_url,
           title,
-          hash,
           token_count,
           markdown_hash,
           text_hash,
