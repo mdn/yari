@@ -398,6 +398,12 @@ dl.bc-notes-list {
   }
 }
 
+.bcd-timeline-cell-text-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
 .bcd-cell-text-copy {
   color: var(--text-primary);
   display: flex;

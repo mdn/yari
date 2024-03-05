@@ -13,21 +13,28 @@ import "./index.scss";
 export const ArticleActionsContainer = ({
   doc,
   parents = doc?.parents,
+  withSidebar = true,
 }: {
   doc?: Doc;
   parents?: DocParent[];
+  withSidebar?: boolean;
 }) => {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
 
   return (
     <div className="article-actions-container">
       <div className="container">
-        <Button
-          extraClasses="sidebar-button"
-          icon="sidebar"
-          type="action"
-          onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
+        {withSidebar && (
+          <Button
+            extraClasses="sidebar-button"
+            icon="sidebar"
+            type="action"
+            aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={isSidebarOpen}
+            aria-controls="sidebar-quicklinks"
+            onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+        )}
 
         {/* if we have breadcrumbs for the current page, continue rendering the section */}
         {parents && <Breadcrumbs parents={parents} />}

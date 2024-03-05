@@ -1,5 +1,5 @@
-import { assert, itMacro, describeMacro } from "./utils";
-import jsdom from "jsdom";
+import { assert, itMacro, describeMacro } from "./utils.js";
+import { JSDOM } from "jsdom";
 
 const locales = {
   "en-US": {
@@ -19,7 +19,7 @@ describeMacro("GamesSidebar", function () {
   itMacro("Creates a sidebar object for en-US", function (macro) {
     macro.ctx.env.locale = "en-US";
     return macro.call().then(function (result) {
-      const dom = jsdom.JSDOM.fragment(result);
+      const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
   });
@@ -27,7 +27,7 @@ describeMacro("GamesSidebar", function () {
   itMacro("Creates a sidebar object for ja", function (macro) {
     macro.ctx.env.locale = "ja";
     return macro.call().then(function (result) {
-      const dom = jsdom.JSDOM.fragment(result);
+      const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "ja");
     });
   });

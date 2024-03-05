@@ -1,11 +1,12 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-import * as util from "./util";
+import * as util from "./util.js";
+
+import { CONTENT_ROOT } from "../../../libs/env/index.js";
+import { KumaThis } from "../environment.js";
 
 const DUMMY_BASE_URL = "https://example.com";
-
-import { CONTENT_ROOT } from "../../../libs/env";
 
 const _warned = new Map();
 // The purpose of this function is to make sure `console.warn` is only called once
@@ -19,17 +20,13 @@ const _warned = new Map();
 // broken link. But that problem lies with the `CSSRef.ejs` macro, which we
 // don't entirely want to swallow and forget. But we don't want to point this
 // out on every single page that *uses* that `CSSRef` macro.
-function warnBrokenFlawByMacro(macro, href, extra = "") {
+function warnBrokenFlawByMacro(macro: string, href: string, notes: string) {
   if (!_warned.has(macro)) {
     _warned.set(macro, new Set());
   }
   if (!_warned.get(macro).has(href)) {
     _warned.get(macro).add(href);
-    console.warn(
-      `In ${macro} the smartLink to ${href} is broken${
-        extra ? ` (${extra})` : ""
-      }`
-    );
+    console.warn(`In ${macro} the smartLink to ${href} is broken! (${notes})`);
   }
 }
 
@@ -52,7 +49,15 @@ const web = {
   //
   // For translated content, if the document doesn't exist
   // then hyperlink to corresponding en-US document is returned.
-  smartLink(href, title, content, subpath, basepath, ignoreFlawMacro = null) {
+  smartLink(
+    this: KumaThis,
+    href: string,
+    title: string | null,
+    content: string | null = null,
+    subpath: string | null = null,
+    basepath: string | null = null,
+    ignoreFlawMacro: string | null = null
+  ) {
     let flaw;
     let flawAttribute = "";
     const page = this.info.getPageByURL(href);
@@ -123,6 +128,7 @@ const web = {
         }
       }
       const titleAttribute = title ? ` title="${title}"` : "";
+      content ??= page.short_title ?? page.title;
       return `<a href="${
         page.url + hrefhash
       }"${titleAttribute}${flawAttribute}>${content}</a>`;
@@ -136,9 +142,7 @@ const web = {
       if (enUSPage.url) {
         // But it's still a flaw. Record it so that translators can write a
         // translated document to "fill the hole".
-        if (ignoreFlawMacro) {
-          warnBrokenFlawByMacro(ignoreFlawMacro, href);
-        } else {
+        if (!ignoreFlawMacro) {
           flaw = this.env.recordNonFatalError(
             "broken-link",
             `${hrefpath} does not exist but fell back to ${enUSPage.url}`
@@ -147,6 +151,7 @@ const web = {
             flaw.macroSource
           )}"`;
         }
+        content ??= enUSPage.short_title ?? enUSPage.title;
         return (
           '<a class="only-in-en-us" ' +
           'title="Currently only available in English (US)" ' +
@@ -155,7 +160,7 @@ const web = {
       }
     }
     if (ignoreFlawMacro) {
-      warnBrokenFlawByMacro(ignoreFlawMacro, href);
+      warnBrokenFlawByMacro(ignoreFlawMacro, href, "does not exist");
     } else {
       flaw = this.env.recordNonFatalError(
         "broken-link",
@@ -164,10 +169,11 @@ const web = {
       flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
     }
     // Let's get a potentially localized title for when the document is missing.
-    const titleWhenMissing = this.mdn.getLocalString(
+    const titleWhenMissing = (this.mdn as any).getLocalString(
       this.web.getJSONData("L10n-Common"),
       "summary"
     );
+    content ??= href;
     return `<a class="page-not-created" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
   },
 

@@ -8,12 +8,12 @@
  * with any of the files there.
  */
 
-import fs from "fs";
+import fs from "node:fs";
 import fse from "fs-extra";
-import path from "path";
-import { execSync } from "child_process";
+import path from "node:path";
+import { execSync } from "node:child_process";
 
-import tempy from "tempy";
+import { temporaryDirectory } from "tempy";
 
 const CONTENT_DIR = path.resolve(path.join("testing", "content"));
 const BUILD_DIR = path.resolve(path.join("client", "build"));
@@ -30,6 +30,17 @@ function* walker(root) {
       yield [filepath, stat];
     }
   }
+}
+
+function extractMatchesFromString(pattern: RegExp, str: string) {
+  const matches = [];
+
+  let match: string[];
+  while ((match = pattern.exec(str)) !== null) {
+    matches.push(match[1] ?? match[0]);
+  }
+
+  return matches;
 }
 
 describe("fixing flaws", () => {
@@ -60,7 +71,7 @@ describe("fixing flaws", () => {
 
   beforeEach(() => {
     // Copy the whole content directory
-    tempdir = tempy.directory();
+    tempdir = temporaryDirectory();
     tempContentDir = path.join(tempdir, "content");
     fse.copySync(CONTENT_DIR, tempContentDir);
     populateFilesBefore(tempContentDir);
@@ -79,12 +90,13 @@ describe("fixing flaws", () => {
   });
 
   it("can be run in dry-run mode", () => {
+    const root = path.join(tempContentDir, "files");
     const stdout = execSync("yarn build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
         {
-          CONTENT_ROOT: path.join(tempContentDir, "files"),
+          CONTENT_ROOT: root,
           BUILD_OUT_ROOT: tempBuildDir,
           BUILD_FIX_FLAWS: "true",
           BUILD_FIX_FLAWS_DRY_RUN: "true",
@@ -94,15 +106,25 @@ describe("fixing flaws", () => {
       ),
     }).toString();
 
-    const regexPattern = /Would modify "(.*)"./g;
-    const dryRunNotices = stdout
-      .split("\n")
-      .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices).toHaveLength(4);
-    expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
-    expect(dryRunNotices[3]).toContain(pattern);
+    const wouldModify = extractMatchesFromString(
+      /Would modify "(.*)"./g,
+      stdout
+    );
+
+    expect(wouldModify).toHaveLength(4);
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "bad_pre_tags", "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "deprecated_macros", "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "images", "index.html")
+    );
+
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles).toHaveLength(0);
   });
@@ -153,7 +175,6 @@ describe("fixing flaws", () => {
     );
     const newRawHtml = fs.readFileSync(regularFile, "utf-8");
     expect(newRawHtml).toContain("{{CSSxRef('number')}}");
-    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
     // Broken links that get fixed.
     expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
     expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");

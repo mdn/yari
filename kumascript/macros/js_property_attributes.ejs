@@ -9,105 +9,104 @@
 // 
 // {{js_property_attributes(1,1,0)}}
 
-var header;
-var writable_name;
-var enumerable_name;
-var configurable_name;
-var yes;
-var no;
+const isWritable = $0 == 1;
+const isEnumerable = $1 == 1;
+const isConfigurable = $2 == 1;
 
-switch(env.locale) {
-    case "fr":
-        header = 'Attributs de <code>' + env.title + '</code>';
-        writable_name = 'Écrivable';
-        enumerable_name = 'Énumérable';
-        configurable_name = 'Configurable';
-        yes = 'Oui';
-        no = 'Non';
-        break;
-    case "es":
-        header = 'Atributos de la propiedad <code>' + env.title + '</code>';
-        writable_name = 'Sobrescribir';
-        enumerable_name = 'Numerable';
-        configurable_name = 'Configurable';
-        yes = 'Sí';
-        no = 'No';
-        break;
-    case "ru":
-        header = 'Атрибуты свойства' + '<code>' + env.title + '</code>';
-        writable_name = 'Записываемое';
-        enumerable_name = 'Перечисляемое';
-        configurable_name = 'Настраиваемое';
-        yes = 'да';
-        no = 'нет';
-        break;
-    case "zh-CN":
-        header = '<code>' + env.title + '</code> 属性的属性特性：';
-        writable_name = 'writable';
-        enumerable_name = 'enumerable';
-        configurable_name = 'configurable';
-        yes = 'true';
-        no = 'false';
-        break;
-    case "ja":
-        header = '<code>' + env.title + '</code> のプロパティ属性';
-        writable_name = '書込可能';
-        enumerable_name = '列挙可能';
-        configurable_name = '設定可能';
-        yes = '可';
-        no = '不可';
-        break;
-    case "uk":
-        header = 'Атрибути поля <code>' + env.title + '</code>';
-        writable_name = 'Доступний для запису';
-        enumerable_name = 'Доступний для переліку';
-        configurable_name = 'Доступний для налаштування';
-        yes = 'так';
-        no = 'ні';
-        break;
-    default:
-        header = 'Property attributes of <code>' + env.title + '</code>';
-        writable_name = 'Writable';
-        enumerable_name = 'Enumerable';
-        configurable_name = 'Configurable';
-        yes = 'yes';
-        no = 'no';
-        break;
-}
-
-var writable = no;
-var enumerable = no;
-var configurable = no;
-
-if ($0 == 1) {
-    writable = yes;
-}
-if ($1 == 1) {
-    enumerable = yes;
-}
-if ($2 == 1) {
-    configurable = yes;
-}
+const text = mdn.localStringMap({
+  "en-US": {
+    header: `Property attributes of <code>${env.title}</code>`,
+    writableName: "Writable",
+    enumerableName: "Enumerable",
+    configurableName: "Configurable",
+    yes: "yes",
+    no: "no"
+  },
+  "es": {
+    header: `Atributos de la propiedad <code>${env.title}</code>`,
+    writableName: "Sobrescribir",
+    enumerableName: "Numerable",
+    configurableName: "Configurable",
+    yes: "Sí",
+    no: "No"
+  },
+  "fr": {
+    header: `Attributs de <code>${env.title}</code>`,
+    writableName: "Écrivable",
+    enumerableName: "Énumérable",
+    configurableName: "Configurable",
+    yes: "Oui",
+    no: "Non"
+  },
+  "ja": {
+    header: `<code>${env.title}</code> のプロパティ属性`,
+    writableName: "書込可能",
+    enumerableName: "列挙可能",
+    configurableName: "設定可能",
+    yes: "可",
+    no: "不可"
+  },
+  "ko": {
+    header: 'Property attributes of <code>' + env.title + '</code>',
+    writable_name: '쓰기 가능',
+    enumerable_name: '열거 가능',
+    configurable_name: '설정 가능',
+    yes: '가능',
+    no: '불가능',
+  },
+  "pt-BR": {
+    header: `Property attributes of <code>${env.title}</code>`,
+    writableName: "Writable",
+    enumerableName: "Enumerable",
+    configurableName: "Configurable",
+    yes: "yes",
+    no: "no"
+  },
+  "ru": {
+    header: `Атрибуты свойства <code>${env.title}</code>`,
+    writableName: "Записываемое",
+    enumerableName: "Перечисляемое",
+    configurableName: "Настраиваемое",
+    yes: "да",
+    no: "нет"
+  },
+  "zh-CN": {
+    header: `<code>${env.title}</code> 的属性特性`,
+    writableName: "可写",
+    enumerableName: "可枚举",
+    configurableName: "可配置",
+    yes: "是",
+    no: "否"
+  },
+  "zh-TW": {
+    header: `<code>${env.title}</code> 的屬性特性`,
+    writableName: "可寫",
+    enumerableName: "可列舉",
+    configurableName: "可配置",
+    yes: "是",
+    no: "否"
+  }
+})
 
 %>
 <table class="standard-table">
   <thead>
     <tr>
-      <th class="header" colspan="2"><%-header%></th>
+      <th class="header" colspan="2"><%-text.header%></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><%=writable_name%></td>
-      <td><%=writable%></td>
+      <td><%=text.writableName%></td>
+      <td><%=(isWritable ? text.yes : text.no)%></td>
     </tr>
     <tr>
-      <td><%=enumerable_name%></td>
-      <td><%=enumerable%></td>
+      <td><%=text.enumerableName%></td>
+      <td><%=(isEnumerable ? text.yes : text.no)%></td>
     </tr>
     <tr>
-      <td><%=configurable_name%></td>
-      <td><%=configurable%></td>
+      <td><%=text.configurableName%></td>
+      <td><%=(isConfigurable ? text.yes : text.no)%></td>
     </tr>
   </tbody>
 </table>

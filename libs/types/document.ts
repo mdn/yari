@@ -1,4 +1,4 @@
-import * as BCD from "@mdn/browser-compat-data/types";
+import type { SupportStatus } from "./web-features.js";
 
 export interface Source {
   folder: string;
@@ -21,12 +21,6 @@ export interface BrokenLink extends GenericFlaw {
   href: string;
   line: number;
   column: number;
-}
-
-export interface BadBCDLinkFlaw extends GenericFlaw {
-  slug: string;
-  query: string | null;
-  key: string;
 }
 
 export interface ImageReferenceFlaw extends GenericFlaw {
@@ -105,7 +99,6 @@ export type Flaws = Partial<{
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: BadBCDQueryFlaw[];
-  bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
   bad_pre_tags: BadPreTagFlaw[];
   sectioning: SectioningFlaw[];
@@ -134,6 +127,7 @@ export type Toc = {
 
 export interface DocMetadata {
   title: string;
+  short_title: string;
   locale: string;
   native: string;
   pageTitle: string;
@@ -142,7 +136,6 @@ export interface DocMetadata {
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
-  translation_of?: string;
   parents?: DocParent[];
   source: Source;
   contributors: string[];
@@ -154,11 +147,13 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
+  baseline?: SupportStatus;
   hash?: string;
 }
 
 export interface Doc extends DocMetadata {
   sidebarHTML: string;
+  sidebarMacro?: string;
   toc: Toc[];
   body: Section[];
 }
@@ -184,9 +179,14 @@ export interface ProseSection {
     title: string | null;
     isH3: boolean;
     content?: string;
-    titleAsText?: string;
   };
 }
+
+export interface Specification {
+  bcdSpecificationURL: string;
+  title: string;
+}
+
 export interface SpecificationsSection {
   type: "specifications";
   value: {
@@ -194,10 +194,7 @@ export interface SpecificationsSection {
     title: string;
     isH3: boolean;
     query: string;
-    specifications: {
-      bcdSpecificationURL: any;
-      title: string;
-    }[];
+    specifications: Specification[];
   };
 }
 
@@ -207,29 +204,27 @@ export interface BCDSection {
     id: string;
     title: string;
     isH3: boolean;
-    data?: BCD.Identifier | null;
-    dataURL?: string;
     query: string;
-    browsers?: BCD.Browsers | null;
   };
 }
 
-export type FrequentlyViewedEntry = {
-  serial: number;
+export interface NewsItem {
   url: string;
   title: string;
-  timestamp: number;
-  visitCount: number;
-  parents?: DocParent[];
-};
+  author?: string;
+  source: {
+    name: string;
+    url: string;
+  };
+  published_at: string;
+}
 
-// Yari builder will attach extra keys from the compat data
-// it gets from @mdn/browser-compat-data. These are "Yari'esque"
-// extras that helps us avoiding to have a separate data structure.
-export interface CompatStatementExtended extends BCD.CompatStatement {
-  // When a compat statement has a .mdn_url but it's actually not a good
-  // one, the Yari builder will attach an extra boolean that indicates
-  // that it's not a valid link.
-  // Note, it's only 'true' if it's present, hence this interface definition.
-  bad_url?: true;
+export interface BuildData {
+  url: string;
+  rawBody: string;
+  metadata: { locale: string };
+  isMarkdown: true;
+  fileInfo: {
+    path: string;
+  };
 }

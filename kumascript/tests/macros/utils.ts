@@ -1,9 +1,9 @@
+import { fileURLToPath } from "node:url";
+
 import { HtmlValidate } from "html-validate";
 
-import Environment from "../../src/environment";
-import Templates from "../../src/templates";
-
-const dirname = __dirname;
+import Environment from "../../src/environment.js";
+import Templates from "../../src/templates.js";
 
 // When we were doing mocha testing, we used this.macro to hold this.
 // But Jest doesn't use the this object, so we just store the object here.
@@ -55,7 +55,9 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  const templates = new Templates(`${dirname}/../../macros/`);
+  const templates = new Templates(
+    fileURLToPath(new URL("../../macros/", import.meta.url))
+  );
   const pageContext = {
     locale: "en-US",
     url: "",
@@ -162,7 +164,7 @@ export function afterEachMacro(teardown) {
  * @param {boolean} fragment
  */
 let htmlValidator = null; // global cache
-export function lintHTML(html) {
+export async function lintHTML(html) {
   if (!htmlValidator) {
     htmlValidator = new HtmlValidate({
       extends: ["html-validate:recommended"],
@@ -174,7 +176,7 @@ export function lintHTML(html) {
       },
     });
   }
-  const report = htmlValidator.validateString(html);
+  const report = await htmlValidator.validateString(html);
   if (report.valid) {
     return null;
   }

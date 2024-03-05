@@ -13,10 +13,10 @@
       width: auto;
     }
   }
-}
 
-.search-filter [type="search"] {
-  flex: 1;
+  [type="search"] {
+    flex: 1;
+  }
 }
 
 .search-filter-category {
@@ -26,6 +26,21 @@
   > .button,
   .dropdown-list {
     width: 100%;
+  }
+
+  .button-wrap {
+    font-size: var(--type-smaller-font-size);
+    white-space: nowrap;
+  }
+
+  .action {
+    > span:before {
+      content: "✓";
+    }
+
+    &:not(.active-menu-item) > span:before {
+      visibility: hidden;
+    }
   }
 }
 

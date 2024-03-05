@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import useSWR, { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 import { useScrollToTop, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
 import { Loading } from "../../ui/atoms/loading";
 import { camelWrap, charSlice, getCategoryByPathname } from "../../utils";
-import { Item, useCollection, useItems } from "./api";
+import { FrequentlyViewedItem, Item, useCollection, useItems } from "./api";
 import NoteCard from "../../ui/molecules/notecards";
 import { DocMetadata } from "../../../../libs/types/document";
 import { Authors, LastModified } from "../../document/organisms/metadata";
@@ -18,9 +19,20 @@ import "./collection.scss";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import {
+  FrequentlyViewedCollection,
+  useFrequentlyViewed,
+} from "./frequently-viewed";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { PLUS_COLLECTIONS } from "../../telemetry/constants";
 dayjs.extend(relativeTime);
 
-export default function CollectionComponent() {
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
+
+export function CollectionComponent() {
   const { collectionId } = useParams();
   const { data: collection, error: collectionError } =
     useCollection(collectionId);
@@ -77,8 +89,8 @@ export default function CollectionComponent() {
               {itemLoading
                 ? "Loading..."
                 : itemError
-                ? "Error (try again)"
-                : "Show more"}
+                  ? "Error (try again)"
+                  : "Show more"}
             </Button>
           </div>
         )}
@@ -110,17 +122,67 @@ export default function CollectionComponent() {
   );
 }
 
+export function FrequentlyViewedCollectionComponent() {
+  let [size, setSize] = useState(0);
+  let [atEnd, setAtEnd] = useState(false);
+  let frequentlyViewed: FrequentlyViewedCollection = useFrequentlyViewed(
+    10,
+    size,
+    setAtEnd
+  );
+
+  useScrollToTop();
+
+  return (
+    <div className="collections collections-collection">
+      <header>
+        <Container>
+          <Link to="../" className="exit">
+            &larr; Back
+          </Link>
+          <h1>{frequentlyViewed.name}</h1>
+          <span className="count">
+            {frequentlyViewed.article_count}{" "}
+            {frequentlyViewed.article_count === 1 ? "article" : "articles"}
+          </span>
+          <p>{frequentlyViewed.description}</p>
+        </Container>
+      </header>
+      <Container>
+        {frequentlyViewed.items.map((item) => (
+          <ItemComponent addNoteEnabled={false} key={item.id} item={item} />
+        ))}
+        {!atEnd && (
+          <div className="pagination">
+            <Button
+              type="primary"
+              onClickHandler={() => {
+                setSize(size + 10);
+              }}
+            >
+              Show more
+            </Button>
+          </div>
+        )}
+      </Container>
+    </div>
+  );
+}
+
 function ItemComponent({
+  addNoteEnabled = true,
   item,
   mutate,
 }: {
-  item: Item;
-  mutate: KeyedMutator<Item[][]>;
+  addNoteEnabled?: boolean;
+  item: Item | FrequentlyViewedItem;
+  mutate?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) {
   const [slicedNote, setSlicedNote] = useState<string>();
   const [note, setNote] = useState<string>();
 
   const locale = useLocale();
+  const gleanClick = useGleanClick();
 
   useEffect(() => {
     const slicedNote = item.notes && charSlice(item.notes, 0, 180);
@@ -149,7 +211,7 @@ function ItemComponent({
     });
   };
 
-  const { data: doc } = useSWR(
+  const { data: doc } = useSWR<DocMetadata>(
     `${item.url}/metadata.json`,
     async (url) => {
       const response = await fetch(url);
@@ -178,14 +240,12 @@ function ItemComponent({
         <h2>
           <Link to={item.url}>{camelWrap(item.title)}</Link>
         </h2>
-        {doc && (
-          <ArticleActions
-            doc={doc}
-            showTranslations={false}
-            item={item}
-            scopedMutator={mutate}
-          />
-        )}
+        <ArticleActions
+          doc={doc}
+          showTranslations={false}
+          item={"collection_id" in item ? item : undefined}
+          scopedMutator={mutate}
+        />
       </header>
       <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
       {doc && (
@@ -204,7 +264,10 @@ function ItemComponent({
               <Button
                 icon="edit"
                 type="action"
-                onClickHandler={openBookmarkMenu}
+                onClickHandler={(e) => {
+                  gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_EDIT);
+                  return openBookmarkMenu(e);
+                }}
               >
                 <span className="visually-hidden">Edit note</span>
               </Button>
@@ -238,12 +301,15 @@ function ItemComponent({
               ))}
           </div>
         </div>
-      ) : doc ? (
+      ) : doc && addNoteEnabled ? (
         <Button
           extraClasses="add-note"
           icon="edit"
           type="action"
-          onClickHandler={openBookmarkMenu}
+          onClickHandler={(e) => {
+            gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_ADD);
+            return openBookmarkMenu(e);
+          }}
         >
           Add note
         </Button>

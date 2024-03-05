@@ -1,10 +1,10 @@
-const VALID_LOCALES = new Map(
+export const VALID_LOCALES = new Map(
   ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
     (x) => [x.toLowerCase(), x]
   )
 );
 
-const RETIRED_LOCALES = new Map(
+export const RETIRED_LOCALES = new Map(
   [
     "ar",
     "bg",
@@ -23,6 +23,7 @@ const RETIRED_LOCALES = new Map(
     "ms",
     "my",
     "nl",
+    "pl",
     "pt-PT",
     "sv-SE",
     "th",
@@ -32,9 +33,9 @@ const RETIRED_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
-const DEFAULT_LOCALE = "en-US";
+export const DEFAULT_LOCALE = "en-US";
 
-const LOCALE_ALIASES = new Map([
+export const LOCALE_ALIASES = new Map([
   // Case is not important on either the keys or the values.
   ["en", "en-us"],
   ["pt", "pt-br"],
@@ -46,8 +47,8 @@ const LOCALE_ALIASES = new Map([
 
 // This must match what we do in `language-menu/index.tsx` where the cookie
 // gets set in the client!
-const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
-const ACTIVE_LOCALES = new Set([
+export const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+export const ACTIVE_LOCALES = new Set([
   "en-us",
   "es",
   "fr",
@@ -59,15 +60,16 @@ const ACTIVE_LOCALES = new Set([
   "zh-tw",
 ]);
 
-const CSP_SCRIPT_SRC_VALUES = [
+export const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
 
   "www.google-analytics.com/analytics.js",
-  "polyfill.io/v3/polyfill.min.js",
 
   "assets.codepen.io",
   "production-assets.codepen.io",
+
+  "https://js.stripe.com",
 
   /*
    * Inline scripts (defined in `client/public/index.html`).
@@ -78,16 +80,13 @@ const CSP_SCRIPT_SRC_VALUES = [
    * previous hash to avoid issues shortly after cache invalidation.
    */
 
-  // 1. Polyfill.
-  "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='",
-
-  // 2. Theme switching.
+  // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
-  // - Current hash:
   "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
+  // - Current hash:
+  "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
 ];
-const CSP_DIRECTIVES = {
+export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
   "script-src": CSP_SCRIPT_SRC_VALUES,
   "script-src-elem": CSP_SCRIPT_SRC_VALUES,
@@ -97,28 +96,36 @@ const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "developer.allizom.org", // required for glean to work on localhost:5042
+
+    "bcd.developer.allizom.org",
+    "bcd.developer.mozilla.org",
+
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
+    "https://api.stripe.com",
   ],
   "font-src": ["'self'"],
   "frame-src": [
     "'self'",
 
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
     "mdn.github.io",
-    "yari-demos.prod.mdn.mozit.cloud",
-    "mdn.mozillademos.org",
-    "yari-demos.stage.mdn.mozit.cloud",
+    "live-samples.mdn.mozilla.net",
+    "live-samples.mdn.allizom.net",
+    "live-samples.developer.allizom.xyz",
+    "*.mdnplay.dev",
+    "*.mdnyalp.dev",
 
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
     "survey.alchemer.com",
+    "https://js.stripe.com",
   ],
   "img-src": [
     "'self'",
@@ -132,14 +139,12 @@ const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
-    "mdn.mozillademos.org",
-    "media.prod.mdn.mozit.cloud",
-    "media.stage.mdn.mozit.cloud",
+    "mdn.dev",
     "interactive-examples.mdn.mozilla.net",
-    "interactive-examples.prod.mdn.mozilla.net",
-    "interactive-examples.stage.mdn.mozilla.net",
+    "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
+    "upload.wikimedia.org",
 
     "www.google-analytics.com",
     "www.gstatic.com",
@@ -150,18 +155,75 @@ const CSP_DIRECTIVES = {
   "worker-src": ["'self'"],
 };
 
-const cspToString = (csp) =>
+export const cspToString = (csp) =>
   Object.entries(csp)
     .map(([directive, values]) => `${directive} ${values.join(" ")};`)
     .join(" ");
 
-const CSP_VALUE = cspToString(CSP_DIRECTIVES);
+export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
+
+const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
+  "'self'",
+  "https:",
+  "'unsafe-eval'",
+  "'unsafe-inline'",
+  "'wasm-unsafe-eval'",
+];
+
+export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
+  "default-src": ["'self'", "https:"],
+  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
+  "style-src": [
+    "'report-sample'",
+    "'self'",
+    "https:",
+    "'unsafe-inline'",
+    "'unsafe-eval'",
+  ],
+  "img-src": ["'self'", "blob:", "https:", "data:"],
+  "base-uri": ["'self'"],
+  "worker-src": ["'self'"],
+  "manifest-src": ["'self'"],
+});
+
+// Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
+export const AUDIO_EXT = ["mp3", "ogg"];
+export const FONT_EXT = ["woff2"];
+export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
+export const ANY_IMAGE_EXT = ["svg", ...BINARY_IMAGE_EXT];
+export const VIDEO_EXT = ["mp4", "webm"];
+
+export const BINARY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...BINARY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export const ANY_ATTACHMENT_EXT = [
+  ...AUDIO_EXT,
+  ...FONT_EXT,
+  ...ANY_IMAGE_EXT,
+  ...VIDEO_EXT,
+].sort();
+
+export function createRegExpFromExtensions(...extensions) {
+  return new RegExp(`\\.(${extensions.join("|")})$`, "i");
+}
+
+export const ANY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...ANY_ATTACHMENT_EXT
+);
+export const BINARY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
+  ...BINARY_ATTACHMENT_EXT
+);
 
 // -----
 // build
 // -----
 
-const FLAW_LEVELS = Object.freeze({
+export const FLAW_LEVELS = Object.freeze({
   ERROR: "error",
   IGNORE: "ignore",
   WARN: "warn",
@@ -175,11 +237,10 @@ const FLAW_LEVELS = Object.freeze({
 //
 // This list needs to be synced with the code. And the CLI arguments
 // used with --flaw-checks needs to match this set.
-const VALID_FLAW_CHECKS = new Set([
+export const VALID_FLAW_CHECKS = new Set([
   "macros",
   "broken_links",
   "bad_bcd_queries",
-  "bad_bcd_links",
   "images",
   "image_widths",
   "bad_pre_tags",
@@ -193,50 +254,33 @@ const VALID_FLAW_CHECKS = new Set([
 // client
 // ------
 
-const MDN_PLUS_TITLE = "MDN Plus";
+export const MDN_PLUS_TITLE = "MDN Plus";
+export const CURRICULUM_TITLE = "MDN Curriculum";
 
 // -------
 // content
 // -------
 
-const HTML_FILENAME = "index.html";
-const MARKDOWN_FILENAME = "index.md";
+export const HTML_FILENAME = "index.html";
+export const MARKDOWN_FILENAME = "index.md";
 
 // ---------
 // filecheck
 // ---------
 
-const VALID_MIME_TYPES = new Set([
+export const VALID_MIME_TYPES = new Set([
+  "audio/mp4",
+  "audio/mpeg",
+  "audio/ogg",
+  "audio/webm",
+  "font/woff2",
   "image/png",
   "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
   "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/ogg",
+  "video/webm",
 ]);
 
-const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent
-
-module.exports = {
-  ACTIVE_LOCALES,
-  VALID_LOCALES,
-  RETIRED_LOCALES,
-  DEFAULT_LOCALE,
-  LOCALE_ALIASES,
-  PREFERRED_LOCALE_COOKIE_NAME,
-
-  CSP_SCRIPT_SRC_VALUES,
-  CSP_VALUE,
-
-  // build
-  FLAW_LEVELS,
-  VALID_FLAW_CHECKS,
-
-  // client
-  MDN_PLUS_TITLE,
-
-  // content
-  HTML_FILENAME,
-  MARKDOWN_FILENAME,
-
-  // filecheck
-  VALID_MIME_TYPES,
-  MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-};
+export const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent

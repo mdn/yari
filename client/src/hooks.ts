@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigationType, useParams } from "react-router-dom";
+import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
+import { FeatureId } from "./constants";
+import { OFFLINE_SETTINGS_KEY, useUserData } from "./user-context";
+import { Theme } from "./types/theme";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -51,9 +54,60 @@ export function useOnClickOutside(ref, handler) {
   );
 }
 
+function getCurrentTheme(): Theme {
+  const { classList } = document.documentElement;
+
+  const themes: Theme[] = ["os-default", "dark", "light"];
+  for (const theme of themes) {
+    if (classList.contains(theme)) {
+      return theme;
+    }
+  }
+
+  // Fallback.
+  return "light";
+}
+
+export function useTheme() {
+  const isServer = useIsServer();
+  const [theme, setTheme] = useState<Theme>();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    const updateScheme = () => setTheme(getCurrentTheme());
+
+    // Update once.
+    updateScheme();
+
+    // Listen for changes.
+    const observer = new MutationObserver(updateScheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [isServer]);
+
+  return theme;
+}
+
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
+  const isServer = useIsServer();
+  const trueStatus = useTrueOnlineStatus();
+  // ensure we don't get a hydration error due to mismatched markup:
+  return isServer ? { isOnline: true, isOffline: false } : trueStatus;
+}
+
+export function useTrueOnlineStatus(): {
+  isOnline: boolean;
+  isOffline: boolean;
+} {
   const [isOnline, setIsOnline] = useState<boolean>(
-    window?.navigator.onLine ?? true
+    typeof window === "undefined" ? false : window.navigator.onLine
   );
   const isOffline = useMemo(() => !isOnline, [isOnline]);
 
@@ -86,7 +140,132 @@ export function useIsServer(): boolean {
 
 export function useScrollToTop() {
   const navigationType = useNavigationType();
+  const location = useLocation();
   useEffect(() => {
     if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
-  }, [navigationType]);
+  }, [navigationType, location]);
 }
+
+export function useViewedState() {
+  const isServer = useIsServer();
+  const key = (id: FeatureId) => `viewed.${id}`;
+
+  return {
+    isViewed: (id: FeatureId) => {
+      if (isServer) {
+        // Avoids the dot from popping up quickly on each load.
+        return true;
+      }
+      try {
+        return !!window?.localStorage?.getItem(key(id));
+      } catch (e) {
+        console.warn("Unable to read viewed state from localStorage", e);
+        return false;
+      }
+    },
+    setViewed: (id: FeatureId) => {
+      if (isServer) {
+        return;
+      }
+      try {
+        window?.localStorage?.setItem(key(id), Date.now().toString());
+      } catch (e) {
+        console.warn("Unable to write viewed state to localStorage", e);
+      }
+    },
+  };
+}
+
+export function usePing() {
+  const { isOnline } = useTrueOnlineStatus();
+  const user = useUserData();
+
+  React.useEffect(() => {
+    try {
+      const nextPing = new Date(localStorage.getItem("next-ping") || 0);
+      if (
+        navigator.sendBeacon &&
+        isOnline &&
+        user?.isAuthenticated &&
+        nextPing < new Date()
+      ) {
+        const params = new URLSearchParams();
+
+        // fetch offline settings from local storage as its
+        // values are very inconsistent in the user context
+        const offlineSettings = JSON.parse(
+          localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
+        );
+        if (offlineSettings?.offline) params.set("offline", "true");
+
+        navigator.sendBeacon("/api/v1/ping", params);
+
+        const newNextPing = new Date();
+        newNextPing.setUTCDate(newNextPing.getUTCDate() + 1);
+        newNextPing.setUTCHours(0);
+        newNextPing.setUTCMinutes(0);
+        newNextPing.setUTCSeconds(0);
+        newNextPing.setUTCMilliseconds(0);
+        localStorage.setItem("next-ping", newNextPing.toISOString());
+      }
+    } catch (e) {
+      console.error("Failed to send ping", e);
+    }
+  }, [isOnline, user]);
+}
+
+function getIsDocumentHidden() {
+  if (typeof document !== "undefined") {
+    return !document.hidden;
+  }
+  return false;
+}
+
+export function usePageVisibility() {
+  const [isVisible, setIsVisible] = React.useState(getIsDocumentHidden());
+  const onVisibilityChange = () => setIsVisible(getIsDocumentHidden());
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const visibilityChange = "visibilitychange";
+      document.addEventListener(visibilityChange, onVisibilityChange, false);
+      return () => {
+        document.removeEventListener(visibilityChange, onVisibilityChange);
+      };
+    }
+  });
+  return isVisible;
+}
+
+export function useIsIntersecting(
+  node: HTMLElement | undefined,
+  options: IntersectionObserverInit
+) {
+  const [isIntersectingState, setIsIntersectingState] = useState(false);
+  useEffect(() => {
+    if (node && window.IntersectionObserver) {
+      const intersectionObserver = new IntersectionObserver((entries) => {
+        const [{ isIntersecting = false } = {}] = entries;
+        setIsIntersectingState(isIntersecting);
+      }, options);
+      intersectionObserver.observe(node);
+      return () => {
+        intersectionObserver.disconnect();
+      };
+    }
+  }, [node, options]);
+  return isIntersectingState;
+}
+
+export const useScrollToAnchor = () => {
+  const scrolledRef = React.useRef(false);
+  const { hash } = useLocation();
+  React.useEffect(() => {
+    if (hash && !scrolledRef.current) {
+      const element = document.getElementById(hash.replace("#", ""));
+      if (element) {
+        element.scrollIntoView({ behavior: "instant" });
+        scrolledRef.current = true;
+      }
+    }
+  });
+};

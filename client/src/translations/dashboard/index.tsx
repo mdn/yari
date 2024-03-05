@@ -2,13 +2,13 @@ import React from "react";
 import {
   createSearchParams,
   Link,
-  useParams,
   useSearchParams,
   useNavigate,
 } from "react-router-dom";
 import useSWR from "swr";
 
 import { MainContentContainer } from "../../ui/atoms/page-content";
+import { useLocale } from "../../hooks";
 
 interface Data {
   l10nKPIs: L10nKPIs;
@@ -89,7 +89,7 @@ function getStorage(locale: string): LocaleStorageData | null {
 }
 
 export function TranslationDashboard() {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -447,7 +447,7 @@ function DocumentsTable({
             <TableHead id="popularityEn" title="Popularity rank (en-US)" />
             <TableHead
               id="popularityLocale"
-              title="Popularity rank ({locale})"
+              title={`Popularity rank (${locale})`}
             />
             <TableHead id="dateDiff" title="Date delta" />
           </tr>

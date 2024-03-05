@@ -1,4 +1,4 @@
-import { MDNOfflineDB } from "./db";
+import { MDNOfflineDB } from "./db.js";
 
 const PATH_WHOAMI = "/api/v1/whoami";
 
@@ -15,7 +15,7 @@ function jsonBlob(json) {
   });
 }
 
-class WhoamiInterceptor implements FetchInterceptor {
+export class WhoamiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
   constructor(db: MDNOfflineDB) {
@@ -44,7 +44,7 @@ class WhoamiInterceptor implements FetchInterceptor {
   }
 }
 
-class DefaultApiInterceptor implements FetchInterceptor {
+export class DefaultApiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
   constructor(db: MDNOfflineDB) {
@@ -52,23 +52,27 @@ class DefaultApiInterceptor implements FetchInterceptor {
   }
 
   handles(path: string): boolean {
-    return path.startsWith("/api/v1/") || path.startsWith("/users/fxa/");
+    return path.startsWith("/api/") || path.startsWith("/users/fxa/");
   }
 
   async onGet(req: Request): Promise<Response> {
     try {
       return await fetch(req);
     } catch (err: any) {
-      return new Response(jsonBlob({ error: "offline" }));
+      return new Response(jsonBlob({ error: "offline" }), {
+        status: 418,
+        statusText: "You're offline",
+      });
     }
   }
   async onPost(req: Request): Promise<Response> {
     try {
       return await fetch(req);
     } catch (err) {
-      return new Response(jsonBlob({ error: "offline" }));
+      return new Response(jsonBlob({ error: "offline" }), {
+        status: 418,
+        statusText: "You're offline",
+      });
     }
   }
 }
-
-export { WhoamiInterceptor, DefaultApiInterceptor };

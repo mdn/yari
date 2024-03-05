@@ -2,17 +2,63 @@
 // tested its main functions. The features of that macro are now
 // part of ../../src/environment.js, but we're still testing them here.
 
-import fs from "fs";
-import path from "path";
-import { Document } from "../../../content";
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
+import fs from "node:fs";
+import { jest } from "@jest/globals";
 
-const dirname = __dirname;
+import * as Content from "../../../content/index.js";
+
+jest.unstable_mockModule("../../../content/index.js", () => ({
+  ...Content,
+  Document: {
+    ...Content.Document,
+    findByURL: jest.fn((url: string) => {
+      const data = fixtureData[url.toLowerCase()];
+      if (!data) {
+        return null;
+      }
+      return {
+        url: data.url,
+        metadata: {
+          title: data.title,
+          locale: data.locale,
+          summary: data.summary,
+          slug: data.slug,
+          tags: data.tags,
+        },
+      };
+    }),
+    findChildren: jest.fn((url: string) => {
+      const result: any[] = [];
+      const parent = `${url.toLowerCase()}/`;
+      for (const [key, data] of Object.entries(fixtureData) as any) {
+        if (!key.replace(parent, "").includes("/")) {
+          key.replace(`${url.toLowerCase()}/`, "");
+          result.push({
+            url: data.url,
+            metadata: {
+              title: data.title,
+              locale: data.locale,
+              summary: data.summary,
+              slug: data.slug,
+              tags: data.tags,
+            },
+          });
+        }
+      }
+      return result;
+    }),
+  },
+}));
+
+// Depends on module mocking
+const { assert, itMacro, describeMacro, beforeEachMacro } = await import(
+  "./utils.js"
+);
 
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(dirname, "fixtures", "documentData1.json"),
+    new URL("./fixtures/documentData1.json", import.meta.url),
     "utf-8"
   )
 );
@@ -74,67 +120,29 @@ function checkSubpagesResult(res) {
 
 describeMacro("page API tests", function () {
   beforeEachMacro(function (macro) {
-    macro.ctx.info.cleanURL = jest.fn((url) =>
+    macro.ctx.info.cleanURL = jest.fn((url: string) =>
       new URL(url, "https://example.com").pathname.toLowerCase()
     );
-    Document.findByURL = jest.fn((url) => {
-      const data = fixtureData[url.toLowerCase()];
-      if (!data) {
-        return null;
-      }
-      return {
-        url: data.url,
-        metadata: {
-          title: data.title,
-          locale: data.locale,
-          summary: data.summary,
-          slug: data.slug,
-          tags: data.tags,
-        },
-      };
-    });
-    Document.findChildren = jest.fn((url) => {
-      const result = [];
-      const parent = `${url.toLowerCase()}/`;
-      for (const [key, data] of Object.entries(fixtureData) as any) {
-        if (!key.replace(parent, "").includes("/")) {
-          key.replace(`${url.toLowerCase()}/`, "");
-          result.push({
-            url: data.url,
-            metadata: {
-              title: data.title,
-              locale: data.locale,
-              summary: data.summary,
-              slug: data.slug,
-              tags: data.tags,
-            },
-          });
-        }
-      }
-      return result;
-    });
   });
   itMacro("dummy", function (macro) {
     const pkg = macro.ctx.page;
     assert.isObject(pkg);
     assert.isFunction(pkg.hasTag);
-    assert.isFunction(pkg.subpages);
     assert.isFunction(pkg.subpagesExpand);
-    assert.isFunction(pkg.subPagesFlatten);
     assert.isFunction(pkg.translations);
   });
-  describe('test "subpages"', function () {
+  describe('test "subpages(Expand)"', function () {
     itMacro("One argument (non-null)", function (macro) {
-      const res = macro.ctx.page.subpages(fix_url);
+      const res = macro.ctx.page.subpagesExpand(fix_url);
       checkSubpagesResult(res);
     });
     itMacro("One argument (null)", function (macro) {
       macro.ctx.env.url = fix_url;
-      const res = macro.ctx.page.subpages(null);
+      const res = macro.ctx.page.subpagesExpand(null);
       checkSubpagesResult(res);
     });
     itMacro("Two arguments (self=true)", function (macro) {
-      const res = macro.ctx.page.subpages(fix_url, 2, true);
+      const res = macro.ctx.page.subpagesExpand(fix_url, 2, true);
       assert.isArray(res);
       assert.equal(res.length, 1);
       assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");

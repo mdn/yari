@@ -1,9 +1,9 @@
-import path from "path";
+import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
 
-import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 
 type Tree = { [key: string]: Tree | null };
 

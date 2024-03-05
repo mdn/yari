@@ -1,24 +1,22 @@
 /* eslint no-restricted-globals: ["off", "location"] */
 /// <reference lib="WebWorker" />
 
-import { cacheName, contentCache, openCache } from "./caches";
-import { respond } from "./fetcher";
-import { unpackAndCache } from "./unpack-cache";
+import { cacheName, contentCache, openCache } from "./caches.js";
+import { respond } from "./fetcher.js";
+import { unpackAndCache } from "./unpack-cache.js";
 import {
   ContentStatusPhase,
   getContentStatus,
   patchContentStatus,
   RemoteContentStatus,
   SwType,
-} from "./db";
-import { fetchWithExampleOverride } from "./fetcher";
+} from "./db.js";
+import { fetchWithExampleOverride } from "./fetcher.js";
 
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
 );
-export const LIVE_SAMPLES_URL = new URL(
-  "https://yari-demos.prod.mdn.mozit.cloud"
-);
+export const LIVE_SAMPLES_URL = new URL("https://live-samples.mdn.mozilla.net");
 export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
 
 const UPDATES_BASE_URL = `https://updates.${
@@ -26,7 +24,8 @@ const UPDATES_BASE_URL = `https://updates.${
 }`;
 
 const SW_TYPE: SwType =
-  SwType[new URLSearchParams(location.search).get("type")] || SwType.ApiOnly;
+  SwType[new URLSearchParams(location.search).get("type")] ||
+  SwType.PreferOnline;
 
 // export empty type because of tsc --isolatedModules flag
 export type {};
@@ -36,31 +35,32 @@ var unpacking = Promise.resolve();
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    SW_TYPE === SwType.ApiOnly
-      ? self.skipWaiting()
-      : (async () => {
-          const cache = await openCache();
-          const { files = {} }: { files: object } =
-            (await (await fetch("/asset-manifest.json")).json()) || {};
-          const assets = [...Object.values(files)].filter(
-            (asset) => !(asset as string).endsWith(".map")
-          );
-          let keys = new Set(
-            (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
-          );
-          const toCache = assets.filter((file) => !keys.has(file));
-          await cache.addAll(toCache as string[]);
-        })().then(() => self.skipWaiting())
+    (async () => {
+      const cache = await openCache();
+      const { files = {} }: { files: object } =
+        (await (
+          await fetch("/asset-manifest.json", { cache: "no-cache" })
+        ).json()) || {};
+      const assets = [...Object.values(files)].filter(
+        (asset) => !(asset as string).endsWith(".map")
+      );
+      let keys = new Set(
+        (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
+      );
+      const toCache = assets.filter((file) => !keys.has(file));
+      await cache.addAll(toCache as string[]);
+    })().then(() => self.skipWaiting())
   );
 
   initOncePerRun(self);
 });
 
 self.addEventListener("fetch", async (e) => {
+  const url = new URL(e.request.url);
   if (
-    (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
-    !e.request.url.includes("/api/v1/") &&
-    !e.request.url.includes("/users/fxa/")
+    SW_TYPE === SwType.PreferOnline &&
+    !url.pathname.startsWith("/api/") &&
+    !url.pathname.startsWith("/users/fxa/")
   ) {
     e.respondWith(
       (async () => {

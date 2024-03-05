@@ -1,42 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Avatar } from "../../atoms/avatar";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
-import { useIsServer, useLocale } from "../../../hooks";
-import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
+import { useIsServer, useLocale, useViewedState } from "../../../hooks";
+import { FeatureId } from "../../../constants";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
-import { NotificationData } from "../../../types/notifications";
-import useSWR from "swr";
+import { NEWSLETTER_ENABLED } from "../../../env";
 
 export const UserMenu = () => {
   const userData = useUserData();
   const locale = useLocale();
   const isServer = useIsServer();
+  const { isViewed } = useViewedState();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [newNotifications, setNewNotifications] = useState<boolean>(false);
-  const { data } = useSWR<NotificationData>(
-    HEADER_NOTIFICATIONS_MENU_API_URL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
-      }
-      return await response.json();
-    },
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  useEffect(() => {
-    setNewNotifications(Boolean(data?.items?.length));
-  }, [data]);
 
   // if we don't have the user data yet, don't render anything
   if (!userData || isServer) {
@@ -52,17 +33,24 @@ export const UserMenu = () => {
         extraClasses: "submenu-header",
       },
       {
-        label: "Notifications",
-        url: `/${locale}/plus/notifications`,
-        dot: newNotifications ? "New notifications" : undefined,
-      },
-      {
         label: "Collections",
         url: `/${locale}/plus/collections`,
       },
       {
+        label: "Updates",
+        url: `/${locale}/plus/updates`,
+      },
+      {
         label: "My Settings",
         url: "/en-US/plus/settings",
+        dot:
+          NEWSLETTER_ENABLED &&
+          userData?.isSubscriber &&
+          Date.now() < 1677628799000 && // new Date("2023-02-28 23:59:59Z").getTime()
+          !userData?.settings?.mdnplusNewsletter &&
+          !isViewed(FeatureId.PLUS_NEWSLETTER)
+            ? "New feature"
+            : undefined,
       },
       {
         url: "https://support.mozilla.org/products/mdn-plus",
@@ -79,6 +67,8 @@ export const UserMenu = () => {
     ],
   };
 
+  const hasAnyDot = userMenuItems.items.some((item) => item.dot);
+
   return (
     <DropdownMenuWrapper
       className="top-level-entry-container user-menu"
@@ -89,19 +79,16 @@ export const UserMenu = () => {
         type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="top-level-entry menu-toggle user-menu-toggle"
-        ariaControls={userMenuItems.id}
-        ariaHasPopup="menu"
-        ariaExpanded={isOpen || undefined}
+        aria-controls={userMenuItems.id}
+        aria-haspopup="menu"
+        aria-expanded={isOpen || undefined}
         onClickHandler={() => {
           setIsOpen(!isOpen);
         }}
       >
-        {newNotifications && (
-          <span className="visually-hidden notification-dot">
-            New notifications received.
-          </span>
-        )}
+        {hasAnyDot && <span className="visually-hidden dot">New feature</span>}
         <Avatar userData={userData} />
+        <span className="visually-hidden">User menu</span>
         <span className="user-menu-id">{userData.email}</span>
       </Button>
 

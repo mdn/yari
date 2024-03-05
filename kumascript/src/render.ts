@@ -38,9 +38,9 @@
  *   - the environment object that defines per-page values such as
  *     locale, title and slug.
  */
-import Parser from "./parser.js";
-import Templates from "./templates";
-import Environment from "./environment";
+import * as Parser from "./parser.js";
+import Templates from "./templates.js";
+import Environment from "./environment.js";
 import {
   MacroInvocationError,
   MacroNotFoundError,
@@ -51,14 +51,16 @@ import {
   MacroWrongXRefError,
   MacroDeprecatedError,
   MacroPagesError,
-} from "./errors";
-import { RedirectInfo } from "../../libs/types/document";
+} from "./errors.js";
+import { RedirectInfo } from "../../libs/types/document.js";
 
 const defaultTemplates = new Templates();
 
 export function normalizeMacroName(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
+
+export const macroRenderTimes: Record<string, bigint[]> = {};
 
 export async function render(
   source: string,
@@ -166,6 +168,7 @@ export async function render(
     }
 
     const macroName = normalizeMacroName(token.name);
+    const startTime = process.hrtime.bigint();
 
     if (selectiveMode) {
       if (selectMacros.includes(macroName)) {
@@ -243,7 +246,7 @@ export async function render(
         ) {
           // The named macro does not exist
           macroError = new MacroNotFoundError(e, source, token);
-        } else if (e.name === "SyntaxError") {
+        } else if (e instanceof Error && e.name == "SyntaxError") {
           // There was a syntax error compiling the macro
           macroError = new MacroCompilationError(e, source, token);
         } else {
@@ -267,6 +270,9 @@ export async function render(
         errors.push(error);
       }
     }
+    const elapsedTime = process.hrtime.bigint() - startTime;
+    macroRenderTimes[macroName] ??= [];
+    macroRenderTimes[macroName].push(elapsedTime);
   }
   return [output, errors];
 }

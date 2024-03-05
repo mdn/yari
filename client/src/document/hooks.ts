@@ -1,10 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { useIsServer } from "../hooks";
-import { Doc, FrequentlyViewedEntry } from "../../../libs/types/document";
+import { useIsServer, useLocale } from "../hooks";
+import { Doc } from "../../../libs/types/document";
+import { initPlayIframe } from "../playground/utils";
+// import { addExplainButton } from "./code/ai-explain";
+import {
+  addBreakoutButton,
+  addCollectButton,
+  getCodeAndNodesForIframe,
+  getCodeAndNodesForIframeBySampleClass,
+  highlight,
+} from "./code/playground";
+import { addCopyToClipboardButton } from "./code/copy";
+import { useUIStatus } from "../ui-context";
 
 export function useDocumentURL() {
-  const { "*": slug, locale } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
   const url = `/${locale}/docs/${slug}`;
   // If you're in local development Express will force the trailing /
   // on any URL. We can't keep that if we're going to compare the current
@@ -12,7 +24,78 @@ export function useDocumentURL() {
   return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
 }
 
-export function useCopyExamplesToClipboard(doc: Doc | undefined) {
+export function useCollectSample(doc: any) {
+  const isServer = useIsServer();
+  const locale = useLocale();
+  const { highlightedQueueExample } = useUIStatus();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    if (!doc) {
+      return;
+    }
+    document
+      .querySelectorAll(
+        "section > *:not(#syntax) ~ * .example-header:not(.play-sample)"
+      )
+      .forEach((header) => {
+        addCollectButton(header, "collect", locale);
+        highlight(header, highlightedQueueExample);
+      });
+  }, [doc, isServer, locale, highlightedQueueExample]);
+}
+
+export function useRunSample(doc: Doc | undefined) {
+  const isServer = useIsServer();
+  const locale = useLocale();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    if (!doc) {
+      return;
+    }
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      const src = new URL(iframe.src || "", "https://example.com");
+      if (!(src && src.pathname.toLowerCase().endsWith(`/runner.html`))) {
+        return null;
+      }
+      const id = src.searchParams.get("id");
+      if (!id) {
+        return null;
+      }
+
+      const r =
+        getCodeAndNodesForIframeBySampleClass(id, src.pathname) ||
+        getCodeAndNodesForIframe(id, iframe, src.pathname);
+      if (r === null) {
+        return null;
+      }
+      const { code, nodes } = r;
+      nodes.forEach((element) => {
+        if (element.classList.contains("hidden")) {
+          return;
+        }
+        const header =
+          element.parentElement?.querySelector(".example-header") || null;
+        addBreakoutButton(header, id, code, locale);
+      });
+      addBreakoutButton(
+        iframe.parentElement?.querySelector(".example-header") || null,
+        id,
+        code,
+        locale
+      );
+      initPlayIframe(iframe, code);
+    });
+  }, [doc, isServer, locale]);
+}
+export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
   const location = useLocation();
   const isServer = useIsServer();
 
@@ -25,305 +108,56 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       return;
     }
 
-    if (!navigator.clipboard) {
-      console.log(
-        "Copy-to-clipboard disabled because your browser does not appear to support it."
-      );
-      return;
-    }
-
-    [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
-      (element) => {
-        const wrapper = element.parentElement;
-        // No idea how a parentElement could be falsy in practice, but it can
-        // in theory and hence in TypeScript. So to having to test for it, bail
-        // early if we have to.
-        if (!wrapper) return;
-
-        const button = document.createElement("button");
-        const span = document.createElement("span");
-        const liveregion = document.createElement("span");
-
-        span.textContent = "Copy to Clipboard";
-
-        button.setAttribute("type", "button");
-        button.setAttribute("class", "icon copy-icon");
-        span.setAttribute("class", "visually-hidden");
-        liveregion.classList.add("copy-icon-message", "visually-hidden");
-        liveregion.setAttribute("role", "alert");
-        liveregion.style.top = "52px";
-
-        button.appendChild(span);
-        wrapper.appendChild(button);
-        wrapper.appendChild(liveregion);
-
-        button.onclick = async () => {
-          let copiedSuccessfully = true;
-          try {
-            const text = element.textContent || "";
-            await navigator.clipboard.writeText(text);
-          } catch (err) {
-            console.error(
-              "Error when trying to use navigator.clipboard.writeText()",
-              err
-            );
-            copiedSuccessfully = false;
-          }
-
-          if (copiedSuccessfully) {
-            button.classList.add("copied");
-            showCopiedMessage(wrapper, "Copied!");
-          } else {
-            button.classList.add("failed");
-            showCopiedMessage(wrapper, "Error trying to copy to clipboard!");
-          }
-
-          setTimeout(
-            () => {
-              hideCopiedMessage(wrapper);
-            },
-            copiedSuccessfully ? 1000 : 3000
+    document
+      .querySelectorAll("div.code-example pre:not(.hidden)")
+      .forEach((element) => {
+        const header = element.parentElement?.querySelector(".example-header");
+        // Paused for now
+        // addExplainButton(header, element);
+        if (!navigator.clipboard) {
+          console.log(
+            "Copy-to-clipboard disabled because your browser does not appear to support it."
           );
-        };
-      }
-    );
-  }, [doc, location, isServer]);
-}
-
-function showCopiedMessage(wrapper: HTMLElement, msg: string) {
-  const element = getCopiedMessageElement(wrapper);
-  element.textContent = msg;
-  element.classList.remove("visually-hidden");
-}
-
-function hideCopiedMessage(wrapper: HTMLElement) {
-  const element = getCopiedMessageElement(wrapper);
-  element.textContent = ""; // ensure contents change, so that they are picked up by the live region
-  if (element) {
-    element.classList.add("visually-hidden");
-  }
-}
-
-function getCopiedMessageElement(wrapper: HTMLElement) {
-  const className = "copy-icon-message";
-  let element: HTMLSpanElement | null = wrapper.querySelector(
-    `span.${className}`
-  );
-  if (!element) {
-    element = document.createElement("span");
-    element.classList.add(className);
-    element.classList.add("visually-hidden");
-    element.setAttribute("role", "alert");
-    element.style.top = "52px";
-    wrapper.appendChild(element);
-  }
-  return element;
-}
-
-const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
-const FREQUENTLY_VIEWED_MAX_ITEMS = 20;
-
-function getFrequentlyViewed(): FrequentlyViewedEntry[] {
-  let frequentlyViewed: string | null = null;
-  try {
-    frequentlyViewed = localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY);
-  } catch (err) {
-    console.warn(
-      "Unable to read frequently viewed documents from localStorage",
-      err
-    );
-  }
-
-  const entries = JSON.parse(
-    frequentlyViewed || "[]"
-  ) as FrequentlyViewedEntry[];
-
-  // Assign serials to old entries.
-  entries.forEach((e) => {
-    e.serial =
-      e.serial === undefined
-        ? getNextFrequentlyViewedSerial(entries)
-        : e.serial;
-  });
-
-  return entries;
-}
-
-function setFrequentlyViewed(
-  frequentlyViewed: FrequentlyViewedEntry[],
-  done = () => {}
-) {
-  try {
-    localStorage.setItem(
-      FREQUENTLY_VIEWED_STORAGE_KEY,
-      JSON.stringify(frequentlyViewed.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
-    );
-    done();
-  } catch (err) {
-    console.warn(
-      "Failed to write frequently viewed documents to localStorage",
-      err
-    );
-  }
-}
-
-const sortByVisitsThenTimestampDesc = (
-  first: FrequentlyViewedEntry,
-  second: FrequentlyViewedEntry
-) => {
-  if (first.visitCount > second.visitCount) return -1;
-  if (first.visitCount < second.visitCount) return 1;
-  if (first.timestamp < second.timestamp) return 1;
-  if (first.timestamp > second.timestamp) return -1;
-  return 0;
-};
-
-function getNextFrequentlyViewedSerial(
-  entries: FrequentlyViewedEntry[]
-): number {
-  return (
-    1 +
-    Math.max(
-      0,
-      ...entries.map((entry) => entry.serial).filter((serial) => !isNaN(serial))
-    )
-  );
-}
-
-export function useFrequentlyViewed(): [
-  FrequentlyViewedEntry[],
-  (arg: FrequentlyViewedEntry[]) => void
-] {
-  const [entries, setEntries] = useState<FrequentlyViewedEntry[]>([]);
-  const [updated, setUpdated] = useState(false);
-
-  useEffect(() => {
-    const entries = getFrequentlyViewed();
-
-    const newEntries: FrequentlyViewedEntry[] = [];
-    for (const entry of entries) {
-      newEntries.push({
-        serial: entry.serial,
-        url: entry.url,
-        title: entry.title,
-        timestamp: entry.timestamp,
-        parents: entry?.parents || [],
-        visitCount: entry.visitCount,
+          return;
+        } else {
+          addCopyToClipboardButton(element, header);
+        }
       });
-    }
-    //Reset sorting in case of undelete
-    setEntries(newEntries.sort(sortByVisitsThenTimestampDesc));
-    setUpdated(false);
-  }, [updated]);
-
-  const setStoredEntries = (value: FrequentlyViewedEntry[]) => {
-    setEntries(value);
-    setFrequentlyViewed(value, () => setUpdated(true));
-  };
-
-  return [entries, setStoredEntries];
-}
-
-/**
- * @param  {Doc|undefined} doc
- * Persists frequently viewed docs to localstorage as part of MDN Plus MVP.
- *
- */
-export function usePersistFrequentlyViewed(doc: Doc | undefined) {
-  useEffect(() => {
-    if (!doc) {
-      return;
-    }
-    let frequentlyViewed = getFrequentlyViewed();
-
-    const index = frequentlyViewed.findIndex(
-      (entry) => entry.url === doc.mdn_url
-    );
-
-    if (index !== -1) {
-      frequentlyViewed[index].timestamp = new Date().getTime();
-      frequentlyViewed[index].visitCount += 1;
-    } else {
-      const newEntry: FrequentlyViewedEntry = {
-        serial: getNextFrequentlyViewedSerial(frequentlyViewed),
-        url: doc.mdn_url,
-        title: doc.title,
-        parents: doc.parents,
-        timestamp: new Date().getTime(),
-        visitCount: 1,
-      };
-
-      if (frequentlyViewed.length === 0) {
-        setFrequentlyViewed([newEntry]);
-        return;
-      } else {
-        frequentlyViewed.unshift(newEntry);
-      }
-    }
-
-    //Sort descending so most frequently viewed appears on top.
-    frequentlyViewed = frequentlyViewed.sort(sortByVisitsThenTimestampDesc);
-    setFrequentlyViewed(frequentlyViewed);
-  });
+  }, [doc, location, isServer]);
 }
 
 /**
  * Provides the height of the sticky header.
  */
 export function useStickyHeaderHeight() {
-  function determineStickyHeaderHeight(): number {
-    if (typeof getComputedStyle !== "function") {
-      // SSR.
-      return 0;
-    }
-
-    const styles = getComputedStyle(document.documentElement);
-    const stickyHeaderHeight = styles
-      .getPropertyValue("--sticky-header-height")
-      .trim();
-
-    if (stickyHeaderHeight.endsWith("rem")) {
-      const fontSize = styles.fontSize.trim();
-      if (fontSize.endsWith("px")) {
-        return parseFloat(stickyHeaderHeight) * parseFloat(fontSize);
-      } else {
-        console.warn(
-          `[useStickyHeaderHeight] fontSize has unexpected unit: ${fontSize}`
-        );
-        return 0;
-      }
-    } else if (stickyHeaderHeight.endsWith("px")) {
-      return parseFloat(stickyHeaderHeight);
-    } else {
-      console.warn(
-        `[useStickyHeaderHeight] --sticky-header-height has unexpected unit: ${stickyHeaderHeight}`
-      );
-      return 0;
-    }
-  }
-
-  const [height, setHeight] = useState<number>(determineStickyHeaderHeight());
+  const [height, setHeight] = useState<number>(0);
 
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Unfortunately we cannot observe the CSS variable using MutationObserver,
-    // but we know that it may change when the width of the window changes.
-
-    const debouncedListener = () => {
-      if (timeout.current) {
-        window.clearTimeout(timeout.current);
+    const header = document.getElementsByClassName(
+      "sticky-header-container"
+    )?.[0];
+    if (!header) {
+      return;
+    }
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { height } = entry.contentRect;
+        if (timeout.current) {
+          window.clearTimeout(timeout.current);
+        }
+        timeout.current = setTimeout(() => {
+          setHeight(height);
+          timeout.current = null;
+        }, 250);
       }
-      timeout.current = setTimeout(() => {
-        setHeight(determineStickyHeaderHeight());
-        timeout.current = null;
-      }, 250);
-    };
+    });
 
-    window.addEventListener("resize", debouncedListener);
+    resizeObserver.observe(header);
 
-    return () => window.removeEventListener("resize", debouncedListener);
-  }, []);
+    return () => resizeObserver.disconnect();
+  }, [setHeight]);
 
   return height;
 }

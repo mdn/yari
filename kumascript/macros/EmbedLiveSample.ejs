@@ -10,7 +10,8 @@
 //  $5 - (Deprecated) The class name of the frame; defaults to "sample-code-frame". If you
 //       pass this parameter and give it a value other than "sample-code-frame",
 //       then the "Open in CodePen"/"Open in JSFiddle" buttons will not be displayed.
-//  $6 - (Deprecated) Allowed features, separated by semicolons (optional)
+//  $6 - Allowed features (like geolocation, microphone), separated by semicolons (optional).
+//       Defaults to ''.
 //
 // See also : LiveSampleLink
 
@@ -18,8 +19,8 @@
 // If one of this parameter is not empty, we raise a MacroDeprecationError flaw
 // When there will be 0 use left on translated-content (May 2022: 203 occurrences for $4),
 // we will be able to simplify this macro (and likely the whole of MDN).
-if ($4 !== "" || $5 !== "" || $6 !== "") {
-  mdn.deprecated("The fourth to sixth parameters of 'EmbedLiveSample' are deprecated");
+if ($4 !== "" || $5 !== "") {
+  mdn.deprecatedParams("The fourth and fifth parameters of 'EmbedLiveSample' are deprecated");
 }
 
 var sampleIdOrOffset = $0 || $token.location.start.offset;
@@ -68,7 +69,8 @@ if (sampleSlug) {
       }
     }
 }
-var url = await template('LiveSampleURL', [sampleIdOrOffset, sampleUrl]);
+var id = web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset));
+var url = await template('LiveSampleURL', [id, sampleUrl]);
 
 if (hasScreenshot) {
 %><table class="sample-code-table"><%
@@ -85,12 +87,13 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="<%= className %>"<%
-%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
+%><div class="code-example"><div class="example-header"></div><iframe class="<%= className %>"<%
+%> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
-%>></iframe><%
+sandbox="allow-scripts allow-same-origin"
+%>></iframe></div><%
 if (hasScreenshot) { %></td></tr></tbody></table><% } %>

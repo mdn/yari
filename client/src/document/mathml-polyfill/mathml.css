@@ -2,13 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* Adding the following based on https://developer.mozilla.org/en-US/docs/Web/MathML/Fonts */
-@font-face {
-  font-family: "STIXRegular";
-  src: url("./font/STIXTwoMath-Regular.otf") format("opentype");
-  font-weight: normal;
-}
-
 /* See https://github.com/fred-wang/mathml.css */
 
 @namespace "http://www.w3.org/1998/Math/MathML";
@@ -16,10 +9,10 @@
 /* math */
 math {
   display: inline;
-  font-family: "STIXRegular";
   text-indent: 0;
 }
-math[display="block"] {
+math[display="block"],
+math[mode="display"] {
   display: block;
   text-align: center;
 }
@@ -97,7 +90,8 @@ mroot {
   border-top: solid thin;
 }
 msqrt:before,
-mroot:before {
+mroot:before,
+menclose[notation="radical"]:before {
   margin-left: -0.5em;
   content: "\221A";
 }
@@ -141,8 +135,28 @@ menclose[notation*="roundedbox"] {
 menclose[notation*="circle"] {
   border-radius: 50%;
 }
-menclose[notation*="horizontalstrike"] {
+menclose[notation*="strike"] {
   text-decoration: line-through;
+}
+menclose[notation="radical"],
+menclose[notation*="longdiv"] {
+  border-top: solid thin;
+  margin-left: 0.5em;
+}
+menclose[notation*="longdiv"]::before {
+  margin-left: -0.6em;
+  content: "\27CC"; /* in unicode fonts only */
+}
+menclose[notation*="phasorangle"] {
+  border-bottom: solid thin;
+  margin-left: 0.2em;
+}
+
+menclose[notation*="phasorangle"]::before {
+  margin-left: -0.5em;
+  position: relative;
+  top: 0.45em;
+  content: "\2220"; /* in unicode fonts only */
 }
 
 /* table */
@@ -151,12 +165,26 @@ mtable {
   vertical-align: middle;
   text-align: center;
 }
-mtr {
+mtr,
+mlabeledtr {
   display: table-row !important;
 }
+mlabeledtr > mtd:first-child {
+  display: none;
+} /* fallback since won't display this as label correctly */
 mtd {
   display: table-cell !important;
   padding: 0 0.5ex;
+}
+
+mtable[frame="solid"] {
+  border-style: solid;
+}
+mtable[frame="dashed"] {
+  border-style: dashed;
+}
+mtable[frame="none"] {
+  border-style: none;
 }
 
 /* token elements */
@@ -238,4 +266,9 @@ math:active > semantics > *:first-child {
 }
 math:active annotation:first-of-type {
   display: inline !important;
+}
+
+/* fix */
+mfrac {
+  text-align: center; /* was done previously (above) */
 }

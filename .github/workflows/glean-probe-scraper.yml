@@ -1,0 +1,12 @@
+name: Glean probe-scraper
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  glean-probe-scraper:
+    if: github.repository == 'mdn/yari'
+    uses: mozilla/probe-scraper/.github/workflows/glean.yaml@main

@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./mathml-font.scss";
+
 const MathMLPolyfill = React.lazy(() => import("./polyfill"));
 
 // This component gets rendered if the document has MathML in it.

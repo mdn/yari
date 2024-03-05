@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { usePageVisibility } from "./hooks";
-
 import "./viewed-documents.scss";
+import { usePageVisibility } from "../hooks";
 
 dayjs.extend(relativeTime);
 

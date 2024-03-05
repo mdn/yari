@@ -9,10 +9,16 @@ jobs:
   auto-merge:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
+
     steps:
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2.6
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v1
         with:
           github-token: ${{ secrets.AUTOMERGE_TOKEN }}
-          command: "squash and merge"
-          approve: false
-          target: minor
+
+      - name: Squash and merge
+        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' || steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+        run: gh pr comment ${{ github.event.pull_request.html_url }} --body "@dependabot squash and merge"

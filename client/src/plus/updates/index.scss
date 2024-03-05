@@ -1,0 +1,200 @@
+@use "../../ui/vars" as *;
+
+.updates {
+  > header {
+    --plus-header: var(--updates-header);
+    --plus-mandala: var(--updates-mandala);
+    --plus-icon: var(--updates-icon);
+    --plus-link: var(--updates-link);
+  }
+
+  .reset-filters {
+    --button-action-transform: none;
+
+    .button-wrap {
+      font-size: var(--type-smaller-font-size);
+      font-weight: 400;
+    }
+
+    .button-wrap:before {
+      content: "✖️";
+    }
+  }
+
+  .group {
+    background: var(--background-secondary);
+    border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem;
+
+    header {
+      align-items: center;
+      color: var(--text-primary);
+      display: flex;
+      flex-wrap: wrap;
+      font-weight: 500;
+      gap: 0.5rem;
+      letter-spacing: var(--header-letter-spacing);
+      line-height: 175%;
+
+      .icon {
+        background: var(--text-secondary);
+        height: 1.25rem;
+        width: 1.25rem;
+      }
+
+      .number-badge {
+        background: #{$mdn-color-light-theme-blue-10};
+        border-radius: 0.25rem;
+        color: #{$mdn-color-light-theme-blue-70};
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.0938rem;
+        line-height: 120%;
+        padding: 0.25rem 0.5rem;
+        text-transform: uppercase;
+      }
+
+      time {
+        color: var(--text-secondary);
+        font-size: var(--type-tiny-font-size);
+        margin-left: auto;
+      }
+    }
+  }
+
+  details {
+    background: var(--background-primary);
+    border-radius: 0.25rem;
+    box-shadow: inset 0.25rem 0 0 var(--category-color-engage);
+
+    &[open] {
+      summary .icon-chevron {
+        transform: rotate(180deg);
+      }
+    }
+
+    summary {
+      align-items: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: var(--header-letter-spacing);
+      line-height: 175%;
+      list-style: none;
+      padding: 0.5rem 1rem;
+      padding-right: 3rem;
+      position: relative;
+
+      &::-webkit-details-marker {
+        // remove arrow from older versions of safari
+        display: none;
+      }
+
+      code {
+        border-radius: 0.25rem;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        line-height: 150%;
+        margin-right: 0.5rem;
+        overflow-wrap: anywhere;
+        padding: 0.25rem 0.25rem 0.125rem;
+      }
+
+      i {
+        font-size: var(--type-tiny-font-size);
+        margin-right: 1rem;
+      }
+
+      .status-added {
+        background-color: var(--background-success);
+
+        &:before {
+          content: "✓";
+          padding-right: 0.25rem;
+        }
+      }
+
+      .status-removed {
+        background-color: var(--background-critical);
+
+        &:before {
+          content: "✗";
+          padding-right: 0.25rem;
+        }
+      }
+
+      .status {
+        margin-left: auto;
+
+        svg {
+          margin-right: 0.75rem;
+
+          circle {
+            fill: #{$mdn-color-neutral-20};
+
+            &.active {
+              fill: #{$mdn-color-light-theme-green-40};
+            }
+          }
+        }
+      }
+
+      .icon-chevron {
+        position: absolute;
+        right: 1rem;
+      }
+    }
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+
+      > nav {
+        --button-action-transform: none;
+        --article-actions-position-left: 0;
+        align-items: baseline;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        > div {
+          position: relative;
+        }
+      }
+
+      .table-container {
+        margin: 0;
+        width: auto;
+
+        &-inner {
+          padding: 0;
+        }
+      }
+
+      .bc-github-link,
+      .bc-legend {
+        display: none;
+      }
+
+      .bc-table {
+        margin: 0;
+      }
+    }
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    padding-top: 0;
+  }
+}

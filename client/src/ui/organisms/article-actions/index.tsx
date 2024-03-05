@@ -1,5 +1,4 @@
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenu } from "./notifications-watch-menu";
 import { LanguageMenu } from "./language-menu";
 
 import { useIsServer } from "../../../hooks";
@@ -10,10 +9,16 @@ import { Doc, DocMetadata } from "../../../../../libs/types/document";
 import "./index.scss";
 
 import BookmarkMenu from "./bookmark-menu";
-import { useUIStatus } from "../../../ui-context";
-import { useState } from "react";
+import { Overlay, useUIStatus } from "../../../ui-context";
+import { useEffect, useState } from "react";
 import { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 import { Item } from "../../../plus/collections/api";
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 export const ArticleActions = ({
   doc,
@@ -21,23 +26,27 @@ export const ArticleActions = ({
   item,
   scopedMutator,
 }: {
-  doc: Doc | DocMetadata;
+  doc?: Doc | DocMetadata;
   showTranslations?: boolean;
   item?: Item;
-  scopedMutator?: KeyedMutator<Item[][]>;
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) => {
   const [showArticleActionsMenu, setShowArticleActionsMenu] = useState(false);
   const userData = useUserData();
   const isServer = useIsServer();
-  const { fullScreenOverlay, setFullScreenOverlay } = useUIStatus();
+  const { toggleMobileOverlay } = useUIStatus();
   const isAuthenticated = userData && userData.isAuthenticated;
-  const translations = doc.other_translations || [];
-  const { native } = doc;
+  const translations = doc?.other_translations || [];
+  const native = doc?.native;
 
   function toggleArticleActionsMenu() {
     setShowArticleActionsMenu(!showArticleActionsMenu);
-    setFullScreenOverlay(!fullScreenOverlay);
   }
+
+  useEffect(
+    () => toggleMobileOverlay(Overlay.ArticleActions, showArticleActionsMenu),
+    [showArticleActionsMenu, toggleMobileOverlay]
+  );
 
   // @TODO we will need the following when including the language drop-down
   // const translations = doc.other_translations || [];
@@ -53,6 +62,7 @@ export const ArticleActions = ({
         >
           <Button
             type="action"
+            aria-label="Article actions"
             extraClasses="article-actions-toggle"
             onClickHandler={toggleArticleActionsMenu}
             icon={showArticleActionsMenu ? "cancel" : "ellipses"}
@@ -65,11 +75,6 @@ export const ArticleActions = ({
             <>
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
-                  <NotificationsWatchMenu doc={doc} />
-                </li>
-              )}
-              {!isServer && isAuthenticated && (
-                <li className="article-actions-entry">
                   <BookmarkMenu
                     doc={doc}
                     item={item}
@@ -77,17 +82,20 @@ export const ArticleActions = ({
                   />
                 </li>
               )}
-              {showTranslations && translations && !!translations.length && (
-                <li className="article-actions-entry">
-                  <LanguageMenu
-                    onClose={() =>
-                      showArticleActionsMenu && toggleArticleActionsMenu()
-                    }
-                    translations={translations}
-                    native={native}
-                  />
-                </li>
-              )}
+              {showTranslations &&
+                translations &&
+                !!translations.length &&
+                native && (
+                  <li className="article-actions-entry">
+                    <LanguageMenu
+                      onClose={() =>
+                        showArticleActionsMenu && toggleArticleActionsMenu()
+                      }
+                      translations={translations}
+                      native={native}
+                    />
+                  </li>
+                )}
             </>
           </ul>
         </div>

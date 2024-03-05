@@ -1,17 +1,16 @@
-import SignInLink from "../../atoms/signin-link";
-import { SubscribeLink } from "../../atoms/subscribe-link";
-import { TOP_NAV_GET_MDN_PLUS } from "../../../telemetry/constants";
+import LogInLink from "../../atoms/login-link";
+import { SignUpLink } from "../../atoms/signup-link";
 
 import "./index.scss";
 
-export const AuthContainer = () => {
+export const AuthContainer = ({ logInGleanContext, signUpGleanContext }) => {
   return (
     <ul className="auth-container">
       <li>
-        <SignInLink />
+        <LogInLink gleanContext={logInGleanContext} />
       </li>
       <li>
-        <SubscribeLink gleanContext={TOP_NAV_GET_MDN_PLUS} />
+        <SignUpLink gleanContext={signUpGleanContext} />
       </li>
     </ul>
   );

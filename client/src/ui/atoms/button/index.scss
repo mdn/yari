@@ -130,7 +130,7 @@ button,
   }
 
   .button-wrap {
-    text-transform: uppercase;
+    text-transform: var(--button-action-transform, uppercase);
   }
 
   &.highlight {
@@ -140,7 +140,9 @@ button,
 
 /* Select Version */
 .button.select {
-  --button-bg: var(--background-primary);
+  --button-bg: var(--button-secondary-default);
+  --button-bg-hover: var(--button-secondary-hover);
+  --button-bg-active: var(--button-secondary-active);
   --button-border-color: var(--border-primary);
   --button-color: var(--text-secondary);
   appearance: none;

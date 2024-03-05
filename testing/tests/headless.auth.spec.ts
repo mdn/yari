@@ -14,15 +14,12 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await context.clearCookies();
   });
 
-  test("'Already a subscriber?' should link to fxa authentication flow and sign in", async ({
+  test("'Log in' should link to fxa authentication flow and sign in", async ({
     page,
   }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
 
-    const signinHref = await page.getAttribute(
-      "text='Already a subscriber?'",
-      "href"
-    );
+    const signinHref = await page.getAttribute("text='Log in'", "href");
 
     expect(signinHref).toContain(
       `/users/fxa/login/authenticate/?${new URLSearchParams({
@@ -30,27 +27,27 @@ test.describe("Visiting pages related and requiring authentication", () => {
       }).toString()}`
     );
 
-    await page.click("text='Already a subscriber?'");
+    await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
     await page.click("#my-mdn-plus-button");
     await page.click(".signout-form button[type='submit']");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/"));
+    expect(page.url()).toBe(testURL("/en-US/"));
   });
 
   test("Signing out", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
 
     // Sign in
-    await page.click("text='Already a subscriber?'");
+    await page.click("text='Log in'");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     await expect(page.locator(".user-menu")).toBeVisible();
 
     // open up user menu
@@ -59,6 +56,6 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click(".signout-form button[type='submit']");
     await page.waitForLoadState("networkidle");
 
-    expect(page.url()).toMatch(testURL("/en-US/"));
+    expect(page.url()).toBe(testURL("/en-US/"));
   });
 });

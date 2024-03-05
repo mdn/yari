@@ -4,15 +4,28 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "noImplicitAny": false,
+    "paths": {
+      "front-matter": ["./type-fixes/front-matter.js"],
+      "@mdn/browser-compat-data/types": [
+        "./node_modules/@mdn/browser-compat-data/types.d.ts"
+      ],
+      "web-features": ["./type-fixes/web-features.js"]
+    },
+    "preserveWatchOutput": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strictBindCallApply": true,
-    "target": "ES2020",
-    "preserveWatchOutput": true
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "target": "ES2020"
   },
-  "files": [],
   "ts-node": {
+    "esm": true,
     "swc": true
-  }
+  },
+  "exclude": ["client", "ssr"]
 }

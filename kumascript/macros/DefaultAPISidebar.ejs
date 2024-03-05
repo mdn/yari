@@ -10,7 +10,7 @@ var locale = env.locale;
 var APIHref = '/' + locale + '/docs/Web/API';
 var output = "";
 var group = $0;
-var htmlEscape = kuma.htmlEscape;
+var htmlEscape = mdn.htmlEscape;
 // slug is not available in preview mode.
 if (slug && group) {
 
@@ -24,6 +24,7 @@ var text = {
     'Events': mdn.getLocalString(commonl10n, 'Events'),
     'Interfaces': mdn.getLocalString(commonl10n, 'Interfaces'),
     'Guides': mdn.getLocalString(commonl10n, 'Guides'),
+    'Tutorial': mdn.getLocalString(commonl10n, 'Tutorial'),
     'translate': mdn.getLocalString(commonl10n, '[Translate]'),
     'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
 };
@@ -35,14 +36,10 @@ var methods = webAPIGroups[0][group].methods || [];
 var properties = webAPIGroups[0][group].properties || [];
 var events = webAPIGroups[0][group].events || [];
 var groupGuides = webAPIGroups[0][group].guides || [];
-var guides = [];
+var groupTutorial = webAPIGroups[0][group].tutorial || [];
 
-for (let guideUrl of groupGuides) {
-    const page = await wiki.getPage(guideUrl);
-    if (page && page.url) {
-        guides.push(page);
-    }
-}
+var guides = await wiki.getPages(...groupGuides);
+var tutorial = await wiki.getPages(...groupTutorial);
 
 function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
@@ -102,7 +99,7 @@ function convertEvent(eventName) {
 }
 
 // output
-output = '<section id="Quick_links"><ol>';
+output = '<section id="Quick_links" data-macro="DefaultAPISidebar"><ol>';
 
 if (webAPIGroups[0][group].overview) {
   output += '<li><strong><a href="' +  APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_') + '">' + webAPIGroups[0][group].overview[0] + '</a></strong></li>';
@@ -110,6 +107,10 @@ if (webAPIGroups[0][group].overview) {
 
 if (guides.length > 0) {
   output += buildSublist(guides, text['Guides']);
+}
+
+if (tutorial.length > 0) {
+  output += buildSublist(tutorial, text['Tutorial']);
 }
 
 interfaces = interfaces.map(convert);

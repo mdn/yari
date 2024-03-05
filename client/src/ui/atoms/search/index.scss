@@ -24,14 +24,25 @@
   color: var(--text-primary);
   height: var(--form-elem-height);
   min-width: 60px;
-  padding-left: 2rem;
+  padding-left: 0.5rem;
   width: 100%;
 
   &:focus {
     outline: var(--border-primary);
   }
 
+  &:not([value=""]) {
+    ~ .button.clear-search-button {
+      display: block;
+      right: 2.1rem;
+    }
+  }
+
   &::placeholder {
     color: var(--text-inactive);
+  }
+
+  .button.clear-search-button {
+    display: none;
   }
 }

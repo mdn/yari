@@ -1,16 +1,15 @@
-import path from "path";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import React from "react";
 import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "../client/src/app";
 import render from "./render";
 
-const dirname = __dirname;
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
-// This is necessary because the ssr.js is in dist/ssr.js
-// and we need to reach the .env this way.
 dotenv.config({
   path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });

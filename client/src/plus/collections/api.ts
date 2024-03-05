@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useSWR, { KeyedMutator, mutate, SWRResponse } from "swr";
-import useSWRInfinite from "swr/infinite";
+import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
 import {
   MultipleCollectionInfo,
   MultipleCollectionResponse,
@@ -9,6 +9,11 @@ import {
   CollectionItemCreationRequest,
   CollectionItemModificationRequest,
 } from "./rust-types";
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 export interface NewCollection {
   name: string;
@@ -34,6 +39,14 @@ export interface Item extends NewItem {
   created_at: string;
   updated_at: string;
   parents: ItemParent[];
+}
+
+export interface FrequentlyViewedItem {
+  notes?: string;
+  parents: ItemParent[];
+  title: string;
+  url: string;
+  id: number;
 }
 
 export interface ItemParent {
@@ -280,7 +293,9 @@ export function useItemAdd() {
   );
 }
 
-export function useItemEdit(scopedMutator?: KeyedMutator<Item[][]>) {
+export function useItemEdit(
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>
+) {
   return useMutation<Item, Response>(
     ({ collection_id, id, ...body }) =>
       poster<CollectionItemModificationRequest>(
@@ -295,7 +310,9 @@ export function useItemEdit(scopedMutator?: KeyedMutator<Item[][]>) {
   );
 }
 
-export function useItemDelete(scopedMutator?: KeyedMutator<Item[][]>) {
+export function useItemDelete(
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>
+) {
   return useMutation<Item, Response>(
     ({ collection_id, id }) => deleter(getItemKey(collection_id, id)),
     ({ collection_id, url }) => {

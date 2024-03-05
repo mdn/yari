@@ -1,5 +1,5 @@
 import { Switch } from "../ui/atoms/switch";
-import { SettingsData, getMDNWorker } from "./mdn-worker";
+import { getMDNWorker } from "./mdn-worker";
 import useInterval from "@use-it/interval";
 
 import { useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
-import { useUserData } from "../user-context";
+import { OfflineSettingsData, useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 import {
   TOGGLE_PLUS_OFFLINE_DISABLED,
@@ -29,7 +29,7 @@ export default function OfflineSettings({ ...appProps }) {
 
   return (
     <section className="field-group">
-      <h2>MDN Offline</h2>
+      <h2>Offline Access</h2>
       {user?.isSubscriber ? (
         serviceWorkerAvailable ? (
           <Settings />
@@ -58,7 +58,7 @@ function Settings() {
   const [saving, setSaving] = useState<boolean>(true);
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
-  const [settings, setSettings] = useState<SettingsData>();
+  const [settings, setSettings] = useState<OfflineSettingsData>();
   // Workaround to avoid "Error: Too many re-renders." (https://github.com/mdn/yari/pull/5744).
   const updateTriggered = useRef(false);
   const gleanClick = useGleanClick();
@@ -82,7 +82,9 @@ function Settings() {
   useEffect(() => {
     const mdnWorker = getMDNWorker();
     const isWorkerBusy = status?.phase
-      ? status?.phase !== ContentStatusPhase.IDLE
+      ? ![ContentStatusPhase.INITIAL, ContentStatusPhase.IDLE].includes(
+          status?.phase
+        )
       : false;
     mdnWorker.toggleKeepAlive(isWorkerBusy);
 
@@ -98,7 +100,7 @@ function Settings() {
     }
   }, [status?.phase]);
 
-  const updateSettings = async (change: SettingsData) => {
+  const updateSettings = async (change: Partial<OfflineSettingsData>) => {
     setSaving(true);
     const mdnWorker = getMDNWorker();
     let newSettings = await mdnWorker.setOfflineSettings(change);
@@ -140,42 +142,52 @@ function Settings() {
   return (
     <ul>
       <li>
-        <h3>Enable offline storage</h3>
-        <span>Allow MDN content to be downloaded for offline access</span>
-        {(saving === true && <Spinner extraClasses="loading" />) || (
-          <Switch
-            name="offline"
-            checked={settings?.offline || false}
-            toggle={(e) => {
-              const source = e.target.checked
-                ? TOGGLE_PLUS_OFFLINE_ENABLED
-                : TOGGLE_PLUS_OFFLINE_DISABLED;
-              gleanClick(source);
-              updateSettings({
-                offline: e.target.checked,
-              });
-            }}
-          ></Switch>
-        )}
+        <section aria-labelledby="offline-storage">
+          <h3 id="offline-storage">MDN Offline Storage</h3>
+          <div className="setting-row">
+            <span>
+              Enable storage to allow MDN content download for offline reading.
+            </span>
+            {(saving === true && <Spinner extraClasses="loading" />) || (
+              <Switch
+                name="offline"
+                checked={settings?.offline || false}
+                toggle={(e) => {
+                  const source = e.target.checked
+                    ? TOGGLE_PLUS_OFFLINE_ENABLED
+                    : TOGGLE_PLUS_OFFLINE_DISABLED;
+                  gleanClick(source);
+                  updateSettings({
+                    offline: e.target.checked,
+                  });
+                }}
+              ></Switch>
+            )}
+          </div>
+        </section>
       </li>
       {settings?.offline && (
         <>
           <li>
-            <h3>Prefer online content</h3>
-            <span>
-              Do not use offline content while connected to the internet
-            </span>
-            {(saving === true && <Spinner extraClasses="loading" />) || (
-              <Switch
-                name="prefer-online"
-                checked={settings?.preferOnline || false}
-                toggle={(e) =>
-                  updateSettings({
-                    preferOnline: e.target.checked,
-                  })
-                }
-              ></Switch>
-            )}
+            <section aria-labelledby="prefer-online-content">
+              <h3>Prefer online content</h3>
+              <div className="setting-row">
+                <span>
+                  Do not use offline content while connected to the internet
+                </span>
+                {(saving === true && <Spinner extraClasses="loading" />) || (
+                  <Switch
+                    name="prefer-online"
+                    checked={settings?.preferOnline || false}
+                    toggle={(e) =>
+                      updateSettings({
+                        preferOnline: e.target.checked,
+                      })
+                    }
+                  ></Switch>
+                )}
+              </div>
+            </section>
           </li>
           <li>
             <UpdateButton
@@ -185,36 +197,44 @@ function Settings() {
             />
           </li>
           <li>
-            <h3>Enable auto-update</h3>
-            <span>
-              Automatically download updates to content enabled for download
-            </span>
-            {(saving === true && <Spinner extraClasses="loading" />) || (
-              <Switch
-                name="auto-update"
-                checked={settings?.autoUpdates || false}
-                toggle={(e) =>
-                  updateSettings({
-                    autoUpdates: e.target.checked,
-                  })
-                }
-              ></Switch>
-            )}
+            <section aria-labelledby="enable-auto-update">
+              <h3 id="enable-auto-update">Enable auto-update</h3>
+              <div className="setting-row">
+                <span>
+                  Automatically download updates to content enabled for download
+                </span>
+                {(saving === true && <Spinner extraClasses="loading" />) || (
+                  <Switch
+                    name="auto-update"
+                    checked={settings?.autoUpdates || false}
+                    toggle={(e) =>
+                      updateSettings({
+                        autoUpdates: e.target.checked,
+                      })
+                    }
+                  ></Switch>
+                )}
+              </div>
+            </section>
           </li>
           {window?.location.hash === "#debug" && (
             <li>
-              <h3>Debug</h3>
-              <span style={{ fontFamily: "monospace", whiteSpace: "pre" }}>
-                {JSON.stringify(status, null, 2)}
-              </span>
+              <section aria-labelledby="offline-debug">
+                <h3 id="offline-debug">Debug</h3>
+                <span style={{ fontFamily: "monospace", whiteSpace: "pre" }}>
+                  {JSON.stringify(status, null, 2)}
+                </span>
+              </section>
             </li>
           )}
           {usage && (
             <li>
-              <h3>Storage used</h3>
-              <span>
-                MDN Offline currently uses <b>{usage}</b>
-              </span>
+              <section aria-labelledby="storage-used">
+                <h3 id="storage-used">Storage used</h3>
+                <span>
+                  MDN Offline currently uses <b>{usage}</b>
+                </span>
+              </section>
             </li>
           )}
           <li>

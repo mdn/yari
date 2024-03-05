@@ -1,39 +1,50 @@
 #!/usr/bin/env node
-import { isValidLocale } from "../libs/locale-utils";
-import type { Doc } from "../libs/types/document";
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
-import { program } from "@caporal/core";
+import caporal from "@caporal/core";
 import chalk from "chalk";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
+import { Action, ActionParameters, Logger } from "types";
 
-const dirname = __dirname;
-
-import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { Redirect, Document, buildURL, getRoot } from "../content";
-import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
-
-import { VALID_FLAW_CHECKS } from "../libs/constants";
+import {
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+  VALID_FLAW_CHECKS,
+} from "../libs/constants/index.js";
+import { Redirect, Document, buildURL, getRoot } from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import type { Doc } from "../libs/types/document.js";
 import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} from "../libs/env";
-import { runMakePopularitiesFile } from "./popularities";
-import { runOptimizeClientBuild } from "./optimize-client-build";
-import { runBuildRobotsTxt } from "./build-robots-txt";
-import { syncAllTranslatedContent } from "./sync-translated-content";
-import * as kumascript from "../kumascript";
-import { Action, ActionParameters, Logger } from "types";
-import { MacroRedirectedLinkError } from "../kumascript/src/errors";
+} from "../libs/env/index.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+import { syncAllTranslatedContent } from "./sync-translated-content.js";
+import { macroUsageReport } from "./macro-usage-report.js";
+import * as kumascript from "../kumascript/index.js";
+import {
+  MacroInvocationError,
+  MacroRedirectedLinkError,
+} from "../kumascript/src/errors.js";
+import { whatsdeployed } from "./whatsdeployed.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -132,7 +143,7 @@ interface GatherGitHistoryActionParameters extends ActionParameters {
 
 interface SyncTranslatedContentActionParameters extends ActionParameters {
   args: {
-    locale: string[];
+    locales: string[];
   };
   options: {
     verbose: boolean;
@@ -199,14 +210,37 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
   };
 }
 
-function tryOrExit(
-  f: ({ options, ...args }: ActionParameters) => unknown
+interface MacroUsageReportActionParameters extends ActionParameters {
+  options: {
+    deprecatedOnly: boolean;
+    format: "md-table" | "csv" | "json";
+    unusedOnly: boolean;
+  };
+}
+
+interface WhatsdeployedActionParameters extends ActionParameters {
+  args: {
+    directory: string;
+  };
+  options: {
+    output: string;
+    dryRun: boolean;
+  };
+}
+
+function tryOrExit<T extends ActionParameters>(
+  f: ({ options, ...args }: T) => unknown
 ): Action {
   return async ({ options = {}, ...args }: ActionParameters) => {
     try {
-      await f({ options, ...args });
-    } catch (error) {
-      if (options.verbose || options.v) {
+      await f({ options, ...args } as T);
+    } catch (e) {
+      const error = e as Error;
+      if (
+        options.verbose ||
+        options.v ||
+        (error instanceof Error && !error.message)
+      ) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -315,12 +349,12 @@ program
     tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
-      const changes = Document.remove(slug, locale, {
+      const changes = await Document.remove(slug, locale, {
         recursive,
         redirect,
         dry: true,
       });
-      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.green(`Will delete ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
         console.log(
@@ -346,11 +380,40 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, {
+        const deletedDocs = await Document.remove(slug, locale, {
           recursive,
           redirect,
         });
-        console.log(chalk.green(`Moved ${removed.length} documents.`));
+        console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));
+
+        // find references to the deleted document in content
+        console.log("Checking references...");
+        const referringFiles = [];
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const deleted of deletedDocs) {
+            const url = `/${locale}/docs/${deleted}`;
+            if (rawBody.includes(url)) {
+              referringFiles.push(`${document.url}`);
+            }
+          }
+        }
+
+        if (referringFiles.length) {
+          console.warn(
+            chalk.yellow(
+              `\n${referringFiles.length} files are referring to the deleted document. ` +
+                `Please update the following files to remove the links:\n\t${referringFiles.join(
+                  "\n\t"
+                )}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the deleted document.")
+          );
+        }
       }
     })
   )
@@ -358,8 +421,8 @@ program
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
-    validator: (value: string) => {
-      if (value.includes("#")) {
+    validator: (value) => {
+      if (typeof value === "string" && value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
       return value;
@@ -374,7 +437,7 @@ program
     tryOrExit(async ({ args, options }: MoveActionParameters) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
-      const changes = Document.move(oldSlug, newSlug, locale, {
+      const changes = await Document.move(oldSlug, newSlug, locale, {
         dry: true,
       });
       console.log(
@@ -396,7 +459,7 @@ program
             default: true,
           });
       if (run) {
-        const moved = Document.move(oldSlug, newSlug, locale);
+        const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
     })
@@ -635,29 +698,31 @@ program
     "sync-translated-content",
     "Sync translated content (sync with en-US slugs) for a locale"
   )
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
     tryOrExit(
       async ({ args, options }: SyncTranslatedContentActionParameters) => {
-        const { locale } = args;
+        const { locales } = args;
         const { verbose } = options;
         if (verbose) {
           log.setDefaultLevel(log.levels.DEBUG);
         }
-        for (const l of locale) {
+        for (const locale of locales) {
           const {
             movedDocs,
             conflictingDocs,
             orphanedDocs,
             redirectedDocs,
+            renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(l);
-          console.log(chalk.green(`Syncing ${l}:`));
+          } = await syncAllTranslatedContent(locale);
+          console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
+          console.log(chalk.green(`Renamed ${renamedDocs} documents`));
           console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
           console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
           console.log(
@@ -685,10 +750,10 @@ program
     tryOrExit(async ({ args, options }: FixFlawsActionParameters) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
-      const allDocs = Document.findAll({
+      const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
-      for (const document of allDocs.iter()) {
+      for (const document of allDocs.iterDocs()) {
         if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
           await buildDocument(document, {
             fixFlaws: true,
@@ -741,73 +806,12 @@ program
     })
   )
 
-  .command("redundant-translations", "Find redundant translations")
-  .action(
-    tryOrExit(async () => {
-      if (!CONTENT_TRANSLATED_ROOT) {
-        throw new Error("CONTENT_TRANSLATED_ROOT not set");
-      }
-      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
-        throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
-      }
-      const documents = Document.findAll();
-      if (!documents.count) {
-        throw new Error("No documents to analyze");
-      }
-      // Build up a map of translations by their `translation_of`
-      const map = new Map();
-      for (const document of documents.iter()) {
-        if (!document.isTranslated) continue;
-        const { translation_of, locale } = document.metadata;
-        if (!map.has(translation_of)) {
-          map.set(translation_of, new Map());
-        }
-        if (!map.get(translation_of).has(locale)) {
-          map.get(translation_of).set(locale, []);
-        }
-        map
-          .get(translation_of)
-          .get(locale)
-          .push(
-            Object.assign(
-              { filePath: document.fileInfo.path },
-              document.metadata
-            )
-          );
-      }
-      // Now, let's investigate those with more than 1
-      let sumENUS = 0;
-      let sumTotal = 0;
-      for (const [translation_of, localeMap] of map) {
-        for (const [, metadatas] of localeMap) {
-          if (metadatas.length > 1) {
-            // console.log(translation_of, locale, metadatas);
-            sumENUS++;
-            sumTotal += metadatas.length;
-            console.log(
-              `https://developer.allizom.org/en-US/docs/${translation_of}`
-            );
-            for (const metadata of metadatas) {
-              console.log(metadata);
-            }
-          }
-        }
-      }
-      console.warn(
-        `${sumENUS} en-US documents have multiple translations with the same locale`
-      );
-      console.log(
-        `In total, ${sumTotal} translations that share the same translation_of`
-      );
-    })
-  )
-
   .command(
     "popularities",
-    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
+    "Convert Glean-derived page view CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(dirname, "..", "popularities.json")),
+    default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -884,7 +888,7 @@ program
         if (account) {
           const dntHelperCode = fs
             .readFileSync(
-              path.join(dirname, "mozilla.dnthelper.min.js"),
+              new URL("mozilla.dnthelper.min.js", import.meta.url),
               "utf-8"
             )
             .trim();
@@ -980,7 +984,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           .map((m) => `"${m}"`)
           .join(", ")} within content folder(s) matching "${foldersearch}"`
       );
-      const documents = Document.findAll({
+      const documents = await Document.findAll({
         folderSearch: foldersearch,
       });
       if (!documents.count) {
@@ -994,13 +998,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             selective_mode: [cmdLC, macros],
           });
         } catch (error) {
-          if (error.name === "MacroInvocationError") {
+          if (error instanceof MacroInvocationError) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
             );
           }
-          // Any other unexpected error re-thrown.
+
           throw error;
         }
       }
@@ -1009,7 +1013,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       let countSkipped = 0;
       let countModified = 0;
       let countNoChange = 0;
-      for (const document of documents.iter()) {
+      for (const document of documents.iterDocs()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
         const originalRawBody = document.rawBody;
@@ -1052,7 +1056,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 console.log(`${flaw.macroSource} --> ${suggestion}`);
               }
               console.groupEnd();
-              Document.update(
+              await Document.update(
                 document.url,
                 document.rawBody,
                 document.metadata
@@ -1073,7 +1077,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
-          Document.update(document.url, newRawHTML, document.metadata);
+          await Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
         } else {
@@ -1153,6 +1157,42 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
       }
     )
+  )
+
+  .command(
+    "macro-usage-report",
+    "Counts occurrences of each macro and prints it as a table."
+  )
+  .option("--deprecated-only", "Only reports deprecated macros.")
+  .option("--format <type>", "Format of the report.", {
+    default: "md-table",
+    validator: ["json", "md-table", "csv"],
+  })
+  .option("--unused-only", "Only reports unused macros.")
+  .action(
+    tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
+      const { deprecatedOnly, format, unusedOnly } = options;
+      return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
+  )
+
+  .command(
+    "whatsdeployed",
+    "Create a whatsdeployed.json file by asking git for the date and commit hash of HEAD."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: process.cwd(),
+  })
+  .option("--output <output>", "Name of JSON file to create.", {
+    default: "whatsdeployed.json",
+  })
+  .option("--dry-run", "Prints the result without writing the file")
+  .action(
+    tryOrExit(async ({ args, options }: WhatsdeployedActionParameters) => {
+      const { directory } = args;
+      const { output, dryRun } = options;
+      return whatsdeployed(directory, output, dryRun);
+    })
   );
 
 program.run();

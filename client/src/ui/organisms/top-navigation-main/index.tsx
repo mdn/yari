@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { AuthContainer } from "../../molecules/auth-container";
 import MainMenu from "../../molecules/main-menu";
 import { UserMenu } from "../../molecules/user-menu";
@@ -12,6 +10,7 @@ import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 import Maintenance from "../../molecules/maintenance";
+import { TOP_NAV_LOGIN, TOP_NAV_SIGNUP } from "../../../telemetry/constants";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
@@ -27,12 +26,13 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       {(PLUS_IS_ENABLED &&
         !isServer &&
         userData &&
-        userData.isAuthenticated && (
-          <>
-            <UserMenu />
-          </>
-        )) ||
-        (userData?.maintenance && <Maintenance />) || <AuthContainer />}
+        userData.isAuthenticated && <UserMenu />) ||
+        (userData?.maintenance && <Maintenance />) || (
+          <AuthContainer
+            logInGleanContext={TOP_NAV_LOGIN}
+            signUpGleanContext={TOP_NAV_SIGNUP}
+          />
+        )}
     </div>
   );
 };

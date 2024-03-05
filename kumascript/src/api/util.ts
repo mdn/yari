@@ -175,58 +175,62 @@ export class HTMLTool {
     // If it's a H1-6 tag, generate (slugify) an ID from its text.
     // If all else, generate a unique one.
     // And we ensure all IDs that get added are completely lowercase.
-    $([...INJECT_SECTION_ID_TAGS].join(",")).each(
-      (i, element: cheerio.Element) => {
-        const $element = $(element);
-        const isDt = $element[0].name === "dt";
-        // Default is the existing one. Let's see if we need to change it.
-        let id = $element.attr("id");
-        if ($element.attr("name")) {
-          // The "name" attribute overrides any current "id".
-          id = slugify($element.attr("name").toLowerCase());
-        } else if (id) {
-          // If there’s already has an ID, use it — and lowercase it as long
-          // as the value isn’t "Quick_links" (which we need to keep as-is),
-          // and as long as it’s not a class=bc-data div (the ID for which we
-          // need to keep as-is).
-          if (
-            id !== "Quick_links" &&
-            $element[0].attribs["class"] !== "bc-data"
-          ) {
-            id = id.toLowerCase();
-          }
-        } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
-          // For heading elements, we start by getting the text content of
-          // the entire heading element (including any children it may have).
-          let text = $element.text();
-          if (isDt) {
-            // dt elements can, along with the actual term, contain stuff
-            // like <span class="badge inline optional">Optional</span>. If
-            // we include the text from that, we end up with generated IDs
-            // like id="rtcSessionDescriptionInit_Optional". So, for dt, we
-            // take just the text from the first element child of the dt.
-            text = $element.contents().first().text();
-          }
-          id = slugify(text).toLowerCase();
-          if (id) {
-            // Ensure that the slugified "id" has not already been
-            // taken. If it has, create a unique version of it.
-            let version = 2;
-            const originalID = id;
-            while (knownIDs.has(id)) {
-              id = `${originalID}_${version++}`.toLowerCase();
-            }
+    $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
+      const $element = $(element);
+      const $first = $element[0] as cheerio.Element;
+      const isDt = $first.name === "dt";
+      // Default is the existing one. Let's see if we need to change it.
+      let id = $element.attr("id");
+      if ($element.attr("name")) {
+        // The "name" attribute overrides any current "id".
+        id = slugify($element.attr("name").toLowerCase());
+      } else if (id) {
+        // If there’s already has an ID, use it — and lowercase it as long
+        // as the value isn’t "Quick_links" (which we need to keep as-is),
+        // and as long as it’s not a class=bc-data div (the ID for which we
+        // need to keep as-is).
+        if (id !== "Quick_links" && $first.attribs["class"] !== "bc-data") {
+          id = id.toLowerCase();
+        }
+      } else if (H1_TO_H6_TAGS.has($first.name) || isDt) {
+        // For heading elements, we start by getting the text content of
+        // the entire heading element (including any children it may have).
+        let text = $element.text();
+        if (isDt) {
+          // dt elements can, along with the actual term, contain stuff
+          // like <span class="badge inline optional">Optional</span>. If
+          // we include the text from that, we end up with generated IDs
+          // like id="rtcSessionDescriptionInit_Optional". So, for dt, we
+          // take just the text from the first element child of the dt.
+          text = $element.contents().first().text();
+        }
+        id = slugify(text).toLowerCase();
+        if (id) {
+          // Ensure that the slugified "id" has not already been
+          // taken. If it has, create a unique version of it.
+          let version = 2;
+          const originalID = id;
+          while (knownIDs.has(id)) {
+            id = `${originalID}_${version++}`.toLowerCase();
           }
         }
-        if (!id) {
-          // No need to call toLowerCase() here, because generateUniqueID()
-          // makes all-lowercase IDs in the form sectN, where N is a number.
-          id = generateUniqueID();
-        }
-        knownIDs.add(id);
-        $element.attr("id", id);
       }
-    );
+      if (!id) {
+        // No need to call toLowerCase() here, because generateUniqueID()
+        // makes all-lowercase IDs in the form sectN, where N is a number.
+        id = generateUniqueID();
+      }
+      knownIDs.add(id);
+      $element.attr("id", id);
+
+      if (isDt) {
+        // Link the first element child to the ID.
+        const firstContent = $element.contents().first();
+        if (!firstContent.is("a") && firstContent.find("a").length === 0) {
+          $(firstContent).wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
+        }
+      }
+    });
     return this;
   }
 
@@ -282,8 +286,9 @@ export class HTMLTool {
 
   extractLiveSampleObject(iframeID) {
     const sectionID = iframeID.substr("frame_".length);
+    let result;
     if (hasHeading(this.$, sectionID)) {
-      const result = Object.create(null);
+      result = Object.create(null);
       const sample = this.getSection(sectionID);
       // We have to wrap the collection of elements from the section
       // we've just acquired because we're going to search among all
@@ -307,19 +312,19 @@ export class HTMLTool {
           `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`
         );
       }
-      return result;
     } else {
       // We're here because we can't find the sectionID, so instead we're going
       // to find the live-sample iframe by its id (iframeID, NOT sectionID), and
       // then collect the closest blocks of code for the live sample.
-      const result = collectClosestCode(findSectionStart(this.$, iframeID));
+      result = collectClosestCode(findSectionStart(this.$, iframeID));
       if (!result) {
         throw new KumascriptError(
           `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`
         );
       }
-      return result;
     }
+    result.hasMathML = /<math\b/i.test(result.html);
+    return result;
   }
 
   html() {

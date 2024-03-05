@@ -6,12 +6,14 @@
   $1 - @-rule - defaults to the @-rule within the URL
 */
 
+const data = require('mdn-data/css');
+const localStrings = require('mdn-data/l10n/css');
+
 let slug = env.slug;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() :
     "preview-wiki-content");
 let atRule = $1;
 
-var data = require('mdn-data/css');
 let formattedError = "<span style=\"color:red;\">$1$</span>";
 let locale = env.locale;
 let localize = mdn.getLocalString;
@@ -21,7 +23,6 @@ let localWiki = wiki;
 let currentPage = page;
 
 let cssLocalStrings = web.getJSONData("L10n-CSS");
-let localStrings = require('mdn-data/l10n/css');
 
 /*
   Creates a link to another API, e.g. a CSS property or SVG element
@@ -33,15 +34,14 @@ let localStrings = require('mdn-data/l10n/css');
   area - Area of the API (i.e. CSS, SVG, etc.)
   linkName - String to use as link label
 */
-async function createLink(apiName, area, linkName) {
+function createLink(apiName, area, linkName) {
     let formattedLinkName = linkName || apiName;
     let url = "/" + locale + "/docs/Web/" + (area || "CSS") + "/" + apiName;
-    let thisPage = await localWiki.getPage(url);
+    let thisPage = localWiki.getPage(url);
 
-    if (currentPage.hasTag(thisPage, "CSS Function")) {
+    if (thisPage.pageType === "css-function") {
         formattedLinkName += "()";
-    } else if (currentPage.hasTag(thisPage, "CSS Data Type") ||
-        currentPage.hasTag(thisPage, "Element")) {
+    } else if (thisPage.pageType === "css-type" || thisPage.pageType === "svg-element") {
         formattedLinkName = "&lt;" + formattedLinkName + "&gt;";
     }
 
@@ -61,37 +61,33 @@ async function parseMacros(s) {
     }
 
     var area = "";
-    let parsedString = await string.asyncReplace(
-        s,
-        /\{\{(.+?)(?:\((.+?)\))?\}\}/g,
-        async function (match, macroName, paramsString) {
-            var params = paramsString ? paramsString.split(/, ?/) : [];
-            params.forEach(function(param, index, params) {
-              params[index] = params[index].toLowerCase().slice(1, -1);
-            });
-            var apiName = (params.length !== 0 ? params[0] : "");
-            switch (macroName.toLowerCase()) {
-                case "xref_csslength":
-                    apiName = "length";
-                    area = "CSS";
-                    break;
+    let parsedString = s.replace(/\{\{(.+?)(?:\((.+?)\))?\}\}/g, (match, macroName, paramsString) => {
+        const params = paramsString ? paramsString.split(/, ?/) : [];
+        params.forEach((param, index, params) => {
+          params[index] = params[index].toLowerCase().slice(1, -1);
+        });
+        let apiName = (params.length !== 0 ? params[0] : "");
+        switch (macroName.toLowerCase()) {
+            case "xref_csslength":
+                apiName = "length";
+                area = "CSS";
+                break;
 
-                case "xref_cssangle":
-                    apiName = "angle";
-                    area = "CSS";
-                    break;
+            case "xref_cssangle":
+                apiName = "angle";
+                area = "CSS";
+                break;
 
-                case "svgelement":
-                    area = "SVG/Element";
-                    break;
+            case "svgelement":
+                area = "SVG/Element";
+                break;
 
-                default:
-                    area = "CSS";
-            }
-
-            return await createLink(apiName, area, params[1]);
+            default:
+                area = "CSS";
         }
-    );
+
+        return createLink(apiName, area, params[1]);
+    });
     return parsedString;
 }
 

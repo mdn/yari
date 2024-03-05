@@ -1,6 +1,5 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import bcd from "@mdn/browser-compat-data";
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -39,7 +38,8 @@ export const HIDDEN_BROWSERS = ["ie"];
  */
 function gatherPlatformsAndBrowsers(
   category: string,
-  data: BCD.Identifier
+  data: BCD.Identifier,
+  browserInfo: BCD.Browsers
 ): [string[], BCD.BrowserName[]] {
   const hasNodeJSData = data.__compat && "nodejs" in data.__compat.support;
   const hasDenoData = data.__compat && "deno" in data.__compat.support;
@@ -54,8 +54,8 @@ function gatherPlatformsAndBrowsers(
   // Add browsers in platform order to align table cells
   for (const platform of platforms) {
     browsers.push(
-      ...(Object.keys(bcd.browsers).filter(
-        (browser) => bcd.browsers[browser].type === platform
+      ...(Object.keys(browserInfo).filter(
+        (browser) => browserInfo[browser].type === platform
       ) as BCD.BrowserName[])
     );
   }
@@ -63,7 +63,7 @@ function gatherPlatformsAndBrowsers(
   // Filter WebExtension browsers in corresponding tables.
   if (category === "webextensions") {
     browsers = browsers.filter(
-      (browser) => bcd.browsers[browser].accepts_webextensions
+      (browser) => browserInfo[browser].accepts_webextensions
     );
   }
 
@@ -141,7 +141,11 @@ export default function BrowserCompatibilityTable({
   const category = breadcrumbs[0];
   const name = breadcrumbs[breadcrumbs.length - 1];
 
-  const [platforms, browsers] = gatherPlatformsAndBrowsers(category, data);
+  const [platforms, browsers] = gatherPlatformsAndBrowsers(
+    category,
+    data,
+    browserInfo
+  );
 
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
@@ -174,7 +178,11 @@ export default function BrowserCompatibilityTable({
         <figure className="table-container">
           <figure className="table-container-inner">
             <table key="bc-table" className="bc-table bc-table-web">
-              <Headers {...{ platforms, browsers }} />
+              <Headers
+                platforms={platforms}
+                browsers={browsers}
+                browserInfo={browserInfo}
+              />
               <tbody>
                 <FeatureListAccordion
                   browsers={browsers}

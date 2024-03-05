@@ -22,6 +22,9 @@
  * from the rest of the file which is well tested.
  */
 
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+
 // The properties of this object will be globals in the macro
 // execution environment.
 const globalsPrototype = {
@@ -35,14 +38,23 @@ const globalsPrototype = {
   require,
 };
 
-import kumaPrototype from "./api/kuma";
-import mdnPrototype from "./api/mdn";
-import stringPrototype from "./api/string";
-import wikiPrototype from "./api/wiki";
-import webPrototype from "./api/web";
-import pagePrototype from "./api/page";
-import info from "./info";
-import Templates from "./templates";
+import mdnPrototype from "./api/mdn.js";
+import wikiPrototype from "./api/wiki.js";
+import webPrototype from "./api/web.js";
+import pagePrototype from "./api/page.js";
+import info from "./info.js";
+import Templates from "./templates.js";
+
+export interface KumaThis {
+  mdn: typeof mdnPrototype;
+  wiki: typeof wikiPrototype;
+  web: typeof webPrototype;
+  page: typeof pagePrototype;
+  env: typeof Environment & PerPageContext;
+  info: typeof info;
+  renderPrerequisiteFromURL: (path: string) => unknown;
+  template: (name: string, args?: any[]) => unknown;
+}
 
 type PerPageContext = Partial<{
   [x: string]: any;
@@ -122,9 +134,7 @@ export default class Environment {
     this.templates = templates;
     const globals = Object.create(prepareProto(globalsPrototype));
 
-    const kuma = Object.create(prepareProto(kumaPrototype, globals));
     const mdn = Object.create(prepareProto(mdnPrototype, globals));
-    const string = Object.create(prepareProto(stringPrototype, globals));
     const wiki = Object.create(prepareProto(wikiPrototype, globals));
     const web = Object.create(prepareProto(webPrototype, globals));
     const page = Object.create(prepareProto(pagePrototype, globals));
@@ -141,9 +151,7 @@ export default class Environment {
 
     // Now update the globals object to define each of the sub-objects
     // and the environment object as global variables
-    globals.kuma = globals.Kuma = freeze(kuma);
     globals.MDN = globals.mdn = freeze(mdn);
-    globals.string = globals.String = freeze(string);
     globals.wiki = globals.Wiki = freeze(wiki);
     globals.web = globals.Web = freeze(web);
     globals.page = globals.Page = freeze(page);
@@ -163,13 +171,13 @@ export default class Environment {
   // A templating function that we define in the global environment
   // so that templates can invoke other templates. This is not part
   // of the public API of the class; it is for use by other templates
-  async _renderTemplate(name, args) {
+  async _renderTemplate(name, args?) {
     return await this.templates.render(name, this.getExecutionContext(args));
   }
 
   // Get a customized environment object that is specific to a single
   // macro on a page by including the arguments to be passed to that macro.
-  getExecutionContext(args, token = null) {
+  getExecutionContext(args?, token = null) {
     const context = Object.create(this.prototypeEnvironment);
 
     // Make a defensive copy of the arguments so that macros can't

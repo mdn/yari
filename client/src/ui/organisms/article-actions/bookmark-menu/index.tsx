@@ -18,16 +18,18 @@ import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 import NoteCard from "../../../molecules/notecards";
 import { useGleanClick } from "../../../../telemetry/glean-context";
-import {
-  ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
-  ARTICLE_ACTIONS_NEW_COLLECTION,
-  ARTICLE_ACTIONS_COLLECTIONS_OPENED,
-  NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS,
-} from "../../../../telemetry/constants";
+import { PLUS_COLLECTIONS } from "../../../../telemetry/constants";
 import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
 import { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 
 import "./index.scss";
+import { Overlay, useUIStatus } from "../../../../ui-context";
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 const addValue = "add";
 
@@ -36,9 +38,76 @@ export default function BookmarkMenu({
   item,
   scopedMutator,
 }: {
-  doc: Doc | DocMetadata;
+  doc?: Doc | DocMetadata;
   item?: Item;
-  scopedMutator?: KeyedMutator<Item[][]>;
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
+}) {
+  const [show, setShow] = useState(false);
+  const [disableAutoClose, setDisableAutoClose] = useState(false);
+  const { isOffline } = useOnlineStatus();
+  const [saved, setSaved] = useState(false);
+  const gleanClick = useGleanClick();
+  const { toggleMobileOverlay } = useUIStatus();
+
+  useEffect(() => {
+    if (item) setSaved(true);
+  }, [item]);
+
+  useEffect(() => {
+    toggleMobileOverlay(Overlay.BookmarkMenu, show);
+  }, [show, toggleMobileOverlay]);
+
+  return (
+    <DropdownMenuWrapper
+      className="bookmark-menu"
+      isOpen={show}
+      setIsOpen={setShow}
+      disableAutoClose={disableAutoClose}
+    >
+      <Button
+        type="action"
+        isDisabled={isOffline || !doc}
+        icon={saved ? "bookmark-filled" : "bookmark"}
+        extraClasses={`bookmark-button small ${saved ? "highlight" : ""}`}
+        onClickHandler={() => {
+          setShow((v) => !v);
+          if (!show) {
+            gleanClick(PLUS_COLLECTIONS.ARTICLE_ACTIONS_OPENED);
+          }
+        }}
+      >
+        <span className="bookmark-button-label">
+          {saved ? "Saved" : "Save"}
+        </span>
+      </Button>
+      {doc && (
+        <BookmarkMenuDropdown
+          doc={doc}
+          setShow={setShow}
+          setSaved={setSaved}
+          setDisableAutoClose={setDisableAutoClose}
+          item={item}
+          scopedMutator={scopedMutator}
+        />
+      )}
+    </DropdownMenuWrapper>
+  );
+}
+
+function BookmarkMenuDropdown({
+  doc,
+  setShow,
+  setSaved,
+  setDisableAutoClose,
+  item,
+  scopedMutator,
+}: {
+  doc: Doc | DocMetadata;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setSaved: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisableAutoClose: React.Dispatch<React.SetStateAction<boolean>>;
+  item?: Item;
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) {
   const { data: collections } = useCollections();
   const { data: savedItems } = useBookmark(doc.mdn_url);
@@ -50,12 +119,9 @@ export default function BookmarkMenu({
     collection_id: "",
   };
 
-  const { isOffline } = useOnlineStatus();
-  const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [focusEventTriggered, setFocusEventTriggered] = useState(false);
 
-  const [disableAutoClose, setDisableAutoClose] = useState(false);
   const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
   const [lastAction, setLastAction] = useState("");
   const gleanClick = useGleanClick();
@@ -76,19 +142,24 @@ export default function BookmarkMenu({
 
   useEffect(() => {
     if (item) setFormItem(item);
-    else if (savedItems?.length) setFormItem(savedItems[0]);
-  }, [item, savedItems]);
+    else if (savedItems?.length) {
+      setFormItem(savedItems[0]);
+      setSaved(true);
+    } else {
+      setSaved(false);
+    }
+  }, [item, savedItems, setSaved]);
 
   useEffect(() => {
     if (showNewCollection === false) {
       setDisableAutoClose(false);
     }
-  }, [showNewCollection]);
+  }, [showNewCollection, setDisableAutoClose]);
 
   const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === addValue) {
-      gleanClick(ARTICLE_ACTIONS_NEW_COLLECTION);
+      gleanClick(PLUS_COLLECTIONS.ARTICLE_ACTIONS_NEW);
       setDisableAutoClose(true);
       setShowNewCollection(true);
       changeHandler(e);
@@ -165,30 +236,7 @@ export default function BookmarkMenu({
   };
 
   return (
-    <DropdownMenuWrapper
-      className="bookmark-menu"
-      isOpen={show}
-      setIsOpen={setShow}
-      disableAutoClose={disableAutoClose}
-    >
-      <Button
-        type="action"
-        isDisabled={isOffline}
-        icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
-        extraClasses={`bookmark-button small ${
-          savedItems?.length ? "highlight" : ""
-        }`}
-        onClickHandler={() => {
-          setShow((v) => !v);
-          if (!show) {
-            gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
-          }
-        }}
-      >
-        <span className="bookmark-button-label">
-          {savedItems?.length ? "Saved" : "Save"}
-        </span>
-      </Button>
+    <>
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
           <div
@@ -229,7 +277,9 @@ export default function BookmarkMenu({
                   onChange={collectionChangeHandler}
                   onFocus={() => {
                     if (!focusEventTriggered) {
-                      gleanClick(ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED);
+                      gleanClick(
+                        PLUS_COLLECTIONS.ARTICLE_ACTIONS_SELECT_OPENED
+                      );
                       setFocusEventTriggered(true);
                     }
                   }}
@@ -325,9 +375,9 @@ export default function BookmarkMenu({
               collection_id: collection_id || collections[0].id,
             });
           }}
-          source={NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS}
+          source={PLUS_COLLECTIONS.NEW_MODAL_SUBMIT_ARTICLE_ACTIONS}
         />
       )}
-    </DropdownMenuWrapper>
+    </>
   );
 }

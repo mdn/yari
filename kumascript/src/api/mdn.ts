@@ -1,5 +1,6 @@
 import got from "got";
-import * as util from "./util";
+import { KumaThis } from "../environment.js";
+import * as util from "./util.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;
@@ -18,12 +19,14 @@ const mdn = {
     return e;
   },
 
+  htmlEscape: util.htmlEscape,
+
   /**
    * Given a set of strings like this:
-   *     { "en-US": "Foo", "de": "Bar", "es": "Baz" }
+   *     { "en-US": "Foo", "es": "Baz", "fr": "Bar" }
    * Return the one which matches the current locale.
    */
-  localString(strings) {
+  localString(this: KumaThis, strings) {
     let lang = this.env.locale;
     if (!(lang in strings)) lang = "en-US";
     return strings[lang];
@@ -31,11 +34,11 @@ const mdn = {
 
   /**
    * Given a set of string maps like this:
-   *     { "en-US": {"name": "Foo"}, "de": {"name": "Bar"} }
+   *     { "en-US": {"name": "Foo"}, "fr": {"name": "Bar"} }
    * Return a map which matches the current locale, falling back to en-US
    * properties when the localized map contains partial properties.
    */
-  localStringMap(maps) {
+  localStringMap(this: KumaThis, maps) {
     const lang = this.env.locale;
     const defaultMap = maps["en-US"];
     if (lang == "en-US" || !(lang in maps)) {
@@ -56,17 +59,17 @@ const mdn = {
   /**
    * Given a set of strings like this:
    *   {
-   *    "hello": { "en-US": "Hello!", "de": "Hallo!" },
-   *    "bye": { "en-US": "Goodbye!", "de": "Auf Wiedersehen!" }
+   *    "hello": { "en-US": "Hello!", "fr": "Bonjour !" },
+   *    "bye": { "en-US": "Goodbye!", "fr": "Au revoir !" }
    *   }
    * Returns the one, which matches the current locale.
    *
    * Example:
-   *   getLocalString({"hello": {"en-US": "Hello!", "de": "Hallo!"}},
+   *   getLocalString({"hello": {"en-US": "Hello!", "fr": "Bonjour !"}},
    *       "hello");
-   *   => "Hallo!" (in case the locale is 'de')
+   *   => "Bonjour !" (in case the locale is 'fr')
    */
-  getLocalString(strings, key) {
+  getLocalString(this: KumaThis, strings, key) {
     if (!Object.prototype.hasOwnProperty.call(strings, key)) {
       return key;
     }
@@ -122,7 +125,18 @@ const mdn = {
    * Throw a deprecation error.
    */
   deprecated(
+    this: KumaThis,
     message = "This macro has been deprecated, and should be removed."
+  ) {
+    this.env.recordNonFatalError("deprecated", message);
+  },
+
+  /**
+   * Throw a deprecation error for parameters to macros.
+   */
+  deprecatedParams(
+    this: KumaThis,
+    message = "Parameters for this macro have been deprecated and should be removed."
   ) {
     this.env.recordNonFatalError("deprecated", message);
   },
@@ -133,8 +147,8 @@ const mdn = {
         webExtExamples = await got(
           "https://raw.githubusercontent.com/mdn/webextensions-examples/master/examples.json",
           {
-            timeout: 1000,
-            retry: 5,
+            timeout: { request: 1000 },
+            retry: { limit: 5 },
           }
         ).json();
       } catch (error) {

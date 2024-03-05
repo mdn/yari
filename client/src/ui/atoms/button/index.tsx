@@ -3,12 +3,9 @@ import { Icon } from "../icon";
 import InternalLink from "../internal-link";
 
 import "./index.scss";
+import { FormMethod } from "react-router-dom";
 
 type ButtonProps = {
-  ariaControls?: string;
-  ariaExpanded?: boolean;
-  ariaHasPopup?: "true" | "false" | "menu" | "dialog" | "listbox";
-  ariaLabel?: string;
   title?: string;
 
   type?: "primary" | "secondary" | "action" | "select" | "link";
@@ -20,6 +17,7 @@ type ButtonProps = {
   name?: string;
   extraClasses?: string | null;
   href?: string;
+  target?: string;
   rel?: string;
   icon?: string;
 
@@ -28,6 +26,7 @@ type ButtonProps = {
    * Should the button be disabled? This is optional with a default of false
    */
   isDisabled?: boolean;
+  formMethod?: FormMethod | "dialog";
   onClickHandler?: (event: React.MouseEvent<Element>) => void;
   onFocusHandler?: (event: React.FocusEvent<Element>) => void;
 
@@ -39,16 +38,13 @@ type ButtonProps = {
 };
 
 export const Button = ({
-  ariaControls,
-  ariaExpanded,
-  ariaHasPopup,
-  ariaLabel,
   title,
   name,
   type = "primary",
   buttonType = "button",
   extraClasses,
   href,
+  target,
   rel,
   icon,
   id,
@@ -58,7 +54,9 @@ export const Button = ({
   size,
   state,
   value,
+  formMethod,
   children,
+  ...passthroughAttrs
 }: ButtonProps) => {
   let buttonClasses = "button";
   [type, size, state].forEach((attr) => {
@@ -84,6 +82,23 @@ export const Button = ({
   }
 
   if (href) {
+    if (target) {
+      return (
+        <a
+          href={href}
+          target={target}
+          rel={rel}
+          className={buttonClasses}
+          id={id}
+          onClick={onClickHandler}
+          onFocus={onFocusHandler}
+          title={title}
+          {...passthroughAttrs}
+        >
+          <span className="button-wrap">{renderContent()}</span>
+        </a>
+      );
+    }
     return (
       <InternalLink
         to={href}
@@ -92,8 +107,8 @@ export const Button = ({
         id={id}
         onClick={onClickHandler}
         onFocus={onFocusHandler}
-        aria-label={ariaLabel}
         title={title}
+        {...passthroughAttrs}
       >
         <span className="button-wrap">{renderContent()}</span>
       </InternalLink>
@@ -101,10 +116,6 @@ export const Button = ({
   }
   return (
     <button
-      aria-controls={ariaControls}
-      aria-expanded={ariaExpanded}
-      aria-haspopup={ariaHasPopup}
-      aria-label={ariaLabel}
       title={title}
       disabled={isDisabled}
       id={id}
@@ -114,6 +125,8 @@ export const Button = ({
       onFocus={onFocusHandler}
       value={value}
       name={name}
+      formMethod={formMethod}
+      {...passthroughAttrs}
     >
       <span className="button-wrap">{renderContent()}</span>
     </button>

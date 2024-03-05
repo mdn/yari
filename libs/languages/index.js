@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   ach: {
     English: "Acholi",
     native: "Acholi",

@@ -1,7 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const dirname = __dirname;
+import fs from "node:fs";
 
 // Module-level cache
 const popularities = new Map<string, number>();
@@ -9,12 +6,10 @@ const popularities = new Map<string, number>();
 export function getPopularities() {
   if (!popularities.size) {
     // This is the file that's *not* checked into git.
-    const filePath = path.resolve(
-      path.join(dirname, "..", "popularities.json")
-    );
+    const filePath = new URL("../popularities.json", import.meta.url);
     Object.entries(JSON.parse(fs.readFileSync(filePath, "utf-8"))).forEach(
-      ([url, value]: [string, number]) => {
-        popularities.set(url, value);
+      ([url, value]: [string, unknown]) => {
+        popularities.set(url, value as number);
       }
     );
   }

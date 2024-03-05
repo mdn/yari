@@ -1,9 +1,19 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
-import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
-import { MDNWorker } from "./settings/mdn-worker";
+import {
+  DISABLE_AUTH,
+  DEFAULT_GEO_COUNTRY,
+  DEFAULT_GEO_COUNTRY_ISO,
+} from "./env";
+import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
+
+const DEPRECATED_LOCAL_STORAGE_KEYS = [
+  "collection-items",
+  "collection-items-updated-date",
+];
+
+export const OFFLINE_SETTINGS_KEY = "MDNSettings";
 
 export enum SubscriptionType {
   MDN_CORE = "core",
@@ -14,11 +24,50 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
-  colInSearch: boolean;
+  aiHelpHistory: boolean | null;
   collectionLastModified: Date | null;
+  mdnplusNewsletter: boolean | null;
+  noAds: boolean | null;
 };
 
-export type UserData = {
+export class OfflineSettingsData {
+  offline: boolean;
+  preferOnline: boolean;
+  autoUpdates: boolean;
+
+  constructor({
+    offline = false,
+    preferOnline = false,
+    autoUpdates = false,
+  } = {}) {
+    this.offline = offline;
+    this.preferOnline = preferOnline;
+    this.autoUpdates = autoUpdates;
+  }
+
+  static read(): OfflineSettingsData {
+    let settingsData: OfflineSettingsData | undefined;
+    try {
+      settingsData = JSON.parse(
+        window.localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
+      );
+    } catch (err) {
+      console.warn("Unable to read settings from localStorage", err);
+    }
+
+    return new OfflineSettingsData(settingsData);
+  }
+
+  write() {
+    try {
+      window.localStorage.setItem(OFFLINE_SETTINGS_KEY, JSON.stringify(this));
+    } catch (err) {
+      console.warn("Unable to write settings to localStorage", err);
+    }
+  }
+}
+
+export type User = {
   username: string | null | undefined;
   isAuthenticated: boolean;
   isBetaTester: boolean;
@@ -32,14 +81,20 @@ export type UserData = {
   email: string | null | undefined;
   geo: {
     country: string;
+    country_iso: string;
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
-  mdnWorker?: MDNWorker;
+  offlineSettings: null | OfflineSettingsData;
   mutate: () => void;
 };
 
-export const UserDataContext = React.createContext<UserData | null>(null);
+export type UserData =
+  | User
+  | (Partial<User> & { maintenance: string })
+  | undefined;
+
+export const UserDataContext = React.createContext<UserData>(undefined);
 
 // The argument for using sessionStorage rather than localStorage is because
 // it's marginally simpler and "safer". For example, if we use localStorage
@@ -60,18 +115,19 @@ function getSessionStorageData() {
       if (!parsed.geo) {
         // If we don't do this check, you might be returning stored data
         // that doesn't match any of the new keys.
-        return false;
+        return undefined;
       }
-      return parsed as UserData;
+      return parsed as User;
     }
   } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
-    return null;
+    return undefined;
   }
 }
 
 export function cleanupUserData() {
   removeSessionStorageData();
+  removeLocalStorageData(FREQUENTLY_VIEWED_STORAGE_KEY);
   if (window.mdnWorker) {
     window.mdnWorker.cleanDb();
     window.mdnWorker.disableServiceWorker();
@@ -89,7 +145,21 @@ function removeSessionStorageData() {
   }
 }
 
-function setSessionStorageData(data: UserData) {
+function removeLocalStorageData(key: string) {
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    console.warn(`Unable to delete ${key} from localStorage`, e);
+  }
+}
+
+function removeDeprecatedLocalStorageData() {
+  for (const key of DEPRECATED_LOCAL_STORAGE_KEYS) {
+    removeLocalStorageData(key);
+  }
+}
+
+function setSessionStorageData(data: User) {
   try {
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
   } catch (error: any) {
@@ -98,7 +168,7 @@ function setSessionStorageData(data: UserData) {
 }
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
-  const { data, mutate } = useSWR<UserData | null, Error | null>(
+  const { data, error, isLoading, mutate } = useSWR<User | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
     async (url) => {
       const response = await fetch(url);
@@ -108,13 +178,18 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       }
       const data = await response.json();
       const collectionLastModified =
-        data.settings?.collections_last_modified_time;
-      const settings: UserPlusSettings | null = data.settings
+        data?.settings?.collections_last_modified_time;
+      const settings: UserPlusSettings | null = data?.settings
         ? {
-            colInSearch: data.settings.col_in_search || false,
+            aiHelpHistory:
+              typeof data?.settings?.ai_help_history === "boolean"
+                ? data.settings.ai_help_history
+                : null,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
+            mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
+            noAds: data?.settings?.no_ads || null,
           }
         : null;
 
@@ -134,48 +209,62 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         email: data.email || null,
         geo: {
           country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+          country_iso:
+            (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
         },
         maintenance: data.maintenance,
         settings,
+        offlineSettings: null,
         mutate,
       };
     }
   );
 
   React.useEffect(() => {
+    removeDeprecatedLocalStorageData();
+  }, []);
+
+  React.useEffect(() => {
     if (data) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
+      data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
 
-      if (data.settings?.colInSearch) {
-        fetchAllCollectionsItems(data.settings?.collectionLastModified || null);
-      }
-      // Let's initialize the MDN Worker if the user is signed in.
-      if (!window.mdnWorker && data?.isAuthenticated) {
+      // Let's initialize the MDN Worker if applicable.
+      if (!window.mdnWorker && data?.offlineSettings?.offline) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {
           const mdnWorker = getMDNWorker();
           if (data?.isSubscriber === false) {
             mdnWorker.clearOfflineSettings();
+            mdnWorker.disableServiceWorker();
+            data.offlineSettings = new OfflineSettingsData();
           }
         });
       } else if (window.mdnWorker) {
-        if (data?.isAuthenticated === false) {
-          window.mdnWorker.disableServiceWorker();
-        } else if (data?.isSubscriber === false) {
+        if (data?.isSubscriber === false) {
           window.mdnWorker.clearOfflineSettings();
+          data.offlineSettings = new OfflineSettingsData();
+        }
+        if (!data?.offlineSettings?.offline) {
+          window.mdnWorker.disableServiceWorker();
         }
       }
     }
   }, [data]);
 
-  let userData = data || getSessionStorageData();
-  if (userData && window?.mdnWorker) {
-    userData.mdnWorker = window.mdnWorker;
-  }
+  const userData = isLoading
+    ? getSessionStorageData()
+    : error || !data
+      ? {
+          ...getSessionStorageData(),
+          ...data,
+          maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
+        }
+      : data;
 
   return (
-    <UserDataContext.Provider value={userData || null}>
+    <UserDataContext.Provider value={userData}>
       {props.children}
     </UserDataContext.Provider>
   );

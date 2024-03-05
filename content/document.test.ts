@@ -1,16 +1,16 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-import * as Document from "./document";
+import * as Document from "./document.js";
 
 describe("Document.findAll()", () => {
-  it("should always return files that exist", () => {
-    const filePaths = [...Document.findAll().iter({ pathOnly: true })];
+  it("should always return files that exist", async () => {
+    const filePaths = [...(await Document.findAll()).iterPaths()];
     expect(filePaths.every((value) => fs.existsSync(value))).toBeTruthy();
   });
 
-  it("all files should be either index.html or index.md", () => {
-    const filePaths = [...Document.findAll().iter({ pathOnly: true })];
+  it("all files should be either index.html or index.md", async () => {
+    const filePaths = [...(await Document.findAll()).iterPaths()];
     expect(
       filePaths.every(
         (value) => value.endsWith("index.html") || value.endsWith("index.md")
@@ -18,23 +18,21 @@ describe("Document.findAll()", () => {
     ).toBeTruthy();
   });
 
-  it("searching by specific file", () => {
-    const filePaths = [...Document.findAll().iter({ pathOnly: true })];
+  it("searching by specific file", async () => {
+    const filePaths = [...(await Document.findAll()).iterPaths()];
     const randomFile = filePaths[Math.floor(Math.random() * filePaths.length)];
     const specificFilePaths = [
-      ...Document.findAll({ files: new Set([randomFile]) }).iter({
-        pathOnly: true,
-      }),
+      ...(await Document.findAll({ files: new Set([randomFile]) })).iterPaths(),
     ];
     expect(specificFilePaths).toHaveLength(1);
     expect(specificFilePaths[0]).toBe(randomFile);
   });
 
-  it("searching by specific locales", () => {
+  it("searching by specific locales", async () => {
     const specificFilePaths = [
-      ...Document.findAll({ locales: new Map([["fr", true]]) }).iter({
-        pathOnly: true,
-      }),
+      ...(
+        await Document.findAll({ locales: new Map([["fr", true]]) })
+      ).iterPaths(),
     ];
     expect(
       specificFilePaths.every((filePath) =>
@@ -43,11 +41,9 @@ describe("Document.findAll()", () => {
     ).toBeTruthy();
   });
 
-  it("searching by specific folders", () => {
+  it("searching by specific folders", async () => {
     const specificFilePaths = [
-      ...Document.findAll({ folderSearch: "/foo/" }).iter({
-        pathOnly: true,
-      }),
+      ...(await Document.findAll({ folderSearch: "/foo/" })).iterPaths(),
     ];
     expect(
       specificFilePaths.every((filePath) =>

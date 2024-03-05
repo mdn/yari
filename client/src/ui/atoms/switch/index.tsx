@@ -10,7 +10,7 @@ export function Switch({
   name: string;
   hiddenLabel?: string;
   checked?: boolean;
-  toggle?: (Event) => void;
+  toggle?: React.ChangeEventHandler<HTMLInputElement>;
   children?: React.ReactNode;
 }) {
   return (

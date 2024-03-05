@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import crypto from "crypto";
-import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants";
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants/index.js";
 
 describe("Content-Security-Policy", () => {
   test('All inline <script> tags must have a corresponding "script-src" CSP entry.', () => {
@@ -24,7 +24,7 @@ describe("Content-Security-Policy", () => {
 
     // If this assertion fails, an inline script was added to client/public/index.html`.
     // Please consider merging it with the other inline script, or increment this number.
-    expect(inlineScriptContents).toHaveLength(2);
+    expect(inlineScriptContents).toHaveLength(1);
 
     const inlineScriptCspValues = inlineScriptContents.map(cspValueOf);
 
