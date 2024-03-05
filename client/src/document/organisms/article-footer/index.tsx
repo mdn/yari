@@ -4,10 +4,7 @@ import { OnGitHubLink } from "../../on-github";
 import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-footer/article-footer.svg";
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import {
-  ARTICLE_FEEDBACK as ARTICLE_FOOTER,
-  THUMBS,
-} from "../../../telemetry/constants";
+import { ARTICLE_FOOTER, THUMBS } from "../../../telemetry/constants";
 
 export function LastModified({ value, locale }) {
   if (!value) {
