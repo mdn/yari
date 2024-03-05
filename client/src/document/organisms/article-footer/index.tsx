@@ -4,7 +4,10 @@ import { OnGitHubLink } from "../../on-github";
 import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-footer/article-footer.svg";
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { ARTICLE_FEEDBACK as ARTICLE_FOOTER } from "../../../telemetry/constants";
+import {
+  ARTICLE_FEEDBACK as ARTICLE_FOOTER,
+  THUMBS,
+} from "../../../telemetry/constants";
 
 export function LastModified({ value, locale }) {
   if (!value) {
@@ -54,7 +57,8 @@ export function ArticleFooter({ doc, locale }) {
 
   function handleVote(value: boolean) {
     setView(value ? ArticleFooterView.Thanks : ArticleFooterView.Feedback);
-    gleanClick(`${ARTICLE_FOOTER}: vote -> ${Number(value)}`);
+    // Reusing Thumbs' key to be able to reuse queries.
+    gleanClick(`${THUMBS}: ${ARTICLE_FOOTER} -> ${Number(value)}`);
   }
 
   function handleFeedback() {
