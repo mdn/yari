@@ -5870,10 +5870,10 @@ devlop@^1.0.0, devlop@^1.1.0:
   dependencies:
     dequal "^2.0.0"
 
-dexie@^3.2.5:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.5.tgz#f68e34b98e0e5e3412cf86b540a2cc6cbf9b0266"
-  integrity sha512-MA7vYQvXxWN2+G50D0GLS4FqdYUyRYQsN0FikZIVebOmRoNCSCL9+eUbIF80dqrfns3kmY+83+hE2GN9CnAGyA==
+dexie@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.6.tgz#c5980e4228d7e81744bb324c81459afa6604da41"
+  integrity sha512-R9VzQ27/cncQymoAeD1kfu66NUrdxcnMNXVfEoFLnQ+apVVbS4++veUcSGxft9V++zaeiLkMAREOMf8EwgR/Vw==
   dependencies:
     karma-safari-launcher "^1.0.0"
 
