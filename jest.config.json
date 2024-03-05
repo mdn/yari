@@ -1,11 +1,18 @@
 {
-  "preset": "ts-jest",
+  "extensionsToTreatAsEsm": [".ts", ".tsx"],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "preset": "ts-jest/presets/default-esm",
   "testPathIgnorePatterns": ["headless*", "developing.spec.ts"],
   "transform": {
     "\\.tsx?$": [
       "ts-jest",
       {
-        "babelConfig": true
+        "babelConfig": true,
+        "isolatedModules": true,
+        "tsconfig": { "moduleResolution": "node" },
+        "useESM": true
       }
     ]
   }

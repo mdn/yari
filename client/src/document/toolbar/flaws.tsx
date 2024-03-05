@@ -4,14 +4,13 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../env";
+import { WRITER_MODE, WRITER_MODE_HOSTNAMES } from "../../env";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
   Doc,
   BrokenLink,
   MacroErrorMessage,
-  BadBCDLinkFlaw,
   ImageReferenceFlaw,
   ImageWidthFlaw,
   GenericFlaw,
@@ -159,8 +158,8 @@ export function ToggleDocumentFlaws({
       el.href = !allFlaws
         ? "/favicon-48x48-flawless.png"
         : allFlaws === allFixableFlaws
-        ? "/favicon-48x48-flaws-fixable.png"
-        : "/favicon-48x48-flaws.png";
+          ? "/favicon-48x48-flaws-fixable.png"
+          : "/favicon-48x48-flaws.png";
     }
   }, [doc.flaws]);
 
@@ -206,8 +205,8 @@ function Flaws({
   flaws: FlawCount[];
   reloadPage: () => void;
 }) {
-  if (!CRUD_MODE) {
-    throw new Error("This shouldn't be used in non-development builds");
+  if (!WRITER_MODE) {
+    throw new Error("This shouldn't be used without WRITER_MODE=true");
   }
 
   const fixableFlaws = Object.values(doc.flaws)
@@ -218,7 +217,7 @@ function Flaws({
     })
     .flat();
 
-  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+  const isReadOnly = !WRITER_MODE_HOSTNAMES.includes(window.location.hostname);
 
   // Note! This will work on Windows. The filename can be sent to
   // the server in POSIX style and the `open-editor` program will make
@@ -253,13 +252,6 @@ function Flaws({
                 sourceFilePath={filePath}
                 links={doc.flaws.broken_links as BrokenLink[]}
                 isReadOnly={isReadOnly}
-              />
-            );
-          case "bad_bcd_links":
-            return (
-              <BadBCDLinks
-                key="bad_bcd_links"
-                links={doc.flaws.bad_bcd_links as BadBCDLinkFlaw[]}
               />
             );
           case "bad_bcd_queries":
@@ -547,22 +539,6 @@ function BadBCDQueries({ flaws }: { flaws: BadBCDQueryFlaw[] }) {
         {flaws.map((flaw) => (
           <li key={flaw.id}>
             <code>{flaw.explanation}</code>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
-  return (
-    <div className="flaw flaw__bad_bcd_links">
-      <h3>{humanizeFlawName("bad_bcd_links")}</h3>
-      <ul>
-        {links.map((link) => (
-          <li key={link.slug}>
-            In <code>{link.query}</code> under key <code>{link.key}</code> can't
-            find document: <code>{link.slug}</code>
           </li>
         ))}
       </ul>

@@ -10,35 +10,52 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
 import { getBCDDataForPath } from "@mdn/bcd-utils-api";
+import sanitizeFilename from "sanitize-filename";
 
 import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} from "../build";
-import { findDocumentTranslations } from "../content/translations";
-import { Document, Redirect, Image } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants";
+} from "../build/index.js";
+import { findTranslations } from "../content/translations.js";
+import { Document, Redirect, FileAttachment } from "../content/index.js";
+import {
+  ANY_ATTACHMENT_REGEXP,
+  CSP_VALUE,
+  DEFAULT_LOCALE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
+} from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} from "../libs/env";
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  BLOG_ROOT,
+} from "../libs/env/index.js";
 
-import documentRouter from "./document";
-import fakeV1APIRouter from "./fake-v1-api";
-import { searchIndexRoute } from "./search-index";
-import flawsRoute from "./flaws";
-import { router as translationsRouter } from "./translations";
-import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
-import { getRoot } from "../content/utils";
+import documentRouter from "./document.js";
+import fakeV1APIRouter from "./fake-v1-api.js";
+import { searchIndexRoute } from "./search-index.js";
+import flawsRoute from "./flaws.js";
+import { router as translationsRouter } from "./translations.js";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
+import { MEMOIZE_INVALIDATE, getRoot } from "../content/utils.js";
 
-import { renderHTML } from "../ssr/dist/main";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
+import {
+  allPostFrontmatter,
+  findPostLiveSampleBySlug,
+  findPostBySlug,
+  findPostPathBySlug,
+} from "../build/blog.js";
+import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;
@@ -48,7 +65,10 @@ async function buildDocumentFromURL(url) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
     // the phase that happens when you do a regular `yarn build`.
-    document.translations = findDocumentTranslations(document);
+    document.translations = findTranslations(
+      document.metadata.slug,
+      document.metadata.locale
+    );
   }
   return await buildDocument(document, documentOptions);
 }
@@ -57,6 +77,7 @@ const app = express();
 
 const bcdRouter = express.Router({ caseSensitive: true });
 
+// Note that this route will only get hit if .env has this: REACT_APP_BCD_BASE_URL=""
 bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
   const data = getBCDDataForPath(req.params.path);
   return data ? res.json(data) : res.status(404).send("BCD path not found");
@@ -74,20 +95,29 @@ app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
+const target = `${
+  ["developer.mozilla.org", "developer.allizom.org"].includes(PROXY_HOSTNAME)
+    ? "https://"
+    : "http://"
+}${PROXY_HOSTNAME}`;
 const proxy = FAKE_V1_API
   ? fakeV1APIRouter
   : createProxyMiddleware({
-      target: `${
-        ["developer.mozilla.org", "developer.allizom.org"].includes(
-          PROXY_HOSTNAME
-        )
-          ? "https://"
-          : "http://"
-      }${PROXY_HOSTNAME}`,
+      target,
       changeOrigin: true,
       // proxyTimeout: 20000,
       // timeout: 20000,
     });
+
+const stageApiProxy = createProxyMiddleware({
+  target: `https://developer.allizom.org`,
+  changeOrigin: true,
+  proxyTimeout: 20000,
+  timeout: 20000,
+  headers: {
+    Connection: "keep-alive",
+  },
+});
 
 const contentProxy =
   CONTENT_HOSTNAME &&
@@ -98,6 +128,9 @@ const contentProxy =
     // timeout: 20000,
   });
 
+app.use("/pong/*", stageApiProxy);
+app.use("/pimg/*", stageApiProxy);
+app.use("/api/v1/stripe/plans", stageApiProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
@@ -204,7 +237,78 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
+app.get(
+  [
+    "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
+    "/:locale/curriculum/index.json",
+  ],
+  async (req, res) => {
+    const { slug = "" } = req.params;
+    const data = await findCurriculumPageBySlug(slug);
+    if (!data) {
+      return res.status(404).send("Nothing here 🤷‍♂️");
+    }
+    return res.json(data);
+  }
+);
+
+app.get("/:locale/blog/index.json", async (_, res) => {
+  const posts = await allPostFrontmatter(
+    { includeUnpublished: true },
+    MEMOIZE_INVALIDATE
+  );
+  return res.json({ hyData: { posts } });
+});
+app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  return send(
+    req,
+    path.resolve(
+      BLOG_ROOT,
+      "..",
+      "authors",
+      sanitizeFilename(slug),
+      sanitizeFilename(asset)
+    )
+  ).pipe(res);
+});
+app.get("/:locale/blog/:slug/index.json", async (req, res) => {
+  const { slug } = req.params;
+  const data = await findPostBySlug(slug);
+  if (!data) {
+    return res.status(404).send("Nothing here 🤷‍♂️");
+  }
+  return res.json(data);
+});
+app.get(
+  ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
+  async (req, res) => {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
+);
+app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
+  const { slug, id } = req.params;
+  try {
+    return res.send(await findPostLiveSampleBySlug(slug, id));
+  } catch (e) {
+    return res.status(404).send(e.toString());
+  }
+});
+app.get("/:locale/blog/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  const p = findPostPathBySlug(slug);
+  if (p) {
+    return send(req, path.resolve(path.join(p, sanitizeFilename(asset)))).pipe(
+      res
+    );
+  }
+  return res.status(404).send("Nothing here 🤷‍♂️");
+});
 app.get("/*", async (req, res, ...args) => {
+  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
@@ -223,9 +327,18 @@ app.get("/*", async (req, res, ...args) => {
     return contentProxy(req, res, ...args);
   }
 
+  if (parsedUrl.pathname.endsWith("/runner.html")) {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
   if (req.url.includes("/_sample_.")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.path));
+      return res
+        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .status(200)
+        .send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }
@@ -240,14 +353,12 @@ app.get("/*", async (req, res, ...args) => {
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
-  // TODO: Would be nice to have a list of all supported file extensions
-  // in a constants file.
-  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
-    // Remember, Image.findByURLWithFallback() will return the absolute file path
+  if (ANY_ATTACHMENT_REGEXP.test(req.path)) {
+    // Remember, FileAttachment.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
     // Using a "fallback" strategy here so that images embedded in live samples
     // are resolved if they exist in en-US but not in <locale>
-    const filePath = Image.findByURLWithFallback(req.path);
+    const filePath = FileAttachment.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
@@ -260,10 +371,8 @@ app.get("/*", async (req, res, ...args) => {
 
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
-  let bcdDataURL = "";
   let isMetadata = false;
   let isDocument = false;
-  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.path.endsWith("index.json")) {
     // It's a bit special then.
@@ -279,21 +388,16 @@ app.get("/*", async (req, res, ...args) => {
     isMetadata = true;
     extraSuffix = "/metadata.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.path)) {
-    bcdDataURL = req.path;
-    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
-  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
     const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
-      bcdData = built.bcdData;
     } else if (
       lookupURL.split("/")[1] &&
       lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
@@ -322,12 +426,6 @@ app.get("/*", async (req, res, ...args) => {
     return res
       .status(404)
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (bcdDataURL) {
-    return res.json(
-      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
-    );
   }
 
   if (isDocument) {

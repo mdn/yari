@@ -1,24 +1,19 @@
-const path = require("node:path");
+import { fileURLToPath } from "node:url";
+import nodeExternals from "webpack-node-externals";
+import webpack from "webpack";
 
-const nodeExternals = require("webpack-node-externals");
-const webpack = require("webpack");
-
-const dirname = __dirname;
-
-module.exports = {
-  context: path.resolve(dirname, "."),
+const config = {
+  context: fileURLToPath(new URL(".", import.meta.url)),
   entry: "./index.ts",
   output: {
-    path: path.resolve(dirname, "dist"),
+    path: fileURLToPath(new URL("dist", import.meta.url)),
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
-    libraryTarget: "commonjs2",
+    library: { type: "module" },
+    chunkFormat: "module",
   },
   target: "node",
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
+  node: false,
   // See all options here:
   // https://webpack.js.org/configuration/stats/
   stats: "errors-warnings",
@@ -75,4 +70,9 @@ module.exports = {
       maxChunks: 1,
     }),
   ],
+  experiments: {
+    outputModule: true,
+  },
 };
+
+export default config;

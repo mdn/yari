@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { useSearchParams } from "react-router-dom";
 import { useUserData } from "../../user-context";
+import { BCD_BASE_URL } from "../../env";
 
 export interface Event {
   path: string;
@@ -53,10 +54,11 @@ function composeUrl({
         params.set(key, value);
         break;
 
-      case "show":
+      case "collections":
         if (isAuthenticated) {
           // Different endpoint for uncached personalized data.
-          url += "watched/";
+          url += "collections/";
+          params.set(key, value);
         }
         break;
 
@@ -80,7 +82,7 @@ export function useUpdates() {
   const [searchParams] = useSearchParams();
 
   const url = composeUrl({
-    isAuthenticated: user && user.isAuthenticated,
+    isAuthenticated: user?.isAuthenticated || false,
     searchParams,
   });
 
@@ -106,7 +108,7 @@ export function useUpdates() {
 
 export function useBCD(path: string) {
   return useSWR(
-    `/bcd/api/v0/current/${path}.json`,
+    `${BCD_BASE_URL}/bcd/api/v0/current/${path}.json`,
     async (key) => {
       const res = await fetch(key);
       if (res.ok) {

@@ -55,13 +55,6 @@ if (includeParent) {
 const containsTag = page.hasTag;
 const htmlEscape = mdn.htmlEscape;
 
-const badges = {
-    ExperimentalBadge: await template("ExperimentalBadge"),
-    NonStandardBadge: await template("NonStandardBadge"),
-    DeprecatedBadge: await template("DeprecatedBadge"),
-    ObsoleteBadge: await template("ObsoleteBadge"),
-}
-
 // Trims the title, returning only the text
 // between the start and end delimiter characters.
 // Does nothing if both are null or empty.
@@ -75,34 +68,16 @@ function trimTitle(title) {
     return title.substring(startIndex, endIndex);
 }
 
-function createLink(item) {
-    const url = item.url.replace('en-US', locale);
-    let title = htmlEscape(item.title);
+async function createLink(aPage) {
+    const url = aPage.url.replace('en-US', locale);
+    let title = htmlEscape(aPage.title);
 
     if (locale !== 'en-US') {
-        for (const translation of item.translations) {
+        for (const translation of aPage.translations) {
             if (translation.locale === locale) {
                 title = htmlEscape(trimTitle(translation.title));
             }
         }
-    }
-
-    const pageBadges = [];
-
-    if (containsTag(item, 'Experimental')) {
-        pageBadges.push(badges.ExperimentalBadge);
-    }
-
-    if (containsTag(item, 'Non-standard') || containsTag(item, 'Non Standard')) {
-        pageBadges.push(badges.NonStandardBadge);
-    }
-
-    if (containsTag(item, 'Deprecated')) {
-        pageBadges.push(badges.DeprecatedBadge);
-    }
-
-    if (containsTag(item, 'Obsolete')) {
-        pageBadges.push(badges.ObsoleteBadge);
     }
 
     let linkContent = title;
@@ -110,11 +85,18 @@ function createLink(item) {
       linkContent = `<code>${linkContent}</code>`;
     }
 
-    const result = `<li>${pageBadges.join('')}<a href="${url}">${linkContent}</a></li>`;
+    const pageBadges = (await page.badges(aPage)).join("");
+
+    const result = `<li><a href="${url}">${linkContent}</a>${pageBadges}</li>`;
     return result;
 }
 
-const output = pages.length ? `<ol>${pages.map(createLink).join('')}</ol>` : '';
+let output = ''
+if(pages.length) {
+    const linkArray = await Promise.all(pages.map(createLink));
+    const links = linkArray.join('');
+    output = `<ol>${links}</ol>`;
+}
 
 %>
 <%- output %>

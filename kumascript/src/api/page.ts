@@ -1,4 +1,6 @@
-import { KumaThis } from "../environment";
+import { KumaThis } from "../environment.js";
+import { getBadgeTemplates } from "../lib/badges.js";
+import { getCSSSyntax } from "../lib/css-syntax.js";
 
 const page = {
   // Determines whether or not the page has the specified tag. Returns
@@ -53,6 +55,14 @@ const page = {
 
   translations(this: KumaThis, path) {
     return this.info.getTranslations(path || this.env.url);
+  },
+
+  async badges(this: KumaThis, aPage) {
+    return await getBadgeTemplates(this, aPage);
+  },
+
+  async cssSyntax(this: KumaThis, slug?: string) {
+    return await getCSSSyntax(this, slug);
   },
 };
 

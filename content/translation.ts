@@ -1,4 +1,4 @@
-import Parser from "../kumascript/src/parser.js";
+import * as Parser from "../kumascript/src/parser.js";
 
 function* fastKSParser(s: string) {
   for (const match of s.matchAll(
@@ -58,25 +58,20 @@ const IMPORTANT_MACROS = new Map(
     "MDNSidebar",
     "SVGRef",
     "SeeCompatTable",
-    "ServiceWorkerSidebar",
     "Specifications",
-    "ToolsSidebar",
     "WebAssemblySidebar",
     "WebExtAPISidebar",
-    "WebGLSidebar",
-    "WebRTCSidebar",
-    "languages",
     "page",
   ].map((name) => [name.toLowerCase(), name])
 );
 
-function getKSMacros(content, fast = false) {
+function getKSMacros(content: string, fast = false) {
   return fast ? getMacrosFast(content) : getMacrosSlow(content);
 }
 
-function getMacrosSlow(content) {
+function getMacrosSlow(content: string) {
   const tokens = Parser.parse(content);
-  const macros = new Set();
+  const macros = new Set<string>();
 
   for (const token of tokens) {
     if (token.type !== "MACRO") {
@@ -105,7 +100,7 @@ function getMacrosSlow(content) {
 
 function getMacrosFast(content: string) {
   const tokens = fastKSParser(content);
-  const macros = new Set();
+  const macros = new Set<string>();
 
   for (const token of tokens) {
     const macroName = token.name.toLowerCase();

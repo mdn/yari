@@ -1,7 +1,7 @@
 # Yari
 
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
-![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
+![Prod Build](https://github.com/mdn/yari/workflows/Prod%20Build/badge.svg)
 
 ## Quickstart
 
@@ -19,8 +19,8 @@ Before you can start working with Yari, you need to:
     So for now let's make an exception. -->
 <!-- markdownlint-disable list-marker-space -->
 
-1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org) (>=
-    16.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+1.  Install [git](https://git-scm.com/), [Node.js](https://nodejs.org), and
+    [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
     the MDN [content](https://github.com/mdn/content) and
@@ -40,6 +40,9 @@ app locally. Do this like so:
 
     cd yari
     yarn install
+
+See the [troubleshooting](#troubleshooting) section below if you run into
+problems.
 
 Now copy the `.env-dist` file to `.env`:
 
@@ -105,6 +108,14 @@ All source code is [MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
 For content, see its
 [license](https://github.com/mdn/content/blob/main/LICENSE.md) in the
 [mdn/content repository](https://github.com/mdn/content).
+
+## Supported Platforms
+
+`yari` runs on Linux in CI, and when building for Production.
+
+We also support Windows and MacOS, however we don't aim to proactively catch
+issues with CI on those platforms. If bugs arise, we welcome issues being filed,
+or PRs being opened to fix them.
 
 ## How it works
 
@@ -286,3 +297,27 @@ The default server port `:5042` might be in use by another process. To resolve
 this, you can pick any unused port (e.g., 6000) and run the following:
 
     echo SERVER_PORT=6000 >> .env
+
+### Yarn install errors
+
+If you get errors while installing dependencies via yarn on a Mac, you may need
+to install some additional packages. Check the error message for the package
+name causing the problem.
+
+1. First, install [brew](https://brew.sh/) if you haven’t already
+
+1. To fix problems with `gifsicle`:
+
+   brew install automake autoconf libtool
+
+1. To fix problems with `pngquant-bin`:
+
+   brew install pkg-config
+
+1. To fix problems with `mozjpeg`:
+
+   brew install libpng sudo ln -s
+   /opt/homebrew/Cellar/libpng/1.6.40/lib/libpng16.a /usr/local/lib/libpng16.a
+
+You may need to adjust the path to `libpng16.a` depending on the version of
+`libpng` you have installed.

@@ -3,10 +3,10 @@ import path from "node:path";
 
 import express, { Request } from "express";
 
-import { Document, slugToFolder } from "../content";
-import { buildDocument } from "../build";
-import { BUILD_OUT_ROOT } from "../libs/env";
-import { Doc } from "../libs/types/document";
+import { Document, slugToFolder } from "../content/index.js";
+import { buildDocument } from "../build/index.js";
+import { BUILD_OUT_ROOT } from "../libs/env/index.js";
+import { Doc } from "../libs/types/document.js";
 
 const router = express();
 
@@ -73,19 +73,19 @@ router.get("/", withDocument, (req: RequestWithDocument, res) => {
 router.put("/", withDocument, async (req: RequestWithDocument, res) => {
   const { rawBody, metadata } = req.body;
   if (metadata.title && rawBody) {
-    Document.update(req.document.url, `${rawBody.trim()}\n`, metadata);
+    await Document.update(req.document.url, `${rawBody.trim()}\n`, metadata);
   }
   res.sendStatus(200);
 });
 
 // XXX deprecated anyway and doesn't work with Markdown
 // router.put("/move", async (req, res) => {
-//   Document.move(req.query.slug, req.query.newSlug, req.query.locale);
+//   await Document.move(req.query.slug, req.query.newSlug, req.query.locale);
 //   res.sendStatus(200);
 // });
 
-router.delete("/", (req, res) => {
-  Document.remove(req.query.slug as string, req.query.locale as string, {
+router.delete("/", async (req, res) => {
+  await Document.remove(req.query.slug as string, req.query.locale as string, {
     recursive: true,
   });
   res.sendStatus(200);

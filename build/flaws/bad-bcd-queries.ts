@@ -1,4 +1,7 @@
-import { packageBCD } from "../resolve-bcd";
+import { packageBCD } from "../resolve-bcd.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document.js";
+import { Flaw } from "./index.js";
 
 // Bad BCD queries are when the `<div class="bc-data">` tags have an
 // ID (or even lack the `id` attribute) that don't match anything in the
@@ -6,7 +9,10 @@ import { packageBCD } from "../resolve-bcd";
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
 
-export function getBadBCDQueriesFlaws(doc, $) {
+export function getBadBCDQueriesFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI
+): Flaw[] {
   return $("div.bc-data")
     .map((i, element) => {
       const $element = $(element);

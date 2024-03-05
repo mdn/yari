@@ -81,7 +81,7 @@ export default function SearchFilter({
   const isDefaultFilter = (key: string, value: string) => {
     const filter = filters.find((filter) => filter.key === key) as AnyFilter;
     const option = filter.options.find((option) => option.value === value);
-    return option.isDefault ?? false;
+    return option?.isDefault ?? false;
   };
 
   const isCurrentFilter = (key: string, value: string) => {
@@ -103,7 +103,7 @@ export default function SearchFilter({
 
   const isDefaultSort = (param: string) => {
     const sort = sorts.find((sort) => sort.param === param);
-    return sort.isDefault ?? false;
+    return sort?.isDefault ?? false;
   };
 
   const isCurrentSort = (param: string) => {
@@ -212,9 +212,9 @@ export default function SearchFilter({
         >
           <Button
             type="select"
-            ariaControls={filterMenu.id}
-            ariaHasPopup={"menu"}
-            ariaExpanded={openFilter === filterMenu.key}
+            aria-controls={filterMenu.id}
+            aria-haspopup={"menu"}
+            aria-expanded={openFilter === filterMenu.key}
             extraClasses={`${
               searchParams.get(filterMenu.key) ? "active" : ""
             } ${isDisabled ? "inactive" : ""}`}
@@ -223,6 +223,7 @@ export default function SearchFilter({
                 openFilter === filterMenu.key ? null : filterMenu.key
               )
             }
+            isDisabled={filterMenu.items.length === 0}
           >
             {filterMenu.label}
           </Button>
@@ -248,6 +249,10 @@ export default function SearchFilter({
           setSelectedTerms(camelUnwrap(terms))
         }
         onChangeHandler={(e) => setTerms(e.target.value)}
+        onResetHandler={() => {
+          setTerms("");
+          setSelectedTerms("");
+        }}
       />
 
       {sorts.length ? (
@@ -258,9 +263,9 @@ export default function SearchFilter({
         >
           <Button
             type="select"
-            ariaControls={sortMenu.id}
-            ariaHasPopup={"menu"}
-            ariaExpanded={isSortingOpen || undefined}
+            aria-controls={sortMenu.id}
+            aria-haspopup={"menu"}
+            aria-expanded={isSortingOpen || undefined}
             extraClasses={`${searchParams.get("sort") ? "active" : ""} ${
               isDisabled ? "inactive" : ""
             }`}

@@ -6,21 +6,35 @@ import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-import { program } from "@caporal/core";
-import { prompt } from "inquirer";
+import caporal from "@caporal/core";
+import inquirer from "inquirer";
 
-import { Document, slugToFolder, translationsOf } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { VALID_LOCALES } from "../libs/constants";
-import { renderHTML } from "../ssr/dist/main";
-import options from "./build-options";
-import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { Flaws } from "../libs/types";
-import * as bcd from "@mdn/browser-compat-data/types";
-import SearchIndex from "./search-index";
-import { BUILD_OUT_ROOT } from "../libs/env";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps";
-import { humanFileSize } from "./utils";
+import { Document, slugToFolder, translationsOf } from "../content/index.js";
+import {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  BUILD_OUT_ROOT,
+  SENTRY_DSN_BUILD,
+} from "../libs/env/index.js";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
+import options from "./build-options.js";
+import {
+  buildDocument,
+  BuiltDocument,
+  renderContributorsTxt,
+} from "./index.js";
+import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
+import SearchIndex from "./search-index.js";
+import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { humanFileSize } from "./utils.js";
+import { initSentry } from "./sentry.js";
+import { macroRenderTimes } from "../kumascript/src/render.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
@@ -35,9 +49,17 @@ export interface InteractiveDocumentBuild {
   skip: false;
 }
 
+interface GlobalMetadata {
+  [locale: string]: Array<DocMetadata>;
+}
+
+interface BuildMetadata {
+  [locale: string]: any;
+}
+
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -50,15 +72,19 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = translationsOf(document.metadata);
-      if (translations && translations.length > 0) {
-        document.translations = translations;
-      } else {
-        document.translations = [];
-      }
+      document.translations = translationsOf(
+        document.metadata.slug,
+        document.metadata.locale
+      );
     }
 
-    return { document, doc: await buildDocument(document), skip: false };
+    return {
+      document,
+      doc: await buildDocument(document, {
+        plainHTML: document.metadata.locale === DEFAULT_LOCALE,
+      }),
+      skip: false,
+    };
   } catch (e) {
     if (!interactive) {
       throw e;
@@ -116,15 +142,42 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
-  const metadata = {};
+  const metadata: GlobalMetadata = {};
+  const buildMetadata: BuildMetadata = {};
 
-  const documents = Document.findAll(findAllOptions);
+  function updateBaselineBuildMetadata(doc: Doc) {
+    if (typeof doc.baseline?.baseline === "undefined") {
+      return;
+    }
+
+    if (typeof buildMetadata[doc.locale] === "undefined") {
+      buildMetadata[doc.locale] = {};
+    }
+    if (typeof buildMetadata[doc.locale].baseline === "undefined") {
+      buildMetadata[doc.locale].baseline = {
+        total: 0,
+        high: 0,
+        highPaths: [],
+        low: 0,
+        lowPaths: [],
+        not: 0,
+        notPaths: [],
+      };
+    }
+
+    buildMetadata[doc.locale].baseline.total++;
+    const key = doc.baseline.baseline || "not";
+    buildMetadata[doc.locale].baseline[key]++;
+    buildMetadata[doc.locale].baseline[`${key}Paths`].push(doc.mdn_url);
+  }
+
+  const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_grey
   );
 
-  const docPerLocale = {};
+  const docPerLocale: Record<string, { slug: string; modified: string }[]> = {};
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
@@ -153,15 +206,16 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap, plainHTML },
       document,
     } = result;
 
@@ -172,11 +226,19 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
+    if (builtDocument.baseline) {
+      updateBaselineBuildMetadata(builtDocument);
+    }
+
     if (!noHTML) {
       fs.writeFileSync(
         path.join(outPath, "index.html"),
         renderHTML(document.url, { doc: builtDocument })
       );
+    }
+
+    if (plainHTML) {
+      fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
@@ -190,37 +252,32 @@ async function buildDocuments(
         builtDocument.source.github_url.replace("/blob/", "/commits/")
       )
     );
-    for (const { url, data } of bcdData) {
-      fs.writeFileSync(
-        path.join(outPath, path.basename(url)),
-        JSON.stringify(data, (key, value) => {
-          // The BCD data object contains a bunch of data we don't need in the
-          // React component that loads the `bcd.json` file and displays it.
-          // The `.releases` block contains information about browsers (e.g
-          // release dates) and that part has already been extracted and put
-          // next to each version number where appropriate.
-          // Therefore, we strip out all "retired" releases.
-          if (key === "releases") {
-            return Object.fromEntries(
-              Object.entries(value as bcd.ReleaseStatement).filter(
-                ([, v]) => v.status !== "retired"
-              )
-            );
-          }
-          return value;
-        })
-      );
-    }
 
-    for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+    for (const { id, html, slug } of liveSamples) {
+      let liveSamplePath: string;
+      if (slug) {
+        // Since we no longer build all live samples we have to build live samples
+        // for foreign slugs. If slug is truthy it's a different slug than the current
+        // document. So we need to set up the folder.
+        console.warn(
+          `Building live sample from another page: ${id} in ${documentPath}`
+        );
+        const liveSampleBasePath = path.join(
+          BUILD_OUT_ROOT,
+          slugToFolder(slug)
+        );
+        liveSamplePath = path.join(liveSampleBasePath, `_sample_.${id}.html`);
+        fs.mkdirSync(liveSampleBasePath, { recursive: true });
+      } else {
+        liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+      }
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    for (const filePath of fileAttachments) {
+    for (const [basename, filePath] of fileAttachmentMap) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      fs.copyFileSync(filePath, path.join(outPath, basename));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -243,6 +300,7 @@ async function buildDocuments(
       body: _,
       toc: __,
       sidebarHTML: ___,
+      sidebarMacro: ____,
       ...builtMetadata
     } = builtDocument;
     builtMetadata.hash = hash;
@@ -295,11 +353,36 @@ async function buildDocuments(
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
+    const sortedMeta = meta
+      .slice()
+      .sort((a, b) => a.mdn_url.localeCompare(b.mdn_url));
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
+      JSON.stringify(sortedMeta)
+    );
+  }
+
+  // allBrowserCompat.txt is used by differy, see:
+  // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
+  const allBrowserCompat = new Set<string>();
+  Object.values(metadata).forEach((localeMeta) =>
+    localeMeta.forEach((doc) =>
+      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    )
+  );
+  fs.writeFileSync(
+    path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
+    [...allBrowserCompat].sort().join(" ")
+  );
+
+  for (const [locale, meta] of Object.entries(buildMetadata)) {
+    // have to write per-locale because we build each locale concurrently
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
       JSON.stringify(meta)
     );
   }
+
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
@@ -320,6 +403,42 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
+function nsToMs(bigint: bigint) {
+  return Number(bigint / BigInt(1_000)) / 1_000;
+}
+
+function formatMacroRenderReport(header = "Macro render report") {
+  const out = ["\n"];
+  out.push(header);
+
+  // Prepare data.
+  const stats = Object.entries(macroRenderTimes).map(([name, times]) => {
+    const sortedTimes = times.slice().sort(compareBigInt);
+    return {
+      name,
+      min: sortedTimes.at(0),
+      max: sortedTimes.at(-1),
+      count: times.length,
+      sum: times.reduce((acc, value) => acc + value, BigInt(0)),
+    };
+  });
+
+  // Sort by total render time.
+  stats.sort(({ sum: a }, { sum: b }) => Number(b - a));
+
+  // Format data.
+  out.push(
+    ["name", "count", "min (ms)", "avg (ms)", "max (ms)", "sum (ms)"].join(",")
+  );
+  for (const { name, min, max, count, sum } of stats) {
+    const avg = sum / BigInt(count);
+    out.push([name, count, ...[min, avg, max, sum].map(nsToMs)].join(","));
+  }
+
+  out.push("\n");
+  return out.join("\n");
+}
+
 interface BuildArgsAndOptions {
   args: {
     files?: string[];
@@ -332,6 +451,10 @@ interface BuildArgsAndOptions {
     notLocale?: string[];
     sitemapIndex?: boolean;
   };
+}
+
+if (SENTRY_DSN_BUILD) {
+  initSentry(SENTRY_DSN_BUILD);
 }
 
 program
@@ -474,6 +597,7 @@ program
         }
         console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
         console.log(formatTotalFlaws(totalFlaws));
+        console.log(formatMacroRenderReport());
       }
     } catch (error) {
       // So you get a stacktrace in the CLI output
@@ -484,3 +608,12 @@ program
   });
 
 program.run();
+function compareBigInt(a: bigint, b: bigint): number {
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+}

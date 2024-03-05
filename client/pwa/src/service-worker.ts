@@ -1,24 +1,22 @@
 /* eslint no-restricted-globals: ["off", "location"] */
 /// <reference lib="WebWorker" />
 
-import { cacheName, contentCache, openCache } from "./caches";
-import { respond } from "./fetcher";
-import { unpackAndCache } from "./unpack-cache";
+import { cacheName, contentCache, openCache } from "./caches.js";
+import { respond } from "./fetcher.js";
+import { unpackAndCache } from "./unpack-cache.js";
 import {
   ContentStatusPhase,
   getContentStatus,
   patchContentStatus,
   RemoteContentStatus,
   SwType,
-} from "./db";
-import { fetchWithExampleOverride } from "./fetcher";
+} from "./db.js";
+import { fetchWithExampleOverride } from "./fetcher.js";
 
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
 );
-export const LIVE_SAMPLES_URL = new URL(
-  "https://yari-demos.prod.mdn.mozit.cloud"
-);
+export const LIVE_SAMPLES_URL = new URL("https://live-samples.mdn.mozilla.net");
 export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
 
 const UPDATES_BASE_URL = `https://updates.${
@@ -40,7 +38,9 @@ self.addEventListener("install", (e) => {
     (async () => {
       const cache = await openCache();
       const { files = {} }: { files: object } =
-        (await (await fetch("/asset-manifest.json")).json()) || {};
+        (await (
+          await fetch("/asset-manifest.json", { cache: "no-cache" })
+        ).json()) || {};
       const assets = [...Object.values(files)].filter(
         (asset) => !(asset as string).endsWith(".map")
       );
@@ -56,10 +56,11 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("fetch", async (e) => {
+  const url = new URL(e.request.url);
   if (
     SW_TYPE === SwType.PreferOnline &&
-    !e.request.url.includes("/api/v1/") &&
-    !e.request.url.includes("/users/fxa/")
+    !url.pathname.startsWith("/api/") &&
+    !url.pathname.startsWith("/users/fxa/")
   ) {
     e.respondWith(
       (async () => {

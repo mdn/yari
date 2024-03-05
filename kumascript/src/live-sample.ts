@@ -1,8 +1,10 @@
 import cheerio from "cheerio";
 import ejs from "ejs";
+import path from "node:path";
 
-import { MacroLiveSampleError } from "./errors";
-import { HTMLTool, KumascriptError, slugify } from "./api/util";
+import { MacroLiveSampleError } from "./errors.js";
+import { HTMLTool, KumascriptError, slugify } from "./api/util.js";
+import { render } from "../index.js";
 
 const LIVE_SAMPLE_HTML = `
 <!DOCTYPE html>
@@ -67,42 +69,70 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-export function buildLiveSamplePages(uri, title, $, rawBody) {
+const liveSampleRE = /.*\/(runner|_sample_\.(.*))\.html($|\?.*$)/i;
+
+function extractSlug(uri) {
+  const url = new URL(uri, "https://example.com");
+  return path.dirname(url.pathname);
+}
+
+export async function buildLiveSamplePages(uri, title, $, rawBody) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample pages for the given
   // document or else collect flaws
+
   if (typeof $ == "string") {
     $ = cheerio.load($);
   }
-  return $("iframe")
-    .filter((i, iframe) => {
-      const src = $(iframe).attr("src");
-      return (
-        src && src.toLowerCase().includes(`${uri.toLowerCase()}/_sample_.`)
-      );
-    })
-    .map((i, iframe) => {
-      const iframeId = $(iframe).attr("id");
-      const id = slugify(iframeId.substr("frame_".length));
-      const result = { id, html: null, flaw: null };
-      const tool = new HTMLTool($, uri);
-      let sampleData;
-      try {
-        sampleData = tool.extractLiveSampleObject(iframeId);
-      } catch (error) {
-        if (error instanceof KumascriptError) {
-          result.flaw = new MacroLiveSampleError(
-            error,
-            rawBody,
-            JSON.parse($(iframe).attr("data-token"))
-          );
-          return result;
+  return Promise.all([
+    ...$("iframe")
+      .filter((i, iframe) => {
+        const src = $(iframe).attr("src");
+        return src && liveSampleRE.test(src.toLowerCase());
+      })
+      .map(async (i, iframe) => {
+        const iframeId = $(iframe).attr("id");
+        const id = slugify(iframeId.substr("frame_".length));
+        const iframeSrc = $(iframe).attr("src");
+        const result = { id, html: null, flaw: null, slug: null };
+        const iframeSlug = extractSlug(iframeSrc);
+        let slug = uri;
+        let ctx = $;
+        if (uri.toLowerCase() !== iframeSlug.toLowerCase()) {
+          // This means we have an transplanted live sample.
+          // It's deprecated but we still apply a workaround for now.
+          slug = iframeSlug;
+          result.slug = iframeSlug;
+          try {
+            const [c] = await render(slug);
+            ctx = c;
+          } catch (e) {
+            result.flaw = new MacroLiveSampleError(
+              e,
+              rawBody,
+              JSON.parse($(iframe).attr("data-token"))
+            );
+            return result;
+          }
         }
-        throw error;
-      }
-      sampleData.sampleTitle = `${title} - ${id} - code sample`;
-      result.html = liveSampleTemplate(sampleData);
-      return result;
-    })
-    .get();
+        const tool = new HTMLTool(ctx, slug);
+        let sampleData;
+        try {
+          sampleData = tool.extractLiveSampleObject(iframeId);
+        } catch (error) {
+          if (error instanceof KumascriptError) {
+            result.flaw = new MacroLiveSampleError(
+              error,
+              rawBody,
+              JSON.parse($(iframe).attr("data-token"))
+            );
+            return result;
+          }
+          throw error;
+        }
+        sampleData.sampleTitle = `${title} - ${id} - code sample`;
+        result.html = liveSampleTemplate(sampleData);
+        return result;
+      }),
+  ]);
 }

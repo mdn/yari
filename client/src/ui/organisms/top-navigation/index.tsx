@@ -30,9 +30,7 @@ export function TopNavigation() {
 
   return (
     <header
-      className={`main-document-header-container top-navigation ${
-        showMainMenu ? "show-nav" : ""
-      }
+      className={`top-navigation ${showMainMenu ? "show-nav" : ""}
       ${dark ? " dark" : ""}
       ${transparent ? " is-transparent" : ""}`}
     >
@@ -41,9 +39,9 @@ export function TopNavigation() {
           <Logo />
           <Button
             type="action"
-            ariaHasPopup={"menu"}
-            ariaLabel={assistiveText}
-            ariaExpanded={showMainMenu}
+            aria-haspopup={"menu"}
+            aria-label={assistiveText}
+            aria-expanded={showMainMenu}
             title={assistiveText}
             icon={showMainMenu ? "cancel" : "menu"}
             onClickHandler={toggleMainMenu}

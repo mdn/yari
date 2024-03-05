@@ -1,12 +1,11 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../env";
+import { DEV_MODE } from "../../env";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
-import { DocParent, Toc } from "../../../../libs/types/document";
+import { Toc } from "../../../../libs/types/document";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
-import { ArticleActionsContainer } from "../../ui/organisms/article-actions-container";
 
 interface StaticPageDoc {
   id: string;
@@ -19,7 +18,6 @@ interface StaticPageProps {
   extraClasses?: string;
   locale: string;
   slug: string;
-  parents: DocParent[];
   fallbackData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
@@ -29,7 +27,6 @@ function StaticPage({
   extraClasses = "",
   locale,
   slug,
-  parents = [],
   fallbackData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
@@ -48,7 +45,7 @@ function StaticPage({
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: DEV_MODE,
       revalidateOnMount: !fallbackData,
     }
   );
@@ -67,10 +64,6 @@ function StaticPage({
 
   return (
     <>
-      <ArticleActionsContainer
-        parents={[...parents, { uri: baseURL, title: hyData.title }]}
-      />
-
       <div className="main-wrapper">
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
