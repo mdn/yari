@@ -28,6 +28,7 @@ import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
+import { Curriculum } from "./curriculum";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -54,7 +55,7 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && (
+        {pageType !== "document-page" && pageType !== "curriculum" && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
           </div>
@@ -164,6 +165,14 @@ export function App(appProps: HydrationData) {
         time it hits any React code.
        */}
       <Route path="/" element={homePage} />
+      <Route
+        path="/en-US/curriculum/*"
+        element={
+          <Layout pageType="curriculum">
+            <Curriculum {...appProps} />
+          </Layout>
+        }
+      />
       <Route
         path="/en-US/blog/*"
         element={

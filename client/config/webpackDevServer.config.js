@@ -5,7 +5,7 @@ import ignoredFiles from "react-dev-utils/ignoredFiles.js";
 import redirectServedPath from "react-dev-utils/redirectServedPathMiddleware.js";
 
 import paths from "./paths.js";
-import getHttpsConfig from "./getHttpsConfig.js";
+import getServerConfig from "./getHttpsConfig.js";
 
 const host = process.env.HOST || "0.0.0.0";
 const sockHost = process.env.WDS_SOCKET_HOST;
@@ -93,8 +93,7 @@ function config(proxy, allowedHost) {
       // remove last slash so user can land on `/test` instead of `/test/`
       publicPath: paths.publicUrlOrPath.slice(0, -1),
     },
-
-    https: getHttpsConfig(),
+    server: getServerConfig(),
     host,
     historyApiFallback: {
       // Paths with dots should still use the history fallback.

@@ -15,7 +15,9 @@ export function createPong2GetHandler(
 }>;
 
 export function createPong2ClickHandler(coder: Coder): (
-  params: URLSearchParams
+  params: URLSearchParams,
+  countryCode: string,
+  userAgent: string
 ) => Promise<{
   status: number;
   location: string;
@@ -23,4 +25,8 @@ export function createPong2ClickHandler(coder: Coder): (
 
 export function createPong2ViewedHandler(
   coder: Coder
-): (params: URLSearchParams) => Promise<void>;
+): (
+  params: URLSearchParams,
+  countryCode: string,
+  userAgent: string
+) => Promise<void>;

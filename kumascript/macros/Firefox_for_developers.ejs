@@ -1,58 +1,67 @@
-<div class="multiColumnList">
-<ul>
 <%
 /*
+ * This macro generates a list of links to Firefox release notes.
+ * It should be used under the "Mozilla/Firefox/Releases" tree.
+ * 
  * Parameters:
- * $0 = max version to show in the list
+ *   None
  */
 
-var CURRENT_MAX_VERSION = $0;
-
-var maxVersion = CURRENT_MAX_VERSION;
-var minVersion = maxVersion - 30;
-
-if (minVersion < 4) { minVersion = 4 }
-
-// for href attr
-var slug = mdn.localString({
-    "en-US" : "Releases",
-    "fr" : "Versions"
-});
-
 // for content
-var str = mdn.localString({
-    "en-US": ["Firefox ", " for developers"],
-    "fr" : ["Firefox ", " pour les développeurs"],
-    "ko": ["Firefox", "릴리즈노트"],
-    "ru": ["Firefox ", " для разработчиков"]
+const str = mdn.localString({
+  "en-US": ["Firefox ", " for developers"],
+  "fr" : ["Firefox ", " pour les développeurs"],
+  "ko": ["Firefox", "릴리즈노트"],
+  "ru": ["Firefox ", " для разработчиков"],
+  "zh-CN": ["Firefox ", " 的开发者说明"],
 });
 
-var loc = env.locale;
+const locale = env.locale;
+const slug = env.slug;
+
+const oldVersion = ["3.6", "3.5", "3", "2", "1.5"];
+
+const versionStr = slug.split("/").at(-1);
+let maxVersion = Number(versionStr);
+
+let oldVersionStartIdx = 0;
+
+// determine the start index of old version and the max version
+if (maxVersion < 4) {
+  oldVersionStartIdx = oldVersion.indexOf(versionStr) + 1;
+} else {
+  maxVersion--;
+}
+
+let minVersion = maxVersion - 30;
+
+if (minVersion < 4) {
+  minVersion = 4;
+}
+
+// generate release links
+const releaseLinks = [];
+
+function generateReleaseLink(version) {
+  return `<li><a href="/${locale}/docs/Mozilla/Firefox/Releases/${version}">${str[0]}${version}${str[1]}</a></li>`;
+}
 
 // for newer version
-for (var i = maxVersion; i >= minVersion; i--) {
-    %><li><a href="/<%-loc%>/docs/Mozilla/Firefox/<%- slug %>/<%- i %>"><%- str[0] %><%- i %><%- str[1] %></a></li><%
+for (let i = maxVersion; i >= minVersion; i--) {
+  releaseLinks.push(generateReleaseLink(i));
 }
 
 // for older version
-if (minVersion == 4) {
-  var ov = ["3.6", "3.5", "3", "2", "1.5"];
-  var ovStart = ov.indexOf($0);
-  if (ovStart == -1) {
-    ovStart = 0;
-  }
-  for(var i = ovStart; i < ov.length; i++) {
-      %><li><a href="/<%-loc%>/docs/Mozilla/Firefox/<%- slug %>/<%- ov[i] %>"><%- str[0] %><%-ov[i]%><%- str[1] %></a></li><%
+if (minVersion === 4) {
+  for (let i = oldVersionStartIdx; i < oldVersion.length; i++) {
+    releaseLinks.push(generateReleaseLink(oldVersion[i]));
   }
 }
 
-/*
-    This template is difficult. Because, old "fr" page have other rule...
-    If the URL of your country's page is the same as the English pages,
-    You just have to add your country into the object in argument of mdn.localString.
-
-    And, some old pages have this link: "https://developer.mozilla.org/en-US/docs/Updating_web_applications_for_Firefox_3"
-*/
-
-%></ul>
+const output = releaseLinks.join("");
+%>
+<div class="multiColumnList">
+  <ul>
+    <%-output%>
+  </ul>
 </div>

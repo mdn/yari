@@ -13,11 +13,7 @@ export function Prose({ section }: { section: any }) {
 
   return (
     <section aria-labelledby={id}>
-      <DisplayHx
-        id={id}
-        title={section.title}
-        titleAsText={section.titleAsText}
-      />
+      <DisplayHx id={id} title={section.title} />
       <div className="section-content" dangerouslySetInnerHTML={html} />
     </section>
   );

@@ -72,7 +72,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="ai-help/"
+        path="ai-help"
         element={
           <Layout>
             <AiHelp />

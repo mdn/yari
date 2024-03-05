@@ -50,6 +50,7 @@
     gap: 0.125rem;
     line-height: var(--base-line-height);
     margin: 0;
+    overflow-wrap: break-word;
 
     a {
       color: var(--text-primary);

@@ -2,33 +2,27 @@
 
 .auth-container {
   display: flex;
-  flex-flow: column-reverse;
   flex-shrink: 0;
+  flex-wrap: nowrap;
   font-family: var(--font-body);
   font-size: var(--type-smaller-font-size);
   font-weight: var(--font-body-strong-weight);
-  gap: 0.5rem;
+  gap: 1rem;
   list-style: none;
-  margin-bottom: 0.5rem;
   padding: 0;
-  text-align: center;
 
   li {
     flex-shrink: 0;
   }
+}
 
-  @media screen and (min-width: $screen-lg) {
-    align-items: center;
-    flex-flow: row;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin: 0;
-    text-align: initial;
-    width: min-content;
-  }
-
-  // override to fix layout in English.
-  @media screen and (min-width: 820px) {
-    width: unset;
+.top-navigation-main {
+  .auth-container {
+    @media screen and (max-width: #{$screen-lg - 1}) {
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
   }
 }

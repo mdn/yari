@@ -20,6 +20,7 @@ export const BINARY_ATTACHMENT_REGEXP: RegExp;
 export const FLAW_LEVELS: Readonly<Record<string, string>>;
 export const VALID_FLAW_CHECKS: Set<string>;
 export const MDN_PLUS_TITLE: string;
+export const CURRICULUM_TITLE: string;
 export const HTML_FILENAME: string;
 export const MARKDOWN_FILENAME: string;
 export const VALID_MIME_TYPES: Set<string>;

@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
@@ -19,9 +18,10 @@ import {
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
+  DEV_MODE,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
-import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
+import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -31,10 +31,16 @@ import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 
 const FEATURED_ARTICLES = [
-  "blog/regular-expressions-reference-updates/",
-  "blog/aria-accessibility-html-landmark-roles/",
-  "docs/Web/API/Performance_API",
-  "docs/Web/CSS/CSS_nesting",
+  "blog/learn-javascript-console-methods/",
+  "blog/introduction-to-web-sustainability/",
+  "docs/Web/API/CSS_Custom_Highlight_API",
+  "docs/Web/CSS/color_value",
+];
+
+const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-curriculum-launch/",
+  "blog/baseline-evolution-on-mdn/",
+  "blog/introducing-the-mdn-playground/",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
@@ -317,6 +323,10 @@ export async function buildSPAs(options: {
                   mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
                   summary: description,
                   title,
+                  tag: {
+                    uri: `/${DEFAULT_LOCALE}/blog/`,
+                    title: "Blog",
+                  } satisfies DocParent,
                 };
               }
             }
@@ -368,14 +378,25 @@ async function fetchGitHubPRs(repo, count = 5) {
     "sort:updated",
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
-  const pullRequestsData = (await got(pullRequestUrl).json()) as {
-    items: any[];
-  };
-  const prDataRepo = pullRequestsData.items.map((item) => ({
-    ...item,
-    repo: { name: repo, url: `https://github.com/${repo}` },
-  }));
-  return prDataRepo;
+  try {
+    const pullRequestsData = (await got(pullRequestUrl).json()) as {
+      items: any[];
+    };
+    const prDataRepo = pullRequestsData.items.map((item) => ({
+      ...item,
+      repo: { name: repo, url: `https://github.com/${repo}` },
+    }));
+    return prDataRepo;
+  } catch (e) {
+    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }
 
 async function fetchRecentContributions() {
@@ -403,69 +424,35 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
-
-  const $ = cheerio.load(xml, { xmlMode: true });
-
-  const items: NewsItem[] = [];
-
-  items.push(
-    {
-      title: "Responsibly empowering developers with AI on MDN",
-      url: `https://blog.mozilla.org/en/products/mdn/responsibly-empowering-developers-with-ai-on-mdn/`,
-      author: "Steve Teixeira",
-      published_at: new Date("Thu, 06 Jul 2023 14:41:20 +0000").toString(),
-      source: {
-        name: "blog.mozilla.org",
-        url: `https://blog.mozilla.org/en/latest/`,
-      },
-    },
-    {
-      title: "Introducing AI Help: Your Trusted Companion for Web Development",
-      url: `/${DEFAULT_LOCALE}/blog/introducing-ai-help/`,
-      author: "Hermina Condei",
-      published_at: new Date("2023-06-27").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: `/${DEFAULT_LOCALE}/blog/`,
-      },
-    },
-    {
-      title: "Introducing the MDN Playground: Bring your code to life!",
-      url: `/${DEFAULT_LOCALE}/blog/introducing-the-mdn-playground/`,
-      author: "Florian Dieminger",
-      published_at: new Date("2023-06-22").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: `/${DEFAULT_LOCALE}/blog/`,
-      },
-    },
-    {
-      title: "Introducing Baseline: a unified view of stable web features",
-      url: `/${DEFAULT_LOCALE}/blog/baseline-unified-view-stable-web-features/`,
-      author: "Hermina Condei",
-      published_at: new Date("2023-05-10").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: `/${DEFAULT_LOCALE}/blog/`,
-      },
-    }
-  );
-
-  $("item").each((i, item) => {
-    const $item = $(item);
-
-    items.push({
-      title: $item.find("title").text(),
-      url: $item.find("guid").text(),
-      author: $item.find("dc\\:creator").text(),
-      published_at: $item.find("pubDate").text(),
-      source: {
-        name: "hacks.mozilla.org",
-        url: "https://hacks.mozilla.org/category/mdn/",
-      },
-    });
-  });
+  const items: NewsItem[] = (
+    await Promise.all(
+      LATEST_NEWS.map(async (itemOrUrl) => {
+        if (typeof itemOrUrl !== "string") {
+          return itemOrUrl;
+        }
+        const url = itemOrUrl;
+        const post = await findPostBySlug(
+          getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+        );
+        if (post) {
+          const {
+            doc: { title },
+            blogMeta: { author, date, slug },
+          } = post;
+          return {
+            title,
+            url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+            author: author?.name || "The MDN Team",
+            published_at: new Date(date).toString(),
+            source: {
+              name: "developer.mozilla.org",
+              url: `/${DEFAULT_LOCALE}/blog/`,
+            },
+          };
+        }
+      })
+    )
+  ).filter(Boolean);
 
   return {
     items,

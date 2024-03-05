@@ -10,9 +10,9 @@ interface WebSpec {
     currentSpecification: string;
     title: string;
     shortTitle: string;
-    nightlyUrl: string;
+    nightlyUrl?: string;
   };
-  nightly: {
+  nightly?: {
     url: string;
     status: string;
     sourcePath: string;
@@ -49,10 +49,11 @@ export async function getWebSpec(url: string): Promise<WebSpec | undefined> {
   return specs.find(
     (spec) =>
       url.startsWith(spec.url) ||
-      url.startsWith(spec.nightly.url) ||
-      spec.nightly.alternateUrls.some((s) => url.startsWith(s)) ||
-      // When grabbing series nightly, make sure we're grabbing the latest spec version
-      (spec.shortname === spec.series.currentSpecification &&
-        url.startsWith(spec.series.nightlyUrl))
+      (spec.nightly &&
+        (url.startsWith(spec.nightly.url) ||
+          spec.nightly.alternateUrls.some((s) => url.startsWith(s)) ||
+          // When grabbing series nightly, make sure we're grabbing the latest spec version
+          (spec.shortname === spec.series.currentSpecification &&
+            url.startsWith(spec.series.nightlyUrl))))
   );
 }

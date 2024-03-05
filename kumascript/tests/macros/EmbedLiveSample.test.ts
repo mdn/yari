@@ -13,7 +13,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call("Quotations"),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="Quotations sample"' +
         ' id="frame_quotations"' +
         ' src="https://live.mdnplay.dev/en-US/docs/Web/HTML/Element/figure/runner.html?id=quotations">' +
@@ -25,7 +25,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/SVG/Element/switch";
     return assert.eventually.equal(
       macro.call("SVG_&lt;switch&gt;_example"),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="SVG &amp;lt;switch&amp;gt; example sample"' +
         ' id="frame_svg_ltswitchgt_example"' +
         ' src="https://live.mdnplay.dev/en-US/docs/Web/SVG/Element/switch/runner.html?id=svg_ltswitchgt_example">' +
@@ -36,7 +36,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/SVG/Element/switch";
     return assert.eventually.equal(
       macro.call("SVG_%3Cswitch%3E_example"),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="SVG %3Cswitch%3E example sample"' +
         ' id="frame_svg_switch_example"' +
         ' src="https://live.mdnplay.dev/en-US/docs/Web/SVG/Element/switch/runner.html?id=svg_switch_example">' +
@@ -48,7 +48,7 @@ describeMacro("EmbedLiveSample", function () {
       "/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS";
     return assert.eventually.equal(
       macro.call("Dégradés_linéaires_simples"),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="Dégradés linéaires simples sample"' +
         ' id="frame_dégradés_linéaires_simples"' +
         ' src="https://live.mdnplay.dev/fr/docs/Web/CSS/Utilisation_de_d%C3%A9grad%C3%A9s_CSS/runner.html?id=d%C3%A9grad%C3%A9s_lin%C3%A9aires_simples">' +
@@ -59,7 +59,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call('"><script>alert("XSS");</script>'),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt; sample"' +
         ' id="frame_scriptalertxssscript"' +
         ' src="https://live.mdnplay.dev/en-US/docs/Web/HTML/Element/figure/runner.html?id=scriptalertxssscript">' +
@@ -70,7 +70,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/CSS/border-top-width";
     return assert.eventually.equal(
       macro.call("Example", "100%"),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="Example sample"' +
         ' id="frame_example"' +
         ' width="100%"' +
@@ -82,7 +82,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/CSS/border-top-width";
     return assert.eventually.equal(
       macro.call("Example", '"><script>alert("XSS");</script>'),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="Example sample"' +
         ' id="frame_example"' +
         ' width="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
@@ -94,7 +94,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call("Images", "100%", 250),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="Images sample"' +
         ' id="frame_images"' +
         ' width="100%" height="250"' +
@@ -107,7 +107,7 @@ describeMacro("EmbedLiveSample", function () {
       "/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations";
     return assert.eventually.equal(
       macro.call("增加关键帧", "100%", "250"),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="增加关键帧 sample"' +
         ' id="frame_增加关键帧"' +
         ' width="100%" height="250"' +
@@ -123,7 +123,7 @@ describeMacro("EmbedLiveSample", function () {
         160,
         160
       ),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E9%AA%A8%E6%9E%B6 sample"' +
         ' id="frame_一个模板骨架"' +
         ' width="160" height="160"' +
@@ -135,7 +135,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.url = "/en-US/docs/Web/HTML/Element/figure";
     return assert.eventually.equal(
       macro.call("Images", "100%", '"><script>alert("XSS");</script>'),
-      '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+      '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
         ' title="Images sample"' +
         ' id="frame_images"' +
         ' width="100%" height="&#34;&gt;&lt;script&gt;alert(&#34;XSS&#34;);&lt;/script&gt;"' +
@@ -144,7 +144,7 @@ describeMacro("EmbedLiveSample", function () {
     );
   });
   const same_slug_iframe =
-    '<div class="code-example"><p class="example-header"></p><iframe class="sample-code-frame"' +
+    '<div class="code-example"><div class="example-header"></div><iframe class="sample-code-frame"' +
     ' title="Examples sample"' +
     ' id="frame_examples"' +
     ' width="700px" height="700px"' +

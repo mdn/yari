@@ -36,9 +36,9 @@ function Tooltip({
             ? x
             : wH
           : // the center of the parent is on the right half of the window
-          x > iW - wH // if the inner width of the window is less than half the tooltip
-          ? 2 * wH - (iW - x)
-          : wH);
+            x > iW - wH // if the inner width of the window is less than half the tooltip
+            ? 2 * wH - (iW - x)
+            : wH);
       const tooltipOffset = `${offset.toFixed(2)}px`;
       setStyle(Object.fromEntries([["--tooltip-offset", tooltipOffset]]));
     };

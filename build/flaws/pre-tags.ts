@@ -1,6 +1,6 @@
 import { Flaw } from "./index.js";
 
-import { getFirstMatchInText } from "../matches-in-text.js";
+import { getFirstMatchInText } from "../matches.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 const escapeHTML = (s: string) =>

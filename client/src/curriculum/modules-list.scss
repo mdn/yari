@@ -1,0 +1,239 @@
+@use "../ui/vars" as *;
+
+// .with sidebar is needed to
+.curriculum-content-container.curriculum-overview,
+.curriculum-content-container {
+  .curriculum-content {
+    .modules {
+      input[type="radio"]:not(:checked) ~ a.lets-begin,
+      input[type="radio"]:not(:checked) ~ ol.modules-list {
+        display: none;
+      }
+    }
+
+    ol.modules-list-list {
+      display: grid;
+      grid-template-areas:
+        "started core  extensions"
+        "hr      hr    hr"
+        "mod     mod   mod"
+        "cta     cta   cta";
+
+      grid-template-columns: auto;
+      margin: 0;
+      padding: 0;
+
+      @media screen and (min-width: $screen-sm) {
+        grid-template-areas:
+          "started core  extensions spacer"
+          "hr      hr    hr         hr"
+          "mod     mod   mod        mod"
+          "cta     cta   cta        cta";
+
+        grid-template-columns: auto auto auto 1fr;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid var(--text-inactive);
+        grid-area: hr;
+        margin: 0 0 1.5rem;
+        width: 100%;
+      }
+
+      li.modules-list-list-item {
+        display: contents;
+
+        > input:checked + label {
+          color: var(--text-primary);
+
+          &::before {
+            height: 0;
+            position: absolute;
+            transform: translate3d(-0.75rem, 0.75rem, 0);
+            width: 0;
+          }
+        }
+
+        > input:checked:focus-visible + label {
+          outline-color: var(--accent-primary);
+          outline-offset: 1px;
+          outline-style: auto;
+        }
+
+        > label {
+          color: var(--text-inactive);
+          cursor: pointer;
+        }
+
+        &#modules-0 {
+          > label,
+          > input {
+            grid-area: started;
+          }
+
+          > input:checked + label::before {
+            content: url("../assets/icons/curriculum-modules-underline.svg#1");
+          }
+        }
+
+        &#modules-1 {
+          > label,
+          > input {
+            grid-area: core;
+
+            @media screen and (min-width: $screen-sm) {
+              margin-left: 2rem;
+            }
+          }
+
+          > input:checked + label::before {
+            content: url("../assets/icons/curriculum-modules-underline.svg#2");
+          }
+        }
+
+        &#modules-2 {
+          > label,
+          > input {
+            grid-area: extensions;
+
+            @media screen and (min-width: $screen-sm) {
+              margin-left: 2rem;
+            }
+          }
+
+          > input:checked + label::before {
+            content: url("../assets/icons/curriculum-modules-underline.svg#3");
+          }
+        }
+
+        > ol.modules-list {
+          grid-area: mod;
+          margin: 0;
+        }
+
+        > a.lets-begin {
+          grid-area: cta;
+          margin-left: 0.5rem;
+          margin-top: 2rem;
+          width: fit-content;
+
+          @media screen and (min-width: $screen-md) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    ol.modules-list {
+      container-name: module-list;
+      container-type: inline-size;
+      display: grid;
+      flex-wrap: wrap;
+      gap: 1rem;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin: 0;
+      overflow: scroll;
+      padding: 0.5rem;
+      scroll-snap-type: inline mandatory;
+
+      @media screen and (min-width: $screen-md) {
+        overflow: inherit;
+        padding: 0;
+      }
+
+      :focus-visible {
+        outline-offset: -2px;
+      }
+
+      li.module-list-item {
+        background-color: var(--curriculum-bg-color-list-item-body);
+        border: 1px solid var(--curriculum-border-color-list-item);
+        border-radius: var(--elem-radius);
+        box-shadow: var(--curriculum-shadow);
+        display: flex;
+        flex-direction: column;
+        justify-self: center;
+        max-width: 20rem;
+        min-width: 15rem;
+        overflow: auto;
+        padding: 0;
+        scroll-snap-align: center;
+        width: 100%;
+
+        @media screen and (min-width: $screen-md) {
+          min-width: initial;
+        }
+
+        &:hover {
+          border-color: var(--curriculum-border-color-list-item-hover);
+        }
+
+        > header {
+          a {
+            align-items: center;
+            background-color: var(--curriculum-bg-color-list-item-header);
+            display: flex;
+            flex-direction: column;
+            height: 10rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+
+            svg.topic-icon {
+              height: 4rem;
+              width: 4rem;
+
+              circle {
+                fill: var(--curriculum-bg-color-list-item-icon);
+              }
+
+              path {
+                fill: var(--curriculum-color-list-item-icon);
+              }
+            }
+
+            > span {
+              color: var(--text-primary);
+              font-weight: var(--font-body-strong-weight);
+              margin: auto;
+              text-align: center;
+            }
+          }
+        }
+
+        > section {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+          font-size: var(--type-smaller-font-size);
+          height: 11rem;
+          justify-content: space-between;
+          padding: 1rem 1.5rem;
+
+          p {
+            color: var(--text-secondary);
+            margin: 0;
+            text-align: center;
+          }
+
+          p:last-child {
+            color: var(--curriculum-color-topic);
+            font-weight: 600;
+          }
+        }
+      }
+
+      @media screen and (min-width: $screen-sm) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @media screen and (min-width: $screen-xxl) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+  }
+}

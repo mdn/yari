@@ -25,6 +25,9 @@ describe("CSSSyntax", () => {
   });
 
   it("renders function", async () => {
+    expect(
+      await render("Web/CSS/basic-shape/polygon", "css-function")
+    ).toMatchSnapshot("polygon");
     expect(await render("Web/CSS/sin", "css-function")).toMatchSnapshot("sin");
   });
 
@@ -42,5 +45,12 @@ describe("CSSSyntax", () => {
 
   it("renders type", async () => {
     expect(await render("Web/CSS/ratio", "css-type")).toMatchSnapshot("ratio");
+    expect(await render("Web/CSS/alpha-value", "css-type")).toMatchSnapshot(
+      "alpha-value"
+    );
+    // Note that Web/CSS/content-replacement doesn't really exist.
+    expect(
+      await render("Web/CSS/content-replacement", "css-type")
+    ).toMatchSnapshot("content-replacement");
   });
 });

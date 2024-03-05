@@ -41,6 +41,9 @@ app locally. Do this like so:
     cd yari
     yarn install
 
+See the [troubleshooting](#troubleshooting) section below if you run into
+problems.
+
 Now copy the `.env-dist` file to `.env`:
 
     cp .env-dist .env
@@ -294,3 +297,27 @@ The default server port `:5042` might be in use by another process. To resolve
 this, you can pick any unused port (e.g., 6000) and run the following:
 
     echo SERVER_PORT=6000 >> .env
+
+### Yarn install errors
+
+If you get errors while installing dependencies via yarn on a Mac, you may need
+to install some additional packages. Check the error message for the package
+name causing the problem.
+
+1. First, install [brew](https://brew.sh/) if you haven’t already
+
+1. To fix problems with `gifsicle`:
+
+   brew install automake autoconf libtool
+
+1. To fix problems with `pngquant-bin`:
+
+   brew install pkg-config
+
+1. To fix problems with `mozjpeg`:
+
+   brew install libpng sudo ln -s
+   /opt/homebrew/Cellar/libpng/1.6.40/lib/libpng16.a /usr/local/lib/libpng16.a
+
+You may need to adjust the path to `libpng16.a` depending on the version of
+`libpng` you have installed.

@@ -57,10 +57,12 @@ involved:
 
 Sign up for an MDN Plus account if you haven't already.
 
-1. Participate in discussions, share ideas, and seek help in the
-   [Playground forums](https://discord.gg/3Pb8cQrTfB).
-2. Contribute to the improvement of the Playground by reporting issues or
-   suggesting new features.
+1. Participate in discussions, share ideas, and seek help on
+   [Discord](/discord).
+2. Contribute to the improvement of the Playground by
+   [reporting issues](https://github.com/mdn/yari/issues/new?template=bug-report.yml)
+   or
+   [suggesting new features](https://github.com/mdn/mdn/issues/new?template=content-or-feature-suggestion.yml).
 3. Showcase your projects, share your knowledge, and inspire others by
    contributing code examples to MDN.
 

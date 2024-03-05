@@ -99,6 +99,9 @@ export const GLEAN_DEBUG = Boolean(
 export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
+export const GLEAN_LOG_CLICK = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_LOG_CLICK || "false")
+);
 
 export const AI_FEEDBACK_GITHUB_REPO =
   process.env.REACT_APP_AI_FEEDBACK_GITHUB_REPO || "mdn/private-ai-feedback";

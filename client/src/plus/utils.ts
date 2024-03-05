@@ -16,7 +16,7 @@ export function usePlusUrl(): string {
   let target = `/${locale}/plus`;
 
   if (normalizedUrl(target) === normalizedUrl(pathname)) {
-    target = "#subscribe";
+    target += "#subscribe";
   }
 
   return target;

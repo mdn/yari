@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Toast, { ToastData } from "./ui/atoms/toast";
 import { Theme } from "./types/theme";
+import { QueueEntry } from "./types/playground";
 
 interface UIStatus {
   toggleMobileOverlay: (id: Overlay, shown?: boolean) => void;
@@ -9,6 +10,11 @@ interface UIStatus {
   setToastData: React.Dispatch<React.SetStateAction<ToastData | null>>;
   colorScheme: Theme;
   setColorScheme: React.Dispatch<React.SetStateAction<Theme>>;
+  queuedExamples: Set<string>;
+  queue: QueueEntry[];
+  setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
+  highlightedQueueExample: null | string;
+  setHighlightedQueueExample: (value: string | null) => void;
 }
 
 export enum Overlay {
@@ -25,6 +31,11 @@ const UIContext = React.createContext<UIStatus>({
   setToastData: () => {},
   colorScheme: "os-default",
   setColorScheme: () => {},
+  queuedExamples: new Set<string>(),
+  queue: [],
+  setQueue: () => {},
+  highlightedQueueExample: null,
+  setHighlightedQueueExample: () => {},
 });
 
 export function UIProvider(props: any) {
@@ -35,6 +46,11 @@ export function UIProvider(props: any) {
   const [colorScheme, setColorScheme] = useState<Theme>(
     (initialTheme as Theme) || "os-default"
   );
+  const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
+  const [queue, setQueue] = useState<QueueEntry[]>([]);
+  const [highlightedQueueExample, setHighlightedQueueExample] = useState<
+    string | null
+  >(null);
 
   const toggleMobileOverlay = useCallback(
     (overlay: Overlay, shown?: boolean) => {
@@ -91,6 +107,10 @@ export function UIProvider(props: any) {
       : document.body.classList.remove("mobile-overlay-active");
   }, [mobileOverlays]);
 
+  React.useEffect(() => {
+    setQueuedExamples(new Set(queue.map((item) => item.id)));
+  }, [queue]);
+
   return (
     <UIContext.Provider
       value={{
@@ -100,6 +120,12 @@ export function UIProvider(props: any) {
         setToastData,
         colorScheme,
         setColorScheme,
+        // Playground.
+        queuedExamples,
+        queue,
+        setQueue,
+        highlightedQueueExample: highlightedQueueExample,
+        setHighlightedQueueExample: setHighlightedQueueExample,
       }}
     >
       {props.children}

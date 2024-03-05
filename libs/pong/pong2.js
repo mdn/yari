@@ -114,13 +114,21 @@ export function createPong2GetHandler(zoneKeys, coder) {
 }
 
 export function createPong2ClickHandler(coder) {
-  return async (params) => {
+  return async (params, countryCode, userAgent) => {
     const click = coder.decodeAndVerify(params.get("code"));
 
     if (!click) {
       return {};
     }
-    const res = await fetch(`https:${click}`, { redirect: "manual" });
+
+    const anonymousIp = anonymousIpByCC(countryCode);
+    const clickURL = new URL(`https:${click}`);
+    clickURL.searchParams.set("forwardedip", anonymousIp);
+    clickURL.searchParams.set("useragent", userAgent);
+
+    const res = await fetch(clickURL, {
+      redirect: "manual",
+    });
     const status = res.status;
     const location = res.headers.get("location");
     return { status, location };
@@ -128,10 +136,15 @@ export function createPong2ClickHandler(coder) {
 }
 
 export function createPong2ViewedHandler(coder) {
-  return async (params) => {
+  return async (params, countryCode, userAgent) => {
     const view = coder.decodeAndVerify(params.get("code"));
     if (view) {
-      await fetch(`https:${view}`, {
+      const anonymousIp = anonymousIpByCC(countryCode);
+      const viewURL = new URL(`https:${view}`);
+      viewURL.searchParams.set("forwardedip", anonymousIp);
+      viewURL.searchParams.set("useragent", userAgent);
+
+      await fetch(viewURL, {
         redirect: "manual",
       });
     }

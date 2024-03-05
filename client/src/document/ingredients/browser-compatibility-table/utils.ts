@@ -116,14 +116,21 @@ export function versionIsPreview(
 
 export function hasNoteworthyNotes(support: BCD.SimpleSupportStatement) {
   return (
-    support.notes?.length &&
+    (support.notes?.length || support.impl_url?.length) &&
     !support.version_removed &&
     !support.partial_implementation
   );
 }
 
+export function bugURLToString(url: string) {
+  const bugNumber = url.match(
+    /^https:\/\/(?:crbug\.com|webkit\.org\/b|bugzil\.la)\/([0-9]+)/i
+  )?.[1];
+  return bugNumber ? `bug ${bugNumber}` : url;
+}
+
 function hasLimitation(support: BCD.SimpleSupportStatement) {
-  return hasMajorLimitation(support) || support.notes;
+  return hasMajorLimitation(support) || support.notes || support.impl_url;
 }
 
 function hasMajorLimitation(support: BCD.SimpleSupportStatement) {

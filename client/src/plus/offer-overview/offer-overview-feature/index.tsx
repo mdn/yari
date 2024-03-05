@@ -1,5 +1,6 @@
 import { Button } from "../../../ui/atoms/button";
 import "./index.scss";
+import screenshotAiHelp from "../../../../public/assets/ai-help/ai-help_light.png";
 
 function OfferOverviewFeature({ id, img, imgAlt, children }) {
   return (
@@ -23,14 +24,14 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
-      <OfferOverviewFeature id="ai-help" img="/assets/ai-help.png" imgAlt="">
+      <OfferOverviewFeature id="ai-help" img={screenshotAiHelp} imgAlt="">
         <section aria-labelledby="ai-help-section-title">
           <h2 id="ai-help-section-title">AI Help</h2>
           <h3>Get real-time assistance and support.</h3>
           <p>
             No need to scroll through page after page to find your answers.
             Introducing an AI assistant that can answer all your web development
-            questions in real time. Powered by OpenAI GPT 3.5.
+            questions in real time. Powered by OpenAI GPT-3.5 and GPT-4.
           </p>
           <Button href="/en-US/plus/docs/features/ai-help" target="_self">
             Learn more →

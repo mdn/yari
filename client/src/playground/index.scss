@@ -151,7 +151,7 @@ main.play {
           margin-left: auto;
 
           button {
-            text-transform: uppercase;
+            text-transform: capitalize;
 
             &.red {
               --button-color: var(--text-primary-red);

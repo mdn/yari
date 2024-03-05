@@ -1,6 +1,7 @@
 @use "../ui/vars" as *;
 
 .blog {
+  --background-toc-active: var(--apis-accent-background-color);
   --category-color: var(--apis-accent-color);
 
   .top-navigation {

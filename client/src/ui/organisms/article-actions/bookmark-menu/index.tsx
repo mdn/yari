@@ -21,9 +21,15 @@ import { useGleanClick } from "../../../../telemetry/glean-context";
 import { PLUS_COLLECTIONS } from "../../../../telemetry/constants";
 import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
 import { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 
 import "./index.scss";
 import { Overlay, useUIStatus } from "../../../../ui-context";
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 const addValue = "add";
 
@@ -34,7 +40,7 @@ export default function BookmarkMenu({
 }: {
   doc?: Doc | DocMetadata;
   item?: Item;
-  scopedMutator?: KeyedMutator<Item[][]>;
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) {
   const [show, setShow] = useState(false);
   const [disableAutoClose, setDisableAutoClose] = useState(false);
@@ -101,7 +107,7 @@ function BookmarkMenuDropdown({
   setSaved: React.Dispatch<React.SetStateAction<boolean>>;
   setDisableAutoClose: React.Dispatch<React.SetStateAction<boolean>>;
   item?: Item;
-  scopedMutator?: KeyedMutator<Item[][]>;
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) {
   const { data: collections } = useCollections();
   const { data: savedItems } = useBookmark(doc.mdn_url);

@@ -38,15 +38,15 @@ export function buildURL(locale: string, slug: string) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-export function memoize<Args>(
-  fn: (...args: Args[]) => any
-): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any {
+export function memoize<F extends (...args: any[]) => any>(
+  fn: F
+): (...args: [...Parameters<F>, typeof MEMOIZE_INVALIDATE?]) => ReturnType<F> {
   if (process.env.NODE_ENV !== "production") {
-    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any;
+    return fn;
   }
 
   const cache = new LRUCache({ max: 2000 });
-  return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => {
+  return (...args) => {
     let invalidate = false;
     if (args.includes(MEMOIZE_INVALIDATE)) {
       args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
@@ -62,7 +62,7 @@ export function memoize<Args>(
       }
     }
 
-    const value = fn(...(args as Args[]));
+    const value = fn(...args);
     cache.set(key, value);
     if (value instanceof Promise) {
       value.catch(() => {

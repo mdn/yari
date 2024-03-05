@@ -1,0 +1,12 @@
+.curriculum-prev-next {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+  width: 100%;
+
+  a {
+    margin: 0.5rem 0;
+  }
+}

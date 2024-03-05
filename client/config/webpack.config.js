@@ -721,9 +721,6 @@ function config(webpackEnv) {
               { file: "**/src/setupTests.*" },
             ],
           },
-          logger: {
-            infrastructure: "silent",
-          },
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({

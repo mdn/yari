@@ -3,19 +3,32 @@
 $browsers: "chrome", "edge", "firefox", "safari";
 
 .baseline-indicator {
-  --baseline-bg: var(--baseline-unsupported-bg);
-  --baseline-engine-bg: var(--baseline-unsupported-engine-bg);
-  --baseline-img: var(--baseline-unsupported-img);
+  --baseline-bg: var(--baseline-limited-bg);
+  --baseline-engine-bg: var(--baseline-limited-engine-bg);
+  --baseline-img: var(--baseline-limited-img);
+  --baseline-check: var(--baseline-limited-check);
+  --baseline-cross: var(--baseline-limited-cross);
+  --feedback-link-icon: var(--icon-primary);
 
   background: var(--baseline-bg);
   border-radius: 0.25rem;
   margin: 1rem 0;
   padding-left: 3.8125rem;
 
-  &.supported {
-    --baseline-bg: var(--baseline-supported-bg);
-    --baseline-engine-bg: var(--baseline-supported-engine-bg);
-    --baseline-img: var(--baseline-supported-img);
+  &.high {
+    --baseline-bg: var(--baseline-high-bg);
+    --baseline-engine-bg: var(--baseline-high-engine-bg);
+    --baseline-img: var(--baseline-high-img);
+    --baseline-check: var(--baseline-high-check);
+  }
+
+  &.low {
+    --baseline-bg: var(--baseline-low-bg);
+    --baseline-engine-bg: var(--baseline-low-engine-bg);
+    --baseline-img: var(--baseline-low-img);
+    --baseline-check: var(--baseline-low-check);
+    --baseline-pill-bg: var(--baseline-low-pill-bg);
+    --baseline-pill-color: var(--baseline-low-pill-color);
   }
 
   &[open] {
@@ -34,6 +47,7 @@ $browsers: "chrome", "edge", "firefox", "safari";
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    justify-content: space-between;
     padding: 1rem 0;
     padding-right: calc(
       var(--chevron-padding-left) + var(--chevron-size) +
@@ -67,12 +81,22 @@ $browsers: "chrome", "edge", "firefox", "safari";
       letter-spacing: 0;
       line-height: 1.5;
       margin: 0;
-      margin-right: auto;
       padding: 0.375rem 0;
 
       .not-bold {
         font-weight: normal;
       }
+    }
+
+    .pill {
+      background: var(--baseline-pill-bg);
+      border-radius: 0.125rem;
+      color: var(--baseline-pill-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: auto;
+      padding: 0 0.25rem;
+      text-transform: uppercase;
     }
 
     .browsers {
@@ -107,7 +131,7 @@ $browsers: "chrome", "edge", "firefox", "safari";
           }
 
           &::after {
-            background-color: var(--baseline-browser-unsupported-bg);
+            background-color: var(--baseline-cross);
             content: "";
             display: block;
             height: 1.25rem;
@@ -118,7 +142,7 @@ $browsers: "chrome", "edge", "firefox", "safari";
           }
 
           &.supported::after {
-            background-color: var(--baseline-browser-supported-bg);
+            background-color: var(--baseline-check);
             mask-image: url("../assets/icons/baseline/browser-check.svg");
           }
         }
@@ -155,8 +179,22 @@ $browsers: "chrome", "edge", "firefox", "safari";
         list-style: none;
         margin: 0;
 
-        &:not(:first-child) a {
-          color: var(--text-primary);
+        a.learn-more {
+          &,
+          &:active,
+          &:visited {
+            background: none;
+            color: var(--text-link);
+          }
+        }
+
+        a:not(.learn-more) {
+          &,
+          &:active,
+          &:visited {
+            background: none;
+            color: var(--text-primary);
+          }
         }
       }
     }

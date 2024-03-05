@@ -3,6 +3,8 @@
 .logo {
   align-items: center;
   display: flex;
+  // Width of largest logo ("mdn web docs").
+  width: 160px;
 
   svg {
     height: 1.5rem;

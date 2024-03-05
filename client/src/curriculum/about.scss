@@ -1,0 +1,44 @@
+.curriculum-content-container.curriculum-about {
+  .curriculum-content {
+    // Workaround so last toc item works.
+    margin-bottom: 5rem;
+
+    h2#motivation + div {
+      li {
+        list-style-image: var(--curriculum-bullet);
+      }
+    }
+
+    h3 {
+      align-items: center;
+      display: flex;
+      gap: 1.25rem;
+
+      &::before {
+        display: inline-block;
+        height: 2.5rem;
+        width: 2.5rem;
+      }
+
+      &#students::before {
+        content: var(--curriculum-about-students);
+      }
+
+      &#educators::before {
+        content: var(--curriculum-about-educators);
+      }
+
+      &#whats_covered::before {
+        content: var(--curriculum-about-covered);
+      }
+
+      &#level_of_detail::before {
+        content: var(--curriculum-about-detail);
+      }
+
+      &#what_is_not_covered::before {
+        content: var(--curriculum-about-not);
+      }
+    }
+  }
+}
