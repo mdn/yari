@@ -63,6 +63,8 @@ export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
     ["sm", 426],
     ["xs", 0],
   ]);
+
+export const ARTICLE_FOOTER = "article_footer";
 export const THUMBS = "thumbs";
 
 export const BASELINE = Object.freeze({

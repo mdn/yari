@@ -28,7 +28,7 @@ import { RenderSideBar } from "./organisms/sidebar";
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
-import { Metadata } from "./organisms/metadata";
+import { ArticleFooter } from "./organisms/article-footer";
 import { PageNotFound } from "../page-not-found";
 
 import "./index.scss";
@@ -265,8 +265,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </header>
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
-            <Metadata doc={doc} locale={locale} />
           </article>
+          <ArticleFooter doc={doc} locale={locale} />
         </MainContentContainer>
         {false && <PlayQueue standalone={true} />}
       </div>
