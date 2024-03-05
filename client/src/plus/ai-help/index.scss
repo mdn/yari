@@ -152,6 +152,16 @@
     .auth-container {
       margin-top: 1rem;
     }
+
+    &.disabled {
+      background-color: var(--background-secondary);
+
+      margin-bottom: 2.25rem;
+
+      .button {
+        display: none;
+      }
+    }
   }
 
   .ai-help-inner {
@@ -177,6 +187,10 @@
 
       .ai-help-footer-actions {
         padding-bottom: 0.5rem;
+
+        button:disabled {
+          visibility: hidden;
+        }
       }
 
       .ai-help-footer-text {
@@ -383,7 +397,6 @@
         color: var(--text-secondary);
 
         &::before {
-          animation: pulse 1s infinite alternate;
           background-color: var(--text-secondary);
           content: "";
           display: inline-block;
@@ -408,8 +421,11 @@
           }
         }
 
+        &.active::before {
+          animation: pulse 1s infinite alternate;
+        }
+
         &.complete::before {
-          animation: none;
           background-color: var(--ai-help-icon);
           mask-image: url("../../assets/icons/progress-check.svg");
         }
@@ -422,7 +438,6 @@
           padding: 0.5rem 1rem;
 
           &::before {
-            animation: none;
             background-color: var(--icon-critical);
             mask-image: url("../../assets/icons/alert-circle.svg");
           }
@@ -466,9 +481,10 @@
         > ol:last-child li:last-child:after,
         > pre:last-child code:after,
         > ul:last-child li:last-child:after {
-          content: "…";
-          margin-left: 0.25rem;
-          vertical-align: baseline;
+          color: var(--text-muted);
+          content: "■\00a0Stopped answering";
+          display: block;
+          margin-top: 1.7rem;
         }
 
         &.empty::after {

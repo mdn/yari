@@ -1085,6 +1085,21 @@ test("image flaws with bad images", () => {
         "File not present on disk, an empty file, or not an image"
     ).length
   ).toBe(4);
+  // Check the line and column numbers for html <img> tags in markdown
+  expect({
+    line: flaws.images[2].line,
+    column: flaws.images[2].column,
+  }).toEqual({
+    line: 16,
+    column: 12,
+  });
+  expect({
+    line: flaws.images[3].line,
+    column: flaws.images[3].column,
+  }).toEqual({
+    line: 25,
+    column: 17,
+  });
 });
 
 test("linked to local files", () => {
