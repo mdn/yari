@@ -78,6 +78,10 @@ custom_stopwords = token_filter(
     #   https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/is
     #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
     #
+    #   "not"
+    #   https://developer.mozilla.org/en-US/docs/Web/CSS/:not
+    #   https://developer.mozilla.org/en-US/docs/Web/XPath/Functions/not
+    #
     #   "of"
     #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
     #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/of
@@ -101,7 +105,6 @@ custom_stopwords = token_filter(
         "into",
         "it",
         "no",
-        "not",
         "on",
         "or",
         "such",
