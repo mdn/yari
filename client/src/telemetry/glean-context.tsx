@@ -4,7 +4,13 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { DEV_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import {
+  DEV_MODE,
+  GLEAN_CHANNEL,
+  GLEAN_DEBUG,
+  GLEAN_LOG_CLICK,
+  GLEAN_ENABLED,
+} from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
@@ -32,6 +38,7 @@ export type PageProps = {
   httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
+  geo_iso: string | undefined;
   userAgent: string | undefined;
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
@@ -116,6 +123,9 @@ function glean(): GleanAnalytics {
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
+      }
+      if (page.geo_iso) {
+        navigatorMetric.geoIso.set(page.geo_iso);
       }
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
@@ -204,6 +214,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
       geo: userData?.geo?.country,
+      geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
       viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
         ([_, width]) => width <= window.innerWidth
@@ -212,30 +223,34 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       viewportHorizontalCoverage: Math.round(
         (100 * window.innerWidth) / window.screen.width
       ),
-      isBaseline:
-        doc?.baseline?.is_baseline === undefined
-          ? undefined
-          : doc.baseline.is_baseline
-          ? "baseline"
-          : "not_baseline",
+      isBaseline: doc?.baseline?.baseline
+        ? `baseline_${doc.baseline.baseline}`
+        : doc?.baseline?.baseline === false
+          ? "not_baseline"
+          : undefined,
       utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.is_baseline]);
+  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.baseline]);
 }
 
 export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
   return React.useCallback(
-    (source: string) =>
+    (source: string) => {
+      if (GLEAN_LOG_CLICK && !source.includes("pong")) {
+        console.log({ gleanClick: source });
+      }
+
       glean.click({
         source,
         subscriptionType: userData?.subscriptionType || "none",
-      }),
+      });
+    },
     [glean, userData?.subscriptionType]
   );
 }

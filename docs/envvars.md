@@ -44,6 +44,12 @@ https://github.com/mdn/translated-content.
 Path to the contributor spotlight content, cloned from
 https://github.com/mdn/mdn-contributor-spotlight.
 
+### `CURRICULUM_ROOT`
+
+**Default: `../curriculum`**
+
+Path to the curriculum content, cloned from https://github.com/mdn/curriculum.
+
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -310,6 +316,14 @@ Determines if the MDN++ SPA should be reachable or not.
 If the `/api/v1/whoami` does not include a `geo.country` value, fall back on
 this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
 included this value for `geo.country`.
+
+### `REACT_APP_DEFAULT_GEO_COUNTRY_ISO`
+
+**Default: `US`**
+
+If the `/api/v1/whoami` does not include a `geo.country_iso` value, fall back on
+this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
+included this value for `geo.country_iso`.
 
 ## Glean (Analytics)
 

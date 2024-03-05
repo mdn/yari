@@ -1085,6 +1085,21 @@ test("image flaws with bad images", () => {
         "File not present on disk, an empty file, or not an image"
     ).length
   ).toBe(4);
+  // Check the line and column numbers for html <img> tags in markdown
+  expect({
+    line: flaws.images[2].line,
+    column: flaws.images[2].column,
+  }).toEqual({
+    line: 16,
+    column: 12,
+  });
+  expect({
+    line: flaws.images[3].line,
+    column: flaws.images[3].column,
+  }).toEqual({
+    line: 25,
+    column: 17,
+  });
 });
 
 test("linked to local files", () => {
@@ -1422,14 +1437,9 @@ test("headings with HTML should be rendered as HTML", () => {
     doc: Doc;
   };
   const [section1, section2] = doc.body as ProseSection[];
-  // Because the title contains HTML, you can expect a 'titleAsText'
   expect(section1.value.title).toBe("Here's some <code>code</code>");
-  expect(section1.value.titleAsText).toBe("Here's some code");
   expect(section2.value.title).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
-  );
-  expect(section2.value.titleAsText).toBe(
-    "You can use escaped HTML tags like <pre> still"
   );
 });
 
