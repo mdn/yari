@@ -8256,10 +8256,10 @@ html-url-attributes@^3.0.0:
   resolved "https://registry.yarnpkg.com/html-url-attributes/-/html-url-attributes-3.0.0.tgz#fc4abf0c3fb437e2329c678b80abb3c62cff6f08"
   integrity sha512-/sXbVCWayk6GDVg3ctOX6nxaVj7So40FcFAnWlWGNAB1LpYKcV5Cd10APjPjW80O7zYW2MsjBV4zZ7IZO5fVow==
 
-html-validate@^8.12.0:
-  version "8.12.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.12.0.tgz#fae414aa5cb819990a4bd2eecaf3ab75702c3489"
-  integrity sha512-a3erV9NTYPDlo7mPgR5ta712UQDzRlWjw0Dhfm7ytRkgUjpWhLq6o4ulTQA8ZE8zG8ov162GCfmz5skB1yQSUw==
+html-validate@^8.13.0:
+  version "8.13.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.13.0.tgz#24c92fb776a5122fdb59e843d96ce6ce0a38f29c"
+  integrity sha512-OMbF3y38iRPXDz+CsqDS6UUCr3WqAdGH3ECmpsJzBUWXqZZStZV7DKYDqccUOMpkFF0vRi1dKvT/MA+d5yOBjA==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^4.1.0"
