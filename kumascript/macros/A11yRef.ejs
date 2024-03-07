@@ -1,0 +1,100 @@
+<%
+
+const text = mdn.localStringMap({
+  'en-US': {
+    "Accessibility" : "Accessibility",
+    "Guides" : "Guides",
+        "Information_for_Web_authors" : "Information for web authors",
+        "Accessibility:_What_users_can_to_to_browse_safely" : "User settings",
+        "An_overview_of_accessible_web_applications_and_widgets" : "Applications and widgets",
+        "Keyboard-navigable_JavaScript_widgets" : "Keyboard-navigable widgets",
+        "Mobile_accessibility_checklist" : "Mobile checklist",
+        "Understanding_WCAG" : "Understanding WCAG",
+        "Cognitive_accessibility" : "Cognitive accessibility",
+        "Accessibility_and_Spacial_Patterns" : "Spacial Patterns",
+        "Understanding_Colors_and_Luminance" : "Colors and Luminance",
+        "Seizure_disorders" : "Seizures and physical reactions",
+    "Resources" : "Resources",
+        "What_is_accessibility" : "What is accessibility?",
+        "HTML" : "HTML: A good basis for accessibility",
+        "CSS_and_JavaScript" : "CSS and JavaScript accessibility best practices",
+        "WAI-ARIA_basics" : "WAI-ARIA basics",
+        "Multimedia" : "Accessible multimedia",
+        "Mobile" : "Mobile accessibility",
+    "ARIA Guides" : "ARIA Guides",
+        "Annotations" : "Annotations",
+        "ARIA_Guides" : "Guides",
+        "ARIA_Live_Regions" : "Live regions",
+        "ARIA_Screen_Reader_Implementors_Guide" : "Screen reader implementors guide",
+        "ARIA_Techniques" : "Using ARIA",
+        "Multipart_labels" : "Multipart labels",
+        "How_to_file_ARIA-related_bugs" : "How to file bugs",
+  }
+});
+
+
+const locale = env.locale;
+const baseURL = `/${locale}/docs/Web/Accessibility/`;
+const AriaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
+const LearnURL = `/${locale}/docs/Learn/`;
+const cssURL = `/${locale}/docs/Web/CSS/`;
+
+%>
+
+<section id="Quick_links" data-macro="A11yRef">
+    <ol>
+        <li><a href="<%=baseURL%>"><strong><%=text["Accessibility"]%></strong></a></li>
+        <li class="toggle">
+          <details><summary><%=text["Guides"]%></summary>
+            <ol>
+                <li><a href="<%=baseURL%>Information_for_Web_authors"><%=text["Information_for_Web_authors"]%></a></li>
+                <li><a href="<%=baseURL%>Accessibility:_What_users_can_to_to_browse_safely">User settings</a></li>
+                <li><a href="<%=baseURL%>An_overview_of_accessible_web_applications_and_widgets"><%=text["An_overview_of_accessible_web_applications_and_widgets"]%></a></li>
+                <li><a href="<%=baseURL%>Keyboard-navigable_JavaScript_widgets">Keyboard-navigable widgets</a></li>
+                <li><a href="<%=baseURL%>Mobile_accessibility_checklist"><%=text["Mobile_accessibility_checklist"]%></a></li>
+                <li><a href="<%=baseURL%>Understanding_WCAG"><%=text["Understanding_WCAG"]%></a></li>
+                <li><a href="<%=baseURL%>Cognitive_accessibility"><%=text["Cognitive_accessibility"]%></a></li>
+                <li><a href="<%=baseURL%>Accessibility_and_Spacial_Patterns"><%=text["Accessibility_and_Spacial_Patterns"]%></a></li>
+                <li><a href="<%=baseURL%>Understanding_Colors_and_Luminance"><%=text["Understanding_Colors_and_Luminance"]%></a></li>
+                <li><a href="<%=baseURL%>Seizure_disorders"><%=text["Seizure_disorders"]%></a></li>
+            </ol>
+          </details>
+        </li>
+        <li class="toggle">
+            <details><summary><%=text["Resources"]%></summary>
+              <ol>
+                <li><a href="<%=LearnURL%>What_is_accessibility"><%=text["What_is_accessibility"]%></a></li>
+                <li><a href="<%=LearnURL%>HTML"><%=text["HTML"]%></a></li>
+                <li><a href="<%=LearnURL%>CSS_and_JavaScript"><%=text["CSS_and_JavaScript"]%></a></li>
+                <li><a href="<%=LearnURL%>WAI-ARIA_basics"><%=text["WAI-ARIA_basics"]%></a></li>
+                <li><a href="<%=LearnURL%>Multimedia"><%=text["Multimedia"]%></a></li>
+                <li><a href="<%=LearnURL%>Mobile"><%=text["Mobile"]%></a></li>
+              </ol>
+            </details>
+        </li>
+        <li><a href="<%=AriaURL%>"><strong>ARIA</strong></a></li>
+        <li class="toggle">
+          <details><summary><%=text["ARIA Guides"]%></summary>
+            <ol>
+                <li><a href="<%=AriaURL%>Annotations"><%=text["Annotations"]%></a></li>
+                <li><a href="<%=AriaURL%>ARIA_Guides"><%=text["ARIA_Guides"]%></a></li>
+                <li><a href="<%=AriaURL%>ARIA_Live_Regions"><%=text["ARIA_Live_Regions"]%></a></li>
+                <li><a href="<%=AriaURL%>ARIA_Screen_Reader_Implementors_Guide"><%=text["ARIA_Screen_Reader_Implementors_Guide"]%></a></li>
+                <li><a href="<%=AriaURL%>ARIA_Techniques"><%=text["ARIA_Techniques"]%></a></li>
+                <li><a href="<%=AriaURL%>Multipart_labels"><%=text["Multipart_labels"]%></a></li>
+                <li><a href="<%=AriaURL%>How_to_file_ARIA-related_bugs"><%=text["How_to_file_ARIA-related_bugs"]%></a></li>
+            </ol>
+          </details>
+        </li>
+        <li class="toggle">
+          <details><summary>ARIA States and properties</summary>
+            <%-await template("ListSubpagesForSidebar", ['/Web/Accessibility/ARIA/Attributes', true, true])%>
+          </details>
+        </li>
+        <li class="toggle">
+          <details><summary>ARIA Roles</summary>
+            <%-await template("ListSubpagesForSidebar", ['/Web/Accessibility/ARIA/Roles', true, true])%>
+          </details>
+        </li>
+      </ol>
+</section>
