@@ -3,7 +3,7 @@
   "display": "Node 18 + ESM + Strictest",
   "compilerOptions": {
     "lib": ["es2022", "DOM"],
-    "module": "es2022",
+    "module": "nodenext",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": false,

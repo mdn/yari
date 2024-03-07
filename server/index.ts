@@ -7,8 +7,8 @@ import chalk from "chalk";
 import express from "express";
 import send from "send";
 import {
-  createProxyMiddleware,
   legacyCreateProxyMiddleware,
+  createProxyMiddleware,
 } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
@@ -97,21 +97,40 @@ bcdRouter.use(
 app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
-// on `.json` files on disk or we proxy the requests to Kuma.
+// on `.json` files on disk or we proxy the requests to Rumba.
 const target = `${
   ["developer.mozilla.org", "developer.allizom.org"].includes(PROXY_HOSTNAME)
     ? "https://"
     : "http://"
-}${PROXY_HOSTNAME}`;
-const proxy = FAKE_V1_API
+}${PROXY_HOSTNAME}/api`;
+const apiProxy = FAKE_V1_API
   ? fakeV1APIRouter
-  : legacyCreateProxyMiddleware({
+  : createProxyMiddleware({
       target,
+      changeOrigin: true,
+      on: {
+        proxyReq: (proxyReq, req, res) => {
+          res.on("close", () => {
+            proxyReq.destroy();
+          });
+        },
+      },
+    });
+
+const usersTarget = `${
+  ["developer.mozilla.org", "developer.allizom.org"].includes(PROXY_HOSTNAME)
+    ? "https://"
+    : "http://"
+}${PROXY_HOSTNAME}/users`;
+const usersProxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: usersTarget,
       changeOrigin: true,
     });
 
-const stageApiProxy = legacyCreateProxyMiddleware({
-  target: `https://developer.allizom.org`,
+const stageApiProxy = createProxyMiddleware({
+  target: `https://developer.allizom.org/api/v1/stripe/plans`,
   changeOrigin: true,
   proxyTimeout: 20000,
   timeout: 20000,
@@ -120,21 +139,29 @@ const stageApiProxy = legacyCreateProxyMiddleware({
   },
 });
 
+const pongProxy = createProxyMiddleware({
+  target: `https://developer.allizom.org/pong`,
+  changeOrigin: true,
+});
+
+const pimgProxy = createProxyMiddleware({
+  target: `https://developer.allizom.org/pimg`,
+  changeOrigin: true,
+});
+
 const contentProxy =
   CONTENT_HOSTNAME &&
-  legacyCreateProxyMiddleware({
+  createProxyMiddleware({
     target: `https://${CONTENT_HOSTNAME}`,
     changeOrigin: true,
-    // proxyTimeout: 20000,
-    // timeout: 20000,
   });
 
-app.use("/pong/*", stageApiProxy);
-app.use("/pimg/*", stageApiProxy);
+app.use("/pong", pongProxy);
+app.use("/pimg", pimgProxy);
 app.use("/api/v1/stripe/plans", stageApiProxy);
-app.use("/api/*", proxy);
+app.use("/api", apiProxy);
 // This is an exception and it's only ever relevant in development.
-app.use("/users/*", proxy);
+app.use("/users", usersProxy);
 
 // // The proxy middleware has to come before all other middleware to avoid modifying the requests we proxy.
 
