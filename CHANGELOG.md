@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.43.0](https://github.com/mdn/yari/compare/v2.42.1...v2.43.0) (2024-03-05)
+
+
+### Features
+
+* **article-footer:** redesign footer + add feedback buttons ([#10625](https://github.com/mdn/yari/issues/10625)) ([40659a8](https://github.com/mdn/yari/commit/40659a8359af372c0e1af4e2c40da4d0979afc06))
+* **latest-news:** fetch metadata from Blog articles + update list ([#10614](https://github.com/mdn/yari/issues/10614)) ([734c37c](https://github.com/mdn/yari/commit/734c37c0834713f0cfd62d98d282a7c37522b68f))
+
+
+### Bug Fixes
+
+* **cloud-function:** redirect blog/curriculum/play without locale ([#10654](https://github.com/mdn/yari/issues/10654)) ([2fe9d54](https://github.com/mdn/yari/commit/2fe9d540a0c4cd7b78047770d6195fb30fff0a91))
+* **featured-articles:** improve how Blog articles are shown ([#10624](https://github.com/mdn/yari/issues/10624)) ([4900d37](https://github.com/mdn/yari/commit/4900d37495b30cb0d2adb99dded61a88f30c2c3b))
+* **logo:** set width to width of largest logo ([#10652](https://github.com/mdn/yari/issues/10652)) ([e606646](https://github.com/mdn/yari/commit/e60664601ea55cd61a94ee4ad5db304b2df0f49d))
+* **recent-contributions:** break long words instead of overflowing ([#10503](https://github.com/mdn/yari/issues/10503)) ([9ec8963](https://github.com/mdn/yari/commit/9ec8963de4277cb98ff8633c29687c411cbf5db2))
+* **types:** pass types through memoize properly ([#10567](https://github.com/mdn/yari/issues/10567)) ([ed9cbf3](https://github.com/mdn/yari/commit/ed9cbf3e0b2b3dd017b266ac04dd9c540388f42c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump the types group with 1 update ([#10648](https://github.com/mdn/yari/issues/10648)) ([a6293c3](https://github.com/mdn/yari/commit/a6293c3ee4ac66334f9dda5b124b02130517839d))
+* **deps-dev:** bump typescript-eslint from 7.1.0 to 7.1.1 ([#10649](https://github.com/mdn/yari/issues/10649)) ([cc74431](https://github.com/mdn/yari/commit/cc74431283efead765156e2453a306c0329341d6))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.36 to 2.7.37 in /client/pwa ([#10646](https://github.com/mdn/yari/issues/10646)) ([b218c21](https://github.com/mdn/yari/commit/b218c2192ab6d06dc1db4cca7e3b65444bb4da4e))
+* **deps:** bump @stripe/stripe-js from 3.0.6 to 3.0.7 ([#10651](https://github.com/mdn/yari/issues/10651)) ([0071314](https://github.com/mdn/yari/commit/00713146c396aad3c9187044def1abbb17760fe2))
+* **deps:** bump dexie from 3.2.5 to 3.2.6 ([#10650](https://github.com/mdn/yari/issues/10650)) ([8a6f76d](https://github.com/mdn/yari/commit/8a6f76d294167f8cc72893bad5d62bbd67bc4f1d))
+* **deps:** bump dexie from 3.2.5 to 3.2.6 in /client/pwa ([#10645](https://github.com/mdn/yari/issues/10645)) ([17e353f](https://github.com/mdn/yari/commit/17e353ffcfe180153e1de1644f5b7d49527ce6e1))
+
+## [2.42.1](https://github.com/mdn/yari/compare/v2.42.0...v2.42.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* **build/matches:** remove unnecessary type imports ([#10634](https://github.com/mdn/yari/issues/10634)) ([7a31bf6](https://github.com/mdn/yari/commit/7a31bf6297f0f7ea309f831ef34318abb80b287c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @playwright/test from 1.42.0 to 1.42.1 ([#10641](https://github.com/mdn/yari/issues/10641)) ([83a4b83](https://github.com/mdn/yari/commit/83a4b83c89e7a50bbe51695c5f4f63003e50974a))
+* **deps-dev:** bump eslint-plugin-react from 7.33.2 to 7.34.0 ([#10639](https://github.com/mdn/yari/issues/10639)) ([ae23d61](https://github.com/mdn/yari/commit/ae23d61db80f0b41069755e6c47d42bdb4063981))
+* **deps-dev:** bump html-validate from 8.11.1 to 8.12.0 ([#10640](https://github.com/mdn/yari/issues/10640)) ([fc9bcec](https://github.com/mdn/yari/commit/fc9bcece20e5878cb2190a03304de1d69e4e6c3e))
+* **deps:** bump @mdn/browser-compat-data from 5.5.12 to 5.5.13 ([#10642](https://github.com/mdn/yari/issues/10642)) ([bce0c1f](https://github.com/mdn/yari/commit/bce0c1fde52e6b17ac8ccb922d3bdabeedc861d9))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#10637](https://github.com/mdn/yari/issues/10637)) ([2493ab5](https://github.com/mdn/yari/commit/2493ab5129a07d91c9d73c842be6d77dc2aa0223))
+* **deps:** bump the dependencies group in /testing/integration with 1 update ([#10635](https://github.com/mdn/yari/issues/10635)) ([be0f9eb](https://github.com/mdn/yari/commit/be0f9eb2cfb06623bbdb51a79247089a23527fef))
+* **deps:** bump the sentry group with 2 updates ([#10636](https://github.com/mdn/yari/issues/10636)) ([8b8d421](https://github.com/mdn/yari/commit/8b8d421d5778d4d87344ebdb0d38560772180d98))
+* **macro:** Add ko DOMAttributeMethods ([9658fca](https://github.com/mdn/yari/commit/9658fcaba5bd7a7ecae28eb5129d9171c70e9d16))
+* **macros/DOMAttributeMethods:** add ko locale ([#10502](https://github.com/mdn/yari/issues/10502)) ([9658fca](https://github.com/mdn/yari/commit/9658fcaba5bd7a7ecae28eb5129d9171c70e9d16))
+
 ## [2.42.0](https://github.com/mdn/yari/compare/v2.41.0...v2.42.0) (2024-03-01)
 
 
