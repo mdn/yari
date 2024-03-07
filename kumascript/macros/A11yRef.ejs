@@ -37,7 +37,6 @@ const locale = env.locale;
 const baseURL = `/${locale}/docs/Web/Accessibility/`;
 const AriaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
 const LearnURL = `/${locale}/docs/Learn/`;
-const cssURL = `/${locale}/docs/Web/CSS/`;
 
 %>
 
@@ -87,12 +86,12 @@ const cssURL = `/${locale}/docs/Web/CSS/`;
           </details>
         </li>
         <li class="toggle">
-          <details><summary>ARIA States and properties</summary>
+          <details><summary><%=text['ARIA States and properties']%></summary>
             <%-await template("ListSubpagesForSidebar", ['/Web/Accessibility/ARIA/Attributes', true, true])%>
           </details>
         </li>
         <li class="toggle">
-          <details><summary>ARIA Roles</summary>
+          <details><summary><%=text['ARIA Roles']%></summary>
             <%-await template("ListSubpagesForSidebar", ['/Web/Accessibility/ARIA/Roles', true, true])%>
           </details>
         </li>
