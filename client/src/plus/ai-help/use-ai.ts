@@ -710,6 +710,9 @@ export function useAiChat({
   }
 
   function resetLoadingState() {
+    console.log(
+      `RESET LOADING STATE eventSourceRef: ${JSON.stringify(eventSourceRef.current?.stream)}`
+    );
     eventSourceRef.current?.close();
     eventSourceRef.current = undefined;
     setLoadingState("idle");
@@ -717,6 +720,7 @@ export function useAiChat({
   }
 
   function stop() {
+    console.log("STOP!");
     resetLoadingState();
     dispatchState({
       type: "update",

@@ -100,7 +100,7 @@
     "front-matter": "^4.0.2",
     "fs-extra": "^11.2.0",
     "got": "^13.0.0",
-    "http-proxy-middleware": "^2.0.6",
+    "http-proxy-middleware": "^3.0.0-beta",
     "image-size": "^1.1.1",
     "image-type": "^4.1.0",
     "imagemin": "^8.0.1",

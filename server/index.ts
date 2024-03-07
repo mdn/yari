@@ -6,7 +6,10 @@ import path from "node:path";
 import chalk from "chalk";
 import express from "express";
 import send from "send";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import {
+  createProxyMiddleware,
+  legacyCreateProxyMiddleware,
+} from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
 import { getBCDDataForPath } from "@mdn/bcd-utils-api";
@@ -85,7 +88,7 @@ bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
 
 bcdRouter.use(
   "/updates/v0/",
-  createProxyMiddleware({
+  legacyCreateProxyMiddleware({
     target: "http://localhost:8080",
     pathRewrite: (path) => path.replace("/bcd/updates/v0/", "/"),
   })
@@ -102,14 +105,12 @@ const target = `${
 }${PROXY_HOSTNAME}`;
 const proxy = FAKE_V1_API
   ? fakeV1APIRouter
-  : createProxyMiddleware({
+  : legacyCreateProxyMiddleware({
       target,
       changeOrigin: true,
-      // proxyTimeout: 20000,
-      // timeout: 20000,
     });
 
-const stageApiProxy = createProxyMiddleware({
+const stageApiProxy = legacyCreateProxyMiddleware({
   target: `https://developer.allizom.org`,
   changeOrigin: true,
   proxyTimeout: 20000,
@@ -121,7 +122,7 @@ const stageApiProxy = createProxyMiddleware({
 
 const contentProxy =
   CONTENT_HOSTNAME &&
-  createProxyMiddleware({
+  legacyCreateProxyMiddleware({
     target: `https://${CONTENT_HOSTNAME}`,
     changeOrigin: true,
     // proxyTimeout: 20000,
@@ -135,7 +136,7 @@ app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
 
-// The proxy middleware has to come before all other middleware to avoid modifying the requests we proxy.
+// // The proxy middleware has to come before all other middleware to avoid modifying the requests we proxy.
 
 app.use(express.json());
 
