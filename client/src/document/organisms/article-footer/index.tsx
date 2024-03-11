@@ -121,7 +121,9 @@ export function ArticleFooter({ doc, locale }) {
               </div>
             </>
           ) : (
-            <span className="thank-you">Thank you for your feedback! ❤️</span>
+            <span className="thank-you">
+              Thank you for your feedback! <span className="emoji">❤️</span>
+            </span>
           )}
         </fieldset>
 

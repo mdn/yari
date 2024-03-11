@@ -101,5 +101,10 @@
       margin-bottom: 0;
       margin-top: 3rem;
     }
+
+    .emoji {
+      // Ensure emojis are shown in color.
+      font-family: initial;
+    }
   }
 }
