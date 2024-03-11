@@ -5,7 +5,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
     <div id="on-github" className="on-github">
       <SourceOnGitHubLink doc={doc}>
         View this page on GitHub
-      </SourceOnGitHubLink>
+      </SourceOnGitHubLink>{" "}
       •{" "}
       <NewIssueOnGitHubLink doc={doc}>
         Report a problem with this content
