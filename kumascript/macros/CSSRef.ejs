@@ -81,7 +81,7 @@ const text = mdn.localStringMap({
         'Content_breaks_in_Multicol': 'Content breaks in Multicol',
       'Conditional_rules': 'Conditional rules',
         'Using_feature_queries': 'Using feature queries',
-      'CSSOM_view': 'CSSOM view',
+        'CSSOM_view': 'CSSOM view',
         'Coordinate_systems': 'Coordinate systems',
       'Flexbox': 'Flexbox',
         'Basic_concepts_of_Flexbox': 'Basic concepts of Flexbox',
@@ -937,6 +937,13 @@ const hasTag = page.hasTag;
 const rtlLocales = ['ar', 'he', 'fa'];
 
 const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
+
+// some functions are at depth two
+const levelTwoPages = pageList.reduce((list, page)=>{
+  list.push(...page.subpages);
+  return list;
+}, pageList);
+
 const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
 const groups = [];
@@ -946,7 +953,7 @@ const combinators = [];
 const pseudoClasses = [];
 const pseudoElements = [];
 const atRules = [];
-const functions = [];
+let functions = [];
 const types = [];
 
 for (const page of standardPages) {
@@ -982,7 +989,9 @@ for (const page of standardPages) {
   }
 }
 
-properties = properties.sort((a, b) => a.title.localeCompare(b.title));
+const sortByTitle = (a, b) => a.title.localeCompare(b.title);
+properties = properties.sort(sortByTitle);
+functions = functions.sort(sortByTitle);
 
 function smartLink(href, title, content, subpath) {
   let basepath = subpath;
@@ -1261,8 +1270,8 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['Conditional_rules']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Conditional_Rules/Using_Feature_Queries`, null, text['Using_feature_queries'], cssURL)%></li>
-          </ol>
-      </details>
+                  </ol>
+    </details>
   </li>
   <li class="toggle">
       <details>
