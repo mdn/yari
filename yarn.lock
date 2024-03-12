@@ -2497,10 +2497,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@stripe/stripe-js@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-3.0.7.tgz#ceec7db210830d742c1ba2a697ddaf3a210542af"
-  integrity sha512-qmjTsxnst84iWDsGqPxk5Wlff/fG4nSFjy/r24t9WWFAlCuvwnuUAe4eGgbqZBng019AtgWvo8wuhM3Y5/olbw==
+"@stripe/stripe-js@^3.0.8":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-3.0.8.tgz#7328688356e22dc2f9e5e13b769b446cf1b2e922"
+  integrity sha512-nEDZjCSrGI5GICqr2DsV7gPnEjmt5Y61Uj/z/UuWu3WR/ZyyskbEW/3ziVZdnnvFcoNCfpV2wA2ar1C1W//+Vg==
 
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   version "2.2.3"
