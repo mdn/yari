@@ -41,10 +41,9 @@ export function SiteSearch() {
         // I.e. not the initial load but the location has now changed.
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
-        gtag("set", "dimension19", "Yes");
-        gtag("send", {
-          hitType: "pageview",
-          location,
+        gtag("event", "pageview", {
+          dimension19: "Yes",
+          page_location: location,
         });
         gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
       }
