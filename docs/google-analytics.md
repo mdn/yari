@@ -13,10 +13,10 @@ we use to set up Google Analytics.
 
 By default, it's not set and that means no Google Analytics JavaScript code
 inside the rendered final HTML. By setting the environment variable, a
-build-step will generate a `/static/js/ga.js` file that configures how we enable
-Google Analytics. And the server-side rendering will inject a
-`<script defer src=/static/js/ga.js>` in the HTML of every page, including home
-page, site-search, `404.html` and article pages.
+build-step will generate a `/static/js/gtag.js` file that configures how we
+enable Google Analytics. And the server-side rendering will inject a
+`<script defer src=/static/js/gtag.js>` in the HTML of every page, including
+home page, site-search, `404.html` and article pages.
 
 ## Debugging
 
@@ -55,7 +55,7 @@ to wrap you send events with a conditional statement.
 
 ## Client-side navigation
 
-By default, we send a `pageview` event as soon as the `ga.js` and the
+By default, we send a `pageview` event as soon as the `gtag.js` and the
 `https://www.google-analytics.com/analytics.js` code have both loaded. This
 should happen as early as possible. Even before the `DOMContentLoaded` DOM
 event. But we do use some client-side navigation and that will trigger a new

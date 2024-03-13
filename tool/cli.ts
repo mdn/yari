@@ -865,15 +865,8 @@ program
     "Generate a .js file that can be used in SSR rendering"
   )
   .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
+    default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
   })
-  .option(
-    "--debug",
-    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
-    {
-      default: GOOGLE_ANALYTICS_DEBUG,
-    }
-  )
   .option(
     "--account <id>",
     "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
@@ -884,7 +877,7 @@ program
   .action(
     tryOrExit(
       async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, debug, account } = options;
+        const { outfile, account } = options;
         if (account) {
           const dntHelperCode = fs
             .readFileSync(
@@ -893,30 +886,27 @@ program
             )
             .trim();
 
-          const gaScriptURL = `https://www.google-analytics.com/${
-            debug ? "analytics_debug" : "analytics"
-          }.js`;
+          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(account)}`;
 
           const code = `
 // Mozilla DNT Helper
 ${dntHelperCode}
-// only load GA if DNT is not enabled
+// Load GA unless DNT is enabled.
 if (Mozilla && !Mozilla.dntEnabled()) {
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', '${account}', 'mozilla.org');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${account}', { 'anonymize_ip': true });
 
-    var gaScript = document.createElement('script');
-    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
-    document.head.appendChild(gaScript);
+  var gaScript = document.createElement('script');
+  gaScript.async = true;
+  gaScript.src = '${gaScriptURL}';
+  document.head.appendChild(gaScript);
 }`.trim();
           fs.writeFileSync(outfile, `${code}\n`, "utf-8");
           logger.info(
             chalk.green(
-              `Generated ${outfile} for SSR rendering using ${account}${
-                debug ? " (debug mode)" : ""
-              }.`
+              `Generated ${outfile} for SSR rendering using ${account}.`
             )
           );
         } else {

@@ -123,7 +123,7 @@ test("content built foo page", () => {
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `.env.testing`.
-  expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
+  expect($('script[src="/static/js/gtag.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]')).toHaveLength(5);
