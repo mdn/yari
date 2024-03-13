@@ -6,35 +6,6 @@ export interface GAData {
 }
 export type GAFunction = (...any) => void;
 
-const GA_SESSION_STORAGE_KEY = "ga";
-
-function getPostponedEvents() {
-  let value;
-  try {
-    value = sessionStorage.getItem(GA_SESSION_STORAGE_KEY);
-  } catch (e) {
-    // No sessionStorage support
-    return [];
-  }
-  return JSON.parse(value || JSON.stringify([]));
-}
-
-/**
- * Saves given events into sessionStorage so that they are sent once the next
- * page has loaded. This should be used for events that need to be sent without
- * delaying navigation to a new page (which would cancel pending network
- * requests).
- */
-export function gaSendOnNextPage(newEvents: any[]) {
-  const events = getPostponedEvents();
-  const value = JSON.stringify(events.concat(newEvents));
-  try {
-    sessionStorage.setItem(GA_SESSION_STORAGE_KEY, value);
-  } catch (e) {
-    // No sessionStorage support
-  }
-}
-
 declare global {
   interface Window {
     gtag?: Function;
@@ -63,22 +34,6 @@ const GAContext = React.createContext<GAData>({ gtag });
  * the function provided by this component.
  */
 export function GAProvider(props: { children: React.ReactNode }) {
-  /**
-   * Checks for the existence of postponed analytics events, which we store
-   * in sessionStorage. It also clears them so that they aren't sent again.
-   */
-  useEffect(() => {
-    const events = getPostponedEvents();
-    try {
-      sessionStorage.removeItem(GA_SESSION_STORAGE_KEY);
-    } catch (e) {
-      // No sessionStorage support
-    }
-    for (const event of events) {
-      gtag("send", event);
-    }
-  }, []);
-
   return (
     <GAContext.Provider value={{ gtag }}>{props.children}</GAContext.Provider>
   );
