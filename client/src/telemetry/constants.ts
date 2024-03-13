@@ -78,3 +78,4 @@ export const BASELINE = Object.freeze({
 
 export const CLIENT_SIDE_NAVIGATION = "client_side_nav";
 export const LANGUAGE = "language";
+export const THEME_SWITCHER = "theme_switcher";
