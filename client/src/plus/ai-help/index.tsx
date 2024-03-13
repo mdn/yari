@@ -48,13 +48,14 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND,
+  SORRY_BACKEND_PREFIX,
   SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
+  MESSAGE_STOPPED,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
@@ -123,9 +124,6 @@ function AIHelpAuthenticated() {
             Report Feedback
           </a>
         </p>
-      </Container>
-      <Container>
-        <AiHelpBanner />
       </Container>
       <AIHelpInner />
     </div>
@@ -290,60 +288,52 @@ function AIHelpAssistantResponse({
 
   let sample = 0;
 
+  const isOffTopic =
+    message.role === MessageRole.Assistant &&
+    message.content?.startsWith(SORRY_BACKEND_PREFIX);
+
+  function messageForStatus(status: MessageStatus) {
+    switch (status) {
+      case MessageStatus.Errored:
+        return (
+          <>
+            {MESSAGE_FAILED} Please{" "}
+            <Button type="link" onClickHandler={retryLastQuestion}>
+              try again
+            </Button>
+            .
+          </>
+        );
+
+      case MessageStatus.Stopped:
+        return MESSAGE_STOPPED;
+
+      case MessageStatus.InProgress:
+        return MESSAGE_ANSWERING;
+
+      default:
+        return MESSAGE_ANSWERED;
+    }
+  }
+
   return (
     <>
-      <div
-        className={[
-          "ai-help-message-progress",
-          message.status !== MessageStatus.Pending && "complete",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {message.status === MessageStatus.Pending
-          ? MESSAGE_SEARCHING
-          : MESSAGE_SEARCHED}
-      </div>
-      {message.sources && message.sources.length > 0 && (
-        <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
-            <li key={index}>
-              <InternalLink
-                to={url}
-                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
-                target="_blank"
-              >
-                {title}
-              </InternalLink>
-            </li>
-          ))}
-        </ul>
-      )}
+      {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
       {(message.content ||
         message.status === MessageStatus.InProgress ||
         message.status === MessageStatus.Errored) && (
         <div
           className={[
             "ai-help-message-progress",
+            message.status === MessageStatus.InProgress && "active",
             message.status === MessageStatus.Complete && "complete",
             message.status === MessageStatus.Errored && "errored",
+            message.status === MessageStatus.Stopped && "stopped",
           ]
             .filter(Boolean)
             .join(" ")}
         >
-          {message.status === MessageStatus.Errored ? (
-            <>
-              {MESSAGE_FAILED} Please{" "}
-              <Button type="link" onClickHandler={retryLastQuestion}>
-                try again
-              </Button>
-              .
-            </>
-          ) : message.status === MessageStatus.InProgress ? (
-            MESSAGE_ANSWERING
-          ) : (
-            MESSAGE_ANSWERED
-          )}
+          {messageForStatus(message.status)}
         </div>
       )}
       {message.content && (
@@ -497,12 +487,12 @@ function AIHelpAssistantResponse({
               },
             }}
           >
-            {message.content?.replace(SORRY_BACKEND, SORRY_FRONTEND)}
+            {isOffTopic ? SORRY_FRONTEND : message.content}
           </ReactMarkdown>
-          {message.status === "complete" &&
-            !message.content?.includes(SORRY_BACKEND) && (
-              <>
-                <section className="ai-help-feedback">
+          {(message.status === "complete" || isOffTopic) && (
+            <>
+              <section className="ai-help-feedback">
+                {!isOffTopic && (
                   <GleanThumbs
                     feature="ai-help-answer"
                     featureKey={message.messageId}
@@ -510,16 +500,65 @@ function AIHelpAssistantResponse({
                     upLabel={"Yes, this answer was useful."}
                     downLabel={"No, this answer was not useful."}
                   />
-                  <ReportIssueOnGitHubLink
-                    messages={messages}
-                    currentMessage={message}
-                  >
-                    Report an issue with this answer on GitHub
-                  </ReportIssueOnGitHubLink>
-                </section>
-              </>
-            )}
+                )}
+                <ReportIssueOnGitHubLink
+                  messages={messages}
+                  currentMessage={{
+                    ...message,
+                    ...(isOffTopic
+                      ? {
+                          content: SORRY_FRONTEND,
+                          sources: [],
+                        }
+                      : {}),
+                  }}
+                >
+                  Report an issue with this answer on GitHub
+                </ReportIssueOnGitHubLink>
+              </section>
+            </>
+          )}
         </div>
+      )}
+    </>
+  );
+}
+
+function AIHelpAssistantResponseSources({
+  message,
+}: {
+  message: Pick<Message, "status" | "sources">;
+}) {
+  const gleanClick = useGleanClick();
+
+  return (
+    <>
+      <div
+        className={[
+          "ai-help-message-progress",
+          message.status !== MessageStatus.Pending && "complete",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
+      </div>
+      {message.sources && message.sources.length > 0 && (
+        <ul className="ai-help-message-sources">
+          {message.sources.map(({ url, title }, index) => (
+            <li key={index}>
+              <InternalLink
+                to={url}
+                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
+                target="_blank"
+              >
+                {title}
+              </InternalLink>
+            </li>
+          ))}
+        </ul>
       )}
     </>
   );
@@ -635,6 +674,7 @@ export function AIHelpInner() {
         messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
       />
       <Container>
+        <AiHelpBanner isDisabled={isQuotaExceeded(quota)} />
         {isQuotaLoading || isHistoryLoading ? (
           <Loading />
         ) : (
@@ -700,6 +740,7 @@ export function AIHelpInner() {
                 <div className="ai-help-footer-actions">
                   <Button
                     type="action"
+                    isDisabled={!isResponding}
                     extraClasses="ai-help-stop-button"
                     onClickHandler={() => {
                       gleanClick(`${AI_HELP}: stop`);

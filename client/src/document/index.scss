@@ -254,10 +254,13 @@
 
   @media screen and (min-width: $screen-sm) {
     padding: 3rem;
+    // Reduce space to article footer.
+    padding-bottom: 0;
   }
 
   @media screen and (min-width: $screen-md) {
-    margin-bottom: 0.5rem;
+    // Reduce space to article footer.
+    margin-bottom: 0;
     padding: 0;
   }
 }
@@ -276,7 +279,7 @@ table {
   width: 100%;
 
   th {
-    background: var(--background-tertiary);
+    background: var(--background-primary);
     font-weight: var(--font-body-strong-weight);
     line-height: 1.5;
     text-align: left;

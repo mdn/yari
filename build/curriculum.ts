@@ -40,7 +40,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
 
-export const allFiles: () => string[] = memoize(async () => {
+export const allFiles = memoize(async () => {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
@@ -49,7 +49,7 @@ export const allFiles: () => string[] = memoize(async () => {
   return (await api.withPromise()).sort();
 });
 
-export const buildIndex: () => CurriculumMetaData[] = memoize(async () => {
+export const buildIndex = memoize(async () => {
   const files = await allFiles();
   const modules = await Promise.all(
     files.map(
@@ -170,13 +170,15 @@ async function buildParents(url: string): Promise<DocParent[]> {
     return { url, title };
   });
   const parents = breadcrumbPath(url, index);
-  if (!parents) {
+  if (parents) {
     const { url, title } = index[0];
     if (parents[0]?.uri !== url) {
       return [{ uri: url, title }, ...parents];
     }
     return parents;
   }
+
+  return [];
 }
 
 async function readCurriculumPage(
