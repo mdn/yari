@@ -28,11 +28,11 @@ See:
 You can send individual arbitrary events in the client-side code. The best way
 to describe how this works is to look a existing code.
 
-Look for code that uses the `const ga = useGA()` hook and things that start
-with...:
+Look for code that uses the `const { gtag } = useGA()` hook and things that
+start with...:
 
 ```javascript
-ga("send", {
+gtag("event", {
   ...
 ```
 
