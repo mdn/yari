@@ -4,7 +4,6 @@ export const BASE_URL: string;
 export const FILES: string;
 export const FOLDERSEARCH: string;
 export const GOOGLE_ANALYTICS_ACCOUNT: string;
-export const GOOGLE_ANALYTICS_DEBUG: boolean;
 export const NO_PROGRESSBAR: boolean;
 export const FIX_FLAWS: boolean;
 export const FIX_FLAWS_DRY_RUN: boolean;

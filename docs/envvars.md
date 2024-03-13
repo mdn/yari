@@ -151,16 +151,6 @@ If set, the rendered HTML will have a Google Analytics snippet. For example, to
 test use: `export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0`. By default it's
 disabled (empty string).
 
-### `BUILD_GOOGLE_ANALYTICS_DEBUG`
-
-**Default: `false`**
-
-If true, and when `BUILD_GOOGLE_ANALYTICS_ACCOUNT` is truthy, when it injects
-the Google Analytics script tag it will use
-`<script src="https://www.google-analytics.com/analytics_debug.js"></script>`
-instead which triggers additional console logging which is useful for
-developers.
-
 ### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
 **Default: `false`**

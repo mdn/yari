@@ -29,7 +29,6 @@ import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
 import { runOptimizeClientBuild } from "./optimize-client-build.js";

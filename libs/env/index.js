@@ -30,9 +30,6 @@ export const FILES = process.env.BUILD_FILES || "";
 export const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
 export const GOOGLE_ANALYTICS_ACCOUNT =
   process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
-export const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
-  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
-);
 export const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );

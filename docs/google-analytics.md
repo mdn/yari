@@ -20,21 +20,8 @@ home page, site-search, `404.html` and article pages.
 
 ## Debugging
 
-The best way to debugging it is to set two environment variables in your `.env`.
-
-```bash
-BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0
-BUILD_GOOGLE_ANALYTICS_DEBUG=true
-```
-
-That will ensure that the `https://www.google-analytics.com/analytics_debug.js`
-file is used which uses `console.log()` to print out all sorts of information
-about what it's sending to Google Analytics.
-
-But note, when you use the `webpack` server (from `create-react-app`) that runs
-on <http://localhost:3000> this will not be present. It's only present on pages
-that are fully server-side rendered. So to test out what Google Analytics does,
-make sure you use <http://localhost:5042>.
+See:
+[Troubleshooting with Tag Assistant](https://support.google.com/tagassistant/answer/10039345)
 
 ## Sending events
 
