@@ -28,7 +28,7 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_ACCOUNT,
+  GOOGLE_ANALYTICS_MEASUREMENT_ID,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
 import { runOptimizeClientBuild } from "./optimize-client-build.js";
@@ -180,7 +180,7 @@ interface PopularitiesActionParameters extends ActionParameters {
 
 interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
   options: {
-    account: string;
+    measurementId: string;
     debug: boolean;
     outfile: string;
   };
@@ -867,17 +867,17 @@ program
     default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
   })
   .option(
-    "--account <id>",
-    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
+    "--measurement-id <id>",
+    "Google Analytics measurement ID (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
     {
-      default: GOOGLE_ANALYTICS_ACCOUNT,
+      default: GOOGLE_ANALYTICS_MEASUREMENT_ID,
     }
   )
   .action(
     tryOrExit(
       async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, account } = options;
-        if (account) {
+        const { outfile, measurementId } = options;
+        if (measurementId) {
           const dntHelperCode = fs
             .readFileSync(
               new URL("mozilla.dnthelper.min.js", import.meta.url),
@@ -885,7 +885,7 @@ program
             )
             .trim();
 
-          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(account)}`;
+          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
 
           const code = `
 // Mozilla DNT Helper
@@ -895,7 +895,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', '${account}', { 'anonymize_ip': true });
+  gtag('config', '${measurementId}', { 'anonymize_ip': true });
 
   var gaScript = document.createElement('script');
   gaScript.async = true;
@@ -905,7 +905,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           fs.writeFileSync(outfile, `${code}\n`, "utf-8");
           logger.info(
             chalk.green(
-              `Generated ${outfile} for SSR rendering using ${account}.`
+              `Generated ${outfile} for SSR rendering using ${measurementId}.`
             )
           );
         } else {

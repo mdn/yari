@@ -125,7 +125,7 @@ jobs:
 
           # This just makes sure the Google Analytics script gets used even if
           # it goes nowhere.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-00000000-0
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true

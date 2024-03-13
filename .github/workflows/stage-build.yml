@@ -195,7 +195,7 @@ jobs:
           BUILD_FLAW_LEVELS: "*:ignore"
 
           # This is the Google Analytics measurement ID for developer.allizom.org.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: G-ZG5HNVZRY0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-ZG5HNVZRY0
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true

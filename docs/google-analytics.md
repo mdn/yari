@@ -5,7 +5,7 @@ from the client-side code. The way it works is that you have to send an
 environment variable, like:
 
 ```bash
-BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-1234678-0
+BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=UA-1234678-0
 ```
 
 and that gets included in the build by more or less code-generating the snippet
