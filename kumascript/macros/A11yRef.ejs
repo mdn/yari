@@ -1,19 +1,9 @@
 <%
 
-const text = mdn.localStringMap({
+const sections = mdn.localStringMap({
   'en-US': {
     "Accessibility" : "Accessibility",
     "Guides" : "Guides",
-        "Information_for_Web_authors" : "Information for web authors",
-        "Accessibility:_What_users_can_to_to_browse_safely" : "User settings",
-        "An_overview_of_accessible_web_applications_and_widgets" : "Applications and widgets",
-        "Keyboard-navigable_JavaScript_widgets" : "Keyboard-navigable widgets",
-        "Mobile_accessibility_checklist" : "Mobile checklist",
-        "Understanding_WCAG" : "Understanding WCAG",
-        "Cognitive_accessibility" : "Cognitive accessibility",
-        "Accessibility_and_Spacial_Patterns" : "Spacial Patterns",
-        "Understanding_Colors_and_Luminance" : "Colors and Luminance",
-        "Seizure_disorders" : "Seizures and physical reactions",
     "Resources" : "Resources",
         "What_is_accessibility" : "What is accessibility?",
         "HTML" : "HTML: A good basis for accessibility",
@@ -48,7 +38,7 @@ const LearnURL = `/${locale}/docs/Learn/`;
         <li class="toggle">
           <details><summary><%=text["Guides"]%></summary>
             <ol>
-                <li><a href="<%=baseURL%>Information_for_Web_authors"><%=text["Information_for_Web_authors"]%></a></li>
+                <li>${web.smartLink(`${baseURL}Information_for_Web_authors`)</li>
                 <li><a href="<%=baseURL%>Accessibility:_What_users_can_to_to_browse_safely">User settings</a></li>
                 <li><a href="<%=baseURL%>An_overview_of_accessible_web_applications_and_widgets"><%=text["An_overview_of_accessible_web_applications_and_widgets"]%></a></li>
                 <li><a href="<%=baseURL%>Keyboard-navigable_JavaScript_widgets">Keyboard-navigable widgets</a></li>
