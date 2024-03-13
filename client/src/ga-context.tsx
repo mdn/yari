@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 export interface GAData {
   gtag: GAFunction;
@@ -37,20 +37,6 @@ export function GAProvider(props: { children: React.ReactNode }) {
   return (
     <GAContext.Provider value={{ gtag }}>{props.children}</GAContext.Provider>
   );
-}
-
-// This is a custom hook to return the GA client id. It returns the
-// empty string until (and unless) it can determine that id from the GA object.
-export function useClientId() {
-  const [clientId, setClientId] = useState<string>("");
-  const { gtag } = useContext(GAContext);
-  useEffect(() => {
-    gtag((tracker) => {
-      setClientId(tracker.get("clientId"));
-    });
-  }, [gtag]);
-
-  return clientId;
 }
 
 export function useGA() {
