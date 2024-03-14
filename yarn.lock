@@ -14123,10 +14123,10 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
-sse.js@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/sse.js/-/sse.js-2.3.0.tgz#2afc3758958e5a6859b47275df233a09cffb5ec8"
-  integrity sha512-DuvzoKO5DBdiGvvtSA+9UbwtEN3KuGAFB67Miwfx8eAn7hnnskT9SGPReLMKo6IjksB6oeYkkL8jf1cV0SmJww==
+sse.js@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/sse.js/-/sse.js-2.4.1.tgz#1d0cb4507b814bf27cddaf4407b94945d3df30ac"
+  integrity sha512-0qXPFZCClp+RPWtldNTYUjDWDlStZq1nyRF7at8WDFotHEyCivEBlR7Z5ftcJnt9KpouRg+NdzGFvPTB2gHl8Q==
 
 stable@^0.1.8:
   version "0.1.8"
