@@ -1622,13 +1622,7 @@ test("translated content broken links can fall back to en-us", () => {
     line: 19,
     column: 16,
   });
-  expect(map.get("/fr/docs/Web/CSS/number")).toMatchObject({
-    explanation: "Can't resolve /fr/docs/Web/CSS/number",
-    suggestion: "/fr/docs/Web/CSS/number",
-    fixable: true,
-    line: 21,
-    column: 14,
-  });
+  expect(map.get("/fr/docs/Web/CSS/number")).toBeUndefined();
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
