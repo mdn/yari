@@ -249,10 +249,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.7.36":
-  version "2.7.36"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.36.tgz#eb1ee00b5cf00769ebf6e0ad0570546acb9221bb"
-  integrity sha512-u11fkedhUmMYIH1RRiVJM7fVw4CY+VPl0k6BxLBgngsIml70gGvbTHLhbXcN+BMBmQbZWL3DGEVxIo2xXVkLWg==
+"@zip.js/zip.js@2.7.40":
+  version "2.7.40"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.40.tgz#e53626cfe051119df97bf1672188b9f36dfe75b8"
+  integrity sha512-kSYwO0Wth6G66QM4CejZqG0nRhBsVVTaR18M/Ta8EcqcvaV0dYrnDDyKAstfy0V5+ejK4b9w5xc1W0ECATJTvA==
 
 acorn-import-assertions@^1.9.0:
   version "1.9.0"
@@ -371,10 +371,10 @@ cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-dexie@*, dexie@3.2.5:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.5.tgz#f68e34b98e0e5e3412cf86b540a2cc6cbf9b0266"
-  integrity sha512-MA7vYQvXxWN2+G50D0GLS4FqdYUyRYQsN0FikZIVebOmRoNCSCL9+eUbIF80dqrfns3kmY+83+hE2GN9CnAGyA==
+dexie@*, dexie@3.2.6:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.6.tgz#c5980e4228d7e81744bb324c81459afa6604da41"
+  integrity sha512-R9VzQ27/cncQymoAeD1kfu66NUrdxcnMNXVfEoFLnQ+apVVbS4++veUcSGxft9V++zaeiLkMAREOMf8EwgR/Vw==
   dependencies:
     karma-safari-launcher "^1.0.0"
 
@@ -849,10 +849,10 @@ ts-loader@^9.5.1:
     semver "^7.3.4"
     source-map "^0.7.4"
 
-typescript@^5.3.3:
-  version "5.3.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
-  integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
+typescript@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.2.tgz#0ae9cebcfae970718474fe0da2c090cad6577372"
+  integrity sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==
 
 update-browserslist-db@^1.0.13:
   version "1.0.13"
