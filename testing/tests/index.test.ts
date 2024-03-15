@@ -1614,9 +1614,21 @@ test("translated content broken links can fall back to en-us", () => {
     doc: Doc;
   };
 
-  const brokenHrefs = doc.flaws.broken_links.map((x) => x.href);
-  expect(brokenHrefs).not.toContain("/fr/docs/Web/CSS/dumber");
-  expect(brokenHrefs).not.toContain("/fr/docs/Web/CSS/number");
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/fr/docs/Web/CSS/dumber")).toMatchObject({
+    explanation: "Can't resolve /fr/docs/Web/CSS/dumber",
+    suggestion: "/en-US/docs/Web/CSS/dumber",
+    fixable: true,
+    line: 19,
+    column: 16,
+  });
+  expect(map.get("/fr/docs/Web/CSS/number")).toMatchObject({
+    explanation: "Can't resolve /fr/docs/Web/CSS/number",
+    suggestion: "/en-US/docs/Web/CSS/number",
+    fixable: true,
+    line: 21,
+    column: 14,
+  });
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
