@@ -1,10 +1,7 @@
 import fs from "node:fs";
 
-import { fromMarkdown } from "mdast-util-from-markdown";
-import { visit } from "unist-util-visit";
-
 import { Document, Redirect, FileAttachment } from "../../content/index.js";
-import { findMatchesInText } from "../matches-in-text.js";
+import { findMatchesInText, findMatchesInMarkdown } from "../matches.js";
 import {
   DEFAULT_LOCALE,
   FLAW_LEVELS,
@@ -14,17 +11,6 @@ import { isValidLocale } from "../../libs/locale-utils/index.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
-
-function findMatchesInMarkdown(rawContent: string, href: string) {
-  const matches = [];
-  visit(fromMarkdown(rawContent), "link", (node: any) => {
-    if (node.url == href) {
-      const { line, column } = node.position.start;
-      matches.push({ line, column });
-    }
-  });
-  return matches;
-}
 
 const _safeToHttpsDomains = new Map();
 
@@ -130,17 +116,13 @@ export function getBrokenLinksFlaws(
         href,
 
         doc.isMarkdown
-          ? findMatchesInMarkdown(rawContent, href)
-          : Array.from(
-              findMatchesInText(href, rawContent, {
-                attribute: "href",
-              })
-            )
+          ? findMatchesInMarkdown(href, rawContent, { type: "link" })
+          : findMatchesInText(href, rawContent, {
+              attribute: "href",
+            })
       );
     }
-    // findMatchesInText() is a generator function so use `Array.from()`
-    // to turn it into an array so we can use `.forEach()` because that
-    // gives us an `i` for every loop.
+
     matches.get(href).forEach((match, i) => {
       if (i !== index) {
         return;
@@ -301,7 +283,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("/") &&
       !href.startsWith("//") &&
-      !/^\/en-US\/blog(\/|$)/.test(href)
+      !/^\/(discord|en-US\/blog)(\/|$)/.test(href)
     ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");

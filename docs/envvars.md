@@ -44,6 +44,12 @@ https://github.com/mdn/translated-content.
 Path to the contributor spotlight content, cloned from
 https://github.com/mdn/mdn-contributor-spotlight.
 
+### `CURRICULUM_ROOT`
+
+**Default: `../curriculum`**
+
+Path to the curriculum content, cloned from https://github.com/mdn/curriculum.
+
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
