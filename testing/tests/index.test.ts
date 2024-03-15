@@ -1617,7 +1617,7 @@ test("translated content broken links can fall back to en-us", () => {
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/fr/docs/Web/CSS/dumber")).toMatchObject({
     explanation: "Can't resolve /fr/docs/Web/CSS/dumber",
-    suggestion: "/fr/docs/Web/CSS/dumber",
+    suggestion: "/fr/docs/Web/CSS/number",
     fixable: true,
     line: 19,
     column: 16,
