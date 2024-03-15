@@ -1614,6 +1614,10 @@ test("translated content broken links can fall back to en-us", () => {
     doc: Doc;
   };
 
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.keys()).not.toContain("/fr/docs/Web/CSS/dumber");
+  expect(map.keys()).not.toContain("/fr/docs/Web/CSS/number");
+
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
