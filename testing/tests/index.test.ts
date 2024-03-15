@@ -1613,19 +1613,23 @@ test("translated content broken links can fall back to en-us", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
+
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
-  expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
-    "Can use the English (en-US) link as a fallback"
-  );
-  expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
-    "Can use the English (en-US) link as a fallback"
-  );
+  expect(map.get("/fr/docs/Web/CSS/dumber")).toMatchObject({
+    explanation: "Can't resolve /fr/docs/Web/CSS/dumber",
+    suggestion: "/fr/docs/Web/CSS/number",
+    fixable: true,
+    line: 19,
+    column: 16,
+  });
+  expect(map.get("/fr/docs/Web/CSS/number")).toBeUndefined();
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('article a[href="/fr/docs/Web/CSS/dumber"]')).toHaveLength(0);
   expect($('article a[href="/fr/docs/Web/CSS/number"]')).toHaveLength(0);
+  // Localized docs don't exist, but fallback to en-US is possible
   expect($('article a[href="/en-US/docs/Web/CSS/number"]')).toHaveLength(2);
   expect($("article a.only-in-en-us")).toHaveLength(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
