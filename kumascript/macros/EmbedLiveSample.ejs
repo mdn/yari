@@ -19,7 +19,6 @@
 // If a non-empty value is provided for a deprecated parameter, we raise a MacroDeprecationError flaw
 // When there are 0 uses in translated-content,
 // we will be able to simplify this macro (and likely the whole of MDN).
-// (May 2022: 203 occurrences for $4)
 if ($3 !== "") {
   mdn.deprecatedParams("'EmbedLiveSample' parameter $3 is deprecated (no screenshot URLs).");
 }
