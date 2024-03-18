@@ -160,6 +160,7 @@
         padding: 0;
         scroll-snap-align: center;
         width: 100%;
+        position: relative;
 
         @media screen and (min-width: $screen-md) {
           min-width: initial;
@@ -201,6 +202,12 @@
               font-weight: var(--font-body-strong-weight);
               margin: auto;
               text-align: center;
+            }
+
+            &::before {
+              content: "";
+              position: absolute;
+              inset: 0;
             }
           }
         }
