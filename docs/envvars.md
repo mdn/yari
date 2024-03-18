@@ -148,8 +148,8 @@ The base URL used in the Interactive Example iframes.
 **Default: `''`**
 
 If set, the rendered HTML will have a Google Analytics snippet. For example, to
-test use: `export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=UA-00000000-0`. By
-default it's disabled (empty string).
+test use: `export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=G-XXXXXXXX`. By default
+it's disabled (empty string).
 
 ### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
