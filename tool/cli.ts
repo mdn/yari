@@ -867,8 +867,8 @@ program
     default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
   })
   .option(
-    "--measurement-id <id>",
-    "Google Analytics measurement ID (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
+    "--measurement-id <id>[,<id>]",
+    "Google Analytics measurement IDs (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
     {
       default: GOOGLE_ANALYTICS_MEASUREMENT_ID,
     }
@@ -877,7 +877,8 @@ program
     tryOrExit(
       async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
         const { outfile, measurementId } = options;
-        if (measurementId) {
+        const measurementIds = measurementId.split(",").filter(Boolean);
+        if (measurementIds.length) {
           const dntHelperCode = fs
             .readFileSync(
               new URL("mozilla.dnthelper.min.js", import.meta.url),
@@ -885,7 +886,8 @@ program
             )
             .trim();
 
-          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+          const firstMeasurementId = measurementIds.at(0);
+          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(firstMeasurementId)}`;
 
           const code = `
 // Mozilla DNT Helper
@@ -895,7 +897,9 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', '${measurementId}', { 'anonymize_ip': true });
+  ${measurementIds
+    .map((id) => `gtag('config', '${id}', { 'anonymize_ip': true });`)
+    .join("\n  ")}
 
   var gaScript = document.createElement('script');
   gaScript.async = true;

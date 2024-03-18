@@ -151,6 +151,12 @@ If set, the rendered HTML will have a Google Analytics snippet. For example, to
 test use: `export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=G-XXXXXXXX`. By default
 it's disabled (empty string).
 
+For dual tagging (UA + GA4), multiple IDs can be separated by a comma:
+
+```env
+export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=UA-00000000-0,G-XXXXXXXX
+```
+
 ### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
 **Default: `false`**
