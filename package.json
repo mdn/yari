@@ -38,7 +38,7 @@
     "prepare": "(husky || true) && yarn install:all && yarn install:all:npm",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
-    "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
+    "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env NODE_ENV=development BABEL_ENV=development BROWSER=none PORT=3000 node scripts/start.js",
     "start:server": "node-dev --experimental-loader ts-node/esm server/index.ts",
     "start:static-server": "ts-node server/static.ts",
