@@ -111,6 +111,7 @@ export const CSP_DIRECTIVES = {
     "www.google-analytics.com",
     // GA4.
     "https://*.google-analytics.com",
+    "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
     "stats.g.doubleclick.net",
