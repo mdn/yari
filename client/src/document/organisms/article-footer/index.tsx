@@ -5,6 +5,7 @@ import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-foot
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { ARTICLE_FOOTER, THUMBS } from "../../../telemetry/constants";
+import { VALID_LOCALES } from "../../../constants";
 
 export function LastModified({ value, locale }) {
   if (!value) {
@@ -127,7 +128,7 @@ export function ArticleFooter({ doc, locale }) {
           )}
         </fieldset>
 
-        <Contribute />
+        <Contribute locale={locale} />
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} /> by{" "}
           <Authors url={doc.mdn_url} />.
@@ -138,13 +139,19 @@ export function ArticleFooter({ doc, locale }) {
   );
 }
 
-function Contribute() {
+function Contribute({ locale }) {
+  const contributeHref = [...VALID_LOCALES.keys()]
+    .filter((language) => language !== "en-us")
+    .includes(locale)
+    ? "https://github.com/mdn/translated-content/blob/main/CONTRIBUTING.md"
+    : "https://github.com/mdn/content/blob/main/CONTRIBUTING.md";
+
   return (
     <>
       <a
         className="contribute"
-        href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
-        title={`This will take you to our contribution guidelines on GitHub.`}
+        href={contributeHref}
+        title="This will take you to our contribution guidelines on GitHub."
         target="_blank"
         rel="noopener noreferrer"
       >
