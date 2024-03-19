@@ -140,14 +140,13 @@ export function ArticleFooter({ doc }) {
 }
 
 function Contribute({ locale }) {
-  const contributeRepo =
-    locale === DEFAULT_LOCALE ? "content" : "translated-content";
+  const repo = locale === DEFAULT_LOCALE ? "content" : "translated-content";
 
   return (
     <>
       <a
         className="contribute"
-        href={`https://github.com/mdn/${contributeRepo}/blob/main/CONTRIBUTING.md`}
+        href={`https://github.com/mdn/${repo}/blob/main/CONTRIBUTING.md`}
         title="This will take you to our contribution guidelines on GitHub."
         target="_blank"
         rel="noopener noreferrer"
