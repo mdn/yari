@@ -5,7 +5,7 @@ import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-foot
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { ARTICLE_FOOTER, THUMBS } from "../../../telemetry/constants";
-import { VALID_LOCALES } from "../../../constants";
+import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 export function LastModified({ value, locale }) {
   if (!value) {
@@ -47,7 +47,7 @@ const FEEDBACK_REASONS: Required<Record<FeedbackReason, string>> = {
   other: "Other",
 };
 
-export function ArticleFooter({ doc, locale }) {
+export function ArticleFooter({ doc }) {
   const [view, setView] = useState<ArticleFooterView>(ArticleFooterView.Vote);
   const [reason, setReason] = useState<FeedbackReason>();
 
@@ -128,9 +128,9 @@ export function ArticleFooter({ doc, locale }) {
           )}
         </fieldset>
 
-        <Contribute locale={locale} />
+        <Contribute locale={doc.locale} />
         <p className="last-modified-date">
-          <LastModified value={doc.modified} locale={locale} /> by{" "}
+          <LastModified value={doc.modified} locale={doc.locale} /> by{" "}
           <Authors url={doc.mdn_url} />.
         </p>
         {doc.isActive && <OnGitHubLink doc={doc} />}
@@ -140,11 +140,8 @@ export function ArticleFooter({ doc, locale }) {
 }
 
 function Contribute({ locale }) {
-  const contributeRepo = [...VALID_LOCALES.keys()]
-    .filter((language) => language !== "en-us")
-    .includes(locale)
-    ? "translated-content"
-    : "content";
+  const contributeRepo =
+    locale === DEFAULT_LOCALE ? "content" : "translated-content";
 
   return (
     <>
