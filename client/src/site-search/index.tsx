@@ -4,8 +4,10 @@ import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
+import { useGleanClick } from "../telemetry/glean-context";
 import "./index.scss";
 import { SidePlacement } from "../ui/organisms/placement";
+import { CLIENT_SIDE_NAVIGATION } from "../telemetry/constants";
 
 const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
@@ -13,6 +15,7 @@ const SearchResults = React.lazy(() => import("./search-results"));
 export function SiteSearch() {
   const isServer = useIsServer();
   const ga = useGA();
+  const gleanClick = useGleanClick();
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get("q");
@@ -33,6 +36,7 @@ export function SiteSearch() {
   React.useEffect(() => {
     if (ga) {
       if (mountCounter.current > 0) {
+        const location = window.location.toString();
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.
         // Note that in local development, where you use `localhost:3000`
@@ -40,14 +44,15 @@ export function SiteSearch() {
         ga("set", "dimension19", "Yes");
         ga("send", {
           hitType: "pageview",
-          location: window.location.toString(),
+          location,
         });
+        gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
       }
       // By counting every time a document is mounted, we can use this to know if
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [query, page, ga]);
+  }, [query, page, ga, gleanClick]);
 
   return (
     <div className="main-wrapper site-search">

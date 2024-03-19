@@ -281,7 +281,7 @@ export async function buildBlogPosts(options: {
 
     const url = `/${locale}/blog/${blogMeta.slug}/`;
     const renderUrl = `/${locale}/blog/${blogMeta.slug}`;
-    const renderDoc = {
+    const renderDoc: BlogPostDoc = {
       url: renderUrl,
       rawBody: body,
       metadata: { locale, ...blogMeta },
@@ -344,11 +344,11 @@ export async function buildBlogPosts(options: {
   }
 }
 
-interface BlogPostDoc {
+export interface BlogPostDoc {
   url: string;
   rawBody: string;
   metadata: BlogPostMetadata & { locale: string };
-  isMarkdown: boolean;
+  isMarkdown: true;
   fileInfo: {
     path: string;
   };
@@ -368,7 +368,7 @@ export async function buildPost(
   let $ = null;
   const liveSamples: LiveSample[] = [];
 
-  [$] = await kumascript.render(document.url, {}, document as any);
+  [$] = await kumascript.render(document.url, {}, document);
 
   const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
@@ -449,8 +449,12 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
       description: post.description,
       author: [
         {
-          name: post.author?.name || "The MDN Team",
-          link: post.author?.link,
+          name:
+            (typeof post.author === "string"
+              ? post.author
+              : post.author?.name) || "The MDN Team",
+          link:
+            typeof post.author === "string" ? post.author : post.author?.link,
         },
       ],
       date: new Date(post.date),

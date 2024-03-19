@@ -81,6 +81,10 @@ const text = mdn.localStringMap({
         'Content_breaks_in_Multicol': 'Content breaks in Multicol',
       'Conditional_rules': 'Conditional rules',
         'Using_feature_queries': 'Using feature queries',
+      'Containment' : 'Containment',
+        'Using_CSS_containment' : 'Using CSS containment',
+        'Container_queries' : 'CSS container queries',
+        'Container_size_and_style_queries' : 'Using container size and style queries',
       'CSSOM_view': 'CSSOM view',
         'Coordinate_systems': 'Coordinate systems',
       'Flexbox': 'Flexbox',
@@ -1263,6 +1267,16 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${cssURL}CSS_Conditional_Rules/Using_Feature_Queries`, null, text['Using_feature_queries'], cssURL)%></li>
           </ol>
       </details>
+  </li>
+  <li class="toggle">
+    <details>
+        <summary><%=text['Containment']%></summary>
+        <ol>
+          <li><%-smartLink(`${cssURL}CSS_Containment/Using_CSS_containment`)%></li>
+          <li><%-smartLink(`${cssURL}CSS_Containment/Container_queries`)%></li>
+          <li><%-smartLink(`${cssURL}CSS_Containment/Container_size_and_style_queries`)%></li>
+        </ol>
+    </details>
   </li>
   <li class="toggle">
       <details>

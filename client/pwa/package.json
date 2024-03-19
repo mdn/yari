@@ -12,14 +12,14 @@
     "dev": "webpack-cli --watch"
   },
   "dependencies": {
-    "@zip.js/zip.js": "2.7.34",
-    "dexie": "3.2.5"
+    "@zip.js/zip.js": "2.7.40",
+    "dexie": "3.2.6"
   },
   "devDependencies": {
     "@types/dexie": "1.3.1",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3",
-    "webpack": "^5.90.1",
+    "typescript": "^5.4.2",
+    "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
     "workers-preview": "^1.0.6"
   }
