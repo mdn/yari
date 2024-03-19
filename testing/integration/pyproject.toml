@@ -11,13 +11,13 @@ readme = "README.md"
 python = "^3.10"
 pytest = "^8.1.1"
 pytest-base-url = "^2.1.0"
-pytest-rerunfailures = "^13.0"
+pytest-rerunfailures = "^14.0"
 requests = "^2.31.0"
 pyquery = "^2.0.0"
 braceexpand = "^0.1.7"
 
 [tool.poetry.dev-dependencies]
-black = "^24.2"
+black = "^24.3"
 flake8 = "^7.0.0"
 
 [build-system]

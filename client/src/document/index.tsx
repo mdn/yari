@@ -271,7 +271,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
           </article>
-          <ArticleFooter doc={doc} locale={locale} />
+          <ArticleFooter doc={doc} />
         </MainContentContainer>
         {false && <PlayQueue standalone={true} />}
       </div>

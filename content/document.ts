@@ -145,6 +145,7 @@ export function saveFile(
   fs.mkdirSync(folderPath, { recursive: true });
 
   const combined = `---\n${yaml.dump(saveMetadata, {
+    lineWidth: -1, // do not break lines
     quotingType: '"',
   })}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
