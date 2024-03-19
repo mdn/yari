@@ -126,8 +126,13 @@ export function range(start: number, stop: number) {
  * Used by quicksearch and sidebar filters.
  */
 export function splitQuery(term: string): string[] {
-  return term
-    .trim()
-    .toLowerCase()
-    .split(/[ ,.]+/);
+  term = term.trim().toLowerCase();
+
+  if (term.startsWith(".") || term.endsWith(".")) {
+    // Dot is probably meaningful.
+    return term.split(/[ ,]+/);
+  } else {
+    // Dot is probably just a word separator.
+    return term.split(/[ ,.]+/);
+  }
 }
