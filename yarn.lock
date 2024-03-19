@@ -2291,10 +2291,10 @@
   dependencies:
     call-bind "^1.0.7"
 
-"@mdn/bcd-utils-api@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.5.tgz#9587c6b592e87f8a5ccab80ccdd8b5184f867922"
-  integrity sha512-+8zfCGZzBoAoLK6jYnOm9Xa2LcdNRDVrUXatuBNuGJHyt7tpR+k/+de2LSGHiU34TYrfAXk7g9x8/IpXR+4zhw==
+"@mdn/bcd-utils-api@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.6.tgz#166fd6c431702af3c84133013f337b028476e7bc"
+  integrity sha512-aT0tumSuqi8RbD2ownK9f84pygC/m9/NlXh6IAWcSxj4YtFv14ohH95KcVLiLnTFx1reokVagYvC7P9611EU2A==
 
 "@mdn/browser-compat-data@^5.5.16":
   version "5.5.16"
