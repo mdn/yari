@@ -2,18 +2,14 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
 import caporal from "@caporal/core";
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import pg from "pg";
+import pgvector from "pgvector/pg";
 import { fdir } from "fdir";
 import OpenAI from "openai";
 import { load as cheerio } from "cheerio";
 
 import { DocMetadata } from "../libs/types/document.js";
-import {
-  BUILD_OUT_ROOT,
-  OPENAI_KEY,
-  SUPABASE_SERVICE_ROLE_KEY,
-  SUPABASE_URL,
-} from "../libs/env/index.js";
+import { BUILD_OUT_ROOT, OPENAI_KEY, PG_URI } from "../libs/env/index.js";
 import path from "node:path";
 import bcd from "@mdn/browser-compat-data" assert { type: "json" };
 import {
@@ -21,6 +17,7 @@ import {
   SimpleSupportStatement,
   VersionValue,
 } from "@mdn/browser-compat-data/types";
+import { h2mSync } from "../markdown/index.js";
 
 const { program } = caporal;
 
@@ -28,6 +25,7 @@ interface IndexedDoc {
   id: number;
   mdn_url: string;
   title: string;
+  title_short: string;
   token_count: number | null;
   hash: string;
   text_hash: string;
@@ -36,8 +34,10 @@ interface IndexedDoc {
 interface Doc {
   mdn_url: string;
   title: string;
+  title_short: string;
   hash: string;
   html: string;
+  markdown: string;
   text?: string;
   text_hash?: string;
 }
@@ -46,14 +46,18 @@ export async function updateEmbeddings(
   directory: string,
   updateFormatting: boolean
 ) {
-  if (!OPENAI_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    throw Error(
-      "Please set these environment variables: OPENAI_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY"
-    );
+  if (!OPENAI_KEY || !PG_URI) {
+    throw Error("Please set these environment variables: OPENAI_KEY, PG_URI");
   }
 
-  // Supabase.
-  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+  // Postgres.
+  const pgClient = new pg.Client({
+    connectionString: PG_URI,
+  });
+
+  await pgClient.connect();
+  await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
+  await pgvector.registerType(pgClient);
 
   // Open AI.
   const openai = new OpenAI({
@@ -67,16 +71,9 @@ export async function updateEmbeddings(
         model: "text-embedding-ada-002",
         input,
       });
-    } catch (e: any) {
-      const {
-        data: {
-          error: { message, type },
-        },
-        status,
-        statusText,
-      } = e.response;
+    } catch ({ error: { message, type }, status }: any) {
       console.error(
-        `[!] Failed to create embedding (${status} ${statusText}): ${type} - ${message}`
+        `[!] Failed to create embedding (${status}): ${type} - ${message}`
       );
       // Try again with trimmed content.
       embeddingResponse = await openai.embeddings.create({
@@ -97,7 +94,7 @@ export async function updateEmbeddings(
   };
 
   console.log(`Retrieving all indexed documents...`);
-  const existingDocs = await fetchAllExistingDocs(supabaseClient);
+  const existingDocs = await fetchAllExistingDocs(pgClient);
   console.log(`-> Done.`);
 
   const existingDocByUrl = new Map<string, IndexedDoc>(
@@ -110,9 +107,15 @@ export async function updateEmbeddings(
   const updates: Doc[] = [];
   const formattingUpdates: Doc[] = [];
 
-  for await (const { mdn_url, title, hash, html, text } of builtDocs(
-    directory
-  )) {
+  for await (const {
+    mdn_url,
+    title,
+    title_short,
+    hash,
+    html,
+    markdown,
+    text,
+  } of builtDocs(directory)) {
     seenUrls.add(mdn_url);
 
     // Check for existing document in DB and compare checksums.
@@ -124,8 +127,10 @@ export async function updateEmbeddings(
       updates.push({
         mdn_url,
         title,
+        title_short,
         hash,
         html,
+        markdown,
         text,
         text_hash,
       });
@@ -133,14 +138,16 @@ export async function updateEmbeddings(
       formattingUpdates.push({
         mdn_url,
         title,
+        title_short,
         hash,
         html,
+        markdown,
       });
     }
   }
 
   console.log(
-    `-> ${updates.length} of ${seenUrls.size} documents were changed (or added).`
+    `-> ${updates.length} (${formattingUpdates.length}) of ${seenUrls.size} documents were changed or added (or formatted).`
   );
   const deletions: IndexedDoc[] = [...existingDocByUrl.entries()]
     .filter(([key]) => !seenUrls.has(key))
@@ -151,7 +158,16 @@ export async function updateEmbeddings(
 
   if (updates.length > 0 || formattingUpdates.length > 0) {
     console.log(`Applying updates...`);
-    for (const { mdn_url, title, hash, html, text, text_hash } of updates) {
+    for (const {
+      mdn_url,
+      title,
+      title_short,
+      hash,
+      html,
+      markdown,
+      text,
+      text_hash,
+    } of updates) {
       try {
         console.log(`-> [${mdn_url}] Updating document...`);
 
@@ -159,50 +175,85 @@ export async function updateEmbeddings(
         const { total_tokens, embedding } = await createEmbedding(text);
 
         // Create/update document record.
-        await supabaseClient
-          .from("mdn_doc_macro")
-          .upsert(
-            {
-              mdn_url,
-              title,
-              hash,
-              html,
-              token_count: total_tokens,
-              embedding,
-              text_hash,
-            },
-            { onConflict: "mdn_url" }
-          )
-          .select()
-          .single()
-          .throwOnError();
+        const query = {
+          name: "upsert-embedding-doc",
+          text: `
+            INSERT INTO mdn_doc_macro(
+                    mdn_url,
+                    title,
+                    title_short,
+                    hash,
+                    html,
+                    markdown,
+                    token_count,
+                    embedding,
+                    text_hash
+                )
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
+            UPDATE
+            SET mdn_url = $1,
+                title = $2,
+                title_short = $3,
+                hash = $4,
+                html = $5,
+                markdown = $6,
+                token_count = $7,
+                embedding = $8,
+                text_hash = $9
+          `,
+          values: [
+            mdn_url,
+            title,
+            title_short,
+            hash,
+            html,
+            markdown,
+            total_tokens,
+            pgvector.toSql(embedding),
+            text_hash,
+          ],
+          rowMode: "array",
+        };
+
+        await pgClient.query(query);
       } catch (err: any) {
         console.error(`!> [${mdn_url}] Failed to update document.`);
         const context = err?.response?.data ?? err?.response ?? err;
         console.error(context);
       }
     }
-    for (const { mdn_url, title, hash, html } of formattingUpdates) {
+    for (const {
+      mdn_url,
+      title,
+      title_short,
+      hash,
+      html,
+      markdown,
+    } of formattingUpdates) {
       try {
         console.log(
           `-> [${mdn_url}] Updating document without generating new embedding...`
         );
 
         // Create/update document record.
-        await supabaseClient
-          .from("mdn_doc_macro")
-          .upsert(
-            {
-              mdn_url,
-              title,
-              hash,
-              html,
-            },
-            { onConflict: "mdn_url" }
-          )
-          .select()
-          .single()
-          .throwOnError();
+        const query = {
+          name: "upsert-doc",
+          text: `
+            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, html, markdown)
+            VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (mdn_url) DO
+            UPDATE
+            SET mdn_url = $1,
+                title = $2,
+                title_short = $3,
+                hash = $4,
+                html = $5,
+                markdown = $6
+          `,
+          values: [mdn_url, title, title_short, hash, html, markdown],
+          rowMode: "array",
+        };
+
+        await pgClient.query(query);
       } catch (err: any) {
         console.error(`!> [${mdn_url}] Failed to update document.`);
         const context = err?.response?.data ?? err?.response ?? err;
@@ -216,19 +267,23 @@ export async function updateEmbeddings(
     console.log(`Applying deletions...`);
     for (const { id, mdn_url } of deletions) {
       console.log(`-> [${mdn_url}] Deleting indexed document...`);
-      await supabaseClient
-        .from("mdn_doc_macro")
-        .delete()
-        .eq("id", id)
-        .throwOnError();
+      const query = {
+        name: "delete-doc",
+        text: `DELETE from mdn_doc_macro WHERE id = $1`,
+        values: [id],
+        rowMode: "array",
+      };
+
+      await pgClient.query(query);
     }
     console.log(`-> Done.`);
   }
+  pgClient.end();
 }
 
 async function formatDocs(directory: string) {
-  for await (const { html, text } of builtDocs(directory)) {
-    console.log(html, text);
+  for await (const { html, markdown, text } of builtDocs(directory)) {
+    console.log(html, markdown, text);
   }
 }
 
@@ -250,7 +305,9 @@ async function* builtDocs(directory: string) {
   for await (const metadataPath of builtPaths(directory)) {
     try {
       const raw = await readFile(metadataPath, "utf-8");
-      const { title, mdn_url, hash } = JSON.parse(raw) as DocMetadata;
+      const { title, short_title, mdn_url, hash } = JSON.parse(
+        raw
+      ) as DocMetadata;
 
       const plainPath = path.join(path.dirname(metadataPath), "plain.html");
       const plainHTML = await readFile(plainPath, "utf-8");
@@ -268,6 +325,7 @@ async function* builtDocs(directory: string) {
         $(el).replaceWith(buildBCDTable($(el).data("query") as string));
       });
       const html = $.html();
+      const markdown = h2mSync(html);
 
       // reformat text version, used for embedding
       $("title").remove();
@@ -277,8 +335,10 @@ async function* builtDocs(directory: string) {
       yield {
         mdn_url,
         title,
+        title_short: short_title || title,
         hash,
         html,
+        markdown,
         text,
       };
     } catch (e) {
@@ -457,24 +517,44 @@ export function isNotSupportedAtAll(support: SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
 
-async function fetchAllExistingDocs(supabase: SupabaseClient) {
+async function fetchAllExistingDocs(pgClient) {
   const PAGE_SIZE = 1000;
-  const selectDocs = () =>
-    supabase
-      .from("mdn_doc_macro")
-      .select("id, mdn_url, title, hash, token_count, text_hash")
-      .order("id")
-      .limit(PAGE_SIZE);
+  const selectDocs = async (lastId) => {
+    const query = {
+      name: "fetch-all-doc",
+      text: `
+        SELECT id,
+            mdn_url,
+            title,
+            hash,
+            token_count,
+            text_hash
+        from mdn_doc_macro
+        WHERE id > $1
+        ORDER BY id ASC
+        LIMIT $2
+      `,
+      values: [lastId, PAGE_SIZE],
+      rowMode: "array",
+    };
+    const result = await pgClient.query(query);
+    return result.rows.map(
+      ([id, mdn_url, title, hash, token_count, text_hash]) => {
+        return { id, mdn_url, title, hash, token_count, text_hash };
+      }
+    );
+  };
 
-  let { data } = await selectDocs().throwOnError();
-  let allData = data;
-  while (data.length === PAGE_SIZE) {
-    const lastItem = data[data.length - 1];
-    ({ data } = await selectDocs().gt("id", lastItem.id).throwOnError());
-    allData = [...allData, ...data];
+  const allDocs = [];
+  let docs = await selectDocs(0);
+  allDocs.push(...docs);
+  while (docs.length === PAGE_SIZE) {
+    const lastItem = docs[docs.length - 1];
+    docs = await selectDocs(lastItem.id);
+    allDocs.push(...docs);
   }
 
-  return allData;
+  return allDocs;
 }
 
 // CLI.

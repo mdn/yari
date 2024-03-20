@@ -10,8 +10,10 @@ import {
   isNotSupportedAtAll,
   isTruthy,
   versionIsPreview,
+  bugURLToString,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
+import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 function getSupportClassName(
   support: BCD.SupportStatement | undefined,
@@ -341,7 +343,7 @@ function getNotes(
             (otherItem) => otherItem.version_added === item.version_removed
           )
             ? {
-                iconName: "disabled",
+                iconName: "footnote",
                 label: (
                   <>
                     Removed in {labelFromString(item.version_removed, browser)}{" "}
@@ -378,6 +380,19 @@ function getNotes(
             ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
                 (note) => ({ iconName: "footnote", label: note })
               )
+            : null,
+          item.impl_url
+            ? (Array.isArray(item.impl_url)
+                ? item.impl_url
+                : [item.impl_url]
+              ).map((impl_url) => ({
+                iconName: "footnote",
+                label: (
+                  <>
+                    See <a href={impl_url}>{bugURLToString(impl_url)}</a>.
+                  </>
+                ),
+              }))
             : null,
           versionIsPreview(item.version_added, browser)
             ? {
@@ -532,8 +547,12 @@ export const FeatureRow = React.memo(
     let titleNode: string | React.ReactNode;
 
     if (compat.mdn_url && depth > 0) {
+      const href = compat.mdn_url.replace(
+        `/${DEFAULT_LOCALE}/docs`,
+        `/${locale}/docs`
+      );
       titleNode = (
-        <a href={compat.mdn_url} className="bc-table-row-header">
+        <a href={href} className="bc-table-row-header">
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>
