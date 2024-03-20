@@ -67,7 +67,7 @@ export class HTTPError extends Error {
 }
 
 export function Document(props /* TODO: define a TS interface for this */) {
-  const ga = useGA();
+  const { gtag } = useGA();
   const gleanClick = useGleanClick();
   const isServer = useIsServer();
 
@@ -147,10 +147,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
         // I.e. not the initial load but the location has now changed.
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
-        ga("set", "dimension19", "Yes");
-        ga("send", {
-          hitType: "pageview",
-          location,
+        gtag("event", "pageview", {
+          dimension19: "Yes",
+          page_location: location,
         });
         gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
       }
@@ -159,7 +158,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [ga, gleanClick, doc, error]);
+  }, [gtag, gleanClick, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;

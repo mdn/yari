@@ -129,7 +129,7 @@ jobs:
           # If it's used on other domains (e.g. stage or dev builds), it's OK
           # because ultimately Google Analytics will filter it out since the
           # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
