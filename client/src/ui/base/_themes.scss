@@ -308,6 +308,14 @@
       $mdn-theme-light-icon-warning,
       $alpha: -0.9
     )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
+    )};
   --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
   --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
