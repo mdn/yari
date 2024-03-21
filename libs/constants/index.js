@@ -64,7 +64,8 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
 
-  "www.google-analytics.com/analytics.js",
+  // GA4.
+  "https://www.googletagmanager.com/gtag/js",
 
   "assets.codepen.io",
   "production-assets.codepen.io",
@@ -104,7 +105,11 @@ export const CSP_DIRECTIVES = {
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
-    "www.google-analytics.com",
+    // GA4.
+    "https://*.google-analytics.com",
+    "https://*.analytics.google.com",
+    "https://*.googletagmanager.com",
+
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -146,7 +151,10 @@ export const CSP_DIRECTIVES = {
     "wikipedia.org",
     "upload.wikimedia.org",
 
-    "www.google-analytics.com",
+    // GA4.
+    "https://*.google-analytics.com",
+    "https://*.googletagmanager.com",
+
     "www.gstatic.com",
   ],
   "manifest-src": ["'self'"],
@@ -255,6 +263,7 @@ export const VALID_FLAW_CHECKS = new Set([
 // ------
 
 export const MDN_PLUS_TITLE = "MDN Plus";
+export const CURRICULUM_TITLE = "MDN Curriculum";
 
 // -------
 // content

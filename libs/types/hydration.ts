@@ -1,8 +1,8 @@
 import { BlogPostMetadata } from "./blog.js";
 
-interface HydrationData<T = any> {
+interface HydrationData<T = any, S = any> {
   hyData?: T;
-  doc?: any;
+  doc?: S;
   blogMeta?: BlogPostMetadata | null;
   pageNotFound?: boolean;
   pageTitle?: any;

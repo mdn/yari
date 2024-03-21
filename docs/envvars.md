@@ -44,6 +44,12 @@ https://github.com/mdn/translated-content.
 Path to the contributor spotlight content, cloned from
 https://github.com/mdn/mdn-contributor-spotlight.
 
+### `CURRICULUM_ROOT`
+
+**Default: `../curriculum`**
+
+Path to the curriculum content, cloned from https://github.com/mdn/curriculum.
+
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -137,23 +143,19 @@ Used to serve legacy lives samples that do not support playground rendering.
 
 The base URL used in the Interactive Example iframes.
 
-### `BUILD_GOOGLE_ANALYTICS_ACCOUNT`
+### `BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID`
 
 **Default: `''`**
 
 If set, the rendered HTML will have a Google Analytics snippet. For example, to
-test use: `export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0`. By default it's
-disabled (empty string).
+test use: `export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=G-XXXXXXXX`. By default
+it's disabled (empty string).
 
-### `BUILD_GOOGLE_ANALYTICS_DEBUG`
+For dual tagging (UA + GA4), multiple IDs can be separated by a comma:
 
-**Default: `false`**
-
-If true, and when `BUILD_GOOGLE_ANALYTICS_ACCOUNT` is truthy, when it injects
-the Google Analytics script tag it will use
-`<script src="https://www.google-analytics.com/analytics_debug.js"></script>`
-instead which triggers additional console logging which is useful for
-developers.
+```env
+export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=UA-00000000-0,G-XXXXXXXX
+```
 
 ### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
