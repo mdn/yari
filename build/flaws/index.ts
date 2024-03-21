@@ -11,7 +11,7 @@ import {
 import {
   replaceMatchesInText,
   replaceMatchingLinksInMarkdown,
-} from "../matches-in-text.js";
+} from "../matches.js";
 import { forceExternalURL, downloadAndResizeImage } from "../utils.js";
 import { getBadBCDQueriesFlaws } from "./bad-bcd-queries.js";
 import { getBrokenLinksFlaws } from "./broken-links.js";
@@ -20,11 +20,13 @@ import { getPreTagFlaws } from "./pre-tags.js";
 export { injectSectionFlaws } from "./sections.js";
 import { getUnsafeHTMLFlaws } from "./unsafe-html.js";
 import { injectTranslationDifferences } from "./translation-differences.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document.js";
 
 export interface Flaw {
   explanation: any;
   id: any;
-  fixable: any;
+  fixable?: any;
   html?: any;
   suggestion: any;
   type?: any;
@@ -33,9 +35,19 @@ export interface Flaw {
   difference?: any;
 }
 
-type GetFlawsFunction = (doc: any, $: any, document: any, level: any) => Flaw[];
+type GetFlawsFunction = (
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  document: any,
+  level: any
+) => Flaw[];
 
-export function injectFlaws(doc, $, options, document) {
+export function injectFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  document
+) {
   const flawChecks: Array<[string, GetFlawsFunction, boolean]> = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
@@ -87,7 +99,7 @@ export function injectFlaws(doc, $, options, document) {
   }
 }
 
-export async function fixFixableFlaws(doc, options, document) {
+export async function fixFixableFlaws(doc: Partial<Doc>, options, document) {
   if (!options.fixFlaws) return;
 
   const { rawBody, isMarkdown } = document;
@@ -303,7 +315,7 @@ export async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
-      Document.update(document.url, newRawBody, document.metadata);
+      await Document.update(document.url, newRawBody, document.metadata);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(

@@ -317,7 +317,7 @@ export function validateLocale(locale: string, strict = false) {
 }
 
 function redirectFilePathForLocale(locale: string, throws = false) {
-  const makeFilePath = (root) =>
+  const makeFilePath = (root: string) =>
     path.join(root, locale.toLowerCase(), "_redirects.txt");
 
   const filePath = makeFilePath(CONTENT_ROOT);
@@ -361,7 +361,7 @@ export function load(
   }
 }
 
-export const resolve = (url) => {
+export const resolve = (url: string) => {
   if (!redirects.size) {
     load();
   }
@@ -395,7 +395,10 @@ function shortCuts(pairs: Pairs, throws = false): Pairs {
   const transitiveDag = new Map<string, string>();
 
   // Expand all "edges" and keep track of the nodes we traverse.
-  const transit = (s, froms = []) => {
+  const transit = (
+    s: string,
+    froms: string[] = []
+  ): [string[], string] | [] => {
     const next = dg.get(s);
     if (next) {
       froms.push(s);
@@ -412,7 +415,7 @@ function shortCuts(pairs: Pairs, throws = false): Pairs {
     return [froms, s];
   };
 
-  const sortTuples = ([a, b], [c, d]) => {
+  const sortTuples = ([a, b]: Pair, [c, d]: Pair) => {
     if (a > c) {
       return 1;
     }

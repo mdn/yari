@@ -19,7 +19,7 @@ page:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   referrer:
     type: url
     lifetime: application
@@ -36,7 +36,35 @@ page:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
+  utm:
+    type: labeled_string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The UTM parameters of the page, used to attribute the source of traffic:
+      "source": which site sent the traffic
+      "medium": what type of link was used
+      "campaign": what specific campaign or experiment does this relate to
+      "term": here for completeness, the search term that was purchased/bid on
+      "content": what specifically was clicked to bring the user to the site
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - "https://mozilla-hub.atlassian.net/browse/MP-545"
+    data_reviews:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1851150"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
+    labels:
+      - source
+      - medium
+      - campaign
+      - term
+      - content
   http_status:
     type: string
     description: |
@@ -53,7 +81,28 @@ page:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1822124
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
+  is_baseline:
+    type: string
+    description: |
+      The Baseline status of the page:
+      null: the page has no baseline status
+      "baseline_high": the page is baseline high
+      "baseline_low": the page is baseline low
+      "not_baseline" the page is not baseline
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    data_sensitivity:
+      - technical
+    bugs:
+      - "https://mozilla-hub.atlassian.net/browse/MP-542"
+    data_reviews:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1848187"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
 
 navigator:
   geo:
@@ -72,7 +121,24 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
+  geo_iso:
+    type: string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The navigator's two-letter ISO 3166 country code based on geo ip.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1798296
+    data_reviews:
+      - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
   user_agent:
     type: string
     lifetime: application
@@ -89,7 +155,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   subscription_type:
     type: string
     lifetime: application
@@ -107,7 +173,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   viewport_breakpoint:
     type: string
     description: |
@@ -125,7 +191,7 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   viewport_ratio:
     type: quantity
     unit: percentage
@@ -144,7 +210,7 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
   viewport_horizontal_coverage:
     type: quantity
     unit: percentage
@@ -162,7 +228,7 @@ navigator:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1820819
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
 
 element:
   clicked:
@@ -180,7 +246,7 @@ element:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2023-09-05
+    expires: 2024-09-05
     extra_keys:
       source:
         description: |

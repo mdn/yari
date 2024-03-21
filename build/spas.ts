@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
@@ -19,21 +18,29 @@ import {
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
+  DEV_MODE,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
-import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
+import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
-import { splitSections } from "./utils.js";
+import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
+import { findPostBySlug } from "./blog.js";
 
 const FEATURED_ARTICLES = [
-  "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
-  "Web/CSS/CSS_Container_Queries",
-  "Web/API/Performance_API",
-  "Web/CSS/font-palette",
+  "blog/learn-javascript-console-methods/",
+  "blog/introduction-to-web-sustainability/",
+  "docs/Web/API/CSS_Custom_Highlight_API",
+  "docs/Web/CSS/color_value",
+];
+
+const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-curriculum-launch/",
+  "blog/baseline-evolution-on-mdn/",
+  "blog/introducing-the-mdn-playground/",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
@@ -130,8 +137,14 @@ export async function buildSPAs(options: {
       }
 
       const SPAs = [
+        { prefix: "play", pageTitle: "Playground | MDN" },
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
+        {
+          prefix: "plus/ai-help",
+          pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
         {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
@@ -156,9 +169,12 @@ export async function buildSPAs(options: {
         { prefix: "community", pageTitle: "Contribute to MDN" },
         {
           prefix: "advertising",
-          pageTitle: "Experimenting with advertising on MDN",
+          pageTitle: "Advertise with us",
         },
-        { prefix: "advertising/with_us", pageTitle: "Advertise with us" },
+        {
+          prefix: "newsletter",
+          pageTitle: "Stay Informed with MDN",
+        },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
@@ -278,19 +294,41 @@ export async function buildSPAs(options: {
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
-            const document =
-              findByURL(`/${locale}/docs/${url}`) ||
-              findByURL(`/${DEFAULT_LOCALE}/docs/${url}`);
-            if (document) {
-              const {
-                doc: { mdn_url, summary, title, parents },
-              } = await buildDocument(document);
-              return {
-                mdn_url,
-                summary,
-                title,
-                tag: parents.length > 2 ? parents[1] : null,
-              };
+            const segment = url.split("/")[0];
+            if (segment === "docs") {
+              const document =
+                findByURL(`/${locale}/${url}`) ||
+                findByURL(`/${DEFAULT_LOCALE}/${url}`);
+              if (document) {
+                const {
+                  doc: { mdn_url, summary, title, parents },
+                } = await buildDocument(document);
+                return {
+                  mdn_url,
+                  summary,
+                  title,
+                  tag: parents.length > 2 ? parents[1] : null,
+                };
+              }
+            } else if (segment === "blog") {
+              const post = await findPostBySlug(
+                getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+              );
+              if (post) {
+                const {
+                  doc: { title },
+                  blogMeta: { description, slug },
+                } = post;
+                return {
+                  mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+                  summary: description,
+                  title,
+                  tag: {
+                    uri: `/${DEFAULT_LOCALE}/blog/`,
+                    title: "Blog",
+                  } satisfies DocParent,
+                };
+              }
             }
           })
         )
@@ -340,14 +378,25 @@ async function fetchGitHubPRs(repo, count = 5) {
     "sort:updated",
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
-  const pullRequestsData = (await got(pullRequestUrl).json()) as {
-    items: any[];
-  };
-  const prDataRepo = pullRequestsData.items.map((item) => ({
-    ...item,
-    repo: { name: repo, url: `https://github.com/${repo}` },
-  }));
-  return prDataRepo;
+  try {
+    const pullRequestsData = (await got(pullRequestUrl).json()) as {
+      items: any[];
+    };
+    const prDataRepo = pullRequestsData.items.map((item) => ({
+      ...item,
+      repo: { name: repo, url: `https://github.com/${repo}` },
+    }));
+    return prDataRepo;
+  } catch (e) {
+    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }
 
 async function fetchRecentContributions() {
@@ -375,49 +424,35 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
-
-  const $ = cheerio.load(xml, { xmlMode: true });
-
-  const items: NewsItem[] = [];
-
-  items.push(
-    {
-      title: "Experimenting with advertising on MDN",
-      url: `/${DEFAULT_LOCALE}/advertising`,
-      author: "Mozilla",
-      published_at: new Date("2023-02-15 15:00Z").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: "/",
-      },
-    },
-    {
-      title: "A shared and open roadmap for MDN",
-      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
-      author: "Mozilla",
-      published_at: new Date("2023-02-08").toString(),
-      source: {
-        name: "blog.mozilla.org",
-        url: "https://blog.mozilla.org/",
-      },
-    }
-  );
-
-  $("item").each((i, item) => {
-    const $item = $(item);
-
-    items.push({
-      title: $item.find("title").text(),
-      url: $item.find("guid").text(),
-      author: $item.find("dc\\:creator").text(),
-      published_at: $item.find("pubDate").text(),
-      source: {
-        name: "hacks.mozilla.org",
-        url: "https://hacks.mozilla.org/category/mdn/",
-      },
-    });
-  });
+  const items: NewsItem[] = (
+    await Promise.all(
+      LATEST_NEWS.map(async (itemOrUrl) => {
+        if (typeof itemOrUrl !== "string") {
+          return itemOrUrl;
+        }
+        const url = itemOrUrl;
+        const post = await findPostBySlug(
+          getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+        );
+        if (post) {
+          const {
+            doc: { title },
+            blogMeta: { author, date, slug },
+          } = post;
+          return {
+            title,
+            url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+            author: author?.name || "The MDN Team",
+            published_at: new Date(date).toString(),
+            source: {
+              name: "developer.mozilla.org",
+              url: `/${DEFAULT_LOCALE}/blog/`,
+            },
+          };
+        }
+      })
+    )
+  ).filter(Boolean);
 
   return {
     items,

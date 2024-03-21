@@ -3,13 +3,12 @@ import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { Loading } from "../ui/atoms/loading";
-import { CRUD_MODE, KUMA_HOST } from "../env";
+import { WRITER_MODE, KUMA_HOST } from "../env";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 import { Button } from "../ui/atoms/button";
 
 import "./search-results.scss";
-import { useGA } from "../ga-context";
 import NoteCard from "../ui/molecules/notecards";
 
 import LANGUAGES_RAW from "../../../libs/languages";
@@ -85,7 +84,6 @@ class ServerOperationalError extends Error {
 }
 
 export default function SearchResults() {
-  const ga = useGA();
   const [searchParams] = useSearchParams();
   const locale = useLocale();
   // A call to `/api/v1/search` will default to mean the same thing as
@@ -111,15 +109,6 @@ export default function SearchResults() {
       } else if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
-
-      // See docs/experiments/0001_site-search-x-cache.md
-      const xCacheHeaderValue = response.headers.get("x-cache");
-      ga("send", {
-        hitType: "event",
-        eventCategory: "Site-search X-Cache",
-        eventAction: url,
-        eventLabel: xCacheHeaderValue || "no value",
-      });
 
       return await response.json();
     },
@@ -159,7 +148,7 @@ export default function SearchResults() {
 
     return (
       <SearchErrorContainer>
-        <p>Something else when horribly wrong with the search</p>
+        <p>Something else went horribly wrong with the search</p>
         <p>
           <code>{error.toString()}</code>
         </p>
@@ -195,8 +184,8 @@ export default function SearchResults() {
 }
 
 function RemoteSearchWarning() {
-  if (CRUD_MODE) {
-    // If you're in CRUD_MODE, the search results will be proxied from a remote
+  if (WRITER_MODE) {
+    // If you're in WRITER_MODE, the search results will be proxied from a remote
     // Kuma and it might be confusing if a writer is wondering why their
     // actively worked-on content isn't showing up in searches.
     // The default value in the server is not accessible from the react app,

@@ -1,7 +1,11 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import {
+  DISABLE_AUTH,
+  DEFAULT_GEO_COUNTRY,
+  DEFAULT_GEO_COUNTRY_ISO,
+} from "./env";
 import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
 
 const DEPRECATED_LOCAL_STORAGE_KEYS = [
@@ -20,6 +24,7 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
+  aiHelpHistory: boolean | null;
   collectionLastModified: Date | null;
   mdnplusNewsletter: boolean | null;
   noAds: boolean | null;
@@ -62,7 +67,7 @@ export class OfflineSettingsData {
   }
 }
 
-export type UserData = {
+export type User = {
   username: string | null | undefined;
   isAuthenticated: boolean;
   isBetaTester: boolean;
@@ -76,6 +81,7 @@ export type UserData = {
   email: string | null | undefined;
   geo: {
     country: string;
+    country_iso: string;
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
@@ -83,9 +89,12 @@ export type UserData = {
   mutate: () => void;
 };
 
-export const UserDataContext = React.createContext<UserData | null | undefined>(
-  undefined
-);
+export type UserData =
+  | User
+  | (Partial<User> & { maintenance: string })
+  | undefined;
+
+export const UserDataContext = React.createContext<UserData>(undefined);
 
 // The argument for using sessionStorage rather than localStorage is because
 // it's marginally simpler and "safer". For example, if we use localStorage
@@ -108,7 +117,7 @@ function getSessionStorageData() {
         // that doesn't match any of the new keys.
         return undefined;
       }
-      return parsed as UserData;
+      return parsed as User;
     }
   } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
@@ -150,7 +159,7 @@ function removeDeprecatedLocalStorageData() {
   }
 }
 
-function setSessionStorageData(data: UserData) {
+function setSessionStorageData(data: User) {
   try {
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
   } catch (error: any) {
@@ -159,51 +168,57 @@ function setSessionStorageData(data: UserData) {
 }
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
-  const { data, error, isLoading, mutate } = useSWR<
-    UserData | null,
-    Error | null
-  >(DISABLE_AUTH ? null : "/api/v1/whoami", async (url) => {
-    const response = await fetch(url);
-    if (!response.ok) {
-      removeSessionStorageData();
-      throw new Error(`${response.status} on ${response.url}`);
-    }
-    const data = await response.json();
-    const collectionLastModified =
-      data?.settings?.collections_last_modified_time;
-    const settings: UserPlusSettings | null = data?.settings
-      ? {
-          collectionLastModified:
-            (collectionLastModified && new Date(collectionLastModified)) ||
-            null,
-          mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
-          noAds: data?.settings?.no_ads || null,
-        }
-      : null;
+  const { data, error, isLoading, mutate } = useSWR<User | null, Error | null>(
+    DISABLE_AUTH ? null : "/api/v1/whoami",
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        removeSessionStorageData();
+        throw new Error(`${response.status} on ${response.url}`);
+      }
+      const data = await response.json();
+      const collectionLastModified =
+        data?.settings?.collections_last_modified_time;
+      const settings: UserPlusSettings | null = data?.settings
+        ? {
+            aiHelpHistory:
+              typeof data?.settings?.ai_help_history === "boolean"
+                ? data.settings.ai_help_history
+                : null,
+            collectionLastModified:
+              (collectionLastModified && new Date(collectionLastModified)) ||
+              null,
+            mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
+            noAds: data?.settings?.no_ads || null,
+          }
+        : null;
 
-    return {
-      username: data.username || null,
-      isAuthenticated: data.is_authenticated || false,
-      isBetaTester: data.is_beta_tester || false,
-      isStaff: data.is_staff || false,
-      isSuperuser: data.is_super_user || false,
-      avatarUrl: data.avatar_url || null,
-      isSubscriber: data.is_subscriber || false,
-      subscriptionType:
-        data.subscription_type === "core"
-          ? SubscriptionType.MDN_CORE
-          : data.subscription_type ?? null,
-      subscriberNumber: data.subscriber_number || null,
-      email: data.email || null,
-      geo: {
-        country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
-      },
-      maintenance: data.maintenance,
-      settings,
-      offlineSettings: null,
-      mutate,
-    };
-  });
+      return {
+        username: data.username || null,
+        isAuthenticated: data.is_authenticated || false,
+        isBetaTester: data.is_beta_tester || false,
+        isStaff: data.is_staff || false,
+        isSuperuser: data.is_super_user || false,
+        avatarUrl: data.avatar_url || null,
+        isSubscriber: data.is_subscriber || false,
+        subscriptionType:
+          data.subscription_type === "core"
+            ? SubscriptionType.MDN_CORE
+            : data.subscription_type ?? null,
+        subscriberNumber: data.subscriber_number || null,
+        email: data.email || null,
+        geo: {
+          country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+          country_iso:
+            (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
+        },
+        maintenance: data.maintenance,
+        settings,
+        offlineSettings: null,
+        mutate,
+      };
+    }
+  );
 
   React.useEffect(() => {
     removeDeprecatedLocalStorageData();
@@ -238,7 +253,15 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     }
   }, [data]);
 
-  const userData = isLoading ? getSessionStorageData() : error ? null : data;
+  const userData = isLoading
+    ? getSessionStorageData()
+    : error || !data
+      ? {
+          ...getSessionStorageData(),
+          ...data,
+          maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
+        }
+      : data;
 
   return (
     <UserDataContext.Provider value={userData}>

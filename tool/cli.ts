@@ -28,8 +28,7 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
+  GOOGLE_ANALYTICS_MEASUREMENT_ID,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
 import { runOptimizeClientBuild } from "./optimize-client-build.js";
@@ -41,6 +40,7 @@ import {
   MacroInvocationError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
+import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -180,7 +180,7 @@ interface PopularitiesActionParameters extends ActionParameters {
 
 interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
   options: {
-    account: string;
+    measurementId: string;
     debug: boolean;
     outfile: string;
   };
@@ -212,8 +212,18 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
 interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
-    format: "md-table" | "json";
+    format: "md-table" | "csv" | "json";
     unusedOnly: boolean;
+  };
+}
+
+interface WhatsdeployedActionParameters extends ActionParameters {
+  args: {
+    directory: string;
+  };
+  options: {
+    output: string;
+    dryRun: boolean;
   };
 }
 
@@ -225,7 +235,11 @@ function tryOrExit<T extends ActionParameters>(
       await f({ options, ...args } as T);
     } catch (e) {
       const error = e as Error;
-      if (options.verbose || options.v) {
+      if (
+        options.verbose ||
+        options.v ||
+        (error instanceof Error && !error.message)
+      ) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -334,12 +348,12 @@ program
     tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
-      const changes = Document.remove(slug, locale, {
+      const changes = await Document.remove(slug, locale, {
         recursive,
         redirect,
         dry: true,
       });
-      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.green(`Will delete ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
         console.log(
@@ -365,11 +379,40 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, {
+        const deletedDocs = await Document.remove(slug, locale, {
           recursive,
           redirect,
         });
-        console.log(chalk.green(`Moved ${removed.length} documents.`));
+        console.log(chalk.green(`Deleted ${deletedDocs.length} documents.`));
+
+        // find references to the deleted document in content
+        console.log("Checking references...");
+        const referringFiles = [];
+        const allDocs = await Document.findAll();
+        for (const document of allDocs.iterDocs()) {
+          const rawBody = document.rawBody;
+          for (const deleted of deletedDocs) {
+            const url = `/${locale}/docs/${deleted}`;
+            if (rawBody.includes(url)) {
+              referringFiles.push(`${document.url}`);
+            }
+          }
+        }
+
+        if (referringFiles.length) {
+          console.warn(
+            chalk.yellow(
+              `\n${referringFiles.length} files are referring to the deleted document. ` +
+                `Please update the following files to remove the links:\n\t${referringFiles.join(
+                  "\n\t"
+                )}`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green("\nNo file is referring to the deleted document.")
+          );
+        }
       }
     })
   )
@@ -393,7 +436,7 @@ program
     tryOrExit(async ({ args, options }: MoveActionParameters) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
-      const changes = Document.move(oldSlug, newSlug, locale, {
+      const changes = await Document.move(oldSlug, newSlug, locale, {
         dry: true,
       });
       console.log(
@@ -415,7 +458,7 @@ program
             default: true,
           });
       if (run) {
-        const moved = Document.move(oldSlug, newSlug, locale);
+        const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
     })
@@ -674,7 +717,7 @@ program
             redirectedDocs,
             renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(locale);
+          } = await syncAllTranslatedContent(locale);
           console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -762,70 +805,9 @@ program
     })
   )
 
-  .command("redundant-translations", "Find redundant translations")
-  .action(
-    tryOrExit(async () => {
-      if (!CONTENT_TRANSLATED_ROOT) {
-        throw new Error("CONTENT_TRANSLATED_ROOT not set");
-      }
-      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
-        throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
-      }
-      const documents = await Document.findAll();
-      if (!documents.count) {
-        throw new Error("No documents to analyze");
-      }
-      // Build up a map of translations by their `translation_of`
-      const map = new Map();
-      for (const document of documents.iterDocs()) {
-        if (!document.isTranslated) continue;
-        const { translation_of, locale } = document.metadata;
-        if (!map.has(translation_of)) {
-          map.set(translation_of, new Map());
-        }
-        if (!map.get(translation_of).has(locale)) {
-          map.get(translation_of).set(locale, []);
-        }
-        map
-          .get(translation_of)
-          .get(locale)
-          .push(
-            Object.assign(
-              { filePath: document.fileInfo.path },
-              document.metadata
-            )
-          );
-      }
-      // Now, let's investigate those with more than 1
-      let sumENUS = 0;
-      let sumTotal = 0;
-      for (const [translation_of, localeMap] of map) {
-        for (const [, metadatas] of localeMap) {
-          if (metadatas.length > 1) {
-            // console.log(translation_of, locale, metadatas);
-            sumENUS++;
-            sumTotal += metadatas.length;
-            console.log(
-              `https://developer.allizom.org/en-US/docs/${translation_of}`
-            );
-            for (const metadata of metadatas) {
-              console.log(metadata);
-            }
-          }
-        }
-      }
-      console.warn(
-        `${sumENUS} en-US documents have multiple translations with the same locale`
-      );
-      console.log(
-        `In total, ${sumTotal} translations that share the same translation_of`
-      );
-    })
-  )
-
   .command(
     "popularities",
-    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
+    "Convert Glean-derived page view CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
     default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
@@ -882,27 +864,21 @@ program
     "Generate a .js file that can be used in SSR rendering"
   )
   .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
+    default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
   })
   .option(
-    "--debug",
-    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
+    "--measurement-id <id>[,<id>]",
+    "Google Analytics measurement IDs (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
     {
-      default: GOOGLE_ANALYTICS_DEBUG,
-    }
-  )
-  .option(
-    "--account <id>",
-    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
-    {
-      default: GOOGLE_ANALYTICS_ACCOUNT,
+      default: GOOGLE_ANALYTICS_MEASUREMENT_ID,
     }
   )
   .action(
     tryOrExit(
       async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, debug, account } = options;
-        if (account) {
+        const { outfile, measurementId } = options;
+        const measurementIds = measurementId.split(",").filter(Boolean);
+        if (measurementIds.length) {
           const dntHelperCode = fs
             .readFileSync(
               new URL("mozilla.dnthelper.min.js", import.meta.url),
@@ -910,30 +886,30 @@ program
             )
             .trim();
 
-          const gaScriptURL = `https://www.google-analytics.com/${
-            debug ? "analytics_debug" : "analytics"
-          }.js`;
+          const firstMeasurementId = measurementIds.at(0);
+          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(firstMeasurementId)}`;
 
           const code = `
 // Mozilla DNT Helper
 ${dntHelperCode}
-// only load GA if DNT is not enabled
+// Load GA unless DNT is enabled.
 if (Mozilla && !Mozilla.dntEnabled()) {
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', '${account}', 'mozilla.org');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  ${measurementIds
+    .map((id) => `gtag('config', '${id}', { 'anonymize_ip': true });`)
+    .join("\n  ")}
 
-    var gaScript = document.createElement('script');
-    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
-    document.head.appendChild(gaScript);
+  var gaScript = document.createElement('script');
+  gaScript.async = true;
+  gaScript.src = '${gaScriptURL}';
+  document.head.appendChild(gaScript);
 }`.trim();
           fs.writeFileSync(outfile, `${code}\n`, "utf-8");
           logger.info(
             chalk.green(
-              `Generated ${outfile} for SSR rendering using ${account}${
-                debug ? " (debug mode)" : ""
-              }.`
+              `Generated ${outfile} for SSR rendering using ${measurementId}.`
             )
           );
         } else {
@@ -1073,7 +1049,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 console.log(`${flaw.macroSource} --> ${suggestion}`);
               }
               console.groupEnd();
-              Document.update(
+              await Document.update(
                 document.url,
                 document.rawBody,
                 document.metadata
@@ -1094,7 +1070,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
-          Document.update(document.url, newRawHTML, document.metadata);
+          await Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
         } else {
@@ -1183,13 +1159,32 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .option("--deprecated-only", "Only reports deprecated macros.")
   .option("--format <type>", "Format of the report.", {
     default: "md-table",
-    validator: ["json", "md-table"],
+    validator: ["json", "md-table", "csv"],
   })
   .option("--unused-only", "Only reports unused macros.")
   .action(
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
       const { deprecatedOnly, format, unusedOnly } = options;
       return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
+  )
+
+  .command(
+    "whatsdeployed",
+    "Create a whatsdeployed.json file by asking git for the date and commit hash of HEAD."
+  )
+  .argument("<directory>", "Path in which to execute git", {
+    default: process.cwd(),
+  })
+  .option("--output <output>", "Name of JSON file to create.", {
+    default: "whatsdeployed.json",
+  })
+  .option("--dry-run", "Prints the result without writing the file")
+  .action(
+    tryOrExit(async ({ args, options }: WhatsdeployedActionParameters) => {
+      const { directory } = args;
+      const { output, dryRun } = options;
+      return whatsdeployed(directory, output, dryRun);
     })
   );
 

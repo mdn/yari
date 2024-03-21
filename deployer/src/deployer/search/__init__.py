@@ -208,11 +208,19 @@ def walk(root):
 def to_search(file, _index=None):
     with open(file) as f:
         data = json.load(f)
+    if "blogMeta" in data:
+        # Skip blog content for now.
+        return
     if "doc" not in data:
         # If the file we just opened isn't use for documents, it might be for
         # other SPAs like the home page. Skip these.
         return
     doc = data["doc"]
+
+    if doc["mdn_url"].startswith("/en-US/curriculum/"):
+        # Skip curriculum content for now.
+        return
+
     locale, slug = doc["mdn_url"].split("/docs/", 1)
     if slug.endswith("/Index"):
         # We have a lot of pages that uses the `{{Index(...)}}` kumascript macro

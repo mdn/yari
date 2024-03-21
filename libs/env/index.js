@@ -18,6 +18,8 @@ dotenv.config({
 // build
 // -----
 
+export const BASE_URL = process.env.BASE_URL || "https://developer.mozilla.org";
+
 export const BUILD_OUT_ROOT =
   process.env.BUILD_OUT_ROOT || path.join(ROOT, "client", "build");
 
@@ -26,11 +28,8 @@ export const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 export const FILES = process.env.BUILD_FILES || "";
 export const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
-export const GOOGLE_ANALYTICS_ACCOUNT =
-  process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
-export const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
-  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
-);
+export const GOOGLE_ANALYTICS_MEASUREMENT_ID =
+  process.env.BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID || "";
 export const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -62,6 +61,8 @@ export const ALWAYS_ALLOW_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
+export const SENTRY_DSN_BUILD = process.env.SENTRY_DSN_BUILD || "";
+
 // -------
 // content
 // -------
@@ -75,6 +76,10 @@ export const CONTENT_TRANSLATED_ROOT = correctContentPathFromEnv(
 export const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
   "CONTRIBUTOR_SPOTLIGHT_ROOT"
 );
+
+export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
+
+export const CURRICULUM_ROOT = correctPathFromEnv("CURRICULUM_ROOT");
 
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.
@@ -92,12 +97,20 @@ if (CONTENT_TRANSLATED_ROOT) {
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
-function correctContentPathFromEnv(envVarName) {
+function correctPathFromEnv(envVarName) {
   let pathName = process.env[envVarName];
   if (!pathName) {
     return;
   }
   pathName = fs.realpathSync(pathName);
+  return pathName;
+}
+
+function correctContentPathFromEnv(envVarName) {
+  let pathName = correctPathFromEnv(envVarName);
+  if (!pathName) {
+    return;
+  }
   if (
     path.basename(pathName) !== "files" &&
     fs.existsSync(path.join(pathName, "files"))
@@ -135,6 +148,11 @@ export const LIVE_SAMPLES_BASE_URL =
     ? process.env.BUILD_LIVE_SAMPLES_BASE_URL
     : SERVER_URL;
 
+export const LEGACY_LIVE_SAMPLES_BASE_URL =
+  process.env.BUILD_LEGACY_LIVE_SAMPLES_BASE_URL !== undefined
+    ? process.env.BUILD_LEGACY_LIVE_SAMPLES_BASE_URL
+    : LIVE_SAMPLES_BASE_URL || SERVER_URL;
+
 export const INTERACTIVE_EXAMPLES_BASE_URL =
   process.env.BUILD_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
@@ -151,3 +169,26 @@ export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
 export const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
 
 export const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
+
+// ----
+// tool
+// ----
+
+export const OPENAI_KEY = process.env.OPENAI_KEY || "";
+export const PG_URI = process.env.PG_URI || "";
+
+export const SAMPLE_SIGN_KEY = process.env.BUILD_SAMPLE_SIGN_KEY
+  ? Buffer.from(process.env.BUILD_SAMPLE_SIGN_KEY, "base64")
+  : null;
+
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));

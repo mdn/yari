@@ -1,11 +1,15 @@
-interface HydrationData<T = any> {
+import { BlogPostMetadata } from "./blog.js";
+
+interface HydrationData<T = any, S = any> {
   hyData?: T;
-  doc?: any;
+  doc?: S;
+  blogMeta?: BlogPostMetadata | null;
   pageNotFound?: boolean;
   pageTitle?: any;
   possibleLocales?: any;
   locale?: any;
   noIndexing?: any;
+  image?: string | null;
 }
 
 export type { HydrationData };

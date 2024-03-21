@@ -14,7 +14,10 @@ import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
-import SignInLink from "../../../ui/atoms/signin-link";
+import LogInLink from "../../../ui/atoms/login-link";
+import React from "react";
+
+const Stripe = React.lazy(() => import("./stripe"));
 
 export enum Period {
   Month,
@@ -71,10 +74,11 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
+  ["afree", "Ads free"],
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
-  ["afree", "Ads free", "new"],
+  ["ai-help", "AI Help", "beta"],
 ];
 
 const CORE: OfferDetailsProps = {
@@ -83,6 +87,8 @@ const CORE: OfferDetailsProps = {
   features: [
     ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
+    ["playground", "Share playgrounds"],
+    ["ai-help", "AI Help: 5 questions per day", "beta"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -164,6 +170,7 @@ function OfferDetails({
     }).format(monthlyPrice / 100);
   return (
     <section className="subscribe-detail" id={offerDetails.id}>
+      <Stripe></Stripe>
       <h3>{offerDetails.name}</h3>
       <div className="sub-info">
         {(displayMonthlyPrice && (
@@ -214,12 +221,12 @@ function OfferDetails({
                 <>
                   {" "}
                   <a href={`#${href}`}>{text}</a>
-                  {sup && <sup>{sup}</sup>}
+                  {sup && <sup className="new">{sup}</sup>}
                 </>
               )) || (
                 <>
                   {text}
-                  {sup && <sup>{sup}</sup>}
+                  {sup && <sup className="new">{sup}</sup>}
                 </>
               )}
             </li>
@@ -238,20 +245,14 @@ function OfferDetails({
   );
 }
 
-function isCurrent(
-  user: UserData | null | undefined,
-  subscriptionType: SubscriptionType
-) {
+function isCurrent(user: UserData, subscriptionType: SubscriptionType) {
   if (!user?.isAuthenticated) {
     return false;
   }
   return user.subscriptionType === subscriptionType;
 }
 
-function canUpgrade(
-  user: UserData | null | undefined,
-  subscriptionType: SubscriptionType
-) {
+function canUpgrade(user: UserData, subscriptionType: SubscriptionType) {
   if (!user?.isAuthenticated) {
     return null;
   }
@@ -350,7 +351,7 @@ function OfferOverviewSubscribe() {
                 {!activeSubscription && (
                   <>
                     {" "}
-                    or <SignInLink cta="log in" />
+                    or <LogInLink cta="log in" />
                   </>
                 )}
               </h2>

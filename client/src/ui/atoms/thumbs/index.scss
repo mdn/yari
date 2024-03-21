@@ -1,0 +1,59 @@
+.glean-thumbs {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  height: 1.5rem;
+
+  .confirmation {
+    animation-duration: 2.5s;
+    animation-fill-mode: forwards;
+    animation-name: colorHighlight;
+    color: var(--category-color);
+
+    @keyframes colorHighlight {
+      0% {
+        opacity: 0;
+      }
+
+      25% {
+        color: var(--category-color);
+        opacity: 1;
+      }
+
+      75% {
+        color: var(--category-color);
+      }
+
+      100% {
+        color: var(--text-inactive);
+      }
+    }
+  }
+}
+
+.thumbs {
+  &:hover {
+    --button-bg-hover: unset;
+  }
+
+  &:active {
+    --button-bg-active: unset;
+  }
+
+  .icon {
+    background-color: var(--icon-secondary);
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    .icon-thumbs-up {
+      background-color: var(--icon-success);
+    }
+
+    .icon-thumbs-down {
+      background-color: var(--icon-critical);
+    }
+  }
+}

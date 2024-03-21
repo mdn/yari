@@ -1,6 +1,7 @@
 import * as Document from "./document.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
+import { Translation } from "../libs/types/document.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -8,67 +9,40 @@ const LANGUAGES = new Map(
   })
 );
 
-const TRANSLATIONS_OF = new Map();
+const TRANSLATIONS_OF = new Map<string, Array<Translation>>();
 
-async function gatherTranslations() {
-  const iter = (await Document.findAll()).iterDocs();
-  for (const {
-    metadata: { slug, locale, title },
-  } of iter) {
-    if (!slug || !locale || !title) {
-      continue;
-    }
-    const translation = {
-      title,
-      locale,
-      native: LANGUAGES.get(locale.toLowerCase()).native,
-    };
-    const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
-    if (translations) {
-      translations.push(translation);
-      translations.sort(({ locale: a }, { locale: b }) => {
-        if (a < b) return -1;
-        if (a > b) return 1;
-        return 0;
-      });
-    } else {
-      TRANSLATIONS_OF.set(slug.toLowerCase(), [translation]);
-    }
+// gather and cache all translations of a document,
+// then return all translations except the current locale
+export function translationsOf(
+  slug: string,
+  currentLocale: string
+): Translation[] {
+  let translations = TRANSLATIONS_OF.get(slug.toLowerCase());
+  if (!translations) {
+    translations = findTranslations(slug);
+    TRANSLATIONS_OF.set(slug.toLowerCase(), translations);
   }
+  return translations.filter(
+    ({ locale }) => locale.toLowerCase() !== currentLocale.toLowerCase()
+  );
 }
 
-export async function translationsOf({ slug, locale: currentLocale }) {
-  if (TRANSLATIONS_OF.size === 0) {
-    const label = "Time to gather all translations";
-    console.time(label);
-    await gatherTranslations();
-    console.timeEnd(label);
-  }
-  const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
-  if (translations && currentLocale) {
-    return translations.filter(
-      ({ locale }) => locale.toLowerCase() !== currentLocale.toLowerCase()
-    );
-  }
-  return translations;
-}
-
-export function findDocumentTranslations(document) {
+// return all translations of a document
+export function findTranslations(
+  slug: string,
+  currentLocale: string = null
+): Translation[] {
   const translations = [];
-
   for (const locale of VALID_LOCALES.values()) {
-    if (document.metadata.locale === locale) {
+    if (currentLocale?.toLowerCase() === locale.toLowerCase()) {
       continue;
     }
-    const translatedDocumentURL = document.url.replace(
-      `/${document.metadata.locale}/`,
-      `/${locale}/`
-    );
-    const translatedDocument = Document.findByURL(translatedDocumentURL);
-    if (translatedDocument) {
+    const documentURL = `/${locale}/docs/${slug}`;
+    const document = Document.findByURL(documentURL);
+    if (document) {
       translations.push({
         locale,
-        title: translatedDocument.metadata.title,
+        title: document.metadata.title,
         native: LANGUAGES.get(locale.toLowerCase()).native,
       });
     }

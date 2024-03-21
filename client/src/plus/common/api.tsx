@@ -1,6 +1,7 @@
 export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
 export const SETTINGS_BASE_PATH = "/api/v1/plus/settings/";
 export const NEWSLETTER_BASE_PATH = "/api/v1/plus/newsletter/";
+export const AI_HELP_QUOTA_PATH = "/api/v1/plus/ai/help/quota";
 
 export type PLUS_SETTINGS = {
   col_in_search: boolean;
@@ -33,6 +34,16 @@ export async function toggleNoAds(enabled: boolean) {
   });
 }
 
+export async function toggleAIHelpHistory(enabled: boolean) {
+  return await fetch(SETTINGS_BASE_PATH, {
+    body: JSON.stringify({ ai_help_history: enabled }),
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
+
 export async function getNewsletterSubscription(): Promise<boolean | null> {
   try {
     const res = await fetch(NEWSLETTER_BASE_PATH);
@@ -44,13 +55,7 @@ export async function getNewsletterSubscription(): Promise<boolean | null> {
 }
 
 export async function getStripePlans() {
-  let res;
-  //This comes from edge lambda so must be from live.
-  if (window.location.hostname.includes("localhost")) {
-    res = await fetch("https://developer.allizom.org/api/v1/stripe/plans");
-  } else {
-    res = await fetch(STRIPE_PLANS_PATH);
-  }
+  const res = await fetch(STRIPE_PLANS_PATH);
 
   return await res.json();
 }

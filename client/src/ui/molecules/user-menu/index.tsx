@@ -88,6 +88,7 @@ export const UserMenu = () => {
       >
         {hasAnyDot && <span className="visually-hidden dot">New feature</span>}
         <Avatar userData={userData} />
+        <span className="visually-hidden">User menu</span>
         <span className="user-menu-id">{userData.email}</span>
       </Button>
 

@@ -1,5 +1,8 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
 import got from "got";
@@ -9,13 +12,23 @@ import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
+import { rgPath } from "@vscode/ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../libs/constants/index.js";
+import {
+  ANY_ATTACHMENT_REGEXP,
+  VALID_MIME_TYPES,
+} from "../libs/constants/index.js";
+import { FileAttachment } from "../content/index.js";
+import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
-export function humanFileSize(size) {
+export function escapeRegExp(str: string) {
+  return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+}
+
+export function humanFileSize(size: number) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
   const num = size / 1024 ** i;
@@ -39,14 +52,18 @@ export function humanFileSize(size) {
 // be able to process them and fix the problem we need to "temporarily"
 // pretend they were hosted on a remote working full domain.
 // See https://github.com/mdn/yari/issues/1103
-export function forceExternalURL(url) {
+export function forceExternalURL(url: string) {
   if (url.startsWith("/")) {
     return `https://mdn.mozillademos.org${url}`;
   }
   return url;
 }
 
-export async function downloadAndResizeImage(src, out, basePath) {
+export async function downloadAndResizeImage(
+  src: string,
+  out: string,
+  basePath: string
+) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
     timeout: { request: 10000 },
@@ -120,7 +137,7 @@ export async function downloadAndResizeImage(src, out, basePath) {
   return destination;
 }
 
-export function getImageminPlugin(fileName) {
+export function getImageminPlugin(fileName: string) {
   const extension = path.extname(fileName).toLowerCase();
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();
@@ -169,4 +186,210 @@ export function splitSections(rawHTML) {
 
   const sections = blocks.map((block) => block.html().trim());
   return { sections, toc };
+}
+
+/**
+ * Return an array of all images that are inside the documents source folder.
+ *
+ * @param {Document} document
+ */
+export function getAdjacentFileAttachments(documentDirectory: string) {
+  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
+  return dirents
+    .filter((dirent) => {
+      // This needs to match what we do in filecheck/checker.py
+      return !dirent.isDirectory() && ANY_ATTACHMENT_REGEXP.test(dirent.name);
+    })
+    .map((dirent) => path.join(documentDirectory, dirent.name));
+}
+/**
+ * Find all tags that we need to change to tell tools like Google Translate
+ * to not translate.
+ *
+ * @param {Cheerio document instance} $
+ */
+export function injectNoTranslate($) {
+  $("pre").addClass("notranslate");
+}
+
+/**
+ * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
+ *
+ * @param {Cheerio document instance} $
+ */
+export function injectLoadingLazyAttributes($) {
+  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
+}
+
+/**
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" and rel="noopener">`
+ *
+ *
+ * @param {Cheerio document instance} $
+ */
+export function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
+    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
+      // This should have been removed since it's considered a flaw.
+      // But we haven't applied all fixable flaws yet and we still have to
+      // support translated content which is quite a long time away from
+      // being entirely treated with the fixable flaws cleanup.
+      return;
+    }
+    $a.addClass("external");
+    $a.attr("target", "_blank");
+  });
+}
+
+/**
+ * For every `<a href="... curriculum ... .md ...">` remove the ".md"
+ */
+export function postProcessCurriculumLinks(
+  $: cheerio.CheerioAPI,
+  toUrl: (x?: string) => string
+) {
+  // expand relative links
+  $("a[href^=.]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", toUrl($a.attr("href")));
+  });
+
+  // remove trailing .md for /en-US/curriculum/*
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "$1/$2"));
+  });
+
+  // remove trailing .md and add locale for /curriculum/*
+  $("a[href^=/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
+  });
+
+  // remove leading numbers for /en-US/curriculum/*
+  // /en-US/curriculum/2-core/ -> /en-US/curriculum/core/
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    const [head, hash] = $a.attr("href")?.split("#") || [];
+    $a.attr("href", `${head.replace(/\d+-/g, "")}${hash ? `#${hash}` : ""}`);
+  });
+}
+
+/**
+ * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
+ * `<a href="$CURRENT_PATH/THING">`
+ *
+ *
+ * @param {Cheerio document instance} $
+ */
+export function postLocalFileLinks($, doc) {
+  $("a[href]").each((i, element) => {
+    const href = element.attribs.href;
+
+    // This test is merely here to quickly bail if there's no hope to find the
+    // file attachment as a local file link. There are a LOT of hyperlinks
+    // throughout the content and this simple if statement means we can skip 99%
+    // of the links, so it's presumed to be worth it.
+    if (
+      !href ||
+      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
+    ) {
+      return;
+    }
+    // There are a lot of links that don't match. E.g. `<a href="SubPage">`
+    // So we'll look-up a lot "false positives" that are not file attachments.
+    // Thankfully, this lookup is fast.
+    const url = `${doc.mdn_url}/${href}`;
+    const fileAttachment = FileAttachment.findByURLWithFallback(url);
+    if (fileAttachment) {
+      $(element).attr("href", url);
+    }
+  });
+}
+
+/**
+ * Fix the heading IDs so they're all lower case.
+ *
+ * @param {Cheerio document instance} $
+ */
+export function postProcessSmallerHeadingIDs($) {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
+    const id = element.attribs.id;
+    const lcID = id.toLowerCase();
+    if (id !== lcID) {
+      $(element).attr("id", lcID);
+    }
+  });
+}
+
+/**
+ * Return an array of objects like this [{text: ..., id: ...}, ...]
+ * from a document's body.
+ * This will be used for the "Table of Contents" menu which expects to be able
+ * to link to each section with anchor links.
+ *
+ * @param {Document} doc
+ */
+export function makeTOC(doc, withH3 = false) {
+  return doc.body
+    .map((section) => {
+      if (
+        (section.type === "prose" ||
+          section.type === "browser_compatibility" ||
+          section.type === "specifications") &&
+        section.value.id &&
+        section.value.title &&
+        (!section.value.isH3 || withH3)
+      ) {
+        return { text: section.value.title, id: section.value.id };
+      }
+      return null;
+    })
+    .filter(Boolean);
+}
+
+export function findPostFileBySlug(slug: string): string | null {
+  if (!BLOG_ROOT) {
+    console.warn("'BLOG_ROOT' not set in .env file");
+    return null;
+  }
+
+  try {
+    const { stdout, stderr, status } = spawnSync(rgPath, [
+      "-il",
+      `slug: ${slug}`,
+      BLOG_ROOT,
+    ]);
+    if (status === 0) {
+      const file = stdout.toString("utf-8").split("\n")[0];
+      return file;
+    }
+    const message = stderr.toString();
+    if (message) {
+      console.error(`error running rg: ${message}`);
+    } else {
+      console.error(`Post ${slug} not found in ${BLOG_ROOT}`);
+    }
+  } catch {
+    console.error("rg failed");
+  }
+  return null;
+}
+
+const POST_URL_RE = /^\/en-US\/blog\/([^/]+)\/?$/;
+
+export function getSlugByBlogPostUrl(url: string): string | null {
+  return url.match(POST_URL_RE)?.[1] || null;
+}
+
+export async function importJSON<T>(jsonPath: string): Promise<T> {
+  if (!jsonPath.startsWith(".")) {
+    jsonPath = path.join(cwd(), "node_modules", jsonPath);
+  }
+
+  const json = await readFile(jsonPath, "utf-8");
+
+  return JSON.parse(json);
 }

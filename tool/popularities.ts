@@ -1,25 +1,19 @@
 /**
  * This script exists only to periodically generate a
- * 'popularities.json' file from a Cloudfront access CSV export.
+ * 'popularities.json' file from a Glean page view CSV export.
  *
  * Generally, only the core MDN Web Docs team needs to run this. The output
- * file gets checked into git so it's easily available to everyone.
- *
- * In production build it might be a future option to generate this
- * dynamically on every single production build.
- *
+ * file gets added to our npm package so it's easily available to everyone.
  */
 import fs from "node:fs";
 
 import * as csv from "@fast-csv/parse";
 import got from "got";
 
-const CURRENT_URL =
-  "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";
+const CURRENT_URL = "https://popularities.mdn.mozilla.net/current.csv";
 
 async function fetchPopularities() {
-  const { body: csvURL } = await got(CURRENT_URL);
-  const { body: csv } = await got(csvURL);
+  const { body: csv } = await got(CURRENT_URL);
   return csv;
 }
 
