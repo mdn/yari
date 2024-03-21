@@ -215,7 +215,7 @@
     "mini-css-extract-plugin": "^2.8.1",
     "node-dev": "^8.0.0",
     "peggy": "^4.0.2",
-    "postcss": "^8.4.37",
+    "postcss": "^8.4.38",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.1.1",
     "postcss-normalize": "^10.0.1",
