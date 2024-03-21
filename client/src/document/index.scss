@@ -787,6 +787,7 @@ pre {
     mask-image: url("../assets/clippy.svg");
     mask-size: cover;
     width: 1rem;
+    padding: 0;
 
     &:hover,
     &:focus {
