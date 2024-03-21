@@ -53,7 +53,11 @@ export async function proxyBSA(req: Request, res: Response) {
     }
     const params = new URLSearchParams(search);
     try {
-      const { status, location } = await handleClick(params);
+      const { status, location } = await handleClick(
+        params,
+        countryCode,
+        userAgent
+      );
       if (location && (status === 301 || status === 302)) {
         return res.redirect(location);
       } else {
@@ -68,7 +72,7 @@ export async function proxyBSA(req: Request, res: Response) {
     }
     const params = new URLSearchParams(search);
     try {
-      await handleViewed(params);
+      await handleViewed(params, countryCode, userAgent);
       return res.sendStatus(201).end();
     } catch (e) {
       console.error(e);

@@ -81,6 +81,10 @@ const text = mdn.localStringMap({
         'Content_breaks_in_Multicol': 'Content breaks in Multicol',
       'Conditional_rules': 'Conditional rules',
         'Using_feature_queries': 'Using feature queries',
+      'Containment' : 'Containment',
+        'Using_CSS_containment' : 'Using CSS containment',
+        'Container_queries' : 'CSS container queries',
+        'Container_size_and_style_queries' : 'Using container size and style queries',
       'CSSOM_view': 'CSSOM view',
         'Coordinate_systems': 'Coordinate systems',
       'Flexbox': 'Flexbox',
@@ -91,7 +95,6 @@ const text = mdn.localStringMap({
         'Controlling_flex_item_ratios': 'Controlling flex item ratios',
         'Mastering_wrapping_of_flex_items': 'Mastering wrapping of flex items',
         'Typical_use_cases_of_Flexbox': 'Typical use cases of Flexbox',
-        'Backwards_compatibility_of_Flexbox': 'Backwards compatibility of Flexbox',
       'Flow_layout': 'Flow layout',
         'Block_and_Inline_layout_in_normal_flow': 'Block and Inline layout in normal flow',
         'In_flow_and_Out_of_flow': 'In flow and Out of flow',
@@ -125,10 +128,13 @@ const text = mdn.localStringMap({
         'Floating_and_positioning': 'Floating and positioning',
         'Margins_borders_and_padding': 'Margins, borders and padding',
         'Sizing': 'Sizing',
+      'Math_functions': 'Math functions',
+        'Using_CSS_math_functions': 'Using CSS math functions',
       'Media_queries': 'Media queries',
         'Using_media_queries': 'Using media queries',
         'Using_media_queries_for_accessibility': 'Using media queries for accessibility',
         'Testing_media_queries_programmatically': 'Testing media queries programmatically',
+        'Printing': 'Printing',
       'Nesting': 'Nesting style rules',
         'Using_CSS_nesting': 'Using CSS nesting',
         'Nesting_and_specificity': 'Nesting and specificity',
@@ -242,7 +248,6 @@ const text = mdn.localStringMap({
         'Controlling_flex_item_ratios': 'Contrôler les proportions des objets flexibles',
         'Mastering_wrapping_of_flex_items': 'Maîtriser le retour à la ligne des objets flexibles',
         'Typical_use_cases_of_Flexbox': 'Cas d\'usage caractéristiques des boîtes flexibles',
-        'Backwards_compatibility_of_Flexbox': 'Rétrocompatibilité des boîtes flexibles',
       'Flow_layout': 'Disposition de flux',
         'Block_and_Inline_layout_in_normal_flow': 'Disposition de bloc et en ligne avec le flux normal',
         'In_flow_and_Out_of_flow': 'Dans le flux et en dehors',
@@ -442,7 +447,6 @@ const text = mdn.localStringMap({
         'Controlling_flex_item_ratios': '항목 비율 설정하기',
         'Mastering_wrapping_of_flex_items': '항목 wrapping 정복하기',
         'Typical_use_cases_of_Flexbox': '플렉스박스 적용 사례',
-        'Backwards_compatibility_of_Flexbox': '플렉스박스의 하위 호환성',
       'Flow_layout': '플로 레이아웃',
         'Block_and_Inline_layout_in_normal_flow': '일반 대열 속 블록 및 인라인 레이아웃',
         'In_flow_and_Out_of_flow': '대열과 탈대열',
@@ -642,7 +646,6 @@ const text = mdn.localStringMap({
         'Controlling_flex_item_ratios': 'Управление соотношением элементов вдоль главной оси',
         'Mastering_wrapping_of_flex_items': 'Разбираемся с обёртыванием флекс-элементов',
         'Typical_use_cases_of_Flexbox': 'Типовые варианты использования флексбокса',
-        'Backwards_compatibility_of_Flexbox': 'Обратная совместимость флексбокс',
       'Flow_layout': 'Потоковая раскладка',
         'Block_and_Inline_layout_in_normal_flow': 'Блочная и последовательная раскладка в базовом потоке',
         'In_flow_and_Out_of_flow': 'В потоке и вне потока',
@@ -780,6 +783,10 @@ const text = mdn.localStringMap({
       'Box_model': '盒模型',
         'Introduction_to_the_CSS_basic_box_model': 'CSS 基本盒模型简介',
         'Mastering_margin_collapsing': '外边距重叠',
+      'Colors': '颜色',
+        'Applying_color_to_HTML_elements_using_CSS': '使用 CSS 为 HTML 元素添加颜色',
+        'Web_Accessibility_Understanding_Colors_and_Luminance': 'Web 无障碍：理解颜色和亮度',
+        'Color_contrast': 'Web 无障碍：色彩对比度',
       'Columns': '多栏式布局',
         'Basic_concepts_of_Multicol': '多栏式布局的基础概念',
         'Styling_columns': '多栏式布局的样式',
@@ -798,7 +805,6 @@ const text = mdn.localStringMap({
         'Controlling_flex_item_ratios': '控制弹性盒子元素在主轴上的比例',
         'Mastering_wrapping_of_flex_items': '包装弹性盒布局中的元素',
         'Typical_use_cases_of_Flexbox': '经典的弹性盒布局示例',
-        'Backwards_compatibility_of_Flexbox': '弹性盒布局的向下兼容性',
       'Flow_layout': '流式布局',
         'Block_and_Inline_layout_in_normal_flow': '一般的流式布局中的块式和行式布局',
         'In_flow_and_Out_of_flow': '应用或脱离流式布局',
@@ -830,8 +836,10 @@ const text = mdn.localStringMap({
       'Logical_properties': '逻辑属性',
         'Basic_concepts': '基础概念',
         'Floating_and_positioning': '浮动和定位',
-        'Margins_borders_padding': '内外边距和边框',
+        'Margins_borders_and_padding': '内外边距和边框',
         'Sizing': '调整尺寸',
+      'Math_functions': '数学函数',
+        'Using_CSS_math_functions': '使用 CSS 数学函数',
       'Media_queries': '媒体查询',
         'Using_media_queries': '使用媒体查询',
         'Using_media_queries_for_accessibility': '无障碍相关的媒体查询',
@@ -1261,6 +1269,16 @@ async function buildPropertylist(pages, title) {
       </details>
   </li>
   <li class="toggle">
+    <details>
+        <summary><%=text['Containment']%></summary>
+        <ol>
+          <li><%-smartLink(`${cssURL}CSS_Containment/Using_CSS_containment`)%></li>
+          <li><%-smartLink(`${cssURL}CSS_Containment/Container_queries`)%></li>
+          <li><%-smartLink(`${cssURL}CSS_Containment/Container_size_and_style_queries`)%></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
       <details>
           <summary><%=text['CSSOM_view']%></summary>
           <ol>
@@ -1279,7 +1297,6 @@ async function buildPropertylist(pages, title) {
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Controlling_ratios_of_flex_items_along_the_main_axis`, null, text['Controlling_flex_item_ratios'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Mastering_Wrapping_of_Flex_Items`, null, text['Mastering_wrapping_of_flex_items'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox`, null, text['Typical_use_cases_of_Flexbox'], cssURL)%></li>
-            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Backwards_Compatibility_of_Flexbox`, null, text['Backwards_compatibility_of_Flexbox'], cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -1354,11 +1371,20 @@ async function buildPropertylist(pages, title) {
   </li>
   <li class="toggle">
       <details>
+          <summary><%=text['Math_functions']%></summary>
+          <ol>
+            <li><%-smartLink(`${cssURL}CSS_Functions/Using_CSS_math_functions`, null, text['Using_CSS_math_functions'], cssURL)%></li>
+          </ol>
+      </details>
+  </li>
+  <li class="toggle">
+      <details>
           <summary><%=text['Media_queries']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_Media_Queries/Using_media_queries`, null, text['Using_media_queries'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Media_Queries/Using_Media_Queries_for_Accessibility`, null, text['Using_media_queries_for_accessibility'], cssURL)%></li>
             <li><%-smartLink(`${cssURL}CSS_Media_Queries/Testing_media_queries`, null, text['Testing_media_queries_programmatically'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Media_Queries/Printing`, null, text['Printing'], cssURL)%></li>
           </ol>
       </details>
   </li>
