@@ -15,7 +15,6 @@ import InterpolateHtmlPlugin from "react-dev-utils/InterpolateHtmlPlugin.js";
 import WorkboxWebpackPlugin from "workbox-webpack-plugin";
 import ModuleScopePlugin from "react-dev-utils/ModuleScopePlugin.js";
 import getCSSModuleLocalIdent from "react-dev-utils/getCSSModuleLocalIdent.js";
-import ESLintPlugin from "eslint-webpack-plugin";
 import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
@@ -49,9 +48,6 @@ const babelRuntimeRegenerator = resolve.sync("@babel/runtime/regenerator", {
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
-
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
 
 const imageInlineSizeLimit = 0; // our CSP doesn't support inline images
 
@@ -720,33 +716,6 @@ function config(webpackEnv) {
               { file: "**/src/setupProxy.*" },
               { file: "**/src/setupTests.*" },
             ],
-          },
-        }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-          formatter: resolve.sync("react-dev-utils/eslintFormatter.js"),
-          eslintPath: resolve.sync("eslint"),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          cacheLocation: path.resolve(
-            paths.appNodeModules,
-            ".cache/.eslintcache"
-          ),
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: fileURLToPath(
-            new URL(".", import.meta.url)
-          ),
-          baseConfig: {
-            extends: [resolve.sync("eslint-config-react-app/base")],
-            rules: {
-              ...(!hasJsxRuntime && {
-                "react/react-in-jsx-scope": "error",
-              }),
-            },
           },
         }),
     ].filter(Boolean),
