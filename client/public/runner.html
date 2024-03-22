@@ -110,20 +110,30 @@
         }
         window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
 
-        const style = document.createElement("style");
-        style.textContent = state.css;
-        document.head.appendChild(style);
-
-        document.body.innerHTML = "";
-        setHTML(document.body, state.html);
-
-        const script = document.createElement("script");
-        script.textContent = state.js;
-        document.body.appendChild(script);
-
-        dispatchEvent(new Event("DOMContentLoaded"));
-        dispatchEvent(new Event("load"));
-        initialized = true;
+        return new Promise((resolve) => window.setTimeout(resolve))
+          .then(() => {
+            const style = document.createElement("style");
+            style.textContent = state.css;
+            document.head.appendChild(style);
+          })
+          .then(() => {
+            document.body.innerHTML = "";
+            setHTML(document.body, state.html);
+          })
+          .then(() => {
+            const script = document.createElement("script");
+            script.textContent = state.js;
+            document.body.appendChild(script);
+          })
+          .then(() => {
+            dispatchEvent(new Event("DOMContentLoaded"));
+          })
+          .then(() => {
+            dispatchEvent(new Event("load"));
+          })
+          .then(() => {
+            initialized = true;
+          });
       }
       window.addEventListener("message", (event) => {
         const e = event.data;
