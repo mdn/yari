@@ -5,6 +5,7 @@ import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-foot
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { ARTICLE_FOOTER, THUMBS } from "../../../telemetry/constants";
+import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 export function LastModified({ value, locale }) {
   if (!value) {
@@ -46,7 +47,7 @@ const FEEDBACK_REASONS: Required<Record<FeedbackReason, string>> = {
   other: "Other",
 };
 
-export function ArticleFooter({ doc, locale }) {
+export function ArticleFooter({ doc }) {
   const [view, setView] = useState<ArticleFooterView>(ArticleFooterView.Vote);
   const [reason, setReason] = useState<FeedbackReason>();
 
@@ -121,13 +122,15 @@ export function ArticleFooter({ doc, locale }) {
               </div>
             </>
           ) : (
-            <span className="thank-you">Thank you for your feedback! ❤️</span>
+            <span className="thank-you">
+              Thank you for your feedback! <span className="emoji">❤️</span>
+            </span>
           )}
         </fieldset>
 
-        <Contribute />
+        <Contribute locale={doc.locale} />
         <p className="last-modified-date">
-          <LastModified value={doc.modified} locale={locale} /> by{" "}
+          <LastModified value={doc.modified} locale={doc.locale} /> by{" "}
           <Authors url={doc.mdn_url} />.
         </p>
         {doc.isActive && <OnGitHubLink doc={doc} />}
@@ -136,13 +139,15 @@ export function ArticleFooter({ doc, locale }) {
   );
 }
 
-function Contribute() {
+function Contribute({ locale }) {
+  const repo = locale === DEFAULT_LOCALE ? "content" : "translated-content";
+
   return (
     <>
       <a
         className="contribute"
-        href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
-        title={`This will take you to our contribution guidelines on GitHub.`}
+        href={`https://github.com/mdn/${repo}/blob/main/CONTRIBUTING.md`}
+        title="This will take you to our contribution guidelines on GitHub."
         target="_blank"
         rel="noopener noreferrer"
       >
