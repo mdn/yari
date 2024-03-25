@@ -122,6 +122,7 @@
         script.textContent = state.js;
         document.body.appendChild(script);
 
+        dispatchEvent(new Event("DOMContentLoaded"));
         dispatchEvent(new Event("load"));
       }
       window.addEventListener("message", (event) => {
