@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.45.1](https://github.com/mdn/yari/compare/v2.45.0...v2.45.1) (2024-03-25)
+
+
+### Bug Fixes
+
+* **macros/LearnSidebar:** update titles for consistency ([#10773](https://github.com/mdn/yari/issues/10773)) ([b488d0f](https://github.com/mdn/yari/commit/b488d0fb5e915abd61fa754050655386822c16ca))
+* **playground:** dispatch DOMContentLoaded event manually ([#10770](https://github.com/mdn/yari/issues/10770)) ([2515b3d](https://github.com/mdn/yari/commit/2515b3de75d67bbf32d3de1564efa5734177e6ad))
+* **routes:** redirect / =&gt; /en-US/ except for writers ([#10778](https://github.com/mdn/yari/issues/10778)) ([7d694d0](https://github.com/mdn/yari/commit/7d694d018f78f01595446653ec023c7955d43ecb))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump html-validate from 8.17.1 to 8.18.0 ([#10780](https://github.com/mdn/yari/issues/10780)) ([e59a9fd](https://github.com/mdn/yari/commit/e59a9fddfef666184ba21c1b9b5217b710c8ff32))
+* **deps-dev:** bump the types group with 1 update ([#10779](https://github.com/mdn/yari/issues/10779)) ([1e4a564](https://github.com/mdn/yari/commit/1e4a56426b569c5c045609703b0fd71a7361e910))
+* **deps:** bump @webref/css from 6.12.3 to 6.12.4 ([#10782](https://github.com/mdn/yari/issues/10782)) ([e12fedd](https://github.com/mdn/yari/commit/e12fedd530cac8f545039317a60af7616db739a6))
+* **deps:** bump dependabot/fetch-metadata from 1 to 2 ([#10767](https://github.com/mdn/yari/issues/10767)) ([07ca353](https://github.com/mdn/yari/commit/07ca35352cce92659d5b995bda9d9620a0a53993))
+* **deps:** bump the dependencies group in /deployer with 1 update ([#10783](https://github.com/mdn/yari/issues/10783)) ([df2570b](https://github.com/mdn/yari/commit/df2570b2923a89add0483c1677f3cfad97305ffb))
+* **deps:** bump the sentry group with 2 updates ([#10768](https://github.com/mdn/yari/issues/10768)) ([e13746d](https://github.com/mdn/yari/commit/e13746d19de57511e18cdd160f27faaf748f64ed))
+* **deps:** bump web-features from 0.6.0 to 0.6.1 ([#10781](https://github.com/mdn/yari/issues/10781)) ([d90a926](https://github.com/mdn/yari/commit/d90a9269711b8dcc09bd02dc2f7889033a9ac36b))
+* **macros/LearnSidebar:** add Japanese translation retake ([40be4dd](https://github.com/mdn/yari/commit/40be4dd0044bada0dcbe5910297290f7e0d8acec))
+
 ## [2.45.0](https://github.com/mdn/yari/compare/v2.44.0...v2.45.0) (2024-03-21)
 
 
