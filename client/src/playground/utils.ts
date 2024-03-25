@@ -56,16 +56,21 @@ export function initPlayIframe(
     typ: "init",
     state: editorContent,
   };
+  // Lazy loading is trick cross platform.
+  // We send an init message initially because the iframe might be ready already.
   iframe.contentWindow?.postMessage?.(message, { targetOrigin: "*" });
-  const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
+  const deferred = (event: MessageEvent) => {
+    const { data: { typ = null, prop = {} } = {}, source = null } = event;
     const id = new URL(iframe.src, "https://example.com").searchParams.get(
       "id"
     );
-    if (id === prop["id"]) {
+    if (id === prop["id"] && source === iframe.contentWindow) {
       if (typ === "ready") {
+        window.removeEventListener("message", deferred);
         iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });
       }
     }
   };
+  // Now we listen for the ready message in case the iframe wasn't ready yet.
   window.addEventListener("message", deferred);
 }
