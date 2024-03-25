@@ -33,9 +33,10 @@
         grid-template-columns: auto auto auto 1fr;
       }
 
-      hr {
+      &::before {
         border: none;
         border-top: 1px solid var(--text-inactive);
+        content: "";
         grid-area: hr;
         margin: 0 0 1.5rem;
         width: 100%;
