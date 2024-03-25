@@ -6,15 +6,20 @@ import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
+import { PLACEMENT_ENABLED } from "../../../env";
+import { SidePlacement } from "../../../ui/organisms/placement";
+import { SidebarFilter } from "./filter";
 
 export function SidebarContainer({
   doc,
   label,
   children,
+  tocTitle,
 }: {
   doc: any;
   label?: string;
   children: React.ReactNode;
+  tocTitle?: string;
 }) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
@@ -40,9 +45,9 @@ export function SidebarContainer({
     const sidebar = document.querySelector("#sidebar-quicklinks");
     const currentSidebarItem = sidebar?.querySelector("em");
     if (sidebar && currentSidebarItem) {
-      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach((n) =>
+      [sidebar, sidebar.querySelector(".sidebar-inner-nav")].forEach((n) =>
         n?.scrollTo({
-          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+          top: currentSidebarItem.offsetTop - window.innerHeight / 4,
         })
       );
     }
@@ -62,10 +67,20 @@ export function SidebarContainer({
           aria-label="Collapse sidebar"
         />
         <nav aria-label={label} className="sidebar-inner">
-          <div className="in-nav-toc">
-            {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+          {doc.sidebarHTML && (
+            <header className="sidebar-actions">
+              <SidebarFilter />
+            </header>
+          )}
+          <div className="sidebar-inner-nav">
+            <div className="in-nav-toc">
+              {doc.toc && !!doc.toc.length && (
+                <TOC toc={doc.toc} title={tocTitle} />
+              )}
+            </div>
+            {children}
           </div>
-          {children}
+          {PLACEMENT_ENABLED && <SidePlacement />}
         </nav>
       </aside>
     </>
@@ -79,6 +94,7 @@ export function RenderSideBar({ doc }) {
         {doc.sidebarHTML && (
           <>
             <div
+              className="sidebar-body"
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}

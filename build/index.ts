@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
+import * as cheerio from "cheerio";
+import * as Sentry from "@sentry/node";
+
 import {
   MacroInvocationError,
   MacroLiveSampleError,
@@ -9,15 +12,14 @@ import {
 } from "../kumascript/src/errors.js";
 
 import { Doc } from "../libs/types/document.js";
-import { Document, Image, execGit } from "../content/index.js";
+import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
-import { FLAW_LEVELS } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants/index.js";
 import { extractSections } from "./extract-sections.js";
 import { extractSidebar } from "./extract-sidebar.js";
 import { extractSummary } from "./extract-summary.js";
-export { default as SearchIndex } from "./search-index.js";
 import { addBreadcrumbData } from "./document-utils.js";
 import {
   fixFixableFlaws,
@@ -29,11 +31,22 @@ import { getPageTitle } from "./page-title.js";
 import { syntaxHighlight } from "./syntax-highlight.js";
 import { formatNotecards } from "./format-notecards.js";
 import buildOptions from "./build-options.js";
-export { gather as gatherGitHistory } from "./git-history.js";
-export { buildSPAs } from "./spas.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
+import {
+  getAdjacentFileAttachments,
+  injectLoadingLazyAttributes,
+  injectNoTranslate,
+  makeTOC,
+  postLocalFileLinks,
+  postProcessExternalLinks,
+  postProcessSmallerHeadingIDs,
+} from "./utils.js";
+import { getWebFeatureStatus } from "./web-features.js";
+export { default as SearchIndex } from "./search-index.js";
+export { gather as gatherGitHistory } from "./git-history.js";
+export { buildSPAs } from "./spas.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -46,7 +59,7 @@ const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/con
 // Module-level cache
 const rootToGitBranchMap = new Map();
 
-function getCurrentGitBranch(root) {
+function getCurrentGitBranch(root: string) {
   if (!rootToGitBranchMap.has(root)) {
     // If this is running in a GitHub Action "PR Build" workflow the current
     // branch name will be set in `GITHUB_REF_NAME_SLUG`.
@@ -84,7 +97,7 @@ function getCurrentGitBranch(root) {
  * the content (metadata file).
  * If all is well, do nothing. Nothing is expected to return.
  */
-function validateSlug(slug) {
+function validateSlug(slug: string) {
   if (!slug) {
     throw new Error("slug is empty");
   }
@@ -100,101 +113,13 @@ function validateSlug(slug) {
 }
 
 /**
- * Find all tags that we need to change to tell tools like Google Translate
- * to not translate.
- *
- * @param {Cheerio document instance} $
- */
-function injectNoTranslate($) {
-  $("pre").addClass("notranslate");
-}
-
-/**
- * For every image and iframe, where appropriate add the `loading="lazy"` attribute.
- *
- * @param {Cheerio document instance} $
- */
-function injectLoadingLazyAttributes($) {
-  $("img:not([loading]), iframe:not([loading])").attr("loading", "lazy");
-}
-
-/**
- * For every `<a href="http...">` make it
- * `<a href="http..." class="external" and rel="noopener">`
- *
- *
- * @param {Cheerio document instance} $
- */
-function postProcessExternalLinks($) {
-  $("a[href^=http]").each((i, element) => {
-    const $a = $(element);
-    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
-      // This should have been removed since it's considered a flaw.
-      // But we haven't applied all fixable flaws yet and we still have to
-      // support translated content which is quite a long time away from
-      // being entirely treated with the fixable flaws cleanup.
-      return;
-    }
-    $a.addClass("external");
-    $a.attr("target", "_blank");
-  });
-}
-
-/**
- * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
- * `<a href="$CURRENT_PATH/THING">`
- *
- *
- * @param {Cheerio document instance} $
- */
-function postLocalFileLinks($, doc) {
-  $("a[href]").each((i, element) => {
-    const href = element.attribs.href;
-
-    // This test is merely here to quickly bail if there's no hope to find the
-    // image as a local file link. There are a LOT of hyperlinks throughout
-    // the content and this simple if statement means we can skip 99% of the
-    // links, so it's presumed to be worth it.
-    if (
-      !href ||
-      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
-    ) {
-      return;
-    }
-    // There are a lot of links that don't match. E.g. `<a href="SubPage">`
-    // So we'll look-up a lot "false positives" that are not images.
-    // Thankfully, this lookup is fast.
-    const url = `${doc.mdn_url}/${href}`;
-    const image = Image.findByURLWithFallback(url);
-    if (image) {
-      $(element).attr("href", url);
-    }
-  });
-}
-
-/**
- * Fix the heading IDs so they're all lower case.
- *
- * @param {Cheerio document instance} $
- */
-function postProcessSmallerHeadingIDs($) {
-  $("h4[id], h5[id], h6[id]").each((i, element) => {
-    const id = element.attribs.id;
-    const lcID = id.toLowerCase();
-    if (id !== lcID) {
-      $(element).attr("id", lcID);
-    }
-  });
-}
-
-/**
  * Find all `<div class="warning">` and turn them into `<div class="warning notecard">`
  * and keep in mind that if it was already been manually fixed so, you
  * won't end up with `<div class="warning notecard notecard">`.
  *
  * @param {Cheerio document instance} $
  */
-function injectNotecardOnWarnings($) {
+function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
   $("div.warning, div.note, div.blockIndicator")
     .addClass("notecard")
     .removeClass("blockIndicator");
@@ -204,7 +129,7 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder, filename) {
+function getGitHubURL(root: string, folder: string, filename: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
@@ -215,7 +140,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-export function getLastCommitURL(root, hash) {
+export function getLastCommitURL(root: string, hash: string) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
 }
@@ -232,57 +157,14 @@ function injectSource(doc, document, metadata) {
   };
 }
 
-/**
- * Return an array of objects like this [{text: ..., id: ...}, ...]
- * from a document's body.
- * This will be used for the "Table of Contents" menu which expects to be able
- * to link to each section with anchor links.
- *
- * @param {Document} doc
- */
-function makeTOC(doc) {
-  return doc.body
-    .map((section) => {
-      if (
-        (section.type === "prose" ||
-          section.type === "browser_compatibility" ||
-          section.type === "specifications") &&
-        section.value.id &&
-        section.value.title &&
-        !section.value.isH3
-      ) {
-        return { text: section.value.title, id: section.value.id };
-      }
-      return null;
-    })
-    .filter(Boolean);
-}
-
-/**
- * Return an array of all images that are inside the documents source folder.
- *
- * @param {Document} document
- */
-function getAdjacentImages(documentDirectory) {
-  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => {
-      // This needs to match what we do in filecheck/checker.py
-      return (
-        !dirent.isDirectory() &&
-        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
-      );
-    })
-    .map((dirent) => path.join(documentDirectory, dirent.name));
-}
-
 export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
-  fileAttachments: any;
+  fileAttachmentMap: Map<string, string>;
   source?: {
     github_url: string;
   };
+  plainHTML?: string;
 }
 
 interface DocumentOptions {
@@ -290,12 +172,22 @@ interface DocumentOptions {
   fixFlawsDryRun?: boolean;
   fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
+  plainHTML?: boolean;
 }
 
 export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
+  Sentry.setContext("doc", {
+    path: document?.fileInfo?.path,
+    title: document?.metadata?.title,
+    url: document?.url,
+  });
+  Sentry.setTags({
+    doc_slug: document?.metadata?.slug,
+    doc_locale: document?.metadata?.locale,
+  });
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -321,14 +213,19 @@ export async function buildDocument(
   interface LiveSample {
     id: string;
     html: string;
+    slug?: string;
   }
 
   let flaws: any[] = [];
-  let $ = null;
+  let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
+  // this will get populated with the parent's frontmatter by kumascript if the document is localized:
+  let allMetadata = metadata;
 
   try {
-    [$, flaws] = await kumascript.render(document.url);
+    let kumascriptMetadata;
+    [$, flaws, kumascriptMetadata] = await kumascript.render(document.url);
+    allMetadata = { ...allMetadata, ...kumascriptMetadata };
   } catch (error) {
     if (
       error instanceof MacroInvocationError &&
@@ -348,14 +245,14 @@ export async function buildDocument(
     throw error;
   }
 
-  const liveSamplePages = kumascript.buildLiveSamplePages(
+  const liveSamplePages = await kumascript.buildLiveSamplePages(
     document.url,
     document.metadata.title,
     $,
     document.rawBody
   );
   for (const liveSamplePage of liveSamplePages) {
-    const { id, flaw } = liveSamplePage;
+    const { id, flaw, slug } = liveSamplePage;
     let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
@@ -402,7 +299,7 @@ export async function buildDocument(
         </html>
         `;
     }
-    liveSamples.push({ id: id.toLowerCase(), html });
+    liveSamples.push({ id: id.toLowerCase(), html, slug });
   }
 
   if (flaws.length) {
@@ -478,10 +375,14 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
-  const browserCompat = metadata["browser-compat"];
+
+  // metadata doesn't have a browser-compat key on translated docs:
+  const browserCompat = allMetadata["browser-compat"];
   doc.browserCompat =
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
+
+  doc.baseline = addBaseline(doc);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -495,15 +396,34 @@ export async function buildDocument(
   extractSidebar($, doc);
 
   // Check and scrutinize any local image references
-  const fileAttachments = checkImageReferences(doc, $, options, document);
+  const fileAttachmentMap = checkImageReferences(doc, $, options, document);
   // Not all images are referenced as `<img>` tags. Some are just sitting in the
   // current document's folder and they might be referenced in live samples.
   // The checkImageReferences() does 2 things. Checks image *references* and
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
-  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+  getAdjacentFileAttachments(path.dirname(document.fileInfo.path)).forEach(
+    (fp) => fileAttachmentMap.set(path.basename(fp), fp)
   );
+
+  if (doc.locale !== DEFAULT_LOCALE) {
+    // If it's not the default locale, we need to add the images
+    // from the default locale too.
+    const defaultLocaleDir = path.join(
+      CONTENT_ROOT,
+      DEFAULT_LOCALE.toLowerCase(),
+      slugToFolder(metadata.slug)
+    );
+
+    if (fs.existsSync(defaultLocaleDir)) {
+      getAdjacentFileAttachments(defaultLocaleDir).forEach((fp) => {
+        const basename = path.basename(fp);
+        if (!fileAttachmentMap.has(basename)) {
+          fileAttachmentMap.set(basename, fp);
+        }
+      });
+    }
+  }
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
@@ -527,11 +447,11 @@ export async function buildDocument(
     throw error;
   }
 
-  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
-  // that were used for that. If we don't do this, for example, the `pre` tags will be
-  // syntax highligted, which is a waste because they're going to be invisible
-  // anyway.
-  $("div.hidden").remove();
+  // Dump HTML for GPT context.
+  let plainHTML;
+  if (documentOptions.plainHTML) {
+    plainHTML = $.html();
+  }
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
@@ -572,7 +492,7 @@ export async function buildDocument(
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
   try {
-    const [sections, sectionFlaws] = extractSections($);
+    const [sections, sectionFlaws] = await extractSections($);
     doc.body = sections;
     if (sectionFlaws.length) {
       injectSectionFlaws(doc, sectionFlaws, options);
@@ -604,31 +524,12 @@ export async function buildDocument(
 
   doc.modified = metadata.modified || null;
 
-  const otherTranslations = document.translations || [];
-  if (!otherTranslations.length && metadata.translation_of) {
-    // If built just-in-time, we won't have a record of all the other translations
-    // available. But if the current document has a translation_of, we can
-    // at least use that.
-    const translationOf = Document.findByURL(
-      `/en-US/docs/${metadata.translation_of}`
-    );
-    if (translationOf) {
-      otherTranslations.push({
-        locale: "en-US",
-        title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us")?.native,
-      });
-    }
-  }
-
-  if (otherTranslations.length) {
-    doc.other_translations = otherTranslations;
-  }
+  doc.other_translations = document.translations || [];
 
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {
-    doc.shortTitle = document.metadata["short-title"];
+    doc.short_title = document.metadata["short-title"];
   }
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
@@ -643,7 +544,51 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachments };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
+}
+
+function addBaseline(doc: Partial<Doc>) {
+  if (doc.browserCompat) {
+    const filteredBrowserCompat = doc.browserCompat.filter(
+      (query) =>
+        // temporary blocklist while we wait for per-key baseline statuses
+        // or another solution to the baseline/bcd table discrepancy problem
+        ![
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
+          "api.Clipboard.read",
+          "api.Clipboard.readText",
+          "api.Clipboard.write",
+          "api.Clipboard.writeText",
+          "api.ClipboardEvent",
+          "api.ClipboardEvent.ClipboardEvent",
+          "api.ClipboardEvent.clipboardData",
+          "api.ClipboardItem",
+          "api.ClipboardItem.ClipboardItem",
+          "api.ClipboardItem.getType",
+          "api.ClipboardItem.presentationStyle",
+          "api.ClipboardItem.types",
+          "api.Navigator.clipboard",
+          "api.Permissions.permission_clipboard-read",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
+          "api.CustomElementRegistry",
+          "api.CustomElementRegistry.builtin_element_support",
+          "api.CustomElementRegistry.define",
+          "api.Window.customElements",
+          "css.selectors.defined",
+          "css.selectors.host",
+          "css.selectors.host-context",
+          "css.selectors.part",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
+          "api.Element.input_event",
+          "api.InputEvent.InputEvent",
+          "api.InputEvent.data",
+          "api.InputEvent.dataTransfer",
+          "api.InputEvent.getTargetRanges",
+          "api.InputEvent.inputType",
+        ].includes(query)
+    );
+    return getWebFeatureStatus(...filteredBrowserCompat);
+  }
 }
 
 interface BuiltLiveSamplePage {
@@ -652,7 +597,7 @@ interface BuiltLiveSamplePage {
   flaw: MacroLiveSampleError | null;
 }
 
-export async function buildLiveSamplePageFromURL(url) {
+export async function buildLiveSamplePageFromURL(url: string) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
   // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
@@ -666,12 +611,12 @@ export async function buildLiveSamplePageFromURL(url) {
     throw new Error(`No document found for ${documentURL}`);
   }
   const liveSamplePage = (
-    kumascript.buildLiveSamplePages(
+    (await kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
       (await kumascript.render(document.url))[0],
       document.rawBody
-    ) as BuiltLiveSamplePage[]
+    )) as BuiltLiveSamplePage[]
   ).find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {

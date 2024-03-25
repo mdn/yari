@@ -1,15 +1,21 @@
 import { Flaw } from "./index.js";
 
-import { getFirstMatchInText } from "../matches-in-text.js";
-const escapeHTML = (s) =>
+import { getFirstMatchInText } from "../matches.js";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document.js";
+const escapeHTML = (s: string) =>
   s
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-export function getPreTagFlaws(doc, $, { rawContent }) {
-  const flaws = [];
+export function getPreTagFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  { rawContent }
+) {
+  const flaws: Flaw[] = [];
 
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
   // are actually full of HTML. Almost exclusively we've observed <pre> tags whose
@@ -30,7 +36,7 @@ export function getPreTagFlaws(doc, $, { rawContent }) {
   //
   // This makes it easier to edit the code in raw form. It also makes it less
   // heavy because any HTML will be replaced with Prism HTML anyway.
-  function addCodeTagFlaw($pre) {
+  function addCodeTagFlaw($pre: cheerio.Cheerio<cheerio.Element>) {
     const id = `bad_pre_tags${flaws.length + 1}`;
     const type = "pre_with_html";
     const explanation = `<pre><code>CODE can be just <pre>CODE`;

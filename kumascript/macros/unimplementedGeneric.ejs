@@ -26,10 +26,10 @@ var str = s_str[0];
 if ($1 && $0 != 'method') {
   switch(product.toLowerCase()) {
     case 'mozilla':
-      str += " (" + s_str[1] + " " + await template("bug", [$1]) + ")";
+      str += ` (${s_str[1]} <a href="https://bugzil.la/${$1}">Firefox bug ${$1}</a>)`;
     break;
     case 'webkit':
-      str += " (" + s_str[1] + " " + await template("WebkitBug", [$1]) + ")";
+      str += ` (${s_str[1]} <a href="https://webkit.org/b/${$1}">WebKit bug ${$1}</a>)`;
     break;
   }
 }

@@ -24,29 +24,34 @@ export default function Newsletter() {
 
   return (
     <section className="field-group">
-      <h2>Newsletter</h2>
+      <h2 id="newsletter">Stay updated</h2>
       <ul>
         <li>
-          <h3>Receive updates from MDN Plus</h3>
-          <span>
-            Allow us to email you product updates, news about our latest
-            features, tips to get the most out of MDN Plus, and more.
-          </span>
-          {loading ? (
-            <Spinner extraClasses="loading" />
-          ) : (
-            <Switch
-              name="mdn_plus_newsletter"
-              checked={Boolean(enabled)}
-              toggle={async (e) => {
-                setLoading(true);
-                setEnabled(
-                  await toggleNewsletterSubscription(Boolean(e.target.checked))
-                );
-                setLoading(false);
-              }}
-            ></Switch>
-          )}
+          <section aria-labelledby="mdn-plus-newsletter">
+            <h3 id="mdn-plus-newsletter">MDN Plus Newsletter</h3>
+            <div className="setting-row">
+              <span>
+                Allow us to email you product updates, news, and more.
+              </span>
+              {loading ? (
+                <Spinner extraClasses="loading" />
+              ) : (
+                <Switch
+                  name="mdn_plus_newsletter"
+                  checked={Boolean(enabled)}
+                  toggle={async (e) => {
+                    setLoading(true);
+                    setEnabled(
+                      await toggleNewsletterSubscription(
+                        Boolean(e.target.checked)
+                      )
+                    );
+                    setLoading(false);
+                  }}
+                ></Switch>
+              )}
+            </div>
+          </section>
         </li>
       </ul>
     </section>

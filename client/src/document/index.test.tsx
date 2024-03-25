@@ -1,5 +1,4 @@
 import { Route, Routes, MemoryRouter } from "react-router-dom";
-import React from "react";
 import { render, waitFor } from "@testing-library/react";
 
 import { Document } from "./index";

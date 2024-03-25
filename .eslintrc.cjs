@@ -1,10 +1,27 @@
+// @ts-check
 const path = require("node:path");
 const { readGitignoreFiles } = require("eslint-gitignore");
 
-const ignores = readGitignoreFiles({
-  cwd: path.join(".git", "info"),
-  patterns: ["exclude"],
-});
+/** @type {string[]} */
+let ignores = [];
+try {
+  ignores = readGitignoreFiles({
+    cwd: path.join(".git", "info"),
+    patterns: ["exclude"],
+  });
+} catch (error) {
+  if (error.code === "ENOTDIR") {
+    console.log(
+      `${path.join(
+        ".git",
+        "info",
+        "exclude"
+      )} dir doesn't exist, we're probably a submodule`
+    );
+  } else {
+    throw error;
+  }
+}
 
 module.exports = {
   ignorePatterns: ignores,
@@ -32,14 +49,17 @@ module.exports = {
     {
       files: ["**/*.ts", "**/*.tsx"],
       parser: "@typescript-eslint/parser",
-      extends: ["plugin:@typescript-eslint/recommended"],
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        //"plugin:@typescript-eslint/stylistic",
+      ],
       rules: {
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-unused-vars": [
           "warn",
           { ignoreRestSiblings: true },
         ],
+        "n/no-deprecated-api": "off",
         "n/no-extraneous-import": [
           "error",
           {
@@ -63,12 +83,6 @@ module.exports = {
       rules: {
         "n/shebang": 0,
         "no-process-exit": 0,
-      },
-    },
-    {
-      files: ["deployer/aws-lambda/**/*.js"],
-      parserOptions: {
-        sourceType: "module",
       },
     },
     {

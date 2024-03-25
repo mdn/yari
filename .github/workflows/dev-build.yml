@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
@@ -51,29 +51,32 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -122,7 +125,7 @@ jobs:
 
           # This just makes sure the Google Analytics script gets used even if
           # it goes nowhere.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-XXXXXXXX
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true
@@ -132,11 +135,6 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn build:prepare
-
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
 
           yarn tool sync-translated-content
 
@@ -161,6 +159,11 @@ jobs:
           # Generate sitemap index file
           yarn build --sitemap-index
 
+          # Generate whatsdeployed files.
+          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+
       - name: Deploy with deployer
         env:
           # Set the CONTENT_ROOT first
@@ -169,7 +172,6 @@ jobs:
 
           DEPLOYER_BUCKET_NAME: mdn-content-dev
           DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix }}
-          DEPLOYER_DISTRIBUTION_ID: E9813D0RN1QZI
           DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD: ${{ github.event.inputs.log_each_successful_upload }}
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
@@ -191,23 +193,14 @@ jobs:
 
           cd deployer
 
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
-          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           poetry run deployer upload --prune ../client/build
-          poetry run deployer update-lambda-functions ./aws-lambda
-          # TODO
-          # Execute command to tell the Dev CloudFront distribution to use the
-          # latest and greatest *version* of the updated lambda functions.
-          # (Or, make it an optional flag to the `update-lambda-functions` command)
-
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
