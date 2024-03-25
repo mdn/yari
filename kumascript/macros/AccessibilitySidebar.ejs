@@ -2,9 +2,9 @@
 
 const locale = env.locale;
 const sidebarURL = `/docs/Web/`;
-const baseURL = `/${locale}/docs/Web/Accessibility/`;
-const AriaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
-const LearnURL = `/${locale}/docs/Learn/Accessibility/`;
+const baseURL = `/${locale}/docs/`;
+const ariaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
+const learnURL = `/${locale}/docs/Learn/`;
 
 const l10nStrings = mdn.localStringMap({
   "en-US": {
@@ -20,13 +20,7 @@ const l10nStrings = mdn.localStringMap({
         "Accessibility_and_Spacial_Patterns" : "Spacial Patterns",
         "Understanding_Colors_and_Luminance" : "Colors and Luminance",
         "Seizure_disorders" : "Seizures and physical reactions",
-    "Resources" : "Resources",
-        "What_is_accessibility" : "What is accessibility?",
-        "HTML" : "HTML: A good basis for accessibility",
-        "CSS_and_JavaScript" : "CSS and JavaScript accessibility best practices",
-        "WAI-ARIA_basics" : "WAI-ARIA basics",
-        "Multimedia" : "Accessible multimedia",
-        "Mobile" : "Mobile accessibility",
+    "Learn" : "Learn accessibility",
     "ARIA" : "ARIA",
     "ARIA_guides" : "ARIA guides",
         "Annotations" : "Annotations",
@@ -50,30 +44,32 @@ const sections = [
         name: "Guides",
         url: baseURL,
         pages: [
-          "Information_for_Web_authors",
-          "Accessibility:_What_users_can_to_to_browse_safely",
-          "An_overview_of_accessible_web_applications_and_widgets",
-          "Keyboard-navigable_JavaScript_widgets",
-          "Mobile_accessibility_checklist",
-          "Understanding_WCAG",
-          "Cognitive_accessibility",
-          "Accessibility_and_Spacial_Patterns",
-          "Understanding_Colors_and_Luminance",
-          "Seizure_disorders",
+          "Web/Accessibility/Information_for_Web_authors",
+          "Web/Accessibility/Accessibility:_What_users_can_to_to_browse_safely",
+          "Web/Accessibility/An_overview_of_accessible_web_applications_and_widgets",
+          "Web/Accessibility/Keyboard-navigable_JavaScript_widgets",
+          "Web/Accessibility/Mobile_accessibility_checklist",
+          "Web/Accessibility/Understanding_WCAG",
+          "Web/Accessibility/Cognitive_accessibility",
+          "Web/Accessibility/Accessibility_and_Spacial_Patterns",
+          "Web/Accessibility/Understanding_Colors_and_Luminance",
+          "Web/Accessibility/Seizure_disorders",
         ]
       },
       {
-        name: "Resources",
-        url: LearnURL,
+        name: "Learn",
+        url: learnURL,
         pages: [
-          "What_is_accessibility",
-          "HTML",
-          "CSS_and_JavaScript",
-          "WAI-ARIA_basics",
-          "Multimedia",
-          "Mobile",
+          "Accessibility/",
+          "Accessibility/What_is_accessibility",
+          "Accessibility/HTML",
+          "Accessibility/CSS_and_JavaScript",
+          "Accessibility/WAI-ARIA_basics",
+          "Accessibility/Multimedia",
+          "Accessibility/Mobile",
+          "Accessibility/Accessibility_troubleshooting",
         ]
-      }
+      },
     ]
   },
   {
@@ -82,7 +78,7 @@ const sections = [
     subsections: [
       {
         name: "ARIA_guides",
-        url: AriaURL,
+        url: ariaURL,
         pages: [
           "Annotations",
           "ARIA_Guides",
@@ -95,33 +91,24 @@ const sections = [
       },
       {
         name: "ARIA states and properties",
-        url: AriaURL,
+        url: ariaURL,
         subdirectory: "attributes",
       },
       {
         name: "ARIA roles",
-        url: AriaURL,
+        url: ariaURL,
         subdirectory: "roles",
       }
     ]
   }
 ];
 
-async function getTitle(pageSlug, URL) {
-  let baseURL = URL? URL : baseURL;
-  let page = await wiki.getPage(`${baseURL}${pageSlug}`);
-  if (!page.title) {
-    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
-  }
-  return mdn.htmlEscape(page.title);
-}
-
 async function renderSubsection(subsection) {
   let output = `<li><details><summary>${l10nStrings[subsection.name]}</summary><ol>`;
   if (subsection.pages) {
-    let URL = subsection.url;
+    let url = subsection.url;
     for (const page of subsection.pages) {
-      const link = web.smartLink(`${URL}${page}`, null, await getTitle(page, URL));
+      const link = web.smartLink(`${url}${page}`);
       output += `<li>${link}</li>`;
     }
   } else {
