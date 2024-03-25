@@ -108,7 +108,6 @@
         if (initialized) {
           return;
         }
-        initialized = true;
         window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
 
         const style = document.createElement("style");
@@ -124,6 +123,7 @@
 
         dispatchEvent(new Event("DOMContentLoaded"));
         dispatchEvent(new Event("load"));
+        initialized = true;
       }
       window.addEventListener("message", (event) => {
         const e = event.data;
