@@ -161,6 +161,7 @@ function AIHelpUserQuestion({
     >
       <ExpandingTextarea
         ref={inputRef}
+        maxLength={25_000}
         enterKeyHint="send"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -799,6 +800,7 @@ export function AIHelpInner() {
                     >
                       <ExpandingTextarea
                         ref={inputRef}
+                        maxLength={25_000}
                         autoFocus={true}
                         disabled={isLoading || isResponding}
                         enterKeyHint="send"
