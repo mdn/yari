@@ -290,7 +290,9 @@ function AIHelpAssistantResponse({
 
   const isOffTopic =
     message.role === MessageRole.Assistant &&
-    message.content?.startsWith(SORRY_BACKEND_PREFIX);
+    (message.content?.startsWith(SORRY_BACKEND_PREFIX) ||
+      (message.status === MessageStatus.Complete &&
+        SORRY_BACKEND_PREFIX.startsWith(message.content)));
 
   function messageForStatus(status: MessageStatus) {
     switch (status) {
