@@ -3,6 +3,7 @@
 const locale = env.locale;
 const sidebarURL = `/docs/Web/`;
 const baseURL = `/${locale}/docs/`;
+const accessibilityURL = `/${locale}/docs/Web/Accessibility/`;
 const ariaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
 const learnURL = `/${locale}/docs/Learn/`;
 
@@ -32,6 +33,7 @@ const l10nStrings = mdn.localStringMap({
         "How_to_file_ARIA-related_bugs" : "How to file bugs",
     "ARIA states and properties": "ARIA states and properties",
     "ARIA roles": "ARIA roles",
+    "WCAG": "WCAG",
   }
 });
 
@@ -70,6 +72,11 @@ const sections = [
           "Accessibility/Accessibility_troubleshooting",
         ]
       },
+      {
+        name: "WCAG",
+        url: accessibilityURL,
+        subdirectory: "Understanding_WCAG",
+      }
     ]
   },
   {
