@@ -10,14 +10,13 @@ import {
   isNotSupportedAtAll,
   isTruthy,
   versionIsPreview,
-  SupportStatementExtended,
   bugURLToString,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 function getSupportClassName(
-  support: SupportStatementExtended | undefined,
+  support: BCD.SupportStatement | undefined,
   browser: BCD.BrowserStatement
 ): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
   if (!support) {
@@ -48,12 +47,17 @@ function getSupportClassName(
 }
 
 function getSupportBrowserReleaseDate(
-  support: SupportStatementExtended | undefined
+  currentSupport: BCD.SimpleSupportStatement | undefined,
+  browser: BCD.BrowserStatement
 ): string | undefined {
-  if (!support) {
+  if (!currentSupport) {
     return undefined;
   }
-  return getCurrentSupport(support)!.release_date;
+  const version = currentSupport.version_added;
+  if (typeof version !== "string" || version === "preview") {
+    return undefined;
+  }
+  return browser.releases[version].release_date;
 }
 
 function StatusIcons({ status }: { status: BCD.StatusBlock }) {
@@ -138,7 +142,10 @@ const CellText = React.memo(
     const added = currentSupport?.version_added ?? null;
     const lastVersion = currentSupport?.version_last ?? null;
 
-    const browserReleaseDate = getSupportBrowserReleaseDate(support);
+    const browserReleaseDate = getSupportBrowserReleaseDate(
+      currentSupport,
+      browser
+    );
     const supportClassName = getSupportClassName(support, browser);
 
     let status:

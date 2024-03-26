@@ -10,11 +10,8 @@ import { load as cheerio } from "cheerio";
 
 import { DocMetadata } from "../libs/types/document.js";
 import { BUILD_OUT_ROOT, OPENAI_KEY, PG_URI } from "../libs/env/index.js";
-import {
-  getBCDDataForPath,
-  SimpleSupportStatementExtended,
-} from "@mdn/bcd-utils-api";
 import path from "node:path";
+import bcd from "@mdn/browser-compat-data" assert { type: "json" };
 import {
   BrowserStatement,
   SimpleSupportStatement,
@@ -351,19 +348,27 @@ async function* builtDocs(directory: string) {
 }
 
 function buildBCDTable(query: string) {
-  const bcdData = getBCDDataForPath(query);
-  if (!bcdData) return "";
-  const { browsers, data } = bcdData;
+  const bcdPathParts = query.split(".");
+
+  let data: any = bcd;
+  for (const part of bcdPathParts) {
+    if (!(part in data)) {
+      return "";
+    }
+    data = data[part];
+  }
+  if (!data) return "";
+
   return data.__compat?.support
     ? `<table class="bc-table">
 <thead><tr><th>Browser</th><th>Support</th>
 <tbody>
-${Object.entries(data.__compat?.support)
+${Object.entries(data.__compat.support)
   .map(
     ([browser, support]) =>
-      `<tr><td>${browsers[browser].name}</td><td>${buildBCDSupportString(
-        browsers[browser],
-        support
+      `<tr><td>${bcd.browsers[browser].name}</td><td>${buildBCDSupportString(
+        bcd.browsers[browser],
+        support as SimpleSupportStatement[]
       )}</td></tr>`
   )
   .join("\n")}
@@ -374,10 +379,13 @@ ${Object.entries(data.__compat?.support)
 
 function buildBCDSupportString(
   browser: BrowserStatement,
-  support: (SimpleSupportStatement & SimpleSupportStatementExtended)[]
+  support: SimpleSupportStatement[]
 ) {
   return support
     .flatMap((item) => {
+      const releaseDate =
+        typeof item.version_added === "string" &&
+        browser.releases[item.version_added]?.release_date;
       return [
         item.version_removed &&
         !support.some(
@@ -405,7 +413,7 @@ function buildBCDSupportString(
         isFullySupportedWithoutLimitation(item) &&
         !versionIsPreview(item.version_added, browser)
           ? `Full support since version ${item.version_added}${
-              item.release_date ? ` (released ${item.release_date})` : ""
+              releaseDate ? ` (released ${releaseDate})` : ""
             }`
           : isNotSupportedAtAll(item)
             ? "No support"

@@ -9,8 +9,9 @@ import send from "send";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
-import { getBCDDataForPath } from "@mdn/bcd-utils-api";
 import sanitizeFilename from "sanitize-filename";
+
+import bcd from "@mdn/browser-compat-data" assert { type: "json" };
 
 import {
   buildDocument,
@@ -79,8 +80,22 @@ const bcdRouter = express.Router({ caseSensitive: true });
 
 // Note that this route will only get hit if .env has this: REACT_APP_BCD_BASE_URL=""
 bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
-  const data = getBCDDataForPath(req.params.path);
-  return data ? res.json(data) : res.status(404).send("BCD path not found");
+  const bcdPath = req.params.path;
+  const bcdPathParts = bcdPath.split(".");
+
+  let data = bcd;
+
+  for (const part of bcdPathParts) {
+    if (part in data) {
+      data = data[part];
+    } else {
+      res.status(404).send("BCD path not found");
+    }
+  }
+
+  return data
+    ? res.json({ browsers: bcd.browsers, data, query: bcdPath })
+    : res.status(404).send("BCD path not found");
 });
 
 bcdRouter.use(
