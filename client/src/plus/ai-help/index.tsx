@@ -318,6 +318,14 @@ function AIHelpAssistantResponse({
     }
   }
 
+  if (isOffTopic) {
+    message = {
+      ...message,
+      content: SORRY_FRONTEND,
+      sources: [],
+    };
+  }
+
   return (
     <>
       {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
@@ -338,7 +346,7 @@ function AIHelpAssistantResponse({
           {messageForStatus(message.status)}
         </div>
       )}
-      {(message.content || isOffTopic) && (
+      {message.content && (
         <div
           className={[
             "ai-help-message-content",
@@ -489,7 +497,7 @@ function AIHelpAssistantResponse({
               },
             }}
           >
-            {isOffTopic ? SORRY_FRONTEND : message.content}
+            {message.content}
           </ReactMarkdown>
           {message.status === "stopped" && (
             <section className="stopped-message">
@@ -510,15 +518,7 @@ function AIHelpAssistantResponse({
                 )}
                 <ReportIssueOnGitHubLink
                   messages={messages}
-                  currentMessage={{
-                    ...message,
-                    ...(isOffTopic
-                      ? {
-                          content: SORRY_FRONTEND,
-                          sources: [],
-                        }
-                      : {}),
-                  }}
+                  currentMessage={message}
                 >
                   Report an issue with this answer on GitHub
                 </ReportIssueOnGitHubLink>
