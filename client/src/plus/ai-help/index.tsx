@@ -48,14 +48,14 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND_PREFIX,
-  SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
   MESSAGE_STOPPED,
+  OFF_TOPIC_PREFIX,
+  OFF_TOPIC_MESSAGE,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
@@ -290,9 +290,9 @@ function AIHelpAssistantResponse({
 
   const isOffTopic =
     message.role === MessageRole.Assistant &&
-    (message.content?.startsWith(SORRY_BACKEND_PREFIX) ||
+    (message.content?.startsWith(OFF_TOPIC_PREFIX) ||
       (message.status === MessageStatus.Complete &&
-        SORRY_BACKEND_PREFIX.startsWith(message.content)));
+        OFF_TOPIC_PREFIX.startsWith(message.content)));
 
   function messageForStatus(status: MessageStatus) {
     switch (status) {
@@ -321,7 +321,7 @@ function AIHelpAssistantResponse({
   if (isOffTopic) {
     message = {
       ...message,
-      content: SORRY_FRONTEND,
+      content: OFF_TOPIC_MESSAGE,
       sources: [],
     };
   }
