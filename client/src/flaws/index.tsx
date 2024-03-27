@@ -629,7 +629,7 @@ function DocumentsTable({
         )}
       </h3>
       {!counts.built ? (
-        <WarnAboutNothingBuilt />
+        <WarnAboutNothingBuilt locale={locale} />
       ) : (
         <h4 className="subheader">
           {counts.built.toLocaleString()} documents built ({locale})
@@ -688,13 +688,45 @@ function DocumentsTable({
   );
 }
 
+function PageLink({
+  number,
+  disabled,
+  children,
+}: {
+  number: number;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  const [filters] = useFiltersURL();
+  // Unfortunately TS's Partial<T> is not quite the right return type of this function,
+  // as it implies the object could have keys set to undefined, which isn't true here.
+  // Hence we have to use type coercion (any)
+  const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
+  if (newFilters.page) {
+    newFilters.page = String(newFilters.page);
+  }
+  return (
+    <Link
+      to={"?" + createSearchParams(newFilters).toString()}
+      className={disabled ? "disabled" : ""}
+      onClick={(event) => {
+        if (disabled) {
+          event.preventDefault();
+        }
+      }}
+    >
+      {children}
+    </Link>
+  );
+}
+
 function WarnAboutNothingBuilt() {
   return (
     <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
       <p>
-        At the moment, you have to use the command line tools to build documents
-        that we can analyze.
+        Run <code>yarn build --locale {locale.toLowerCase()}</code> to build all
+        documents for the current locale.
       </p>
     </div>
   );

@@ -62,7 +62,7 @@ const locales = {
     ResourcesURI: "Resources and URIs",
   },
   es: {
-    ResourcesURI: "Recursons y URIs",
+    ResourcesURI: "Recursos y URIs",
   },
 };
 
