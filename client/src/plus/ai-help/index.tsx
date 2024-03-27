@@ -329,23 +329,24 @@ function AIHelpAssistantResponse({
   return (
     <>
       {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
-      {(message.content ||
-        message.status === MessageStatus.InProgress ||
-        message.status === MessageStatus.Errored) && (
-        <div
-          className={[
-            "ai-help-message-progress",
-            message.status === MessageStatus.InProgress && "active",
-            message.status === MessageStatus.Complete && "complete",
-            message.status === MessageStatus.Errored && "errored",
-            message.status === MessageStatus.Stopped && "stopped",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {messageForStatus(message.status)}
-        </div>
-      )}
+      {!isOffTopic &&
+        (message.content ||
+          message.status === MessageStatus.InProgress ||
+          message.status === MessageStatus.Errored) && (
+          <div
+            className={[
+              "ai-help-message-progress",
+              message.status === MessageStatus.InProgress && "active",
+              message.status === MessageStatus.Complete && "complete",
+              message.status === MessageStatus.Errored && "errored",
+              message.status === MessageStatus.Stopped && "stopped",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {messageForStatus(message.status)}
+          </div>
+        )}
       {message.content && (
         <div
           className={[
