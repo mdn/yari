@@ -158,7 +158,7 @@ export default function Playground() {
       window.removeEventListener("message", messageListener);
     };
   }, [messageListener]);
-  const reset = async () => {
+  const clear = async () => {
     setSearchParams([], { replace: true });
     setCodeSrc(undefined);
     htmlRef.current?.setContent(HTML_DEFAULT);
@@ -167,10 +167,10 @@ export default function Playground() {
 
     updateWithEditorContent();
   };
-  const resetConfirm = async () => {
-    if (window.confirm("Do you really want to reset everything?")) {
+  const clearConfirm = async () => {
+    if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
-      await reset();
+      await clear();
     }
   };
 
@@ -287,11 +287,11 @@ export default function Playground() {
               </Button>
               <Button
                 type="secondary"
-                id="reset"
+                id="clear"
                 extraClasses="red"
-                onClickHandler={resetConfirm}
+                onClickHandler={clearConfirm}
               >
-                reset
+                clear
               </Button>
             </menu>
           </aside>
