@@ -338,7 +338,7 @@ function AIHelpAssistantResponse({
           {messageForStatus(message.status)}
         </div>
       )}
-      {message.content && (
+      {(message.content || isOffTopic) && (
         <div
           className={[
             "ai-help-message-content",
