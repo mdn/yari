@@ -14,7 +14,6 @@ export function ModulesListList({
   const [tab, setTab] = useState(1);
   return (
     <ol className="modules-list-list">
-      <hr />
       {modules.map((modulesList, i) => {
         return (
           <li

@@ -20,17 +20,32 @@ export interface PlacementContextData
   status: Status;
 }
 
-const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
-  side: /\/[^/]+\/(play|docs\/|blog\/|curriculum\/[^$]|search$)/i,
-  top: /\/[^/]+\/(?!$|_homepage$).*/i,
-  hpMain: /\/[^/]+\/($|_homepage$)/i,
-  hpFooter: /\/[^/]+\/($|_homepage$)/i,
-  bottom: /\/[^/]+\/docs\//i,
+const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
+  side: {
+    typ: "side",
+    pattern: /\/[^/]+\/(play|docs\/|blog\/|curriculum\/[^$]|search$)/i,
+  },
+  top: {
+    typ: "top-banner",
+    pattern: /\/[^/]+\/(?!$|_homepage$).*/i,
+  },
+  hpMain: {
+    typ: "hp-main",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
+  },
+  hpFooter: {
+    typ: "hp-footer",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
+  },
+  bottom: {
+    typ: "bottom-banner",
+    pattern: /\/[^/]+\/docs\//i,
+  },
 };
 
 function placementTypes(pathname: string): string[] {
   return Object.entries(PLACEMENT_MAP)
-    .map(([k, re]) => re.test(pathname) && k)
+    .map(([k, { pattern: re }]) => re.test(pathname) && k)
     .filter(Boolean) as string[];
 }
 
@@ -74,7 +89,12 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
 
       try {
         const placementResponse: PlacementContextData = await response.json();
-        gleanClick(`pong: pong->status ${placementResponse.side?.status}`);
+        const typs = Object.entries(PLACEMENT_MAP)
+          .filter(([key]) => key in placementResponse)
+          .map(([, { typ }]) => typ);
+        if (typs.length) {
+          gleanClick(`pong: pong->served ${typs.join()}`);
+        }
         return placementResponse;
       } catch (e) {
         throw Error(response.statusText);
