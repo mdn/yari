@@ -1,0 +1,162 @@
+<%
+
+const locale = env.locale;
+const sidebarURL = `/docs/Web/`;
+const baseURL = `/${locale}/docs/`;
+const accessibilityURL = `/${locale}/docs/Web/Accessibility/`;
+const ariaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
+const learnURL = `/${locale}/docs/Learn/`;
+
+const l10nStrings = mdn.localStringMap({
+  "en-US": {
+    "Accessibility" : "Accessibility",
+    "Guides" : "Guides",
+        "Information_for_Web_authors" : "Information for web authors",
+        "Accessibility:_What_users_can_to_to_browse_safely" : "User settings",
+        "An_overview_of_accessible_web_applications_and_widgets" : "Applications and widgets",
+        "Keyboard-navigable_JavaScript_widgets" : "Keyboard-navigable widgets",
+        "Mobile_accessibility_checklist" : "Mobile checklist",
+        "Understanding_WCAG" : "Understanding WCAG",
+        "Cognitive_accessibility" : "Cognitive accessibility",
+        "Accessibility_and_Spacial_Patterns" : "Spacial Patterns",
+        "Understanding_Colors_and_Luminance" : "Colors and Luminance",
+        "Seizure_disorders" : "Seizures and physical reactions",
+    "Learn" : "Learn accessibility",
+    "ARIA" : "ARIA",
+    "ARIA_guides" : "ARIA guides",
+        "Annotations" : "Annotations",
+        "ARIA_Guides" : "Guides",
+        "ARIA_Live_Regions" : "Live regions",
+        "ARIA_Screen_Reader_Implementors_Guide" : "Screen reader implementors guide",
+        "ARIA_Techniques" : "Using ARIA",
+        "Multipart_labels" : "Multipart labels",
+        "How_to_file_ARIA-related_bugs" : "How to file bugs",
+    "ARIA states and properties": "ARIA states and properties",
+    "ARIA roles": "ARIA roles",
+    "WCAG": "WCAG",
+  }
+});
+
+const sections = [
+  {
+    name: "Accessibility",
+    link: "Accessibility",
+    subsections: [
+      {
+        name: "Guides",
+        url: baseURL,
+        pages: [
+          "Web/Accessibility/Information_for_Web_authors",
+          "Web/Accessibility/Accessibility:_What_users_can_to_to_browse_safely",
+          "Web/Accessibility/An_overview_of_accessible_web_applications_and_widgets",
+          "Web/Accessibility/Keyboard-navigable_JavaScript_widgets",
+          "Web/Accessibility/Mobile_accessibility_checklist",
+          "Web/Accessibility/Understanding_WCAG",
+          "Web/Accessibility/Cognitive_accessibility",
+          "Web/Accessibility/Accessibility_and_Spacial_Patterns",
+          "Web/Accessibility/Understanding_Colors_and_Luminance",
+          "Web/Accessibility/Seizure_disorders",
+        ]
+      },
+      {
+        name: "Learn",
+        url: learnURL,
+        pages: [
+          "Accessibility/",
+          "Accessibility/What_is_accessibility",
+          "Accessibility/HTML",
+          "Accessibility/CSS_and_JavaScript",
+          "Accessibility/WAI-ARIA_basics",
+          "Accessibility/Multimedia",
+          "Accessibility/Mobile",
+          "Accessibility/Accessibility_troubleshooting",
+        ]
+      },
+      {
+        name: "WCAG",
+        url: accessibilityURL,
+        subdirectory: "Understanding_WCAG",
+      }
+    ]
+  },
+  {
+    name: "ARIA",
+    link: "ARIA",
+    subsections: [
+      {
+        name: "ARIA_guides",
+        url: ariaURL,
+        pages: [
+          "Annotations",
+          "ARIA_Guides",
+          "ARIA_Live_Regions",
+          "ARIA_Screen_Reader_Implementors_Guide",
+          "ARIA_Techniques",
+          "Multipart_labels",
+          "How_to_file_ARIA-related_bugs",
+        ]
+      },
+      {
+        name: "ARIA states and properties",
+        url: ariaURL,
+        subdirectory: "attributes",
+      },
+      {
+        name: "ARIA roles",
+        url: ariaURL,
+        subdirectory: "roles",
+      }
+    ]
+  }
+];
+
+async function renderSubsection(subsection) {
+  let output = `<li><details><summary>${l10nStrings[subsection.name]}</summary><ol>`;
+  if (subsection.pages) {
+    let url = subsection.url;
+    for (const page of subsection.pages) {
+      const link = web.smartLink(`${url}${page}`);
+      output += `<li>${link}</li>`;
+    }
+  } else {
+    output += await renderDirectory(subsection);
+  }
+  output += "</ol></details></li>";
+  return output;
+}
+
+
+async function renderDirectory(subsection) {
+  let directory = `${subsection.url}${subsection.subdirectory}`;
+  let output = await template("ListSubpagesForSidebar", [directory, true, true]);
+  return output;
+}
+
+
+async function renderSection(section) {
+  let output = `<li><a href="${baseURL}${section.link}"><strong>${l10nStrings[section.name]}</strong></a></li>`;
+
+  for (const subsection of section.subsections) {
+    output += await renderSubsection(subsection);
+  }
+
+  return output;
+}
+
+async function renderSidebar() {
+  let output = '<section id="Quick_links" data-macro="AccessibilitySidebar"><ol>';
+
+  for (const section of sections) {
+    output += await renderSection(section);
+  }
+  
+  output += "</ol></section>";
+
+  return output;
+}
+
+const output = await renderSidebar();
+
+%>
+
+<%-output%>
