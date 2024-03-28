@@ -211,7 +211,7 @@ async function buildSublist(pages, title, opened) {
     locale === "en-US"
       ? (page) => page.title
       : (page) =>
-          page.translations.find((translation) => translation.locale === locale)
+          page.translations().find((translation) => translation.locale === locale)
             ?.title ?? page.title;
 
   const items = pages.map(async (aPage) => {
