@@ -93,12 +93,12 @@ export function Contribute() {
           an invaluable partner in the day-to-day work of making MDN. Read more
           about OWD’s activities in their{" "}
           <a
-            href="https://openwebdocs.org/content/reports/2022/"
+            href="https://openwebdocs.org/content/reports/2023/"
             target="_blank"
             rel="noreferrer noopener"
             className="external"
           >
-            2022 Impact and Transparency Report
+            2023 Impact and Transparency Report
           </a>{" "}
           and get continuous updates on their{" "}
           <a
@@ -113,7 +113,7 @@ export function Contribute() {
         </p>
         <Quote
           name="Florian Scholz"
-          title="Content Lead"
+          title="Director"
           org="Open Web Docs"
           extraClasses="owd dark"
         >
