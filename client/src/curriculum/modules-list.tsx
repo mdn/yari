@@ -29,7 +29,9 @@ export function ModulesListList({
               checked={i === tab}
               onChange={() => setTab(i)}
             />
-            <label htmlFor={`module-${i}`}>{modulesList.title}</label>
+            <label htmlFor={`module-${i}`}>
+              {modulesList.title.replace(/ modules$/, "")}
+            </label>
             {modulesList.children?.length && (
               <>
                 <ModulesList modules={modulesList.children} />
@@ -59,16 +61,16 @@ export function ModulesList({ modules }: { modules: CurriculumIndexEntry[] }) {
             key={`ml-${j}`}
             className={`module-list-item topic-${topic2css(module.topic)}`}
           >
-            <header>
-              <a href={module.url}>
+            <a href={module.url}>
+              <header>
                 {module.topic && <TopicIcon topic={module.topic} />}
                 <span>{module.title}</span>
-              </a>
-            </header>
-            <section>
-              <p>{module.summary}</p>
-              <p>{module.topic}</p>
-            </section>
+              </header>
+              <section>
+                <p>{module.summary}</p>
+                <p>{module.topic}</p>
+              </section>
+            </a>
           </li>
         );
       })}

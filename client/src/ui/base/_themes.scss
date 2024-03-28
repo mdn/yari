@@ -222,6 +222,8 @@
   --curriculum-bg-color-landing-stairway-floor: #fcefe2;
   --curriculum-category-color: #e3642a;
   --curriculum-color: #d47d55;
+  --curriculum-module-label-color: #b34d1f;
+  --curriculum-module-label-bg-color: #faf0e3;
   --curriculum-color-topic-standards: #{$mdn-color-light-theme-red-60};
   --curriculum-color-topic-styling: #{$mdn-color-light-theme-blue-60};
   --curriculum-color-topic-scripting: #{$mdn-color-light-theme-yellow-60};
@@ -497,7 +499,7 @@
   --curriculum-bg-color-topic-practices: #584280;
   --curriculum-bg-color-landing: #0e0b0a;
   --curriculum-bg-color-landing-about-ul: #000;
-  --curriculum-bg-color-landing-top-icon: rgba(178, 92, 53, 0.3);
+  --curriculum-bg-color-landing-top-icon: #321d13;
   --curriculum-bg-color-landing-stairway-floor: rgba(137, 91, 51, 1);
   --curriculum-category-color: #e3642a;
   --curriculum-bg-color-grey: #1f1c1a;
@@ -506,6 +508,8 @@
   --curriculum-bg-color-list-item-body: #000;
   --curriculum-border-color-list-item: #4e4e4e;
   --curriculum-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
+  --curriculum-module-label-color: #e3642a;
+  --curriculum-module-label-bg-color: #321d13;
   --curriculum-bg-color-list-item-topic-standards: #343434;
   --curriculum-bg-color-list-item-topic-styling: #343434;
   --curriculum-bg-color-list-item-topic-scripting: #343434;

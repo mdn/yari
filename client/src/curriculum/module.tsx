@@ -19,7 +19,8 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
       <header>
         {doc?.topic && <TopicIcon topic={doc?.topic} />}
         <h1>{doc?.title}</h1>
-        {doc?.topic && <p>{doc?.topic}</p>}
+        {doc?.topic && <p className="module-topic">{doc.topic}</p>}
+        {doc?.group && <p className="module-group">{doc.group}</p>}
       </header>
       <RenderCurriculumBody doc={doc} />
       <PrevNext doc={doc} />
