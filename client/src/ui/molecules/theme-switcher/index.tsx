@@ -9,6 +9,8 @@ import "./index.scss";
 import { switchTheme } from "../../../utils";
 import { Theme } from "../../../types/theme";
 import { useUIStatus } from "../../../ui-context";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { THEME_SWITCHER } from "../../../telemetry/constants";
 
 type ThemeButton = {
   id: Theme;
@@ -19,6 +21,7 @@ export const ThemeSwitcher = () => {
   const menuId = "themes-menu";
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const gleanClick = useGleanClick();
   const { setColorScheme } = useUIStatus();
   const [activeTheme, setActiveTheme] = React.useState<Theme>("os-default");
 
@@ -30,6 +33,7 @@ export const ThemeSwitcher = () => {
         `}
         icon={`theme-${id}`}
         onClickHandler={() => {
+          gleanClick(`${THEME_SWITCHER}: switch -> ${id}`);
           setColorScheme(id);
           switchTheme(id, setActiveTheme);
           setIsOpen(false);
@@ -74,6 +78,7 @@ export const ThemeSwitcher = () => {
         icon={`theme-${activeTheme}`}
         extraClasses="theme-switcher-menu small"
         onClickHandler={() => {
+          gleanClick(`${THEME_SWITCHER}: ${isOpen ? "close" : "open"}`);
           setIsOpen(!isOpen);
         }}
       >

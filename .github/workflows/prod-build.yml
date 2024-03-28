@@ -62,7 +62,7 @@ permissions:
 jobs:
   build:
     environment: prod
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -88,6 +88,12 @@ jobs:
           path: mdn/mdn-studio
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
 
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
@@ -119,7 +125,7 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
@@ -131,7 +137,7 @@ jobs:
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -169,6 +175,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.mozilla.org"
 
           # The default for this environment variable is geared for writers
@@ -184,11 +191,11 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          # These are the Google Analytics measurement IDs for:
+          # - developer.mozilla.org (UA)
+          # - developer.mozilla.org (GA4)
+          # Using measurement ids on other domains is okay, as GA will filter these events.
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5,G-PWTK27XVWP
 
           # This enables the MDN Plus
           REACT_APP_ENABLE_PLUS: true
@@ -252,11 +259,6 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
-
           yarn tool sync-translated-content
 
           # Build using one process per locale.
@@ -277,6 +279,9 @@ jobs:
 
           # Build the blog
           yarn build:blog
+
+          # Build the curriculum
+          yarn build:curriculum
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -301,7 +306,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
@@ -319,7 +324,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
@@ -349,7 +354,7 @@ jobs:
             --min-instances=10 \
             --max-instances=1000 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
@@ -372,13 +377,11 @@ jobs:
             wait $pid
           done
 
-      - name: Update AI Help index
-        run: yarn ai-help update-index
+      - name: Update AI Help index with macros
+        run: yarn ai-help-macros update-index
         env:
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          PG_URI: ${{ secrets.PG_URI }}
 
       - name: Slack Notification
         if: failure()

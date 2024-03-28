@@ -9,6 +9,8 @@ import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
 import { useLocale } from "../hooks";
+import { PageNotFound } from "../page-not-found";
+import { Loading } from "../ui/atoms/loading";
 
 type ContributorDetails = {
   sections: [string];
@@ -31,7 +33,7 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
 
   const fallbackData = props.hyData ? props : undefined;
 
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { error, data: { hyData } = {} } = useSWR<any>(
     contributorJSONUrl,
     async (url) => {
       const response = await fetch(url);
@@ -55,37 +57,39 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
     document.title = pageTitle;
   }, [hyData]);
 
+  if (error) {
+    return <PageNotFound />;
+  } else if (!hyData) {
+    return <Loading />;
+  }
+
   return (
     <>
       <main className="contributor-spotlight-content-container">
-        {hyData && (
-          <>
-            <h1 className="_ify">Contributor profile</h1>
-            <section className="profile-header">
-              <img
-                className="profile-image"
-                src={`${baseURL}/${hyData.profileImg}`}
-                alt={hyData.profileImgAlt}
-                width="200"
-                height="200"
-              />
-              <a
-                className="username"
-                href={`https://github.com/${hyData.usernames.github}`}
-              >
-                @{hyData.usernames.github}
-              </a>
-            </section>
-            <section
-              dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
-            ></section>
-            <Quote name={hyData.contributorName}>{hyData.quote}</Quote>
+        <h1 className="_ify">Contributor profile</h1>
+        <section className="profile-header">
+          <img
+            className="profile-image"
+            src={`${baseURL}/${hyData.profileImg}`}
+            alt={hyData.profileImgAlt}
+            width="200"
+            height="200"
+          />
+          <a
+            className="username"
+            href={`https://github.com/${hyData.usernames.github}`}
+          >
+            @{hyData.usernames.github}
+          </a>
+        </section>
+        <section
+          dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
+        ></section>
+        <Quote name={hyData.contributorName}>{hyData.quote}</Quote>
 
-            {hyData.sections.slice(1).map((section) => {
-              return <section dangerouslySetInnerHTML={{ __html: section }} />;
-            })}
-          </>
-        )}
+        {hyData.sections.slice(1).map((section) => {
+          return <section dangerouslySetInnerHTML={{ __html: section }} />;
+        })}
       </main>
       <GetInvolved />
     </>
