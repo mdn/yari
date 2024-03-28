@@ -3,7 +3,13 @@ import fs from "node:fs";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
+import {
+  beforeEachMacro,
+  describeMacro,
+  itMacro,
+  lintHTML,
+  parsePagesFixture,
+} from "./utils.js";
 
 /**
  * Load all the fixtures.
@@ -13,9 +19,7 @@ const subpagesFixturePath = new URL(
   "./fixtures/apiref/subpages.json",
   import.meta.url
 );
-const subpagesFixture = JSON.parse(
-  fs.readFileSync(subpagesFixturePath, "utf-8")
-);
+const subpagesFixture = parsePagesFixture(subpagesFixturePath);
 const commonl10nFixturePath = new URL(
   "./fixtures/apiref/commonl10n.json",
   import.meta.url
