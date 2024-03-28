@@ -40,7 +40,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
 
-export const allFiles: () => string[] = memoize(async () => {
+export const allFiles = memoize(async () => {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
@@ -49,7 +49,7 @@ export const allFiles: () => string[] = memoize(async () => {
   return (await api.withPromise()).sort();
 });
 
-export const buildIndex: () => CurriculumMetaData[] = memoize(async () => {
+export const buildIndex = memoize(async () => {
   const files = await allFiles();
   const modules = await Promise.all(
     files.map(

@@ -22,7 +22,7 @@ test.describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     expect(await page.title()).toContain("<foo>: A test tag");
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
-    expect(await page.isVisible(".metadata time")).toBeTruthy();
+    expect(await page.isVisible(".article-footer time")).toBeTruthy();
   });
 
   // @TODO Temporarily disabled until we reintroduce the language selector
