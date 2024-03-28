@@ -94,6 +94,7 @@ jobs:
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
+          ref: MP-948-h1-numbers
 
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
