@@ -6,15 +6,11 @@
   margin-right: auto;
 
   ol {
-    display: flex;
-    flex-wrap: wrap;
     line-height: 1.2;
-    padding-top: 0.375rem;
   }
 
   li {
     display: none;
-    padding-bottom: 0.375rem;
     hyphens: auto;
     // only show last two items on small sizes (size < 426px)
     &:nth-last-child(-n + 2) {
@@ -66,7 +62,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-sm) {
+  @media screen and (min-width: $screen-xl) {
     li {
       display: inline-flex;
     }
