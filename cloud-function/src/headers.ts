@@ -2,7 +2,9 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 import {
   CSP_VALUE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
+  PLAYGROUND_LIVE_CSP_VALUE,
+  PLAYGROUND_LIVE_HOSTNAME_PREFIX,
+  PLAYGROUND_WILDCARD_CSP_VALUE,
 } from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
 
@@ -95,13 +97,20 @@ export function setContentResponseHeaders(
 
 export function withRunnerResponseHeaders(
   _proxyRes: IncomingMessage,
-  _req: IncomingMessage,
+  req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ): void {
+  const isLiveSample =
+    "hostname" in req &&
+    typeof req.hostname === "string" &&
+    req.hostname.startsWith(PLAYGROUND_LIVE_HOSTNAME_PREFIX);
   [
     ["X-Content-Type-Options", "nosniff"],
     ["Clear-Site-Data", '"*"'],
     ["Strict-Transport-Security", "max-age=63072000"],
-    ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
+    [
+      "Content-Security-Policy",
+      isLiveSample ? PLAYGROUND_LIVE_CSP_VALUE : PLAYGROUND_WILDCARD_CSP_VALUE,
+    ],
   ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }

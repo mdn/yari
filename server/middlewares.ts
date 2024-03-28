@@ -2,7 +2,7 @@ import express from "express";
 
 import {
   CSP_VALUE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
+  PLAYGROUND_WILDCARD_CSP_VALUE,
 } from "../libs/constants/index.js";
 import { STATIC_ROOT } from "../libs/env/index.js";
 import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
@@ -56,7 +56,7 @@ export const staticMiddlewares = [
   express.static(STATIC_ROOT, {
     setHeaders: (res) => {
       if (res.req.path.endsWith("/runner.html")) {
-        res.setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE);
+        res.setHeader("Content-Security-Policy", PLAYGROUND_WILDCARD_CSP_VALUE);
       } else {
         res.setHeader("Content-Security-Policy", CSP_VALUE);
       }
