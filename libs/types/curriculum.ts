@@ -48,6 +48,7 @@ export interface CurriculumMetaData
   modules: CurriculumIndexEntry[];
   parents: DocParent[];
   prevNext?: PrevNext;
+  group?: string;
 }
 
 export interface CurriculumDoc extends Doc {
@@ -55,6 +56,7 @@ export interface CurriculumDoc extends Doc {
   modules?: CurriculumIndexEntry[];
   prevNext?: PrevNext;
   topic?: Topic;
+  group?: string;
 }
 
 export interface CurriculumData {
