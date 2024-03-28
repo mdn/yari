@@ -42,7 +42,7 @@ def test_document_based_redirection(base_url):
     """Ensure that content-based redirects properly redirect."""
     url = base_url + "/en-US/docs/concat"
     resp = request("get", url)
-    assert resp.status_code == 301
+    assert resp.status_code == 302
     assert (
         resp.headers["Location"]
         == "/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat"
