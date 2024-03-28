@@ -4,7 +4,8 @@ import { getLocale } from "../internal/locale-utils/index.js";
 import { VALID_LOCALES } from "../internal/constants/index.js";
 import { redirect } from "../utils.js";
 
-const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
+const NEEDS_LOCALE =
+  /^\/(?:blog|curriculum|docs|play|search|settings|plus)(?:$|\/)/;
 
 export async function redirectLocale(
   req: Request,

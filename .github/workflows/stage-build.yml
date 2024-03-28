@@ -62,7 +62,7 @@ permissions:
 jobs:
   build:
     environment: stage
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -88,6 +88,12 @@ jobs:
           path: mdn/mdn-studio
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
 
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
@@ -169,6 +175,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.allizom.org"
 
           # The default for this environment variable is geared for writers
@@ -187,11 +194,11 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          # These are the Google Analytics measurement IDs for:
+          # - developer.mozilla.org (UA)
+          # - developer.allizom.org (GA4)
+          # Using measurement ids on other domains is okay, as GA will filter these events.
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5,G-ZG5HNVZRY0
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -245,11 +252,6 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
-
           yarn tool sync-translated-content
 
           # Build using one process per locale.
@@ -270,6 +272,9 @@ jobs:
 
           # Build the blog
           yarn build:blog
+
+          # Build the curriculum
+          yarn build:curriculum
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -365,20 +370,11 @@ jobs:
             wait $pid
           done
 
-      - name: Update AI Help index
-        run: yarn ai-help update-index
-        env:
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-
       - name: Update AI Help index with macros
         run: yarn ai-help-macros update-index
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          PG_URI: ${{ secrets.PG_URI }}
 
       - name: Slack Notification
         if: failure()

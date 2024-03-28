@@ -19,7 +19,7 @@ import {
   Quota,
   useAiChat,
 } from "./use-ai";
-import { AiUpsellBanner } from "./banners";
+import { AiHelpBanner, AiUpsellBanner } from "./banners";
 import { useUserData } from "../../user-context";
 import Container from "../../ui/atoms/container";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
@@ -48,15 +48,17 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND,
-  SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
+  MESSAGE_STOPPED,
+  OFF_TOPIC_PREFIX,
+  OFF_TOPIC_MESSAGE,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
+import { isPlusSubscriber } from "../../utils";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -123,16 +125,6 @@ function AIHelpAuthenticated() {
           </a>
         </p>
       </Container>
-      <Container>
-        <div className="ai-help-banner">
-          <p>
-            <Icon name="bell-ring" />
-            <strong>GPT-4-powered AI Help.</strong>
-          </p>
-          <p>Now with chat history, enhanced context, and optimized prompts.</p>
-          <p>This is a beta feature.</p>
-        </div>
-      </Container>
       <AIHelpInner />
     </div>
   );
@@ -160,7 +152,7 @@ function AIHelpUserQuestion({
       className="ai-help-input-form"
       onSubmit={(event) => {
         event.preventDefault();
-        if (canEdit && question) {
+        if (canEdit && question?.trim()) {
           gleanClick(`${AI_HELP}: edit submit`);
           setEditing(false);
           submit(question, message.chatId, message.parentId, message.messageId);
@@ -169,11 +161,12 @@ function AIHelpUserQuestion({
     >
       <ExpandingTextarea
         ref={inputRef}
+        maxLength={25_000}
         enterKeyHint="send"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            if (canEdit && question) {
+            if (canEdit && question?.trim()) {
               gleanClick(`${AI_HELP}: edit submit`);
               setEditing(false);
               submit(
@@ -211,7 +204,7 @@ function AIHelpUserQuestion({
               icon="send"
               buttonType="submit"
               title="Submit question"
-              isDisabled={!question}
+              isDisabled={!question.trim()}
             >
               <span className="visually-hidden">Submit question</span>
             </Button>
@@ -282,65 +275,79 @@ function AIHelpAssistantResponse({
   queuedExamples,
   setQueue,
   messages,
+  retryLastQuestion,
 }: {
   message: Message;
   queuedExamples: Set<string>;
   setQueue: React.Dispatch<React.SetStateAction<QueueEntry[]>>;
   messages: Message[];
+  retryLastQuestion: () => void;
 }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
+  const { highlightedQueueExample } = useUIStatus();
 
   let sample = 0;
 
+  const isOffTopic =
+    message.role === MessageRole.Assistant &&
+    (message.content?.startsWith(OFF_TOPIC_PREFIX) ||
+      (message.status === MessageStatus.Complete &&
+        OFF_TOPIC_PREFIX.startsWith(message.content)));
+
+  function messageForStatus(status: MessageStatus) {
+    switch (status) {
+      case MessageStatus.Errored:
+        return (
+          <>
+            {MESSAGE_FAILED} Please{" "}
+            <Button type="link" onClickHandler={retryLastQuestion}>
+              try again
+            </Button>
+            .
+          </>
+        );
+
+      case MessageStatus.Stopped:
+        return MESSAGE_STOPPED;
+
+      case MessageStatus.InProgress:
+        return MESSAGE_ANSWERING;
+
+      default:
+        return MESSAGE_ANSWERED;
+    }
+  }
+
+  if (isOffTopic) {
+    message = {
+      ...message,
+      content: OFF_TOPIC_MESSAGE,
+      sources: [],
+    };
+  }
+
   return (
     <>
-      <div
-        className={[
-          "ai-help-message-progress",
-          message.status !== MessageStatus.Pending && "complete",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {message.status === MessageStatus.Pending
-          ? MESSAGE_SEARCHING
-          : MESSAGE_SEARCHED}
-      </div>
-      {message.sources && message.sources.length > 0 && (
-        <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
-            <li key={index}>
-              <InternalLink
-                to={url}
-                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
-                target="_blank"
-              >
-                {title}
-              </InternalLink>
-            </li>
-          ))}
-        </ul>
-      )}
-      {(message.content ||
-        message.status === MessageStatus.InProgress ||
-        message.status === MessageStatus.Errored) && (
-        <div
-          className={[
-            "ai-help-message-progress",
-            message.status === MessageStatus.Complete && "complete",
-            message.status === MessageStatus.Errored && "errored",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {message.status === MessageStatus.Errored
-            ? MESSAGE_FAILED
-            : message.status === MessageStatus.InProgress
-              ? MESSAGE_ANSWERING
-              : MESSAGE_ANSWERED}
-        </div>
-      )}
+      {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
+      {!isOffTopic &&
+        (message.content ||
+          message.status === MessageStatus.InProgress ||
+          message.status === MessageStatus.Errored) && (
+          <div
+            className={[
+              "ai-help-message-progress",
+              message.status === MessageStatus.InProgress && "active",
+              message.status === MessageStatus.Complete && "complete",
+              message.status === MessageStatus.Errored && "errored",
+              message.status === MessageStatus.Stopped && "stopped",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {messageForStatus(message.status)}
+          </div>
+        )}
       {message.content && (
         <div
           className={[
@@ -406,7 +413,11 @@ function AIHelpAssistantResponse({
                 sample += 1;
                 return (
                   <div className="code-example">
-                    <div className="example-header play-collect">
+                    <div
+                      className={`example-header play-collect ${
+                        highlightedQueueExample === id ? "active" : ""
+                      }`}
+                    >
                       <span className="language-name">{code}</span>
                       {message.status === MessageStatus.Complete &&
                         ["html", "js", "javascript", "css"].includes(
@@ -488,12 +499,17 @@ function AIHelpAssistantResponse({
               },
             }}
           >
-            {message.content?.replace(SORRY_BACKEND, SORRY_FRONTEND)}
+            {message.content}
           </ReactMarkdown>
-          {message.status === "complete" &&
-            !message.content?.includes(SORRY_BACKEND) && (
-              <>
-                <section className="ai-help-feedback">
+          {message.status === "stopped" && (
+            <section className="stopped-message">
+              {"■\u00a0Stopped answering"}
+            </section>
+          )}
+          {(message.status === "complete" || isOffTopic) && (
+            <>
+              <section className="ai-help-feedback">
+                {!isOffTopic && (
                   <GleanThumbs
                     feature="ai-help-answer"
                     featureKey={message.messageId}
@@ -501,16 +517,57 @@ function AIHelpAssistantResponse({
                     upLabel={"Yes, this answer was useful."}
                     downLabel={"No, this answer was not useful."}
                   />
-                  <ReportIssueOnGitHubLink
-                    messages={messages}
-                    currentMessage={message}
-                  >
-                    Report an issue with this answer on GitHub
-                  </ReportIssueOnGitHubLink>
-                </section>
-              </>
-            )}
+                )}
+                <ReportIssueOnGitHubLink
+                  messages={messages}
+                  currentMessage={message}
+                >
+                  Report an issue with this answer on GitHub
+                </ReportIssueOnGitHubLink>
+              </section>
+            </>
+          )}
         </div>
+      )}
+    </>
+  );
+}
+
+function AIHelpAssistantResponseSources({
+  message,
+}: {
+  message: Pick<Message, "status" | "sources">;
+}) {
+  const gleanClick = useGleanClick();
+
+  return (
+    <>
+      <div
+        className={[
+          "ai-help-message-progress",
+          message.status === MessageStatus.Pending ? "active" : "complete",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
+      </div>
+      {message.sources && message.sources.length > 0 && (
+        <ul className="ai-help-message-sources">
+          {message.sources.map(({ url, title }, index) => (
+            <li key={index}>
+              <InternalLink
+                to={url}
+                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
+                target="_blank"
+              >
+                {title}
+              </InternalLink>
+            </li>
+          ))}
+        </ul>
       )}
     </>
   );
@@ -523,9 +580,11 @@ export function AIHelpInner() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const { queuedExamples, setQueue } = useUIStatus();
+  const { queuedExamples, setQueue, setHighlightedQueueExample } =
+    useUIStatus();
   const { hash } = useLocation();
   const gleanClick = useGleanClick();
+  const user = useUserData();
 
   const {
     isFinished,
@@ -551,7 +610,7 @@ export function AIHelpInner() {
   const isQuotaLoading = quota === undefined;
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
-  const gptVersion = "GPT-4";
+  const gptVersion = isPlusSubscriber(user) ? "GPT-4" : "GPT-3.5";
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
@@ -624,6 +683,7 @@ export function AIHelpInner() {
         messageId={messages.length === 2 ? messages[0]?.messageId : undefined}
       />
       <Container>
+        <AiHelpBanner isDisabled={isQuotaExceeded(quota)} />
         {isQuotaLoading || isHistoryLoading ? (
           <Loading />
         ) : (
@@ -658,6 +718,7 @@ export function AIHelpInner() {
                             queuedExamples={queuedExamples}
                             setQueue={setQueue}
                             messages={messages}
+                            retryLastQuestion={retryLastQuestion}
                           />
                         )}
                       </li>
@@ -688,6 +749,7 @@ export function AIHelpInner() {
                 <div className="ai-help-footer-actions">
                   <Button
                     type="action"
+                    isDisabled={!isResponding}
                     extraClasses="ai-help-stop-button"
                     onClickHandler={() => {
                       gleanClick(`${AI_HELP}: stop`);
@@ -723,6 +785,7 @@ export function AIHelpInner() {
                           gleanClick(`${AI_HELP}: topic new`);
                           setQuery("");
                           setQueue([]);
+                          setHighlightedQueueExample(null);
                           reset();
                           window.setTimeout(() => window.scrollTo(0, 0));
                         }}
@@ -740,6 +803,7 @@ export function AIHelpInner() {
                     >
                       <ExpandingTextarea
                         ref={inputRef}
+                        maxLength={25_000}
                         autoFocus={true}
                         disabled={isLoading || isResponding}
                         enterKeyHint="send"
@@ -808,7 +872,7 @@ export function AIHelpInner() {
                           icon="send"
                           buttonType="submit"
                           title="Submit question"
-                          isDisabled={!query}
+                          isDisabled={!query.trim()}
                         >
                           <span className="visually-hidden">
                             Submit question
@@ -856,8 +920,9 @@ export function AIHelpInner() {
                       </header>
                       <div className="modal-body">
                         <p>
-                          Our AI Help feature employs {gptVersion}, a Large
-                          Language Model (LLM) developed by{" "}
+                          Our AI Help feature integrates GPT-3.5 for MDN Plus
+                          free users and GPT-4 for paying subscribers,
+                          leveraging Large Language Models (LLMs) developed by{" "}
                           <a
                             href="https://platform.openai.com/docs/api-reference/models"
                             className="external"
@@ -866,31 +931,29 @@ export function AIHelpInner() {
                           >
                             OpenAI
                           </a>
-                          . While it's designed to offer helpful and relevant
-                          information drawn from MDN's comprehensive
-                          documentation, it's important to bear in mind that it
-                          is an LLM and may not produce perfectly accurate
-                          information in every circumstance.
+                          . This tool is designed to enhance your experience by
+                          providing relevant insights from MDN's extensive
+                          documentation. However, given the nature of LLMs, it's
+                          crucial to approach the generated information with a
+                          discerning eye, especially for complex or critical
+                          subjects.
                         </p>
                         <p>
-                          We strongly advise all users to cross-verify the
-                          information generated by this AI Help feature,
-                          particularly for complex or critical topics. While we
-                          strive for accuracy and relevance, the nature of AI
-                          means that responses may vary in precision.
+                          We encourage users to verify the AI Help's output. For
+                          convenience and accuracy, links for further reading
+                          and verification are provided at the beginning of
+                          responses, directing you to the relevant MDN
+                          documentation. This ensures immediate access to deeper
+                          insights and broader context.
                         </p>
                         <p>
-                          The AI Help feature provides links at the end of its
-                          responses to support further reading and verification
-                          within the MDN documentation. These links are intended
-                          to facilitate deeper understanding and context.
-                        </p>
-                        <p>
-                          As you use the AI Help feature, keep in mind its
-                          nature as an LLM. It's not perfect, but it's here to
-                          assist you as best as it can. We're excited to have
-                          you try AI Help, and we hope it makes your MDN
-                          experience even better.
+                          Remember, while AI Help aims to be a valuable
+                          resource, its responses, influenced by the
+                          complexities of AI, might not always hit the mark with
+                          absolute precision. We invite you to explore this
+                          feature, designed to complement your MDN exploration.
+                          Your feedback is invaluable as we continue to refine
+                          AI Help to better serve your needs.
                         </p>
                       </div>
                     </MDNModal>
