@@ -6,6 +6,10 @@
   This template handles CSS data types and CSS functions gracefully by
   automatically adding arrow brackets or round brackets, respectively.
 
+  For the ease of linking to CSS descriptors and functions, if only one
+  parameter is specified and it contains a slash, the displayed link name
+  will strip the last slash and any content before it.
+
   Parameters:
   $0 - API name to refer to
   $1 - name of the link to display (optional)
@@ -13,62 +17,57 @@
 
   Examples:
   {{cssxref("background")}} =>
-      <a href="/en-US/docs/Web/CSS/background" title="The background CSS
-      property is..."><code>background</code></a>
+      <a href="/en-US/docs/Web/CSS/background"><code>background</code></a>
   {{cssxref("length")}} =>
-      <a href="/en-US/docs/Web/CSS/length" title="The <length> CSS data type
-      denotes..."><code>&lt;length&gt;</code></a>
-  {{cssxref("linear-gradient()")}} =>
-      <a href="/en-US/docs/Web/CSS/linear-gradient()" title="The CSS
-      linear-gradient() function creates..."><code>linear-gradient()</code></a>
+      <a href="/en-US/docs/Web/CSS/length"><code>&lt;length&gt;</code></a>
+  {{cssxref("gradient/linear-gradient")}} =>
+      <a href="/en-US/docs/Web/CSS/gradient/linear-gradient"><code>linear-gradient()</code></a>
+  {{cssxref("calc()")}} =>
+      <a href="/en-US/docs/Web/CSS/calc"><code>calc()</code></a>
   {{cssxref("margin-top", "top margin")}} =>
-      <a href="/en-US/docs/Web/CSS/margin-top" title="The margin-top CSS
-      property of an element sets..."><code>top margin</code></a>
-  {{cssxref("filter", "", "#url")}} =>
-      <a href="/en-US/docs/Web/CSS/filter#url()"><code>filter</code></a>
+      <a href="/en-US/docs/Web/CSS/margin-top"><code>top margin</code></a>
+  {{cssxref("attr()", "", "#values")}} =>
+      <a href="/en-US/docs/Web/CSS/attr#values"><code>attr()</code></a>
 */
 
-var lang = env.locale;
-var url = "";
-var urlWithoutAnchor = "";
-var str = ($1 || $0);
+const lang = env.locale;
+let url = "";
+let urlWithoutAnchor = "";
+let displayName = ($1 || $0.slice($0.lastIndexOf("/") + 1));
 
-// Deal with CSS data types by removing <>
-var slug = $0.replace(/&lt;(.*)&gt;/g, '$1');
+// Deal with CSS data types and functions by removing <> and ()
+let slug = $0.replace(/&lt;(.*)&gt;/g, "$1")
+    .replace(/\(\)/g, "");
 
-// Special case <color>, <flex>, and <position>
-switch ($0) {
-    case '&lt;color&gt;':
-        slug = 'color_value';
-        break;
-
-    case '&lt;flex&gt;':
-        slug = 'flex_value';
-        break;
-
-    case '&lt;position&gt;':
-        slug = 'position_value';
-        break;
+// Special case <color>, <flex>, <overflow>, and <position>
+if (/^&lt;(color|flex|overflow|position)&gt;$/.test($0)) {
+    slug += "_value";
 }
 
-str = str.toLowerCase();
+// Special case :host() and fit-content()
+if (/^(:host|fit-content)\(\)$/.test($0)) {
+    slug += "_function";
+}
+
 const basePath = `/${lang}/docs/Web/CSS/`;
 urlWithoutAnchor = basePath + slug;
 url = urlWithoutAnchor + $2;
 
-const thisPage = (!$1 || !$2) ? wiki.getPage(urlWithoutAnchor) : null;
+const thisPage = (!$1 || !$2) ?
+  wiki.getPage(`/en-US/docs/Web/CSS/${slug}`) :
+  null;
 
 if (!$1) {
     // Append parameter brackets to CSS functions
-    if ((thisPage.pageType === "css-function") && !str.endsWith("()")) {
-        str += "()";
+    if ((thisPage.pageType === "css-function") && !displayName.endsWith("()")) {
+        displayName += "()";
     }
     // Enclose CSS data types in arrow brackets
-    if ((thisPage.pageType === "css-type") && !/^&lt;.+&gt;$/.test(str)) {
-        str = "&lt;" + str + "&gt;";
+    if ((thisPage.pageType === "css-type") && !/^&lt;.+&gt;$/.test(displayName)) {
+        displayName = "&lt;" + displayName + "&gt;";
     }
 }
 
-const entry = web.smartLink(url, "", `<code>${str}</code>`, $0, basePath);
+const entry = web.smartLink(url, "", `<code>${displayName}</code>`, $0, basePath);
 
 %><%- entry %>

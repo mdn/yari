@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import { useGA } from "../../../../ga-context";
+import { useGleanClick } from "../../../../telemetry/glean-context";
 import { Translation } from "../../../../../../libs/types/document";
 import { Button } from "../../../atoms/button";
 import { Submenu } from "../../../molecules/submenu";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
+import { useLocale } from "../../../../hooks";
+import { LANGUAGE } from "../../../../telemetry/constants";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -22,24 +24,15 @@ export function LanguageMenu({
   native: string;
 }) {
   const menuId = "language-menu";
-  const ga = useGA();
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const { locale = "en-US" } = useParams();
+  const gleanClick = useGleanClick();
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  function translateURL(destinationLocale: string) {
-    return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
-  }
-
-  function changeLocale(event) {
-    event.preventDefault();
-
-    const preferredLocale = event.currentTarget.name;
+  const changeLocale: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
+    const preferredLocale = event.currentTarget.dataset.locale;
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
     if (preferredLocale !== locale) {
-      const localeURL = translateURL(preferredLocale);
       let cookieValueBefore = document.cookie
         .split("; ")
         .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
@@ -64,22 +57,10 @@ export function LanguageMenu({
         }
       }
 
-      ga("send", {
-        hitType: "event",
-        eventCategory: "Language",
-        eventAction: `Change preferred language (cookie before: ${
-          cookieValueBefore || "none"
-        })`,
-        eventLabel: `${window.location.pathname} to ${localeURL}`,
-      });
-
-      navigate(localeURL);
-      window.scrollTo(0, 0);
-
-      setIsOpen(false);
-      onClose();
+      const oldValue = cookieValueBefore || "none";
+      gleanClick(`${LANGUAGE}: ${oldValue} -> ${preferredLocale}`);
     }
-  }
+  };
 
   const menuEntry = {
     label: "Languages",
@@ -104,8 +85,8 @@ export function LanguageMenu({
       <Button
         id="languages-switcher-button"
         type="action"
-        ariaHasPopup={"menu"}
-        ariaExpanded={isOpen || undefined}
+        aria-haspopup={"menu"}
+        aria-expanded={isOpen || undefined}
         icon="language"
         size="small"
         extraClasses="languages-switcher-menu"
@@ -121,16 +102,28 @@ export function LanguageMenu({
   );
 }
 
-function LanguageMenuItem({ translation, changeLocale, native }) {
+function LanguageMenuItem({
+  translation,
+  changeLocale,
+  native,
+}: {
+  translation: Translation;
+  changeLocale: React.MouseEventHandler<HTMLAnchorElement>;
+  native: string;
+}) {
+  const { pathname } = useLocation();
+  const locale = useLocale();
+
   return (
-    <button
+    <a
       aria-current={translation.native === native || undefined}
       key={translation.locale}
-      name={translation.locale}
+      data-locale={translation.locale}
       onClick={changeLocale}
+      href={pathname.replace(`/${locale}/`, `/${translation.locale}/`)}
       className="button submenu-item"
     >
       <span>{translation.native}</span>
-    </button>
+    </a>
   );
 }

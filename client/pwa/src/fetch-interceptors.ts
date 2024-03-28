@@ -1,4 +1,4 @@
-import { MDNOfflineDB } from "./db";
+import { MDNOfflineDB } from "./db.js";
 
 const PATH_WHOAMI = "/api/v1/whoami";
 
@@ -15,7 +15,7 @@ function jsonBlob(json) {
   });
 }
 
-class WhoamiInterceptor implements FetchInterceptor {
+export class WhoamiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
   constructor(db: MDNOfflineDB) {
@@ -44,7 +44,7 @@ class WhoamiInterceptor implements FetchInterceptor {
   }
 }
 
-class DefaultApiInterceptor implements FetchInterceptor {
+export class DefaultApiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
   constructor(db: MDNOfflineDB) {
@@ -76,5 +76,3 @@ class DefaultApiInterceptor implements FetchInterceptor {
     }
   }
 }
-
-export { WhoamiInterceptor, DefaultApiInterceptor };

@@ -21,7 +21,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Evolution of HTTP',
     'ResourcesURI': 'Resources and URIs',
     'Identifying': 'Identifying resources on the Web',
-    'DataURIs': 'Data URIs',
+    'DataURLs': 'Data URLs',
     'MIMETypes': 'Introduction to MIME types',
     'ListMIMETypes': 'Common MIME types',
     'WWWorNotWWW': 'Choosing between www and non-www URLs',
@@ -40,8 +40,8 @@ var text = mdn.localStringMap({
     'CORS': 'HTTP access control (CORS)',
     'Resources': 'HTTP specifications',
     'Permissions_Policy': 'Permissions Policy',
-    'Guides': 'Guides:',
-    'Reference': 'References:',
+    'Guides': 'Guides',
+    'Reference': 'References',
     'Methods': 'HTTP request methods',
     'Status': 'HTTP response status codes',
     'CSPDirectives': 'CSP directives',
@@ -49,19 +49,21 @@ var text = mdn.localStringMap({
     'PermissionsPolicyDirectives': 'Permissions-Policy directives',
     'Security': 'HTTP security',
     'Authentication': 'HTTP authentication',
-    'ProtocolUpgradeMech': 'Protocol upgrade mechanism'
+    'ProtocolUpgradeMech': 'Protocol upgrade mechanism',
+    'CSP': 'Content Security Policy (CSP)'
   },
-    'es': {
+  'es': {
     'HTTP': 'HTTP',
+    'HTTPGuide': 'Guía de HTTP',
     'Basics': 'Fundamentos de HTTP',
     'Overview': 'Generalidades de HTTP',
     'Evolution': 'Evolución de HTTP',
-    'ResourcesURI': 'Recursons y URIs',
-    'Identifying': 'Identificación de recursons en la Web',
-    'DataURIs': 'URIs de Datos',
+    'ResourcesURI': 'Recursos y URIs',
+    'Identifying': 'Identificación de recursos en la Web',
+    'DataURLs': 'URLs de Datos',
     'MIMETypes': 'Presentación de tipos MIME',
     'ListMIMETypes': 'Lista completa de tipos MIME',
-    'WWWorNotWWW': 'Eleción entre ww y no-www URLs',
+    'WWWorNotWWW': 'Elección entre URLs con y sin www',
     'Messages': 'Mensajes HTTP',
     'Session': 'Una típica comunicación HTTP',
     'Connection1x': 'Gestión de la conexión en HTTP/1.x',
@@ -72,17 +74,18 @@ var text = mdn.localStringMap({
     'Headers': 'Cabeceras HTTP',
     'Response_codes': 'Códigos de respuesta',
     'Compression': 'Compresión en HTTP',
-    'Cookies': 'HTTP cookies',
-    'Caching': 'HTTP caching',
+    'Cookies': 'Cookies HTTP',
+    'Caching': 'Caché HTTP',
     'CORS': 'Control de acceso en HTTP(CORS)',
     'Resources': 'La especificación de HTTP',
-    'Guides': 'Guias:',
-    'Reference': 'Referencias:',
+    'Guides': 'Guías',
+    'Reference': 'Referencias',
     'Methods': 'Métodos de petición HTTP',
     'Status': 'Códigos de estado de HTTP',
     'CSPDirectives': 'Directivas CSP',
     'Security': 'Seguridad en HTTP',
-    'Authentication': 'Autenticación en HTTP'
+    'Authentication': 'Autenticación en HTTP',
+    'CSP': 'Content Security Policy (CSP)'
   },
   'fr': {
     'HTTP': 'HTTP',
@@ -92,7 +95,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Évolution de HTTP',
     'ResourcesURI': 'Ressources et URI',
     'Identifying': 'Identifier des ressources sur le Web',
-    'DataURIs': 'URI de données',
+    'DataURLs': 'URL de données',
     'MIMETypes': 'Introduction aux types MIME',
     'ListMIMETypes': 'Types MIME usuels',
     'WWWorNotWWW': 'Choisir entre les URL avec ou sans www',
@@ -111,8 +114,8 @@ var text = mdn.localStringMap({
     'CORS': 'Contrôle d\'accès HTTP',
     'Resources': 'Spécifications HTTP',
     'Permissions_Policy': 'Règles de fonctionnalité',
-    'Guides': 'Guides\xa0:',
-    'Reference': 'Références\xa0:',
+    'Guides': 'Guides',
+    'Reference': 'Références',
     'Methods': 'Méthodes de requête HTTP',
     'Status': 'Codes de statut de réponse HTTP',
     'CSPDirectives': 'Directives CSP',
@@ -120,7 +123,8 @@ var text = mdn.localStringMap({
     'PermissionsPolicyDirectives': 'Directives Permissions-Policy',
     'Security': 'Sécurité HTTP',
     'Authentication': 'Authentification HTTP',
-    'ProtocolUpgradeMech': 'Mécanisme d\'amélioration du protocole'
+    'ProtocolUpgradeMech': 'Mécanisme d\'amélioration du protocole',
+    'CSP': 'Content Security Policy (CSP)'
   },
   'ja': {
     'HTTP': 'HTTP',
@@ -130,7 +134,7 @@ var text = mdn.localStringMap({
     'Evolution': 'HTTP の進化',
     'ResourcesURI': 'リソースと URI',
     'Identifying': 'ウェブ上のリソースの識別',
-    'DataURIs': 'データ URL',
+    'DataURLs': 'データ URL',
     'MIMETypes': 'MIME タイプ入門',
     'ListMIMETypes': 'よくある MIME タイプ',
     'WWWorNotWWW': 'www 付きと www なしの URL の選択',
@@ -149,8 +153,8 @@ var text = mdn.localStringMap({
     'CORS': 'HTTP アクセス制御 (CORS)',
     'Resources': 'HTTP 仕様書',
     'Permissions_Policy': '機能ポリシー',
-    'Guides': 'ガイド:',
-    'Reference': 'リファレンス:',
+    'Guides': 'ガイド',
+    'Reference': 'リファレンス',
     'Methods': 'HTTP リクエストメソッド',
     'Status': 'HTTP レスポンスステータスコード',
     'CSPDirectives': 'CSP ディレクティブ',
@@ -158,17 +162,18 @@ var text = mdn.localStringMap({
     'PermissionsPolicyDirectives': '機能ポリシーディレクティブ',
     'Security': 'HTTP セキュリティ',
     'Authentication': 'HTTP 認証',
-    'ProtocolUpgradeMech': 'プロトコルのアップグレードの仕組み'
+    'ProtocolUpgradeMech': 'プロトコルのアップグレードの仕組み',
+    'CSP': 'Content Security Policy (CSP)'
   },
   'ko': {
     'HTTP': 'HTTP',
-    'HTTPGuide': 'HTTP 가이드',
+    'HTTPGuide': 'HTTP 안내서',
     'Basics': 'HTTP 기본',
     'Overview': 'HTTP 개요',
     'Evolution': 'HTTP의 진화',
     'ResourcesURI': '리소스와 URIs',
     'Identifying': '웹의 리소스 식별하기',
-    'DataURIs': '데이터 URIs',
+    'DataURLs': '데이터 URLs',
     'MIMETypes': 'MIME 타입 소개',
     'ListMIMETypes': 'MIME 타입의 전체 리스트',
     'WWWorNotWWW': 'www와 non-www URL 중에서 선택하기',
@@ -187,8 +192,8 @@ var text = mdn.localStringMap({
     'CORS': 'HTTP 접근 제어(CORS)',
     'Resources': 'HTTP 명세',
     'Permissions_Policy': 'Permissions policy',
-    'Guides': '가이드:',
-    'Reference': '레퍼런스:',
+    'Guides': '가이드',
+    'Reference': '레퍼런스',
     'Methods': 'HTTP 요청 메소드',
     'Status': 'HTTP 응답 상태 코드',
     'CSPDirectives': 'CSP 지시문',
@@ -196,7 +201,8 @@ var text = mdn.localStringMap({
     'PermissionsPolicyDirectives': 'Permissions-Policy 지시문',
     'Security': 'HTTP 보안',
     'Authentication': 'HTTP 인증',
-    'ProtocolUpgradeMech': '프로토콜 업그레이드 메커니즘'
+    'ProtocolUpgradeMech': '프로토콜 업그레이드 메커니즘',
+    'CSP': 'Content Security Policy (CSP)'
   },
   'ru': {
     'HTTP': 'HTTP',
@@ -206,7 +212,7 @@ var text = mdn.localStringMap({
     'Evolution': 'Эволюция протокола HTTP',
     'ResourcesURI': 'Ресурсы и URI-адреса',
     'Identifying': 'Идентификация ресурсов в Вебе',
-    'DataURIs': 'Data URL',
+    'DataURLs': 'Data URL',
     'MIMETypes': 'Введение в MIME типы',
     'ListMIMETypes': 'Неполный список типов MIME',
     'WWWorNotWWW': 'Choosing between www and non-www URLs',
@@ -225,8 +231,8 @@ var text = mdn.localStringMap({
     'CORS': 'Контроль доступа в HTTP (CORS)',
     'Resources': 'Спецификации HTTP',
     'Permissions_Policy': 'Permissions policy',
-    'Guides': 'Учебники:',
-    'Reference': 'Справочники:',
+    'Guides': 'Учебники',
+    'Reference': 'Справочники',
     'Methods': 'Методы HTTP запроса',
     'Status': 'Коды ответа HTTP',
     'CSPDirectives': 'Директивы CSP',
@@ -234,7 +240,8 @@ var text = mdn.localStringMap({
     'PermissionsPolicyDirectives': 'Директивы Permissions-Policy',
     'Security': 'Безопасность в HTTP',
     'Authentication': 'HTTP авторизация',
-    'ProtocolUpgradeMech': 'Protocol upgrade mechanism'
+    'ProtocolUpgradeMech': 'Protocol upgrade mechanism',
+    'CSP': 'Content Security Policy (CSP)'
   },
   'zh-CN': {
     'HTTP': 'HTTP',
@@ -244,7 +251,7 @@ var text = mdn.localStringMap({
     'Evolution': 'HTTP 的发展',
     'ResourcesURI': '资源和 URI',
     'Identifying': '标识互联网上的内容',
-    'DataURIs': 'Data URI',
+    'DataURLs': 'Data URL',
     'MIMETypes': 'MIME 类型介绍',
     'ListMIMETypes': '常见的 MIME 类型',
     'WWWorNotWWW': '选择 www 或非 www 域名？',
@@ -255,10 +262,10 @@ var text = mdn.localStringMap({
     'Redirects': 'HTTP 重定向',
     'Conditionals': 'HTTP 条件请求',
     'ContentNego': 'HTTP 内容协商',
-    'Headers': 'HTTP 头部',
+    'Headers': 'HTTP 标头',
     'Response_codes': '响应代码',
     'Compression': 'HTTP 压缩',
-    'Cookies': 'HTTP cookies',
+    'Cookies': 'HTTP cookie',
     'Caching': 'HTTP 缓存',
     'CORS': 'HTTP 访问控制（CORS）',
     'Resources': 'HTTP 规范',
@@ -269,16 +276,17 @@ var text = mdn.localStringMap({
     'Status': 'HTTP 响应状态码',
     'CSPDirectives': 'CSP 指令',
     'CORS_errors': 'CORS 错误',
-    'PermissionsPolicyDirectives': 'Permissions-Policy 指令',
+    'PermissionsPolicyDirectives': '权限策略指令',
     'Security': 'HTTP 安全',
     'Authentication': 'HTTP 认证',
-    'ProtocolUpgradeMech': '协议升级机制'
+    'ProtocolUpgradeMech': '协议升级机制',
+    'CSP': '内容安全策略（CSP）'
   }
 });
 %>
 
 
-<section id="Quick_links">
+<section id="Quick_links" data-macro="HTTPSidebar">
   <ol>
     <li><a href="/<%=locale%>/docs/Web/HTTP"><strong><%=text['HTTP']%></strong></a></li>
     <li><strong><%=text['Guides']%></strong></li>
@@ -287,7 +295,7 @@ var text = mdn.localStringMap({
             <summary><%=text['ResourcesURI']%></summary>
             <ol>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web"><%=text['Identifying']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Data_URIs"><%=text['DataURIs']%></a></li>
+                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Data_URLs"><%=text['DataURLs']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/MIME_Types"><%=text['MIMETypes']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types"><%=text['ListMIMETypes']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs"><%=text['WWWorNotWWW']%></a></li>
@@ -312,9 +320,8 @@ var text = mdn.localStringMap({
         <details>
             <summary><%=text['Security']%></summary>
             <ol>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/CSP">Content Security Policy (CSP)</a></li>
+                <li><a href="/<%=locale%>/docs/Web/HTTP/CSP"><%=text['CSP']%></a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/Strict-Transport-Security">HTTP Strict Transport Security (HSTS)</a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Cookies#Secure_and_HttpOnly_cookies">Cookie security</a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-Content-Type-Options">X-Content-Type-Options</a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a></li>
                 <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-XSS-Protection">X-XSS-Protection</a></li>

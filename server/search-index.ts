@@ -4,10 +4,10 @@ import path from "node:path";
 import { fdir, PathsOutput } from "fdir";
 import fm from "front-matter";
 
-import { VALID_LOCALES } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { SearchIndex } from "../build";
-import { isValidLocale } from "../libs/locale-utils";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { SearchIndex } from "../build/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
 
 interface DocAttributes {
   locale: string;
@@ -66,5 +66,6 @@ export async function searchIndexRoute(req, res) {
   populateSearchIndex(searchIndex, locale);
   searchIndex.sort();
   console.timeEnd(label);
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.json(searchIndex.getItems()[locale]);
 }

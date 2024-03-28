@@ -1,4 +1,4 @@
-import * as Redirect from "./redirect";
+import * as Redirect from "./redirect.js";
 
 describe("short cuts", () => {
   it("simple chain", () => {

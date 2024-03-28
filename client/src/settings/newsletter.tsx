@@ -7,11 +7,9 @@ import {
 } from "../plus/common/api";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
-import { SubscriptionType, useUserData } from "../user-context";
 
 export default function Newsletter() {
   const [loading, setLoading] = useState<boolean>(true);
-  const user = useUserData();
   const [enabled, setEnabled] = useState<boolean | null>(null);
   useEffect(() => {
     (async () => {
@@ -26,42 +24,36 @@ export default function Newsletter() {
 
   return (
     <section className="field-group">
-      <h2>Newsletter</h2>
-      {user?.subscriptionType &&
-      user?.subscriptionType !== SubscriptionType.MDN_CORE ? (
-        <ul>
-          <li>
-            <h3>Receive updates from MDN Plus</h3>
-            <span>
-              Activating this switch will allow us to email you product updates,
-              news about our latest features, tips to get the most out of MDN
-              Plus, and more.
-            </span>
-            {loading ? (
-              <Spinner extraClasses="loading" />
-            ) : (
-              <Switch
-                name="mdn_plus_newsletter"
-                checked={Boolean(enabled)}
-                toggle={async (e) => {
-                  setLoading(true);
-                  setEnabled(
-                    await toggleNewsletterSubscription(
-                      Boolean(e.target.checked)
-                    )
-                  );
-                  setLoading(false);
-                }}
-              ></Switch>
-            )}
-          </li>
-        </ul>
-      ) : (
-        <>
-          The MDN Plus newsletter is only available to MDN Plus subscribers.{" "}
-          <a href={`/en-US/plus#subscribe`}>Learn more</a> about our plans.
-        </>
-      )}
+      <h2 id="newsletter">Stay updated</h2>
+      <ul>
+        <li>
+          <section aria-labelledby="mdn-plus-newsletter">
+            <h3 id="mdn-plus-newsletter">MDN Plus Newsletter</h3>
+            <div className="setting-row">
+              <span>
+                Allow us to email you product updates, news, and more.
+              </span>
+              {loading ? (
+                <Spinner extraClasses="loading" />
+              ) : (
+                <Switch
+                  name="mdn_plus_newsletter"
+                  checked={Boolean(enabled)}
+                  toggle={async (e) => {
+                    setLoading(true);
+                    setEnabled(
+                      await toggleNewsletterSubscription(
+                        Boolean(e.target.checked)
+                      )
+                    );
+                    setLoading(false);
+                  }}
+                ></Switch>
+              )}
+            </div>
+          </section>
+        </li>
+      </ul>
     </section>
   );
 }

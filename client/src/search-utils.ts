@@ -20,7 +20,9 @@ export function useFocusViaKeyboard(
       const isSlash = keyPressed === "/" && !ctrlOrMetaPressed;
       const isCtrlK =
         keyPressed === "k" && ctrlOrMetaPressed && !event.shiftKey;
-      const isTextField = ["TEXTAREA", "INPUT"].includes(target.tagName);
+      const isTextField =
+        ["TEXTAREA", "INPUT"].includes(target.tagName) ||
+        target.isContentEditable;
       if ((isSlash || isCtrlK) && !isTextField) {
         if (input && document.activeElement !== input) {
           event.preventDefault();

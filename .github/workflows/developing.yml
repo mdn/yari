@@ -8,21 +8,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version-file: ".nvmrc"
           cache: yarn
+
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
 
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -34,6 +43,7 @@ jobs:
 
       - name: Start the dev server
         env:
+          REACT_APP_WRITER_MODE: true
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"

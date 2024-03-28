@@ -14,6 +14,10 @@ import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
+import LogInLink from "../../../ui/atoms/login-link";
+import React from "react";
+
+const Stripe = React.lazy(() => import("./stripe"));
 
 export enum Period {
   Month,
@@ -70,17 +74,21 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
-  ["notifications", "Page notifications"],
+  ["afree", "Ads free"],
+  ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
+  ["ai-help", "AI Help", "beta"],
 ];
 
 const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
-    ["notifications", "Notifications for up to 3 pages"],
+    ["updates", "Filter and sort updates"],
     ["collections", "Up to 3 collections"],
+    ["playground", "Share playgrounds"],
+    ["ai-help", "AI Help: 5 questions per day", "beta"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -162,6 +170,7 @@ function OfferDetails({
     }).format(monthlyPrice / 100);
   return (
     <section className="subscribe-detail" id={offerDetails.id}>
+      <Stripe></Stripe>
       <h3>{offerDetails.name}</h3>
       <div className="sub-info">
         {(displayMonthlyPrice && (
@@ -206,9 +215,20 @@ function OfferDetails({
           )}
         <p className="includes">{offerDetails.includes}</p>
         <ul>
-          {offerDetails.features.map(([href, text], index) => (
+          {offerDetails.features.map(([href, text, sup], index) => (
             <li key={index}>
-              {(href && <a href={`#${href}`}>{text}</a>) || text}
+              {(href && (
+                <>
+                  {" "}
+                  <a href={`#${href}`}>{text}</a>
+                  {sup && <sup className="new">{sup}</sup>}
+                </>
+              )) || (
+                <>
+                  {text}
+                  {sup && <sup className="new">{sup}</sup>}
+                </>
+              )}
             </li>
           ))}
         </ul>
@@ -225,15 +245,15 @@ function OfferDetails({
   );
 }
 
-function isCurrent(user: UserData | null, subscriptionType: SubscriptionType) {
-  if (user === null || !user.isAuthenticated) {
+function isCurrent(user: UserData, subscriptionType: SubscriptionType) {
+  if (!user?.isAuthenticated) {
     return false;
   }
   return user.subscriptionType === subscriptionType;
 }
 
-function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
-  if (user === null || !user.isAuthenticated) {
+function canUpgrade(user: UserData, subscriptionType: SubscriptionType) {
+  if (!user?.isAuthenticated) {
     return null;
   }
   if (!user.isSubscriber || !user.subscriptionType) {
@@ -325,9 +345,17 @@ function OfferOverviewSubscribe() {
         )}
         {isOnline && (
           <>
-            {(offerDetails && <h2>Choose a plan</h2>) || (
-              <h2>Loading available plans…</h2>
-            )}
+            {(offerDetails && (
+              <h2>
+                Choose a plan
+                {!activeSubscription && (
+                  <>
+                    {" "}
+                    or <LogInLink cta="log in" />
+                  </>
+                )}
+              </h2>
+            )) || <h2>Loading available plans…</h2>}
             {offerDetails &&
               /** Only display discount switch if paid plans available  */
               offerDetails.PLUS_5 && (

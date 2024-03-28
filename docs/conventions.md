@@ -19,7 +19,7 @@ which do not adhere to its formatting.
 Things should be defined in order in which they are used. E.g.:
 
 ```javascript
-const dependency = require("dependency");
+import dependency from "dependency";
 
 function doThing() {
   // ...

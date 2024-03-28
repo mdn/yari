@@ -1,0 +1,39 @@
+.play-loader {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+
+  svg {
+    animation: rotate 2s linear infinite;
+    height: 100px;
+    width: 100px;
+  }
+
+  .glow {
+    animation: rotate 2s linear infinite;
+    border-radius: 50%;
+
+    box-shadow:
+      inset 0 0 50px #fff,
+      inset 20px 0 80px #f0f,
+      inset -20px 0 80px #0ff,
+      inset 20px 0 300px #f0f,
+      inset -20px 0 300px #0ff,
+      0 0 50px #fff,
+      -10px 0 80px #f0f,
+      10px 0 80px #0ff;
+    height: 100px;
+    width: 100px;
+  }
+
+  @keyframes rotate {
+    50% {
+      transform: scale(0.9);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

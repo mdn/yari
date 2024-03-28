@@ -1,10 +1,12 @@
 import * as cheerio from "cheerio";
-import { ProseSection, Section } from "../libs/types";
-import { extractSpecifications } from "./extract-specifications";
+import { ProseSection, Section } from "../libs/types/document.js";
+import { extractSpecifications } from "./extract-specifications.js";
 
 type SectionsAndFlaws = [Section[], string[]];
 
-export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
+export async function extractSections(
+  $: cheerio.CheerioAPI
+): Promise<[Section[], string[]]> {
   const flaws: string[] = [];
   const sections: Section[] = [];
   const section = cheerio
@@ -17,7 +19,7 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
   const iterable = [...(body.childNodes as cheerio.Element[])];
 
   let c = 0;
-  iterable.forEach((child: cheerio.Element) => {
+  for (const child of iterable) {
     if (
       child.tagName === "h2" ||
       child.tagName === "h3" ||
@@ -25,7 +27,7 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
         child.attribs.class?.includes("media-feature-note")) // Unlike other special sections, Media Feature note might be placed within prose
     ) {
       if (c) {
-        const [subSections, subFlaws] = addSections(section.clone());
+        const [subSections, subFlaws] = await addSections(section.clone());
         sections.push(...subSections);
         flaws.push(...subFlaws);
         section.empty();
@@ -37,10 +39,11 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
     // That might make the DOM nodes more compact and memory efficient.
     c++;
     section.append(child);
-  });
+  }
+
   if (c) {
     // last straggler
-    const [subSections, subFlaws] = addSections(section);
+    const [subSections, subFlaws] = await addSections(section);
     sections.push(...subSections);
     flaws.push(...subFlaws);
   }
@@ -162,7 +165,9 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
  *        specifications: {....}
  *   }]
  */
-function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
+async function addSections(
+  $: cheerio.Cheerio<cheerio.Element>
+): Promise<SectionsAndFlaws> {
   const flaws: string[] = [];
 
   const countPotentialSpecialDivs = $.find(
@@ -219,7 +224,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
       const iterable = [...(div.childNodes as cheerio.Element[])];
       let c = 0;
       let countSpecialDivsFound = 0;
-      iterable.forEach((child) => {
+      for (const child of iterable) {
         if (
           child.tagName === "div" &&
           child.attribs &&
@@ -242,13 +247,15 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
           // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
-          subSections.push(..._addSingleSpecialSection(section.clone()));
+          subSections.push(
+            ...(await _addSingleSpecialSection(section.clone()))
+          );
           section.empty();
         } else {
           section.append(child);
           c++;
         }
-      });
+      }
       if (c) {
         const [proseSections, proseFlaws] = _addSectionProse(section.clone());
         subSections.push(...proseSections);
@@ -263,7 +270,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
       }
       return [subSections, flaws];
     }
-    const specialSections = _addSingleSpecialSection($);
+    const specialSections = await _addSingleSpecialSection($);
 
     // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
     // and the `div.bc-data`, `div.bc-specs` or `div.media-feature-note` to turn it into a special section.
@@ -288,9 +295,9 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
   return [proseSections, flaws];
 }
 
-function _addSingleSpecialSection(
+async function _addSingleSpecialSection(
   $: cheerio.Cheerio<cheerio.Element>
-): Section[] {
+): Promise<Section[]> {
   let id: string | null = null;
   let title: string | null = null;
   let isH3 = false;
@@ -362,7 +369,7 @@ function _addSingleSpecialSection(
       },
     ];
   } else if (specialSectionType === "specifications") {
-    const specifications = extractSpecifications(query, specURLsString);
+    const specifications = await extractSpecifications(query, specURLsString);
 
     return [
       {
@@ -399,7 +406,6 @@ function _addSectionProse(
 ): SectionsAndFlaws {
   let id: string | null = null;
   let title: string | null = null;
-  let titleAsText = "";
   let isH3 = false;
 
   const flaws: string[] = [];
@@ -423,7 +429,6 @@ function _addSectionProse(
       // First element
       id = h2.attr("id") ?? "";
       title = h2.html() ?? "";
-      titleAsText = h2.text();
       h2.remove();
     }
     h2found = true;
@@ -444,7 +449,6 @@ function _addSectionProse(
       } else {
         id = h3.attr("id") ?? "";
         title = h3.html() ?? "";
-        titleAsText = h3.text();
         if (id && title) {
           isH3 = true;
           h3.remove();
@@ -464,12 +468,6 @@ function _addSectionProse(
     isH3,
     content: $.html()?.trim(),
   };
-
-  // Only include it if it's useful. It's an optional property and it's
-  // potentially a waste of space to include it if it's not different.
-  if (titleAsText && titleAsText !== title) {
-    value["titleAsText"] = titleAsText;
-  }
 
   const sections: ProseSection[] = [];
   if (value.content || value.title) {

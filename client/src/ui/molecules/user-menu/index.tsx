@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Avatar } from "../../atoms/avatar";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
@@ -6,15 +6,10 @@ import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
 import { useIsServer, useLocale, useViewedState } from "../../../hooks";
-import {
-  FeatureId,
-  HEADER_NOTIFICATIONS_MENU_API_URL,
-} from "../../../constants";
+import { FeatureId } from "../../../constants";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
-import { NotificationData } from "../../../types/notifications";
-import useSWR from "swr";
 import { NEWSLETTER_ENABLED } from "../../../env";
 
 export const UserMenu = () => {
@@ -23,25 +18,6 @@ export const UserMenu = () => {
   const isServer = useIsServer();
   const { isViewed } = useViewedState();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [newNotifications, setNewNotifications] = useState<boolean>(false);
-  const { data } = useSWR<NotificationData>(
-    HEADER_NOTIFICATIONS_MENU_API_URL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
-      }
-      return await response.json();
-    },
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  useEffect(() => {
-    setNewNotifications(Boolean(data?.items?.length));
-  }, [data]);
 
   // if we don't have the user data yet, don't render anything
   if (!userData || isServer) {
@@ -55,11 +31,6 @@ export const UserMenu = () => {
       {
         label: userData.email || "",
         extraClasses: "submenu-header",
-      },
-      {
-        label: "Notifications",
-        url: `/${locale}/plus/notifications`,
-        dot: newNotifications ? "New notifications" : undefined,
       },
       {
         label: "Collections",
@@ -108,22 +79,16 @@ export const UserMenu = () => {
         type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="top-level-entry menu-toggle user-menu-toggle"
-        ariaControls={userMenuItems.id}
-        ariaHasPopup="menu"
-        ariaExpanded={isOpen || undefined}
+        aria-controls={userMenuItems.id}
+        aria-haspopup="menu"
+        aria-expanded={isOpen || undefined}
         onClickHandler={() => {
           setIsOpen(!isOpen);
         }}
       >
-        {(newNotifications && (
-          <span className="visually-hidden dot">
-            New notifications received.
-          </span>
-        )) ||
-          (hasAnyDot && (
-            <span className="visually-hidden dot">New feature</span>
-          ))}
+        {hasAnyDot && <span className="visually-hidden dot">New feature</span>}
         <Avatar userData={userData} />
+        <span className="visually-hidden">User menu</span>
         <span className="user-menu-id">{userData.email}</span>
       </Button>
 

@@ -25,11 +25,12 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import ejs from "ejs";
 
-const dirname = __dirname;
-
-const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
+const DEFAULT_MACROS_DIRECTORY = path.normalize(
+  fileURLToPath(new URL("../macros", import.meta.url))
+);
 
 export default class Templates {
   private macroDirectory: string;
@@ -100,29 +101,17 @@ export default class Templates {
       // creates a more informative MacroNotFoundError
       throw new ReferenceError(`Unknown macro ${name}`);
     }
-    if (process.env.BUILD_MACROS_USED_LOGFILE) {
-      try {
-        fs.appendFileSync(
-          process.env.BUILD_MACROS_USED_LOGFILE,
-          `${name}|${args.arguments}\n`,
-          "utf-8"
-        );
-      } catch (err) {
-        console.warn(
-          "Unable to write BUILD_MACROS_USED_LOGFILE " +
-            `(${process.env.BUILD_MACROS_USED_LOGFILE})`,
-          err
-        );
-      }
-    }
     try {
       const rendered = await ejs.renderFile(path, args, {
         async: true,
-        cache: process.env.NODE_ENV === "production",
+        cache: args.cache || process.env.NODE_ENV === "production",
       });
       return rendered.trim();
     } catch (error) {
-      console.error(`${name} macro failed:`, error);
+      console.error(
+        `The ${name} macro on ${args.env.url} failed to render.`,
+        error
+      );
       throw error;
     }
   }

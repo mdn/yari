@@ -11,8 +11,10 @@ import {
   isTruthy,
   versionIsPreview,
   SupportStatementExtended,
+  bugURLToString,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
+import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
@@ -206,7 +208,11 @@ const CellText = React.memo(
     }
 
     return (
-      <div className="bcd-cell-text-wrapper">
+      <div
+        className={
+          timeline ? "bcd-timeline-cell-text-wrapper" : "bcd-cell-text-wrapper"
+        }
+      >
         <div className="bcd-cell-icons">
           <span className="icon-wrap">
             <abbr
@@ -225,10 +231,15 @@ const CellText = React.memo(
           <span
             className="bc-version-label"
             title={
-              browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+              browserReleaseDate && !timeline
+                ? `Released ${browserReleaseDate}`
+                : undefined
             }
           >
             {label}
+            {browserReleaseDate && timeline
+              ? ` (Released ${browserReleaseDate})`
+              : ""}
           </span>
         </div>
         <CellIcons support={support} />
@@ -285,7 +296,7 @@ function FlagsNote({
         </>
       )}
       {hasAddedVersion || hasRemovedVersion ? ": this" : "This"} feature is
-      behind the
+      behind the{" "}
       {flags.map((flag, i) => {
         const valueToSet = flag.value_to_set && (
           <>
@@ -296,7 +307,7 @@ function FlagsNote({
         return (
           <React.Fragment key={flag.name}>
             <code>{flag.name}</code>
-            {flag.type === "preference" && <> preferences{valueToSet}</>}
+            {flag.type === "preference" && <> preference{valueToSet}</>}
             {flag.type === "runtime_flag" && <> runtime flag{valueToSet}</>}
             {i < flags.length - 1 && " and the "}
           </React.Fragment>
@@ -325,7 +336,7 @@ function getNotes(
             (otherItem) => otherItem.version_added === item.version_removed
           )
             ? {
-                iconName: "disabled",
+                iconName: "footnote",
                 label: (
                   <>
                     Removed in {labelFromString(item.version_removed, browser)}{" "}
@@ -363,6 +374,19 @@ function getNotes(
                 (note) => ({ iconName: "footnote", label: note })
               )
             : null,
+          item.impl_url
+            ? (Array.isArray(item.impl_url)
+                ? item.impl_url
+                : [item.impl_url]
+              ).map((impl_url) => ({
+                iconName: "footnote",
+                label: (
+                  <>
+                    See <a href={impl_url}>{bugURLToString(impl_url)}</a>.
+                  </>
+                ),
+              }))
+            : null,
           versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
@@ -379,11 +403,11 @@ function getNotes(
                 label: "Full support",
               }
             : isNotSupportedAtAll(item)
-            ? {
-                iconName: "footnote",
-                label: "No support",
-              }
-            : null,
+              ? {
+                  iconName: "footnote",
+                  label: "No support",
+                }
+              : null,
         ]
           .flat()
           .filter(isTruthy);
@@ -516,8 +540,12 @@ export const FeatureRow = React.memo(
     let titleNode: string | React.ReactNode;
 
     if (compat.mdn_url && depth > 0) {
+      const href = compat.mdn_url.replace(
+        `/${DEFAULT_LOCALE}/docs`,
+        `/${locale}/docs`
+      );
       titleNode = (
-        <a href={compat.mdn_url} className="bc-table-row-header">
+        <a href={href} className="bc-table-row-header">
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>

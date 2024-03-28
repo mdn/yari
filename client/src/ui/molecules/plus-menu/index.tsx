@@ -5,6 +5,7 @@ import { useIsServer, useLocale, useViewedState } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 import { MenuEntry } from "../submenu";
 import { FeatureId } from "../../../constants";
+import { useLocation } from "react-router";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const plusUrl = usePlusUrl();
@@ -15,8 +16,15 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
 
   const { isViewed } = useViewedState();
 
+  // Avoid that "Plus" and "AI Help" are both active.
+  const { pathname } = useLocation();
+  const aiHelpUrl = `/${locale}/plus/ai-help`;
+  const isActive =
+    pathname.startsWith(plusUrl.split("#", 2)[0]) &&
+    !pathname.startsWith(aiHelpUrl);
+
   const plusMenu: MenuEntry = {
-    label: "MDN Plus",
+    label: "Plus",
     id: "mdn-plus",
     to: plusUrl,
     items: [
@@ -27,6 +35,13 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "Overview",
         url: plusUrl,
       },
+      {
+        description: "Get real-time assistance and support",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "AI Help (beta)",
+        url: aiHelpUrl,
+      },
       ...(!isServer && isAuthenticated
         ? [
             {
@@ -35,13 +50,6 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
               iconClasses: "submenu-icon",
               label: "Collections",
               url: `/${locale}/plus/collections`,
-            },
-            {
-              description: "Updates from the pages you’re watching",
-              hasIcon: true,
-              iconClasses: "submenu-icon",
-              label: "Notifications",
-              url: `/${locale}/plus/notifications`,
             },
           ]
         : []),
@@ -75,5 +83,12 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   };
   const isOpen = visibleSubMenuId === plusMenu.id;
 
-  return <Menu menu={plusMenu} isOpen={isOpen} toggle={toggleMenu} />;
+  return (
+    <Menu
+      menu={plusMenu}
+      isActive={isActive}
+      isOpen={isOpen}
+      toggle={toggleMenu}
+    />
+  );
 };

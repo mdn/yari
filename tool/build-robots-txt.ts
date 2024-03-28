@@ -5,8 +5,8 @@
  */
 import fs from "node:fs";
 
-import { VALID_LOCALES } from "../libs/constants";
-import { ALWAYS_ALLOW_ROBOTS } from "../libs/env";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import { ALWAYS_ALLOW_ROBOTS } from "../libs/env/index.js";
 
 const ALLOW_TEXT = `
 User-agent: *

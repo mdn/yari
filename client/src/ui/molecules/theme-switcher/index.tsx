@@ -8,6 +8,9 @@ import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import "./index.scss";
 import { switchTheme } from "../../../utils";
 import { Theme } from "../../../types/theme";
+import { useUIStatus } from "../../../ui-context";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { THEME_SWITCHER } from "../../../telemetry/constants";
 
 type ThemeButton = {
   id: Theme;
@@ -17,6 +20,9 @@ type ThemeButton = {
 export const ThemeSwitcher = () => {
   const menuId = "themes-menu";
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const gleanClick = useGleanClick();
+  const { setColorScheme } = useUIStatus();
   const [activeTheme, setActiveTheme] = React.useState<Theme>("os-default");
 
   function ThemeButton({ id, label }: ThemeButton) {
@@ -27,6 +33,8 @@ export const ThemeSwitcher = () => {
         `}
         icon={`theme-${id}`}
         onClickHandler={() => {
+          gleanClick(`${THEME_SWITCHER}: switch -> ${id}`);
+          setColorScheme(id);
           switchTheme(id, setActiveTheme);
           setIsOpen(false);
         }}
@@ -54,10 +62,8 @@ export const ThemeSwitcher = () => {
       console.warn("Unable to read theme from localStorage", e);
     }
 
-    if (theme) {
-      switchTheme(theme, setActiveTheme);
-    }
-  }, [activeTheme]);
+    switchTheme(theme ?? "os-default", setActiveTheme);
+  }, []);
 
   return (
     <DropdownMenuWrapper
@@ -67,11 +73,12 @@ export const ThemeSwitcher = () => {
     >
       <Button
         type="action"
-        ariaHasPopup={"menu"}
-        ariaExpanded={isOpen || undefined}
+        aria-haspopup={"menu"}
+        aria-expanded={isOpen || undefined}
         icon={`theme-${activeTheme}`}
         extraClasses="theme-switcher-menu small"
         onClickHandler={() => {
+          gleanClick(`${THEME_SWITCHER}: ${isOpen ? "close" : "open"}`);
           setIsOpen(!isOpen);
         }}
       >

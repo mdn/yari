@@ -1,43 +1,13 @@
 import fs from "node:fs";
-import path from "node:path";
 import { JSDOM } from "jsdom";
-import { Document } from "../../../content";
-import {
-  assert,
-  itMacro,
-  beforeEachMacro,
-  describeMacro,
-  lintHTML,
-} from "./utils";
+import { jest } from "@jest/globals";
+import * as Content from "../../../content/index.js";
 
-const dirname = __dirname;
-
-// Load fixture data.
-const fixtureData = JSON.parse(
-  fs.readFileSync(
-    path.resolve(dirname, "fixtures", "documentData2.json"),
-    "utf-8"
-  )
-) as any;
-
-const locales = {
-  "en-US": {
-    ResourcesURI: "Resources and URIs",
-  },
-  es: {
-    ResourcesURI: "Recursons y URIs",
-  },
-};
-
-function checkSidebarDom(dom, locale) {
-  const summaries = dom.querySelectorAll("summary");
-  assert.equal(summaries[0].textContent, locales[locale].ResourcesURI);
-}
-
-describeMacro("HTTPSidebar", function () {
-  beforeEachMacro(function (macro) {
-    macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
-    Document.findByURL = jest.fn((url) => {
+jest.unstable_mockModule("../../../content/index.js", () => ({
+  ...Content,
+  Document: {
+    ...Content.Document,
+    findByURL: jest.fn((url: string) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {
         return null;
@@ -52,8 +22,8 @@ describeMacro("HTTPSidebar", function () {
           tags: data.tags,
         },
       };
-    });
-    Document.findChildren = jest.fn((url) => {
+    }),
+    findChildren: jest.fn((url: string) => {
       const result: any[] = [];
       const parent = `${url.toLowerCase()}/`;
       for (const [key, data] of Object.entries(fixtureData) as any) {
@@ -72,13 +42,44 @@ describeMacro("HTTPSidebar", function () {
         }
       }
       return result;
-    });
+    }),
+  },
+}));
+
+const { assert, itMacro, beforeEachMacro, describeMacro, lintHTML } =
+  await import("./utils.js");
+
+// Load fixture data.
+const fixtureData = JSON.parse(
+  fs.readFileSync(
+    new URL("./fixtures/documentData2.json", import.meta.url),
+    "utf-8"
+  )
+) as any;
+
+const locales = {
+  "en-US": {
+    ResourcesURI: "Resources and URIs",
+  },
+  es: {
+    ResourcesURI: "Recursos y URIs",
+  },
+};
+
+function checkSidebarDom(dom, locale) {
+  const summaries = dom.querySelectorAll("summary");
+  assert.equal(summaries[0].textContent, locales[locale].ResourcesURI);
+}
+
+describeMacro("HTTPSidebar", function () {
+  beforeEachMacro(function (macro) {
+    macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {
     macro.ctx.env.locale = "en-US";
-    return macro.call().then(function (result) {
-      expect(lintHTML(result)).toBeFalsy();
+    return macro.call().then(async function (result) {
+      expect(await lintHTML(result)).toBeFalsy();
       const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
@@ -86,8 +87,8 @@ describeMacro("HTTPSidebar", function () {
 
   itMacro("Creates a sidebar object for es", function (macro) {
     macro.ctx.env.locale = "es";
-    return macro.call().then(function (result) {
-      expect(lintHTML(result)).toBeFalsy();
+    return macro.call().then(async function (result) {
+      expect(await lintHTML(result)).toBeFalsy();
       const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "es");
     });

@@ -12,7 +12,6 @@ import { Loading } from "../../ui/atoms/loading";
 import Mandala from "../../ui/molecules/mandala";
 import { Paginator } from "../../ui/molecules/paginator";
 import BookmarkMenu from "../../ui/organisms/article-actions/bookmark-menu";
-import { NotificationsWatchMenu } from "../../ui/organisms/article-actions/notifications-watch-menu";
 import { useUserData } from "../../user-context";
 import { camelWrap, range } from "../../utils";
 import { Event, Group, useBCD, useUpdates } from "./api";
@@ -20,11 +19,11 @@ import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
-import { LoginBanner } from "./login-banner";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
+import { PlusLoginBanner } from "../common/login-banner";
 
 type EventWithStatus = Event & { status: Status };
 type Status = "added" | "removed";
@@ -169,7 +168,7 @@ function UpdatesLayout() {
         <Container>
           <h1>
             <div className="mandala-icon-wrapper">
-              <Mandala rotate={true} />
+              <Mandala />
               <Icon name="bell-filled" />
             </div>
             <span>Updates</span>
@@ -202,7 +201,11 @@ function UpdatesLayout() {
           }
         />
 
-        {user && !user.isAuthenticated && <LoginBanner />}
+        {user && !user.isAuthenticated && (
+          <PlusLoginBanner gleanPrefix={PLUS_UPDATES.MDN_PLUS}>
+            Want to use filters?
+          </PlusLoginBanner>
+        )}
 
         {user && user.isAuthenticated && hasFilters && (
           <Button
@@ -403,7 +406,6 @@ function ArticleActions({ path, mdn_url }: { path: string; mdn_url?: string }) {
       </Button>
       {url && (
         <>
-          <NotificationsWatchMenu doc={doc} />
           <BookmarkMenu doc={doc} />
         </>
       )}

@@ -1,7 +1,7 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 dotenv.config();
 
-import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../libs/constants";
+import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../libs/constants/index.js";
 import {
   DEFAULT_FLAW_LEVELS,
   FILES,
@@ -11,7 +11,7 @@ import {
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_TYPES,
   FIX_FLAWS_VERBOSE,
-} from "../libs/env";
+} from "../libs/env/index.js";
 
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),

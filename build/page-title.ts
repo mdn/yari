@@ -1,4 +1,5 @@
-import { Document } from "../content";
+import { Document } from "../content/index.js";
+import { Doc } from "../libs/types/document.js";
 
 /**
  * Return the appropriate document title to go into the HTML <title>
@@ -12,7 +13,7 @@ import { Document } from "../content";
  * done when Kuma was the platform.
  *
  */
-export function getPageTitle(doc) {
+export function getPageTitle(doc: Partial<Doc>) {
   const docURL = doc.mdn_url;
   const rootParentURL = getRootURL(docURL);
   let title = doc.title;
@@ -36,7 +37,7 @@ const BAD_ROOTS = new Set(["Web"]);
 /**
  * Return the root URL based on specific rules.
  */
-export function getRootURL(url) {
+export function getRootURL(url: string) {
   const split = url.split("/");
   // If "url" was "/$locale/docs/Foo/Bar/Bez" the thing to return
   // is "/$locale/docs/Foo".

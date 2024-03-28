@@ -1,5 +1,4 @@
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenu } from "./notifications-watch-menu";
 import { LanguageMenu } from "./language-menu";
 
 import { useIsServer } from "../../../hooks";
@@ -13,7 +12,13 @@ import BookmarkMenu from "./bookmark-menu";
 import { Overlay, useUIStatus } from "../../../ui-context";
 import { useEffect, useState } from "react";
 import { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 import { Item } from "../../../plus/collections/api";
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 export const ArticleActions = ({
   doc,
@@ -24,7 +29,7 @@ export const ArticleActions = ({
   doc?: Doc | DocMetadata;
   showTranslations?: boolean;
   item?: Item;
-  scopedMutator?: KeyedMutator<Item[][]>;
+  scopedMutator?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) => {
   const [showArticleActionsMenu, setShowArticleActionsMenu] = useState(false);
   const userData = useUserData();
@@ -68,11 +73,6 @@ export const ArticleActions = ({
           </Button>
           <ul className="article-actions-entries">
             <>
-              {!isServer && isAuthenticated && (
-                <li className="article-actions-entry">
-                  <NotificationsWatchMenu doc={doc} />
-                </li>
-              )}
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
                   <BookmarkMenu

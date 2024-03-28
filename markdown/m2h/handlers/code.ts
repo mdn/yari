@@ -1,10 +1,11 @@
-import u from "unist-builder";
+import { Handler, State } from "mdast-util-to-hast";
+import { u } from "unist-builder";
 
 /**
  * Transform a Markdown code block into a <pre>.
  * Adding the highlight tags as classes prefixed by "brush:"
  */
-export function code(h, node) {
+export function code(state: State, node: any): ReturnType<Handler> {
   const value = node.value ? node.value + "\n" : "";
   const lang = node.lang?.replace(/-nolint$/, "");
   const meta = (node.meta || "").split(" ");
@@ -26,5 +27,10 @@ export function code(h, node) {
   // }
   // return h(node.position, "pre", props, [code]);
 
-  return h(node.position, "pre", props, [u("text", value)]);
+  return {
+    type: "element",
+    tagName: "pre",
+    properties: props,
+    children: [u("text", value)],
+  };
 }

@@ -212,9 +212,9 @@ export default function SearchFilter({
         >
           <Button
             type="select"
-            ariaControls={filterMenu.id}
-            ariaHasPopup={"menu"}
-            ariaExpanded={openFilter === filterMenu.key}
+            aria-controls={filterMenu.id}
+            aria-haspopup={"menu"}
+            aria-expanded={openFilter === filterMenu.key}
             extraClasses={`${
               searchParams.get(filterMenu.key) ? "active" : ""
             } ${isDisabled ? "inactive" : ""}`}
@@ -249,6 +249,10 @@ export default function SearchFilter({
           setSelectedTerms(camelUnwrap(terms))
         }
         onChangeHandler={(e) => setTerms(e.target.value)}
+        onResetHandler={() => {
+          setTerms("");
+          setSelectedTerms("");
+        }}
       />
 
       {sorts.length ? (
@@ -259,9 +263,9 @@ export default function SearchFilter({
         >
           <Button
             type="select"
-            ariaControls={sortMenu.id}
-            ariaHasPopup={"menu"}
-            ariaExpanded={isSortingOpen || undefined}
+            aria-controls={sortMenu.id}
+            aria-haspopup={"menu"}
+            aria-expanded={isSortingOpen || undefined}
             extraClasses={`${searchParams.get("sort") ? "active" : ""} ${
               isDisabled ? "inactive" : ""
             }`}

@@ -1,9 +1,10 @@
+import { fileURLToPath } from "node:url";
+
 import { HtmlValidate } from "html-validate";
 
-import Environment from "../../src/environment";
-import Templates from "../../src/templates";
-
-const dirname = __dirname;
+import Environment from "../../src/environment.js";
+import Templates from "../../src/templates.js";
+import fs from "node:fs";
 
 // When we were doing mocha testing, we used this.macro to hold this.
 // But Jest doesn't use the this object, so we just store the object here.
@@ -55,7 +56,9 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  const templates = new Templates(`${dirname}/../../macros/`);
+  const templates = new Templates(
+    fileURLToPath(new URL("../../macros/", import.meta.url))
+  );
   const pageContext = {
     locale: "en-US",
     url: "",
@@ -153,6 +156,23 @@ export function afterEachMacro(teardown) {
 }
 
 /**
+ * This function parses a JSON file containing pages fixture data.
+ * It returns the parsed object, with the "translations" property
+ * replaced by a function that returns the translations object.
+ */
+export function parsePagesFixture(file: URL) {
+  return JSON.parse(
+    fs.readFileSync(fileURLToPath(file), { encoding: "utf-8" }),
+    (key, value) => {
+      if (key === "translations") {
+        return () => value;
+      }
+      return value;
+    }
+  );
+}
+
+/**
  * This function validates its input as HTML. By default, it assumes the input
  * is an HTML fragment, wrapping it to make a complete HTML document, but the
  * second argument can be set to false to avoid wrapping. It returns null on
@@ -162,7 +182,7 @@ export function afterEachMacro(teardown) {
  * @param {boolean} fragment
  */
 let htmlValidator = null; // global cache
-export function lintHTML(html) {
+export async function lintHTML(html) {
   if (!htmlValidator) {
     htmlValidator = new HtmlValidate({
       extends: ["html-validate:recommended"],
@@ -174,7 +194,7 @@ export function lintHTML(html) {
       },
     });
   }
-  const report = htmlValidator.validateString(html);
+  const report = await htmlValidator.validateString(html);
   if (report.valid) {
     return null;
   }

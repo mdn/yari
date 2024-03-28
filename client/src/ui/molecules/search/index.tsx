@@ -22,11 +22,9 @@ function useQueryParamState() {
 export function Search({
   id,
   isHomepageSearch,
-  onResultPicked,
 }: {
   id: string;
   isHomepageSearch?: boolean;
-  onResultPicked?: () => void;
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
@@ -51,7 +49,7 @@ export function Search({
     <div
       className={isHomepageSearch ? "homepage-hero-search" : "header-search"}
     >
-      <SearchNavigateWidget {...searchProps} onResultPicked={onResultPicked} />
+      <SearchNavigateWidget {...searchProps} />
     </div>
   );
 }

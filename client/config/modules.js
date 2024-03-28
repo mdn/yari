@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const paths = require("./paths");
-const chalk = require("react-dev-utils/chalk");
-const resolve = require("resolve");
+import fs from "node:fs";
+import path from "node:path";
+import resolve from "resolve";
+import chalk from "react-dev-utils/chalk.js";
+import paths from "./paths.js";
 
 /**
  * Get additional module paths based on the baseUrl of a compilerOptions object.
@@ -89,7 +89,7 @@ function getJestAliases(options = {}) {
   }
 }
 
-function getModules() {
+async function getModules() {
   // Check if TypeScript is setup
   const hasTsConfig = fs.existsSync(paths.appTsConfig);
   const hasJsConfig = fs.existsSync(paths.appJsConfig);
@@ -106,14 +106,17 @@ function getModules() {
   // TypeScript project and set up the config
   // based on tsconfig.json
   if (hasTsConfig) {
-    const ts = require(resolve.sync("typescript", {
-      basedir: paths.appNodeModules,
-    }));
+    const { default: ts } = await import(
+      "file://" +
+        resolve.sync("typescript", {
+          basedir: paths.appNodeModules,
+        })
+    );
     config = ts.readConfigFile(paths.appTsConfig, ts.sys.readFile).config;
     // Otherwise we'll check if there is jsconfig.json
     // for non TS projects.
   } else if (hasJsConfig) {
-    config = require(paths.appJsConfig);
+    config = await import("file://" + paths.appJsConfig).default;
   }
 
   config = config || {};
@@ -129,4 +132,4 @@ function getModules() {
   };
 }
 
-module.exports = getModules();
+export default getModules();

@@ -1,4 +1,4 @@
-import { lintHTML } from "./utils";
+import { lintHTML } from "./utils.js";
 
 const ERROR_TEST_CASES = [
   {
@@ -21,11 +21,11 @@ const ERROR_TEST_CASES = [
 
 describe("test lintHTML function", function () {
   for (const test of ERROR_TEST_CASES) {
-    it(test.title, function () {
-      expect(lintHTML(test.html)).toContain(test.error);
+    it(test.title, async function () {
+      expect(await lintHTML(test.html)).toContain(test.error);
     });
   }
-  it("with valid HTML input", function () {
-    expect(lintHTML("<div>This is nice</div>")).toBeFalsy();
+  it("with valid HTML input", async function () {
+    expect(await lintHTML("<div>This is nice</div>")).toBeFalsy();
   });
 });

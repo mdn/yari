@@ -1,13 +1,22 @@
 import path from "node:path";
 import childProcess from "node:child_process";
-import LRU from "lru-cache";
 
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { slugToFolder as _slugToFolder } from "../libs/slug-utils";
+import { LRUCache } from "lru-cache";
+
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { slugToFolder as _slugToFolder } from "../libs/slug-utils/index.js";
+
+let prettier = null;
+
+try {
+  prettier = (await import("prettier")).default;
+} catch (e) {
+  // If we failed to import Prettier, that's okay
+}
 
 export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
-export function getRoot(locale, throws = "") {
+export function getRoot(locale: string, throws = "") {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
   if (throws && !root) {
@@ -16,14 +25,10 @@ export function getRoot(locale, throws = "") {
   return root;
 }
 
-export function buildURL(locale, slug) {
+export function buildURL(locale: string, slug: string) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
-}
-
-function isPromise(p): p is Promise<unknown> {
-  return p && Object.prototype.toString.call(p) === "[object Promise]";
 }
 
 /**
@@ -33,15 +38,15 @@ function isPromise(p): p is Promise<unknown> {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-export function memoize<Args>(
-  fn: (...args: Args[]) => any
-): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any {
+export function memoize<F extends (...args: any[]) => any>(
+  fn: F
+): (...args: [...Parameters<F>, typeof MEMOIZE_INVALIDATE?]) => ReturnType<F> {
   if (process.env.NODE_ENV !== "production") {
-    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any;
+    return fn;
   }
 
-  const cache = new LRU({ max: 2000 });
-  return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => {
+  const cache = new LRUCache({ max: 2000 });
+  return (...args) => {
     let invalidate = false;
     if (args.includes(MEMOIZE_INVALIDATE)) {
       args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
@@ -57,14 +62,13 @@ export function memoize<Args>(
       }
     }
 
-    const value = fn(...(args as Args[]));
-    if (isPromise(value)) {
-      return value.then((actualValue) => {
-        cache.set(key, actualValue);
-        return actualValue;
+    const value = fn(...args);
+    cache.set(key, value);
+    if (value instanceof Promise) {
+      value.catch(() => {
+        cache.delete(key);
       });
     }
-    cache.set(key, value);
     return value;
   };
 }
@@ -104,19 +108,21 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
   return stdout.toString().trim();
 }
 
-export function toPrettyJSON(value) {
+export async function toPrettyJSON(value: unknown) {
   const json = JSON.stringify(value, null, 2) + "\n";
-  try {
-    // eslint-disable-next-line n/no-unpublished-require
-    return require("prettier").format(json, { parser: "json" });
-  } catch (e) {
-    return json;
+  if (prettier) {
+    try {
+      return await prettier.format(json, { parser: "json" });
+    } catch (e) {
+      // If Prettier formatting failed, don't worry
+    }
   }
+  return json;
 }
 
-export function urlToFolderPath(url) {
+export function urlToFolderPath(url: string) {
   const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
+  return path.join(locale.toLowerCase(), _slugToFolder(slugParts.join("/")));
 }
 
 export function slugToFolder(slug) {
