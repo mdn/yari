@@ -628,7 +628,7 @@ function DocumentsTable({
         )}
       </h3>
       {!counts.built ? (
-        <WarnAboutNothingBuilt />
+        <WarnAboutNothingBuilt locale={locale} />
       ) : (
         <h4 className="subheader">
           {counts.built.toLocaleString()} documents built ({locale})
@@ -735,13 +735,13 @@ function PageLink({
   );
 }
 
-function WarnAboutNothingBuilt() {
+function WarnAboutNothingBuilt({ locale }) {
   return (
     <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
       <p>
-        At the moment, you have to use the command line tools to build documents
-        that we can analyze.
+        Run <code>yarn build --locale {locale.toLowerCase()}</code> to build all
+        documents for the current locale.
       </p>
     </div>
   );
