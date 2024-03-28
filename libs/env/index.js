@@ -12,7 +12,7 @@ const ROOT = path.join(dirname, "..", "..");
 
 function parse(value) {
   try {
-    JSON.parse(value);
+    return JSON.parse(value);
   } catch (e) {
     throw new Error(`Error parsing value '${value}' in .env file: `, {
       cause: e,
