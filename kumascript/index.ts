@@ -94,6 +94,7 @@ export async function render(
       ...metadata,
       url,
       tags: "tags" in metadata ? metadata.tags || [] : [],
+      status: metadata.status || [],
       selective_mode,
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
