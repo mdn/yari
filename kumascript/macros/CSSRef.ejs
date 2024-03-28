@@ -941,6 +941,13 @@ const hasTag = page.hasTag;
 const rtlLocales = ['ar', 'he', 'fa'];
 
 const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
+
+// some functions are at depth two
+const levelTwoPages = pageList.reduce((list, page)=>{
+  list.push(...page.subpages);
+  return list;
+}, pageList);
+
 const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
 const groups = [];
@@ -950,7 +957,7 @@ const combinators = [];
 const pseudoClasses = [];
 const pseudoElements = [];
 const atRules = [];
-const functions = [];
+let functions = [];
 const types = [];
 
 for (const page of standardPages) {
@@ -986,7 +993,9 @@ for (const page of standardPages) {
   }
 }
 
-properties = properties.sort((a, b) => a.title.localeCompare(b.title));
+const sortByTitle = (a, b) => a.title.localeCompare(b.title);
+properties = properties.sort(sortByTitle);
+functions = functions.sort(sortByTitle);
 
 function smartLink(href, title, content, subpath) {
   let basepath = subpath;
