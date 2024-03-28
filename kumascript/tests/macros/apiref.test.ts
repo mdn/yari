@@ -510,7 +510,7 @@ async function checkResult(html, config) {
   expect(num_valid_links).toEqual(num_total_links);
 
   // Test main interface link
-  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li>strong>a");
+  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li.section>a");
   expect(mainIfLink.textContent).toEqual(config.expected.mainIfLink.text);
 
   if (mainIfLink.href !== "") {

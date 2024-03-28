@@ -146,7 +146,7 @@ var text = mdn.localStringMap({
 async function renderRootItem(slug) {
   const [link, title] = await getPageLinkAndTitle(slug);
 
-  return `<li><a href="${link}"><strong>${title}</strong></a></li>`
+  return `<li class="section"><a href="${link}">${title}</a></li>`
 }
 
 async function renderItems(slugs) {

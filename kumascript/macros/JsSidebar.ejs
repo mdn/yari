@@ -399,8 +399,8 @@ var text = mdn.localStringMap({
 %>
 <section id="Quick_links" data-macro="JsSidebar">
  <ol>
-  <li><a href="/<%=locale%>/docs/Web/JavaScript"><strong>JavaScript</strong></a></li>
-  <li><a href="/<%=locale%>/docs/Web/JavaScript/Tutorials"><strong><%=text['Tutorials']%></strong></a></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/JavaScript">JavaScript</a></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/JavaScript/Tutorials"><%=text['Tutorials']%></a></li>
   <li class="toggle">
     <details <%=state('Complete_beginners')%>>
       <summary><%=text['Complete_beginners']%></summary>
@@ -461,7 +461,7 @@ var text = mdn.localStringMap({
       </ol>
     </details>
   </li>
-  <li><strong><a href="/<%=locale%>/docs/Web/JavaScript/Reference"><%=text['Reference']%></a></strong></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/JavaScript/Reference"><%=text['Reference']%></a></li>
   <li class="toggle">
     <details <%=state('Objects')%>>
        <summary><%=text['Global_Objects']%></summary>

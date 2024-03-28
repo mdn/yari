@@ -262,7 +262,7 @@ async function checkResult(html, config) {
 
   if (config.expected.overview) {
     // Test overview link
-    const overviewLink = dom.querySelector("ol>li>strong");
+    const overviewLink = dom.querySelector("ol>li.section");
     checkItem(config.expected.overview, overviewLink, config.locale);
   }
 

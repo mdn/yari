@@ -38,16 +38,16 @@
     }
   }
 
-  .no-link {
-    display: inline-flex;
-    padding: 0.25rem;
-  }
-
-  // TODO: Find these and add a class, if possible. These are section headings
-  strong {
+  li.section {
     display: flex;
     font-size: var(--type-base-font-size-rem);
-    margin-top: 1rem;
+    font-weight: var(--font-body-strong-weight);
+    letter-spacing: 0.02rem;
+    margin-top: 1.5rem;
+
+    &.no-link {
+      padding: 0.25rem;
+    }
   }
 
   li:first-of-type strong {
