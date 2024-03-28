@@ -17,7 +17,7 @@
     display: none;
     hyphens: auto;
 
-    // only show last two items on small sizes (size < 426px)
+    // only show last two items on mobile
     &:nth-last-child(-n + 2) {
       display: inline-flex;
     }
