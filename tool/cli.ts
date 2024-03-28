@@ -71,6 +71,7 @@ interface AddRedirectActionParameters extends ActionParameters {
   args: {
     from: string;
     to: string;
+    locale: string;
   };
 }
 interface FixRedirectsActionParameters extends ActionParameters {
@@ -307,14 +308,19 @@ program
   )
 
   .command("add-redirect", "Add a new redirect")
-  .argument("<from>", "From-URL")
-  .argument("<to>", "To-URL")
+  .argument("<from>", "From Slug")
+  .argument("<to>", "To Slug or URL")
+  .argument("[locale]", "Locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
   .action(
     tryOrExit(({ args, logger }: AddRedirectActionParameters) => {
-      const from = new URL(args.from).pathname;
-      const to = new URL(args.to).pathname;
-      const locale = from.split("/")[1];
-      Redirect.add(locale, [[from, to]]);
+      const from = `/${args.locale}/docs/${args.from}`;
+      const to = args.to.includes("://")
+        ? args.to
+        : `/${args.locale}/docs/${args.to}`;
+      Redirect.add(args.locale, [[from, to]]);
       logger.info(chalk.green(`Saved '${from}' → '${to}'`));
     })
   )
