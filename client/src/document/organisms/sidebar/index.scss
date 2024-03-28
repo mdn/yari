@@ -64,10 +64,6 @@
 
     ol {
       li {
-        .icon {
-          margin-right: 0.01em;
-        }
-
         &.no-bullet {
           display: block;
           font-weight: var(--font-body-strong-weight);
@@ -142,7 +138,6 @@
     align-self: center;
     background-size: 14px;
     height: 14px;
-    margin-right: -0.25rem;
     mask-size: 14px;
     width: 14px;
   }
