@@ -32,12 +32,11 @@
     }
 
     ins {
-      background-color: #d4fcbc;
+      background-color: var(--background-ins);
     }
 
     del {
-      background-color: #fbb;
-      text-decoration: none;
+      background-color: var(--background-del);
     }
 
     .explanation-notes li {
