@@ -475,21 +475,10 @@
         }
       }
 
-      &.status-stopped .ai-help-message-content {
-        &.empty::after,
-        > :not(ol):not(ul):not(pre):last-child:after,
-        > ol:last-child li:last-child:after,
-        > pre:last-child code:after,
-        > ul:last-child li:last-child:after {
-          color: var(--text-muted);
-          content: "■\00a0Stopped answering";
-          display: block;
-          margin-top: 1.7rem;
-        }
-
-        &.empty::after {
-          margin-left: unset;
-        }
+      .stopped-message {
+        color: var(--text-muted);
+        display: block;
+        margin-top: 1.7rem;
       }
     }
 

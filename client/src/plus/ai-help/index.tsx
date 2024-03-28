@@ -48,14 +48,14 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND,
-  SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
   MESSAGE_STOPPED,
+  OFF_TOPIC_PREFIX,
+  OFF_TOPIC_MESSAGE,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
@@ -161,6 +161,7 @@ function AIHelpUserQuestion({
     >
       <ExpandingTextarea
         ref={inputRef}
+        maxLength={25_000}
         enterKeyHint="send"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -288,6 +289,12 @@ function AIHelpAssistantResponse({
 
   let sample = 0;
 
+  const isOffTopic =
+    message.role === MessageRole.Assistant &&
+    (message.content?.startsWith(OFF_TOPIC_PREFIX) ||
+      (message.status === MessageStatus.Complete &&
+        OFF_TOPIC_PREFIX.startsWith(message.content)));
+
   function messageForStatus(status: MessageStatus) {
     switch (status) {
       case MessageStatus.Errored:
@@ -312,52 +319,35 @@ function AIHelpAssistantResponse({
     }
   }
 
+  if (isOffTopic) {
+    message = {
+      ...message,
+      content: OFF_TOPIC_MESSAGE,
+      sources: [],
+    };
+  }
+
   return (
     <>
-      <div
-        className={[
-          "ai-help-message-progress",
-          message.status === MessageStatus.Pending && "active",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {message.status === MessageStatus.Pending
-          ? MESSAGE_SEARCHING
-          : MESSAGE_SEARCHED}
-      </div>
-      {message.sources && message.sources.length > 0 && (
-        <ul className="ai-help-message-sources">
-          {message.sources.map(({ url, title }, index) => (
-            <li key={index}>
-              <InternalLink
-                to={url}
-                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
-                target="_blank"
-              >
-                {title}
-              </InternalLink>
-            </li>
-          ))}
-        </ul>
-      )}
-      {(message.content ||
-        message.status === MessageStatus.InProgress ||
-        message.status === MessageStatus.Errored) && (
-        <div
-          className={[
-            "ai-help-message-progress",
-            message.status === MessageStatus.InProgress && "active",
-            message.status === MessageStatus.Complete && "complete",
-            message.status === MessageStatus.Errored && "errored",
-            message.status === MessageStatus.Stopped && "stopped",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {messageForStatus(message.status)}
-        </div>
-      )}
+      {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
+      {!isOffTopic &&
+        (message.content ||
+          message.status === MessageStatus.InProgress ||
+          message.status === MessageStatus.Errored) && (
+          <div
+            className={[
+              "ai-help-message-progress",
+              message.status === MessageStatus.InProgress && "active",
+              message.status === MessageStatus.Complete && "complete",
+              message.status === MessageStatus.Errored && "errored",
+              message.status === MessageStatus.Stopped && "stopped",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {messageForStatus(message.status)}
+          </div>
+        )}
       {message.content && (
         <div
           className={[
@@ -509,12 +499,17 @@ function AIHelpAssistantResponse({
               },
             }}
           >
-            {message.content?.replace(SORRY_BACKEND, SORRY_FRONTEND)}
+            {message.content}
           </ReactMarkdown>
-          {message.status === "complete" &&
-            !message.content?.includes(SORRY_BACKEND) && (
-              <>
-                <section className="ai-help-feedback">
+          {message.status === "stopped" && (
+            <section className="stopped-message">
+              {"■\u00a0Stopped answering"}
+            </section>
+          )}
+          {(message.status === "complete" || isOffTopic) && (
+            <>
+              <section className="ai-help-feedback">
+                {!isOffTopic && (
                   <GleanThumbs
                     feature="ai-help-answer"
                     featureKey={message.messageId}
@@ -522,16 +517,57 @@ function AIHelpAssistantResponse({
                     upLabel={"Yes, this answer was useful."}
                     downLabel={"No, this answer was not useful."}
                   />
-                  <ReportIssueOnGitHubLink
-                    messages={messages}
-                    currentMessage={message}
-                  >
-                    Report an issue with this answer on GitHub
-                  </ReportIssueOnGitHubLink>
-                </section>
-              </>
-            )}
+                )}
+                <ReportIssueOnGitHubLink
+                  messages={messages}
+                  currentMessage={message}
+                >
+                  Report an issue with this answer on GitHub
+                </ReportIssueOnGitHubLink>
+              </section>
+            </>
+          )}
         </div>
+      )}
+    </>
+  );
+}
+
+function AIHelpAssistantResponseSources({
+  message,
+}: {
+  message: Pick<Message, "status" | "sources">;
+}) {
+  const gleanClick = useGleanClick();
+
+  return (
+    <>
+      <div
+        className={[
+          "ai-help-message-progress",
+          message.status === MessageStatus.Pending ? "active" : "complete",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {message.status === MessageStatus.Pending
+          ? MESSAGE_SEARCHING
+          : MESSAGE_SEARCHED}
+      </div>
+      {message.sources && message.sources.length > 0 && (
+        <ul className="ai-help-message-sources">
+          {message.sources.map(({ url, title }, index) => (
+            <li key={index}>
+              <InternalLink
+                to={url}
+                onClick={() => gleanClick(`${AI_HELP}: link source -> ${url}`)}
+                target="_blank"
+              >
+                {title}
+              </InternalLink>
+            </li>
+          ))}
+        </ul>
       )}
     </>
   );
@@ -767,6 +803,7 @@ export function AIHelpInner() {
                     >
                       <ExpandingTextarea
                         ref={inputRef}
+                        maxLength={25_000}
                         autoFocus={true}
                         disabled={isLoading || isResponding}
                         enterKeyHint="send"

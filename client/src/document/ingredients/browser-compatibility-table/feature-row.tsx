@@ -336,7 +336,7 @@ function getNotes(
             (otherItem) => otherItem.version_added === item.version_removed
           )
             ? {
-                iconName: "disabled",
+                iconName: "footnote",
                 label: (
                   <>
                     Removed in {labelFromString(item.version_removed, browser)}{" "}

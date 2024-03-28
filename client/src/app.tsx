@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation, useMatch } from "react-router-dom";
+import {
+  Navigate,
+  Routes,
+  Route,
+  useLocation,
+  useMatch,
+} from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -161,10 +167,13 @@ export function App(appProps: HydrationData) {
       {/*
         Note, this can only happen in local development.
         In production, all traffic at `/` is redirected to at least
-        having a locale. So it'll be `/en-US` (for example) by the
+        having a locale. So it'll be `/en-US/` (for example) by the
         time it hits any React code.
        */}
-      <Route path="/" element={homePage} />
+      <Route
+        path="/"
+        element={WRITER_MODE ? homePage : <Navigate to="/en-US/" />}
+      />
       <Route
         path="/en-US/curriculum/*"
         element={

@@ -191,11 +191,11 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          # These are the Google Analytics measurement IDs for:
+          # - developer.mozilla.org (UA)
+          # - developer.mozilla.org (GA4)
+          # Using measurement ids on other domains is okay, as GA will filter these events.
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5,G-PWTK27XVWP
 
           # This enables the MDN Plus
           REACT_APP_ENABLE_PLUS: true

@@ -28,11 +28,8 @@ export const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 export const FILES = process.env.BUILD_FILES || "";
 export const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
-export const GOOGLE_ANALYTICS_ACCOUNT =
-  process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
-export const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
-  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
-);
+export const GOOGLE_ANALYTICS_MEASUREMENT_ID =
+  process.env.BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID || "";
 export const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -183,3 +180,15 @@ export const PG_URI = process.env.PG_URI || "";
 export const SAMPLE_SIGN_KEY = process.env.BUILD_SAMPLE_SIGN_KEY
   ? Buffer.from(process.env.BUILD_SAMPLE_SIGN_KEY, "base64")
   : null;
+
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));
