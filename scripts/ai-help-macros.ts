@@ -28,9 +28,8 @@ interface IndexedDoc {
   id: number;
   mdn_url: string;
   title: string;
-  title_short: string;
   token_count: number | null;
-  hash: string;
+  markdown_hash: string;
   text_hash: string;
 }
 
@@ -38,9 +37,8 @@ interface Doc {
   mdn_url: string;
   title: string;
   title_short: string;
-  hash: string;
-  html: string;
   markdown: string;
+  markdown_hash: string;
   text?: string;
   text_hash?: string;
 }
@@ -110,41 +108,39 @@ export async function updateEmbeddings(
   const updates: Doc[] = [];
   const formattingUpdates: Doc[] = [];
 
-  for await (const {
-    mdn_url,
-    title,
-    title_short,
-    hash,
-    html,
-    markdown,
-    text,
-  } of builtDocs(directory)) {
+  for await (const { mdn_url, title, title_short, markdown, text } of builtDocs(
+    directory
+  )) {
     seenUrls.add(mdn_url);
 
     // Check for existing document in DB and compare checksums.
     const existingDoc = existingDocByUrl.get(mdn_url);
 
     const text_hash = createHash("sha256").update(text).digest("base64");
+    const markdown_hash = createHash("sha256")
+      .update(markdown)
+      .digest("base64");
 
     if (existingDoc?.text_hash !== text_hash) {
       updates.push({
         mdn_url,
         title,
         title_short,
-        hash,
-        html,
         markdown,
+        markdown_hash,
         text,
         text_hash,
       });
-    } else if (updateFormatting || existingDoc?.hash !== hash) {
+    } else if (
+      updateFormatting ||
+      existingDoc?.markdown_hash !== markdown_hash
+    ) {
       formattingUpdates.push({
         mdn_url,
         title,
         title_short,
-        hash,
-        html,
         markdown,
+        markdown_hash,
       });
     }
   }
@@ -165,9 +161,8 @@ export async function updateEmbeddings(
       mdn_url,
       title,
       title_short,
-      hash,
-      html,
       markdown,
+      markdown_hash,
       text,
       text_hash,
     } of updates) {
@@ -185,32 +180,29 @@ export async function updateEmbeddings(
                     mdn_url,
                     title,
                     title_short,
-                    hash,
-                    html,
                     markdown,
+                    markdown_hash,
                     token_count,
                     embedding,
                     text_hash
                 )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
-                hash = $4,
-                html = $5,
-                markdown = $6,
-                token_count = $7,
-                embedding = $8,
-                text_hash = $9
+                markdown = $4,
+                markdown_hash = $5,
+                token_count = $6,
+                embedding = $7,
+                text_hash = $8
           `,
           values: [
             mdn_url,
             title,
             title_short,
-            hash,
-            html,
             markdown,
+            markdown_hash,
             total_tokens,
             pgvector.toSql(embedding),
             text_hash,
@@ -229,9 +221,8 @@ export async function updateEmbeddings(
       mdn_url,
       title,
       title_short,
-      hash,
-      html,
       markdown,
+      markdown_hash,
     } of formattingUpdates) {
       try {
         console.log(
@@ -242,17 +233,16 @@ export async function updateEmbeddings(
         const query = {
           name: "upsert-doc",
           text: `
-            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, hash, html, markdown)
-            VALUES($1, $2, $3, $4, $5, $6) ON CONFLICT (mdn_url) DO
+            INSERT INTO mdn_doc_macro(mdn_url, title, title_short, markdown, markdown_hash)
+            VALUES($1, $2, $3, $4, $5) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
                 title_short = $3,
-                hash = $4,
-                html = $5,
-                markdown = $6
+                markdown = $4,
+                markdown_hash = $5
           `,
-          values: [mdn_url, title, title_short, hash, html, markdown],
+          values: [mdn_url, title, title_short, markdown, markdown_hash],
           rowMode: "array",
         };
 
@@ -285,8 +275,8 @@ export async function updateEmbeddings(
 }
 
 async function formatDocs(directory: string) {
-  for await (const { html, markdown, text } of builtDocs(directory)) {
-    console.log(html, markdown, text);
+  for await (const { markdown, text } of builtDocs(directory)) {
+    console.log(markdown, text);
   }
 }
 
@@ -340,7 +330,6 @@ async function* builtDocs(directory: string) {
         title,
         title_short: short_title || title,
         hash,
-        html,
         markdown,
         text,
       };
@@ -509,7 +498,7 @@ export function isNotSupportedAtAll(support: SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
 
-async function fetchAllExistingDocs(pgClient) {
+async function fetchAllExistingDocs(pgClient): Promise<IndexedDoc[]> {
   const PAGE_SIZE = 1000;
   const selectDocs = async (lastId) => {
     const query = {
@@ -518,8 +507,8 @@ async function fetchAllExistingDocs(pgClient) {
         SELECT id,
             mdn_url,
             title,
-            hash,
             token_count,
+            markdown_hash,
             text_hash
         from mdn_doc_macro
         WHERE id > $1
@@ -531,8 +520,15 @@ async function fetchAllExistingDocs(pgClient) {
     };
     const result = await pgClient.query(query);
     return result.rows.map(
-      ([id, mdn_url, title, hash, token_count, text_hash]) => {
-        return { id, mdn_url, title, hash, token_count, text_hash };
+      ([id, mdn_url, title, token_count, markdown_hash, text_hash]) => {
+        return {
+          id,
+          mdn_url,
+          title,
+          token_count,
+          markdown_hash,
+          text_hash,
+        };
       }
     );
   };
