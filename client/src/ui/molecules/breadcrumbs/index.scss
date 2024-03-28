@@ -6,7 +6,11 @@
   margin-right: auto;
 
   ol {
+    display: flex;
+    flex-wrap: wrap;
     line-height: 1.2;
+    padding: 0.25rem 0;
+    row-gap: 0.25rem;
   }
 
   li {
