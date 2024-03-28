@@ -621,7 +621,7 @@ router.get("/missing", async (req, res) => {
 
   const label = `Find all missing translations (${locale})`;
   console.time(label);
-  const found = gatherL10NstatsSection({ locale });
+  const found = await gatherL10NstatsSection({ locale });
   console.timeEnd(label);
   res.json(found);
 });
