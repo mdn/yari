@@ -11,7 +11,7 @@ export async function resolveIndexHTML(
   _res: Response,
   next: NextFunction
 ) {
-  const urlParsed = url.parse(req.url);
+  const urlParsed = new URL(req.url);
   if (urlParsed.pathname) {
     let pathname = slugToFolder(urlParsed.pathname);
     if (!isAsset(pathname)) {

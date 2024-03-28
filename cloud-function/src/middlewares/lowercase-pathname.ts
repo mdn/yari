@@ -7,7 +7,7 @@ export async function lowercasePathname(
   _res: Response,
   next: NextFunction
 ) {
-  const urlParsed = url.parse(req.url);
+  const urlParsed = new URL(req.url);
   if (urlParsed.pathname) {
     urlParsed.pathname = urlParsed.pathname.toLowerCase();
     req.url = url.format(urlParsed);
