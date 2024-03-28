@@ -5,7 +5,7 @@ import "./index.scss";
 
 export const AuthContainer = ({ logInGleanContext, signUpGleanContext }) => {
   return (
-    <ul className="auth-container">
+    <ul className="auth-container mobile-hidden">
       <li>
         <LogInLink gleanContext={logInGleanContext} />
       </li>
