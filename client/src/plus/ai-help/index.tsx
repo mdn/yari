@@ -48,14 +48,14 @@ import { useUIStatus } from "../../ui-context";
 import { QueueEntry } from "../../types/playground";
 import { AIHelpLanding } from "./landing";
 import {
-  SORRY_BACKEND_PREFIX,
-  SORRY_FRONTEND,
   MESSAGE_SEARCHING,
   MESSAGE_ANSWERING,
   MESSAGE_FAILED,
   MESSAGE_ANSWERED,
   MESSAGE_SEARCHED,
   MESSAGE_STOPPED,
+  OFF_TOPIC_PREFIX,
+  OFF_TOPIC_MESSAGE,
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
@@ -291,9 +291,9 @@ function AIHelpAssistantResponse({
 
   const isOffTopic =
     message.role === MessageRole.Assistant &&
-    (message.content?.startsWith(SORRY_BACKEND_PREFIX) ||
+    (message.content?.startsWith(OFF_TOPIC_PREFIX) ||
       (message.status === MessageStatus.Complete &&
-        SORRY_BACKEND_PREFIX.startsWith(message.content)));
+        OFF_TOPIC_PREFIX.startsWith(message.content)));
 
   function messageForStatus(status: MessageStatus) {
     switch (status) {
@@ -319,26 +319,35 @@ function AIHelpAssistantResponse({
     }
   }
 
+  if (isOffTopic) {
+    message = {
+      ...message,
+      content: OFF_TOPIC_MESSAGE,
+      sources: [],
+    };
+  }
+
   return (
     <>
       {!isOffTopic && <AIHelpAssistantResponseSources message={message} />}
-      {(message.content ||
-        message.status === MessageStatus.InProgress ||
-        message.status === MessageStatus.Errored) && (
-        <div
-          className={[
-            "ai-help-message-progress",
-            message.status === MessageStatus.InProgress && "active",
-            message.status === MessageStatus.Complete && "complete",
-            message.status === MessageStatus.Errored && "errored",
-            message.status === MessageStatus.Stopped && "stopped",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {messageForStatus(message.status)}
-        </div>
-      )}
+      {!isOffTopic &&
+        (message.content ||
+          message.status === MessageStatus.InProgress ||
+          message.status === MessageStatus.Errored) && (
+          <div
+            className={[
+              "ai-help-message-progress",
+              message.status === MessageStatus.InProgress && "active",
+              message.status === MessageStatus.Complete && "complete",
+              message.status === MessageStatus.Errored && "errored",
+              message.status === MessageStatus.Stopped && "stopped",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {messageForStatus(message.status)}
+          </div>
+        )}
       {message.content && (
         <div
           className={[
@@ -490,7 +499,7 @@ function AIHelpAssistantResponse({
               },
             }}
           >
-            {isOffTopic ? SORRY_FRONTEND : message.content}
+            {message.content}
           </ReactMarkdown>
           {message.status === "stopped" && (
             <section className="stopped-message">
@@ -511,15 +520,7 @@ function AIHelpAssistantResponse({
                 )}
                 <ReportIssueOnGitHubLink
                   messages={messages}
-                  currentMessage={{
-                    ...message,
-                    ...(isOffTopic
-                      ? {
-                          content: SORRY_FRONTEND,
-                          sources: [],
-                        }
-                      : {}),
-                  }}
+                  currentMessage={message}
                 >
                   Report an issue with this answer on GitHub
                 </ReportIssueOnGitHubLink>
