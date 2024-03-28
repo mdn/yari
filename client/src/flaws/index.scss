@@ -55,7 +55,8 @@
       color: var(--text-inactive);
     }
 
-    a {
+    a,
+    .current-page {
       padding: 10px;
     }
   }

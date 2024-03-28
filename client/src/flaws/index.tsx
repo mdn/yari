@@ -6,6 +6,7 @@ import "./index.scss";
 
 import { humanizeFlawName } from "../flaw-utils";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Paginator } from "../ui/molecules/paginator";
 import { useLocale } from "../hooks";
 
 interface DocumentPopularity {
@@ -578,7 +579,7 @@ function DocumentsTable({
     return (
       <th onClick={() => setSort(id)} className="sortable">
         {title}{" "}
-        {filters.sort_by === id ? (filters.sort_reverse ? "🔽" : "🔼") : null}
+        {filters.sort_by === id ? (filters.sort_reverse ? "↓" : "↑") : null}
       </th>
     );
   }
@@ -682,23 +683,7 @@ function DocumentsTable({
         </tbody>
       </table>
 
-      {pageCount > 1 && (
-        <p className="pagination">
-          <PageLink number={1} disabled={page === 1}>
-            ⇤ First page
-          </PageLink>{" "}
-          {page > 2 && <PageLink number={page - 1}>← Previous page</PageLink>}{" "}
-          {page}{" "}
-          {page < pageCount - 1 && (
-            <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-              Next page →
-            </PageLink>
-          )}
-          <PageLink number={pageCount} disabled={page === pageCount}>
-            Last page ({pageCount}) ⇥
-          </PageLink>
-        </p>
-      )}
+      <Paginator last={pageCount} />
     </div>
   );
 }
@@ -735,7 +720,7 @@ function PageLink({
   );
 }
 
-function WarnAboutNothingBuilt({ locale }) {
+function WarnAboutNothingBuilt() {
   return (
     <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
