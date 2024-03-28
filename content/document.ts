@@ -451,6 +451,8 @@ export function findByURL(
 }
 
 export async function findAll({
+  chunk = 1,
+  chunks = 1,
   files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
@@ -524,6 +526,19 @@ export async function findAll({
     const output: PathsOutput = await api.withPromise();
     filePaths.push(...output);
   }
+
+  if (chunks > 1) {
+    // chunk: 1..n
+    const count = filePaths.length;
+    const chunkSize = Math.ceil(count / chunks);
+    if (1 < chunk) {
+      filePaths.splice(0, (chunk - 1) * chunkSize);
+    }
+    if (chunk < chunks) {
+      filePaths.splice(chunkSize, filePaths.length - chunkSize);
+    }
+  }
+
   return {
     count: filePaths.length,
     *iterPaths() {

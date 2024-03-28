@@ -14,6 +14,8 @@ import {
 } from "../libs/env/index.js";
 
 const options = Object.freeze({
+  chunk: 1 as number,
+  chunks: 1 as number,
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),
   folderSearch: parseFolderSearch(FOLDERSEARCH),
