@@ -35,6 +35,8 @@ interface DocumentEdits {
   parentModified: string;
   commitURL: string;
   parentCommitURL: string;
+  sourceCommitsBehindCount?: number;
+  sourceCommitURL?: string;
 }
 
 interface Document {
@@ -574,6 +576,10 @@ function DocumentsTable({
         const a = A.mdn_url;
         const b = B.mdn_url;
         return reverse * a.localeCompare(b);
+      } else if (sort === "sourceCommit") {
+        const a = A.edits.sourceCommitsBehindCount ?? -1;
+        const b = B.edits.sourceCommitsBehindCount ?? -1;
+        return reverse * (b - a);
       } else {
         throw new Error(`Unrecognized sort '${sort}'`);
       }
@@ -606,6 +612,7 @@ function DocumentsTable({
             <TableHead id="popularity" title="Popularity" />
             <TableHead id="modified" title="Last modified" />
             <TableHead id="differences" title="Differences" />
+            <TableHead id="sourceCommit" title="Source Commit" />
           </tr>
         </thead>
         <tbody>
@@ -658,6 +665,14 @@ function DocumentsTable({
                     <LastModified edits={doc.edits} />
                   </td>
                   <td>{doc.differences.total.toLocaleString()}</td>
+                  <td>
+                    <L10nSourceCommitModified
+                      sourceCommitsBehindCount={
+                        doc.edits.sourceCommitsBehindCount
+                      }
+                      sourceCommitURL={doc.edits.sourceCommitURL}
+                    />
+                  </td>
                 </tr>
               );
             })}
@@ -677,6 +692,29 @@ function DocumentsTable({
         </p>
       )}
     </div>
+  );
+}
+
+function L10nSourceCommitModified({
+  sourceCommitsBehindCount,
+  sourceCommitURL,
+}: Pick<DocumentEdits, "sourceCommitsBehindCount" | "sourceCommitURL">) {
+  if (
+    !sourceCommitURL ||
+    (!sourceCommitsBehindCount && sourceCommitsBehindCount !== 0)
+  ) {
+    return <>Metadata does not exist.</>;
+  }
+
+  const getImportanceColor = () => {
+    if (sourceCommitsBehindCount === 0) return "🟢";
+    return sourceCommitsBehindCount < 10 ? "🟠" : "🔴";
+  };
+
+  return (
+    <a
+      href={sourceCommitURL}
+    >{`${getImportanceColor()} ${sourceCommitsBehindCount} commits behind`}</a>
   );
 }
 
