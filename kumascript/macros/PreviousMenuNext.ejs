@@ -13,9 +13,9 @@ Issue
 
 const locale = env.locale;
 const defaultLocale = "en-US";
-const prevPage = $0.replace(/ /g, '_');
-const nextPage = $1.replace(/ /g, '_');
-const mainMenu = $2.replace(/ /g, '_');
+const prevPage = $0.replace(/ /g, "_");
+const nextPage = $1.replace(/ /g, "_");
+const mainMenu = $2.replace(/ /g, "_");
 
 const previousNextStr = mdn.localString({
     "en-US": [" Previous ",          " Next  "],
@@ -53,7 +53,7 @@ function generateMenuLink(pageSlug) {
   let title = "";
   if (!aPage.url) {
     // fallback to generate title from slug
-    title = pageSlug.split('/').at(-1).replace(/_/g, ' ');
+    title = pageSlug.split('/').at(-1).replace(/_/g, " ");
   } else {
     title = aPage.title;
   }
