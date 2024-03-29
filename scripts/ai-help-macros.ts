@@ -65,11 +65,11 @@ export async function updateEmbeddings(
     apiKey: OPENAI_KEY,
   });
 
-  const createEmbedding = async (input: string) => {
+  const createEmbedding = async (input: string, model: string) => {
     let embeddingResponse: OpenAI.Embeddings.CreateEmbeddingResponse;
     try {
       embeddingResponse = await openai.embeddings.create({
-        model: "text-embedding-ada-002",
+        model,
         input,
       });
     } catch ({ error: { message, type }, status }: any) {
@@ -78,7 +78,7 @@ export async function updateEmbeddings(
       );
       // Try again with trimmed content.
       embeddingResponse = await openai.embeddings.create({
-        model: "text-embedding-ada-002",
+        model,
         input: input.substring(0, 15000),
       });
     }
@@ -170,7 +170,14 @@ export async function updateEmbeddings(
         console.log(`-> [${mdn_url}] Updating document...`);
 
         // Embedding for full document.
-        const { total_tokens, embedding } = await createEmbedding(text);
+        const { total_tokens, embedding } = await createEmbedding(
+          text,
+          "text-embedding-ada-002"
+        );
+        const { embedding: embedding_next } = await createEmbedding(
+          text,
+          "text-embedding-3-model-small"
+        );
 
         // Create/update document record.
         const query = {
@@ -184,9 +191,10 @@ export async function updateEmbeddings(
                     markdown_hash,
                     token_count,
                     embedding,
+                    embedding_next,
                     text_hash
                 )
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (mdn_url) DO
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (mdn_url) DO
             UPDATE
             SET mdn_url = $1,
                 title = $2,
@@ -195,7 +203,8 @@ export async function updateEmbeddings(
                 markdown_hash = $5,
                 token_count = $6,
                 embedding = $7,
-                text_hash = $8
+                embedding_next = $8,
+                text_hash = $9
           `,
           values: [
             mdn_url,
@@ -205,6 +214,7 @@ export async function updateEmbeddings(
             markdown_hash,
             total_tokens,
             pgvector.toSql(embedding),
+            pgvector.toSql(embedding_next),
             text_hash,
           ],
           rowMode: "array",
