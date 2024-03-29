@@ -938,7 +938,8 @@ const rtlLocales = ['ar', 'he', 'fa'];
 
 const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
 
-// some functions are at depth two
+// Some functions are at depth two.
+// Example: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/hsl
 const levelTwoPages = pageList.reduce((list, page)=>{
   list.push(...page.subpages);
   return list;
@@ -953,7 +954,7 @@ const combinators = [];
 const pseudoClasses = [];
 const pseudoElements = [];
 const atRules = [];
-let functions = [];
+const functions = [];
 const types = [];
 
 for (const page of standardPages) {
@@ -990,8 +991,8 @@ for (const page of standardPages) {
 }
 
 const sortByTitle = (a, b) => a.title.localeCompare(b.title);
-properties = properties.sort(sortByTitle);
-functions = functions.sort(sortByTitle);
+properties.sort(sortByTitle);
+functions.sort(sortByTitle);
 
 function smartLink(href, title, content, subpath) {
   let basepath = subpath;
