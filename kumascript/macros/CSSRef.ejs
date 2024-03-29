@@ -940,10 +940,7 @@ const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
 
 // Some functions are at depth two.
 // Example: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/hsl
-const levelTwoPages = pageList.reduce((list, page)=>{
-  list.push(...page.subpages);
-  return list;
-}, pageList);
+pageList.push(...pageList.map((page) => page.subpages).flat());
 
 const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
