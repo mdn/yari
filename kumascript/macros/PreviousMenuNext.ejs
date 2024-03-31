@@ -6,16 +6,13 @@ Parameter
     $1 (second parameter): path of Next page
     $2 (third parameter): path to main menu of module
 
-Issue
-    * Problem of Apostrophe (https://developer.mozilla.org/fr/docs/JavaScript_Guide/Op%C3%A9rateurs/Op%C3%A9rateurs_sp%C3%A9ciaux)
-
 */
 
 const locale = env.locale;
 const defaultLocale = "en-US";
-const prevPage = $0.replace(/ /g, "_");
-const nextPage = $1.replace(/ /g, "_");
-const mainMenu = $2.replace(/ /g, "_");
+const prevPage = $0?.replace(/ /g, "_");
+const nextPage = $1?.replace(/ /g, "_");
+const mainMenu = $2?.replace(/ /g, "_");
 
 const previousNextStr = mdn.localString({
     "en-US": [" Previous ",          " Next  "],
