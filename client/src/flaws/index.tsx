@@ -720,7 +720,7 @@ function PageLink({
   );
 }
 
-function WarnAboutNothingBuilt() {
+function WarnAboutNothingBuilt({ locale }) {
   return (
     <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
