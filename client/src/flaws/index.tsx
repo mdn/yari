@@ -688,38 +688,6 @@ function DocumentsTable({
   );
 }
 
-function PageLink({
-  number,
-  disabled,
-  children,
-}: {
-  number: number;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  const [filters] = useFiltersURL();
-  // Unfortunately TS's Partial<T> is not quite the right return type of this function,
-  // as it implies the object could have keys set to undefined, which isn't true here.
-  // Hence we have to use type coercion (any)
-  const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
-  if (newFilters.page) {
-    newFilters.page = String(newFilters.page);
-  }
-  return (
-    <Link
-      to={"?" + createSearchParams(newFilters).toString()}
-      className={disabled ? "disabled" : ""}
-      onClick={(event) => {
-        if (disabled) {
-          event.preventDefault();
-        }
-      }}
-    >
-      {children}
-    </Link>
-  );
-}
-
 function WarnAboutNothingBuilt({ locale }) {
   return (
     <div className="notecard warning document-warnings">
