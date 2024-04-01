@@ -329,7 +329,7 @@ export default function Playground() {
             title="runner"
             ref={iframe}
             src={src.toString()}
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts allow-same-origin allow-forms"
           ></iframe>
           <Console vConsole={vConsole} />
           <SidePlacement />
