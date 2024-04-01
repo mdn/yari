@@ -42,7 +42,7 @@ function generateLink(pageSlug, linkText) {
 function generateMenuLink(pageSlug) {
   const url = `/${locale}/docs/${pageSlug}`;
   let aPage = info.getPageByURL(url);
-  if (!aPage.url) {
+  if (!aPage.url && locale !== defaultLocale) {
     const fallbackUrl = `/${defaultLocale}/docs/${pageSlug}`;
     aPage = info.getPageByURL(fallbackUrl);
   }
