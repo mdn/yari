@@ -6,7 +6,7 @@
     }
 
     .dark {
-      --circle: rgba(178, 92, 53, 0.3);
+      --circle: #321d13;
       --icon: #E3642A;
     }
   </style>
