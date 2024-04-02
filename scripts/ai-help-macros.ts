@@ -211,13 +211,16 @@ export async function updateEmbeddings(
         console.log(`-> [${mdn_url}] Updating document...`);
 
         // Embedding for full document.
-        const { total_tokens, embedding } = await createEmbedding(
-          text,
-          EMBEDDING_MODEL
+        const [{ total_tokens, embedding }, embedding_next] = await Promise.all(
+          [
+            createEmbedding(text, EMBEDDING_MODEL),
+            EMBEDDING_MODEL_NEXT
+              ? createEmbedding(text, EMBEDDING_MODEL_NEXT).then(
+                  ({ embedding }) => embedding
+                )
+              : null,
+          ]
         );
-        const embedding_next = EMBEDDING_MODEL_NEXT
-          ? (await createEmbedding(text, EMBEDDING_MODEL_NEXT)).embedding
-          : null;
 
         // Create/update document record.
         const query = {
