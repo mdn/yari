@@ -10,7 +10,7 @@
         "icon heading"
         "icon category";
       justify-content: flex-start;
-      @media screen and (min-width: $screen-sm) {
+      @media screen and (min-width: $screen-md) {
         grid-template-areas:
           "icon heading group"
           "icon category .";
