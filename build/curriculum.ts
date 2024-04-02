@@ -222,7 +222,7 @@ async function readCurriculumPage(
     sidebar = await buildCurriculumSidebar();
     parents = await buildParents(url);
     if (parents.length > 1) {
-      const title = parents[parents.length - 2]?.title;
+      const title = parents.at(-2)?.title;
       if (title?.endsWith(" modules")) {
         group = title;
       }
