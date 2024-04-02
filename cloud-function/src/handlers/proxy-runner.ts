@@ -17,11 +17,13 @@ export const proxyRunner = createProxyMiddleware({
   proxyTimeout: PROXY_TIMEOUT,
   xfwd: true,
   selfHandleResponse: true,
-  onProxyReq: fixRequestBody,
-  onProxyRes: responseInterceptor(
-    async (responseBuffer, proxyRes, req, res) => {
-      withRunnerResponseHeaders(proxyRes, req, res);
-      return responseBuffer;
-    }
-  ),
+  on: {
+    proxyReq: fixRequestBody,
+    proxyRes: responseInterceptor(
+      async (responseBuffer, proxyRes, req, res) => {
+        withRunnerResponseHeaders(proxyRes, req, res);
+        return responseBuffer;
+      }
+    ),
+  },
 });
