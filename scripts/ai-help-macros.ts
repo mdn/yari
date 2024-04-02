@@ -158,7 +158,10 @@ export async function updateEmbeddings(
         markdown,
         markdown_hash,
       });
-    } else if (!existingDoc.has_embedding || !existingDoc.has_embedding_next) {
+    } else if (
+      !existingDoc.has_embedding ||
+      !existingDoc.has_embedding_next !== !EMBEDDING_MODEL_NEXT
+    ) {
       const { has_embedding, has_embedding_next } = existingDoc;
       embeddingUpdates.push({
         mdn_url,
@@ -174,7 +177,7 @@ export async function updateEmbeddings(
   );
   if (embeddingUpdates.length > 0) {
     console.log(
-      `-> ${embeddingUpdates.length} documents have incomplete embeddings.`
+      `-> ${embeddingUpdates.length} documents have outdated embeddings.`
     );
   }
 
@@ -208,10 +211,9 @@ export async function updateEmbeddings(
           text,
           EMBEDDING_MODEL
         );
-        const { embedding: embedding_next } = await createEmbedding(
-          text,
-          EMBEDDING_MODEL_NEXT
-        );
+        const embedding_next = EMBEDDING_MODEL_NEXT
+          ? (await createEmbedding(text, EMBEDDING_MODEL_NEXT)).embedding
+          : null;
 
         // Create/update document record.
         const query = {
@@ -248,7 +250,7 @@ export async function updateEmbeddings(
             markdown_hash,
             total_tokens,
             pgvector.toSql(embedding),
-            pgvector.toSql(embedding_next),
+            embedding_next ? pgvector.toSql(embedding_next) : null,
             text_hash,
           ],
           rowMode: "array",
@@ -306,7 +308,7 @@ export async function updateEmbeddings(
       has_embedding_next,
     } of embeddingUpdates) {
       try {
-        console.log(`-> [${mdn_url}] Adding embeddings...`);
+        console.log(`-> [${mdn_url}] Updating embeddings...`);
 
         if (!has_embedding) {
           const { total_tokens, embedding } = await createEmbedding(
@@ -317,7 +319,11 @@ export async function updateEmbeddings(
           const query = {
             name: "upsert-doc-embedding",
             text: "UPDATE mdn_doc_macro SET total_tokens = $2, embedding = $3 WHERE mdn_url = $1",
-            values: [mdn_url, total_tokens, pgvector.toSql(embedding)],
+            values: [
+              mdn_url,
+              total_tokens,
+              embedding ? pgvector.toSql(embedding) : null,
+            ],
             rowMode: "array",
           };
 
@@ -325,15 +331,14 @@ export async function updateEmbeddings(
         }
 
         if (!has_embedding_next) {
-          const { embedding } = await createEmbedding(
-            text,
-            EMBEDDING_MODEL_NEXT
-          );
+          const embedding = EMBEDDING_MODEL_NEXT
+            ? (await createEmbedding(text, EMBEDDING_MODEL_NEXT)).embedding
+            : null;
 
           const query = {
             name: "upsert-doc-embedding-next",
             text: "UPDATE mdn_doc_macro SET embedding_next = $2 WHERE mdn_url = $1",
-            values: [mdn_url, pgvector.toSql(embedding)],
+            values: [mdn_url, embedding ? pgvector.toSql(embedding) : null],
             rowMode: "array",
           };
 
