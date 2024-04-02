@@ -308,18 +308,20 @@ export async function updateEmbeddings(
       try {
         console.log(`-> [${mdn_url}] Adding embeddings...`);
 
-        // Embedding for full document.
-        const update = {};
-
         if (!has_embedding) {
           const { total_tokens, embedding } = await createEmbedding(
             text,
             EMBEDDING_MODEL
           );
-          Object.assign(update, {
-            total_tokens,
-            embedding: pgvector.toSql(embedding),
-          });
+
+          const query = {
+            name: "upsert-doc-embedding",
+            text: "UPDATE mdn_doc_macro SET total_tokens = $2, embedding = $3 WHERE mdn_url = $1",
+            values: [mdn_url, total_tokens, pgvector.toSql(embedding)],
+            rowMode: "array",
+          };
+
+          await pgClient.query(query);
         }
 
         if (!has_embedding_next) {
@@ -327,26 +329,16 @@ export async function updateEmbeddings(
             text,
             EMBEDDING_MODEL_NEXT
           );
-          Object.assign(update, {
-            embedding_next: pgvector.toSql(embedding),
-          });
+
+          const query = {
+            name: "upsert-doc-embedding-next",
+            text: "UPDATE mdn_doc_macro SET embedding_next = $2 WHERE mdn_url = $1",
+            values: [mdn_url, pgvector.toSql(embedding)],
+            rowMode: "array",
+          };
+
+          await pgClient.query(query);
         }
-
-        // Create/update document record.
-        const query = {
-          name: "upsert-doc-embeddings",
-          text: `
-            UPDATE mdn_doc_macro
-            SET ${Object.keys(update)
-              .map((key, index) => `${key} = $${index + 2}`)
-              .join(", ")}
-            WHERE mdn_url = $1
-          `,
-          values: [mdn_url, ...Object.values(update)],
-          rowMode: "array",
-        };
-
-        await pgClient.query(query);
       } catch (err: any) {
         console.error(`!> [${mdn_url}] Failed to add embeddings.`);
         const context = err?.response?.data ?? err?.response ?? err;
