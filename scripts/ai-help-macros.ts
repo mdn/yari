@@ -138,6 +138,7 @@ export async function updateEmbeddings(
       .digest("base64");
 
     if (existingDoc?.text_hash !== text_hash) {
+      // Document added or content changed => (re)generate embeddings.
       updates.push({
         mdn_url,
         title,
@@ -147,28 +148,31 @@ export async function updateEmbeddings(
         text,
         text_hash,
       });
-    } else if (
-      updateFormatting ||
-      existingDoc?.markdown_hash !== markdown_hash
-    ) {
-      formattingUpdates.push({
-        mdn_url,
-        title,
-        title_short,
-        markdown,
-        markdown_hash,
-      });
-    } else if (
-      !existingDoc.has_embedding ||
-      !existingDoc.has_embedding_next !== !EMBEDDING_MODEL_NEXT
-    ) {
-      const { has_embedding, has_embedding_next } = existingDoc;
-      embeddingUpdates.push({
-        mdn_url,
-        text,
-        has_embedding,
-        has_embedding_next,
-      });
+    } else {
+      if (updateFormatting || existingDoc?.markdown_hash !== markdown_hash) {
+        // Document formatting changed => update markdown.
+        formattingUpdates.push({
+          mdn_url,
+          title,
+          title_short,
+          markdown,
+          markdown_hash,
+        });
+      }
+
+      if (
+        !existingDoc.has_embedding ||
+        !existingDoc.has_embedding_next !== !EMBEDDING_MODEL_NEXT
+      ) {
+        // Embedding missing => add embeddings.
+        const { has_embedding, has_embedding_next } = existingDoc;
+        embeddingUpdates.push({
+          mdn_url,
+          text,
+          has_embedding,
+          has_embedding_next,
+        });
+      }
     }
   }
 
