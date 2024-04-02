@@ -22,8 +22,8 @@ import {
 } from "@mdn/browser-compat-data/types";
 import { h2mSync } from "../markdown/index.js";
 
-const EMBEDDING_MODEL_NEXT = "text-embedding-3-small";
 const EMBEDDING_MODEL = "text-embedding-ada-002";
+const EMBEDDING_MODEL_NEXT = "text-embedding-3-small";
 
 const { program } = caporal;
 
