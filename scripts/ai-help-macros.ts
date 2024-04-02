@@ -22,6 +22,9 @@ import {
 } from "@mdn/browser-compat-data/types";
 import { h2mSync } from "../markdown/index.js";
 
+const EMBEDDING_MODEL_NEXT = "text-embedding-3-small";
+const EMBEDDING_MODEL = "text-embedding-ada-002";
+
 const { program } = caporal;
 
 interface IndexedDoc {
@@ -172,11 +175,11 @@ export async function updateEmbeddings(
         // Embedding for full document.
         const { total_tokens, embedding } = await createEmbedding(
           text,
-          "text-embedding-ada-002"
+          EMBEDDING_MODEL
         );
         const { embedding: embedding_next } = await createEmbedding(
           text,
-          "text-embedding-3-model-small"
+          EMBEDDING_MODEL_NEXT
         );
 
         // Create/update document record.
