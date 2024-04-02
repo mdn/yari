@@ -32,6 +32,8 @@ interface IndexedDoc {
   mdn_url: string;
   title: string;
   token_count: number | null;
+  has_embedding: boolean;
+  has_embedding_next: boolean;
   markdown_hash: string;
   text_hash: string;
 }
@@ -45,6 +47,16 @@ interface Doc {
   text?: string;
   text_hash?: string;
 }
+
+type FormattingUpdate = Pick<
+  Doc,
+  "mdn_url" | "title" | "title_short" | "markdown" | "markdown_hash"
+>;
+
+type EmbeddingUpdate = Pick<Doc, "mdn_url" | "text"> & {
+  has_embedding: boolean;
+  has_embedding_next: boolean;
+};
 
 export async function updateEmbeddings(
   directory: string,
@@ -109,7 +121,8 @@ export async function updateEmbeddings(
 
   const seenUrls = new Set<string>();
   const updates: Doc[] = [];
-  const formattingUpdates: Doc[] = [];
+  const formattingUpdates: FormattingUpdate[] = [];
+  const embeddingUpdates: EmbeddingUpdate[] = [];
 
   for await (const { mdn_url, title, title_short, markdown, text } of builtDocs(
     directory
@@ -145,12 +158,26 @@ export async function updateEmbeddings(
         markdown,
         markdown_hash,
       });
+    } else if (!existingDoc.has_embedding || !existingDoc.has_embedding_next) {
+      const { has_embedding, has_embedding_next } = existingDoc;
+      embeddingUpdates.push({
+        mdn_url,
+        text,
+        has_embedding,
+        has_embedding_next,
+      });
     }
   }
 
   console.log(
     `-> ${updates.length} (${formattingUpdates.length}) of ${seenUrls.size} documents were changed or added (or formatted).`
   );
+  if (embeddingUpdates.length > 0) {
+    console.log(
+      `-> ${embeddingUpdates.length} documents have incomplete embeddings.`
+    );
+  }
+
   const deletions: IndexedDoc[] = [...existingDocByUrl.entries()]
     .filter(([key]) => !seenUrls.has(key))
     .map(([, value]) => value);
@@ -158,7 +185,11 @@ export async function updateEmbeddings(
     `-> ${deletions.length} of ${existingDocs.length} indexed documents were deleted (or moved).`
   );
 
-  if (updates.length > 0 || formattingUpdates.length > 0) {
+  if (
+    updates.length > 0 ||
+    formattingUpdates.length > 0 ||
+    embeddingUpdates.length > 0
+  ) {
     console.log(`Applying updates...`);
     for (const {
       mdn_url,
@@ -230,6 +261,7 @@ export async function updateEmbeddings(
         console.error(context);
       }
     }
+
     for (const {
       mdn_url,
       title,
@@ -266,6 +298,62 @@ export async function updateEmbeddings(
         console.error(context);
       }
     }
+
+    for (const {
+      mdn_url,
+      text,
+      has_embedding,
+      has_embedding_next,
+    } of embeddingUpdates) {
+      try {
+        console.log(`-> [${mdn_url}] Adding embeddings...`);
+
+        // Embedding for full document.
+        const update = {};
+
+        if (!has_embedding) {
+          const { total_tokens, embedding } = await createEmbedding(
+            text,
+            EMBEDDING_MODEL
+          );
+          Object.assign(update, {
+            total_tokens,
+            embedding: pgvector.toSql(embedding),
+          });
+        }
+
+        if (!has_embedding_next) {
+          const { embedding } = await createEmbedding(
+            text,
+            EMBEDDING_MODEL_NEXT
+          );
+          Object.assign(update, {
+            embedding_next: pgvector.toSql(embedding),
+          });
+        }
+
+        // Create/update document record.
+        const query = {
+          name: "upsert-doc-embeddings",
+          text: `
+            UPDATE mdn_doc_macro
+            SET ${Object.keys(update)
+              .map((key, index) => `${key} = $${index + 2}`)
+              .join(", ")}
+            WHERE mdn_url = $1
+          `,
+          values: [mdn_url, ...Object.values(update)],
+          rowMode: "array",
+        };
+
+        await pgClient.query(query);
+      } catch (err: any) {
+        console.error(`!> [${mdn_url}] Failed to add embeddings.`);
+        const context = err?.response?.data ?? err?.response ?? err;
+        console.error(context);
+      }
+    }
+
     console.log(`-> Done.`);
   }
 
@@ -521,6 +609,8 @@ async function fetchAllExistingDocs(pgClient): Promise<IndexedDoc[]> {
             mdn_url,
             title,
             token_count,
+            embedding IS NOT NULL as has_embedding,
+            embedding_next IS NOT NULL as has_embedding_next,
             markdown_hash,
             text_hash
         from mdn_doc_macro
@@ -533,12 +623,23 @@ async function fetchAllExistingDocs(pgClient): Promise<IndexedDoc[]> {
     };
     const result = await pgClient.query(query);
     return result.rows.map(
-      ([id, mdn_url, title, token_count, markdown_hash, text_hash]) => {
+      ([
+        id,
+        mdn_url,
+        title,
+        token_count,
+        has_embedding,
+        has_embedding_next,
+        markdown_hash,
+        text_hash,
+      ]) => {
         return {
           id,
           mdn_url,
           title,
           token_count,
+          has_embedding,
+          has_embedding_next,
           markdown_hash,
           text_hash,
         };
