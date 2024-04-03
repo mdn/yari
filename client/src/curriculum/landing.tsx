@@ -14,6 +14,7 @@ import { CurriculumLayout } from "./layout";
 import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
+import { PartnerBanner } from "./partner-banner";
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -98,6 +99,7 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           return null;
         }}
       />
+      <PartnerBanner />
     </CurriculumLayout>
   );
 }

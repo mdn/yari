@@ -248,6 +248,7 @@
   --curriculum-bg-color-list-item-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
   --curriculum-bg-color-list-item-topic-tooling: #{$mdn-color-light-theme-green-50}30;
   --curriculum-bg-color-list-item-topic-practices: #{$mdn-color-light-theme-violet-50}30;
+  --curriculum-bg-color-partner: #fff;
   --curriculum-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
     -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
   --curriculum-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
@@ -273,6 +274,7 @@
     --curriculum-about-educators: url("../../assets/icons/curriculum-about-educators.svg#light");
     --curriculum-about-not: url("../../assets/icons/curriculum-about-not.svg#light");
     --curriculum-about-students: url("../../assets/icons/curriculum-about-students.svg#light");
+    --curriculum-partner-bg: url("../../assets/curriculum-partner-bg.svg#light");
   }
 
   color-scheme: light;
@@ -525,6 +527,7 @@
   --curriculum-bg-color-list-item-icon-topic-scripting: #806a42;
   --curriculum-bg-color-list-item-icon-topic-tooling: #428050;
   --curriculum-bg-color-list-item-icon-topic-practices: #584280;
+  --curriculum-bg-color-partner: #1f1c1a;
   --curriculum-shadow: 2px 2px 5px 0 rgba(36, 36, 36, 0.15),
     -2px 2px 8px 0 rgba(87, 87, 87, 0.15);
   --curriculum-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
@@ -550,6 +553,7 @@
     --curriculum-about-educators: url("../../assets/icons/curriculum-about-educators.svg#dark");
     --curriculum-about-not: url("../../assets/icons/curriculum-about-not.svg#dark");
     --curriculum-about-students: url("../../assets/icons/curriculum-about-students.svg#dark");
+    --curriculum-partner-bg: url("../../assets/curriculum-partner-bg.svg#dark");
   }
 
   color-scheme: dark;
