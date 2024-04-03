@@ -166,7 +166,7 @@
     "@types/jest": "^29.5.12",
     "@types/mdast": "^4.0.3",
     "@types/node": "^18.16.6",
-    "@types/react": "^18.2.73",
+    "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.23",
     "@types/react-modal": "^3.16.3",
     "babel-jest": "^29.7.0",
