@@ -125,7 +125,8 @@ export function buildLocalizedHandlers(locale: string): Handlers {
               ],
             });
             node.children[0].children[1].value =
-              " " + node.children[0].children[1].value;
+              (["zh-CN", "zh-TW"].includes(locale) ? "" : " ") +
+              node.children[0].children[1].value;
           }
         } else {
           // Remove "Callout:" text
