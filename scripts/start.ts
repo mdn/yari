@@ -24,6 +24,12 @@ async function main() {
         stdio: "inherit",
       });
 
+    if (!(await exists(`${basedir}/popularities.json`)))
+      execSync("yarn tool popularities", {
+        cwd: basedir,
+        stdio: "inherit",
+      });
+
     if (!(await exists(`${basedir}/client/build/en-us/_spas`)))
       execSync("yarn tool spas", {
         cwd: basedir,

@@ -8,7 +8,7 @@ import imagesize from "image-size";
 
 import { Document, FileAttachment } from "../content/index.js";
 import { FLAW_LEVELS } from "../libs/constants/index.js";
-import { findMatchesInText } from "./matches-in-text.js";
+import { findMatchesInText, findMatchesInMarkdown } from "./matches.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../libs/types/document.js";
 
@@ -30,50 +30,57 @@ export function checkImageReferences(
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
-  const checked = new Map();
+  const checked = new Map<string, number>();
 
   function addImageFlaw(
-    $img,
-    src,
-    { explanation, externalImage = false, suggestion = null }
+    $img: cheerio.Cheerio<cheerio.Element>,
+    src: string,
+    {
+      explanation,
+      externalImage = false,
+      suggestion = null,
+    }: {
+      explanation: string;
+      externalImage?: boolean;
+      suggestion?: string;
+    }
   ) {
     // If the document has *two* `<img src="XXX">` tags, this function
     // (addImageFlaw) is called two times. We can then assume the
     // findMatchesInText() will find it two times too. For each call,
     // we need to match the call based in counting matches from findMatchesInText().
-    const matches = [
-      ...findMatchesInText(src, rawContent, {
-        attribute: "src",
-      }),
-    ];
-    const checkedBefore = checked.get(src) || 0;
-    matches.forEach((match, i) => {
-      if (i !== checkedBefore) {
-        return;
-      }
-      if (!("images" in doc.flaws)) {
-        doc.flaws.images = [];
-      }
-      let fixable = false;
-      if (suggestion) {
-        $img.attr("src", suggestion);
-        fixable = true;
-      }
-      const id = `image${doc.flaws.images.length + 1}`;
-      $img.attr("data-flaw", id);
-      doc.flaws.images.push({
-        id,
-        src,
-        fixable,
-        suggestion,
-        explanation,
-        externalImage,
-        ...match,
-      });
-
-      // Use this to remember which in the list of matches we've dealt with.
-      checked.set(src, checkedBefore + 1);
+    const matches = doc.isMarkdown
+      ? findMatchesInMarkdown(src, rawContent, { type: "image" })
+      : findMatchesInText(src, rawContent, { attribute: "src" });
+    const checkedBefore = checked.get(src) ?? 0;
+    if (matches.length <= checkedBefore) {
+      console.warn(
+        `Could not find enough matches for src: ${src}, index ${checkedBefore} out of bounds`
+      );
+      return;
+    }
+    const match = matches[checkedBefore];
+    if (!("images" in doc.flaws)) {
+      doc.flaws.images = [];
+    }
+    const fixable = Boolean(suggestion);
+    if (suggestion) {
+      $img.attr("src", suggestion);
+    }
+    const id = `image${doc.flaws.images.length + 1}`;
+    $img.attr("data-flaw", id);
+    doc.flaws.images.push({
+      id,
+      src,
+      fixable,
+      suggestion,
+      explanation,
+      externalImage,
+      ...match,
     });
+
+    // Use this to remember which in the list of matches we've dealt with.
+    checked.set(src, checkedBefore + 1);
   }
 
   $("img[src]").each((i, element) => {
@@ -238,11 +245,9 @@ export function checkImageWidths(
     }
     const id = `image_widths${doc.flaws.image_widths.length + 1}`;
     $img.attr("data-flaw", id);
-    const matches = [
-      ...findMatchesInText(style, rawContent, {
-        attribute: "style",
-      }),
-    ];
+    const matches = findMatchesInText(style, rawContent, {
+      attribute: "style",
+    });
     const checkedBefore = checked.get(style) || 0;
     matches.forEach((match, i) => {
       if (i !== checkedBefore) {

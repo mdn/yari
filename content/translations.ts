@@ -1,18 +1,13 @@
 import * as Document from "./document.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
+import { Translation } from "../libs/types/document.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })
 );
-
-type Translation = {
-  locale: string;
-  title: string;
-  native: string;
-};
 
 const TRANSLATIONS_OF = new Map<string, Array<Translation>>();
 

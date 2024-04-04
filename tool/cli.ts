@@ -8,6 +8,7 @@ import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
+import cliProgress from "cli-progress";
 import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
@@ -28,8 +29,7 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
+  GOOGLE_ANALYTICS_MEASUREMENT_ID,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
 import { runOptimizeClientBuild } from "./optimize-client-build.js";
@@ -181,7 +181,7 @@ interface PopularitiesActionParameters extends ActionParameters {
 
 interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
   options: {
-    account: string;
+    measurementId: string;
     debug: boolean;
     outfile: string;
   };
@@ -753,15 +753,28 @@ program
       const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
+      const progressBar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_grey
+      );
+      progressBar.start(allDocs.count, 0);
+
       for (const document of allDocs.iterDocs()) {
-        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
-          await buildDocument(document, {
-            fixFlaws: true,
-            fixFlawsTypes: new Set(fixFlawsTypes),
-            fixFlawsVerbose: true,
-          });
+        try {
+          if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+            await buildDocument(document, {
+              fixFlaws: true,
+              fixFlawsTypes: new Set(fixFlawsTypes),
+              fixFlawsVerbose: true,
+            });
+          }
+        } catch (e) {
+          console.error(e);
         }
+        progressBar.increment();
       }
+
+      progressBar.stop();
     })
   )
 
@@ -865,27 +878,21 @@ program
     "Generate a .js file that can be used in SSR rendering"
   )
   .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
+    default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
   })
   .option(
-    "--debug",
-    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
+    "--measurement-id <id>[,<id>]",
+    "Google Analytics measurement IDs (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
     {
-      default: GOOGLE_ANALYTICS_DEBUG,
-    }
-  )
-  .option(
-    "--account <id>",
-    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
-    {
-      default: GOOGLE_ANALYTICS_ACCOUNT,
+      default: GOOGLE_ANALYTICS_MEASUREMENT_ID,
     }
   )
   .action(
     tryOrExit(
       async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, debug, account } = options;
-        if (account) {
+        const { outfile, measurementId } = options;
+        const measurementIds = measurementId.split(",").filter(Boolean);
+        if (measurementIds.length) {
           const dntHelperCode = fs
             .readFileSync(
               new URL("mozilla.dnthelper.min.js", import.meta.url),
@@ -893,30 +900,30 @@ program
             )
             .trim();
 
-          const gaScriptURL = `https://www.google-analytics.com/${
-            debug ? "analytics_debug" : "analytics"
-          }.js`;
+          const firstMeasurementId = measurementIds.at(0);
+          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(firstMeasurementId)}`;
 
           const code = `
 // Mozilla DNT Helper
 ${dntHelperCode}
-// only load GA if DNT is not enabled
+// Load GA unless DNT is enabled.
 if (Mozilla && !Mozilla.dntEnabled()) {
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', '${account}', 'mozilla.org');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  ${measurementIds
+    .map((id) => `gtag('config', '${id}', { 'anonymize_ip': true });`)
+    .join("\n  ")}
 
-    var gaScript = document.createElement('script');
-    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
-    document.head.appendChild(gaScript);
+  var gaScript = document.createElement('script');
+  gaScript.async = true;
+  gaScript.src = '${gaScriptURL}';
+  document.head.appendChild(gaScript);
 }`.trim();
           fs.writeFileSync(outfile, `${code}\n`, "utf-8");
           logger.info(
             chalk.green(
-              `Generated ${outfile} for SSR rendering using ${account}${
-                debug ? " (debug mode)" : ""
-              }.`
+              `Generated ${outfile} for SSR rendering using ${measurementId}.`
             )
           );
         } else {
