@@ -1002,14 +1002,14 @@ function smartLink(href, title, content, subpath) {
  */
 async function makePageLink(aPage) {
   const url = aPage.url.replace('en-US', locale);
-  const title = htmlEscape(aPage.title);
+  let title = htmlEscape(aPage.title);
 
-  if (locale != 'en-US') {
-    aPage.translations.forEach(function(translation){
+  if (locale !== 'en-US') {
+    for (const translation of aPage.translations()) {
       if (translation.locale === locale) {
         title = htmlEscape(translation.title);
       }
-    });
+    }
   }
 
   const pageBadges = (await page.badges(aPage)).join("");
