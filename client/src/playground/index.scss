@@ -1,0 +1,282 @@
+@use "../ui/vars" as *;
+
+.play-menu {
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  .top-navigation-main {
+    justify-content: flex-end;
+  }
+}
+
+main.play {
+  --play-height: calc(
+    100vh - var(--top-nav-height) - var(--top-banner-outer-height)
+  );
+  background-color: var(--background-primary);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  min-height: var(--play-height);
+  padding: 1rem;
+  @media screen and (min-width: $screen-md) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  dialog {
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    box-shadow: 1px 1px 2px var(--border-primary);
+    margin: auto;
+    width: fit-content;
+    z-index: 1;
+
+    > form {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      font-size: var(--type-smaller-font-size);
+      gap: 2rem;
+      max-width: 30rem;
+      overflow-wrap: anywhere;
+      padding: 0.5rem;
+      width: min(calc(100vw - 5rem), 25rem);
+
+      a:hover:not(.button) {
+        text-decoration: underline;
+      }
+
+      > section {
+        display: flex;
+        flex-direction: column;
+
+        &#share-link > a {
+          align-self: center;
+          margin-top: 1rem;
+        }
+
+        > span {
+          font-size: var(--type-base-font-size-rem);
+        }
+
+        .button {
+          margin: 0.5rem auto;
+          width: min(100%, 15rem);
+
+          .button-wrap {
+            height: initial;
+            padding: 0.5rem 1rem;
+          }
+        }
+
+        .share-get-plus {
+          --text-link: var(--plus-accent-color);
+          background-color: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: var(--elem-radius);
+          padding: 0.5rem;
+          text-align: center;
+
+          .auth-container {
+            justify-content: center;
+            margin-top: 1rem;
+          }
+        }
+      }
+
+      #share-cancel {
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+        width: fit-content;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+    }
+
+    > form.flag {
+      > textarea {
+        height: 6rem;
+        resize: vertical;
+        width: 100%;
+      }
+
+      > .buttons {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  section {
+    &.editors {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: max(calc(var(--play-height) - 2rem), 30rem);
+
+      aside {
+        border: 1px solid var(--border-primary);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+
+        h1 {
+          display: inline-flex;
+          font-size: 1rem;
+          margin: auto 0;
+          text-transform: uppercase;
+        }
+
+        .switch {
+          font-size: smaller;
+        }
+
+        menu {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          justify-content: flex-end;
+          margin: 0;
+          margin-left: auto;
+
+          button {
+            text-transform: capitalize;
+
+            &.red {
+              --button-color: var(--text-primary-red);
+            }
+          }
+        }
+      }
+
+      details.editor-container {
+        --editor-header-height: 2.25rem;
+        --editor-header-padding: 0.25rem;
+        --editor-header-border-width: 1px;
+
+        background-color: var(--background-secondary);
+        border: var(--editor-header-border-width) solid var(--border-primary);
+        display: flex;
+        flex-direction: column;
+        min-height: var(--editor-header-height);
+        width: 100%;
+
+        &[open] {
+          height: 100%;
+        }
+
+        &:not(:focus-within) summary {
+          color: var(--text-inactive);
+        }
+
+        summary {
+          cursor: pointer;
+          padding: var(--editor-header-padding);
+        }
+
+        .editor {
+          height: calc(
+            100% - var(--editor-header-height) - 2 *
+              var(--editor-header-padding) - var(--editor-header-border-width)
+          );
+          margin: 0.5rem 0 0;
+          overflow-y: scroll;
+
+          .cm-editor {
+            min-height: 100%;
+            width: 100%;
+
+            @media screen and (max-width: $screen-sm) {
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+    }
+
+    &.preview {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      @media screen and (min-width: 25rem) {
+        .place {
+          align-self: flex-end;
+          max-width: 20rem;
+          min-height: 10rem;
+
+          .pong-box {
+            width: 100%;
+
+            .pong {
+              flex-direction: row;
+            }
+
+            .pong-note {
+              margin-top: 0;
+            }
+          }
+        }
+      }
+
+      button.flag-example {
+        align-self: flex-end;
+        color: var(--text-link);
+        cursor: pointer;
+        font-size: smaller;
+        margin: 0;
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      iframe {
+        height: 100%;
+        width: 100%;
+      }
+
+      #play-console {
+        display: flex;
+        flex-direction: column;
+        font-size: smaller;
+        margin: 0;
+        width: 100%;
+
+        > span {
+          background-color: var(--code-background-inline);
+          font-weight: 600;
+          text-align: center;
+          width: 100%;
+        }
+
+        ul {
+          background-color: var(--code-background-inline);
+          height: 6rem;
+          max-height: 6rem;
+          overflow: auto;
+          width: 100%;
+
+          li {
+            padding: 0 1rem;
+
+            &::before {
+              content: ">";
+            }
+          }
+        }
+      }
+    }
+  }
+}

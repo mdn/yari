@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { ProseSection, Section } from "../libs/types/document";
+import { ProseSection, Section } from "../libs/types/document.js";
 
 /**
  * Given an array of sections, return a plain text

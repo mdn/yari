@@ -1,9 +1,10 @@
-// Note! This is copied verbatim from stumptown-content
+import bcdUntyped from "@mdn/browser-compat-data/forLegacyNode";
+import { CompatData, Identifier } from "@mdn/browser-compat-data/types";
 
-import bcd from "@mdn/browser-compat-data";
+const bcd = bcdUntyped as CompatData;
 
 export function packageBCD(query) {
-  const data = query.split(".").reduce((prev, curr) => {
+  const data: Identifier = query.split(".").reduce((prev, curr) => {
     return prev && Object.prototype.hasOwnProperty.call(prev, curr)
       ? prev[curr]
       : undefined;

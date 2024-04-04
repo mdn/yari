@@ -1,17 +1,17 @@
+import fs from "node:fs";
+
+import { jest } from "@jest/globals";
 import { JSDOM } from "jsdom";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
-
-const dirname = __dirname;
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
-import fs from "node:fs";
-import path from "node:path";
-const groupDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/listgroups/groupdata.json"
+
+const groupDataFixturePath = new URL(
+  "./fixtures/listgroups/groupdata.json",
+  import.meta.url
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf-8")
@@ -23,9 +23,16 @@ const groupDataFixture = JSON.parse(
 const overviewPages = {
   "/en-US/docs/Web/API/An_overview_page_for_ATestInterface_API": {
     tags: ["foo", "bar"],
+    status: [],
   },
-  "/en-US/docs/Web/API/A2TestInterface_overview": { tags: ["experimental"] },
-  "/en-US/docs/Web/API/An_overview_page_for_BTestInterface_API": { tags: [] },
+  "/en-US/docs/Web/API/A2TestInterface_overview": {
+    tags: ["experimental"],
+    status: [],
+  },
+  "/en-US/docs/Web/API/An_overview_page_for_BTestInterface_API": {
+    tags: [],
+    status: [],
+  },
 };
 
 /**
@@ -77,8 +84,8 @@ function compareNode(actual, expected) {
 /**
  * This is the entry point for checking the result of a test.
  */
-function checkResult(html) {
-  expect(lintHTML(html)).toBeFalsy();
+async function checkResult(html) {
+  expect(await lintHTML(html)).toBeFalsy();
   const actualDOM = JSDOM.fragment(html);
   const actualNodes = actualDOM.querySelectorAll("*");
   const expectedDOM = JSDOM.fragment(expectedHTML);
@@ -91,8 +98,8 @@ function checkResult(html) {
 
 function testMacro() {
   itMacro("Test ListGroups macro", (macro) => {
-    return macro.call().then((result) => {
-      checkResult(result);
+    return macro.call().then(async (result) => {
+      await checkResult(result);
     });
   });
 }
@@ -101,7 +108,7 @@ describeMacro("ListGroups", () => {
   beforeEachMacro((macro) => {
     macro.ctx.env.locale = "en-US";
     // Mock calls to wiki.page
-    macro.ctx.wiki.getPage = jest.fn((name) => {
+    macro.ctx.wiki.getPage = jest.fn((name: string) => {
       return overviewPages[name];
     });
     // Mock calls to GroupData
@@ -112,6 +119,10 @@ describeMacro("ListGroups", () => {
       } else {
         return originalgetJSONData(name);
       }
+    });
+    // Mock calls to smartLink
+    macro.ctx.web.smartLink = jest.fn((groupUrl, _, text) => {
+      return `<a href='${groupUrl}'>${text}</a>`;
     });
   });
 

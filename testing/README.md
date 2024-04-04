@@ -19,7 +19,7 @@ attachments generated from that build.
 To run these tests, first run:
 
 ```sh
-export ENV_FILE=testing/.env
+export ENV_FILE=.env.testing
 yarn build:prepare
 yarn build
 yarn start:static-server
@@ -49,7 +49,7 @@ Headless tests are all about using a headless browser to browse the built HTML
 files with `playwright`. It's based on the same steps as above, so first:
 
 ```sh
-export ENV_FILE=testing/.env
+export ENV_FILE=.env.testing
 yarn test:prepare
 ```
 
@@ -100,7 +100,7 @@ developers would see. To run these you first need to run, in one terminal:
 yarn dev
 ```
 
-> NOTE: Ensure that you have `REACT_APP_CRUD_MODE` set to `true` in the `.env`
+> NOTE: Ensure that you have `REACT_APP_WRITER_MODE` set to `true` in the `.env`
 > at the root of the project before running `yarn dev`.
 
 And in another terminal, run:

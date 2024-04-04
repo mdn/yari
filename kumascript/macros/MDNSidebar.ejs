@@ -1,251 +1,226 @@
 <%
 
-const locale = env.locale;
-
-const baseURL = `/${locale}/docs/MDN/`;
-
-const text = mdn.localStringMap({
+const l10nStrings = mdn.localStringMap({
   "en-US": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Community guidelines",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "es": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Community guidelines",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "fr": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Règles de la communauté",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Règles de la communauté",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "ja": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Community guidelines",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "ko": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "커뮤니티 지침",
+      "contributing_to_mdn_web_docs": "MDN에 기역하기",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "pt-BR": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Community guidelines",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "ru": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Community guidelines",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   },
   "zh-CN": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "社区指南",
+      "contributing_to_mdn_web_docs": "为 MDN 做贡献",
+    "writing_guide": "撰写指南",
+      "how_to_guides": "MDN 写作指南",
+      "page_structures": "页面结构",
   },
   "zh-TW": {
-    "MDN_project": "The MDN Web Docs Project",
-    "Community_guide": "Community guidelines",
-      "Comm_overview": "Overview",
-      "Contributing": "Contributing to MDN",
-      "Open_source": "Open source etiquette",
-      "Communication": "Communication channels",
-      "Discuss": "Discussions",
-      "Learn": "Learn forum",
-      "Issues": "Issue guidelines",
-      "PRs": "Pull request guidelines",
-      "Content": "Content repository guidelines",
-      "Users": "Roles and teams",
-    "Writing_guide": "Writing guidelines",
-      "Write_overview": "Overview",
-      "What_write": "What we write",
-      "Style_guide": "Writing style guide",
-      "Howto": "How-to guides",
-      "Structures": "Page structures",
-      "Attrib": "Attribution and copyright",
-      "Exper": "Experimental, deprecated and obsolete",
+    "history": "History",
+    "advisory_board": "Advisory Board",
+    "community_guidelines": "Community guidelines",
+      "contributing_to_mdn_web_docs": "Contributing to MDN Web Docs",
+    "writing_guide": "Writing guidelines",
+      "how_to_guides": "How-to guides",
+      "page_structures": "Page structures",
   }
 });
 
+const sections = [
+  {
+    name: "mdn_project",
+    link: ""
+  },
+  {
+    name: "community_guidelines",
+      subSections: [
+        "Community",
+        {
+          name: "contributing_to_mdn_web_docs",
+          subSections: [
+            "Community/Contributing",
+            "Community/Contributing/Getting_started",
+            "Community/Contributing/Our_repositories",
+            "Community/Contributing/Translated_content",
+            "Community/Contributing/Security_vulnerability_response"
+          ]
+        },
+        "Community/Open_source_etiquette",
+        "Community/Communication_channels",
+        "Community/Discussions",
+        "Community/Learn_forum",
+        "Community/Issues",
+        "Community/Pull_requests",
+        "Community/Roles_teams"
+      ]
+    },
+    {
+      name: "writing_guide",
+      subSections: [
+        "Writing_guidelines",
+        "Writing_guidelines/What_we_write",
+        "Writing_guidelines/Writing_style_guide",
+        {
+          name: "how_to_guides",
+          subSections: [
+            "Writing_guidelines/Howto",
+            "Writing_guidelines/Howto/Images_media",
+            "Writing_guidelines/Howto/Creating_moving_deleting",
+            "Writing_guidelines/Howto/Document_a_CSS_property",
+            "Writing_guidelines/Howto/Document_an_HTTP_header",
+            "Writing_guidelines/Howto/Document_web_errors",
+            "Writing_guidelines/Howto/Research_technology",
+            "Writing_guidelines/Howto/JSON_Structured_data",
+            "Writing_guidelines/Howto/Write_an_api_reference",
+            "Writing_guidelines/Howto/Write_a_new_entry_in_the_glossary",
+            "Writing_guidelines/Howto/Markdown_in_MDN",
+          ]
+        },
+        {
+          "name": "page_structures",
+          subSections: [
+            "Writing_guidelines/Page_structures",
+            "Writing_guidelines/Page_structures/Banners_and_notices",
+            "Writing_guidelines/Page_structures/Code_examples",
+            "Writing_guidelines/Page_structures/Compatibility_tables",
+            "Writing_guidelines/Page_structures/Live_samples",
+            "Writing_guidelines/Page_structures/Page_types",
+            "Writing_guidelines/Page_structures/Sidebars",
+            "Writing_guidelines/Page_structures/Specification_tables",
+            "Writing_guidelines/Page_structures/Syntax_sections",
+            "Writing_guidelines/Page_structures/Macros",
+            "Writing_guidelines/Page_structures/Feature_status",
+          ]
+        },
+        "Writing_guidelines/Attrib_copyright_license",
+        "Writing_guidelines/Experimental_deprecated_obsolete"
+      ]
+    },
+  {
+    name: "advisory_board",
+    subSections: [
+      "MDN_Product_Advisory_Board",
+      "MDN_Product_Advisory_Board/Membership"
+    ]
+  },
+  {
+    name: "history",
+    subSections: [
+      "At_ten",
+      "At_ten/History_of_MDN"
+    ]
+  },
+  {
+    name: "changelog",
+    link: "Changelog"
+  },
+];
+
+const sidebarURL = `/docs/MDN/`;
+const baseURL = `/${env.locale}${sidebarURL}`;
+async function getTitle(pageSlug) {
+  let page = await wiki.getPage(`${baseURL}${pageSlug}`);
+  if (!page.title) {
+    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
+  }
+  return page.title;
+}
+
+async function renderPage(page) {
+  const link = web.smartLink(`${baseURL}${page}`, null, await getTitle(page));
+  return `<li>${link}</li>`;
+}
+
+async function renderSection(section) {
+  let output = `<li class="toggle"><details><summary>${l10nStrings[section.name]}</summary><ol>`;
+  for (const subSection of section.subSections) {
+    if (subSection.subSections) {
+      output += await renderSection(subSection);
+    } else {
+      output += await renderPage(subSection);
+    }
+  }
+  output += "</ol></details></li>";
+  return output;
+}
+
+async function renderSidebar(macroName) {
+ try {
+  let output = '<section id="Quick_links" data-macro="MDNSidebar"><ol>';
+  for (const section of sections) {
+    if (section.subSections) {
+      output += await renderSection(section);
+    } else {
+      output += await renderPage(section.link);
+    }
+  }
+  output += "</ol></section>";
+  return output;
+  } catch (e) {
+    console.warn("error");
+  }
+}
+
+const output = await renderSidebar();
+
 %>
 
-<section id="Quick_links">
-    <ol>
-        <li>
-            <a href="<%=baseURL%>"><%=text['MDN_project']%></a>
-        </li>
-
-        <li class="toggle">
-            <details>
-            <details>
-                <summary><%=text['Community_guide']%></summary>
-                <ol>
-                    <li><a href="<%=baseURL%>Community"><%=text['Comm_overview']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Contributing"><%=text['Contributing']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Open_source_etiquette"><%=text['Open_source']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Communication_channels"><%=text['Communication']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Discussions"><%=text['Discuss']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Learn_forum"><%=text['Learn']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Issues"><%=text['Issues']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Pull_requests"><%=text['PRs']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Mdn_content"><%=text['Content']%></a></li>
-                    <li><a href="<%=baseURL%>Community/Users_teams"><%=text['Users']%></a></li>
-                </ol>
-            </details>
-        </li>
-
-        <li class="toggle">
-            <details>
-                <summary><%=text['Writing_guide']%></summary>
-                <ol>
-                    <li><a href="<%=baseURL%>Writing_guidelines"><%=text['Write_overview']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/What_we_write"><%=text['What_write']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Writing_style_guide"><%=text['Style_guide']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Howto"><%=text['Howto']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Page_structures"><%=text['Structures']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Attrib_copyright_license"><%=text['Attrib']%></a></li>
-                    <li><a href="<%=baseURL%>Writing_guidelines/Experimental_deprecated_obsolete"><%=text['Exper']%></a></li>
-                </ol>
-            </details>
-        </li>
-
-    </ol>
-</section>
+<%-output%>

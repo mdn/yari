@@ -1,17 +1,22 @@
-const fs = require("fs");
-const evalSourceMapMiddleware = require("react-dev-utils/evalSourceMapMiddleware");
-const noopServiceWorkerMiddleware = require("react-dev-utils/noopServiceWorkerMiddleware");
-const ignoredFiles = require("react-dev-utils/ignoredFiles");
-const redirectServedPath = require("react-dev-utils/redirectServedPathMiddleware");
-const paths = require("./paths");
-const getHttpsConfig = require("./getHttpsConfig");
+import fs from "node:fs";
+import evalSourceMapMiddleware from "react-dev-utils/evalSourceMapMiddleware.js";
+import noopServiceWorkerMiddleware from "react-dev-utils/noopServiceWorkerMiddleware.js";
+import ignoredFiles from "react-dev-utils/ignoredFiles.js";
+import redirectServedPath from "react-dev-utils/redirectServedPathMiddleware.js";
+
+import paths from "./paths.js";
+import getServerConfig from "./getHttpsConfig.js";
 
 const host = process.env.HOST || "0.0.0.0";
 const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
-module.exports = function (proxy, allowedHost) {
+const proxySetup = fs.existsSync(paths.proxySetup)
+  ? (await import("file://" + paths.proxySetup)).default
+  : null;
+
+function config(proxy, allowedHost) {
   const disableFirewall =
     !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === "true";
   return {
@@ -88,8 +93,7 @@ module.exports = function (proxy, allowedHost) {
       // remove last slash so user can land on `/test` instead of `/test/`
       publicPath: paths.publicUrlOrPath.slice(0, -1),
     },
-
-    https: getHttpsConfig(),
+    server: getServerConfig(),
     host,
     historyApiFallback: {
       // Paths with dots should still use the history fallback.
@@ -107,9 +111,9 @@ module.exports = function (proxy, allowedHost) {
         evalSourceMapMiddleware(devServer)
       );
 
-      if (fs.existsSync(paths.proxySetup)) {
+      if (proxySetup) {
         // This registers user provided middleware for proxy reasons
-        require(paths.proxySetup)(devServer.app);
+        proxySetup(devServer.app);
       }
 
       middlewares.push(
@@ -127,4 +131,6 @@ module.exports = function (proxy, allowedHost) {
       return middlewares;
     },
   };
-};
+}
+
+export default config;

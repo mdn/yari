@@ -3,43 +3,14 @@ import { Doc } from "../../../libs/types/document";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h3>Found a content problem with this page?</h3>
-      <ul>
-        <li>
-          Edit the page <EditOnGitHubLink doc={doc} />.
-        </li>
-        <li>
-          Report the <NewIssueOnGitHubLink doc={doc} />.
-        </li>
-        <li>
-          View the source <SourceOnGitHubLink doc={doc} />.
-        </li>
-      </ul>
-      Want to get more involved? Learn{" "}
-      <a
-        href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
-        title={`This will take you to our contribution guidelines on GitHub.`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        how to contribute
-      </a>
-      .
+      <SourceOnGitHubLink doc={doc}>
+        View this page on GitHub
+      </SourceOnGitHubLink>{" "}
+      •{" "}
+      <NewIssueOnGitHubLink doc={doc}>
+        Report a problem with this content
+      </NewIssueOnGitHubLink>
     </div>
-  );
-}
-
-function EditOnGitHubLink({ doc }: { doc: Doc }) {
-  const { github_url } = doc.source;
-  return (
-    <a
-      href={github_url.replace("/blob/", "/edit/")}
-      title={`This will take you to GitHub, where you'll need to sign in first.`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      on GitHub
-    </a>
   );
 }
 
@@ -71,7 +42,13 @@ function fillMetadata(string, doc) {
     .trim();
 }
 
-function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
+function NewIssueOnGitHubLink({
+  doc,
+  children,
+}: {
+  doc: Doc;
+  children: React.ReactNode;
+}) {
   const { locale } = doc;
   const url = new URL("https://github.com/");
   const sp = new URLSearchParams();
@@ -98,12 +75,18 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      content issue
+      {children}
     </a>
   );
 }
 
-function SourceOnGitHubLink({ doc }: { doc: Doc }) {
+function SourceOnGitHubLink({
+  doc,
+  children,
+}: {
+  doc: Doc;
+  children: React.ReactNode;
+}) {
   const { github_url, folder } = doc.source;
   return (
     <a
@@ -112,7 +95,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      on GitHub
+      {children}
     </a>
   );
 }

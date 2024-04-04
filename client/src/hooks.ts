@@ -4,6 +4,7 @@ import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
 import { FeatureId } from "./constants";
 import { OFFLINE_SETTINGS_KEY, useUserData } from "./user-context";
+import { Theme } from "./types/theme";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -51,6 +52,47 @@ export function useOnClickOutside(ref, handler) {
     // ... passing it into this hook.
     [ref, handler]
   );
+}
+
+function getCurrentTheme(): Theme {
+  const { classList } = document.documentElement;
+
+  const themes: Theme[] = ["os-default", "dark", "light"];
+  for (const theme of themes) {
+    if (classList.contains(theme)) {
+      return theme;
+    }
+  }
+
+  // Fallback.
+  return "light";
+}
+
+export function useTheme() {
+  const isServer = useIsServer();
+  const [theme, setTheme] = useState<Theme>();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
+    const updateScheme = () => setTheme(getCurrentTheme());
+
+    // Update once.
+    updateScheme();
+
+    // Listen for changes.
+    const observer = new MutationObserver(updateScheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [isServer]);
+
+  return theme;
 }
 
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
@@ -171,3 +213,59 @@ export function usePing() {
     }
   }, [isOnline, user]);
 }
+
+function getIsDocumentHidden() {
+  if (typeof document !== "undefined") {
+    return !document.hidden;
+  }
+  return false;
+}
+
+export function usePageVisibility() {
+  const [isVisible, setIsVisible] = React.useState(getIsDocumentHidden());
+  const onVisibilityChange = () => setIsVisible(getIsDocumentHidden());
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const visibilityChange = "visibilitychange";
+      document.addEventListener(visibilityChange, onVisibilityChange, false);
+      return () => {
+        document.removeEventListener(visibilityChange, onVisibilityChange);
+      };
+    }
+  });
+  return isVisible;
+}
+
+export function useIsIntersecting(
+  node: HTMLElement | undefined,
+  options: IntersectionObserverInit
+) {
+  const [isIntersectingState, setIsIntersectingState] = useState(false);
+  useEffect(() => {
+    if (node && window.IntersectionObserver) {
+      const intersectionObserver = new IntersectionObserver((entries) => {
+        const [{ isIntersecting = false } = {}] = entries;
+        setIsIntersectingState(isIntersecting);
+      }, options);
+      intersectionObserver.observe(node);
+      return () => {
+        intersectionObserver.disconnect();
+      };
+    }
+  }, [node, options]);
+  return isIntersectingState;
+}
+
+export const useScrollToAnchor = () => {
+  const scrolledRef = React.useRef(false);
+  const { hash } = useLocation();
+  React.useEffect(() => {
+    if (hash && !scrolledRef.current) {
+      const element = document.getElementById(hash.replace("#", ""));
+      if (element) {
+        element.scrollIntoView({ behavior: "instant" });
+        scrolledRef.current = true;
+      }
+    }
+  });
+};

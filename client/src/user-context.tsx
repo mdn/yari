@@ -1,7 +1,11 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import {
+  DISABLE_AUTH,
+  DEFAULT_GEO_COUNTRY,
+  DEFAULT_GEO_COUNTRY_ISO,
+} from "./env";
 import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
 
 const DEPRECATED_LOCAL_STORAGE_KEYS = [
@@ -20,8 +24,10 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
+  aiHelpHistory: boolean | null;
   collectionLastModified: Date | null;
   mdnplusNewsletter: boolean | null;
+  noAds: boolean | null;
 };
 
 export class OfflineSettingsData {
@@ -61,7 +67,7 @@ export class OfflineSettingsData {
   }
 }
 
-export type UserData = {
+export type User = {
   username: string | null | undefined;
   isAuthenticated: boolean;
   isBetaTester: boolean;
@@ -75,6 +81,7 @@ export type UserData = {
   email: string | null | undefined;
   geo: {
     country: string;
+    country_iso: string;
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
@@ -82,7 +89,12 @@ export type UserData = {
   mutate: () => void;
 };
 
-export const UserDataContext = React.createContext<UserData | null>(null);
+export type UserData =
+  | User
+  | (Partial<User> & { maintenance: string })
+  | undefined;
+
+export const UserDataContext = React.createContext<UserData>(undefined);
 
 // The argument for using sessionStorage rather than localStorage is because
 // it's marginally simpler and "safer". For example, if we use localStorage
@@ -103,13 +115,13 @@ function getSessionStorageData() {
       if (!parsed.geo) {
         // If we don't do this check, you might be returning stored data
         // that doesn't match any of the new keys.
-        return false;
+        return undefined;
       }
-      return parsed as UserData;
+      return parsed as User;
     }
   } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
-    return null;
+    return undefined;
   }
 }
 
@@ -147,7 +159,7 @@ function removeDeprecatedLocalStorageData() {
   }
 }
 
-function setSessionStorageData(data: UserData) {
+function setSessionStorageData(data: User) {
   try {
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
   } catch (error: any) {
@@ -156,7 +168,7 @@ function setSessionStorageData(data: UserData) {
 }
 
 export function UserDataProvider(props: { children: React.ReactNode }) {
-  const { data, mutate } = useSWR<UserData | null, Error | null>(
+  const { data, error, isLoading, mutate } = useSWR<User | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
     async (url) => {
       const response = await fetch(url);
@@ -169,10 +181,15 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         data?.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data?.settings
         ? {
+            aiHelpHistory:
+              typeof data?.settings?.ai_help_history === "boolean"
+                ? data.settings.ai_help_history
+                : null,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
             mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
+            noAds: data?.settings?.no_ads || null,
           }
         : null;
 
@@ -192,6 +209,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         email: data.email || null,
         geo: {
           country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+          country_iso:
+            (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
         },
         maintenance: data.maintenance,
         settings,
@@ -234,10 +253,18 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     }
   }, [data]);
 
-  let userData = data || getSessionStorageData();
+  const userData = isLoading
+    ? getSessionStorageData()
+    : error || !data
+      ? {
+          ...getSessionStorageData(),
+          ...data,
+          maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
+        }
+      : data;
 
   return (
-    <UserDataContext.Provider value={userData || null}>
+    <UserDataContext.Provider value={userData}>
       {props.children}
     </UserDataContext.Provider>
   );

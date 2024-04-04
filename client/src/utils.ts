@@ -1,5 +1,6 @@
 import { IEX_DOMAIN } from "./env";
 import { Theme } from "./types/theme";
+import { User } from "./user-context";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
@@ -57,6 +58,17 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   if (window && html) {
     html.className = theme;
     html.style.backgroundColor = "";
+
+    setTimeout(() => {
+      const meta = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]'
+      );
+      const color = getComputedStyle(document.body).backgroundColor;
+      if (meta && color) {
+        meta.content = color;
+      }
+    }, 1);
+
     try {
       window.localStorage.setItem("theme", theme);
     } catch (err) {
@@ -67,7 +79,7 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   }
 }
 
-export function isPlusSubscriber(user) {
+export function isPlusSubscriber(user): user is User {
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&
@@ -108,4 +120,19 @@ export function charSlice(string: string, start?: number, end?: number) {
 
 export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
+}
+
+/**
+ * Used by quicksearch and sidebar filters.
+ */
+export function splitQuery(term: string): string[] {
+  term = term.trim().toLowerCase();
+
+  if (term.startsWith(".") || term.endsWith(".")) {
+    // Dot is probably meaningful.
+    return term.split(/[ ,]+/);
+  } else {
+    // Dot is probably just a word separator.
+    return term.split(/[ ,.]+/);
+  }
 }

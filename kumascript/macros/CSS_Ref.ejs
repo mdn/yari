@@ -9,11 +9,12 @@
   $1 - Item grouping type
        (valid values: 'alphabetically', 'no'; defaults to 'alphabetically')
   $2 - Array of strings used to filter the items by their status
-       (valid values: 'standard', 'experimental', "nonstandard', 'obsolete';
+       (valid values: 'standard', 'experimental', "nonstandard';
        defaults to ['standard', 'experimental'])
 */
 
 const data = require('mdn-data/css');
+
 let types = ["properties", "selectors", "types", "syntaxes", "at-rules",
              "descriptors", "units"];
 let groupingType = "alphabetically";
@@ -393,6 +394,7 @@ for (let i in characters) {
         let item = index[characters[i]][j];
 
         switch (item.label) {
+            // Add alternate name for pseudo-elements (one colon)
             case "::after":
             case "::before":
             case "::first-letter":
@@ -400,8 +402,10 @@ for (let i in characters) {
                 item.label += ` (${item.label.replace(/^:/, "")})`;
                 break;
 
+            // Font-feature-values
             case "@annotation":
             case "@character-variant":
+            case "@historical-forms":
             case "@ornaments":
             case "@styleset":
             case "@stylistic":
@@ -409,6 +413,7 @@ for (let i in characters) {
                 item.urlPath = `@font-feature-values#${item.label}`;
                 break;
 
+            // Font-variant-alternates
             case "annotation()":
             case "character-variant()":
             case "ornaments()":
@@ -418,18 +423,17 @@ for (let i in characters) {
                 item.urlPath = `font-variant-alternates#${item.label}`;
                 break;
 
-            case "format()":
-                item.urlPath = "@font-face/src#format()";
-                break;
 
+            // Image
             case "image()":
                 item.urlPath = "image#The_image()_functional_notation";
                 break;
-
-            case "url()":
-                item.urlPath = "url#The_url()_functional_notation";
+            case "image-set()":
+            case "paint()":
+                item.urlPath = `image/${item.label.replace("()", "")}`;
                 break;
 
+            // Filter
             case "blur()":
             case "brightness()":
             case "contrast()":
@@ -443,6 +447,7 @@ for (let i in characters) {
                 item.urlPath = `filter-function/${item.label.replace("()", "")}`;
                 break;
 
+            // Transforms
             case "matrix()":
             case "matrix3d()":
             case "perspective()":
@@ -467,24 +472,46 @@ for (let i in characters) {
                 item.urlPath = `transform-function/${item.label.replace("()", "")}`;
                 break;
 
+            // Colors
+            case "rgba()": // Still valid but alternative name for rgb()
+                item.urlPath = "color_value/rgb";
+                break;
+            case "hsla()": // Still valid but alternative name for hsl()
+                item.urlPath = "color_value/hsl";
+                break;
             case "rgb()":
-            case "rgba()":
             case "hsl()":
-            case "hsla()":
-                item.urlPath = `color_value#${item.label}`;
+            case "hwb()":
+            case "lab()":
+            case "lch()":
+            case "light-dark()":
+            case "oklab()":
+            case "oklch()":
+                item.urlPath = `color_value/${item.label.replace("()", "")}`;
                 break;
 
+            // Gradients
+            case "conic-gradient()":
+            case "linear-gradient()":
+            case "radial-gradient()":
+            case "repeating-conic-gradient()":
+            case "repeating-linear-gradient()":
+            case "repeating-radial-gradient()":
+                item.urlPath = `gradient/${item.label.replace("()", "")}`;
+                break;
+
+            // Shapes
             case "inset()":
             case "polygon()":
             case "circle()":
             case "ellipse()":
                 item.urlPath = `basic-shape#${item.label}`;
                 break;
-
             case "rect()":
                 item.urlPath = `shape#${item.label}`;
                 break;
 
+            // @page
             case "@top-left-corner":
             case "@top-left":
             case "@top-center":
@@ -504,10 +531,37 @@ for (let i in characters) {
                 item.urlPath = "@page#page-margin-box-type";
                 break;
 
+            // Easing functions
             case "cubic-bezier()":
-            case "frames()":
+                item.urlPath = "easing-function#cubic_bézier_easing_function";
+                break;
+            case "linear()":
+                item.urlPath = "easing-function#linear_easing_function";
+                break;
             case "steps()":
-                item.urlPath = `single-transition-timing-function#${item.label}`;
+                item.urlPath = `easing-function#steps_easing_function`;
+                break;
+
+            // Alternate name
+            case "word-wrap":
+                item.urlPath = "overflow-wrap";
+                break;
+            case "line-clamp": // Nobody implements it under this name
+                item.urlPath = "-webkit-line-clamp"
+                break;
+
+            // Misc
+            case "view()":
+                item.urlPath = "animation-timeline/view";
+                break;
+            case ":host()":
+                item.urlPath = ":host_function"
+                break;
+            case "format()":
+                item.urlPath = "@font-face/src#format()";
+                break;
+            case "url()":
+                item.urlPath = "url#The_url()_functional_notation";
                 break;
         }
     }

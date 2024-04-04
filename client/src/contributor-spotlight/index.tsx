@@ -2,12 +2,15 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE } from "../env";
-import { HydrationData } from "../types/hydration";
+import { WRITER_MODE } from "../env";
+import { HydrationData } from "../../../libs/types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
+import { useLocale } from "../hooks";
+import { PageNotFound } from "../page-not-found";
+import { Loading } from "../ui/atoms/loading";
 
 type ContributorDetails = {
   sections: [string];
@@ -23,13 +26,14 @@ type ContributorDetails = {
 };
 
 export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
-  const { "*": slug, locale = "en-US" } = useParams();
+  const locale = useLocale();
+  const { "*": slug } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 
   const fallbackData = props.hyData ? props : undefined;
 
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { error, data: { hyData } = {} } = useSWR<any>(
     contributorJSONUrl,
     async (url) => {
       const response = await fetch(url);
@@ -41,7 +45,7 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
     },
     {
       fallbackData,
-      revalidateOnFocus: CRUD_MODE,
+      revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: !fallbackData,
     }
   );
@@ -53,37 +57,39 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
     document.title = pageTitle;
   }, [hyData]);
 
+  if (error) {
+    return <PageNotFound />;
+  } else if (!hyData) {
+    return <Loading />;
+  }
+
   return (
     <>
       <main className="contributor-spotlight-content-container">
-        {hyData && (
-          <>
-            <h1 className="_ify">Contributor profile</h1>
-            <section className="profile-header">
-              <img
-                className="profile-image"
-                src={`${baseURL}/${hyData.profileImg}`}
-                alt={hyData.profileImgAlt}
-                width="200"
-                height="200"
-              />
-              <a
-                className="username"
-                href={`https://github.com/${hyData.usernames.github}`}
-              >
-                @{hyData.usernames.github}
-              </a>
-            </section>
-            <section
-              dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
-            ></section>
-            <Quote name={hyData.contributorName}>{hyData.quote}</Quote>
+        <h1 className="_ify">Contributor profile</h1>
+        <section className="profile-header">
+          <img
+            className="profile-image"
+            src={`${baseURL}/${hyData.profileImg}`}
+            alt={hyData.profileImgAlt}
+            width="200"
+            height="200"
+          />
+          <a
+            className="username"
+            href={`https://github.com/${hyData.usernames.github}`}
+          >
+            @{hyData.usernames.github}
+          </a>
+        </section>
+        <section
+          dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
+        ></section>
+        <Quote name={hyData.contributorName}>{hyData.quote}</Quote>
 
-            {hyData.sections.slice(1).map((section) => {
-              return <section dangerouslySetInnerHTML={{ __html: section }} />;
-            })}
-          </>
-        )}
+        {hyData.sections.slice(1).map((section) => {
+          return <section dangerouslySetInnerHTML={{ __html: section }} />;
+        })}
       </main>
       <GetInvolved />
     </>

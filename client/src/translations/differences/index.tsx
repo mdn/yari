@@ -2,7 +2,6 @@ import React from "react";
 import {
   createSearchParams,
   Link,
-  useParams,
   useSearchParams,
   useNavigate,
 } from "react-router-dom";
@@ -13,6 +12,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "./index.scss";
 
 import { MainContentContainer } from "../../ui/atoms/page-content";
+import { Paginator } from "../../ui/molecules/paginator";
+import { useLocale } from "../../hooks";
 
 dayjs.extend(relativeTime);
 
@@ -35,6 +36,8 @@ interface DocumentEdits {
   parentModified: string;
   commitURL: string;
   parentCommitURL: string;
+  sourceCommitsBehindCount?: number;
+  sourceCommitURL?: string;
 }
 
 interface Document {
@@ -107,7 +110,7 @@ function getStorage(locale: string): LocaleStorageData | null {
 }
 
 export function TranslationDifferences() {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -228,6 +231,7 @@ export function TranslationDifferences() {
         <div className="filter-documents">
           <FilterControls />
           <DocumentsTable
+            locale={locale}
             counts={lastData.counts}
             documents={lastData.documents}
             sort={sort}
@@ -481,11 +485,13 @@ function matchNumericOperation(value: number, op: NumericOperation): boolean {
 }
 
 function DocumentsTable({
+  locale,
   counts,
   documents,
   sort,
   sortReverse,
 }: {
+  locale: string;
   counts: Counts;
   documents: Document[];
   sort: string;
@@ -515,11 +521,9 @@ function DocumentsTable({
             setSearchParams(createSearchParams({ sort: id }));
           }
         }}
-        className={`sortable ${sort === id ? "active" : ""} ${
-          sort === id && sortReverse ? "reverse" : ""
-        }`}
+        className="sortable"
       >
-        {title}
+        {title} {sort === id ? (sortReverse ? "↓" : "↑") : null}
       </th>
     );
   }
@@ -574,6 +578,10 @@ function DocumentsTable({
         const a = A.mdn_url;
         const b = B.mdn_url;
         return reverse * a.localeCompare(b);
+      } else if (sort === "sourceCommit") {
+        const a = A.edits.sourceCommitsBehindCount ?? -1;
+        const b = B.edits.sourceCommitsBehindCount ?? -1;
+        return reverse * (b - a);
       } else {
         throw new Error(`Unrecognized sort '${sort}'`);
       }
@@ -583,10 +591,17 @@ function DocumentsTable({
   return (
     <div className="documents">
       <h3>
-        Documents found ({filteredDocuments.length.toLocaleString()}){" "}
-        {page > 1 && <span className="page">page {page}</span>}{" "}
-        <small>of {counts.total.toLocaleString()} in total</small>
+        Documents with differences found (
+        {filteredDocuments.length.toLocaleString()}){" "}
+        {pageCount > 1 && (
+          <span className="page">
+            page {page}/{pageCount}
+          </span>
+        )}
       </h3>
+      <h4 className="subheader">
+        {counts.total.toLocaleString()} total documents found ({locale})
+      </h4>
 
       {filterDifferences && !filterDifferencesOperation && (
         <div className="error-message">
@@ -606,6 +621,7 @@ function DocumentsTable({
             <TableHead id="popularity" title="Popularity" />
             <TableHead id="modified" title="Last modified" />
             <TableHead id="differences" title="Differences" />
+            <TableHead id="sourceCommit" title="Source Commit" />
           </tr>
         </thead>
         <tbody>
@@ -658,25 +674,45 @@ function DocumentsTable({
                     <LastModified edits={doc.edits} />
                   </td>
                   <td>{doc.differences.total.toLocaleString()}</td>
+                  <td>
+                    <L10nSourceCommitModified
+                      sourceCommitsBehindCount={
+                        doc.edits.sourceCommitsBehindCount
+                      }
+                      sourceCommitURL={doc.edits.sourceCommitURL}
+                    />
+                  </td>
                 </tr>
               );
             })}
         </tbody>
       </table>
-      {pageCount > 1 && (
-        <p className="pagination">
-          <PageLink number={1} disabled={page === 1}>
-            First page
-          </PageLink>{" "}
-          {page > 2 && (
-            <PageLink number={page - 1}>Previous page ({page - 1})</PageLink>
-          )}{" "}
-          <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-            Next page ({page + 1})
-          </PageLink>
-        </p>
-      )}
+
+      <Paginator last={pageCount} />
     </div>
+  );
+}
+
+function L10nSourceCommitModified({
+  sourceCommitsBehindCount,
+  sourceCommitURL,
+}: Pick<DocumentEdits, "sourceCommitsBehindCount" | "sourceCommitURL">) {
+  if (
+    !sourceCommitURL ||
+    (!sourceCommitsBehindCount && sourceCommitsBehindCount !== 0)
+  ) {
+    return <>Metadata does not exist.</>;
+  }
+
+  const getImportanceColor = () => {
+    if (sourceCommitsBehindCount === 0) return "🟢";
+    return sourceCommitsBehindCount < 10 ? "🟠" : "🔴";
+  };
+
+  return (
+    <a
+      href={sourceCommitURL}
+    >{`${getImportanceColor()} ${sourceCommitsBehindCount} commits behind`}</a>
   );
 }
 
@@ -758,39 +794,4 @@ function getGetOrdinal(n: number) {
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
   return n.toLocaleString() + (s[(v - 20) % 10] || s[v] || s[0]);
-}
-
-function PageLink({
-  number,
-  disabled,
-  children,
-}: {
-  number: number;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  const [searchParams] = useSearchParams();
-  const params = createSearchParams(searchParams);
-  if (number > 1) {
-    params.set("page", `${number}`);
-  } else {
-    params.delete("page");
-  }
-  return (
-    <Link
-      to={"?" + params.toString()}
-      className={disabled ? "disabled" : ""}
-      onClick={(event) => {
-        if (disabled) {
-          event.preventDefault();
-        }
-        const top = document.querySelector("div.all-translations");
-        if (top) {
-          top.scrollIntoView({ behavior: "smooth" });
-        }
-      }}
-    >
-      {children}
-    </Link>
-  );
 }

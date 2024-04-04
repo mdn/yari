@@ -1,19 +1,21 @@
 <%
 var str = mdn.localString({
+    "en-US": "Read only ",
     "fr": "Lecture seule ",
     "ja": "読取専用 ",
-    "ru": "Только для чтения ",
+    "ko": "읽기 전용",
     "pt-BR": "Somente leitura ",
-    "zh-CN": "只读 ",
-    "en-US": "Read only "
+    "ru": "Только для чтения ",
+    "zh-CN": "只读 "
 });
 
 var title = mdn.localString({
+    "en-US": "This value may not be changed.",
     "fr": "Cette valeur ne peut pas être changée.",
-    "ru": "Это значение изменять нельзя.",
+    "ko": "이 값은 변경 할 수 없습니다.",
     "pt-BR": "Este valor não pode ser alterado.",
+    "ru": "Это значение изменять нельзя.",
     "zh-CN": "该属性的值无法更改",
-    "en-US": "This value may not be changed."
 });
 %>
 <span title="<%= title %>" class="badge inline readonly"><%= str %></span>

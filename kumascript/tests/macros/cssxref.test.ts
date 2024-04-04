@@ -1,4 +1,5 @@
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
+import { jest } from "@jest/globals";
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 // Basic const
 const CSS_BASE_URL = "/en-US/docs/Web/CSS";
@@ -34,9 +35,9 @@ const MOCK_PAGES = {
     },
   },
   attr: {
-    url: [CSS_BASE_URL, "attr()"].join("/"),
+    url: [CSS_BASE_URL, "attr"].join("/"),
     data: {
-      url: [CSS_BASE_URL, "attr()"].join("/"),
+      url: [CSS_BASE_URL, "attr"].join("/"),
       summary:
         'The <strong><code>attr()</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> function is used to retrieve the value of an attribute of the selected element and use it in the style sheet.',
       pageType: "css-function",

@@ -1,13 +1,13 @@
-import { packageBCD } from "./resolve-bcd";
-import * as bcd from "@mdn/browser-compat-data/types";
-import { Specification } from "../libs/types/document";
-import specs from "web-specs";
-import web from "../kumascript/src/api/web";
+import { packageBCD } from "./resolve-bcd.js";
+import bcd from "@mdn/browser-compat-data/types";
+import { Specification } from "../libs/types/document.js";
+import web from "../kumascript/src/api/web.js";
+import { getWebSpec } from "./web-specs.js";
 
-export function extractSpecifications(
+export async function extractSpecifications(
   query: string | undefined,
   specURLsString: string
-): Specification[] {
+): Promise<Specification[]> {
   if (query === undefined && specURLsString === "") {
     return [];
   }
@@ -92,36 +92,30 @@ export function extractSpecifications(
 
   // Use BCD specURLs to look up more specification data
   // from the web-specs package
-  const specifications = specURLs
-    .map((specURL) => {
-      const spec = specs.find(
-        (spec) =>
-          specURL.startsWith(spec.url) ||
-          specURL.startsWith(spec.nightly.url) ||
-          spec.nightly.alternateUrls.some((s) => specURL.startsWith(s)) ||
-          // When grabbing series nightly, make sure we're grabbing the latest spec version
-          (spec.shortname === spec.series.currentSpecification &&
-            specURL.startsWith(spec.series.nightlyUrl))
-      );
-      const specificationsData = {
-        bcdSpecificationURL: specURL,
-        title: "Unknown specification",
-      };
-      if (spec) {
-        specificationsData.title = spec.title;
-      } else {
-        const specList = web.getJSONData("SpecData");
-        const titleFromSpecData = Object.keys(specList).find(
-          (key) => specList[key]["url"] === specURL.split("#")[0]
-        );
-        if (titleFromSpecData) {
-          specificationsData.title = titleFromSpecData;
+  const specifications = (
+    await Promise.all(
+      specURLs.map(async (specURL) => {
+        const spec = await getWebSpec(specURL);
+        const specificationsData = {
+          bcdSpecificationURL: specURL,
+          title: "Unknown specification",
+        };
+        if (spec) {
+          specificationsData.title = spec.title;
+        } else {
+          const specList = web.getJSONData("SpecData");
+          const titleFromSpecData = Object.keys(specList).find(
+            (key) => specList[key]["url"] === specURL.split("#")[0]
+          );
+          if (titleFromSpecData) {
+            specificationsData.title = titleFromSpecData;
+          }
         }
-      }
 
-      return specificationsData;
-    })
-    .filter(Boolean);
+        return specificationsData;
+      })
+    )
+  ).filter(Boolean);
 
   return specifications;
 }
