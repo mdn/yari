@@ -5,9 +5,8 @@
     background-color: var(--curriculum-bg-color-partner);
     background-image: var(--curriculum-partner-bg);
     background-repeat: no-repeat;
-    box-shadow:
-      -4px -4px 8px 0 #b3b3b326,
-      4px 4px 8px 0 #b3b3b326;
+    border: 1px solid var(--curriculum-border-color);
+    box-shadow: var(--curriculum-shadow);
     display: grid;
     grid-template-areas: "h2" "image" "p" "a";
     margin: 1rem auto;
@@ -47,6 +46,10 @@
           text-align: left;
         }
 
+        > em {
+          color: var(--curriculum-category-color);
+          font-style: normal;
+        }
         > span {
           display: inline-block;
           min-width: max-content;

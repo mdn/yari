@@ -15,7 +15,7 @@ export function PartnerBanner(props: HydrationData<any, CurriculumDoc>) {
         <div className="partner-banner">
           <section>
             <h2>
-              Learn the curriculum with Scrimba and become{" "}
+              Learn the curriculum with <em>Scrimba</em> and become{" "}
               <span>job ready</span>
             </h2>
             <p>
