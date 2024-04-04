@@ -152,7 +152,7 @@
     "@babel/core": "^7.24.4",
     "@babel/eslint-parser": "^7.24.1",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/preset-env": "^7.24.3",
+    "@babel/preset-env": "^7.24.4",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.42.1",
