@@ -5,9 +5,12 @@
 @mixin light-theme {
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
+  --text-active: #{$mdn-theme-light-text-active};
   --text-inactive: #{$mdn-theme-light-text-inactive};
   --text-link: #{$mdn-theme-light-text-link};
+  --text-visited: #551a8b; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1787-1790
   --text-invert: #{$mdn-theme-light-text-invert};
+  --text-muted: #{$mdn-theme-light-text-muted};
 
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
@@ -37,6 +40,8 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
+  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-light-border-primary};
   --border-secondary: #{$mdn-theme-light-border-secondary};
@@ -181,6 +186,7 @@
   --ai-help-header: #{$mdn-color-neutral-light-70};
   --ai-help-mandala: #{$mdn-color-light-theme-green-30};
   --ai-help-icon: #{$mdn-color-light-theme-green-50};
+  --ai-help-accent-background-color: #{$mdn-color-light-theme-green-50}10;
 
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
@@ -188,14 +194,88 @@
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-50};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-50, 0.2)};
 
-  --baseline-supported-bg: #e6f4ea;
-  --baseline-supported-engine-bg: #ceead6;
-  --baseline-supported-img: url("../../assets/icons/baseline/check.svg");
-  --baseline-unsupported-bg: #f1f3f4;
-  --baseline-unsupported-engine-bg: #e3e6e8;
-  --baseline-unsupported-img: url("../../assets/icons/baseline/cross.svg");
-  --baseline-browser-supported-bg: #1e8e3e;
-  --baseline-browser-unsupported-bg: #666;
+  --baseline-high-bg: #e6f4ea;
+  --baseline-high-engine-bg: #ceead6;
+  --baseline-high-img: url("../../assets/icons/baseline/high.svg");
+  --baseline-high-check: #099949;
+  --baseline-low-bg: #e8f0fe;
+  --baseline-low-engine-bg: #d2e3fc;
+  --baseline-low-check: #1a73e8;
+  --baseline-low-img: url("../../assets/icons/baseline/low.svg");
+  --baseline-low-pill-bg: #3367d6;
+  --baseline-low-pill-color: #f1f3f4;
+  --baseline-limited-bg: #f1f3f4;
+  --baseline-limited-engine-bg: #e3e6e8;
+  --baseline-limited-img: url("../../assets/icons/baseline/limited.svg");
+  --baseline-limited-check: #1e8e3e;
+  --baseline-limited-cross: #ea8600;
+
+  --curriculum-bg-color: #fcefe2;
+  --curriculum-bg-color-note: rgba(252, 239, 226, 0.5);
+  --curriculum-bg-large-color: #fcefe2;
+  --curriculum-bg-color-topic-standards: #{$mdn-color-light-theme-red-50}30;
+  --curriculum-bg-color-topic-styling: #{$mdn-color-light-theme-blue-50}30;
+  --curriculum-bg-color-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
+  --curriculum-bg-color-topic-tooling: #{$mdn-color-light-theme-green-50}30;
+  --curriculum-bg-color-topic-practices: #{$mdn-color-light-theme-violet-50}30;
+  --curriculum-bg-color-landing: #fff;
+  --curriculum-bg-color-landing-about-ul: #fff;
+  --curriculum-bg-color-landing-top-icon: #fcefe2;
+  --curriculum-bg-color-landing-stairway-floor: #fcefe2;
+  --curriculum-category-color: #e3642a;
+  --curriculum-color: #d47d55;
+  --curriculum-module-label-color: #b34d1f;
+  --curriculum-module-label-bg-color: #faf0e3;
+  --curriculum-color-topic-standards: #{$mdn-color-light-theme-red-60};
+  --curriculum-color-topic-styling: #{$mdn-color-light-theme-blue-60};
+  --curriculum-color-topic-scripting: #{$mdn-color-light-theme-yellow-60};
+  --curriculum-color-topic-tooling: #{$mdn-color-light-theme-green-60};
+  --curriculum-color-topic-practices: #{$mdn-color-light-theme-violet-60};
+  --curriculum-color-landing-laptop: #e3642a;
+  --curriculum-border-color-list-item: #f2f1f1;
+  --curriculum-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
+  --curriculum-bg-color-list-item-body: #fff;
+  --curriculum-color-list-item-icon-topic-standards: #{$mdn-color-light-theme-red-60};
+  --curriculum-color-list-item-icon-topic-styling: #{$mdn-color-light-theme-blue-60};
+  --curriculum-color-list-item-icon-topic-scripting: #{$mdn-color-light-theme-yellow-60};
+  --curriculum-color-list-item-icon-topic-tooling: #{$mdn-color-light-theme-green-60};
+  --curriculum-color-list-item-icon-topic-practices: #{$mdn-color-light-theme-violet-60};
+  --curriculum-bg-color-list-item-icon-topic-standards: #fff;
+  --curriculum-bg-color-list-item-icon-topic-styling: #fff;
+  --curriculum-bg-color-list-item-icon-topic-scripting: #fff;
+  --curriculum-bg-color-list-item-icon-topic-tooling: #fff;
+  --curriculum-bg-color-list-item-icon-topic-practices: #fff;
+  --curriculum-bg-color-list-item-topic-standards: #{$mdn-color-light-theme-red-50}30;
+  --curriculum-bg-color-list-item-topic-styling: #{$mdn-color-light-theme-blue-50}30;
+  --curriculum-bg-color-list-item-topic-scripting: #{$mdn-color-light-theme-yellow-50}30;
+  --curriculum-bg-color-list-item-topic-tooling: #{$mdn-color-light-theme-green-50}30;
+  --curriculum-bg-color-list-item-topic-practices: #{$mdn-color-light-theme-violet-50}30;
+  --curriculum-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
+    -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
+  --curriculum-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
+    0 -2px 4px 0 rgba(178, 92, 53, 0.06);
+
+  --curriculum-landing-about-beginner: url("../../assets/icons/curriculum-landing-about-beginner.svg#light");
+  --curriculum-landing-about-pace: url("../../assets/icons/curriculum-landing-about-pace.svg#light");
+  --curriculum-landing-about-free: url("../../assets/icons/curriculum-landing-about-free.svg#light");
+  --curriculum-landing-about-bullet: url("../../assets/icons/curriculum-landing-about-bullet.svg#light");
+  --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#small-light");
+  --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#small-light");
+  --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#small-light");
+  --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#small-light");
+  @media screen and (min-width: $screen-md) {
+    --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#light");
+    --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#light");
+    --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#light");
+    --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#light");
+    --curriculum-module-mdn-resource: url("../../assets/icons/curriculum-mdn-resource.svg#light");
+    --curriculum-bullet: url("../../assets/icons/curriculum-bullet.svg#light");
+    --curriculum-about-covered: url("../../assets/icons/curriculum-about-covered.svg#light");
+    --curriculum-about-detail: url("../../assets/icons/curriculum-about-detail.svg#light");
+    --curriculum-about-educators: url("../../assets/icons/curriculum-about-educators.svg#light");
+    --curriculum-about-not: url("../../assets/icons/curriculum-about-not.svg#light");
+    --curriculum-about-students: url("../../assets/icons/curriculum-about-students.svg#light");
+  }
 
   color-scheme: light;
 }
@@ -203,9 +283,12 @@
 @mixin dark-theme {
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
+  --text-active: #{$mdn-theme-dark-text-active};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
   --text-link: #{$mdn-theme-dark-text-link};
+  --text-visited: #ffadff; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1794-1797
   --text-invert: #{$mdn-theme-dark-text-invert};
+  --text-muted: #{$mdn-theme-dark-text-muted};
 
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
@@ -235,6 +318,8 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
+  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
   --border-secondary: #{$mdn-theme-dark-border-secondary};
@@ -378,6 +463,7 @@
   --ai-help-header: #{$mdn-color-black};
   --ai-help-mandala: #{$mdn-color-dark-theme-green-20};
   --ai-help-icon: #{$mdn-color-dark-theme-green-30};
+  --ai-help-accent-background-color: #{$mdn-color-light-theme-green-50}30;
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};
@@ -385,14 +471,90 @@
   --form-invalid-focus-color: #{$mdn-color-light-theme-red-40};
   --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-40, 0.2)};
 
-  --baseline-supported-bg: #0e2a10;
-  --baseline-supported-engine-bg: #031b05;
-  --baseline-supported-img: url("../../assets/icons/baseline/check-dark.svg");
-  --baseline-unsupported-bg: #282a2c;
-  --baseline-unsupported-engine-bg: #1d1e1f;
-  --baseline-unsupported-img: url("../../assets/icons/baseline/cross-dark.svg");
-  --baseline-browser-supported-bg: #5bb974;
-  --baseline-browser-unsupported-bg: #9aa0a6;
+  --baseline-high-bg: #0e2a10;
+  --baseline-high-engine-bg: #031b05;
+  --baseline-high-img: url("../../assets/icons/baseline/high-dark.svg");
+  --baseline-high-check: #099949;
+  --baseline-low-bg: #041e49;
+  --baseline-low-engine-bg: #020d20;
+  --baseline-low-check: #1a73e8;
+  --baseline-low-img: url("../../assets/icons/baseline/low-dark.svg");
+  --baseline-low-pill-bg: #3367d6;
+  --baseline-low-pill-color: #f1f3f4;
+  --baseline-limited-bg: #282a2c;
+  --baseline-limited-engine-bg: #1d1e1f;
+  --baseline-limited-img: url("../../assets/icons/baseline/limited-dark.svg");
+  --baseline-limited-check: #1e8e3e;
+  --baseline-limited-cross: #ea8600;
+
+  --curriculum-color: #e3642a;
+  --curriculum-color-topic-standards: #f2919c;
+  --curriculum-color-topic-styling: #91a6f2;
+  --curriculum-color-topic-scripting: #f2cf8f;
+  --curriculum-color-topic-tooling: #8ff2a4;
+  --curriculum-color-topic-practices: #c891f2;
+  --curriculum-bg-color: #664b33;
+  --curriculum-bg-color-note: #321d13;
+  --curriculum-bg-large-color: #343434;
+  --curriculum-bg-color-topic-standards: #994b53;
+  --curriculum-bg-color-topic-styling: #4e609e;
+  --curriculum-bg-color-topic-scripting: #7d683d;
+  --curriculum-bg-color-topic-tooling: #3d7c4b;
+  --curriculum-bg-color-topic-practices: #584280;
+  --curriculum-bg-color-landing: #0e0b0a;
+  --curriculum-bg-color-landing-about-ul: #000;
+  --curriculum-bg-color-landing-top-icon: #321d13;
+  --curriculum-bg-color-landing-stairway-floor: rgba(137, 91, 51, 1);
+  --curriculum-category-color: #e3642a;
+  --curriculum-bg-color-grey: #1f1c1a;
+  --curriculum-bg-color-orange: #b25c35;
+  --curriculum-color-landing-laptop: #b25c35;
+  --curriculum-bg-color-list-item-body: #000;
+  --curriculum-border-color-list-item: #4e4e4e;
+  --curriculum-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
+  --curriculum-module-label-color: #e3642a;
+  --curriculum-module-label-bg-color: #321d13;
+  --curriculum-bg-color-list-item-topic-standards: #343434;
+  --curriculum-bg-color-list-item-topic-styling: #343434;
+  --curriculum-bg-color-list-item-topic-scripting: #343434;
+  --curriculum-bg-color-list-item-topic-tooling: #343434;
+  --curriculum-bg-color-list-item-topic-practices: #343434;
+  --curriculum-color-list-item-icon-topic-standards: #f2919c;
+  --curriculum-color-list-item-icon-topic-styling: #91a6f2;
+  --curriculum-color-list-item-icon-topic-scripting: #f2cf8f;
+  --curriculum-color-list-item-icon-topic-tooling: #8ff2a4;
+  --curriculum-color-list-item-icon-topic-practices: #c891f2;
+  --curriculum-bg-color-list-item-icon-topic-standards: #804248;
+  --curriculum-bg-color-list-item-icon-topic-styling: #425080;
+  --curriculum-bg-color-list-item-icon-topic-scripting: #806a42;
+  --curriculum-bg-color-list-item-icon-topic-tooling: #428050;
+  --curriculum-bg-color-list-item-icon-topic-practices: #584280;
+  --curriculum-shadow: 2px 2px 5px 0 rgba(36, 36, 36, 0.15),
+    -2px 2px 8px 0 rgba(87, 87, 87, 0.15);
+  --curriculum-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
+    0 -2px 4px 0 rgba(178, 92, 53, 0.06);
+
+  --curriculum-landing-about-beginner: url("../../assets/icons/curriculum-landing-about-beginner.svg#dark");
+  --curriculum-landing-about-pace: url("../../assets/icons/curriculum-landing-about-pace.svg#dark");
+  --curriculum-landing-about-free: url("../../assets/icons/curriculum-landing-about-free.svg#dark");
+  --curriculum-landing-about-bullet: url("../../assets/icons/curriculum-landing-about-bullet.svg#dark");
+  --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#small-dark");
+  --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#small-dark");
+  --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#small-dark");
+  --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#small-dark");
+  @media screen and (min-width: $screen-md) {
+    --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#dark");
+    --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#dark");
+    --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#dark");
+    --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#dark");
+    --curriculum-module-mdn-resource: url("../../assets/icons/curriculum-mdn-resource.svg#dark");
+    --curriculum-bullet: url("../../assets/icons/curriculum-bullet.svg#dark");
+    --curriculum-about-covered: url("../../assets/icons/curriculum-about-covered.svg#dark");
+    --curriculum-about-detail: url("../../assets/icons/curriculum-about-detail.svg#dark");
+    --curriculum-about-educators: url("../../assets/icons/curriculum-about-educators.svg#dark");
+    --curriculum-about-not: url("../../assets/icons/curriculum-about-not.svg#dark");
+    --curriculum-about-students: url("../../assets/icons/curriculum-about-students.svg#dark");
+  }
 
   color-scheme: dark;
 }

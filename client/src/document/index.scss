@@ -65,7 +65,13 @@
     color: var(--text-link);
     width: fit-content;
 
-    &:active {
+    &:visited:not([href^="#"]) {
+      // Distinguish visited links (excl. anchor links).
+      color: var(--text-visited);
+    }
+
+    &:active,
+    &:active:visited {
       background-color: var(--text-link);
       color: #fff;
 
@@ -248,10 +254,13 @@
 
   @media screen and (min-width: $screen-sm) {
     padding: 3rem;
+    // Reduce space to article footer.
+    padding-bottom: 0;
   }
 
   @media screen and (min-width: $screen-md) {
-    margin-bottom: 0.5rem;
+    // Reduce space to article footer.
+    margin-bottom: 0;
     padding: 0;
   }
 }
@@ -270,7 +279,7 @@ table {
   width: 100%;
 
   th {
-    background: var(--background-tertiary);
+    background: var(--background-primary);
     font-weight: var(--font-body-strong-weight);
     line-height: 1.5;
     text-align: left;
@@ -556,21 +565,25 @@ pre {
 }
 
 .code-example {
-  color: var(--code-default);
+  --code-action-color: var(--text-secondary);
   margin-bottom: 2rem;
   position: relative;
 
   .example-header {
-    align-items: center;
+    align-items: baseline;
     background-color: var(--background-secondary);
-    border: 1px solid var(--border-primary);
+    border-bottom: 1px solid var(--border-secondary);
     border-top-left-radius: var(--elem-radius);
     border-top-right-radius: var(--elem-radius);
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin: 0;
-    padding: 0 1rem;
+    padding: 0.1rem 1rem;
+
+    &.active {
+      background-color: var(--background-toc-active);
+    }
 
     ~ pre,
     ~ iframe {
@@ -672,14 +685,14 @@ pre {
 
   .play-button,
   .ai-explain-button {
+    color: var(--code-action-color);
     cursor: pointer;
-    font-size: smaller;
     margin: 0;
-    opacity: 0.4;
+    text-transform: capitalize;
 
     &:hover,
     &:focus {
-      opacity: 1;
+      opacity: 0.6;
     }
 
     &:first-child {
@@ -687,35 +700,98 @@ pre {
     }
   }
 
+  .playlist {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+
+    > label {
+      color: var(--code-action-color);
+      cursor: pointer;
+      padding: 1px;
+      text-transform: capitalize;
+
+      &:hover,
+      &:focus {
+        opacity: 0.6;
+      }
+    }
+
+    > input {
+      height: 0;
+      margin: 0;
+      opacity: 0;
+      position: absolute;
+      width: 0;
+
+      ~ label::before {
+        background-color: var(--code-action-color);
+        content: "";
+        display: inline-block;
+        height: 1rem;
+        margin-right: 4px;
+        mask-image: url("../assets/icons/queue.svg");
+        mask-size: cover;
+        vertical-align: middle;
+        width: 1rem;
+      }
+
+      &:focus ~ label {
+        opacity: 1;
+      }
+
+      &:focus-visible ~ label {
+        opacity: 1;
+        outline-color: var(--accent-primary);
+        outline-offset: 1px;
+        outline-style: auto;
+      }
+
+      &:checked ~ label {
+        color: var(--category-color);
+        opacity: 1;
+
+        &::before {
+          mask-image: url("../assets/icons/queued.svg");
+        }
+      }
+
+      &:checked ~ label:before {
+        background-color: var(--category-color);
+      }
+    }
+  }
+
   .ai-explain-button.ai-explain-highlight {
     animation: 1s ease-in 1 ai-explain-highlight-frames;
   }
 
-  .play-button::after {
-    background-color: var(--icon-primary);
+  .play-button::before {
+    background-color: var(--code-action-color);
     content: "";
     display: inline-block;
-    height: 10px;
-    margin-left: 4px;
-    mask-image: url("../assets/icons/external.svg");
+    height: 1rem;
+    margin-right: 4px;
+    mask-image: url("../assets/icons/play.svg");
     mask-size: cover;
-    width: 10px;
+    vertical-align: middle;
+    width: 1rem;
   }
 
   .copy-icon {
-    border-radius: var(--elem-radius);
+    align-self: center;
+    background-color: var(--code-action-color);
     cursor: pointer;
-    height: 1.25rem;
-    margin: 0;
+    height: 1rem;
+    margin-top: -0.1rem;
     mask-image: url("../assets/clippy.svg");
     mask-size: cover;
-    opacity: 0.4;
-    padding: 0.25rem;
-    width: 1.25rem;
+    padding: 0;
+    width: 1rem;
 
     &:hover,
     &:focus {
-      opacity: 1;
+      opacity: 0.6;
     }
 
     &:first-child {

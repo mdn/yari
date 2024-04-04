@@ -94,8 +94,8 @@ const readBuildHTML = lazy(() => {
   return html;
 });
 
-const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
-  // Return the relative path if there exists a `BUILD_ROOT/static/js/ga.js`.
+const getGAScriptPathName = lazy((relPath = "/static/js/gtag.js") => {
+  // Return the relative path if there exists a `BUILD_ROOT/static/js/gtag.js`.
   // If the file doesn't exist, return falsy.
   // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
   // based on `dirname` but that's wrong when compared as a source and as
@@ -233,10 +233,16 @@ export default function render(
     )
     .join("");
 
+  // Open Graph protocol expects `language_TERRITORY` format.
+  const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
+    "-",
+    "_"
+  );
+
   const og = new Map([
     ["title", escapedPageTitle],
     ["url", canonicalURL],
-    ["locale", locale || (doc && doc.locale) || "en-US"],
+    ["locale", ogLocale],
   ]);
 
   if (pageDescription) {

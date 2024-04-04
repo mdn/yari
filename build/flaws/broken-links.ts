@@ -1,10 +1,7 @@
 import fs from "node:fs";
 
-import { fromMarkdown } from "mdast-util-from-markdown";
-import { visit } from "unist-util-visit";
-
 import { Document, Redirect, FileAttachment } from "../../content/index.js";
-import { findMatchesInText } from "../matches-in-text.js";
+import { findMatchesInText, findMatchesInMarkdown } from "../matches.js";
 import {
   DEFAULT_LOCALE,
   FLAW_LEVELS,
@@ -14,17 +11,6 @@ import { isValidLocale } from "../../libs/locale-utils/index.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
-
-function findMatchesInMarkdown(rawContent: string, href: string) {
-  const matches = [];
-  visit(fromMarkdown(rawContent), "link", (node: any) => {
-    if (node.url == href) {
-      const { line, column } = node.position.start;
-      matches.push({ line, column });
-    }
-  });
-  return matches;
-}
 
 const _safeToHttpsDomains = new Map();
 
@@ -63,13 +49,16 @@ function mutateLink(
 ) {
   if (isSelfLink) {
     $element.attr("aria-current", "page");
-  } else if (suggestion) {
-    $element.attr("href", suggestion);
   } else if (enUSFallback) {
+    // If we have an English (US) fallback, then we use this first.
+    // As we still suggest the translated version even if we only
+    // have an English (US) version.
     $element.attr("href", enUSFallback);
     $element.append(` <small>(${DEFAULT_LOCALE})<small>`);
     $element.addClass("only-in-en-us");
     $element.attr("title", "Currently only available in English (US)");
+  } else if (suggestion) {
+    $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
     $element.attr("title", "This is a link to an unwritten page");
@@ -127,17 +116,13 @@ export function getBrokenLinksFlaws(
         href,
 
         doc.isMarkdown
-          ? findMatchesInMarkdown(rawContent, href)
-          : Array.from(
-              findMatchesInText(href, rawContent, {
-                attribute: "href",
-              })
-            )
+          ? findMatchesInMarkdown(href, rawContent, { type: "link" })
+          : findMatchesInText(href, rawContent, {
+              attribute: "href",
+            })
       );
     }
-    // findMatchesInText() is a generator function so use `Array.from()`
-    // to turn it into an array so we can use `.forEach()` because that
-    // gives us an `i` for every loop.
+
     matches.get(href).forEach((match, i) => {
       if (i !== index) {
         return;
@@ -247,6 +232,7 @@ export function getBrokenLinksFlaws(
       // links in our content but that's a reality of MDN being 15+ years old.
     } else if (
       href.startsWith("https://developer.mozilla.org/") &&
+      !href.startsWith("https://developer.mozilla.org/en-US/curriculum/") &&
       !href.startsWith("https://developer.mozilla.org/en-US/blog/")
     ) {
       // It might be a working 200 OK link but the link just shouldn't
@@ -298,7 +284,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("/") &&
       !href.startsWith("//") &&
-      !/^\/en-US\/blog(\/|$)/.test(href)
+      !/^\/(discord|en-US\/(blog|curriculum))(\/|$)/.test(href)
     ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
@@ -317,7 +303,6 @@ export function getBrokenLinksFlaws(
               resolved + absoluteURL.search + absoluteURL.hash.toLowerCase()
             );
           } else {
-            let enUSFallbackURL = null;
             // Test if the document is a translated document and the link isn't
             // to an en-US URL. We know the link is broken (in this locale!)
             // but it might be "salvageable" if we link the en-US equivalent.
@@ -334,28 +319,38 @@ export function getBrokenLinksFlaws(
                 `/${DEFAULT_LOCALE}/`
               );
               const enUSFound = Document.findByURL(enUSHrefNormalized);
+              // Note, we still recommend that contributors use localized links,
+              // even if the target document is still not localized.
               if (enUSFound) {
-                enUSFallbackURL = enUSFound.url;
+                // Found the en-US version of the document. Just link to that.
+                mutateLink(a, null, enUSFound.url);
               } else {
                 const enUSResolved = Redirect.resolve(enUSHrefNormalized);
+                let suggestion = null;
+                let enUSFallbackURL = null;
                 if (enUSResolved !== enUSHrefNormalized) {
                   enUSFallbackURL =
                     enUSResolved +
                     absoluteURL.search +
                     absoluteURL.hash.toLowerCase();
+                  suggestion = enUSFallbackURL.replace(
+                    `/${DEFAULT_LOCALE}/`,
+                    `/${doc.locale}/`
+                  );
                 }
+                addBrokenLink(
+                  a,
+                  checked.get(href),
+                  href,
+                  suggestion,
+                  null,
+                  enUSFallbackURL
+                );
               }
+            } else {
+              // The link is broken and we don't have a suggestion.
+              addBrokenLink(a, checked.get(href), href);
             }
-            addBrokenLink(
-              a,
-              checked.get(href),
-              href,
-              null,
-              enUSFallbackURL
-                ? "Can use the English (en-US) link as a fallback"
-                : null,
-              enUSFallbackURL
-            );
           }
         }
         // But does it have the correct case?!

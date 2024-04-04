@@ -9,7 +9,6 @@ import { appendURL } from "./utils";
 import { Button } from "../ui/atoms/button";
 
 import "./search-results.scss";
-import { useGA } from "../ga-context";
 import NoteCard from "../ui/molecules/notecards";
 
 import LANGUAGES_RAW from "../../../libs/languages";
@@ -85,7 +84,6 @@ class ServerOperationalError extends Error {
 }
 
 export default function SearchResults() {
-  const ga = useGA();
   const [searchParams] = useSearchParams();
   const locale = useLocale();
   // A call to `/api/v1/search` will default to mean the same thing as
@@ -111,15 +109,6 @@ export default function SearchResults() {
       } else if (!response.ok) {
         throw new Error(`${response.status} on ${url}`);
       }
-
-      // See docs/experiments/0001_site-search-x-cache.md
-      const xCacheHeaderValue = response.headers.get("x-cache");
-      ga("send", {
-        hitType: "event",
-        eventCategory: "Site-search X-Cache",
-        eventAction: url,
-        eventLabel: xCacheHeaderValue || "no value",
-      });
 
       return await response.json();
     },
@@ -358,9 +347,9 @@ function Results({
                 LANGUAGES.has(document.locale) && (
                   <span
                     className="locale-indicator"
-                    title={`The linked document is in ${LANGUAGES.get(
-                      document.locale
-                    )?.English} which is different from your current locale.`}
+                    title={`The linked document is in ${
+                      LANGUAGES.get(document.locale)?.English
+                    } which is different from your current locale.`}
                   >
                     {LANGUAGES.get(document.locale)?.English}
                   </span>

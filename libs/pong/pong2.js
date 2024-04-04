@@ -14,51 +14,56 @@ export function createPong2GetHandler(zoneKeys, coder) {
       });
 
     const requests = placements.map(async ({ name, zoneKey }) => {
-      const {
-        ads: [
-          {
-            description = null,
-            statlink,
-            statimp,
-            smallImage,
-            backgroundColor,
-            backgroundHoverColor,
-            callToAction,
-            ctaBackgroundColor,
-            ctaBackgroundHoverColor,
-            ctaTextColor,
-            ctaTextColorHover,
-            textColor,
-            textColorHover,
-          },
-        ] = [],
-      } = await (
+      const res = await (
         await fetch(
           `https://srv.buysellads.com/ads/${zoneKey}.json?forwardedip=${encodeURIComponent(
             anonymousIp
           )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
         )
       ).json();
+      const {
+        ads: [
+          {
+            statlink = null,
+            statimp,
+            Description,
+            Image,
+            ImageTitle,
+            BackgroundColor,
+            BackgroundColorLight,
+            BackgroundColorDark,
+            CallToAction,
+            CtaBackgroundColorLight,
+            CtaBackgroundColorDark,
+            CtaTextColorLight,
+            CtaTextColorDark,
+            TextColor,
+            TextColorLight,
+            TextColorDark,
+          },
+        ] = [],
+      } = res;
       return {
         name,
         p:
-          description === null
+          statlink === null
             ? null
             : {
                 click: coder.encodeAndSign(statlink),
                 view: coder.encodeAndSign(statimp),
-                image: coder.encodeAndSign(smallImage),
-                copy: description && he.decode(description),
-                cta: callToAction && he.decode(callToAction),
+                image: coder.encodeAndSign(Image),
+                alt: ImageTitle && he.decode(ImageTitle),
+                copy: Description && he.decode(Description),
+                cta: CallToAction && he.decode(CallToAction),
                 colors: {
-                  textColor,
-                  backgroundColor,
-                  ctaTextColor,
-                  ctaBackgroundColor,
-                  textColorDark: textColorHover,
-                  backgroundColorDark: backgroundHoverColor,
-                  ctaTextColorDark: ctaTextColorHover,
-                  ctaBackgroundColorDark: ctaBackgroundHoverColor,
+                  textColor: TextColor || TextColorLight,
+                  backgroundColor: BackgroundColor || BackgroundColorLight,
+                  ctaTextColor: CtaTextColorLight,
+                  ctaBackgroundColor: CtaBackgroundColorLight,
+                  textColorDark: TextColorDark,
+                  backgroundColorDark: BackgroundColorDark,
+                  ctaTextColorDark: CtaTextColorDark,
+                  ctaBackgroundColorDark: CtaBackgroundColorDark,
                 },
               },
       };
@@ -86,13 +91,14 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const { copy, image, click, view, cta, colors = {} } = v;
+          const { copy, image, alt, click, view, cta, colors = {} } = v;
           return [
             p,
             {
               status: "success",
               copy,
               image,
+              alt,
               cta,
               colors,
               click,
@@ -108,13 +114,21 @@ export function createPong2GetHandler(zoneKeys, coder) {
 }
 
 export function createPong2ClickHandler(coder) {
-  return async (params) => {
+  return async (params, countryCode, userAgent) => {
     const click = coder.decodeAndVerify(params.get("code"));
 
     if (!click) {
       return {};
     }
-    const res = await fetch(`https:${click}`, { redirect: "manual" });
+
+    const anonymousIp = anonymousIpByCC(countryCode);
+    const clickURL = new URL(`https:${click}`);
+    clickURL.searchParams.set("forwardedip", anonymousIp);
+    clickURL.searchParams.set("useragent", userAgent);
+
+    const res = await fetch(clickURL, {
+      redirect: "manual",
+    });
     const status = res.status;
     const location = res.headers.get("location");
     return { status, location };
@@ -122,10 +136,15 @@ export function createPong2ClickHandler(coder) {
 }
 
 export function createPong2ViewedHandler(coder) {
-  return async (params) => {
+  return async (params, countryCode, userAgent) => {
     const view = coder.decodeAndVerify(params.get("code"));
     if (view) {
-      await fetch(`https:${view}`, {
+      const anonymousIp = anonymousIpByCC(countryCode);
+      const viewURL = new URL(`https:${view}`);
+      viewURL.searchParams.set("forwardedip", anonymousIp);
+      viewURL.searchParams.set("useragent", userAgent);
+
+      await fetch(viewURL, {
         redirect: "manual",
       });
     }

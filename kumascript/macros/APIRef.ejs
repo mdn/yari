@@ -172,16 +172,6 @@ async function buildSublist(pages, title) {
     var aPage = pages[i];
     var url = aPage.url.replace('en-US', locale);
 
-    var translated = false;
-    if (locale != 'en-US') {
-        aPage.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                url = translation.url;
-                translated = true;
-            }
-        });
-    }
-
     const title = getPageTitle(aPage);
 
     result += '<li>';
