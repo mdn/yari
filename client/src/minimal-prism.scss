@@ -72,6 +72,7 @@ don't use any of that, we can safely ignore it.
 
 .token.italic {
   font-style: italic;
+  font-variation-settings: "slnt" -10;
 }
 
 .token.entity {

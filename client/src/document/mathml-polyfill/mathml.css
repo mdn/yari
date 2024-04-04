@@ -193,6 +193,7 @@ mspace {
 }
 mi {
   font-style: italic;
+  font-variation-settings: "slnt" -10;
 }
 mo {
   margin-right: 0.2em;
@@ -233,6 +234,7 @@ ms[rquote]:after {
 [mathvariant="sans-serif-italic"],
 [mathvariant="sans-serif-bold-italic"] {
   font-style: italic;
+  font-variation-settings: "slnt" -10;
 }
 [mathvariant="normal"] {
   font-style: normal;
