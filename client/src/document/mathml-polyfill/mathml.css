@@ -217,10 +217,12 @@ ms[rquote]:after {
 [mathvariant="sans-serif-bold-italic"] {
   font-weight: var(--font-body-strong-weight);
   font-style: normal;
+  font-variation-settings: normal;
 }
 [mathvariant="monospace"] {
   font-family: monospace;
   font-style: normal;
+  font-variation-settings: normal;
 }
 [mathvariant="sans-serif"],
 [mathvariant="bold-sans-serif"],
@@ -228,6 +230,7 @@ ms[rquote]:after {
 [mathvariant="sans-serif-bold-italic"] {
   font-family: sans-serif;
   font-style: normal;
+  font-variation-settings: normal;
 }
 [mathvariant="italic"],
 [mathvariant="bold-italic"],
@@ -238,6 +241,7 @@ ms[rquote]:after {
 }
 [mathvariant="normal"] {
   font-style: normal;
+  font-variation-settings: normal;
 }
 
 /* mphantom */
