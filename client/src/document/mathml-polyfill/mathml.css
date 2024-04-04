@@ -193,7 +193,6 @@ mspace {
 }
 mi {
   font-style: italic;
-  font-variation-settings: "slnt" -10;
 }
 mo {
   margin-right: 0.2em;
@@ -217,12 +216,10 @@ ms[rquote]:after {
 [mathvariant="sans-serif-bold-italic"] {
   font-weight: var(--font-body-strong-weight);
   font-style: normal;
-  font-variation-settings: normal;
 }
 [mathvariant="monospace"] {
   font-family: monospace;
   font-style: normal;
-  font-variation-settings: normal;
 }
 [mathvariant="sans-serif"],
 [mathvariant="bold-sans-serif"],
@@ -230,18 +227,15 @@ ms[rquote]:after {
 [mathvariant="sans-serif-bold-italic"] {
   font-family: sans-serif;
   font-style: normal;
-  font-variation-settings: normal;
 }
 [mathvariant="italic"],
 [mathvariant="bold-italic"],
 [mathvariant="sans-serif-italic"],
 [mathvariant="sans-serif-bold-italic"] {
   font-style: italic;
-  font-variation-settings: "slnt" -10;
 }
 [mathvariant="normal"] {
   font-style: normal;
-  font-variation-settings: normal;
 }
 
 /* mphantom */
