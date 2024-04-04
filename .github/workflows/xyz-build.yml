@@ -33,7 +33,7 @@ permissions:
 jobs:
   build:
     environment: xyz
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -57,7 +57,14 @@ jobs:
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
+          lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
@@ -75,9 +82,9 @@ jobs:
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
@@ -103,6 +110,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.allizom.xyz"
 
           # The default for this environment variable is geared for writers
@@ -121,7 +129,7 @@ jobs:
           # If it's used on other domains (e.g. stage or dev builds), it's OK
           # because ultimately Google Analytics will filter it out since the
           # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -163,11 +171,6 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
-
           yarn tool sync-translated-content
 
           # Build using one process per locale.
@@ -189,20 +192,23 @@ jobs:
           # Build the blog
           yarn build:blog
 
+          # Build the curriculum
+          yarn build:curriculum
+
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
@@ -238,7 +244,7 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \

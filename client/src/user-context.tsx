@@ -1,7 +1,11 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import {
+  DISABLE_AUTH,
+  DEFAULT_GEO_COUNTRY,
+  DEFAULT_GEO_COUNTRY_ISO,
+} from "./env";
 import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
 
 const DEPRECATED_LOCAL_STORAGE_KEYS = [
@@ -20,6 +24,7 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
+  aiHelpHistory: boolean | null;
   collectionLastModified: Date | null;
   mdnplusNewsletter: boolean | null;
   noAds: boolean | null;
@@ -76,6 +81,7 @@ export type User = {
   email: string | null | undefined;
   geo: {
     country: string;
+    country_iso: string;
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
@@ -175,6 +181,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         data?.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data?.settings
         ? {
+            aiHelpHistory:
+              typeof data?.settings?.ai_help_history === "boolean"
+                ? data.settings.ai_help_history
+                : null,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
@@ -199,6 +209,8 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         email: data.email || null,
         geo: {
           country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
+          country_iso:
+            (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
         },
         maintenance: data.maintenance,
         settings,
@@ -244,12 +256,12 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   const userData = isLoading
     ? getSessionStorageData()
     : error || !data
-    ? {
-        ...getSessionStorageData(),
-        ...data,
-        maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
-      }
-    : data;
+      ? {
+          ...getSessionStorageData(),
+          ...data,
+          maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
+        }
+      : data;
 
   return (
     <UserDataContext.Provider value={userData}>

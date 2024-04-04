@@ -6,16 +6,19 @@
   margin-right: auto;
 
   ol {
+    display: flex;
+    flex-wrap: wrap;
     line-height: 1.2;
+    padding: 0.25rem 0;
+    row-gap: 0.25rem;
   }
 
   li {
     display: none;
     hyphens: auto;
 
-    // only show first and last on mobile
-    &:first-child,
-    &:last-child {
+    // only show last two items on mobile
+    &:nth-last-child(-n + 2) {
       display: inline-flex;
     }
 

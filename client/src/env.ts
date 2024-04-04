@@ -78,6 +78,8 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+export const DEFAULT_GEO_COUNTRY_ISO =
+  process.env.REACT_APP_DEFAULT_GEO_COUNTRY_ISO || "US";
 
 export const BCD_BASE_URL =
   process.env.REACT_APP_BCD_BASE_URL ?? "https://bcd.developer.allizom.org";
@@ -96,6 +98,9 @@ export const GLEAN_DEBUG = Boolean(
 );
 export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
+);
+export const GLEAN_LOG_CLICK = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_LOG_CLICK || "false")
 );
 
 export const AI_FEEDBACK_GITHUB_REPO =

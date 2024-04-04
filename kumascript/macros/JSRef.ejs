@@ -178,7 +178,7 @@ for (const key in source) {
 async function buildSublist(pages, title, opened) {
   const getTitle = locale === "en-US"
   ? page => page.title
-  : page => page.translations.find(translation => translation.locale === locale)?.title ?? page.title;
+  : page => page.translations().find(translation => translation.locale === locale)?.title ?? page.title;
 
   const items = pages.map(async aPage => {
     const url = aPage.url.replace("en-US", locale);

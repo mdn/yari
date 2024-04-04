@@ -8,11 +8,8 @@ import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import {
-  PlacementData,
-  Status,
-  usePlacement,
-} from "../../../placement-context";
+import { Status, usePlacement } from "../../../placement-context";
+import { Payload as PlacementData } from "../../../../../libs/pong/types";
 import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
@@ -24,12 +21,15 @@ interface PlacementRenderArgs {
   extraClassNames?: string[];
   click: string;
   image: string;
+  alt?: string;
   imageWidth: number;
   imageHeight: number;
   copy?: string;
   cta?: string;
   user: User;
   style: object;
+  version?: number;
+  typ: string;
 }
 
 const INTERSECTION_OPTIONS = {
@@ -42,9 +42,7 @@ function viewed(pong?: PlacementData) {
   pong?.view &&
     navigator.sendBeacon?.(
       `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
-        pong?.fallback
-          ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
-          : ""
+        pong?.version ? `&version=${pong.version}` : ""
       }`
     );
 }
@@ -131,8 +129,8 @@ export function TopPlacement() {
     isServer || placementData?.status === Status.loading
       ? "loading"
       : placementData?.top
-      ? "visible"
-      : "fallback";
+        ? "visible"
+        : "fallback";
 
   return (
     <div className={`top-banner ${status}`} style={css}>
@@ -162,6 +160,7 @@ export function HpMainPlacement() {
     placementData: placementData?.hpMain,
     imageWidth: 970,
     imageHeight: 250,
+    typ: "hp-main",
   });
 }
 
@@ -171,6 +170,7 @@ export function HpFooterPlacement() {
     placementData: placementData?.hpFooter,
     imageWidth: 728,
     imageHeight: 90,
+    typ: "hp-footer",
   });
 }
 
@@ -178,10 +178,12 @@ function HpPlacement({
   placementData,
   imageWidth,
   imageHeight,
+  typ,
 }: {
   placementData?: PlacementData;
   imageWidth: number;
   imageHeight: number;
+  typ: string;
 }) {
   const { backgroundColor } = placementData?.colors || {};
   const css = createObjectFromEntries([
@@ -197,19 +199,30 @@ function HpPlacement({
       imageHeight={imageHeight}
       style={css}
       renderer={RenderHpPlacement}
-      typ="hp-main"
+      typ={typ}
     ></PlacementInner>
   );
 }
 
 export function BottomBanner() {
-  return (
+  const placementData = usePlacement()?.bottom;
+  const { backgroundColor, textColor } = placementData?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-bottom-banner-background", backgroundColor],
+      ["--place-bottom-banner-color", textColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
+  return placementData ? (
     <PlacementInner
-      pong={{ status: Status.empty }}
+      pong={placementData}
+      imageWidth={728}
+      imageHeight={90}
+      style={css}
       renderer={RenderBottomBanner}
       typ="bottom-banner"
-    />
-  );
+    ></PlacementInner>
+  ) : null;
 }
 
 export function PlacementInner({
@@ -272,8 +285,7 @@ export function PlacementInner({
     };
   }, [isVisible, isIntersecting, sendViewed]);
 
-  const { image, copy } = pong?.fallback || pong || {};
-  const { click } = pong || {};
+  const { image, copy, alt, click, version } = pong || {};
   return (
     <>
       {!isServer &&
@@ -283,12 +295,15 @@ export function PlacementInner({
           extraClassNames,
           click,
           image,
+          alt,
           imageWidth,
           imageHeight,
           copy,
           cta,
           user,
           style,
+          version,
+          typ,
         })}
     </>
   );
@@ -299,12 +314,15 @@ function RenderSideOrTopBanner({
   extraClassNames = [],
   click,
   image,
+  alt,
   imageWidth,
   imageHeight,
   copy,
   cta,
   user,
   style,
+  version = 1,
+  typ,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -315,15 +333,17 @@ function RenderSideOrTopBanner({
       <p className="pong-box">
         <a
           className="pong"
-          data-glean="pong: pong->click"
-          href={`/pong/click?code=${encodeURIComponent(click)}`}
+          data-glean={`pong: pong->click ${typ}`}
+          href={`/pong/click?code=${encodeURIComponent(
+            click
+          )}&version=${version}`}
           target="_blank"
           rel="noreferrer"
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
-            aria-hidden="true"
-            alt=""
+            aria-hidden={!Boolean(alt)}
+            alt={alt || ""}
             width={imageWidth}
             height={imageHeight}
           ></img>
@@ -332,8 +352,10 @@ function RenderSideOrTopBanner({
         {cta && (
           <a
             className="pong-cta"
-            data-glean="pong: pong->click"
-            href={`/pong/click?code=${encodeURIComponent(click)}`}
+            data-glean={`pong: pong->click ${typ}`}
+            href={`/pong/click?code=${encodeURIComponent(
+              click
+            )}&version=${version}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -373,10 +395,13 @@ function RenderHpPlacement({
   extraClassNames = [],
   click,
   image,
+  alt,
   imageWidth,
   imageHeight,
   copy,
   style,
+  version = 1,
+  typ,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -386,14 +411,16 @@ function RenderHpPlacement({
     >
       <a
         className="pong"
-        data-glean="pong: pong->click"
-        href={`/pong/click?code=${encodeURIComponent(click)}`}
+        data-glean={`pong: pong->click ${typ}`}
+        href={`/pong/click?code=${encodeURIComponent(
+          click
+        )}&version=${version}`}
         target="_blank"
         rel="noreferrer"
       >
         <img
           src={`/pimg/${encodeURIComponent(image || "")}`}
-          alt={copy}
+          alt={alt || copy}
           width={imageWidth}
           height={imageHeight}
         ></img>
@@ -402,6 +429,65 @@ function RenderHpPlacement({
   );
 }
 
-function RenderBottomBanner({ place }: PlacementRenderArgs) {
-  return <div ref={place} className="empty-place bottom-banner"></div>;
+function RenderBottomBanner({
+  place,
+  extraClassNames = [],
+  click,
+  image,
+  alt,
+  imageWidth,
+  imageHeight,
+  copy,
+  user,
+  style,
+  version = 1,
+  typ,
+}: PlacementRenderArgs) {
+  return (
+    <div className="bottom-banner-container" style={style}>
+      <section
+        ref={place}
+        className={["place", "bottom-banner", ...extraClassNames].join(" ")}
+      >
+        <a
+          className="pong"
+          data-glean={`pong: pong->click ${typ}`}
+          href={`/pong/click?code=${encodeURIComponent(
+            click
+          )}&version=${version}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img
+            src={`/pimg/${encodeURIComponent(image || "")}`}
+            alt={alt || copy}
+            width={imageWidth}
+            height={imageHeight}
+          ></img>
+        </a>
+        <a
+          href="/en-US/advertising"
+          className="pong-note"
+          data-glean="pong: pong->about"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Mozilla ads
+        </a>
+        <a
+          className="no-pong"
+          data-glean={
+            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+          }
+          href={
+            user?.isSubscriber
+              ? "/en-US/plus/settings?ref=nope"
+              : "/en-US/plus?ref=nope#subscribe"
+          }
+        >
+          Don't want to see ads?
+        </a>
+      </section>
+    </div>
+  );
 }

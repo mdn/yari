@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { PLACEMENT_ENABLED } from "./env";
 import { useUserData } from "./user-context";
 import { useLocation } from "react-router";
+import { Payload as PlacementData } from "../../libs/pong/types";
 
 export enum Status {
   success = "success",
@@ -13,50 +14,38 @@ export enum Status {
   empty = "empty",
 }
 
-export interface Fallback {
-  click: string;
-  view: string;
-  copy: string;
-  image: string;
-  by: string;
-}
-
-export interface PlacementData {
-  status: Status;
-  click?: string;
-  view?: string;
-  copy?: string;
-  image?: string;
-  fallback?: Fallback;
-  cta?: string;
-  colors?: {
-    textColor?: string;
-    backgroundColor?: string;
-    ctaTextColor?: string;
-    ctaBackgroundColor?: string;
-    textColorDark?: string;
-    backgroundColorDark?: string;
-    ctaTextColorDark?: string;
-    ctaBackgroundColorDark?: string;
-  };
-}
-
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter";
+type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   status: Status;
 }
 
-const PLACEMENT_MAP: Record<PlacementType, RegExp> = {
-  side: /\/[^/]+\/(play|docs\/|blog\/|search$)/i,
-  top: /\/[^/]+\/(?!$|_homepage$).*/i,
-  hpMain: /\/[^/]+\/($|_homepage$)/i,
-  hpFooter: /\/[^/]+\/($|_homepage$)/i,
+const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
+  side: {
+    typ: "side",
+    pattern: /\/[^/]+\/(play|docs\/|blog\/|curriculum\/[^$]|search$)/i,
+  },
+  top: {
+    typ: "top-banner",
+    pattern: /\/[^/]+\/(?!$|_homepage$).*/i,
+  },
+  hpMain: {
+    typ: "hp-main",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
+  },
+  hpFooter: {
+    typ: "hp-footer",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
+  },
+  bottom: {
+    typ: "bottom-banner",
+    pattern: /\/[^/]+\/docs\//i,
+  },
 };
 
 function placementTypes(pathname: string): string[] {
   return Object.entries(PLACEMENT_MAP)
-    .map(([k, re]) => re.test(pathname) && k)
+    .map(([k, { pattern: re }]) => re.test(pathname) && k)
     .filter(Boolean) as string[];
 }
 
@@ -100,7 +89,12 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
 
       try {
         const placementResponse: PlacementContextData = await response.json();
-        gleanClick(`pong: pong->status ${placementResponse.side?.status}`);
+        const typs = Object.entries(PLACEMENT_MAP)
+          .filter(([key]) => key in placementResponse)
+          .map(([, { typ }]) => typ);
+        if (typs.length) {
+          gleanClick(`pong: pong->served ${typs.join()}`);
+        }
         return placementResponse;
       } catch (e) {
         throw Error(response.statusText);

@@ -24,12 +24,24 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
-                className="icon icon-twitter"
+                className="icon icon-mastodon"
+                href="https://mozilla.social/@mdn"
+                target="_blank"
+                rel="me noopener noreferrer"
+              >
+                <span className="visually-hidden">MDN on Mastodon</span>
+              </a>
+            </li>
+            <li>
+              <a
+                className="icon icon-twitter-x"
                 href="https://twitter.com/mozdevnet"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="visually-hidden">MDN on Twitter</span>
+                <span className="visually-hidden">
+                  MDN on X (formerly Twitter)
+                </span>
               </a>
             </li>
             <li>
@@ -65,7 +77,7 @@ export function Footer() {
             </li>
             <li className="footer-nav-item">
               <a
-                href="https://www.mozilla.org/en-US/careers/listings/?team=Marketing"
+                href="https://www.mozilla.org/en-US/careers/listings/?team=ProdOps"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -123,7 +135,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://discord.gg/hkGN8VKvvD"
+                href="/discord"
                 target="_blank"
                 rel="noopener noreferrer"
               >

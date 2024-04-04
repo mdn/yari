@@ -7,18 +7,25 @@ function PageLink({
   page,
   children,
   onClick,
+  disabled,
 }: {
   page: number;
   children?: React.ReactNode;
   onClick?: (page: number) => unknown;
+  disabled?: boolean;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <Link
       to={{}}
+      className={disabled ? "disabled" : ""}
       onClick={(event) => {
         event.preventDefault();
+        if (disabled) {
+          return;
+        }
+
         onClick && onClick(page);
         setSearchParams({
           ...Object.fromEntries(searchParams.entries()),
@@ -58,20 +65,29 @@ export function Paginator({
     onChange && onChange(page, current);
   };
 
+  if (first === last) {
+    // There are no pages, so return nothing
+    return <></>;
+  }
+
   return (
     <div className="pagination">
-      {current > first && (
-        <PageLink page={current - 1} onClick={onClick}>
-          {"<"} Previous
-        </PageLink>
-      )}
+      <PageLink
+        page={current - 1}
+        onClick={onClick}
+        disabled={current === first}
+      >
+        ← Previous
+      </PageLink>
       {left.map((page) => (
         <PageLink key={page} page={page} onClick={onClick} />
       ))}
       {Boolean(left.length) && left[left.length - 1] + 1 !== middle[0] && "…"}
       {middle.map((page) =>
         current === page ? (
-          <span key={page}>{page}</span>
+          <span className="current-page" key={page}>
+            {page}
+          </span>
         ) : (
           <PageLink key={page} page={page} onClick={onClick} />
         )
@@ -82,11 +98,13 @@ export function Paginator({
       {right.map((page) => (
         <PageLink key={page} page={page} onClick={onClick} />
       ))}
-      {current < last && (
-        <PageLink page={current + 1} onClick={onClick}>
-          Next {">"}
-        </PageLink>
-      )}
+      <PageLink
+        page={current + 1}
+        onClick={onClick}
+        disabled={current === last}
+      >
+        Next →
+      </PageLink>
     </div>
   );
 }

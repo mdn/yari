@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation, useMatch } from "react-router-dom";
+import {
+  Navigate,
+  Routes,
+  Route,
+  useLocation,
+  useMatch,
+} from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -28,6 +34,7 @@ import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
+import { Curriculum } from "./curriculum";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -54,8 +61,10 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && (
-          <TopNavigation extraClasses="main-document-header-container" />
+        {pageType !== "document-page" && pageType !== "curriculum" && (
+          <div className="sticky-header-container without-actions">
+            <TopNavigation />
+          </div>
         )}
         {children}
       </div>
@@ -158,10 +167,21 @@ export function App(appProps: HydrationData) {
       {/*
         Note, this can only happen in local development.
         In production, all traffic at `/` is redirected to at least
-        having a locale. So it'll be `/en-US` (for example) by the
+        having a locale. So it'll be `/en-US/` (for example) by the
         time it hits any React code.
        */}
-      <Route path="/" element={homePage} />
+      <Route
+        path="/"
+        element={WRITER_MODE ? homePage : <Navigate to="/en-US/" />}
+      />
+      <Route
+        path="/en-US/curriculum/*"
+        element={
+          <Layout pageType="curriculum">
+            <Curriculum {...appProps} />
+          </Layout>
+        }
+      />
       <Route
         path="/en-US/blog/*"
         element={

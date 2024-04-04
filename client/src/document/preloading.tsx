@@ -1,5 +1,3 @@
-import { Link, LinkProps } from "react-router-dom";
-
 const prefetches = new Set<string>();
 
 export function preload(url: string) {
@@ -28,22 +26,4 @@ export function preloadSupported() {
       "isIntersecting" in IntersectionObserverEntry.prototype
   );
   return _isSupported;
-}
-
-export function PreloadingDocumentLink(props: LinkProps) {
-  return (
-    <Link
-      {...props}
-      onMouseOver={(event) => {
-        if (preloadSupported()) {
-          preload(`${props.to}/index.json`);
-        }
-        if (props.onMouseOver) {
-          props.onMouseOver(event);
-        }
-      }}
-    >
-      {props.children}
-    </Link>
-  );
 }
