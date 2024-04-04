@@ -13,11 +13,18 @@ export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
 export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
 export const TOGGLE_PLUS_ADS_FREE_DISABLED = "toggle_plus_ads_free_disabled";
 export const TOGGLE_PLUS_ADS_FREE_ENABLED = "toggle_plus_ads_free_enabled";
+export const TOGGLE_PLUS_AI_HELP_HISTORY_DISABLED =
+  "toggle_plus_ai_help_history_disabled";
+export const TOGGLE_PLUS_AI_HELP_HISTORY_ENABLED =
+  "toggle_plus_ai_help_history_enabled";
 export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
 export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
+export const SETTINGS = "settings";
+
+export const A11Y_MENU = "a11y_menu";
 
 export const MENU = Object.freeze({
   CLICK_LINK: "menu_click_link",
@@ -58,6 +65,8 @@ export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
     ["sm", 426],
     ["xs", 0],
   ]);
+
+export const ARTICLE_FOOTER = "article_footer";
 export const THUMBS = "thumbs";
 
 export const BASELINE = Object.freeze({
@@ -66,3 +75,7 @@ export const BASELINE = Object.freeze({
   LINK_BCD_TABLE: "baseline_link_bcd_table",
   LINK_FEEDBACK: "baseline_link_feedback",
 });
+
+export const CLIENT_SIDE_NAVIGATION = "client_side_nav";
+export const LANGUAGE = "language";
+export const THEME_SWITCHER = "theme_switcher";

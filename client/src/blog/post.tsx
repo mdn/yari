@@ -22,6 +22,7 @@ import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
+import { PlayQueue } from "../playground/queue";
 
 function MaybeLink({ className = "", link, children }) {
   return link ? (
@@ -214,6 +215,7 @@ export function BlogPost(props: HydrationData) {
             {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
           <NewsletterSignUp />
+          <PlayQueue standalone={true} />
         </main>
       )}
     </>

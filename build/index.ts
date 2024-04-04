@@ -164,6 +164,7 @@ export interface BuiltDocument {
   source?: {
     github_url: string;
   };
+  plainHTML?: string;
 }
 
 interface DocumentOptions {
@@ -171,6 +172,7 @@ interface DocumentOptions {
   fixFlawsDryRun?: boolean;
   fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
+  plainHTML?: boolean;
 }
 
 export async function buildDocument(
@@ -445,6 +447,12 @@ export async function buildDocument(
     throw error;
   }
 
+  // Dump HTML for GPT context.
+  let plainHTML;
+  if (documentOptions.plainHTML) {
+    plainHTML = $.html();
+  }
+
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
 
@@ -516,26 +524,7 @@ export async function buildDocument(
 
   doc.modified = metadata.modified || null;
 
-  const otherTranslations = document.translations || [];
-  if (!otherTranslations.length && metadata.translation_of) {
-    // If built just-in-time, we won't have a record of all the other translations
-    // available. But if the current document has a translation_of, we can
-    // at least use that.
-    const translationOf = Document.findByURL(
-      `/en-US/docs/${metadata.translation_of}`
-    );
-    if (translationOf) {
-      otherTranslations.push({
-        locale: "en-US",
-        title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us")?.native,
-      });
-    }
-  }
-
-  if (otherTranslations.length) {
-    doc.other_translations = otherTranslations;
-  }
+  doc.other_translations = document.translations || [];
 
   injectSource(doc, document, metadata);
 
@@ -555,12 +544,50 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
 }
 
 function addBaseline(doc: Partial<Doc>) {
   if (doc.browserCompat) {
-    return getWebFeatureStatus(...doc.browserCompat);
+    const filteredBrowserCompat = doc.browserCompat.filter(
+      (query) =>
+        // temporary blocklist while we wait for per-key baseline statuses
+        // or another solution to the baseline/bcd table discrepancy problem
+        ![
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
+          "api.Clipboard.read",
+          "api.Clipboard.readText",
+          "api.Clipboard.write",
+          "api.Clipboard.writeText",
+          "api.ClipboardEvent",
+          "api.ClipboardEvent.ClipboardEvent",
+          "api.ClipboardEvent.clipboardData",
+          "api.ClipboardItem",
+          "api.ClipboardItem.ClipboardItem",
+          "api.ClipboardItem.getType",
+          "api.ClipboardItem.presentationStyle",
+          "api.ClipboardItem.types",
+          "api.Navigator.clipboard",
+          "api.Permissions.permission_clipboard-read",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
+          "api.CustomElementRegistry",
+          "api.CustomElementRegistry.builtin_element_support",
+          "api.CustomElementRegistry.define",
+          "api.Window.customElements",
+          "css.selectors.defined",
+          "css.selectors.host",
+          "css.selectors.host-context",
+          "css.selectors.part",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
+          "api.Element.input_event",
+          "api.InputEvent.InputEvent",
+          "api.InputEvent.data",
+          "api.InputEvent.dataTransfer",
+          "api.InputEvent.getTargetRanges",
+          "api.InputEvent.inputType",
+        ].includes(query)
+    );
+    return getWebFeatureStatus(...filteredBrowserCompat);
   }
 }
 
