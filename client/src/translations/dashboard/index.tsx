@@ -194,7 +194,7 @@ export function TranslationDashboard() {
       )}
       {error && <ShowError error={error} />}
       {lastData && (
-        <div className="filter-documents">
+        <div>
           <SectionHeader
             l10nKPIs={lastData.l10nKPIs}
             section={currentSection}

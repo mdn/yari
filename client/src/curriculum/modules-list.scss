@@ -33,9 +33,10 @@
         grid-template-columns: auto auto auto 1fr;
       }
 
-      hr {
+      &::before {
         border: none;
         border-top: 1px solid var(--text-inactive);
+        content: "";
         grid-area: hr;
         margin: 0 0 1.5rem;
         width: 100%;
@@ -126,8 +127,6 @@
     }
 
     ol.modules-list {
-      container-name: module-list;
-      container-type: inline-size;
       display: grid;
       flex-wrap: wrap;
       gap: 1rem;
@@ -147,41 +146,40 @@
       }
 
       li.module-list-item {
-        background-color: var(--curriculum-bg-color-list-item-body);
-        border: 1px solid var(--curriculum-border-color-list-item);
-        border-radius: var(--elem-radius);
-        box-shadow: var(--curriculum-shadow);
-        display: flex;
-        flex-direction: column;
-        justify-self: center;
-        max-width: 20rem;
-        min-width: 15rem;
-        overflow: auto;
-        padding: 0;
-        scroll-snap-align: center;
-        width: 100%;
+        display: block;
 
-        @media screen and (min-width: $screen-md) {
-          min-width: initial;
-        }
+        > a {
+          background-color: var(--curriculum-bg-color-list-item-body);
+          border: 1px solid var(--curriculum-border-color-list-item);
+          border-radius: var(--elem-radius);
+          box-shadow: var(--curriculum-shadow);
+          display: flex;
+          flex-direction: column;
+          justify-self: center;
+          max-width: 20rem;
+          min-width: 15rem;
+          overflow: auto;
+          padding: 0;
+          scroll-snap-align: center;
+          text-decoration: none;
+          width: 100%;
 
-        &:hover {
-          border-color: var(--curriculum-border-color-list-item-hover);
-        }
+          &:hover {
+            border-color: var(--curriculum-border-color-list-item-hover);
+            text-decoration: none;
+          }
 
-        > header {
-          a {
+          @media screen and (min-width: $screen-md) {
+            min-width: initial;
+          }
+
+          > header {
             align-items: center;
             background-color: var(--curriculum-bg-color-list-item-header);
             display: flex;
             flex-direction: column;
             height: 10rem;
-            padding: 1rem 2rem;
-            text-decoration: none;
-
-            &:hover {
-              text-decoration: underline;
-            }
+            padding: 1rem;
 
             svg.topic-icon {
               height: 4rem;
@@ -203,26 +201,26 @@
               text-align: center;
             }
           }
-        }
 
-        > section {
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-          font-size: var(--type-smaller-font-size);
-          height: 11rem;
-          justify-content: space-between;
-          padding: 1rem 1.5rem;
+          > section {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            font-size: var(--type-smaller-font-size);
+            height: 11rem;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
 
-          p {
-            color: var(--text-secondary);
-            margin: 0;
-            text-align: center;
-          }
+            p {
+              color: var(--text-secondary);
+              margin: 0;
+              text-align: center;
+            }
 
-          p:last-child {
-            color: var(--curriculum-color-topic);
-            font-weight: 600;
+            p:last-child {
+              color: var(--curriculum-color-topic);
+              font-weight: 600;
+            }
           }
         }
       }

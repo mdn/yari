@@ -4,19 +4,21 @@
     margin: 25px 0;
     padding: 10px;
 
-    h3,
     h4 {
       margin-top: 0;
-    }
-
-    h3 span.page {
-      color: #666;
-      margin-left: 10px;
     }
 
     p {
       margin-bottom: 3px;
     }
+  }
+
+  h3 span.page {
+    color: var(--text-inactive);
+  }
+
+  h4.subheader {
+    margin-top: 2px;
   }
 
   .loading {
@@ -34,7 +36,7 @@
     width: 100%;
 
     th.sortable {
-      cursor: ns-resize;
+      cursor: pointer;
     }
 
     th.sortable.active {
@@ -55,7 +57,7 @@
     }
 
     td .document-title-preview {
-      // color: rgb(118, 118, 118);
+      /* color: rgb(118, 118, 118); */
     }
 
     td .last_modified.ahead a {
@@ -87,17 +89,19 @@
       color: rgb(159, 159, 159);
     }
 
-    a {
+    a,
+    .current-page {
       padding: 10px;
     }
   }
 
   div.filter-documents {
-    .filters {
-      // XXX Can someone please turn this into a CSS grid
-      float: left;
-      width: 300px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 300px 1fr;
+    margin: auto;
 
+    .filters {
       h4 {
         border-bottom: 1px solid #efefef;
         margin-bottom: 10px;
@@ -110,10 +114,6 @@
           list-style: none;
         }
       }
-    }
-
-    .documents {
-      margin-left: 300px;
     }
   }
 }
