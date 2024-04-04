@@ -40,6 +40,8 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
+  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-light-border-primary};
   --border-secondary: #{$mdn-theme-light-border-secondary};
@@ -316,6 +318,8 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
+  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
   --border-secondary: #{$mdn-theme-dark-border-secondary};
