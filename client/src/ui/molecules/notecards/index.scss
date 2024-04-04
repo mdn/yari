@@ -78,15 +78,6 @@
     }
   }
 
-  &.caution {
-    --note-background: var(--background-critical);
-    --note-theme: var(--icon-critical);
-
-    &:before {
-      mask-image: url("../../../assets/icons/note-caution.svg");
-    }
-  }
-
   &.deprecated {
     --note-background: var(--background-critical);
     --note-theme: var(--icon-critical);
@@ -108,21 +99,6 @@
 
     &:before {
       mask-image: url("../../../assets/icons/note-info.svg");
-    }
-  }
-
-  &.tip {
-    --note-background: var(--background-success);
-    --note-theme: var(--icon-success);
-
-    &:before {
-      mask-image: url("../../../assets/icons/tip.svg");
-    }
-  }
-
-  &.important {
-    &:before {
-      mask-image: url("../../../assets/icons/important.svg");
     }
   }
 

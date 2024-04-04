@@ -5,21 +5,9 @@
         "msgid": "card_note_label",
         "msgstr": ["참고:"]
       },
-      "card_tip_label": {
-        "msgid": "card_tip_label",
-        "msgstr": ["팁:"]
-      },
-      "card_important_label": {
-        "msgid": "card_important_label",
-        "msgstr": ["중요한:"]
-      },
       "card_warning_label": {
         "msgid": "card_warning_label",
         "msgstr": ["경고:"]
-      },
-      "card_caution_label": {
-        "msgid": "card_caution_label",
-        "msgstr": ["주의:"]
       },
       "card_callout_label": {
         "msgid": "card_callout_label",

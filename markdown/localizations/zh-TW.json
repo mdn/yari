@@ -5,20 +5,8 @@
         "msgid": "card_note_label",
         "msgstr": ["備註："]
       },
-      "card_tip_label": {
-        "msgid": "card_tip_label",
-        "msgstr": ["提示："]
-      },
-      "card_important_label": {
-        "msgid": "card_important_label",
-        "msgstr": ["重要的："]
-      },
       "card_warning_label": {
         "msgid": "card_warning_label",
-        "msgstr": ["警告："]
-      },
-      "card_caution_label": {
-        "msgid": "card_caution_label",
         "msgstr": ["警告："]
       },
       "card_callout_label": {

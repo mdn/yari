@@ -36,8 +36,6 @@ function getL10nCardMap(locale = DEFAULT_LOCALE) {
 
 function getNotecardType(node, locale) {
   const types = ["note", "warning", "callout"];
-  // The styling and infrastructure is in place to add the following types when ready:
-  // const types = ["note", "tip", "important", "warning", "caution", "callout"];
 
   if (!node.children) {
     return null;
