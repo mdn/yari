@@ -101,7 +101,7 @@ function convertEvent(eventName) {
 output = '<section id="Quick_links" data-macro="DefaultAPISidebar"><ol>';
 
 if (webAPIGroups[0][group].overview) {
-  output += '<li><strong><a href="' +  APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_') + '">' + webAPIGroups[0][group].overview[0] + '</a></strong></li>';
+  output += '<li class="section"><a href="' +  APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_') + '">' + webAPIGroups[0][group].overview[0] + '</a></li>';
 }
 
 if (guides.length > 0) {
