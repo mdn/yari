@@ -1113,8 +1113,8 @@ async function buildPropertylist(pages, title) {
 <section id="Quick_links" data-macro="CSSRef">
 
 <ol>
-  <li><a href="/<%=locale%>/docs/Web/CSS"><strong>CSS</strong></a></li>
-  <li><a href="<%=learnURL%>CSS"><strong><%=text['Tutorials']%></strong></a></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/CSS">CSS</a></li>
+  <li class="section"><a href="<%=learnURL%>CSS"><%=text['Tutorials']%></a></li>
   <li><a href="<%=learnURL%>Getting_started_with_the_web/CSS_basics"><%=text['CSS_basics']%></a></li>
   <li class="toggle">
       <details>
@@ -1191,7 +1191,7 @@ async function buildPropertylist(pages, title) {
       </details>
   </li>
 
-  <li><a href="/<%=locale%>/docs/Web/CSS/Reference"><strong><%=text['Reference']%></strong></a></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/CSS/Reference"><%=text['Reference']%></a></li>
   <%-await buildSublist(groups, 'Modules');%>
   <%-await buildPropertylist(properties, 'Properties');%>
   <%-await buildSublist(selectors, 'Selectors');%>
@@ -1202,7 +1202,7 @@ async function buildPropertylist(pages, title) {
   <%-await buildSublist(functions, 'Functions');%>
   <%-await buildSublist(types, 'Types');%>
 
-  <li><strong><%=text['Guides']%></strong></li>
+  <li class="section no-link"><%=text['Guides']%></li>
   <li class="toggle">
       <details>
           <summary><%=text['Animations']%></summary>
@@ -1452,7 +1452,7 @@ async function buildPropertylist(pages, title) {
       </details>
   </li>
 
-  <li><a href="/<%=locale%>/docs/Web/CSS/Layout_cookbook"><strong><%=text['Layout_cookbook']%></strong></a></li>
+  <li class="section"><a href="/<%=locale%>/docs/Web/CSS/Layout_cookbook"><%=text['Layout_cookbook']%></a></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, text['Media_objects'], cssURL)%></li>
@@ -1468,7 +1468,7 @@ async function buildPropertylist(pages, title) {
     </ol>
   </li>
 
-  <li><strong><%=text['Tools']%></strong></li>
+  <li class="section no-link"><%=text['Tools']%></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
