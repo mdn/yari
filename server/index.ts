@@ -55,8 +55,8 @@ import {
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
-async function buildDocumentFromURL(url: string) {
-  const document = Document.findByURL(url);
+async function buildDocumentFromURL(url: string, contentSha?: string) {
+  const document = Document.findByURL(url, MEMOIZE_INVALIDATE, contentSha);
   if (!document) {
     return null;
   }
@@ -400,7 +400,10 @@ app.get("/*", async (req, res, ...args) => {
   let document;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    const built = await buildDocumentFromURL(lookupURL);
+    const built = await buildDocumentFromURL(
+      lookupURL,
+      req.query.ref as string
+    );
     if (built) {
       document = built.doc;
     } else if (

@@ -187,10 +187,8 @@ export function getFolderPath(metadata, root: string | null = null) {
 }
 
 export const read = memoize(
-  (folderOrFilePath: string, ...roots: string[]): UnbuiltDocument => {
-    if (roots.length === 0) {
-      roots = ROOTS;
-    }
+  (folderOrFilePath: string, _cache_breaker, ref): UnbuiltDocument => {
+    const roots = ROOTS;
     let filePath: string = null;
     let folder: string = null;
     let root: string = null;
@@ -270,7 +268,15 @@ export const read = memoize(
       CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
     );
 
-    const rawContent = fs.readFileSync(filePath, "utf-8");
+    let rawContent;
+    if (ref) {
+      rawContent = execGit(
+        ["show", `${ref}:${filePath.replace(root, "files")}`, "--no-textconv"],
+        { cwd: root }
+      );
+    } else {
+      rawContent = fs.readFileSync(filePath, "utf-8");
+    }
     if (!rawContent) {
       throw new Error(`${filePath} is an empty file`);
     }
