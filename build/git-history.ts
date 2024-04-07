@@ -4,6 +4,15 @@ import path from "node:path";
 import { execGit } from "../content/index.js";
 import { CONTENT_ROOT } from "../libs/env/index.js";
 
+export type Commit = {
+  modified: Date;
+  hash: string;
+};
+
+interface CommitHistory {
+  [filePath: string]: Commit;
+}
+
 function getFromGit(contentRoot = CONTENT_ROOT) {
   // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it
   // impossible to compute the relative path for files within when we get
@@ -22,9 +31,13 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
       "log",
       "--name-only",
       "--no-decorate",
-      `--format=${MARKER}%H${DELIMITER}%cI${DELIMITER}%P`,
+      `--format=${MARKER}%H${DELIMITER}%cI`,
       "--date-order",
       "--reverse",
+      // use the merge commit's date, as this is the date the content can
+      // be built and deployed. And such behavior is similar to
+      // GitHub's "Squash and merge" option.
+      "--first-parent",
       // "Separate the commits with NULs instead of with new newlines."
       // So each line isn't, possibly, wrapped in "quotation marks".
       // Now we just need to split the output, as a string, by \0.
@@ -36,55 +49,58 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
     repoRoot
   );
 
-  const map = new Map();
+  const map = new Map<string, Commit>();
   let date = null;
   let hash = null;
   // Even if we specified the `-z` option to `git log ...` above, sometimes
   // it seems `git log` prefers to use a newline character.
   // At least as of git version 2.28.0 (Dec 2020). So let's split on both
   // characters to be safe.
-  const parents = new Map();
   for (const line of output.split(/\0|\n/)) {
     if (line.startsWith(MARKER)) {
-      const data = line.replace(MARKER, "").split(DELIMITER);
-      hash = data[0];
-      date = new Date(data[1]);
-      if (data[2]) {
-        const split = data[2].split(" ");
-        if (split.length === 2) {
-          const [, parentHash] = split;
-          parents.set(parentHash, { modified: date, hash });
-        }
-      }
+      const [hashStr, dateStr] = line.replace(MARKER, "").split(DELIMITER);
+      hash = hashStr;
+      date = new Date(dateStr);
     } else if (line) {
       const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
       map.set(relPath, { modified: date, hash });
     }
   }
-  return [map, parents];
+  return map;
 }
 
-export function gather(contentRoots, previousFile = null) {
-  const map = new Map();
+export function readGitHistory(contentRoot: string): CommitHistory {
+  const historyFilePath = path.join(contentRoot, "_githistory.json");
+  if (fs.existsSync(historyFilePath)) {
+    return JSON.parse(
+      fs.readFileSync(historyFilePath, "utf-8")
+    ) as CommitHistory;
+  }
+  return {};
+}
+
+export function gather(contentRoots: string[], previousFile: string = null) {
+  const map = new Map<string, Commit>();
   if (previousFile) {
-    const previous = JSON.parse(fs.readFileSync(previousFile, "utf-8"));
+    const previous = readGitHistory(previousFile);
     for (const [key, value] of Object.entries(previous)) {
       map.set(key, value);
     }
   }
   // Every key in this map is a path, relative to root.
   for (const contentRoot of contentRoots) {
-    const [commits, parents] = getFromGit(contentRoot);
+    const commits = getFromGit(contentRoot);
     for (const [key, value] of commits) {
       // Because CONTENT_*_ROOT isn't necessarily the same as the path relative to
       // the git root. For example "../README.md" and since those aren't documents
       // exclude them.
-      // We also only care about documents.
+      // We also only care about existing documents.
       if (
         !key.startsWith(".") &&
-        (key.endsWith("index.html") || key.endsWith("index.md"))
+        (key.endsWith("index.html") || key.endsWith("index.md")) &&
+        fs.existsSync(path.join(contentRoot, key))
       ) {
-        map.set(key, Object.assign(value, { merged: parents.get(value.hash) }));
+        map.set(key, value);
       }
     }
   }
