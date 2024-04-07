@@ -73,7 +73,13 @@ export function readGitHistory(contentRoot: string): CommitHistory {
   const historyFilePath = path.join(contentRoot, "_githistory.json");
   if (fs.existsSync(historyFilePath)) {
     return JSON.parse(
-      fs.readFileSync(historyFilePath, "utf-8")
+      fs.readFileSync(historyFilePath, "utf-8"),
+      (key, value) => {
+        if (key === "modified") {
+          return new Date(value);
+        }
+        return value;
+      }
     ) as CommitHistory;
   }
   return {};
