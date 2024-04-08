@@ -115,8 +115,8 @@ jobs:
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.developer.allizom.xyz
-          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https:///live-samples.developer.allizom.xyz
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
@@ -253,7 +253,8 @@ jobs:
             --memory=2GB \
             --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
