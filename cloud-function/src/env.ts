@@ -47,7 +47,7 @@ export function getOriginFromRequest(req: Request): Origin {
   ) {
     return Origin.liveSamples;
   } else if (
-    req.hostname.endsWith(ORIGIN_PLAY) ||
+    (ORIGIN_PLAY && req.hostname.endsWith(ORIGIN_PLAY)) ||
     // In case ORIGIN_PLAY is not a prefix of ORIGIN_LIVE_SAMPLES.
     (req.hostname === ORIGIN_LIVE_SAMPLES && req.path.endsWith("/runner.html"))
   ) {
