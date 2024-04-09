@@ -53,7 +53,7 @@
     "test:libs": "yarn jest --rootDir libs --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
-    "tool": "NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
+    "tool": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "resolutions": {
