@@ -9,11 +9,11 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -b",
-    "build-redirects": "ts-node src/build-redirects.ts",
+    "build-redirects": "NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/build-redirects.ts",
     "copy-internal": "rm -rf ./src/internal && cp -R ../libs ./src/internal",
     "gcp-build": "npm run build",
     "prepare": "([ ! -e ../libs ] || npm run copy-internal)",
-    "proxy": "ts-node src/proxy.ts",
+    "proxy": "NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/proxy.ts",
     "server": "npm run build && functions-framework --target=mdnHandler",
     "server:watch": "nodemon --exec npm run server",
     "start": "nf start"
