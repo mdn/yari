@@ -6,6 +6,7 @@ import {
   BUILD_OUT_ROOT,
   BASE_URL,
 } from "../libs/env/index.js";
+import { generateGA } from "./ga.js";
 
 const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 const clientBuildRoot = path.resolve(dirname, "client/build");
@@ -39,26 +40,15 @@ function* extractCSSURLs(css, filterFunction) {
 function webfontTags(webfontURLs): string {
   return webfontURLs
     .map(
-      (url) => `<link rel="preload" as="font" type="font/woff2" href="${url}">`
+      (url) =>
+        `<link rel="preload" as="font" type="font/woff2" href="${url}" crossorigin>`
     )
     .join("");
 }
 
 function gtagScriptPath(relPath = "/static/js/gtag.js") {
-  // Return the relative path if there exists a `BUILD_ROOT/static/js/gtag.js`.
-  // If the file doesn't exist, return falsy.
-  // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
-  // based on `dirname` but that's wrong when compared as a source and as
-  // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
-  let root = BUILD_OUT_ROOT;
-  if (!fs.existsSync(root)) {
-    root = root
-      .split(path.sep)
-      .filter((x) => x !== "ssr")
-      .join(path.sep);
-  }
   const filePath = relPath.split("/").slice(1).join(path.sep);
-  if (fs.existsSync(path.join(root, filePath))) {
+  if (fs.existsSync(path.join(BUILD_OUT_ROOT, filePath))) {
     return relPath;
   }
   return null;
@@ -70,7 +60,7 @@ function prepare() {
   const gtagPath = gtagScriptPath();
 
   fs.writeFileSync(
-    "include.ts",
+    path.join(dirname, "ssr", "include.ts"),
     `
 export const WEBFONT_TAGS = ${JSON.stringify(tags)};
 export const GTAG_PATH = ${JSON.stringify(gtagPath)};
@@ -80,4 +70,4 @@ export const ALWAYS_ALLOW_ROBOTS = ${JSON.stringify(ALWAYS_ALLOW_ROBOTS)};
   );
 }
 
-prepare();
+generateGA().then(() => prepare());
