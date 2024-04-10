@@ -5,10 +5,10 @@ import {
 } from "../libs/env/index.js";
 import path from "node:path";
 
-async function main() {
-  const measurementId = GOOGLE_ANALYTICS_MEASUREMENT_ID;
+export async function generateGA() {
   const outFile = path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js");
-  const measurementIds = measurementId.split(",").filter(Boolean);
+  const measurementIds =
+    GOOGLE_ANALYTICS_MEASUREMENT_ID.split(",").filter(Boolean);
   if (measurementIds.length) {
     const dntHelperCode = fs
       .readFileSync(
@@ -17,7 +17,7 @@ async function main() {
       )
       .trim();
 
-    const firstMeasurementId = measurementIds.at(0);
+    const firstMeasurementId = measurementIds[0];
     const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(firstMeasurementId)}`;
 
     const code = `
@@ -39,10 +39,9 @@ if (Mozilla && !Mozilla.dntEnabled()) {
 }`.trim();
     fs.writeFileSync(outFile, `${code}\n`, "utf-8");
     console.log(
-      `Generated ${outFile} for SSR rendering using ${measurementId}.`
+      `Generated ${outFile} for SSR rendering using ${GOOGLE_ANALYTICS_MEASUREMENT_ID}.`
     );
   } else {
     console.log("No Google Analytics code file generated");
   }
 }
-main();

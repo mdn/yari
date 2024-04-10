@@ -6,6 +6,7 @@ import {
   BUILD_OUT_ROOT,
   BASE_URL,
 } from "../libs/env/index.js";
+import { generateGA } from "./ga.js";
 
 const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 const clientBuildRoot = path.resolve(dirname, "client/build");
@@ -39,7 +40,8 @@ function* extractCSSURLs(css, filterFunction) {
 function webfontTags(webfontURLs): string {
   return webfontURLs
     .map(
-      (url) => `<link rel="preload" as="font" type="font/woff2" href="${url}">`
+      (url) =>
+        `<link rel="preload" as="font" type="font/woff2" href="${url}" crossorigin>`
     )
     .join("");
 }
@@ -80,4 +82,4 @@ export const ALWAYS_ALLOW_ROBOTS = ${JSON.stringify(ALWAYS_ALLOW_ROBOTS)};
   );
 }
 
-prepare();
+generateGA().then(() => prepare());

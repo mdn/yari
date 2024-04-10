@@ -22,7 +22,7 @@
     "build:curriculum": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/build-curriculum.ts",
     "build:dist": "tsc -p tsconfig.dist.json",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
-    "build:prepare": "yarn build:client && yarn ga && yarn build:ssr && yarn tool optimize-client-build && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
+    "build:prepare": "yarn build:client && yarn build:ssr && yarn tool optimize-client-build && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
     "build:ssr": "cd ssr && cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node prepare.ts && webpack --mode=production",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
