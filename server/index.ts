@@ -272,41 +272,46 @@ app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
     )
   ).pipe(res);
 });
-app.get("/:locale/blog/:slug/index.json", async (req, res) => {
-  const { slug } = req.params;
-  const data = await findPostBySlug(slug);
-  if (!data) {
+if (BLOG_ROOT) {
+  app.get("/:locale/blog/:slug/index.json", async (req, res) => {
+    const { slug } = req.params;
+    const data = await findPostBySlug(slug);
+    if (!data) {
+      return res.status(404).send("Nothing here 🤷‍♂️");
+    }
+    return res.json(data);
+  });
+  app.get(
+    ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
+    async (req, res) => {
+      return res
+        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .status(200)
+        .sendFile(path.join(STATIC_ROOT, "runner.html"));
+    }
+  );
+  app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
+    const { slug, id } = req.params;
+    try {
+      return res.send(await findPostLiveSampleBySlug(slug, id));
+    } catch (e) {
+      return res.status(404).send(e.toString());
+    }
+  });
+  app.get("/:locale/blog/:slug/:asset", async (req, res) => {
+    const { slug, asset } = req.params;
+    const p = findPostPathBySlug(slug);
+    if (p) {
+      return send(
+        req,
+        path.resolve(path.join(p, sanitizeFilename(asset)))
+      ).pipe(res);
+    }
     return res.status(404).send("Nothing here 🤷‍♂️");
-  }
-  return res.json(data);
-});
-app.get(
-  ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
-  async (req, res) => {
-    return res
-      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-      .status(200)
-      .sendFile(path.join(STATIC_ROOT, "runner.html"));
-  }
-);
-app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
-  const { slug, id } = req.params;
-  try {
-    return res.send(await findPostLiveSampleBySlug(slug, id));
-  } catch (e) {
-    return res.status(404).send(e.toString());
-  }
-});
-app.get("/:locale/blog/:slug/:asset", async (req, res) => {
-  const { slug, asset } = req.params;
-  const p = findPostPathBySlug(slug);
-  if (p) {
-    return send(req, path.resolve(path.join(p, sanitizeFilename(asset)))).pipe(
-      res
-    );
-  }
-  return res.status(404).send("Nothing here 🤷‍♂️");
-});
+  });
+} else {
+  console.warn("'BLOG_ROOT' not set in .env file");
+}
 app.get("/*", async (req, res, ...args) => {
   const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
   if (req.url.startsWith("/_")) {

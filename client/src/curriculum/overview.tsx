@@ -25,7 +25,7 @@ export function CurriculumModuleOverview(
       </header>
       <RenderCurriculumBody doc={doc} />
       <section className="module-contents">
-        <h2>Module Contents</h2>
+        <h2>Module list</h2>
         {doc?.modules && <ModulesList modules={doc.modules} />}
       </section>
       <PrevNext doc={doc} />

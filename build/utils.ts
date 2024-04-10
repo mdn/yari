@@ -352,10 +352,8 @@ export function makeTOC(doc, withH3 = false) {
 
 export function findPostFileBySlug(slug: string): string | null {
   if (!BLOG_ROOT) {
-    console.warn("'BLOG_ROOT' not set in .env file");
     return null;
   }
-
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",

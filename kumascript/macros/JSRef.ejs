@@ -255,7 +255,7 @@ async function renderOutput() {
     slugStdlib,
     "JSRef",
   );
-  output += `<li><strong>${link}</strong></li>`;
+  output += `<li class="section">${link}</li>`;
 
   for (const [index, item] of inheritanceChain.entries()) {
     const {
@@ -270,7 +270,7 @@ async function renderOutput() {
     } = item;
 
     if (index === 1) {
-      output += `<li><strong>${text.Inheritance}</strong></li>`;
+      output += `<li class="section no-link">${text.Inheritance}</li>`;
     }
 
     const link = web.smartLink(
@@ -281,7 +281,7 @@ async function renderOutput() {
       slugStdlib,
       "JSRef",
     );
-    output += `<li><strong>${link}</strong></li>`;
+    output += `<li class="section">${link}</li>`;
 
     if (constructors.length > 0) {
       output += await buildSublist(
@@ -321,7 +321,7 @@ async function renderOutput() {
   }
 
   if (group.length > 0) {
-    output += `<li><strong>${text.Related}</strong></li>`;
+    output += `<li class="section no-link">${text.Related}</li>`;
     for (const groupItem of group) {
       const link = web.smartLink(
         `${slugStdlib}/${groupItem.replace(".", "/")}`,
@@ -331,7 +331,7 @@ async function renderOutput() {
         slugStdlib,
         "JSRef",
       );
-      output += `<li><strong>${link}</strong></li>`;
+      output += `<li class="section">${link}</li>`;
     }
   }
 
