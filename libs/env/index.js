@@ -113,7 +113,6 @@ function correctPathFromEnv(envVarName) {
     return;
   }
   pathName = fs.realpathSync(pathName);
-  console.log("realPathName", pathName);
   return pathName;
 }
 
