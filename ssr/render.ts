@@ -9,7 +9,9 @@ import {
   GTAG_PATH,
 } from "./include";
 
-import HTML from "!!raw-loader!../client/build/index.html";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import HTML from "../client/build/index.html?raw";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
