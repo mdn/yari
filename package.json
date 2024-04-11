@@ -179,7 +179,7 @@
     "camelcase": "^8.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "cross-env": "^7.0.3",
-    "css-loader": "^7.1.0",
+    "css-loader": "^7.1.1",
     "css-minimizer-webpack-plugin": "^6.0.0",
     "diff": "^5.2.0",
     "downshift": "^7.6.1",
