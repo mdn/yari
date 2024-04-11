@@ -6,7 +6,7 @@ import { App } from "./app";
 it("renders without crashing", () => {
   const app = (
     <MemoryRouter>
-      <App />
+      <App url="/" />
     </MemoryRouter>
   );
   const div = document.createElement("div");

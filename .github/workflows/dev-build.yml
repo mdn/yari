@@ -159,6 +159,9 @@ jobs:
           # Generate sitemap index file
           yarn build --sitemap-index
 
+          # SSR all pages
+          yarn ssr
+
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
