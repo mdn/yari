@@ -68,7 +68,7 @@ module.exports = {
         ],
         "n/no-missing-import": "off",
         "n/no-unpublished-import": "off",
-        "n/shebang": "off",
+        "n/hashbang": "off",
       },
     },
     {
