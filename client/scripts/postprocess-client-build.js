@@ -9,7 +9,7 @@ import path from "node:path";
 import cheerio from "cheerio";
 import md5File from "md5-file";
 
-export async function runOptimizeClientBuild(buildRoot) {
+export async function hashSomeStaticFilesForClientBuild(buildRoot) {
   const indexHtmlFilePath = path.join(buildRoot, "index.html");
   const indexHtml = fs.readFileSync(indexHtmlFilePath, "utf-8");
 
@@ -28,15 +28,6 @@ export async function runOptimizeClientBuild(buildRoot) {
       }
       href = element.attribs.content;
       attributeKey = "content";
-      // This is an unfortunate hack. The value for the
-      // <meta property=og:image content=...> needs to be an absolute URL.
-      // We tested with a relative URL and it seems it doesn't work in Twitter.
-      // So we hardcode the URL to be our production domain so the URL is
-      // always absolute.
-      // Yes, this makes it a bit weird to use a build of this on a dev,
-      // stage, preview, or a local build. Especially if the hashed URL doesn't
-      // always work. But it's a fair price to pay.
-      hrefPrefix = "https://developer.mozilla.org";
     } else {
       href = element.attribs.href;
       if (!href) {
@@ -75,7 +66,7 @@ export async function runOptimizeClientBuild(buildRoot) {
     const splitName = filePath.split(extName);
     const hashedFilePath = `${splitName[0]}.${hash}${extName}`;
     fs.copyFileSync(filePath, hashedFilePath);
-    const hashedHref = filePathToHref(buildRoot, hashedFilePath);
+    const hashedHref = filePathToHref(buildRoot, hashedFilePath, href);
     results.push({
       filePath,
       href,
@@ -101,8 +92,18 @@ export async function runOptimizeClientBuild(buildRoot) {
 }
 
 // Turn 'C:\Path\to\client\build\favicon.ico' to '/favicon.ico'
-function filePathToHref(root, filePath) {
-  return `${filePath.replace(root, "").replace(path.sep, "/")}`;
+function filePathToHref(root, filePath, href) {
+  let dummyOrExistingUrl = new URL(href, "http://localhost.example");
+  dummyOrExistingUrl.pathname = "";
+  let url = new URL(
+    `${filePath.replace(root, "").replace(path.sep, "/")}`,
+    dummyOrExistingUrl
+  );
+  if (url.hostname === "localhost.example") {
+    return url.pathname;
+  } else {
+    return url.href;
+  }
 }
 
 // Turn '/favicon.ico' to 'C:\Path\to\client\build\favicon.ico'

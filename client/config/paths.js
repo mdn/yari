@@ -19,7 +19,7 @@ const appPackage = JSON.parse(fs.readFileSync(resolveApp("package.json")));
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === "development",
   appPackage.homepage,
-  process.env.PUBLIC_URL
+  process.env.PUBLIC_URL || process.env.BASE_URL
 );
 
 const buildPath = process.env.BUILD_PATH || "build";

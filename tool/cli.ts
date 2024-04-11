@@ -31,7 +31,6 @@ import {
   CONTENT_TRANSLATED_ROOT,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
@@ -1061,40 +1060,6 @@ program
 
       process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
-  )
-
-  .command(
-    "optimize-client-build",
-    "After the client code has been built there are things to do that react-scripts can't."
-  )
-  .argument("<buildroot>", "directory where react-scripts built", {
-    default: path.join("client", "build"),
-  })
-  .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-        logger,
-      }: OptimizeClientBuildActionParameters) => {
-        const { buildroot } = args;
-        const { results } = await runOptimizeClientBuild(buildroot);
-        if (options.verbose) {
-          for (const result of results) {
-            logger.info(`${result.filePath} -> ${result.hashedHref}`);
-          }
-        } else {
-          logger.info(
-            chalk.green(
-              `Hashed ${results.length} files in ${path.join(
-                buildroot,
-                "index.html"
-              )}`
-            )
-          );
-        }
-      }
-    )
   )
 
   .command(
