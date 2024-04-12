@@ -194,12 +194,6 @@ interface MacrosActionParameters extends ActionParameters {
   };
 }
 
-interface OptimizeClientBuildActionParameters extends ActionParameters {
-  args: {
-    buildroot: string;
-  };
-}
-
 interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
