@@ -16,24 +16,30 @@ export async function ssrAllDocuments() {
   const docs = await api.withPromise();
 
   const t0 = new Date();
-  const out = await Promise.all(
-    docs
-      .map(async (file) => {
-        const context: HydrationData = JSON.parse(
-          await readFile(file, "utf-8")
-        );
-        if (!context?.url) {
-          return null;
-        }
-        const html = renderHTML(context);
-        const outputFile = file.replace(/.json$/, ".html");
-        await writeFile(outputFile, html);
-        return outputFile;
-      })
-      .filter(Boolean)
-  );
+
+  const done = [];
+  for (let i = 0; i < docs.length; i += 1000) {
+    const chunk = docs.slice(i, i + 1000);
+    const out = await Promise.all(
+      chunk
+        .map(async (file) => {
+          const context: HydrationData = JSON.parse(
+            await readFile(file, "utf-8")
+          );
+          if (!context?.url) {
+            return null;
+          }
+          const html = renderHTML(context);
+          const outputFile = file.replace(/.json$/, ".html");
+          await writeFile(outputFile, html);
+          return outputFile;
+        })
+        .filter(Boolean)
+    );
+    done.push(...out);
+  }
   const t1 = new Date();
-  const count = out.length;
+  const count = done.length;
   const seconds = (t1.getTime() - t0.getTime()) / 1000;
   const took =
     seconds > 60
