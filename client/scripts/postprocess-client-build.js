@@ -92,6 +92,7 @@ export async function hashSomeStaticFilesForClientBuild(buildRoot) {
 }
 
 // Turn 'C:\Path\to\client\build\favicon.ico' to '/favicon.ico'
+// or 'https://foo.bar/favicon.ico' if href is an absolute URL.
 function filePathToHref(root, filePath, href) {
   let dummyOrExistingUrl = new URL(href, "http://localhost.example");
   dummyOrExistingUrl.pathname = "";

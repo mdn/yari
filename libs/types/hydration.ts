@@ -10,6 +10,7 @@ interface HydrationData<T = any, S = any> {
   locale?: any;
   noIndexing?: any;
   image?: string | null;
+  url: string;
 }
 
 export type { HydrationData };

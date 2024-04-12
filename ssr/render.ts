@@ -99,6 +99,7 @@ const readBuildHTML = lazy(() => {
 
 export default function render(
   renderApp,
+  url: string,
   {
     doc = null,
     pageNotFound = false,
@@ -109,7 +110,7 @@ export default function render(
     noIndexing = null,
     image = null,
     blogMeta = null,
-  }: HydrationData = {}
+  }: HydrationData = { url }
 ) {
   const buildHtml = readBuildHTML();
   const rendered = renderToString(renderApp);
@@ -119,7 +120,7 @@ export default function render(
   let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
 
-  const hydrationData: HydrationData = {};
+  const hydrationData: HydrationData = { url };
   const translations: string[] = [];
   if (blogMeta) {
     hydrationData.blogMeta = blogMeta;
