@@ -19,9 +19,13 @@ const appPackage = JSON.parse(fs.readFileSync(resolveApp("package.json")));
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === "development",
   appPackage.homepage,
-  process.env.PUBLIC_URL ||
-    process.env.BASE_URL ||
-    "https://developer.mozilla.org/"
+  process.env.PUBLIC_URL
+);
+
+const baseUrl = getPublicUrlOrPath(
+  process.env.NODE_ENV === "development",
+  appPackage.homepage,
+  process.env.BASE_URL || "/"
 );
 
 const buildPath = process.env.BUILD_PATH || "build";
@@ -73,6 +77,7 @@ const config = {
   appTsBuildInfoFile: resolveApp("../node_modules/.cache/tsconfig.tsbuildinfo"),
   swSrc: resolveModule(resolveApp, "src/service-worker"),
   publicUrlOrPath,
+  baseUrl,
   libsPath: resolveApp("../libs"),
   moduleFileExtensions,
 };
