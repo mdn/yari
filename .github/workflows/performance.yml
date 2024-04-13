@@ -50,7 +50,7 @@ jobs:
 
           # Make sure it's set to something so that the build uses the
           # Google Analytics tag which is most realistic.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-XXXXXXXX
         run: |
           yarn build:prepare
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build

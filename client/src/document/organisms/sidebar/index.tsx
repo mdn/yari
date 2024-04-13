@@ -14,10 +14,12 @@ export function SidebarContainer({
   doc,
   label,
   children,
+  tocTitle,
 }: {
   doc: any;
   label?: string;
   children: React.ReactNode;
+  tocTitle?: string;
 }) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
@@ -65,12 +67,16 @@ export function SidebarContainer({
           aria-label="Collapse sidebar"
         />
         <nav aria-label={label} className="sidebar-inner">
-          <header className="sidebar-actions">
-            {doc.sidebarHTML && <SidebarFilter />}
-          </header>
+          {doc.sidebarHTML && (
+            <header className="sidebar-actions">
+              <SidebarFilter />
+            </header>
+          )}
           <div className="sidebar-inner-nav">
             <div className="in-nav-toc">
-              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+              {doc.toc && !!doc.toc.length && (
+                <TOC toc={doc.toc} title={tocTitle} />
+              )}
             </div>
             {children}
           </div>

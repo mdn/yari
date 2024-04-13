@@ -3,7 +3,13 @@ import fs from "node:fs";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
+import {
+  beforeEachMacro,
+  describeMacro,
+  itMacro,
+  lintHTML,
+  parsePagesFixture,
+} from "./utils.js";
 
 /**
  * Load all the fixtures.
@@ -13,9 +19,7 @@ const subpagesFixturePath = new URL(
   "./fixtures/apiref/subpages.json",
   import.meta.url
 );
-const subpagesFixture = JSON.parse(
-  fs.readFileSync(subpagesFixturePath, "utf-8")
-);
+const subpagesFixture = parsePagesFixture(subpagesFixturePath);
 const commonl10nFixturePath = new URL(
   "./fixtures/apiref/commonl10n.json",
   import.meta.url
@@ -506,7 +510,7 @@ async function checkResult(html, config) {
   expect(num_valid_links).toEqual(num_total_links);
 
   // Test main interface link
-  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li>strong>a");
+  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li.section>a");
   expect(mainIfLink.textContent).toEqual(config.expected.mainIfLink.text);
 
   if (mainIfLink.href !== "") {

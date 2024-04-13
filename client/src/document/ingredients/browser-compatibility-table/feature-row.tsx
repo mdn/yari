@@ -11,6 +11,7 @@ import {
   isTruthy,
   versionIsPreview,
   SupportStatementExtended,
+  bugURLToString,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
@@ -335,7 +336,7 @@ function getNotes(
             (otherItem) => otherItem.version_added === item.version_removed
           )
             ? {
-                iconName: "disabled",
+                iconName: "footnote",
                 label: (
                   <>
                     Removed in {labelFromString(item.version_removed, browser)}{" "}
@@ -372,6 +373,19 @@ function getNotes(
             ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
                 (note) => ({ iconName: "footnote", label: note })
               )
+            : null,
+          item.impl_url
+            ? (Array.isArray(item.impl_url)
+                ? item.impl_url
+                : [item.impl_url]
+              ).map((impl_url) => ({
+                iconName: "footnote",
+                label: (
+                  <>
+                    See <a href={impl_url}>{bugURLToString(impl_url)}</a>.
+                  </>
+                ),
+              }))
             : null,
           versionIsPreview(item.version_added, browser)
             ? {
