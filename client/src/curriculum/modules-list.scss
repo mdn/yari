@@ -65,6 +65,7 @@
         > label {
           color: var(--text-inactive);
           cursor: pointer;
+          width: max-content;
         }
 
         &#modules-0 {
@@ -146,6 +147,8 @@
       }
 
       li.module-list-item {
+        --spacing: 1rem;
+        --icon-size: 4rem;
         display: block;
 
         > a {
@@ -178,12 +181,15 @@
             background-color: var(--curriculum-bg-color-list-item-header);
             display: flex;
             flex-direction: column;
-            height: 10rem;
-            padding: 1rem;
+            font-weight: var(--font-body-strong-weight);
+            height: 10.5rem;
+            height: calc(3 * var(--spacing) + var(--icon-size) + 2lh);
+            padding: var(--spacing);
+            row-gap: var(--spacing);
 
             svg.topic-icon {
-              height: 4rem;
-              width: 4rem;
+              height: var(--icon-size);
+              width: var(--icon-size);
 
               circle {
                 fill: var(--curriculum-bg-color-list-item-icon);
@@ -196,8 +202,7 @@
 
             > span {
               color: var(--text-primary);
-              font-weight: var(--font-body-strong-weight);
-              margin: auto;
+              margin: 0 auto;
               text-align: center;
             }
           }
@@ -209,7 +214,7 @@
             font-size: var(--type-smaller-font-size);
             height: 11rem;
             justify-content: space-between;
-            padding: 1rem 1.5rem;
+            padding: var(--spacing);
 
             p {
               color: var(--text-secondary);
