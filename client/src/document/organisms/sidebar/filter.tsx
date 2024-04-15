@@ -22,16 +22,16 @@ export function SidebarFilter() {
   }, [gleanClick, isActive]);
 
   useEffect(() => {
-    if (hasTyped) {
-      gleanClick(SIDEBAR_FILTER_TYPED);
-    }
-  }, [gleanClick, hasTyped]);
-
-  useEffect(() => {
     if (query) {
       setTyped(true);
     }
   }, [query, setTyped]);
+
+  useEffect(() => {
+    if (hasTyped) {
+      gleanClick(SIDEBAR_FILTER_TYPED);
+    }
+  }, [gleanClick, hasTyped]);
 
   useEffect(() => {
     if (!isActive) {
