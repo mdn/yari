@@ -4,10 +4,14 @@ import { Button } from "../../../ui/atoms/button";
 
 import "./filter.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { SIDEBAR_FILTER_FOCUS } from "../../../telemetry/constants";
+import {
+  SIDEBAR_FILTER_FOCUS,
+  SIDEBAR_FILTER_TYPED,
+} from "../../../telemetry/constants";
 
 export function SidebarFilter() {
   const [isActive, setActive] = useState<Boolean>(false);
+  const [hasTyped, setTyped] = useState<Boolean>(false);
   const { query, setQuery, matchCount } = useSidebarFilter();
   const gleanClick = useGleanClick();
 
@@ -16,6 +20,24 @@ export function SidebarFilter() {
       gleanClick(SIDEBAR_FILTER_FOCUS);
     }
   }, [gleanClick, isActive]);
+
+  useEffect(() => {
+    if (hasTyped) {
+      gleanClick(SIDEBAR_FILTER_TYPED);
+    }
+  }, [gleanClick, hasTyped]);
+
+  useEffect(() => {
+    if (query) {
+      setTyped(true);
+    }
+  }, [query, setTyped]);
+
+  useEffect(() => {
+    if (!isActive) {
+      setTyped(false);
+    }
+  }, [isActive, setTyped]);
 
   return (
     <section className="sidebar-filter-container">
