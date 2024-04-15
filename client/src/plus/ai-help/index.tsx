@@ -1108,7 +1108,7 @@ function ReportIssueOnGitHubLink({
         (source) =>
           `- [${source.title}](https://developer.mozilla.org${source.url})`
       )
-      .join("\n") ?? "(None)"
+      .join("\n") || "(None)"
   );
   // TODO Persist model in messages and read it from there.
   sp.set("model", isSubscriber ? "gpt-4" : "gpt-3.5");
