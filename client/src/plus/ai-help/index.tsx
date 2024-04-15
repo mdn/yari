@@ -1083,6 +1083,9 @@ function ReportIssueOnGitHubLink({
   currentMessage: Message;
   children: React.ReactNode;
 }) {
+  const user = useUserData();
+  const isSubscriber = useMemo(() => isPlusSubscriber(user), [user]);
+
   const gleanClick = useGleanClick();
   const currentMessageIndex = messages.indexOf(currentMessage);
   const questions = messages
@@ -1107,6 +1110,8 @@ function ReportIssueOnGitHubLink({
       )
       .join("\n") ?? "(None)"
   );
+  // TODO Persist model in messages and read it from there.
+  sp.set("model", isSubscriber ? "gpt-4" : "gpt-3.5");
   sp.set("template", "ai-help-answer.yml");
 
   url.search = sp.toString();
