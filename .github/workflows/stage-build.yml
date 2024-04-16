@@ -84,14 +84,15 @@ jobs:
         run: |
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
+          echo "REF=${{ github.event.inputs.ref || env.DEFAULT_REF }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.ref || env.DEFAULT_REF }}
+          ref: ${{ env.REF }}
           fetch-depth: 0
 
       - name: Merge main
-        if: ${{ (github.event.inputs.ref || env.DEFAULT_REF) != 'main' }}
+        if: ${{ env.REF != 'main' }}
         run: |
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
