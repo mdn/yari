@@ -3,9 +3,6 @@
 const locale = env.locale;
 const sidebarURL = `/docs/Web/`;
 const baseURL = `/${locale}/docs/`;
-const accessibilityURL = `/${locale}/docs/Web/Accessibility/`;
-const ariaURL = `/${locale}/docs/Web/Accessibility/ARIA/`;
-const learnURL = `/${locale}/docs/Learn/`;
 
 const l10nStrings = mdn.localStringMap({
   "en-US": {
@@ -40,11 +37,10 @@ const l10nStrings = mdn.localStringMap({
 const sections = [
   {
     name: "Accessibility",
-    link: "Accessibility",
+    link: "Web/Accessibility",
     subsections: [
       {
         name: "Guides",
-        url: baseURL,
         pages: [
           "Web/Accessibility/Information_for_Web_authors",
           "Web/Accessibility/Accessibility:_What_users_can_to_to_browse_safely",
@@ -60,51 +56,46 @@ const sections = [
       },
       {
         name: "Learn",
-        url: learnURL,
         pages: [
-          "Accessibility/",
-          "Accessibility/What_is_accessibility",
-          "Accessibility/HTML",
-          "Accessibility/CSS_and_JavaScript",
-          "Accessibility/WAI-ARIA_basics",
-          "Accessibility/Multimedia",
-          "Accessibility/Mobile",
-          "Accessibility/Accessibility_troubleshooting",
+          "Learn/Accessibility/",
+          "Learn/Accessibility/What_is_accessibility",
+          "Learn/Accessibility/HTML",
+          "Learn/Accessibility/CSS_and_JavaScript",
+          "Learn/Accessibility/WAI-ARIA_basics",
+          "Learn/Accessibility/Multimedia",
+          "Learn/Accessibility/Mobile",
+          "Learn/Accessibility/Accessibility_troubleshooting",
         ]
       },
       {
         name: "WCAG",
-        url: accessibilityURL,
-        subdirectory: "Understanding_WCAG",
+        subdirectory: "Web/Accessibility/Understanding_WCAG",
       }
     ]
   },
   {
     name: "ARIA",
-    link: "ARIA",
+    link: "Web/Accessibility/ARIA",
     subsections: [
       {
         name: "ARIA_guides",
-        url: ariaURL,
         pages: [
-          "Annotations",
-          "ARIA_Guides",
-          "ARIA_Live_Regions",
-          "ARIA_Screen_Reader_Implementors_Guide",
-          "ARIA_Techniques",
-          "Multipart_labels",
-          "How_to_file_ARIA-related_bugs",
+          "Web/Accessibility/ARIA/Annotations",
+          "Web/Accessibility/ARIA/ARIA_Guides",
+          "Web/Accessibility/ARIA/ARIA_Live_Regions",
+          "Web/Accessibility/ARIA/ARIA_Screen_Reader_Implementors_Guide",
+          "Web/Accessibility/ARIA/ARIA_Techniques",
+          "Web/Accessibility/ARIA/Multipart_labels",
+          "Web/Accessibility/ARIA/How_to_file_ARIA-related_bugs",
         ]
       },
       {
         name: "ARIA states and properties",
-        url: ariaURL,
-        subdirectory: "attributes",
+        subdirectory: "Web/Accessibility/ARIA/attributes",
       },
       {
         name: "ARIA roles",
-        url: ariaURL,
-        subdirectory: "roles",
+        subdirectory: "Web/Accessibility/ARIA/roles",
       }
     ]
   }
@@ -113,9 +104,8 @@ const sections = [
 async function renderSubsection(subsection) {
   let output = `<li><details><summary>${l10nStrings[subsection.name]}</summary><ol>`;
   if (subsection.pages) {
-    let url = subsection.url;
     for (const page of subsection.pages) {
-      const link = web.smartLink(`${url}${page}`);
+      const link = web.smartLink(`${baseURL}${page}`);
       output += `<li>${link}</li>`;
     }
   } else {
@@ -127,7 +117,7 @@ async function renderSubsection(subsection) {
 
 
 async function renderDirectory(subsection) {
-  let directory = `${subsection.url}${subsection.subdirectory}`;
+  let directory = `${baseURL}${subsection.subdirectory}`;
   let output = await template("ListSubpagesForSidebar", [directory, true, true]);
   return output;
 }
