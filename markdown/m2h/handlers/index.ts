@@ -7,7 +7,7 @@ import { Handler, Handlers, State } from "mdast-util-to-hast";
 
 /* A utilitary function which parses a JSON gettext file
   to return a Map with each localized string and its matching ID  */
-function getL10nCardMap(locale = DEFAULT_LOCALE) {
+function getL10nCardMap(locale = DEFAULT_LOCALE): Map<string, string> {
   // Test if target localization file exists, if
   // not, fallback on English
   let localeFilePath = new URL(
