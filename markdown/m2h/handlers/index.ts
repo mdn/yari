@@ -6,7 +6,8 @@ import { asDefinitionList, isDefinitionList } from "./dl.js";
 import { Handler, Handlers, State } from "mdast-util-to-hast";
 
 /* A utilitary function which parses a JSON gettext file
-  to return a Map with each localized string and its matching ID  */
+   to return a Map with each key and its corresponding localized string.
+   If the locale specified is not found, it will fallback to English */
 function getL10nCardMap(locale = DEFAULT_LOCALE): Map<string, string> {
   // Test if target localization file exists, if
   // not, fallback on English
