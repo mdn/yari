@@ -1,0 +1,25 @@
+<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .light {
+      --circle: #FCEFE2;
+      --icon: #E3642A;
+    }
+
+    .dark {
+      --circle: #321d13;
+      --icon: #E3642A;
+    }
+  </style>
+  <defs>
+    <g id="i">
+      <circle cx="20" cy="20" r="20" fill="var(--circle)" />
+      <path
+        d="M26 18.5V14L23.89 15.06C23.96 15.36 24 15.67 24 16C24 18.21 22.21 20 20 20C17.79 20 16 18.21 16 16C16 15.67 16.04 15.36 16.11 15.06L13 13.5L20 10L27 13.5V18.5H26ZM20 17L18 16C18 17.1 18.9 18 20 18C21.1 18 22 17.1 22 16L20 17ZM22.75 13.42L20.16 12.1L17.47 13.47L20.07 14.79L22.75 13.42ZM20 21C22.67 21 28 22.33 28 25V28H12V25C12 22.33 17.33 21 20 21ZM20 22.9C17 22.9 13.9 24.36 13.9 25V26.1H26.1V25C26.1 24.36 22.97 22.9 20 22.9Z"
+        fill="var(--icon)" />
+    </g>
+  </defs>
+  <view id="light" />
+  <use href="#i" class="light" />
+  <view id="dark" viewBox="0 40 40 40" />
+  <use y="40" href="#i" class="dark" />
+</svg>

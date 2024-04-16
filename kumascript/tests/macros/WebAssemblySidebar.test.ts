@@ -4,7 +4,7 @@ const expected = `\
 <section id="Quick_links" data-macro="WebAssemblySidebar">
 
 <ol>
-  <li data-default-state="open"><a href="/en-US/docs/WebAssembly"><strong>WebAssembly home page</strong></a>
+  <li class="section"><a href="/en-US/docs/WebAssembly">WebAssembly home page</a>
   <li class="toggle">
     <details open>
       <summary>Tutorials</summary>
