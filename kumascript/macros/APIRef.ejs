@@ -172,16 +172,6 @@ async function buildSublist(pages, title) {
     var aPage = pages[i];
     var url = aPage.url.replace('en-US', locale);
 
-    var translated = false;
-    if (locale != 'en-US') {
-        aPage.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                url = translation.url;
-                translated = true;
-            }
-        });
-    }
-
     const title = getPageTitle(aPage);
 
     result += '<li>';
@@ -227,10 +217,10 @@ function buildIFList(interfaces, title) {
 // output
 output = '<section id="Quick_links" data-macro="APIRef"><ol>';
 if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
-  output += `<li><strong>${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref, null, "APIRef")}</strong></li>`;
+  output += `<li class="section">${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref, null, "APIRef")}</li>`;
 }
 
-output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref, null, "APIRef")}</strong></li>`;
+output += `<li class="section">${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref, null, "APIRef")}</li>`;
 
 if (ctors.length > 0) {
   output += await buildSublist(ctors, text['Constructor']);

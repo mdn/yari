@@ -1,5 +1,5 @@
-export const SORRY_BACKEND_PREFIX = "I'm sorry, but I can't";
-export const SORRY_FRONTEND =
+export const OFF_TOPIC_PREFIX = "I'm sorry, but I can't";
+export const OFF_TOPIC_MESSAGE =
   "I'm sorry, but I can't answer questions outside web development.";
 
 export const MESSAGE_SEARCHING = "Searching for MDN content…";
