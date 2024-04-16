@@ -13,6 +13,7 @@ env:
   DEFAULT_DEPLOYMENT_PREFIX: "main"
   DEFAULT_NOTES: ""
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
+  DEFAULT_REF: next
 
 on:
   schedule:
@@ -21,6 +22,10 @@ on:
 
   workflow_dispatch:
     inputs:
+      ref:
+        description: "Branch to deploy (default: next)"
+        required: false
+
       notes:
         description: "Notes"
         required: false
@@ -69,6 +74,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || env.DEFAULT_REF }}
+          fetch-depth: 0
+
+      - name: Merge main
+        if: ${{ (github.event.inputs.ref || env.DEFAULT_REF) != 'main' }}
+        run: |
+          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
+          git config --global user.name "mdn-bot"
+          git status
+          git pull
+          git checkout main
+          git status
+          git checkout -
+          git merge main --no-edit
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
