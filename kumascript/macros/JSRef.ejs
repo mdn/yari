@@ -205,7 +205,7 @@ async function buildSublist(pages, title, opened) {
 async function renderOutput() {
   let output = '<section class="Quick_links" id="Quick_links" data-macro="JSRef"><ol>';
   const link = web.smartLink(slugStdlib, null, text.stdlib, slugStdlib, slugStdlib, "JSRef");
-  output += `<li><strong>${link}</strong></li>`;
+  output += `<li class="section">${link}</li>`;
 
   for (const [index, item] of Object.values(result).entries()) {
     const resultTitle        = item.title ?? "";
@@ -216,11 +216,11 @@ async function renderOutput() {
     const resultOpen         = item.defaultOpened ?? false;
 
     if (index === 1) {
-      output += `<li><strong>${text.Inheritance}</strong></li>`;
+      output += `<li class="section no-link">${text.Inheritance}</li>`;
     }
 
     const link = web.smartLink(`${slugStdlib}/${resultSubPath}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
-    output += `<li><strong>${link}</strong></li>`;
+    output += `<li class="section">${link}</li>`;
 
     if (resultConstructors.length > 0) {
       output += await buildSublist(resultConstructors, text.Constructor, resultOpen);
@@ -233,10 +233,10 @@ async function renderOutput() {
     }
 
     if (index === 0 && group.length > 0) {
-      output += `<li><strong>${text.Related}</strong></li>`;
+      output += `<li class="section no-link">${text.Related}</li>`;
       for (const groupItem of group) {
         const link = web.smartLink(`${slugStdlib}/${groupItem.replace(".", "/")}`, null, `<code>${groupItem}</code>`, null, slugStdlib, "JSRef");
-        output += `<li><strong>${link}</strong></li>`;
+        output += `<li class="section">${link}</li>`;
       }
     }
   }

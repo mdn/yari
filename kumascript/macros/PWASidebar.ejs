@@ -75,7 +75,7 @@ async function getTitle(pageSlug) {
 }
 
 async function renderRootItem(item) {
-  return `<li><a href="${getLink(item)}"><strong>${await getTitle(item)}</strong></a></li>`
+  return `<li class="section"><a href="${getLink(item)}">${await getTitle(item)}</a></li>`
 }
 
 async function renderItem(item) {
