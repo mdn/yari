@@ -92,7 +92,7 @@ async function renderSubsection(subsection) {
       output += `<li>${link}</li>`;
     }
   } else {
-    output += await renderDirectory(subsection);
+    output += await renderDirectory(subsection.directory);
   }
   output += "</ol></details></li>";
 
@@ -100,9 +100,9 @@ async function renderSubsection(subsection) {
 }
 
 
-async function renderDirectory(subsection) {
-  const directory = `${baseURL}${subsection.directory}`;
-  const output = await template("ListSubpagesForSidebar", [directory, true, true]);
+async function renderDirectory(directory) {
+  const path = `${baseURL}${directory}`;
+  const output = await template("ListSubpagesForSidebar", [path, true, true]);
 
   return output;
 }
