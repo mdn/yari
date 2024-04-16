@@ -34,7 +34,13 @@ function getL10nCardMap(locale = DEFAULT_LOCALE) {
   return l10nCardMap;
 }
 
-function getNotecardType(node, locale) {
+interface NotecardType {
+  type: string;
+  isGFM: boolean;
+  magicKeyword: string;
+}
+
+function getNotecardType(node: any, locale: string): NotecardType | null {
   const types = ["note", "warning", "callout"];
 
   if (!node.children) {
