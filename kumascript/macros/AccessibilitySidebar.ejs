@@ -85,6 +85,7 @@ const sections = [
 
 async function renderSubsection(subsection) {
   let output = `<li><details><summary>${l10nStrings[subsection.name]}</summary><ol>`;
+
   if (subsection.pages) {
     for (const page of subsection.pages) {
       const link = web.smartLink(`${baseURL}${page}`);
@@ -94,13 +95,15 @@ async function renderSubsection(subsection) {
     output += await renderDirectory(subsection);
   }
   output += "</ol></details></li>";
+
   return output;
 }
 
 
 async function renderDirectory(subsection) {
-  let directory = `${baseURL}${subsection.directory}`;
-  let output = await template("ListSubpagesForSidebar", [directory, true, true]);
+  const directory = `${baseURL}${subsection.directory}`;
+  const output = await template("ListSubpagesForSidebar", [directory, true, true]);
+
   return output;
 }
 
