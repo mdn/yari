@@ -73,6 +73,18 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
+      # Our usecase is a bit complicated. When the cron schedule runs this workflow,
+      # we rely on the env vars defined at the top of the file. But if it's a manual
+      # trigger we rely on the inputs and only the inputs. That way, the user can
+      # opt to type in 'false'.
+      # It's not possible to express this with GitHub Workflow syntax, so we
+      # have a dedicate set that conveniently sets these as env vars which we
+      # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
+      - name: Merge dispatch inputs with default env vars
+        run: |
+          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
+          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || env.DEFAULT_REF }}
@@ -114,18 +126,6 @@ jobs:
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
-
-      # Our usecase is a bit complicated. When the cron schedule runs this workflow,
-      # we rely on the env vars defined at the top of the file. But if it's a manual
-      # trigger we rely on the inputs and only the inputs. That way, the user can
-      # opt to type in 'false'.
-      # It's not possible to express this with GitHub Workflow syntax, so we
-      # have a dedicate set that conveniently sets these as env vars which we
-      # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
-      - name: Merge dispatch inputs with default env vars
-        run: |
-          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
-          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
