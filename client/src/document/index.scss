@@ -213,10 +213,6 @@
   .section-content {
     p {
       font: var(--type-article-p);
-
-      &:last-child {
-        margin-bottom: 2rem;
-      }
     }
 
     figure {
