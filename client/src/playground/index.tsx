@@ -74,6 +74,7 @@ export default function Playground() {
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
+  const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const subdomain = useRef<string>(crypto.randomUUID());
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
@@ -175,6 +176,9 @@ export default function Playground() {
   };
 
   const updateWithEditorContent = () => {
+    const { html, css, js } = getEditorContent();
+    setIsEmpty(!html && !css && !js);
+
     const loading = [
       {},
       {
@@ -277,6 +281,7 @@ export default function Playground() {
               <Button
                 type="secondary"
                 id="share"
+                isDisabled={isEmpty}
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
                   setDialogState(DialogState.share);
@@ -287,6 +292,7 @@ export default function Playground() {
               </Button>
               <Button
                 type="secondary"
+                isDisabled={isEmpty}
                 id="clear"
                 extraClasses="red"
                 onClickHandler={clearConfirm}
