@@ -943,6 +943,11 @@ const hasTag = page.hasTag;
 const rtlLocales = ['ar', 'he', 'fa'];
 
 const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
+
+// Some functions are at depth two.
+// Example: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/hsl
+pageList.push(...pageList.map((page) => page.subpages).flat());
+
 const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
 const groups = [];
@@ -988,7 +993,9 @@ for (const page of standardPages) {
   }
 }
 
-properties = properties.sort((a, b) => a.title.localeCompare(b.title));
+const sortByTitle = (a, b) => a.title.localeCompare(b.title);
+properties.sort(sortByTitle);
+functions.sort(sortByTitle);
 
 function smartLink(href, title, content, subpath) {
   let basepath = subpath;

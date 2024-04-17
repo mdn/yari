@@ -65,12 +65,21 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'mdn/yari' && github.event.schedule != '' }}
+    steps:
+      # The schedule runs the `main` version, but we want the `next` version.
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "${{ env.DEFAULT_REF }}"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: stage
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    if: ${{ github.repository == 'mdn/yari' && github.event.schedule == '' }}
 
     steps:
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
