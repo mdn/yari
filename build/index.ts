@@ -538,7 +538,7 @@ export async function buildDocument(
   addBreadcrumbData(document.url, doc);
 
   const pageTitle = getPageTitle(doc);
-  doc.pageTitle = rewritePageTitleForSEO(pageTitle);
+  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
