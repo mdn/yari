@@ -122,7 +122,7 @@
         document.body.appendChild(script);
 
         ["DOMContentLoaded", "readystatechange", "load"].forEach((type) => {
-          dispatchEvent(new Event(type));
+          document.dispatchEvent(new Event(type, { bubbles: true }));
         });
         initialized = true;
       }
