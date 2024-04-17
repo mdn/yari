@@ -167,6 +167,7 @@ export default function Playground() {
 
     updateWithEditorContent();
   };
+
   const reset = async () => {
     htmlRef.current?.setContent(initialCode?.html || HTML_DEFAULT);
     cssRef.current?.setContent(initialCode?.css || CSS_DEFAULT);
@@ -174,12 +175,14 @@ export default function Playground() {
 
     updateWithEditorContent();
   };
+
   const clearConfirm = async () => {
     if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
       await clear();
     }
   };
+
   const resetConfirm = async () => {
     if (window.confirm("Do you really want to revert your changes?")) {
       gleanClick(`${PLAYGROUND}: revert-click`);
