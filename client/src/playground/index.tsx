@@ -133,12 +133,22 @@ export default function Playground() {
     },
     [getEditorContent]
   );
+
+  const setEditorContent = ({
+    html,
+    css,
+    js,
+  }: Pick<EditorContent, "html" | "css" | "js">) => {
+    htmlRef.current?.setContent(html);
+    cssRef.current?.setContent(css);
+    jsRef.current?.setContent(js);
+    setIsEmpty(!html && !css && !js);
+  };
+
   useEffect(() => {
     if (state === State.initial || state === State.remote) {
       if (initialCode && Object.values(initialCode).some(Boolean)) {
-        htmlRef.current?.setContent(initialCode?.html);
-        cssRef.current?.setContent(initialCode?.css);
-        jsRef.current?.setContent(initialCode?.js);
+        setEditorContent(initialCode);
         if (initialCode.src) {
           setCodeSrc(
             initialCode?.src &&
@@ -146,28 +156,31 @@ export default function Playground() {
           );
         }
       } else {
-        htmlRef.current?.setContent(HTML_DEFAULT);
-        cssRef.current?.setContent(CSS_DEFAULT);
-        jsRef.current?.setContent(JS_DEFAULT);
+        setEditorContent({
+          html: HTML_DEFAULT,
+          css: CSS_DEFAULT,
+          js: JS_DEFAULT,
+        });
       }
       setState(State.ready);
     }
   }, [initialCode, state]);
+
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
       window.removeEventListener("message", messageListener);
     };
   }, [messageListener]);
+
   const clear = async () => {
     setSearchParams([], { replace: true });
     setCodeSrc(undefined);
-    htmlRef.current?.setContent(HTML_DEFAULT);
-    cssRef.current?.setContent(CSS_DEFAULT);
-    jsRef.current?.setContent(JS_DEFAULT);
+    setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
 
     updateWithEditorContent();
   };
+
   const clearConfirm = async () => {
     if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
@@ -225,9 +238,7 @@ export default function Playground() {
           plugins: [prettierPluginBabel, prettierPluginESTree],
         }),
       };
-      htmlRef.current?.setContent(formatted.html);
-      cssRef.current?.setContent(formatted.css);
-      jsRef.current?.setContent(formatted.js);
+      setEditorContent(formatted);
     } catch (e) {
       console.error(e);
     }
