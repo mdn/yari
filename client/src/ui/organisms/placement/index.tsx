@@ -70,9 +70,12 @@ function TopPlacementFallbackContent() {
   const gleanClick = useGleanClick();
 
   return (
-    <p className={`fallback-copy ${user?.settings?.noAds ? "ad-free" : ""}`}>
+    <p className="fallback-copy">
       {user?.settings?.noAds ? (
-        <span title="Thank you for supporting MDN with your subscription. Enjoy MDN ads-free!">
+        <span
+          className="ad-free"
+          title="Thank you for supporting MDN with your subscription. Enjoy MDN ads-free!"
+        >
           {"Ads."}
         </span>
       ) : (
