@@ -35,7 +35,6 @@ import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
 import { Curriculum } from "./curriculum";
-import { useUserData } from "./user-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -45,7 +44,6 @@ const Playground = React.lazy(() => import("./playground"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
-  const user = useUserData();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
@@ -62,7 +60,7 @@ function Layout({ pageType, children }) {
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {user?.settings?.noAds || <TopPlacement />}
+        <TopPlacement />
         {pageType !== "document-page" && pageType !== "curriculum" && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
