@@ -167,10 +167,25 @@ export default function Playground() {
 
     updateWithEditorContent();
   };
+  const reset = async () => {
+    setSearchParams([], { replace: true });
+    setCodeSrc(undefined);
+    htmlRef.current?.setContent(initialCode?.html || HTML_DEFAULT);
+    cssRef.current?.setContent(initialCode?.css || CSS_DEFAULT);
+    jsRef.current?.setContent(initialCode?.js || JS_DEFAULT);
+
+    updateWithEditorContent();
+  };
   const clearConfirm = async () => {
     if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
       await clear();
+    }
+  };
+  const resetConfirm = async () => {
+    if (window.confirm("Do you really want to revert your changes?")) {
+      gleanClick(`${PLAYGROUND}: revert-click`);
+      await reset();
     }
   };
 
@@ -293,6 +308,16 @@ export default function Playground() {
               >
                 clear
               </Button>
+              {initialCode && (
+                <Button
+                  type="secondary"
+                  id="reset"
+                  extraClasses="red"
+                  onClickHandler={resetConfirm}
+                >
+                  reset
+                </Button>
+              )}
             </menu>
           </aside>
           <Editor
