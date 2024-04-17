@@ -168,8 +168,6 @@ export default function Playground() {
     updateWithEditorContent();
   };
   const reset = async () => {
-    setSearchParams([], { replace: true });
-    setCodeSrc(undefined);
     htmlRef.current?.setContent(initialCode?.html || HTML_DEFAULT);
     cssRef.current?.setContent(initialCode?.css || CSS_DEFAULT);
     jsRef.current?.setContent(initialCode?.js || JS_DEFAULT);
