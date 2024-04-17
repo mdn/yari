@@ -70,7 +70,7 @@ jobs:
     if: ${{ github.repository == 'mdn/yari' && github.event.schedule != '' }}
     steps:
       # The schedule runs the `main` version, but we want the `next` version.
-      - run: gh workflow run "${{ github.workflow }}" --ref "${{ env.DEFAULT_REF }}"
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "${{ env.DEFAULT_REF }}"
         env:
           GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
 
