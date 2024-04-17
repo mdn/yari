@@ -210,6 +210,11 @@ section.place.hp-main {
         text-decoration: underline;
       }
     }
+
+    .ad-free {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
   }
 }
 

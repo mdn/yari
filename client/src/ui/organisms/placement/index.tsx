@@ -65,20 +65,33 @@ export function SidePlacement() {
 }
 
 function TopPlacementFallbackContent() {
+  const user = useUserData();
+
   const gleanClick = useGleanClick();
 
   return (
     <p className="fallback-copy">
-      Get real-time assistance with your coding queries. Try{" "}
-      <a
-        href="/en-US/plus/ai-help"
-        onClick={() => {
-          gleanClick(BANNER_AI_HELP_CLICK);
-        }}
-      >
-        AI Help
-      </a>{" "}
-      now!
+      {user?.settings?.noAds ? (
+        <span
+          className="ad-free"
+          title="Thank you for supporting MDN with your subscription. Enjoy MDN ads-free!"
+        >
+          {"Ads."}
+        </span>
+      ) : (
+        <>
+          Get real-time assistance with your coding queries. Try{" "}
+          <a
+            href="/en-US/plus/ai-help"
+            onClick={() => {
+              gleanClick(BANNER_AI_HELP_CLICK);
+            }}
+          >
+            AI Help
+          </a>{" "}
+          now!
+        </>
+      )}
     </p>
   );
 }
