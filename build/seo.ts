@@ -1,4 +1,4 @@
-// URLs of 500 pages randomly sampled from 6660 Web/API pages.
+// URLs of 500 pages randomly sampled from 2719 affected Web/API pages.
 const TEST_GROUP = new Set(
   [
     "Element/getClientRects",
