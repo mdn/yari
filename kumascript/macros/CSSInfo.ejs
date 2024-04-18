@@ -283,7 +283,7 @@ if (name === "preview-wiki-content") {
     if (!atRule) {
         properties = properties.concat({
             name: "animationType",
-            label: localize(localStrings, "animationType")
+            label: await template("animationType")
         });
     }
 
