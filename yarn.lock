@@ -5368,10 +5368,10 @@ crypto-random-string@^4.0.0:
   dependencies:
     type-fest "^1.0.1"
 
-css-blank-pseudo@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/css-blank-pseudo/-/css-blank-pseudo-6.0.1.tgz#f79f8b84cc00f891e16aa85f14093c5e1c3499a8"
-  integrity sha512-goSnEITByxTzU4Oh5oJZrEWudxTqk7L6IXj1UW69pO6Hv0UdX+Vsrt02FFu5DweRh2bLu6WpX/+zsQCu5O1gKw==
+css-blank-pseudo@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/css-blank-pseudo/-/css-blank-pseudo-6.0.2.tgz#50db072d4fb5b40c2df9ffe5ca5fbb9b19c77fc8"
+  integrity sha512-J/6m+lsqpKPqWHOifAFtKFeGLOzw3jR92rxQcwRUfA/eTuZzKfKlxOmYDx2+tqOPQAueNvBiY8WhAeHu5qNmTg==
   dependencies:
     postcss-selector-parser "^6.0.13"
 
@@ -12286,10 +12286,10 @@ postcss-place@^9.0.1:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-preset-env@^9.5.5:
-  version "9.5.5"
-  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-9.5.5.tgz#b44aa9110007d92c6d5d157b615d9cff15ac1664"
-  integrity sha512-tg71KfEgTHMM+C4LpWtKfHFWEunfWj1JThq/Odsw60MOowcffBrMAcSBDE+imftW5/BD3mpOiiTL6c+KcnGaLQ==
+postcss-preset-env@^9.5.6:
+  version "9.5.6"
+  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-9.5.6.tgz#5c3d188e9342d73e744f83fa1e736ae80936c2c1"
+  integrity sha512-sSfCYe178J99q8brBMBOjXhyhdJo1IYwvxjUm/uHeOGnXwWR5lbMWMyUFso45CG1lNkt6aIlYDf7J5Epi8mb9Q==
   dependencies:
     "@csstools/postcss-cascade-layers" "^4.0.4"
     "@csstools/postcss-color-function" "^3.0.13"
@@ -12322,7 +12322,7 @@ postcss-preset-env@^9.5.5:
     "@csstools/postcss-unset-value" "^3.0.1"
     autoprefixer "^10.4.19"
     browserslist "^4.22.3"
-    css-blank-pseudo "^6.0.1"
+    css-blank-pseudo "^6.0.2"
     css-has-pseudo "^6.0.3"
     css-prefers-color-scheme "^9.0.1"
     cssdb "^8.0.0"
