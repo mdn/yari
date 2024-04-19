@@ -44,6 +44,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { getWebFeatureStatus } from "./web-features.js";
+import { rewritePageTitleForSEO } from "./seo.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -536,7 +537,8 @@ export async function buildDocument(
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  doc.pageTitle = getPageTitle(doc);
+  const pageTitle = getPageTitle(doc);
+  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =

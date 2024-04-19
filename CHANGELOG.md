@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.49.0](https://github.com/mdn/yari/compare/v2.48.0...v2.49.0) (2024-04-18)
+
+
+### Features
+
+* **experiment:** rewrite Web/API page titles ([#10926](https://github.com/mdn/yari/issues/10926)) ([d8173cc](https://github.com/mdn/yari/commit/d8173cc190686634cd43f0a83b4f6178a133e9f5))
+
+
+### Bug Fixes
+
+* **experiment:** replace test group for Web/API page titles ([#10955](https://github.com/mdn/yari/issues/10955)) ([1dfb5b2](https://github.com/mdn/yari/commit/1dfb5b23db7e643e8ad4c7450b9d0ceacb227cbd))
+* **playground:** dispatch DOMContentLoaded event on document + bubble ([7229dd3](https://github.com/mdn/yari/commit/7229dd334ed51281816629db88b9365858c56740))
+* **playground:** dispatch readystatechange + bubble DOMContentLoaded on document ([#10946](https://github.com/mdn/yari/issues/10946)) ([7229dd3](https://github.com/mdn/yari/commit/7229dd334ed51281816629db88b9365858c56740))
+* **playground:** dispatch readystatechange event ([7229dd3](https://github.com/mdn/yari/commit/7229dd334ed51281816629db88b9365858c56740))
+* **stage-build:** provide GH_TOKEN + specify repo in trigger job ([#10932](https://github.com/mdn/yari/issues/10932)) ([d371c0a](https://github.com/mdn/yari/commit/d371c0a8b76a6c47eb8a11d59275860559232678))
+
+
+### Enhancements
+
+* **macros/PreviousMenuNext:** use the actual title of the document by default ([#10812](https://github.com/mdn/yari/issues/10812)) ([10da897](https://github.com/mdn/yari/commit/10da8978812024f0bf3d1e21db4a36e68da33d8a))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.4.14 to 1.4.15 ([#10941](https://github.com/mdn/yari/issues/10941)) ([28f775d](https://github.com/mdn/yari/commit/28f775d91a3163b446ee8855df66d8d4b56df277))
+* **deps-dev:** bump @swc/core from 1.4.15 to 1.4.16 ([#10951](https://github.com/mdn/yari/issues/10951)) ([d099746](https://github.com/mdn/yari/commit/d09974644971491627705abd5da743fc24f65faf))
+* **deps-dev:** bump mini-css-extract-plugin from 2.8.1 to 2.9.0 ([#10938](https://github.com/mdn/yari/issues/10938)) ([672e79a](https://github.com/mdn/yari/commit/672e79a6d70bc7cd2a17cbe314a6b7e3acb221e9))
+* **deps-dev:** bump sass-loader from 14.2.0 to 14.2.1 ([#10937](https://github.com/mdn/yari/issues/10937)) ([85372d5](https://github.com/mdn/yari/commit/85372d56b9bef30c379a5e3846233feef59a1962))
+* **deps:** bump @mdn/browser-compat-data from 5.5.21 to 5.5.22 ([#10939](https://github.com/mdn/yari/issues/10939)) ([c290528](https://github.com/mdn/yari/commit/c29052859667c74d5be831d56df0c42d13e0aa62))
+* **deps:** bump @webref/css from 6.12.7 to 6.12.8 ([#10949](https://github.com/mdn/yari/issues/10949)) ([3051a61](https://github.com/mdn/yari/commit/3051a613edb2a169d63cf20415e302f56028ad7a))
+* **deps:** bump inquirer from 9.2.18 to 9.2.19 ([#10940](https://github.com/mdn/yari/issues/10940)) ([b4520ff](https://github.com/mdn/yari/commit/b4520ff50ae976be365b6ca0531f4834e3451e7a))
+* **deps:** bump openai from 4.35.0 to 4.36.0 ([#10936](https://github.com/mdn/yari/issues/10936)) ([dcda615](https://github.com/mdn/yari/commit/dcda6157cb8a0722ec43079b66bcf001fe6beb92))
+* **deps:** bump openai from 4.36.0 to 4.37.1 ([#10950](https://github.com/mdn/yari/issues/10950)) ([c6212c4](https://github.com/mdn/yari/commit/c6212c4f155db69dd464e7708cdca33570b53e15))
+* **deps:** bump web-specs from 3.7.1 to 3.8.0 ([#10952](https://github.com/mdn/yari/issues/10952)) ([126088d](https://github.com/mdn/yari/commit/126088dce86f68adeabed833943cd86883899f34))
+
 ## [2.48.0](https://github.com/mdn/yari/compare/v2.47.0...v2.48.0) (2024-04-16)
 
 
