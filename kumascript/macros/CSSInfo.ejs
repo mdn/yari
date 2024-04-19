@@ -283,7 +283,7 @@ if (name === "preview-wiki-content") {
     if (!atRule) {
         properties = properties.concat({
             name: "animationType",
-            label: await template("animationType")
+            label: `<a href="/${env.locale}/docs/Web/CSS/CSS_animated_properties">${localize(localStrings, "animationType")}</a>`
         });
     }
 
