@@ -3,10 +3,6 @@
     background-color: var(--background-warning);
   }
 
-  h3 {
-    margin-top: 0;
-  }
-
   h3 span.page {
     color: var(--text-inactive);
   }
@@ -66,7 +62,6 @@
     gap: 20px;
     grid-template-columns: 300px 1fr;
     margin: auto;
-    width: calc(100% - 40px);
 
     .filters {
       h4 {
