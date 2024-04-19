@@ -134,14 +134,13 @@ export default function Playground() {
     [getEditorContent]
   );
 
-  const setEditorContent = ({
-    html,
-    css,
-    js,
-  }: Pick<EditorContent, "html" | "css" | "js">) => {
+  const setEditorContent = ({ html, css, js, src }: EditorContent) => {
     htmlRef.current?.setContent(html);
     cssRef.current?.setContent(css);
     jsRef.current?.setContent(js);
+    if (src) {
+      setCodeSrc(src.split("/").slice(0, -1).join("/"));
+    }
     setIsEmpty(!html && !css && !js);
   };
 
@@ -149,12 +148,6 @@ export default function Playground() {
     if (state === State.initial || state === State.remote) {
       if (initialCode && Object.values(initialCode).some(Boolean)) {
         setEditorContent(initialCode);
-        if (initialCode.src) {
-          setCodeSrc(
-            initialCode?.src &&
-              `${initialCode.src.split("/").slice(0, -1).join("/")}`
-          );
-        }
       } else {
         setEditorContent({
           html: HTML_DEFAULT,
