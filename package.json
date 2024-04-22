@@ -30,7 +30,6 @@
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node filecheck/cli.ts",
-    "ga": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/ga.ts",
     "install:all": "find . -mindepth 2 -name 'yarn.lock' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'yarn --cwd $(dirname $0) install'",
     "install:all:npm": "find . -mindepth 2 -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'npm --prefix $(dirname $0) install'",
     "jest": "node --experimental-vm-modules --expose-gc ./node_modules/.bin/jest --logHeapUsage",
