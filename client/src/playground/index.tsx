@@ -123,8 +123,19 @@ export default function Playground() {
       if (typ === "console") {
         if (prop === "clear") {
           setVConsole([]);
-        } else {
+        } else if (
+          (prop === "log" || prop === "error" || prop === "warn") &&
+          typeof message === "string"
+        ) {
           setVConsole((vConsole) => [...vConsole, { prop, message }]);
+        } else {
+          setVConsole((vConsole) => [
+            ...vConsole,
+            {
+              prop: "warn",
+              message: `[Playground] Unsupported console message: ${JSON.stringify({ prop, message }, null, 2)}`,
+            },
+          ]);
         }
       } else if (typ === "ready") {
         updatePlayIframe(iframe.current, getEditorContent());

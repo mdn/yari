@@ -10,11 +10,6 @@
         "icon heading"
         "icon category";
       justify-content: flex-start;
-      @media screen and (min-width: $screen-md) {
-        grid-template-areas:
-          "icon heading group"
-          "icon category .";
-      }
 
       .topic-icon {
         --background-primary: var(--curriculum-bg-color-topic);
