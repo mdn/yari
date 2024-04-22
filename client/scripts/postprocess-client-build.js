@@ -26,6 +26,9 @@ export async function hashSomeStaticFilesForClientBuild(buildRoot) {
       if (element.attribs.property !== "og:image") {
         return;
       }
+      // This is a can of worms. Using from environment for now.
+      // We need to use an absolute URL for "og:image".
+      hrefPrefix = process.env.BASE_URL || "";
       href = element.attribs.content;
       attributeKey = "content";
     } else {

@@ -22,12 +22,6 @@ const publicUrlOrPath = getPublicUrlOrPath(
   process.env.PUBLIC_URL
 );
 
-const baseUrl = getPublicUrlOrPath(
-  process.env.NODE_ENV === "development",
-  appPackage.homepage,
-  process.env.BASE_URL || "/"
-);
-
 const buildPath = process.env.BUILD_PATH || "build";
 
 const moduleFileExtensions = [
@@ -77,7 +71,6 @@ const config = {
   appTsBuildInfoFile: resolveApp("../node_modules/.cache/tsconfig.tsbuildinfo"),
   swSrc: resolveModule(resolveApp, "src/service-worker"),
   publicUrlOrPath,
-  baseUrl,
   libsPath: resolveApp("../libs"),
   moduleFileExtensions,
 };
