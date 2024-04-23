@@ -175,7 +175,7 @@ async function buildSublist(pages, title) {
     const title = getPageTitle(aPage);
 
     result += '<li>';
-    
+
     const pageBadges = (await page.badges(aPage)).join("");
 
     if (rtlLocales.indexOf(locale) != -1) {
@@ -205,8 +205,10 @@ function buildIFList(interfaces, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
 
   for (var i = 0; i < interfaces.length; i++) {
-    var url = interfaces[i].replace('()', '').replace('.', '/');
-    result += `<li>${web.smartLink(APIHref + '/' + url, null, `<code>${interfaces[i]}</code>`, APIHref, null, "APIRef")}</li>`;
+    var url = APIHref + '/' + interfaces[i].replace('()', '').replace('.', '/');
+    if (!url.endsWith(slug)) {
+      result += `<li>${web.smartLink(url, null, `<code>${interfaces[i]}</code>`, APIHref, null, "APIRef")}</li>`;
+    }
   }
 
   result += '</ol></details></li>';
