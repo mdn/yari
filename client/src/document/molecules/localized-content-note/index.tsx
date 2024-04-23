@@ -8,6 +8,10 @@ export function LocalizedContentNote({
   locale: string;
 }) {
   const activeLocaleNoteContent = {
+    de: {
+      linkText: "Diese Seite wurde automatisch aus dem Englischen übersetzt.",
+      url: "/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
+    },
     "en-US": {
       linkText:
         "This page was translated from English by the community. Learn more and join the MDN Web Docs community.",

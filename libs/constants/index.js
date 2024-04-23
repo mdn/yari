@@ -1,5 +1,5 @@
 export const VALID_LOCALES = new Map(
-  ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+  ["de", "en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
     (x) => [x.toLowerCase(), x]
   )
 );
@@ -10,7 +10,7 @@ export const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
-    "de",
+    //"de",
     "el",
     "fa",
     "fi",
@@ -49,6 +49,7 @@ export const LOCALE_ALIASES = new Map([
 // gets set in the client!
 export const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 export const ACTIVE_LOCALES = new Set([
+  "de",
   "en-us",
   "es",
   "fr",
