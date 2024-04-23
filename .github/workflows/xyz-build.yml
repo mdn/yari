@@ -67,10 +67,12 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
-          repository: mdn/translated-content
+          repository: mdn/mtc
+          ref: wip
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
+          token: ${{ secrets.MDN_MTC_PAT }}
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -166,11 +168,11 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          yarn tool sync-translated-content
+          #yarn tool sync-translated-content
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+          for locale in en-us de; do
             yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
