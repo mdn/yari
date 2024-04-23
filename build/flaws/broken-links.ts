@@ -54,7 +54,6 @@ function mutateLink(
     // As we still suggest the translated version even if we only
     // have an English (US) version.
     $element.attr("href", enUSFallback);
-    $element.append(` <small>(${DEFAULT_LOCALE})<small>`);
     $element.addClass("only-in-en-us");
     $element.attr("title", "Currently only available in English (US)");
   } else if (suggestion) {
