@@ -186,9 +186,11 @@ export default function Playground() {
   };
 
   const reset = async () => {
-    htmlRef.current?.setContent(initialCode?.html || HTML_DEFAULT);
-    cssRef.current?.setContent(initialCode?.css || CSS_DEFAULT);
-    jsRef.current?.setContent(initialCode?.js || JS_DEFAULT);
+    setEditorContent({
+      html: initialCode?.html || HTML_DEFAULT,
+      css: initialCode?.css || CSS_DEFAULT,
+      js: initialCode?.js || JS_DEFAULT,
+    });
 
     updateWithEditorContent();
   };
