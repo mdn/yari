@@ -153,6 +153,10 @@ main.play {
           button {
             text-transform: capitalize;
 
+            &:disabled {
+              cursor: not-allowed;
+            }
+
             &.red {
               --button-color: var(--text-primary-red);
             }
