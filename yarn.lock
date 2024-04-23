@@ -11971,10 +11971,10 @@ postcss-custom-media@^10.0.4:
     "@csstools/css-tokenizer" "^2.2.4"
     "@csstools/media-query-list-parser" "^2.1.9"
 
-postcss-custom-properties@^13.3.7:
-  version "13.3.7"
-  resolved "https://registry.yarnpkg.com/postcss-custom-properties/-/postcss-custom-properties-13.3.7.tgz#87f8ce173b147dc5e7e7d7f36123042b2572afd6"
-  integrity sha512-0N9F/GUCr/D0IazjzHahyYW2bQVDT6qDtEudiGHAhMd3XqhfM3VmfYVlkc/40DOhsPtngSNb54/Ctu8msvFOvQ==
+postcss-custom-properties@^13.3.8:
+  version "13.3.8"
+  resolved "https://registry.yarnpkg.com/postcss-custom-properties/-/postcss-custom-properties-13.3.8.tgz#2a75e867fb7a6037e10282e313f9e87ae8881a10"
+  integrity sha512-OP9yj4yXxYOiW2n2TRpnE7C0yePvBiZb72S22mZVNzZEObdTYFjNaX6oZO4R4E8Ie9RmC/Jxw8EKYSbLrC1EFA==
   dependencies:
     "@csstools/cascade-layer-name-parser" "^1.0.9"
     "@csstools/css-parser-algorithms" "^2.6.1"
@@ -12287,10 +12287,10 @@ postcss-place@^9.0.1:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-preset-env@^9.5.8:
-  version "9.5.8"
-  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-9.5.8.tgz#1803f4dcb85ee517b631e57f734830af51ba715b"
-  integrity sha512-AjQ5ZgrVJVL8Ja7UxIlbyHUN5knkdk6L0JxxV7KDZU4S5WfJjRNgvWlU7Xq7CMyRZSjHZBmLDOsBKIL9WStPyw==
+postcss-preset-env@^9.5.9:
+  version "9.5.9"
+  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-9.5.9.tgz#e316ed765d776a4d824f1cf2018e6f506b15261d"
+  integrity sha512-W+WgDH1MOWLT3Fsvknd45pzGMQ8Sp3fmt94Pxeik3Zkqfhw2XUDF8FehfV3Naxw4l/NrKPWLtltPJYVnpjMmfw==
   dependencies:
     "@csstools/postcss-cascade-layers" "^4.0.4"
     "@csstools/postcss-color-function" "^3.0.14"
@@ -12333,7 +12333,7 @@ postcss-preset-env@^9.5.8:
     postcss-color-hex-alpha "^9.0.4"
     postcss-color-rebeccapurple "^9.0.3"
     postcss-custom-media "^10.0.4"
-    postcss-custom-properties "^13.3.7"
+    postcss-custom-properties "^13.3.8"
     postcss-custom-selectors "^7.1.8"
     postcss-dir-pseudo-class "^8.0.1"
     postcss-double-position-gradients "^5.0.6"
