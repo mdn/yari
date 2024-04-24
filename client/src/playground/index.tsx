@@ -76,6 +76,9 @@ export default function Playground() {
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const subdomain = useRef<string>(crypto.randomUUID());
+  const [initialContent, setInitialContent] = useState<EditorContent | null>(
+    null
+  );
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
@@ -105,8 +108,11 @@ export default function Playground() {
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    initialCode && store(SESSION_KEY, initialCode);
-  }, [initialCode]);
+    if (initialCode) {
+      store(SESSION_KEY, initialCode);
+      setInitialContent(structuredClone(initialCode));
+    }
+  }, [initialCode, setInitialContent]);
 
   const getEditorContent = useCallback(() => {
     const code = {
@@ -186,7 +192,11 @@ export default function Playground() {
   };
 
   const reset = async () => {
-    setEditorContent({ html: initialCode?.html || HTML_DEFAULT, css: initialCode?.css || CSS_DEFAULT, js: initialCode?.js || JS_DEFAULT });
+    setEditorContent({
+      html: initialContent?.html || HTML_DEFAULT,
+      css: initialContent?.css || CSS_DEFAULT,
+      js: initialContent?.js || JS_DEFAULT,
+    });
 
     updateWithEditorContent();
   };
@@ -327,7 +337,7 @@ export default function Playground() {
               >
                 clear
               </Button>
-              {initialCode && (
+              {initialContent && (
                 <Button
                   type="secondary"
                   id="reset"
