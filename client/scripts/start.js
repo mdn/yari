@@ -32,10 +32,7 @@ process.on("unhandledRejection", (err) => {
 
 const appPackageJson = JSON.parse(fs.readFileSync(paths.appPackageJson));
 
-const env = getClientEnvironment(
-  paths.publicUrlOrPath.replace(/\/$/, ""),
-  paths.baseUrl.replace(/\/$/, "")
-);
+const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
 
