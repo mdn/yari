@@ -62,9 +62,10 @@ permissions:
 jobs:
   trigger:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'mdn/yari' && github.event.schedule != '' }}
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
     steps:
-      # The schedule runs the `main` version, but we want the `next` version.
       - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "next"
         env:
           GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
@@ -73,8 +74,8 @@ jobs:
     environment: stage
     runs-on: ubuntu-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: ${{ github.repository == 'mdn/yari' && github.event.schedule == '' }}
+    # We only ever want to deploy the `next` branch to stage.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'next' }}
 
     steps:
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
@@ -94,7 +95,6 @@ jobs:
           fetch-depth: 0
 
       - name: Merge main
-        if: ${{ github.ref_name != 'main' }}
         run: |
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
