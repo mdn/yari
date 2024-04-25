@@ -54,11 +54,22 @@ const config = {
               ref: true,
             },
           },
+          "file-loader?outputPath=/distimages/",
         ],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader?outputPath=/distimages/"],
+        test: [/\.avif$/, /\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 0,
+          },
+        },
+        generator: {
+          emit: false,
+          publicPath: "/",
+          filename: "static/media/[name].[hash][ext]",
+        },
       },
       { test: /\.(css|scss)$/, loader: "ignore-loader" },
     ],

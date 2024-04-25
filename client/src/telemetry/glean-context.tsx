@@ -91,7 +91,7 @@ function glean(): GleanAnalytics {
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
-    maxEvents: 1,
+    enableAutoPageLoadEvents: true,
     channel: GLEAN_CHANNEL,
     migrateFromLegacyStorage: true,
     serverEndpoint: DEV_MODE
@@ -101,8 +101,8 @@ function glean(): GleanAnalytics {
 
   if (DEV_MODE) {
     Glean.setDebugViewTag("mdn-dev");
+    Glean.setLogPings(GLEAN_DEBUG);
   }
-  Glean.setLogPings(GLEAN_DEBUG);
 
   const gleanContext = {
     page: (page: PageProps) => {
