@@ -13,6 +13,11 @@ export function LocalizedContentNote({
         "This page was translated from English by the community. Learn more and join the MDN Web Docs community.",
       url: "/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
     },
+    es: {
+      linkText:
+        "Esta página ha sido traducida del inglés por la comunidad. Aprende más y únete a la comunidad de MDN Web Docs.",
+      url: "/es/docs/MDN/Community/Contributing/Translated_content#locales_activos",
+    },
     fr: {
       linkText:
         "Cette page a été traduite à partir de l'anglais par la communauté. Vous pouvez également contribuer en rejoignant la communauté francophone sur MDN Web Docs.",
@@ -41,10 +46,6 @@ export function LocalizedContentNote({
     "en-US": {
       linkText:
         "This page was translated from English by the community, but it's not maintained and may be out-of-date. To help maintain it, learn how to activate locales.",
-    },
-    es: {
-      linkText:
-        "Esta página fue traducida del inglés por la comunidad, pero no se mantiene activamente, por lo que puede estar desactualizada. Si desea ayudar a mantenerlo, descubra cómo activar las configuraciones regionales inactivas.",
     },
   };
 
