@@ -18,7 +18,7 @@
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
     "build": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/cli.ts",
     "build:blog": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/build-blog.ts",
-    "build:client": "cd client && cross-env NODE_ENV=production BABEL_ENV=production INLINE_RUNTIME_CHUNK=false node scripts/build.js",
+    "build:client": "cd client && cross-env NODE_ENV=production BABEL_ENV=production node scripts/build.js",
     "build:curriculum": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/build-curriculum.ts",
     "build:dist": "tsc -p tsconfig.dist.json",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
