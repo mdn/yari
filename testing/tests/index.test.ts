@@ -49,7 +49,6 @@ test("all favicons on the home page", () => {
   // Check that the og:image resolves
   $('meta[property="og:image"]').each((i, element) => {
     const url = $(element).attr("content");
-    console.log("og:image", url);
     const href = new URL(url).pathname;
     // There should always be a 8 character hash in the href
     expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
