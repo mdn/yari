@@ -288,7 +288,9 @@ export async function getCSSSyntax(
   function renderNode(name, node) {
     switch (node.type) {
       case "Property": {
-        return `<span class="token property">${name}</span>`;
+        let encoded = name.replaceAll("<", "&lt;");
+        encoded = encoded.replaceAll(">", "&gt;");
+        return `<span class="token property">${encoded}</span>`;
       }
       case "Type": {
         // encode < and >
