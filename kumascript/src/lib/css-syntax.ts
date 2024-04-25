@@ -523,7 +523,7 @@ export async function getCSSSyntax(
       let name;
       if (node.type === "Type") {
         name = node.name;
-        value = values[node.name].value;
+        value = values[node.name]?.value;
       } else if (node.type === "Property") {
         name = node.name;
         value = getPropertySyntax(node.name);
