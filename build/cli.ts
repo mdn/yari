@@ -19,7 +19,6 @@ import {
 import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import options from "./build-options.js";
 import {
   buildDocument,
@@ -32,6 +31,7 @@ import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
+import { ssrAllDocuments } from "./ssr.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -139,7 +139,6 @@ async function buildDocuments(
   files: string[] = null,
   quiet = false,
   interactive = false,
-  noHTML = false,
   locales: Map<string, string> = new Map()
 ): Promise<BuiltDocuments> {
   // If a list of files was set, it came from the CLI.
@@ -240,20 +239,16 @@ async function buildDocuments(
       updateBaselineBuildMetadata(builtDocument);
     }
 
-    if (!noHTML) {
-      fs.writeFileSync(
-        path.join(outPath, "index.html"),
-        renderHTML(document.url, { doc: builtDocument })
-      );
-    }
-
     if (plainHTML) {
       fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
     // mutating the built document which makes this not great and refactor-worthy.
-    const docString = JSON.stringify({ doc: builtDocument });
+    const docString = JSON.stringify({
+      doc: builtDocument,
+      url: builtDocument.mdn_url,
+    });
     fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
@@ -463,7 +458,6 @@ interface BuildArgsAndOptions {
   options: {
     quiet?: boolean;
     interactive?: boolean;
-    nohtml?: boolean;
     locale?: string[];
     notLocale?: string[];
     sitemapIndex?: boolean;
@@ -476,10 +470,8 @@ if (SENTRY_DSN_BUILD) {
 
 program
   .name("build")
+  .command("build", "build content")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
-    default: false,
-  })
-  .option("-n, --nohtml", "Do not build index.html", {
     default: false,
   })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
@@ -584,7 +576,6 @@ program
         files,
         Boolean(options.quiet),
         Boolean(options.interactive),
-        Boolean(options.nohtml),
         locales
       );
       const t1 = new Date();
@@ -623,6 +614,10 @@ program
       throw error;
     }
   });
+
+program.command("render", "render all documents").action(async () => {
+  await ssrAllDocuments();
+});
 
 program.run();
 function compareBigInt(a: bigint, b: bigint): number {
