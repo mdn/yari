@@ -15558,10 +15558,10 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
-web-features@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/web-features/-/web-features-0.6.4.tgz#67164f23bd8a440b1d0407b834bda3965e5613a7"
-  integrity sha512-PxXrpilVA1gpymvfItc5yrCdIiUNhRgxM1jF2S/1lr9aNACq3G00HDg27Ou+idjjqrdBdzm+9wCaYN21k+BDiw==
+web-features@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/web-features/-/web-features-0.7.0.tgz#04de85a18db3e0a700ca9ceec3149f68c67a3238"
+  integrity sha512-p0T0O63HufhFmGnvBqLfBd5Z4NHWPpMfbBVIa+kkHpjmvmZNwhNj95ZUrBaKX2bq1Yn0DQPnxegBXkk/of3Ehg==
 
 web-namespaces@^2.0.0:
   version "2.0.1"
