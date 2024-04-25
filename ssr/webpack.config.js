@@ -24,6 +24,10 @@ const config = {
   module: {
     rules: [
       {
+        resourceQuery: /raw/,
+        type: "asset/source",
+      },
+      {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
