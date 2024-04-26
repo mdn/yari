@@ -10,11 +10,11 @@ const expected = `\
       <summary>Tutorials</summary>
       <ol>
         <li><a href="/en-US/docs/WebAssembly/Concepts">WebAssembly concepts</a></li>
-        <li><a href="/en-US/docs/WebAssembly/C_to_wasm">Compiling from C/C++ to WebAssembly</a></li>
-        <li><a href="/en-US/docs/WebAssembly/Rust_to_wasm">Compiling from Rust to WebAssembly</a></li>
+        <li><a href="/en-US/docs/WebAssembly/C_to_Wasm">Compiling from C/C++ to WebAssembly</a></li>
+        <li><a href="/en-US/docs/WebAssembly/Rust_to_Wasm">Compiling from Rust to WebAssembly</a></li>
         <li><a href="/en-US/docs/WebAssembly/Using_the_JavaScript_API">Using the WebAssembly JavaScript API</a></li>
         <li><a href="/en-US/docs/WebAssembly/Understanding_the_text_format">Understanding WebAssembly text format</a></li>
-        <li><a href="/en-US/docs/WebAssembly/Text_format_to_wasm">Converting WebAssembly text format to wasm</a></li>
+        <li><a href="/en-US/docs/WebAssembly/Text_format_to_Wasm">Converting WebAssembly text format to wasm</a></li>
         <li><a href="/en-US/docs/WebAssembly/Loading_and_running">Loading and running WebAssembly code</a></li>
         <li><a href="/en-US/docs/WebAssembly/Exported_functions">Exported WebAssembly functions</a></li>
       </ol>
