@@ -24,7 +24,7 @@ export const ONLY_AVAILABLE_IN_ENGLISH = localString({
   ja: "このページは現在、英語のみで利用可能です。",
   ko: "이 페이지는 현재 영어로만 제공됩니다.",
   "pt-BR": "Esta página está disponível apenas em inglês no momento.",
-  ru: "Эта страница в настоящее время доступна только на английском.",
+  ru: "В настоящее время эта страница доступна только на английском языке",
   "zh-CN": "此页面目前仅提供英文版本。",
   "zh-TW": "此頁面目前僅提供英文版本。",
 });
