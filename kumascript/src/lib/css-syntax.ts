@@ -288,7 +288,9 @@ export async function getCSSSyntax(
   function renderNode(name, node) {
     switch (node.type) {
       case "Property": {
-        return `<span class="token property">${name}</span>`;
+        let encoded = name.replaceAll("<", "&lt;");
+        encoded = encoded.replaceAll(">", "&gt;");
+        return `<span class="token property">${encoded}</span>`;
       }
       case "Type": {
         // encode < and >
@@ -443,8 +445,16 @@ export async function getCSSSyntax(
       if (typesToLink.includes(`<${node.name}>`)) {
         return;
       }
-      if (node.type === "Type" && !constituents.includes(node.name)) {
-        constituents.push(node.name);
+      if (
+        node.type === "Type" &&
+        !constituents.some((n) => n.name === node.name && n.type === node.type)
+      ) {
+        constituents.push(node);
+      } else if (
+        node.type === "Property" &&
+        !constituents.some((n) => n.name === node.name && n.type === node.type)
+      ) {
+        constituents.push(node);
       }
     }
 
@@ -477,10 +487,16 @@ export async function getCSSSyntax(
       // and then get the types in those syntaxes
       constituentSyntaxes = [];
       for (const constituent of allConstituents.slice(oldConstituentsLength)) {
-        const constituentSyntaxEntry = values[constituent];
+        let constituentSyntaxEntry;
+        if (constituent.type === "Type") {
+          constituentSyntaxEntry =
+            values[constituent.name.replace(/^'|'$/g, "")]?.value;
+        } else if (constituent.type === "Property") {
+          constituentSyntaxEntry = getPropertySyntax(constituent.name);
+        }
 
-        if (constituentSyntaxEntry?.value) {
-          constituentSyntaxes.push(constituentSyntaxEntry.value);
+        if (constituentSyntaxEntry) {
+          constituentSyntaxes.push(constituentSyntaxEntry);
         }
       }
     }
@@ -501,12 +517,21 @@ export async function getCSSSyntax(
     output += renderSyntax(itemName, itemSyntax);
     output += "<br/>";
     // collect all the constituent types for the property
-    const types = getConstituentTypes(itemSyntax);
+    const nodes = getConstituentTypes(itemSyntax);
 
     // and write each one out
-    for (const type of types) {
-      if (values[type] && values[type].value) {
-        output += renderSyntax(`&lt;${type}&gt;`, values[type].value);
+    for (const node of nodes) {
+      let value;
+      let name;
+      if (node.type === "Type") {
+        name = node.name;
+        value = values[node.name]?.value;
+      } else if (node.type === "Property") {
+        name = node.name;
+        value = getPropertySyntax(node.name);
+      }
+      if (name && value) {
+        output += renderSyntax(`&lt;${name}&gt;`, value);
         output += "<br/>";
       }
     }
