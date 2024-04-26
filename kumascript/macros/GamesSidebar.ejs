@@ -456,8 +456,8 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Introduction"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Introduction"><%=text["Introduction"]%></a></li>
-              <li><a href="<%=baseURL%>Anatomy"><%=text["Anatomy"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Introduction`, null, text["Introduction"])%></li>
+              <li><%-web.smartLink(`${baseURL}Anatomy`, null, text["Anatomy"])%></li>
             </ol>
         </details>
     </li>
@@ -465,22 +465,22 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["APIs_for_game_development"]%></summary>
             <ol>
-              <li><a href="<%=webURL%>API/Canvas_API"><%=text["Canvas"]%></a></li>
-              <li><a href="<%=webURL%>CSS"><%=text["CSS"]%></a></li>
-              <li><a href="<%=webURL%>API/Fullscreen_API"><%=text["Full_Screen"]%></a></li>
-              <li><a href="<%=webURL%>API/Gamepad_API"><%=text["Gamepad"]%></a></li>
-              <li><a href="<%=webURL%>API/IndexedDB_API"><%=text["IndexedDB"]%></a></li>
-              <li><a href="<%=webURL%>JavaScript"><%=text["JavaScript"]%></a></li>
-              <li><a href="<%=webURL%>API/Pointer_Lock_API"><%=text["Pointer_Lock"]%></a></li>
-              <li><a href="<%=webURL%>SVG"><%=text["SVG"]%></a></li>
-              <li><a href="<%=webURL%>JavaScript/Reference/Global_Objects/TypedArray"><%=text["Typed_Arrays"]%></a></li>
-              <li><a href="<%=webURL%>API/Web_Audio_API"><%=text["Web_Audio"]%></a></li>
-              <li><a href="<%=webURL%>API/WebGL_API"><%=text["WebGL"]%></a></li>
-              <li><a href="<%=webURL%>API/WebRTC_API"><%=text["WebRTC"]%></a></li>
-              <li><a href="<%=webURL%>API/WebSockets_API"><%=text["Web_Sockets"]%></a></li>
-              <li><a href="<%=webURL%>API/WebVR_API"><%=text["WebVR"]%></a></li>
-              <li><a href="<%=webURL%>API/Web_Workers_API"><%=text["Web_Workers"]%></a></li>
-              <li><a href="<%=webURL%>API/XMLHttpRequest"><%=text["XMLHttpRequest"]%></a></li>
+              <li><%-web.smartLink(`${webURL}API/Canvas_API`, null, text["Canvas"])%></li>
+              <li><%-web.smartLink(`${webURL}CSS`, null, text["CSS"])%></li>
+              <li><%-web.smartLink(`${webURL}API/Fullscreen_API`, null, text["Full_Screen"])%></li>
+              <li><%-web.smartLink(`${webURL}API/Gamepad_API`, null, text["Gamepad"])%></li>
+              <li><%-web.smartLink(`${webURL}API/IndexedDB_API`, null, text["IndexedDB"])%></li>
+              <li><%-web.smartLink(`${webURL}JavaScript`, null, text["JavaScript"])%></li>
+              <li><%-web.smartLink(`${webURL}API/Pointer_Lock_API`, null, text["Pointer_Lock"])%></li>
+              <li><%-web.smartLink(`${webURL}SVG`, null, text["SVG"])%></li>
+              <li><%-web.smartLink(`${webURL}JavaScript/Reference/Global_Objects/TypedArray`, null, text["Typed_Arrays"])%></li>
+              <li><%-web.smartLink(`${webURL}API/Web_Audio_API`, null, text["Web_Audio"])%></li>
+              <li><%-web.smartLink(`${webURL}API/WebGL_API`, null, text["WebGL"])%></li>
+              <li><%-web.smartLink(`${webURL}API/WebRTC_API`, null, text["WebRTC"])%></li>
+              <li><%-web.smartLink(`${webURL}API/WebSockets_API`, null, text["Web_Sockets"])%></li>
+              <li><%-web.smartLink(`${webURL}API/WebVR_API`, null, text["WebVR"])%></li>
+              <li><%-web.smartLink(`${webURL}API/Web_Workers_API`, null, text["Web_Workers"])%></li>
+              <li><%-web.smartLink(`${webURL}API/XMLHttpRequest`, null, text["XMLHttpRequest"])%></li>
             </ol>
         </details>
     </li>
@@ -488,13 +488,13 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Techniques"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Techniques/Async_scripts"><%=text["Using_async_scripts_for_asm.js"]%></a></li>
-              <li><a href="<%=appsURL%>Developing/Optimizing_startup_performance"><%=text["Optimizing_startup_performance"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/WebRTC_data_channels"><%=text["Using_WebRTC_peer-to-peer_data_channels"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Efficient_animation_for_web_games"><%=text["Efficient_animation_for_web_games"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Audio_for_Web_Games"><%=text["Audio_for_Web_Games"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/2D_collision_detection"><%=text["2D_collision_detection"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Tilemaps"><%=text["Tiles_and_tilemaps_overview"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Async_scripts`, null, text["Using_async_scripts_for_asm.js"])%></li>
+              <li><%-web.smartLink(`${appsURL}Developing/Optimizing_startup_performance`, null, text["Optimizing_startup_performance"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/WebRTC_data_channels`, null, text["Using_WebRTC_peer-to-peer_data_channels"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Efficient_animation_for_web_games`, null, text["Efficient_animation_for_web_games"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Audio_for_Web_Games`, null, text["Audio_for_Web_Games"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/2D_collision_detection`, null, text["2D_collision_detection"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Tilemaps`, null, text["Tiles_and_tilemaps_overview"])%></li>
             </ol>
         </details>
     </li>
@@ -502,15 +502,15 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["3D_games_on_the_Web"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web"><%=text["3D_games_on_the_Web_overview"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web/Basic_theory"><%=text["Explaining_basic_3D_theory"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web/Building_up_a_basic_demo_with_A-Frame"><%=text["Building_up_a_basic_demo_with_A-Frame"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web/Building_up_a_basic_demo_with_Babylon.js"><%=text["Building_up_a_basic_demo_with_Babylon.js"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web/Building_up_a_basic_demo_with_PlayCanvas"><%=text["Building_up_a_basic_demo_with_PlayCanvas"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web/Building_up_a_basic_demo_with_Three.js"><%=text["Building_up_a_basic_demo_with_Three.js"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_on_the_web/WebXR"><%=text["WebXR_guide"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_collision_detection"><%=text["3D_collision_detection"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js"><%=text["Bounding_volume_collision_detection_with_THREE.js"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web`, null, text["3D_games_on_the_Web_overview"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web/Basic_theory`, null, text["Explaining_basic_3D_theory"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web/Building_up_a_basic_demo_with_A-Frame`, null, text["Building_up_a_basic_demo_with_A-Frame"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web/Building_up_a_basic_demo_with_Babylon.js`, null, text["Building_up_a_basic_demo_with_Babylon.js"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web/Building_up_a_basic_demo_with_PlayCanvas`, null, text["Building_up_a_basic_demo_with_PlayCanvas"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web/Building_up_a_basic_demo_with_Three.js`, null, text["Building_up_a_basic_demo_with_Three.js"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_on_the_web/WebXR`, null, text["WebXR_guide"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_collision_detection`, null, text["3D_collision_detection"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js`, null, text["Bounding_volume_collision_detection_with_THREE.js"])%></li>
             </ol>
         </details>
     </li>
@@ -518,11 +518,11 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Implementing_game_control_mechanisms"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Techniques/Control_mechanisms"><%=text["Control_mechanisms"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Control_mechanisms/Mobile_touch"><%=text["Mobile_touch"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Control_mechanisms/Desktop_with_mouse_and_keyboard"><%=text["Desktop_with_mouse_and_keyboard"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Control_mechanisms/Desktop_with_gamepad"><%=text["Desktop_with_gamepad"]%></a></li>
-              <li><a href="<%=baseURL%>Techniques/Control_mechanisms/Other"><%=text["Other"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Control_mechanisms`, null, text["Control_mechanisms"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Control_mechanisms/Mobile_touch`, null, text["Mobile_touch"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Control_mechanisms/Desktop_with_mouse_and_keyboard`, null, text["Desktop_with_mouse_and_keyboard"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Control_mechanisms/Desktop_with_gamepad`, null, text["Desktop_with_gamepad"])%></li>
+              <li><%-web.smartLink(`${baseURL}Techniques/Control_mechanisms/Other`, null, text["Other"])%></li>
             </ol>
         </details>
     </li>
@@ -530,9 +530,9 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Tutorials"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Tutorials/2D_Breakout_game_pure_JavaScript"><%=text["2D_breakout_game_using_pure_JavaScript"]%></a></li>
-              <li><a href="<%=baseURL%>Tutorials/2D_breakout_game_Phaser"><%=text["2D_breakout_game_using_Phaser"]%></a></li>
-              <li><a href="<%=baseURL%>Tutorials/HTML5_Gamedev_Phaser_Device_Orientation"><%=text["2D_maze_game_with_device_orientation"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Tutorials/2D_Breakout_game_pure_JavaScript`, null, text["2D_breakout_game_using_pure_JavaScript"])%></li>
+              <li><%-web.smartLink(`${baseURL}Tutorials/2D_breakout_game_Phaser`, null, text["2D_breakout_game_using_Phaser"])%></li>
+              <li><%-web.smartLink(`${baseURL}Tutorials/HTML5_Gamedev_Phaser_Device_Orientation`, null, text["2D_maze_game_with_device_orientation"])%></li>
               <li><a href="https://mozdevs.github.io/html5-games-workshop/en/guides/platformer/start-here/"><%=text["2D_platform_game_using_Phaser"]%></a></li>
             </ol>
         </details>
@@ -541,10 +541,10 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Publishing_games"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Publishing_games"><%=text["Publishing_games_overview"]%></a></li>
-              <li><a href="<%=baseURL%>Publishing_games/Game_distribution"><%=text["Game_distribution"]%></a></li>
-              <li><a href="<%=baseURL%>Publishing_games/Game_promotion"><%=text["Game_promotion"]%></a></li>
-              <li><a href="<%=baseURL%>Publishing_games/Game_monetization"><%=text["Game_monetization"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Publishing_games`, null, text["Publishing_games_overview"])%></li>
+              <li><%-web.smartLink(`${baseURL}Publishing_games/Game_distribution`, null, text["Game_distribution"])%></li>
+              <li><%-web.smartLink(`${baseURL}Publishing_games/Game_promotion`, null, text["Game_promotion"])%></li>
+              <li><%-web.smartLink(`${baseURL}Publishing_games/Game_monetization`, null, text["Game_monetization"])%></li>
             </ol>
         </details>
     </li>
