@@ -5,10 +5,13 @@ import * as util from "./util.js";
 
 import { CONTENT_ROOT } from "../../../libs/env/index.js";
 import { KumaThis } from "../environment.js";
+import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
+import { ONLY_AVAILABLE_IN_ENGLISH } from "../../../libs/l10n/l10n.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
 const _warned = new Map();
+
 // The purpose of this function is to make sure `console.warn` is only called once
 // per 'macro' per 'href'.
 // There are some macros that use `smartLink` within themselves and these macros
@@ -152,9 +155,11 @@ const web = {
           )}"`;
         }
         content ??= enUSPage.short_title ?? enUSPage.title;
+        const title = ONLY_AVAILABLE_IN_ENGLISH(this.env.locale);
+
         return (
           '<a class="only-in-en-us" ' +
-          'title="Currently only available in English (US)" ' +
+          `title="${title}" ` +
           `href="${enUSPage.url}"${flawAttribute}>${content}</a>`
         );
       }
