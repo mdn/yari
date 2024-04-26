@@ -24,6 +24,7 @@ export ENV_FILE=".env.testing"
 
 yarn build:prepare
 yarn build
+yarn build:render
 
 nohup yarn start:static-server > testing.log 2>&1 &
 PID=$!

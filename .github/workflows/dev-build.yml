@@ -160,7 +160,7 @@ jobs:
           yarn build --sitemap-index
 
           # SSR all pages
-          yarn ssr
+          yarn build:render
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
