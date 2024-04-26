@@ -21,8 +21,8 @@ To run these tests, first run:
 ```sh
 export ENV_FILE=.env.testing
 yarn build:prepare
-yarn build
-yarn build:render
+yarn build:json
+yarn build:render-html
 yarn start:static-server
 ```
 

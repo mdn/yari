@@ -53,9 +53,9 @@ jobs:
           BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-XXXXXXXX
         run: |
           yarn build:prepare
-          # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
-          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
-          yarn build:render
+          # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build:json
+          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build:json
+          yarn build:render-html
 
       - name: Serve and lhci
         env:

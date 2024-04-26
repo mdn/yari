@@ -221,18 +221,17 @@ pages, but you can pre-emptively build all the content in advance if desired.
 One potential advantage is that you can get a more complete list of all possible
 "flaws" across all documents before you even visit them.
 
-The two most fundamental CLI commands are:
+The most fundamental CLI command is:
 
     yarn build
-    yarn build:render
 
 ### What gets built
 
-`yarn build` builds every `index.md` into an `index.json` which contains all
-input data for our React client to render a page.
+Every `index.html` becomes two files:
 
-`yarn build:render` renders every of the previously built `index.json` into a
-`index.html` which contains the fully formed and complete HTML for the page.
+- `index.html` — a fully formed and complete HTML file
+- `index.json` — the state information React needs to build the page in the
+  client
 
 ### Flaw checks
 

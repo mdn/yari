@@ -90,8 +90,8 @@ jobs:
           ENV_FILE: .env.testing
         run: |
           yarn build:prepare
-          yarn build
-          yarn build:render
+          yarn build:json
+          yarn build:render-html
 
           yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1

@@ -6,10 +6,15 @@ import { readFile, writeFile } from "node:fs/promises";
 import { renderHTML } from "../ssr/dist/main.js";
 import { HydrationData } from "../libs/types/hydration.js";
 
-export async function ssrAllDocuments() {
+export function ssrDocument(context: HydrationData) {
+  return renderHTML(context);
+}
+
+export async function ssrAllDocuments(noDocs = false) {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
+    .exclude((dirName) => noDocs && dirName === "docs")
     .filter(
       (filePath) =>
         filePath.endsWith("index.json") || filePath.endsWith("404.json")
