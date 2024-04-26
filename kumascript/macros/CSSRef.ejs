@@ -1196,7 +1196,7 @@ async function buildPropertylist(pages, title) {
       </details>
   </li>
 
-  <li class="section"><%-smartLink(`/${locale}/docs/Web/CSS/Reference`, null, text['Reference']`)%></a></li>
+  <li class="section"><%-smartLink(`/${locale}/docs/Web/CSS/Reference`, null, text['Reference'])%></a></li>
   <%-await buildSublist(groups, 'Modules');%>
   <%-await buildPropertylist(properties, 'Properties');%>
   <%-await buildSublist(selectors, 'Selectors');%>
