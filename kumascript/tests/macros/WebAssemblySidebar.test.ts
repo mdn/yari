@@ -42,8 +42,17 @@ const expected = `\
 
 </section>`;
 
+function mock(macro) {
+  macro.ctx.env.recordNonFatalError = () => {
+    return {
+      macroSource: "foo",
+    };
+  };
+}
+
 describeMacro("WebAssemblySidebar", function () {
   itMacro("Generates WebAssembly Sidebar", function (macro) {
+    mock(macro);
     return assert.eventually.equal(macro.call(), expected);
   });
 });
