@@ -41,6 +41,12 @@ export function LocalizedContentNote({
         "此页面由社区从英文翻译而来。了解更多并加入 MDN Web Docs 社区。",
       url: "/zh-CN/docs/MDN/Community/Contributing/Translated_content#活跃语言",
     },
+    "zh-TW": {
+      linkText:
+        "此頁面由社群從英文翻譯而來。了解更多並加入 MDN Web Docs 社群。",
+      url: "/zh-TW/docs/MDN/Community/Contributing/Translated_content#活躍的語言",
+    },
+
   };
   const inactiveLocaleNoteContent = {
     "en-US": {
