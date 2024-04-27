@@ -46,7 +46,6 @@ export function LocalizedContentNote({
         "此頁面由社群從英文翻譯而來。了解更多並加入 MDN Web Docs 社群。",
       url: "/zh-TW/docs/MDN/Community/Contributing/Translated_content#活躍的語言",
     },
-
   };
   const inactiveLocaleNoteContent = {
     "en-US": {
