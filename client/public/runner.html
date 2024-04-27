@@ -54,6 +54,28 @@
       window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
 
+      async function loadExternalScripts(html) {
+        const dummy = document.createElement("div");
+        dummy.innerHTML = html;
+        const scripts = dummy.querySelectorAll("script[src]");
+
+        const loaded = [...scripts].reduce((acc, scrpt) => {
+          acc.push(
+            new Promise((resolve) => {
+              const script = document.createElement("script");
+              script.src = scrpt.src;
+              script.addEventListener("load", () => resolve());
+
+              document.head.appendChild(script);
+            })
+          );
+
+          return acc;
+        }, []);
+
+        await Promise.all(loaded);
+      }
+
       function setHTML(parent, html) {
         const dummy = parent.cloneNode(false);
         dummy.innerHTML = html;
@@ -67,6 +89,9 @@
               continue;
             }
             if (child.nodeType !== Node.ELEMENT_NODE) {
+              continue;
+            }
+            if (child.nodeName === "SCRIPT" && child.src) {
               continue;
             }
 
@@ -104,7 +129,7 @@
       }
 
       let initialized = false;
-      function init(state) {
+      async function init(state) {
         if (initialized) {
           return;
         }
@@ -113,6 +138,8 @@
         const style = document.createElement("style");
         style.textContent = state.css;
         document.head.appendChild(style);
+
+        await loadExternalScripts(state.html);
 
         document.body.innerHTML = "";
         setHTML(document.body, state.html);
@@ -129,10 +156,10 @@
 
         initialized = true;
       }
-      window.addEventListener("message", (event) => {
+      window.addEventListener("message", async (event) => {
         const e = event.data;
         if (e.typ === "init") {
-          init(e.state);
+          await init(e.state);
         }
         if (e.typ === "reload") {
           window.location.reload();
