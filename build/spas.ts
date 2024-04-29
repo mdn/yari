@@ -466,6 +466,11 @@ async function fetchLatestNews() {
 
 function renderPage(url: string, context: any) {
   const html = renderHTML(url, context);
+  // Better safe than sorry.
+  html.replace(
+    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
+    `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
+  );
   html.replace(
     `<link rel="canonical" href="${BASE_URL}"/>`,
     `<link rel="canonical" href="${BASE_URL}${url}"/>`
