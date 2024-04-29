@@ -465,15 +465,15 @@ async function fetchLatestNews() {
 }
 
 function renderPage(url: string, context: any) {
-  const html = renderHTML(url, context);
-  // Better safe than sorry.
-  html.replace(
-    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
-    `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
-  );
-  html.replace(
+  let html = renderHTML(url, context);
+  html = html.replace(
     `<link rel="canonical" href="${BASE_URL}"/>`,
     `<link rel="canonical" href="${BASE_URL}${url}"/>`
+  );
+  // Better safe than sorry.
+  html = html.replace(
+    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
+    `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
   );
   return html;
 }
