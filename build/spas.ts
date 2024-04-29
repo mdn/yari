@@ -227,7 +227,8 @@ export async function buildSPAs(options: {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
-      const locale = DEFAULT_LOCALE.toLowerCase();
+      const locale = DEFAULT_LOCALE;
+      const pathLocale = locale.toLowerCase();
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
@@ -250,7 +251,7 @@ export async function buildSPAs(options: {
       const html = renderPage(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
-        locale,
+        pathLocale,
         ...slug.split("/"),
         page
       );
