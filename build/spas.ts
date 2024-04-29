@@ -19,6 +19,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
+  BASE_URL,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
@@ -75,7 +76,7 @@ async function buildContributorSpotlight(
     };
     const context = { hyData };
 
-    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
+    const html = renderPage(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
@@ -113,6 +114,10 @@ export async function buildSPAs(options: {
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const url = `/${DEFAULT_LOCALE}/404.html`;
   const html = renderHTML(url, { pageNotFound: true });
+  html.replace(
+    '<link rel="canonical" href="https://developer.mozilla.org"/>',
+    ""
+  );
   const outPath = path.join(
     BUILD_OUT_ROOT,
     DEFAULT_LOCALE.toLowerCase(),
@@ -185,7 +190,7 @@ export async function buildSPAs(options: {
           noIndexing,
         };
 
-        const html = renderHTML(url, context);
+        const html = renderPage(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
@@ -242,7 +247,7 @@ export async function buildSPAs(options: {
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
       };
 
-      const html = renderHTML(url, context);
+      const html = renderPage(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
         locale,
@@ -342,7 +347,7 @@ export async function buildSPAs(options: {
         featuredArticles,
       };
       const context = { hyData };
-      const html = renderHTML(url, context);
+      const html = renderPage(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
@@ -457,4 +462,18 @@ async function fetchLatestNews() {
   return {
     items,
   };
+}
+
+function renderPage(url: string, context: any) {
+  let html = renderHTML(url, context);
+  html = html.replace(
+    `<link rel="canonical" href="${BASE_URL}"/>`,
+    `<link rel="canonical" href="${BASE_URL}${url}"/>`
+  );
+  // Better safe than sorry.
+  html = html.replace(
+    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
+    `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
+  );
+  return html;
 }
