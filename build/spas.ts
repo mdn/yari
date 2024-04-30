@@ -113,8 +113,8 @@ export async function buildSPAs(options: {
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const url = `/${DEFAULT_LOCALE}/404.html`;
-  const html = renderHTML(url, { pageNotFound: true });
-  html.replace(
+  let html = renderHTML(url, { pageNotFound: true });
+  html = html.replace(
     '<link rel="canonical" href="https://developer.mozilla.org"/>',
     ""
   );
