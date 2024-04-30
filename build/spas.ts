@@ -113,11 +113,8 @@ export async function buildSPAs(options: {
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const url = `/${DEFAULT_LOCALE}/404.html`;
-  const html = renderHTML(url, { pageNotFound: true });
-  html.replace(
-    '<link rel="canonical" href="https://developer.mozilla.org"/>',
-    ""
-  );
+  let html = renderHTML(url, { pageNotFound: true });
+  html = setCanonical(html, null);
   const outPath = path.join(
     BUILD_OUT_ROOT,
     DEFAULT_LOCALE.toLowerCase(),
@@ -467,14 +464,21 @@ async function fetchLatestNews() {
 
 function renderPage(url: string, context: any) {
   let html = renderHTML(url, context);
+  html = setCanonical(html, url);
+  return html;
+}
+
+function setCanonical(html: string, url: string | null) {
   html = html.replace(
     `<link rel="canonical" href="${BASE_URL}"/>`,
-    `<link rel="canonical" href="${BASE_URL}${url}"/>`
+    url ? `<link rel="canonical" href="${BASE_URL}${url}"/>` : ""
   );
   // Better safe than sorry.
   html = html.replace(
     `<link rel="canonical" href="https://developer.mozilla.org"/>`,
-    `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
+    url
+      ? `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
+      : ""
   );
   return html;
 }
