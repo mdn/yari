@@ -76,7 +76,10 @@ async function buildContributorSpotlight(
     };
     const context = { hyData };
 
-    const html = renderPage(`/${locale}/${prefix}/${contributor}`, context);
+    const html = renderCanonicalHTML(
+      `/${locale}/${prefix}/${contributor}`,
+      context
+    );
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
@@ -187,7 +190,7 @@ export async function buildSPAs(options: {
           noIndexing,
         };
 
-        const html = renderPage(url, context);
+        const html = renderCanonicalHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
@@ -245,7 +248,7 @@ export async function buildSPAs(options: {
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
       };
 
-      const html = renderPage(url, context);
+      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
         pathLocale,
@@ -345,7 +348,7 @@ export async function buildSPAs(options: {
         featuredArticles,
       };
       const context = { hyData };
-      const html = renderPage(url, context);
+      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
@@ -462,7 +465,7 @@ async function fetchLatestNews() {
   };
 }
 
-function renderPage(url: string, context: any) {
+function renderCanonicalHTML(url: string, context: any) {
   let html = renderHTML(url, context);
   html = setCanonical(html, url);
   return html;
