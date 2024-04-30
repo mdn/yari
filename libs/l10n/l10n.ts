@@ -1,10 +1,8 @@
-import { TranslatedLocale } from "../types/core.js";
+import { Locale } from "../types/core.js";
 
-type Strings = {
-  "en-US": string;
-} & Record<TranslatedLocale, string>;
+type LocaleStringMap = Record<Locale, string>;
 
-function localString(strings: Strings) {
+function localString(strings: LocaleStringMap) {
   return (locale: string) => strings[locale] ?? strings["en-US"];
 }
 
