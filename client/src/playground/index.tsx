@@ -110,7 +110,9 @@ export default function Playground() {
   useEffect(() => {
     if (initialCode) {
       store(SESSION_KEY, initialCode);
-      setInitialContent(structuredClone(initialCode));
+      if (Object.values(initialCode).some(Boolean)) {
+        setInitialContent(structuredClone(initialCode));
+      }
     }
   }, [initialCode, setInitialContent]);
 
