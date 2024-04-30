@@ -1,14 +1,5 @@
-type Locale =
-  | "en-US"
-  | "es"
-  | "fr"
-  | "ja"
-  | "ko"
-  | "pt-BR"
-  | "ru"
-  | "zh-CN"
-  | "zh-TW";
-type TranslatedLocale = Exclude<Locale, "en-US">;
+import { TranslatedLocale } from "../types/core.js";
+
 type Strings = {
   "en-US": string;
 } & Record<TranslatedLocale, string>;
