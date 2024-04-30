@@ -2,11 +2,11 @@ import { Locale } from "../types/core.js";
 
 type LocaleStringMap = Record<Locale, string>;
 
-function localString(strings: LocaleStringMap) {
+function localeString(strings: LocaleStringMap) {
   return (locale: string) => strings[locale] ?? strings["en-US"];
 }
 
-export const ONLY_AVAILABLE_IN_ENGLISH = localString({
+export const ONLY_AVAILABLE_IN_ENGLISH = localeString({
   "en-US": "This page is currently only available in English",
   es: "Esta página está disponible solo en inglés",
   fr: "Cette page est actuellement disponible uniquement en anglais",
