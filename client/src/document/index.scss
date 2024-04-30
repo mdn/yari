@@ -975,8 +975,10 @@ html[lang="pt-BR"] a.only-in-en-us:after {
 
 html[lang="zh-CN"] a.only-in-en-us:after {
   content: "（英语）";
+  vertical-align: baseline;
 }
 
 html[lang="zh-TW"] a.only-in-en-us:after {
   content: "（英語）";
+  vertical-align: baseline;
 }
