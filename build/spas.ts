@@ -76,7 +76,10 @@ async function buildContributorSpotlight(
     };
     const context = { hyData };
 
-    const html = renderPage(`/${locale}/${prefix}/${contributor}`, context);
+    const html = renderCanonicalHTML(
+      `/${locale}/${prefix}/${contributor}`,
+      context
+    );
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
@@ -112,14 +115,12 @@ export async function buildSPAs(options: {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = `/${DEFAULT_LOCALE}/404.html`;
+  const locale = DEFAULT_LOCALE;
+  const url = `/${locale}/404.html`;
   let html = renderHTML(url, { pageNotFound: true });
   html = setCanonical(html, null);
-  const outPath = path.join(
-    BUILD_OUT_ROOT,
-    DEFAULT_LOCALE.toLowerCase(),
-    "_spas"
-  );
+  html = setCanonical(html, null);
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
   buildCount++;
@@ -187,7 +188,7 @@ export async function buildSPAs(options: {
           noIndexing,
         };
 
-        const html = renderPage(url, context);
+        const html = renderCanonicalHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
@@ -245,7 +246,7 @@ export async function buildSPAs(options: {
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
       };
 
-      const html = renderPage(url, context);
+      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
         pathLocale,
@@ -345,7 +346,7 @@ export async function buildSPAs(options: {
         featuredArticles,
       };
       const context = { hyData };
-      const html = renderPage(url, context);
+      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
@@ -462,7 +463,7 @@ async function fetchLatestNews() {
   };
 }
 
-function renderPage(url: string, context: any) {
+function renderCanonicalHTML(url: string, context: any) {
   let html = renderHTML(url, context);
   html = setCanonical(html, url);
   return html;
