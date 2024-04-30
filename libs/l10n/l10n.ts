@@ -1,23 +1,12 @@
-type Locale =
-  | "en-US"
-  | "es"
-  | "fr"
-  | "ja"
-  | "ko"
-  | "pt-BR"
-  | "ru"
-  | "zh-CN"
-  | "zh-TW";
-type TranslatedLocale = Exclude<Locale, "en-US">;
-type Strings = {
-  "en-US": string;
-} & Record<TranslatedLocale, string>;
+import { Locale } from "../types/core.js";
 
-function localString(strings: Strings) {
+type LocaleStringMap = Record<Locale, string>;
+
+function localeString(strings: LocaleStringMap) {
   return (locale: string) => strings[locale] ?? strings["en-US"];
 }
 
-export const ONLY_AVAILABLE_IN_ENGLISH = localString({
+export const ONLY_AVAILABLE_IN_ENGLISH = localeString({
   "en-US": "This page is currently only available in English",
   es: "Esta página está disponible solo en inglés",
   fr: "Cette page est actuellement disponible uniquement en anglais",

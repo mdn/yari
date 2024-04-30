@@ -5,8 +5,8 @@ import * as util from "./util.js";
 
 import { CONTENT_ROOT } from "../../../libs/env/index.js";
 import { KumaThis } from "../environment.js";
-import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 import { ONLY_AVAILABLE_IN_ENGLISH } from "../../../libs/l10n/l10n.js";
+import { htmlEscape } from "./util.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -159,7 +159,7 @@ const web = {
 
         return (
           '<a class="only-in-en-us" ' +
-          `title="${title}" ` +
+          `title="${htmlEscape(title)}" ` +
           `href="${enUSPage.url}"${flawAttribute}>${content}</a>`
         );
       }
