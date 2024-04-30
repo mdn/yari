@@ -115,14 +115,11 @@ export async function buildSPAs(options: {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = `/${DEFAULT_LOCALE}/404.html`;
+  const locale = DEFAULT_LOCALE;
+  const url = `/${locale}/404.html`;
   let html = renderHTML(url, { pageNotFound: true });
   html = setCanonical(html, null);
-  const outPath = path.join(
-    BUILD_OUT_ROOT,
-    DEFAULT_LOCALE.toLowerCase(),
-    "_spas"
-  );
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
   buildCount++;
