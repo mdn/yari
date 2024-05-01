@@ -117,7 +117,8 @@ const web = {
         } else {
           flaw = this.env.recordNonFatalError(
             "wrong-xref-macro",
-            "wrong xref macro used (consider changing which macro you use)",
+            "Wrong xref macro used (consider changing which macro you use). " +
+              `Error processing path ${href}`,
             {
               current: subpath,
             }
