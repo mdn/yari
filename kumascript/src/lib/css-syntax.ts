@@ -288,9 +288,13 @@ export async function getCSSSyntax(
   function renderNode(name, node) {
     switch (node.type) {
       case "Property": {
-        let encoded = name.replaceAll("<", "&lt;");
-        encoded = encoded.replaceAll(">", "&gt;");
-        return `<span class="token property">${encoded}</span>`;
+        const encoded = name.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        const span = `<span class="token property">${encoded}</span>`;
+        const linkSlug = name.match(/^<'(.*)'>$/)?.[1];
+        if (linkSlug) {
+          return `<a href="/${locale}/docs/Web/CSS/${linkSlug}">${span}</a>`;
+        }
+        return span;
       }
       case "Type": {
         // encode < and >
