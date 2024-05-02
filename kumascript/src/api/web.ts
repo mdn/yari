@@ -155,7 +155,7 @@ const web = {
         return (
           '<a class="only-in-en-us" ' +
           'title="Currently only available in English (US)" ' +
-          `href="${enUSPage.url}"${flawAttribute}>${content} <small>(en-US)</small></a>`
+          `href="${enUSPage.url}"${flawAttribute}>${content}</a>`
         );
       }
     }
