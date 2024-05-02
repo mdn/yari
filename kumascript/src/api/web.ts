@@ -5,10 +5,13 @@ import * as util from "./util.js";
 
 import { CONTENT_ROOT } from "../../../libs/env/index.js";
 import { KumaThis } from "../environment.js";
+import { ONLY_AVAILABLE_IN_ENGLISH } from "../../../libs/l10n/l10n.js";
+import { htmlEscape } from "./util.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
 const _warned = new Map();
+
 // The purpose of this function is to make sure `console.warn` is only called once
 // per 'macro' per 'href'.
 // There are some macros that use `smartLink` within themselves and these macros
@@ -51,12 +54,12 @@ const web = {
   // then hyperlink to corresponding en-US document is returned.
   smartLink(
     this: KumaThis,
-    href,
-    title,
-    content,
-    subpath,
-    basepath,
-    ignoreFlawMacro = null
+    href: string,
+    title: string | null,
+    content: string | null = null,
+    subpath: string | null = null,
+    basepath: string | null = null,
+    ignoreFlawMacro: string | null = null
   ) {
     let flaw;
     let flawAttribute = "";
@@ -117,7 +120,8 @@ const web = {
         } else {
           flaw = this.env.recordNonFatalError(
             "wrong-xref-macro",
-            "wrong xref macro used (consider changing which macro you use)",
+            "Wrong xref macro used (consider changing which macro you use). " +
+              `Error processing path ${href}`,
             {
               current: subpath,
             }
@@ -128,6 +132,7 @@ const web = {
         }
       }
       const titleAttribute = title ? ` title="${title}"` : "";
+      content ??= page.short_title ?? page.title;
       return `<a href="${
         page.url + hrefhash
       }"${titleAttribute}${flawAttribute}>${content}</a>`;
@@ -150,10 +155,13 @@ const web = {
             flaw.macroSource
           )}"`;
         }
+        content ??= enUSPage.short_title ?? enUSPage.title;
+        const title = ONLY_AVAILABLE_IN_ENGLISH(this.env.locale);
+
         return (
           '<a class="only-in-en-us" ' +
-          'title="Currently only available in English (US)" ' +
-          `href="${enUSPage.url}"${flawAttribute}>${content} <small>(en-US)</small></a>`
+          `title="${htmlEscape(title)}" ` +
+          `href="${enUSPage.url}"${flawAttribute}>${content}</a>`
         );
       }
     }
@@ -171,6 +179,7 @@ const web = {
       this.web.getJSONData("L10n-Common"),
       "summary"
     );
+    content ??= href;
     return `<a class="page-not-created" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
   },
 

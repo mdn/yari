@@ -49,14 +49,17 @@ module.exports = {
     {
       files: ["**/*.ts", "**/*.tsx"],
       parser: "@typescript-eslint/parser",
-      extends: ["plugin:@typescript-eslint/recommended"],
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        //"plugin:@typescript-eslint/stylistic",
+      ],
       rules: {
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-unused-vars": [
           "warn",
           { ignoreRestSiblings: true },
         ],
+        "n/no-deprecated-api": "off",
         "n/no-extraneous-import": [
           "error",
           {
@@ -65,7 +68,7 @@ module.exports = {
         ],
         "n/no-missing-import": "off",
         "n/no-unpublished-import": "off",
-        "n/shebang": "off",
+        "n/hashbang": "off",
       },
     },
     {

@@ -3,7 +3,6 @@ import path from "node:path";
 
 import chalk from "chalk";
 import * as cheerio from "cheerio";
-import webFeatures from "web-features/index.json" assert { type: "json" };
 import * as Sentry from "@sentry/node";
 
 import {
@@ -12,7 +11,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 
-import { Doc, WebFeature, WebFeatureStatus } from "../libs/types/document.js";
+import { Doc } from "../libs/types/document.js";
 import { Document, execGit, slugToFolder } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
@@ -44,6 +43,8 @@ import {
   postProcessExternalLinks,
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
+import { getWebFeatureStatus } from "./web-features.js";
+import { rewritePageTitleForSEO } from "./seo.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -164,6 +165,7 @@ export interface BuiltDocument {
   source?: {
     github_url: string;
   };
+  plainHTML?: string;
 }
 
 interface DocumentOptions {
@@ -171,6 +173,7 @@ interface DocumentOptions {
   fixFlawsDryRun?: boolean;
   fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
+  plainHTML?: boolean;
 }
 
 export async function buildDocument(
@@ -217,9 +220,13 @@ export async function buildDocument(
   let flaws: any[] = [];
   let $: cheerio.CheerioAPI = null;
   const liveSamples: LiveSample[] = [];
+  // this will get populated with the parent's frontmatter by kumascript if the document is localized:
+  let allMetadata = metadata;
 
   try {
-    [$, flaws] = await kumascript.render(document.url);
+    let kumascriptMetadata;
+    [$, flaws, kumascriptMetadata] = await kumascript.render(document.url);
+    allMetadata = { ...allMetadata, ...kumascriptMetadata };
   } catch (error) {
     if (
       error instanceof MacroInvocationError &&
@@ -369,7 +376,9 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
-  const browserCompat = metadata["browser-compat"];
+
+  // metadata doesn't have a browser-compat key on translated docs:
+  const browserCompat = allMetadata["browser-compat"];
   doc.browserCompat =
     browserCompat &&
     (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
@@ -439,6 +448,12 @@ export async function buildDocument(
     throw error;
   }
 
+  // Dump HTML for GPT context.
+  let plainHTML;
+  if (documentOptions.plainHTML) {
+    plainHTML = $.html();
+  }
+
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
 
@@ -478,7 +493,7 @@ export async function buildDocument(
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
   try {
-    const [sections, sectionFlaws] = extractSections($);
+    const [sections, sectionFlaws] = await extractSections($);
     doc.body = sections;
     if (sectionFlaws.length) {
       injectSectionFlaws(doc, sectionFlaws, options);
@@ -510,26 +525,7 @@ export async function buildDocument(
 
   doc.modified = metadata.modified || null;
 
-  const otherTranslations = document.translations || [];
-  if (!otherTranslations.length && metadata.translation_of) {
-    // If built just-in-time, we won't have a record of all the other translations
-    // available. But if the current document has a translation_of, we can
-    // at least use that.
-    const translationOf = Document.findByURL(
-      `/en-US/docs/${metadata.translation_of}`
-    );
-    if (translationOf) {
-      otherTranslations.push({
-        locale: "en-US",
-        title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us")?.native,
-      });
-    }
-  }
-
-  if (otherTranslations.length) {
-    doc.other_translations = otherTranslations;
-  }
+  doc.other_translations = document.translations || [];
 
   injectSource(doc, document, metadata);
 
@@ -541,7 +537,8 @@ export async function buildDocument(
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  doc.pageTitle = getPageTitle(doc);
+  const pageTitle = getPageTitle(doc);
+  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
@@ -549,21 +546,50 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachmentMap };
+  return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
 }
 
-function addBaseline(doc: Partial<Doc>): WebFeatureStatus | undefined {
+function addBaseline(doc: Partial<Doc>) {
   if (doc.browserCompat) {
-    for (const feature of Object.values<WebFeature>(webFeatures)) {
-      if (
-        feature.status &&
-        feature.compat_features?.some(
-          (query) => doc.browserCompat?.includes(query)
-        )
-      ) {
-        return feature.status;
-      }
-    }
+    const filteredBrowserCompat = doc.browserCompat.filter(
+      (query) =>
+        // temporary blocklist while we wait for per-key baseline statuses
+        // or another solution to the baseline/bcd table discrepancy problem
+        ![
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
+          "api.Clipboard.read",
+          "api.Clipboard.readText",
+          "api.Clipboard.write",
+          "api.Clipboard.writeText",
+          "api.ClipboardEvent",
+          "api.ClipboardEvent.ClipboardEvent",
+          "api.ClipboardEvent.clipboardData",
+          "api.ClipboardItem",
+          "api.ClipboardItem.ClipboardItem",
+          "api.ClipboardItem.getType",
+          "api.ClipboardItem.presentationStyle",
+          "api.ClipboardItem.types",
+          "api.Navigator.clipboard",
+          "api.Permissions.permission_clipboard-read",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
+          "api.CustomElementRegistry",
+          "api.CustomElementRegistry.builtin_element_support",
+          "api.CustomElementRegistry.define",
+          "api.Window.customElements",
+          "css.selectors.defined",
+          "css.selectors.host",
+          "css.selectors.host-context",
+          "css.selectors.part",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
+          "api.Element.input_event",
+          "api.InputEvent.InputEvent",
+          "api.InputEvent.data",
+          "api.InputEvent.dataTransfer",
+          "api.InputEvent.getTargetRanges",
+          "api.InputEvent.inputType",
+        ].includes(query)
+    );
+    return getWebFeatureStatus(...filteredBrowserCompat);
   }
 }
 

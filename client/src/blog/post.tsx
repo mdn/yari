@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 import { HydrationData } from "../../../libs/types/hydration";
 import { HTTPError, RenderDocumentBody } from "../document";
-import { WRITER_MODE } from "../env";
+import { PLACEMENT_ENABLED, WRITER_MODE } from "../env";
 
 import "./index.scss";
 import "./post.scss";
@@ -20,6 +20,9 @@ import {
 } from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
+import { TOC } from "../document/organisms/toc";
+import { SidePlacement } from "../ui/organisms/placement";
+import { PlayQueue } from "../playground/queue";
 
 function MaybeLink({ className = "", link, children }) {
   return link ? (
@@ -191,9 +194,15 @@ export function BlogPost(props: HydrationData) {
   return (
     <>
       {doc && blogMeta && (
-        <>
+        <main className="blog-post-container container">
+          <div className="sidebar-container toc-container">
+            <aside className="toc">
+              <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+            </aside>
+            {PLACEMENT_ENABLED && !blogMeta?.sponsored && <SidePlacement />}
+          </div>
           <article
-            className="blog-container post container main-page-content"
+            className="blog-post blog-container main-page-content"
             lang={doc?.locale}
           >
             <BlogImageFigure image={blogMeta?.image} width={800} height={420} />
@@ -206,7 +215,8 @@ export function BlogPost(props: HydrationData) {
             {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
           <NewsletterSignUp />
-        </>
+          <PlayQueue standalone={true} />
+        </main>
       )}
     </>
   );

@@ -1,3 +1,4 @@
-type Theme = "dark" | "light" | "os-default";
+type Scheme = "dark" | "light";
+type Theme = Scheme | "os-default";
 
-export type { Theme };
+export type { Scheme, Theme };

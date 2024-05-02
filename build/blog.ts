@@ -281,7 +281,7 @@ export async function buildBlogPosts(options: {
 
     const url = `/${locale}/blog/${blogMeta.slug}/`;
     const renderUrl = `/${locale}/blog/${blogMeta.slug}`;
-    const renderDoc = {
+    const renderDoc: BlogPostDoc = {
       url: renderUrl,
       rawBody: body,
       metadata: { locale, ...blogMeta },
@@ -344,8 +344,18 @@ export async function buildBlogPosts(options: {
   }
 }
 
+export interface BlogPostDoc {
+  url: string;
+  rawBody: string;
+  metadata: BlogPostMetadata & { locale: string };
+  isMarkdown: true;
+  fileInfo: {
+    path: string;
+  };
+}
+
 export async function buildPost(
-  document
+  document: BlogPostDoc
 ): Promise<{ doc: Doc; liveSamples: any }> {
   const { metadata } = document;
 
@@ -393,7 +403,7 @@ export async function buildPost(
   postProcessSmallerHeadingIDs($);
   wrapTables($);
   try {
-    const [sections] = extractSections($);
+    const [sections] = await extractSections($);
     doc.body = sections;
   } catch (error) {
     console.error(
@@ -401,8 +411,6 @@ export async function buildPost(
     );
     throw error;
   }
-
-  doc.modified = metadata.modified || null;
 
   doc.pageTitle = `${doc.title} | MDN Blog`;
 
@@ -441,8 +449,12 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
       description: post.description,
       author: [
         {
-          name: post.author?.name || "The MDN Team",
-          link: post.author?.link,
+          name:
+            (typeof post.author === "string"
+              ? post.author
+              : post.author?.name) || "The MDN Team",
+          link:
+            typeof post.author === "string" ? post.author : post.author?.link,
         },
       ],
       date: new Date(post.date),

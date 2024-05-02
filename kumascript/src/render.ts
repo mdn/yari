@@ -60,6 +60,8 @@ export function normalizeMacroName(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
 
+export const macroRenderTimes: Record<string, bigint[]> = {};
+
 export async function render(
   source: string,
   pageEnvironment,
@@ -166,6 +168,7 @@ export async function render(
     }
 
     const macroName = normalizeMacroName(token.name);
+    const startTime = process.hrtime.bigint();
 
     if (selectiveMode) {
       if (selectMacros.includes(macroName)) {
@@ -267,6 +270,9 @@ export async function render(
         errors.push(error);
       }
     }
+    const elapsedTime = process.hrtime.bigint() - startTime;
+    macroRenderTimes[macroName] ??= [];
+    macroRenderTimes[macroName].push(elapsedTime);
   }
   return [output, errors];
 }

@@ -4,6 +4,7 @@ import { HtmlValidate } from "html-validate";
 
 import Environment from "../../src/environment.js";
 import Templates from "../../src/templates.js";
+import fs from "node:fs";
 
 // When we were doing mocha testing, we used this.macro to hold this.
 // But Jest doesn't use the this object, so we just store the object here.
@@ -152,6 +153,23 @@ export function afterEachMacro(teardown) {
     // undefined (if synchronous).
     return teardown(macro);
   });
+}
+
+/**
+ * This function parses a JSON file containing pages fixture data.
+ * It returns the parsed object, with the "translations" property
+ * replaced by a function that returns the translations object.
+ */
+export function parsePagesFixture(file: URL) {
+  return JSON.parse(
+    fs.readFileSync(fileURLToPath(file), { encoding: "utf-8" }),
+    (key, value) => {
+      if (key === "translations") {
+        return () => value;
+      }
+      return value;
+    }
+  );
 }
 
 /**

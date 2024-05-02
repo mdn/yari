@@ -40,6 +40,12 @@ body.ReactModal__Body--open {
   padding-bottom: 1.5rem;
 
   .button.has-icon {
+    --button-color: var(--icon-secondary);
+
+    &:hover {
+      --button-color: var(--icon-primary);
+    }
+
     .button-wrap {
       height: auto;
       margin: -0.5rem;
@@ -49,7 +55,6 @@ body.ReactModal__Body--open {
   }
 
   .icon {
-    background-color: #000;
     height: 1.25rem;
     margin: 0;
     width: 1.25rem;
