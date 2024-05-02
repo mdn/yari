@@ -29,7 +29,7 @@ export async function proxyKevel(req: Request, res: Response) {
 
   const userAgent = req.headers["user-agent"] ?? "";
 
-  const parsedUrl = new URL(req.url);
+  const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
   const pathname = parsedUrl.pathname ?? "";
   const search = parsedUrl.search ?? "";
 
