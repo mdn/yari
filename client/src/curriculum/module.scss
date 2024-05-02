@@ -5,7 +5,10 @@
     > header {
       column-gap: 1.5rem;
       display: grid;
-      grid-template-areas: "icon heading" "icon category";
+      grid-template-areas:
+        ". group"
+        "icon heading"
+        "icon category";
       justify-content: flex-start;
 
       .topic-icon {
@@ -21,7 +24,7 @@
         }
       }
 
-      p {
+      p.module-topic {
         color: var(--curriculum-color-topic);
         font-size: var(--type-smaller-font-size);
         grid-area: category;
@@ -31,6 +34,20 @@
         &::before {
           content: "Category: ";
         }
+      }
+
+      p.module-group {
+        align-self: center;
+        background-color: var(--curriculum-module-label-bg-color);
+        border-radius: var(--elem-radius);
+        color: var(--curriculum-module-label-color);
+        font-size: var(--type-smaller-font-size);
+        grid-area: group;
+        height: max-content;
+        margin: 0;
+        margin-bottom: 0.25rem;
+        padding: 0.125rem 0.5rem;
+        width: fit-content;
       }
     }
 

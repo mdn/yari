@@ -6,17 +6,15 @@ Parameter
     $1 (second parameter): path of Next page
     $2 (third parameter): path to main menu of module
 
-Issue
-    * Problem of Apostrophe (https://developer.mozilla.org/fr/docs/JavaScript_Guide/Op%C3%A9rateurs/Op%C3%A9rateurs_sp%C3%A9ciaux)
-
 */
 
-var lang = env.locale;
-var strPrevious = "";
-var strNext = "";
-var strMenu = "";
+const locale = env.locale;
+const defaultLocale = "en-US";
+const prevPage = $0?.replace(/ /g, "_");
+const nextPage = $1?.replace(/ /g, "_");
+const mainMenu = $2?.replace(/ /g, "_");
 
-var s_PreviousNext = mdn.localString({
+const previousNextStr = mdn.localString({
     "en-US": [" Previous ",          " Next  "],
     "es"   : [" Anterior ",     " Siguiente  "],
     "fr"   : [" Précédent ",      " Suivant  "],
@@ -28,7 +26,7 @@ var s_PreviousNext = mdn.localString({
     "zh-TW": [" 前頁 ",                              " 次頁  "]
 });
 
-var s_Menu = mdn.localString({
+const menuStr = mdn.localString({
     "en-US": " Overview: ",
     "pt-BR": " Menu: ",
     "fr"   : " Aperçu&nbsp;: ",
@@ -37,29 +35,34 @@ var s_Menu = mdn.localString({
     "zh-TW": " 概述：",
 });
 
-if ($0) {
-    strPrevious = '<li><a class="button secondary" href="/' + lang + '/docs/' + $0.replace(/ /g, '_') + '"><span class="button-wrap">' + s_PreviousNext[0] + '</span></a></li>';
+function generateLink(pageSlug, linkText) {
+  return `<li><a class="button secondary" href="/${locale}/docs/${pageSlug}"><span class="button-wrap">${linkText}</span></a></li>`;
 }
 
-if ($1) {
-    strNext = '<li><a class="button secondary" href="/' + lang + '/docs/' + $1.replace(/ /g, '_') + '"><span class="button-wrap">' + s_PreviousNext[1] + '</span></a></li>';
-}
-
-if ($2) {
-  var startString = $2;
-  var linkTextArray = startString.split('/');
-  var linkText = linkTextArray[linkTextArray.length-1];
-  var re = /_/gi;
-  var finalString = linkText.replace(re,' ');
-
-  if($0 && $1) {
-    strMenu = '<li><a class="button secondary" href="/' + lang + '/docs/' + $2.replace(/ /g, '_') + '"><span class="button-wrap">' + s_Menu + finalString + '</span></a></li>';
-  } else if($0) {
-    strMenu = '<li><a class="button secondary" href="/' + lang + '/docs/' + $2.replace(/ /g, '_') + '"><span class="button-wrap">' + s_Menu + finalString + '</span></a></li>';
-  } else if($1) {
-    strMenu = '<li><a class="button secondary" href="/' + lang + '/docs/' + $2.replace(/ /g, '_') + '"><span class="button-wrap">' + s_Menu + finalString + '</span></a></li>';
+function generateMenuLink(pageSlug) {
+  const url = `/${locale}/docs/${pageSlug}`;
+  let aPage = info.getPageByURL(url);
+  if (!aPage.url && locale !== defaultLocale) {
+    const fallbackUrl = `/${defaultLocale}/docs/${pageSlug}`;
+    aPage = info.getPageByURL(fallbackUrl);
   }
+  
+  let title = "";
+  if (!aPage.url) {
+    // fallback to generate title from slug
+    title = pageSlug.split('/').at(-1).replace(/_/g, " ");
+  } else {
+    title = aPage.title;
+  }
+  return generateLink(pageSlug, `${menuStr}${title}`);
 }
+
+
+// Output
+const strPrevious = prevPage ? generateLink(prevPage, previousNextStr[0]) : "";
+const strNext = nextPage ? generateLink(nextPage, previousNextStr[1]) : "";
+// If there is a main menu with a previous and/or a next page, generate a link to the main menu
+const strMenu = (mainMenu && (prevPage || nextPage)) ? generateMenuLink(mainMenu) : "";
 %>
 <ul class="prev-next">
     <%- strPrevious %>
