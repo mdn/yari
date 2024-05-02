@@ -72,7 +72,6 @@ const sections = [
       {
         name: "ARIA_guides",
         pages: [
-          "Web/Accessibility/ARIA/Annotations",
           "Web/Accessibility/ARIA/ARIA_Guides",
           "Web/Accessibility/ARIA/ARIA_Live_Regions",
           "Web/Accessibility/ARIA/ARIA_Screen_Reader_Implementors_Guide",
@@ -119,7 +118,7 @@ async function renderDirectory(directory) {
 
 
 async function renderSection(section) {
-  let output = `<li class="section"><a href="${baseURL}${section.link}">${l10nStrings[section.name]}</a></li>`;
+  let output = `<li class="section">${web.smartLink(`${baseURL}${section.link}`, null, l10nStrings[section.name])}</li>`;
 
   for (const subsection of section.subsections) {
     output += await renderSubsection(subsection);

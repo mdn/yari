@@ -95,7 +95,7 @@ export function LanguageMenu({
         {native}
       </Button>
 
-      <DropdownMenu>
+      <DropdownMenu alwaysRenderChildren>
         <Submenu menuEntry={menuEntry} />
       </DropdownMenu>
     </DropdownMenuWrapper>

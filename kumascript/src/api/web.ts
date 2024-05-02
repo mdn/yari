@@ -160,7 +160,7 @@ const web = {
         return (
           '<a class="only-in-en-us" ' +
           `title="${htmlEscape(title)}" ` +
-          `href="${enUSPage.url}"${flawAttribute}>${content} <small>(en-US)</small></a>`
+          `href="${enUSPage.url}"${flawAttribute}>${content}</a>`
         );
       }
     }
