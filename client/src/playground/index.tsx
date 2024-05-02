@@ -76,6 +76,9 @@ export default function Playground() {
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const subdomain = useRef<string>(crypto.randomUUID());
+  const [initialContent, setInitialContent] = useState<EditorContent | null>(
+    null
+  );
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
@@ -105,8 +108,13 @@ export default function Playground() {
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    initialCode && store(SESSION_KEY, initialCode);
-  }, [initialCode]);
+    if (initialCode) {
+      store(SESSION_KEY, initialCode);
+      if (Object.values(initialCode).some(Boolean)) {
+        setInitialContent(structuredClone(initialCode));
+      }
+    }
+  }, [initialCode, setInitialContent]);
 
   const getEditorContent = useCallback(() => {
     const code = {
@@ -181,6 +189,17 @@ export default function Playground() {
     setSearchParams([], { replace: true });
     setCodeSrc(undefined);
     setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
+    setInitialContent(null);
+
+    updateWithEditorContent();
+  };
+
+  const reset = async () => {
+    setEditorContent({
+      html: initialContent?.html || HTML_DEFAULT,
+      css: initialContent?.css || CSS_DEFAULT,
+      js: initialContent?.js || JS_DEFAULT,
+    });
 
     updateWithEditorContent();
   };
@@ -189,6 +208,13 @@ export default function Playground() {
     if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
       await clear();
+    }
+  };
+
+  const resetConfirm = async () => {
+    if (window.confirm("Do you really want to revert your changes?")) {
+      gleanClick(`${PLAYGROUND}: revert-click`);
+      await reset();
     }
   };
 
@@ -314,6 +340,16 @@ export default function Playground() {
               >
                 clear
               </Button>
+              {initialContent && (
+                <Button
+                  type="secondary"
+                  id="reset"
+                  extraClasses="red"
+                  onClickHandler={resetConfirm}
+                >
+                  reset
+                </Button>
+              )}
             </menu>
           </aside>
           <Editor
