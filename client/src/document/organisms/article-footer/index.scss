@@ -1,0 +1,110 @@
+@use "../../../ui/vars" as *;
+
+.article-footer {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  box-shadow: var(--shadow-01);
+  margin: 0;
+  padding: 1rem;
+
+  @media screen and (max-width: $screen-md) {
+    margin: 3rem;
+    // Reduce space to article content.
+    margin-top: 0;
+  }
+
+  .article-footer-inner {
+    margin: 0 auto;
+    max-width: 1440px;
+    width: 100%;
+
+    .svg-container {
+      position: relative;
+
+      svg {
+        height: auto;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 20%;
+      }
+    }
+
+    h2 {
+      margin-top: 0;
+      padding: 0;
+    }
+
+    .feedback {
+      border: none;
+      margin: 0;
+      margin-bottom: 0.25rem;
+      padding: 0;
+
+      > label {
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
+      .thank-you {
+        display: block;
+        margin-bottom: calc(2.75rem + 2px);
+      }
+
+      .button-container {
+        // Ensure both buttons take minimal width.
+        display: inline-flex;
+        gap: 0.75rem;
+        margin: 0.25rem 0;
+      }
+
+      button {
+        // Ensure both buttons have same size.
+        flex: 1;
+        min-width: 0;
+
+        &:not(:hover) {
+          --button-bg: var(--background-secondary);
+          --button-color: var(--text-primary);
+        }
+
+        &.yes {
+          --button-bg-hover: var(--text-primary-green);
+        }
+
+        &.no {
+          --button-bg-hover: var(--text-primary-red);
+        }
+      }
+
+      .button-wrap {
+        display: flex;
+        // Increase space between icon and button label.
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+
+      .radio-container {
+        align-items: center;
+        display: flex;
+        gap: 0.25rem;
+        margin: 0.25rem 0;
+      }
+    }
+
+    .contribute {
+      margin-top: 0.25rem;
+    }
+
+    .last-modified-date {
+      margin-bottom: 0;
+      margin-top: 2rem;
+    }
+
+    .emoji {
+      // Ensure emojis are shown in color.
+      font-family: initial;
+    }
+  }
+}

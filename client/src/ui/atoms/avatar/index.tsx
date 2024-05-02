@@ -6,7 +6,7 @@ export const Avatar = ({ userData }: { userData: UserData }) => {
   // If we have user data and the user is logged in, show their
   // profile pic, defaulting to the dino head if the avatar
   // URL doesn't work.
-  const avatarImage = `${process.env.PUBLIC_URL || ""}/assets/avatar.png`;
+  const avatarImage = "/assets/avatar.png";
 
   return (
     <div

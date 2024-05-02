@@ -8,6 +8,7 @@ import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
+import cliProgress from "cli-progress";
 import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
@@ -28,11 +29,8 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
@@ -179,14 +177,6 @@ interface PopularitiesActionParameters extends ActionParameters {
   logger: Logger;
 }
 
-interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
-  options: {
-    account: string;
-    debug: boolean;
-    outfile: string;
-  };
-}
-
 interface BuildRobotsTxtActionParameters extends ActionParameters {
   options: {
     outfile: string;
@@ -201,12 +191,6 @@ interface MacrosActionParameters extends ActionParameters {
     cmd: string;
     foldersearch: string;
     macros: string[];
-  };
-}
-
-interface OptimizeClientBuildActionParameters extends ActionParameters {
-  args: {
-    buildroot: string;
   };
 }
 
@@ -753,15 +737,28 @@ program
       const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
+      const progressBar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_grey
+      );
+      progressBar.start(allDocs.count, 0);
+
       for (const document of allDocs.iterDocs()) {
-        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
-          await buildDocument(document, {
-            fixFlaws: true,
-            fixFlawsTypes: new Set(fixFlawsTypes),
-            fixFlawsVerbose: true,
-          });
+        try {
+          if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+            await buildDocument(document, {
+              fixFlaws: true,
+              fixFlawsTypes: new Set(fixFlawsTypes),
+              fixFlawsVerbose: true,
+            });
+          }
+        } catch (e) {
+          console.error(e);
         }
+        progressBar.increment();
       }
+
+      progressBar.stop();
     })
   )
 
@@ -806,70 +803,9 @@ program
     })
   )
 
-  .command("redundant-translations", "Find redundant translations")
-  .action(
-    tryOrExit(async () => {
-      if (!CONTENT_TRANSLATED_ROOT) {
-        throw new Error("CONTENT_TRANSLATED_ROOT not set");
-      }
-      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
-        throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
-      }
-      const documents = await Document.findAll();
-      if (!documents.count) {
-        throw new Error("No documents to analyze");
-      }
-      // Build up a map of translations by their `translation_of`
-      const map = new Map();
-      for (const document of documents.iterDocs()) {
-        if (!document.isTranslated) continue;
-        const { translation_of, locale } = document.metadata;
-        if (!map.has(translation_of)) {
-          map.set(translation_of, new Map());
-        }
-        if (!map.get(translation_of).has(locale)) {
-          map.get(translation_of).set(locale, []);
-        }
-        map
-          .get(translation_of)
-          .get(locale)
-          .push(
-            Object.assign(
-              { filePath: document.fileInfo.path },
-              document.metadata
-            )
-          );
-      }
-      // Now, let's investigate those with more than 1
-      let sumENUS = 0;
-      let sumTotal = 0;
-      for (const [translation_of, localeMap] of map) {
-        for (const [, metadatas] of localeMap) {
-          if (metadatas.length > 1) {
-            // console.log(translation_of, locale, metadatas);
-            sumENUS++;
-            sumTotal += metadatas.length;
-            console.log(
-              `https://developer.allizom.org/en-US/docs/${translation_of}`
-            );
-            for (const metadata of metadatas) {
-              console.log(metadata);
-            }
-          }
-        }
-      }
-      console.warn(
-        `${sumENUS} en-US documents have multiple translations with the same locale`
-      );
-      console.log(
-        `In total, ${sumTotal} translations that share the same translation_of`
-      );
-    })
-  )
-
   .command(
     "popularities",
-    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
+    "Convert Glean-derived page view CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
     default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
@@ -919,72 +855,6 @@ program
         )
       );
     })
-  )
-
-  .command(
-    "google-analytics-code",
-    "Generate a .js file that can be used in SSR rendering"
-  )
-  .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
-  })
-  .option(
-    "--debug",
-    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
-    {
-      default: GOOGLE_ANALYTICS_DEBUG,
-    }
-  )
-  .option(
-    "--account <id>",
-    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
-    {
-      default: GOOGLE_ANALYTICS_ACCOUNT,
-    }
-  )
-  .action(
-    tryOrExit(
-      async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, debug, account } = options;
-        if (account) {
-          const dntHelperCode = fs
-            .readFileSync(
-              new URL("mozilla.dnthelper.min.js", import.meta.url),
-              "utf-8"
-            )
-            .trim();
-
-          const gaScriptURL = `https://www.google-analytics.com/${
-            debug ? "analytics_debug" : "analytics"
-          }.js`;
-
-          const code = `
-// Mozilla DNT Helper
-${dntHelperCode}
-// only load GA if DNT is not enabled
-if (Mozilla && !Mozilla.dntEnabled()) {
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', '${account}', 'mozilla.org');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
-
-    var gaScript = document.createElement('script');
-    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
-    document.head.appendChild(gaScript);
-}`.trim();
-          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
-          logger.info(
-            chalk.green(
-              `Generated ${outfile} for SSR rendering using ${account}${
-                debug ? " (debug mode)" : ""
-              }.`
-            )
-          );
-        } else {
-          logger.info(chalk.yellow("No Google Analytics code file generated"));
-        }
-      }
-    )
   )
 
   .command(
@@ -1184,40 +1054,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
 
       process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
-  )
-
-  .command(
-    "optimize-client-build",
-    "After the client code has been built there are things to do that react-scripts can't."
-  )
-  .argument("<buildroot>", "directory where react-scripts built", {
-    default: path.join("client", "build"),
-  })
-  .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-        logger,
-      }: OptimizeClientBuildActionParameters) => {
-        const { buildroot } = args;
-        const { results } = await runOptimizeClientBuild(buildroot);
-        if (options.verbose) {
-          for (const result of results) {
-            logger.info(`${result.filePath} -> ${result.hashedHref}`);
-          }
-        } else {
-          logger.info(
-            chalk.green(
-              `Hashed ${results.length} files in ${path.join(
-                buildroot,
-                "index.html"
-              )}`
-            )
-          );
-        }
-      }
-    )
   )
 
   .command(

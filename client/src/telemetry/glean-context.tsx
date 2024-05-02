@@ -4,7 +4,13 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { DEV_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import {
+  DEV_MODE,
+  GLEAN_CHANNEL,
+  GLEAN_DEBUG,
+  GLEAN_LOG_CLICK,
+  GLEAN_ENABLED,
+} from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
@@ -85,7 +91,7 @@ function glean(): GleanAnalytics {
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
-    maxEvents: 1,
+    enableAutoPageLoadEvents: true,
     channel: GLEAN_CHANNEL,
     migrateFromLegacyStorage: true,
     serverEndpoint: DEV_MODE
@@ -95,8 +101,8 @@ function glean(): GleanAnalytics {
 
   if (DEV_MODE) {
     Glean.setDebugViewTag("mdn-dev");
+    Glean.setLogPings(GLEAN_DEBUG);
   }
-  Glean.setLogPings(GLEAN_DEBUG);
 
   const gleanContext = {
     page: (page: PageProps) => {
@@ -166,14 +172,14 @@ const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
-  const button = ev?.target;
+  const button = (ev?.target as HTMLElement | null)?.closest("button");
   if (button instanceof HTMLButtonElement && button.dataset.glean) {
     click(button.dataset.glean);
   }
 }
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
-  const anchor = ev?.target;
+  const anchor = (ev?.target as HTMLElement | null)?.closest("a");
   if (anchor instanceof HTMLAnchorElement) {
     if (anchor.dataset.glean) {
       click(anchor.dataset.glean);
@@ -217,30 +223,34 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       viewportHorizontalCoverage: Math.round(
         (100 * window.innerWidth) / window.screen.width
       ),
-      isBaseline:
-        doc?.baseline?.is_baseline === undefined
-          ? undefined
-          : doc.baseline.is_baseline
-          ? "baseline"
-          : "not_baseline",
+      isBaseline: doc?.baseline?.baseline
+        ? `baseline_${doc.baseline.baseline}`
+        : doc?.baseline?.baseline === false
+          ? "not_baseline"
+          : undefined,
       utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.is_baseline]);
+  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.baseline]);
 }
 
 export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
   return React.useCallback(
-    (source: string) =>
+    (source: string) => {
+      if (GLEAN_LOG_CLICK && !source.includes("pong")) {
+        console.log({ gleanClick: source });
+      }
+
       glean.click({
         source,
         subscriptionType: userData?.subscriptionType || "none",
-      }),
+      });
+    },
     [glean, userData?.subscriptionType]
   );
 }

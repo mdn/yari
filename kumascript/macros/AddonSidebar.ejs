@@ -144,9 +144,7 @@ var text = mdn.localStringMap({
 });
 
 async function renderRootItem(slug) {
-  const [link, title] = await getPageLinkAndTitle(slug);
-
-  return `<li><a href="${link}"><strong>${title}</strong></a></li>`
+  return `<li class="section">${web.smartLink(`/${env.locale}${slug}`)}</li>`
 }
 
 async function renderItems(slugs) {
@@ -154,24 +152,7 @@ async function renderItems(slugs) {
 }
 
 async function renderItem(slug) {
-  const [link, title] = await getPageLinkAndTitle(slug);
-  
-  return `<li><a href="${link}">${title}</a></li>`;
-}
-
-async function getPageLinkAndTitle(slug) {
-  let link = `/${env.locale}${slug}`;
-  let page = await wiki.getPage(link);
-
-  if (!page.title && env.locale !== 'en-US') {
-    link = `/en-US${slug}`;
-    page = await wiki.getPage(link);
-  }
-
-  let title = page.short_title || page.title;
-  title = mdn.htmlEscape(title);
-
-  return [link, title];
+  return `<li>${web.smartLink(`/${env.locale}${slug}`)}</li>`;
 }
 
 %>
