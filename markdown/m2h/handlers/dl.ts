@@ -1,5 +1,4 @@
-import { all, wrap } from "./mdast-util-to-hast-utils.js";
-
+import { Handler } from "mdast-util-to-hast";
 export const DEFINITION_PREFIX = ": ";
 
 export function isDefinitionList(node) {
@@ -28,7 +27,7 @@ export function isDefinitionList(node) {
   );
 }
 
-export function asDefinitionList(h, node) {
+export function asDefinitionList(state, node): ReturnType<Handler> {
   const children = node.children.flatMap((listItem) => {
     const terms = listItem.children.slice(0, -1);
     const definition =
@@ -38,28 +37,32 @@ export function asDefinitionList(h, node) {
       DEFINITION_PREFIX.length
     );
 
-    const [firstDtChild, ...dtChildren] = all(h, {
-      ...node,
-      children:
-        terms.length == 1 && terms[0].type == "paragraph"
-          ? terms[0].children
-          : terms,
-    });
-    if (firstDtChild) {
-      dtChildren.unshift(
-        h(node, "a", { "data-link-to-id": "true" }, [firstDtChild])
-      );
-    }
-
     return [
-      h(node, "dt", {}, dtChildren),
-      h(
-        node,
-        "dd",
-        {},
-        all(h, { ...definition, children: [paragraph, ...rest] })
-      ),
+      {
+        type: "element",
+        tagName: "dt",
+        properties: {},
+        children: state.all({
+          ...node,
+          children:
+            terms.length == 1 && terms[0].type == "paragraph"
+              ? terms[0].children
+              : terms,
+        }),
+      },
+      {
+        type: "element",
+        tagName: "dd",
+        properties: {},
+        children: state.all({ ...definition, children: [paragraph, ...rest] }),
+      },
     ];
   });
-  return h(node, "dl", {}, wrap(children, true));
+
+  return {
+    type: "element",
+    tagName: "dl",
+    properties: {},
+    children: state.wrap(children, true),
+  };
 }

@@ -21,8 +21,6 @@ on:
     secrets:
       GCP_PROJECT_NAME:
         required: true
-      GCS_BUCKET:
-        required: true
       WIP_PROJECT_ID:
         required: true
 
@@ -33,7 +31,7 @@ permissions:
 jobs:
   build:
     environment: xyz
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
     if: github.repository == 'mdn/yari'
@@ -57,7 +55,14 @@ jobs:
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
+          lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
@@ -75,9 +80,9 @@ jobs:
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: yarn
 
       - name: Install all yarn packages
@@ -103,25 +108,21 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.allizom.xyz"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.developer.allizom.xyz
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
-
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -151,8 +152,10 @@ jobs:
           REACT_APP_NEWSLETTER_ENABLED: false
 
           # Placement
-          REACT_APP_PLACEMENT_ENABLED: true
+          REACT_APP_PLACEMENT_ENABLED: false
 
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_HOST: mdnyalp.dev
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
@@ -162,11 +165,6 @@ jobs:
           # Build the ServiceWorker first
           yarn build:sw
           yarn build:prepare
-
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
 
           yarn tool sync-translated-content
 
@@ -189,28 +187,43 @@ jobs:
           # Build the blog
           yarn build:blog
 
+          # Build the curriculum
+          yarn build:curriculum
+
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          install_components: "beta"
+        uses: google-github-actions/setup-gcloud@v2
 
-      - name: Sync build with GCS bucket
+      - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+
+      - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: "beta"
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -238,9 +251,10 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=60s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.developer.allizom.xyz" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
@@ -250,8 +264,6 @@ jobs:
             --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
             --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
             --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
-            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
-            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
             2>&1 | sed "s/^/[$region] /" &
             pids+=($!)
           done

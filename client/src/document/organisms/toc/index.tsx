@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import "./index.scss";
 import { Toc } from "../../../../../libs/types/document";
 import { useFirstVisibleElement } from "../../hooks";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { TOC_CLICK } from "../../../telemetry/constants";
 
-export function TOC({ toc }: { toc: Toc[] }) {
+export function TOC({ toc, title }: { toc: Toc[]; title?: string }) {
   const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
 
   const observedElements = React.useCallback(() => {
@@ -42,7 +44,9 @@ export function TOC({ toc }: { toc: Toc[] }) {
       <div className="document-toc-container">
         <section className="document-toc">
           <header>
-            <h2 className="document-toc-heading">In this article</h2>
+            <h2 className="document-toc-heading">
+              {title || "In this article"}
+            </h2>
           </header>
           <ul className="document-toc-list">
             {toc.map((item) => {
@@ -69,14 +73,17 @@ function TOCItem({
   sub,
   currentViewedTocItem,
 }: Toc & { currentViewedTocItem: string }) {
+  const gleanClick = useGleanClick();
+  const href = id && `#${id.toLowerCase()}`;
   return (
     <li className={`document-toc-item ${sub ? "document-toc-item-sub" : ""}`}>
       <a
         className="document-toc-link"
         key={id}
-        aria-current={currentViewedTocItem === id.toLowerCase() || undefined}
-        href={`#${id.toLowerCase()}`}
+        aria-current={currentViewedTocItem === id?.toLowerCase() || undefined}
+        href={href}
         dangerouslySetInnerHTML={{ __html: text }}
+        onClick={() => gleanClick(`${TOC_CLICK}: ${href}`)}
       />
     </li>
   );

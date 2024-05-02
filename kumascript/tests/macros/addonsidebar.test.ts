@@ -138,6 +138,12 @@ describeMacro("AddonSidebar", function () {
     // Mock calls to info.getChildren, which indirectly mocks the
     // call to wiki.tree within AddonSidebar.ejs.
     macro.ctx.info.getChildren = jest.fn(getMockResultForGetChildren);
+    // Mock calls to env.recordNonFatalError, called from web.smartLink().
+    macro.ctx.env.recordNonFatalError = () => {
+      return {
+        macroSource: "foo",
+      };
+    };
   });
 
   for (const locale of ["en-US", "fr", "ja"]) {

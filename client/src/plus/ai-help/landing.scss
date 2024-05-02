@@ -1,0 +1,150 @@
+@use "../../ui/vars" as *;
+
+.ai-help .ai-help-landing {
+  margin: 2rem 0;
+
+  h2 {
+    font-size: var(--type-heading-h3-font-size);
+    margin: 0.5rem 0;
+  }
+
+  h3 {
+    font: unset;
+    font-size: var(--type-heading-h4-font-size);
+    font-weight: 500;
+    letter-spacing: unset;
+  }
+
+  .auth-container {
+    justify-content: flex-start;
+  }
+
+  .ai-help-landing-top {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: row;
+      gap: 6rem;
+      justify-content: space-evenly;
+    }
+
+    @media screen and (min-width: $screen-lg) {
+      gap: 12rem;
+    }
+
+    > * {
+      flex: 1;
+    }
+
+    h1 {
+      em {
+        color: var(--category-color);
+        font-style: unset;
+        font-variation-settings: unset;
+      }
+    }
+
+    img {
+      border-radius: 1rem;
+      box-shadow: 0 3px 22px var(--border-secondary);
+    }
+  }
+
+  .ai-help-landing-features {
+    background-color: var(--background-secondary);
+    margin: 4rem 0;
+    padding: 1rem 0;
+
+    .ai-help-new-additions {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin: 2rem 0;
+
+      @media screen and (min-width: $screen-md) {
+        flex-direction: row;
+        gap: 3rem;
+        justify-content: space-between;
+      }
+
+      figure {
+        align-items: center;
+        display: flex;
+
+        gap: 1.5rem;
+        margin-top: 1rem;
+        text-align: center;
+
+        svg {
+          height: 3rem;
+          width: 3rem;
+        }
+
+        figcaption {
+          p {
+            margin: 0;
+          }
+        }
+
+        @media screen and (min-width: $screen-md) {
+          // Desktop.
+          display: block;
+
+          svg {
+            height: 5rem;
+            margin: 0 auto;
+            width: 5rem;
+          }
+
+          figcaption {
+            text-align: center;
+          }
+        }
+
+        @media screen and (max-width: #{$screen-md - 1}) {
+          // Mobile.
+
+          figcaption {
+            text-align: left;
+
+            h3 {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ai-help-landing-bottom {
+    margin-bottom: 4rem;
+
+    ul.highlights {
+      margin: 2rem 0;
+
+      li {
+        &:before {
+          background-image: url("../../../public/assets/ai-help/lightbulb-question.svg");
+          content: "";
+          display: inline-block;
+          height: 1rem;
+          margin-right: 0.5ch;
+          vertical-align: text-top;
+          width: 1rem;
+        }
+
+        &:not(:last-of-type) {
+          margin-bottom: 1rem;
+        }
+
+        em {
+          font-style: unset;
+          font-variation-settings: unset;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

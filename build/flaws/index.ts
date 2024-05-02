@@ -11,7 +11,7 @@ import {
 import {
   replaceMatchesInText,
   replaceMatchingLinksInMarkdown,
-} from "../matches-in-text.js";
+} from "../matches.js";
 import { forceExternalURL, downloadAndResizeImage } from "../utils.js";
 import { getBadBCDQueriesFlaws } from "./bad-bcd-queries.js";
 import { getBrokenLinksFlaws } from "./broken-links.js";

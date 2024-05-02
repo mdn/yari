@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 # Check if commit signing is enabled
 if [ "$(git config commit.gpgSign)" != "true" ]; then
     echo "ERROR: Commit signing is NOT enabled!"

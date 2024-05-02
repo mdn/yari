@@ -151,7 +151,11 @@ main.play {
           margin-left: auto;
 
           button {
-            text-transform: uppercase;
+            text-transform: capitalize;
+
+            &:disabled {
+              cursor: not-allowed;
+            }
 
             &.red {
               --button-color: var(--text-primary-red);
@@ -191,10 +195,10 @@ main.play {
               var(--editor-header-padding) - var(--editor-header-border-width)
           );
           margin: 0.5rem 0 0;
-          overflow: scroll;
+          overflow-y: scroll;
 
           .cm-editor {
-            height: 100%;
+            min-height: 100%;
             width: 100%;
 
             @media screen and (max-width: $screen-sm) {
