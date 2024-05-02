@@ -159,7 +159,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.13",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.5.0",
-    "@testing-library/react": "^15.0.5",
+    "@testing-library/react": "^15.0.6",
     "@types/async": "^3.2.24",
     "@types/cli-progress": "^3.11.5",
     "@types/imagemin": "^8.0.5",
