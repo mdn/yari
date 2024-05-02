@@ -34,12 +34,12 @@ import { HydrationData } from "../../libs/types/hydration";
 import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
-import { Curriculum } from "./curriculum";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
+const Curriculum = React.lazy(() => import("./curriculum"));
 const Playground = React.lazy(() => import("./playground"));
 
 function Layout({ pageType, children }) {

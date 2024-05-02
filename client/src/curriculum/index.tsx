@@ -8,7 +8,7 @@ import { CurriculumLanding } from "./landing";
 
 import "./index.scss";
 
-export function Curriculum(appProps: HydrationData) {
+export default function Curriculum(appProps: HydrationData) {
   return (
     <Routes>
       <Route path="/" element={<CurriculumLanding {...appProps} />} />
