@@ -1,5 +1,14 @@
 # Check if commit signing is enabled
-if [ "$(git config commit.gpgSign)" != "true" ]; then
+function is_signing_enabled {
+    local value=$(git config --get commit.gpgSign)
+    if [[ "$value" == "true" || "$value" == "1" || "$value" == "yes" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+if [ ! is_signing_enabled ]; then
     echo "ERROR: Commit signing is NOT enabled!"
     echo "Please note that we require that all commits are signed."
     echo "Please see the documentation about signed commits and how to sign yours on GitHub:"
