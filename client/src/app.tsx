@@ -35,6 +35,7 @@ import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
 import { Curriculum } from "./curriculum";
+import { useGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -135,6 +136,7 @@ export function App(appProps: HydrationData) {
 
   usePing();
   useGleanPage(pageNotFound, appProps.doc);
+  useScrollDepthMeasurement();
 
   const localeMatch = useMatch("/:locale/*");
 
@@ -348,4 +350,47 @@ export function App(appProps: HydrationData) {
     </Routes>
   );
   return routes;
+}
+
+function useScrollDepthMeasurement(thresholds = [25, 50, 75]) {
+  const timeoutID = React.useRef<number | null>();
+  const [currentDepth, setScrollDepth] = React.useState(0);
+  const { gtag } = useGA();
+
+  useEffect(() => {
+    const listener = () => {
+      if (timeoutID.current) {
+        window.clearTimeout(timeoutID.current);
+      }
+      timeoutID.current = window.setTimeout(() => {
+        const { scrollHeight } = document.documentElement;
+        const { innerHeight, scrollY } = window;
+        const scrollPosition = innerHeight + scrollY;
+        const depth = (100 * scrollPosition) / scrollHeight;
+
+        const matchingThresholds = thresholds.filter(
+          (threshold) => currentDepth < threshold && threshold <= depth
+        );
+
+        matchingThresholds.forEach((threshold) => {
+          gtag("event", "scroll", {
+            percent_scrolled: String(threshold),
+          });
+        });
+
+        const lastThreshold = matchingThresholds.at(-1);
+        if (lastThreshold) {
+          setScrollDepth(lastThreshold);
+        }
+
+        timeoutID.current = null;
+      }, 100);
+    };
+
+    window.addEventListener("scroll", listener);
+
+    return () => window.removeEventListener("scroll", listener);
+  });
+
+  return currentDepth;
 }
