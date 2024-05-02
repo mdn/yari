@@ -189,6 +189,7 @@ export default function Playground() {
     setSearchParams([], { replace: true });
     setCodeSrc(undefined);
     setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
+    setInitialContent(null);
 
     updateWithEditorContent();
   };
