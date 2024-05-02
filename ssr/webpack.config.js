@@ -54,8 +54,18 @@ const config = {
               ref: true,
             },
           },
-          "file-loader?outputPath=/distimages/",
+          {
+            loader: "file-loader",
+            options: {
+              emitFile: false,
+              publicPath: "/",
+              name: "static/media/[name].[hash].[ext]",
+            },
+          },
         ],
+        issuer: {
+          and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
+        },
       },
       {
         test: [/\.avif$/, /\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
