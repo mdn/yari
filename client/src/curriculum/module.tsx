@@ -9,7 +9,9 @@ import { topic2css, useCurriculumDoc } from "./utils";
 import "./index.scss";
 import "./module.scss";
 
-export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
+export default function CurriculumModule(
+  props: HydrationData<any, CurriculumDoc>
+) {
   const doc = useCurriculumDoc(props as CurriculumData);
   return (
     <CurriculumLayout

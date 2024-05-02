@@ -7,7 +7,9 @@ import { CurriculumLayout } from "./layout";
 import "./index.scss";
 import "./about.scss";
 
-export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
+export default function CurriculumAbout(
+  props: HydrationData<any, CurriculumDoc>
+) {
   const doc = useCurriculumDoc(props);
   const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (

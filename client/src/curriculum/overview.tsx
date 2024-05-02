@@ -8,7 +8,7 @@ import { CurriculumLayout } from "./layout";
 
 import "./index.scss";
 
-export function CurriculumModuleOverview(
+export default function CurriculumModuleOverview(
   props: HydrationData<any, CurriculumDoc>
 ) {
   const doc = useCurriculumDoc(props as CurriculumData);

@@ -15,7 +15,9 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 
-export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
+export default function CurriculumLanding(
+  appProps: HydrationData<any, CurriculumDoc>
+) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
   return (
     <CurriculumLayout

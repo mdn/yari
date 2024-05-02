@@ -1,14 +1,16 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { HydrationData } from "../../../libs/types/hydration";
-import { CurriculumModuleOverview } from "./overview";
-import { CurriculumModule } from "./module";
-import { CurriculumAbout } from "./about";
-import { CurriculumLanding } from "./landing";
 
 import "./index.scss";
 
-export default function Curriculum(appProps: HydrationData) {
+const CurriculumModuleOverview = React.lazy(() => import("./overview"));
+const CurriculumModule = React.lazy(() => import("./module"));
+const CurriculumAbout = React.lazy(() => import("./about"));
+const CurriculumLanding = React.lazy(() => import("./landing"));
+
+export function Curriculum(appProps: HydrationData) {
   return (
     <Routes>
       <Route path="/" element={<CurriculumLanding {...appProps} />} />
