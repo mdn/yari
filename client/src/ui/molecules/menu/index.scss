@@ -4,6 +4,11 @@
   }
 
   &:not(.active) > a {
+    &:link,
+    &:visited {
+      color: var(--text-secondary);
+    }
+
     &:hover,
     &:active {
       color: var(--category-color);
