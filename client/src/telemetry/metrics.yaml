@@ -150,6 +150,23 @@ navigator:
     data_sensitivity:
       - web_activity
     bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1894992
+    data_reviews:
+      - https://github.com/mdn/yari/pull/11065
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2024-09-05
+  user_languages:
+    type: string_list
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The user's preferred languages.
+    data_sensitivity:
+      - web_activity
+    bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1798296
     data_reviews:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
