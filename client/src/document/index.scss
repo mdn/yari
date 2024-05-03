@@ -949,7 +949,7 @@ html a.only-in-en-us {
   &:after {
     content: "(en-US)";
     display: inline-block;
-    font-size: smaller;
+    font-size: var(--type-tiny-font-size);
     vertical-align: super;
   }
 }
