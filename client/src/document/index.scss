@@ -943,15 +943,11 @@ kbd {
   }
 }
 
-html a.only-in-en-us {
-  opacity: 0.775;
-
-  &:after {
-    content: "(en-US)";
-    display: inline-block;
-    font-size: var(--type-tiny-font-size);
-    vertical-align: super;
-  }
+html a.only-in-en-us:after {
+  content: "(en-US)";
+  display: inline-block;
+  font-size: var(--type-tiny-font-size);
+  vertical-align: super;
 }
 
 html[lang="es"] a.only-in-en-us:after {
