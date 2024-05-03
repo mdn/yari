@@ -131,6 +131,9 @@ function glean(): GleanAnalytics {
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
       }
+      if (page.userLanguages) {
+        navigatorMetric.userLanguages.set(page.userLanguages);
+      }
       if (page.viewportBreakpoint) {
         navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
       }
