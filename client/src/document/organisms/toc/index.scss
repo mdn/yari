@@ -32,7 +32,7 @@
   &-link.document-toc-link:not(.button) {
     border-left: 2px solid var(--border-secondary);
     color: var(--text-secondary);
-    display: block;
+    display: inline-block;
     padding: 0.5rem 1rem;
     text-decoration: none;
 
