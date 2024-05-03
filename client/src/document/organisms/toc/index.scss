@@ -42,7 +42,9 @@
 
     &[aria-current]:not([aria-current=""]):not([aria-current="false"]) {
       background-color: var(--background-toc-active);
+      border-bottom-right-radius: 0.25rem;
       border-left: 2px solid var(--category-color);
+      border-top-right-radius: 0.25rem;
       color: var(--text-primary);
       font-weight: 600;
     }
