@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.51.0](https://github.com/mdn/yari/compare/v2.50.0...v2.51.0) (2024-05-02)
+
+
+### Features
+
+* **css-syntax:** render more constituents ([#11003](https://github.com/mdn/yari/issues/11003)) ([9c61077](https://github.com/mdn/yari/commit/9c61077c889a49b5e58077904aacb190bf95e893))
+* **markdown:** add support for GFM noteblocks proposal ([#10168](https://github.com/mdn/yari/issues/10168)) ([afeb857](https://github.com/mdn/yari/commit/afeb85708e5fdaa4230071a27241f480de681ac8))
+* **playground:** add Reset button ([#10934](https://github.com/mdn/yari/issues/10934)) ([d316348](https://github.com/mdn/yari/commit/d3163481da53792b0cd4c893051484a62caa127d))
+* **telemetry:** measure 25%/50%/75% scroll depth ([#11041](https://github.com/mdn/yari/issues/11041)) ([4585241](https://github.com/mdn/yari/commit/4585241a24fcd62076c39cd11ccf92394da5351a))
+
+
+### Bug Fixes
+
+* **fonts:** ensure italic looks like italic in Safari ([#10828](https://github.com/mdn/yari/issues/10828)) ([a06e429](https://github.com/mdn/yari/commit/a06e429e8f4a02a5b898ebdb885d23667eee31c2))
+* **macros:** make smartLink() error message more informative ([#11042](https://github.com/mdn/yari/issues/11042)) ([930c9cf](https://github.com/mdn/yari/commit/930c9cf51ec393ea72c0bff0c40fd19ac10df494))
+* **placement:** adjust hover style for links ([#9981](https://github.com/mdn/yari/issues/9981)) ([67a8e4c](https://github.com/mdn/yari/commit/67a8e4c60d9654c0575967445195ed4ee5b069b3))
+* **ssr:** imported svg paths set wrong ([#11012](https://github.com/mdn/yari/issues/11012)) ([ec1ded9](https://github.com/mdn/yari/commit/ec1ded9f4cb4db6f16c705f58c42f30b47d7eef7))
+
+
+### Enhancements
+
+* **l10n:** localize "(en-US)" indicator ([#10996](https://github.com/mdn/yari/issues/10996)) ([be8852c](https://github.com/mdn/yari/commit/be8852c8b0f3bc4296eb77e44a108bf5e1f86f40))
+* **l10n:** localize en-US link title ([#11011](https://github.com/mdn/yari/issues/11011)) ([56a18b0](https://github.com/mdn/yari/commit/56a18b0ce36e13135491200eed2adbfd42d3a6c0))
+* **macros/APIRef:** show badges on all links ([#9757](https://github.com/mdn/yari/issues/9757)) ([b7bbcaa](https://github.com/mdn/yari/commit/b7bbcaa7fb33b02e0ee16bad00972b216948f7ff))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @testing-library/react from 15.0.5 to 15.0.6 ([#11049](https://github.com/mdn/yari/issues/11049)) ([56a8ee5](https://github.com/mdn/yari/commit/56a8ee5a2c9b154f0af68d95edeb5d5cff4c814b))
+* **deps-dev:** bump sass from 1.75.0 to 1.76.0 ([#11046](https://github.com/mdn/yari/issues/11046)) ([165736b](https://github.com/mdn/yari/commit/165736b9a6acf419abf65fb47ad57984b9b11372))
+* **deps:** bump @mdn/browser-compat-data from 5.5.23 to 5.5.24 ([#11044](https://github.com/mdn/yari/issues/11044)) ([4e5f0e2](https://github.com/mdn/yari/commit/4e5f0e25cf74abb87587acea4e425b413beb1c1b))
+* **deps:** bump @mozilla/glean from 5.0.0 to 5.0.1 ([#11043](https://github.com/mdn/yari/issues/11043)) ([9d02ed7](https://github.com/mdn/yari/commit/9d02ed7730cfdc8f4facf7580a500fc0dd430091))
+* **deps:** bump openai from 4.39.0 to 4.40.0 ([#11045](https://github.com/mdn/yari/issues/11045)) ([babe608](https://github.com/mdn/yari/commit/babe608767cb8bafd98800ddec75761bd959c742))
+
 ## [2.50.0](https://github.com/mdn/yari/compare/v2.49.0...v2.50.0) (2024-04-30)
 
 
