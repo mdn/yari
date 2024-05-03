@@ -1,5 +1,5 @@
 .top-level-entry-container {
-  &.active > a {
+  &:not(.active) > a {
     &:link,
     &:visited {
       color: var(--text-inactive);
