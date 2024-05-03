@@ -63,8 +63,9 @@
         }
 
         > label {
-          color: var(--text-inactive);
+          color: var(--text-secondary);
           cursor: pointer;
+          opacity: 0.775;
           width: max-content;
         }
 
