@@ -40,6 +40,7 @@ export type PageProps = {
   geo: string | undefined;
   geo_iso: string | undefined;
   userAgent: string | undefined;
+  userLanguages: string[];
   viewportBreakpoint: ViewportBreakpoint | undefined;
   viewportRatio: number;
   viewportHorizontalCoverage: number;
@@ -129,6 +130,9 @@ function glean(): GleanAnalytics {
       if (page.userAgent) {
         navigatorMetric.userAgent.set(page.userAgent);
       }
+      if (page.userLanguages) {
+        navigatorMetric.userLanguages.set(page.userLanguages);
+      }
       if (page.viewportBreakpoint) {
         navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
       }
@@ -212,6 +216,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       // on port 3000 this will always return "200":
       httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
+      userLanguages: Array.from(navigator?.languages || []),
       geo: userData?.geo?.country,
       geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
