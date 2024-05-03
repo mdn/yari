@@ -119,8 +119,8 @@
 
         for (const script of document.querySelectorAll("script[src]")) {
           await new Promise((resolve) => {
-            script.addEventListener("load", () => resolve());
-            script.addEventListener("error", () => resolve());
+            script.addEventListener("load", resolve);
+            script.addEventListener("error", resolve);
           });
         }
 
