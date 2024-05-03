@@ -524,6 +524,7 @@ pre {
     }
 
     li {
+      break-inside: avoid-column;
       margin: 0 0 0.5rem;
     }
   }
