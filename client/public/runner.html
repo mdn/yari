@@ -86,6 +86,7 @@
               continue;
             }
             if (child.nodeName === "SCRIPT" && child.src) {
+              // Script tags with `src` are handled in `loadExternalScripts()`.
               continue;
             }
 
