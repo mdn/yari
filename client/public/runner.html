@@ -121,8 +121,12 @@
         script.textContent = state.js;
         document.body.appendChild(script);
 
-        dispatchEvent(new Event("DOMContentLoaded"));
-        dispatchEvent(new Event("load"));
+        document.dispatchEvent(
+          new Event("DOMContentLoaded", { bubbles: true })
+        );
+        document.dispatchEvent(new Event("readystatechange"));
+        window.dispatchEvent(new Event("load"));
+
         initialized = true;
       }
       window.addEventListener("message", (event) => {

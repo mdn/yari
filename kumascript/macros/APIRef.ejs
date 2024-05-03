@@ -165,6 +165,17 @@ function getPageTitle(page) {
   return title;
 }
 
+async function smartLinkWithBadges(url, content) {
+  let aPage = await wiki.getPage(url);
+  if (!aPage.title && env.locale !== 'en-US') {
+    const originalUrl = url.replace(`/${env.locale}/`, "/en-US/");
+    aPage = await wiki.getPage(originalUrl);
+  }
+  const link = web.smartLink(url, null, content, APIHref, null, "APIRef");
+  const badges = (await page.badges(aPage)).join("");
+  return link + badges;
+}
+
 async function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
 
@@ -175,7 +186,7 @@ async function buildSublist(pages, title) {
     const title = getPageTitle(aPage);
 
     result += '<li>';
-    
+
     const pageBadges = (await page.badges(aPage)).join("");
 
     if (rtlLocales.indexOf(locale) != -1) {
@@ -185,8 +196,7 @@ async function buildSublist(pages, title) {
     if (slug == aPage.slug) {
         result += `<em><code>${title}</code> ${pageBadges}</em>`
     } else {
-        result += web.smartLink(url, null, `<code>${title}</code>`, APIHref, null, "APIRef");
-        result += pageBadges;
+        result += await smartLinkWithBadges(url, `<code>${title}</code>`);
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
@@ -201,12 +211,14 @@ async function buildSublist(pages, title) {
   return result;
 }
 
-function buildIFList(interfaces, title) {
-  var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
+async function buildIFList(interfaces, title) {
+  let result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
 
   for (var i = 0; i < interfaces.length; i++) {
-    var url = interfaces[i].replace('()', '').replace('.', '/');
-    result += `<li>${web.smartLink(APIHref + '/' + url, null, `<code>${interfaces[i]}</code>`, APIHref, null, "APIRef")}</li>`;
+    var url = APIHref + '/' + interfaces[i].replace('()', '').replace('.', '/');
+    if (!url.endsWith(slug)) {
+      result += `<li>${await smartLinkWithBadges(url, `<code>${interfaces[i]}</code>`)}</li>`;
+    }
   }
 
   result += '</ol></details></li>';
@@ -217,10 +229,10 @@ function buildIFList(interfaces, title) {
 // output
 output = '<section id="Quick_links" data-macro="APIRef"><ol>';
 if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
-  output += `<li><strong>${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref, null, "APIRef")}</strong></li>`;
+  output += `<li class="section">${await smartLinkWithBadges(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), webAPIGroups[0][group].overview[0])}</li>`;
 }
 
-output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref, null, "APIRef")}</strong></li>`;
+output += `<li class="section">${await smartLinkWithBadges(APIHref + '/' + mainIF, `<code>${mainIF}</code>`)}</li>`;
 
 if (ctors.length > 0) {
   output += await buildSublist(ctors, text['Constructor']);
@@ -241,14 +253,14 @@ if (events.length > 0) {
   output += await buildSublist(events, text['Events']);
 }
 if (inh.length > 0) {
-  output += buildIFList(inheritedIF, text['Inheritance']);
+  output += await buildIFList(inheritedIF, text['Inheritance']);
 }
 if (implementedBy.length > 0) {
-  output += buildIFList(implementedBy, text['Implemented_by']);
+  output += await buildIFList(implementedBy, text['Implemented_by']);
 }
 
 if (related.length > 0) {
-  output += buildIFList(related, text['Related']);
+  output += await buildIFList(related, text['Related']);
 }
 
 output += '</ol></section>';

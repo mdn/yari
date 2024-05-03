@@ -213,10 +213,6 @@
   .section-content {
     p {
       font: var(--type-article-p);
-
-      &:last-child {
-        margin-bottom: 2rem;
-      }
     }
 
     figure {
@@ -544,7 +540,6 @@ pre {
 
 .callout {
   background: var(--background-secondary);
-  border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   display: flex;
@@ -946,4 +941,44 @@ kbd {
     color: var(--text-primary);
     opacity: 0.4;
   }
+}
+
+html a.only-in-en-us:after {
+  content: "(en-US)";
+  font-size: smaller;
+  vertical-align: super;
+}
+
+html[lang="es"] a.only-in-en-us:after {
+  content: "(inglés)";
+}
+
+html[lang="fr"] a.only-in-en-us:after {
+  content: "(angl.)";
+}
+
+html[lang="ja"] a.only-in-en-us:after {
+  content: "(英語)";
+}
+
+html[lang="ko"] a.only-in-en-us:after {
+  content: "(영어)";
+}
+
+html[lang="ru"] a.only-in-en-us:after {
+  content: "(англ.)";
+}
+
+html[lang="pt-BR"] a.only-in-en-us:after {
+  content: "(inglês)";
+}
+
+html[lang="zh-CN"] a.only-in-en-us:after {
+  content: "（英语）";
+  vertical-align: baseline;
+}
+
+html[lang="zh-TW"] a.only-in-en-us:after {
+  content: "（英語）";
+  vertical-align: baseline;
 }

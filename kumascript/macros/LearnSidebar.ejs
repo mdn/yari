@@ -285,8 +285,8 @@ const l10nStrings = mdn.localStringMap({
       'Accessibility_guides' : 'Accessibility guides',
       'Accessibility_assessment' : 'Accessibility assessment',
     'Tools_and_testing' : 'ツールとテスト',
-      'Cross_browser_testing' : 'Cross browser testing',
-      'Git_and_GitHub' : 'Git and GitHub',
+      'Cross_browser_testing' : 'ブラウザー横断テスト',
+      'Git_and_GitHub' : 'Git と GitHub',
       'Client-side_web_development_tools' : 'クライアントサイドウェブ開発ツール',
       'Introduction_to_client-side_frameworks': 'クライアントサイドフレームワークの概要',
       'React': 'React',
@@ -294,10 +294,10 @@ const l10nStrings = mdn.localStringMap({
       'Vue': 'Vue',
       'Svelte': 'Svelte',
       'Angular': 'Angular',
-    'Server-side_website_programming' : 'Server-side website programming',
-      'First_steps' : 'First steps',
-      'Django_web_framework_(Python)' : 'Django web framework (Python)',
-      'Express_Web_Framework_(Node.js_JavaScript)' : 'Express Web Framework (Node.js/JavaScript)',
+    'Server-side_website_programming' : 'サーバーサイドウェブサイトプログラミング',
+      'First_steps' : 'サーバーサイドのウェブサイトプログラミングの第一歩',
+      'Django_web_framework_(Python)' : 'Django ウェブフレームワーク (Python)',
+      'Express_Web_Framework_(Node.js_JavaScript)' : 'Express ウェブフレームワーク (Node.js/JavaScript)',
     'Further_resources': 'Further resources',
       'Common_questions': 'Common questions',
   },
@@ -858,7 +858,7 @@ async function renderSubsection(subsection) {
 }
 
 async function renderSection(section) {
-  let output = `<li><a href="${baseURL}${section.link}"><strong>${l10nStrings[section.name]}</strong></a></li>`;
+  let output = `<li class="section"><a href="${baseURL}${section.link}">${l10nStrings[section.name]}</a></li>`;
 
   for (const subsection of section.subsections) {
     output += await renderSubsection(subsection);

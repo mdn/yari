@@ -1,14 +1,17 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import { renderToString } from "react-dom/server";
 import { HydrationData } from "../libs/types/hydration";
 
-import { DEFAULT_LOCALE } from "../libs/constants";
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT, BASE_URL } from "../libs/env";
+import { DEFAULT_LOCALE } from "../libs/constants/index";
+import {
+  ALWAYS_ALLOW_ROBOTS,
+  BASE_URL,
+  WEBFONT_TAGS,
+  GTAG_PATH,
+} from "./include";
 
-const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import HTML from "../client/build/index.html?raw";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -75,73 +78,24 @@ const lazy = (creator) => {
 };
 
 // Path strings are preferred over URLs here to mitigate Webpack resolution
-const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
-  let html = fs.readFileSync(path.join(clientBuildRoot, "index.html"), "utf-8");
-  if (!html.includes('<div id="root"></div>')) {
+  if (!HTML.includes('<div id="root"></div>')) {
     throw new Error(
       'The render depends on being able to inject into <div id="root"></div>'
     );
   }
   const scripts: string[] = [];
-  const gaScriptPathName = getGAScriptPathName();
+  const gaScriptPathName = GTAG_PATH;
   if (gaScriptPathName) {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
   }
 
-  html = html.replace('<meta name="SSR_SCRIPTS"/>', () => scripts.join(""));
+  const html = HTML.replace('<meta name="SSR_SCRIPTS"/>', () =>
+    scripts.join("")
+  );
   return html;
 });
-
-const getGAScriptPathName = lazy((relPath = "/static/js/gtag.js") => {
-  // Return the relative path if there exists a `BUILD_ROOT/static/js/gtag.js`.
-  // If the file doesn't exist, return falsy.
-  // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
-  // based on `dirname` but that's wrong when compared as a source and as
-  // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
-  let root = BUILD_OUT_ROOT;
-  if (!fs.existsSync(root)) {
-    root = root
-      .split(path.sep)
-      .filter((x) => x !== "ssr")
-      .join(path.sep);
-  }
-  const filePath = relPath.split("/").slice(1).join(path.sep);
-  if (fs.existsSync(path.join(root, filePath))) {
-    return relPath;
-  }
-  return null;
-});
-
-const extractWebFontURLs = lazy(() => {
-  const urls: string[] = [];
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
-  );
-  for (const entrypoint of manifest.entrypoints) {
-    if (!entrypoint.endsWith(".css")) continue;
-    const css = fs.readFileSync(
-      path.join(clientBuildRoot, entrypoint),
-      "utf-8"
-    );
-    const generator = extractCSSURLs(
-      css,
-      (url) => url.endsWith(".woff2") && /Bold/i.test(url)
-    );
-    urls.push(...generator);
-  }
-  return urls;
-});
-
-function* extractCSSURLs(css, filterFunction) {
-  for (const match of css.matchAll(/url\((.*?)\)/g)) {
-    const url = match[1];
-    if (filterFunction(url)) {
-      yield url;
-    }
-  }
-}
 
 export default function render(
   renderApp,
@@ -158,7 +112,6 @@ export default function render(
   }: HydrationData = {}
 ) {
   const buildHtml = readBuildHTML();
-  const webfontURLs = extractWebFontURLs();
   const rendered = renderToString(renderApp);
 
   let canonicalURL = BASE_URL;
@@ -226,12 +179,6 @@ export default function render(
   }
 
   const titleTag = `<title>${escapedPageTitle || "MDN Web Docs"}</title>`;
-  const webfontTags = webfontURLs
-    .map(
-      (url) =>
-        `<link rel="preload" as="font" type="font/woff2" href="${url}" crossorigin>`
-    )
-    .join("");
 
   // Open Graph protocol expects `language_TERRITORY` format.
   const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
@@ -270,7 +217,7 @@ export default function render(
       : "index, follow";
   const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
   const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
-  const ssr_data = [...translations, ...webfontTags, rssLink, robotsMeta];
+  const ssr_data = [...translations, ...WEBFONT_TAGS, rssLink, robotsMeta];
   let html = buildHtml;
   html = html.replace(
     '<html lang="en"',

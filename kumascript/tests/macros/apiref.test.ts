@@ -510,7 +510,7 @@ async function checkResult(html, config) {
   expect(num_valid_links).toEqual(num_total_links);
 
   // Test main interface link
-  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li>strong>a");
+  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li.section>a");
   expect(mainIfLink.textContent).toEqual(config.expected.mainIfLink.text);
 
   if (mainIfLink.href !== "") {
@@ -684,6 +684,9 @@ describeMacro("APIRef", function () {
     macro.ctx.page.subpagesExpand = jest.fn((page) => {
       expect(page).toEqual("/en-US/docs/Web/API/TestInterface");
       return subpagesFixture;
+    });
+    macro.ctx.wiki.getPage = jest.fn((url) => {
+      return subpagesFixture.find((doc) => doc.url === url) ?? {};
     });
   });
 

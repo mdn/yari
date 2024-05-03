@@ -13,10 +13,6 @@
     }
   }
 
-  h3 {
-    margin-top: 0;
-  }
-
   h3 span.page {
     color: var(--text-inactive);
   }
@@ -38,6 +34,21 @@
 
   table {
     width: 100%;
+
+    th.sortable {
+      cursor: pointer;
+    }
+
+    th.sortable.active {
+      background-color: var(--background-secondary);
+      color: var(--text-primary);
+    }
+
+    th.sortable.active.reverse {
+      .icon {
+        transform: rotate(-180deg);
+      }
+    }
 
     td a .url-prefix {
       color: rgb(159, 159, 159);
@@ -89,7 +100,6 @@
     gap: 20px;
     grid-template-columns: 300px 1fr;
     margin: auto;
-    width: calc(100% - 40px);
 
     .filters {
       h4 {
@@ -103,16 +113,6 @@
         li {
           list-style: none;
         }
-      }
-    }
-
-    .documents {
-      h4.subheader {
-        margin-top: 2px;
-      }
-
-      th.sortable {
-        cursor: ns-resize;
       }
     }
   }
