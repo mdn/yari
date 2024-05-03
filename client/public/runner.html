@@ -59,13 +59,16 @@
         dummy.innerHTML = html;
         const scripts = dummy.querySelectorAll("script[src]");
 
-        const loaded = [...scripts].map((scrpt) => new Promise((resolve) => {
-          const script = document.createElement("script");
-          script.src = scrpt.src;
-          script.addEventListener("load", () => resolve());
+        const loaded = [...scripts].map(
+          (scrpt) =>
+            new Promise((resolve) => {
+              const script = document.createElement("script");
+              script.src = scrpt.src;
+              script.addEventListener("load", () => resolve());
 
-          document.head.appendChild(script);
-        }));
+              document.head.appendChild(script);
+            })
+        );
 
         await Promise.all(loaded);
       }
