@@ -948,6 +948,7 @@ html a.only-in-en-us {
 
   &:after {
     content: "(en-US)";
+    display: inline-block;
     font-size: smaller;
     vertical-align: super;
   }
