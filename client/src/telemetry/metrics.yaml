@@ -150,9 +150,9 @@ navigator:
     data_sensitivity:
       - web_activity
     bugs:
-      - https://bugzilla.mozilla.org/show_bug.cgi?id=xxx
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1894992
     data_reviews:
-      - https://github.com/mdn/yari/pull/xxx
+      - https://github.com/mdn/yari/pull/11065
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2024-09-05
