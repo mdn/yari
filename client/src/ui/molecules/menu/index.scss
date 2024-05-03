@@ -2,7 +2,7 @@
   &.active > a {
     &:link,
     &:visited {
-      color: var(--text-active);
+      color: var(--text-inactive);
     }
 
     &:hover,
