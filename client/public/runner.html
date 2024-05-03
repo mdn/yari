@@ -104,7 +104,7 @@
       }
 
       let initialized = false;
-      function init(state) {
+      async function init(state) {
         if (initialized) {
           return;
         }
@@ -116,6 +116,13 @@
 
         document.body.innerHTML = "";
         setHTML(document.body, state.html);
+
+        for (const script of document.querySelectorAll("script[src]")) {
+          await new Promise((resolve) => {
+            script.addEventListener("load", () => resolve());
+            script.addEventListener("error", () => resolve());
+          });
+        }
 
         const script = document.createElement("script");
         script.textContent = state.js;
@@ -129,10 +136,10 @@
 
         initialized = true;
       }
-      window.addEventListener("message", (event) => {
+      window.addEventListener("message", async (event) => {
         const e = event.data;
         if (e.typ === "init") {
-          init(e.state);
+          await init(e.state);
         }
         if (e.typ === "reload") {
           window.location.reload();
