@@ -1,10 +1,9 @@
 .top-level-entry-container {
-  &:not(.active) > a {
-    &:link,
-    &:visited {
-      color: var(--text-inactive);
-    }
+  &:not(.active):not(:hover) {
+    opacity: 0.775;
+  }
 
+  &:not(.active) > a {
     &:hover,
     &:active {
       color: var(--category-color);
