@@ -54,25 +54,6 @@
       window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
 
-      async function loadExternalScripts(html) {
-        const dummy = document.createElement("div");
-        dummy.innerHTML = html;
-        const scripts = dummy.querySelectorAll("script[src]");
-
-        const loaded = [...scripts].map(
-          (scrpt) =>
-            new Promise((resolve) => {
-              const script = document.createElement("script");
-              script.src = scrpt.src;
-              script.addEventListener("load", () => resolve());
-
-              document.head.appendChild(script);
-            })
-        );
-
-        await Promise.all(loaded);
-      }
-
       function setHTML(parent, html) {
         const dummy = parent.cloneNode(false);
         dummy.innerHTML = html;
@@ -86,10 +67,6 @@
               continue;
             }
             if (child.nodeType !== Node.ELEMENT_NODE) {
-              continue;
-            }
-            if (child.nodeName === "SCRIPT" && child.src) {
-              // Script tags with `src` are handled in `loadExternalScripts()`.
               continue;
             }
 
@@ -137,10 +114,15 @@
         style.textContent = state.css;
         document.head.appendChild(style);
 
-        await loadExternalScripts(state.html);
-
         document.body.innerHTML = "";
         setHTML(document.body, state.html);
+
+        for (const script of document.querySelectorAll("script[src]")) {
+          await new Promise((resolve) => {
+            script.addEventListener("load", () => resolve());
+            script.addEventListener("error", () => resolve());
+          });
+        }
 
         const script = document.createElement("script");
         script.textContent = state.js;
