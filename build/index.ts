@@ -44,6 +44,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { getWebFeatureStatus } from "./web-features.js";
+import { rewritePageTitleForSEO } from "./seo.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -524,26 +525,7 @@ export async function buildDocument(
 
   doc.modified = metadata.modified || null;
 
-  const otherTranslations = document.translations || [];
-  if (!otherTranslations.length && metadata.translation_of) {
-    // If built just-in-time, we won't have a record of all the other translations
-    // available. But if the current document has a translation_of, we can
-    // at least use that.
-    const translationOf = Document.findByURL(
-      `/en-US/docs/${metadata.translation_of}`
-    );
-    if (translationOf) {
-      otherTranslations.push({
-        locale: "en-US",
-        title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us")?.native,
-      });
-    }
-  }
-
-  if (otherTranslations.length) {
-    doc.other_translations = otherTranslations;
-  }
+  doc.other_translations = document.translations || [];
 
   injectSource(doc, document, metadata);
 
@@ -555,7 +537,8 @@ export async function buildDocument(
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  doc.pageTitle = getPageTitle(doc);
+  const pageTitle = getPageTitle(doc);
+  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =

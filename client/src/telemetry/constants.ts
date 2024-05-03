@@ -4,6 +4,7 @@ export const OFFER_OVERVIEW_CLICK = "offer_overview_click";
 export const SIDEBAR_CLICK = "sidebar_click";
 export const SIDEBAR_CLICK_WITH_FILTER = "sidebar_click_with_filter";
 export const SIDEBAR_FILTER_FOCUS = "sidebar_filter_focus";
+export const SIDEBAR_FILTER_TYPED = "sidebar_filter_typed";
 export const TOC_CLICK = "toc_click";
 /** Replaced "top_nav_already_subscriber" in July 2023. */
 export const TOP_NAV_LOGIN = "top_nav: login";
@@ -23,6 +24,8 @@ export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
+
+export const A11Y_MENU = "a11y_menu";
 
 export const MENU = Object.freeze({
   CLICK_LINK: "menu_click_link",
@@ -63,6 +66,8 @@ export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
     ["sm", 426],
     ["xs", 0],
   ]);
+
+export const ARTICLE_FOOTER = "article_footer";
 export const THUMBS = "thumbs";
 
 export const BASELINE = Object.freeze({
@@ -71,3 +76,7 @@ export const BASELINE = Object.freeze({
   LINK_BCD_TABLE: "baseline_link_bcd_table",
   LINK_FEEDBACK: "baseline_link_feedback",
 });
+
+export const CLIENT_SIDE_NAVIGATION = "client_side_nav";
+export const LANGUAGE = "language";
+export const THEME_SWITCHER = "theme_switcher";

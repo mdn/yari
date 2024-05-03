@@ -15,6 +15,7 @@ import printBuildError from "react-dev-utils/printBuildError.js";
 
 import configFactory from "../config/webpack.config.js";
 import paths from "../config/paths.js";
+import { hashSomeStaticFilesForClientBuild } from "./postprocess-client-build.js";
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -120,6 +121,17 @@ checkBrowsers(paths.appPath, isInteractive)
       }
     }
   )
+  .then(async () => {
+    const { results } = await hashSomeStaticFilesForClientBuild(paths.appBuild);
+    console.log(
+      chalk.green(
+        `Hashed ${results.length} files in ${path.join(
+          paths.appBuild,
+          "index.html"
+        )}`
+      )
+    );
+  })
   .catch((err) => {
     if (err && err.message) {
       console.log(err.message);

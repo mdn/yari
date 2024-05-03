@@ -24,6 +24,10 @@ import { BLOG_ROOT } from "../libs/env/index.js";
 
 const { default: imageminPngquant } = imageminPngquantPkg;
 
+export function escapeRegExp(str: string) {
+  return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+}
+
 export function humanFileSize(size: number) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
@@ -240,6 +244,40 @@ export function postProcessExternalLinks($) {
 }
 
 /**
+ * For every `<a href="... curriculum ... .md ...">` remove the ".md"
+ */
+export function postProcessCurriculumLinks(
+  $: cheerio.CheerioAPI,
+  toUrl: (x?: string) => string
+) {
+  // expand relative links
+  $("a[href^=.]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", toUrl($a.attr("href")));
+  });
+
+  // remove trailing .md for /en-US/curriculum/*
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "$1/$2"));
+  });
+
+  // remove trailing .md and add locale for /curriculum/*
+  $("a[href^=/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
+  });
+
+  // remove leading numbers for /en-US/curriculum/*
+  // /en-US/curriculum/2-core/ -> /en-US/curriculum/core/
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    const [head, hash] = $a.attr("href")?.split("#") || [];
+    $a.attr("href", `${head.replace(/\d+-/g, "")}${hash ? `#${hash}` : ""}`);
+  });
+}
+
+/**
  * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
  * `<a href="$CURRENT_PATH/THING">`
  *
@@ -294,7 +332,7 @@ export function postProcessSmallerHeadingIDs($) {
  *
  * @param {Document} doc
  */
-export function makeTOC(doc) {
+export function makeTOC(doc, withH3 = false) {
   return doc.body
     .map((section) => {
       if (
@@ -303,7 +341,7 @@ export function makeTOC(doc) {
           section.type === "specifications") &&
         section.value.id &&
         section.value.title &&
-        !section.value.isH3
+        (!section.value.isH3 || withH3)
       ) {
         return { text: section.value.title, id: section.value.id };
       }
@@ -314,10 +352,8 @@ export function makeTOC(doc) {
 
 export function findPostFileBySlug(slug: string): string | null {
   if (!BLOG_ROOT) {
-    console.warn("'BLOG_ROOT' not set in .env file");
     return null;
   }
-
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",

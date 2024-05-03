@@ -10,6 +10,16 @@ import { VALID_FLAW_CHECKS } from "../constants/index.js";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = path.join(dirname, "..", "..");
 
+function parse(value) {
+  try {
+    return JSON.parse(value);
+  } catch (e) {
+    throw new Error(`Error parsing value '${value}' in .env file: `, {
+      cause: e,
+    });
+  }
+}
+
 dotenv.config({
   path: path.join(cwd(), process.env.ENV_FILE || ".env"),
 });
@@ -28,16 +38,13 @@ export const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 export const FILES = process.env.BUILD_FILES || "";
 export const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
-export const GOOGLE_ANALYTICS_ACCOUNT =
-  process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
-export const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
-  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
-);
+export const GOOGLE_ANALYTICS_MEASUREMENT_ID =
+  process.env.BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID || "";
 export const NO_PROGRESSBAR = Boolean(
-  JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
+  parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
-export const FIX_FLAWS = JSON.parse(process.env.BUILD_FIX_FLAWS || "false");
-export const FIX_FLAWS_DRY_RUN = JSON.parse(
+export const FIX_FLAWS = parse(process.env.BUILD_FIX_FLAWS || "false");
+export const FIX_FLAWS_DRY_RUN = parse(
   process.env.BUILD_FIX_FLAWS_DRY_RUN || "false"
 );
 export const FIX_FLAWS_TYPES = new Set(
@@ -53,14 +60,14 @@ if ([...FIX_FLAWS_TYPES].some((flawType) => !VALID_FLAW_CHECKS.has(flawType))) {
   );
 }
 
-export const FIX_FLAWS_VERBOSE = JSON.parse(
+export const FIX_FLAWS_VERBOSE = parse(
   // It's on by default because it's such a sensible option to always have
   // on.
   process.env.BUILD_FIX_FLAWS_VERBOSE || "true"
 );
 
 // See explanation in docs/envvars.md
-export const ALWAYS_ALLOW_ROBOTS = JSON.parse(
+export const ALWAYS_ALLOW_ROBOTS = parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
@@ -82,6 +89,8 @@ export const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
 
 export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
 
+export const CURRICULUM_ROOT = correctPathFromEnv("CURRICULUM_ROOT");
+
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.
 // E.g. `'https://github.com/' + REPOSITORY_URLS[document.fileInfo.root]`
@@ -98,12 +107,20 @@ if (CONTENT_TRANSLATED_ROOT) {
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
-function correctContentPathFromEnv(envVarName) {
+function correctPathFromEnv(envVarName) {
   let pathName = process.env[envVarName];
   if (!pathName) {
     return;
   }
   pathName = fs.realpathSync(pathName);
+  return pathName;
+}
+
+function correctContentPathFromEnv(envVarName) {
+  let pathName = correctPathFromEnv(envVarName);
+  if (!pathName) {
+    return;
+  }
   if (
     path.basename(pathName) !== "files" &&
     fs.existsSync(path.join(pathName, "files"))
@@ -123,7 +140,7 @@ function correctContentPathFromEnv(envVarName) {
 // filecheck
 // ---------
 
-export const MAX_FILE_SIZE = JSON.parse(
+export const MAX_FILE_SIZE = parse(
   process.env.FILECHECK_MAX_FILE_SIZE || 500 * 1024 // 500KiB
 );
 
@@ -161,7 +178,7 @@ export const PROXY_HOSTNAME =
 export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
 export const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
 
-export const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
+export const FAKE_V1_API = parse(process.env.SERVER_FAKE_V1_API || false);
 
 // ----
 // tool
@@ -173,3 +190,15 @@ export const PG_URI = process.env.PG_URI || "";
 export const SAMPLE_SIGN_KEY = process.env.BUILD_SAMPLE_SIGN_KEY
   ? Buffer.from(process.env.BUILD_SAMPLE_SIGN_KEY, "base64")
   : null;
+
+const CRUD_MODE =
+  process.env.REACT_APP_WRITER_MODE || process.env.REACT_APP_DEV_MODE
+    ? false
+    : Boolean(
+        JSON.parse(
+          process.env.REACT_APP_CRUD_MODE ||
+            JSON.stringify(process.env.NODE_ENV === "development")
+        )
+      );
+export const DEV_MODE =
+  CRUD_MODE || Boolean(JSON.parse(process.env.REACT_APP_DEV_MODE || "false"));

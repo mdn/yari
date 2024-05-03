@@ -7,12 +7,35 @@ import { useLocation } from "react-router";
 
 import "./baseline-indicator.scss";
 
-import type { SupportStatus } from "../../../libs/types/web-features";
+import type {
+  SupportStatus,
+  browserIdentifier,
+} from "../../../libs/types/web-features";
 
-const ENGINES = [
-  { name: "Blink", browsers: ["Chrome", "Edge"] },
-  { name: "Gecko", browsers: ["Firefox"] },
-  { name: "WebKit", browsers: ["Safari"] },
+interface BrowserGroup {
+  name: string;
+  ids: browserIdentifier[];
+}
+
+const ENGINES: {
+  name: string;
+  browsers: BrowserGroup[];
+}[] = [
+  {
+    name: "Blink",
+    browsers: [
+      { name: "Chrome", ids: ["chrome", "chrome_android"] },
+      { name: "Edge", ids: ["edge"] },
+    ],
+  },
+  {
+    name: "Gecko",
+    browsers: [{ name: "Firefox", ids: ["firefox", "firefox_android"] }],
+  },
+  {
+    name: "WebKit",
+    browsers: [{ name: "Safari", ids: ["safari", "safari_ios"] }],
+  },
 ];
 
 const LOCALIZED_BCD_IDS = {
@@ -52,25 +75,27 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     pathname
   )}&level=${level}`;
 
-  const supported = (browser: string) => {
-    const version: string | undefined = status.support?.[browser.toLowerCase()];
-    return Boolean(status.baseline || version);
+  const supported = (browser: BrowserGroup) => {
+    return browser.ids
+      .map((id) => status.support?.[id])
+      .every((version) => Boolean(version));
   };
 
-  const engineTitle = (browsers: string[]) =>
+  const engineTitle = (browsers: BrowserGroup[]) =>
     browsers
       .map((browser, index, array) => {
         const previous = index > 0 ? supported(array[index - 1]) : undefined;
         const current = supported(browser);
+        const name = browser.name;
         return typeof previous === "undefined"
           ? current
-            ? `Supported in ${browser}`
-            : `Not widely supported in ${browser}`
+            ? `Supported in ${name}`
+            : `Not widely supported in ${name}`
           : current === previous
-            ? ` and ${browser}`
+            ? ` and ${name}`
             : current
-              ? `, and supported in ${browser}`
-              : `, and not widely supported in ${browser}`;
+              ? `, and supported in ${name}`
+              : `, and not widely supported in ${name}`;
       })
       .join("");
 
@@ -105,12 +130,12 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
             <span key={name} className="engine" title={engineTitle(browsers)}>
               {browsers.map((browser) => (
                 <span
-                  key={browser}
-                  className={`browser ${browser.toLowerCase()} ${
+                  key={browser.ids[0]}
+                  className={`browser ${browser.ids[0]} ${
                     supported(browser) ? "supported" : ""
                   }`}
                   role="img"
-                  aria-label={`${browser} ${
+                  aria-label={`${browser.name} ${
                     supported(browser) ? "check" : "cross"
                   }`}
                 />

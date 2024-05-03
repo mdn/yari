@@ -97,8 +97,8 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Firefox_releases"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Firefox/Releases"><%=text["Firefox_release_notes_developer"]%></a></li>
-              <li><a href="<%=baseURL%>Firefox/Experimental_features"><%=text["Experimental_features_firefox"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Firefox/Releases`, null, text["Firefox_release_notes_developer"])%></li>
+              <li><%-web.smartLink(`${baseURL}Firefox/Experimental_features`, null, text["Experimental_features_firefox"])%></li>
             </ol>
         </details>
     </li>
@@ -106,8 +106,8 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Add-ons"]%></summary>
             <ol>
-              <li><a href="<%=addonsURL%>WebExtensions"><%=text["Browser_extensions"]%></a></li>
-              <li><a href="<%=addonsURL%>Themes"><%=text["Themes"]%></a></li>
+              <li><%-web.smartLink(`${addonsURL}WebExtensions`, null, text["Browser_extensions"])%></li>
+              <li><%-web.smartLink(`${addonsURL}Themes`, null, text["Themes"])%></li>
             </ol>
         </details>
     </li>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useGA } from "../../../../ga-context";
+import { useGleanClick } from "../../../../telemetry/glean-context";
 import { Translation } from "../../../../../../libs/types/document";
 import { Button } from "../../../atoms/button";
 import { Submenu } from "../../../molecules/submenu";
@@ -9,6 +9,7 @@ import { Submenu } from "../../../molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
+import { LANGUAGE } from "../../../../telemetry/constants";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -23,7 +24,7 @@ export function LanguageMenu({
   native: string;
 }) {
   const menuId = "language-menu";
-  const ga = useGA();
+  const gleanClick = useGleanClick();
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -56,14 +57,8 @@ export function LanguageMenu({
         }
       }
 
-      ga("send", {
-        hitType: "event",
-        eventCategory: "Language",
-        eventAction: `Change preferred language (cookie before: ${
-          cookieValueBefore || "none"
-        })`,
-        eventLabel: `${window.location.pathname} to ${event.currentTarget.href}`,
-      });
+      const oldValue = cookieValueBefore || "none";
+      gleanClick(`${LANGUAGE}: ${oldValue} -> ${preferredLocale}`);
     }
   };
 
@@ -100,7 +95,7 @@ export function LanguageMenu({
         {native}
       </Button>
 
-      <DropdownMenu>
+      <DropdownMenu alwaysRenderChildren>
         <Submenu menuEntry={menuEntry} />
       </DropdownMenu>
     </DropdownMenuWrapper>

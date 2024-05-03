@@ -2,8 +2,7 @@
   --note-background: var(--background-information);
   --note-theme: var(--icon-information);
   background-color: var(--note-background);
-  border: 1px solid var(--border-secondary);
-  border-left: 4px solid var(--note-theme);
+  border-left: 2px solid var(--note-theme);
   border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   margin: 1rem 0;
@@ -18,7 +17,7 @@
 
   p {
     line-height: 2;
-    margin: 0 !important;
+    margin: 0;
   }
 
   &:before {

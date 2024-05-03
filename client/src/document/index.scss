@@ -213,10 +213,6 @@
   .section-content {
     p {
       font: var(--type-article-p);
-
-      &:last-child {
-        margin-bottom: 2rem;
-      }
     }
 
     figure {
@@ -254,10 +250,13 @@
 
   @media screen and (min-width: $screen-sm) {
     padding: 3rem;
+    // Reduce space to article footer.
+    padding-bottom: 0;
   }
 
   @media screen and (min-width: $screen-md) {
-    margin-bottom: 0.5rem;
+    // Reduce space to article footer.
+    margin-bottom: 0;
     padding: 0;
   }
 }
@@ -276,7 +275,7 @@ table {
   width: 100%;
 
   th {
-    background: var(--background-tertiary);
+    background: var(--background-primary);
     font-weight: var(--font-body-strong-weight);
     line-height: 1.5;
     text-align: left;
@@ -541,7 +540,6 @@ pre {
 
 .callout {
   background: var(--background-secondary);
-  border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   display: flex;
@@ -783,6 +781,7 @@ pre {
     margin-top: -0.1rem;
     mask-image: url("../assets/clippy.svg");
     mask-size: cover;
+    padding: 0;
     width: 1rem;
 
     &:hover,
@@ -942,4 +941,44 @@ kbd {
     color: var(--text-primary);
     opacity: 0.4;
   }
+}
+
+html a.only-in-en-us:after {
+  content: "(en-US)";
+  font-size: smaller;
+  vertical-align: super;
+}
+
+html[lang="es"] a.only-in-en-us:after {
+  content: "(inglés)";
+}
+
+html[lang="fr"] a.only-in-en-us:after {
+  content: "(angl.)";
+}
+
+html[lang="ja"] a.only-in-en-us:after {
+  content: "(英語)";
+}
+
+html[lang="ko"] a.only-in-en-us:after {
+  content: "(영어)";
+}
+
+html[lang="ru"] a.only-in-en-us:after {
+  content: "(англ.)";
+}
+
+html[lang="pt-BR"] a.only-in-en-us:after {
+  content: "(inglês)";
+}
+
+html[lang="zh-CN"] a.only-in-en-us:after {
+  content: "（英语）";
+  vertical-align: baseline;
+}
+
+html[lang="zh-TW"] a.only-in-en-us:after {
+  content: "（英語）";
+  vertical-align: baseline;
 }

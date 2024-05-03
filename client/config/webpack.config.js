@@ -58,11 +58,6 @@ const imageInlineSizeLimit = 0; // our CSP doesn't support inline images
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
-// Check if Tailwind config exists
-const useTailwind = fs.existsSync(
-  path.join(paths.appPath, "tailwind.config.js")
-);
-
 // Get the path to the uncompiled service worker (if it exists).
 const swSrc = paths.swSrc;
 
@@ -100,7 +95,7 @@ function config(webpackEnv) {
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
   // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
   // Get environment variables to inject into our app.
-  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
+  const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
 
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
@@ -131,36 +126,22 @@ function config(webpackEnv) {
             // https://github.com/facebook/create-react-app/issues/2677
             ident: "postcss",
             config: false,
-            plugins: !useTailwind
-              ? [
-                  "postcss-flexbugs-fixes",
-                  [
-                    "postcss-preset-env",
-                    {
-                      autoprefixer: {
-                        flexbox: "no-2009",
-                      },
-                      stage: 3,
-                    },
-                  ],
-                  // Adds PostCSS Normalize as the reset css with default options,
-                  // so that it honors browserslist config in package.json
-                  // which in turn let's users customize the target behavior as per their needs.
-                  "postcss-normalize",
-                ]
-              : [
-                  "tailwindcss",
-                  "postcss-flexbugs-fixes",
-                  [
-                    "postcss-preset-env",
-                    {
-                      autoprefixer: {
-                        flexbox: "no-2009",
-                      },
-                      stage: 3,
-                    },
-                  ],
-                ],
+            plugins: [
+              "postcss-flexbugs-fixes",
+              [
+                "postcss-preset-env",
+                {
+                  autoprefixer: {
+                    flexbox: "no-2009",
+                  },
+                  stage: 3,
+                },
+              ],
+              // Adds PostCSS Normalize as the reset css with default options,
+              // so that it honors browserslist config in package.json
+              // which in turn let's users customize the target behavior as per their needs.
+              "postcss-normalize",
+            ],
           },
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
         },
@@ -720,9 +701,6 @@ function config(webpackEnv) {
               { file: "**/src/setupProxy.*" },
               { file: "**/src/setupTests.*" },
             ],
-          },
-          logger: {
-            infrastructure: "silent",
           },
         }),
       !disableESLintPlugin &&

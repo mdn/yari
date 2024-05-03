@@ -91,7 +91,7 @@ function glean(): GleanAnalytics {
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
-    maxEvents: 1,
+    enableAutoPageLoadEvents: true,
     channel: GLEAN_CHANNEL,
     migrateFromLegacyStorage: true,
     serverEndpoint: DEV_MODE
@@ -101,8 +101,8 @@ function glean(): GleanAnalytics {
 
   if (DEV_MODE) {
     Glean.setDebugViewTag("mdn-dev");
+    Glean.setLogPings(GLEAN_DEBUG);
   }
-  Glean.setLogPings(GLEAN_DEBUG);
 
   const gleanContext = {
     page: (page: PageProps) => {
@@ -172,14 +172,14 @@ const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
-  const button = ev?.target;
+  const button = (ev?.target as HTMLElement | null)?.closest("button");
   if (button instanceof HTMLButtonElement && button.dataset.glean) {
     click(button.dataset.glean);
   }
 }
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
-  const anchor = ev?.target;
+  const anchor = (ev?.target as HTMLElement | null)?.closest("a");
   if (anchor instanceof HTMLAnchorElement) {
     if (anchor.dataset.glean) {
       click(anchor.dataset.glean);

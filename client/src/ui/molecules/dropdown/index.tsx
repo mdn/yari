@@ -54,9 +54,11 @@ export function DropdownMenuWrapper({
 
 export function DropdownMenu({
   children,
+  alwaysRenderChildren = false,
   onClose = () => {},
 }: {
   children: React.ReactNode;
+  alwaysRenderChildren?: boolean;
   onClose?: (event?: Event) => void;
 }) {
   const { isOpen, wrapperRef, close, disableAutoClose } =
@@ -82,7 +84,12 @@ export function DropdownMenu({
       onClose(event);
     }
   });
-  if (!isOpen) return null;
+
+  if (alwaysRenderChildren) {
+    return <div className={isOpen ? "contents" : "hidden"}>{children}</div>;
+  } else if (!isOpen) {
+    return null;
+  }
 
   return <>{children}</>;
 }

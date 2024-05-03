@@ -8,6 +8,7 @@ import {
 import useSWR from "swr";
 
 import { MainContentContainer } from "../../ui/atoms/page-content";
+import { Icon } from "../../ui/atoms/icon";
 import { useLocale } from "../../hooks";
 
 interface Data {
@@ -193,7 +194,7 @@ export function TranslationDashboard() {
       )}
       {error && <ShowError error={error} />}
       {lastData && (
-        <div className="filter-documents">
+        <div>
           <SectionHeader
             l10nKPIs={lastData.l10nKPIs}
             section={currentSection}
@@ -399,40 +400,62 @@ function DocumentsTable({
     return documentDetail;
   });
 
-  function TableHead({ id, title }: { id: string; title: string }) {
-    return (
-      <th
-        onClick={() => {
-          if (sort === id) {
-            setSearchParams(
-              createSearchParams({
-                sort: id,
-                sortReverse: JSON.stringify(!sortReverse),
-                section: currentSection,
-              })
-            );
-          } else {
-            setSearchParams(
-              createSearchParams({ sort: id, section: currentSection })
-            );
-          }
-        }}
-        className={`sortable ${sort === id ? "active" : ""} ${
-          sort === id && sortReverse ? "reverse" : ""
-        }`}
-      >
-        {title}
+  function TableHead({
+    id,
+    title,
+    sortable,
+  }: {
+    id: string;
+    title: string;
+    sortable?: boolean;
+  }) {
+    function getClassName() {
+      const className = ["sortable"];
+
+      if (sort === id) {
+        className.push("active");
+      }
+
+      if (sortReverse) {
+        className.push("reverse");
+      }
+
+      return className.join(" ");
+    }
+
+    function onClick() {
+      if (sort === id) {
+        setSearchParams(
+          createSearchParams({
+            sort: id,
+            sortReverse: JSON.stringify(!sortReverse),
+            section: currentSection,
+          })
+        );
+      } else {
+        setSearchParams(
+          createSearchParams({ sort: id, section: currentSection })
+        );
+      }
+    }
+
+    return sortable ? (
+      <th className={getClassName()} onClick={onClick}>
+        {title} <Icon name="small-arrow" />
       </th>
+    ) : (
+      <th>{title}</th>
     );
   }
 
   return (
     <section id="documents-table">
       <h3>List of direct subpages</h3>
+
       <table>
         <thead>
           <tr>
-            <TableHead id="url" title="Slug" />
+            <TableHead id="url" title="Slug" sortable />
             <TableHead id="enMDNURL" title="English doc on MDN" />
             <TableHead
               id="enCommitGHURL"
@@ -444,14 +467,20 @@ function DocumentsTable({
               id="localCommitGHURL"
               title="Localized doc commit on GitHub"
             />
-            <TableHead id="popularityEn" title="Popularity rank (en-US)" />
+            <TableHead
+              id="popularityEn"
+              title="Popularity rank (en-US)"
+              sortable
+            />
             <TableHead
               id="popularityLocale"
               title={`Popularity rank (${locale})`}
+              sortable
             />
-            <TableHead id="dateDiff" title="Date delta" />
+            <TableHead id="dateDiff" title="Date delta" sortable />
           </tr>
         </thead>
+
         <tbody>
           {documents
             .sort((A, B) => {

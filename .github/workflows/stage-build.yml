@@ -60,15 +60,50 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "next"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: stage
     runs-on: ubuntu-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    # We only ever want to deploy the `next` branch to stage.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'next' }}
 
     steps:
+      # Our usecase is a bit complicated. When the cron schedule runs this workflow,
+      # we rely on the env vars defined at the top of the file. But if it's a manual
+      # trigger we rely on the inputs and only the inputs. That way, the user can
+      # opt to type in 'false'.
+      # It's not possible to express this with GitHub Workflow syntax, so we
+      # have a dedicate set that conveniently sets these as env vars which we
+      # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
+      - name: Merge dispatch inputs with default env vars
+        run: |
+          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
+          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge main
+        run: |
+          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
+          git config --global user.name "mdn-bot"
+          git status
+          git pull
+          git checkout main
+          git status
+          git checkout -
+          git merge main --no-edit
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
@@ -89,17 +124,11 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      # Our usecase is a bit complicated. When the cron schedule runs this workflow,
-      # we rely on the env vars defined at the top of the file. But if it's a manual
-      # trigger we rely on the inputs and only the inputs. That way, the user can
-      # opt to type in 'false'.
-      # It's not possible to express this with GitHub Workflow syntax, so we
-      # have a dedicate set that conveniently sets these as env vars which we
-      # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
-      - name: Merge dispatch inputs with default env vars
-        run: |
-          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
-          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
@@ -169,6 +198,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.allizom.org"
 
           # The default for this environment variable is geared for writers
@@ -187,11 +217,11 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          # These are the Google Analytics measurement IDs for:
+          # - developer.mozilla.org (UA)
+          # - developer.allizom.org (GA4)
+          # Using measurement ids on other domains is okay, as GA will filter these events.
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5,G-ZG5HNVZRY0
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -245,11 +275,6 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          yarn tool popularities
-
           yarn tool sync-translated-content
 
           # Build using one process per locale.
@@ -270,6 +295,9 @@ jobs:
 
           # Build the blog
           yarn build:blog
+
+          # Build the curriculum
+          yarn build:curriculum
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
