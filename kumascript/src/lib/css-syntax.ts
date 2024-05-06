@@ -351,7 +351,7 @@ export async function getCSSSyntax(
           `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">[</a>`
         );
         name = name.replace(
-          /\](.?)$/,
+          /\]([^']?)$/,
           `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">]</a>$1`
         );
 
