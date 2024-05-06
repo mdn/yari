@@ -1633,7 +1633,7 @@ test("translated content broken links can fall back to en-us", () => {
   expect($('article a[href="/en-US/docs/Web/CSS/number"]')).toHaveLength(2);
   expect($("article a.only-in-en-us")).toHaveLength(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
-    "Currently only available in English (US)"
+    "Cette page est actuellement disponible uniquement en anglais"
   );
 });
 
