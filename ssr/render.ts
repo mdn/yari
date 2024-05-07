@@ -91,7 +91,7 @@ const readBuildHTML = lazy(() => {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
   }
 
-  const html = HTML.replace('<meta name="SSR_SCRIPTS"/>', () =>
+  const html = HTML.replace('<meta name="SSR_SCRIPTS">', () =>
     scripts.join("")
   );
   return html;
@@ -168,7 +168,7 @@ export default function render(
           )}" href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
             translation.locale,
             allLocales
-          )}"/>`
+          )}">`
         );
       }
     }
@@ -216,7 +216,7 @@ export default function render(
       ? "noindex, nofollow"
       : "index, follow";
   const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
-  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
+  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en">`;
   const ssr_data = [...translations, ...WEBFONT_TAGS, rssLink, robotsMeta];
   let html = buildHtml;
   html = html.replace(
@@ -224,26 +224,26 @@ export default function render(
     () => `<html lang="${locale || DEFAULT_LOCALE}"`
   );
   html = html.replace(
-    /<meta property="og:([^"]*)" content="([^"]*)"\/>/g,
+    /<meta property="og:([^"]*)" content="([^"]*)">/g,
     (_, typ, content) => {
-      return `<meta property="og:${typ}" content="${og.get(typ) || content}"/>`;
+      return `<meta property="og:${typ}" content="${og.get(typ) || content}">`;
     }
   );
   if (pageDescription) {
-    html = html.replace(/<meta name="description" content="[^"]*"\/>/g, () => {
-      return `<meta name="description" content="${pageDescription}"/>`;
+    html = html.replace(/<meta name="description" content="[^"]*">/g, () => {
+      return `<meta name="description" content="${pageDescription}">`;
     });
   }
   html = html.replace("<title>MDN Web Docs</title>", () => `${titleTag}`);
 
   if (!pageNotFound) {
     html = html.replace(
-      '<link rel="canonical" href="https://developer.mozilla.org"/>',
-      () => `<link rel="canonical" href="${canonicalURL}"/>`
+      '<link rel="canonical" href="https://developer.mozilla.org">',
+      () => `<link rel="canonical" href="${canonicalURL}">`
     );
   }
 
-  html = html.replace('<meta name="SSR_DATA"/>', () => ssr_data.join(""));
+  html = html.replace('<meta name="SSR_DATA">', () => ssr_data.join(""));
   html = html.replace('<div id="root"></div>', () => root);
   return html;
 }
