@@ -322,7 +322,7 @@ export const read = memoize(
         popularity: getPopularities().get(url) || 0.0,
         modified,
         hash,
-        contributors: wikiHistory ? wikiHistory.contributors : [],
+        contributors: wikiHistory?.contributors ?? [],
       },
       url,
     };

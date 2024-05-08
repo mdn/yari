@@ -234,8 +234,8 @@ export interface UnbuiltDocument {
     frontMatterKeys: string[];
     locale: string;
     popularity: number;
-    modified: any;
-    hash: any;
+    modified?: Date;
+    hash?: string;
     contributors: any;
   };
   url: string;
