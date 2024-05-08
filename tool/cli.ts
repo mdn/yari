@@ -455,7 +455,10 @@ program
         for (const document of allDocs.iterDocs()) {
           const rawBody = document.rawBody;
           for (const [oldSlug, newSlug] of movedDocs) {
-            const updatedBody = rawBody.replaceAll(oldSlug, newSlug);
+            const updatedBody = rawBody.replace(
+              new RegExp(oldSlug, "g"),
+              newSlug
+            );
             if (rawBody !== updatedBody) {
               Document.saveFile(
                 document.fileInfo.path,
