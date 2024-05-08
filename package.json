@@ -237,7 +237,7 @@
     "rough-notation": "^0.5.1",
     "sass": "^1.77.0",
     "sass-loader": "^14.2.1",
-    "semver": "^7.6.0",
+    "semver": "^7.6.1",
     "source-map-explorer": "^2.5.3",
     "source-map-loader": "^5.0.0",
     "style-dictionary": "^3.9.2",
