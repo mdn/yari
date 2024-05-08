@@ -20,7 +20,7 @@ export function getWikiHistories(root: string, locale: string) {
             JSON.parse(
               fs.readFileSync(historyFilePath, "utf-8"),
               (key, value) => {
-                if (key === "modified" && typeof value === "string") {
+                if (key === "modified") {
                   return new Date(value);
                 }
                 return value;
