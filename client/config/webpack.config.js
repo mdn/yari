@@ -48,8 +48,6 @@ const babelRuntimeRegenerator = resolve.sync("@babel/runtime/regenerator", {
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
 
-const imageInlineSizeLimit = 0; // our CSP doesn't support inline images
-
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
@@ -335,25 +333,12 @@ function config(webpackEnv) {
             // https://github.com/jshttp/mime-db
             {
               test: [/\.avif$/],
-              type: "asset",
+              type: "asset/resource",
               mimetype: "image/avif",
-              parser: {
-                dataUrlCondition: {
-                  maxSize: imageInlineSizeLimit,
-                },
-              },
             },
-            // "url" loader works like "file" loader except that it embeds assets
-            // smaller than specified limit in bytes as data URLs to avoid requests.
-            // A missing `test` is equivalent to a match.
             {
               test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-              type: "asset",
-              parser: {
-                dataUrlCondition: {
-                  maxSize: imageInlineSizeLimit,
-                },
-              },
+              type: "asset/resource",
             },
             {
               test: /\.svg$/,
