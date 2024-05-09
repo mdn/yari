@@ -18,7 +18,6 @@ import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 import paths from "./paths.js";
-import modules from "./modules.js";
 import getClientEnvironment from "./env.js";
 import createEnvironmentHash from "./webpack/persistentCache/createEnvironmentHash.js";
 
@@ -279,7 +278,6 @@ function config(webpackEnv) {
           "react-dom$": "react-dom/profiling",
           "scheduler/tracing": "scheduler/tracing-profiling",
         }),
-        ...(modules.webpackAliases || {}),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
