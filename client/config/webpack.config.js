@@ -257,11 +257,6 @@ function config(webpackEnv) {
       ],
     },
     resolve: {
-      // This allows you to set a fallback for where webpack should look for modules.
-      // We placed these paths second because we want `node_modules` to "win"
-      // if there are any conflicts. This matches Node resolution mechanism.
-      // https://github.com/facebook/create-react-app/issues/253
-      modules: ["node_modules", paths.appNodeModules],
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -570,9 +565,6 @@ function config(webpackEnv) {
       new ForkTsCheckerWebpackPlugin({
         async: isEnvDevelopment,
         typescript: {
-          typescriptPath: resolve.sync("typescript", {
-            basedir: paths.appNodeModules,
-          }),
           configOverwrite: {
             compilerOptions: {
               sourceMap: isEnvProduction
@@ -619,10 +611,6 @@ function config(webpackEnv) {
           failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
           context: paths.appSrc,
           cache: true,
-          cacheLocation: path.resolve(
-            paths.appNodeModules,
-            ".cache/.eslintcache"
-          ),
           // ESLint class options
           cwd: paths.appPath,
           resolvePluginsRelativeTo: fileURLToPath(
