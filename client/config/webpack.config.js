@@ -196,7 +196,6 @@ function config(webpackEnv) {
     cache: {
       type: "filesystem",
       version: createEnvironmentHash(env.raw),
-      cacheDirectory: paths.appWebpackCache,
       store: "pack",
       buildDependencies: {
         defaultWebpack: ["webpack/lib/"],
