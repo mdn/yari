@@ -67,27 +67,6 @@ function getWebpackAliases(options = {}) {
   }
 }
 
-/**
- * Get jest aliases based on the baseUrl of a compilerOptions object.
- *
- * @param {*} options
- */
-function getJestAliases(options = {}) {
-  const baseUrl = options.baseUrl;
-
-  if (!baseUrl) {
-    return {};
-  }
-
-  const baseUrlResolved = path.resolve(paths.appPath, baseUrl);
-
-  if (path.relative(paths.appPath, baseUrlResolved) === "") {
-    return {
-      "^src/(.*)$": "<rootDir>/src/$1",
-    };
-  }
-}
-
 async function getModules() {
   const { default: ts } = await import(
     "file://" +
@@ -103,7 +82,6 @@ async function getModules() {
   return {
     additionalModulePaths: additionalModulePaths,
     webpackAliases: getWebpackAliases(options),
-    jestAliases: getJestAliases(options),
   };
 }
 
