@@ -570,7 +570,6 @@ function config(webpackEnv) {
             { file: "**/src/**/__tests__/**" },
             { file: "**/src/**/?(*.){spec|test}.*" },
             { file: "**/src/setupProxy.*" },
-            { file: "**/src/setupTests.*" },
           ],
         },
       }),
