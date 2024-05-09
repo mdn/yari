@@ -560,21 +560,42 @@ export async function getCSSSyntax(
 let parsedWebRefCache: null | Promise<WebRefObjectData> = null;
 async function getParsedWebRef(): Promise<WebRefObjectData> {
   if (!parsedWebRefCache) {
-    parsedWebRefCache = getRawWebRefData().then((rawItems) =>
-      Object.fromEntries(
-        Object.entries(rawItems).map(
-          ([name, { spec, properties, atrules, values }]) => [
-            name,
-            {
-              spec,
-              properties: byName(properties),
-              atrules: byName(atrules),
-              values: byName(values),
-            },
-          ]
-        )
-      )
-    );
+    parsedWebRefCache = getRawWebRefData().then((rawItems) => {
+      const sortedRawItems = [...Object.entries(rawItems)];
+      sortedRawItems.sort(([a], [b]) => {
+        if (a === b) {
+          return 0;
+        }
+        if (/-\d+$/.test(a)) {
+          if (a.replace(/-\d+$/, "") === b) {
+            return -1;
+          }
+        }
+        if (/-\d+$/.test(b)) {
+          if (b.replace(/-\d+$/, "") === a) {
+            return 1;
+          }
+        }
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        return 0;
+      });
+      return Object.fromEntries(
+        sortedRawItems.map(([name, { spec, properties, atrules, values }]) => [
+          name,
+          {
+            spec,
+            properties: byName(properties),
+            atrules: byName(atrules),
+            values: byName(values),
+          },
+        ])
+      );
+    });
   }
 
   return parsedWebRefCache;
