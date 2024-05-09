@@ -26,19 +26,6 @@ const buildPath = process.env.BUILD_PATH || "build";
 
 const moduleFileExtensions = ["mjs", "js", "ts", "tsx", "json", "jsx"];
 
-// Resolve file paths in the same order as webpack
-const resolveModule = (resolveFn, filePath) => {
-  const extension = moduleFileExtensions.find((extension) =>
-    fs.existsSync(resolveFn(`${filePath}.${extension}`))
-  );
-
-  if (extension) {
-    return resolveFn(`${filePath}.${extension}`);
-  }
-
-  return resolveFn(`${filePath}.js`);
-};
-
 // config after eject: we're in ./config/
 const config = {
   dotenv: resolveApp("../.env"),
@@ -46,7 +33,6 @@ const config = {
   appBuild: resolveApp(buildPath),
   appPublic: resolveApp("public"),
   appHtml: resolveApp("public/index.html"),
-  appIndexJs: resolveModule(resolveApp, "src/index"),
   appPackageJson: resolveApp("../package.json"),
   appSrc: resolveApp("src"),
   appTsConfig: resolveApp("tsconfig.json"),

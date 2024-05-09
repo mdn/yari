@@ -158,7 +158,7 @@ function config(webpackEnv) {
       : isEnvDevelopment && "cheap-module-source-map",
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: paths.appIndexJs,
+    entry: "./src/index.tsx",
     output: {
       // The build folder.
       path: paths.appBuild,

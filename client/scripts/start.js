@@ -6,7 +6,6 @@ import chalk from "react-dev-utils/chalk.js";
 import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import clearConsole from "react-dev-utils/clearConsole.js";
-import checkRequiredFiles from "react-dev-utils/checkRequiredFiles.js";
 import { checkBrowsers } from "react-dev-utils/browsersHelper.js";
 import {
   choosePort,
@@ -35,11 +34,6 @@ const appPackageJson = JSON.parse(fs.readFileSync(paths.appPackageJson));
 const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
-
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-  process.exit(1);
-}
 
 // Tools like Cloud9 rely on this.
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
