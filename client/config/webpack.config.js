@@ -574,7 +574,7 @@ function config(webpackEnv) {
               declarationMap: false,
               noEmit: true,
               incremental: true,
-              tsBuildInfoFile: paths.appTsBuildInfoFile,
+              tsBuildInfoFile: "node_modules/.cache/tsconfig.tsbuildinfo",
             },
           },
           context: paths.appPath,
