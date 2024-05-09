@@ -53,7 +53,6 @@ const config = {
   yarnLockFile: resolveApp("../yarn.lock"),
   testsSetup: resolveModule(resolveApp, "src/setupTests"),
   proxySetup: resolveApp("src/setupProxy.js"),
-  swSrc: resolveModule(resolveApp, "src/service-worker"),
   publicUrlOrPath,
   libsPath: resolveApp("../libs"),
   moduleFileExtensions,
