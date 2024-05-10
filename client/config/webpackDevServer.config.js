@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import evalSourceMapMiddleware from "react-dev-utils/evalSourceMapMiddleware.js";
 import noopServiceWorkerMiddleware from "react-dev-utils/noopServiceWorkerMiddleware.js";
 import ignoredFiles from "react-dev-utils/ignoredFiles.js";
@@ -6,15 +5,12 @@ import redirectServedPath from "react-dev-utils/redirectServedPathMiddleware.js"
 
 import paths from "./paths.js";
 import getServerConfig from "./getHttpsConfig.js";
+import proxySetup from "../src/setupProxy.js";
 
 const host = process.env.HOST || "0.0.0.0";
 const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
-
-const proxySetup = fs.existsSync(paths.proxySetup)
-  ? (await import("file://" + paths.proxySetup)).default
-  : null;
 
 function config(proxy, allowedHost) {
   const disableFirewall =
@@ -111,10 +107,8 @@ function config(proxy, allowedHost) {
         evalSourceMapMiddleware(devServer)
       );
 
-      if (proxySetup) {
-        // This registers user provided middleware for proxy reasons
-        proxySetup(devServer.app);
-      }
+      // This registers user provided middleware for proxy reasons
+      proxySetup(devServer.app);
 
       middlewares.push(
         // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match

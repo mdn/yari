@@ -7,7 +7,6 @@ import fs from "fs-extra";
 import bfj from "bfj";
 import webpack from "webpack";
 import { checkBrowsers } from "react-dev-utils/browsersHelper.js";
-import checkRequiredFiles from "react-dev-utils/checkRequiredFiles.js";
 import formatWebpackMessages from "react-dev-utils/formatWebpackMessages.js";
 import printHostingInstructions from "react-dev-utils/printHostingInstructions.js";
 import FileSizeReporter from "react-dev-utils/FileSizeReporter.js";
@@ -36,11 +35,6 @@ const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
 
 const isInteractive = process.stdout.isTTY;
-
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-  process.exit(1);
-}
 
 const argv = process.argv.slice(2);
 const writeStatsJson = argv.indexOf("--stats") !== -1;
