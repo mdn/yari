@@ -106,7 +106,7 @@
     "imagemin": "^8.0.1",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-mozjpeg": "^10.0.0",
-    "imagemin-pngquant": "^9.0.2",
+    "imagemin-pngquant": "^10.0.0",
     "imagemin-svgo": "^10.0.1",
     "inquirer": "^9.2.20",
     "is-svg": "^5.0.0",
