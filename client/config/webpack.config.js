@@ -10,7 +10,6 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from "webpack-manifest-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
-import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 import paths from "./paths.js";
@@ -427,9 +426,6 @@ function config(webpackEnv) {
             : undefined
         )
       ),
-      // This gives some necessary context to module not found errors, such as
-      // the requesting resource.
-      new ModuleNotFoundPlugin(paths.appPath),
       // Makes some environment variables available to the JS code, for example:
       // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
       // It is absolutely essential that NODE_ENV is set to production
