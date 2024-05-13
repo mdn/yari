@@ -44,19 +44,6 @@ const babelRuntimeRegenerator = resolve.sync("@babel/runtime/regenerator", {
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
 
-const hasJsxRuntime = (() => {
-  if (process.env.DISABLE_NEW_JSX_TRANSFORM === "true") {
-    return false;
-  }
-
-  try {
-    resolve.sync("react/jsx-runtime");
-    return true;
-  } catch (e) {
-    return false;
-  }
-})();
-
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 function config(webpackEnv) {
@@ -339,7 +326,7 @@ function config(webpackEnv) {
                   [
                     resolve.sync("babel-preset-react-app"),
                     {
-                      runtime: hasJsxRuntime ? "automatic" : "classic",
+                      runtime: "automatic",
                     },
                   ],
                 ],
@@ -589,11 +576,6 @@ function config(webpackEnv) {
           ),
           baseConfig: {
             extends: [resolve.sync("eslint-config-react-app/base")],
-            rules: {
-              ...(!hasJsxRuntime && {
-                "react/react-in-jsx-scope": "error",
-              }),
-            },
           },
         }),
     ].filter(Boolean),
