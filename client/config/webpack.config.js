@@ -21,9 +21,6 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
-
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 function config(webpackEnv) {
@@ -509,24 +506,9 @@ function config(webpackEnv) {
           ],
         },
       }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-          formatter: resolve.sync("react-dev-utils/eslintFormatter.js"),
-          eslintPath: resolve.sync("eslint"),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: fileURLToPath(
-            new URL(".", import.meta.url)
-          ),
-          baseConfig: {
-            extends: [resolve.sync("eslint-config-react-app/base")],
-          },
-        }),
+      new ESLintPlugin({
+        extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+      }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
