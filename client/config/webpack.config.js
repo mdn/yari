@@ -9,7 +9,6 @@ import TerserPlugin from "terser-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from "webpack-manifest-plugin";
-import InterpolateHtmlPlugin from "react-dev-utils/InterpolateHtmlPlugin.js";
 import ModuleScopePlugin from "react-dev-utils/ModuleScopePlugin.js";
 import ESLintPlugin from "eslint-webpack-plugin";
 import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
@@ -56,8 +55,7 @@ function config(webpackEnv) {
     isEnvProduction && process.argv.includes("--profile");
 
   // We will provide `paths.publicUrlOrPath` to our app
-  // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
-  // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
+  // as `process.env.PUBLIC_URL` in JavaScript, omitting trailing slash.
   // Get environment variables to inject into our app.
   const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
 
@@ -459,12 +457,6 @@ function config(webpackEnv) {
             : undefined
         )
       ),
-      // Makes some environment variables available in index.html.
-      // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-      // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
-      // It will be an empty string unless you specify "homepage"
-      // in `package.json`, in which case it will be the pathname of that URL.
-      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
