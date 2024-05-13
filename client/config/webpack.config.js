@@ -61,8 +61,6 @@ function config(webpackEnv) {
   // Get environment variables to inject into our app.
   const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
 
-  const shouldUseReactRefresh = env.raw.FAST_REFRESH;
-
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
     const loaders = [
@@ -332,9 +330,7 @@ function config(webpackEnv) {
                 ],
 
                 plugins: [
-                  isEnvDevelopment &&
-                    shouldUseReactRefresh &&
-                    resolve.sync("react-refresh/babel"),
+                  isEnvDevelopment && resolve.sync("react-refresh/babel"),
                   resolve.sync("@babel/plugin-syntax-import-assertions"),
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -481,7 +477,6 @@ function config(webpackEnv) {
       // Experimental hot reloading for React .
       // https://github.com/facebook/react/tree/main/packages/react-refresh
       isEnvDevelopment &&
-        shouldUseReactRefresh &&
         new ReactRefreshWebpackPlugin({
           overlay: false,
         }),

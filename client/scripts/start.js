@@ -14,13 +14,10 @@ import {
   prepareUrls,
 } from "react-dev-utils/WebpackDevServerUtils.js";
 import openBrowser from "react-dev-utils/openBrowser.js";
-import semver from "semver";
-import react from "react";
 
 import paths from "../config/paths.js";
 import configFactory from "../config/webpack.config.js";
 import createDevServerConfig from "../config/webpackDevServer.config.js";
-import getClientEnvironment from "../config/env.js";
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -31,7 +28,6 @@ process.on("unhandledRejection", (err) => {
 
 const appPackageJson = JSON.parse(fs.readFileSync(paths.appPackageJson));
 
-const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
 
@@ -107,14 +103,6 @@ checkBrowsers(paths.appPath, isInteractive)
     devServer.startCallback(() => {
       if (isInteractive) {
         clearConsole();
-      }
-
-      if (env.raw.FAST_REFRESH && semver.lt(react.version, "16.10.0")) {
-        console.log(
-          chalk.yellow(
-            `Fast Refresh requires React 16.10 or higher. You are using React ${react.version}.`
-          )
-        );
       }
 
       console.log(chalk.cyan("Starting the development server...\n"));
