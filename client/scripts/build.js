@@ -2,7 +2,7 @@
 import "../config/env.js";
 
 import path from "node:path";
-import chalk from "react-dev-utils/chalk.js";
+import chalk from "chalk";
 import fs from "fs-extra";
 import bfj from "bfj";
 import webpack from "webpack";

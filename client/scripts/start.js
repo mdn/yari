@@ -2,7 +2,7 @@
 import "../config/env.js";
 
 import fs from "node:fs";
-import chalk from "react-dev-utils/chalk.js";
+import chalk from "chalk";
 import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import clearConsole from "react-dev-utils/clearConsole.js";
