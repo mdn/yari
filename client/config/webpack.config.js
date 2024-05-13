@@ -9,7 +9,6 @@ import TerserPlugin from "terser-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from "webpack-manifest-plugin";
-import ModuleScopePlugin from "react-dev-utils/ModuleScopePlugin.js";
 import ESLintPlugin from "eslint-webpack-plugin";
 import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
@@ -26,19 +25,6 @@ const { default: ForkTsCheckerWebpackPlugin } = await import(
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
-
-const reactRefreshRuntimeEntry = resolve.sync("react-refresh/runtime");
-const reactRefreshWebpackPluginRuntimeEntry = resolve.sync(
-  "@pmmmwh/react-refresh-webpack-plugin"
-);
-const babelRuntimeEntry = resolve.sync("babel-preset-react-app");
-const babelRuntimeEntryHelpers = resolve.sync(
-  "@babel/runtime/helpers/esm/assertThisInitialized",
-  { paths: [babelRuntimeEntry] }
-);
-const babelRuntimeRegenerator = resolve.sync("@babel/runtime/regenerator", {
-  paths: [babelRuntimeEntry],
-});
 
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
@@ -246,22 +232,6 @@ function config(webpackEnv) {
           "scheduler/tracing": "scheduler/tracing-profiling",
         }),
       },
-      plugins: [
-        // Prevents users from importing files from outside of src/ (or node_modules/).
-        // This often causes confusion because we only process files within src/ with babel.
-        // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
-        // please link the files into your node_modules/ and let module-resolution kick in.
-        // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [
-          paths.appPackageJson,
-          reactRefreshRuntimeEntry,
-          reactRefreshWebpackPluginRuntimeEntry,
-          babelRuntimeEntry,
-          babelRuntimeEntryHelpers,
-          babelRuntimeRegenerator,
-          paths.libsPath,
-        ]),
-      ],
     },
     module: {
       strictExportPresence: true,
