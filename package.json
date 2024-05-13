@@ -198,6 +198,7 @@
     "extend": "^3.0.2",
     "file-loader": "^6.2.0",
     "foreman": "^3.0.1",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "history": "^5.2.0",
     "html-validate": "^8.18.2",
     "html-webpack-plugin": "^5.6.0",

@@ -16,11 +16,7 @@ import paths from "./paths.js";
 import getClientEnvironment from "./env.js";
 import createEnvironmentHash from "./webpack/persistentCache/createEnvironmentHash.js";
 
-const { default: ForkTsCheckerWebpackPlugin } = await import(
-  process.env.TSC_COMPILE_ON_ERROR === "true"
-    ? "react-dev-utils/ForkTsCheckerWarningWebpackPlugin.js"
-    : "react-dev-utils/ForkTsCheckerWebpackPlugin.js"
-);
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
