@@ -54,7 +54,17 @@ interface GlobalMetadata {
 }
 
 interface BuildMetadata {
-  [locale: string]: any;
+  [locale: string]: {
+    baseline?: {
+      total: number;
+      high: number;
+      highPaths: string[];
+      low: number;
+      lowPaths: string[];
+      not: number;
+      notPaths: string[];
+    };
+  };
 }
 
 async function buildDocumentInteractive(
