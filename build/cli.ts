@@ -386,6 +386,13 @@ async function buildDocuments(
   );
 
   for (const [locale, meta] of Object.entries(buildMetadata)) {
+    if (meta.baseline) {
+      // Sort to avoid build difference.
+      meta.baseline.highPaths.sort();
+      meta.baseline.lowPaths.sort();
+      meta.baseline.notPaths.sort();
+    }
+
     // have to write per-locale because we build each locale concurrently
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
