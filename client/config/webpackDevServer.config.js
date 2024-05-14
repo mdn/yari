@@ -1,8 +1,3 @@
-import evalSourceMapMiddleware from "react-dev-utils/evalSourceMapMiddleware.js";
-import noopServiceWorkerMiddleware from "react-dev-utils/noopServiceWorkerMiddleware.js";
-import ignoredFiles from "react-dev-utils/ignoredFiles.js";
-import redirectServedPath from "react-dev-utils/redirectServedPathMiddleware.js";
-
 import paths from "./paths.js";
 import getServerConfig from "./getHttpsConfig.js";
 import proxySetup from "../src/setupProxy.js";
@@ -36,14 +31,6 @@ function config() {
       // use an image, put it in `src` and `import` it from JavaScript instead.
       directory: paths.appPublic,
       publicPath: [paths.publicUrlOrPath],
-      // By default files from `contentBase` will not trigger a page reload.
-      watch: {
-        // Reportedly, this avoids CPU overload on some systems.
-        // https://github.com/facebook/create-react-app/issues/293
-        // src/node_modules is not ignored to support absolute imports
-        // https://github.com/facebook/create-react-app/issues/1065
-        ignored: ignoredFiles(paths.appSrc),
-      },
     },
     client: {
       webSocketURL: {
@@ -75,27 +62,8 @@ function config() {
       index: paths.publicUrlOrPath,
     },
     setupMiddlewares(middlewares, devServer) {
-      middlewares.unshift(
-        // Keep `evalSourceMapMiddleware`
-        // middlewares before `redirectServedPath` otherwise will not have any effect
-        // This lets us fetch source contents from webpack for the error overlay
-        evalSourceMapMiddleware(devServer)
-      );
-
       // This registers user provided middleware for proxy reasons
       proxySetup(devServer.app);
-
-      middlewares.push(
-        // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
-        redirectServedPath(paths.publicUrlOrPath),
-
-        // This service worker file is effectively a 'no-op' that will reset any
-        // previous service worker registered for the same host:port combination.
-        // We do this in development to avoid hitting the production cache if
-        // it used the same host and port.
-        // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
-        noopServiceWorkerMiddleware(paths.publicUrlOrPath)
-      );
 
       return middlewares;
     },
