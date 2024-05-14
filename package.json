@@ -102,7 +102,7 @@
     "http-proxy-middleware": "^2.0.6",
     "image-size": "^1.1.1",
     "image-type": "^4.1.0",
-    "imagemin": "^8.0.1",
+    "imagemin": "^9.0.0",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-mozjpeg": "^10.0.0",
     "imagemin-pngquant": "^9.0.2",
