@@ -45,7 +45,7 @@
     "style-dictionary": "style-dictionary build -c sd-config.js",
     "stylelint": "stylelint \"**/*.scss\"",
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:libs && yarn test:content && yarn test:testing",
-    "test:client": "cd client && tsc --noEmit && cross-env NODE_ENV=test BABEL_ENV=test PUBLIC_URL='' node scripts/test.js --env=jsdom",
+    "test:client": "cd client && tsc --noEmit && cross-env NODE_ENV=test BABEL_ENV=test node scripts/test.js --env=jsdom",
     "test:content": "yarn jest --rootDir content",
     "test:developing": "cross-env CONTENT_ROOT=mdn/content/files TESTING_DEVELOPING=true playwright test developing",
     "test:headless": "playwright test headless",

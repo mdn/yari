@@ -24,13 +24,11 @@ function config() {
       // project directory is dangerous because we may expose sensitive files.
       // Instead, we establish a convention that only files in `public` directory
       // get served. Our build script will copy `public` into the `build` folder.
-      // In JavaScript code, you can get URL of `public` folder with `process.env.PUBLIC_URL`.
       // Note that we only recommend to use `public` folder as an escape hatch
       // for files like `favicon.ico`, `manifest.json`, and libraries that are
       // for some reason broken when imported through webpack. If you just want to
       // use an image, put it in `src` and `import` it from JavaScript instead.
       directory: paths.appPublic,
-      publicPath: [paths.publicUrlOrPath],
     },
     client: {
       webSocketURL: {
@@ -46,20 +44,12 @@ function config() {
         warnings: false,
       },
     },
-    devMiddleware: {
-      // It is important to tell WebpackDevServer to use the same "publicPath" path as
-      // we specified in the webpack config. When homepage is '.', default to serving
-      // from the root.
-      // remove last slash so user can land on `/test` instead of `/test/`
-      publicPath: paths.publicUrlOrPath.slice(0, -1),
-    },
     server: getServerConfig(),
     host,
     historyApiFallback: {
       // Paths with dots should still use the history fallback.
       // See https://github.com/facebook/create-react-app/issues/387.
       disableDotRule: true,
-      index: paths.publicUrlOrPath,
     },
     setupMiddlewares(middlewares, devServer) {
       // This registers user provided middleware for proxy reasons

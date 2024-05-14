@@ -32,10 +32,7 @@ function config(webpackEnv) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes("--profile");
 
-  // We will provide `paths.publicUrlOrPath` to our app
-  // as `process.env.PUBLIC_URL` in JavaScript, omitting trailing slash.
-  // Get environment variables to inject into our app.
-  const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
+  const env = getClientEnvironment();
 
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -43,11 +40,6 @@ function config(webpackEnv) {
       isEnvDevelopment && resolve.sync("style-loader"),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
-        // css is located in `static/css`, use '../../' to locate index.html folder
-        // in production `paths.publicUrlOrPath` can be a relative path
-        options: paths.publicUrlOrPath.startsWith(".")
-          ? { publicPath: "../../" }
-          : {},
       },
       {
         loader: resolve.sync("css-loader"),
@@ -135,10 +127,7 @@ function config(webpackEnv) {
         ? "static/js/[name].[contenthash:8].chunk.js"
         : isEnvDevelopment && "static/js/[name].chunk.js",
       assetModuleFilename: "static/media/[name].[hash][ext]",
-      // webpack uses `publicPath` to determine where the app is being served from.
-      // It requires a trailing slash, or the file assets will get an incorrect path.
-      // We inferred the "public path" (such as / or /my-project) from homepage.
-      publicPath: paths.publicUrlOrPath,
+      publicPath: "/",
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
         ? (info) =>
@@ -450,7 +439,6 @@ function config(webpackEnv) {
       //   can be used to reconstruct the HTML if necessary
       new WebpackManifestPlugin({
         fileName: "asset-manifest.json",
-        publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
           const manifestFiles = files.reduce((manifest, file) => {
             manifest[file.name] = file.path;
