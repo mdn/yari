@@ -93,7 +93,6 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     enableAutoPageLoadEvents: true,
     channel: GLEAN_CHANNEL,
-    migrateFromLegacyStorage: true,
     serverEndpoint: DEV_MODE
       ? "https://developer.allizom.org"
       : document.location.origin,
