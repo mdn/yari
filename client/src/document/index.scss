@@ -945,7 +945,8 @@ kbd {
 
 html a.only-in-en-us:after {
   content: "(en-US)";
-  font-size: smaller;
+  display: inline-block;
+  font-size: var(--type-tiny-font-size);
   vertical-align: super;
 }
 
