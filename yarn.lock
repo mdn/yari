@@ -8913,10 +8913,10 @@ is-string@^1.0.5, is-string@^1.0.7:
   dependencies:
     has-tostringtag "^1.0.0"
 
-is-svg@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/is-svg/-/is-svg-5.0.0.tgz#b3039213d6f4805669bb5afb043e05e5632ed206"
-  integrity sha512-sRl7J0oX9yUNamSdc8cwgzh9KBLnQXNzGmW0RVHwg/jEYjGNYHC6UvnYD8+hAeut9WwxRvhG9biK7g/wDGxcMw==
+is-svg@^5.0.0, is-svg@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/is-svg/-/is-svg-5.0.1.tgz#3d5ab95614716d238363ac865800dece43198fc6"
+  integrity sha512-mLYxDsfisQWdS4+gSblAwhATDoNMS/tx8G7BKA+aBIf7F0m1iUwMvuKAo6mW4WMleQAEE50I1Zqef9yMMfHk3w==
   dependencies:
     fast-xml-parser "^4.1.3"
 
