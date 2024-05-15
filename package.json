@@ -163,7 +163,7 @@
     "@types/cli-progress": "^3.11.5",
     "@types/imagemin": "^8.0.5",
     "@types/jest": "^29.5.12",
-    "@types/mdast": "^4.0.3",
+    "@types/mdast": "^4.0.4",
     "@types/node": "^18.16.6",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
