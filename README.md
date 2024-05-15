@@ -193,7 +193,7 @@ using external tools like BrowserStack, WebPageTest, or Google Translate, or to
 simply show a friend what you're up to. Obviously it'll never be faster than
 your uplink Internet connection but it should be fairly feature-complete.
 
-1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
+1. [Create an account on Ngrok.com](https://dashboard.ngrok.com/signup)
 2. [Download the executable](https://ngrok.com/download)
 3. Start your Yari server with `yarn start` in one terminal
 4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5042`
