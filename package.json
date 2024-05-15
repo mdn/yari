@@ -70,7 +70,7 @@
     "@codemirror/theme-one-dark": "^6.1.2",
     "@fast-csv/parse": "^5.0.0",
     "@mdn/bcd-utils-api": "^0.0.7",
-    "@mdn/browser-compat-data": "^5.5.27",
+    "@mdn/browser-compat-data": "^5.5.28",
     "@mozilla/glean": "5.0.1",
     "@sentry/integrations": "^7.114.0",
     "@sentry/node": "^7.114.0",
