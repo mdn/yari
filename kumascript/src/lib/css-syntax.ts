@@ -566,15 +566,11 @@ async function getParsedWebRef(): Promise<WebRefObjectData> {
         if (a === b) {
           return 0;
         }
-        if (/-\d+$/.test(a)) {
-          if (a.replace(/-\d+$/, "") === b) {
-            return -1;
-          }
+        if (/-\d+$/.test(a) && a.replace(/-\d+$/, "") === b) {
+          return -1;
         }
-        if (/-\d+$/.test(b)) {
-          if (b.replace(/-\d+$/, "") === a) {
-            return 1;
-          }
+        if (/-\d+$/.test(b) && b.replace(/-\d+$/, "") === a) {
+          return 1;
         }
         if (a < b) {
           return -1;
