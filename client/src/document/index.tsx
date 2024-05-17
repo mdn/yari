@@ -1,5 +1,5 @@
 import React from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
@@ -73,7 +73,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const locale = useLocale();
-  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
