@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.52.1](https://github.com/mdn/yari/compare/v2.52.0...v2.52.1) (2024-05-17)
+
+
+### Bug Fixes
+
+* **build:** sort build.json content ([#11124](https://github.com/mdn/yari/issues/11124)) ([77ec929](https://github.com/mdn/yari/commit/77ec929f7d80f845f31d5822eb5e4cc8c9b1cef9))
+* **css-syntax:** explicitly order specs ([#11101](https://github.com/mdn/yari/issues/11101)) ([8e8cd78](https://github.com/mdn/yari/commit/8e8cd7892e4737dc82122cc55ea46e4366da6a0d))
+* **l10n:** improve style of en-US links ([#11052](https://github.com/mdn/yari/issues/11052)) ([378dd13](https://github.com/mdn/yari/commit/378dd13aeccf81e2e7d3404528e453ca5064f1d0))
+* **layout:** avoid column breaks in index ([#11053](https://github.com/mdn/yari/issues/11053)) ([710685e](https://github.com/mdn/yari/commit/710685ea6e1acb3f56aaeebdaa7199a99492efd2))
+* **layout:** avoid column-breaks in index ([710685e](https://github.com/mdn/yari/commit/710685ea6e1acb3f56aaeebdaa7199a99492efd2))
+* **spas:** index AI Help + Updates ([#11138](https://github.com/mdn/yari/issues/11138)) ([f4c2388](https://github.com/mdn/yari/commit/f4c2388032a76fa4e09b84d46475f43f55e25004))
+* **ssr:** remove unnecessary robots tags ([#11139](https://github.com/mdn/yari/issues/11139)) ([1207158](https://github.com/mdn/yari/commit/12071588ec64d125cc39c15c1f3cf068d96f204c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.5.5 to 1.5.7 ([#11132](https://github.com/mdn/yari/issues/11132)) ([b5f43c9](https://github.com/mdn/yari/commit/b5f43c977f286e747f4003e45cd2982dd74fe3c7))
+* **deps-dev:** bump @types/mdast from 4.0.3 to 4.0.4 in the types group ([#11128](https://github.com/mdn/yari/issues/11128)) ([aef184e](https://github.com/mdn/yari/commit/aef184e4054b6a8ba7bfc0a73dc12f12ff333a48))
+* **deps-dev:** bump eslint-plugin-unicorn from 52.0.0 to 53.0.0 ([#11103](https://github.com/mdn/yari/issues/11103)) ([0b263d0](https://github.com/mdn/yari/commit/0b263d0e6822ef7f9812760a14b6e3b4a1b879fe))
+* **deps-dev:** bump postcss-preset-env from 9.5.12 to 9.5.13 ([#11131](https://github.com/mdn/yari/issues/11131)) ([1423ca4](https://github.com/mdn/yari/commit/1423ca4c7c1904c49ac2d002aad8b8d5ce498691))
+* **deps-dev:** bump sass from 1.77.1 to 1.77.2 ([#11146](https://github.com/mdn/yari/issues/11146)) ([fb95669](https://github.com/mdn/yari/commit/fb9566992ba4454e7a7e336e649ab36018b83cf4))
+* **deps-dev:** bump typescript-eslint from 7.8.0 to 7.9.0 ([#11129](https://github.com/mdn/yari/issues/11129)) ([a5d0ac3](https://github.com/mdn/yari/commit/a5d0ac3cc59bee18b908c47c4f2da73e1c6379b0))
+* **deps:** bump @mdn/browser-compat-data from 5.5.27 to 5.5.28 ([#11135](https://github.com/mdn/yari/issues/11135)) ([1329cd4](https://github.com/mdn/yari/commit/1329cd4855448e8a642f3d3583fb4f50d5df60af))
+* **deps:** bump @webref/css from 6.12.10 to 6.12.11 ([#11147](https://github.com/mdn/yari/issues/11147)) ([163aa9e](https://github.com/mdn/yari/commit/163aa9ef00a45fb03d154a3000d5fa8eece931a6))
+* **deps:** bump inquirer from 9.2.20 to 9.2.21 ([#11134](https://github.com/mdn/yari/issues/11134)) ([6025c0e](https://github.com/mdn/yari/commit/6025c0efde55d5682c371227a3199b19b97da2c1))
+* **deps:** bump is-svg from 5.0.0 to 5.0.1 ([#11130](https://github.com/mdn/yari/issues/11130)) ([cfb93df](https://github.com/mdn/yari/commit/cfb93df0d952593f3cd86c0cf7ded58e1dde7d84))
+* **deps:** bump openai from 4.45.0 to 4.47.1 ([#11133](https://github.com/mdn/yari/issues/11133)) ([85aec2d](https://github.com/mdn/yari/commit/85aec2d4c7f623b796a30dba0ea251fce97cd0ce))
+* **deps:** bump web-features from 0.8.1 to 0.8.2 ([#11144](https://github.com/mdn/yari/issues/11144)) ([f8c0a29](https://github.com/mdn/yari/commit/f8c0a29b5acb6e03ff0237a15f69342ea32625bf))
+
 ## [2.52.0](https://github.com/mdn/yari/compare/v2.51.0...v2.52.0) (2024-05-14)
 
 
