@@ -209,13 +209,12 @@ export default function render(
   }</script>`;
 
   const robotsContent =
-    !ALWAYS_ALLOW_ROBOTS ||
-    (doc && doc.noIndexing) ||
-    pageNotFound ||
-    noIndexing
+    !ALWAYS_ALLOW_ROBOTS || (doc && doc.noIndexing) || noIndexing
       ? "noindex, nofollow"
-      : "index, follow";
-  const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
+      : "";
+  const robotsMeta = robotsContent
+    ? `<meta name="robots" content="${robotsContent}">`
+    : "";
   const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
   const ssr_data = [...translations, ...WEBFONT_TAGS, rssLink, robotsMeta];
   let html = buildHtml;
