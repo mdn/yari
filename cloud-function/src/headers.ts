@@ -38,6 +38,10 @@ export function withContentResponseHeaders(
     xFrame: !isLiveSample,
   });
 
+  if (req.url?.endsWith("/contributors.txt")) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  }
+
   if (req.url?.endsWith("/sitemap.xml.gz")) {
     res.setHeader("Content-Type", "application/xml");
     res.setHeader("Content-Encoding", "gzip");
