@@ -107,8 +107,7 @@ const LOCALE_PATTERNS = [
       "i"
     ),
     ({ suffix }) => {
-      const join = suffix && suffix.includes("?") ? "&" : "?";
-      return `/${DEFAULT_LOCALE}/${(suffix || "") + join}`;
+      return `/${DEFAULT_LOCALE}/${suffix || ""}`;
     }
   ),
 ];
