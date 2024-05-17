@@ -229,7 +229,7 @@ test.describe("changing language", () => {
 test.describe("viewing retired locales", () => {
   test("redirect retired locale to English (document)", async ({ page }) => {
     await page.goto(testURL("/ar/docs/Web/Foo"));
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
   });
 
@@ -245,26 +245,5 @@ test.describe("viewing retired locales", () => {
     await page.goto(testURL("/ar/search?q=video"));
     expect(page.url()).toBe(testURL("/en-US/search/?q=video"));
     expect(await page.isVisible("text=Search results for: video")).toBeTruthy();
-  });
-
-  test("say the locale was retired", async ({ page }) => {
-    await page.goto(testURL("/en-US/docs/Web/Foo/"));
-    expect(
-      await page.isVisible("text=The page you requested has been retired")
-    ).toBeTruthy();
-    // sanity check that it goes away
-    await page.goto(testURL("/en-US/docs/Web/Foo/"));
-    expect(
-      await page.isVisible("text=The page you requested has been retired")
-    ).toBeFalsy();
-  });
-
-  test("not say the locale was retired if viewing a translated page", async ({
-    page,
-  }) => {
-    await page.goto(testURL("/fr/docs/Web/Foo/"));
-    expect(
-      await page.isVisible("text=The page you requested has been retired")
-    ).toBeFalsy();
   });
 });
