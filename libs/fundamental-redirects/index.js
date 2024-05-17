@@ -106,11 +106,9 @@ const LOCALE_PATTERNS = [
       )})(/(?<suffix>.*)|$)`,
       "i"
     ),
-    ({ locale, suffix }) => {
+    ({ suffix }) => {
       const join = suffix && suffix.includes("?") ? "&" : "?";
-      return `/${DEFAULT_LOCALE}/${
-        (suffix || "") + join
-      }retiredLocale=${RETIRED_LOCALES.get(locale.toLowerCase())}`;
+      return `/${DEFAULT_LOCALE}/${(suffix || "") + join}`;
     }
   ),
 ];
