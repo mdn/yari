@@ -22,6 +22,7 @@ import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
 import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
+import { redirectCapitalization } from "./middlewares/redirect-capitalization.js";
 
 const router = Router();
 router.use(stripForwardedHostHeaders);
@@ -60,6 +61,7 @@ router.get(
 router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
   requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
+  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
@@ -70,6 +72,7 @@ router.get(
   redirectLocale,
   redirectTrailingSlash,
   redirectMovedPages,
+  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
@@ -78,6 +81,7 @@ router.get(
   requireOrigin(Origin.main),
   redirectLocale,
   redirectEnforceTrailingSlash,
+  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
@@ -93,6 +97,7 @@ router.get(
   redirectFundamental,
   redirectLocale,
   redirectTrailingSlash,
+  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
