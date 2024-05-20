@@ -216,7 +216,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
       // on port 3000 this will always return "200":
       httpStatus: pageNotFound ? "404" : "200",
       userAgent: navigator?.userAgent,
-      userLanguages: Array.from(navigator.languages),
+      userLanguages: Array.from(navigator?.languages || []),
       geo: userData?.geo?.country,
       geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",

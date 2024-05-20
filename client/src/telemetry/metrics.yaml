@@ -165,7 +165,7 @@ navigator:
     description: |
       The user's preferred languages.
     data_sensitivity:
-      - web_activity
+      - interaction
     bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1798296
     data_reviews:
