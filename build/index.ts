@@ -587,6 +587,10 @@ function addBaseline(doc: Partial<Doc>) {
           "api.InputEvent.dataTransfer",
           "api.InputEvent.getTargetRanges",
           "api.InputEvent.inputType",
+          // https://github.com/web-platform-dx/web-features/issues/1038
+          // https://github.com/web-platform-dx/web-features/blob/64d2cfd/features/screen-orientation-lock.dist.yml
+          "api.ScreenOrientation.lock",
+          "api.ScreenOrientation.unlock",
         ].includes(query)
     );
     return getWebFeatureStatus(...filteredBrowserCompat);
