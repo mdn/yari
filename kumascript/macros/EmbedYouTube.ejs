@@ -3,12 +3,13 @@
 //
 // Parameters:
 //  $0  Video ID
+//  $1  title (optional)
 
 var video = '<iframe width="560" height="315" ' +
   `src="https://www.youtube-nocookie.com/embed/${$0}" ` +
+  `title="${$1 || 'YouTube video'}" ` +
   'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
   'allowfullscreen></iframe>';
-
 %>
 
 <%-video%>
