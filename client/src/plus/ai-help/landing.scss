@@ -42,6 +42,7 @@
       em {
         color: var(--category-color);
         font-style: unset;
+        font-variation-settings: unset;
       }
     }
 
@@ -140,6 +141,7 @@
 
         em {
           font-style: unset;
+          font-variation-settings: unset;
           font-weight: 600;
         }
       }

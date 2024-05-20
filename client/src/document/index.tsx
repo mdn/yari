@@ -28,7 +28,7 @@ import { RenderSideBar } from "./organisms/sidebar";
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
-import { Metadata } from "./organisms/metadata";
+import { ArticleFooter } from "./organisms/article-footer";
 import { PageNotFound } from "../page-not-found";
 
 import "./index.scss";
@@ -46,6 +46,8 @@ import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry 
 import { BottomBanner, SidePlacement } from "../ui/organisms/placement";
 import { BaselineIndicator } from "./baseline-indicator";
 import { PlayQueue } from "../playground/queue";
+import { useGleanClick } from "../telemetry/glean-context";
+import { CLIENT_SIDE_NAVIGATION } from "../telemetry/constants";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -65,7 +67,8 @@ export class HTTPError extends Error {
 }
 
 export function Document(props /* TODO: define a TS interface for this */) {
-  const ga = useGA();
+  const { gtag } = useGA();
+  const gleanClick = useGleanClick();
   const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
@@ -139,22 +142,23 @@ export function Document(props /* TODO: define a TS interface for this */) {
   React.useEffect(() => {
     if (doc && !error) {
       if (mountCounter.current > 0) {
+        const location = window.location.toString();
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.
         // Note that in local development, where you use `localhost:3000`
         // this will always be true because it's always client-side navigation.
-        ga("set", "dimension19", "Yes");
-        ga("send", {
-          hitType: "pageview",
-          location: window.location.toString(),
+        gtag("event", "pageview", {
+          dimension19: "Yes",
+          page_location: location,
         });
+        gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
       }
 
       // By counting every time a document is mounted, we can use this to know if
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [ga, doc, error]);
+  }, [gtag, gleanClick, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
@@ -265,8 +269,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </header>
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
-            <Metadata doc={doc} locale={locale} />
           </article>
+          <ArticleFooter doc={doc} />
         </MainContentContainer>
         {false && <PlayQueue standalone={true} />}
       </div>

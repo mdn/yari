@@ -378,7 +378,6 @@ function _addSectionProse(
 ): SectionsAndFlaws {
   let id: string | null = null;
   let title: string | null = null;
-  let titleAsText = "";
   let isH3 = false;
 
   const flaws: string[] = [];
@@ -402,7 +401,6 @@ function _addSectionProse(
       // First element
       id = h2.attr("id") ?? "";
       title = h2.html() ?? "";
-      titleAsText = h2.text();
       h2.remove();
     }
     h2found = true;
@@ -423,7 +421,6 @@ function _addSectionProse(
       } else {
         id = h3.attr("id") ?? "";
         title = h3.html() ?? "";
-        titleAsText = h3.text();
         if (id && title) {
           isH3 = true;
           h3.remove();
@@ -443,12 +440,6 @@ function _addSectionProse(
     isH3,
     content: $.html()?.trim(),
   };
-
-  // Only include it if it's useful. It's an optional property and it's
-  // potentially a waste of space to include it if it's not different.
-  if (titleAsText && titleAsText !== title) {
-    value["titleAsText"] = titleAsText;
-  }
 
   const sections: ProseSection[] = [];
   if (value.content || value.title) {

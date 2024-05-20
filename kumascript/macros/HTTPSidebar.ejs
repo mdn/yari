@@ -54,15 +54,16 @@ var text = mdn.localStringMap({
   },
   'es': {
     'HTTP': 'HTTP',
+    'HTTPGuide': 'Guía de HTTP',
     'Basics': 'Fundamentos de HTTP',
     'Overview': 'Generalidades de HTTP',
     'Evolution': 'Evolución de HTTP',
-    'ResourcesURI': 'Recursons y URIs',
-    'Identifying': 'Identificación de recursons en la Web',
+    'ResourcesURI': 'Recursos y URIs',
+    'Identifying': 'Identificación de recursos en la Web',
     'DataURLs': 'URLs de Datos',
     'MIMETypes': 'Presentación de tipos MIME',
     'ListMIMETypes': 'Lista completa de tipos MIME',
-    'WWWorNotWWW': 'Eleción entre ww y no-www URLs',
+    'WWWorNotWWW': 'Elección entre URLs con y sin www',
     'Messages': 'Mensajes HTTP',
     'Session': 'Una típica comunicación HTTP',
     'Connection1x': 'Gestión de la conexión en HTTP/1.x',
@@ -73,11 +74,11 @@ var text = mdn.localStringMap({
     'Headers': 'Cabeceras HTTP',
     'Response_codes': 'Códigos de respuesta',
     'Compression': 'Compresión en HTTP',
-    'Cookies': 'HTTP cookies',
-    'Caching': 'HTTP caching',
+    'Cookies': 'Cookies HTTP',
+    'Caching': 'Caché HTTP',
     'CORS': 'Control de acceso en HTTP(CORS)',
     'Resources': 'La especificación de HTTP',
-    'Guides': 'Guias',
+    'Guides': 'Guías',
     'Reference': 'Referencias',
     'Methods': 'Métodos de petición HTTP',
     'Status': 'Códigos de estado de HTTP',
@@ -287,8 +288,8 @@ var text = mdn.localStringMap({
 
 <section id="Quick_links" data-macro="HTTPSidebar">
   <ol>
-    <li><a href="/<%=locale%>/docs/Web/HTTP"><strong><%=text['HTTP']%></strong></a></li>
-    <li><strong><%=text['Guides']%></strong></li>
+    <li class="section"><a href="/<%=locale%>/docs/Web/HTTP"><%=text['HTTP']%></a></li>
+    <li class="section no-link"><%=text['Guides']%></li>
     <li class="toggle">
         <details>
             <summary><%=text['ResourcesURI']%></summary>
@@ -341,7 +342,7 @@ var text = mdn.localStringMap({
     <li><a href="/<%=locale%>/docs/Web/HTTP/Redirections"><%=text['Redirects']%></a></li>
     <li><a href="/<%=locale%>/docs/Web/HTTP/Resources_and_specifications"><%=text['Resources']%></a></li>
     <li><a href="/<%=locale%>/docs/Web/HTTP/Permissions_Policy"><%=text['Permissions_Policy']%></a></li>
-    <li><strong><%=text['Reference']%></strong></li>
+    <li class="section no-link"><%=text['Reference']%></li>
     <li class="toggle">
         <details <%=state('Web/HTTP/Headers')%>>
             <summary><%=text['Headers']%></summary>

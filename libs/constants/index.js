@@ -64,7 +64,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
 
-  "www.google-analytics.com/analytics.js",
+  // GA4.
+  "https://www.google-analytics.com/analytics.js",
+  "https://www.googletagmanager.com/gtag/js",
 
   "assets.codepen.io",
   "production-assets.codepen.io",
@@ -104,11 +106,11 @@ export const CSP_DIRECTIVES = {
     "updates.developer.allizom.org",
     "updates.developer.mozilla.org",
 
-    "stage.observatory.mdn.nonprod.webservices.mozgcp.net",
-    "prod.observatory.mdn.prod.webservices.mozgcp.net",
-    "http-observatory.security.mozilla.org",
+    // GA4.
+    "https://*.google-analytics.com",
+    "https://*.analytics.google.com",
+    "https://*.googletagmanager.com",
 
-    "www.google-analytics.com",
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -150,11 +152,24 @@ export const CSP_DIRECTIVES = {
     "wikipedia.org",
     "upload.wikimedia.org",
 
-    "www.google-analytics.com",
+    // Shared assets.
+    "https://mdn.github.io/shared-assets/",
+
+    // GA4.
+    "https://*.google-analytics.com",
+    "https://*.googletagmanager.com",
+
     "www.gstatic.com",
   ],
   "manifest-src": ["'self'"],
-  "media-src": ["'self'", "archive.org", "videos.cdn.mozilla.net"],
+  "media-src": [
+    "'self'",
+    "archive.org",
+    "videos.cdn.mozilla.net",
+
+    // Shared assets.
+    "https://mdn.github.io/shared-assets/",
+  ],
   "child-src": ["'self'"],
   "worker-src": ["'self'"],
 };
@@ -259,6 +274,7 @@ export const VALID_FLAW_CHECKS = new Set([
 // ------
 
 export const MDN_PLUS_TITLE = "MDN Plus";
+export const CURRICULUM_TITLE = "MDN Curriculum";
 
 // -------
 // content

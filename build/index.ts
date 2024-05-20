@@ -44,6 +44,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { getWebFeatureStatus } from "./web-features.js";
+import { rewritePageTitleForSEO } from "./seo.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -524,26 +525,7 @@ export async function buildDocument(
 
   doc.modified = metadata.modified || null;
 
-  const otherTranslations = document.translations || [];
-  if (!otherTranslations.length && metadata.translation_of) {
-    // If built just-in-time, we won't have a record of all the other translations
-    // available. But if the current document has a translation_of, we can
-    // at least use that.
-    const translationOf = Document.findByURL(
-      `/en-US/docs/${metadata.translation_of}`
-    );
-    if (translationOf) {
-      otherTranslations.push({
-        locale: "en-US",
-        title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us")?.native,
-      });
-    }
-  }
-
-  if (otherTranslations.length) {
-    doc.other_translations = otherTranslations;
-  }
+  doc.other_translations = document.translations || [];
 
   injectSource(doc, document, metadata);
 
@@ -555,7 +537,8 @@ export async function buildDocument(
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  doc.pageTitle = getPageTitle(doc);
+  const pageTitle = getPageTitle(doc);
+  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
@@ -573,6 +556,7 @@ function addBaseline(doc: Partial<Doc>) {
         // temporary blocklist while we wait for per-key baseline statuses
         // or another solution to the baseline/bcd table discrepancy problem
         ![
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
           "api.Clipboard.read",
           "api.Clipboard.readText",
           "api.Clipboard.write",
@@ -587,6 +571,26 @@ function addBaseline(doc: Partial<Doc>) {
           "api.ClipboardItem.types",
           "api.Navigator.clipboard",
           "api.Permissions.permission_clipboard-read",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
+          "api.CustomElementRegistry",
+          "api.CustomElementRegistry.builtin_element_support",
+          "api.CustomElementRegistry.define",
+          "api.Window.customElements",
+          "css.selectors.defined",
+          "css.selectors.host",
+          "css.selectors.host-context",
+          "css.selectors.part",
+          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
+          "api.Element.input_event",
+          "api.InputEvent.InputEvent",
+          "api.InputEvent.data",
+          "api.InputEvent.dataTransfer",
+          "api.InputEvent.getTargetRanges",
+          "api.InputEvent.inputType",
+          // https://github.com/web-platform-dx/web-features/issues/1038
+          // https://github.com/web-platform-dx/web-features/blob/64d2cfd/features/screen-orientation-lock.dist.yml
+          "api.ScreenOrientation.lock",
+          "api.ScreenOrientation.unlock",
         ].includes(query)
     );
     return getWebFeatureStatus(...filteredBrowserCompat);

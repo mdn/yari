@@ -29,7 +29,7 @@
   }
 
   th {
-    background: var(--background-tertiary);
+    background: var(--background-primary);
     padding: 0.4rem;
     vertical-align: bottom;
   }
@@ -180,6 +180,7 @@
 .bc-legend-tip {
   font-size: var(--type-smaller-font-size);
   font-style: italic;
+  font-variation-settings: "slnt" -10;
   margin-bottom: 1rem;
   margin-top: 0;
 }
