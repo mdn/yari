@@ -269,8 +269,6 @@ export async function buildSPAs(options: {
   );
 
   // Build all the home pages in all locales.
-  // Fetch merged content PRs for the latest contribution section.
-  const recentContributions = await fetchRecentContributions();
 
   // Fetch latest Hacks articles.
   const latestNews = await fetchLatestNews();
@@ -287,6 +285,9 @@ export async function buildSPAs(options: {
       if (!fs.statSync(path.join(root, localeLC)).isDirectory()) {
         continue;
       }
+
+      // Fetch merged content PRs for the latest contribution section.
+      const recentContributions = await fetchRecentContributions(locale);
 
       const featuredContributor = contributorSpotlightRoot
         ? await buildContributorSpotlight(locale, options)
@@ -369,20 +370,25 @@ export async function buildSPAs(options: {
   }
 }
 
-async function fetchGitHubPRs(repo, count = 5) {
-  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+async function fetchGitHubPRs(
+  repo,
+  { count, label } = { count: 10, label: null }
+) {
   const pullRequestsQuery = [
     `repo:${repo}`,
     "is:pr",
     "is:merged",
-    `merged:>${twoDaysAgo.toISOString()}`,
     "sort:updated",
-  ].join("+");
-  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
+  ];
+  if (label) {
+    pullRequestsQuery.push(`label:${label}`);
+  }
+  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery.join("+")}&per_page=${count}`;
   try {
     const pullRequestsData = (await got(pullRequestUrl).json()) as {
       items: any[];
     };
+
     const prDataRepo = pullRequestsData.items.map((item) => ({
       ...item,
       repo: { name: repo, url: `https://github.com/${repo}` },
@@ -400,14 +406,43 @@ async function fetchGitHubPRs(repo, count = 5) {
   }
 }
 
-async function fetchRecentContributions() {
-  const repos = ["mdn/content", "mdn/translated-content"];
-  const countPerRepo = 5;
-  const pullRequests = (
-    await Promise.all(
-      repos.map(async (repo) => await fetchGitHubPRs(repo, countPerRepo))
-    )
-  ).flat();
+async function fetchRecentContributions(locale: string) {
+  let repo: string;
+  let label: string | null;
+
+  if (locale == DEFAULT_LOCALE) {
+    repo = "mdn/content";
+    label = null;
+  } else {
+    repo = "mdn/translated-content";
+    switch (locale) {
+      case "es":
+        label = "l10n-es";
+        break;
+      case "fr":
+        label = "l10n-fr";
+        break;
+      case "ja":
+        label = "l10n-ja";
+        break;
+      case "ko":
+        label = "l10n-ko";
+        break;
+      case "ru":
+        label = "l10n-ru";
+        break;
+      case "pt-BR":
+        label = "l10n-pt-br";
+        break;
+      case "zh-CN":
+      case "zh-TW":
+        label = "l10n-zh";
+        break;
+    }
+  }
+
+  const count = 10;
+  const pullRequests = await fetchGitHubPRs(repo, { count, label });
   const pullRequestsData = pullRequests.sort((a, b) =>
     a.updated_at < b.updated_at ? 1 : -1
   );
