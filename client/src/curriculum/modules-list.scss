@@ -62,10 +62,13 @@
           outline-style: auto;
         }
 
-        > label {
+        > input:not(:checked) + label {
           color: var(--text-secondary);
-          cursor: pointer;
           opacity: 0.775;
+        }
+
+        > label {
+          cursor: pointer;
           width: max-content;
         }
 
