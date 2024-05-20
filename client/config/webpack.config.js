@@ -9,53 +9,17 @@ import TerserPlugin from "terser-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from "webpack-manifest-plugin";
-import InterpolateHtmlPlugin from "react-dev-utils/InterpolateHtmlPlugin.js";
-import ModuleScopePlugin from "react-dev-utils/ModuleScopePlugin.js";
 import ESLintPlugin from "eslint-webpack-plugin";
-import ModuleNotFoundPlugin from "react-dev-utils/ModuleNotFoundPlugin.js";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 import paths from "./paths.js";
 import getClientEnvironment from "./env.js";
 import createEnvironmentHash from "./webpack/persistentCache/createEnvironmentHash.js";
 
-const { default: ForkTsCheckerWebpackPlugin } = await import(
-  process.env.TSC_COMPILE_ON_ERROR === "true"
-    ? "react-dev-utils/ForkTsCheckerWarningWebpackPlugin.js"
-    : "react-dev-utils/ForkTsCheckerWebpackPlugin.js"
-);
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
-
-const reactRefreshRuntimeEntry = resolve.sync("react-refresh/runtime");
-const reactRefreshWebpackPluginRuntimeEntry = resolve.sync(
-  "@pmmmwh/react-refresh-webpack-plugin"
-);
-const babelRuntimeEntry = resolve.sync("babel-preset-react-app");
-const babelRuntimeEntryHelpers = resolve.sync(
-  "@babel/runtime/helpers/esm/assertThisInitialized",
-  { paths: [babelRuntimeEntry] }
-);
-const babelRuntimeRegenerator = resolve.sync("@babel/runtime/regenerator", {
-  paths: [babelRuntimeEntry],
-});
-
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
-
-const hasJsxRuntime = (() => {
-  if (process.env.DISABLE_NEW_JSX_TRANSFORM === "true") {
-    return false;
-  }
-
-  try {
-    resolve.sync("react/jsx-runtime");
-    return true;
-  } catch (e) {
-    return false;
-  }
-})();
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -68,13 +32,7 @@ function config(webpackEnv) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes("--profile");
 
-  // We will provide `paths.publicUrlOrPath` to our app
-  // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
-  // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
-  // Get environment variables to inject into our app.
-  const env = getClientEnvironment(paths.publicUrlOrPath.replace(/\/$/, ""));
-
-  const shouldUseReactRefresh = env.raw.FAST_REFRESH;
+  const env = getClientEnvironment();
 
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -82,11 +40,6 @@ function config(webpackEnv) {
       isEnvDevelopment && resolve.sync("style-loader"),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
-        // css is located in `static/css`, use '../../' to locate index.html folder
-        // in production `paths.publicUrlOrPath` can be a relative path
-        options: paths.publicUrlOrPath.startsWith(".")
-          ? { publicPath: "../../" }
-          : {},
       },
       {
         loader: resolve.sync("css-loader"),
@@ -174,10 +127,7 @@ function config(webpackEnv) {
         ? "static/js/[name].[contenthash:8].chunk.js"
         : isEnvDevelopment && "static/js/[name].chunk.js",
       assetModuleFilename: "static/media/[name].[hash][ext]",
-      // webpack uses `publicPath` to determine where the app is being served from.
-      // It requires a trailing slash, or the file assets will get an incorrect path.
-      // We inferred the "public path" (such as / or /my-project) from homepage.
-      publicPath: paths.publicUrlOrPath,
+      publicPath: "/",
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
         ? (info) =>
@@ -263,22 +213,6 @@ function config(webpackEnv) {
           "scheduler/tracing": "scheduler/tracing-profiling",
         }),
       },
-      plugins: [
-        // Prevents users from importing files from outside of src/ (or node_modules/).
-        // This often causes confusion because we only process files within src/ with babel.
-        // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
-        // please link the files into your node_modules/ and let module-resolution kick in.
-        // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [
-          paths.appPackageJson,
-          reactRefreshRuntimeEntry,
-          reactRefreshWebpackPluginRuntimeEntry,
-          babelRuntimeEntry,
-          babelRuntimeEntryHelpers,
-          babelRuntimeRegenerator,
-          paths.libsPath,
-        ]),
-      ],
     },
     module: {
       strictExportPresence: true,
@@ -339,15 +273,13 @@ function config(webpackEnv) {
                   [
                     resolve.sync("babel-preset-react-app"),
                     {
-                      runtime: hasJsxRuntime ? "automatic" : "classic",
+                      runtime: "automatic",
                     },
                   ],
                 ],
 
                 plugins: [
-                  isEnvDevelopment &&
-                    shouldUseReactRefresh &&
-                    resolve.sync("react-refresh/babel"),
+                  isEnvDevelopment && resolve.sync("react-refresh/babel"),
                   resolve.sync("@babel/plugin-syntax-import-assertions"),
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -476,15 +408,6 @@ function config(webpackEnv) {
             : undefined
         )
       ),
-      // Makes some environment variables available in index.html.
-      // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-      // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
-      // It will be an empty string unless you specify "homepage"
-      // in `package.json`, in which case it will be the pathname of that URL.
-      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
-      // This gives some necessary context to module not found errors, such as
-      // the requesting resource.
-      new ModuleNotFoundPlugin(paths.appPath),
       // Makes some environment variables available to the JS code, for example:
       // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
       // It is absolutely essential that NODE_ENV is set to production
@@ -494,7 +417,6 @@ function config(webpackEnv) {
       // Experimental hot reloading for React .
       // https://github.com/facebook/react/tree/main/packages/react-refresh
       isEnvDevelopment &&
-        shouldUseReactRefresh &&
         new ReactRefreshWebpackPlugin({
           overlay: false,
         }),
@@ -517,7 +439,6 @@ function config(webpackEnv) {
       //   can be used to reconstruct the HTML if necessary
       new WebpackManifestPlugin({
         fileName: "asset-manifest.json",
-        publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
           const manifestFiles = files.reduce((manifest, file) => {
             manifest[file.name] = file.path;
@@ -573,29 +494,9 @@ function config(webpackEnv) {
           ],
         },
       }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-          formatter: resolve.sync("react-dev-utils/eslintFormatter.js"),
-          eslintPath: resolve.sync("eslint"),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: fileURLToPath(
-            new URL(".", import.meta.url)
-          ),
-          baseConfig: {
-            extends: [resolve.sync("eslint-config-react-app/base")],
-            rules: {
-              ...(!hasJsxRuntime && {
-                "react/react-in-jsx-scope": "error",
-              }),
-            },
-          },
-        }),
+      new ESLintPlugin({
+        extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+      }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter

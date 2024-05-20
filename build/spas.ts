@@ -146,7 +146,6 @@ export async function buildSPAs(options: {
         {
           prefix: "plus/ai-help",
           pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
         },
         {
           prefix: "plus/collections",
@@ -161,7 +160,6 @@ export async function buildSPAs(options: {
         {
           prefix: "plus/updates",
           pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
         },
         {
           prefix: "plus/settings",
