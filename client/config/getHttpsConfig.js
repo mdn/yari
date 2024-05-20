@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import chalk from "react-dev-utils/chalk.js";
+import chalk from "chalk";
 import paths from "./paths.js";
 
 // Ensure the certificate and key provided are valid and if not
