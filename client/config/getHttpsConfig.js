@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import chalk from "react-dev-utils/chalk.js";
+import chalk from "chalk";
 import paths from "./paths.js";
 
 // Ensure the certificate and key provided are valid and if not
@@ -50,15 +50,18 @@ function getHttpsConfig() {
   if (isHttps && SSL_CRT_FILE && SSL_KEY_FILE) {
     const crtFile = path.resolve(paths.appPath, SSL_CRT_FILE);
     const keyFile = path.resolve(paths.appPath, SSL_KEY_FILE);
-    const config = {
+    const options = {
       cert: readEnvFile(crtFile, "SSL_CRT_FILE"),
       key: readEnvFile(keyFile, "SSL_KEY_FILE"),
     };
 
-    validateKeyAndCerts({ ...config, keyFile, crtFile });
-    return config;
+    validateKeyAndCerts({ ...options, keyFile, crtFile });
+    return {
+      type: "https",
+      options,
+    };
   }
-  return isHttps;
+  return isHttps ? "https" : "http";
 }
 
 export default getHttpsConfig;

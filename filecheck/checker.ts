@@ -10,7 +10,7 @@ import { temporaryDirectory } from "tempy";
 import * as cheerio from "cheerio";
 import { fileTypeFromFile } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquantPkg from "imagemin-pngquant";
+import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
@@ -25,8 +25,6 @@ import {
   VIDEO_EXT,
   FONT_EXT,
 } from "../libs/constants/index.js";
-
-const { default: imageminPngquant } = imageminPngquantPkg;
 
 const BINARY_NON_IMAGE_FILE_REGEXP = createRegExpFromExtensions(
   ...AUDIO_EXT,
@@ -171,8 +169,8 @@ export async function checkFile(
   const docFilePath = (await fse.exists(htmlFilePath))
     ? htmlFilePath
     : (await fse.exists(mdFilePath))
-    ? mdFilePath
-    : null;
+      ? mdFilePath
+      : null;
   if (!docFilePath) {
     throw new FixableError(
       `${getRelativePath(

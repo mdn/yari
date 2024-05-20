@@ -47,13 +47,32 @@ section.place {
     }
   }
 
+  &.top .pong-note,
+  .no-pong {
+    text-decoration: none;
+
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.side .pong-note,
+  &.bottom-banner .pong-note {
+    text-decoration: underline;
+
+    &:focus,
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .no-pong {
     color: var(--text-secondary);
     font-size: 0.6rem;
     margin-bottom: 0.5rem;
     max-width: 12rem;
     padding: 0;
-    text-decoration: underline;
     width: 100%;
   }
 
@@ -125,13 +144,6 @@ section.place {
         grid-area: note;
         margin: 0 0 auto auto;
         padding: 0 0.5rem 0.125rem;
-        text-decoration: none;
-
-        &:hover,
-        &:focus,
-        &:active {
-          text-decoration: underline;
-        }
       }
     }
 
@@ -226,4 +238,70 @@ div.empty-place {
   --place-top-color: var(--place-top-color-dark);
   --place-top-cta-background: var(--place-top-cta-background-dark);
   --place-top-cta-color: var(--place-top-cta-color-dark);
+}
+
+.bottom-banner-container {
+  background-color: var(
+    --place-bottom-banner-background,
+    var(--background-primary)
+  );
+  color: var(--place-bottom-banner-color, var(--text-primary));
+  margin: 0;
+  width: 100%;
+
+  > section.place.bottom-banner {
+    column-gap: 3rem;
+    display: grid;
+    grid-template-areas:
+      "nope pong note"
+      "nope pong no";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 0 1rem;
+
+    .pong {
+      grid-area: pong;
+      justify-self: center;
+
+      img {
+        height: auto;
+      }
+    }
+
+    .pong-note {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: note;
+      margin-top: 0.5rem;
+    }
+
+    .no-pong {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: no;
+      margin-top: auto;
+    }
+
+    @media screen and (max-width: $screen-xl) {
+      grid-template-areas:
+        "pong note"
+        "pong no";
+      grid-template-columns: auto max-content;
+      grid-template-rows: auto 2rem;
+    }
+
+    @media screen and (max-width: $screen-lg) {
+      grid-template-areas:
+        "pong pong"
+        "note no";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 2rem;
+
+      .no-pong {
+        justify-self: end;
+        width: fit-content;
+      }
+    }
+  }
 }

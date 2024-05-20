@@ -80,7 +80,7 @@ export function AdvertiseWithUs() {
           who support our privacy goals. For now, that means collaborating
           without attribution and developing a better way together.{" "}
           <a
-            href="https://survey.alchemer.com/s3/7212589/MDN-Advertise-with-us"
+            href="https://www.buysellads.com/mdn"
             target="_blank"
             rel="noreferrer"
             className="external"
@@ -110,7 +110,7 @@ export function AdvertiseWithUs() {
         <p>
           Ready to advertise on MDN? Complete{" "}
           <a
-            href="https://survey.alchemer.com/s3/7212589/MDN-Advertise-with-us"
+            href="https://www.buysellads.com/mdn"
             target="_blank"
             rel="noreferrer"
             className="external"

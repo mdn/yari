@@ -119,11 +119,11 @@ test("content built foo page", () => {
     `https://developer.mozilla.org${doc.mdn_url}`
   );
 
-  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `.env.testing`.
-  expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
+  expect($('script[src="/static/js/gtag.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]')).toHaveLength(5);
@@ -239,7 +239,7 @@ test("content built zh-CN page for hreflang tag and copying image testing", () =
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-CN");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh_CN");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 测试网页 | MDN"
   );
@@ -273,7 +273,7 @@ test("content built zh-TW page with en-US fallback image", () => {
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh_TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
   );
@@ -1085,6 +1085,21 @@ test("image flaws with bad images", () => {
         "File not present on disk, an empty file, or not an image"
     ).length
   ).toBe(4);
+  // Check the line and column numbers for html <img> tags in markdown
+  expect({
+    line: flaws.images[2].line,
+    column: flaws.images[2].column,
+  }).toEqual({
+    line: 16,
+    column: 12,
+  });
+  expect({
+    line: flaws.images[3].line,
+    column: flaws.images[3].column,
+  }).toEqual({
+    line: 25,
+    column: 17,
+  });
 });
 
 test("linked to local files", () => {
@@ -1164,8 +1179,8 @@ test("404 page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
+  expect($('meta[name="robots"]')).toHaveLength(0);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en_US");
 });
 
 test("plus page", () => {
@@ -1175,7 +1190,7 @@ test("plus page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
 });
 
 test("plus collections page", () => {
@@ -1422,14 +1437,9 @@ test("headings with HTML should be rendered as HTML", () => {
     doc: Doc;
   };
   const [section1, section2] = doc.body as ProseSection[];
-  // Because the title contains HTML, you can expect a 'titleAsText'
   expect(section1.value.title).toBe("Here's some <code>code</code>");
-  expect(section1.value.titleAsText).toBe("Here's some code");
   expect(section2.value.title).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
-  );
-  expect(section2.value.titleAsText).toBe(
-    "You can use escaped HTML tags like <pre> still"
   );
 });
 
@@ -1559,7 +1569,7 @@ test("basic markdown rendering", () => {
   expect($("article em")).toHaveLength(1);
   expect($("article ul li")).toHaveLength(6);
   expect($('article a[href^="/"]')).toHaveLength(2);
-  expect($('article a[href^="#"]')).toHaveLength(5);
+  expect($('article a[href^="#"]')).toHaveLength(6);
   expect($("article pre")).toHaveLength(4);
   expect($("article pre.notranslate")).toHaveLength(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
@@ -1603,23 +1613,27 @@ test("translated content broken links can fall back to en-us", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
+
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
-  expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
-    "Can use the English (en-US) link as a fallback"
-  );
-  expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
-    "Can use the English (en-US) link as a fallback"
-  );
+  expect(map.get("/fr/docs/Web/CSS/dumber")).toMatchObject({
+    explanation: "Can't resolve /fr/docs/Web/CSS/dumber",
+    suggestion: "/fr/docs/Web/CSS/number",
+    fixable: true,
+    line: 19,
+    column: 16,
+  });
+  expect(map.get("/fr/docs/Web/CSS/number")).toBeUndefined();
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('article a[href="/fr/docs/Web/CSS/dumber"]')).toHaveLength(0);
   expect($('article a[href="/fr/docs/Web/CSS/number"]')).toHaveLength(0);
+  // Localized docs don't exist, but fallback to en-US is possible
   expect($('article a[href="/en-US/docs/Web/CSS/number"]')).toHaveLength(2);
   expect($("article a.only-in-en-us")).toHaveLength(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
-    "Currently only available in English (US)"
+    "Cette page est actuellement disponible uniquement en anglais"
   );
 });
 

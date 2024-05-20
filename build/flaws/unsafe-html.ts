@@ -4,7 +4,7 @@ import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
 } from "../../libs/env/index.js";
-import { findMatchesInText } from "../matches-in-text.js";
+import { findMatchesInText } from "../matches.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 

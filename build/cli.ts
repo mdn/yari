@@ -16,7 +16,7 @@ import {
   BUILD_OUT_ROOT,
   SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
-import { VALID_LOCALES } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
@@ -26,11 +26,12 @@ import {
   BuiltDocument,
   renderContributorsTxt,
 } from "./index.js";
-import { DocMetadata, Flaws } from "../libs/types/document.js";
+import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
+import { macroRenderTimes } from "../kumascript/src/render.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -50,6 +51,20 @@ export interface InteractiveDocumentBuild {
 
 interface GlobalMetadata {
   [locale: string]: Array<DocMetadata>;
+}
+
+interface BuildMetadata {
+  [locale: string]: {
+    baseline?: {
+      total: number;
+      high: number;
+      highPaths: string[];
+      low: number;
+      lowPaths: string[];
+      not: number;
+      notPaths: string[];
+    };
+  };
 }
 
 async function buildDocumentInteractive(
@@ -73,7 +88,13 @@ async function buildDocumentInteractive(
       );
     }
 
-    return { document, doc: await buildDocument(document), skip: false };
+    return {
+      document,
+      doc: await buildDocument(document, {
+        plainHTML: document.metadata.locale === DEFAULT_LOCALE,
+      }),
+      skip: false,
+    };
   } catch (e) {
     if (!interactive) {
       throw e;
@@ -132,6 +153,33 @@ async function buildDocuments(
   }
 
   const metadata: GlobalMetadata = {};
+  const buildMetadata: BuildMetadata = {};
+
+  function updateBaselineBuildMetadata(doc: Doc) {
+    if (typeof doc.baseline?.baseline === "undefined") {
+      return;
+    }
+
+    if (typeof buildMetadata[doc.locale] === "undefined") {
+      buildMetadata[doc.locale] = {};
+    }
+    if (typeof buildMetadata[doc.locale].baseline === "undefined") {
+      buildMetadata[doc.locale].baseline = {
+        total: 0,
+        high: 0,
+        highPaths: [],
+        low: 0,
+        lowPaths: [],
+        not: 0,
+        notPaths: [],
+      };
+    }
+
+    buildMetadata[doc.locale].baseline.total++;
+    const key = doc.baseline.baseline || "not";
+    buildMetadata[doc.locale].baseline[key]++;
+    buildMetadata[doc.locale].baseline[`${key}Paths`].push(doc.mdn_url);
+  }
 
   const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -139,7 +187,7 @@ async function buildDocuments(
     cliProgress.Presets.shades_grey
   );
 
-  const docPerLocale = {};
+  const docPerLocale: Record<string, { slug: string; modified: string }[]> = {};
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
@@ -177,7 +225,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachmentMap },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap, plainHTML },
       document,
     } = result;
 
@@ -188,11 +236,19 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
+    if (builtDocument.baseline) {
+      updateBaselineBuildMetadata(builtDocument);
+    }
+
     if (!noHTML) {
       fs.writeFileSync(
         path.join(outPath, "index.html"),
         renderHTML(document.url, { doc: builtDocument })
       );
+    }
+
+    if (plainHTML) {
+      fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
@@ -307,23 +363,42 @@ async function buildDocuments(
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
+    const sortedMeta = meta
+      .slice()
+      .sort((a, b) => a.mdn_url.localeCompare(b.mdn_url));
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
-      JSON.stringify(meta)
+      JSON.stringify(sortedMeta)
     );
   }
 
+  // allBrowserCompat.txt is used by differy, see:
+  // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
-    localeMeta.forEach(
-      (doc) =>
-        doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    localeMeta.forEach((doc) =>
+      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
     )
   );
   fs.writeFileSync(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
-    [...allBrowserCompat].join(" ")
+    [...allBrowserCompat].sort().join(" ")
   );
+
+  for (const [locale, meta] of Object.entries(buildMetadata)) {
+    if (meta.baseline) {
+      // Sort to avoid build difference.
+      meta.baseline.highPaths.sort();
+      meta.baseline.lowPaths.sort();
+      meta.baseline.notPaths.sort();
+    }
+
+    // have to write per-locale because we build each locale concurrently
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
+      JSON.stringify(meta)
+    );
+  }
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
@@ -341,6 +416,42 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
       `${key.padEnd(longestKey + 1)} ${flawsCountMap.get(key).toLocaleString()}`
     );
   }
+  out.push("\n");
+  return out.join("\n");
+}
+
+function nsToMs(bigint: bigint) {
+  return Number(bigint / BigInt(1_000)) / 1_000;
+}
+
+function formatMacroRenderReport(header = "Macro render report") {
+  const out = ["\n"];
+  out.push(header);
+
+  // Prepare data.
+  const stats = Object.entries(macroRenderTimes).map(([name, times]) => {
+    const sortedTimes = times.slice().sort(compareBigInt);
+    return {
+      name,
+      min: sortedTimes.at(0),
+      max: sortedTimes.at(-1),
+      count: times.length,
+      sum: times.reduce((acc, value) => acc + value, BigInt(0)),
+    };
+  });
+
+  // Sort by total render time.
+  stats.sort(({ sum: a }, { sum: b }) => Number(b - a));
+
+  // Format data.
+  out.push(
+    ["name", "count", "min (ms)", "avg (ms)", "max (ms)", "sum (ms)"].join(",")
+  );
+  for (const { name, min, max, count, sum } of stats) {
+    const avg = sum / BigInt(count);
+    out.push([name, count, ...[min, avg, max, sum].map(nsToMs)].join(","));
+  }
+
   out.push("\n");
   return out.join("\n");
 }
@@ -503,6 +614,7 @@ program
         }
         console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
         console.log(formatTotalFlaws(totalFlaws));
+        console.log(formatMacroRenderReport());
       }
     } catch (error) {
       // So you get a stacktrace in the CLI output
@@ -513,3 +625,12 @@ program
   });
 
 program.run();
+function compareBigInt(a: bigint, b: bigint): number {
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+}

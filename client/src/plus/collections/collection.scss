@@ -69,6 +69,7 @@
     .breadcrumbs {
       font-size: 0.6875rem;
       font-style: italic;
+      font-variation-settings: "slnt" -10;
       margin-top: -0.5rem;
     }
 
@@ -98,6 +99,7 @@
       font-size: 0.875rem;
 
       font-style: italic;
+      font-variation-settings: "slnt" -10;
       gap: 1rem;
       padding: 1rem;
 
@@ -118,6 +120,7 @@
         &.code {
           font-family: var(--font-code);
           font-style: normal;
+          font-variation-settings: normal;
         }
       }
     }

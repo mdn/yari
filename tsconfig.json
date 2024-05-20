@@ -12,7 +12,8 @@
       "front-matter": ["./type-fixes/front-matter.js"],
       "@mdn/browser-compat-data/types": [
         "./node_modules/@mdn/browser-compat-data/types.d.ts"
-      ]
+      ],
+      "web-features": ["./type-fixes/web-features.js"]
     },
     "preserveWatchOutput": true,
     "resolveJsonModule": true,

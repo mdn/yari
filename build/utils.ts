@@ -1,11 +1,14 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
 import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquantPkg from "imagemin-pngquant";
+import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
@@ -17,10 +20,11 @@ import {
   VALID_MIME_TYPES,
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
-import { spawnSync } from "node:child_process";
 import { BLOG_ROOT } from "../libs/env/index.js";
 
-const { default: imageminPngquant } = imageminPngquantPkg;
+export function escapeRegExp(str: string) {
+  return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+}
 
 export function humanFileSize(size: number) {
   if (size < 1024) return `${size} B`;
@@ -238,6 +242,40 @@ export function postProcessExternalLinks($) {
 }
 
 /**
+ * For every `<a href="... curriculum ... .md ...">` remove the ".md"
+ */
+export function postProcessCurriculumLinks(
+  $: cheerio.CheerioAPI,
+  toUrl: (x?: string) => string
+) {
+  // expand relative links
+  $("a[href^=.]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", toUrl($a.attr("href")));
+  });
+
+  // remove trailing .md for /en-US/curriculum/*
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "$1/$2"));
+  });
+
+  // remove trailing .md and add locale for /curriculum/*
+  $("a[href^=/curriculum]").each((_, element) => {
+    const $a = $(element);
+    $a.attr("href", $a.attr("href")?.replace(/(.*)\.md(#.*|$)/, "/en-US$1/$2"));
+  });
+
+  // remove leading numbers for /en-US/curriculum/*
+  // /en-US/curriculum/2-core/ -> /en-US/curriculum/core/
+  $("a[href^=/en-US/curriculum]").each((_, element) => {
+    const $a = $(element);
+    const [head, hash] = $a.attr("href")?.split("#") || [];
+    $a.attr("href", `${head.replace(/\d+-/g, "")}${hash ? `#${hash}` : ""}`);
+  });
+}
+
+/**
  * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
  * `<a href="$CURRENT_PATH/THING">`
  *
@@ -292,7 +330,7 @@ export function postProcessSmallerHeadingIDs($) {
  *
  * @param {Document} doc
  */
-export function makeTOC(doc) {
+export function makeTOC(doc, withH3 = false) {
   return doc.body
     .map((section) => {
       if (
@@ -301,7 +339,7 @@ export function makeTOC(doc) {
           section.type === "specifications") &&
         section.value.id &&
         section.value.title &&
-        !section.value.isH3
+        (!section.value.isH3 || withH3)
       ) {
         return { text: section.value.title, id: section.value.id };
       }
@@ -312,10 +350,8 @@ export function makeTOC(doc) {
 
 export function findPostFileBySlug(slug: string): string | null {
   if (!BLOG_ROOT) {
-    console.warn("'BLOG_ROOT' not set in .env file");
     return null;
   }
-
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",
@@ -342,4 +378,14 @@ const POST_URL_RE = /^\/en-US\/blog\/([^/]+)\/?$/;
 
 export function getSlugByBlogPostUrl(url: string): string | null {
   return url.match(POST_URL_RE)?.[1] || null;
+}
+
+export async function importJSON<T>(jsonPath: string): Promise<T> {
+  if (!jsonPath.startsWith(".")) {
+    jsonPath = path.join(cwd(), "node_modules", jsonPath);
+  }
+
+  const json = await readFile(jsonPath, "utf-8");
+
+  return JSON.parse(json);
 }
