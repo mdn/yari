@@ -399,16 +399,16 @@ var text = mdn.localStringMap({
 %>
 <section id="Quick_links" data-macro="JsSidebar">
  <ol>
-  <li class="section"><a href="/<%=locale%>/docs/Web/JavaScript">JavaScript</a></li>
-  <li class="section"><a href="/<%=locale%>/docs/Web/JavaScript/Tutorials"><%=text['Tutorials']%></a></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/JavaScript`, null, "JavaScript")%></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Tutorials`, null, text['Tutorials'])%></li>
   <li class="toggle">
     <details <%=state('Complete_beginners')%>>
       <summary><%=text['Complete_beginners']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/Learn/Getting_started_with_the_web/JavaScript_basics"><%=text['Basics']%></a></li>
-        <li><a href="/<%=locale%>/docs/Learn/JavaScript/First_steps"><%=text['First_steps']%></a></li>
-        <li><a href="/<%=locale%>/docs/Learn/JavaScript/Building_blocks"><%=text['Building_blocks']%></a></li>
-        <li><a href="/<%=locale%>/docs/Learn/JavaScript/Objects"><%=text['Introducing_objects']%></a></li>
+        <li><%-web.smartLink(`/${locale}/docs/Learn/Getting_started_with_the_web/JavaScript_basics`, null, text['Basics'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Learn/JavaScript/First_steps`, null, text['First_steps'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Learn/JavaScript/Building_blocks`, null, text['Building_blocks'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Learn/JavaScript/Objects`, null, text['Introducing_objects'])%></li>
       </ol>
     </details>
   </li>
@@ -416,24 +416,24 @@ var text = mdn.localStringMap({
     <details <%=state('JavaScript Guide')%>>
       <summary><%=text['Guide']%></summary>
       <ol>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Introduction"><%=text['Guide_Introduction']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Grammar_and_types"><%=text['Guide_Grammar']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Control_flow_and_error_handling"><%=text['Guide_Control_flow']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Loops_and_iteration"><%=text['Guide_Loops']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Functions"><%=text['Guide_Functions']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Expressions_and_operators"><%=text['Guide_Expressions']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Numbers_and_dates"><%=text['Guide_Numbers']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Text_formatting"><%=text['Guide_Text']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Regular_expressions"><%=text['Guide_RegExp']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Indexed_collections"><%=text['Guide_Indexed_collections']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Keyed_collections"><%=text['Guide_keyed_collections']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Working_with_objects"><%=text['Guide_Objects']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Using_classes"><%=text['Guide_Classes']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Using_promises"><%=text['Guide_Promises']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Typed_arrays"><%=text['Guide_Typed_arrays']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Iterators_and_generators"><%=text['Guide_Iterators_generators']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Meta_programming"><%=text['Guide_Meta']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Modules"><%=text['Guide_Modules']%></a></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Introduction`, null, text['Guide_Introduction'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Grammar_and_types`, null, text['Guide_Grammar'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Control_flow_and_error_handling`, null, text['Guide_Control_flow'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Loops_and_iteration`, null, text['Guide_Loops'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Functions`, null, text['Guide_Functions'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Expressions_and_operators`, null, text['Guide_Expressions'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Numbers_and_dates`, null, text['Guide_Numbers'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Text_formatting`, null, text['Guide_Text'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Regular_expressions`, null, text['Guide_RegExp'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Indexed_collections`, null, text['Guide_Indexed_collections'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Keyed_collections`, null, text['Guide_keyed_collections'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Working_with_objects`, null, text['Guide_Objects'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Using_classes`, null, text['Guide_Classes'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Using_promises`, null, text['Guide_Promises'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Typed_arrays`, null, text['Guide_Typed_arrays'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Iterators_and_generators`, null, text['Guide_Iterators_generators'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Meta_programming`, null, text['Guide_Meta'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Guide/Modules`, null, text['Guide_Modules'])%></li>
         </ol>
     </details>
   </li>
@@ -441,13 +441,13 @@ var text = mdn.localStringMap({
     <details <%=state('Intermediate')%>>
       <summary><%=text['Intermediate']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks"><%=text['Frameworks']%></a></li>
-        <li><a href="/<%=locale%>/docs/Learn/JavaScript/Client-side_web_APIs"><%=text['Client-side_APIs']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Language_overview"><%=text['Language_overview']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Data_structures"><%=text['Data_structures']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Equality_comparisons_and_sameness"><%=text['Equality']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Enumerability_and_ownership_of_properties"><%=text['Enumerability']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Closures"><%=text['Closures']%></a></li>
+        <li><%-web.smartLink(`/${locale}/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks`, null, text['Frameworks'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Learn/JavaScript/Client-side_web_APIs`, null, text['Client-side_APIs'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Language_overview`, null, text['Language_overview'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Data_structures`, null, text['Data_structures'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Equality_comparisons_and_sameness`, null, text['Equality'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Enumerability_and_ownership_of_properties`, null, text['Enumerability'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Closures`, null, text['Closures'])%></li>
       </ol>
     </details>
   </li>
@@ -455,13 +455,13 @@ var text = mdn.localStringMap({
     <details <%=state('Advanced')%>>
       <summary><%=text['Advanced']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"><%=text['Inheritance']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Memory_management"><%=text['Memory_management']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Event_loop"><%=text['Event_loop']%></a></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Inheritance_and_the_prototype_chain`, null, text['Inheritance'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Memory_management`, null, text['Memory_management'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Event_loop`, null, text['Event_loop'])%></li>
       </ol>
     </details>
   </li>
-  <li class="section"><a href="/<%=locale%>/docs/Web/JavaScript/Reference"><%=text['Reference']%></a></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference`, null, text['Reference'])%></li>
   <li class="toggle">
     <details <%=state('Objects')%>>
        <summary><%=text['Global_Objects']%></summary>
@@ -508,13 +508,13 @@ var text = mdn.localStringMap({
     <details <%=state('More')%>>
       <summary><%=text['More']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/JavaScript_technologies_overview"><%=text['Overview']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Lexical_grammar"><%=text['Lexical_grammar']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Iteration_protocols"><%=text['Iteration_protocols']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Strict_mode"><%=text['Strict_mode']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Template_literals"><%=text['Template_strings']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Trailing_commas"><%=text['Trailing_commas']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features"><%=text['Deprecated_features']%></a></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/JavaScript_technologies_overview`, null, text['Overview'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference/Lexical_grammar`, null, text['Lexical_grammar'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference/Iteration_protocols`, null, text['Iteration_protocols'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference/Strict_mode`, null, text['Strict_mode'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference/Template_literals`, null, text['Template_strings'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference/Trailing_commas`, null, text['Trailing_commas'])%></li>
+        <li><%-web.smartLink(`/${locale}/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features`, null, text['Deprecated_features'])%></li>
       </ol>
     </details>
   </li>
