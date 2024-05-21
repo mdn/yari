@@ -54,7 +54,7 @@ export default function ObservatoryLanding() {
     if (form.host.trim().length === 0) {
       setError(new Error("please enter a hostname"));
     } else {
-      trigger(form.hidden);
+      trigger();
     }
   };
 

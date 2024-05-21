@@ -378,9 +378,7 @@ export default function ObservatoryRecommendations({
                   <span className="visually-hidden">Next</span>
                 </Button>
               </div>
-              <Button onClickHandler={() => trigger(result.scan.hidden)}>
-                Rescan
-              </Button>
+              <Button onClickHandler={() => trigger()}>Rescan</Button>
             </div>
           )}
         </div>
@@ -395,9 +393,7 @@ export default function ObservatoryRecommendations({
               Oops, it looks like we can't load these test results, you should
               Rescan.
             </p>
-            <Button onClickHandler={() => trigger(result.scan.hidden)}>
-              Rescan
-            </Button>
+            <Button onClickHandler={() => trigger()}>Rescan</Button>
           </div>
         </div>
       </figure>

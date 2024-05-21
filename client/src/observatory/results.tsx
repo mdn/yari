@@ -126,35 +126,27 @@ function ObservatoryRating({
         <table className="overall">
           <thead>
             <tr>
-              {result.scan.state === "FINISHED" && (
-                <>
-                  <th>Grade</th>
-                  <th>Score</th>
-                  <th>Tests Passed</th>
-                </>
-              )}
+              <th>Grade</th>
+              <th>Score</th>
+              <th>Tests Passed</th>
               <th>Scan Time</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              {result.scan.state === "FINISHED" && (
-                <>
-                  <td>
-                    <div
-                      className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
-                    >
-                      {result.scan.grade}
-                    </div>
-                  </td>
-                  <td>{result.scan.score}/100</td>
-                  <td>
-                    {result.scan.tests_passed}/{result.scan.tests_quantity}
-                  </td>
-                </>
-              )}
               <td>
-                {new Date(result.scan.end_time).toLocaleString([], {
+                <div
+                  className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
+                >
+                  {result.scan.grade}
+                </div>
+              </td>
+              <td>{result.scan.score}/100</td>
+              <td>
+                {result.scan.tests_passed}/{result.scan.tests_quantity}
+              </td>
+              <td>
+                {new Date(result.scan.scanned_at).toLocaleString([], {
                   dateStyle: "medium",
                   timeStyle: "medium",
                 })}
@@ -271,18 +263,20 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
             </tr>
           </thead>
           <tbody>
-            {[...result.history].reverse().map(({ end_time, score, grade }) => (
-              <tr key={end_time}>
-                <td>
-                  {new Date(end_time).toLocaleString([], {
-                    dateStyle: "full",
-                    timeStyle: "medium",
-                  })}
-                </td>
-                <td>{score}</td>
-                <td>{grade}</td>
-              </tr>
-            ))}
+            {[...result.history]
+              .reverse()
+              .map(({ scanned_at, score, grade }) => (
+                <tr key={scanned_at}>
+                  <td>
+                    {new Date(scanned_at).toLocaleString([], {
+                      dateStyle: "full",
+                      timeStyle: "medium",
+                    })}
+                  </td>
+                  <td>{score}</td>
+                  <td>{grade}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </figure>

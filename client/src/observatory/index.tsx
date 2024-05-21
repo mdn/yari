@@ -24,11 +24,11 @@ export default function Observatory() {
 export function useUpdateResult(host: string) {
   return useSWRMutation(
     host,
-    async (key: string, { arg }: { arg: boolean }) => {
+    async (key: string) => {
       const url = new URL(OBSERVATORY_API_URL + "/api/v2/analyze");
       url.searchParams.set("host", key);
       const formData = new FormData();
-      if (arg) formData.set("hidden", String(arg));
+      // if (arg) formData.set("hidden", String(arg));
       const res = await fetch(url, {
         method: "POST",
         body: formData,

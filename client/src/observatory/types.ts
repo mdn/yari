@@ -19,17 +19,12 @@ export interface ObservatoryResult {
 
 export interface ObservatoryScanResult {
   algorithm_version: number;
-  end_time: number;
-  error?: string;
-  grade?: string;
-  hidden: boolean;
+  scanned_at: string;
+  error?: string | null;
+  grade?: string | null;
   id: number;
-  likelihood_indicator?: string;
   response_headers?: Record<string, string>;
   score?: number;
-  site_id: number;
-  start_time: number;
-  state: ObservatoryScanState;
   status_code?: number;
   tests_failed: number;
   tests_passed: number;
@@ -49,7 +44,7 @@ export interface ObservatoryIndividualTest {
 }
 
 export interface ObservatoryHistoryResult {
-  end_time: number;
+  scanned_at: string;
   grade: string;
   id: number;
   score: number;
