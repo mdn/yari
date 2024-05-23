@@ -11,6 +11,7 @@ import { BlogImage, BlogPostMetadata } from "../../../libs/types/blog.js";
 import "./index.scss";
 import { Button } from "../ui/atoms/button";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
+import { BlogFeedIcon } from "./icon";
 
 interface BlogIndexData {
   posts: BlogPostMetadata[];
@@ -98,14 +99,7 @@ function BlogIndex(props: HydrationData) {
       >
         <header>
           <h1 className="mify">Blog it better</h1>
-          <a
-            className="icon icon-feed"
-            href="/en-US/blog/rss.xml"
-            target="_blank"
-            title="RSS feed"
-          >
-            <span className="visually-hidden">MDN Blog RSS Feed</span>
-          </a>
+          <BlogFeedIcon />
         </header>
         <section className="article-list">
           {data?.posts.map((fm) => {
