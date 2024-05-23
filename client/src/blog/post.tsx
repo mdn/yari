@@ -24,7 +24,6 @@ import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
 import { PlayQueue } from "../playground/queue";
 import { BlogFeedIcon } from "./icon";
-import { ReactNode } from "react";
 
 function MaybeLink({ className = "", link, children }) {
   return link ? (
