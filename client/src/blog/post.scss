@@ -82,6 +82,16 @@
     grid-area: post;
     max-width: 52rem;
 
+    .icon-feed {
+      background-color: var(--category-color);
+      height: 1rem;
+      width: 1rem;
+
+      &:hover {
+        background-color: var(--text-primary);
+      }
+    }
+
     + .section-newsletter h2 {
       font: var(--type-heading-h3);
       margin: 0;

@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { ReactComponent as MDNLogo } from "../../../assets/mdn-footer-logo.svg";
 import { ReactComponent as MozLogo } from "../../../assets/moz-logo.svg";
 import { PLUS_IS_ENABLED } from "../../../env";
+import { BlogFeedIcon } from "../../../blog/icon";
 const DARK_NAV_ROUTES = [/\/plus\/?$/i];
 
 export function Footer() {
@@ -55,13 +56,7 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a
-                className="icon icon-feed"
-                href="/en-US/blog/rss.xml"
-                target="_blank"
-              >
-                <span className="visually-hidden">MDN Blog RSS Feed</span>
-              </a>
+              <BlogFeedIcon />
             </li>
           </ul>
         </div>

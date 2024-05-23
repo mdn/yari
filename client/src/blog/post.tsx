@@ -23,6 +23,8 @@ import { SignUpSection as NewsletterSignUp } from "../newsletter";
 import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
 import { PlayQueue } from "../playground/queue";
+import { BlogFeedIcon } from "./icon";
+import { ReactNode } from "react";
 
 function MaybeLink({ className = "", link, children }) {
   return link ? (
@@ -76,14 +78,17 @@ export function Author({ metadata }: { metadata: AuthorMetadata | undefined }) {
 
 export function AuthorDateReadTime({
   metadata,
+  withFeedIcon = false,
 }: {
   metadata: BlogPostMetadata;
+  withFeedIcon?: boolean;
 }) {
   return (
     <div className="date-author">
       <Author metadata={metadata.author} />
       <PublishDate date={metadata.date} />
       <TimeToRead readTime={metadata.readTime} />
+      {withFeedIcon && <BlogFeedIcon />}
     </div>
   );
 }
@@ -210,7 +215,7 @@ export function BlogPost(props: HydrationData) {
               <span className="sponsored">Sponsored</span>
             )}
             <h1>{doc?.title}</h1>
-            <AuthorDateReadTime metadata={blogMeta} />
+            <AuthorDateReadTime metadata={blogMeta} withFeedIcon />
             <RenderDocumentBody doc={doc} />
             {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
