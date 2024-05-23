@@ -54,8 +54,7 @@
 // wide in the mobile layout to the time it switches
 // to two columns. Then, from the time the iframe
 // is 590px wide in the two-column layout on up.
-@media (min-width: 688px) and (max-width: $screen-md - 1),
-  screen and (min-width: 1008px) {
+@media (min-width: 688px) and (max-width: $screen-md - 1), (min-width: 1008px) {
   .interactive {
     height: 375px;
 

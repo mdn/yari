@@ -881,7 +881,7 @@ kbd {
       );
     }
 
-    @media screen and not (min-height: $screen-height-place-limit) {
+    @media not (min-height: $screen-height-place-limit) {
       overflow: auto;
     }
   }

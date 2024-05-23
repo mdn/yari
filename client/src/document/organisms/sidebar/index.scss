@@ -255,8 +255,7 @@
   @media (min-width: $screen-md) {
     display: flex;
   }
-  @media (min-width: $screen-lg),
-    screen and (min-height: $screen-height-place-limit) {
+  @media (min-width: $screen-lg), (min-height: $screen-height-place-limit) {
     display: block;
     overflow: auto;
   }
