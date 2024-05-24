@@ -62,8 +62,12 @@
           outline-style: auto;
         }
 
+        > input:not(:checked) + label {
+          color: var(--text-secondary);
+          opacity: 0.775;
+        }
+
         > label {
-          color: var(--text-inactive);
           cursor: pointer;
           width: max-content;
         }
