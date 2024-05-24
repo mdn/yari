@@ -2354,10 +2354,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mozilla/glean@5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-5.0.1.tgz#784bb3238b89f8c979fe2dd6f15282fb21242ee2"
-  integrity sha512-PrIvNGjJsBBzasGMf2QwoxEPK+XNGKu0il3YgiwbXXGJZ6aguFS6dakKkVho+X5Gdckj0QD7P2rjfG3y6IkGfQ==
+"@mozilla/glean@5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-5.0.2.tgz#e5ec03685cccbf429e91b170cf0c445aea6c4c93"
+  integrity sha512-NBWNBoPTY0AeLdDiNROECq9Vx84ybKmzdkwSXQ54EgjGUkq7FD4yoo11NqeQKvgnRCgzR/IhuQNiE0HXcAyQxw==
   dependencies:
     fflate "^0.8.0"
     tslib "^2.3.1"
