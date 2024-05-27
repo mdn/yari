@@ -19,9 +19,6 @@ updates:
     ignore:
       # Temporarily disable updates to Dinocons
       - dependency-name: "@mdn/dinocons"
-      - dependency-name: imagemin-svgo
-        versions:
-          - "> 10.0.1"
 
   - package-ecosystem: "github-actions"
     directory: "/"
