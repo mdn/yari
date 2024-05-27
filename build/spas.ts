@@ -140,7 +140,7 @@ export async function buildSPAs(options: {
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
-        { prefix: "search", pageTitle: "Search" },
+        { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
           prefix: "plus/ai-help",
@@ -177,12 +177,13 @@ export async function buildSPAs(options: {
         },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing } of SPAs) {
+      for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context = {
           pageTitle,
           locale,
           noIndexing,
+          onlyFollow,
         };
 
         const html = renderCanonicalHTML(url, context);

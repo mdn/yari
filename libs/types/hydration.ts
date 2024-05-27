@@ -8,7 +8,8 @@ interface HydrationData<T = any, S = any> {
   pageTitle?: any;
   possibleLocales?: any;
   locale?: any;
-  noIndexing?: any;
+  noIndexing?: boolean;
+  onlyFollow?: boolean;
   image?: string | null;
 }
 
