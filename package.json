@@ -192,7 +192,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-unicorn": "^53.0.0",
-    "eslint-webpack-plugin": "^4.1.0",
+    "eslint-webpack-plugin": "^4.2.0",
     "extend": "^3.0.2",
     "file-loader": "^6.2.0",
     "foreman": "^3.0.1",
