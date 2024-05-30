@@ -115,7 +115,9 @@ export function createPong2GetHandler(zoneKeys, coder) {
 
 export function createPong2ClickHandler(coder) {
   return async (params, countryCode, userAgent) => {
-    const click = coder.decodeAndVerify(params.get("code"));
+    const code = params.get("code");
+    const click = coder.decodeAndVerify(code);
+    console.debug("pong2", code, click);
 
     if (!click) {
       return {};
