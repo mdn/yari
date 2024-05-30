@@ -2332,7 +2332,7 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.8.0.tgz#5aa7abb48f23f693068ed2999ae627d2f7d902ec"
   integrity sha512-I/s6F7yKUDdtMsoBWXJe8Qz40Tui5vsuKCWJEWVL+5q9sSWRzzx6v2KeNsOBEwd94j0eWkpWCH4yB6rZg9Mf0w==
 
-"@opentelemetry/context-async-hooks@^1.23.0":
+"@opentelemetry/context-async-hooks@^1.24.1":
   version "1.24.1"
   resolved "https://registry.yarnpkg.com/@opentelemetry/context-async-hooks/-/context-async-hooks-1.24.1.tgz#1db7116d78f60e993e0d337bd497885a53deba1a"
   integrity sha512-R5r6DO4kgEOVBxFXhXjwospLQkv+sYxwCfjvoZBe7Zm6KKXAV9kDSJhi/D1BweowdZmO+sdbENLs374gER8hpQ==
@@ -2344,14 +2344,14 @@
   dependencies:
     "@opentelemetry/semantic-conventions" "1.24.1"
 
-"@opentelemetry/instrumentation-connect@0.36.0":
-  version "0.36.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/instrumentation-connect/-/instrumentation-connect-0.36.0.tgz#6a83722f0cb22a7f9b3bd8185f940308bbed0e50"
-  integrity sha512-k9++bmJZ9zDEs3u3DnKTn2l7QTiNFg3gPx7G9rW0TPnP+xZoBSBTrEcGYBaqflQlrFG23Q58+X1sM2ayWPv5Fg==
+"@opentelemetry/instrumentation-connect@0.36.1":
+  version "0.36.1"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/instrumentation-connect/-/instrumentation-connect-0.36.1.tgz#4ef93ade4c7224213d9e4411190c22d753166a18"
+  integrity sha512-xI5Q/CMmzBmHshPnzzjD19ptFaYO/rQWzokpNio4QixZYWhJsa35QgRvN9FhPkwgtuJIbt/CWWAufJ3egJNHEA==
   dependencies:
     "@opentelemetry/core" "^1.8.0"
     "@opentelemetry/instrumentation" "^0.51.0"
-    "@opentelemetry/semantic-conventions" "^1.0.0"
+    "@opentelemetry/semantic-conventions" "^1.22.0"
     "@types/connect" "3.4.36"
 
 "@opentelemetry/instrumentation-express@0.39.0":
@@ -2595,24 +2595,24 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@sentry/core@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.5.0.tgz#ddad729e94bab81c7e9a2d9ef295d40cdb02ed8e"
-  integrity sha512-SO3ddBzGdha+Oflp+IKwBxj+7ds1q69OAT3VsypTd+WUFQdI9DIhR92Bjf+QQZCIzUNOi79VWOh3aOi3f6hMnw==
+"@sentry/core@8.7.0":
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.7.0.tgz#c98bc47020cd48d899806baaebc7a4b6fe10b9ab"
+  integrity sha512-Sq/46B+5nWmgnCD6dEMZ6HTkKbV/KAdgaSvT8oXDb9OWoPy1jJ/gbLrhLs62KbjuDQk4/vWnOgHiKQbcslSzMw==
   dependencies:
-    "@sentry/types" "8.5.0"
-    "@sentry/utils" "8.5.0"
+    "@sentry/types" "8.7.0"
+    "@sentry/utils" "8.7.0"
 
-"@sentry/node@^8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.5.0.tgz#46fc78bd4d1f566ca3e564e538f5dd8c04e99a5e"
-  integrity sha512-t9cHAx/wLJYtdVf2XlzKlRJGvwdAp1wjzG0tC4E1Znx74OuUS1cFNo5WrGuOi0/YcWSxiJaxBvtUcsWK86fIgw==
+"@sentry/node@^8.7.0":
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.7.0.tgz#dd8993c6060870ad80b8c45091d4ae91c1c7b7c2"
+  integrity sha512-El1LmXGVe8Ahi5oUdlrE5s3Or23/iGnnntNvaYymXk4BmL4dJtv7ttlQ94ZrI9QWs8VnfM7eHqCd+OPjTh0XJQ==
   dependencies:
     "@opentelemetry/api" "^1.8.0"
-    "@opentelemetry/context-async-hooks" "^1.23.0"
+    "@opentelemetry/context-async-hooks" "^1.24.1"
     "@opentelemetry/core" "^1.24.1"
     "@opentelemetry/instrumentation" "^0.51.1"
-    "@opentelemetry/instrumentation-connect" "0.36.0"
+    "@opentelemetry/instrumentation-connect" "0.36.1"
     "@opentelemetry/instrumentation-express" "0.39.0"
     "@opentelemetry/instrumentation-fastify" "0.36.1"
     "@opentelemetry/instrumentation-graphql" "0.40.0"
@@ -2630,33 +2630,33 @@
     "@opentelemetry/sdk-trace-base" "^1.23.0"
     "@opentelemetry/semantic-conventions" "^1.23.0"
     "@prisma/instrumentation" "5.14.0"
-    "@sentry/core" "8.5.0"
-    "@sentry/opentelemetry" "8.5.0"
-    "@sentry/types" "8.5.0"
-    "@sentry/utils" "8.5.0"
+    "@sentry/core" "8.7.0"
+    "@sentry/opentelemetry" "8.7.0"
+    "@sentry/types" "8.7.0"
+    "@sentry/utils" "8.7.0"
   optionalDependencies:
     opentelemetry-instrumentation-fetch-node "1.2.0"
 
-"@sentry/opentelemetry@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@sentry/opentelemetry/-/opentelemetry-8.5.0.tgz#34b01e029439988939b0e21a6d2314f61ab18406"
-  integrity sha512-AbxFUNjuTKQ9ugZrssmGtPxWkBr4USNoP7GjaaGCNwNzvIVYCa+i8dv7BROJiW2lsxNAremULEbh+nbVmhGxDA==
+"@sentry/opentelemetry@8.7.0":
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/@sentry/opentelemetry/-/opentelemetry-8.7.0.tgz#9f6ba1c081918fd2f82b4811aefd94b2362c5c0f"
+  integrity sha512-I9JEXnqXDBPr5MtgEYRvmcolmpugSgH1QV+SFnfOPc40Mu/npNsJq7oqbGzhlCe4H45XD6LJzFlc7BfoCzwAsQ==
   dependencies:
-    "@sentry/core" "8.5.0"
-    "@sentry/types" "8.5.0"
-    "@sentry/utils" "8.5.0"
+    "@sentry/core" "8.7.0"
+    "@sentry/types" "8.7.0"
+    "@sentry/utils" "8.7.0"
 
-"@sentry/types@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-8.5.0.tgz#03b4925fbcda918a0290f8fc668b62129e3408df"
-  integrity sha512-eDgkSmKI4+XL0QZm4H3j/n1RgnrbnjXZmjj+LsfccRZQwbPu9bWlc8q7Y7Ty1gOsoUpX+TecNLp2a8CRID4KHA==
+"@sentry/types@8.7.0":
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-8.7.0.tgz#92731af32318d6abb8759216cf6c3c5035894e6e"
+  integrity sha512-11KLOKumP6akugVGLvSoEig+JlP0ZEzW3nN9P+ppgdIx9HAxMIh6UvumbieG4/DWjAh2kh6NPNfUw3gk2Gfq1A==
 
-"@sentry/utils@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-8.5.0.tgz#95987f34cc79b34cd7a80959abd615c42d9e5c7e"
-  integrity sha512-fdrCzo8SAYiw9JBhkJPqYqJkDXZ/wICzN7+zcXIuzKNhE1hdoFjeKcPnpUI3bKZCG6e3hT1PTYQXhVw7GIZV9w==
+"@sentry/utils@8.7.0":
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-8.7.0.tgz#26893acc5bca9bfd4998d2eafe724491e3ca78a2"
+  integrity sha512-aWmcbSoOmrbzll/FkNQFJcCtLAuJLvTYbRKiCSkV3FScA7UaA742HkTZAPFiioALFIESWk/fcGZqtN0s4I281Q==
   dependencies:
-    "@sentry/types" "8.5.0"
+    "@sentry/types" "8.7.0"
 
 "@sidvind/better-ajv-errors@2.1.3":
   version "2.1.3"
