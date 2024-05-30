@@ -12,6 +12,7 @@ User-agent: *
 Sitemap: https://developer.mozilla.org/sitemap.xml
 
 Disallow: /api/
+Disallow: /*/contributors.txt
 Disallow: /*/files/
 Disallow: /media
 `;
