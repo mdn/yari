@@ -156,7 +156,7 @@
     "@playwright/test": "^1.44.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.13",
     "@svgr/webpack": "^8.1.0",
-    "@swc/core": "^1.5.7",
+    "@swc/core": "^1.5.22",
     "@testing-library/react": "^15.0.7",
     "@types/async": "^3.2.24",
     "@types/cli-progress": "^3.11.5",
