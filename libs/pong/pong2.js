@@ -122,7 +122,7 @@ export function createPong2ClickHandler(coder) {
     }
 
     const anonymousIp = anonymousIpByCC(countryCode);
-    const clickURL = new URL(`https:${click}`);
+    const clickURL = createURL(click);
     clickURL.searchParams.set("forwardedip", anonymousIp);
     clickURL.searchParams.set("useragent", userAgent);
 
@@ -140,7 +140,7 @@ export function createPong2ViewedHandler(coder) {
     const view = coder.decodeAndVerify(params.get("code"));
     if (view) {
       const anonymousIp = anonymousIpByCC(countryCode);
-      const viewURL = new URL(`https:${view}`);
+      const viewURL = createURL(view);
       viewURL.searchParams.set("forwardedip", anonymousIp);
       viewURL.searchParams.set("useragent", userAgent);
 
@@ -149,4 +149,17 @@ export function createPong2ViewedHandler(coder) {
       });
     }
   };
+}
+
+function createURL(payload) {
+  if (payload.startsWith("//")) {
+    // BSA omitted 'https:' until May 2024.
+    return new URL(`https:${payload}`);
+  }
+
+  if (!payload.startsWith("https://")) {
+    console.error(`Invalid URL payload: ${payload}`);
+  }
+
+  return new URL(payload);
 }
