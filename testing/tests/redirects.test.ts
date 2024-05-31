@@ -1245,6 +1245,10 @@ const MISC_REDIRECT_URLS = [].concat(
     "/en-US/docs/Tools/Memory/Treemap_view"
   ),
   url_test(
+    "/en-US/Using_audio_and_video_in_Firefox",
+    "/en-US/docs/Using_audio_and_video_in_Firefox"
+  ),
+  url_test(
     "/en-US/Using_files_from_web_applications",
     "/en-US/docs/Using_files_from_web_applications"
   ),
