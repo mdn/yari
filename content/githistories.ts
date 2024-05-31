@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import path from "node:path";
 import { Commit, readGitHistory } from "../build/git-history.js";
 
