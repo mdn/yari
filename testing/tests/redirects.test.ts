@@ -1216,14 +1216,26 @@ const MISC_REDIRECT_URLS = [].concat(
     "/en-US/DragDrop/Drag_and_Drop/",
     "/en-US/docs/DragDrop/Drag_and_Drop"
   ),
+  url_test(
+    "/en-US/ECMAScript_DontEnum_attribute",
+    "/en-US/docs/ECMAScript_DontEnum_attribute"
+  ),
   url_test("/en-US/HTML", "/en-US/docs/HTML"),
   url_test("/en-US/HTML/", "/en-US/docs/HTML"),
   url_test("/en-US/HTML/Canvas/", "/en-US/docs/HTML/Canvas"),
   url_test("/en-US/JavaScript", "/en-US/docs/JavaScript"),
   url_test("/en-US/JavaScript/", "/en-US/docs/JavaScript"),
   url_test(
+    "/en-US/JavaScript_typed_arrays/ArrayBuffer",
+    "/en-US/docs/JavaScript_typed_arrays/ArrayBuffer"
+  ),
+  url_test(
     "/en-US/JavaScript/Reference/About/",
     "/en-US/docs/JavaScript/Reference/About"
+  ),
+  url_test(
+    "/en-US/Media_formats_supported_by_the_audio_and_video_elements",
+    "/en-US/docs/Media_formats_supported_by_the_audio_and_video_elements"
   ),
   url_test("/en-US/SVG", "/en-US/docs/SVG"),
   url_test("/en-US/SVG/", "/en-US/docs/SVG"),
@@ -1233,6 +1245,10 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test(
     "/en-US/Tools/Memory/Treemap_view/",
     "/en-US/docs/Tools/Memory/Treemap_view"
+  ),
+  url_test(
+    "/en-US/Using_audio_and_video_in_Firefox",
+    "/en-US/docs/Using_audio_and_video_in_Firefox"
   ),
   url_test(
     "/en-US/Using_files_from_web_applications",
