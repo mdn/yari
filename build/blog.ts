@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { gzipSync } from "node:zlib";
 
 import { fdir } from "fdir";
 import { Feed } from "feed";
@@ -38,6 +39,7 @@ import { extractSections } from "./extract-sections.js";
 import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
+import { makeSitemapXML } from "./sitemaps.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;
@@ -493,5 +495,37 @@ export async function buildAuthors(options: { verbose?: boolean }) {
         console.log("Copied", from, "to", to);
       }
     }
+  }
+}
+
+export async function buildBlogSitemap(options: { verbose?: boolean }) {
+  const posts = await allPostFrontmatter();
+
+  const items = posts.map((post) => ({
+    slug: `${post.slug}/`,
+    modified: new Date(post.date).toISOString(),
+  }));
+
+  const index = {
+    slug: "",
+    modified: items
+      .map((p) => p.modified)
+      .sort((a, b) => b.localeCompare(a))
+      .at(0),
+  };
+
+  const xml = makeSitemapXML(`/${DEFAULT_LOCALE}/blog/`, [index, ...items]);
+
+  const sitemapDir = path.join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    DEFAULT_LOCALE.toLowerCase(),
+    "blog"
+  );
+  await fs.mkdir(sitemapDir, { recursive: true });
+  const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
+  await fs.writeFile(sitemapFilePath, gzipSync(xml));
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
   }
 }
