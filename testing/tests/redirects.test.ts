@@ -1222,6 +1222,10 @@ const MISC_REDIRECT_URLS = [].concat(
     "/en-US/DragDrop/Drag_and_Drop/",
     "/en-US/docs/DragDrop/Drag_and_Drop"
   ),
+  url_test(
+    "/en-US/ECMAScript_DontEnum_attribute",
+    "/en-US/docs/ECMAScript_DontEnum_attribute"
+  ),
   url_test("/en-US/HTML", "/en-US/docs/HTML"),
   url_test("/en-US/HTML/", "/en-US/docs/HTML"),
   url_test("/en-US/HTML/Canvas/", "/en-US/docs/HTML/Canvas"),
