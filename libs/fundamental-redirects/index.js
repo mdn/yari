@@ -323,291 +323,6 @@ const SCL3_REDIRECT_PATTERNS = [
     "/docs/Web/API/HTMLCanvasElement.mozGetAsFile",
     { permanent: true }
   ),
-  //##################################
-  // MDN.GITHUB.IO
-  //##################################
-  // canvas raycaster
-  redirect(
-    /^samples\/raycaster\/input.js$/i,
-    "http://mdn.github.io/canvas-raycaster/input.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/raycaster\/Level.js$/i,
-    "http://mdn.github.io/canvas-raycaster/Level.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/raycaster\/Player.js$/i,
-    "http://mdn.github.io/canvas-raycaster/Player.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/raycaster\/RayCaster.html$/i,
-    "http://mdn.github.io/canvas-raycaster/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/raycaster\/RayCaster.js$/i,
-    "http://mdn.github.io/canvas-raycaster/RayCaster.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/raycaster\/trace.css$/i,
-    "http://mdn.github.io/canvas-raycaster/trace.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/raycaster\/trace.js$/i,
-    "http://mdn.github.io/canvas-raycaster/trace.js",
-    { permanent: true }
-  ),
-  // Bug 1215255 - Redirect static WebGL examples
-  redirect(
-    /^samples\/webgl\/sample1$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample1",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample1\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample1/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample1\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample1/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample1\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample2$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample2",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample2\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample2\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample2/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample2\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample2\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample2/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample2\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample3$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample3",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample3\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample3\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample3/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample3\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample3\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample3/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample3\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample4$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample4",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample4\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample4\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample4/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample4\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample4\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample4/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample4\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample5$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample5",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample5\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample5\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample5/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample5\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample5\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample5/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample5\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample6",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6\/cubetexture.png$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample6/cubetexture.png",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample6/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample6/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample6\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample7",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7\/cubetexture.png$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample7/cubetexture.png",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample7/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample7/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample7\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample8",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8\/Firefox.ogv$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample8/Firefox.ogv",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8\/glUtils.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/glUtils.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8\/index.html$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample8/index.html",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8\/sylvester.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sylvester.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8\/webgl-demo.js$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/sample8/webgl-demo.js",
-    { permanent: true }
-  ),
-  redirect(
-    /^samples\/webgl\/sample8\/webgl.css$/i,
-    "http://mdn.github.io/webgl-examples/tutorial/webgl.css",
-    { permanent: true }
-  ),
   // All of the remaining "samples/" URL's are redirected to the
   // the media domain (ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN).
   redirect(
@@ -709,13 +424,6 @@ const SCL3_REDIRECT_PATTERNS = [
   localeRedirect(
     /^demos\/detail\/bananabread$/i,
     "https://github.com/kripken/BananaBread/",
-    { prependLocale: false, permanent: true }
-  ),
-  // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread/launch$
-  // https://kripken.github.io/BananaBread/cube2/index.html [R=301,L]
-  localeRedirect(
-    /^demos\/detail\/bananabread\/launch$/i,
-    "https://kripken.github.io/BananaBread/cube2/index.html",
     { prependLocale: false, permanent: true }
   ),
   // All other Demo Studio and Dev Derby paths (bug 1238037)
@@ -865,8 +573,6 @@ for (const [zoneRoot, wikiSlug, locales] of zoneRedirects) {
   }
 }
 
-const MARIONETTE_CLIENT_DOCS_URL =
-  "https://marionette-client.readthedocs.io/en/latest/";
 const MARIONETTE_DOCS_ROOT_URL =
   "https://firefox-source-docs.mozilla.org/testing/marionette/marionette/";
 
@@ -878,14 +584,6 @@ const MARIONETTE_REDIRECT_PATTERNS = [
   externalRedirect(
     /docs\/(?:Mozilla\/QA\/)?Marionette\/Builds$/i,
     () => `${MARIONETTE_DOCS_ROOT_URL}Building.html`
-  ),
-  externalRedirect(
-    /docs\/(?:Mozilla\/QA\/)?Marionette\/Client$/i,
-    () => MARIONETTE_CLIENT_DOCS_URL
-  ),
-  externalRedirect(
-    /docs\/Mozilla\/QA\/Marionette\/Python_Client$/i,
-    () => MARIONETTE_CLIENT_DOCS_URL
   ),
   externalRedirect(
     /docs\/(?:Mozilla\/QA\/)?Marionette\/Developer_setup$/i,
@@ -1063,21 +761,6 @@ for (const [aoPath, ewPath] of [
   );
 }
 
-const FIREFOX_ACCOUNTS_REDIRECT_PATTERNS = [
-  externalRedirect(
-    /(?:docs\/)?Mozilla\/Firefox_Accounts_OAuth_Dashboard(?:\/|$)/i,
-    "https://mozilla.github.io/ecosystem-platform/docs/welcome"
-  ),
-  externalRedirect(
-    /(?:docs\/)?Mozilla\/(?:Tech\/)?Firefox_Accounts(?:\/|$)/i,
-    "https://mozilla.github.io/ecosystem-platform/docs/welcome"
-  ),
-  externalRedirect(
-    /(?:docs\/)?Archive\/Mozilla\/Firefox\/Accounts(?:\/|$)/i,
-    "https://mozilla.github.io/ecosystem-platform/docs/welcome"
-  ),
-];
-
 const FIREFOX_SOURCE_DOCS_ROOT_URL = "https://firefox-source-docs.mozilla.org";
 const FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS = [];
 for (const [pattern, path] of [
@@ -1182,21 +865,8 @@ const REDIRECT_PATTERNS = [].concat(
   ZONE_REDIRECT_PATTERNS,
   MARIONETTE_REDIRECT_PATTERNS,
   WEBEXTENSIONS_REDIRECT_PATTERNS,
-  FIREFOX_ACCOUNTS_REDIRECT_PATTERNS,
   FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS,
   [
-    localeRedirect(
-      /^fellowship.*/i,
-      "/docs/Archive/2015_MDN_Fellowship_Program",
-      {
-        permanent: true,
-      }
-    ),
-    localeRedirect(
-      /^docs\/(ServerJS|CommonJS)(?<subPath>$|\/.+)/i,
-      ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
-      { prependLocale: false, permanent: true }
-    ),
     localeRedirect(/advertising\/with_us/i, "/advertising", {
       permanent: true,
     }),
