@@ -1,5 +1,6 @@
 import path from "node:path";
 import fs from "node:fs/promises";
+import { gzipSync } from "node:zlib";
 
 import { fdir } from "fdir";
 import frontmatter from "front-matter";
@@ -39,6 +40,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
+import { makeSitemapXML } from "./sitemaps.js";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -427,4 +429,33 @@ function setCurriculumTypes($: CheerioAPI) {
       }
     }
   });
+}
+
+export async function buildCurriculumSitemap(options: { verbose?: boolean }) {
+  const index = await buildCurriculumIndex();
+  const items = [];
+  while (index.length) {
+    const current = index.shift();
+    items.push({
+      slug: current.url,
+    });
+    if (current.children) {
+      index.push(...current.children);
+    }
+  }
+
+  const xml = makeSitemapXML("", items);
+
+  const sitemapDir = path.join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    DEFAULT_LOCALE.toLowerCase(),
+    "curriculum"
+  );
+  await fs.mkdir(sitemapDir, { recursive: true });
+  const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
+  await fs.writeFile(sitemapFilePath, gzipSync(xml));
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
+  }
 }
