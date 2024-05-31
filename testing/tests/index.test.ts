@@ -119,7 +119,7 @@ test("content built foo page", () => {
     `https://developer.mozilla.org${doc.mdn_url}`
   );
 
-  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `.env.testing`.
@@ -1179,7 +1179,7 @@ test("404 page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
   expect($('meta[property="og:locale"]').attr("content")).toBe("en_US");
 });
 
@@ -1190,7 +1190,7 @@ test("plus page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
 });
 
 test("plus collections page", () => {

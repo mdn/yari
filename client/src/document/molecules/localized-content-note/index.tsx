@@ -32,6 +32,11 @@ export function LocalizedContentNote({
       linkText:
         "이 페이지는 영어로부터 커뮤니티에 의하여 번역되었습니다. MDN Web Docs에서 한국 커뮤니티에 가입하여 자세히 알아보세요.",
     },
+    "pt-BR": {
+      linkText:
+        "Esta página foi traduzida do inglês pela comunidade. Saiba mais e junte-se à comunidade MDN Web Docs.",
+      url: "/pt-BR/docs/MDN/Community/Contributing/Translated_content#locais_ativos",
+    },
     ru: {
       linkText:
         "Эта страница была переведена с английского языка силами сообщества. Вы тоже можете внести свой вклад, присоединившись к русскоязычному сообществу MDN Web Docs.",
