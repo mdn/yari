@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.53.1](https://github.com/mdn/yari/compare/v2.53.0...v2.53.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **cloud-function:** skip next() on fundamental redirect ([#11222](https://github.com/mdn/yari/issues/11222)) ([00daf0f](https://github.com/mdn/yari/commit/00daf0f11a77b0fb76ca873f1f4bbc9108d50237))
+* **seo:** add rel="nofollow" on "Sign up for free" link ([#11219](https://github.com/mdn/yari/issues/11219)) ([ef26b7f](https://github.com/mdn/yari/commit/ef26b7f91bf19919e328bf04ab97955a20e4f4a6))
+* **sync-translated-content:** preserve l10n frontmatter ([#11224](https://github.com/mdn/yari/issues/11224)) ([66653b7](https://github.com/mdn/yari/commit/66653b7426b5570cbcffb495c9f5997215079d7e))
+
 ## [2.53.0](https://github.com/mdn/yari/compare/v2.52.1...v2.53.0) (2024-05-30)
 
 
