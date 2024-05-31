@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 type WikiHistory = {
-  modified: Date;
+  modified: string; // ISO 8601 format
   contributors: string[];
 };
 
@@ -17,15 +17,7 @@ export function getWikiHistories(root: string, locale: string) {
     const history = fs.existsSync(historyFilePath)
       ? new Map(
           Object.entries(
-            JSON.parse(
-              fs.readFileSync(historyFilePath, "utf-8"),
-              (key, value) => {
-                if (key === "modified") {
-                  return new Date(value);
-                }
-                return value;
-              }
-            )
+            JSON.parse(fs.readFileSync(historyFilePath, "utf-8"))
           ).map(([slug, history]) => {
             return [`/${locale}/docs/${slug}`, history];
           })
