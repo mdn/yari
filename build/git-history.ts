@@ -69,8 +69,9 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   return map;
 }
 
-export function readGitHistory(contentRoot: string): CommitHistory {
-  const historyFilePath = path.join(contentRoot, "_githistory.json");
+// Read the git history from the specified file.
+// If the file doesn't exist, return an empty object.
+export function readGitHistory(historyFilePath: string): CommitHistory {
   if (fs.existsSync(historyFilePath)) {
     return JSON.parse(fs.readFileSync(historyFilePath, "utf-8"));
   }
