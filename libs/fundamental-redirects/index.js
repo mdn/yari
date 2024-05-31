@@ -117,44 +117,6 @@ const LOCALE_PATTERNS = [
 
 // Redirects/rewrites/aliases migrated from SCL3 httpd config
 const SCL3_REDIRECT_PATTERNS = [
-  // RewriteRule ^/media/(redesign/)?css/(.*)-min.css$
-  // /static/build/styles/$2.css [L,R=301]
-  redirect(
-    /^media\/(?:redesign\/)?css\/(?<doc>.*)-min.css$/i,
-    ({ doc }) => `/static/build/styles/${doc}.css`,
-    { permanent: true }
-  ),
-  // RewriteRule ^/media/(redesign/)?js/(.*)-min.js$ /static/build/js/$2.js
-  // [L,R=301]
-  redirect(
-    /^media\/(?:redesign\/)?js\/(?<doc>.*)-min.js$/i,
-    ({ doc }) => `/static/build/js/${doc}.js`,
-    { permanent: true }
-  ),
-  // RewriteRule ^/media/(redesign/)?img(.*) /static/img$2 [L,R=301]
-  redirect(
-    /^media\/(?:redesign\/)?img(?<suffix>.*)$/i,
-    ({ suffix }) => `/static/img${suffix}`,
-    { permanent: true }
-  ),
-  // RewriteRule ^/media/(redesign/)?css(.*) /static/styles$2 [L,R=301]
-  redirect(
-    /^media\/(?:redesign\/)?css(?<suffix>.*)$/i,
-    ({ suffix }) => `/static/styles${suffix}`,
-    { permanent: true }
-  ),
-  // RewriteRule ^/media/(redesign/)?js(.*) /static/js$2 [L,R=301]
-  redirect(
-    /^media\/(?:redesign\/)?js(?<suffix>.*)$/i,
-    ({ suffix }) => `/static/js${suffix}`,
-    { permanent: true }
-  ),
-  // RewriteRule ^/media/(redesign/)?fonts(.*) /static/fonts$2 [L,R=301]
-  redirect(
-    /^media\/(?:redesign\/)?fonts(?<suffix>.*)$/i,
-    ({ suffix }) => `/static/fonts${suffix}`,
-    { permanent: true }
-  ),
   // RedirectMatch 302 /media/uploads/demos/(.*)$
   // https://developer.mozilla.org/docs/Web/Demos_of_open_web_technologies/
   // Django will then redirect based on Accept-Language
