@@ -1162,7 +1162,7 @@ const MISC_REDIRECT_PATTERNS = [
   // redirects often take over from there, so let's only insert "/docs/"
   // and let any other redirect rules work from that point onwards.
   localeRedirect(
-    /^(?<prefix>AJAX|CSS|DOM|DragDrop|ECMAScript_DontEnum_attribute|HTML|JavaScript|JavaScript_typed_arrays|SVG|Tools|Using_audio_and_video_in_Firefox|Using_files_from_web_applications|Web|XMLHttpRequest|Security)(?<subPath>\/.+?)?\/?$/i,
+    /^(?<prefix>AJAX|CSS|DOM|DragDrop|ECMAScript_DontEnum_attribute|HTML|JavaScript|JavaScript_typed_arrays|Media_formats_supported_by_the_audio_and_video_elements|SVG|Tools|Using_audio_and_video_in_Firefox|Using_files_from_web_applications|Web|XMLHttpRequest|Security)(?<subPath>\/.+?)?\/?$/i,
     ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
     { permanent: true }
   ),

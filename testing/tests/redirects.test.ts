@@ -1239,6 +1239,10 @@ const MISC_REDIRECT_URLS = [].concat(
     "/en-US/JavaScript/Reference/About/",
     "/en-US/docs/JavaScript/Reference/About"
   ),
+  url_test(
+    "/en-US/Media_formats_supported_by_the_audio_and_video_elements",
+    "/en-US/docs/Media_formats_supported_by_the_audio_and_video_elements"
+  ),
   url_test("/en-US/SVG", "/en-US/docs/SVG"),
   url_test("/en-US/SVG/", "/en-US/docs/SVG"),
   url_test("/en-US/SVG/Element/font/", "/en-US/docs/SVG/Element/font"),
