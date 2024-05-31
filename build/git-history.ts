@@ -5,7 +5,7 @@ import { execGit } from "../content/index.js";
 import { CONTENT_ROOT } from "../libs/env/index.js";
 
 export type Commit = {
-  modified: Date;
+  modified: string; // ISO 8601 format
   hash: string;
 };
 
@@ -50,8 +50,8 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   );
 
   const map = new Map<string, Commit>();
-  let date = null;
-  let hash = null;
+  let date: string = null;
+  let hash: string = null;
   // Even if we specified the `-z` option to `git log ...` above, sometimes
   // it seems `git log` prefers to use a newline character.
   // At least as of git version 2.28.0 (Dec 2020). So let's split on both
@@ -60,7 +60,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
     if (line.startsWith(MARKER)) {
       const [hashStr, dateStr] = line.replace(MARKER, "").split(DELIMITER);
       hash = hashStr;
-      date = new Date(dateStr);
+      date = new Date(dateStr).toISOString();
     } else if (line) {
       const relPath = path.relative(realContentRoot, path.join(repoRoot, line));
       map.set(relPath, { modified: date, hash });
@@ -72,15 +72,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
 export function readGitHistory(contentRoot: string): CommitHistory {
   const historyFilePath = path.join(contentRoot, "_githistory.json");
   if (fs.existsSync(historyFilePath)) {
-    return JSON.parse(
-      fs.readFileSync(historyFilePath, "utf-8"),
-      (key, value) => {
-        if (key === "modified") {
-          return new Date(value);
-        }
-        return value;
-      }
-    ) as CommitHistory;
+    return JSON.parse(fs.readFileSync(historyFilePath, "utf-8"));
   }
   return {};
 }

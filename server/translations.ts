@@ -15,6 +15,7 @@ import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { getLastCommitURL } from "../build/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
+import { UnbuiltDocument } from "../libs/types/document.js";
 
 export const router = express.Router();
 
@@ -302,14 +303,17 @@ async function getDocument(filePath) {
     return sourceCommitCache.get(fileFolder) as number;
   }
 
-  async function packageEdits(document, parentDocument) {
+  async function packageEdits(
+    document: UnbuiltDocument,
+    parentDocument: UnbuiltDocument
+  ) {
     const {
       fileInfo: { root: fileRoot, folder: fileFolder },
       metadata: { hash: fileHash, modified, l10n },
-    } = document;
+    } = document as any;
     const {
       fileInfo: { root: parentFileRoot, path: parentFilePath },
-      metadata: { hash: parentFileHash, parentModified },
+      metadata: { hash: parentFileHash, modified: parentModified },
     } = parentDocument;
 
     const commitURL = getLastCommitURL(fileRoot, fileHash);
@@ -340,8 +344,8 @@ async function getDocument(filePath) {
   // payload. It's too much stuff and some values need to be repackaged/
   // serialized or some other transformation computation.
   async function packageDocument(
-    document,
-    englishDocument,
+    document: UnbuiltDocument,
+    englishDocument: UnbuiltDocument,
     translationDifferences
   ) {
     const mdn_url = document.url;
@@ -393,7 +397,7 @@ async function gatherL10NstatsSection({
     };
   }
 
-  function packageEdits(document) {
+  function packageEdits(document: UnbuiltDocument) {
     const commitURL = getLastCommitURL(
       document.fileInfo.root,
       document.metadata.hash
@@ -405,7 +409,7 @@ async function gatherL10NstatsSection({
     };
   }
 
-  function packageDocument(document) {
+  function packageDocument(document: UnbuiltDocument) {
     const mdn_url = document.url;
     const { title } = document.metadata;
     const popularity = packagePopularity(document);
