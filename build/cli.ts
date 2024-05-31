@@ -32,6 +32,7 @@ import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
+import { fdir } from "fdir";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -350,7 +351,7 @@ async function buildDocuments(
     const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
     fs.writeFileSync(
       sitemapFilePath,
-      zlib.gzipSync(makeSitemapXML(locale, docs))
+      zlib.gzipSync(makeSitemapXML(`/${locale}/docs/`, docs))
     );
   }
 
@@ -514,33 +515,23 @@ program
         if (!options.quiet) {
           console.log(chalk.yellow("Building sitemap index file..."));
         }
-        const sitemapsBuilt = [];
-        const locales = [];
-        for (const locale of VALID_LOCALES.keys()) {
-          const sitemapFilePath = path.join(
-            BUILD_OUT_ROOT,
-            "sitemaps",
-            locale,
-            "sitemap.xml.gz"
-          );
-          if (fs.existsSync(sitemapFilePath)) {
-            sitemapsBuilt.push(sitemapFilePath);
-            locales.push(locale);
-          }
-        }
-
+        const sitemapsBuilt = new fdir()
+          .filter((p) => p.endsWith("/sitemap.xml.gz"))
+          .withFullPaths()
+          .crawl(path.join(BUILD_OUT_ROOT, "sitemaps"))
+          .sync()
+          .sort()
+          .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
         const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
         fs.writeFileSync(
           sitemapIndexFilePath,
-          makeSitemapIndexXML(
-            sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
-          )
+          makeSitemapIndexXML(sitemapsBuilt)
         );
 
         if (!options.quiet) {
           console.log(
             chalk.green(
-              `Sitemap index file built with locales: ${locales.join(", ")}.`
+              `Sitemap index file built referencing ${sitemapsBuilt.length} sitemaps:\n- ${sitemapsBuilt.join("\n- ")}`
             )
           );
         }
