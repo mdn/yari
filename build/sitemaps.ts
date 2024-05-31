@@ -1,6 +1,6 @@
 export function makeSitemapXML(
-  locale: string,
-  docs: { slug: string; modified: string }[]
+  prefix: string,
+  docs: { slug: string; modified?: string }[]
 ) {
   const sortedDocs = docs.slice().sort((a, b) => a.slug.localeCompare(b.slug));
 
@@ -9,7 +9,7 @@ export function makeSitemapXML(
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...sortedDocs.map((doc) => {
-      const loc = `<loc>https://developer.mozilla.org/${locale}/docs/${doc.slug}</loc>`;
+      const loc = `<loc>https://developer.mozilla.org${prefix}${doc.slug}</loc>`;
       const modified = doc.modified
         ? `<lastmod>${doc.modified.toString().split("T")[0]}</lastmod>`
         : "";

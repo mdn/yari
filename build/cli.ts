@@ -350,7 +350,7 @@ async function buildDocuments(
     const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
     fs.writeFileSync(
       sitemapFilePath,
-      zlib.gzipSync(makeSitemapXML(locale, docs))
+      zlib.gzipSync(makeSitemapXML(`/${locale}/docs/`, docs))
     );
   }
 
