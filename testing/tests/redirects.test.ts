@@ -1228,6 +1228,10 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test("/en-US/JavaScript", "/en-US/docs/JavaScript"),
   url_test("/en-US/JavaScript/", "/en-US/docs/JavaScript"),
   url_test(
+    "/en-US/JavaScript_typed_arrays/ArrayBuffer",
+    "/en-US/docs/JavaScript_typed_arrays/ArrayBuffer"
+  ),
+  url_test(
     "/en-US/JavaScript/Reference/About/",
     "/en-US/docs/JavaScript/Reference/About"
   ),
