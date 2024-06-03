@@ -1,3 +1,9 @@
+import { join } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { gzipSync } from "node:zlib";
+
+import { BUILD_OUT_ROOT } from "../libs/env/index.js";
+
 export function makeSitemapXML(
   prefix: string,
   docs: { slug: string; modified?: string }[]
@@ -37,4 +43,18 @@ export function makeSitemapIndexXML(paths: string[]) {
     }),
     "</sitemapindex>",
   ].join("\n");
+}
+
+export async function writeSitemap(xml: string, ...paths: string[]) {
+  const dirPath = join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    ...paths.map((p) => p.toLowerCase())
+  );
+  await mkdir(dirPath, { recursive: true });
+
+  const filePath = join(dirPath, "sitemap.xml.gz");
+  await writeFile(filePath, gzipSync(xml));
+
+  return filePath;
 }
