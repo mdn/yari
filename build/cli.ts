@@ -531,7 +531,7 @@ program
         if (!options.quiet) {
           console.log(
             chalk.green(
-              `Sitemap index file built referencing ${sitemapsBuilt.length} sitemaps:\n- ${sitemapsBuilt.join("\n- ")}`
+              `Wrote sitemap index referencing ${sitemapsBuilt.length} sitemaps:\n${sitemapsBuilt.map((s) => `- ${s}`).join("\n")}`
             )
           );
         }
