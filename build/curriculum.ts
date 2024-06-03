@@ -39,7 +39,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
-import { makeSitemapXML, writeSitemap } from "./sitemaps.js";
+import { buildSitemap } from "./sitemaps.js";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -443,8 +443,9 @@ export async function buildCurriculumSitemap(options: { verbose?: boolean }) {
     }
   }
 
-  const xml = makeSitemapXML("", items);
-  const sitemapFilePath = await writeSitemap(xml, DEFAULT_LOCALE, "curriculum");
+  const sitemapFilePath = await buildSitemap(items, {
+    pathSuffix: [DEFAULT_LOCALE, "curriculum"],
+  });
 
   if (options.verbose) {
     console.log("Wrote", sitemapFilePath);

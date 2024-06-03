@@ -38,7 +38,7 @@ import { extractSections } from "./extract-sections.js";
 import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
-import { makeSitemapXML, writeSitemap } from "./sitemaps.js";
+import { buildSitemap } from "./sitemaps.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;
@@ -513,8 +513,10 @@ export async function buildBlogSitemap(options: { verbose?: boolean }) {
       .at(0),
   };
 
-  const xml = makeSitemapXML(`/${DEFAULT_LOCALE}/blog/`, [index, ...items]);
-  const sitemapFilePath = await writeSitemap(xml, DEFAULT_LOCALE, "blog");
+  const sitemapFilePath = await buildSitemap([index, ...items], {
+    slugPrefix: `/${DEFAULT_LOCALE}/blog/`,
+    pathSuffix: [DEFAULT_LOCALE, "blog"],
+  });
 
   if (options.verbose) {
     console.log("Wrote", sitemapFilePath);

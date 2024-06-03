@@ -4,10 +4,25 @@ import { gzipSync } from "node:zlib";
 
 import { BUILD_OUT_ROOT } from "../libs/env/index.js";
 
-export function makeSitemapXML(
-  prefix: string,
-  docs: { slug: string; modified?: string }[]
+interface SitemapEntry {
+  slug: string;
+  modified?: string;
+}
+
+export async function buildSitemap(
+  entries: SitemapEntry[],
+  {
+    slugPrefix = "",
+    pathSuffix = [],
+  }: { slugPrefix?: string; pathSuffix?: string[] }
 ) {
+  const xml = makeSitemapXML(slugPrefix, entries);
+  const path = await writeSitemap(xml, ...pathSuffix);
+
+  return path;
+}
+
+function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
   const sortedDocs = docs.slice().sort((a, b) => a.slug.localeCompare(b.slug));
 
   // Based on https://support.google.com/webmasters/answer/183668?hl=en
@@ -45,7 +60,7 @@ export function makeSitemapIndexXML(paths: string[]) {
   ].join("\n");
 }
 
-export async function writeSitemap(xml: string, ...paths: string[]) {
+async function writeSitemap(xml: string, ...paths: string[]) {
   const dirPath = join(
     BUILD_OUT_ROOT,
     "sitemaps",

@@ -27,11 +27,7 @@ import {
 } from "./index.js";
 import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
-import {
-  makeSitemapXML,
-  makeSitemapIndexXML,
-  writeSitemap,
-} from "./sitemaps.js";
+import { makeSitemapIndexXML, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
@@ -345,8 +341,10 @@ async function buildDocuments(
   }
 
   for (const [locale, docs] of Object.entries(docPerLocale)) {
-    const xml = makeSitemapXML(`/${locale}/docs/`, docs);
-    await writeSitemap(xml, locale);
+    await buildSitemap(docs, {
+      slugPrefix: `/${locale}/docs/`,
+      pathSuffix: [locale],
+    });
   }
 
   searchIndex.sort();
