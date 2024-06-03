@@ -2,7 +2,6 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
@@ -28,7 +27,7 @@ import {
 } from "./index.js";
 import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { makeSitemapIndexXML, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
@@ -342,17 +341,10 @@ async function buildDocuments(
   }
 
   for (const [locale, docs] of Object.entries(docPerLocale)) {
-    const sitemapDir = path.join(
-      BUILD_OUT_ROOT,
-      "sitemaps",
-      locale.toLowerCase()
-    );
-    fs.mkdirSync(sitemapDir, { recursive: true });
-    const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-    fs.writeFileSync(
-      sitemapFilePath,
-      zlib.gzipSync(makeSitemapXML(`/${locale}/docs/`, docs))
-    );
+    await buildSitemap(docs, {
+      slugPrefix: `/${locale}/docs/`,
+      pathSuffix: [locale],
+    });
   }
 
   searchIndex.sort();
@@ -531,7 +523,7 @@ program
         if (!options.quiet) {
           console.log(
             chalk.green(
-              `Sitemap index file built referencing ${sitemapsBuilt.length} sitemaps:\n- ${sitemapsBuilt.join("\n- ")}`
+              `Wrote sitemap index referencing ${sitemapsBuilt.length} sitemaps:\n${sitemapsBuilt.map((s) => `- ${s}`).join("\n")}`
             )
           );
         }

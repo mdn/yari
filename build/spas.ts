@@ -1,8 +1,6 @@
 import fs from "node:fs";
-import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { gzipSync } from "node:zlib";
 
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
@@ -32,7 +30,7 @@ import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
-import { makeSitemapXML } from "./sitemaps.js";
+import { buildSitemap } from "./sitemaps.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -387,17 +385,14 @@ export async function buildSPAs(options: {
   }
 
   // Sitemap.
-  const sitemapXml = makeSitemapXML(
-    "",
+  const sitemapFilePath = await buildSitemap(
     sitemap.map(({ url }) => ({
       slug: url,
       modified: "",
-    }))
+    })),
+    { pathSuffix: ["misc"] }
   );
-  const sitemapDir = path.join(BUILD_OUT_ROOT, "sitemaps", "misc");
-  await mkdir(sitemapDir, { recursive: true });
-  const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-  await writeFile(sitemapFilePath, gzipSync(sitemapXml));
+
   if (!options.quiet) {
     console.log("Wrote", sitemapFilePath);
   }
