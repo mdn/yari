@@ -2,7 +2,9 @@ import { join } from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
 import { gzipSync } from "node:zlib";
 
-import { BUILD_OUT_ROOT } from "../libs/env/index.js";
+import { BASE_URL, BUILD_OUT_ROOT } from "../libs/env/index.js";
+
+const SITEMAP_BASE_URL = BASE_URL.replace(/\/$/, "");
 
 interface SitemapEntry {
   slug: string;
@@ -30,7 +32,7 @@ function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...sortedDocs.map((doc) => {
-      const loc = `<loc>https://developer.mozilla.org${prefix}${doc.slug}</loc>`;
+      const loc = `<loc>${SITEMAP_BASE_URL}${prefix}${doc.slug}</loc>`;
       const modified = doc.modified
         ? `<lastmod>${doc.modified.toString().split("T")[0]}</lastmod>`
         : "";
@@ -51,7 +53,7 @@ export function makeSitemapIndexXML(paths: string[]) {
     ...sortedPaths.map((path) => {
       return (
         "<sitemap>" +
-        `<loc>https://developer.mozilla.org${path}</loc>` +
+        `<loc>${SITEMAP_BASE_URL}${path}</loc>` +
         `<lastmod>${new Date().toISOString().split("T")[0]}</lastmod>` +
         "</sitemap>"
       );
