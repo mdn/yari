@@ -160,7 +160,7 @@
     "@testing-library/react": "^15.0.7",
     "@types/async": "^3.2.24",
     "@types/cli-progress": "^3.11.5",
-    "@types/imagemin": "^8.0.5",
+    "@types/imagemin": "^9.0.0",
     "@types/jest": "^29.5.12",
     "@types/mdast": "^4.0.4",
     "@types/node": "^18.16.6",
