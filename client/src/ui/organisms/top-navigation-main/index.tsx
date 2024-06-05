@@ -12,13 +12,13 @@ import { ThemeSwitcher } from "../../molecules/theme-switcher";
 import Maintenance from "../../molecules/maintenance";
 import { TOP_NAV_LOGIN, TOP_NAV_SIGNUP } from "../../../telemetry/constants";
 
-export const TopNavigationMain = ({ isOpenOnMobile }) => {
+export const TopNavigationMain = () => {
   const userData = useUserData();
   const isServer = useIsServer();
 
   return (
-    <div className="top-navigation-main">
-      <MainMenu isOpenOnMobile={isOpenOnMobile} />
+    <>
+      <MainMenu />
 
       <Search id="top-nav-search" />
       <ThemeSwitcher />
@@ -33,6 +33,6 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
             signUpGleanContext={TOP_NAV_SIGNUP}
           />
         )}
-    </div>
+    </>
   );
 };

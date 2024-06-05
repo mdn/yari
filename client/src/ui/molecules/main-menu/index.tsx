@@ -11,7 +11,7 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 import { MENU } from "../../../telemetry/constants";
 import { useLocation } from "react-router";
 
-export default function MainMenu({ isOpenOnMobile }) {
+export default function MainMenu() {
   const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
@@ -51,12 +51,6 @@ export default function MainMenu({ isOpenOnMobile }) {
     });
   });
 
-  useEffect(() => {
-    if (!isOpenOnMobile && visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
-  }, [isOpenOnMobile, visibleSubMenuId]);
-
   function toggleMenu(id) {
     if (visibleSubMenuId === id) {
       setVisibleSubMenuId(null);
@@ -66,7 +60,7 @@ export default function MainMenu({ isOpenOnMobile }) {
   }
 
   return (
-    <nav className="main-nav" aria-label="Main menu">
+    <nav className="main-nav mobile-hidden" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
         <ReferenceMenu
           visibleSubMenuId={visibleSubMenuId}
