@@ -152,6 +152,9 @@ export const CSP_DIRECTIVES = {
     "wikipedia.org",
     "upload.wikimedia.org",
 
+    // Shared assets.
+    "https://mdn.github.io/shared-assets/",
+
     // GA4.
     "https://*.google-analytics.com",
     "https://*.googletagmanager.com",
@@ -159,7 +162,14 @@ export const CSP_DIRECTIVES = {
     "www.gstatic.com",
   ],
   "manifest-src": ["'self'"],
-  "media-src": ["'self'", "archive.org", "videos.cdn.mozilla.net"],
+  "media-src": [
+    "'self'",
+    "archive.org",
+    "videos.cdn.mozilla.net",
+
+    // Shared assets.
+    "https://mdn.github.io/shared-assets/",
+  ],
   "child-src": ["'self'"],
   "worker-src": ["'self'"],
 };

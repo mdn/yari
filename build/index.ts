@@ -44,7 +44,6 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { getWebFeatureStatus } from "./web-features.js";
-import { rewritePageTitleForSEO } from "./seo.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -537,8 +536,7 @@ export async function buildDocument(
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  const pageTitle = getPageTitle(doc);
-  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
+  doc.pageTitle = getPageTitle(doc);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
@@ -587,6 +585,10 @@ function addBaseline(doc: Partial<Doc>) {
           "api.InputEvent.dataTransfer",
           "api.InputEvent.getTargetRanges",
           "api.InputEvent.inputType",
+          // https://github.com/web-platform-dx/web-features/issues/1038
+          // https://github.com/web-platform-dx/web-features/blob/64d2cfd/features/screen-orientation-lock.dist.yml
+          "api.ScreenOrientation.lock",
+          "api.ScreenOrientation.unlock",
         ].includes(query)
     );
     return getWebFeatureStatus(...filteredBrowserCompat);
