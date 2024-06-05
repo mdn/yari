@@ -84,7 +84,7 @@ body.ReactModal__Body--open {
   }
 
   .mdn-form-item {
-    @media screen and (max-width: $screen-lg) {
+    @media (max-width: $screen-lg) {
       &:last-child {
         padding-bottom: 1.5rem;
       }
@@ -103,7 +103,7 @@ body.ReactModal__Body--open {
   }
 }
 
-@media screen and (min-width: $screen-lg) {
+@media (min-width: $screen-lg) {
   body.ReactModal__Body--open {
     overflow: unset;
   }
