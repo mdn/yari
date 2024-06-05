@@ -52,7 +52,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
         </div>
         <figure className="contributor-graphic">
           <img
-            width="523"
+            width="512"
             height="323"
             src={contributorGraphic}
             alt="Tiled Mozilla Logo"
