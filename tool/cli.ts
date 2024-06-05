@@ -701,6 +701,7 @@ program
             orphanedDocs,
             redirectedDocs,
             renamedDocs,
+            updatedDocs,
             totalDocs,
           } = await syncAllTranslatedContent(locale);
           console.log(chalk.green(`Syncing ${locale}:`));
@@ -709,6 +710,7 @@ program
           console.log(chalk.green(`Renamed ${renamedDocs} documents`));
           console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
           console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+          console.log(chalk.green(`Updated ${updatedDocs} documents.`));
           console.log(
             chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
           );

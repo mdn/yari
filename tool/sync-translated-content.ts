@@ -44,19 +44,28 @@ export async function syncAllTranslatedContent(locale: string) {
       );
     })
     .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
-  const files = [...(api.sync() as any)];
+
+  const files = [...(api.sync() as any)].sort();
   const stats = {
     conflictingDocs: 0,
     movedDocs: 0,
     orphanedDocs: 0,
     redirectedDocs: 0,
     renamedDocs: 0,
+    updatedDocs: 0,
     totalDocs: files.length,
   };
 
   for (const f of files) {
-    const { conflicting, moved, followed, orphaned, redirect, renamed } =
-      await syncTranslatedContent(f, locale);
+    const {
+      conflicting,
+      moved,
+      followed,
+      orphaned,
+      redirect,
+      renamed,
+      updated,
+    } = await syncTranslatedContent(f, locale);
     if (conflicting) {
       stats.conflictingDocs += 1;
     }
@@ -75,6 +84,9 @@ export async function syncAllTranslatedContent(locale: string) {
     if (renamed) {
       stats.renamedDocs += 1;
     }
+    if (updated) {
+      stats.updatedDocs += 1;
+    }
   }
 
   if (redirects.size > 0) {
@@ -84,14 +96,87 @@ export async function syncAllTranslatedContent(locale: string) {
   return stats;
 }
 
-function resolve(slug: string) {
+const SIDEBAR_MACRO_REGEX =
+  /\{\{\s*(AccessibilitySidebar|AddonSidebar|AddonSidebarMain|APIRef|CSSRef|DefaultAPISidebar|FirefoxSidebar|GamesSidebar|GlossarySidebar|HTMLSidebar|HTTPSidebar|JSRef|JsSidebar|LearnSidebar|ListSubpagesForSidebar|MathMLRef|MDNSidebar|PWASidebar|QuicklinksWithSubPages|SVGRef|WebAssemblySidebar|XsltSidebar)(\s*\([^)}]*\))?\s*\}\}/gi;
+const SLUGS_WITHOUT_SIDEBAR = [
+  "Learn/Forms/User_input_methods", // NO sidebar
+  "Related", // NO sidebar
+  "Web", // INLINE sidebar with {{ListSubpages}}
+  "Web/API", // NO sidebar
+  "Web/API/Document_Object_Model/Using_the_Document_Object_Model/Example", // NO sidebar
+  "Web/API/FragmentDirective", // NO sidebar
+  "Web/API/Navigator/registerProtocolHandler/Web-based_protocol_handlers", // NO sidebar
+  "Web/CSS/CSS_fonts/WOFF", // NO sidebar
+  "Web/Demos", // NO sidebar
+  "Web/Events", // INLINE sidebar with {{ListSubpages}}
+  "Web/Guide/CSS/CSS_Layout", // NO sidebar
+  "Web/Guide/CSS/Getting_started/Challenge_solutions", // NO sidebar
+  "Web/EXSLT", // INLINE sidebar
+  "Web/Media/Formats/Support_issues", // NO sidebar
+  "Web/Security", // INLINE sidebar with {{ListSubpages}}
+  "Web/Text_fragments", // NO sidebar
+  "Web/Tutorials", // NO sidebar
+];
+const SLUGS_WITH_MULTIPLE__SIDEBARS = [
+  "Web/API/BluetoothRemoteGATTCharacteristic/getDescriptor", // has APIRef twice
+  "Web/API/BluetoothRemoteGATTCharacteristic/getDescriptors", // has APIRef twice
+  "Web/HTML/Attributes/crossorigin", // has HTMLSidebar (correct) + QuickLinksWithSubpages
+];
+
+function extractMacroCall(slug, rawContent) {
+  if (
+    slug.startsWith("conflicting/") ||
+    rawContent.includes('section id="Quick_links"')
+  ) {
+    return true;
+  }
+  const sidebarMacros = new Set(
+    [...rawContent.matchAll(SIDEBAR_MACRO_REGEX)].map((match) => match[0])
+  );
+
+  if (
+    sidebarMacros.size == 0 &&
+    !(
+      SLUGS_WITHOUT_SIDEBAR.includes(slug) ||
+      slug.startsWith("Learn/WebGL/By_example/") ||
+      slug.startsWith("Learn/Server-side/Express_Nodejs/") ||
+      slug.startsWith("Web/API/WebGL_API/By_example") ||
+      (slug.startsWith("Learn/") && slug.includes("/Example"))
+    )
+  ) {
+    //console.warn(`${slug} has no sidebar.`);
+  } else if (
+    sidebarMacros.size > 1 &&
+    !(
+      SLUGS_WITH_MULTIPLE__SIDEBARS.includes(slug) ||
+      slug.startsWith("MDN/Writing_guidelines/") ||
+      slug.startsWith("Web/API/BluetoothRemoteGATT")
+    )
+  ) {
+    //console.warn(`${slug} has multiple macros: ${[...sidebarMacros.values()].join(' | ')}`);
+    return true;
+  }
+
+  return Array.from(sidebarMacros)[0] ?? null;
+}
+
+function resolve(slug: string): { slug: string; macro: string | true | null } {
   if (!slug) {
-    return slug;
+    return {
+      slug,
+      macro: null,
+    };
   }
   const url = buildURL(DEFAULT_LOCALE_LC, slug);
   const resolved = Redirect.resolve(url);
   const doc = Document.read(Document.urlToFolderPath(resolved));
-  return doc?.metadata.slug ?? slug;
+
+  const macro = doc ? extractMacroCall(slug, doc.rawContent) : null;
+
+  return {
+    slug: doc?.metadata.slug ?? slug,
+    macro,
+  };
 }
 
 function mdOrHtmlExists(folderPath: string) {
@@ -117,12 +202,29 @@ export async function syncTranslatedContent(
     moved: false,
     orphaned: false,
     renamed: false,
+    updated: false,
   };
 
   const rawDoc = fs.readFileSync(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
-  const { attributes: oldMetadata, body: rawBody } = fm<DocFrontmatter>(rawDoc);
-  const resolvedSlug = resolve(oldMetadata.slug);
+  const result = fm<DocFrontmatter>(rawDoc);
+  const oldMetadata = result.attributes;
+  let rawBody = result.body;
+  const macro = extractMacroCall(oldMetadata.slug, rawBody);
+  const { slug: resolvedSlug, macro: resolvedMacro } = resolve(
+    oldMetadata.slug
+  );
+
+  if (!macro && resolvedMacro && resolvedMacro !== true) {
+    const firstLine = rawBody.split("\n").at(0);
+    rawBody = [
+      resolvedMacro,
+      firstLine.startsWith("{{") && firstLine.endsWith("}}") ? "" : "\n\n",
+      rawBody,
+    ].join("");
+    status.updated = true;
+  }
+
   const metadata = {
     ...oldMetadata,
     slug: resolvedSlug,
@@ -173,7 +275,7 @@ export async function syncTranslatedContent(
     path.join(CONTENT_ROOT, DEFAULT_LOCALE_LC, slugToFolder(metadata.slug))
   );
 
-  if (!status.renamed && !status.orphaned) {
+  if (!status.renamed && !status.orphaned && !status.updated) {
     return status;
   }
 
@@ -202,22 +304,26 @@ export async function syncTranslatedContent(
     }
   }
 
-  status.redirect = [
-    buildURL(VALID_LOCALES.get(locale), oldMetadata.slug),
-    buildURL(VALID_LOCALES.get(locale), metadata.slug),
-  ];
-
   const filePath = path.join(folderPath, fileName);
-  log.log(`${inFilePath} → ${filePath}`);
-  await Document.updateWikiHistory(
-    path.join(CONTENT_TRANSLATED_ROOT, locale.toLowerCase()),
-    oldMetadata.slug,
-    metadata.slug
-  );
-  if (status.moved) {
-    moveContent(path.dirname(inFilePath), folderPath);
-    metadata.original_slug = oldMetadata.slug;
+  if (status.renamed || status.orphaned) {
+    status.redirect = [
+      buildURL(VALID_LOCALES.get(locale), oldMetadata.slug),
+      buildURL(VALID_LOCALES.get(locale), metadata.slug),
+    ];
+
+    log.log(`${inFilePath} → ${filePath}`);
+    await Document.updateWikiHistory(
+      path.join(CONTENT_TRANSLATED_ROOT, locale.toLowerCase()),
+      oldMetadata.slug,
+      metadata.slug
+    );
+
+    if (status.moved) {
+      moveContent(path.dirname(inFilePath), folderPath);
+      metadata.original_slug = oldMetadata.slug;
+    }
   }
+
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
 
   return status;
