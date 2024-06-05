@@ -3,9 +3,9 @@ import { DEV_MODE } from "../../env";
 import { HydrationData } from "../../../../libs/types/hydration";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
+import mdnContributorLogo from "../../../public/assets/mdn_contributor.png";
 
 import "./index.scss";
-const contributorGraphic = "/assets/mdn_contributor.png";
 
 export function ContributorSpotlight(props: HydrationData<any>) {
   const fallbackData = props.hyData ? props : undefined;
@@ -54,7 +54,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
           <img
             width="512"
             height="323"
-            src={contributorGraphic}
+            src={mdnContributorLogo}
             alt="Tiled Mozilla Logo"
           />
         </figure>
