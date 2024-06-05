@@ -52,6 +52,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
         </div>
         <figure className="contributor-graphic">
           <img
+            loading="lazy"
             width="512"
             height="323"
             src={mdnContributorLogo}
