@@ -10,7 +10,7 @@
     position: relative;
     width: 100%;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       align-items: center;
       display: flex;
       gap: 0.5rem;
@@ -55,7 +55,7 @@
       }
     }
 
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       &:invalid {
         width: 1rem;
       }
@@ -235,7 +235,7 @@
     background: transparent;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     right: 1.2rem;
     width: 1.5rem;
   }

@@ -42,7 +42,7 @@ export function withContentResponseHeaders(
     res.setHeader("X-Robots-Tag", "noindex, nofollow");
   }
 
-  if (req.url?.endsWith("/sitemap.xml.gz")) {
+  if (res.statusCode === 200 && req.url?.endsWith("/sitemap.xml.gz")) {
     res.setHeader("Content-Type", "application/xml");
     res.setHeader("Content-Encoding", "gzip");
   }
