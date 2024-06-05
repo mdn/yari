@@ -74,7 +74,11 @@ export default function Playground() {
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
+  const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const subdomain = useRef<string>(crypto.randomUUID());
+  const [initialContent, setInitialContent] = useState<EditorContent | null>(
+    null
+  );
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
     async (url) => {
@@ -104,8 +108,13 @@ export default function Playground() {
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    initialCode && store(SESSION_KEY, initialCode);
-  }, [initialCode]);
+    if (initialCode) {
+      store(SESSION_KEY, initialCode);
+      if (Object.values(initialCode).some(Boolean)) {
+        setInitialContent(structuredClone(initialCode));
+      }
+    }
+  }, [initialCode, setInitialContent]);
 
   const getEditorContent = useCallback(() => {
     const code = {
@@ -123,8 +132,21 @@ export default function Playground() {
       if (typ === "console") {
         if (prop === "clear") {
           setVConsole([]);
-        } else {
+        } else if (
+          (prop === "log" || prop === "error" || prop === "warn") &&
+          typeof message === "string"
+        ) {
           setVConsole((vConsole) => [...vConsole, { prop, message }]);
+        } else {
+          const warning = "[Playground] Unsupported console message";
+          setVConsole((vConsole) => [
+            ...vConsole,
+            {
+              prop: "warn",
+              message: `${warning} (see browser console)`,
+            },
+          ]);
+          console.warn(warning, { prop, message });
         }
       } else if (typ === "ready") {
         updatePlayIframe(iframe.current, getEditorContent());
@@ -132,49 +154,76 @@ export default function Playground() {
     },
     [getEditorContent]
   );
+
+  const setEditorContent = ({ html, css, js, src }: EditorContent) => {
+    htmlRef.current?.setContent(html);
+    cssRef.current?.setContent(css);
+    jsRef.current?.setContent(js);
+    if (src) {
+      setCodeSrc(src.split("/").slice(0, -1).join("/"));
+    }
+    setIsEmpty(!html && !css && !js);
+  };
+
   useEffect(() => {
     if (state === State.initial || state === State.remote) {
       if (initialCode && Object.values(initialCode).some(Boolean)) {
-        htmlRef.current?.setContent(initialCode?.html);
-        cssRef.current?.setContent(initialCode?.css);
-        jsRef.current?.setContent(initialCode?.js);
-        if (initialCode.src) {
-          setCodeSrc(
-            initialCode?.src &&
-              `${initialCode.src.split("/").slice(0, -1).join("/")}`
-          );
-        }
+        setEditorContent(initialCode);
       } else {
-        htmlRef.current?.setContent(HTML_DEFAULT);
-        cssRef.current?.setContent(CSS_DEFAULT);
-        jsRef.current?.setContent(JS_DEFAULT);
+        setEditorContent({
+          html: HTML_DEFAULT,
+          css: CSS_DEFAULT,
+          js: JS_DEFAULT,
+        });
       }
       setState(State.ready);
     }
   }, [initialCode, state]);
+
   useEffect(() => {
     window.addEventListener("message", messageListener);
     return () => {
       window.removeEventListener("message", messageListener);
     };
   }, [messageListener]);
-  const reset = async () => {
+
+  const clear = async () => {
     setSearchParams([], { replace: true });
     setCodeSrc(undefined);
-    htmlRef.current?.setContent(HTML_DEFAULT);
-    cssRef.current?.setContent(CSS_DEFAULT);
-    jsRef.current?.setContent(JS_DEFAULT);
+    setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
+    setInitialContent(null);
 
     updateWithEditorContent();
   };
-  const resetConfirm = async () => {
-    if (window.confirm("Do you really want to reset everything?")) {
+
+  const reset = async () => {
+    setEditorContent({
+      html: initialContent?.html || HTML_DEFAULT,
+      css: initialContent?.css || CSS_DEFAULT,
+      js: initialContent?.js || JS_DEFAULT,
+    });
+
+    updateWithEditorContent();
+  };
+
+  const clearConfirm = async () => {
+    if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
+      await clear();
+    }
+  };
+
+  const resetConfirm = async () => {
+    if (window.confirm("Do you really want to revert your changes?")) {
+      gleanClick(`${PLAYGROUND}: revert-click`);
       await reset();
     }
   };
 
   const updateWithEditorContent = () => {
+    const { html, css, js } = getEditorContent();
+    setIsEmpty(!html && !css && !js);
+
     const loading = [
       {},
       {
@@ -221,9 +270,7 @@ export default function Playground() {
           plugins: [prettierPluginBabel, prettierPluginESTree],
         }),
       };
-      htmlRef.current?.setContent(formatted.html);
-      cssRef.current?.setContent(formatted.css);
-      jsRef.current?.setContent(formatted.js);
+      setEditorContent(formatted);
     } catch (e) {
       console.error(e);
     }
@@ -277,6 +324,7 @@ export default function Playground() {
               <Button
                 type="secondary"
                 id="share"
+                isDisabled={isEmpty}
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
                   setDialogState(DialogState.share);
@@ -287,12 +335,23 @@ export default function Playground() {
               </Button>
               <Button
                 type="secondary"
-                id="reset"
+                isDisabled={isEmpty}
+                id="clear"
                 extraClasses="red"
-                onClickHandler={resetConfirm}
+                onClickHandler={clearConfirm}
               >
-                reset
+                clear
               </Button>
+              {initialContent && (
+                <Button
+                  type="secondary"
+                  id="reset"
+                  extraClasses="red"
+                  onClickHandler={resetConfirm}
+                >
+                  reset
+                </Button>
+              )}
             </menu>
           </aside>
           <Editor
@@ -329,7 +388,7 @@ export default function Playground() {
             title="runner"
             ref={iframe}
             src={src.toString()}
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts allow-same-origin allow-forms"
           ></iframe>
           <Console vConsole={vConsole} />
           <SidePlacement />

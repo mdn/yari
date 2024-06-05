@@ -23,7 +23,7 @@
       margin: 0;
       padding: 0;
 
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         grid-template-areas:
           "started core  extensions spacer"
           "hr      hr    hr         hr"
@@ -62,9 +62,14 @@
           outline-style: auto;
         }
 
+        > input:not(:checked) + label {
+          color: var(--text-secondary);
+          opacity: 0.775;
+        }
+
         > label {
-          color: var(--text-inactive);
           cursor: pointer;
+          width: max-content;
         }
 
         &#modules-0 {
@@ -83,7 +88,7 @@
           > input {
             grid-area: core;
 
-            @media screen and (min-width: $screen-sm) {
+            @media (min-width: $screen-sm) {
               margin-left: 2rem;
             }
           }
@@ -98,7 +103,7 @@
           > input {
             grid-area: extensions;
 
-            @media screen and (min-width: $screen-sm) {
+            @media (min-width: $screen-sm) {
               margin-left: 2rem;
             }
           }
@@ -119,7 +124,7 @@
           margin-top: 2rem;
           width: fit-content;
 
-          @media screen and (min-width: $screen-md) {
+          @media (min-width: $screen-md) {
             margin-left: 0;
           }
         }
@@ -127,8 +132,6 @@
     }
 
     ol.modules-list {
-      container-name: module-list;
-      container-type: inline-size;
       display: grid;
       flex-wrap: wrap;
       gap: 1rem;
@@ -138,7 +141,7 @@
       padding: 0.5rem;
       scroll-snap-type: inline mandatory;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         overflow: inherit;
         padding: 0;
       }
@@ -148,45 +151,49 @@
       }
 
       li.module-list-item {
-        background-color: var(--curriculum-bg-color-list-item-body);
-        border: 1px solid var(--curriculum-border-color-list-item);
-        border-radius: var(--elem-radius);
-        box-shadow: var(--curriculum-shadow);
-        display: flex;
-        flex-direction: column;
-        justify-self: center;
-        max-width: 20rem;
-        min-width: 15rem;
-        overflow: auto;
-        padding: 0;
-        scroll-snap-align: center;
-        width: 100%;
+        --spacing: 1rem;
+        --icon-size: 4rem;
+        display: block;
 
-        @media screen and (min-width: $screen-md) {
-          min-width: initial;
-        }
+        > a {
+          background-color: var(--curriculum-bg-color-list-item-body);
+          border: 1px solid var(--curriculum-border-color-list-item);
+          border-radius: var(--elem-radius);
+          box-shadow: var(--curriculum-shadow);
+          display: flex;
+          flex-direction: column;
+          justify-self: center;
+          max-width: 20rem;
+          min-width: 15rem;
+          overflow: auto;
+          padding: 0;
+          scroll-snap-align: center;
+          text-decoration: none;
+          width: 100%;
 
-        &:hover {
-          border-color: var(--curriculum-border-color-list-item-hover);
-        }
+          &:hover {
+            border-color: var(--curriculum-border-color-list-item-hover);
+            text-decoration: none;
+          }
 
-        > header {
-          a {
+          @media (min-width: $screen-md) {
+            min-width: initial;
+          }
+
+          > header {
             align-items: center;
             background-color: var(--curriculum-bg-color-list-item-header);
             display: flex;
             flex-direction: column;
-            height: 10rem;
-            padding: 1rem 2rem;
-            text-decoration: none;
-
-            &:hover {
-              text-decoration: underline;
-            }
+            font-weight: var(--font-body-strong-weight);
+            height: 10.5rem;
+            height: calc(3 * var(--spacing) + var(--icon-size) + 2lh);
+            padding: var(--spacing);
+            row-gap: var(--spacing);
 
             svg.topic-icon {
-              height: 4rem;
-              width: 4rem;
+              height: var(--icon-size);
+              width: var(--icon-size);
 
               circle {
                 fill: var(--curriculum-bg-color-list-item-icon);
@@ -199,40 +206,39 @@
 
             > span {
               color: var(--text-primary);
-              font-weight: var(--font-body-strong-weight);
-              margin: auto;
+              margin: 0 auto;
               text-align: center;
             }
           }
-        }
 
-        > section {
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-          font-size: var(--type-smaller-font-size);
-          height: 11rem;
-          justify-content: space-between;
-          padding: 1rem 1.5rem;
+          > section {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            font-size: var(--type-smaller-font-size);
+            height: 11rem;
+            justify-content: space-between;
+            padding: var(--spacing);
 
-          p {
-            color: var(--text-secondary);
-            margin: 0;
-            text-align: center;
-          }
+            p {
+              color: var(--text-secondary);
+              margin: 0;
+              text-align: center;
+            }
 
-          p:last-child {
-            color: var(--curriculum-color-topic);
-            font-weight: 600;
+            p:last-child {
+              color: var(--curriculum-color-topic);
+              font-weight: 600;
+            }
           }
         }
       }
 
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         grid-template-columns: 1fr 1fr;
       }
 
-      @media screen and (min-width: $screen-xxl) {
+      @media (min-width: $screen-xxl) {
         grid-template-columns: 1fr 1fr 1fr;
       }
     }

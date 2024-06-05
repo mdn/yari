@@ -11,12 +11,11 @@ export function HomepageHero() {
           <br /> by Developers
         </h1>
         <p>
-          Documenting web technologies, including CSS, HTML, and JavaScript,
-          since 2005.
+          <span>United in love</span>
         </p>
         <Search id="hp-search" isHomepageSearch={true} />
       </section>
-      <Mandala extraClasses="homepage-hero-bg" />
+      <Mandala pride={true} extraClasses="homepage-hero-bg animate-colors" />
     </div>
   );
 }

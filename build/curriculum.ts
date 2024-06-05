@@ -39,6 +39,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
+import { buildSitemap } from "./sitemaps.js";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -191,7 +192,7 @@ async function readCurriculumPage(
   const raw = await fs.readFile(file, "utf-8");
   const { attributes, body: rawBody } = frontmatter<CurriculumFrontmatter>(raw);
   const filename = file.replace(CURRICULUM_ROOT, "").replace(/^\/?/, "");
-  let title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim() || "";
+  const title = rawBody.match(/^[\w\n]*#+(.*\n)/)[1]?.trim() || "";
   const body = rawBody.replace(/^[\w\n]*#+(.*\n)/, "");
 
   const slug = fileToSlug(file);
@@ -202,6 +203,7 @@ async function readCurriculumPage(
 
   let modules: CurriculumIndexEntry[];
   let prevNext: PrevNext;
+  let group: string;
   if (!options?.forIndex) {
     if (attributes.template === Template.Landing) {
       modules = (await buildCurriculumIndex())?.filter(
@@ -220,11 +222,12 @@ async function readCurriculumPage(
 
     sidebar = await buildCurriculumSidebar();
     parents = await buildParents(url);
-  } else {
-    title = title
-      .replace(/^\d+\s+/, "") // Strip number prefix.
-      .replace(/ modules$/, "") // Strip "modules" suffix.
-      .replace(/Extension \d+:/, ""); // Strip "Extension" prefix.
+    if (parents.length > 1) {
+      const title = parents.at(-2)?.title;
+      if (title?.endsWith(" modules")) {
+        group = title;
+      }
+    }
   }
 
   return {
@@ -237,6 +240,7 @@ async function readCurriculumPage(
       modules,
       parents,
       prevNext,
+      group,
       ...attributes,
     },
     body,
@@ -284,7 +288,7 @@ export async function buildCurriculumPage(
   $("[data-token]").removeAttr("data-token");
   $("[data-flaw-src]").removeAttr("data-flaw-src");
 
-  doc.title = metadata.title.replace(/^\d+\s+/, "");
+  doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
   doc.native = LANGUAGES_RAW[DEFAULT_LOCALE]?.native;
@@ -323,14 +327,13 @@ export async function buildCurriculumPage(
     : CURRICULUM_TITLE;
 
   doc.noIndexing = false;
-  doc.toc = makeTOC(doc, true).map(({ text, id }) => {
-    return { text: text.replace(/^[\d.]+\s+/, ""), id };
-  });
+  doc.toc = makeTOC(doc, true);
   doc.sidebar = metadata.sidebar;
   doc.modules = metadata.modules;
   doc.prevNext = metadata.prevNext;
   doc.parents = metadata.parents;
   doc.topic = metadata.topic;
+  doc.group = metadata.group;
 
   return doc as CurriculumDoc;
 }
@@ -425,4 +428,26 @@ function setCurriculumTypes($: CheerioAPI) {
       }
     }
   });
+}
+
+export async function buildCurriculumSitemap(options: { verbose?: boolean }) {
+  const index = await buildCurriculumIndex();
+  const items = [];
+  while (index.length) {
+    const current = index.shift();
+    items.push({
+      slug: current.url,
+    });
+    if (current.children) {
+      index.push(...current.children);
+    }
+  }
+
+  const sitemapFilePath = await buildSitemap(items, {
+    pathSuffix: [DEFAULT_LOCALE, "curriculum"],
+  });
+
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
+  }
 }

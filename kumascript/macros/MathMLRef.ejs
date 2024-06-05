@@ -42,30 +42,19 @@ const text = mdn.localStringMap({
   },
 });
 
-const sidebarURL = `/docs/Web/MathML/`;
-const baseURL = `/${env.locale}${sidebarURL}`;
-
-async function getTitle(pageSlug) {
-  let page = await wiki.getPage(`${baseURL}${pageSlug}`);
-  if (!page.title) {
-    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
-  }
-  return mdn.htmlEscape(page.title);
-}
-
 %>
 <section id="Quick_links" data-macro="MathMLRef">
  <ol>
-  <li><a href="/<%=locale%>/docs/Web/MathML"><strong>MathML</strong></a></li>
-  <li><strong><%=text['Guides']%></strong></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/MathML`)%></li>
+  <li class="section no-link"><%=text['Guides']%></li>
   <li>
     <ol>
-    <li><a href="/<%=locale%>/docs/Web/MathML/Authoring"><%=await getTitle("Authoring")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/MathML/Fonts"><%=await getTitle("Fonts")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/MathML/Values"><%=await getTitle("Values")%></a></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/MathML/Authoring`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/MathML/Fonts`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/MathML/Values`)%></li>
     </ol>
   </li>
-  <li><strong><%=text['Reference']%></strong></li>
+  <li class="section no-link"><%=text['Reference']%></li>
   <li class="toggle">
     <details>
       <summary><%=text['Elements']%></summary>
@@ -78,12 +67,12 @@ async function getTitle(pageSlug) {
       <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/MathML/Global_attributes'])%>
     </details>
   </li>
-  <li><a href="/<%=locale%>/docs/Web/MathML/Attribute"><%=await getTitle("Attribute")%></a></li>
-  <li><strong><%=text['Examples']%></strong></li>
+  <li><%-web.smartLink(`/${locale}/docs/Web/MathML/Attribute`)%></li>
+  <li class="section no-link"><%=text['Examples']%></li>
   <li>
     <ol>
-    <li><a href="/<%=locale%>/docs/Web/MathML/Examples/Deriving_the_Quadratic_Formula"><%=await getTitle("Examples/Deriving_the_Quadratic_Formula")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/MathML/Examples/MathML_Pythagorean_Theorem"><%=await getTitle("Examples/MathML_Pythagorean_Theorem")%></a></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/MathML/Examples/Deriving_the_Quadratic_Formula`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/MathML/Examples/MathML_Pythagorean_Theorem`)%></li>
     </ol>
   </li>
  </ol>

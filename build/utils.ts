@@ -8,7 +8,7 @@ import * as cheerio from "cheerio";
 import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquantPkg from "imagemin-pngquant";
+import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
@@ -21,8 +21,6 @@ import {
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
 import { BLOG_ROOT } from "../libs/env/index.js";
-
-const { default: imageminPngquant } = imageminPngquantPkg;
 
 export function escapeRegExp(str: string) {
   return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
@@ -352,10 +350,8 @@ export function makeTOC(doc, withH3 = false) {
 
 export function findPostFileBySlug(slug: string): string | null {
   if (!BLOG_ROOT) {
-    console.warn("'BLOG_ROOT' not set in .env file");
     return null;
   }
-
   try {
     const { stdout, stderr, status } = spawnSync(rgPath, [
       "-il",

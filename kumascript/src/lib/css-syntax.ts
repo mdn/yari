@@ -288,7 +288,13 @@ export async function getCSSSyntax(
   function renderNode(name, node) {
     switch (node.type) {
       case "Property": {
-        return `<span class="token property">${name}</span>`;
+        const encoded = name.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        const span = `<span class="token property">${encoded}</span>`;
+        const linkSlug = name.match(/^<'(.*)'>$/)?.[1];
+        if (linkSlug) {
+          return `<a href="/${locale}/docs/Web/CSS/${linkSlug}">${span}</a>`;
+        }
+        return span;
       }
       case "Type": {
         // encode < and >
@@ -443,8 +449,16 @@ export async function getCSSSyntax(
       if (typesToLink.includes(`<${node.name}>`)) {
         return;
       }
-      if (node.type === "Type" && !constituents.includes(node.name)) {
-        constituents.push(node.name);
+      if (
+        node.type === "Type" &&
+        !constituents.some((n) => n.name === node.name && n.type === node.type)
+      ) {
+        constituents.push(node);
+      } else if (
+        node.type === "Property" &&
+        !constituents.some((n) => n.name === node.name && n.type === node.type)
+      ) {
+        constituents.push(node);
       }
     }
 
@@ -477,10 +491,16 @@ export async function getCSSSyntax(
       // and then get the types in those syntaxes
       constituentSyntaxes = [];
       for (const constituent of allConstituents.slice(oldConstituentsLength)) {
-        const constituentSyntaxEntry = values[constituent];
+        let constituentSyntaxEntry;
+        if (constituent.type === "Type") {
+          constituentSyntaxEntry =
+            values[constituent.name.replace(/^'|'$/g, "")]?.value;
+        } else if (constituent.type === "Property") {
+          constituentSyntaxEntry = getPropertySyntax(constituent.name);
+        }
 
-        if (constituentSyntaxEntry?.value) {
-          constituentSyntaxes.push(constituentSyntaxEntry.value);
+        if (constituentSyntaxEntry) {
+          constituentSyntaxes.push(constituentSyntaxEntry);
         }
       }
     }
@@ -501,12 +521,21 @@ export async function getCSSSyntax(
     output += renderSyntax(itemName, itemSyntax);
     output += "<br/>";
     // collect all the constituent types for the property
-    const types = getConstituentTypes(itemSyntax);
+    const nodes = getConstituentTypes(itemSyntax);
 
     // and write each one out
-    for (const type of types) {
-      if (values[type] && values[type].value) {
-        output += renderSyntax(`&lt;${type}&gt;`, values[type].value);
+    for (const node of nodes) {
+      let value;
+      let name;
+      if (node.type === "Type") {
+        name = node.name;
+        value = values[node.name]?.value;
+      } else if (node.type === "Property") {
+        name = node.name;
+        value = getPropertySyntax(node.name);
+      }
+      if (name && value) {
+        output += renderSyntax(`&lt;${name}&gt;`, value);
         output += "<br/>";
       }
     }
@@ -531,21 +560,38 @@ export async function getCSSSyntax(
 let parsedWebRefCache: null | Promise<WebRefObjectData> = null;
 async function getParsedWebRef(): Promise<WebRefObjectData> {
   if (!parsedWebRefCache) {
-    parsedWebRefCache = getRawWebRefData().then((rawItems) =>
-      Object.fromEntries(
-        Object.entries(rawItems).map(
-          ([name, { spec, properties, atrules, values }]) => [
-            name,
-            {
-              spec,
-              properties: byName(properties),
-              atrules: byName(atrules),
-              values: byName(values),
-            },
-          ]
-        )
-      )
-    );
+    parsedWebRefCache = getRawWebRefData().then((rawItems) => {
+      const sortedRawItems = [...Object.entries(rawItems)];
+      sortedRawItems.sort(([a], [b]) => {
+        if (a === b) {
+          return 0;
+        }
+        if (/-\d+$/.test(a) && a.replace(/-\d+$/, "") === b) {
+          return -1;
+        }
+        if (/-\d+$/.test(b) && b.replace(/-\d+$/, "") === a) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        return 0;
+      });
+      return Object.fromEntries(
+        sortedRawItems.map(([name, { spec, properties, atrules, values }]) => [
+          name,
+          {
+            spec,
+            properties: byName(properties),
+            atrules: byName(atrules),
+            values: byName(values),
+          },
+        ])
+      );
+    });
   }
 
   return parsedWebRefCache;

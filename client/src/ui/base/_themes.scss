@@ -40,6 +40,8 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
+  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-light-border-primary};
   --border-secondary: #{$mdn-theme-light-border-secondary};
@@ -222,6 +224,8 @@
   --curriculum-bg-color-landing-stairway-floor: #fcefe2;
   --curriculum-category-color: #e3642a;
   --curriculum-color: #d47d55;
+  --curriculum-module-label-color: #b34d1f;
+  --curriculum-module-label-bg-color: #faf0e3;
   --curriculum-color-topic-standards: #{$mdn-color-light-theme-red-60};
   --curriculum-color-topic-styling: #{$mdn-color-light-theme-blue-60};
   --curriculum-color-topic-scripting: #{$mdn-color-light-theme-yellow-60};
@@ -259,7 +263,7 @@
   --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#small-light");
   --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#small-light");
   --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#small-light");
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#light");
     --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#light");
     --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#light");
@@ -314,6 +318,8 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
+  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
   --border-secondary: #{$mdn-theme-dark-border-secondary};
@@ -488,7 +494,7 @@
   --curriculum-color-topic-tooling: #8ff2a4;
   --curriculum-color-topic-practices: #c891f2;
   --curriculum-bg-color: #664b33;
-  --curriculum-bg-color-note: #332e2b;
+  --curriculum-bg-color-note: #321d13;
   --curriculum-bg-large-color: #343434;
   --curriculum-bg-color-topic-standards: #994b53;
   --curriculum-bg-color-topic-styling: #4e609e;
@@ -497,7 +503,7 @@
   --curriculum-bg-color-topic-practices: #584280;
   --curriculum-bg-color-landing: #0e0b0a;
   --curriculum-bg-color-landing-about-ul: #000;
-  --curriculum-bg-color-landing-top-icon: rgba(178, 92, 53, 0.3);
+  --curriculum-bg-color-landing-top-icon: #321d13;
   --curriculum-bg-color-landing-stairway-floor: rgba(137, 91, 51, 1);
   --curriculum-category-color: #e3642a;
   --curriculum-bg-color-grey: #1f1c1a;
@@ -506,6 +512,8 @@
   --curriculum-bg-color-list-item-body: #000;
   --curriculum-border-color-list-item: #4e4e4e;
   --curriculum-border-color-list-item-hover: rgba(227, 100, 42, 0.7);
+  --curriculum-module-label-color: #e3642a;
+  --curriculum-module-label-bg-color: #321d13;
   --curriculum-bg-color-list-item-topic-standards: #343434;
   --curriculum-bg-color-list-item-topic-styling: #343434;
   --curriculum-bg-color-list-item-topic-scripting: #343434;
@@ -534,7 +542,7 @@
   --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#small-dark");
   --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#small-dark");
   --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#small-dark");
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#dark");
     --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#dark");
     --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#dark");
@@ -562,6 +570,12 @@ body,
   --mdn-background-light: #{$mdn-theme-light-background-primary};
   --mdn-background-light-grey: #{$mdn-color-neutral-10};
   --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
+  --pride-0: #e50000;
+  --pride-1: #e68d00;
+  --pride-2: #e6d600;
+  --pride-3: #008100;
+  --pride-4: #004cff;
+  --pride-5: #760188;
 }
 
 .light {

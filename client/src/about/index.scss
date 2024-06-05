@@ -12,7 +12,7 @@
       margin-top: 3rem;
     }
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       h1 {
         font-size: 3.5rem;
       }
@@ -29,6 +29,7 @@
         font-family: var(--font-heading);
         font-size: 1.313rem;
         font-style: normal;
+        font-variation-settings: normal;
         font-weight: normal;
         line-height: 175%;
         margin: 0;
@@ -47,7 +48,7 @@
 
     .heading-break {
       display: none;
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         display: block;
       }
     }

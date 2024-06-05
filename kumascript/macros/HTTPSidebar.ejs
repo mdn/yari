@@ -288,17 +288,17 @@ var text = mdn.localStringMap({
 
 <section id="Quick_links" data-macro="HTTPSidebar">
   <ol>
-    <li><a href="/<%=locale%>/docs/Web/HTTP"><strong><%=text['HTTP']%></strong></a></li>
-    <li><strong><%=text['Guides']%></strong></li>
+    <li class="section"><%-web.smartLink(`/${locale}/docs/Web/HTTP`, null, text['HTTP'])%></li>
+    <li class="section no-link"><%=text['Guides']%></li>
     <li class="toggle">
         <details>
             <summary><%=text['ResourcesURI']%></summary>
             <ol>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web"><%=text['Identifying']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Data_URLs"><%=text['DataURLs']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/MIME_Types"><%=text['MIMETypes']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types"><%=text['ListMIMETypes']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs"><%=text['WWWorNotWWW']%></a></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web`, null, text['Identifying'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Data_URLs`, null, text['DataURLs'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/MIME_types`, null, text['MIMETypes'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types`, null, text['ListMIMETypes'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs`, null, text['WWWorNotWWW'])%></li>
             </ol>
         </details>
     </li>
@@ -306,13 +306,13 @@ var text = mdn.localStringMap({
         <details>
             <summary><%=text['HTTPGuide']%></summary>
             <ol>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP"><%=text['Basics']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Overview"><%=text['Overview']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP"><%=text['Evolution']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Messages"><%=text['Messages']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Session"><%=text['Session']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Connection_management_in_HTTP_1.x"><%=text['Connection1x']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Protocol_upgrade_mechanism"><%=text['ProtocolUpgradeMech']%></a></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP`, null, text['Basics'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Overview`, null, text['Overview'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP`, null, text['Evolution'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Messages`, null, text['Messages'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Session`, null, text['Session'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Connection_management_in_HTTP_1.x`, null, text['Connection1x'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Protocol_upgrade_mechanism`, null, text['ProtocolUpgradeMech'])%></li>
             </ol>
         </details>
     </li>
@@ -320,29 +320,29 @@ var text = mdn.localStringMap({
         <details>
             <summary><%=text['Security']%></summary>
             <ol>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/CSP"><%=text['CSP']%></a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/Strict-Transport-Security">HTTP Strict Transport Security (HSTS)</a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-Content-Type-Options">X-Content-Type-Options</a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a></li>
-                <li><a href="/<%=locale%>/docs/Web/HTTP/Headers/X-XSS-Protection">X-XSS-Protection</a></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/CSP`, null, text['CSP'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/Strict-Transport-Security`, null, "HTTP Strict Transport Security (HSTS)")%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/X-Content-Type-Options`, null, "X-Content-Type-Options")%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/X-Frame-Options`, null, "X-Frame-Options")%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/X-XSS-Protection`, null, "X-XSS-Protection")%></li>
                 <li><a href="https://wiki.mozilla.org/Security/Guidelines/Web_Security">Mozilla web security guidelines</a></li>
                 <li><a href="https://observatory.mozilla.org/">Mozilla Observatory</a></li>
             </ol>
         </details>
     </li>
 
-    <li><a href="/<%=locale%>/docs/Web/HTTP/CORS"><%=text['CORS']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Authentication"><%=text['Authentication']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Caching"><%=text['Caching']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Compression"><%=text['Compression']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Conditional_requests"><%=text['Conditionals']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Content_negotiation"><%=text['ContentNego']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Cookies"><%=text['Cookies']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Range_requests"><%=text['Ranges']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Redirections"><%=text['Redirects']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Resources_and_specifications"><%=text['Resources']%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/HTTP/Permissions_Policy"><%=text['Permissions_Policy']%></a></li>
-    <li><strong><%=text['Reference']%></strong></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/CORS`, null, text['CORS'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Authentication`, null, text['Authentication'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Caching`, null, text['Caching'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Compression`, null, text['Compression'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Conditional_requests`, null, text['Conditionals'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Content_negotiation`, null, text['ContentNego'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Cookies`, null, text['Cookies'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Range_requests`, null, text['Ranges'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Redirections`, null, text['Redirects'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Resources_and_specifications`, null, text['Resources'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Permissions_Policy`, null, text['Permissions_Policy'])%></li>
+    <li class="section no-link"><%=text['Reference']%></li>
     <li class="toggle">
         <details <%=state('Web/HTTP/Headers')%>>
             <summary><%=text['Headers']%></summary>

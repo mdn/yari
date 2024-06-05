@@ -81,13 +81,13 @@
   }
 
   &.inline-submenu-lg {
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       @include not-inline-submenu();
     }
   }
 
   &:not(.inline-submenu-lg) {
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       @include not-inline-submenu();
     }
   }
@@ -105,7 +105,7 @@
     background: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     border-bottom: 1px solid var(--border-primary);
   }
 }
@@ -122,7 +122,7 @@
 .submenu-item {
   font-size: var(--type-smaller-font-size);
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     // If there is sub-text associated with this heading, make it bold.
     &:not(:only-child) {
       font-weight: var(--font-body-strong-weight);
@@ -133,7 +133,7 @@
 .submenu-item-description {
   display: none;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: block;
     font-size: var(--type-tiny-font-size);
     margin: 0.25rem 0 0;

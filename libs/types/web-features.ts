@@ -22,7 +22,7 @@ export interface FeatureData {
     | [usage_stats_url, usage_stats_url, ...usage_stats_url[]]; // A single URL or an array of two or more
 }
 
-type browserIdentifier =
+export type browserIdentifier =
   | "chrome"
   | "chrome_android"
   | "edge"

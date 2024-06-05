@@ -83,7 +83,7 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
                           practices.
                         </span>
                         <span id="stair-3">
-                          Get access to hight-quality recommended resources.
+                          Get access to high-quality recommended resources.
                         </span>
                         <span id="stair-4">
                           Get guidance from trusted voices.

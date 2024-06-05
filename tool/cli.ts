@@ -8,6 +8,7 @@ import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
+import cliProgress from "cli-progress";
 import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
@@ -28,10 +29,8 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_MEASUREMENT_ID,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
@@ -178,14 +177,6 @@ interface PopularitiesActionParameters extends ActionParameters {
   logger: Logger;
 }
 
-interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
-  options: {
-    measurementId: string;
-    debug: boolean;
-    outfile: string;
-  };
-}
-
 interface BuildRobotsTxtActionParameters extends ActionParameters {
   options: {
     outfile: string;
@@ -200,12 +191,6 @@ interface MacrosActionParameters extends ActionParameters {
     cmd: string;
     foldersearch: string;
     macros: string[];
-  };
-}
-
-interface OptimizeClientBuildActionParameters extends ActionParameters {
-  args: {
-    buildroot: string;
   };
 }
 
@@ -752,15 +737,28 @@ program
       const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
+      const progressBar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_grey
+      );
+      progressBar.start(allDocs.count, 0);
+
       for (const document of allDocs.iterDocs()) {
-        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
-          await buildDocument(document, {
-            fixFlaws: true,
-            fixFlawsTypes: new Set(fixFlawsTypes),
-            fixFlawsVerbose: true,
-          });
+        try {
+          if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+            await buildDocument(document, {
+              fixFlaws: true,
+              fixFlawsTypes: new Set(fixFlawsTypes),
+              fixFlawsVerbose: true,
+            });
+          }
+        } catch (e) {
+          console.error(e);
         }
+        progressBar.increment();
       }
+
+      progressBar.stop();
     })
   )
 
@@ -857,66 +855,6 @@ program
         )
       );
     })
-  )
-
-  .command(
-    "google-analytics-code",
-    "Generate a .js file that can be used in SSR rendering"
-  )
-  .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
-  })
-  .option(
-    "--measurement-id <id>[,<id>]",
-    "Google Analytics measurement IDs (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
-    {
-      default: GOOGLE_ANALYTICS_MEASUREMENT_ID,
-    }
-  )
-  .action(
-    tryOrExit(
-      async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, measurementId } = options;
-        const measurementIds = measurementId.split(",").filter(Boolean);
-        if (measurementIds.length) {
-          const dntHelperCode = fs
-            .readFileSync(
-              new URL("mozilla.dnthelper.min.js", import.meta.url),
-              "utf-8"
-            )
-            .trim();
-
-          const firstMeasurementId = measurementIds.at(0);
-          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(firstMeasurementId)}`;
-
-          const code = `
-// Mozilla DNT Helper
-${dntHelperCode}
-// Load GA unless DNT is enabled.
-if (Mozilla && !Mozilla.dntEnabled()) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  ${measurementIds
-    .map((id) => `gtag('config', '${id}', { 'anonymize_ip': true });`)
-    .join("\n  ")}
-
-  var gaScript = document.createElement('script');
-  gaScript.async = true;
-  gaScript.src = '${gaScriptURL}';
-  document.head.appendChild(gaScript);
-}`.trim();
-          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
-          logger.info(
-            chalk.green(
-              `Generated ${outfile} for SSR rendering using ${measurementId}.`
-            )
-          );
-        } else {
-          logger.info(chalk.yellow("No Google Analytics code file generated"));
-        }
-      }
-    )
   )
 
   .command(
@@ -1116,40 +1054,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
 
       process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
-  )
-
-  .command(
-    "optimize-client-build",
-    "After the client code has been built there are things to do that react-scripts can't."
-  )
-  .argument("<buildroot>", "directory where react-scripts built", {
-    default: path.join("client", "build"),
-  })
-  .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-        logger,
-      }: OptimizeClientBuildActionParameters) => {
-        const { buildroot } = args;
-        const { results } = await runOptimizeClientBuild(buildroot);
-        if (options.verbose) {
-          for (const result of results) {
-            logger.info(`${result.filePath} -> ${result.hashedHref}`);
-          }
-        } else {
-          logger.info(
-            chalk.green(
-              `Hashed ${results.length} files in ${path.join(
-                buildroot,
-                "index.html"
-              )}`
-            )
-          );
-        }
-      }
-    )
   )
 
   .command(

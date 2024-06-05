@@ -213,10 +213,6 @@
   .section-content {
     p {
       font: var(--type-article-p);
-
-      &:last-child {
-        margin-bottom: 2rem;
-      }
     }
 
     figure {
@@ -252,13 +248,13 @@
     }
   }
 
-  @media screen and (min-width: $screen-sm) {
+  @media (min-width: $screen-sm) {
     padding: 3rem;
     // Reduce space to article footer.
     padding-bottom: 0;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     // Reduce space to article footer.
     margin-bottom: 0;
     padding: 0;
@@ -378,7 +374,7 @@ h1 {
   margin-bottom: 2rem;
   word-break: break-word;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     font: var(--type-heading-h1);
   }
 }
@@ -523,11 +519,12 @@ pre {
   ul {
     margin: 0.5rem 0 2rem;
 
-    @media screen and (min-width: $screen-xl) {
+    @media (min-width: $screen-xl) {
       columns: 3;
     }
 
     li {
+      break-inside: avoid-column;
       margin: 0 0 0.5rem;
     }
   }
@@ -544,7 +541,6 @@ pre {
 
 .callout {
   background: var(--background-secondary);
-  border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   display: flex;
@@ -864,7 +860,7 @@ kbd {
   --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -875,7 +871,7 @@ kbd {
   top: var(--offset);
   z-index: var(--z-index-sidebar-mobile);
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     z-index: auto;
   }
 
@@ -893,7 +889,7 @@ kbd {
       grid-area: toc;
       margin: 0;
     }
-    @media screen and (min-width: $screen-xl) {
+    @media (min-width: $screen-xl) {
       display: flex;
       flex-direction: column;
       gap: 0;
@@ -913,13 +909,13 @@ kbd {
         padding-bottom: 3rem;
       }
     }
-    @media screen and (max-width: #{$screen-md - 1}) {
+    @media (max-width: #{$screen-md - 1}) {
       .place {
         display: none;
       }
     }
   }
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     display: contents;
   }
 }
@@ -939,4 +935,45 @@ kbd {
     color: var(--text-primary);
     opacity: 0.4;
   }
+}
+
+html a.only-in-en-us:after {
+  content: "(en-US)";
+  display: inline-block;
+  font-size: var(--type-tiny-font-size);
+  vertical-align: super;
+}
+
+html[lang="es"] a.only-in-en-us:after {
+  content: "(inglés)";
+}
+
+html[lang="fr"] a.only-in-en-us:after {
+  content: "(angl.)";
+}
+
+html[lang="ja"] a.only-in-en-us:after {
+  content: "(英語)";
+}
+
+html[lang="ko"] a.only-in-en-us:after {
+  content: "(영어)";
+}
+
+html[lang="ru"] a.only-in-en-us:after {
+  content: "(англ.)";
+}
+
+html[lang="pt-BR"] a.only-in-en-us:after {
+  content: "(inglês)";
+}
+
+html[lang="zh-CN"] a.only-in-en-us:after {
+  content: "（英语）";
+  vertical-align: baseline;
+}
+
+html[lang="zh-TW"] a.only-in-en-us:after {
+  content: "（英語）";
+  vertical-align: baseline;
 }

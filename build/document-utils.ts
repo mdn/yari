@@ -56,7 +56,9 @@ export function addBreadcrumbData(url, document) {
     if (parentDoc) {
       parents.unshift({
         uri: parentURL,
-        title: transformTitle(parentDoc.metadata.title),
+        title:
+          parentDoc.metadata["short-title"] ||
+          transformTitle(parentDoc.metadata.title),
       });
     }
   }
