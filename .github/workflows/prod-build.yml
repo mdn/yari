@@ -274,14 +274,14 @@ jobs:
 
           du -sh client/build
 
-          # Generate sitemap index file
-          yarn build --sitemap-index
-
           # Build the blog
           yarn build:blog
 
           # Build the curriculum
           yarn build:curriculum
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
