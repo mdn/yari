@@ -219,8 +219,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       return [];
     }
 
-    // setSearchResultsMaxHeight(calculateSearchResultsMaxHeight);
-
     const inputValueLC = inputValue.toLowerCase().trim();
     const q = splitQuery(inputValue);
     const indexResults = searchIndex.flex
