@@ -218,7 +218,10 @@ export async function syncTranslatedContent(
   if (!macro && resolvedMacro && resolvedMacro !== true) {
     const firstLine = rawBody.split("\n").at(0);
     rawBody = [
-      resolvedMacro,
+      resolvedMacro.replace(
+        /(QuickLinksWithSubpages\s*\(\s*["'])\/en-US\//i,
+        `$1/${VALID_LOCALES.get(locale)}/`
+      ),
       firstLine.startsWith("{{") && firstLine.endsWith("}}") ? "" : "\n\n",
       rawBody,
     ].join("");
