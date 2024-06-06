@@ -205,6 +205,7 @@ export async function getCSSSyntax(
       }
     }
     if (spec_values.length > 1) {
+      // Filter out specs that end "-n" where n is a number.
       spec_values = spec_values.filter(({ spec }) => !/-\d+$/.test(spec));
     }
     return spec_values[0]?.value || "";
