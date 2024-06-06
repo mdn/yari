@@ -22,13 +22,13 @@
     padding-top: 0;
 
     ol.modules-list {
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         grid-template-columns: 1fr 1fr;
       }
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         grid-template-columns: 1fr 1fr 1fr;
       }
-      @media screen and (min-width: $screen-lg) {
+      @media (min-width: $screen-lg) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }
     }
@@ -37,7 +37,7 @@
   header.landing-header {
     display: grid;
     grid-template-areas: "copy" "svg";
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       grid-template-areas: "copy svg";
       grid-template-columns: 30rem auto;
     }
@@ -50,7 +50,7 @@
       max-width: 28rem;
       width: 100%;
       z-index: 1;
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         margin-bottom: 0;
       }
 
@@ -69,7 +69,7 @@
       margin-top: 3rem;
       max-width: 30rem;
       padding-right: 1rem;
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         margin-bottom: 4rem;
       }
 
@@ -77,7 +77,7 @@
         color: var(--curriculum-color-topic);
         font-size: 2rem;
         margin-bottom: 0.5rem;
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           font-size: 2.5rem;
         }
       }
@@ -86,7 +86,7 @@
         font-size: 1.25rem;
         margin-bottom: 1.5rem;
         margin-top: 0.5rem;
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           font-size: 2rem;
           margin-bottom: 2rem;
         }
@@ -115,7 +115,7 @@
       grid-template-columns: 1fr;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         grid-template-areas:
           "li li "
           "h2 . "
@@ -149,25 +149,25 @@
           padding: 1rem;
           transform: translateY(-1rem);
           width: 100%;
-          @media screen and (min-width: $screen-sm) {
+          @media (min-width: $screen-sm) {
             align-items: center;
             gap: 1rem;
           }
-          @media screen and (min-width: $screen-md) {
+          @media (min-width: $screen-md) {
             justify-content: start;
           }
-          @media screen and (min-width: $screen-lg) {
+          @media (min-width: $screen-lg) {
             justify-content: center;
           }
 
           > li {
             margin: 0 0.5rem;
             text-align: center;
-            @media screen and (min-width: $screen-sm) {
+            @media (min-width: $screen-sm) {
               margin: 0 1rem;
               width: max-content;
             }
-            @media screen and (min-width: $screen-md) {
+            @media (min-width: $screen-md) {
               align-items: center;
               display: inline-flex;
               gap: 1rem;
@@ -178,7 +178,7 @@
               height: 3rem;
               margin: 0 auto;
               width: 3rem;
-              @media screen and (min-width: $screen-md) {
+              @media (min-width: $screen-md) {
                 display: initial;
                 margin: 0;
               }
@@ -266,10 +266,10 @@
       padding-right: var(--gutter);
       width: 100%;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         grid-template-columns: min(100%, 34rem);
       }
-      @media screen and (min-width: $screen-lg) {
+      @media (min-width: $screen-lg) {
         grid-template-areas: "a b";
         grid-template-columns: 1fr 1.4fr;
       }
@@ -280,7 +280,7 @@
 
       > #stairway1-container {
         --fs: clamp(1rem, calc(3 * calc(100vw / 100)), 1.75rem);
-        @media screen and (min-width: $screen-lg) {
+        @media (min-width: $screen-lg) {
           --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
         }
         grid-area: a;
@@ -310,7 +310,7 @@
 
       > #stairway2-container {
         --fs: clamp(0.75rem, calc(1.25 * calc(100vw / 100)), 1rem);
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
         }
         grid-area: b;
@@ -332,7 +332,7 @@
             max-width: 10rem;
             position: absolute;
             text-wrap: wrap;
-            @media screen and (min-width: $screen-md) {
+            @media (min-width: $screen-md) {
               max-width: initial;
               text-wrap: nowrap;
             }
@@ -357,7 +357,7 @@
             left: 8%;
             top: 86%;
           }
-          @media screen and (min-width: $screen-md) {
+          @media (min-width: $screen-md) {
             #stair-1 {
               left: 35%;
               top: 53%;
@@ -384,7 +384,7 @@
           &#stairway2large {
             display: none;
             grid-area: b;
-            @media screen and (min-width: $screen-md) {
+            @media (min-width: $screen-md) {
               display: initial;
             }
           }
@@ -392,7 +392,7 @@
           &#stairway2small {
             grid-area: b;
             max-width: 100%;
-            @media screen and (min-width: $screen-md) {
+            @media (min-width: $screen-md) {
               display: none;
             }
           }
@@ -423,14 +423,14 @@
         max-width: 52rem;
         overflow: scroll;
         scroll-snap-type: inline mandatory;
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           gap: 5rem 4rem;
           grid-template-areas:
             "beginner advanced"
             "employ educator";
           grid-template-columns: auto auto;
         }
-        @media screen and (min-width: $screen-lg) {
+        @media (min-width: $screen-lg) {
           gap: 5rem 8rem;
         }
 
@@ -452,7 +452,7 @@
           scroll-snap-align: center;
           width: 80vw;
 
-          @media screen and (min-width: $screen-md) {
+          @media (min-width: $screen-md) {
             align-items: start;
             background-color: initial;
             gap: 1rem 2rem;
@@ -472,7 +472,7 @@
             display: inline-block;
             height: 3rem;
             width: 3rem;
-            @media screen and (min-width: $screen-md) {
+            @media (min-width: $screen-md) {
               grid-area: i;
               height: 5rem;
               width: 5rem;
@@ -538,7 +538,7 @@
             text-align: center;
             text-decoration: none;
             width: fit-content;
-            @media screen and (min-width: $screen-md) {
+            @media (min-width: $screen-md) {
               justify-self: start;
             }
 

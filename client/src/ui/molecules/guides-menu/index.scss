@@ -11,7 +11,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     .desktop-only {
       display: inherit;
     }

@@ -67,7 +67,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     li {
       display: inline-flex;
     }

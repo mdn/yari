@@ -274,7 +274,7 @@
   --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#small-light");
   --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#small-light");
   --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#small-light");
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#light");
     --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#light");
     --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#light");
@@ -564,7 +564,7 @@
   --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#small-dark");
   --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#small-dark");
   --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#small-dark");
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#dark");
     --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#dark");
     --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#dark");
