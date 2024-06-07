@@ -54,8 +54,8 @@ export const SURVEYS: Survey[] = [
     bucket: SurveyBucket.DE_LOCALE_2024,
     show: () => (navigator?.language || "").startsWith("de"),
     src: "https://survey.alchemer.com/s3/7881145/MDN-German-Locale-Survey",
-    teaser: "Was wäre, wenn MDN auf Deutsch übersetzt wäre?",
-    question: "Welche Sprache würdest du dann bevorzugen?",
+    teaser: "Wie wär’s, wenn MDN auf Deutsch verfügbar wäre?",
+    question: "Welche Sprache würdest du dann benutzen?",
     footnote:
       "This is a survey. You're seeing this, because your browser indicates German as your preferred language.",
     ...survey_duration(SurveyBucket.DE_LOCALE_2024),
