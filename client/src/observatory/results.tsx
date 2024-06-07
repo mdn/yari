@@ -228,7 +228,6 @@ function ObservatoryRating({
 function ObservatoryTests({ result }: { result: ObservatoryResult }) {
   return Object.keys(result.tests).length !== 0 ? (
     <>
-      <h2>Test Scores</h2>
       <figure className="scroll-container">
         <table className="fancy tests">
           <thead>
@@ -241,73 +240,46 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
             </tr>
           </thead>
           <tbody>
-            {Object.entries(result.tests)
-              .sort(
-                (
-                  [aName, { result: aResult, score_modifier: aScore }],
-                  [bName, { result: bResult, score_modifier: bScore }]
-                ) => {
-                  const aIndex = RECOMMENDATIONS.findIndex(([results]) =>
-                    results.includes(aResult)
-                  );
-                  const bIndex = RECOMMENDATIONS.findIndex(([results]) =>
-                    results.includes(bResult)
-                  );
-                  const scoreDiff = aScore - bScore;
-                  // sort by order in RECOMMENDATIONS
-                  return aIndex !== -1 && bIndex !== -1
-                    ? aIndex - bIndex
-                    : aIndex !== -1
-                      ? -1
-                      : bIndex !== -1
-                        ? 1
-                        : // then by score
-                          scoreDiff !== 0
-                          ? scoreDiff
-                          : // then by test name
-                            (TEST_MAP[aName]?.name || aName).localeCompare(
-                              TEST_MAP[bName]?.name || bName,
-                              undefined,
-                              { sensitivity: "base" }
-                            );
-                }
-              )
-              .map(([name, test]) => {
-                const mappedTest = TEST_MAP[name];
-                return mappedTest ? (
-                  <tr key={name}>
+            {Object.entries(result.tests).map(([name, test]) => {
+              const mappedTest = TEST_MAP[name];
+              return mappedTest ? (
+                <tr key={name}>
+                  <td>
+                    <Link href={mappedTest.url}>{mappedTest.name}</Link>
+                  </td>
+                  {[
+                    "referrer-policy-not-implemented",
+                    "referrer-policy-no-referrer-when-downgrade",
+                    "sri-not-implemented-response-not-html",
+                    "sri-not-implemented-but-no-scripts-loaded",
+                    "sri-not-implemented-but-all-scripts-loaded-from-secure-origin",
+                    "cookies-not-found",
+                  ].includes(test.result) ? (
+                    <td>-</td>
+                  ) : (
                     <td>
-                      <Link href={mappedTest.url}>{mappedTest.name}</Link>
+                      <Icon
+                        name={test.pass ? "check-circle" : "alert-circle"}
+                      />
+                      <span className="visually-hidden">
+                        {test.pass ? "Passed" : "Failed"}
+                      </span>
                     </td>
-                    {[
-                      "referrer-policy-not-implemented",
-                      "referrer-policy-no-referrer-when-downgrade",
-                      "sri-not-implemented-response-not-html",
-                      "sri-not-implemented-but-no-scripts-loaded",
-                      "sri-not-implemented-but-all-scripts-loaded-from-secure-origin",
-                      "cookies-not-found",
-                    ].includes(test.result) ? (
-                      <td>-</td>
-                    ) : (
-                      <td>
-                        <Icon
-                          name={test.pass ? "check-circle" : "alert-circle"}
-                        />
-                        <span className="visually-hidden">
-                          {test.pass ? "Passed" : "Failed"}
-                        </span>
-                      </td>
+                  )}
+                  <td>{test.score_modifier}</td>
+                  <td
+                    dangerouslySetInnerHTML={{
+                      __html: test.score_description,
+                    }}
+                  />
+                  <td>
+                    {mappedTest.info && (
+                      <InfoTooltip>{mappedTest.info}</InfoTooltip>
                     )}
-                    <td>{test.score_modifier}</td>
-                    <td>{test.score_description}</td>
-                    <td>
-                      {mappedTest.info && (
-                        <InfoTooltip>{mappedTest.info}</InfoTooltip>
-                      )}
-                    </td>
-                  </tr>
-                ) : null;
-              })}
+                  </td>
+                </tr>
+              ) : null;
+            })}
           </tbody>
         </table>
       </figure>

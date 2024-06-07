@@ -1,8 +1,12 @@
 @use "../ui/vars" as *;
 
 .observatory {
-  --border-radius: 0.5rem;
+  // --border-radius: 0.5rem;
   background-color: var(--observatory-bg);
+
+  th {
+    font-weight: normal;
+  }
 
   .accent {
     color: var(--observatory-accent);
@@ -135,18 +139,18 @@
         height: 3rem;
 
         :focus-visible {
+          outline: 2px solid var(--observatory-accent);
           outline-offset: -2px;
           outline-width: 3px;
-          outline: 2px solid var(--observatory-accent);
         }
 
         input {
+          background-color: var(--observatory-bg);
           border: 1px solid var(--observatory-border);
           border-bottom-left-radius: var(--border-radius);
           border-top-left-radius: var(--border-radius);
           flex-grow: 1;
           padding: 0 0.75rem;
-          background-color: var(--observatory-bg);
         }
 
         button {
@@ -461,18 +465,19 @@
     }
 
     section {
-      padding: 1rem;
       line-height: 4rem;
+      padding: 1rem;
     }
 
     .grade-trend {
       grid-area: grade;
-      text-align: center;
       justify-self: start;
+      text-align: center;
+
       .trend {
+        color: #696969;
         font-weight: 400;
         line-height: 2rem;
-        color: #696969;
       }
     }
 
