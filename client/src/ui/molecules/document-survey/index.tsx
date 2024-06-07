@@ -56,11 +56,28 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
   const [originalState] = React.useState(() => getSurveyState(survey.bucket));
   const [state, setState] = React.useState(() => originalState);
-  const seen = React.useRef<boolean>(!!originalState.seen_at);
 
   React.useEffect(() => {
     writeSurveyState(survey.bucket, state);
   }, [state, survey.bucket]);
+
+  const seen = React.useCallback(() => {
+    if (state.seen_at) {
+      return;
+    }
+
+    const timeoutId = setTimeout(
+      () =>
+        setState((state) => ({
+          ...state,
+          seen_at: Date.now(),
+        })),
+      0
+    );
+    gleanClick(`${SURVEY}: seen ${survey.bucket}`);
+
+    return () => clearTimeout(timeoutId);
+  }, [gleanClick, state.seen_at, survey.bucket]);
 
   function dismiss() {
     setState({
@@ -100,17 +117,10 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
   }, [details, state, survey, gleanClick]);
 
   React.useEffect(() => {
-    if (!state.seen_at) {
-      setState({
-        ...state,
-        seen_at: Date.now(),
-      });
-      if (!seen.current) {
-        seen.current = true;
-        gleanClick(`${SURVEY}: seen ${survey.bucket}`);
-      }
-    }
-  }, [state, gleanClick, survey.bucket]);
+    const timeoutId = setTimeout(() => seen(), 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [seen]);
 
   React.useEffect(() => {
     // For this to work, the Survey needs this JavaScript action:
