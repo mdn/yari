@@ -15,6 +15,7 @@ export interface Survey {
   src: string;
   teaser: string;
   question: string;
+  footnote?: string;
 }
 
 enum SurveyBucket {
