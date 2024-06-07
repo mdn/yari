@@ -35,9 +35,12 @@ export type ObservatoryTestResult = Record<string, ObservatoryIndividualTest>;
 export interface ObservatoryIndividualTest {
   data: null | ObservatoryCookiesData;
   expectation: string;
+  name: string;
+  link: string;
   pass: boolean;
   result: string;
   score_description: string;
+  recommendation: string;
   score_modifier: number;
   policy?: ObservatoryCSPPolicy;
 }

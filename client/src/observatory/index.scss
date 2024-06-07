@@ -4,8 +4,16 @@
   // --border-radius: 0.5rem;
   background-color: var(--observatory-bg);
 
-  th {
-    font-weight: normal;
+  .obs-none {
+    color: var(--observatory-color-secondary);
+  }
+
+  .obs-score-value {
+    margin-right: 0.5rem;
+  }
+
+  .obs-pass-icon {
+    vertical-align: text-top;
   }
 
   .accent {
@@ -292,24 +300,29 @@
         color: var(--text-secondary);
       }
 
-      tr:nth-child(2n) {
-        background: var(--observatory-bg);
+      tr {
+        background: var(--background-primary);
       }
     }
 
     &.tests {
       min-width: calc($screen-md - 2rem);
 
+      th {
+        font-weight: normal;
+      }
+
       th,
       td {
+        vertical-align: top;
         &:first-of-type {
           width: 30%;
         }
 
-        &:nth-of-type(n + 2):nth-of-type(-n + 3),
-        &:last-of-type {
-          text-align: center;
-        }
+        // &:nth-of-type(n + 2):nth-of-type(-n + 3),
+        // &:last-of-type {
+        //   text-align: center;
+        // }
       }
 
       td:last-of-type {
@@ -318,7 +331,7 @@
 
       a {
         color: var(--observatory-color);
-        font-weight: 500;
+        // font-weight: 500;
         text-decoration: underline;
 
         &:hover,
