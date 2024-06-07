@@ -56,6 +56,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
   const [originalState] = React.useState(() => getSurveyState(survey.bucket));
   const [state, setState] = React.useState(() => originalState);
+  const seen = React.useRef<boolean>(!!originalState.seen_at);
 
   React.useEffect(() => {
     writeSurveyState(survey.bucket, state);
@@ -103,7 +104,10 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
         ...state,
         seen_at: Date.now(),
       });
-      gleanClick(`${SURVEY}: seen ${survey.bucket}`);
+      if (!seen.current) {
+        seen.current = true;
+        gleanClick(`${SURVEY}: seen ${survey.bucket}`);
+      }
     }
   }, [state, gleanClick, survey.bucket]);
 
