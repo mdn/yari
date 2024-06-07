@@ -205,6 +205,7 @@ export async function getCSSSyntax(
       }
     }
     if (spec_values.length > 1) {
+      // Filter out specs that end "-n" where n is a number.
       spec_values = spec_values.filter(({ spec }) => !/-\d+$/.test(spec));
     }
     return spec_values[0]?.value || "";
@@ -308,6 +309,7 @@ export async function getCSSSyntax(
         const span = `<span class="token property">${encoded}</span>`;
         // If the type is not included in the syntax, or is in "typesToLink",
         // link to its dedicated page (don't expand it)
+        // Remove surrounding angle brackets, and range/choice brackets.
         const key = name.replace(/(^<|>$)/g, "").replace(/ ?\[.*\]$/, "");
         if (values[key]?.value && !typesToLink.includes(name)) {
           return span;
