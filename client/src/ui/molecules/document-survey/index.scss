@@ -61,6 +61,10 @@
 
     .icon {
       background-color: $mdn-color-neutral-60;
+
+      &:hover {
+        background-color: $mdn-color-neutral-90;
+      }
     }
   }
 }
