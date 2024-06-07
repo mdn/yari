@@ -1,6 +1,7 @@
 @use "../../vars" as *;
 
 .document-survey {
+  --margin-vertical: 0.75rem;
   background-color: $mdn-color-light-theme-violet-10;
   border-radius: 0.5rem;
   color: $mdn-color-neutral-90;
@@ -29,13 +30,13 @@
 
   details {
     iframe {
-      margin-top: 0.9rem;
+      margin-top: var(--margin-vertical);
     }
   }
 
   summary {
     color: #6800cf;
-    margin-top: 1rem;
+    margin-top: var(--margin-vertical);
     text-decoration: underline;
 
     &:focus,
@@ -54,7 +55,12 @@
     margin-left: 4rem;
   }
 
-  .survey-dismiss .icon {
-    background-color: $mdn-color-neutral-60;
+  .survey-dismiss {
+    // Avoid the parent container to grow from 28px to 30px.
+    margin-top: -2px;
+
+    .icon {
+      background-color: $mdn-color-neutral-60;
+    }
   }
 }
