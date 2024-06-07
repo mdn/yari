@@ -353,6 +353,7 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
+          npm run build-sitemap
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}

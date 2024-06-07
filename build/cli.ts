@@ -27,11 +27,10 @@ import {
 } from "./index.js";
 import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
-import { makeSitemapIndexXML, buildSitemap } from "./sitemaps.js";
+import { buildSitemapIndex, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
-import { fdir } from "fdir";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -507,18 +506,7 @@ program
         if (!options.quiet) {
           console.log(chalk.yellow("Building sitemap index file..."));
         }
-        const sitemapsBuilt = new fdir()
-          .filter((p) => p.endsWith("/sitemap.xml.gz"))
-          .withFullPaths()
-          .crawl(path.join(BUILD_OUT_ROOT, "sitemaps"))
-          .sync()
-          .sort()
-          .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
-        const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-        fs.writeFileSync(
-          sitemapIndexFilePath,
-          makeSitemapIndexXML(sitemapsBuilt)
-        );
+        const sitemapsBuilt = await buildSitemapIndex();
 
         if (!options.quiet) {
           console.log(

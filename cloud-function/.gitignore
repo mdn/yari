@@ -3,5 +3,6 @@ node_modules
 !.env-dist
 *.log
 redirects.json
+sitemap.json
 src/**/*.js
 src/internal

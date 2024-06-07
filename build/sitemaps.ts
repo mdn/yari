@@ -1,6 +1,8 @@
 import { join } from "node:path";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { gzipSync } from "node:zlib";
+
+import { fdir } from "fdir";
 
 import { BASE_URL, BUILD_OUT_ROOT } from "../libs/env/index.js";
 
@@ -18,10 +20,46 @@ export async function buildSitemap(
     pathSuffix = [],
   }: { slugPrefix?: string; pathSuffix?: string[] }
 ) {
+  const txt = entries.map(({ slug }) => `${slugPrefix}${slug}`).join("\n");
   const xml = makeSitemapXML(slugPrefix, entries);
-  const path = await writeSitemap(xml, ...pathSuffix);
 
-  return path;
+  const dirPath = join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    ...pathSuffix.map((p) => p.toLowerCase())
+  );
+  await mkdir(dirPath, { recursive: true });
+
+  const txtPath = join(dirPath, "sitemap.txt");
+  const xmlPath = join(dirPath, "sitemap.xml.gz");
+
+  await Promise.all([
+    writeFile(txtPath, txt, "utf-8"),
+    writeFile(xmlPath, gzipSync(xml)),
+  ]);
+
+  return xmlPath;
+}
+
+export async function buildSitemapIndex() {
+  const sitemapsBuilt = new fdir()
+    .filter((p) => p.endsWith("/sitemap.txt"))
+    .withFullPaths()
+    .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
+    .sync();
+
+  const txtPath = join(BUILD_OUT_ROOT, "sitemap.txt");
+  const xmlPath = join(BUILD_OUT_ROOT, "sitemap.xml");
+
+  await Promise.all([
+    Promise.all(sitemapsBuilt.map((p) => readFile(p, "utf-8")))
+      .then((contents) => contents.join("\n").split("\n"))
+      .then((urls) => urls.filter(Boolean).sort().join("\n"))
+      .then((content) => writeFile(txtPath, content, "utf-8")),
+    writeFile(xmlPath, makeSitemapIndexXML(sitemapsBuilt)),
+  ]);
+
+  return sitemapsBuilt.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
 }
 
 function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
@@ -60,18 +98,4 @@ export function makeSitemapIndexXML(paths: string[]) {
     }),
     "</sitemapindex>",
   ].join("\n");
-}
-
-async function writeSitemap(xml: string, ...paths: string[]) {
-  const dirPath = join(
-    BUILD_OUT_ROOT,
-    "sitemaps",
-    ...paths.map((p) => p.toLowerCase())
-  );
-  await mkdir(dirPath, { recursive: true });
-
-  const filePath = join(dirPath, "sitemap.xml.gz");
-  await writeFile(filePath, gzipSync(xml));
-
-  return filePath;
 }

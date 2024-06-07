@@ -10,6 +10,7 @@ import { handleStripePlans } from "./handlers/handle-stripe-plans.js";
 import { proxyTelemetry } from "./handlers/proxy-telemetry.js";
 import { lowercasePathname } from "./middlewares/lowercase-pathname.js";
 import { resolveIndexHTML } from "./middlewares/resolve-index-html.js";
+import { redirectNonCanonicals } from "./middlewares/redirect-non-canonicals.js";
 import { redirectLeadingSlash } from "./middlewares/redirect-leading-slash.js";
 import { redirectMovedPages } from "./middlewares/redirect-moved-pages.js";
 import { redirectEnforceTrailingSlash } from "./middlewares/redirect-enforce-trailing-slash.js";
@@ -22,7 +23,6 @@ import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
 import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
-import { redirectCapitalization } from "./middlewares/redirect-capitalization.js";
 
 const router = Router();
 router.use(stripForwardedHostHeaders);
@@ -40,6 +40,7 @@ router.all(
 router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyPong);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
+router.use(redirectNonCanonicals);
 router.get(
   ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
   requireOrigin(Origin.play),
@@ -61,7 +62,6 @@ router.get(
 router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
   requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
-  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
@@ -72,7 +72,6 @@ router.get(
   redirectLocale,
   redirectTrailingSlash,
   redirectMovedPages,
-  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
@@ -81,7 +80,6 @@ router.get(
   requireOrigin(Origin.main),
   redirectLocale,
   redirectEnforceTrailingSlash,
-  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
@@ -97,7 +95,6 @@ router.get(
   redirectFundamental,
   redirectLocale,
   redirectTrailingSlash,
-  redirectCapitalization,
   resolveIndexHTML,
   proxyContent
 );
