@@ -327,7 +327,7 @@ function RenderSideOrTopBanner({
             click
           )}&version=${version}`}
           target="_blank"
-          rel="noreferrer"
+          rel="sponsored noreferrer"
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
@@ -346,7 +346,7 @@ function RenderSideOrTopBanner({
               click
             )}&version=${version}`}
             target="_blank"
-            rel="noreferrer"
+            rel="sponsored noreferrer"
           >
             {cta}
           </a>
@@ -405,7 +405,7 @@ function RenderHpPlacement({
           click
         )}&version=${version}`}
         target="_blank"
-        rel="noreferrer"
+        rel="sponsored noreferrer"
       >
         <img
           src={`/pimg/${encodeURIComponent(image || "")}`}
@@ -445,7 +445,7 @@ function RenderBottomBanner({
             click
           )}&version=${version}`}
           target="_blank"
-          rel="noreferrer"
+          rel="sponsored noreferrer"
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}

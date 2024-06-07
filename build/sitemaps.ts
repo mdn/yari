@@ -1,7 +1,30 @@
-export function makeSitemapXML(
-  locale: string,
-  docs: { slug: string; modified: string }[]
+import { join } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { gzipSync } from "node:zlib";
+
+import { BASE_URL, BUILD_OUT_ROOT } from "../libs/env/index.js";
+
+const SITEMAP_BASE_URL = BASE_URL.replace(/\/$/, "");
+
+interface SitemapEntry {
+  slug: string;
+  modified?: string;
+}
+
+export async function buildSitemap(
+  entries: SitemapEntry[],
+  {
+    slugPrefix = "",
+    pathSuffix = [],
+  }: { slugPrefix?: string; pathSuffix?: string[] }
 ) {
+  const xml = makeSitemapXML(slugPrefix, entries);
+  const path = await writeSitemap(xml, ...pathSuffix);
+
+  return path;
+}
+
+function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
   const sortedDocs = docs.slice().sort((a, b) => a.slug.localeCompare(b.slug));
 
   // Based on https://support.google.com/webmasters/answer/183668?hl=en
@@ -9,7 +32,7 @@ export function makeSitemapXML(
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...sortedDocs.map((doc) => {
-      const loc = `<loc>https://developer.mozilla.org/${locale}/docs/${doc.slug}</loc>`;
+      const loc = `<loc>${SITEMAP_BASE_URL}${prefix}${doc.slug}</loc>`;
       const modified = doc.modified
         ? `<lastmod>${doc.modified.toString().split("T")[0]}</lastmod>`
         : "";
@@ -30,11 +53,25 @@ export function makeSitemapIndexXML(paths: string[]) {
     ...sortedPaths.map((path) => {
       return (
         "<sitemap>" +
-        `<loc>https://developer.mozilla.org${path}</loc>` +
+        `<loc>${SITEMAP_BASE_URL}${path}</loc>` +
         `<lastmod>${new Date().toISOString().split("T")[0]}</lastmod>` +
         "</sitemap>"
       );
     }),
     "</sitemapindex>",
   ].join("\n");
+}
+
+async function writeSitemap(xml: string, ...paths: string[]) {
+  const dirPath = join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    ...paths.map((p) => p.toLowerCase())
+  );
+  await mkdir(dirPath, { recursive: true });
+
+  const filePath = join(dirPath, "sitemap.xml.gz");
+  await writeFile(filePath, gzipSync(xml));
+
+  return filePath;
 }
