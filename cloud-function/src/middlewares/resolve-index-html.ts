@@ -16,8 +16,7 @@ export async function resolveIndexHTML(
     if (!isAsset(pathname)) {
       pathname = path.join(pathname, "index.html");
     }
-    urlParsed.pathname = pathname;
-    req.url = urlParsed.toString();
+    req.url = pathname; // e.g. "/en-us/docs/mozilla/add-ons/webextensions/browser_compatibility_for_manifest.json"
     // Workaround for http-proxy-middleware v2 using `req.originalUrl`.
     // See: https://github.com/chimurai/http-proxy-middleware/pull/731
     req.originalUrl = req.url;
