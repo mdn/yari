@@ -82,19 +82,19 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
   }, [measure]);
 
   function dismiss() {
+    measure("dismissed");
     setState({
       ...state,
       dismissed_at: Date.now(),
     });
-    measure("dismissed");
   }
 
   function submitted() {
+    measure("submitted");
     setState({
       ...state,
       submitted_at: Date.now(),
     });
-    measure("submitted");
   }
 
   React.useEffect(() => {
@@ -105,11 +105,11 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
     const listener = () => {
       if (current.open && !state.opened_at) {
+        measure("opened");
         setState({
           ...state,
           opened_at: Date.now(),
         });
-        measure("opened");
       }
     };
 
