@@ -68,9 +68,11 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
   const seen = React.useCallback(() => {
     setState((state) => {
-      if (!state.seen_at) {
-        measure("seen");
+      if (state.seen_at) {
+        return state;
       }
+
+      measure("seen");
 
       return {
         ...state,
