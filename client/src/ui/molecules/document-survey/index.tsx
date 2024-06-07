@@ -7,6 +7,8 @@ import { useIsServer } from "../../../hooks";
 import { Icon } from "../../atoms/icon";
 import { useLocation } from "react-router";
 import { DEV_MODE, WRITER_MODE } from "../../../env";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { SURVEY } from "../../../telemetry/constants";
 
 const FORCE_SURVEY_PREFIX = "#FORCE_SURVEY=";
 
@@ -49,6 +51,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
 }
 
 function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
+  const gleanClick = useGleanClick();
   const details = React.useRef<HTMLDetailsElement | null>(null);
 
   const [originalState] = React.useState(() => getSurveyState(survey.bucket));
@@ -63,6 +66,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
       ...state,
       dismissed_at: Date.now(),
     });
+    gleanClick(`${SURVEY}: dismissed ${survey.bucket}`);
   }
 
   function submitted() {
@@ -70,6 +74,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
       ...state,
       submitted_at: Date.now(),
     });
+    gleanClick(`${SURVEY}: submitted ${survey.bucket}`);
   }
 
   React.useEffect(() => {
@@ -98,8 +103,9 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
         ...state,
         seen_at: Date.now(),
       });
+      gleanClick(`${SURVEY}: seen ${survey.bucket}`);
     }
-  }, [state]);
+  }, [state, gleanClick, survey.bucket]);
 
   React.useEffect(() => {
     // For this to work, the Survey needs this JavaScript action:
