@@ -2,6 +2,7 @@
 
 .document-survey {
   --margin-vertical: 0.75rem;
+  // Same color for light and dark theme.
   background-color: $mdn-color-light-theme-violet-10;
   border-radius: 0.5rem;
   color: $mdn-color-neutral-90;
@@ -35,6 +36,7 @@
   }
 
   summary {
+    // Same color for light and dark theme.
     color: #6800cf;
     margin-top: var(--margin-vertical);
     text-decoration: underline;
