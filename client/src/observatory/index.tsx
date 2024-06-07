@@ -27,11 +27,8 @@ export function useUpdateResult(host: string) {
     async (key: string) => {
       const url = new URL(OBSERVATORY_API_URL + "/api/v2/analyze");
       url.searchParams.set("host", key);
-      const formData = new FormData();
-      // if (arg) formData.set("hidden", String(arg));
       const res = await fetch(url, {
         method: "POST",
-        body: formData,
       });
       return await handleResponse(res);
     },
@@ -49,12 +46,14 @@ export function useResult(host?: string) {
 }
 
 async function handleResponse(res: Response): Promise<ObservatoryResult> {
+  console.log(res);
   if (!res.ok && res.status !== 429) {
     let message = `${res.status}: ${res.statusText}`;
     try {
       const data = await res.json();
+      console.log(data);
       if (data.error) {
-        message = data.text;
+        message = data.message;
       }
     } finally {
       throw Error(message);

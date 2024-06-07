@@ -15,7 +15,6 @@ export default function ObservatoryLanding() {
 
   const defaultForm: ObservatoryAnalyzeRequest = {
     host: "",
-    hidden: false,
   };
 
   const [form, setForm] = useState(defaultForm);
@@ -31,6 +30,7 @@ export default function ObservatoryLanding() {
 
   useEffect(() => {
     try {
+      // tolerate url-style host values and pick out the hostname part
       const url = new URL(form.host);
       setCleanHostname(url.hostname.trim() || form.host);
     } catch {
@@ -60,15 +60,14 @@ export default function ObservatoryLanding() {
 
   return (
     <>
-      <section className="observatory-landing">
+      <section className="observatory-landing observatory-landing-top">
         <Container extraClasses="observatory-wrapper">
           <section className="header">
-            <h1>HTTP Observatory</h1>
+            <h1>MDN Observatory</h1>
             <p>
-              Launched in 2016, the HTTP Observatory is designed to enhance web
-              security by analyzing website compliance with security best
-              practices. To date, it has delivered insights and recommendations
-              to over 6.5 million websites via 47 million scans.
+              Launched in 2016 as HTTP Observatory, it enhances web security by
+              analyzing compliance with best security practices. It has provided
+              insights to over 6.5 million websites through 47 million scans.
             </p>
             <form onSubmit={submit}>
               {error && !isMutating && (
@@ -94,21 +93,13 @@ export default function ObservatoryLanding() {
                   </button>
                 </div>
               )}
-              <label>
-                <input
-                  type="checkbox"
-                  name="hidden"
-                  checked={form.hidden}
-                  onChange={(e) =>
-                    setForm({ ...form, hidden: e.target.checked })
-                  }
-                  disabled={isMutating}
-                />
-                Don’t include my site in the public results
-              </label>
             </form>
           </section>
           <SidePlacement />
+        </Container>
+      </section>
+      <section className="observatory-landing">
+        <Container extraClasses="observatory-wrapper">
           <section className="footer">
             <section className="about">
               <figure>

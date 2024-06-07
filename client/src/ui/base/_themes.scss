@@ -188,11 +188,11 @@
   --ai-help-icon: #{$mdn-color-light-theme-green-50};
   --ai-help-accent-background-color: #{$mdn-color-light-theme-green-50}10;
 
-  --observatory-bg: #{$mdn-color-neutral-light-70};
+  --observatory-bg: #f2f2f5;
   --observatory-bg-secondary: #e7f3fd;
-  --observatory-accent: #3983ea;
-  --observatory-border: #{$mdn-color-neutral-10};
-  --observatory-border-accent: #87b4f2;
+  --observatory-accent: rgba(90, 35, 215, 1);
+  --observatory-border: #ececf6;
+  --observatory-border-accent: rgba(90, 35, 215, 1);
   --observatory-table-bg: #fff;
   --observatory-color: #000;
   --observatory-color-secondary: #{$mdn-color-neutral-60};

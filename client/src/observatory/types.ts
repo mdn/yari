@@ -1,6 +1,5 @@
 export interface ObservatoryAnalyzeRequest {
   host: string;
-  hidden: boolean;
 }
 
 export type ObservatoryScanState =

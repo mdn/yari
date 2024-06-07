@@ -2,6 +2,7 @@
 
 .observatory {
   --border-radius: 0.5rem;
+  background-color: var(--observatory-bg);
 
   .accent {
     color: var(--observatory-accent);
@@ -73,15 +74,19 @@
 
     @media screen and (min-width: $screen-xl) {
       column-gap: 3rem;
-      grid-template-areas: "sidebar header pong" "sidebar main nothing" "sidebar footer nothing";
-      grid-template-columns: 1fr minmax(0, 832px) 1fr;
+      grid-template-areas: "header pong" "main pong" "footer nothing";
+      grid-template-columns: 2fr minmax(0, 200px);
       padding-left: 1rem;
       padding-right: 1rem;
     }
   }
 
-  .observatory-landing {
+  .observatory-landing.observatory-landing-top {
     background: var(--background-primary);
+  }
+
+  .observatory-landing {
+    background: var(--observatory-bg);
 
     h1 {
       margin-bottom: unset;
@@ -132,14 +137,16 @@
         :focus-visible {
           outline-offset: -2px;
           outline-width: 3px;
+          outline: 2px solid var(--observatory-accent);
         }
 
         input {
-          border: 1px solid var(--observatory-border-accent);
+          border: 1px solid var(--observatory-border);
           border-bottom-left-radius: var(--border-radius);
           border-top-left-radius: var(--border-radius);
           flex-grow: 1;
           padding: 0 0.75rem;
+          background-color: var(--observatory-bg);
         }
 
         button {
@@ -429,6 +436,54 @@
       .next .icon {
         transform: rotate(-90deg);
       }
+    }
+  }
+
+  .icon-bullet {
+    display: inline-block;
+    fill: var(--observatory-color);
+    width: 2rem;
+  }
+
+  section.scan-result {
+    background-color: var(--background-primary);
+    display: grid;
+    grid-template-areas: "grade score time";
+    grid-template-columns: 1fr 1fr 1fr;
+    max-width: var(--max-width);
+
+    .arrow-down {
+      color: rgb(158, 0, 39);
+    }
+
+    .arrow-up {
+      color: rgb(45, 136, 45);
+    }
+
+    section {
+      padding: 1rem;
+      line-height: 4rem;
+    }
+
+    .grade-trend {
+      grid-area: grade;
+      text-align: center;
+      justify-self: start;
+      .trend {
+        font-weight: 400;
+        line-height: 2rem;
+        color: #696969;
+      }
+    }
+
+    .score {
+      grid-area: score;
+      justify-self: center;
+    }
+
+    .scan-time {
+      grid-area: time;
+      justify-self: end;
     }
   }
 
