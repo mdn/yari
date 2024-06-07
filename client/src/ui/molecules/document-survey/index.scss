@@ -51,8 +51,16 @@
   }
 
   .survey-header,
-  .survey-container {
+  .survey-container,
+  .survey-footer {
     padding-left: 2.5em;
+  }
+
+  .survey-footer {
+    font-size: var(--type-smaller-font-size);
+    font-style: italic;
+    font-variation-settings: "slnt" -10;
+    margin-top: 0.5rem;
   }
 
   .survey-dismiss svg.icon {
