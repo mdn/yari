@@ -61,21 +61,30 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
     writeSurveyState(survey.bucket, state);
   }, [state, survey.bucket]);
 
-  const seen = React.useCallback(() => {
-    setState((state) => ({
-      ...state,
-      seen_at: Date.now(),
-    }));
+  const measure = React.useCallback(
+    (action: string) => gleanClick(`${SURVEY}: ${action} ${survey.bucket}`),
+    [gleanClick, survey.bucket]
+  );
 
-    gleanClick(`${SURVEY}: seen ${survey.bucket}`);
-  }, [gleanClick, survey.bucket]);
+  const seen = React.useCallback(() => {
+    setState((state) => {
+      if (!state.seen_at) {
+        measure("seen");
+      }
+
+      return {
+        ...state,
+        seen_at: Date.now(),
+      };
+    });
+  }, [measure]);
 
   function dismiss() {
     setState({
       ...state,
       dismissed_at: Date.now(),
     });
-    gleanClick(`${SURVEY}: dismissed ${survey.bucket}`);
+    measure("dismissed");
   }
 
   function submitted() {
@@ -83,7 +92,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
       ...state,
       submitted_at: Date.now(),
     });
-    gleanClick(`${SURVEY}: submitted ${survey.bucket}`);
+    measure("submitted");
   }
 
   React.useEffect(() => {
@@ -98,22 +107,16 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
           ...state,
           opened_at: Date.now(),
         });
-        gleanClick(`${SURVEY}: opened ${survey.bucket}`);
+        measure("opened");
       }
     };
 
     current.addEventListener("toggle", listener);
 
     return () => current.removeEventListener("toggle", listener);
-  }, [details, state, survey, gleanClick]);
+  }, [details, state, survey, measure]);
 
-  React.useEffect(() => {
-    if (!state.seen_at) {
-      const timeoutId = setTimeout(seen, 0);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [seen, state.seen_at]);
+  React.useEffect(seen, [seen]);
 
   React.useEffect(() => {
     // For this to work, the Survey needs this JavaScript action:
