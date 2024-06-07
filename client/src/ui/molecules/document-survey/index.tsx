@@ -62,22 +62,13 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
   }, [state, survey.bucket]);
 
   const seen = React.useCallback(() => {
-    if (state.seen_at) {
-      return;
-    }
+    setState((state) => ({
+      ...state,
+      seen_at: Date.now(),
+    }));
 
-    const timeoutId = setTimeout(
-      () =>
-        setState((state) => ({
-          ...state,
-          seen_at: Date.now(),
-        })),
-      0
-    );
     gleanClick(`${SURVEY}: seen ${survey.bucket}`);
-
-    return () => clearTimeout(timeoutId);
-  }, [gleanClick, state.seen_at, survey.bucket]);
+  }, [gleanClick, survey.bucket]);
 
   function dismiss() {
     setState({
@@ -117,10 +108,12 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
   }, [details, state, survey, gleanClick]);
 
   React.useEffect(() => {
-    const timeoutId = setTimeout(() => seen(), 0);
+    if (!state.seen_at) {
+      const timeoutId = setTimeout(seen, 0);
 
-    return () => clearTimeout(timeoutId);
-  }, [seen]);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [seen, state.seen_at]);
 
   React.useEffect(() => {
     // For this to work, the Survey needs this JavaScript action:
