@@ -30,7 +30,10 @@ export async function redirectNonCanonicals(
       pathname.length - suffix.length
     );
     const source = normalizeSlug(originalSource);
-    if (typeof REDIRECTS[source] == "string" && REDIRECTS[source] !== source) {
+    if (
+      typeof REDIRECTS[source] == "string" &&
+      REDIRECTS[source] !== originalSource
+    ) {
       const target = REDIRECTS[source] + suffix + parsedUrl.search;
       return redirect(res, target, {
         status: 301,
