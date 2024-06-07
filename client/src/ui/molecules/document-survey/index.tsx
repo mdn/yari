@@ -90,13 +90,14 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
           ...state,
           opened_at: Date.now(),
         });
+        gleanClick(`${SURVEY}: opened ${survey.bucket}`);
       }
     };
 
     current.addEventListener("toggle", listener);
 
     return () => current.removeEventListener("toggle", listener);
-  }, [details, state, survey]);
+  }, [details, state, survey, gleanClick]);
 
   React.useEffect(() => {
     if (!state.seen_at) {
