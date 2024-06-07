@@ -2,7 +2,6 @@
 
 .document-survey {
   background-color: $mdn-color-light-theme-violet-10;
-  border: 5px solid $mdn-color-light-theme-violet-70;
   border-radius: 0.5rem;
   color: $mdn-color-neutral-90;
   padding: 1rem;
@@ -52,7 +51,7 @@
 
   .survey-header,
   .survey-container {
-    padding-left: 2.5em;
+    padding-left: 3rem;
   }
 
   .survey-dismiss svg.icon {
