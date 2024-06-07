@@ -53,8 +53,16 @@
   }
 
   .survey-header,
-  .survey-container summary {
+  .survey-container summary,
+  .survey-footer {
     margin-left: 4rem;
+  }
+
+  .survey-footer {
+    font-size: var(--type-smaller-font-size);
+    font-style: italic;
+    font-variation-settings: "slnt" -10;
+    margin-top: var(--margin-vertical);
   }
 
   .survey-dismiss {
