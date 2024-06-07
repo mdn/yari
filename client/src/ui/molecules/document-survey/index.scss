@@ -19,6 +19,7 @@
 
   iframe {
     border: 0;
+    border-radius: 0.5rem;
   }
 
   button[type="button"],
@@ -28,13 +29,12 @@
 
   details {
     iframe {
-      margin: 0.9rem;
-      margin-bottom: 0;
-      width: calc(100% - 1.2rem);
+      margin-top: 0.9rem;
     }
   }
 
   summary {
+    color: #6800cf;
     margin-top: 1rem;
     text-decoration: underline;
 
@@ -50,7 +50,7 @@
   }
 
   .survey-header,
-  .survey-container {
+  .survey-container summary {
     padding-left: 3rem;
   }
 
