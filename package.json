@@ -72,7 +72,7 @@
     "@mdn/bcd-utils-api": "^0.0.7",
     "@mdn/browser-compat-data": "^5.5.31",
     "@mozilla/glean": "5.0.2",
-    "@sentry/node": "^8.7.0",
+    "@sentry/node": "^8.8.0",
     "@stripe/stripe-js": "^3.5.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.9",
