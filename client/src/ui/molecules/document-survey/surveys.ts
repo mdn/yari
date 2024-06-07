@@ -57,7 +57,7 @@ export const SURVEYS: Survey[] = [
     teaser: "Wie wär’s, wenn MDN auf Deutsch verfügbar wäre?",
     question: "Welche Sprache würdest du dann benutzen?",
     footnote:
-      "This is a survey. You're seeing this, because your browser indicates German as your preferred language.",
+      "You're seeing this survey, because your browser indicates German as your preferred language.",
     ...survey_duration(SurveyBucket.DE_LOCALE_2024),
     ...survey_rates(SurveyKey.DE_LOCALE_2024),
   },
