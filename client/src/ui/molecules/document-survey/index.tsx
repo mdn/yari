@@ -153,6 +153,9 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
           ></iframe>
         )}
       </details>
+      {survey.footnote && (
+        <section className="survey-footer">({survey.footnote})</section>
+      )}
     </div>
   );
 }
