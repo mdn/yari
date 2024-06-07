@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const REDIRECTS = require("../../sitemap.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
-export async function redirectCapitalization(
+export async function redirectNonCanonicals(
   req: Request,
   res: Response,
   next: NextFunction
