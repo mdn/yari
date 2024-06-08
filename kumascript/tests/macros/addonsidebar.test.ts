@@ -58,6 +58,18 @@ const SUMMARIES = {
 };
 
 const MANIFEST_SLUG = "Mozilla/Add-ons/WebExtensions/manifest.json";
+const LOCALES = ["en-US", "fr", "ja"];
+
+function listTranslations(title: string) {
+  const results = LOCALES.map((locale) => ({
+    title,
+    locale,
+  }));
+  function getTranslations() {
+    return results;
+  }
+  return getTranslations;
+}
 
 function getMockResultForGetChildren(doc_url) {
   const locale = new URL(doc_url, "http://example.com").pathname.split("/")[1];
@@ -68,6 +80,7 @@ function getMockResultForGetChildren(doc_url) {
       subpages: [],
       slug: `${MANIFEST_SLUG}/author`,
       title: "author",
+      translations: listTranslations("author"),
     },
     {
       locale: `${locale}`,
@@ -75,6 +88,7 @@ function getMockResultForGetChildren(doc_url) {
       subpages: [],
       slug: `${MANIFEST_SLUG}/background`,
       title: "background",
+      translations: listTranslations("background"),
     },
     {
       locale: `${locale}`,
@@ -82,6 +96,7 @@ function getMockResultForGetChildren(doc_url) {
       subpages: [],
       slug: `${MANIFEST_SLUG}/theme`,
       title: "theme",
+      translations: listTranslations("theme"),
     },
     {
       locale: `${locale}`,
@@ -89,6 +104,7 @@ function getMockResultForGetChildren(doc_url) {
       subpages: [],
       slug: `${MANIFEST_SLUG}/version`,
       title: "version",
+      translations: listTranslations("version"),
     },
   ];
 }
@@ -144,9 +160,12 @@ describeMacro("AddonSidebar", function () {
         macroSource: "foo",
       };
     };
+    macro.ctx.web.smartLink = jest.fn((groupUrl, _, text) => {
+      return `<a href='${groupUrl}'>${text}</a>`;
+    });
   });
 
-  for (const locale of ["en-US", "fr", "ja"]) {
+  for (const locale of LOCALES) {
     itMacro(`with locale ${locale}`, function (macro) {
       macro.ctx.env.locale = locale;
       macro.ctx.env.slug = "Mozilla/Add-ons/AMO";
