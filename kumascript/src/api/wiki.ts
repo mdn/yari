@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
 
@@ -116,123 +117,98 @@ const wiki = {
   // Special note: If ordered is true, pages whose locale differ from
   // the current page's locale are omitted, to work around misplaced
   // localizations showing up in navigation.
-  tree(this: KumaThis, path, depth, self, reverse, ordered) {
+  tree(
+    this: KumaThis,
+    path: string,
+    depth: number,
+    self: boolean,
+    reverse: boolean,
+    ordered: boolean
+  ) {
     // If the path ends with a slash, remove it.
-    if (path.substr(-1, 1) === "/") {
+    if (path.slice(-1) === "/") {
       path = path.slice(0, -1);
     }
 
-    const pages = (this.page as any).subpagesExpand(path, depth, self);
+    const locale = this.env.locale;
+    // replace the locale if it's not the default locale
+    const defaultPath = path.replace(
+      new RegExp(`^/${locale}/`),
+      `/${DEFAULT_LOCALE}/`
+    );
 
-    if (reverse == 0) {
-      pages.sort(alphanumForward);
-    } else {
-      pages.sort(alphanumBackward);
-    }
+    // get the return type of subpagesExpand
+    type PageInfoArray = ReturnType<KumaThis["page"]["subpagesExpand"]>;
+    type PageInfo = PageInfoArray[number];
 
-    return process_array(null, pages, depth, ordered != 0, this.env.locale);
+    const pages = (this.page as any).subpagesExpand(
+      defaultPath,
+      depth,
+      self
+    ) as PageInfoArray;
 
-    function chunkify(t) {
-      const tz = [];
-      let x = 0;
-      let y = -1;
-      let n: boolean | 0 = 0;
-      let i;
-      let j;
-
-      while ((i = (j = t.charAt(x++)).charCodeAt(0))) {
-        const m = i == 46 || (i >= 48 && i <= 57);
-        if (m !== n) {
-          tz[++y] = "";
-          n = m;
-        }
-        tz[y] += j;
+    // Sort the pages by title with numeric option
+    const collator = new Intl.Collator(undefined, {
+      numeric: true,
+    });
+    function sortPages(pages: PageInfoArray) {
+      if (reverse) {
+        return pages.sort((a, b) => collator.compare(b.title, a.title));
       }
-      return tz;
+      return pages.sort((a, b) => collator.compare(a.title, b.title));
     }
 
-    function alphanumForward(a, b) {
-      const aa = chunkify(a.title);
-      const bb = chunkify(b.title);
-
-      for (let x = 0; aa[x] && bb[x]; x++) {
-        if (aa[x] !== bb[x]) {
-          const c = Number(aa[x]);
-          const d = Number(bb[x]);
-          if (c == aa[x] && d == bb[x]) {
-            return c - d;
-          }
-          return aa[x] > bb[x] ? 1 : -1;
-        }
-      }
-      return aa.length - bb.length;
-    }
-
-    function alphanumBackward(a, b) {
-      const bb = chunkify(a.title);
-      const aa = chunkify(b.title);
-
-      for (let x = 0; aa[x] && bb[x]; x++) {
-        if (aa[x] !== bb[x]) {
-          const c = Number(aa[x]);
-          const d = Number(bb[x]);
-          if (c == aa[x] && d == bb[x]) {
-            return c - d;
-          }
-          return aa[x] > bb[x] ? 1 : -1;
-        }
-      }
-      return aa.length - bb.length;
-    }
-
-    function process_array(folderItem, arr, depth, ordered, locale) {
+    const process_array = (
+      folderItem: PageInfo | null,
+      arr: PageInfoArray,
+      depth: number
+    ) => {
       let result = "";
-      let openTag = "<ul>";
-      let closeTag = "</ul>";
+      const [openTag, closeTag] = ordered
+        ? ["<ol>", "</ol>"]
+        : ["<ul>", "</ul>"];
 
-      if (ordered) {
-        openTag = "<ol>";
-        closeTag = "</ol>";
-      }
+      // Sort the pages
+      arr = sortPages(arr);
 
       if (arr.length) {
         result += openTag;
 
         // First add an extra item for linking to the folder's page
         // (only for ordered lists)
-        if (folderItem != null && ordered) {
+        if (folderItem && ordered) {
           result += `<li><a href="${folderItem.url}">${util.htmlEscape(
             folderItem.title
           )}</a></li>`;
         }
 
         // Now dive into the child items
-
-        arr.forEach(function (item) {
+        for (const item of arr) {
           if (!item) {
-            return;
-          }
-          if (ordered && item.locale != locale) {
             return;
           }
           let subList = "";
           if (depth > 1) {
-            subList = process_array(
-              item,
-              item.subpages || [],
-              depth - 1,
-              ordered,
-              locale
-            );
+            subList = process_array(item, item.subpages || [], depth - 1);
           }
-          result += `<li><a href="${item.url}">${util.htmlEscape(
-            item.title
-          )}</a>${subList}</li>`;
-        });
+          const url = item.url.replace(DEFAULT_LOCALE, locale);
+          let title = item.title;
+          if (locale !== DEFAULT_LOCALE) {
+            for (const translation of item.translations()) {
+              if (translation.locale === locale) {
+                title = translation.title;
+                break;
+              }
+            }
+          }
+          result += `<li>${(this.web as any).smartLink(url, null, title)}${subList}</li>`;
+        }
         result += closeTag;
       }
       return result;
-    }
+    };
+
+    return process_array(null, pages, depth);
   },
 };
 

@@ -6,6 +6,7 @@ import { translationsOf } from "../../content/translations.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import { m2hSync } from "../../markdown/index.js";
 import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/utils.js";
+import { Translation } from "../../libs/types/document.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -24,7 +25,23 @@ const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
 
 const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set(["glossary"]);
 
-function repairURL(url) {
+type EmptyObject = { [key: string]: never };
+
+type PageInfo = {
+  url: string;
+  locale: string;
+  slug: string;
+  title: string;
+  short_title: string;
+  status: string[];
+  tags: string[];
+  pageType: string;
+  translations(): Translation[];
+  summary(): string;
+  subpages: PageInfo[];
+};
+
+function repairURL(url: string) {
   // Returns a lowercase URI with common irregularities repaired.
   url = url.trim().toLowerCase();
   if (!url.startsWith("/")) {
@@ -55,13 +72,13 @@ function repairURL(url) {
 }
 
 export const info = {
-  getPathname(url) {
+  getPathname(url: string | URL) {
     // This function returns just the pathname of the given "url", removing
     // any trailing "/".
     return new URL(url, DUMMY_BASE_URL).pathname.replace(/\/$/, "");
   },
 
-  cleanURL(url, followRedirects = true) {
+  cleanURL(url: string, followRedirects = true) {
     // This function returns just the lowercase pathname of the given "url",
     // removing any trailing "/". The DUMMY_BASE_URL is not important here, since
     // we're only after the path of any incoming "url", but it's required by
@@ -83,7 +100,7 @@ export const info = {
     return repairedURL;
   },
 
-  getDescription(url) {
+  getDescription(url: string) {
     const cleanedURL = info.cleanURL(url);
     let description = `${cleanedURL}`;
     if (cleanedURL !== url.toLowerCase()) {
@@ -92,7 +109,7 @@ export const info = {
     return description;
   },
 
-  getChildren(url, includeSelf) {
+  getChildren(url: string, includeSelf: boolean): PageInfo[] {
     // We don't need "depth" since it's handled dynamically (lazily).
     // The caller can keep requesting "subpages" as deep as the
     // hierarchy goes, and they'll be provided on-demand.
@@ -100,7 +117,9 @@ export const info = {
     // it's re-created for each caller (so one caller can't mess with
     // another), but also should NOT be frozen since some macros sort
     // the list in-place.
-    const page = info.getPageByURL(url, { throwIfDoesNotExist: true });
+    const page = info.getPageByURL(url, {
+      throwIfDoesNotExist: true,
+    }) as PageInfo;
     if (includeSelf) {
       return [page];
     }
@@ -154,7 +173,7 @@ export const info = {
   getPageByURL(
     url: string,
     { throwIfDoesNotExist = false, followRedirects = true } = {}
-  ) {
+  ): PageInfo | EmptyObject {
     // Always start by looking it up *without* following redirects.
     let document = Document.findByURL(info.cleanURL(url, false));
     // Usually, `followRedirects` is disabled if the caller definitely is not
@@ -175,7 +194,7 @@ export const info = {
     return this.getPage(document);
   },
 
-  getPage(document) {
+  getPage(document): PageInfo | EmptyObject {
     if (typeof document === "string") {
       console.trace(
         "getPage() was called with a string, presumably a URL. " +
@@ -254,7 +273,7 @@ export const info = {
       get subpages() {
         return Document.findChildren(document.url)
           .map((document) => info.getPage(document))
-          .filter((p) => p?.url);
+          .filter((p) => p?.url) as PageInfo[];
       },
     };
   },

@@ -8,6 +8,8 @@
 // Parameters:
 //
 //  $0  Optional; the page whose subpages are to be included.
+//    The non-localized subpages will also be included.
+//    If not specified, the current page's subpages are used.
 %>
 <section id="Quick_links" data-macro="QuickLinksWithSubpages">
 <%-await template("ListSubpages", [$0, 2, 0, 1])%>
