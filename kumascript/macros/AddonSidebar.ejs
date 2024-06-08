@@ -250,7 +250,7 @@ async function renderItem(slug) {
           ]) %>
         </ol>
       <%-
-        await wiki.tree(baseURL + "WebExtensions/manifest.json", 1, 0, 0, 1)
+        await wiki.tree(baseURL + "WebExtensions/manifest.json", 1, false, false, true)
       %>
       </details>
     </li>
