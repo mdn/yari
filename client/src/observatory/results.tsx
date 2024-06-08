@@ -108,16 +108,20 @@ export default function ObservatoryResults() {
 
 function ObservatoryScanResults({ result, host }) {
   const tabs = [
-    <ObservatoryTests result={result} />,
-    <ObservatoryCSP result={result} />,
-    <ObservatoryHeaders result={result} />,
-    <ObservatoryCookies result={result} />,
-    <ObservatoryHistory result={result} />,
+    { name: "Test Result", element: <ObservatoryTests result={result} /> },
+    { name: "CSP Analysis", element: <ObservatoryCSP result={result} /> },
+    {
+      name: "Raw Server Headers",
+      element: <ObservatoryHeaders result={result} />,
+    },
+    { name: "Cookies", element: <ObservatoryCookies result={result} /> },
+    { name: "Scan History", element: <ObservatoryHistory result={result} /> },
+    { name: "Benchmark Comparison", element: <></> },
   ];
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   return (
-    <>
+    <section className="scan-results">
       <h2>
         <span className="icon-bullet">
           <svg
@@ -132,9 +136,9 @@ function ObservatoryScanResults({ result, host }) {
         Scan results
       </h2>
       <ol className="tabs-list">
-        {tabs.map((tabElement, i) => {
+        {tabs.map((t, i) => {
           return (
-            <li id={`tabs-${i}`} className="tabs-item" key={`ti-${i}`}>
+            <li id={`tabs-${i}`} className="tabs-list-item" key={`tli-${i}`}>
               <input
                 className="visually-hidden"
                 id={`tab-${i}`}
@@ -143,13 +147,13 @@ function ObservatoryScanResults({ result, host }) {
                 checked={i === selectedTab}
                 onChange={() => setSelectedTab(i)}
               />
-              <label htmlFor={`tab-${i}`}>tab-{i}</label>
-              {tabElement}
+              <label htmlFor={`tab-${i}`}>{t.name}</label>
+              {t.element}
             </li>
           );
         })}
       </ol>
-    </>
+    </section>
   );
 }
 
@@ -225,7 +229,7 @@ function ObservatoryRating({
 
 function ObservatoryTests({ result }: { result: ObservatoryResult }) {
   return Object.keys(result.tests).length !== 0 ? (
-    <>
+    <section className="tab-content">
       <figure className="scroll-container">
         <table className="fancy tests">
           <thead>
@@ -276,13 +280,13 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
           </tbody>
         </table>
       </figure>
-    </>
+    </section>
   ) : null;
 }
 
 function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
   return result.history.length ? (
-    <>
+    <section className="tab-content">
       <h2>Grade History</h2>
       <figure className="scroll-container">
         <table className="fancy">
@@ -311,14 +315,14 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
           </tbody>
         </table>
       </figure>
-    </>
+    </section>
   ) : null;
 }
 
 function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
   const cookies = result.tests["cookies"]?.data;
   return cookies && Object.keys(cookies).length !== 0 ? (
-    <>
+    <section className="tab-content">
       <h2>Cookies</h2>
       <figure className="scroll-container">
         <table className="fancy cookies">
@@ -380,7 +384,7 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
           </tbody>
         </table>
       </figure>
-    </>
+    </section>
   ) : (
     []
   );
@@ -388,7 +392,7 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
 
 function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
   return result.scan.response_headers ? (
-    <>
+    <section className="tab-content">
       <h2>Raw Server Headers</h2>
       <figure className="scroll-container">
         <table className="fancy headers">
@@ -410,6 +414,6 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
           </tbody>
         </table>
       </figure>
-    </>
+    </section>
   ) : null;
 }

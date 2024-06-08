@@ -9,7 +9,7 @@ export default function ObservatoryCSP({
 }) {
   const policy = result.tests["content-security-policy"]?.policy;
   return policy ? (
-    <>
+    <section className="tab-content">
       <h2>Content Security Policy Analysis</h2>
       <figure className="scroll-container">
         <table className="fancy csp">
@@ -267,6 +267,6 @@ export default function ObservatoryCSP({
           </tbody>
         </table>
       </figure>
-    </>
+    </section>
   ) : null;
 }
