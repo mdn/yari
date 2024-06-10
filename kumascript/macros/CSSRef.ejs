@@ -70,9 +70,9 @@ const text = mdn.localStringMap({
         'Introduction_to_the_CSS_basic_box_model': 'Introduction to the CSS basic box model',
         'Mastering_margin_collapsing': 'Mastering margin collapsing',
       'Colors': 'Colors',
-        'Applying_color_to_HTML_elements_using_CSS': 'Applying color to HTML elements using CSS',
-        'Web_Accessibility_Understanding_Colors_and_Luminance': 'Web Accessibility: Understanding colors and luminance',
-        'Color_contrast': 'Web Accessibility: Color contrast',
+        'Applying_color_to_HTML_elements_using_CSS': 'Applying color to HTML elements',
+        'Web_Accessibility_Understanding_Colors_and_Luminance': 'Accessibility: Understanding colors and luminance',
+        'Color_contrast': 'Accessibility: Color contrast',
       'Columns': 'Columns',
         'Basic_concepts_of_Multicol': 'Basic concepts of Multicol',
         'Styling_columns': 'Styling columns',
@@ -1118,9 +1118,9 @@ async function buildPropertylist(pages, title) {
 <section id="Quick_links" data-macro="CSSRef">
 
 <ol>
-  <li class="section"><a href="/<%=locale%>/docs/Web/CSS">CSS</a></li>
-  <li class="section"><a href="<%=learnURL%>CSS"><%=text['Tutorials']%></a></li>
-  <li><a href="<%=learnURL%>Getting_started_with_the_web/CSS_basics"><%=text['CSS_basics']%></a></li>
+  <li class="section"><%-smartLink(`/${locale}/docs/Web/CSS`, null, 'CSS')%></li>
+  <li class="section"><%-smartLink(`${learnURL}CSS`, null, text['Tutorials'])%></li>
+  <li><%-smartLink(`${learnURL}Getting_started_with_the_web/CSS_basics`, null, text['CSS_basics'])%></li>
   <li class="toggle">
       <details>
           <summary><%=text['CSS_first_steps']%></summary>
@@ -1196,7 +1196,7 @@ async function buildPropertylist(pages, title) {
       </details>
   </li>
 
-  <li class="section"><a href="/<%=locale%>/docs/Web/CSS/Reference"><%=text['Reference']%></a></li>
+  <li class="section"><%-smartLink(`/${locale}/docs/Web/CSS/Reference`, null, text['Reference'])%></a></li>
   <%-await buildSublist(groups, 'Modules');%>
   <%-await buildPropertylist(properties, 'Properties');%>
   <%-await buildSublist(selectors, 'Selectors');%>
@@ -1250,6 +1250,9 @@ async function buildPropertylist(pages, title) {
           <summary><%=text['Colors']%></summary>
           <ol>
             <li><%-smartLink(`${cssURL}CSS_colors/Applying_color`, null, text['Applying_color_to_HTML_elements_using_CSS'], cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_colors/Color_values`)%></li>
+            <li><%-smartLink(`${cssURL}CSS_colors/Relative_colors`)%></li>
+            <li><%-smartLink(`${cssURL}CSS_colors/Using_color_wisely`)%></li>
             <li><%-smartLink(`${accessibilityURL}Understanding_Colors_and_Luminance`, null, text['Web_Accessibility_Understanding_Colors_and_Luminance'], accessibilityURL)%></li>
             <li><%-smartLink(`${accessibilityURL}Understanding_WCAG/Perceivable/Color_contrast`, null, text['Color_contrast'], accessibilityURL)%></li>
           </ol>
@@ -1457,7 +1460,7 @@ async function buildPropertylist(pages, title) {
       </details>
   </li>
 
-  <li class="section"><a href="/<%=locale%>/docs/Web/CSS/Layout_cookbook"><%=text['Layout_cookbook']%></a></li>
+  <li class="section"><%-smartLink(`/${locale}/docs/Web/CSS/Layout_cookbook`, null, text['Layout_cookbook'])%></a></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, text['Media_objects'], cssURL)%></li>

@@ -29,7 +29,11 @@ export function LastModified({ value, locale }) {
 }
 
 export function Authors({ url }) {
-  return <a href={`${url}/contributors.txt`}>MDN contributors</a>;
+  return (
+    <a href={`${url}/contributors.txt`} rel="nofollow">
+      MDN contributors
+    </a>
+  );
 }
 
 enum ArticleFooterView {

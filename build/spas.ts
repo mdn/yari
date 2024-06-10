@@ -19,6 +19,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
+  BASE_URL,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
@@ -29,6 +30,7 @@ import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
+import { buildSitemap } from "./sitemaps.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -75,7 +77,10 @@ async function buildContributorSpotlight(
     };
     const context = { hyData };
 
-    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
+    const html = renderCanonicalHTML(
+      `/${locale}/${prefix}/${contributor}`,
+      context
+    );
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
@@ -109,15 +114,16 @@ export async function buildSPAs(options: {
   verbose?: boolean;
 }) {
   let buildCount = 0;
+  const sitemap: {
+    url: string;
+  }[] = [];
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = `/${DEFAULT_LOCALE}/404.html`;
-  const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(
-    BUILD_OUT_ROOT,
-    DEFAULT_LOCALE.toLowerCase(),
-    "_spas"
-  );
+  const locale = DEFAULT_LOCALE;
+  const url = `/${locale}/404.html`;
+  let html = renderHTML(url, { pageNotFound: true });
+  html = setCanonical(html, null);
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   fs.writeFileSync(path.join(outPath, path.basename(url)), html);
   buildCount++;
@@ -138,12 +144,11 @@ export async function buildSPAs(options: {
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
-        { prefix: "search", pageTitle: "Search" },
+        { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
           prefix: "plus/ai-help",
           pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
         },
         {
           prefix: "plus/collections",
@@ -158,7 +163,6 @@ export async function buildSPAs(options: {
         {
           prefix: "plus/updates",
           pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
         },
         {
           prefix: "plus/settings",
@@ -177,15 +181,16 @@ export async function buildSPAs(options: {
         },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing } of SPAs) {
+      for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context = {
           pageTitle,
           locale,
           noIndexing,
+          onlyFollow,
         };
 
-        const html = renderHTML(url, context);
+        const html = renderCanonicalHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
@@ -193,6 +198,12 @@ export async function buildSPAs(options: {
         buildCount++;
         if (options.verbose) {
           console.log("Wrote", filePath);
+        }
+
+        if (!noIndexing && !onlyFollow) {
+          sitemap.push({
+            url,
+          });
         }
       }
     }
@@ -222,7 +233,8 @@ export async function buildSPAs(options: {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
-      const locale = DEFAULT_LOCALE.toLowerCase();
+      const locale = DEFAULT_LOCALE;
+      const pathLocale = locale.toLowerCase();
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
@@ -242,10 +254,10 @@ export async function buildSPAs(options: {
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
       };
 
-      const html = renderHTML(url, context);
+      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
-        locale,
+        pathLocale,
         ...slug.split("/"),
         page
       );
@@ -258,6 +270,10 @@ export async function buildSPAs(options: {
       }
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));
+
+      sitemap.push({
+        url,
+      });
     }
   }
 
@@ -342,7 +358,7 @@ export async function buildSPAs(options: {
         featuredArticles,
       };
       const context = { hyData };
-      const html = renderHTML(url, context);
+      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
       const filePath = path.join(outPath, "index.html");
@@ -351,6 +367,10 @@ export async function buildSPAs(options: {
       if (options.verbose) {
         console.log("Wrote", filePath);
       }
+
+      sitemap.push({
+        url,
+      });
 
       // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
@@ -361,6 +381,19 @@ export async function buildSPAs(options: {
         console.log("Wrote", filePathContext);
       }
     }
+  }
+
+  // Sitemap.
+  const sitemapFilePath = await buildSitemap(
+    sitemap.map(({ url }) => ({
+      slug: url,
+      modified: "",
+    })),
+    { pathSuffix: ["misc"] }
+  );
+
+  if (!options.quiet) {
+    console.log("Wrote", sitemapFilePath);
   }
 
   if (!options.quiet) {
@@ -457,4 +490,25 @@ async function fetchLatestNews() {
   return {
     items,
   };
+}
+
+function renderCanonicalHTML(url: string, context: any) {
+  let html = renderHTML(url, context);
+  html = setCanonical(html, url);
+  return html;
+}
+
+function setCanonical(html: string, url: string | null) {
+  html = html.replace(
+    `<link rel="canonical" href="${BASE_URL}"/>`,
+    url ? `<link rel="canonical" href="${BASE_URL}${url}"/>` : ""
+  );
+  // Better safe than sorry.
+  html = html.replace(
+    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
+    url
+      ? `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
+      : ""
+  );
+  return html;
 }

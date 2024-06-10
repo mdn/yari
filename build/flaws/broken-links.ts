@@ -11,6 +11,7 @@ import { isValidLocale } from "../../libs/locale-utils/index.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
+import { ONLY_AVAILABLE_IN_ENGLISH } from "../../libs/l10n/l10n.js";
 
 const _safeToHttpsDomains = new Map();
 
@@ -50,12 +51,13 @@ function mutateLink(
   if (isSelfLink) {
     $element.attr("aria-current", "page");
   } else if (enUSFallback) {
+    const locale = $element.attr("href").match(/^\/([^/]+)\//)[1];
     // If we have an English (US) fallback, then we use this first.
     // As we still suggest the translated version even if we only
     // have an English (US) version.
     $element.attr("href", enUSFallback);
     $element.addClass("only-in-en-us");
-    $element.attr("title", "Currently only available in English (US)");
+    $element.attr("title", ONLY_AVAILABLE_IN_ENGLISH(locale));
   } else if (suggestion) {
     $element.attr("href", suggestion);
   } else {

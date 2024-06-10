@@ -144,9 +144,7 @@ var text = mdn.localStringMap({
 });
 
 async function renderRootItem(slug) {
-  const [link, title] = await getPageLinkAndTitle(slug);
-
-  return `<li class="section"><a href="${link}">${title}</a></li>`
+  return `<li class="section">${web.smartLink(`/${env.locale}${slug}`)}</li>`
 }
 
 async function renderItems(slugs) {
@@ -154,24 +152,7 @@ async function renderItems(slugs) {
 }
 
 async function renderItem(slug) {
-  const [link, title] = await getPageLinkAndTitle(slug);
-  
-  return `<li><a href="${link}">${title}</a></li>`;
-}
-
-async function getPageLinkAndTitle(slug) {
-  let link = `/${env.locale}${slug}`;
-  let page = await wiki.getPage(link);
-
-  if (!page.title && env.locale !== 'en-US') {
-    link = `/en-US${slug}`;
-    page = await wiki.getPage(link);
-  }
-
-  let title = page.short_title || page.title;
-  title = mdn.htmlEscape(title);
-
-  return [link, title];
+  return `<li>${web.smartLink(`/${env.locale}${slug}`)}</li>`;
 }
 
 %>
@@ -189,7 +170,7 @@ async function getPageLinkAndTitle(slug) {
             "/docs/Mozilla/Add-ons/WebExtensions/Your_second_WebExtension",
             "/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension",
             "/docs/Mozilla/Add-ons/WebExtensions/Examples",
-            "/docs/Mozilla/Add-ons/WebExtensions/What_next_",
+            "/docs/Mozilla/Add-ons/WebExtensions/What_next",
           ]) %>
         </ol>
       </details>
@@ -219,7 +200,7 @@ async function getPageLinkAndTitle(slug) {
         <ol>
           <%- await renderItems([
             "/docs/Mozilla/Add-ons/WebExtensions/user_interface",
-            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Browser_action",
+            "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Toolbar_button",
             "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Page_actions",
             "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Sidebars",
             "/docs/Mozilla/Add-ons/WebExtensions/user_interface/Context_menu_items",

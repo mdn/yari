@@ -8,7 +8,7 @@
     padding: 2rem 1rem;
     text-align: center;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       padding: 2rem 4rem;
     }
 
@@ -16,6 +16,7 @@
       color: var(--text-primary);
       font-size: 24px;
       font-style: normal;
+      font-variation-settings: normal;
       font-weight: 650;
       line-height: 120%;
       margin-bottom: 2rem;
@@ -39,7 +40,7 @@
         display: none;
       }
 
-      @media screen and (min-width: 66rem) {
+      @media (min-width: 66rem) {
         align-items: stretch;
         flex-direction: row;
       }
@@ -103,6 +104,7 @@
             .sub-price {
               font-size: 36px;
               font-style: normal;
+              font-variation-settings: normal;
               font-weight: 650;
               grid-column: 1/2;
               justify-self: right;
@@ -117,6 +119,7 @@
             .sub-length {
               font-size: 0.8rem;
               font-style: normal;
+              font-variation-settings: normal;
               grid-column: 2/3;
               justify-self: left;
               line-height: 120%;
@@ -178,6 +181,7 @@
             color: var(--text-invert);
             font-size: 14px;
             font-style: italic;
+            font-variation-settings: "slnt" -10;
             margin-top: auto;
             text-decoration: underline;
 

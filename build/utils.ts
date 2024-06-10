@@ -8,7 +8,7 @@ import * as cheerio from "cheerio";
 import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquantPkg from "imagemin-pngquant";
+import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
@@ -21,8 +21,6 @@ import {
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
 import { BLOG_ROOT } from "../libs/env/index.js";
-
-const { default: imageminPngquant } = imageminPngquantPkg;
 
 export function escapeRegExp(str: string) {
   return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
@@ -112,10 +110,6 @@ export async function downloadAndResizeImage(
       // has to be escaped when working on the command line.
       .replace(/[()]/g, "")
       .replace(/\s+/g, "_")
-      // From legacy we have a lot of images that are named like
-      // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
-      // Take this opportunity to clean that odd looking leading `=`.
-      .replace(/^=/, "")
       .toLowerCase()
   );
   // Before writing to disk, run it through the same imagemin

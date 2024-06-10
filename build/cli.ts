@@ -2,7 +2,6 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
@@ -28,10 +27,11 @@ import {
 } from "./index.js";
 import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { makeSitemapIndexXML, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
+import { fdir } from "fdir";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -54,7 +54,17 @@ interface GlobalMetadata {
 }
 
 interface BuildMetadata {
-  [locale: string]: any;
+  [locale: string]: {
+    baseline?: {
+      total: number;
+      high: number;
+      highPaths: string[];
+      low: number;
+      lowPaths: string[];
+      not: number;
+      notPaths: string[];
+    };
+  };
 }
 
 async function buildDocumentInteractive(
@@ -331,17 +341,10 @@ async function buildDocuments(
   }
 
   for (const [locale, docs] of Object.entries(docPerLocale)) {
-    const sitemapDir = path.join(
-      BUILD_OUT_ROOT,
-      "sitemaps",
-      locale.toLowerCase()
-    );
-    fs.mkdirSync(sitemapDir, { recursive: true });
-    const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-    fs.writeFileSync(
-      sitemapFilePath,
-      zlib.gzipSync(makeSitemapXML(locale, docs))
-    );
+    await buildSitemap(docs, {
+      slugPrefix: `/${locale}/docs/`,
+      pathSuffix: [locale],
+    });
   }
 
   searchIndex.sort();
@@ -376,6 +379,13 @@ async function buildDocuments(
   );
 
   for (const [locale, meta] of Object.entries(buildMetadata)) {
+    if (meta.baseline) {
+      // Sort to avoid build difference.
+      meta.baseline.highPaths.sort();
+      meta.baseline.lowPaths.sort();
+      meta.baseline.notPaths.sort();
+    }
+
     // have to write per-locale because we build each locale concurrently
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
@@ -497,33 +507,23 @@ program
         if (!options.quiet) {
           console.log(chalk.yellow("Building sitemap index file..."));
         }
-        const sitemapsBuilt = [];
-        const locales = [];
-        for (const locale of VALID_LOCALES.keys()) {
-          const sitemapFilePath = path.join(
-            BUILD_OUT_ROOT,
-            "sitemaps",
-            locale,
-            "sitemap.xml.gz"
-          );
-          if (fs.existsSync(sitemapFilePath)) {
-            sitemapsBuilt.push(sitemapFilePath);
-            locales.push(locale);
-          }
-        }
-
+        const sitemapsBuilt = new fdir()
+          .filter((p) => p.endsWith("/sitemap.xml.gz"))
+          .withFullPaths()
+          .crawl(path.join(BUILD_OUT_ROOT, "sitemaps"))
+          .sync()
+          .sort()
+          .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
         const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
         fs.writeFileSync(
           sitemapIndexFilePath,
-          makeSitemapIndexXML(
-            sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
-          )
+          makeSitemapIndexXML(sitemapsBuilt)
         );
 
         if (!options.quiet) {
           console.log(
             chalk.green(
-              `Sitemap index file built with locales: ${locales.join(", ")}.`
+              `Wrote sitemap index referencing ${sitemapsBuilt.length} sitemaps:\n${sitemapsBuilt.map((s) => `- ${s}`).join("\n")}`
             )
           );
         }

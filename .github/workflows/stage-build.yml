@@ -13,7 +13,6 @@ env:
   DEFAULT_DEPLOYMENT_PREFIX: "main"
   DEFAULT_NOTES: ""
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
-  DEFAULT_REF: next
 
 on:
   schedule:
@@ -22,10 +21,6 @@ on:
 
   workflow_dispatch:
     inputs:
-      ref:
-        description: "Branch to deploy (default: next)"
-        required: false
-
       notes:
         description: "Notes"
         required: false
@@ -67,10 +62,11 @@ permissions:
 jobs:
   trigger:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'mdn/yari' && github.event.schedule != '' }}
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
     steps:
-      # The schedule runs the `main` version, but we want the `next` version.
-      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "${{ env.DEFAULT_REF }}"
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "next"
         env:
           GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
 
@@ -78,8 +74,8 @@ jobs:
     environment: stage
     runs-on: ubuntu-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: ${{ github.repository == 'mdn/yari' && github.event.schedule == '' }}
+    # We only ever want to deploy the `next` branch to stage.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'next' }}
 
     steps:
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
@@ -93,15 +89,12 @@ jobs:
         run: |
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
-          echo "REF=${{ github.event.inputs.ref || env.DEFAULT_REF }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.REF }}
           fetch-depth: 0
 
       - name: Merge main
-        if: ${{ env.REF != 'main' }}
         run: |
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
@@ -297,14 +290,14 @@ jobs:
 
           du -sh client/build
 
-          # Generate sitemap index file
-          yarn build --sitemap-index
-
           # Build the blog
           yarn build:blog
 
           # Build the curriculum
           yarn build:curriculum
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json

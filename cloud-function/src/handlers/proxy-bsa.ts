@@ -1,5 +1,3 @@
-import * as url from "node:url";
-
 import type { Request, Response } from "express";
 
 import { Coder } from "../internal/pong/index.js";
@@ -26,7 +24,7 @@ export async function proxyBSA(req: Request, res: Response) {
 
   const userAgent = req.headers["user-agent"] ?? "";
 
-  const parsedUrl = url.parse(req.url);
+  const parsedUrl = new URL(req.url, `${req.protocol}://${req.headers.host}/`);
   const pathname = parsedUrl.pathname ?? "";
   const search = parsedUrl.search ?? "";
 
