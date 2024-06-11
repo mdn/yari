@@ -13,7 +13,7 @@
   }
 
   .obs-pass-icon {
-    vertical-align: text-top;
+    vertical-align: -0.5rem;
   }
 
   .accent {
@@ -227,8 +227,6 @@
   }
 
   .observatory-results {
-    letter-spacing: -0.02rem;
-
     .heading-and-actions {
       align-items: center;
       display: flex;
@@ -248,18 +246,24 @@
 
     h1 {
       margin-bottom: unset;
+      letter-spacing: var(--heading-letter-spacing);
     }
 
     h2 {
       font-size: 1.375rem;
       font-weight: 600;
-      letter-spacing: 0.02rem;
+      letter-spacing: var(--heading-letter-spacing);
       margin-bottom: 1rem;
       margin-top: 1.5rem;
     }
 
     p {
-      font-weight: 300;
+      font-weight: 400;
+      letter-spacing: -0.03rem;
+
+      code {
+        font-weight: 600;
+      }
     }
 
     .scan-results {
@@ -274,7 +278,7 @@
           "hr         hr    hr         hr      hr      hr"
           "mod        mod   mod        mod     mod     mod";
 
-        grid-template-columns: auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         margin: 0;
         padding: 0;
 
@@ -283,7 +287,7 @@
           border-top: 1px solid var(--observatory-border);
           content: "";
           grid-area: hr;
-          margin: 0rem;
+          margin: 0rem 0rem 0rem 0rem;
           width: 100%;
         }
 
@@ -308,7 +312,7 @@
           > label {
             cursor: pointer;
             width: max-content;
-            // width: 100%;
+            height: 2.2rem;
           }
 
           &#tabs-0 {
@@ -372,6 +376,7 @@
   .box,
   .scroll-container {
     margin-bottom: 1.5rem;
+    margin-top: 0.8rem;
   }
 
   @media screen and (max-width: #{$screen-md - 0.02}) {
@@ -461,22 +466,16 @@
       td {
         vertical-align: top;
         &:first-of-type {
-          width: 30%;
+          width: 25%;
         }
-
-        // &:nth-of-type(n + 2):nth-of-type(-n + 3),
-        // &:last-of-type {
-        //   text-align: center;
-        // }
       }
 
-      td:last-of-type {
-        font-size: 0.875rem;
+      td.score {
+        white-space: nowrap;
       }
 
       a {
         color: var(--observatory-color);
-        // font-weight: 500;
         text-decoration: underline;
 
         &:hover,

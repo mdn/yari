@@ -260,7 +260,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                   ].includes(test.result) ? (
                     <td>-</td>
                   ) : (
-                    <td>
+                    <td className="score">
                       <span className="obs-score-value">
                         {test.score_modifier}
                       </span>
