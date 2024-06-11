@@ -42,13 +42,27 @@ export async function buildSitemap(
 }
 
 export async function buildSitemapIndex() {
-  const txtSitemaps = new fdir()
+  return Promise.all([buildSitemapIndexTXT(), buildSitemapIndexXML()]);
+}
+
+export async function buildSitemapIndexTXT() {
+  const sitemaps = new fdir()
     .filter((p) => p.endsWith("/sitemap.txt"))
     .withFullPaths()
     .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
     .sync();
 
-  const xmlSitemaps = new fdir()
+  const file = join(BUILD_OUT_ROOT, "sitemap.txt");
+
+  const content = await makeSitemapIndexTXT(sitemaps);
+
+  await writeFile(file, content, "utf-8");
+
+  return sitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+}
+
+export async function buildSitemapIndexXML() {
+  const sitemaps = new fdir()
     .filter((p) => p.endsWith("/sitemap.xml.gz"))
     .withFullPaths()
     .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
@@ -56,17 +70,11 @@ export async function buildSitemapIndex() {
     .sort()
     .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
 
-  const txtPath = join(BUILD_OUT_ROOT, "sitemap.txt");
-  const xmlPath = join(BUILD_OUT_ROOT, "sitemap.xml");
+  const file = join(BUILD_OUT_ROOT, "sitemap.xml");
 
-  await Promise.all([
-    makeSitemapIndexTXT(txtSitemaps).then((content) =>
-      writeFile(txtPath, content, "utf-8")
-    ),
-    writeFile(xmlPath, makeSitemapIndexXML(xmlSitemaps)),
-  ]);
+  await writeFile(file, makeSitemapIndexXML(sitemaps));
 
-  return xmlSitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+  return sitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
 }
 
 function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
