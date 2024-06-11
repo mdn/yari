@@ -92,7 +92,7 @@ async function createLink(aPage) {
 }
 
 let output = ''
-if(pages.length) {
+if(pages?.length) {
     const linkArray = await Promise.all(pages.map(createLink));
     const links = linkArray.join('');
     output = `<ol>${links}</ol>`;
