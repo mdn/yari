@@ -14,8 +14,6 @@ dotenv.config({
 });
 
 async function buildSitemap() {
-  const siteMap = new Map<string, string>();
-
   const { BUILD_OUT_ROOT = join(root, "client", "build") } = process.env;
 
   const sitemapPath = join(BUILD_OUT_ROOT, "sitemap.txt");
@@ -24,16 +22,17 @@ async function buildSitemap() {
   const lines = content.split("\n");
   const pages = lines.filter((line) => line.startsWith("/"));
 
+  const siteMap: Record<string, string> = {};
   for (const page of pages) {
-    siteMap.set(normalizePath(page), page);
+    siteMap[normalizePath(page)] = page;
   }
   console.log(`- ${sitemapPath}: ${pages.length} pages`);
 
   const output = "sitemap.json";
 
-  await writeFile(output, JSON.stringify(Object.fromEntries(siteMap)));
+  await writeFile(output, JSON.stringify(siteMap));
 
-  const count = siteMap.size;
+  const count = Object.keys(siteMap).length;
   const kb = Math.round((await stat(output)).size / 1024);
   console.log(`Wrote ${count} pages in ${kb} KB.`);
 }
