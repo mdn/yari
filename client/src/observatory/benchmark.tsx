@@ -100,6 +100,11 @@ export default function ObservatoryBenchmark({
                 result={result}
               ></GradeSVG>
             }
+            <p>
+              Refer to this graph to assess the website's current status. By
+              following the recommendations provided and rescanning, you can
+              expect an improvement in the website's grade.
+            </p>
           </>
         ) : isLoading ? (
           <Loading />

@@ -207,7 +207,6 @@ function ObservatoryRating({
       <section className="scan-result">
         <section className="grade-trend">
           <div className="overall">
-            <span className="accent">Grade: </span>
             <div
               className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
             >

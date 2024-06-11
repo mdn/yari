@@ -227,6 +227,8 @@
   }
 
   .observatory-results {
+    letter-spacing: -0.02rem;
+
     .heading-and-actions {
       align-items: center;
       display: flex;
@@ -251,9 +253,13 @@
     h2 {
       font-size: 1.375rem;
       font-weight: 600;
-      letter-spacing: 0.03125rem;
+      letter-spacing: 0.02rem;
       margin-bottom: 1rem;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    p {
+      font-weight: 300;
     }
 
     .scan-results {
@@ -379,6 +385,7 @@
 
   svg.chart {
     background-color: var(--background-primary);
+    border-radius: 8px;
 
     .tick text {
       transform: scale(1);
@@ -411,11 +418,12 @@
 
     .you-are-here {
       polyline {
-        fill: rgba(239, 239, 239);
+        fill: var(--background-primary);
         filter: drop-shadow(0px 0px 3px rgb(170 170 170));
         z-index: 9;
       }
       text {
+        fill: var(--text-primary);
         font-family: var(--font-body);
         font-weight: 300;
         font-size: 0.85rem;
@@ -597,6 +605,7 @@
 
   section.scan-result {
     background-color: var(--background-primary);
+    border-radius: 4px;
     display: grid;
     grid-template-areas: "grade score time";
     grid-template-columns: 1fr 1fr 1fr;
@@ -641,14 +650,16 @@
   .grade {
     background: var(--grade-bg);
     border: 1px solid var(--grade-border);
-    border-radius: 0.125em;
-    box-sizing: content-box;
-    color: #fff;
+    border-radius: 0.2em;
+    // box-sizing: content-box;
+    color: var(--grade-border);
     display: inline-block;
+    font-size: 1.7rem;
     font-weight: 600;
-    line-height: 3;
+    line-height: 5rem;
     text-align: center;
-    width: 3em;
+    width: 5rem;
+    height: 5rem;
   }
 
   .grade-a {
