@@ -15,6 +15,6 @@
 .gitignore
 
 #!include:.gitignore
+!canonicals.json
 !redirects.json
-!sitemap.json
 !src/internal/**

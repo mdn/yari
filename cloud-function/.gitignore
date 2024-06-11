@@ -2,7 +2,7 @@ node_modules
 .env*
 !.env-dist
 *.log
+canonicals.json
 redirects.json
-sitemap.json
 src/**/*.js
 src/internal

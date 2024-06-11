@@ -9,8 +9,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -b",
+    "build-canonicals": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/build-canonicals.ts",
     "build-redirects": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/build-redirects.ts",
-    "build-sitemap": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/build-sitemap.ts",
     "copy-internal": "rm -rf ./src/internal && cp -R ../libs ./src/internal",
     "gcp-build": "npm run build",
     "prepare": "([ ! -e ../libs ] || npm run copy-internal)",

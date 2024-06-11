@@ -13,7 +13,7 @@ dotenv.config({
   path: join(root, process.env["ENV_FILE"] || ".env"),
 });
 
-async function buildSitemap() {
+async function buildCanonicals() {
   const { BUILD_OUT_ROOT = join(root, "client", "build") } = process.env;
 
   const sitemapPath = join(BUILD_OUT_ROOT, "sitemap.txt");
@@ -28,7 +28,7 @@ async function buildSitemap() {
   }
   console.log(`- ${sitemapPath}: ${pages.length} pages`);
 
-  const output = "sitemap.json";
+  const output = "canonicals.json";
 
   await writeFile(output, JSON.stringify(siteMap));
 
@@ -37,4 +37,4 @@ async function buildSitemap() {
   console.log(`Wrote ${count} pages in ${kb} KB.`);
 }
 
-await buildSitemap();
+await buildCanonicals();

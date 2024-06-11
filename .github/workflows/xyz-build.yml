@@ -234,7 +234,7 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
-          npm run build-sitemap
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}

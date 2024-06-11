@@ -6,7 +6,7 @@ import { THIRTY_DAYS } from "../constants.js";
 import { normalizePath, redirect } from "../utils.js";
 
 const require = createRequire(import.meta.url);
-const REDIRECTS = require("../../sitemap.json");
+const REDIRECTS = require("../../canonicals.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 export async function redirectNonCanonicals(
