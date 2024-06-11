@@ -509,11 +509,13 @@ program
         const sitemapsBuilt = await buildSitemapIndex();
 
         if (!options.quiet) {
-          console.log(
-            chalk.green(
-              `Wrote sitemap index referencing ${sitemapsBuilt.length} sitemaps:\n${sitemapsBuilt.map((s) => `- ${s}`).join("\n")}`
-            )
-          );
+          for (const sitemaps of sitemapsBuilt) {
+            console.log(
+              chalk.green(
+                `Wrote sitemap index referencing ${sitemaps.length} sitemaps:\n${sitemaps.map((s) => `- ${s}`).join("\n")}`
+              )
+            );
+          }
         }
         return;
       }

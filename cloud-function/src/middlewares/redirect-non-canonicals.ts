@@ -3,10 +3,10 @@ import { createRequire } from "node:module";
 import { NextFunction, Request, Response } from "express";
 
 import { THIRTY_DAYS } from "../constants.js";
-import { normalizeSlug, redirect } from "../utils.js";
+import { normalizePath, redirect } from "../utils.js";
 
 const require = createRequire(import.meta.url);
-const REDIRECTS = require("../../sitemap.json");
+const REDIRECTS = require("../../canonicals.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 export async function redirectNonCanonicals(
@@ -29,7 +29,7 @@ export async function redirectNonCanonicals(
       0,
       pathname.length - suffix.length
     );
-    const source = normalizeSlug(originalSource);
+    const source = normalizePath(originalSource);
     if (
       typeof REDIRECTS[source] == "string" &&
       REDIRECTS[source] !== originalSource

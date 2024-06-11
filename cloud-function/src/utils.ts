@@ -60,6 +60,6 @@ export function isAsset(url: string) {
   return ANY_ATTACHMENT_REGEXP.test(url);
 }
 
-export function normalizeSlug(slug: string) {
-  return slug.toLowerCase().replace(/\/$/, "");
+export function normalizePath(path: string) {
+  return path.toLowerCase().replace(/\/$/, "");
 }
