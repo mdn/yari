@@ -179,21 +179,25 @@ export function checkImageReferences(
           // image name, if the file didn't exist the document doesn't exist.
           const parentDocument = Document.findByURL(path.dirname(finalSrc));
 
-          // Base the final URL on the parent document + image file name lowercase.
-          finalSrc = `${parentDocument.url}/${path
-            .basename(finalSrc)
-            .toLowerCase()}`;
+          if (parentDocument) {
+            // Base the final URL on the parent document + image file name lowercase.
+            finalSrc = `${parentDocument.url}/${path
+              .basename(finalSrc)
+              .toLowerCase()}`;
 
-          if (src.startsWith("/")) {
-            // E.g. <img src="/en-US/docs/Web/Images/foo.gif"
-            const suggestion = path.join(
-              path.relative(url, parentDocument.url),
-              path.basename(finalSrc)
-            );
-            addImageFlaw(img, src, {
-              explanation: "Pathname should be relative to document",
-              suggestion,
-            });
+            if (src.startsWith("/")) {
+              // E.g. <img src="/en-US/docs/Web/Images/foo.gif"
+              const suggestion = path.join(
+                path.relative(url, parentDocument.url),
+                path.basename(finalSrc)
+              );
+              addImageFlaw(img, src, {
+                explanation: "Pathname should be relative to document",
+                suggestion,
+              });
+            }
+          } else {
+            console.warn("parentDocument not found!");
           }
         }
       }
