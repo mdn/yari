@@ -52,10 +52,9 @@ export async function buildSitemapIndex() {
   const xmlPath = join(BUILD_OUT_ROOT, "sitemap.xml");
 
   await Promise.all([
-    Promise.all(sitemapsBuilt.map((p) => readFile(p, "utf-8")))
-      .then((contents) => contents.join("\n").split("\n"))
-      .then((urls) => urls.filter(Boolean).sort().join("\n"))
-      .then((content) => writeFile(txtPath, content, "utf-8")),
+    makeSitemapIndexTXT(sitemapsBuilt).then((content) =>
+      writeFile(txtPath, content, "utf-8")
+    ),
     writeFile(xmlPath, makeSitemapIndexXML(sitemapsBuilt)),
   ]);
 
@@ -98,4 +97,15 @@ export function makeSitemapIndexXML(paths: string[]) {
     }),
     "</sitemapindex>",
   ].join("\n");
+}
+
+/**
+ * Creates a global text sitemap by merging all text sitemaps.
+ */
+export async function makeSitemapIndexTXT(paths: string[]) {
+  const maps = await Promise.all(paths.map((p) => readFile(p, "utf-8")));
+
+  const urls = maps.join("\n").split("\n").filter(Boolean);
+
+  return urls.sort().join("\n");
 }
