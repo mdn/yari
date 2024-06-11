@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 
 import * as dotenv from "dotenv";
 
+import { normalizeSlug } from "./utils.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const root = join(__dirname, "..", "..");
@@ -23,7 +25,7 @@ async function buildSitemap() {
   const pages = lines.filter((line) => line.startsWith("/"));
 
   for (const page of pages) {
-    siteMap.set(page.toLowerCase().replace(/\/$/, ""), page);
+    siteMap.set(normalizeSlug(page), page);
   }
   console.log(`- ${sitemapPath}: ${pages.length} pages`);
 
