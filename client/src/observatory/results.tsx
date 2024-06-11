@@ -10,6 +10,7 @@ import { Link, PassIcon } from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 import { useState } from "react";
+import ObservatoryBenchmark from "./benchmark";
 
 // const TEST_MAP: Record<string, { name: string; url: string; info: string }> = {
 //   "content-security-policy": {
@@ -116,7 +117,10 @@ function ObservatoryScanResults({ result, host }) {
     },
     { name: "Cookies", element: <ObservatoryCookies result={result} /> },
     { name: "Scan History", element: <ObservatoryHistory result={result} /> },
-    { name: "Benchmark Comparison", element: <></> },
+    {
+      name: "Benchmark Comparison",
+      element: <ObservatoryBenchmark result={result} />,
+    },
   ];
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -287,7 +291,6 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
 function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
   return result.history.length ? (
     <section className="tab-content">
-      <h2>Grade History</h2>
       <figure className="scroll-container">
         <table className="fancy">
           <thead>
@@ -323,7 +326,6 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
   const cookies = result.tests["cookies"]?.data;
   return cookies && Object.keys(cookies).length !== 0 ? (
     <section className="tab-content">
-      <h2>Cookies</h2>
       <figure className="scroll-container">
         <table className="fancy cookies">
           <thead>
@@ -386,14 +388,23 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
       </figure>
     </section>
   ) : (
-    []
+    <section className="tab-content">
+      <figure className="scroll-container">
+        <table className=" cookies">
+          <thead>
+            <tr>
+              <th>No cookies detected</th>
+            </tr>
+          </thead>
+        </table>
+      </figure>
+    </section>
   );
 }
 
 function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
   return result.scan.response_headers ? (
     <section className="tab-content">
-      <h2>Raw Server Headers</h2>
       <figure className="scroll-container">
         <table className="fancy headers">
           <thead>

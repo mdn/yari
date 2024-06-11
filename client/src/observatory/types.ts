@@ -16,6 +16,11 @@ export interface ObservatoryResult {
   history: ObservatoryHistoryResult[];
 }
 
+export interface GradeDistribution {
+  grade: string;
+  count: number;
+}
+
 export interface ObservatoryScanResult {
   algorithm_version: number;
   scanned_at: string;

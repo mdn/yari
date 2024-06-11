@@ -46,7 +46,6 @@ export function useResult(host?: string) {
 }
 
 async function handleResponse(res: Response): Promise<ObservatoryResult> {
-  console.log(res);
   if (!res.ok && res.status !== 429) {
     let message = `${res.status}: ${res.statusText}`;
     try {
