@@ -29,7 +29,7 @@ export async function handleGradeDistributionResponse(
   return await res.json();
 }
 
-function niceNumber(range, round): number {
+function niceNumber(range: number, round: boolean): number {
   const exponent = Math.floor(Math.log10(range));
   const fraction = range / Math.pow(10, exponent);
 
