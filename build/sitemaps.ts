@@ -42,23 +42,31 @@ export async function buildSitemap(
 }
 
 export async function buildSitemapIndex() {
-  const sitemapsBuilt = new fdir()
+  const txtSitemaps = new fdir()
     .filter((p) => p.endsWith("/sitemap.txt"))
     .withFullPaths()
     .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
     .sync();
 
+  const xmlSitemaps = new fdir()
+    .filter((p) => p.endsWith("/sitemap.xml.gz"))
+    .withFullPaths()
+    .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
+    .sync()
+    .sort()
+    .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+
   const txtPath = join(BUILD_OUT_ROOT, "sitemap.txt");
   const xmlPath = join(BUILD_OUT_ROOT, "sitemap.xml");
 
   await Promise.all([
-    makeSitemapIndexTXT(sitemapsBuilt).then((content) =>
+    makeSitemapIndexTXT(txtSitemaps).then((content) =>
       writeFile(txtPath, content, "utf-8")
     ),
-    writeFile(xmlPath, makeSitemapIndexXML(sitemapsBuilt)),
+    writeFile(xmlPath, makeSitemapIndexXML(xmlSitemaps)),
   ]);
 
-  return sitemapsBuilt.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+  return xmlSitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
 }
 
 function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
