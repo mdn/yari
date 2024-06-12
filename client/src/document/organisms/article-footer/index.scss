@@ -8,13 +8,13 @@
   margin: 0;
   padding: 1rem;
 
-  @media screen and (max-width: $screen-md) {
+  @media (max-width: $screen-md) {
     margin: 3rem;
     // Reduce space to article content.
     margin-top: 0;
   }
 
-  @media screen and (max-width: $screen-sm) {
+  @media (max-width: $screen-sm) {
     margin-left: 1rem;
     margin-right: 1rem;
   }

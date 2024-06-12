@@ -195,15 +195,20 @@ export async function getCSSSyntax(
     const specs = getSpecsForItem(atRuleName, "atrules");
     // Look through all the specs that define the at-rule, for the one
     // that defines this descriptor.
+    let spec_values = [];
     for (const spec of specs) {
       const atRule = parsedWebRef[spec].atrules[atRuleName];
       for (const descriptor of atRule.descriptors) {
         if (descriptor.name === atRuleDescriptorName) {
-          return descriptor.value;
+          spec_values.push({ spec, value: descriptor.value });
         }
       }
     }
-    return "";
+    if (spec_values.length > 1) {
+      // Filter out specs that end "-n" where n is a number.
+      spec_values = spec_values.filter(({ spec }) => !/-\d+$/.test(spec));
+    }
+    return spec_values[0]?.value || "";
   }
 
   /**
@@ -304,7 +309,8 @@ export async function getCSSSyntax(
         const span = `<span class="token property">${encoded}</span>`;
         // If the type is not included in the syntax, or is in "typesToLink",
         // link to its dedicated page (don't expand it)
-        const key = name.replace(/(^<|>$)/g, "");
+        // Remove surrounding angle brackets, and range/choice brackets.
+        const key = name.replace(/(^<|>$)/g, "").replace(/ ?\[.*\]$/, "");
         if (values[key]?.value && !typesToLink.includes(name)) {
           return span;
         } else {
@@ -347,8 +353,8 @@ export async function getCSSSyntax(
           `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">[</a>`
         );
         name = name.replace(
-          /\]$/,
-          `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">]</a>`
+          /\]([^']?)$/,
+          `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">]</a>$1`
         );
 
         // link from combinators (except " ") to the value definition syntax docs

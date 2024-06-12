@@ -47,10 +47,10 @@
         position: sticky;
         top: var(--sticky-header-without-actions-height);
       }
-      @media screen and (max-width: $screen-xxl) {
+      @media (max-width: $screen-xxl) {
         grid-template-columns: [left] minmax(0, 15rem) [center] minmax(0, 3fr);
       }
-      @media screen and (max-width: $screen-md) {
+      @media (max-width: $screen-md) {
         grid-template-columns: [center] minmax(0, 3fr);
 
         > .ai-help-history {

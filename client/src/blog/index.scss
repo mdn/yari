@@ -110,7 +110,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
 
-      @media screen and (max-width: $screen-lg) {
+      @media (max-width: $screen-lg) {
         grid-template-columns: auto;
       }
     }

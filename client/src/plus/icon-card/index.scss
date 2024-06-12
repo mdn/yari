@@ -112,7 +112,7 @@
     flex: 1 1 80%;
     overflow: hidden;
 
-    @media screen and (max-width: $screen-sm) {
+    @media (max-width: $screen-sm) {
       flex-basis: 95%;
     }
 

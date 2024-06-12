@@ -109,7 +109,7 @@
   );
 }
 
-@media screen and (min-width: $screen-md) {
+@media (min-width: $screen-md) {
   :root {
     --type-heading-h1: 600 var(--type-heading-h1-font-size) /
       var(--heading-line-height) var(--font-heading);
@@ -139,7 +139,7 @@ body {
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 
   &.mobile-overlay-active {
-    @media screen and (max-width: $screen-md) {
+    @media (max-width: $screen-md) {
       overflow: hidden;
     }
   }

@@ -15,6 +15,7 @@ export interface Survey {
   src: string;
   teaser: string;
   question: string;
+  footnote?: string;
 }
 
 enum SurveyBucket {
@@ -22,6 +23,7 @@ enum SurveyBucket {
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
+  DE_LOCALE_2024 = "DE_LOCALE_2024",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
@@ -36,6 +38,7 @@ enum SurveyKey {
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
   CSS_CASCADE_2022_B = "CSS_CASCADE_2022_B",
+  DE_LOCALE_2024 = "DE_LOCALE_2024",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
@@ -47,14 +50,15 @@ enum SurveyKey {
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.DISCOVERABILITY_AUG_2023,
-    bucket: SurveyBucket.DISCOVERABILITY_AUG_2023,
-    show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7457498/MDN-Discoverability-User-Satisfaction",
-    teaser:
-      "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
-    question: "What’s your experience on MDN Web Docs?",
-    ...survey_duration(SurveyBucket.DISCOVERABILITY_AUG_2023),
-    ...survey_rates(SurveyKey.DISCOVERABILITY_AUG_2023),
+    key: SurveyKey.DE_LOCALE_2024,
+    bucket: SurveyBucket.DE_LOCALE_2024,
+    show: () => (navigator?.language || "").startsWith("de"),
+    src: "https://survey.alchemer.com/s3/7881145/MDN-German-Locale-Survey",
+    teaser: "Wie wär’s, wenn MDN auf Deutsch verfügbar wäre?",
+    question: "Welche Sprache würdest du dann benutzen?",
+    footnote:
+      "You're seeing this survey, because your browser indicates German as your preferred language.",
+    ...survey_duration(SurveyBucket.DE_LOCALE_2024),
+    ...survey_rates(SurveyKey.DE_LOCALE_2024),
   },
 ];
