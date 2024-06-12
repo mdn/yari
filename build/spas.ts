@@ -283,6 +283,11 @@ export async function buildSPAs(options: {
     "plus/docs",
     "MDN Plus"
   );
+  await buildStaticPages(
+    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
+    "observatory/docs",
+    "MDN Observatory"
+  );
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.

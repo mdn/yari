@@ -271,7 +271,7 @@ export function App(appProps: HydrationData) {
               path="observatory/*"
               element={
                 <LazyStandardLayout>
-                  <Observatory />
+                  <Observatory {...appProps} />
                 </LazyStandardLayout>
               }
             />
