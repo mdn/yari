@@ -10,6 +10,89 @@ section.place {
     text-decoration: none;
   }
 
+  .pong-box2 {
+    --border-radius: 0.5rem;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    margin: 0;
+    min-height: 19rem;
+    overflow: hidden;
+    position: relative;
+    width: 11rem;
+
+    > img {
+      height: auto;
+      width: 100%;
+    }
+
+    > div {
+      background: linear-gradient(to top, #111 50%, transparent);
+      border-radius: var(--border-radius);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      height: 100%;
+      justify-content: end;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      .pong-note {
+        background-color: #fff6;
+        border-radius: 0.25rem;
+        color: #fff;
+        font-size: 0.625rem;
+        margin: 0.5rem 0.5rem auto auto;
+        padding: 0 0.25rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        width: max-content;
+      }
+
+      .pong {
+        color: #fff;
+        display: contents;
+        height: 100%;
+        width: 100%;
+
+        strong {
+          font-size: 0.8875rem;
+          line-height: 1.25;
+          padding: 0 1rem;
+        }
+
+        span {
+          font-size: 0.75rem;
+          line-height: 1.25;
+          padding: 0 1rem;
+        }
+      }
+
+      .pong-cta {
+        --color: #fff;
+        --icon-primary: var(--color);
+        background-color: #fff1;
+        border: solid 2px;
+        border-radius: 2rem;
+        color: var(--color);
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin: 0.5rem auto 1rem 1rem;
+        padding: 0.5em 1em;
+        transition: all 0.3s ease-in-out;
+
+        &::after {
+          transition: all 0.3s ease-in-out;
+        }
+
+        &:hover {
+          --color: #111;
+          background-color: #fff;
+        }
+      }
+    }
+  }
+
   .pong-box {
     background-color: var(--background-secondary);
     border: 1px solid var(--border-primary);
@@ -76,6 +159,7 @@ section.place {
     width: 100%;
   }
 
+  &.new-side,
   &.side {
     flex-direction: column;
     max-width: 12rem;
