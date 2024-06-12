@@ -7,6 +7,7 @@ function localeString(strings: LocaleStringMap) {
 }
 
 export const ONLY_AVAILABLE_IN_ENGLISH = localeString({
+  de: "Diese Seite ist derzeit nur auf Englisch verfügbar",
   "en-US": "This page is currently only available in English",
   es: "Esta página está disponible solo en inglés",
   fr: "Cette page est actuellement disponible uniquement en anglais",

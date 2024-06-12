@@ -39,6 +39,7 @@ const ENGINES: {
 ];
 
 const LOCALIZED_BCD_IDS = {
+  de: "browserkompatibilität",
   "en-US": "browser_compatibility",
   es: "compatibilidad_con_navegadores",
   fr: "compatibilité_des_navigateurs",
