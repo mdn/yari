@@ -371,10 +371,10 @@ cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-dexie@*, dexie@3.2.7:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.7.tgz#1346541c9c81e3bc6055a042a928837890595e3a"
-  integrity sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==
+dexie@*, dexie@4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-4.0.4.tgz#a4c0bd27fe3a5aee9fcb8e4c9adeb08b4a624378"
+  integrity sha512-wFzwWSUdi+MC3jiFeQcCp9nInR7EaX8edzYY+4wmiITkQAiSnHpe4Wo2o5Ce5tJZe2nqt7mLW91MsW4GYx3ziQ==
 
 electron-to-chromium@^1.4.601:
   version "1.4.645"

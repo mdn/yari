@@ -424,6 +424,7 @@ export async function buildPost(
 export async function buildBlogFeed(options: { verbose?: boolean }) {
   const prefix = "blog";
   const locale = DEFAULT_LOCALE;
+  const year = new Date().getFullYear();
   const feed = new Feed({
     title: "MDN Blog",
     description:
@@ -433,7 +434,7 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
     language: "en",
     image: `${BASE_URL}/mdn-social-share.png`,
     favicon: `${BASE_URL}/favicon.ico`,
-    copyright: "All rights reserved 2023, MDN",
+    copyright: `All rights reserved 2023-${year}, MDN`,
   });
   const posts = await allPostFrontmatter();
 
@@ -445,7 +446,7 @@ export async function buildBlogFeed(options: { verbose?: boolean }) {
     feed.addItem({
       title: post.title,
       id: post.slug,
-      link,
+      link: `${link}?utm_medium=feed&utm_source=rss&utm_campaign=mdn_blog`,
       guid: link,
       description: post.description,
       author: [

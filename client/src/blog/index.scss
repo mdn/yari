@@ -89,9 +89,11 @@
 
   &.blog-index {
     > header {
+      text-align: center;
       width: 100%;
 
       > h1 {
+        display: inline-block;
         margin: 0 auto 2rem;
         width: fit-content;
 
@@ -100,7 +102,18 @@
         }
 
         &::after {
-          text-decoration-color: var(--category-color);
+          display: none;
+        }
+      }
+
+      > .icon-feed {
+        background-color: var(--category-color);
+        height: 1rem;
+        margin-left: 1rem;
+        width: 1rem;
+
+        &:hover {
+          background-color: var(--text-primary);
         }
       }
     }
