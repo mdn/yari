@@ -245,8 +245,8 @@
     }
 
     h1 {
-      margin-bottom: unset;
       letter-spacing: var(--heading-letter-spacing);
+      margin-bottom: unset;
     }
 
     h2 {
@@ -287,7 +287,7 @@
           border-top: 1px solid var(--observatory-border);
           content: "";
           grid-area: hr;
-          margin: 0rem 0rem 0rem 0rem;
+          margin: 0;
           width: 100%;
         }
 
@@ -295,9 +295,10 @@
           display: contents;
 
           > input:checked + label {
-            color: var(--text-primary);
             border-bottom: 2px solid var(--observatory-accent);
+            color: var(--text-primary);
           }
+
           > input:checked:focus-visible + label {
             outline-color: var(--accent-primary);
             outline-offset: 1px;
@@ -311,8 +312,8 @@
 
           > label {
             cursor: pointer;
-            width: max-content;
             height: 2.2rem;
+            width: max-content;
           }
 
           &#tabs-0 {
@@ -393,28 +394,31 @@
     border-radius: 8px;
 
     .tick text {
-      transform: scale(1);
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 1rem;
       fill: var(--observatory-color-secondary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      transform: scale(1);
+
       &.x-labels {
         text-anchor: middle;
       }
+
       &.y-labels {
         text-anchor: end;
       }
     }
 
     .tick line {
-      stroke-width: 1px;
+      color: var(--observatory-color-secondary);
       stroke: var(--observatory-border);
       stroke-dasharray: 5, 5;
-      color: var(--observatory-color-secondary);
+      stroke-width: 1px;
     }
 
     .bar {
       fill: var(--grade-bg);
+
       &.current-grade {
         stroke: rgba(227, 100, 42, 1);
         stroke-width: 1;
@@ -424,14 +428,15 @@
     .you-are-here {
       polyline {
         fill: var(--background-primary);
-        filter: drop-shadow(0px 0px 3px rgb(170 170 170));
+        filter: drop-shadow(0 0 3px rgb(170 170 170));
         z-index: 9;
       }
+
       text {
         fill: var(--text-primary);
         font-family: var(--font-body);
-        font-weight: 300;
         font-size: 0.85rem;
+        font-weight: 300;
       }
     }
   }
@@ -447,8 +452,8 @@
     }
 
     td {
-      padding: 0.5rem 1.5rem;
       overflow-wrap: anywhere;
+      padding: 0.5rem 1.5rem;
     }
 
     tr {
@@ -465,6 +470,7 @@
       th,
       td {
         vertical-align: top;
+
         &:first-of-type {
           width: 25%;
         }
@@ -498,15 +504,6 @@
       th,
       td {
         &:nth-of-type(n + 3) {
-          text-align: center;
-        }
-      }
-    }
-
-    &.csp {
-      th,
-      td {
-        &:nth-of-type(n + 2) {
           text-align: center;
         }
       }
@@ -655,10 +652,10 @@
     display: inline-block;
     font-size: 1.7rem;
     font-weight: 600;
+    height: 5rem;
     line-height: 5rem;
     text-align: center;
     width: 5rem;
-    height: 5rem;
   }
 
   .grade-a {
