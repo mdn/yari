@@ -79,7 +79,7 @@ export default function ObservatoryResults() {
         <section className="header">
           <section className="heading-and-actions">
             <h1>
-              <span className="accent">MDN Observatory</span> Report
+              <span className="accent">HTTP Observatory</span> Report
             </h1>
             <section className="actions">
               <Button href="../">Scan another site</Button>
@@ -177,7 +177,7 @@ function trend(result: ObservatoryResult) {
         </div>
       );
     } else {
-      return <div className="trend">no change since last scan</div>;
+      return [];
     }
   }
 }
@@ -250,14 +250,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                   <td>
                     <Link href={test.link}>{test.name}</Link>
                   </td>
-                  {[
-                    "referrer-policy-not-implemented",
-                    "referrer-policy-no-referrer-when-downgrade",
-                    "sri-not-implemented-response-not-html",
-                    "sri-not-implemented-but-no-scripts-loaded",
-                    "sri-not-implemented-but-all-scripts-loaded-from-secure-origin",
-                    "cookies-not-found",
-                  ].includes(test.result) ? (
+                  {test.pass === null ? (
                     <td>-</td>
                   ) : (
                     <td className="score">
@@ -274,7 +267,8 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                   />
                   <td
                     dangerouslySetInnerHTML={{
-                      __html: test.recommendation,
+                      __html:
+                        test.recommendation || `<p class="obs-none">None</p>`,
                     }}
                   />
                 </tr>

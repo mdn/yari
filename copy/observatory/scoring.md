@@ -4,8 +4,6 @@ title: Scoring Methodology
 
 # HTTP Observatory Scoring Methodology
 
-**Last Updated:** 2024-02-27 leo@mozilla.com **Author:** april@mozilla.com
-
 It is difficult to assign an objective value to a subjective question such as
 "How bad is not implementing HTTP Strict Transport Security?" In addition, what
 may be unnecessary for one site — such as implementing Content Security Policy —

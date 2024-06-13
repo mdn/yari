@@ -11,7 +11,10 @@ export function Link({ href, children }: { href: string; children: any }) {
   );
 }
 
-export function PassIcon({ pass }: { pass: boolean }) {
+export function PassIcon({ pass }: { pass: boolean | null }) {
+  if (pass === null) {
+    return <>-</>;
+  }
   return (
     <span className="obs-pass-icon">
       {pass ? (
