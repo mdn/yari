@@ -150,6 +150,7 @@ function GradeSVG({
           {gradeDistribution.map((item, index) => {
             return (
               <g
+                key={`tick-x-${index}`}
                 className="tick tick-x"
                 transform={`translate(${xTickOffset / 3 + index * xTickIncr}, 0)`}
               >
@@ -163,12 +164,13 @@ function GradeSVG({
         <g
           className="y-axis"
           fill="none"
-          text-anchor="end"
+          textAnchor="end"
           transform={`translate(${leftSpace}, 0)`}
         >
           {yMarks.map((item, index) => {
             return (
               <g
+                key={`tick-y-${index}`}
                 className="tick tick-y"
                 transform={`translate(0, ${yTickOffset - yTickIncr * index})`}
               >
@@ -195,6 +197,7 @@ function GradeSVG({
             (height - bottomSpace - topSpace) * (item.count / yTickMax);
           return (
             <rect
+              key={`bar-${index}`}
               className={`bar grade-${item.grade.replace(/[+-]/, "").toLowerCase()} ${item.grade === result.scan.grade ? "current-grade" : ""}`}
               x={xTickOffset / 2 + index * xTickIncr - xTickIncr / 4}
               y={yTickOffset - barHeight}
@@ -210,6 +213,7 @@ function GradeSVG({
               (height - bottomSpace - topSpace) * (item.count / yTickMax);
             return (
               <g
+                key="you-are-here"
                 className="you-are-here"
                 transform={`translate(${xTickOffset / 2 + index * xTickIncr - xTickIncr / 8}, ${height - bottomSpace - barHeight - 50})`}
               >

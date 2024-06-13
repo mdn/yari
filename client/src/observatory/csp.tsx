@@ -1,6 +1,7 @@
 import { InfoTooltip } from "../document/molecules/tooltip";
 import { Icon } from "../ui/atoms/icon";
 import { ObservatoryResult } from "./types";
+import { PassIcon } from "./utils";
 
 export default function ObservatoryCSP({
   result,
@@ -22,13 +23,13 @@ export default function ObservatoryCSP({
           <tbody>
             <tr>
               <td>
-                Blocks execution of inline JavaScript by not allowing{" "}
-                <code>'unsafe-inline'</code> inside <code>script-src</code>
+                <p>
+                  Blocks execution of inline JavaScript by not allowing{" "}
+                  <code>'unsafe-inline'</code> inside <code>script-src</code>
+                </p>
               </td>
               <td>
-                <Icon
-                  name={!policy.unsafeInline ? "check-circle" : "alert-circle"}
-                />
+                <PassIcon pass={!policy.unsafeInline} />
                 <span className="visually-hidden">
                   {!policy.unsafeInline ? "Passed" : "Failed"}
                 </span>
@@ -44,14 +45,14 @@ export default function ObservatoryCSP({
             </tr>
             <tr>
               <td>
-                Blocks execution of JavaScript's <code>eval()</code> function by
-                not allowing <code>'unsafe-eval'</code> inside{" "}
-                <code>script-src</code>
+                <p>
+                  Blocks execution of JavaScript's <code>eval()</code> function
+                  by not allowing <code>'unsafe-eval'</code> inside{" "}
+                  <code>script-src</code>
+                </p>
               </td>
               <td>
-                <Icon
-                  name={!policy.unsafeEval ? "check-circle" : "alert-circle"}
-                />
+                <PassIcon pass={!policy.unsafeEval} />
                 <span className="visually-hidden">
                   {!policy.unsafeEval ? "Passed" : "Failed"}
                 </span>
@@ -65,13 +66,13 @@ export default function ObservatoryCSP({
             </tr>
             <tr>
               <td>
-                Blocks execution of plug-ins, using <code>object-src</code>{" "}
-                restrictions
+                <p>
+                  Blocks execution of plug-ins, using <code>object-src</code>{" "}
+                  restrictions
+                </p>
               </td>
               <td>
-                <Icon
-                  name={!policy.unsafeObjects ? "check-circle" : "alert-circle"}
-                />
+                <PassIcon pass={!policy.unsafeObjects} />
                 <span className="visually-hidden">
                   {!policy.unsafeObjects ? "Passed" : "Failed"}
                 </span>
@@ -91,11 +92,7 @@ export default function ObservatoryCSP({
                 <code>'unsafe-inline'</code> inside <code>style-src</code>
               </td>
               <td>
-                <Icon
-                  name={
-                    !policy.unsafeInlineStyle ? "check-circle" : "alert-circle"
-                  }
-                />
+                <PassIcon pass={!policy.unsafeInlineStyle} />
                 <span className="visually-hidden">
                   {!policy.unsafeInlineStyle ? "Passed" : "Failed"}
                 </span>
@@ -110,15 +107,11 @@ export default function ObservatoryCSP({
               </td>
             </tr>
             <tr>
-              <td>Blocks loading of active content over HTTP or FTP</td>
               <td>
-                <Icon
-                  name={
-                    !policy.insecureSchemeActive
-                      ? "check-circle"
-                      : "alert-circle"
-                  }
-                />
+                <p>Blocks loading of active content over HTTP or FTP</p>
+              </td>
+              <td>
+                <PassIcon pass={!policy.insecureSchemeActive} />
                 <span className="visually-hidden">
                   {!policy.insecureSchemeActive ? "Passed" : "Failed"}
                 </span>
@@ -134,13 +127,7 @@ export default function ObservatoryCSP({
             <tr>
               <td>Blocks loading of passive content over HTTP or FTP</td>
               <td>
-                <Icon
-                  name={
-                    !policy.insecureSchemePassive
-                      ? "check-circle"
-                      : "alert-circle"
-                  }
-                />
+                <PassIcon pass={!policy.insecureSchemePassive} />
                 <span className="visually-hidden">
                   {!policy.insecureSchemePassive ? "Passed" : "Failed"}
                 </span>
@@ -156,14 +143,12 @@ export default function ObservatoryCSP({
             </tr>
             <tr>
               <td>
-                Clickjacking protection, using <code>frame-ancestors</code>
+                <p>
+                  Clickjacking protection, using <code>frame-ancestors</code>
+                </p>
               </td>
               <td>
-                <Icon
-                  name={
-                    policy.antiClickjacking ? "check-circle" : "alert-circle"
-                  }
-                />
+                <PassIcon pass={!policy.antiClickjacking} />
                 <span className="visually-hidden">
                   {policy.antiClickjacking ? "Passed" : "Failed"}
                 </span>
@@ -177,12 +162,12 @@ export default function ObservatoryCSP({
             </tr>
             <tr>
               <td>
-                Deny by default, using <code>default-src 'none'</code>
+                <p>
+                  Deny by default, using <code>default-src 'none'</code>
+                </p>
               </td>
               <td>
-                <Icon
-                  name={policy.defaultNone ? "check-circle" : "alert-circle"}
-                />
+                <PassIcon pass={!policy.defaultNone} />
                 <span className="visually-hidden">
                   {policy.defaultNone ? "Passed" : "Failed"}
                 </span>
@@ -202,11 +187,7 @@ export default function ObservatoryCSP({
                 specific origins
               </td>
               <td>
-                <Icon
-                  name={
-                    !policy.insecureBaseUri ? "check-circle" : "alert-circle"
-                  }
-                />
+                <PassIcon pass={!policy.insecureBaseUri} />
                 <span className="visually-hidden">
                   {!policy.insecureBaseUri ? "Passed" : "Failed"}
                 </span>
@@ -220,18 +201,16 @@ export default function ObservatoryCSP({
             </tr>
             <tr>
               <td>
-                Restricts where <code>&lt;form&gt;</code> contents may be
-                submitted by using <code>form-action 'none'</code>,{" "}
-                <code>form-action 'self'</code>, or specific URIs
+                <p>
+                  Restricts where <code>&lt;form&gt;</code> contents may be
+                  submitted by using <code>form-action 'none'</code>,{" "}
+                  <code>form-action 'self'</code>, or specific URIs
+                </p>
               </td>
               <td>
-                <Icon
-                  name={
-                    !policy.insecureFormAction ? "check-circle" : "alert-circle"
-                  }
-                />
+                <PassIcon pass={!policy.insecureBaseUri} />
                 <span className="visually-hidden">
-                  {!policy.insecureFormAction ? "Passed" : "Failed"}
+                  {!policy.insecureBaseUri ? "Passed" : "Failed"}
                 </span>
               </td>
               <td>
@@ -244,12 +223,14 @@ export default function ObservatoryCSP({
             </tr>
             <tr>
               <td>
-                Uses CSP3's <code>'strict-dynamic'</code> directive to allow
-                dynamic script loading (optional)
+                <p>
+                  Uses CSP3's <code>'strict-dynamic'</code> directive to allow
+                  dynamic script loading (optional)
+                </p>
               </td>
               {policy.strictDynamic ? (
                 <td>
-                  <Icon name="check-circle" />
+                  <PassIcon pass={true} />
                   <span className="visually-hidden">"Passed"</span>
                 </td>
               ) : (
