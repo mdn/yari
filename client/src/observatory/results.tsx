@@ -79,7 +79,7 @@ export default function ObservatoryResults() {
         <section className="header">
           <section className="heading-and-actions">
             <h1>
-              <span className="accent">MDN Observatory</span> Report
+              <span className="accent">HTTP Observatory</span> Report
             </h1>
             <section className="actions">
               <Button href="../">Scan another site</Button>
@@ -177,7 +177,7 @@ function trend(result: ObservatoryResult) {
         </div>
       );
     } else {
-      return <div className="trend">no change since last scan</div>;
+      return [];
     }
   }
 }

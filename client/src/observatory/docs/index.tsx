@@ -7,7 +7,7 @@ import { useLocale } from "../../hooks";
 function PlusDocsNav() {
   return (
     <RelatedTopics
-      heading="MDN Observatory"
+      heading="HTTP Observatory"
       items={[
         {
           slug: "observatory/docs/scoring",
