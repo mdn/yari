@@ -71,16 +71,22 @@ export interface ObservatoryIndividualCookie {
   secure: boolean;
 }
 
+export interface ObservatoryPolicyItem {
+  pass: boolean | null;
+  description: string;
+  info: string;
+}
+
 export interface ObservatoryCSPPolicy {
-  antiClickjacking: boolean;
-  defaultNone: boolean;
-  insecureBaseUri: boolean;
-  insecureFormAction: boolean;
-  insecureSchemeActive: boolean;
-  insecureSchemePassive: boolean;
-  strictDynamic: boolean;
-  unsafeEval: boolean;
-  unsafeInline: boolean;
-  unsafeInlineStyle: boolean;
-  unsafeObjects: boolean;
+  antiClickjacking: ObservatoryPolicyItem;
+  defaultNone: ObservatoryPolicyItem;
+  insecureBaseUri: ObservatoryPolicyItem;
+  insecureFormAction: ObservatoryPolicyItem;
+  insecureSchemeActive: ObservatoryPolicyItem;
+  insecureSchemePassive: ObservatoryPolicyItem;
+  strictDynamic: ObservatoryPolicyItem;
+  unsafeEval: ObservatoryPolicyItem;
+  unsafeInline: ObservatoryPolicyItem;
+  unsafeInlineStyle: ObservatoryPolicyItem;
+  unsafeObjects: ObservatoryPolicyItem;
 }
