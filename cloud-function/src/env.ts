@@ -64,6 +64,10 @@ export function sourceUri(source: Source): string {
   }
 }
 
+// Origin trial.
+export const ORIGIN_TRIAL_TOKEN: string | undefined =
+  process.env["ORIGIN_TRIAL_TOKEN"];
+
 // Kevel.
 export const KEVEL_SITE_ID = Number(process.env["KEVEL_SITE_ID"] ?? 0);
 export const KEVEL_NETWORK_ID = Number(process.env["KEVEL_NETWORK_ID"] ?? 0);
