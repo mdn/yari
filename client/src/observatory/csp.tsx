@@ -1,4 +1,3 @@
-import { InfoTooltip } from "../document/molecules/tooltip";
 import { ObservatoryResult } from "./types";
 import { PassIcon } from "./utils";
 
@@ -25,7 +24,7 @@ export default function ObservatoryCSP({
   return policy ? (
     <section className="tab-content">
       <figure className="scroll-container">
-        <table className="fancy csp">
+        <table className="csp">
           <thead>
             <tr>
               <th>Test</th>
@@ -62,5 +61,17 @@ export default function ObservatoryCSP({
         </table>
       </figure>
     </section>
-  ) : null;
+  ) : (
+    <section className="tab-content">
+      <figure className="scroll-container">
+        <table className="csp">
+          <thead>
+            <tr>
+              <th>No CSP headers detected</th>
+            </tr>
+          </thead>
+        </table>
+      </figure>
+    </section>
+  );
 }
