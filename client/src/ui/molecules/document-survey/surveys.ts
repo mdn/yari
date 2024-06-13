@@ -1,5 +1,4 @@
 import { Doc } from "../../../../../libs/types/document";
-import { survey_duration, survey_rates } from "../../../env";
 
 export interface Survey {
   key: SurveyKey;
@@ -48,17 +47,4 @@ enum SurveyKey {
   DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
 }
 
-export const SURVEYS: Survey[] = [
-  {
-    key: SurveyKey.DE_LOCALE_2024,
-    bucket: SurveyBucket.DE_LOCALE_2024,
-    show: () => (navigator?.language || "").startsWith("de"),
-    src: "https://survey.alchemer.com/s3/7881145/MDN-German-Locale-Survey",
-    teaser: "Wie wär’s, wenn MDN auf Deutsch verfügbar wäre?",
-    question: "Welche Sprache würdest du dann benutzen?",
-    footnote:
-      "You're seeing this survey, because your browser indicates German as your preferred language.",
-    ...survey_duration(SurveyBucket.DE_LOCALE_2024),
-    ...survey_rates(SurveyKey.DE_LOCALE_2024),
-  },
-];
+export const SURVEYS: Survey[] = [];
