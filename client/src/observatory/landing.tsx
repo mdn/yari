@@ -63,9 +63,9 @@ export default function ObservatoryLanding() {
       <section className="observatory-landing observatory-landing-top">
         <Container extraClasses="observatory-wrapper">
           <section className="header">
-            <h1>MDN Observatory</h1>
+            <h1>HTTP Observatory | MDN</h1>
             <p>
-              Launched in 2016 as HTTP Observatory, it enhances web security by
+              Launched in 2016, HTTP Observatory enhances web security by
               analyzing compliance with best security practices. It has provided
               insights to over 6.5 million websites through 47 million scans.
             </p>
