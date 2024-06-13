@@ -13,6 +13,14 @@ function PlusDocsNav() {
           slug: "observatory/docs/scoring",
           title: "Scoring",
         },
+        {
+          slug: "observatory/docs/faq",
+          title: "FAQ",
+        },
+        {
+          slug: "observatory/docs/tests",
+          title: "Tests",
+        },
       ]}
     />
   );

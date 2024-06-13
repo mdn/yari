@@ -286,7 +286,7 @@ export async function buildSPAs(options: {
   await buildStaticPages(
     fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
     "observatory/docs",
-    "MDN Observatory"
+    "HTTP Observatory"
   );
 
   // Build all the home pages in all locales.
