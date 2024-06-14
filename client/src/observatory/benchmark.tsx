@@ -133,26 +133,36 @@ function GradeSVG({
   const bottomSpace = 60;
   const topSpace = 60;
   const itemCount = gradeDistribution.length;
-  const xTickOffset = (width - leftSpace) / itemCount / 2;
-  const xTickIncr = (width - leftSpace - rightSpace - 24) / (itemCount - 1);
+  const barWidth = 60;
+
+  const xTickIncr =
+    (width - leftSpace - rightSpace - barWidth) / (itemCount - 1);
+  const xTickOffset = leftSpace + xTickIncr / 2;
   const yMarks = calculateTicks(gradeDistribution);
   const yTickOffset = height - bottomSpace;
   const yTickIncr = (height - bottomSpace - topSpace) / (yMarks.length - 1);
   const yTickMax = Math.max(...yMarks);
+
+  // const xTickOffset = (width - leftSpace) / itemCount / 2;
+  // const xTickIncr = (width - leftSpace - rightSpace - 24) / (itemCount - 1);
+  // const yMarks = calculateTicks(gradeDistribution);
+  // const yTickOffset = height - bottomSpace;
+  // const yTickIncr = (height - bottomSpace - topSpace) / (yMarks.length - 1);
+  // const yTickMax = Math.max(...yMarks);
 
   return (
     <svg className="chart" viewBox="0 0 1200 380">
       <g className="axes-g">
         <g
           className="x-axis"
-          transform={`translate(${leftSpace}, ${height - bottomSpace})`}
+          transform={`translate(${xTickOffset}, ${height - bottomSpace})`}
         >
           {gradeDistribution.map((item, index) => {
             return (
               <g
                 key={`tick-x-${index}`}
                 className="tick tick-x"
-                transform={`translate(${xTickOffset / 3 + index * xTickIncr}, 0)`}
+                transform={`translate(${index * xTickIncr}, 0)`}
               >
                 <text fill="currentColor" y="6" dy="1em" className="x-labels">
                   {item.grade}
@@ -191,7 +201,7 @@ function GradeSVG({
           })}
         </g>
       </g>
-      <g transform={`translate(${leftSpace}, 0)`}>
+      <g>
         {gradeDistribution.map((item, index) => {
           const barHeight =
             (height - bottomSpace - topSpace) * (item.count / yTickMax);
@@ -199,9 +209,11 @@ function GradeSVG({
             <rect
               key={`bar-${index}`}
               className={`bar grade-${item.grade.replace(/[+-]/, "").toLowerCase()} ${item.grade === result.scan.grade ? "current-grade" : ""}`}
-              x={xTickOffset / 2 + index * xTickIncr - xTickIncr / 4}
+              x={xTickOffset + index * xTickIncr - barWidth / 2}
               y={yTickOffset - barHeight}
-              width={xTickOffset / 2}
+              rx="4"
+              ry="4"
+              width="60"
               height={barHeight}
             ></rect>
           );
@@ -215,7 +227,7 @@ function GradeSVG({
               <g
                 key="you-are-here"
                 className="you-are-here"
-                transform={`translate(${xTickOffset / 2 + index * xTickIncr - xTickIncr / 8}, ${height - bottomSpace - barHeight - 50})`}
+                transform={`translate(${xTickOffset + index * xTickIncr}, ${height - bottomSpace - barHeight - 50})`}
               >
                 <polyline points="-80,0 80,0 80,36 7,36 0,48 -7,36 -80,36"></polyline>
                 <text
