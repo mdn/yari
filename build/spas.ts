@@ -27,6 +27,7 @@ import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 import { buildSitemap } from "./sitemaps.js";
+import { HydrationData } from "../libs/types/hydration.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -71,7 +72,10 @@ async function buildContributorSpotlight(
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
-    const context = { hyData, url: `/${locale}/${prefix}/${contributor}` };
+    const context: HydrationData = {
+      hyData,
+      url: `/${locale}/${prefix}/${contributor}`,
+    };
 
     const outPath = path.join(
       BUILD_OUT_ROOT,
@@ -111,7 +115,7 @@ export async function buildSPAs(options: {
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const locale = DEFAULT_LOCALE;
   const url = `/${locale}/404.html`;
-  const context = { url, pageNotFound: true };
+  const context: HydrationData = { url, pageNotFound: true };
   const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   const jsonFilePath = path.join(
@@ -176,7 +180,7 @@ export async function buildSPAs(options: {
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context = {
+        const context: HydrationData = {
           pageTitle,
           locale,
           noIndexing,
@@ -242,7 +246,7 @@ export async function buildSPAs(options: {
         sections,
         toc,
       };
-      const context = {
+      const context: HydrationData = {
         hyData,
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
         url,
@@ -350,7 +354,7 @@ export async function buildSPAs(options: {
         latestNews,
         featuredArticles,
       };
-      const context = { hyData, url };
+      const context: HydrationData = { hyData, url };
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
 
