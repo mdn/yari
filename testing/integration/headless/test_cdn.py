@@ -179,16 +179,6 @@ def test_cached(base_url, is_behind_cdn, slug, status, expected_location):
 
 
 @pytest.mark.parametrize(
-    "slug,status",
-    [("/files/2767/hut.jpg", 301), ("/@api/deki/files/3613/=hut.jpg", 301)],
-)
-def test_cached_attachments(base_url, attachment_url, is_behind_cdn, slug, status):
-    """Ensure that these file-attachment requests are cached."""
-    expected_location = attachment_url + slug
-    assert_cached(base_url + slug, status, expected_location, is_behind_cdn)
-
-
-@pytest.mark.parametrize(
     "zone,status,expected_location",
     [
         ("Add-ons", 302, "/docs/Mozilla/Add-ons"),

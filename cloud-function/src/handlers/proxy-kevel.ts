@@ -1,5 +1,3 @@
-import * as url from "node:url";
-
 import { Client } from "@adzerk/decision-sdk";
 import type { Request, Response } from "express";
 
@@ -31,7 +29,7 @@ export async function proxyKevel(req: Request, res: Response) {
 
   const userAgent = req.headers["user-agent"] ?? "";
 
-  const parsedUrl = url.parse(req.url);
+  const parsedUrl = new URL(req.url, `${req.protocol}://${req.headers.host}`);
   const pathname = parsedUrl.pathname ?? "";
   const search = parsedUrl.search ?? "";
 

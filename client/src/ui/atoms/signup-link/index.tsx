@@ -11,6 +11,7 @@ export const SignUpLink = ({ toPlans = false, gleanContext = "" }) => {
 
   const href = toPlans ? plansUrl : loginUrl;
   const label = toPlans ? "Upgrade Now" : "Sign up for free";
+  const rel = toPlans ? undefined : "nofollow";
 
   return (
     <Button
@@ -18,6 +19,7 @@ export const SignUpLink = ({ toPlans = false, gleanContext = "" }) => {
       target="_self"
       extraClasses="mdn-plus-subscribe-link"
       onClickHandler={() => gleanContext && gleanClick(gleanContext)}
+      rel={rel}
     >
       {label}
     </Button>

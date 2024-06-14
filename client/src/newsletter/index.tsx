@@ -61,7 +61,7 @@ function SignUpForm({ sendUsersToSettings = false, section = false }) {
         Get the MDN newsletter and never miss an update on the latest web
         development trends, tips, and best practices.
       </p>
-      {sendUsersToSettings && user?.isAuthenticated ? (
+      {sendUsersToSettings && user?.isAuthenticated && !isServer ? (
         <p>
           Sign up via the{" "}
           <a href={`/${locale}/plus/settings#newsletter`} rel="_blank">
