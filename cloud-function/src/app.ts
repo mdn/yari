@@ -10,6 +10,7 @@ import { handleStripePlans } from "./handlers/handle-stripe-plans.js";
 import { proxyTelemetry } from "./handlers/proxy-telemetry.js";
 import { lowercasePathname } from "./middlewares/lowercase-pathname.js";
 import { resolveIndexHTML } from "./middlewares/resolve-index-html.js";
+import { redirectNonCanonicals } from "./middlewares/redirect-non-canonicals.js";
 import { redirectLeadingSlash } from "./middlewares/redirect-leading-slash.js";
 import { redirectMovedPages } from "./middlewares/redirect-moved-pages.js";
 import { redirectEnforceTrailingSlash } from "./middlewares/redirect-enforce-trailing-slash.js";
@@ -39,6 +40,7 @@ router.all(
 router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyPong);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
+router.use(redirectNonCanonicals);
 router.get(
   ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
   requireOrigin(Origin.play),
