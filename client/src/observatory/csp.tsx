@@ -35,7 +35,7 @@ export default function ObservatoryCSP({
           <tbody>
             {policyTests.map((pt) => {
               return policy[pt] ? (
-                <tr>
+                <tr key={policy[pt].description}>
                   <td
                     dangerouslySetInnerHTML={{
                       __html: policy[pt].description,

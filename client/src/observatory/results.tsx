@@ -1,6 +1,5 @@
 import { ObservatoryResult } from "./types";
 import { useParams } from "react-router";
-import { Icon } from "../ui/atoms/icon";
 import { SidePlacement } from "../ui/organisms/placement";
 import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
@@ -11,59 +10,7 @@ import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 import { useState } from "react";
 import ObservatoryBenchmark from "./benchmark";
-
-// const TEST_MAP: Record<string, { name: string; url: string; info: string }> = {
-//   "content-security-policy": {
-//     name: "Content Security Policy",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#content-security-policy",
-//     info: "Content Security Policy (CSP) can prevent a wide range of cross-site scripting (XSS) and clickjacking attacks against your website.",
-//   },
-//   cookies: {
-//     name: "Cookies",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#cookies",
-//     info: "Using cookies attributes such as Secure and HttpOnly can protect users from having their personal information stolen.",
-//   },
-//   "cross-origin-resource-sharing": {
-//     name: "Cross-origin Resource Sharing",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#cross-origin-resource-sharing",
-//     info: "Incorrectly configured CORS settings can allow foreign sites to read your site's contents, possibly allowing them access to private user information.",
-//   },
-//   redirection: {
-//     name: "Redirection",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#http-redirections",
-//     info: "Properly configured redirections from HTTP to HTTPS allow browsers to correctly apply HTTP Strict Transport Security (HSTS) settings.",
-//   },
-//   "referrer-policy": {
-//     name: "Referrer Policy",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#referrer-policy",
-//     info: "Referrer Policy can protect the privacy of your users by restricting the contents of the HTTP Referer header.",
-//   },
-//   "strict-transport-security": {
-//     name: "HTTP Strict Transport Security",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#http-strict-transport-security",
-//     info: "HTTP Strict Transport Security (HSTS) instructs web browsers to visit your site only over HTTPS.",
-//   },
-//   "subresource-integrity": {
-//     name: "Subresource Integrity",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#subresource-integrity",
-//     info: "Subresource Integrity protects against JavaScript files and stylesheets stored on content delivery networks (CDNs) from being maliciously modified.",
-//   },
-//   "x-content-type-options": {
-//     name: "X-Content-Type-Options",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#x-content-type-options",
-//     info: "X-Content-Type-Options instructs browsers to not guess the MIME types of files that the web server is delivering.",
-//   },
-//   "x-frame-options": {
-//     name: "X-Frame-Options",
-//     url: "https://infosec.mozilla.org/guidelines/web_security#x-frame-options",
-//     info: "X-Frame-Options controls whether your site can be framed, protecting against clickjacking attacks. It has been superseded by Content Security Policy's frame-ancestors directive, but should still be used for now.",
-//   },
-//   "x-xss-protection": {
-//     name: "X-XSS-Protection",
-//     url: "https://infosec.mozilla.org/guidelines/web_security.html#x-xss-protection",
-//     info: "X-XSS-Protection protects against reflected cross-site scripting (XSS) attacks in IE and Chrome, but has been superseded by Content Security Policy. It can still be used to protect users of older web browsers.",
-//   },
-// };
+import useSWRImmutable from "swr/dist/immutable";
 
 export default function ObservatoryResults() {
   const { host } = useParams();
@@ -234,7 +181,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
   return Object.keys(result.tests).length !== 0 ? (
     <section className="tab-content">
       <figure className="scroll-container">
-        <table className="fancy tests">
+        <table className="tests">
           <thead>
             <tr>
               <th>Test</th>
@@ -248,7 +195,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
               return (
                 <tr key={name}>
                   <td>
-                    <Link href={test.link}>{test.name}</Link>
+                    <Link href={test.link}>{test.title}</Link>
                   </td>
                   {test.pass === null ? (
                     <td>-</td>
@@ -285,7 +232,7 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
   return result.history.length ? (
     <section className="tab-content">
       <figure className="scroll-container">
-        <table className="fancy">
+        <table className="history">
           <thead>
             <tr>
               <th>Date</th>
@@ -320,7 +267,7 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
   return cookies && Object.keys(cookies).length !== 0 ? (
     <section className="tab-content">
       <figure className="scroll-container">
-        <table className="fancy cookies">
+        <table className="cookies">
           <thead>
             <tr>
               <th>Name</th>
@@ -337,24 +284,24 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
               <tr key={key}>
                 <td>{key}</td>
                 <td>
-                  {new Date(value.expires * 1000).toLocaleString([], {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
+                  {value.expires
+                    ? new Date(value.expires).toLocaleString([], {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })
+                    : "Session"}
                 </td>
                 <td>
                   <code>{value.path}</code>
                 </td>
                 <td>
-                  <Icon name={value.secure ? "check-circle" : "alert-circle"} />
+                  <PassIcon pass={value.secure} />
                   <span className="visually-hidden">
                     {value.secure ? "True" : "False"}
                   </span>
                 </td>
                 <td>
-                  <Icon
-                    name={value.httponly ? "check-circle" : "alert-circle"}
-                  />
+                  <PassIcon pass={value.httponly} />
                   <span className="visually-hidden">
                     {value.httponly ? "True" : "False"}
                   </span>
@@ -366,12 +313,12 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
                       (x) => x.startsWith("__Host") || x.startsWith("__Secure")
                     )
                     .map((x) => (
-                      <>
-                        <Icon name={x ? "check-circle" : "alert-circle"} />
+                      <span key={key}>
+                        <PassIcon pass={x} />
                         <span className="visually-hidden">
                           {x ? "True" : "False"}
                         </span>
-                      </>
+                      </span>
                     ))}
                 </td>
               </tr>
@@ -399,7 +346,7 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
   return result.scan.response_headers ? (
     <section className="tab-content">
       <figure className="scroll-container">
-        <table className="fancy headers">
+        <table className="headers">
           <thead>
             <tr>
               <th>Header</th>
@@ -410,7 +357,9 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
             {Object.entries(result.scan.response_headers).map(
               ([header, value]) => (
                 <tr key={header}>
-                  <td>{header}</td>
+                  <td>
+                    <HeaderLink header={header} />
+                  </td>
                   <td>{value}</td>
                 </tr>
               )
@@ -420,4 +369,26 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
       </figure>
     </section>
   ) : null;
+}
+
+export function HeaderLink({ header }: { header: string }) {
+  // try a HEAD fetch for /en-US/docs/Web/HTTP/Headers/<HEADERNAME>/metadata.json
+  // if successful, link to /en-US/docs/Web/HTTP/Headers/<HEADERNAME>
+  const { data, isLoading, error } = useHeaderLink(header);
+  const hasData = !!data;
+  return (
+    <>
+      header {data} {hasData} {isLoading}
+    </>
+  );
+}
+
+export function useHeaderLink(header: string) {
+  return useSWRImmutable(`headerLink-${header}`, async (key) => {
+    const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}/metadata.json`;
+    const res = await fetch(url);
+    return res.ok
+      ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}`
+      : null;
+  });
 }

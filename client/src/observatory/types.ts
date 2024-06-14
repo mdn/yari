@@ -41,6 +41,7 @@ export interface ObservatoryIndividualTest {
   data: null | ObservatoryCookiesData;
   expectation: string;
   name: string;
+  title: string;
   link: string;
   pass: boolean;
   result: string;
