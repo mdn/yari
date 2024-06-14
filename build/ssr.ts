@@ -50,6 +50,9 @@ async function findDocuments(noDocs: boolean) {
 async function ssrSingleDocument(file: string): Promise<string> {
   const context: HydrationData = JSON.parse(await readFile(file, "utf-8"));
   if (!context?.url) {
+    console.warn(
+      `WARNING: Skipped rendering HTML. Document is missing url: ${file}`
+    );
     return null;
   }
   const html = renderHTML(context);
