@@ -89,11 +89,10 @@ export function checkImageReferences(
 
     // These two lines is to simulate what a browser would do.
     const baseURL = `http://yari.placeholder${url}/`;
-    // Make a special exception for the legacy images that start with `/@api/deki...`
+    // Make a special exception for the legacy images that start with `/files/...`
     // If you just pretend their existing URL is static external domain, it
     // will be recognized as an external image (which is fixable).
-    // Also any `<img src="/files/1234/foo.png">` should match.
-    const absoluteURL = /^\/(@api\/deki\/|files\/\d+)/.test(src)
+    const absoluteURL = /^\/files\/\d+/.test(src)
       ? new URL(`https://mdn.mozillademos.org${src}`)
       : new URL(src, baseURL);
 

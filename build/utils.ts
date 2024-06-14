@@ -110,10 +110,6 @@ export async function downloadAndResizeImage(
       // has to be escaped when working on the command line.
       .replace(/[()]/g, "")
       .replace(/\s+/g, "_")
-      // From legacy we have a lot of images that are named like
-      // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
-      // Take this opportunity to clean that odd looking leading `=`.
-      .replace(/^=/, "")
       .toLowerCase()
   );
   // Before writing to disk, run it through the same imagemin

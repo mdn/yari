@@ -23,7 +23,7 @@
     display: none;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media (max-width: $screen-md) {
     .sidebar-button {
       align-items: center;
       align-self: stretch;
@@ -37,7 +37,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     position: static;
 
     .bookmark-button-container {
@@ -45,7 +45,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-xxl) {
+  @media (min-width: $screen-xxl) {
     .container {
       padding-left: 1rem;
       padding-right: 1rem;

@@ -13,7 +13,7 @@
   padding-right: 0.5rem;
   padding-top: 0.5rem;
 
-  @media screen and (max-width: $screen-md) {
+  @media (max-width: $screen-md) {
     padding-bottom: unset;
   }
 
@@ -90,7 +90,7 @@
       position: absolute;
       right: 2.5rem;
 
-      @media screen and (max-width: $screen-md) {
+      @media (max-width: $screen-md) {
         right: 3rem;
       }
     }
@@ -104,7 +104,7 @@
         background: transparent;
       }
 
-      @media screen and (max-width: $screen-md) {
+      @media (max-width: $screen-md) {
         left: calc(100% - 3rem);
       }
     }

@@ -38,6 +38,7 @@ import { extractSections } from "./extract-sections.js";
 import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
+import { buildSitemap } from "./sitemaps.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;
@@ -493,5 +494,31 @@ export async function buildAuthors(options: { verbose?: boolean }) {
         console.log("Copied", from, "to", to);
       }
     }
+  }
+}
+
+export async function buildBlogSitemap(options: { verbose?: boolean }) {
+  const posts = await allPostFrontmatter();
+
+  const items = posts.map((post) => ({
+    slug: `${post.slug}/`,
+    modified: new Date(post.date).toISOString(),
+  }));
+
+  const index = {
+    slug: "",
+    modified: items
+      .map((p) => p.modified)
+      .sort((a, b) => b.localeCompare(a))
+      .at(0),
+  };
+
+  const sitemapFilePath = await buildSitemap([index, ...items], {
+    slugPrefix: `/${DEFAULT_LOCALE}/blog/`,
+    pathSuffix: [DEFAULT_LOCALE, "blog"],
+  });
+
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
   }
 }
