@@ -78,6 +78,10 @@ jobs:
         working-directory: mdn/content
         run: yarn yari-filecheck --help
 
+      - name: (mdn/content) yarn yari-render-html --help
+        working-directory: mdn/content
+        run: yarn yari-render-html --help
+
       - name: (mdn/content) yarn yari-tool
         working-directory: mdn/content
         run: yarn yari-tool --help

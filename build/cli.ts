@@ -31,7 +31,7 @@ import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
 import { fdir } from "fdir";
-import { ssrAllDocuments, ssrDocument } from "./ssr.js";
+import { ssrDocument } from "./ssr.js";
 import { HydrationData } from "../libs/types/hydration.js";
 
 const { program } = caporal;
@@ -471,7 +471,6 @@ if (SENTRY_DSN_BUILD) {
 
 program
   .name("build")
-  .command("build", "build content")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
@@ -608,15 +607,6 @@ program
       // So that the CLI ultimately fails
       throw error;
     }
-  });
-
-program
-  .command("render", "render all documents")
-  .option("-n, --no-docs", "Do not build docs (only spas, blog...)", {
-    default: false,
-  })
-  .action(async ({ options }) => {
-    await ssrAllDocuments(Boolean(options?.noDocs));
   });
 
 program.run();
