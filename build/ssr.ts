@@ -27,22 +27,7 @@ export async function ssrAllDocuments(noDocs = false) {
   const done = [];
   for (let i = 0; i < docs.length; i += 1000) {
     const chunk = docs.slice(i, i + 1000);
-    const out = await Promise.all(
-      chunk
-        .map(async (file) => {
-          const context: HydrationData = JSON.parse(
-            await readFile(file, "utf-8")
-          );
-          if (!context?.url) {
-            return null;
-          }
-          const html = renderHTML(context);
-          const outputFile = file.replace(/.json$/, ".html");
-          await writeFile(outputFile, html);
-          return outputFile;
-        })
-        .filter(Boolean)
-    );
+    const out = await Promise.all(chunk.map(ssrSingleDocument).filter(Boolean));
     done.push(...out);
   }
   const t1 = new Date();
@@ -57,4 +42,15 @@ export async function ssrAllDocuments(noDocs = false) {
       count / seconds
     ).toFixed(1)} documents per second.`
   );
+}
+
+async function ssrSingleDocument(file: string): Promise<string> {
+  const context: HydrationData = JSON.parse(await readFile(file, "utf-8"));
+  if (!context?.url) {
+    return null;
+  }
+  const html = renderHTML(context);
+  const outputFile = file.replace(/.json$/, ".html");
+  await writeFile(outputFile, html);
+  return outputFile;
 }
