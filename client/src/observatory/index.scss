@@ -260,10 +260,10 @@
     p {
       font-weight: 400;
       letter-spacing: -0.03rem;
+    }
 
-      code {
-        font-weight: 600;
-      }
+    code {
+      font-weight: 600;
     }
 
     .scan-results {
@@ -454,23 +454,27 @@
     td {
       overflow-wrap: anywhere;
       padding: 0.5rem 1.5rem;
+      vertical-align: top;
     }
 
     tr {
       background: var(--background-primary);
     }
 
-    &.tests {
-      min-width: calc($screen-md - 2rem);
+    a {
+      color: var(--observatory-color);
+      text-decoration: underline;
+      text-decoration-color: var(--observatory-color-secondary);
 
-      th {
-        font-weight: normal;
+      &:hover,
+      &:active {
+        text-decoration: none;
       }
+    }
 
+    &.tests {
       th,
       td {
-        vertical-align: top;
-
         &:first-of-type {
           width: 25%;
         }
@@ -479,14 +483,13 @@
       td.score {
         white-space: nowrap;
       }
+    }
 
-      a {
-        color: var(--observatory-color);
-        text-decoration: underline;
-
-        &:hover,
-        &:active {
-          text-decoration: none;
+    &.csp {
+      th,
+      td {
+        &:first-of-type {
+          width: 45%;
         }
       }
     }

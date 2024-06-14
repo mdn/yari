@@ -33,7 +33,7 @@ function niceNumber(range: number, round: boolean): number {
   const exponent = Math.floor(Math.log10(range));
   const fraction = range / Math.pow(10, exponent);
 
-  let niceFraction;
+  let niceFraction: number;
   if (round) {
     if (fraction < 1.5) {
       niceFraction = 1;
