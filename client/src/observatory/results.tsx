@@ -10,7 +10,7 @@ import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 import { useState } from "react";
 import ObservatoryBenchmark from "./benchmark";
-import useSWRImmutable from "swr/dist/immutable";
+import useSWRImmutable from "swr/immutable";
 
 export default function ObservatoryResults() {
   const { host } = useParams();
