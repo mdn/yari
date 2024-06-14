@@ -8,7 +8,7 @@ import ObservatoryCSP from "./csp";
 import { Link, PassIcon } from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ObservatoryBenchmark from "./benchmark";
 import useSWRImmutable from "swr/immutable";
 
@@ -55,21 +55,64 @@ export default function ObservatoryResults() {
 }
 
 function ObservatoryScanResults({ result, host }) {
-  const tabs = [
-    { name: "Test Result", element: <ObservatoryTests result={result} /> },
-    { name: "CSP Analysis", element: <ObservatoryCSP result={result} /> },
-    {
-      name: "Raw Server Headers",
-      element: <ObservatoryHeaders result={result} />,
-    },
-    { name: "Cookies", element: <ObservatoryCookies result={result} /> },
-    { name: "Scan History", element: <ObservatoryHistory result={result} /> },
-    {
-      name: "Benchmark Comparison",
-      element: <ObservatoryBenchmark result={result} />,
-    },
-  ];
-  const [selectedTab, setSelectedTab] = useState(0);
+  const tabs = useMemo(() => {
+    return [
+      {
+        name: "Test Result",
+        hash: "test_result",
+        element: <ObservatoryTests result={result} />,
+      },
+      {
+        name: "CSP Analysis",
+        hash: "csp_analysis",
+        element: <ObservatoryCSP result={result} />,
+      },
+      {
+        name: "Raw Server Headers",
+        hash: "raw_server_headers",
+        element: <ObservatoryHeaders result={result} />,
+      },
+      {
+        name: "Cookies",
+        hash: "cookies",
+        element: <ObservatoryCookies result={result} />,
+      },
+      {
+        name: "Scan History",
+        hash: "scan_history",
+        element: <ObservatoryHistory result={result} />,
+      },
+      {
+        name: "Benchmark Comparison",
+        hash: "benchmark_comparison",
+        element: <ObservatoryBenchmark result={result} />,
+      },
+    ];
+  }, [result]);
+  const defaultTabHash = tabs[0].hash!;
+  const initialTabHash =
+    window.location.hash.replace("#", "") || defaultTabHash;
+  const initialTab = tabs.findIndex((tab) => tab.hash === initialTabHash);
+  const [selectedTab, setSelectedTab] = useState(
+    initialTab === -1 ? 0 : initialTab
+  );
+  useEffect(() => {
+    const handleHashChange = () => {
+      const tabIndex = tabs.findIndex(
+        (tab) => tab.hash === window.location.hash.replace("#", "")
+      );
+      setSelectedTab(tabIndex === -1 ? 0 : tabIndex);
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  });
+
+  useEffect(() => {
+    window.location.hash = tabs[selectedTab]?.hash || defaultTabHash;
+  }, [tabs, selectedTab, defaultTabHash]);
 
   return (
     <section className="scan-results">
