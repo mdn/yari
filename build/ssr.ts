@@ -1,6 +1,8 @@
-import { fdir } from "fdir";
-import { BUILD_OUT_ROOT } from "../libs/env/index.js";
 import { readFile, writeFile } from "node:fs/promises";
+
+import { fdir } from "fdir";
+
+import { BUILD_OUT_ROOT } from "../libs/env/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
