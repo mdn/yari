@@ -46,21 +46,27 @@
           text-align: left;
         }
 
-        > em {
-          color: var(--curriculum-category-color);
-          font-style: normal;
-        }
-        > span {
+        > a {
           display: inline-block;
           min-width: max-content;
+          color: var(--curriculum-category-color);
 
-          &::after {
+          &:visited:not([href^="#"]) {
+            color: var(--curriculum-category-color);
+          }
+
+          &::before {
             content: url("../assets/icons/curriculum-partner-underline-small.svg");
             position: absolute;
-            transform: translate3d(-4.375em, 1.125rem, 0);
+            transform: translate3d(-0.1em, 0.4em, 0);
             @media screen and (min-width: $screen-md) {
               content: url("../assets/icons/curriculum-partner-underline-large.svg");
             }
+          }
+          &::after {
+            background-color: var(--curriculum-category-color);
+            height: 0.625em;
+            width: 0.625em;
           }
         }
       }
