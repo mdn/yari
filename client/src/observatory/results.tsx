@@ -374,21 +374,31 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
 export function HeaderLink({ header }: { header: string }) {
   // try a HEAD fetch for /en-US/docs/Web/HTTP/Headers/<HEADERNAME>/metadata.json
   // if successful, link to /en-US/docs/Web/HTTP/Headers/<HEADERNAME>
-  const { data, isLoading, error } = useHeaderLink(header);
+  const { data } = useHeaderLink(header);
   const hasData = !!data;
-  return (
-    <>
-      header {data} {hasData} {isLoading}
-    </>
+  const displayHeaderName = header
+    .split("-")
+    .map((p) => (p ? p[0].toUpperCase() + p.substring(1) : ""))
+    .join("-");
+  return hasData ? (
+    <a href={data} target="_blank" rel="noreferrer">
+      {displayHeaderName}
+    </a>
+  ) : (
+    <>{displayHeaderName}</>
   );
 }
 
 export function useHeaderLink(header: string) {
   return useSWRImmutable(`headerLink-${header}`, async (key) => {
     const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}/metadata.json`;
-    const res = await fetch(url);
-    return res.ok
-      ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}`
-      : null;
+    try {
+      const res = await fetch(url);
+      return res.ok
+        ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}`
+        : null;
+    } catch (e) {
+      return null;
+    }
   });
 }
