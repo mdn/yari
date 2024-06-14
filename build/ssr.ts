@@ -16,20 +16,20 @@ interface SSROptions {
 }
 
 export async function ssrAllDocuments({ noDocs = false }: SSROptions = {}) {
-  const docs = await findDocuments({ noDocs });
+  const files = await findDocuments({ noDocs });
 
-  const start = new Date();
+  const start = Date.now();
 
-  const done = [];
-  for (const chunk of chunks(docs, 1000)) {
+  const renderedFiles = [];
+  for (const chunk of chunks(files, 1000)) {
     const out = await Promise.all(chunk.map(ssrSingleDocument).filter(Boolean));
-    done.push(...out);
+    renderedFiles.push(...out);
   }
 
-  const end = new Date();
+  const end = Date.now();
 
-  const count = done.length;
-  const seconds = (end.getTime() - start.getTime()) / 1000;
+  const count = renderedFiles.length;
+  const seconds = (end - start) / 1000;
   const took = formatDuration(seconds);
 
   console.log(
