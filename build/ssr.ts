@@ -18,16 +18,18 @@ interface SSROptions {
 export async function ssrAllDocuments({ noDocs = false }: SSROptions = {}) {
   const docs = await findDocuments({ noDocs });
 
-  const t0 = new Date();
+  const start = new Date();
 
   const done = [];
   for (const chunk of chunks(docs, 1000)) {
     const out = await Promise.all(chunk.map(ssrSingleDocument).filter(Boolean));
     done.push(...out);
   }
-  const t1 = new Date();
+
+  const end = new Date();
+
   const count = done.length;
-  const seconds = (t1.getTime() - t0.getTime()) / 1000;
+  const seconds = (end.getTime() - start.getTime()) / 1000;
   const took = formatDuration(seconds);
 
   console.log(
