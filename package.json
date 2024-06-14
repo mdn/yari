@@ -9,7 +9,6 @@
     "yari-build": "build/cli.js",
     "yari-build-blog": "build/build-blog.js",
     "yari-filecheck": "filecheck/cli.js",
-    "yari-render-html": "build/cli-ssr.js",
     "yari-server": "server/index.js",
     "yari-tool": "tool/cli.js"
   },
@@ -22,7 +21,6 @@
     "build:client": "cd client && cross-env NODE_ENV=production BABEL_ENV=production node scripts/build.js",
     "build:curriculum": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/build-curriculum.ts",
     "build:dist": "tsc -p tsconfig.dist.json",
-    "build:docs": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/cli.ts -n",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
     "build:prepare": "yarn build:client && yarn build:ssr && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
     "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ssr/prepare.ts && cd ssr && webpack --mode=production",
@@ -40,7 +38,6 @@
     "prepare": "(husky || true) && yarn install:all && yarn install:all:npm",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
-    "render:html": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/ssr-cli.ts",
     "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env NODE_ENV=development BABEL_ENV=development PORT=3000 node scripts/start.js",
     "start:server": "node-dev --experimental-loader ts-node/esm server/index.ts",
@@ -54,7 +51,7 @@
     "test:headless": "playwright test headless",
     "test:kumascript": "yarn jest --rootDir kumascript --env=node",
     "test:libs": "yarn jest --rootDir libs --env=node",
-    "test:prepare": "yarn build:prepare && yarn build:docs && yarn render:html && yarn start:static-server",
+    "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
     "tool": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"

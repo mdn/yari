@@ -18,6 +18,9 @@ import {
   AuthorFrontmatter,
   AuthorMetadata,
 } from "../libs/types/blog.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { renderHTML } from "../ssr/dist/main.js";
 import {
   findPostFileBySlug,
   injectLoadingLazyAttributes,
@@ -237,24 +240,24 @@ export async function buildBlogIndex(options: { verbose?: boolean }) {
   const prefix = "blog";
   const locale = DEFAULT_LOCALE;
 
-  const context: HydrationData = {
-    hyData: {
-      posts: await allPostFrontmatter(),
-    },
-    pageTitle: "MDN Blog",
-    url: `/${locale}/${prefix}/`,
+  const hyData = {
+    posts: await allPostFrontmatter(),
   };
+  const context = { hyData, pageTitle: "MDN Blog" };
 
+  const html = renderHTML(`/${locale}/${prefix}/`, context);
   const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), `${prefix}`);
 
   await fs.mkdir(outPath, { recursive: true });
+  const filePath = path.join(outPath, "index.html");
   const jsonFilePath = path.join(outPath, "index.json");
 
   await fs.mkdir(outPath, { recursive: true });
+  await fs.writeFile(filePath, html);
   await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
   if (options.verbose) {
-    console.log("Wrote", jsonFilePath);
+    console.log("Wrote", filePath);
   }
 }
 
@@ -277,8 +280,8 @@ export async function buildBlogPosts(options: {
       continue;
     }
 
-    const url = `/${locale}/${prefix}/${blogMeta.slug}/`;
-    const renderUrl = `/${locale}/${prefix}/${blogMeta.slug}`;
+    const url = `/${locale}/blog/${blogMeta.slug}/`;
+    const renderUrl = `/${locale}/blog/${blogMeta.slug}`;
     const renderDoc: BlogPostDoc = {
       url: renderUrl,
       rawBody: body,
@@ -300,7 +303,6 @@ export async function buildBlogPosts(options: {
       locale,
       noIndexing: options.noIndexing,
       image: blogMeta.image?.file && `${BASE_URL}${url}${blogMeta.image?.file}`,
-      url,
     };
 
     const outPath = path.join(
@@ -328,13 +330,17 @@ export async function buildBlogPosts(options: {
       await fs.copyFile(from, to);
     }
 
+    const html = renderHTML(`/${locale}/${prefix}/${blogMeta.slug}/`, context);
+
+    const filePath = path.join(outPath, "index.html");
     const jsonFilePath = path.join(outPath, "index.json");
 
     await fs.mkdir(outPath, { recursive: true });
+    await fs.writeFile(filePath, html);
     await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", jsonFilePath);
+      console.log("Wrote", filePath);
     }
   }
 }

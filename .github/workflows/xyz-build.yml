@@ -171,7 +171,7 @@ jobs:
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -189,9 +189,6 @@ jobs:
 
           # Generate sitemap index file
           yarn build --sitemap-index
-
-          # SSR all pages
-          yarn render:html
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json

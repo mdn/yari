@@ -11,7 +11,6 @@ interface HydrationData<T = any, S = any> {
   noIndexing?: boolean;
   onlyFollow?: boolean;
   image?: string | null;
-  url: string;
 }
 
 export type { HydrationData };

@@ -99,7 +99,6 @@ const readBuildHTML = lazy(() => {
 
 export default function render(
   renderApp,
-  url: string,
   {
     doc = null,
     pageNotFound = false,
@@ -111,17 +110,17 @@ export default function render(
     onlyFollow = false,
     image = null,
     blogMeta = null,
-  }: HydrationData = { url }
+  }: HydrationData = {}
 ) {
   const buildHtml = readBuildHTML();
   const rendered = renderToString(renderApp);
 
-  const canonicalURL = `${BASE_URL}${url}`;
+  let canonicalURL = BASE_URL;
 
   let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
 
-  const hydrationData: HydrationData = { url };
+  const hydrationData: HydrationData = {};
   const translations: string[] = [];
   if (blogMeta) {
     hydrationData.blogMeta = blogMeta;
@@ -136,6 +135,7 @@ export default function render(
   } else if (doc) {
     // Use the doc's title instead
     escapedPageTitle = htmlEscape(doc.pageTitle);
+    canonicalURL += doc.mdn_url;
 
     if (doc.summary) {
       pageDescription = htmlEscape(doc.summary);
@@ -238,10 +238,12 @@ export default function render(
   }
   html = html.replace("<title>MDN Web Docs</title>", () => `${titleTag}`);
 
-  html = html.replace(
-    '<link rel="canonical" href="https://developer.mozilla.org"/>',
-    () => (pageNotFound ? "" : `<link rel="canonical" href="${canonicalURL}"/>`)
-  );
+  if (!pageNotFound) {
+    html = html.replace(
+      '<link rel="canonical" href="https://developer.mozilla.org"/>',
+      () => `<link rel="canonical" href="${canonicalURL}"/>`
+    );
+  }
 
   html = html.replace('<meta name="SSR_DATA"/>', () => ssr_data.join(""));
   html = html.replace('<div id="root"></div>', () => root);
