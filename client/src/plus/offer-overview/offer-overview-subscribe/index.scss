@@ -8,7 +8,7 @@
     padding: 2rem 1rem;
     text-align: center;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       padding: 2rem 4rem;
     }
 
@@ -40,7 +40,7 @@
         display: none;
       }
 
-      @media screen and (min-width: 66rem) {
+      @media (min-width: 66rem) {
         align-items: stretch;
         flex-direction: row;
       }

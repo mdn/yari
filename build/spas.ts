@@ -27,6 +27,7 @@ import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
+import { buildSitemap } from "./sitemaps.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -104,6 +105,9 @@ export async function buildSPAs(options: {
   verbose?: boolean;
 }) {
   let buildCount = 0;
+  const sitemap: {
+    url: string;
+  }[] = [];
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const url = `/${DEFAULT_LOCALE}/404.html`;
@@ -137,7 +141,7 @@ export async function buildSPAs(options: {
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
-        { prefix: "search", pageTitle: "Search" },
+        { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
           prefix: "plus/ai-help",
@@ -174,12 +178,13 @@ export async function buildSPAs(options: {
         },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing } of SPAs) {
+      for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context = {
           pageTitle,
           locale,
           noIndexing,
+          onlyFollow,
           url,
         };
 
@@ -190,6 +195,12 @@ export async function buildSPAs(options: {
         buildCount++;
         if (options.verbose) {
           console.log("Wrote", jsonFilePath);
+        }
+
+        if (!noIndexing && !onlyFollow) {
+          sitemap.push({
+            url,
+          });
         }
       }
     }
@@ -254,6 +265,12 @@ export async function buildSPAs(options: {
       if (options.verbose) {
         console.log("Wrote", jsonFilePath);
       }
+      const filePathContext = path.join(outPath, "index.json");
+      fs.writeFileSync(filePathContext, JSON.stringify(context));
+
+      sitemap.push({
+        url,
+      });
     }
   }
 
@@ -341,6 +358,12 @@ export async function buildSPAs(options: {
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
 
+      sitemap.push({
+        url,
+      });
+
+      // Also, dump the recent pull requests in a file so the data can be gotten
+      // in client-side rendering.
       const jsonFilePath = path.join(outPath, "index.json");
       fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
@@ -348,6 +371,19 @@ export async function buildSPAs(options: {
         console.log("Wrote", jsonFilePath);
       }
     }
+  }
+
+  // Sitemap.
+  const sitemapFilePath = await buildSitemap(
+    sitemap.map(({ url }) => ({
+      slug: url,
+      modified: "",
+    })),
+    { pathSuffix: ["misc"] }
+  );
+
+  if (!options.quiet) {
+    console.log("Wrote", sitemapFilePath);
   }
 
   if (!options.quiet) {

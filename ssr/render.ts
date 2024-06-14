@@ -107,7 +107,8 @@ export default function render(
     pageTitle = null,
     possibleLocales = null,
     locale = null,
-    noIndexing = null,
+    noIndexing = false,
+    onlyFollow = false,
     image = null,
     blogMeta = null,
   }: HydrationData = { url }
@@ -211,7 +212,9 @@ export default function render(
   const robotsContent =
     !ALWAYS_ALLOW_ROBOTS || (doc && doc.noIndexing) || noIndexing
       ? "noindex, nofollow"
-      : "";
+      : onlyFollow
+        ? "noindex, follow"
+        : "";
   const robotsMeta = robotsContent
     ? `<meta name="robots" content="${robotsContent}">`
     : "";

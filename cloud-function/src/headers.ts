@@ -5,6 +5,7 @@ import {
   PLAYGROUND_UNSAFE_CSP_VALUE,
 } from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
+import { ORIGIN_TRIAL_TOKEN } from "./env.js";
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
 const DEFAULT_MAX_AGE = 60 * 60;
@@ -38,7 +39,11 @@ export function withContentResponseHeaders(
     xFrame: !isLiveSample,
   });
 
-  if (req.url?.endsWith("/sitemap.xml.gz")) {
+  if (req.url?.endsWith("/contributors.txt")) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  }
+
+  if (res.statusCode === 200 && req.url?.endsWith("/sitemap.xml.gz")) {
     res.setHeader("Content-Type", "application/xml");
     res.setHeader("Content-Encoding", "gzip");
   }
@@ -90,6 +95,7 @@ export function setContentResponseHeaders(
     ["Strict-Transport-Security", "max-age=63072000"],
     ...(csp ? [["Content-Security-Policy", CSP_VALUE]] : []),
     ...(xFrame ? [["X-Frame-Options", "DENY"]] : []),
+    ...(ORIGIN_TRIAL_TOKEN ? [["Origin-Trial", ORIGIN_TRIAL_TOKEN]] : []),
   ].forEach(([k, v]) => k && v && setHeader(k, v));
 }
 

@@ -11,4 +11,4 @@ let linkText = mdn.localString({
     
 });
 %>
-<%- `<a href="/${env.locale}/docs/Web/CSS/initial_value">${linkText}</a>` %>
+<%- web.smartLink(`${env.locale}/docs/Web/CSS/initial_value`, null, linkText) %>

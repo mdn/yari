@@ -38,6 +38,7 @@ import { memoize, slugToFolder } from "../content/utils.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { CheerioAPI } from "cheerio";
+import { buildSitemap } from "./sitemaps.js";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -423,4 +424,26 @@ function setCurriculumTypes($: CheerioAPI) {
       }
     }
   });
+}
+
+export async function buildCurriculumSitemap(options: { verbose?: boolean }) {
+  const index = await buildCurriculumIndex();
+  const items = [];
+  while (index.length) {
+    const current = index.shift();
+    items.push({
+      slug: current.url,
+    });
+    if (current.children) {
+      index.push(...current.children);
+    }
+  }
+
+  const sitemapFilePath = await buildSitemap(items, {
+    pathSuffix: [DEFAULT_LOCALE, "curriculum"],
+  });
+
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
+  }
 }

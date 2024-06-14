@@ -1,6 +1,6 @@
 // Style for desktop.
 
-@media screen and (min-width: $screen-sm) {
+@media (min-width: $screen-sm) {
   .bc-table {
     thead {
       display: table-header-group;
