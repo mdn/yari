@@ -474,7 +474,7 @@ program
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
-  .option("-n, --nohtml", "Do not build index.html", {
+  .option("-n, --nohtml", "Do not render index.html", {
     default: false,
   })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
@@ -491,6 +491,12 @@ program
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }: BuildArgsAndOptions) => {
     try {
+      if (!options.nohtml) {
+        console.warn(
+          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari v3. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
+        );
+      }
+
       if (!options.quiet) {
         const roots = [
           ["CONTENT_ROOT", CONTENT_ROOT],
