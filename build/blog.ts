@@ -237,11 +237,10 @@ export async function buildBlogIndex(options: { verbose?: boolean }) {
   const prefix = "blog";
   const locale = DEFAULT_LOCALE;
 
-  const hyData = {
-    posts: await allPostFrontmatter(),
-  };
-  const context = {
-    hyData,
+  const context: HydrationData = {
+    hyData: {
+      posts: await allPostFrontmatter(),
+    },
     pageTitle: "MDN Blog",
     url: `/${locale}/${prefix}/`,
   };
