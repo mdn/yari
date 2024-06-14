@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@adzerk/decision-sdk": "^1.0.0-beta.20",
-    "@google-cloud/functions-framework": "^3.1.3",
+    "@google-cloud/functions-framework": "^3.4.0",
     "@sentry/serverless": "^7.47.0",
     "@yari-internal/constants": "file:src/internal/constants",
     "@yari-internal/fundamental-redirects": "file:src/internal/fundamental-redirects",
