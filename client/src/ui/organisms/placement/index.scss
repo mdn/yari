@@ -92,7 +92,7 @@ section.place {
     margin: 0 auto;
     width: 100%;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       grid-template-areas: "pong cta note" "pong cta no";
       grid-template-columns: fit-content(100%) auto fit-content(100%);
     }
@@ -204,7 +204,7 @@ section.place.hp-main {
     position: initial;
   }
 
-  @media screen and (max-width: #{$screen-md - 1}) {
+  @media (max-width: #{$screen-md - 1}) {
     display: none;
   }
 
@@ -283,7 +283,7 @@ div.empty-place {
       margin-top: auto;
     }
 
-    @media screen and (max-width: $screen-xl) {
+    @media (max-width: $screen-xl) {
       grid-template-areas:
         "pong note"
         "pong no";
@@ -291,7 +291,7 @@ div.empty-place {
       grid-template-rows: auto 2rem;
     }
 
-    @media screen and (max-width: $screen-lg) {
+    @media (max-width: $screen-lg) {
       grid-template-areas:
         "pong pong"
         "note no";

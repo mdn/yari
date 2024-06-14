@@ -55,15 +55,15 @@ main.contribute {
       display: grid;
       gap: 0.3em;
 
-      @media screen and (max-width: $screen-md) {
+      @media (max-width: $screen-md) {
         grid-template-columns: 1fr 1fr;
       }
 
-      @media screen and (max-width: $screen-sm) {
+      @media (max-width: $screen-sm) {
         grid-template-columns: 1fr;
       }
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }
 

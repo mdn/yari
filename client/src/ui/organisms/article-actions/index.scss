@@ -15,7 +15,7 @@
     display: block;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: block;
 
     .article-actions-toggle {
@@ -24,7 +24,7 @@
   }
 
   /* Open state, mobile-only */
-  @media screen and (max-width: $screen-md) {
+  @media (max-width: $screen-md) {
     &.show-actions {
       background-color: var(--background-primary);
       color: var(--text-primary);
@@ -150,7 +150,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     &.show {
       background-color: var(--background-secondary);
       border: 1px solid var(--border-primary);
@@ -198,7 +198,7 @@
   margin: 0;
   padding: 0;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: flex;
     gap: 0.5rem;
 
