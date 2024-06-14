@@ -32,6 +32,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
           )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
         )
       ).json();
+
       const {
         ads: [
           {
@@ -51,6 +52,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
             TextColor,
             TextColorLight,
             TextColorDark,
+            Heading,
           },
         ] = [],
       } = res;
@@ -66,6 +68,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
                 alt: ImageTitle && he.decode(ImageTitle),
                 copy: Description && he.decode(Description),
                 cta: CallToAction && he.decode(CallToAction),
+                heading: Heading && he.decode(Heading),
                 colors: {
                   textColor: TextColor || TextColorLight,
                   backgroundColor: BackgroundColor || BackgroundColorLight,
@@ -102,7 +105,16 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const { copy, image, alt, click, view, cta, colors = {} } = v;
+          const {
+            copy,
+            image,
+            alt,
+            click,
+            view,
+            cta,
+            colors,
+            heading = {},
+          } = v;
           return [
             p,
             {
@@ -114,6 +126,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
               colors,
               click,
               view,
+              heading,
               version: 2,
             },
           ];
