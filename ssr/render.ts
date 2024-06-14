@@ -116,7 +116,7 @@ export default function render(
   const buildHtml = readBuildHTML();
   const rendered = renderToString(renderApp);
 
-  const canonicalURL = `${BASE_URL}{url}`;
+  const canonicalURL = `${BASE_URL}${url}`;
 
   let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
