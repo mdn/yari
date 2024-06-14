@@ -5,12 +5,35 @@ import { readFile, writeFile } from "node:fs/promises";
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import { HydrationData } from "../libs/types/hydration.js";
+import { chunks, formatDuration } from "./utils.js";
 
 export function ssrDocument(context: HydrationData) {
   return renderHTML(context);
 }
 
 export async function ssrAllDocuments(noDocs = false) {
+  const docs = await findDocuments(noDocs);
+
+  const t0 = new Date();
+
+  const done = [];
+  for (const chunk of chunks(docs, 1000)) {
+    const out = await Promise.all(chunk.map(ssrSingleDocument).filter(Boolean));
+    done.push(...out);
+  }
+  const t1 = new Date();
+  const count = done.length;
+  const seconds = (t1.getTime() - t0.getTime()) / 1000;
+  const took = formatDuration(seconds);
+
+  console.log(
+    `Rendered ${count.toLocaleString()} pages in ${took}, at a rate of ${(
+      count / seconds
+    ).toFixed(1)} documents per second.`
+  );
+}
+
+async function findDocuments(noDocs: boolean) {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
@@ -21,27 +44,7 @@ export async function ssrAllDocuments(noDocs = false) {
     )
     .crawl(BUILD_OUT_ROOT);
   const docs = await api.withPromise();
-
-  const t0 = new Date();
-
-  const done = [];
-  for (let i = 0; i < docs.length; i += 1000) {
-    const chunk = docs.slice(i, i + 1000);
-    const out = await Promise.all(chunk.map(ssrSingleDocument).filter(Boolean));
-    done.push(...out);
-  }
-  const t1 = new Date();
-  const count = done.length;
-  const seconds = (t1.getTime() - t0.getTime()) / 1000;
-  const took =
-    seconds > 60
-      ? `${(seconds / 60).toFixed(1)} minutes`
-      : `${seconds.toFixed(1)} seconds`;
-  console.log(
-    `Rendered ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-      count / seconds
-    ).toFixed(1)} documents per second.`
-  );
+  return docs;
 }
 
 async function ssrSingleDocument(file: string): Promise<string> {
