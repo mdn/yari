@@ -11,8 +11,12 @@ export function ssrDocument(context: HydrationData) {
   return renderHTML(context);
 }
 
-export async function ssrAllDocuments(noDocs = false) {
-  const docs = await findDocuments(noDocs);
+interface SSROptions {
+  noDocs?: boolean;
+}
+
+export async function ssrAllDocuments({ noDocs = false }: SSROptions = {}) {
+  const docs = await findDocuments({ noDocs });
 
   const t0 = new Date();
 
@@ -33,11 +37,11 @@ export async function ssrAllDocuments(noDocs = false) {
   );
 }
 
-async function findDocuments(noDocs: boolean) {
+async function findDocuments(options: Pick<SSROptions, "noDocs">) {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
-    .exclude((dirName) => noDocs && dirName === "docs")
+    .exclude((dirName) => options.noDocs && dirName === "docs")
     .filter(
       (filePath) =>
         filePath.endsWith("index.json") || filePath.endsWith("404.json")

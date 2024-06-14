@@ -16,7 +16,7 @@ program
     default: false,
   })
   .action(async ({ options }) => {
-    await ssrAllDocuments(Boolean(options?.noDocs));
+    await ssrAllDocuments({ noDocs: Boolean(options?.noDocs) });
   });
 
 program.run();
