@@ -109,13 +109,10 @@ export async function buildSPAs(options: {
   }[] = [];
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = `/${DEFAULT_LOCALE}/404.html`;
+  const locale = DEFAULT_LOCALE;
+  const url = `/${locale}/404.html`;
   const context = { url, pageNotFound: true };
-  const outPath = path.join(
-    BUILD_OUT_ROOT,
-    DEFAULT_LOCALE.toLowerCase(),
-    "_spas"
-  );
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
   const jsonFilePath = path.join(
     outPath,
