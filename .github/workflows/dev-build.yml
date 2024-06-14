@@ -141,9 +141,9 @@ jobs:
           # Spread the work across 2 processes. Why 2? Because that's what you
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build:json --locale     en-us --locale     ja --locale     fr &
+          yarn build:docs --locale     en-us --locale     ja --locale     fr &
           build1=$!
-          yarn build:json --not-locale en-us --not-locale ja --not-locale fr &
+          yarn build:docs --not-locale en-us --not-locale ja --not-locale fr &
           build2=$!
 
           # You must explicitly specify the job you're waiting-on to ensure
