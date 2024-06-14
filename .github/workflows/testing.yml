@@ -91,7 +91,7 @@ jobs:
         run: |
           yarn build:prepare
           yarn build:json
-          yarn build:render-html
+          yarn render:html
 
           yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1

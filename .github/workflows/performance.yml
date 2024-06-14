@@ -55,7 +55,7 @@ jobs:
           yarn build:prepare
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build:json
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build:json
-          yarn build:render-html
+          yarn render:html
 
       - name: Serve and lhci
         env:
