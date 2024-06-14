@@ -1,0 +1,91 @@
+@use "../ui/vars" as *;
+
+.partner-banner-container {
+  .partner-banner {
+    background-color: var(--curriculum-bg-color-partner);
+    background-image: var(--curriculum-partner-bg);
+    background-repeat: no-repeat;
+    border: 1px solid var(--curriculum-border-color);
+    box-shadow: var(--curriculum-shadow);
+    display: grid;
+    grid-template-areas: "h2" "image" "p" "a";
+    margin: 1rem auto;
+
+    @media screen and (min-width: $screen-md) {
+      grid-template-areas: "copy image";
+      grid-template-columns: 2fr minmax(24rem, 1fr);
+    }
+
+    > picture {
+      align-self: end;
+      grid-area: image;
+      height: max-content;
+      justify-self: center;
+      max-width: max-content;
+      width: 90%;
+      @media screen and (min-width: $screen-md) {
+        justify-self: end;
+        width: 100%;
+      }
+    }
+
+    > section {
+      display: contents;
+      grid-area: copy;
+      padding: 2rem 4rem;
+      @media screen and (min-width: $screen-md) {
+        display: block;
+      }
+
+      > h2 {
+        grid-area: h2;
+        margin: 1rem 0 2rem;
+        text-align: center;
+        @media screen and (min-width: $screen-md) {
+          margin: 0 0 1rem;
+          text-align: left;
+        }
+
+        > a {
+          display: inline-block;
+          min-width: max-content;
+          color: var(--curriculum-category-color);
+
+          &:visited:not([href^="#"]) {
+            color: var(--curriculum-category-color);
+          }
+
+          &::before {
+            content: url("../assets/icons/curriculum-partner-underline-small.svg");
+            position: absolute;
+            transform: translate3d(-0.1em, 0.4em, 0);
+            @media screen and (min-width: $screen-md) {
+              content: url("../assets/icons/curriculum-partner-underline-large.svg");
+            }
+          }
+          &::after {
+            background-color: var(--curriculum-category-color);
+            height: 0.625em;
+            width: 0.625em;
+          }
+        }
+      }
+
+      > p {
+        grid-area: p;
+        margin: 1.5rem 1rem;
+        @media screen and (min-width: $screen-md) {
+          margin: 1rem 0 1.5rem;
+        }
+      }
+
+      > a {
+        grid-area: a;
+        margin: 1rem;
+        @media screen and (min-width: $screen-md) {
+          margin: 1rem 0 0;
+        }
+      }
+    }
+  }
+}
