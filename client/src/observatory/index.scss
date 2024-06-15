@@ -4,10 +4,11 @@
   --border-radius: 0.3rem;
   background-color: var(--observatory-bg);
 
-  h1 {
+  h1,
+  h2 {
     font-style: normal;
-    font-weight: 450;
-    letter-spacing: -0.01rem;
+    font-weight: 600;
+    letter-spacing: var(--heading-letter-spacing);
   }
 
   .obs-none {
@@ -108,6 +109,7 @@
 
     .header {
       display: flex;
+      gap: 0 6.25rem;
 
       .scan-form {
         flex-grow: 1;
@@ -217,7 +219,7 @@
       background: var(--observatory-bg);
       border-radius: var(--border-radius);
       margin: 1rem 0;
-      padding: 1rem;
+      // padding: 1rem;
 
       h2 {
         margin-top: unset;
@@ -226,7 +228,26 @@
       .about {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+
+        h2 {
+          margin-bottom: 2rem;
+        }
+      }
+
+      .assessment {
+        margin-left: 0;
+      }
+
+      .scanning {
+        margin-left: 3.125rem;
+      }
+
+      .security {
+        margin-left: 6.25rem;
+      }
+
+      .mdn {
+        margin-left: 9.75rem;
       }
 
       figure {
@@ -237,6 +258,7 @@
 
         figcaption {
           p {
+            color: var(--observatory-color);
             margin: 0;
           }
         }
