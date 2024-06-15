@@ -3234,10 +3234,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/imagemin@^8.0.5":
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/@types/imagemin/-/imagemin-8.0.5.tgz#5ff8e1832af416729f31dbb0cee1d614ff489184"
-  integrity sha512-tah3dm+5sG+fEDAz6CrQ5evuEaPX9K6DF3E5a01MPOKhA2oGBoC+oA5EJzSugB905sN4DE19EDzldT2Cld2g6Q==
+"@types/imagemin@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@types/imagemin/-/imagemin-9.0.0.tgz#98fc3bd84492de551873a6213b9ebcb7b4f30b67"
+  integrity sha512-4IaT+BdPUAFf/AAy3XlFAbqGk4RawhdidxWO5XTe+PJAYAr4d7m2FHiqyEPXbDpwS+IaLIJq5AIjLE9HcwMGBg==
   dependencies:
     "@types/node" "*"
 
