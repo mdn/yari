@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
 import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
-import { useResult } from ".";
+import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
 import { Link, PassIcon } from "./utils";
 import Container from "../ui/atoms/container";
@@ -11,35 +11,45 @@ import { Button } from "../ui/atoms/button";
 import { useEffect, useMemo, useState } from "react";
 import ObservatoryBenchmark from "./benchmark";
 import useSWRImmutable from "swr/immutable";
+import InternalLink from "../ui/atoms/internal-link";
 
 export default function ObservatoryResults() {
   const { host } = useParams();
   const { data: result, isLoading, error } = useResult(host);
 
+  // Used for rescan
+  const { trigger, isMutating, error: updateError } = useUpdateResult(host!);
+
   document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
 
-  const hasData = host && result;
-
+  const hasData = !!host && !!result && !isLoading && !isMutating;
   return (
     <div className="observatory-results">
       <Container extraClasses="observatory-wrapper">
         <section className="header">
           <section className="heading-and-actions">
             <h1>
-              <span className="accent">HTTP Observatory</span> Report
+              <span className="accent">HTTP Observatory</span> Report{" "}
             </h1>
-            <section className="actions">
-              <Button href="../">Scan another site</Button>
-            </section>
           </section>
           {hasData ? (
-            <ObservatoryRating result={result} host={host} />
-          ) : isLoading ? (
-            <Loading />
+            <ObservatoryRating
+              result={result!}
+              host={host}
+              rescanTrigger={trigger}
+            />
+          ) : isLoading || isMutating ? (
+            <Loading delay={200} />
           ) : (
             <NoteCard type="error">
               <h4>Error</h4>
-              <p>{error ? error.message : "An error occurred."}</p>
+              <p>
+                {error
+                  ? error.message
+                  : updateError
+                    ? updateError.message
+                    : "An error occurred."}
+              </p>
             </NoteCard>
           )}
         </section>
@@ -175,9 +185,11 @@ function trend(result: ObservatoryResult) {
 function ObservatoryRating({
   result,
   host,
+  rescanTrigger,
 }: {
   result: ObservatoryResult;
   host: string;
+  rescanTrigger: Function;
 }) {
   return (
     <>
@@ -205,18 +217,80 @@ function ObservatoryRating({
           </div>
           {trend(result)}
         </section>
-        <section className="score">
-          <span className="accent">Score:</span> {result.scan.score}/100
+        <section className="host">
+          <span className="label">Host:</span> {host}
         </section>
-        <section className="scan-time">
-          <span className="accent">Scan Time: </span>
-          {new Date(result.scan.scanned_at).toLocaleString([], {
-            dateStyle: "medium",
-            timeStyle: "medium",
-          })}
+        <section className="data">
+          <div>
+            <span className="label">Score:</span> {result.scan.score}/100
+          </div>
+          <div>
+            <span className="label">Scan Time: </span>
+            {new Date(result.scan.scanned_at).toLocaleString([], {
+              dateStyle: "medium",
+              timeStyle: "medium",
+            })}
+          </div>
+          <span className="label">Tests Passed:</span>{" "}
+          {result.scan.tests_passed}/{result.scan.tests_quantity}
+        </section>
+        <section className="actions">
+          <CountdownButton
+            host={host}
+            from={result.scan.scanned_at}
+            duration={60}
+            title="Rescan"
+            onClickHandler={rescanTrigger}
+          />
+          <div>
+            <InternalLink className="scan-another" to="../">
+              Scan another website
+            </InternalLink>
+          </div>
         </section>
       </section>
     </>
+  );
+}
+
+function CountdownButton({
+  host,
+  from,
+  duration,
+  title,
+  onClickHandler,
+}: {
+  host: string;
+  from: string;
+  duration: number;
+  title: string;
+  onClickHandler: Function;
+}) {
+  function calculateRemainingTime() {
+    const endTime = new Date(from).getTime() + duration * 1000;
+    return Math.max(0, endTime - new Date().getTime());
+  }
+  const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRemainingTime(calculateRemainingTime());
+    }, 1000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [from, duration]);
+
+  function rescan() {
+    onClickHandler();
+  }
+
+  const isExpired = remainingTime <= 0;
+
+  return !isExpired ? (
+    <Button isDisabled={true}>{Math.floor(remainingTime / 1000) + 1}</Button>
+  ) : (
+    <Button onClickHandler={rescan}>{title}</Button>
   );
 }
 
@@ -414,7 +488,7 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
   ) : null;
 }
 
-export function HeaderLink({ header }: { header: string }) {
+function HeaderLink({ header }: { header: string }) {
   // try a HEAD fetch for /en-US/docs/Web/HTTP/Headers/<HEADERNAME>/metadata.json
   // if successful, link to /en-US/docs/Web/HTTP/Headers/<HEADERNAME>
   const { data } = useHeaderLink(header);
@@ -432,11 +506,11 @@ export function HeaderLink({ header }: { header: string }) {
   );
 }
 
-export function useHeaderLink(header: string) {
+function useHeaderLink(header: string) {
   return useSWRImmutable(`headerLink-${header}`, async (key) => {
     const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}/metadata.json`;
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { method: "HEAD" });
       return res.ok
         ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}`
         : null;
