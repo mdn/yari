@@ -9,6 +9,7 @@ import { ReactComponent as ScanningSVG } from "../../public/assets/observatory/s
 import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/security.svg";
 import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
 import Container from "../ui/atoms/container";
+import { Loading } from "../ui/atoms/loading";
 
 export default function ObservatoryLanding() {
   document.title = "HTTP Observatory | MDN";
@@ -74,7 +75,7 @@ export default function ObservatoryLanding() {
                 <div className="error">Error: {error.message}</div>
               )}
               {isMutating ? (
-                <div className="progress">Scanning...</div>
+                <Loading delay={200} />
               ) : (
                 <div className="input-group">
                   <label htmlFor="host" className="visually-hidden">

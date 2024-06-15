@@ -420,7 +420,7 @@
       fill: var(--grade-bg);
 
       &.current-grade {
-        stroke: rgba(227, 100, 42, 1);
+        stroke: var(--grade-border);
         stroke-width: 1;
       }
     }
@@ -608,9 +608,16 @@
     background-color: var(--background-primary);
     border-radius: 4px;
     display: grid;
-    grid-template-areas: "grade score time";
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: "grade host data actions";
+    grid-template-columns: 0.5fr 1fr 1.5fr 1fr;
+    margin-bottom: 3rem;
     max-width: var(--max-width);
+
+    .scan-another {
+      color: var(--observatory-color-secondary);
+      font-size: var(--type-smaller-font-size);
+      font-weight: 400;
+    }
 
     .arrow-down {
       color: rgb(158, 0, 39);
@@ -620,31 +627,45 @@
       color: rgb(45, 136, 45);
     }
 
+    .label {
+      font-weight: 600;
+    }
+
     section {
-      line-height: 4rem;
-      padding: 1rem;
+      // line-height: 4rem;
+      padding: 2rem;
+    }
+
+    .actions {
+      grid-area: actions;
+
+      .button-wrap {
+        width: 8rem;
+      }
     }
 
     .grade-trend {
       grid-area: grade;
       justify-self: start;
-      text-align: left;
+      // text-align: left;
 
       .trend {
         color: #696969;
         font-weight: 400;
-        line-height: 2rem;
+        // line-height: 2rem;
       }
     }
 
-    .score {
-      grid-area: score;
-      justify-self: center;
+    .host {
+      align-self: center;
+      grid-area: host;
+      // justify-self: center;
     }
 
-    .scan-time {
-      grid-area: time;
-      justify-self: end;
+    .data {
+      align-self: center;
+      grid-area: data;
+      // justify-self: end;
     }
   }
 
@@ -664,27 +685,27 @@
   }
 
   .grade-a {
-    --grade-bg: rgba(220, 250, 223, 1);
+    --grade-bg: rgba(169, 243, 186, 0.5);
     --grade-border: rgba(0, 154, 70, 1);
   }
 
   .grade-b {
-    --grade-bg: rgba(239, 250, 220, 1);
+    --grade-bg: rgba(219, 243, 169, 0.5);
     --grade-border: rgb(128, 128, 21);
   }
 
   .grade-c {
-    --grade-bg: rgba(250, 249, 220, 1);
+    --grade-bg: rgba(243, 240, 169, 0.5);
     --grade-border: rgb(128, 73, 21);
   }
 
   .grade-d {
-    --grade-bg: rgba(250, 236, 220, 1);
+    --grade-bg: rgba(243, 218, 169, 0.5);
     --grade-border: rgb(74, 16, 84);
   }
 
   .grade-f {
-    --grade-bg: rgba(250, 220, 220, 1);
+    --grade-bg: rgba(243, 169, 169, 0.5);
     --grade-border: rgb(128, 21, 21);
   }
 }
