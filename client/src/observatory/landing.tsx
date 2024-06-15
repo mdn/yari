@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useUpdateResult } from ".";
 import { SidePlacement } from "../ui/organisms/placement";
 
+import { ReactComponent as LandingSVG } from "../../public/assets/observatory/landing-illustration.svg";
+import { ReactComponent as LinesSVG } from "../../public/assets/observatory/lines.svg";
 import { ReactComponent as AssessmentSVG } from "../../public/assets/observatory/assessment.svg";
 import { ReactComponent as ScanningSVG } from "../../public/assets/observatory/scanning.svg";
 import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/security.svg";
@@ -64,37 +66,47 @@ export default function ObservatoryLanding() {
       <section className="observatory-landing observatory-landing-top">
         <Container extraClasses="observatory-wrapper">
           <section className="header">
-            <h1>HTTP Observatory | MDN</h1>
-            <p>
-              Launched in 2016, HTTP Observatory enhances web security by
-              analyzing compliance with best security practices. It has provided
-              insights to over 6.5 million websites through 47 million scans.
-            </p>
-            <form onSubmit={submit}>
-              {error && !isMutating && (
-                <div className="error">Error: {error.message}</div>
-              )}
-              {isMutating ? (
-                <Loading delay={200} />
-              ) : (
-                <div className="input-group">
-                  <label htmlFor="host" className="visually-hidden">
-                    Domain
-                  </label>
-                  <input
-                    placeholder="Scan a website for free (e.g. mozilla.org)"
-                    type="text"
-                    name="host"
-                    id="host"
-                    value={form.host}
-                    onChange={(e) => setForm({ ...form, host: e.target.value })}
-                  />
-                  <button type="submit" disabled={isMutating}>
-                    Scan
-                  </button>
-                </div>
-              )}
-            </form>
+            <section className="scan-form">
+              <h1>
+                <span className="accent">HTTP Observatory</span>
+              </h1>
+              <p>
+                Launched in 2016, HTTP Observatory enhances web security by
+                analyzing compliance with best security practices. It has
+                provided insights to over 6.5 million websites through 47
+                million scans.
+              </p>
+              <form onSubmit={submit}>
+                {error && !isMutating && (
+                  <div className="error">Error: {error.message}</div>
+                )}
+                {isMutating ? (
+                  <Loading delay={200} />
+                ) : (
+                  <div className="input-group">
+                    <label htmlFor="host" className="visually-hidden">
+                      Domain
+                    </label>
+                    <input
+                      placeholder="Scan a website for free (e.g. mozilla.org)"
+                      type="text"
+                      name="host"
+                      id="host"
+                      value={form.host}
+                      onChange={(e) =>
+                        setForm({ ...form, host: e.target.value })
+                      }
+                    />
+                    <button type="submit" disabled={isMutating}>
+                      Scan
+                    </button>
+                  </div>
+                )}
+              </form>
+            </section>
+            <section className="landing-illustration">
+              <LandingSVG role="none" />
+            </section>
           </section>
           <SidePlacement />
         </Container>
@@ -103,9 +115,9 @@ export default function ObservatoryLanding() {
         <Container extraClasses="observatory-wrapper">
           <section className="footer">
             <section className="about">
-              <figure>
+              <h2>About the HTTP Observatory</h2>
+              <figure className="assessment">
                 <AssessmentSVG role="none" />
-
                 <figcaption>
                   <p>
                     Developed by Mozilla, the tool performs an in-depth
@@ -114,10 +126,9 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-
-              <figure>
+              <LinesSVG className="assessment" role="none" />
+              <figure className="scanning">
                 <ScanningSVG role="none" />
-
                 <figcaption>
                   <p>
                     Through its automated scanning process, it provides
@@ -127,10 +138,9 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-
-              <figure>
+              <LinesSVG className="scanning" role="none" />
+              <figure className="security">
                 <SecuritySVG role="none" />
-
                 <figcaption>
                   <p>
                     The tool is instrumental in helping developers and website
@@ -142,10 +152,9 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-
-              <figure>
+              <LinesSVG className="security" role="none" />
+              <figure className="mdn">
                 <MdnSVG role="none" />
-
                 <figcaption>
                   <p>
                     As in any area of web development, there may be multiple

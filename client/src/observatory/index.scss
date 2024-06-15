@@ -1,8 +1,15 @@
 @use "../ui/vars" as *;
 
 .observatory {
-  // --border-radius: 0.5rem;
+  --border-radius: 0.3rem;
   background-color: var(--observatory-bg);
+
+  h1,
+  h2 {
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: var(--heading-letter-spacing);
+  }
 
   .obs-none {
     color: var(--observatory-color-secondary);
@@ -100,6 +107,19 @@
   .observatory-landing {
     background: var(--observatory-bg);
 
+    .header {
+      display: flex;
+      gap: 0 6.25rem;
+
+      .scan-form {
+        flex-grow: 1;
+      }
+
+      .landing-illustration {
+        flex-grow: 0;
+      }
+    }
+
     h1 {
       margin-bottom: unset;
     }
@@ -148,8 +168,8 @@
 
         :focus-visible {
           outline: 2px solid var(--observatory-accent);
-          outline-offset: -2px;
-          outline-width: 3px;
+          outline-offset: -1px;
+          outline-width: 1px;
         }
 
         input {
@@ -199,7 +219,7 @@
       background: var(--observatory-bg);
       border-radius: var(--border-radius);
       margin: 1rem 0;
-      padding: 1rem;
+      // padding: 1rem;
 
       h2 {
         margin-top: unset;
@@ -208,7 +228,26 @@
       .about {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+
+        h2 {
+          margin-bottom: 2rem;
+        }
+      }
+
+      .assessment {
+        margin-left: 0;
+      }
+
+      .scanning {
+        margin-left: 3.125rem;
+      }
+
+      .security {
+        margin-left: 6.25rem;
+      }
+
+      .mdn {
+        margin-left: 9.75rem;
       }
 
       figure {
@@ -219,6 +258,7 @@
 
         figcaption {
           p {
+            color: var(--observatory-color);
             margin: 0;
           }
         }
@@ -391,7 +431,7 @@
 
   svg.chart {
     background-color: var(--background-primary);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
 
     .tick text {
       fill: var(--observatory-color-secondary);
@@ -606,7 +646,7 @@
 
   section.scan-result {
     background-color: var(--background-primary);
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     display: grid;
     grid-template-areas: "grade host data actions";
     grid-template-columns: 0.5fr 1fr 1.5fr 1fr;
@@ -647,25 +687,21 @@
     .grade-trend {
       grid-area: grade;
       justify-self: start;
-      // text-align: left;
 
       .trend {
         color: #696969;
         font-weight: 400;
-        // line-height: 2rem;
       }
     }
 
     .host {
       align-self: center;
       grid-area: host;
-      // justify-self: center;
     }
 
     .data {
       align-self: center;
       grid-area: data;
-      // justify-self: end;
     }
   }
 
@@ -673,7 +709,6 @@
     background: var(--grade-bg);
     border: 1px solid var(--grade-border);
     border-radius: 0.2em;
-    // box-sizing: content-box;
     color: var(--grade-border);
     display: inline-block;
     font-size: 1.7rem;
