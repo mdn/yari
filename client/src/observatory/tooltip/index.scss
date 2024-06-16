@@ -1,0 +1,36 @@
+@use "../../ui/vars" as *;
+
+.info-tooltip {
+  position: relative;
+
+  .arrow {
+    fill: var(--observatory-accent);
+    margin-left: -20px;
+    margin-top: -2rem;
+    padding: 0;
+    position: absolute;
+  }
+
+  .tooltip-popup {
+    --tooltip-offset: 0;
+    background-color: var(--observatory-accent);
+    border-radius: var(--border-radius);
+    color: var(--observatory-tooltip-color);
+    left: 50%;
+    margin-top: 2rem;
+    max-width: min(100vw, 20rem);
+    padding: 1.5rem;
+    position: absolute;
+    text-align: center;
+    top: 100%;
+    transform: translateX(var(--tooltip-offset));
+    visibility: hidden;
+    width: max-content;
+    z-index: 1;
+  }
+
+  &:hover .tooltip-popup,
+  &:focus .tooltip-popup {
+    visibility: visible;
+  }
+}
