@@ -5705,14 +5705,6 @@ css-select@^5.1.0:
     domutils "^3.0.1"
     nth-check "^2.0.1"
 
-css-tree@^1.1.2, css-tree@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-1.1.3.tgz#eb4870fb6fd7707327ec95c2ff2ab09b5e8db91d"
-  integrity sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==
-  dependencies:
-    mdn-data "2.0.14"
-    source-map "^0.6.1"
-
 css-tree@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-2.3.1.tgz#10264ce1e5442e8572fc82fbe490644ff54b5c20"
@@ -5792,13 +5784,6 @@ cssnano@^7.0.1:
   dependencies:
     cssnano-preset-default "^7.0.1"
     lilconfig "^3.1.1"
-
-csso@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/csso/-/csso-4.2.0.tgz#ea3a561346e8dc9f546d6febedd50187cf389529"
-  integrity sha512-wvlcdIbf6pwKEk7vHj8/Bkc0B4ylXZruLvOgs9doS5eOsOpuodOV2zJChSpkp+pRpYQLQMeF04nr3Z68Sta9jA==
-  dependencies:
-    css-tree "^1.1.2"
 
 csso@^5.0.5:
   version "5.0.5"
@@ -8860,13 +8845,13 @@ imagemin-pngquant@^10.0.0:
     pngquant-bin "^9.0.0"
     uint8array-extras "^1.1.0"
 
-imagemin-svgo@^10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/imagemin-svgo/-/imagemin-svgo-10.0.1.tgz#bc592950831c13998a40cb248f6e82e0b0b5c3dd"
-  integrity sha512-v27/UTGkb3vrm5jvjsMGQ2oxaDfSOTBfJOgmFO2fYepx05bY1IqWCK13aDytVR+l9w9eOlq0NMCLbxJlghYb2g==
+imagemin-svgo@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/imagemin-svgo/-/imagemin-svgo-11.0.1.tgz#e33379cca496c5eae321a911f7a1e31d735be104"
+  integrity sha512-sUZdlXFXZkPt61nzVXbt7EzYjjevPkNuZmAw0VjEm085PRrK5AHSF+1myF0NKtE+ZhY2Vf6W3CEoRqAgksruWQ==
   dependencies:
-    is-svg "^4.3.1"
-    svgo "^2.5.0"
+    is-svg "^5.0.1"
+    svgo "^3.3.2"
 
 imagemin@^9.0.0:
   version "9.0.0"
@@ -9405,13 +9390,6 @@ is-string@^1.0.5, is-string@^1.0.7:
   integrity sha512-tE2UXzivje6ofPW7l23cjDOMa09gb7xlAqG6jG5ej6uPV32TlWP3NKPigtaGeHNu9fohccRYvIiZMfOOnOYUtg==
   dependencies:
     has-tostringtag "^1.0.0"
-
-is-svg@^4.3.1:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/is-svg/-/is-svg-4.4.0.tgz#34db20a38146be5f2b3060154da33d11e6f74b7c"
-  integrity sha512-v+AgVwiK5DsGtT9ng+m4mClp6zDAmwrW8nZi6Gg15qzvBnRWWdfWA1TGaXyCDnWq5g5asofIgMVl3PjKxvk1ug==
-  dependencies:
-    fast-xml-parser "^4.1.3"
 
 is-svg@^5.0.1:
   version "5.0.1"
@@ -10767,11 +10745,6 @@ mdast-util-to-string@^4.0.0:
   integrity sha512-0H44vDimn51F0YwvxSJSm0eCDOJTRlmN0R1yBh4HLj9wiV1Dn0QoXGbvFAWj2hSItVTlCmBF1hqKlIyUBVFLPg==
   dependencies:
     "@types/mdast" "^4.0.0"
-
-mdn-data@2.0.14:
-  version "2.0.14"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
-  integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
 mdn-data@2.0.28:
   version "2.0.28"
@@ -14370,11 +14343,6 @@ sse.js@^2.5.0:
   resolved "https://registry.yarnpkg.com/sse.js/-/sse.js-2.5.0.tgz#9d9b715d13630d0a72d0fa9467f20f3c4b783a00"
   integrity sha512-I7zYndqOOkNpz9KIdFZ8c8A7zs1YazNewBr8Nsi/tqThfJkVPuP1q7UE2h4B0RwoWZxbBYpd06uoW3NI3SaZXg==
 
-stable@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
-  integrity sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==
-
 stack-trace@0.0.x:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
@@ -14919,23 +14887,10 @@ svg-tags@^1.0.0:
   resolved "https://registry.yarnpkg.com/svg-tags/-/svg-tags-1.0.0.tgz#58f71cee3bd519b59d4b2a843b6c7de64ac04764"
   integrity sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==
 
-svgo@^2.5.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/svgo/-/svgo-2.8.0.tgz#4ff80cce6710dc2795f0c7c74101e6764cfccd24"
-  integrity sha512-+N/Q9kV1+F+UeWYoSiULYo4xYSDQlTgb+ayMobAXPwMnLvop7oxKMo9OzIrX5x3eS4L4f2UHhc9axXwY8DpChg==
-  dependencies:
-    "@trysound/sax" "0.2.0"
-    commander "^7.2.0"
-    css-select "^4.1.3"
-    css-tree "^1.1.3"
-    csso "^4.2.0"
-    picocolors "^1.0.0"
-    stable "^0.1.8"
-
-svgo@^3.0.2, svgo@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/svgo/-/svgo-3.2.0.tgz#7a5dff2938d8c6096e00295c2390e8e652fa805d"
-  integrity sha512-4PP6CMW/V7l/GmKRKzsLR8xxjdHTV4IMvhTnpuHwwBazSIlw5W/5SmPjN8Dwyt7lKbSJrRDgp4t9ph0HgChFBQ==
+svgo@^3.0.2, svgo@^3.2.0, svgo@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/svgo/-/svgo-3.3.2.tgz#ad58002652dffbb5986fc9716afe52d869ecbda8"
+  integrity sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==
   dependencies:
     "@trysound/sax" "0.2.0"
     commander "^7.2.0"
