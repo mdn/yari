@@ -190,7 +190,7 @@
 
   --observatory-bg: rgba(242, 242, 245, 1);
   --observatory-bg-secondary: #e7f3fd;
-  --observatory-accent: rgba(90, 35, 215, 1);
+  --observatory-accent: rgba(155, 101, 255, 1);
   --observatory-border: rgba(228, 228, 246, 1);
   --observatory-border-accent: rgba(90, 35, 215, 1);
   --observatory-table-bg: #fff;
@@ -198,6 +198,8 @@
   --observatory-color-secondary: rgba(105, 105, 105, 1);
   --observatory-alert: #{$mdn-color-light-theme-red-50};
   --observatory-check: #{$mdn-color-light-theme-green-40};
+  --observatory-tooltip-color: rgba(255, 255, 255, 1);
+  --observatory-tooltip-color-secondary: rgba(179, 179, 179, 1);
 
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};

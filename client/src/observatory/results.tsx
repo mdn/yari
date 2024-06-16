@@ -12,6 +12,25 @@ import { useEffect, useMemo, useState } from "react";
 import ObservatoryBenchmark from "./benchmark";
 import useSWRImmutable from "swr/immutable";
 import InternalLink from "../ui/atoms/internal-link";
+import { Tooltip } from "./tooltip";
+
+import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
+
+const scoringTable = [
+  { grade: "A+", scoreText: "100+", score: 100, stars: true },
+  { grade: "A", scoreText: "90", score: 90, stars: true },
+  { grade: "A-", scoreText: "85", score: 85, stars: true },
+  { grade: "B+", scoreText: "80", score: 80 },
+  { grade: "B", scoreText: "70", score: 70 },
+  { grade: "B-", scoreText: "65", score: 65 },
+  { grade: "C+", scoreText: "60", score: 60 },
+  { grade: "C", scoreText: "50", score: 50 },
+  { grade: "C-", scoreText: "45", score: 45 },
+  { grade: "D+", scoreText: "40", score: 40 },
+  { grade: "D", scoreText: "30", score: 30 },
+  { grade: "D-", scoreText: "25", score: 25 },
+  { grade: "F", scoreText: "0", score: 0 },
+];
 
 export default function ObservatoryResults() {
   const { host } = useParams();
@@ -209,11 +228,46 @@ function ObservatoryRating({
       <section className="scan-result">
         <section className="grade-trend">
           <div className="overall">
-            <div
-              className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
+            <span
+              aria-label="show info tooltip"
+              className="info-tooltip"
+              tabIndex={0}
             >
-              {result.scan.grade}
-            </div>
+              <div
+                className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
+              >
+                {result.scan.grade}
+              </div>
+              <Tooltip>
+                <table className="grade-tooltip">
+                  <thead>
+                    <tr>
+                      <th>Grade</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scoringTable.map((st) => {
+                      return (
+                        <tr
+                          className={
+                            result.scan.grade === st.grade ? "current" : ""
+                          }
+                        >
+                          <td>{st.grade}</td>
+                          <td>
+                            {st.scoreText}{" "}
+                            {result.scan.grade === st.grade && st.stars && (
+                              <StarsSVG />
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Tooltip>
+            </span>
           </div>
           {trend(result)}
         </section>
