@@ -198,6 +198,16 @@
   --observatory-color-secondary: rgba(105, 105, 105, 1);
   --observatory-alert: #{$mdn-color-light-theme-red-50};
   --observatory-check: #{$mdn-color-light-theme-green-40};
+  --observatory-grade-a-bg: rgba(169, 243, 186, 0.5);
+  --observatory-grade-a-border: rgba(0, 154, 70, 1);
+  --observatory-grade-b-bg: rgba(219, 243, 169, 0.5);
+  --observatory-grade-b-border: rgb(128, 128, 21);
+  --observatory-grade-c-bg: rgba(243, 240, 169, 0.5);
+  --observatory-grade-c-border: rgb(128, 73, 21);
+  --observatory-grade-d-bg: rgba(243, 218, 169, 0.5);
+  --observatory-grade-d-border: rgb(74, 16, 84);
+  --observatory-grade-f-bg: rgba(243, 169, 169, 0.5);
+  --observatory-grade-f-border: rgb(128, 21, 21);
   --observatory-tooltip-color: rgba(255, 255, 255, 1);
   --observatory-tooltip-color-secondary: rgba(179, 179, 179, 1);
 
@@ -488,6 +498,16 @@
   --observatory-color-secondary: #{$mdn-color-neutral-30};
   --observatory-alert: #{$mdn-color-dark-theme-red-50};
   --observatory-check: #{$mdn-color-dark-theme-green-50};
+  --observatory-grade-a-bg: rgba(169, 243, 186, 0.5);
+  --observatory-grade-a-border: rgba(0, 154, 70, 1);
+  --observatory-grade-b-bg: rgba(219, 243, 169, 0.5);
+  --observatory-grade-b-border: rgb(128, 128, 21);
+  --observatory-grade-c-bg: rgba(243, 240, 169, 0.5);
+  --observatory-grade-c-border: rgb(128, 73, 21);
+  --observatory-grade-d-bg: rgba(243, 218, 169, 0.5);
+  --observatory-grade-d-border: rgb(74, 16, 84);
+  --observatory-grade-f-bg: rgba(243, 169, 169, 0.5);
+  --observatory-grade-f-border: rgb(128, 21, 21);
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};
