@@ -77,9 +77,6 @@ export default function ObservatoryLanding() {
                 million scans.
               </p>
               <form onSubmit={submit}>
-                {error && !isMutating && (
-                  <div className="error">Error: {error.message}</div>
-                )}
                 {isMutating ? (
                   <Loading delay={200} />
                 ) : (
@@ -101,6 +98,9 @@ export default function ObservatoryLanding() {
                       Scan
                     </button>
                   </div>
+                )}
+                {error && !isMutating && (
+                  <div className="error">Error: {error.message}</div>
                 )}
               </form>
             </section>
