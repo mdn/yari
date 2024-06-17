@@ -584,6 +584,10 @@
 
       &.x-labels {
         text-anchor: middle;
+
+        &.current {
+          fill: var(--grade-border);
+        }
       }
 
       &.y-labels {
