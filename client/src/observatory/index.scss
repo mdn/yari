@@ -659,7 +659,8 @@
     border-radius: var(--border-radius);
     display: grid;
     grid-template-areas: "grade host data actions";
-    grid-template-columns: 0.5fr 1fr 1.5fr 1fr;
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
     margin-bottom: 3rem;
     max-width: var(--max-width);
     padding: var(--spacing);
