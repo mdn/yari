@@ -308,17 +308,20 @@ function ObservatoryRating({
           {trend(result)}
         </section>
         <section className="host">
-          <span className="label">Host:</span> {host}
+          <span className="label">Host:</span>{" "}
+          {hostAsRedirectChain(host, result)}
         </section>
         <section className="data">
           <div>
-            <Link href="docs/scoring">
+            <a href="docs/scoring">
               <span className="label">Score:</span>
-            </Link>{" "}
+            </a>{" "}
             {result.scan.score}/100
           </div>
           <div>
-            <span className="label">Scan Time: </span>
+            <a href="#scan_history">
+              <span className="label">Scan Time: </span>
+            </a>
             {new Date(result.scan.scanned_at).toLocaleString([], {
               dateStyle: "medium",
               timeStyle: "medium",
@@ -344,6 +347,23 @@ function ObservatoryRating({
       </section>
     </>
   );
+}
+
+function hostAsRedirectChain(host, result: ObservatoryResult) {
+  const chain = result.tests.redirection?.route;
+  if (!chain || chain.length < 1) {
+    return host;
+  }
+  try {
+    const firstUrl = new URL(chain[0]);
+    const lastUrl = new URL(chain[chain.length - 1]);
+    if (firstUrl.hostname === lastUrl.hostname) {
+      return host;
+    }
+    return `${firstUrl.hostname} → ${lastUrl.hostname}`;
+  } catch (e) {
+    return host;
+  }
 }
 
 function CountdownButton({

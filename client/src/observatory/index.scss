@@ -289,6 +289,7 @@
         figure ~ figure {
           margin-top: 1.75rem;
         }
+
         .lines {
           display: none;
         }
@@ -659,6 +660,16 @@
     max-width: var(--max-width);
     padding: var(--spacing);
 
+    a {
+      color: var(--observatory-color);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--observatory-color-secondary);
+    }
+
     .scan-another {
       color: var(--observatory-color-secondary);
       font-size: var(--type-smaller-font-size);
@@ -710,10 +721,10 @@
     }
 
     @media (max-width: #{$screen-xl - 1}) {
+      align-items: flex-start;
+      column-gap: var(--spacing);
       grid-template-areas: "grade host actions" "grade data actions";
       grid-template-columns: auto 1fr auto;
-      column-gap: var(--spacing);
-      align-items: flex-start;
       justify-content: space-between;
       row-gap: calc(var(--spacing) / 2);
 
