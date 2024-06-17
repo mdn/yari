@@ -1,3 +1,4 @@
+import { type Locale } from "./core.js";
 import type { SupportStatus } from "./web-features.js";
 
 export interface Source {
@@ -128,7 +129,7 @@ export type Toc = {
 export interface DocMetadata {
   title: string;
   short_title: string;
-  locale: string;
+  locale: Locale;
   native: string;
   pageTitle: string;
   mdn_url: string;
