@@ -142,15 +142,25 @@
     background: var(--observatory-bg);
 
     .header {
-      display: flex;
+      display: grid;
       gap: 0 6.25rem;
+      grid-template-areas: "form svg";
 
       .scan-form {
-        flex-grow: 1;
+        grid-area: form;
       }
 
       .landing-illustration {
-        flex-grow: 0;
+        grid-area: svg;
+
+        svg {
+          height: auto;
+          width: 100%;
+        }
+      }
+
+      @media (max-width: #{$screen-md - 1}) {
+        grid-template-areas: "form" "svg";
       }
     }
 
@@ -664,6 +674,13 @@
     margin-bottom: 3rem;
     max-width: var(--max-width);
     padding: var(--spacing);
+
+    .progress {
+      border-radius: 50%;
+      display: block;
+      height: 0.8rem;
+      width: 0.8rem;
+    }
 
     a {
       color: var(--observatory-color);

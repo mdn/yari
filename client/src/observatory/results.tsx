@@ -327,7 +327,9 @@ function ObservatoryRating({
               timeStyle: "medium",
             })}
           </div>
-          <span className="label">Tests Passed:</span>{" "}
+          <a href="docs/tests">
+            <span className="label">Tests Passed:</span>{" "}
+          </a>
           {result.scan.tests_passed}/{result.scan.tests_quantity}
         </section>
         <section className="actions">
@@ -391,17 +393,25 @@ function CountdownButton({
     }, 1000);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [from, duration]);
+  });
 
   function rescan() {
     onClickHandler();
   }
 
   const isExpired = remainingTime <= 0;
-
+  const remainingSecs = Math.floor(remainingTime / 1000) + 1;
+  const progressPercent = (remainingSecs * 100) / 60;
   return !isExpired ? (
-    <Button isDisabled={true}>{Math.floor(remainingTime / 1000) + 1}</Button>
+    <Button isDisabled={true}>
+      <div
+        className="progress"
+        style={{
+          background: `conic-gradient(var(--button-color) 0grad, ${progressPercent}%, rgba(0,0,0,0) ${progressPercent}% 100%)`,
+        }}
+      ></div>
+      <small>Wait for {title}</small>
+    </Button>
   ) : (
     <Button onClickHandler={rescan}>{title}</Button>
   );
