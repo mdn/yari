@@ -312,7 +312,10 @@ function ObservatoryRating({
         </section>
         <section className="data">
           <div>
-            <span className="label">Score:</span> {result.scan.score}/100
+            <Link href="docs/scoring">
+              <span className="label">Score:</span>
+            </Link>{" "}
+            {result.scan.score}/100
           </div>
           <div>
             <span className="label">Scan Time: </span>
@@ -583,10 +586,7 @@ function HeaderLink({ header }: { header: string }) {
   // if successful, link to /en-US/docs/Web/HTTP/Headers/<HEADERNAME>
   const { data } = useHeaderLink(header);
   const hasData = !!data;
-  const displayHeaderName = header
-    .split("-")
-    .map((p) => (p ? p[0].toUpperCase() + p.substring(1) : ""))
-    .join("-");
+  const displayHeaderName = upperCaseHeaderName(header);
   return hasData ? (
     <a href={data} target="_blank" rel="noreferrer">
       {displayHeaderName}
@@ -597,15 +597,23 @@ function HeaderLink({ header }: { header: string }) {
 }
 
 function useHeaderLink(header: string) {
+  const prettyHeaderName = upperCaseHeaderName(header);
   return useSWRImmutable(`headerLink-${header}`, async (key) => {
-    const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}/metadata.json`;
+    const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(prettyHeaderName)}/metadata.json`;
     try {
       const res = await fetch(url, { method: "HEAD" });
       return res.ok
-        ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}`
+        ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(prettyHeaderName)}`
         : null;
     } catch (e) {
       return null;
     }
   });
+}
+
+function upperCaseHeaderName(header: string) {
+  return header
+    .split("-")
+    .map((p) => (p ? p[0].toUpperCase() + p.substring(1) : ""))
+    .join("-");
 }
