@@ -649,6 +649,7 @@
   }
 
   section.scan-result {
+    --spacing: 2rem;
     background-color: var(--background-primary);
     border-radius: var(--border-radius);
     display: grid;
@@ -656,6 +657,7 @@
     grid-template-columns: 0.5fr 1fr 1.5fr 1fr;
     margin-bottom: 3rem;
     max-width: var(--max-width);
+    padding: var(--spacing);
 
     .scan-another {
       color: var(--observatory-color-secondary);
@@ -677,11 +679,6 @@
 
     .label {
       font-weight: 600;
-    }
-
-    section {
-      // line-height: 4rem;
-      padding: 2rem;
     }
 
     .actions {
@@ -710,6 +707,31 @@
     .data {
       align-self: center;
       grid-area: data;
+    }
+
+    @media (max-width: #{$screen-xl - 1}) {
+      grid-template-areas: "grade host actions" "grade data actions";
+      grid-template-columns: auto 1fr auto;
+      column-gap: var(--spacing);
+      align-items: flex-start;
+      justify-content: space-between;
+      row-gap: calc(var(--spacing) / 2);
+
+      .host,
+      .data {
+        align-self: start;
+      }
+    }
+
+    @media (max-width: #{$screen-lg - 1}) {
+      grid-template-areas: "host grade" "data grade" "data actions";
+      grid-template-columns: 2fr 1fr;
+    }
+
+    @media (max-width: 550px) {
+      grid-template-areas: "grade" "host" "data" "actions";
+      grid-template-columns: 1fr auto;
+      padding: calc(var(--spacing) / 2);
     }
   }
 
