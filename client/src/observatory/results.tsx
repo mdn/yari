@@ -32,6 +32,41 @@ const scoringTable = [
   { grade: "F", scoreText: "0", score: 0 },
 ];
 
+export function ObservatoryGrades() {
+  return (
+    <div className="observatory-results">
+      <Container extraClasses="observatory-wrapper">
+        <section className="header">
+          <section className="heading-and-actions">
+            <h1>
+              <span className="accent">HTTP Observatory</span> Grades{" "}
+            </h1>
+          </section>
+        </section>
+
+        <section className="main">
+          <section className="scan-result">
+            <section className="grade-trend">
+              <div className="overall" style={{ display: "flex", gap: "1rem" }}>
+                {scoringTable.map(({ grade }) => (
+                  <p>
+                    <div
+                      key={grade}
+                      className={`grade grade-${grade[0]?.toLowerCase()}`}
+                    >
+                      {grade}
+                    </div>
+                  </p>
+                ))}
+              </div>
+            </section>
+          </section>
+        </section>
+      </Container>
+    </div>
+  );
+}
+
 export default function ObservatoryResults() {
   const { host } = useParams();
   const { data: result, isLoading, error } = useResult(host);
