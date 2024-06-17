@@ -164,7 +164,19 @@ function GradeSVG({
                 className="tick tick-x"
                 transform={`translate(${index * xTickIncr}, 0)`}
               >
-                <text fill="currentColor" y="6" dy="1em" className="x-labels">
+                <text
+                  fill="currentColor"
+                  y="6"
+                  dy="1em"
+                  className={[
+                    "x-labels",
+                    item.grade === result.scan.grade
+                      ? `current grade-${item.grade[0].toLowerCase()}`
+                      : undefined,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {item.grade}
                 </text>
               </g>

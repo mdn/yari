@@ -289,6 +289,7 @@
         figure ~ figure {
           margin-top: 1.75rem;
         }
+
         .lines {
           display: none;
         }
@@ -583,6 +584,10 @@
 
       &.x-labels {
         text-anchor: middle;
+
+        &.current {
+          fill: var(--grade-border);
+        }
       }
 
       &.y-labels {
@@ -710,10 +715,10 @@
     }
 
     @media (max-width: #{$screen-xl - 1}) {
+      align-items: flex-start;
+      column-gap: var(--spacing);
       grid-template-areas: "grade host actions" "grade data actions";
       grid-template-columns: auto 1fr auto;
-      column-gap: var(--spacing);
-      align-items: flex-start;
       justify-content: space-between;
       row-gap: calc(var(--spacing) / 2);
 
