@@ -675,6 +675,13 @@
     max-width: var(--max-width);
     padding: var(--spacing);
 
+    .progress {
+      border-radius: 50%;
+      display: block;
+      height: 0.8rem;
+      width: 0.8rem;
+    }
+
     a {
       color: var(--observatory-color);
       text-decoration: none;
