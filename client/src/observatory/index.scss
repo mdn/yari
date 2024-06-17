@@ -713,27 +713,27 @@
   }
 
   .grade-a {
-    --grade-bg: rgba(169, 243, 186, 0.5);
-    --grade-border: rgba(0, 154, 70, 1);
+    --grade-bg: var(--observatory-grade-a-bg);
+    --grade-border: var(--observatory-grade-a-border);
   }
 
   .grade-b {
-    --grade-bg: rgba(219, 243, 169, 0.5);
-    --grade-border: rgb(128, 128, 21);
+    --grade-bg: var(--observatory-grade-b-bg);
+    --grade-border: var(--observatory-grade-b-border);
   }
 
   .grade-c {
-    --grade-bg: rgba(243, 240, 169, 0.5);
-    --grade-border: rgb(128, 73, 21);
+    --grade-bg: var(--observatory-grade-c-bg);
+    --grade-border: var(--observatory-grade-c-border);
   }
 
   .grade-d {
-    --grade-bg: rgba(243, 218, 169, 0.5);
-    --grade-border: rgb(74, 16, 84);
+    --grade-bg: var(--observatory-grade-d-bg);
+    --grade-border: var(--observatory-grade-d-border);
   }
 
   .grade-f {
-    --grade-bg: rgba(243, 169, 169, 0.5);
-    --grade-border: rgb(128, 21, 21);
+    --grade-bg: var(--observatory-grade-f-bg);
+    --grade-border: var(--observatory-grade-f-border);
   }
 }
