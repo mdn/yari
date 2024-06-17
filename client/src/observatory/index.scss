@@ -142,15 +142,24 @@
     background: var(--observatory-bg);
 
     .header {
-      display: flex;
+      display: grid;
       gap: 0 6.25rem;
+      grid-template-areas: "form svg";
 
       .scan-form {
-        flex-grow: 1;
+        grid-area: form;
       }
 
       .landing-illustration {
-        flex-grow: 0;
+        grid-area: svg;
+
+        svg {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: #{$screen-md - 1}) {
+        grid-template-areas: "form" "svg";
       }
     }
 
