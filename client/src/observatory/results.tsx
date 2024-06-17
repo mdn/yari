@@ -223,7 +223,7 @@ function ObservatoryRating({
             <path d="M15.45 12.73L20 4.86V16.55V18.55H0V0.55H2V13.09L7.5 3.55L14 7.33L18.24 0L19.97 1L14.74 10.05L8.23 6.3L2.31 16.55H4.57L8.96 8.99L15.45 12.73Z" />
           </svg>{" "}
         </span>
-        Scan summary: <span className="host">{host}</span>
+        Scan summary
       </h2>
       <section className="scan-result">
         <section className="grade-trend">
