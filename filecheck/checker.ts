@@ -15,6 +15,7 @@ import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import isSvg from "is-svg";
+import sanitizeFilename from "sanitize-filename";
 
 import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
@@ -283,7 +284,7 @@ function isRelevantFile(filePath: string) {
 }
 
 function isBinaryFile(filePath: string) {
-  return !/\.(html|json|md|txt|yml)$/i.test(filePath);
+  return !/\.(html|json|jsonc|md|txt|yml|drawio)$/i.test(filePath);
 }
 
 async function resolveDirectory(file: string): Promise<string[]> {
@@ -310,39 +311,50 @@ function validatePath(filePath: string): string[] {
     path.basename(filePath)
   );
 
-  // Must have supported extension
-  const supportedFilesRegExp = /\.(md|json|txt|yml|jpg|jpeg|png|gif|svg)$/i;
-  if (!supportedFilesRegExp.test(filePath)) {
-    errors.push(
-      `Error: Invalid file: ${shortPath}. The file extension is not supported.`
-    );
-  }
+  // TODO: Read allowed extensions from `mdn/content` repo and check here.
 
   // All characters must be lower case.
-  if (shortPath !== shortPath.toLowerCase() && !filePath.endsWith(".json")) {
+  if (shortPath !== shortPath.toLowerCase() && !shortPath.endsWith(".json")) {
     errors.push(
-      `Error: Invalid path: ${shortPath}. All characters must be lowercase.`
+      `Error: Invalid path: ${filePath}. All characters must be lowercase.`
     );
   }
 
   // Whitespaces are not allowed.
-  if (filePath.includes(" ")) {
+  if (shortPath.includes(" ")) {
     errors.push(
-      `Error: Invalid path: ${shortPath}. File path must not include whitespaces.`
+      `Error: Invalid path: ${filePath}. File path must not include whitespaces.`
     );
   }
-  if (filePath.includes("\u200b")) {
+
+  if (shortPath.includes("\u200b")) {
     errors.push(
-      `Error: Invalid path: ${shortPath}. File path must not include zero width whitespaces.`
+      `Error: Invalid path: ${filePath}. File path must not include zero width whitespaces.`
+    );
+  }
+
+  // Use only ASCII characters
+  const normalized = shortPath.normalize("NFD");
+  if (shortPath !== normalized) {
+    errors.push(
+      `Error: Invalid path: ${filePath}. Use only plain ASCII characters.`
     );
   }
 
   // File path should't contain banned characters: `(`, `)`
   const bannedCharsRegExp = /[()]/;
-  if (bannedCharsRegExp.test(filePath)) {
+  if (bannedCharsRegExp.test(shortPath)) {
     errors.push(
-      `Error: Invalid path: ${shortPath}. File path must not include characters: '(', ')'`
+      `Error: Invalid path: ${filePath}. File path must not include characters: '(', ')'`
     );
+  }
+
+  const sanitizedPath = shortPath
+    .split(/\\|\//g)
+    .map((p) => sanitizeFilename(p))
+    .join(path.sep);
+  if (shortPath !== sanitizedPath) {
+    errors.push(`Error: Invalid path ${shortPath}. Change to ${sanitizedPath}`);
   }
 
   return errors;
