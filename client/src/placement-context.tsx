@@ -24,7 +24,7 @@ const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
   side: {
     typ: "side",
     pattern:
-      /\/[^/]+\/(play|docs\/|blog\/|observatory\/|curriculum\/[^$]|search$)/i,
+      /\/[^/]+\/(play|docs\/|blog\/|observatory\/?|curriculum\/[^$]|search$)/i,
   },
   top: {
     typ: "top-banner",
