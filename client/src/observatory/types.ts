@@ -49,6 +49,7 @@ export interface ObservatoryIndividualTest {
   recommendation: string;
   score_modifier: number;
   policy?: ObservatoryCSPPolicy;
+  route?: string[];
 }
 
 export interface ObservatoryHistoryResult {

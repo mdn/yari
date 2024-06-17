@@ -198,6 +198,16 @@
   --observatory-color-secondary: rgba(105, 105, 105, 1);
   --observatory-alert: #{$mdn-color-light-theme-red-50};
   --observatory-check: #{$mdn-color-light-theme-green-40};
+  --observatory-grade-a-bg: #cdfae080;
+  --observatory-grade-a-border: #00793680;
+  --observatory-grade-b-bg: #dbf3a980;
+  --observatory-grade-b-border: #53790080;
+  --observatory-grade-c-bg: #f3eca980;
+  --observatory-grade-c-border: #746a0080;
+  --observatory-grade-d-bg: #f3d1a980;
+  --observatory-grade-d-border: #aa480080;
+  --observatory-grade-f-bg: #f8dada80;
+  --observatory-grade-f-border: #aa000080;
   --observatory-tooltip-color: rgba(255, 255, 255, 1);
   --observatory-tooltip-color-secondary: rgba(179, 179, 179, 1);
 
@@ -490,6 +500,16 @@
   --observatory-color-secondary: #{$mdn-color-neutral-30};
   --observatory-alert: #{$mdn-color-dark-theme-red-50};
   --observatory-check: #{$mdn-color-dark-theme-green-50};
+  --observatory-grade-a-bg: #2a664380;
+  --observatory-grade-a-border: #00ff6a80;
+  --observatory-grade-b-bg: #4e5a3580;
+  --observatory-grade-b-border: #a8ff0080;
+  --observatory-grade-c-bg: #b7ad5180;
+  --observatory-grade-c-border: #fff70080;
+  --observatory-grade-d-bg: #69461e80;
+  --observatory-grade-d-border: #ff6a0080;
+  --observatory-grade-f-bg: #5c262680;
+  --observatory-grade-f-border: #ff4d4d80;
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};

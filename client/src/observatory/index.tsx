@@ -9,12 +9,14 @@ import useSWRImmutable from "swr/immutable";
 import { OBSERVATORY_API_URL } from "../env";
 import { PageNotFound } from "../page-not-found";
 import ObservatoryDocs from "./docs";
+import { ObservatoryGrades } from "./results";
 
 export default function Observatory({ ...props }) {
   return (
     <div className="observatory">
       <Routes>
         <Route path="/" element={<ObservatoryLanding />} />
+        <Route path="/grades" element={<ObservatoryGrades />} />
         <Route path="/:host" element={<ObservatoryResults />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/docs/*" element={<ObservatoryDocs {...props} />} />

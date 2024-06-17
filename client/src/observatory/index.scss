@@ -67,7 +67,7 @@
 
   .observatory-wrapper {
     display: grid;
-    grid-template-areas: "header header header" ". pong ." "main main main" ". footer .";
+    grid-template-areas: "header header header" ". pong ." "main main main";
     grid-template-columns: 1rem 1fr 1rem;
     max-width: var(--max-width);
     padding: 1.5rem 0;
@@ -80,10 +80,6 @@
     section.main {
       grid-area: main;
       padding: 0 1rem;
-    }
-
-    section.footer {
-      grid-area: footer;
     }
 
     section.place.side {
@@ -118,7 +114,7 @@
     }
 
     @media screen and (min-width: $screen-md) {
-      grid-template-areas: "header pong" "main main" "footer footer";
+      grid-template-areas: "header ." "main pong";
       grid-template-columns: minmax(0, 1fr) 12rem;
       padding-left: 1rem;
       padding-right: 1rem;
@@ -131,7 +127,7 @@
 
     @media screen and (min-width: $screen-xl) {
       column-gap: 3rem;
-      grid-template-areas: "header pong" "main pong" "footer nothing";
+      grid-template-areas: "header ." "main pong";
       grid-template-columns: 2fr minmax(0, 200px);
       padding-left: 1rem;
       padding-right: 1rem;
@@ -253,7 +249,7 @@
       }
     }
 
-    .footer {
+    .main {
       background: var(--observatory-bg);
       border-radius: var(--border-radius);
       margin: 1rem 0;
@@ -272,20 +268,31 @@
         }
       }
 
-      .assessment {
-        margin-left: 0;
-      }
+      @media (min-width: $screen-md) {
+        .assessment {
+          margin-left: 0;
+        }
 
-      .scanning {
-        margin-left: 3.125rem;
-      }
+        .scanning {
+          margin-left: 3.125rem;
+        }
 
-      .security {
-        margin-left: 6.25rem;
-      }
+        .security {
+          margin-left: 6.25rem;
+        }
 
-      .mdn {
-        margin-left: 9.75rem;
+        .mdn {
+          margin-left: 9.75rem;
+        }
+      }
+      @media (max-width: #{$screen-md - 1}) {
+        figure ~ figure {
+          margin-top: 1.75rem;
+        }
+
+        .lines {
+          display: none;
+        }
       }
 
       figure {
@@ -454,13 +461,14 @@
       }
 
       ol.tabs-list {
+        column-gap: 1.75rem;
         display: grid;
         grid-template-areas:
           "testresult csp   rawheaders cookies history bench"
           "hr         hr    hr         hr      hr      hr"
           "mod        mod   mod        mod     mod     mod";
-
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: repeat(6, min-content);
+        justify-content: space-between;
         margin: 0;
         padding: 0;
 
@@ -576,6 +584,10 @@
 
       &.x-labels {
         text-anchor: middle;
+
+        &.current {
+          fill: var(--grade-border);
+        }
       }
 
       &.y-labels {
@@ -633,35 +645,6 @@
         margin-bottom: 0;
       }
     }
-
-    .footer {
-      &,
-      .page-controls {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: center;
-      }
-
-      .page-controls {
-        font-size: var(--type-smaller-font-size);
-        margin: 0 auto;
-      }
-
-      p {
-        margin: 0;
-        margin-right: auto;
-      }
-
-      .previous .icon {
-        transform: rotate(90deg);
-      }
-
-      .next .icon {
-        transform: rotate(-90deg);
-      }
-    }
   }
 
   .icon-bullet {
@@ -671,18 +654,35 @@
   }
 
   section.scan-result {
+    --spacing: 2rem;
     background-color: var(--background-primary);
     border-radius: var(--border-radius);
     display: grid;
     grid-template-areas: "grade host data actions";
-    grid-template-columns: 0.5fr 1fr 1.5fr 1fr;
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
     margin-bottom: 3rem;
     max-width: var(--max-width);
+    padding: var(--spacing);
+
+    a {
+      color: var(--observatory-color);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--observatory-color-secondary);
+    }
 
     .scan-another {
       color: var(--observatory-color-secondary);
       font-size: var(--type-smaller-font-size);
       font-weight: 400;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .arrow-down {
@@ -695,11 +695,6 @@
 
     .label {
       font-weight: 600;
-    }
-
-    section {
-      // line-height: 4rem;
-      padding: 2rem;
     }
 
     .actions {
@@ -729,6 +724,31 @@
       align-self: center;
       grid-area: data;
     }
+
+    @media (max-width: #{$screen-xl - 1}) {
+      align-items: flex-start;
+      column-gap: var(--spacing);
+      grid-template-areas: "grade host actions" "grade data actions";
+      grid-template-columns: auto 1fr auto;
+      justify-content: space-between;
+      row-gap: calc(var(--spacing) / 2);
+
+      .host,
+      .data {
+        align-self: start;
+      }
+    }
+
+    @media (max-width: #{$screen-lg - 1}) {
+      grid-template-areas: "host grade" "data grade" "data actions";
+      grid-template-columns: 2fr 1fr;
+    }
+
+    @media (max-width: 550px) {
+      grid-template-areas: "grade" "host" "data" "actions";
+      grid-template-columns: 1fr auto;
+      padding: calc(var(--spacing) / 2);
+    }
   }
 
   .grade {
@@ -746,27 +766,27 @@
   }
 
   .grade-a {
-    --grade-bg: rgba(169, 243, 186, 0.5);
-    --grade-border: rgba(0, 154, 70, 1);
+    --grade-bg: var(--observatory-grade-a-bg);
+    --grade-border: var(--observatory-grade-a-border);
   }
 
   .grade-b {
-    --grade-bg: rgba(219, 243, 169, 0.5);
-    --grade-border: rgb(128, 128, 21);
+    --grade-bg: var(--observatory-grade-b-bg);
+    --grade-border: var(--observatory-grade-b-border);
   }
 
   .grade-c {
-    --grade-bg: rgba(243, 240, 169, 0.5);
-    --grade-border: rgb(128, 73, 21);
+    --grade-bg: var(--observatory-grade-c-bg);
+    --grade-border: var(--observatory-grade-c-border);
   }
 
   .grade-d {
-    --grade-bg: rgba(243, 218, 169, 0.5);
-    --grade-border: rgb(74, 16, 84);
+    --grade-bg: var(--observatory-grade-d-bg);
+    --grade-border: var(--observatory-grade-d-border);
   }
 
   .grade-f {
-    --grade-bg: rgba(243, 169, 169, 0.5);
-    --grade-border: rgb(128, 21, 21);
+    --grade-bg: var(--observatory-grade-f-bg);
+    --grade-border: var(--observatory-grade-f-border);
   }
 }

@@ -32,6 +32,41 @@ const scoringTable = [
   { grade: "F", scoreText: "0", score: 0 },
 ];
 
+export function ObservatoryGrades() {
+  return (
+    <div className="observatory-results">
+      <Container extraClasses="observatory-wrapper">
+        <section className="header">
+          <section className="heading-and-actions">
+            <h1>
+              <span className="accent">HTTP Observatory</span> Grades{" "}
+            </h1>
+          </section>
+        </section>
+
+        <section className="main">
+          <section className="scan-result">
+            <section className="grade-trend">
+              <div className="overall" style={{ display: "flex", gap: "1rem" }}>
+                {scoringTable.map(({ grade }) => (
+                  <p>
+                    <div
+                      key={grade}
+                      className={`grade grade-${grade[0]?.toLowerCase()}`}
+                    >
+                      {grade}
+                    </div>
+                  </p>
+                ))}
+              </div>
+            </section>
+          </section>
+        </section>
+      </Container>
+    </div>
+  );
+}
+
 export default function ObservatoryResults() {
   const { host } = useParams();
   const { data: result, isLoading, error } = useResult(host);
@@ -223,7 +258,7 @@ function ObservatoryRating({
             <path d="M15.45 12.73L20 4.86V16.55V18.55H0V0.55H2V13.09L7.5 3.55L14 7.33L18.24 0L19.97 1L14.74 10.05L8.23 6.3L2.31 16.55H4.57L8.96 8.99L15.45 12.73Z" />
           </svg>{" "}
         </span>
-        Scan summary: <span className="host">{host}</span>
+        Scan summary
       </h2>
       <section className="scan-result">
         <section className="grade-trend">
@@ -253,6 +288,7 @@ function ObservatoryRating({
                           className={
                             result.scan.grade === st.grade ? "current" : ""
                           }
+                          key={st.grade}
                         >
                           <td>{st.grade}</td>
                           <td>
@@ -272,14 +308,20 @@ function ObservatoryRating({
           {trend(result)}
         </section>
         <section className="host">
-          <span className="label">Host:</span> {host}
+          <span className="label">Host:</span>{" "}
+          {hostAsRedirectChain(host, result)}
         </section>
         <section className="data">
           <div>
-            <span className="label">Score:</span> {result.scan.score}/100
+            <a href="docs/scoring">
+              <span className="label">Score:</span>
+            </a>{" "}
+            {result.scan.score}/100
           </div>
           <div>
-            <span className="label">Scan Time: </span>
+            <a href="#scan_history">
+              <span className="label">Scan Time: </span>
+            </a>
             {new Date(result.scan.scanned_at).toLocaleString([], {
               dateStyle: "medium",
               timeStyle: "medium",
@@ -305,6 +347,23 @@ function ObservatoryRating({
       </section>
     </>
   );
+}
+
+function hostAsRedirectChain(host, result: ObservatoryResult) {
+  const chain = result.tests.redirection?.route;
+  if (!chain || chain.length < 1) {
+    return host;
+  }
+  try {
+    const firstUrl = new URL(chain[0]);
+    const lastUrl = new URL(chain[chain.length - 1]);
+    if (firstUrl.hostname === lastUrl.hostname) {
+      return host;
+    }
+    return `${firstUrl.hostname} → ${lastUrl.hostname}`;
+  } catch (e) {
+    return host;
+  }
 }
 
 function CountdownButton({
@@ -547,10 +606,7 @@ function HeaderLink({ header }: { header: string }) {
   // if successful, link to /en-US/docs/Web/HTTP/Headers/<HEADERNAME>
   const { data } = useHeaderLink(header);
   const hasData = !!data;
-  const displayHeaderName = header
-    .split("-")
-    .map((p) => (p ? p[0].toUpperCase() + p.substring(1) : ""))
-    .join("-");
+  const displayHeaderName = upperCaseHeaderName(header);
   return hasData ? (
     <a href={data} target="_blank" rel="noreferrer">
       {displayHeaderName}
@@ -561,15 +617,23 @@ function HeaderLink({ header }: { header: string }) {
 }
 
 function useHeaderLink(header: string) {
+  const prettyHeaderName = upperCaseHeaderName(header);
   return useSWRImmutable(`headerLink-${header}`, async (key) => {
-    const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}/metadata.json`;
+    const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(prettyHeaderName)}/metadata.json`;
     try {
       const res = await fetch(url, { method: "HEAD" });
       return res.ok
-        ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(header)}`
+        ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(prettyHeaderName)}`
         : null;
     } catch (e) {
       return null;
     }
   });
+}
+
+function upperCaseHeaderName(header: string) {
+  return header
+    .split("-")
+    .map((p) => (p ? p[0].toUpperCase() + p.substring(1) : ""))
+    .join("-");
 }

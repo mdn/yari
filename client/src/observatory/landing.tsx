@@ -108,12 +108,11 @@ export default function ObservatoryLanding() {
               <LandingSVG role="none" />
             </section>
           </section>
-          <SidePlacement />
         </Container>
       </section>
       <section className="observatory-landing">
         <Container extraClasses="observatory-wrapper">
-          <section className="footer">
+          <section className="main">
             <section className="about">
               <h2>About the HTTP Observatory</h2>
               <figure className="assessment">
@@ -126,7 +125,7 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-              <LinesSVG className="assessment" role="none" />
+              <LinesSVG className="lines assessment" role="none" />
               <figure className="scanning">
                 <ScanningSVG role="none" />
                 <figcaption>
@@ -138,7 +137,7 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-              <LinesSVG className="scanning" role="none" />
+              <LinesSVG className="lines scanning" role="none" />
               <figure className="security">
                 <SecuritySVG role="none" />
                 <figcaption>
@@ -152,7 +151,7 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-              <LinesSVG className="security" role="none" />
+              <LinesSVG className="lines security" role="none" />
               <figure className="mdn">
                 <MdnSVG role="none" />
                 <figcaption>
@@ -168,6 +167,7 @@ export default function ObservatoryLanding() {
               </figure>
             </section>
           </section>
+          <SidePlacement />
         </Container>
       </section>
     </>
