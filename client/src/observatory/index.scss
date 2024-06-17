@@ -11,6 +11,24 @@
     letter-spacing: var(--heading-letter-spacing);
   }
 
+  h2.summary::before,
+  h2.result::before {
+    background-color: var(--observatory-color);
+    content: "";
+    display: inline-block;
+    height: 1.4rem;
+    mask-image: url("../../public/assets/observatory/summary-icon.svg");
+    mask-position: left;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    width: 2rem;
+  }
+
+  h2.result::before {
+    height: 1.2rem;
+    mask-image: url("../../public/assets/observatory/results-icon.svg");
+  }
+
   .obs-none {
     color: var(--observatory-color-secondary);
   }
@@ -660,12 +678,6 @@
         margin-bottom: 0;
       }
     }
-  }
-
-  .icon-bullet {
-    display: inline-block;
-    fill: var(--observatory-color);
-    width: 2rem;
   }
 
   section.scan-result {
