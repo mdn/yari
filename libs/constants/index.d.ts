@@ -1,7 +1,7 @@
-import { Locale } from "../types/core.ts";
+import { type Locale } from "../types/core.ts";
 
 export const ACTIVE_LOCALES: Set<string>;
-export const VALID_LOCALES: Map<string, string>;
+export const VALID_LOCALES: Map<string, Locale>;
 export const RETIRED_LOCALES: Map<string, string>;
 export const DEFAULT_LOCALE: Locale;
 export const LOCALE_ALIASES: Map<string, string>;

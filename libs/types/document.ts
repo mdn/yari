@@ -223,7 +223,7 @@ export interface NewsItem {
 export interface BuildData {
   url: string;
   rawBody: string;
-  metadata: { locale: string };
+  metadata: { locale: Locale };
   isMarkdown: true;
   fileInfo: {
     path: string;
@@ -233,7 +233,7 @@ export interface BuildData {
 export interface UnbuiltDocument {
   metadata: DocFrontmatter & {
     frontMatterKeys: string[];
-    locale: string;
+    locale: Locale;
     popularity: number;
     modified: any;
     hash: any;

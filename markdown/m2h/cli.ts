@@ -6,6 +6,7 @@ import { saveFile } from "../../content/document.js";
 import { VALID_LOCALES } from "../../libs/constants/index.js";
 
 import { m2h } from "./index.js";
+import { Locale } from "../../libs/types/core.js";
 
 const { program } = caporal;
 
@@ -44,7 +45,7 @@ program
 
   .option("--locale", "Targets a specific locale", {
     default: "all",
-    validator: Array.from(VALID_LOCALES.values()).concat("all"),
+    validator: Array.from(VALID_LOCALES.values()).concat("all" as Locale),
   })
   .argument("[folder]", "convert by folder")
   .action(

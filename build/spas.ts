@@ -31,6 +31,7 @@ import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 import { buildSitemap } from "./sitemaps.js";
+import { type Locale } from "../libs/types/core.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -48,7 +49,7 @@ const LATEST_NEWS: (NewsItem | string)[] = [
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
 async function buildContributorSpotlight(
-  locale: string,
+  locale: Locale,
   options: { verbose?: boolean }
 ) {
   const prefix = "community/spotlight";
@@ -295,7 +296,7 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const localeLC of fs.readdirSync(root)) {
-      const locale = VALID_LOCALES.get(localeLC) || localeLC;
+      const locale = VALID_LOCALES.get(localeLC) || (localeLC as Locale);
       if (!isValidLocale(locale)) {
         continue;
       }

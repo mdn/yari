@@ -35,6 +35,7 @@ import {
 } from "./utils.js";
 import * as Redirect from "./redirect.js";
 import { DocFrontmatter, UnbuiltDocument } from "../libs/types/document.js";
+import { Locale } from "../libs/types/core.js";
 
 export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
 
@@ -195,7 +196,7 @@ export const read = memoize(
     let filePath: string = null;
     let folder: string = null;
     let root: string = null;
-    let locale: string = null;
+    let locale: Locale = null;
 
     if (fs.existsSync(folderOrFilePath)) {
       filePath = folderOrFilePath;

@@ -6,6 +6,7 @@ import { decodePath, slugToFolder } from "../libs/slug-utils/index.js";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import { getRoot } from "./utils.js";
+import { Locale } from "../libs/types/core.js";
 
 type Pair = [string, string];
 type Pairs = Pair[];
@@ -67,7 +68,7 @@ function validateFromURL(url: string, locale: string, checkPath = true) {
   if (!url.includes("/docs/")) {
     throw new Error(`From-URL must contain '/docs/' was ${url}`);
   }
-  if (!VALID_LOCALES_SET.has(url.split("/")[1])) {
+  if (!VALID_LOCALES_SET.has(url.split("/")[1] as Locale)) {
     throw new Error(`The locale prefix is not valid or wrong case was ${url}`);
   }
   checkURLInvalidSymbols(url);
@@ -121,7 +122,7 @@ function validateURLLocale(url: string) {
     throw new Error(`The URL is expected to start with /$locale/docs/: ${url}`);
   }
   const validValues = [...VALID_LOCALES.values()];
-  if (!validValues.includes(locale)) {
+  if (!validValues.includes(locale as Locale)) {
     throw new Error(`'${locale}' not in ${validValues}`);
   }
 }
