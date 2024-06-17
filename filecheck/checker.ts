@@ -283,7 +283,7 @@ function isRelevantFile(filePath: string) {
   );
 }
 
-function isBinaryFile(filePath: string) {
+function needsChecking(filePath: string) {
   return !/\.(html|json|jsonc|md|txt|yml|drawio)$/i.test(filePath);
 }
 
@@ -373,7 +373,7 @@ export async function runChecker(
   files.forEach((f) => errors.push(...validatePath(f)));
 
   // Check binary files.
-  files = files.filter((f) => isBinaryFile(f));
+  files = files.filter((f) => needsChecking(f));
 
   const progressBar = new cliProgress.SingleBar({ etaBuffer: 100 });
   progressBar.start(files.length, 0);
