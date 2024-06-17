@@ -268,20 +268,30 @@
         }
       }
 
-      .assessment {
-        margin-left: 0;
-      }
+      @media (min-width: $screen-md) {
+        .assessment {
+          margin-left: 0;
+        }
 
-      .scanning {
-        margin-left: 3.125rem;
-      }
+        .scanning {
+          margin-left: 3.125rem;
+        }
 
-      .security {
-        margin-left: 6.25rem;
-      }
+        .security {
+          margin-left: 6.25rem;
+        }
 
-      .mdn {
-        margin-left: 9.75rem;
+        .mdn {
+          margin-left: 9.75rem;
+        }
+      }
+      @media (max-width: #{$screen-md - 1}) {
+        figure ~ figure {
+          margin-top: 1.75rem;
+        }
+        .lines {
+          display: none;
+        }
       }
 
       figure {

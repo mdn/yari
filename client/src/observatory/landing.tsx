@@ -125,7 +125,7 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-              <LinesSVG className="assessment" role="none" />
+              <LinesSVG className="lines assessment" role="none" />
               <figure className="scanning">
                 <ScanningSVG role="none" />
                 <figcaption>
@@ -137,7 +137,7 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-              <LinesSVG className="scanning" role="none" />
+              <LinesSVG className="lines scanning" role="none" />
               <figure className="security">
                 <SecuritySVG role="none" />
                 <figcaption>
@@ -151,7 +151,7 @@ export default function ObservatoryLanding() {
                   </p>
                 </figcaption>
               </figure>
-              <LinesSVG className="security" role="none" />
+              <LinesSVG className="lines security" role="none" />
               <figure className="mdn">
                 <MdnSVG role="none" />
                 <figcaption>
