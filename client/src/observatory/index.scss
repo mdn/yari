@@ -67,7 +67,7 @@
 
   .observatory-wrapper {
     display: grid;
-    grid-template-areas: "header header header" ". pong ." "main main main" ". footer .";
+    grid-template-areas: "header header header" ". pong ." "main main main";
     grid-template-columns: 1rem 1fr 1rem;
     max-width: var(--max-width);
     padding: 1.5rem 0;
@@ -80,10 +80,6 @@
     section.main {
       grid-area: main;
       padding: 0 1rem;
-    }
-
-    section.footer {
-      grid-area: footer;
     }
 
     section.place.side {
@@ -118,7 +114,7 @@
     }
 
     @media screen and (min-width: $screen-md) {
-      grid-template-areas: "header pong" "main main" "footer footer";
+      grid-template-areas: "header ." "main pong";
       grid-template-columns: minmax(0, 1fr) 12rem;
       padding-left: 1rem;
       padding-right: 1rem;
@@ -131,7 +127,7 @@
 
     @media screen and (min-width: $screen-xl) {
       column-gap: 3rem;
-      grid-template-areas: "header pong" "main pong" "footer nothing";
+      grid-template-areas: "header ." "main pong";
       grid-template-columns: 2fr minmax(0, 200px);
       padding-left: 1rem;
       padding-right: 1rem;
@@ -253,7 +249,7 @@
       }
     }
 
-    .footer {
+    .main {
       background: var(--observatory-bg);
       border-radius: var(--border-radius);
       margin: 1rem 0;
@@ -631,35 +627,6 @@
 
       :last-child {
         margin-bottom: 0;
-      }
-    }
-
-    .footer {
-      &,
-      .page-controls {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: center;
-      }
-
-      .page-controls {
-        font-size: var(--type-smaller-font-size);
-        margin: 0 auto;
-      }
-
-      p {
-        margin: 0;
-        margin-right: auto;
-      }
-
-      .previous .icon {
-        transform: rotate(90deg);
-      }
-
-      .next .icon {
-        transform: rotate(-90deg);
       }
     }
   }
