@@ -354,7 +354,9 @@ function validatePath(filePath: string): string[] {
     .map((p) => sanitizeFilename(p))
     .join(path.sep);
   if (shortPath !== sanitizedPath) {
-    errors.push(`Error: Invalid path ${shortPath}. Change to ${sanitizedPath}`);
+    errors.push(
+      `Error: Invalid path: ${shortPath}. Change to ${sanitizedPath}`
+    );
   }
 
   return errors;

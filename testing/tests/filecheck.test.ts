@@ -56,28 +56,35 @@ describe("checking files", () => {
   it("should spot files with uppercase file names", async () => {
     const filePath = getFilePath("samplefiles-upperCase/index.md");
     await expect(runChecker([filePath], {})).rejects.toThrow(
-      "Error: Invalid path: samplefiles-upperCase/index.md. All characters must be lowercase."
+      /Error: Invalid path: .*?samplefiles-upperCase\/index.md. All characters must be lowercase./g
     );
   });
 
   it("should spot files with parenthese in file names", async () => {
     const filePath = getFilePath("samplefiles-paren(theses)/index.md");
     await expect(runChecker([filePath], {})).rejects.toThrow(
-      "Error: Invalid path: samplefiles-paren(theses)/index.md. File path must not include characters: '(', ')'"
+      /Error: Invalid path: .*?samplefiles-paren\(theses\)\/index.md. File path must not include characters: '\(', '\)'/g
     );
   });
 
   it("should spot files with whitespaces in file names", async () => {
     const filePath = getFilePath("_Group Data.json");
     await expect(runChecker([filePath], {})).rejects.toThrow(
-      "Error: Invalid path: en-us/_Group Data.json. File path must not include whitespaces."
+      /Error: Invalid path: .*?en-us\/_Group Data.json. File path must not include whitespaces./g
     );
   });
 
-  it("should spot unsupported extension", async () => {
-    const filePath = getFilePath("animation.flv");
+  it("should not include special characters", async () => {
+    const filePath = getFilePath(":animation.flv");
     await expect(runChecker([filePath], {})).rejects.toThrow(
-      /Error: Invalid file: en-us\/animation.flv. The file extension is not supported\..*/
+      /Error: Invalid path: .*?en-us\/:animation.flv. Change to *.?en-us\/animation.flv/g
+    );
+  });
+
+  it("should include only plain ASCII characters", async () => {
+    const filePath = getFilePath("Änimation.flv");
+    await expect(runChecker([filePath], {})).rejects.toThrow(
+      /Error: Invalid path: .*?en-us\/Änimation.flv. Use only plain ASCII characters./g
     );
   });
 });
