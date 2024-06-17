@@ -1,3 +1,4 @@
+import { Locale } from "./core.js";
 import { BuildData, Doc, DocParent } from "./document.js";
 
 export enum Topic {
@@ -69,5 +70,5 @@ export interface ReadCurriculum {
 }
 
 export interface CurriculumBuildData extends BuildData {
-  metadata: { locale: string } & CurriculumMetaData;
+  metadata: { locale: Locale } & CurriculumMetaData;
 }
