@@ -253,6 +253,7 @@ function ObservatoryRating({
                           className={
                             result.scan.grade === st.grade ? "current" : ""
                           }
+                          key={st.grade}
                         >
                           <td>{st.grade}</td>
                           <td>
