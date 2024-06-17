@@ -651,6 +651,10 @@
       color: var(--observatory-color-secondary);
       font-size: var(--type-smaller-font-size);
       font-weight: 400;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .arrow-down {
