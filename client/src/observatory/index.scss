@@ -450,13 +450,14 @@
       }
 
       ol.tabs-list {
+        column-gap: 1.75rem;
         display: grid;
         grid-template-areas:
           "testresult csp   rawheaders cookies history bench"
           "hr         hr    hr         hr      hr      hr"
           "mod        mod   mod        mod     mod     mod";
-
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: repeat(6, min-content);
+        justify-content: space-between;
         margin: 0;
         padding: 0;
 
