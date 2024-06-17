@@ -155,12 +155,17 @@
 
         svg {
           height: auto;
+          max-width: 50vw;
           width: 100%;
         }
       }
 
       @media (max-width: #{$screen-md - 1}) {
         grid-template-areas: "form" "svg";
+
+        .landing-illustration {
+          text-align: center;
+        }
       }
     }
 
