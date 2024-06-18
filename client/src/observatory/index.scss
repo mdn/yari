@@ -640,11 +640,18 @@
   }
 
   @media screen and (max-width: #{$screen-md - 0.02}) {
-    .scroll-container {
-      margin-left: -1rem;
+    ol.tabs-list {
       overflow-x: auto;
-      padding: 0 1rem;
-      width: 100vw;
+
+      section.tab-content {
+        left: 0;
+        position: sticky;
+        width: calc(100vw - 2rem);
+      }
+    }
+
+    .scroll-container {
+      overflow-x: auto;
     }
   }
 
