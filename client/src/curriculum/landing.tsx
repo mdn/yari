@@ -145,14 +145,20 @@ function PartnerIframe() {
                 }
               }}
             >
-              ⎚
+              ⎚<span className="visually-hidden">Toggle fullscreen</span>
             </button>
-            <a href={SCRIM_URL} className="external"></a>
+            <a href={SCRIM_URL} className="external">
+              <span className="visually-hidden">Open on scrimba</span>
+            </a>
           </div>
           {scrimmed ? (
-            <iframe src={SCRIM_URL}></iframe>
+            <iframe
+              src={SCRIM_URL}
+              title="MDN + Scrimba partnership announcement scrim"
+            ></iframe>
           ) : (
             <img
+              alt="MDN + Scrimba partnership announcement scrim preview image"
               src="/assets/curriculum/scrim.png"
               onClick={() => setScrimmed(true)}
             ></img>
