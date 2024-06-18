@@ -717,9 +717,10 @@
     --spacing: 2rem;
     background-color: var(--background-primary);
     border-radius: var(--border-radius);
+    column-gap: var(--spacing);
     display: grid;
-    grid-template-areas: "grade host data actions";
-    grid-template-columns: repeat(4, auto);
+    grid-template-areas: "grade data actions";
+    grid-template-columns: auto 1fr auto;
     justify-content: space-between;
     margin-bottom: 3rem;
     max-width: var(--max-width);
@@ -786,11 +787,6 @@
       }
     }
 
-    .host {
-      align-self: center;
-      grid-area: host;
-    }
-
     .data {
       align-self: center;
       grid-area: data;
@@ -798,26 +794,22 @@
 
     @media (max-width: #{$screen-xl - 1}) {
       align-items: flex-start;
-      column-gap: var(--spacing);
-      grid-template-areas: "grade host actions" "grade data actions";
+      grid-template-areas: "grade data actions";
       grid-template-columns: auto 1fr auto;
       justify-content: space-between;
       row-gap: calc(var(--spacing) / 2);
 
-      .host,
       .data {
         align-self: start;
       }
     }
 
     @media (max-width: #{$screen-lg - 1}) {
-      grid-template-areas: "host grade" "data grade" "data actions";
-      grid-template-columns: 2fr 1fr;
+      grid-template-areas: "grade data" ". actions";
+      grid-template-columns: min-content 1fr;
     }
 
-    @media (max-width: 550px) {
-      grid-template-areas: "grade" "host" "data" "actions";
-      grid-template-columns: 1fr auto;
+    @media (max-width: #{$screen-md - 1}) {
       padding: calc(var(--spacing) / 2);
     }
   }

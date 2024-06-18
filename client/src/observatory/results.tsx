@@ -235,7 +235,9 @@ function ObservatoryRating({
 }) {
   return (
     <>
-      <h2 className="summary">Scan summary</h2>
+      <h2 className="summary">
+        Scan summary: {hostAsRedirectChain(host, result)}
+      </h2>
       <section className="scan-result">
         <section className="grade-trend">
           <div className="overall">
@@ -282,10 +284,6 @@ function ObservatoryRating({
             </span>
           </div>
           {trend(result)}
-        </section>
-        <section className="host">
-          <span className="label">Host:</span>{" "}
-          {hostAsRedirectChain(host, result)}
         </section>
         <section className="data">
           <div>
