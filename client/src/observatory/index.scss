@@ -128,7 +128,8 @@
       }
     }
 
-    section.place.side {
+    section.place.side,
+    section.place.new-side {
       grid-area: pong;
 
       @media screen and (max-width: #{$screen-md - 0.02}) {
