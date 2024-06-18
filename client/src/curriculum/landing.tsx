@@ -7,7 +7,7 @@ import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
 import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";
 import { CurriculumLayout } from "./layout";
 
@@ -121,6 +121,61 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
 }
 
+const SCRIM_URL = "https://v2.scrimba.com/s06i08l";
+
+function PartnerIframe() {
+  const [scrimmed, setScrimmed] = useState(false);
+  const [show, setShow] = useState(false);
+  const dialog = useRef<HTMLDialogElement | null>(null);
+
+  return (
+    <div className="scrim">
+      <dialog ref={dialog}>
+        <div className="scrim-inner">
+          <div className="partner-header">
+            <span>Clicking will load content from scrimba.com</span>
+            <button
+              onClick={() => {
+                if (show) {
+                  dialog.current?.close();
+                  setShow(false);
+                } else {
+                  dialog.current?.showModal();
+                  setShow(true);
+                }
+              }}
+            >
+              ⎚
+            </button>
+            <a href={SCRIM_URL} className="external"></a>
+          </div>
+          {scrimmed ? (
+            <iframe src={SCRIM_URL}></iframe>
+          ) : (
+            <img
+              src="/assets/curriculum/scrim.png"
+              onClick={() => setScrimmed(true)}
+            ></img>
+          )}
+        </div>
+      </dialog>
+      <p>
+        Learn our curriculum with high quality, interactive courses from our
+        partner{" "}
+        <a
+          href="https://scrimba.com"
+          className="external"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Scrimba
+        </a>
+        {" !"}
+      </p>
+    </div>
+  );
+}
+
 function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
@@ -128,7 +183,8 @@ function About({ section }) {
     <section key={id} className="landing-about-container">
       <div className="landing-about">
         <DisplayH2 id={id} title={title} />
-        <div dangerouslySetInnerHTML={html}></div>
+        <div className="about-content" dangerouslySetInnerHTML={html}></div>
+        <PartnerIframe />
       </div>
     </section>
   );

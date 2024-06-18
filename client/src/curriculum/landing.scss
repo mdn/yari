@@ -111,27 +111,30 @@
         "h2"
         "p1"
         "p2"
-        "p3";
+        "p3"
+        "p4"
+        "scrim";
       grid-template-columns: 1fr;
       margin: 0 auto 3rem;
       max-width: min(var(--max-width), 74rem);
-      @media (min-width: $screen-md) {
+      @media (min-width: $screen-lg) {
+        column-gap: 3rem;
         grid-template-areas:
           "li li "
-          "h2 . "
-          ".  p1 "
-          ".  p2"
-          ".  p3";
-        grid-template-columns: 1fr 1fr;
+          "h2 scrim"
+          "p1 scrim"
+          "p2 scrim"
+          "p3 scrim"
+          "p4 scrim";
+        grid-template-columns: 1fr 28rem;
       }
 
       h2 {
         grid-area: h2;
-        margin: 1rem 0 0;
-        text-align: center;
+        margin: 1rem 0;
       }
 
-      > div {
+      > div.about-content {
         display: contents;
 
         ul {
@@ -203,6 +206,8 @@
           color: var(--text-secondary);
           display: grid;
           grid-template-columns: auto auto;
+          justify-content: start;
+          margin: 1rem 0;
 
           &::before {
             align-self: start;
@@ -230,6 +235,14 @@
           &:nth-child(4) {
             grid-area: p3;
 
+            &::before {
+              content: var(--curriculum-landing-about-bullet);
+            }
+          }
+
+          &:nth-child(5) {
+            grid-area: p4;
+
             a {
               color: var(--text-primary);
               font-weight: var(--font-body-strong-weight);
@@ -242,6 +255,82 @@
               }
             }
           }
+        }
+      }
+
+      > div.scrim {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        grid-area: scrim;
+        height: 100%;
+        justify-content: center;
+        justify-self: center;
+        width: 24rem;
+        @media (min-width: $screen-lg) {
+          justify-self: end;
+        }
+
+        dialog {
+          display: contents;
+
+          .scrim-inner {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            .partner-header {
+              align-items: center;
+              background-color: #000;
+              display: flex;
+              flex-flow: row;
+              justify-content: end;
+              margin: 0;
+              padding: 0 0.5rem;
+              width: 100%;
+
+              a::after {
+                background-color: #fff;
+              }
+
+              button {
+                color: #fff;
+              }
+
+              span {
+                color: #fff;
+                font-size: var(--type-tiny-font-size);
+                margin-right: auto;
+              }
+            }
+
+            iframe,
+            img {
+              border: 1px solid #000;
+              height: 16rem;
+              width: 24rem;
+            }
+          }
+
+          &[open] {
+            height: 90vh;
+            width: 90vw;
+
+            .scrim-inner {
+              height: 100%;
+
+              iframe {
+                height: 100%;
+                width: 100%;
+              }
+            }
+          }
+        }
+
+        p {
+          margin: 0;
+          padding: 1rem 0;
         }
       }
     }
