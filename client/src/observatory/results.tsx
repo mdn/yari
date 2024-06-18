@@ -1,5 +1,5 @@
 import { ObservatoryResult } from "./types";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
 import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
@@ -15,6 +15,8 @@ import InternalLink from "../ui/atoms/internal-link";
 import { Tooltip } from "./tooltip";
 
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
+import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
+import { ObservatoryLayout } from "./layout";
 
 const scoringTable = [
   { grade: "A+", scoreText: "100+", score: 100, stars: true },
@@ -68,6 +70,7 @@ export function ObservatoryGrades() {
 }
 
 export default function ObservatoryResults() {
+  const { pathname } = useLocation();
   const { host } = useParams();
   const { data: result, isLoading, error } = useResult(host);
 
@@ -78,43 +81,52 @@ export default function ObservatoryResults() {
 
   const hasData = !!host && !!result && !isLoading && !isMutating;
   return (
-    <div className="observatory-results">
-      <Container extraClasses="observatory-wrapper">
-        <section className="header">
-          <section className="heading-and-actions">
-            <h1>
-              <span className="accent">HTTP Observatory</span> Report{" "}
-            </h1>
+    <ObservatoryLayout
+      parents={[
+        {
+          title: `Report: ${host}`,
+          uri: pathname,
+        },
+      ]}
+    >
+      <div className="observatory-results">
+        <Container extraClasses="observatory-wrapper">
+          <section className="header">
+            <section className="heading-and-actions">
+              <h1>
+                <span className="accent">HTTP Observatory</span> Report{" "}
+              </h1>
+            </section>
+            {hasData ? (
+              <ObservatoryRating
+                result={result!}
+                host={host}
+                rescanTrigger={trigger}
+              />
+            ) : isLoading || isMutating ? (
+              <Loading delay={200} />
+            ) : (
+              <NoteCard type="error">
+                <h4>Error</h4>
+                <p>
+                  {error
+                    ? error.message
+                    : updateError
+                      ? updateError.message
+                      : "An error occurred."}
+                </p>
+              </NoteCard>
+            )}
           </section>
-          {hasData ? (
-            <ObservatoryRating
-              result={result!}
-              host={host}
-              rescanTrigger={trigger}
-            />
-          ) : isLoading || isMutating ? (
-            <Loading delay={200} />
-          ) : (
-            <NoteCard type="error">
-              <h4>Error</h4>
-              <p>
-                {error
-                  ? error.message
-                  : updateError
-                    ? updateError.message
-                    : "An error occurred."}
-              </p>
-            </NoteCard>
+          {hasData && (
+            <section className="main">
+              <ObservatoryScanResults result={result} host={host} />
+            </section>
           )}
-        </section>
-        {hasData && (
-          <section className="main">
-            <ObservatoryScanResults result={result} host={host} />
-          </section>
-        )}
-        <SidePlacement />
-      </Container>
-    </div>
+          <SidePlacement />
+        </Container>
+      </div>
+    </ObservatoryLayout>
   );
 }
 
