@@ -63,7 +63,7 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && pageType !== "curriculum" && (
+        {!["document-page", "curriculum", "observatory"].includes(pageType) && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
           </div>
@@ -88,6 +88,7 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 function LazyStandardLayout(props: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
@@ -102,14 +103,18 @@ function LazyStandardLayout(props: {
 }
 
 function StandardLayout({
+  pageType,
   extraClasses,
   children,
 }: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
+    <Layout pageType={pageType || `standard-page ${extraClasses || ""}`}>
+      {children}
+    </Layout>
   );
 }
 function DocumentLayout({ children }) {
@@ -270,7 +275,7 @@ export function App(appProps: HydrationData) {
             <Route
               path="observatory/*"
               element={
-                <LazyStandardLayout>
+                <LazyStandardLayout pageType="observatory">
                   <Observatory {...appProps} />
                 </LazyStandardLayout>
               }

@@ -12,6 +12,7 @@ import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/s
 import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
 import Container from "../ui/atoms/container";
 import { Loading } from "../ui/atoms/loading";
+import { ObservatoryLayout } from "./layout";
 
 export default function ObservatoryLanding() {
   document.title = "HTTP Observatory | MDN";
@@ -55,14 +56,14 @@ export default function ObservatoryLanding() {
     e.preventDefault();
     setError(undefined);
     if (form.host.trim().length === 0) {
-      setError(new Error("please enter a hostname"));
+      setError(new Error("Please enter a valid hostname"));
     } else {
       trigger();
     }
   };
 
   return (
-    <>
+    <ObservatoryLayout>
       <section className="observatory-landing observatory-landing-top">
         <Container extraClasses="observatory-wrapper">
           <section className="header">
@@ -170,6 +171,6 @@ export default function ObservatoryLanding() {
           <SidePlacement />
         </Container>
       </section>
-    </>
+    </ObservatoryLayout>
   );
 }
