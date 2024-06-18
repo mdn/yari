@@ -435,7 +435,7 @@
       table {
         background: var(--observatory-table-bg);
         border: none;
-        min-width: calc($screen-sm - 2rem);
+        min-width: calc($screen-lg - 2rem - 12rem);
 
         th {
           background: var(--observatory-table-header-bg);
@@ -547,6 +547,8 @@
         grid-template-columns: repeat(6, min-content);
         justify-content: space-between;
         margin: 0;
+        overflow-x: auto;
+        overscroll-behavior-x: none;
         padding: 0;
 
         &::before {
@@ -627,7 +629,17 @@
 
           > section.tab-content {
             grid-area: mod;
+            left: 0;
             margin: 0;
+            position: sticky;
+
+            @media screen and (max-width: #{$screen-lg - 0.02}) {
+              width: calc(100vw - 12rem - 2rem);
+            }
+
+            @media screen and (max-width: #{$screen-md - 0.02}) {
+              width: calc(100vw - 2rem);
+            }
           }
         }
       }
@@ -637,22 +649,8 @@
   .scroll-container {
     margin-bottom: 1.5rem;
     margin-top: 0.8rem;
-  }
-
-  @media screen and (max-width: #{$screen-md - 0.02}) {
-    ol.tabs-list {
-      overflow-x: auto;
-
-      section.tab-content {
-        left: 0;
-        position: sticky;
-        width: calc(100vw - 2rem);
-      }
-    }
-
-    .scroll-container {
-      overflow-x: auto;
-    }
+    overflow-x: auto;
+    overscroll-behavior-x: none;
   }
 
   svg.chart {
