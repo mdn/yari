@@ -16,6 +16,7 @@ import { Tooltip } from "./tooltip";
 
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
 import { ObservatoryLayout } from "./layout";
+import { ObservatoryDocsNav } from "./docs";
 
 const scoringTable = [
   { grade: "A+", scoreText: "100+", score: 100, stars: true },
@@ -117,6 +118,9 @@ export default function ObservatoryResults() {
               </NoteCard>
             )}
           </section>
+          <nav className="sidebar">
+            <ObservatoryDocsNav />
+          </nav>
           {hasData && (
             <section className="main">
               <ObservatoryScanResults result={result} host={host} />
