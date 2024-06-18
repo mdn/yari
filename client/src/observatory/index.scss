@@ -38,7 +38,25 @@
   }
 
   .obs-pass-icon {
-    vertical-align: -0.5rem;
+    svg.pass {
+      path {
+        fill: var(--observatory-pass-icon-bg);
+      }
+
+      circle {
+        fill: var(--observatory-pass-icon-color);
+      }
+    }
+
+    svg.fail {
+      path {
+        fill: var(--observatory-fail-icon-bg);
+      }
+
+      circle {
+        fill: var(--observatory-fail-icon-color);
+      }
+    }
   }
 
   .accent {
@@ -448,10 +466,12 @@
           overflow-wrap: anywhere;
           padding: 0.5rem 1.5rem;
           vertical-align: top;
-        }
 
-        tr {
-          // background: var(--background-primary);
+          &.score {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+          }
         }
 
         a {
@@ -784,7 +804,7 @@
       grid-area: actions;
 
       .button-wrap {
-        width: 8rem;
+        width: 9rem;
       }
     }
 

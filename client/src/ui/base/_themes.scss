@@ -193,6 +193,10 @@
   --observatory-accent: rgba(155, 101, 255, 1);
   --observatory-border: rgba(228, 228, 246, 1);
   --observatory-border-accent: rgba(90, 35, 215, 1);
+  --observatory-pass-icon-bg: rgba(229, 250, 230, 1);
+  --observatory-pass-icon-color: rgba(0, 121, 54, 1);
+  --observatory-fail-icon-bg: rgba(250, 229, 229, 1);
+  --observatory-fail-icon-color: rgba(211, 0, 56, 1);
   --observatory-table-bg: rgba(255, 255, 255, 1);
   --observatory-color: #000;
   --observatory-color-secondary: rgba(105, 105, 105, 1);
@@ -494,6 +498,10 @@
   --observatory-accent: rgba(163, 136, 255, 1);
   --observatory-border: #{$mdn-color-neutral-70};
   --observatory-border-accent: #{$mdn-color-dark-theme-blue-20};
+  --observatory-pass-icon-bg: rgba(38, 92, 61, 1);
+  --observatory-pass-icon-color: rgba(138, 255, 163, 1);
+  --observatory-fail-icon-bg: rgba(92, 38, 38, 1);
+  --observatory-fail-icon-color: rgba(255, 121, 155, 1);
   --observatory-table-bg: rgba(0, 0, 0, 1);
   --observatory-color: #fff;
   --observatory-color-secondary: rgba(249, 249, 251, 1);
