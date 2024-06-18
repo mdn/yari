@@ -154,6 +154,15 @@
 
   .observatory-landing.observatory-landing-top {
     background: var(--observatory-bg-secondary);
+
+    .observatory-wrapper {
+      grid-template-areas: "header .";
+
+      @media (max-width: #{$screen-xl - 1}) {
+        grid-template-areas: "header";
+        grid-template-columns: auto;
+      }
+    }
   }
 
   .observatory-landing {
