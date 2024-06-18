@@ -158,7 +158,7 @@ function PartnerIframe() {
             ></iframe>
           ) : (
             <img
-              alt="MDN + Scrimba partnership announcement scrim preview image"
+              alt="MDN + Scrimba partnership announcement scrim preview"
               src="/assets/curriculum/scrim.png"
               onClick={() => setScrimmed(true)}
             ></img>
