@@ -5,3 +5,4 @@
 /en-US/docs/Web/HTML/Element/anchor	/en-US/docs/Web/HTML/Element/a
 /en-US/docs/Web/JavaScript/Reference/Stern_mode	/en-US/docs/Web/JavaScript/Reference/Strict_mode
 /en-US/docs/Web/JavaScript/Reference/Global_Objects/Flag	/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+/en-US/docs/Web/Redirect_to_external_page	https://external.example.com/

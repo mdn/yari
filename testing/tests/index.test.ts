@@ -1487,6 +1487,42 @@ test("external links always get the right attributes", () => {
   });
 });
 
+test("an external link only in the _redirect.txt of default locale", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "zh-cn",
+    "docs",
+    "web",
+    "externallinks"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("article a")).toHaveLength(1); // sanity check
+  const $a = $($("article a")[0]);
+  expect($a.hasClass("external")).toBe(true);
+  // The "only-in-en-us" class should not be added to the external link
+  expect($a.hasClass("only-in-en-us")).toBe(false);
+  expect($a.attr("target")).toBe("_blank");
+  expect($a.attr("href")).toBe("https://external.example.com/");
+
+  // check flaws
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
+  expect(doc.flaws.broken_links).toHaveLength(1);
+  const map = new Map(doc.flaws.broken_links.map((x) => [x.id, x]));
+  expect(map.get("link1").href).toBe(
+    "/zh-CN/docs/Web/Redirect_to_external_page"
+  );
+  expect(map.get("link1").explanation).toBe(
+    "Can't resolve /zh-CN/docs/Web/Redirect_to_external_page"
+  );
+  expect(map.get("link1").suggestion).toBe("https://external.example.com/");
+  expect(map.get("link1").fixable).toBe(true);
+});
+
 test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 

@@ -329,10 +329,8 @@ export function getBrokenLinksFlaws(
                 const enUSResolved = Redirect.resolve(enUSHrefNormalized);
                 let suggestion = null;
                 let enUSFallbackURL = null;
-                const hostname = new URL(enUSResolved, "http://www.example.com")
-                  .hostname;
                 // check if the resolved URL is an external URL
-                if (hostname !== "www.example.com") {
+                if (!enUSResolved.startsWith("/")) {
                   // external URL
                   suggestion = enUSResolved;
                 } else if (enUSResolved !== enUSHrefNormalized) {
