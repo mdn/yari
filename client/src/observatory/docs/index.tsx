@@ -20,7 +20,7 @@ const ITEMS = [
   },
 ];
 
-function ObservatoryDocsNav() {
+export function ObservatoryDocsNav() {
   return <RelatedTopics heading="HTTP Observatory" items={ITEMS} />;
 }
 
