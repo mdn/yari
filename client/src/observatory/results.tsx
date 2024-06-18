@@ -1,7 +1,6 @@
 import { ObservatoryResult } from "./types";
 import { useLocation, useParams } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
-import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
@@ -16,6 +15,7 @@ import { Tooltip } from "./tooltip";
 
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
 import { ObservatoryLayout } from "./layout";
+import { Progress } from "./progress";
 import { ObservatoryDocsNav } from "./docs";
 
 const scoringTable = [
@@ -104,7 +104,9 @@ export default function ObservatoryResults() {
                 rescanTrigger={trigger}
               />
             ) : isLoading || isMutating ? (
-              <Loading delay={200} />
+              <section className="scan-rescan">
+                <Progress message={`Rescanning ${host}…`} />
+              </section>
             ) : (
               <NoteCard type="error">
                 <h4>Error</h4>

@@ -2,6 +2,8 @@
 
 .observatory {
   --border-radius: 0.3rem;
+
+  --spacing: 2rem;
   background-color: var(--observatory-bg);
 
   h1,
@@ -128,7 +130,8 @@
       }
     }
 
-    section.place.side {
+    section.place.side,
+    section.place.new-side {
       grid-area: pong;
 
       @media screen and (max-width: #{$screen-md - 0.02}) {
@@ -192,6 +195,7 @@
       display: grid;
       gap: 0 6.25rem;
       grid-template-areas: "form svg";
+      grid-template-columns: 2fr 1fr;
 
       .scan-form {
         grid-area: form;
@@ -225,16 +229,6 @@
     }
 
     form {
-      .progress {
-        align-items: center;
-        background: var(--observatory-bg-secondary);
-        border-radius: var(--border-radius);
-        color: var(--observatory-accent);
-        display: flex;
-        height: 3rem;
-        justify-content: center;
-      }
-
       .error {
         color: var(--form-invalid-color);
         margin-top: 0.5rem;
@@ -751,8 +745,16 @@
     }
   }
 
+  section.scan-rescan {
+    background-color: var(--background-primary);
+    border-radius: var(--border-radius);
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    max-width: var(--max-width);
+    padding: var(--spacing);
+  }
+
   section.scan-result {
-    --spacing: 2rem;
     background-color: var(--background-primary);
     border-radius: var(--border-radius);
     column-gap: var(--spacing);

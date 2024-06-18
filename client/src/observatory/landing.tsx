@@ -11,8 +11,8 @@ import { ReactComponent as ScanningSVG } from "../../public/assets/observatory/s
 import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/security.svg";
 import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
 import Container from "../ui/atoms/container";
-import { Loading } from "../ui/atoms/loading";
 import { ObservatoryLayout } from "./layout";
+import { Progress } from "./progress";
 
 export default function ObservatoryLanding() {
   document.title = "HTTP Observatory | MDN";
@@ -77,10 +77,10 @@ export default function ObservatoryLanding() {
                 provided insights to over 6.5 million websites through 47
                 million scans.
               </p>
-              <form onSubmit={submit}>
-                {isMutating ? (
-                  <Loading delay={200} />
-                ) : (
+              {isMutating ? (
+                <Progress message={`Scanning ${cleanHostname}…`} />
+              ) : (
+                <form onSubmit={submit}>
                   <div className="input-group">
                     <label htmlFor="host" className="visually-hidden">
                       Domain
@@ -99,11 +99,11 @@ export default function ObservatoryLanding() {
                       Scan
                     </button>
                   </div>
-                )}
-                {error && !isMutating && (
-                  <div className="error">Error: {error.message}</div>
-                )}
-              </form>
+                </form>
+              )}
+              {error && !isMutating && (
+                <div className="error">Error: {error.message}</div>
+              )}
             </section>
             <section className="landing-illustration">
               <LandingSVG role="none" />
