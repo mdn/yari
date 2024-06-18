@@ -198,7 +198,7 @@ function GradeSVG({
               >
                 <line
                   stroke="currentColor"
-                  x2={width - leftSpace - rightSpace}
+                  x2={width - leftSpace - rightSpace + barWidth / 2}
                 ></line>
                 <text
                   className="y-labels"
@@ -225,7 +225,7 @@ function GradeSVG({
               y={yTickOffset - barHeight}
               rx="4"
               ry="4"
-              width="60"
+              width={barWidth}
               height={barHeight}
             ></rect>
           );
