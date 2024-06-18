@@ -4,7 +4,7 @@ import StaticPage from "../../homepage/static-page";
 import "./index.scss";
 import { useLocale } from "../../hooks";
 
-function PlusDocsNav() {
+function ObservatoryDocsNav() {
   return (
     <RelatedTopics
       heading="HTTP Observatory"
@@ -71,7 +71,7 @@ function ObservatoryDocs({ ...props }) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 
-  const sidebarHeader = <PlusDocsNav />;
+  const sidebarHeader = <ObservatoryDocsNav />;
 
   return (
     <StaticPage
