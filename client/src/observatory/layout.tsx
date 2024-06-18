@@ -22,6 +22,7 @@ export function ObservatoryLayout({
             },
             ...parents,
           ].filter(Boolean)}
+          withSidebar={false}
         />
       </div>
       {children}
