@@ -316,10 +316,8 @@ function ObservatoryRating({
             title="Rescan"
             onClickHandler={rescanTrigger}
           />
-          <div>
-            <InternalLink className="scan-another" to="../">
-              Scan another website
-            </InternalLink>
+          <div className="scan-another">
+            <InternalLink to="../">Scan another website</InternalLink>
           </div>
         </section>
       </section>
@@ -386,7 +384,9 @@ function CountdownButton({
           background: `conic-gradient(var(--button-color) 0grad, ${progressPercent}%, rgba(0,0,0,0) ${progressPercent}% 100%)`,
         }}
       ></div>
-      <small>Wait for {title}</small>
+      <small>
+        Wait {remainingSecs}s to {title}
+      </small>
     </Button>
   ) : (
     <Button onClickHandler={rescan}>{title}</Button>

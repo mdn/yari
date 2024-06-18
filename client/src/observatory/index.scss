@@ -153,7 +153,7 @@
   }
 
   .observatory-landing.observatory-landing-top {
-    background: var(--background-primary);
+    background: var(--observatory-bg-secondary);
   }
 
   .observatory-landing {
@@ -298,6 +298,39 @@
 
         h2 {
           margin-bottom: 2rem;
+        }
+
+        svg.lines defs#defs3 #gradient {
+          stop#stop1 {
+            stop-color: var(--observatory-accent);
+          }
+
+          stop#stop2 {
+            stop-color: color-mix(
+              in srgb,
+              var(--observatory-accent),
+              var(--observatory-bg)
+            );
+          }
+
+          stop#stop3 {
+            stop-color: color-mix(
+              in srgb,
+              var(--observatory-accent) 0%,
+              var(--observatory-bg)
+            );
+          }
+        }
+
+        figure {
+          &.assessment,
+          &.scanning,
+          &.security,
+          &.mdn {
+            svg path {
+              fill: var(--observatory-accent);
+            }
+          }
         }
       }
 
@@ -710,12 +743,16 @@
     }
 
     .scan-another {
-      color: var(--observatory-color-secondary);
       font-size: var(--type-smaller-font-size);
       font-weight: 400;
+      margin-top: 1.2rem;
 
-      &:hover {
-        text-decoration: underline;
+      a {
+        color: var(--observatory-color-secondary);
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
 
