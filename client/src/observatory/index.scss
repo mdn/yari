@@ -40,6 +40,8 @@
   }
 
   .obs-pass-icon {
+    vertical-align: top;
+
     svg.pass {
       path {
         fill: var(--observatory-pass-icon-bg);
@@ -557,6 +559,40 @@
 
         .icon-check-circle {
           background-color: var(--observatory-check);
+        }
+
+        @media screen and (max-width: #{$screen-lg - 0.02}) {
+          min-width: 0;
+
+          thead {
+            display: none;
+          }
+
+          tbody,
+          tr,
+          td {
+            display: block !important;
+            width: auto !important;
+            text-align: left !important;
+          }
+
+          td:before {
+            content: attr(data-header);
+            display: inline;
+            font-weight: 600;
+          }
+
+          td:first-of-type {
+            background: var(--observatory-table-header-bg);
+          }
+
+          td:not(:first-of-type):not(:last-of-type) {
+            padding-bottom: 0;
+          }
+
+          p:first-child {
+            display: inline;
+          }
         }
       }
 

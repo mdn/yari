@@ -37,17 +37,19 @@ export default function ObservatoryCSP({
               return policy[pt] ? (
                 <tr key={policy[pt].description}>
                   <td
+                    data-header="Test: "
                     dangerouslySetInnerHTML={{
                       __html: policy[pt].description,
                     }}
                   />
-                  <td>
+                  <td data-header="Pass: ">
                     <PassIcon pass={!policy[pt].pass} />
                     <span className="visually-hidden">
                       {!policy[pt].PassIcon ? "Passed" : "Failed"}
                     </span>
                   </td>
                   <td
+                    data-header="Info: "
                     dangerouslySetInnerHTML={{
                       __html: policy[pt].info,
                     }}
@@ -65,11 +67,11 @@ export default function ObservatoryCSP({
     <section className="tab-content">
       <figure className="scroll-container">
         <table className="csp">
-          <thead>
+          <tbody>
             <tr>
-              <th>No CSP headers detected</th>
+              <td>No CSP headers detected</td>
             </tr>
-          </thead>
+          </tbody>
         </table>
       </figure>
     </section>

@@ -427,13 +427,13 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
             {Object.entries(result.tests).map(([name, test]) => {
               return (
                 <tr key={name}>
-                  <td>
+                  <td data-header="Test: ">
                     <Link href={test.link}>{test.title}</Link>
                   </td>
                   {test.pass === null ? (
-                    <td>-</td>
+                    <td data-header="Score: ">-</td>
                   ) : (
-                    <td className="score">
+                    <td className="score" data-header="Score: ">
                       <span className="obs-score-value">
                         {test.score_modifier}
                       </span>
@@ -441,11 +441,13 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                     </td>
                   )}
                   <td
+                    data-header="Reason: "
                     dangerouslySetInnerHTML={{
                       __html: test.score_description,
                     }}
                   />
                   <td
+                    data-header="Recommendation: "
                     dangerouslySetInnerHTML={{
                       __html:
                         test.recommendation || `<p class="obs-none">None</p>`,
@@ -478,14 +480,14 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
               .reverse()
               .map(({ scanned_at, score, grade }) => (
                 <tr key={scanned_at}>
-                  <td>
+                  <td data-header="Date: ">
                     {new Date(scanned_at).toLocaleString([], {
                       dateStyle: "full",
                       timeStyle: "medium",
                     })}
                   </td>
-                  <td>{score}</td>
-                  <td>{grade}</td>
+                  <td data-header="Score: ">{score}</td>
+                  <td data-header="Grade: ">{grade}</td>
                 </tr>
               ))}
           </tbody>
@@ -515,8 +517,8 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
           <tbody>
             {Object.entries(cookies).map(([key, value]) => (
               <tr key={key}>
-                <td>{key}</td>
-                <td>
+                <td data-header="Name: ">{key}</td>
+                <td data-header="Expires: ">
                   {value.expires
                     ? new Date(value.expires).toLocaleString([], {
                         dateStyle: "medium",
@@ -524,23 +526,25 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
                       })
                     : "Session"}
                 </td>
-                <td>
+                <td data-header="Path: ">
                   <code>{value.path}</code>
                 </td>
-                <td>
+                <td data-header="Secure: ">
                   <PassIcon pass={value.secure} />
                   <span className="visually-hidden">
                     {value.secure ? "True" : "False"}
                   </span>
                 </td>
-                <td>
+                <td data-header="HttpOnly: ">
                   <PassIcon pass={value.httponly} />
                   <span className="visually-hidden">
                     {value.httponly ? "True" : "False"}
                   </span>
                 </td>
-                <td>{value.samesite && <code>{value.samesite}</code>}</td>
-                <td>
+                <td data-header="SameSite: ">
+                  {value.samesite && <code>{value.samesite}</code>}
+                </td>
+                <td data-header="Prefixed: ">
                   {[key]
                     .map(
                       (x) => x.startsWith("__Host") || x.startsWith("__Secure")
@@ -564,11 +568,11 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
     <section className="tab-content">
       <figure className="scroll-container">
         <table className=" cookies">
-          <thead>
+          <tbody>
             <tr>
-              <th>No cookies detected</th>
+              <td>No cookies detected</td>
             </tr>
-          </thead>
+          </tbody>
         </table>
       </figure>
     </section>
@@ -590,10 +594,10 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
             {Object.entries(result.scan.response_headers).map(
               ([header, value]) => (
                 <tr key={header}>
-                  <td>
+                  <td data-header="Header: ">
                     <HeaderLink header={header} />
                   </td>
-                  <td>{value}</td>
+                  <td data-header="Value: ">{value}</td>
                 </tr>
               )
             )}
