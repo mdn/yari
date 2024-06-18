@@ -383,7 +383,7 @@ function CountdownButton({
         }}
       ></div>
       <small>
-        Wait {remainingSecs}s to {title}
+        Wait {remainingSecs}s to {title.toLowerCase()}
       </small>
     </Button>
   ) : (

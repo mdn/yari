@@ -193,9 +193,10 @@
   --observatory-accent: rgba(155, 101, 255, 1);
   --observatory-border: rgba(228, 228, 246, 1);
   --observatory-border-accent: rgba(90, 35, 215, 1);
-  --observatory-table-bg: #fff;
+  --observatory-table-bg: rgba(255, 255, 255, 1);
   --observatory-color: #000;
   --observatory-color-secondary: rgba(105, 105, 105, 1);
+  --observatory-table-header-bg: rgba(249, 249, 251, 1);
   --observatory-alert: #{$mdn-color-light-theme-red-50};
   --observatory-check: #{$mdn-color-light-theme-green-40};
   --observatory-grade-a-bg: #cdfae080;
@@ -493,9 +494,10 @@
   --observatory-accent: rgba(163, 136, 255, 1);
   --observatory-border: #{$mdn-color-neutral-70};
   --observatory-border-accent: #{$mdn-color-dark-theme-blue-20};
-  --observatory-table-bg: #{$mdn-color-neutral-90};
+  --observatory-table-bg: rgba(0, 0, 0, 1);
   --observatory-color: #fff;
-  --observatory-color-secondary: #{$mdn-color-neutral-30};
+  --observatory-color-secondary: rgba(249, 249, 251, 1);
+  --observatory-table-header-bg: var(--observatory-bg-secondary);
   --observatory-alert: #{$mdn-color-dark-theme-red-50};
   --observatory-check: #{$mdn-color-dark-theme-green-50};
   --observatory-grade-a-bg: #2a664380;

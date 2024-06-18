@@ -248,6 +248,11 @@
           outline-width: 1px;
         }
 
+        ::placeholder {
+          color: var(--observatory-color-secondary);
+          opacity: 0.8;
+        }
+
         input {
           background-color: var(--observatory-bg);
           border: 1px solid var(--observatory-border);
@@ -429,14 +434,11 @@
     .scan-results {
       table {
         background: var(--observatory-table-bg);
-        border: 1px solid var(--observatory-border);
-        border-collapse: separate;
-        border-radius: var(--border-radius);
-        border-spacing: 0;
+        border: none;
         min-width: calc($screen-sm - 2rem);
 
         th {
-          background: var(--background-secondary);
+          background: var(--observatory-table-header-bg);
           color: var(--text-secondary);
           font-weight: 500;
           vertical-align: top;
@@ -449,7 +451,7 @@
         }
 
         tr {
-          background: var(--background-primary);
+          // background: var(--background-primary);
         }
 
         a {
