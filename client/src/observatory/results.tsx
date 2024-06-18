@@ -15,7 +15,6 @@ import InternalLink from "../ui/atoms/internal-link";
 import { Tooltip } from "./tooltip";
 
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
-import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { ObservatoryLayout } from "./layout";
 
 const scoringTable = [

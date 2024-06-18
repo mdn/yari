@@ -3,8 +3,6 @@ import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import "./index.scss";
 import { useLocale } from "../../hooks";
-import { ArticleActionsContainer } from "../../ui/organisms/article-actions-container";
-import { DEFAULT_LOCALE } from "../../../../libs/constants";
 import { ObservatoryLayout } from "../layout";
 
 const ITEMS = [
