@@ -14,6 +14,8 @@ import Container from "../ui/atoms/container";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ERROR_MAP } from "./utils";
+import { useGleanClick } from "../telemetry/glean-context";
+import { OBSERVATORY } from "../telemetry/constants";
 
 export default function ObservatoryLanding() {
   document.title = "HTTP Observatory | MDN";
@@ -67,6 +69,8 @@ export default function ObservatoryLanding() {
     }
   };
 
+  const gleanClick = useGleanClick();
+
   return (
     <ObservatoryLayout>
       <section className="observatory-landing observatory-landing-top">
@@ -100,7 +104,11 @@ export default function ObservatoryLanding() {
                         setForm({ ...form, host: e.target.value })
                       }
                     />
-                    <button type="submit" disabled={isMutating}>
+                    <button
+                      type="submit"
+                      disabled={isMutating}
+                      onClick={() => gleanClick(`${OBSERVATORY}: scan`)}
+                    >
                       Scan
                     </button>
                   </div>

@@ -11,6 +11,8 @@ import ObservatoryBenchmark from "./benchmark";
 import useSWRImmutable from "swr/immutable";
 import InternalLink from "../ui/atoms/internal-link";
 import { Tooltip } from "./tooltip";
+import { useGleanClick } from "../telemetry/glean-context";
+import { OBSERVATORY } from "../telemetry/constants";
 
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
 import { ObservatoryLayout } from "./layout";
@@ -144,31 +146,37 @@ function ObservatoryScanResults({ result, host }) {
         name: "Test Result",
         hash: "test_result",
         element: <ObservatoryTests result={result} />,
+        glean: "test-result-tab",
       },
       {
         name: "CSP Analysis",
         hash: "csp_analysis",
         element: <ObservatoryCSP result={result} />,
+        glean: "csp-analysis-tab",
       },
       {
         name: "Raw Server Headers",
         hash: "raw_server_headers",
         element: <ObservatoryHeaders result={result} />,
+        glean: "raw-server-headers-tab",
       },
       {
         name: "Cookies",
         hash: "cookies",
         element: <ObservatoryCookies result={result} />,
+        glean: "cookies-tab",
       },
       {
         name: "Scan History",
         hash: "scan_history",
         element: <ObservatoryHistory result={result} />,
+        glean: "scan-history-tab",
       },
       {
         name: "Benchmark Comparison",
         hash: "benchmark_comparison",
         element: <ObservatoryBenchmark result={result} />,
+        glean: "benchmark-tab",
       },
     ];
   }, [result]);
@@ -193,6 +201,8 @@ function ObservatoryScanResults({ result, host }) {
     };
   });
 
+  const gleanClick = useGleanClick();
+
   useEffect(() => {
     window.location.hash = tabs[selectedTab]?.hash || defaultTabHash;
   }, [tabs, selectedTab, defaultTabHash]);
@@ -210,7 +220,10 @@ function ObservatoryScanResults({ result, host }) {
                 name="selected"
                 type="radio"
                 checked={i === selectedTab}
-                onChange={() => setSelectedTab(i)}
+                onChange={() => {
+                  gleanClick(`${OBSERVATORY}: ${t.glean}`);
+                  setSelectedTab(i);
+                }}
               />
               <label htmlFor={`tab-${i}`}>{t.name}</label>
               {t.element}
@@ -252,6 +265,8 @@ function ObservatoryRating({
   host: string;
   rescanTrigger: Function;
 }) {
+  const gleanClick = useGleanClick();
+
   return (
     <>
       <h2 className="summary">
@@ -334,7 +349,12 @@ function ObservatoryRating({
             onClickHandler={rescanTrigger}
           />
           <div className="scan-another">
-            <InternalLink to="../">Scan another website</InternalLink>
+            <InternalLink
+              to="../"
+              onClick={() => gleanClick(`${OBSERVATORY}: scan-another`)}
+            >
+              Scan another website
+            </InternalLink>
           </div>
         </section>
       </section>
@@ -386,7 +406,10 @@ function CountdownButton({
     return () => clearInterval(interval);
   });
 
+  const gleanClick = useGleanClick();
+
   function rescan() {
+    gleanClick(`${OBSERVATORY}: rescan`);
     onClickHandler();
   }
 
