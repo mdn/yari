@@ -56,7 +56,7 @@ export function SidePlacement() {
   ) : placementData.side.cta ? (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side"]}
+      extraClassNames={["side", "new-side"]}
       imageWidth={125}
       imageHeight={125}
       cta={placementData.side.cta}
