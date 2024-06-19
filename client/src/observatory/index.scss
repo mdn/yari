@@ -40,8 +40,6 @@
   }
 
   .obs-pass-icon {
-    vertical-align: top;
-
     svg.pass {
       path {
         fill: var(--observatory-pass-icon-bg);
@@ -562,6 +560,7 @@
         }
 
         @media screen and (max-width: #{$screen-lg - 0.02}) {
+          // responsive table
           min-width: 0;
 
           thead {
@@ -571,9 +570,7 @@
           tbody,
           tr,
           td {
-            display: block !important;
-            width: auto !important;
-            text-align: left !important;
+            display: block;
           }
 
           td:before {
@@ -586,8 +583,40 @@
             background: var(--observatory-table-header-bg);
           }
 
+          &.tests,
+          &.csp,
+          &.headers,
+          &.cookies {
+            td:first-of-type {
+              width: auto;
+            }
+          }
+
           td:not(:first-of-type):not(:last-of-type) {
             padding-bottom: 0;
+          }
+
+          td:nth-of-type(n + 3) {
+            padding-top: 0.75rem;
+          }
+
+          &.cookies {
+            td:nth-of-type(n + 3) {
+              text-align: left;
+            }
+          }
+
+          td.score {
+            justify-content: flex-start;
+            gap: 1ch;
+
+            .obs-score-value {
+              margin-right: 0;
+            }
+
+            .obs-pass-icon {
+              height: 1.5em;
+            }
           }
 
           p:first-child {
