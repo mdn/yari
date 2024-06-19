@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { MENU } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import "./index.scss";
@@ -18,7 +17,7 @@ export type SubmenuItem = {
 export type MenuEntry = {
   id: string;
   items: SubmenuItem[];
-  label: string | ReactNode;
+  label: string;
   to?: string;
 };
 
