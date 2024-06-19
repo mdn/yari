@@ -15,7 +15,7 @@ const ITEMS = [
     title: "FAQ",
   },
   {
-    slug: "observatory/docs/tests",
+    slug: "observatory/docs/scoring#tests-and-score-modifiers",
     title: "Tests",
   },
 ];

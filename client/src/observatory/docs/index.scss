@@ -1,52 +1,13 @@
 @use "../../ui/vars" as *;
 
-.plus {
+.observatory {
+  --category-color: var(--observatory-accent);
+
   .article-actions-container {
     display: flex;
   }
 
-  .main-page-content {
-    em {
-      font-style: normal;
-      font-variation-settings: normal;
-      text-decoration: underline;
-      text-decoration-color: var(--text-link);
-      text-decoration-thickness: 0.15rem;
-      text-underline-offset: 0.1em;
-    }
-
-    h1 {
-      color: var(--plus-accent-color);
-      /* MDN/Plus/Type/Overline/S */
-      font: 700 12px/120% Inter;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    h1 + blockquote {
-      border: revert;
-      border-radius: var(--elem-radius);
-      color: var(--text-primary);
-      margin: 1rem 0 2rem;
-      padding: revert;
-
-      p:first-child {
-        font: var(--type-heading-h1-mobile);
-        margin-bottom: 2rem;
-
-        @media (min-width: $screen-md) {
-          font: var(--type-heading-h1);
-        }
-      }
-
-      p {
-        font-style: italic;
-        font-variation-settings: "slnt" -10;
-      }
-    }
-
-    img {
-      margin: 2rem 0;
-    }
+  .sidebar {
+    padding-top: 3rem;
   }
 }

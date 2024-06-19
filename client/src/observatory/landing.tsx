@@ -13,6 +13,7 @@ import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.sv
 import Container from "../ui/atoms/container";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
+import { ERROR_MAP } from "./utils";
 
 export default function ObservatoryLanding() {
   document.title = "HTTP Observatory | MDN";
@@ -44,7 +45,11 @@ export default function ObservatoryLanding() {
 
   useEffect(() => {
     if (!isMutating && data) {
-      navigate(`./${cleanHostname}`);
+      if (data.scan.error) {
+        setError(new Error(data.scan.error));
+      } else {
+        navigate(`./${cleanHostname}`);
+      }
     }
   }, [isMutating, data, navigate, cleanHostname]);
 
@@ -102,7 +107,9 @@ export default function ObservatoryLanding() {
                 </form>
               )}
               {error && !isMutating && (
-                <div className="error">Error: {error.message}</div>
+                <div className="error">
+                  Error: {ERROR_MAP[error.name] || error.message}
+                </div>
               )}
             </section>
             <section className="landing-illustration">
