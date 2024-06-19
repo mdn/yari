@@ -58,3 +58,7 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
     </span>
   );
 }
+
+export const ERROR_MAP = {
+  TypeError: "Observatory is currently down.",
+};

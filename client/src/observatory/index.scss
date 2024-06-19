@@ -130,6 +130,40 @@
       }
     }
 
+    a {
+      color: var(--observatory-color);
+      text-decoration: underline;
+      text-decoration-color: var(--observatory-color-secondary);
+
+      &:hover,
+      &:active {
+        text-decoration: none;
+      }
+    }
+
+    .error {
+      color: var(--form-invalid-color);
+      margin-top: 0.5rem;
+
+      &::before {
+        background-color: var(--form-invalid-color);
+        content: "";
+        display: inline-block;
+        height: 1.3em;
+        margin-bottom: 0.2em;
+        margin-right: 0.3em;
+        mask-image: url("../assets/icons/alert-circle.svg");
+        mask-position: center;
+        mask-repeat: no-repeat;
+        vertical-align: middle;
+        width: 1.3em;
+      }
+
+      + .input-group {
+        --observatory-border-accent: var(--form-invalid-color);
+      }
+    }
+
     section.place.side,
     section.place.new-side {
       grid-area: pong;
@@ -229,29 +263,6 @@
     }
 
     form {
-      .error {
-        color: var(--form-invalid-color);
-        margin-top: 0.5rem;
-
-        &::before {
-          background-color: var(--form-invalid-color);
-          content: "";
-          display: inline-block;
-          height: 1.3em;
-          margin-bottom: 0.2em;
-          margin-right: 0.3em;
-          mask-image: url("../assets/icons/alert-circle.svg");
-          mask-position: center;
-          mask-repeat: no-repeat;
-          vertical-align: middle;
-          width: 1.3em;
-        }
-
-        + .input-group {
-          --observatory-border-accent: var(--form-invalid-color);
-        }
-      }
-
       .input-group {
         display: flex;
         height: 3rem;

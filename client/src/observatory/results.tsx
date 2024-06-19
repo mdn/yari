@@ -4,7 +4,7 @@ import { SidePlacement } from "../ui/organisms/placement";
 import NoteCard from "../ui/molecules/notecards";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
-import { Link, PassIcon } from "./utils";
+import { ERROR_MAP, Link, PassIcon } from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 import { useEffect, useMemo, useState } from "react";
@@ -79,6 +79,8 @@ export default function ObservatoryResults() {
 
   document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
 
+  const combinedError = error || updateError;
+
   const hasData = !!host && !!result && !isLoading && !isMutating;
   return (
     <ObservatoryLayout
@@ -97,33 +99,31 @@ export default function ObservatoryResults() {
                 <span className="accent">HTTP Observatory</span> Report{" "}
               </h1>
             </section>
-            {hasData ? (
+            {hasData && !combinedError ? (
               <ObservatoryRating
                 result={result!}
                 host={host}
                 rescanTrigger={trigger}
               />
-            ) : isLoading || isMutating ? (
+            ) : isLoading ? (
+              <section className="scan-rescan">
+                <Progress message={`Loading ${host}…`} />
+              </section>
+            ) : isMutating ? (
               <section className="scan-rescan">
                 <Progress message={`Rescanning ${host}…`} />
               </section>
             ) : (
-              <NoteCard type="error">
-                <h4>Error</h4>
-                <p>
-                  {error
-                    ? error.message
-                    : updateError
-                      ? updateError.message
-                      : "An error occurred."}
-                </p>
-              </NoteCard>
+              <section className="scan-rescan">
+                <div className="error">Error: {combinedError.message}</div>
+                <a href="./">Observatory Home</a>
+              </section>
             )}
           </section>
           <nav className="sidebar">
             <ObservatoryDocsNav />
           </nav>
-          {hasData && (
+          {hasData && !(error || updateError) && (
             <section className="main">
               <ObservatoryScanResults result={result} host={host} />
             </section>
@@ -318,7 +318,7 @@ function ObservatoryRating({
               timeStyle: "medium",
             })}
           </div>
-          <a href="docs/tests">
+          <a href="docs/scoring##tests-and-score-modifiers">
             <span className="label">Tests Passed:</span>{" "}
           </a>
           {result.scan.tests_passed}/{result.scan.tests_quantity}
