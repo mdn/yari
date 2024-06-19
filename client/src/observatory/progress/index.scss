@@ -6,7 +6,7 @@
 }
 
 .progress-bar-value {
-  animation: indeterminateAnimation 1.5s infinite linear;
+  animation: indeterminateAnimation 2.5s infinite linear;
   background-color: var(--observatory-accent);
   height: 100%;
   transform-origin: 0% 50%;
@@ -24,5 +24,11 @@
 
   100% {
     transform: translateX(100%) scaleX(0.5);
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .progress-bar-value {
+    animation-duration: 60s;
   }
 }

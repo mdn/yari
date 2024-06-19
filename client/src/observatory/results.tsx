@@ -1,7 +1,6 @@
 import { ObservatoryResult } from "./types";
 import { useLocation, useParams } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
-import NoteCard from "../ui/molecules/notecards";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
 import { ERROR_MAP, Link, PassIcon } from "./utils";
@@ -115,7 +114,10 @@ export default function ObservatoryResults() {
               </section>
             ) : (
               <section className="scan-rescan">
-                <div className="error">Error: {combinedError.message}</div>
+                <div className="error">
+                  Error:{" "}
+                  {ERROR_MAP[combinedError.name] || combinedError.message}
+                </div>
                 <a href="./">Observatory Home</a>
               </section>
             )}
@@ -311,16 +313,16 @@ function ObservatoryRating({
           </div>
           <div>
             <a href="#scan_history">
-              <span className="label">Scan Time: </span>
-            </a>
+              <span className="label">Scan Time:</span>
+            </a>{" "}
             {new Date(result.scan.scanned_at).toLocaleString([], {
               dateStyle: "medium",
               timeStyle: "medium",
             })}
           </div>
           <a href="docs/scoring##tests-and-score-modifiers">
-            <span className="label">Tests Passed:</span>{" "}
-          </a>
+            <span className="label">Tests Passed:</span>
+          </a>{" "}
           {result.scan.tests_passed}/{result.scan.tests_quantity}
         </section>
         <section className="actions">
