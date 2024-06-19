@@ -23,6 +23,7 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
         iconClasses: "submenu-icon",
         label: "HTTP Observatory",
         url: `/${locale}/observatory`,
+        dot: "New",
       },
     ],
   };
