@@ -19,18 +19,15 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
-  BASE_URL,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 import { buildSitemap } from "./sitemaps.js";
+import { HydrationData } from "../libs/types/hydration.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -75,29 +72,26 @@ async function buildContributorSpotlight(
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
-    const context = { hyData };
+    const context: HydrationData = {
+      hyData,
+      url: `/${locale}/${prefix}/${contributor}`,
+    };
 
-    const html = renderCanonicalHTML(
-      `/${locale}/${prefix}/${contributor}`,
-      context
-    );
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
       `${prefix}/${hyData.folderName}`
     );
-    const filePath = path.join(outPath, "index.html");
     const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
     const imgFileDestPath = path.join(outPath, profileImg);
     const jsonFilePath = path.join(outPath, "index.json");
 
     fs.mkdirSync(outPath, { recursive: true });
-    fs.writeFileSync(filePath, html);
     fs.copyFileSync(imgFilePath, imgFileDestPath);
     fs.writeFileSync(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", filePath);
+      console.log("Wrote", jsonFilePath);
     }
     if (frontMatter.attributes.is_featured) {
       return {
@@ -121,14 +115,17 @@ export async function buildSPAs(options: {
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const locale = DEFAULT_LOCALE;
   const url = `/${locale}/404.html`;
-  let html = renderHTML(url, { pageNotFound: true });
-  html = setCanonical(html, null);
+  const context: HydrationData = { url, pageNotFound: true };
   const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+  const jsonFilePath = path.join(
+    outPath,
+    path.basename(url).replace(/\.html$/, ".json")
+  );
+  fs.writeFileSync(jsonFilePath, JSON.stringify(context));
   buildCount++;
   if (options.verbose) {
-    console.log("Wrote", path.join(outPath, path.basename(url)));
+    console.log("Wrote", jsonFilePath);
   }
 
   // Basically, this builds one (for example) `search/index.html` for every
@@ -186,21 +183,21 @@ export async function buildSPAs(options: {
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context = {
+        const context: HydrationData = {
           pageTitle,
           locale,
           noIndexing,
           onlyFollow,
+          url,
         };
 
-        const html = renderCanonicalHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
-        const filePath = path.join(outPath, "index.html");
-        fs.writeFileSync(filePath, html);
+        const jsonFilePath = path.join(outPath, "index.json");
+        fs.writeFileSync(jsonFilePath, JSON.stringify(context));
         buildCount++;
         if (options.verbose) {
-          console.log("Wrote", filePath);
+          console.log("Wrote", jsonFilePath);
         }
 
         if (!noIndexing && !onlyFollow) {
@@ -252,12 +249,12 @@ export async function buildSPAs(options: {
         sections,
         toc,
       };
-      const context = {
+      const context: HydrationData = {
         hyData,
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+        url,
       };
 
-      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
         pathLocale,
@@ -265,11 +262,11 @@ export async function buildSPAs(options: {
         page
       );
       fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
+      const jsonFilePath = path.join(outPath, "index.json");
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
-        console.log("Wrote", filePath);
+        console.log("Wrote", jsonFilePath);
       }
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));
@@ -360,16 +357,9 @@ export async function buildSPAs(options: {
         latestNews,
         featuredArticles,
       };
-      const context = { hyData };
-      const html = renderCanonicalHTML(url, context);
+      const context: HydrationData = { hyData, url };
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
-      buildCount++;
-      if (options.verbose) {
-        console.log("Wrote", filePath);
-      }
 
       sitemap.push({
         url,
@@ -377,11 +367,11 @@ export async function buildSPAs(options: {
 
       // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
-      const filePathContext = path.join(outPath, "index.json");
-      fs.writeFileSync(filePathContext, JSON.stringify(context));
+      const jsonFilePath = path.join(outPath, "index.json");
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
-        console.log("Wrote", filePathContext);
+        console.log("Wrote", jsonFilePath);
       }
     }
   }
@@ -493,25 +483,4 @@ async function fetchLatestNews() {
   return {
     items,
   };
-}
-
-function renderCanonicalHTML(url: string, context: any) {
-  let html = renderHTML(url, context);
-  html = setCanonical(html, url);
-  return html;
-}
-
-function setCanonical(html: string, url: string | null) {
-  html = html.replace(
-    `<link rel="canonical" href="${BASE_URL}"/>`,
-    url ? `<link rel="canonical" href="${BASE_URL}${url}"/>` : ""
-  );
-  // Better safe than sorry.
-  html = html.replace(
-    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
-    url
-      ? `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
-      : ""
-  );
-  return html;
 }
