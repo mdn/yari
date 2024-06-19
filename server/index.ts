@@ -448,7 +448,7 @@ app.get("/*", async (req, res, ...args) => {
     res.json({ doc: document });
   } else {
     res.header("Content-Security-Policy", CSP_VALUE);
-    res.send(renderHTML(lookupURL, { doc: document }));
+    res.send(renderHTML({ doc: document, url: lookupURL }));
   }
 });
 
