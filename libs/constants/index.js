@@ -131,6 +131,7 @@ export const CSP_DIRECTIVES = {
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
 
+    "v2.scrimba.com",
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
