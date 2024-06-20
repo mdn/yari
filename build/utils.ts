@@ -385,3 +385,15 @@ export async function importJSON<T>(jsonPath: string): Promise<T> {
 
   return JSON.parse(json);
 }
+
+export function* chunks<T>(array: T[], size: number): Generator<T[]> {
+  for (let i = 0; i < array.length; i += size) {
+    yield array.slice(i, i + size);
+  }
+}
+
+export function formatDuration(seconds: number) {
+  return seconds > 60
+    ? `${(seconds / 60).toFixed(1)} minutes`
+    : `${seconds.toFixed(1)} seconds`;
+}
