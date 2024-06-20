@@ -54,7 +54,6 @@ async function handleResponse(res: Response): Promise<ObservatoryResult> {
     let message = `${res.status}: ${res.statusText}`;
     try {
       const data = await res.json();
-      console.log(data);
       if (data.error) {
         message = data.message;
       }

@@ -83,11 +83,13 @@ export default function ObservatoryResults() {
 
   const combinedError = error || updateError;
 
-  if (error && !isMutating) {
-    gleanClick(
-      `${OBSERVATORY}: error ${ERROR_MAP[combinedError.name] || combinedError.message}`
-    );
-  }
+  useEffect(() => {
+    if (combinedError && !isMutating) {
+      gleanClick(
+        `${OBSERVATORY}: error ${ERROR_MAP[combinedError.name] || combinedError.message}`
+      );
+    }
+  }, [combinedError, isMutating, gleanClick]);
 
   const hasData = !!host && !!result && !isLoading && !isMutating;
   return (

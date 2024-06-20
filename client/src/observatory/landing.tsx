@@ -71,11 +71,14 @@ export default function ObservatoryLanding() {
 
   const gleanClick = useGleanClick();
 
-  if (error && !isMutating) {
-    gleanClick(
-      `${OBSERVATORY}: error ${ERROR_MAP[error.name] || error.message}`
-    );
-  }
+  useEffect(() => {
+    if (error && !isMutating) {
+      gleanClick(
+        `${OBSERVATORY}: error ${ERROR_MAP[error.name] || error.message}`
+      );
+    }
+  }, [error, isMutating, gleanClick]);
+
   return (
     <ObservatoryLayout>
       <section className="observatory-landing observatory-landing-top">
