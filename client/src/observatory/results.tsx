@@ -1,5 +1,5 @@
 import { ObservatoryResult } from "./types";
-import { useLocation, useParams } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
@@ -18,6 +18,8 @@ import { ReactComponent as StarsSVG } from "../../public/assets/observatory/star
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ObservatoryDocsNav } from "./docs";
+import { useIsServer } from "../hooks";
+import { useSearchParams } from "react-router-dom";
 
 const scoringTable = [
   { grade: "A+", scoreText: "100+", score: 100, stars: true },
@@ -72,8 +74,10 @@ export function ObservatoryGrades() {
 
 export default function ObservatoryResults() {
   const { pathname } = useLocation();
-  const { host } = useParams();
-  const { data: result, isLoading, error } = useResult(host);
+  const [searchParams] = useSearchParams();
+  const host = searchParams.get("host");
+
+  const { data: result, isLoading, error } = useResult(host!);
 
   // Used for rescan
   const { trigger, isMutating, error: updateError } = useUpdateResult(host!);
@@ -92,7 +96,7 @@ export default function ObservatoryResults() {
   }, [combinedError, isMutating, gleanClick]);
 
   const hasData = !!host && !!result && !isLoading && !isMutating;
-  return (
+  return !!host ? (
     <ObservatoryLayout
       parents={[
         {
@@ -145,6 +149,8 @@ export default function ObservatoryResults() {
         </Container>
       </div>
     </ObservatoryLayout>
+  ) : (
+    <Navigate to="../" />
   );
 }
 
@@ -275,7 +281,7 @@ function ObservatoryRating({
   rescanTrigger: Function;
 }) {
   const gleanClick = useGleanClick();
-
+  const isServer = useIsServer();
   return (
     <>
       <h2 className="summary">
@@ -350,13 +356,15 @@ function ObservatoryRating({
           {result.scan.tests_passed}/{result.scan.tests_quantity}
         </section>
         <section className="actions">
-          <CountdownButton
-            host={host}
-            from={result.scan.scanned_at}
-            duration={60}
-            title="Rescan"
-            onClickHandler={rescanTrigger}
-          />
+          {!isServer && (
+            <CountdownButton
+              host={host}
+              from={result.scan.scanned_at}
+              duration={60}
+              title="Rescan"
+              onClickHandler={rescanTrigger}
+            />
+          )}
           <div className="scan-another">
             <InternalLink
               to="../"

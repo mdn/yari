@@ -16,8 +16,7 @@ export default function Observatory({ ...props }) {
     <div className="observatory">
       <Routes>
         <Route path="/" element={<ObservatoryLanding />} />
-        <Route path="/grades" element={<ObservatoryGrades />} />
-        <Route path="/:host" element={<ObservatoryResults />} />
+        <Route path="/analyze" element={<ObservatoryResults />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/docs/*" element={<ObservatoryDocs {...props} />} />
       </Routes>

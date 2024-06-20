@@ -50,7 +50,7 @@ export default function ObservatoryLanding() {
       if (data.scan.error) {
         setError(new Error(data.scan.error));
       } else {
-        navigate(`./${cleanHostname}`);
+        navigate(`./analyze?host=${encodeURIComponent(cleanHostname)}`);
       }
     }
   }, [isMutating, data, navigate, cleanHostname]);

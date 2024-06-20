@@ -141,7 +141,32 @@ export async function buildSPAs(options: {
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
-        { prefix: "observatory", pageTitle: "HTTP Observatory | MDN" },
+        {
+          prefix: "observatory",
+          pageTitle: "HTTP Observatory | MDN",
+          doc: {
+            summary:
+              "The HTTP Observatory is a project designed to help developers, system administrators, and security professionals configure their sites safely and securely.",
+            pageTitle: "HTTP Observatory | MDN",
+          },
+        },
+        {
+          prefix: "observatory/analyze",
+          pageTitle: "HTTP Observatory | MDN",
+          doc: {
+            summary:
+              "The HTTP Observatory is a project designed to help developers, system administrators, and security professionals configure their sites safely and securely.",
+            pageTitle: "HTTP Observatory | MDN",
+          },
+        },
+        {
+          prefix: "observatory/docs/scoring",
+          pageTitle: "HTTP Observatory | MDN",
+        },
+        {
+          prefix: "observatory/docs/faq",
+          pageTitle: "HTTP Observatory | MDN",
+        },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
