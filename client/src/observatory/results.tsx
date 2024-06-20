@@ -77,10 +77,17 @@ export default function ObservatoryResults() {
 
   // Used for rescan
   const { trigger, isMutating, error: updateError } = useUpdateResult(host!);
+  const gleanClick = useGleanClick();
 
   document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
 
   const combinedError = error || updateError;
+
+  if (error && !isMutating) {
+    gleanClick(
+      `${OBSERVATORY}: error ${ERROR_MAP[combinedError.name] || combinedError.message}`
+    );
+  }
 
   const hasData = !!host && !!result && !isLoading && !isMutating;
   return (
@@ -127,7 +134,7 @@ export default function ObservatoryResults() {
           <nav className="sidebar">
             <ObservatoryDocsNav />
           </nav>
-          {hasData && !(error || updateError) && (
+          {hasData && !combinedError && (
             <section className="main">
               <ObservatoryScanResults result={result} host={host} />
             </section>
