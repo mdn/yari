@@ -2590,10 +2590,10 @@
   dependencies:
     "@opentelemetry/core" "^1.1.0"
 
-"@peggyjs/from-mem@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@peggyjs/from-mem/-/from-mem-1.2.1.tgz#b83db5b439f1b02159fe47f5c9684bd1ee244edd"
-  integrity sha512-qh5zG8WKT36142/FqOYtpF0scRR3ZJ3H5XST1bJ/KV2FvyB5MvUB/tB9ZjihRe1iKjJD4PBOZczzwEx7hJtgMw==
+"@peggyjs/from-mem@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@peggyjs/from-mem/-/from-mem-1.3.0.tgz#16470cf7dfa22fc75ca217a4e064a5f0c4e1111b"
+  integrity sha512-kzGoIRJjkg3KuGI4bopz9UvF3KguzfxalHRDEIdqEZUe45xezsQ6cx30e0RKuxPUexojQRBfu89Okn7f4/QXsw==
   dependencies:
     semver "7.6.0"
 
@@ -5377,10 +5377,10 @@ commander@^10.0.0, commander@^10.0.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-10.0.1.tgz#881ee46b4f77d1c1dccc5823433aa39b022cbe06"
   integrity sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==
 
-commander@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-12.0.0.tgz#b929db6df8546080adfd004ab215ed48cf6f2592"
-  integrity sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==
+commander@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-12.1.0.tgz#01423b36f501259fdaac4d0e4d60c96c991585d3"
+  integrity sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==
 
 commander@^2.15.1, commander@^2.20.0, commander@^2.8.1:
   version "2.20.3"
@@ -12057,13 +12057,13 @@ peek-readable@^5.0.0:
   resolved "https://registry.yarnpkg.com/peek-readable/-/peek-readable-5.0.0.tgz#7ead2aff25dc40458c60347ea76cfdfd63efdfec"
   integrity sha512-YtCKvLUOvwtMGmrniQPdO7MwPjgkFBtFIrmfSbYmYuq3tKDV/mcfAhBth1+C3ru7uXIZasc/pHnb+YDYNkkj4A==
 
-peggy@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/peggy/-/peggy-4.0.2.tgz#440b79ff8270668294d877addb3a30bb9e28bad5"
-  integrity sha512-j4cepPgB20V7honmTAI+7U022y/n/wVi7Rbbd2QrMl2nifFECpngvA6Zhrz/JdmZ5LIBoTdkgHcDzzaA6C4ABg==
+peggy@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/peggy/-/peggy-4.0.3.tgz#7bcd47718483ab405c960350c5250e3e487dec74"
+  integrity sha512-v7/Pt6kGYsfXsCrfb52q7/yg5jaAwiVaUMAPLPvy4DJJU6Wwr72t6nDIqIDkGfzd1B4zeVuTnQT0RGeOhe/uSA==
   dependencies:
-    "@peggyjs/from-mem" "1.2.1"
-    commander "^12.0.0"
+    "@peggyjs/from-mem" "1.3.0"
+    commander "^12.1.0"
     source-map-generator "0.8.0"
 
 pend@~1.2.0:
