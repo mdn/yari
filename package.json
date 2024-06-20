@@ -143,7 +143,7 @@
     "source-map-support": "^0.5.21",
     "sse.js": "^2.5.0",
     "tempy": "^3.1.0",
-    "unified": "^11.0.4",
+    "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^0.8.6",
