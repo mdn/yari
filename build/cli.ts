@@ -32,8 +32,6 @@ import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
 import { ssrDocument } from "./ssr.js";
 import { HydrationData } from "../libs/types/hydration.js";
-import { ssrDocument } from "./ssr.js";
-import { HydrationData } from "../libs/types/hydration.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
