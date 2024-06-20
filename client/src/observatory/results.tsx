@@ -432,27 +432,29 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
             {Object.entries(result.tests).map(([name, test]) => {
               return (
                 <tr key={name}>
-                  <td data-header="Test: ">
+                  <td data-header="Test">
                     <Link href={test.link}>{test.title}</Link>
                   </td>
                   {test.pass === null ? (
-                    <td data-header="Score: ">-</td>
+                    <td data-header="Score">-</td>
                   ) : (
-                    <td className="score" data-header="Score: ">
-                      <span className="obs-score-value">
-                        {test.score_modifier}
+                    <td className="score" data-header="Score">
+                      <span>
+                        <span className="obs-score-value">
+                          {test.score_modifier}
+                        </span>
+                        <PassIcon pass={test.pass} />
                       </span>
-                      <PassIcon pass={test.pass} />
                     </td>
                   )}
                   <td
-                    data-header="Reason: "
+                    data-header="Reason"
                     dangerouslySetInnerHTML={{
                       __html: test.score_description,
                     }}
                   />
                   <td
-                    data-header="Recommendation: "
+                    data-header="Advice"
                     dangerouslySetInnerHTML={{
                       __html:
                         test.recommendation || `<p class="obs-none">None</p>`,
@@ -485,14 +487,14 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
               .reverse()
               .map(({ scanned_at, score, grade }) => (
                 <tr key={scanned_at}>
-                  <td data-header="Date: ">
+                  <td data-header="Date">
                     {new Date(scanned_at).toLocaleString([], {
                       dateStyle: "full",
                       timeStyle: "medium",
                     })}
                   </td>
-                  <td data-header="Score: ">{score}</td>
-                  <td data-header="Grade: ">{grade}</td>
+                  <td data-header="Score">{score}</td>
+                  <td data-header="Grade">{grade}</td>
                 </tr>
               ))}
           </tbody>
@@ -522,8 +524,8 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
           <tbody>
             {Object.entries(cookies).map(([key, value]) => (
               <tr key={key}>
-                <td data-header="Name: ">{key}</td>
-                <td data-header="Expires: ">
+                <td data-header="Name">{key}</td>
+                <td data-header="Expires">
                   {value.expires
                     ? new Date(value.expires).toLocaleString([], {
                         dateStyle: "medium",
@@ -531,25 +533,25 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
                       })
                     : "Session"}
                 </td>
-                <td data-header="Path: ">
+                <td data-header="Path">
                   <code>{value.path}</code>
                 </td>
-                <td data-header="Secure: ">
+                <td data-header="Secure">
                   <PassIcon pass={value.secure} />
                   <span className="visually-hidden">
                     {value.secure ? "True" : "False"}
                   </span>
                 </td>
-                <td data-header="HttpOnly: ">
+                <td data-header="HttpOnly">
                   <PassIcon pass={value.httponly} />
                   <span className="visually-hidden">
                     {value.httponly ? "True" : "False"}
                   </span>
                 </td>
-                <td data-header="SameSite: ">
+                <td data-header="SameSite">
                   {value.samesite && <code>{value.samesite}</code>}
                 </td>
-                <td data-header="Prefixed: ">
+                <td data-header="Prefixed">
                   {[key]
                     .map(
                       (x) => x.startsWith("__Host") || x.startsWith("__Secure")
@@ -599,10 +601,10 @@ function ObservatoryHeaders({ result }: { result: ObservatoryResult }) {
             {Object.entries(result.scan.response_headers).map(
               ([header, value]) => (
                 <tr key={header}>
-                  <td data-header="Header: ">
+                  <td data-header="Header">
                     <HeaderLink header={header} />
                   </td>
-                  <td data-header="Value: ">{value}</td>
+                  <td data-header="Value">{value}</td>
                 </tr>
               )
             )}

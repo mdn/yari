@@ -474,7 +474,7 @@
           padding: 0.5rem 1.5rem;
           vertical-align: top;
 
-          &.score {
+          &.score > span {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -567,20 +567,31 @@
             display: none;
           }
 
-          tbody,
-          tr,
-          td {
+          tbody {
             display: block;
+          }
+
+          tr {
+            display: grid;
+            grid-template-columns: max-content auto;
+          }
+
+          tr:nth-of-type(odd) {
+            background: var(--observatory-table-header-bg);
+          }
+
+          td {
+            display: grid;
+            column-gap: 2em;
+            grid-column: span 2;
+            grid-template-columns: subgrid;
+            grid-auto-flow: column;
           }
 
           td:before {
             content: attr(data-header);
             display: inline;
             font-weight: 600;
-          }
-
-          td:first-of-type {
-            background: var(--observatory-table-header-bg);
           }
 
           &.tests,
@@ -592,11 +603,11 @@
             }
           }
 
-          td:not(:first-of-type):not(:last-of-type) {
+          td:not(:last-of-type) {
             padding-bottom: 0;
           }
 
-          td:nth-of-type(n + 3) {
+          td:nth-of-type(n + 2) {
             padding-top: 0.75rem;
           }
 
@@ -607,20 +618,17 @@
           }
 
           td.score {
-            gap: 1ch;
-            justify-content: flex-start;
+            display: grid;
 
-            .obs-score-value {
-              margin-right: 0;
+            > span {
+              display: block;
             }
 
             .obs-pass-icon {
               height: 1.5em;
+              display: inline-block;
+              vertical-align: top;
             }
-          }
-
-          p:first-child {
-            display: inline;
           }
         }
       }
@@ -726,11 +734,13 @@
             position: sticky;
 
             @media screen and (max-width: #{$screen-lg - 0.02}) {
-              width: calc(100vw - 12rem - 2rem);
+              width: calc(
+                100vw - 12rem - 3rem
+              ); // 12rem: placement width; 3rem: padding
             }
 
             @media screen and (max-width: #{$screen-md - 0.02}) {
-              width: calc(100vw - 2rem);
+              width: calc(100vw - 2rem); // 2rem: padding
             }
           }
         }
