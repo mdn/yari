@@ -9,7 +9,6 @@ import useSWRImmutable from "swr/immutable";
 import { OBSERVATORY_API_URL } from "../env";
 import { PageNotFound } from "../page-not-found";
 import ObservatoryDocs from "./docs";
-import { ObservatoryGrades } from "./results";
 
 export default function Observatory({ ...props }) {
   return (
