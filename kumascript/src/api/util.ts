@@ -313,7 +313,7 @@ export class HTMLTool {
       // then collect the closest blocks of code for the live sample.
       console.warn(
         chalk.yellow(
-          `invalid header id in live sample ${sectionID} within ${this.pathDescription}`
+          `Live sample references heading id ${sectionID}, but this doesn't exist in ${this.pathDescription}`
         )
       );
       result = collectClosestCode(findSectionStart(this.$, iframeID));

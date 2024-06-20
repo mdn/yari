@@ -52,8 +52,8 @@ var MIN_HEIGHT = 60;
 // Note that if the 'height' is a string like '100%' it won't be a
 // problem because `parseInt('100%') := 100` which is more than `MIN_HEIGHT`
 // assuming it's value is less than 100.
-if (height) {
-  height = Math.max(parseInt(height), MIN_HEIGHT);
+if (height && parseInt(height) < MIN_HEIGHT) {
+  height = MIN_HEIGHT;
 }
 
 var sampleUrl = "";
