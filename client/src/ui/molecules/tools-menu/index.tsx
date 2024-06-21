@@ -8,7 +8,11 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
 
   const menu = {
     id: "tools",
-    label: "Tools",
+    label: (
+      <>
+        Tools <sup className="new">New</sup>
+      </>
+    ),
     items: [
       {
         description: "Write, test and share your code",
