@@ -103,7 +103,7 @@ export default function ObservatoryLanding() {
                       Domain
                     </label>
                     <input
-                      placeholder="Scan a website for free (e.g. mozilla.org)"
+                      placeholder="Scan a website for free (e.g. mdn.dev)"
                       type="text"
                       name="host"
                       id="host"
