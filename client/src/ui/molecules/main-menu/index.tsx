@@ -89,9 +89,6 @@ export default function MainMenu({ isOpenOnMobile }) {
           visibleSubMenuId={visibleSubMenuId}
           toggleMenu={toggleMenu}
         />
-        <TopLevelMenuLink to="/en-US/plus/ai-help">
-          AI Help <sup className="new beta">Beta</sup>
-        </TopLevelMenuLink>
       </ul>
     </nav>
   );

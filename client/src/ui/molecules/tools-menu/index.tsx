@@ -25,6 +25,13 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
         url: `/${locale}/observatory`,
         dot: "New",
       },
+      {
+        description: "Get real-time assistance",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "AI Help",
+        url: `/en-US/plus/ai-help`,
+      },
     ],
   };
   const isOpen = visibleSubMenuId === menu.id;
