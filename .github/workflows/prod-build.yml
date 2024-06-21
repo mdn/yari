@@ -264,7 +264,7 @@ jobs:
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -282,6 +282,9 @@ jobs:
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # SSR all pages
+          yarn render:html
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -337,6 +340,7 @@ jobs:
         run: |-
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -360,6 +364,7 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=A9YWJd0eN0+JyqsF5/4sYlFePcOgkAIKtGSnrERJ7zmzK65fqcrdYjmHUlxAV79Fphmwt96Gkyw2F1WmMEUEztgAAABdeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5tb3ppbGxhLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb24iLCJleHBpcnkiOjE3NDk3NDMyNjF9" \
             --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=prod" \

@@ -4,6 +4,10 @@ env:
   DEFAULT_NOTES: ""
 
 on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 */24 * * *"
+
   workflow_dispatch:
     inputs:
       notes:
@@ -29,12 +33,22 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `test-de` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "test-de"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: test-de
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    if: github.repository == 'mdn/yari' && github.ref_name == 'test-de'
 
     steps:
       - uses: actions/checkout@v4
@@ -172,7 +186,7 @@ jobs:
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us de; do
-            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            yarn build:json --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -190,6 +204,9 @@ jobs:
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # SSR all pages
+          yarn render:html
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
