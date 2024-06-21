@@ -2,7 +2,6 @@
 
 .observatory {
   --border-radius: 0.3rem;
-
   --spacing: 2rem;
   background-color: var(--observatory-bg);
 
@@ -143,6 +142,13 @@
       &:active {
         text-decoration: none;
       }
+    }
+
+    .feedback-link {
+      --feedback-link-icon: var(--observatory-color-secondary);
+      --text-link: var(--observatory-color-secondary);
+      color: var(--observatory-color-secondary);
+      font-size: var(--type-tiny-font-size);
     }
 
     .error {
