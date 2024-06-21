@@ -581,11 +581,11 @@
           }
 
           td {
-            display: grid;
             column-gap: 2em;
+            display: grid;
+            grid-auto-flow: column;
             grid-column: span 2;
             grid-template-columns: subgrid;
-            grid-auto-flow: column;
           }
 
           td:before {
@@ -625,8 +625,8 @@
             }
 
             .obs-pass-icon {
-              height: 1.5em;
               display: inline-block;
+              height: 1.5em;
               vertical-align: top;
             }
           }
