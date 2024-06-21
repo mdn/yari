@@ -37,19 +37,19 @@ export default function ObservatoryCSP({
               return policy[pt] ? (
                 <tr key={policy[pt].description}>
                   <td
-                    data-header="Test: "
+                    data-header="Test"
                     dangerouslySetInnerHTML={{
                       __html: policy[pt].description,
                     }}
                   />
-                  <td data-header="Pass: ">
+                  <td data-header="Pass">
                     <PassIcon pass={!policy[pt].pass} />
                     <span className="visually-hidden">
                       {!policy[pt].PassIcon ? "Passed" : "Failed"}
                     </span>
                   </td>
                   <td
-                    data-header="Info: "
+                    data-header="Info"
                     dangerouslySetInnerHTML={{
                       __html: policy[pt].info,
                     }}
