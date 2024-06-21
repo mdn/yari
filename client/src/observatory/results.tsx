@@ -456,7 +456,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                     <td className="score" data-header="Score">
                       <span>
                         <span className="obs-score-value">
-                          {fixMinusSymbol(test.score_modifier)}
+                          {fixMinusSymbol(`${test.score_modifier}`)}
                         </span>
                         <PassIcon pass={test.pass} />
                       </span>

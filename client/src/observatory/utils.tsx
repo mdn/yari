@@ -78,7 +78,7 @@ export const ERROR_MAP = {
   TypeError: "Observatory is currently down.",
 };
 
-export function fixMinusSymbol(term: string | number | null | undefined) {
+export function fixMinusSymbol(term: string | null | undefined) {
   if (!term) {
     return null;
   }
