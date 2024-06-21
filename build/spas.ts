@@ -144,20 +144,10 @@ export async function buildSPAs(options: {
         {
           prefix: "observatory",
           pageTitle: "HTTP Observatory | MDN",
-          doc: {
-            summary:
-              "The HTTP Observatory is a project designed to help developers, system administrators, and security professionals configure their sites safely and securely.",
-            pageTitle: "HTTP Observatory | MDN",
-          },
         },
         {
           prefix: "observatory/analyze",
           pageTitle: "HTTP Observatory | MDN",
-          doc: {
-            summary:
-              "The HTTP Observatory is a project designed to help developers, system administrators, and security professionals configure their sites safely and securely.",
-            pageTitle: "HTTP Observatory | MDN",
-          },
         },
         {
           prefix: "observatory/docs/scoring",
