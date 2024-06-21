@@ -30,7 +30,7 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
         dot: "New",
       },
       {
-        description: "Get real-time assistance",
+        description: "Get real-time assistance and support",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "AI Help",
