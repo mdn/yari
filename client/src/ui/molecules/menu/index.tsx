@@ -25,8 +25,9 @@ export const Menu = ({
 
   isActive =
     isActive ??
-    (typeof menu.to === "string" &&
-      pathname.startsWith(menu.to.split("#", 2)[0]));
+    (typeof menu.to === "string"
+      ? pathname.startsWith(menu.to.split("#", 2)[0])
+      : menu.items.some((item) => item.url && pathname.startsWith(item.url)));
   const hasAnyDot = menu.items.some((item) => item.dot);
 
   return (

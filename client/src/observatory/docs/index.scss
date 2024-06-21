@@ -1,0 +1,13 @@
+@use "../../ui/vars" as *;
+
+.observatory {
+  --category-color: var(--observatory-accent);
+
+  .article-actions-container {
+    display: flex;
+  }
+
+  .sidebar {
+    padding-top: 3rem;
+  }
+}

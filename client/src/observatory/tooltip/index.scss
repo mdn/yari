@@ -1,25 +1,25 @@
-@use "../../../ui/vars" as *;
+@use "../../ui/vars" as *;
 
 .info-tooltip {
-  cursor: pointer;
   position: relative;
 
-  .icon {
-    color: var(--text-secondary);
+  .arrow {
+    fill: var(--observatory-accent);
+    margin-left: -20px;
+    margin-top: -2rem;
+    padding: 0;
+    position: absolute;
   }
 
   .tooltip-popup {
     --tooltip-offset: 0;
-    background-color: var(--background-secondary);
-    border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius);
-    box-shadow: 1px 1px 2px var(--border-primary);
-    color: var(--text-primary);
-    font-size: smaller;
+    background-color: var(--observatory-accent);
+    border-radius: var(--border-radius);
+    color: var(--observatory-tooltip-color);
     left: 50%;
-    margin-top: 0.25rem;
+    margin-top: 2rem;
     max-width: min(100vw, 20rem);
-    padding: 0.5rem;
+    padding: 1.5rem;
     position: absolute;
     text-align: center;
     top: 100%;
