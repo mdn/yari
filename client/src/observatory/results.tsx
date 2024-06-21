@@ -38,7 +38,7 @@ const scoringTable = [
 ];
 
 export default function ObservatoryResults() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const [searchParams] = useSearchParams();
   const host = searchParams.get("host");
 
@@ -66,7 +66,7 @@ export default function ObservatoryResults() {
       parents={[
         {
           title: `Report: ${host}`,
-          uri: pathname,
+          uri: `${pathname}${search}`,
         },
       ]}
     >
