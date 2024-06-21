@@ -19,6 +19,7 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
     <span className="obs-pass-icon">
       {pass ? (
         <svg
+          aria-hidden="true"
           className="pass"
           width="24"
           height="27"
@@ -31,6 +32,7 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
         </svg>
       ) : (
         <svg
+          aria-hidden="true"
           className="fail"
           width="24"
           height="27"

@@ -44,9 +44,6 @@ export default function ObservatoryCSP({
                   />
                   <td data-header="Pass">
                     <PassIcon pass={!policy[pt].pass} />
-                    <span className="visually-hidden">
-                      {!policy[pt].PassIcon ? "Passed" : "Failed"}
-                    </span>
                   </td>
                   <td
                     data-header="Info"
