@@ -27,25 +27,30 @@ import { proxyPong } from "./handlers/proxy-pong.js";
 const router = Router();
 router.use(stripForwardedHostHeaders);
 router.use(redirectLeadingSlash);
+// MDN Plus plans.
 router.all(
   "/api/v1/stripe/plans",
   requireOrigin(Origin.main),
   handleStripePlans
 );
+// Backend.
 router.all(
   ["/api/*", "/admin-api/*", "/events/fxa", "/users/fxa/*"],
   requireOrigin(Origin.main),
   proxyApi
 );
+// Telemetry.
 router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyPong);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
+// Playground.
 router.get(
   ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
   requireOrigin(Origin.play),
   resolveRunnerHtml,
   proxyRunner
 );
+// Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
@@ -57,19 +62,23 @@ router.get(
   lowercasePathname,
   proxyContent
 );
+// Root.
 router.get("/", requireOrigin(Origin.main), redirectLocale);
+// Live samples.
 router.get(
   ["/[^/]+/docs/*/_sample_.*.html", "/[^/]+/blog/*/_sample_.*.html"],
   requireOrigin(Origin.liveSamples),
   resolveIndexHTML,
   proxyContent
 );
+// Attachments.
 router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
   requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
   proxyContent
 );
+// Pages.
 router.use(redirectNonCanonicals);
 router.get(
   "/[^/]+/docs/*",
@@ -89,6 +98,7 @@ router.get(
   resolveIndexHTML,
   proxyContent
 );
+// MDN Plus, static pages, etc.
 router.get(
   "*",
   requireOrigin(Origin.main),
