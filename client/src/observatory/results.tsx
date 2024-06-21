@@ -123,19 +123,19 @@ function ObservatoryScanResults({ result, host }) {
   const tabs = useMemo(() => {
     return [
       {
-        name: "Test Result",
+        name: "Test result",
         hash: "test_result",
         element: <ObservatoryTests result={result} />,
         glean: "test-result-tab",
       },
       {
-        name: "CSP Analysis",
+        name: "CSP analysis",
         hash: "csp_analysis",
         element: <ObservatoryCSP result={result} />,
         glean: "csp-analysis-tab",
       },
       {
-        name: "Raw Server Headers",
+        name: "Raw server headers",
         hash: "raw_server_headers",
         element: <ObservatoryHeaders result={result} />,
         glean: "raw-server-headers-tab",
@@ -147,13 +147,13 @@ function ObservatoryScanResults({ result, host }) {
         glean: "cookies-tab",
       },
       {
-        name: "Scan History",
+        name: "Scan history",
         hash: "scan_history",
         element: <ObservatoryHistory result={result} />,
         glean: "scan-history-tab",
       },
       {
-        name: "Benchmark Comparison",
+        name: "Benchmark comparison",
         hash: "benchmark_comparison",
         element: <ObservatoryBenchmark result={result} />,
         glean: "benchmark-tab",

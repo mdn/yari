@@ -8,7 +8,7 @@ import { ObservatoryLayout } from "../layout";
 const ITEMS = [
   {
     slug: "observatory/docs/scoring",
-    title: "Scoring",
+    title: "Scoring and Grading",
   },
   {
     slug: "observatory/docs/faq",
