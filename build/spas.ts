@@ -144,7 +144,22 @@ export async function buildSPAs(options: {
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
-        { prefix: "observatory", pageTitle: "HTTP Observatory | MDN" },
+        {
+          prefix: "observatory",
+          pageTitle: "HTTP Observatory | MDN",
+        },
+        {
+          prefix: "observatory/analyze",
+          pageTitle: "HTTP Observatory | MDN",
+        },
+        {
+          prefix: "observatory/docs/scoring",
+          pageTitle: "HTTP Observatory | MDN",
+        },
+        {
+          prefix: "observatory/docs/faq",
+          pageTitle: "HTTP Observatory | MDN",
+        },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {

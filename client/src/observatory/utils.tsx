@@ -19,6 +19,7 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
     <span className="obs-pass-icon">
       {pass ? (
         <svg
+          aria-hidden="true"
           className="pass"
           width="24"
           height="27"
@@ -31,6 +32,7 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
         </svg>
       ) : (
         <svg
+          aria-hidden="true"
           className="fail"
           width="24"
           height="27"
@@ -62,3 +64,14 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
 export const ERROR_MAP = {
   TypeError: "Observatory is currently down.",
 };
+
+export function fixMinusSymbol(term: string | number | null | undefined) {
+  if (!term) {
+    return null;
+  }
+  // replace dash with unicode minus symbol
+  // −
+  // MINUS SIGN
+  // Unicode: U+2212, UTF-8: E2 88 92
+  return `${term}`.replaceAll(/-/g, "−");
+}

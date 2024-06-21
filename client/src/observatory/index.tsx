@@ -9,15 +9,13 @@ import useSWRImmutable from "swr/immutable";
 import { OBSERVATORY_API_URL } from "../env";
 import { PageNotFound } from "../page-not-found";
 import ObservatoryDocs from "./docs";
-import { ObservatoryGrades } from "./results";
 
 export default function Observatory({ ...props }) {
   return (
     <div className="observatory">
       <Routes>
         <Route path="/" element={<ObservatoryLanding />} />
-        <Route path="/grades" element={<ObservatoryGrades />} />
-        <Route path="/:host" element={<ObservatoryResults />} />
+        <Route path="/analyze" element={<ObservatoryResults />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/docs/*" element={<ObservatoryDocs {...props} />} />
       </Routes>
@@ -54,7 +52,6 @@ async function handleResponse(res: Response): Promise<ObservatoryResult> {
     let message = `${res.status}: ${res.statusText}`;
     try {
       const data = await res.json();
-      console.log(data);
       if (data.error) {
         message = data.message;
       }
