@@ -37,8 +37,8 @@ import { HydrationData } from "../libs/types/hydration.js";
 import { memoize, slugToFolder } from "../content/utils.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
+import { buildSitemap } from "./sitemaps.js";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -367,6 +367,7 @@ export async function buildCurriculum(options: {
       pageTitle: meta.title,
       locale,
       noIndexing: options.noIndexing,
+      url: `/${locale}/${meta.slug}/`,
     };
 
     const outPath = path.join(
@@ -377,17 +378,13 @@ export async function buildCurriculum(options: {
 
     await fs.mkdir(outPath, { recursive: true });
 
-    const html: string = renderHTML(`/${locale}/${meta.slug}/`, context);
-
-    const filePath = path.join(outPath, "index.html");
     const jsonFilePath = path.join(outPath, "index.json");
 
     await fs.mkdir(outPath, { recursive: true });
-    await fs.writeFile(filePath, html);
     await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", filePath);
+      console.log("Wrote", jsonFilePath);
     }
   }
 }
@@ -427,4 +424,26 @@ function setCurriculumTypes($: CheerioAPI) {
       }
     }
   });
+}
+
+export async function buildCurriculumSitemap(options: { verbose?: boolean }) {
+  const index = await buildCurriculumIndex();
+  const items = [];
+  while (index.length) {
+    const current = index.shift();
+    items.push({
+      slug: current.url,
+    });
+    if (current.children) {
+      index.push(...current.children);
+    }
+  }
+
+  const sitemapFilePath = await buildSitemap(items, {
+    pathSuffix: [DEFAULT_LOCALE, "curriculum"],
+  });
+
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
+  }
 }

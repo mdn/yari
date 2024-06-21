@@ -7,7 +7,7 @@ blockquote.quote {
   margin: 2rem 0;
   padding: 2rem;
 
-  @media screen and (max-width: 40rem) {
+  @media (max-width: 40rem) {
     flex-wrap: wrap-reverse;
   }
 

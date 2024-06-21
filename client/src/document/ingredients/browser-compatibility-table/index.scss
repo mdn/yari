@@ -18,7 +18,7 @@
     font-weight: 500;
     padding: 0;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       font-size: var(--type-smaller-font-size);
       padding: 0.4rem;
 
@@ -41,7 +41,7 @@
     tr {
       height: 3rem;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         &:last-child {
           th,
           td {
@@ -393,7 +393,7 @@ dl.bc-notes-list {
   flex-direction: row;
   gap: 0.5rem;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     align-items: center;
     flex-direction: column;
   }
@@ -433,12 +433,12 @@ dl.bc-notes-list {
   display: flex;
   gap: 0.5rem;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: block;
   }
 }
 
-@media screen and (min-width: $screen-md) {
+@media (min-width: $screen-md) {
   .bc-table {
     td {
       height: 2rem;

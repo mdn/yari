@@ -18,7 +18,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     #bookmark-note {
       // clamp height to ensure dropdown doesn't go off screen
       // but set a minimum, so it doesn't become unusably small
