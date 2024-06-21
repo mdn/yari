@@ -81,17 +81,12 @@ export default function MainMenu({ isOpenOnMobile }) {
             toggleMenu={toggleMenu}
           />
         )}
-        <TopLevelMenuLink to="/en-US/curriculum/">
-          Curriculum<sup className="new">New</sup>
-        </TopLevelMenuLink>
+        <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>
         <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
         <ToolsMenu
           visibleSubMenuId={visibleSubMenuId}
           toggleMenu={toggleMenu}
         />
-        <TopLevelMenuLink to="/en-US/plus/ai-help">
-          AI Help <sup className="new beta">Beta</sup>
-        </TopLevelMenuLink>
       </ul>
     </nav>
   );

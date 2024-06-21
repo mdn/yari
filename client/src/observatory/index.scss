@@ -26,6 +26,10 @@
     width: 2rem;
   }
 
+  h2.summary .host {
+    font-weight: initial;
+  }
+
   h2.result::before {
     height: 1.2rem;
     mask-image: url("../../public/assets/observatory/results-icon.svg");

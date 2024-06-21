@@ -8,7 +8,11 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
 
   const menu = {
     id: "tools",
-    label: "Tools",
+    label: (
+      <>
+        Tools <sup className="new">New</sup>
+      </>
+    ),
     items: [
       {
         description: "Write, test and share your code",
@@ -24,6 +28,13 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "HTTP Observatory",
         url: `/${locale}/observatory`,
         dot: "New",
+      },
+      {
+        description: "Get real-time assistance",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "AI Help",
+        url: `/en-US/plus/ai-help`,
       },
     ],
   };

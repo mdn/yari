@@ -38,7 +38,7 @@ const scoringTable = [
 ];
 
 export default function ObservatoryResults() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const [searchParams] = useSearchParams();
   const host = searchParams.get("host");
 
@@ -66,7 +66,7 @@ export default function ObservatoryResults() {
       parents={[
         {
           title: `Report: ${host}`,
-          uri: pathname,
+          uri: `${pathname}${search}`,
         },
       ]}
     >
@@ -184,7 +184,14 @@ function ObservatoryScanResults({ result, host }) {
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    window.location.hash = tabs[selectedTab]?.hash || defaultTabHash;
+    const hash = tabs[selectedTab]?.hash || defaultTabHash;
+    window.history.replaceState(
+      "",
+      "",
+      window.location.pathname +
+        window.location.search +
+        (hash !== defaultTabHash ? "#" + hash : "")
+    );
   }, [tabs, selectedTab, defaultTabHash]);
 
   return (
@@ -250,7 +257,8 @@ function ObservatoryRating({
   return (
     <>
       <h2 className="summary">
-        Scan summary: {hostAsRedirectChain(host, result)}
+        Scan summary:{" "}
+        <span className="host">{hostAsRedirectChain(host, result)}</span>
       </h2>
       <section className="scan-result">
         <section className="grade-trend">
