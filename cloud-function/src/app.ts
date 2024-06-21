@@ -40,7 +40,6 @@ router.all(
 router.all("/submit/mdn-yari/*", requireOrigin(Origin.main), proxyTelemetry);
 router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyPong);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
-router.use(redirectNonCanonicals);
 router.get(
   ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
   requireOrigin(Origin.play),
@@ -50,6 +49,12 @@ router.get(
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
+  proxyContent
+);
+router.get(
+  "/[^/]+/search-index.json",
+  requireOrigin(Origin.main),
+  lowercasePathname,
   proxyContent
 );
 router.get("/", requireOrigin(Origin.main), redirectLocale);
@@ -65,6 +70,7 @@ router.get(
   resolveIndexHTML,
   proxyContent
 );
+router.use(redirectNonCanonicals);
 router.get(
   "/[^/]+/docs/*",
   requireOrigin(Origin.main),
@@ -81,12 +87,6 @@ router.get(
   redirectLocale,
   redirectEnforceTrailingSlash,
   resolveIndexHTML,
-  proxyContent
-);
-router.get(
-  "/[^/]+/search-index.json",
-  requireOrigin(Origin.main),
-  lowercasePathname,
   proxyContent
 );
 router.get(
