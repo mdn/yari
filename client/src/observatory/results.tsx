@@ -55,7 +55,7 @@ export default function ObservatoryResults() {
   useEffect(() => {
     if (combinedError && !isMutating) {
       gleanClick(
-        `${OBSERVATORY}: error ${ERROR_MAP[combinedError.name] || combinedError.message}`
+        `${OBSERVATORY}: error: ${ERROR_MAP[combinedError.name] || combinedError.message}`
       );
     }
   }, [combinedError, isMutating, gleanClick]);
@@ -126,37 +126,37 @@ function ObservatoryScanResults({ result, host }) {
         name: "Test result",
         hash: "test_result",
         element: <ObservatoryTests result={result} />,
-        glean: "test-result-tab",
+        glean: "tab-test-result",
       },
       {
         name: "CSP analysis",
         hash: "csp_analysis",
         element: <ObservatoryCSP result={result} />,
-        glean: "csp-analysis-tab",
+        glean: "tab-csp-analysis",
       },
       {
         name: "Raw server headers",
         hash: "raw_server_headers",
         element: <ObservatoryHeaders result={result} />,
-        glean: "raw-server-headers-tab",
+        glean: "tab-raw-server-headers",
       },
       {
         name: "Cookies",
         hash: "cookies",
         element: <ObservatoryCookies result={result} />,
-        glean: "cookies-tab",
+        glean: "tab-cookies",
       },
       {
         name: "Scan history",
         hash: "scan_history",
         element: <ObservatoryHistory result={result} />,
-        glean: "scan-history-tab",
+        glean: "tab-scan-history",
       },
       {
         name: "Benchmark comparison",
         hash: "benchmark_comparison",
         element: <ObservatoryBenchmark result={result} />,
-        glean: "benchmark-tab",
+        glean: "tab-benchmark",
       },
     ];
   }, [result]);
@@ -201,7 +201,7 @@ function ObservatoryScanResults({ result, host }) {
                 type="radio"
                 checked={i === selectedTab}
                 onChange={() => {
-                  gleanClick(`${OBSERVATORY}: ${t.glean}`);
+                  gleanClick(`${OBSERVATORY}: click: ${t.glean}`);
                   setSelectedTab(i);
                 }}
               />
@@ -333,7 +333,7 @@ function ObservatoryRating({
           <div className="scan-another">
             <InternalLink
               to="../"
-              onClick={() => gleanClick(`${OBSERVATORY}: scan-another`)}
+              onClick={() => gleanClick(`${OBSERVATORY}: click: scan-another`)}
             >
               Scan another website
             </InternalLink>
@@ -391,7 +391,7 @@ function CountdownButton({
   const gleanClick = useGleanClick();
 
   function rescan() {
-    gleanClick(`${OBSERVATORY}: rescan`);
+    gleanClick(`${OBSERVATORY}: click: rescan`);
     onClickHandler();
   }
 
