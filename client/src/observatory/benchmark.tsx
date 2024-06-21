@@ -3,6 +3,7 @@ import useSWRImmutable from "swr/immutable";
 import { OBSERVATORY_API_URL } from "../env";
 import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
+import { fixMinusSymbol } from "./utils";
 
 export function useGradeDistribution(grade: string | null | undefined) {
   return useSWRImmutable(`gradeDistribution-${grade}`, async (key) => {
@@ -177,7 +178,7 @@ function GradeSVG({
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  {item.grade}
+                  {fixMinusSymbol(item.grade)}
                 </text>
               </g>
             );

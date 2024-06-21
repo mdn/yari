@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
-import { ERROR_MAP, Link, PassIcon } from "./utils";
+import { ERROR_MAP, fixMinusSymbol, Link, PassIcon } from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 import { useEffect, useMemo, useState } from "react";
@@ -263,7 +263,7 @@ function ObservatoryRating({
               <div
                 className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
               >
-                {result.scan.grade}
+                {fixMinusSymbol(result.scan.grade)}
               </div>
               <Tooltip>
                 <table className="grade-tooltip">
@@ -282,7 +282,7 @@ function ObservatoryRating({
                           }
                           key={st.grade}
                         >
-                          <td>{st.grade}</td>
+                          <td>{fixMinusSymbol(st.grade)}</td>
                           <td>
                             {st.scoreText}{" "}
                             {result.scan.grade === st.grade && st.stars && (
@@ -441,7 +441,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                     <td className="score" data-header="Score">
                       <span>
                         <span className="obs-score-value">
-                          {test.score_modifier}
+                          {fixMinusSymbol(test.score_modifier)}
                         </span>
                         <PassIcon pass={test.pass} />
                       </span>
@@ -494,7 +494,7 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
                     })}
                   </td>
                   <td data-header="Score">{score}</td>
-                  <td data-header="Grade">{grade}</td>
+                  <td data-header="Grade">{fixMinusSymbol(grade)}</td>
                 </tr>
               ))}
           </tbody>
