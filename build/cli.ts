@@ -30,7 +30,6 @@ import { buildSitemapIndex, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
-import { fdir } from "fdir";
 import { ssrDocument } from "./ssr.js";
 import { HydrationData } from "../libs/types/hydration.js";
 
