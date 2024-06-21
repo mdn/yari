@@ -184,7 +184,14 @@ function ObservatoryScanResults({ result, host }) {
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    window.location.hash = tabs[selectedTab]?.hash || defaultTabHash;
+    const hash = tabs[selectedTab]?.hash || defaultTabHash;
+    window.history.replaceState(
+      "",
+      "",
+      window.location.pathname +
+        window.location.search +
+        (hash !== defaultTabHash ? "#" + hash : "")
+    );
   }, [tabs, selectedTab, defaultTabHash]);
 
   return (
