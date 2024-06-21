@@ -13,7 +13,7 @@ import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.sv
 import Container from "../ui/atoms/container";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
-import { ERROR_MAP } from "./utils";
+import { ERROR_MAP, FeedbackLink } from "./utils";
 import { useGleanClick } from "../telemetry/glean-context";
 import { OBSERVATORY } from "../telemetry/constants";
 
@@ -190,6 +190,7 @@ export default function ObservatoryLanding() {
                 </figcaption>
               </figure>
             </section>
+            <FeedbackLink />
           </section>
           <SidePlacement />
         </Container>

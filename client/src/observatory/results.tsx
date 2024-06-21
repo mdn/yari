@@ -3,7 +3,13 @@ import { Navigate, useLocation } from "react-router";
 import { SidePlacement } from "../ui/organisms/placement";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
-import { ERROR_MAP, fixMinusSymbol, Link, PassIcon } from "./utils";
+import {
+  ERROR_MAP,
+  FeedbackLink,
+  fixMinusSymbol,
+  Link,
+  PassIcon,
+} from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
 import { useEffect, useMemo, useState } from "react";
@@ -77,6 +83,7 @@ export default function ObservatoryResults() {
               <h1>
                 <span className="accent">HTTP Observatory</span> Report{" "}
               </h1>
+              <FeedbackLink />
             </section>
             {hasData && !combinedError ? (
               <ObservatoryRating

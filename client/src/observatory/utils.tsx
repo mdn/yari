@@ -61,6 +61,19 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
   );
 }
 
+export function FeedbackLink() {
+  return (
+    <a
+      href="https://survey.alchemer.com/s3/7897385/MDN-HTTP-Observatory"
+      target="_blank"
+      rel="noreferrer noopener"
+      className="feedback-link"
+    >
+      Report Feedback
+    </a>
+  );
+}
+
 export const ERROR_MAP = {
   TypeError: "Observatory is currently down.",
 };
