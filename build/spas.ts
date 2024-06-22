@@ -150,7 +150,8 @@ export async function buildSPAs(options: {
         },
         {
           prefix: "observatory/analyze",
-          pageTitle: "HTTP Observatory | MDN",
+          pageTitle: "Scan results - HTTP Observatory | MDN",
+          noIndexing: true,
         },
         {
           prefix: "observatory/docs/scoring",
