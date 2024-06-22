@@ -45,8 +45,14 @@ section.place {
         margin: 0.5rem 0.5rem auto auto;
         padding: 0 0.25rem;
         text-decoration: none;
+        text-decoration: underline;
         text-transform: uppercase;
         width: max-content;
+
+        &:hover {
+          background-color: #fff;
+          color: #111;
+        }
       }
 
       .pong {

@@ -29,6 +29,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
             statimp,
             Description,
             Image,
+            LargeImage,
             ImageTitle,
             BackgroundColor,
             BackgroundColorLight,
@@ -53,7 +54,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
             : {
                 click: coder.encodeAndSign(statlink),
                 view: coder.encodeAndSign(statimp),
-                image: coder.encodeAndSign(Image),
+                image: coder.encodeAndSign(LargeImage || Image),
                 alt: ImageTitle && he.decode(ImageTitle),
                 copy: Description && he.decode(Description),
                 cta: CallToAction && he.decode(CallToAction),
