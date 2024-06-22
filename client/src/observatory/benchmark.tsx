@@ -144,13 +144,6 @@ function GradeSVG({
   const yTickIncr = (height - bottomSpace - topSpace) / (yMarks.length - 1);
   const yTickMax = Math.max(...yMarks);
 
-  // const xTickOffset = (width - leftSpace) / itemCount / 2;
-  // const xTickIncr = (width - leftSpace - rightSpace - 24) / (itemCount - 1);
-  // const yMarks = calculateTicks(gradeDistribution);
-  // const yTickOffset = height - bottomSpace;
-  // const yTickIncr = (height - bottomSpace - topSpace) / (yMarks.length - 1);
-  // const yTickMax = Math.max(...yMarks);
-
   return (
     <svg className="chart" viewBox="0 0 1200 380">
       <g className="axes-g">
