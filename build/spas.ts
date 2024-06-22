@@ -155,11 +155,11 @@ export async function buildSPAs(options: {
         },
         {
           prefix: "observatory/docs/scoring",
-          pageTitle: "HTTP Observatory | MDN",
+          pageTitle: "Scoring Methodology - HTTP Observatory | MDN",
         },
         {
           prefix: "observatory/docs/faq",
-          pageTitle: "HTTP Observatory | MDN",
+          pageTitle: "FAQ - HTTP Observatory | MDN",
         },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
