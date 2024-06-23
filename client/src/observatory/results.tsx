@@ -311,18 +311,17 @@ function ObservatoryRating({
               timeStyle: "medium",
             })}
           </div>
-          <a href="docs/scoring##tests-and-score-modifiers">
+          <a href="/en-US/observatory/docs/scoring#tests-and-score-modifiers">
             <span className="label">Tests Passed</span>
           </a>
           : {result.scan.tests_passed}/{result.scan.tests_quantity}
         </section>
         <section className="actions">
           {!isServer && (
-            <CountdownButton
+            <RescanButton
               host={host}
-              from={result.scan.scanned_at}
+              from={new Date(result.scan.scanned_at)}
               duration={60}
-              title="Rescan"
               onClickHandler={rescanTrigger}
             />
           )}
@@ -382,21 +381,19 @@ function hostAsRedirectChain(host, result: ObservatoryResult) {
   }
 }
 
-function CountdownButton({
+function RescanButton({
   host,
   from,
   duration,
-  title,
   onClickHandler,
 }: {
   host: string;
-  from: string;
+  from: Date;
   duration: number;
-  title: string;
   onClickHandler: Function;
 }) {
   function calculateRemainingTime() {
-    const endTime = new Date(from).getTime() + duration * 1000;
+    const endTime = from.getTime() + duration * 1000;
     return Math.max(0, endTime - new Date().getTime());
   }
   const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
@@ -427,12 +424,10 @@ function CountdownButton({
           background: `conic-gradient(var(--button-color) 0grad, ${progressPercent}%, rgba(0,0,0,0) ${progressPercent}% 100%)`,
         }}
       ></div>
-      <small>
-        Wait {remainingSecs}s to {title.toLowerCase()}
-      </small>
+      <small>Wait {remainingSecs}s to rescan</small>
     </Button>
   ) : (
-    <Button onClickHandler={rescan}>{title}</Button>
+    <Button onClickHandler={rescan}>Rescan</Button>
   );
 }
 
