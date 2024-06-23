@@ -76,7 +76,7 @@ function build() {
             err["postcssNode"].selector;
         }
 
-        reject(errMessage);
+        return reject(errMessage);
       }
       if (stats.hasErrors()) {
         return reject(

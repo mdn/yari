@@ -135,7 +135,10 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const pathLocale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, pathLocale)).isDirectory()) {
+      if (
+        !fs.statSync(path.join(root, pathLocale)).isDirectory() ||
+        !isValidLocale(pathLocale)
+      ) {
         continue;
       }
 
