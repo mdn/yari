@@ -11,7 +11,7 @@ import { Button } from "../ui/atoms/button";
 import InternalLink from "../ui/atoms/internal-link";
 import { useIsServer } from "../hooks";
 
-import { ObservatoryResult } from "./types";
+import { ObservatoryResult, SCORING_TABLE } from "./types";
 import ObservatoryCSP from "./csp";
 import {
   ERROR_MAP,
@@ -27,25 +27,8 @@ import { Tooltip } from "./tooltip";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ObservatoryDocsNav } from "./docs";
-
-import "./results.scss";
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
-
-const scoringTable = [
-  { grade: "A+", scoreText: "100+", score: 100, stars: true },
-  { grade: "A", scoreText: "90", score: 90, stars: true },
-  { grade: "A-", scoreText: "85", score: 85, stars: true },
-  { grade: "B+", scoreText: "80", score: 80 },
-  { grade: "B", scoreText: "70", score: 70 },
-  { grade: "B-", scoreText: "65", score: 65 },
-  { grade: "C+", scoreText: "60", score: 60 },
-  { grade: "C", scoreText: "50", score: 50 },
-  { grade: "C-", scoreText: "45", score: 45 },
-  { grade: "D+", scoreText: "40", score: 40 },
-  { grade: "D", scoreText: "30", score: 30 },
-  { grade: "D-", scoreText: "25", score: 25 },
-  { grade: "F", scoreText: "0", score: 0 },
-];
+import "./results.scss";
 
 export default function ObservatoryResults() {
   const { pathname, search } = useLocation();
@@ -286,7 +269,7 @@ function ObservatoryRating({
                     </tr>
                   </thead>
                   <tbody>
-                    {scoringTable.map((st) => {
+                    {SCORING_TABLE.map((st) => {
                       return (
                         <tr
                           className={
