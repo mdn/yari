@@ -11,6 +11,11 @@
     width: 2rem;
   }
 
+  h2.document-toc-heading::before {
+    height: 0;
+    width: 0;
+  }
+
   h2.summary::before {
     height: 1.4rem;
     mask-image: url("../../public/assets/observatory/summary-icon.svg");
@@ -26,7 +31,7 @@
   }
 
   .heading-and-actions {
-    align-items: center;
+    align-items: start;
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
