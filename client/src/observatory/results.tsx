@@ -65,7 +65,7 @@ export default function ObservatoryResults() {
   useEffect(() => {
     if (combinedError && !isMutating) {
       gleanClick(
-        `${OBSERVATORY}: error: ${ERROR_MAP[combinedError.name] || combinedError.message}`
+        `${OBSERVATORY}: error -> ${ERROR_MAP[combinedError.name] || combinedError.message}`
       );
     }
   }, [combinedError, isMutating, gleanClick]);
