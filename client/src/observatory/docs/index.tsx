@@ -1,5 +1,4 @@
 import { useParams, useLocation } from "react-router-dom";
-import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import "./index.scss";
 import { useLocale } from "../../hooks";
@@ -7,7 +6,7 @@ import { ObservatoryLayout } from "../layout";
 
 const ITEMS = [
   {
-    slug: "observatory/docs/scoring",
+    slug: "observatory/docs/scoring_methodology",
     title: "Scoring Methodology",
   },
   {
@@ -15,7 +14,7 @@ const ITEMS = [
     title: "FAQ",
   },
   {
-    slug: "observatory/docs/scoring#tests-and-score-modifiers",
+    slug: "observatory/docs/scoring_methodology#tests-and-score-modifiers",
     title: "Tests",
   },
 ];
@@ -38,7 +37,9 @@ function RelatedTopics({
     <aside className="document-toc-container">
       <section className="document-toc">
         <header>
-          <h2 className="document-toc-heading">{heading}</h2>
+          <h2 className="document-toc-heading">
+            <a href="/en-US/observatory">{heading}</a>
+          </h2>
         </header>
         <ul className="document-toc-list">
           {items.map(({ slug, title }) => {
@@ -89,7 +90,7 @@ function ObservatoryDocs({ ...props }) {
           extraClasses: "plus-docs",
           locale,
           slug: fullSlug,
-          title: MDN_PLUS_TITLE,
+          title: "HTTP Observatory | MDN",
           sidebarHeader,
           fallbackData: props.hyData ? props : undefined,
         }}
