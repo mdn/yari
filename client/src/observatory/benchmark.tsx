@@ -68,7 +68,7 @@ export async function handleGradeDistributionResponse(
  * @returns {number} a number according to `1|2|5 * 10^x`, where x is derived from `range` to be in the same order of magnitude
  */
 
-function rangeForMaxValue(range: number, round: boolean): number {
+function rangeForValue(range: number, round: boolean): number {
   const exponent = Math.floor(Math.log10(range));
   const fraction = range / Math.pow(10, exponent);
 
@@ -100,8 +100,8 @@ function rangeForMaxValue(range: number, round: boolean): number {
 function calculateTicks(gradeDistribution: GradeDistribution[]): number[] {
   const maxValue = Math.max(...gradeDistribution.map((item) => item.count));
   const tickTargetCount = 7; // Target number of ticks between 5 and 10
-  const range = rangeForMaxValue(maxValue, false); // Get a nice range
-  const tickInterval = rangeForMaxValue(range / tickTargetCount, true); // Determine a nice tick interval
+  const range = rangeForValue(maxValue, false); // Get a nice range
+  const tickInterval = rangeForValue(range / tickTargetCount, true); // Determine a nice tick interval
   const niceMaxValue = Math.ceil(maxValue / tickInterval) * tickInterval; // Adjust max value to a nice number
   const tickCount = Math.ceil(niceMaxValue / tickInterval) + 1; // Calculate the number of ticks
 
