@@ -1,9 +1,11 @@
+import useSWRMutation from "swr/mutation";
+import useSWRImmutable from "swr/immutable";
+
+import { OBSERVATORY_API_URL } from "../env";
+
+import { ObservatoryResult } from "./types";
 import { ReactComponent as PassSVG } from "../../public/assets/observatory/pass-icon.svg";
 import { ReactComponent as FailSVG } from "../../public/assets/observatory/fail-icon.svg";
-import useSWRMutation from "swr/mutation";
-import { OBSERVATORY_API_URL } from "../env";
-import useSWRImmutable from "swr/immutable";
-import { ObservatoryResult } from "./types";
 
 export function Link({ href, children }: { href: string; children: any }) {
   return (
@@ -32,10 +34,11 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
 
 export function FeedbackLink() {
   return (
+    // eslint-disable-next-line react/jsx-no-target-blank
     <a
       href="https://survey.alchemer.com/s3/7897385/MDN-HTTP-Observatory"
       target="_blank"
-      rel="noreferrer noopener"
+      rel="noopener"
       className="feedback-link"
     >
       Report Feedback
@@ -44,7 +47,7 @@ export function FeedbackLink() {
 }
 
 export const ERROR_MAP = {
-  TypeError: "Observatory is currently down.",
+  TypeError: "Observatory is currently down.", // `fetch()` errors catch-all
 };
 
 export function formatMinus(term: string | null | undefined) {
