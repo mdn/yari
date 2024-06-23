@@ -379,30 +379,6 @@ function Trend({ arrowState }: { arrowState: ARROW_STATE }) {
     default:
       return [];
   }
-
-  // if (
-  //   // newScore !== undefined &&
-  //   // oldScore !== undefined &&
-  //   // newScore !== oldScore
-  // ) {
-  //   return oldScore < newScore ? (
-  //     <div className="trend">
-  //       <span className="arrow-up" aria-hidden="true">
-  //         ↗︎
-  //       </span>{" "}
-  //       since last scan
-  //     </div>
-  //   ) : (
-  //     <div className="trend">
-  //       <span className="arrow-down" aria-hidden="true">
-  //         ↘︎
-  //       </span>{" "}
-  //       since last scan
-  //     </div>
-  //   );
-  // } else {
-  //   return [];
-  // }
 }
 
 function hostAsRedirectChain(host, result: ObservatoryResult) {
