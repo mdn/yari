@@ -228,32 +228,7 @@ function ObservatoryScanResults({ result, host }) {
   );
 }
 
-function trend(result: ObservatoryResult) {
-  if (result.scan.score && result.history.length > 0) {
-    const oldScore = result.history[result.history.length - 1].score;
-    if (oldScore < result.scan.score) {
-      return (
-        <div className="trend">
-          <span className="arrow-up" aria-hidden="true">
-            ↗︎
-          </span>{" "}
-          since last scan
-        </div>
-      );
-    } else if (oldScore > result.scan.score) {
-      return (
-        <div className="trend">
-          <span className="arrow-down" aria-hidden="true">
-            ↘︎
-          </span>{" "}
-          since last scan
-        </div>
-      );
-    } else {
-      return [];
-    }
-  }
-}
+type ARROW_STATE = "up" | "down" | "none";
 
 function ObservatoryRating({
   result,
@@ -266,6 +241,23 @@ function ObservatoryRating({
 }) {
   const gleanClick = useGleanClick();
   const isServer = useIsServer();
+
+  const arrowState = useMemo(() => {
+    const oldScore = result.history.length
+      ? result.history.at(-1)?.score
+      : undefined;
+    const newScore = result.scan.score;
+    if (
+      newScore !== undefined &&
+      oldScore !== undefined &&
+      newScore !== oldScore
+    ) {
+      return oldScore < newScore ? "up" : "down";
+    } else {
+      return "none";
+    }
+  }, [result]);
+
   return (
     <>
       <h2 className="summary">
@@ -317,7 +309,7 @@ function ObservatoryRating({
               </Tooltip>
             </span>
           </div>
-          {trend(result)}
+          <Trend arrowState={arrowState} />
         </section>
         <section className="data">
           <div>
@@ -362,6 +354,55 @@ function ObservatoryRating({
       </section>
     </>
   );
+}
+
+function Trend({ arrowState }: { arrowState: ARROW_STATE }) {
+  switch (arrowState) {
+    case "up":
+      return (
+        <div className="trend">
+          <span className="arrow-up" aria-hidden="true">
+            ↗︎
+          </span>{" "}
+          since last scan
+        </div>
+      );
+    case "down":
+      return (
+        <div className="trend">
+          <span className="arrow-down" aria-hidden="true">
+            ↘︎
+          </span>{" "}
+          since last scan
+        </div>
+      );
+    default:
+      return [];
+  }
+
+  // if (
+  //   // newScore !== undefined &&
+  //   // oldScore !== undefined &&
+  //   // newScore !== oldScore
+  // ) {
+  //   return oldScore < newScore ? (
+  //     <div className="trend">
+  //       <span className="arrow-up" aria-hidden="true">
+  //         ↗︎
+  //       </span>{" "}
+  //       since last scan
+  //     </div>
+  //   ) : (
+  //     <div className="trend">
+  //       <span className="arrow-down" aria-hidden="true">
+  //         ↘︎
+  //       </span>{" "}
+  //       since last scan
+  //     </div>
+  //   );
+  // } else {
+  //   return [];
+  // }
 }
 
 function hostAsRedirectChain(host, result: ObservatoryResult) {
