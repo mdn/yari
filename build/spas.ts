@@ -154,7 +154,7 @@ export async function buildSPAs(options: {
           noIndexing: true,
         },
         {
-          prefix: "observatory/docs/scoring",
+          prefix: "observatory/docs/scoring_methodology",
           pageTitle: "Scoring Methodology - HTTP Observatory | MDN",
         },
         {
