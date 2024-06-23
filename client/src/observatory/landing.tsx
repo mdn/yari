@@ -6,7 +6,7 @@ import { OBSERVATORY } from "../telemetry/constants";
 import Container from "../ui/atoms/container";
 import { SidePlacement } from "../ui/organisms/placement";
 
-import { ObservatoryAnalyzeRequest } from "./types";
+import { OBSERVATORY_TITLE_FULL, ObservatoryAnalyzeRequest } from "./types";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ERROR_MAP, FeedbackLink, useUpdateResult } from "./utils";
@@ -20,7 +20,7 @@ import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/s
 import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
 
 export default function ObservatoryLanding() {
-  document.title = "HTTP Observatory | MDN";
+  document.title = OBSERVATORY_TITLE_FULL;
 
   const defaultForm: ObservatoryAnalyzeRequest = {
     host: "",

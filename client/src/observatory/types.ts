@@ -10,6 +10,9 @@ export type ObservatoryScanState =
   | "STARTING"
   | "RUNNING";
 
+export const OBSERVATORY_TITLE = "HTTP Observatory";
+export const OBSERVATORY_TITLE_FULL = "HTTP Observatory | MDN";
+
 export interface ObservatoryResult {
   scan: ObservatoryScanResult;
   tests: ObservatoryTestResult;

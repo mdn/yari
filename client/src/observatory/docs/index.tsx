@@ -3,6 +3,7 @@ import StaticPage from "../../homepage/static-page";
 import "./index.scss";
 import { useLocale } from "../../hooks";
 import { ObservatoryLayout } from "../layout";
+import { OBSERVATORY_TITLE, OBSERVATORY_TITLE_FULL } from "../types";
 
 const ITEMS = [
   {
@@ -20,7 +21,7 @@ const ITEMS = [
 ];
 
 export function ObservatoryDocsNav({
-  heading = "HTTP Observatory",
+  heading = OBSERVATORY_TITLE,
 }: {
   heading: string;
 }) {
@@ -75,7 +76,7 @@ function ObservatoryDocs({ ...props }) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 
-  const sidebarHeader = <ObservatoryDocsNav heading="HTTP Observatory" />;
+  const sidebarHeader = <ObservatoryDocsNav heading={OBSERVATORY_TITLE} />;
 
   const fullSlug = `observatory/docs/${slug}`;
 
@@ -94,7 +95,7 @@ function ObservatoryDocs({ ...props }) {
           extraClasses: "plus-docs",
           locale,
           slug: fullSlug,
-          title: "HTTP Observatory | MDN",
+          title: OBSERVATORY_TITLE_FULL,
           sidebarHeader,
           fallbackData: props.hyData ? props : undefined,
         }}
