@@ -234,13 +234,19 @@ function trend(result: ObservatoryResult) {
     if (oldScore < result.scan.score) {
       return (
         <div className="trend">
-          <span className="arrow-up">↗︎</span> since last scan
+          <span className="arrow-up" aria-hidden="true">
+            ↗︎
+          </span>{" "}
+          since last scan
         </div>
       );
     } else if (oldScore > result.scan.score) {
       return (
         <div className="trend">
-          <span className="arrow-down">↘︎</span> since last scan
+          <span className="arrow-down" aria-hidden="true">
+            ↘︎
+          </span>{" "}
+          since last scan
         </div>
       );
     } else {
