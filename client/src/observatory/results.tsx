@@ -212,7 +212,7 @@ function ObservatoryScanResults({ result, host }) {
                 type="radio"
                 checked={i === selectedTab}
                 onChange={() => {
-                  gleanClick(`${OBSERVATORY}: click: tab-${t.key}`);
+                  gleanClick(`${OBSERVATORY}: tab-${t.key}`);
                   setSelectedTab(i);
                 }}
               />
@@ -347,7 +347,7 @@ function ObservatoryRating({
           <div className="scan-another">
             <InternalLink
               to="../"
-              onClick={() => gleanClick(`${OBSERVATORY}: click: scan-another`)}
+              onClick={() => gleanClick(`${OBSERVATORY}: scan-another`)}
             >
               Scan another website
             </InternalLink>
@@ -405,7 +405,7 @@ function CountdownButton({
   const gleanClick = useGleanClick();
 
   function rescan() {
-    gleanClick(`${OBSERVATORY}: click: rescan`);
+    gleanClick(`${OBSERVATORY}: rescan`);
     onClickHandler();
   }
 
