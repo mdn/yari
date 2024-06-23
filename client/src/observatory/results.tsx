@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import useSWRImmutable from "swr/immutable";
 import { Navigate, useLocation } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
-import "./results.scss";
-import { ObservatoryResult } from "./types";
+import { useGleanClick } from "../telemetry/glean-context";
+import { OBSERVATORY } from "../telemetry/constants";
 import { SidePlacement } from "../ui/organisms/placement";
+import Container from "../ui/atoms/container";
+import { Button } from "../ui/atoms/button";
+import InternalLink from "../ui/atoms/internal-link";
+import { useIsServer } from "../hooks";
+
+import { ObservatoryResult } from "./types";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
 import {
@@ -14,19 +21,14 @@ import {
   Link,
   PassIcon,
 } from "./utils";
-import Container from "../ui/atoms/container";
-import { Button } from "../ui/atoms/button";
 import ObservatoryBenchmark from "./benchmark";
-import InternalLink from "../ui/atoms/internal-link";
 import { Tooltip } from "./tooltip";
-import { useGleanClick } from "../telemetry/glean-context";
-import { OBSERVATORY } from "../telemetry/constants";
-import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ObservatoryDocsNav } from "./docs";
-import { useIsServer } from "../hooks";
-import { useSearchParams } from "react-router-dom";
+
+import "./results.scss";
+import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
 
 const scoringTable = [
   { grade: "A+", scoreText: "100+", score: 100, stars: true },

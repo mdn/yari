@@ -1,15 +1,18 @@
-import { GradeDistribution, ObservatoryResult } from "./types";
 import useSWRImmutable from "swr/immutable";
-import { OBSERVATORY_API_URL } from "../env";
+
 import { Loading } from "../ui/atoms/loading";
 import NoteCard from "../ui/molecules/notecards";
+
+import { GradeDistribution, ObservatoryResult } from "./types";
+import { OBSERVATORY_API_URL } from "../env";
 import { fixMinusSymbol } from "./utils";
+import { handleJsonResponse } from ".";
 
 export function useGradeDistribution(grade: string | null | undefined) {
   return useSWRImmutable("gradeDistribution", async () => {
     const url = new URL(OBSERVATORY_API_URL + "/api/v2/grade_distribution");
     const res = await fetch(url);
-    return await handleGradeDistributionResponse(res);
+    return await handleJsonResponse<GradeDistribution[]>(res);
   });
 }
 
