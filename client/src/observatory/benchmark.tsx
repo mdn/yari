@@ -5,7 +5,7 @@ import NoteCard from "../ui/molecules/notecards";
 
 import { GradeDistribution, ObservatoryResult } from "./types";
 import { OBSERVATORY_API_URL } from "../env";
-import { fixMinusSymbol } from "./utils";
+import { formatMinus } from "./utils";
 import { handleJsonResponse } from ".";
 
 export function useGradeDistribution(grade: string | null | undefined) {
@@ -174,7 +174,7 @@ function GradeSVG({
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  {fixMinusSymbol(item.grade)}
+                  {formatMinus(item.grade)}
                 </text>
               </g>
             );

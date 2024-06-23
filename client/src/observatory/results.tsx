@@ -14,13 +14,7 @@ import { useIsServer } from "../hooks";
 import { ObservatoryResult } from "./types";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
-import {
-  ERROR_MAP,
-  FeedbackLink,
-  fixMinusSymbol,
-  Link,
-  PassIcon,
-} from "./utils";
+import { ERROR_MAP, FeedbackLink, formatMinus, Link, PassIcon } from "./utils";
 import ObservatoryBenchmark from "./benchmark";
 import { Tooltip } from "./tooltip";
 import { ObservatoryLayout } from "./layout";
@@ -281,7 +275,7 @@ function ObservatoryRating({
               <div
                 className={`grade grade-${result.scan.grade?.[0]?.toLowerCase()}`}
               >
-                {fixMinusSymbol(result.scan.grade)}
+                {formatMinus(result.scan.grade)}
               </div>
               <Tooltip>
                 <table className="grade-tooltip">
@@ -300,7 +294,7 @@ function ObservatoryRating({
                           }
                           key={st.grade}
                         >
-                          <td>{fixMinusSymbol(st.grade)}</td>
+                          <td>{formatMinus(st.grade)}</td>
                           <td>
                             {st.scoreText}{" "}
                             {result.scan.grade === st.grade && st.stars && (
@@ -459,7 +453,7 @@ function ObservatoryTests({ result }: { result: ObservatoryResult }) {
                     <td className="score" data-header="Score">
                       <span>
                         <span className="obs-score-value">
-                          {fixMinusSymbol(`${test.score_modifier}`)}
+                          {formatMinus(`${test.score_modifier}`)}
                         </span>
                         <PassIcon pass={test.pass} />
                       </span>
@@ -512,7 +506,7 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
                     })}
                   </td>
                   <td data-header="Score">{score}</td>
-                  <td data-header="Grade">{fixMinusSymbol(grade)}</td>
+                  <td data-header="Grade">{formatMinus(grade)}</td>
                 </tr>
               ))}
           </tbody>
