@@ -16,8 +16,8 @@ export default function Observatory({ ...props }) {
       <Routes>
         <Route path="/" element={<ObservatoryLanding />} />
         <Route path="/analyze" element={<ObservatoryResults />} />
-        <Route path="*" element={<PageNotFound />} />
         <Route path="/docs/*" element={<ObservatoryDocs {...props} />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );
