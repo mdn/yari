@@ -121,7 +121,7 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
 }
 
-const SCRIM_URL = "https://v2.scrimba.com/s06i08l";
+const SCRIM_URL = "https://v1.scrimba.com/scrim/co0db40a39c34f3a2a683f095#";
 
 function PartnerIframe() {
   const [scrimmed, setScrimmed] = useState(false);
@@ -131,38 +131,40 @@ function PartnerIframe() {
   return (
     <div className="scrim">
       <dialog ref={dialog}>
-        <div className="scrim-inner">
-          <div className="partner-header">
-            <span>Clicking will load content from scrimba.com</span>
-            <button
-              onClick={() => {
-                if (show) {
-                  dialog.current?.close();
-                  setShow(false);
-                } else {
-                  dialog.current?.showModal();
-                  setShow(true);
-                }
-              }}
-            >
-              ⎚<span className="visually-hidden">Toggle fullscreen</span>
-            </button>
-            <a href={SCRIM_URL} className="external">
-              <span className="visually-hidden">Open on scrimba</span>
-            </a>
+        <div className="scrim-with-border">
+          <div className="scrim-inner">
+            <div className="partner-header">
+              <span>Clicking will load content from scrimba.com</span>
+              <button
+                onClick={() => {
+                  if (show) {
+                    dialog.current?.close();
+                    setShow(false);
+                  } else {
+                    dialog.current?.showModal();
+                    setShow(true);
+                  }
+                }}
+              >
+                ⎚<span className="visually-hidden">Toggle fullscreen</span>
+              </button>
+              <a href={SCRIM_URL} className="external">
+                <span className="visually-hidden">Open on scrimba</span>
+              </a>
+            </div>
+            {scrimmed ? (
+              <iframe
+                src={SCRIM_URL}
+                title="MDN + Scrimba partnership announcement scrim"
+              ></iframe>
+            ) : (
+              <img
+                alt="MDN + Scrimba partnership announcement scrim preview"
+                src="/assets/curriculum/scrim.png"
+                onClick={() => setScrimmed(true)}
+              ></img>
+            )}
           </div>
-          {scrimmed ? (
-            <iframe
-              src={SCRIM_URL}
-              title="MDN + Scrimba partnership announcement scrim"
-            ></iframe>
-          ) : (
-            <img
-              alt="MDN + Scrimba partnership announcement scrim preview"
-              src="/assets/curriculum/scrim.png"
-              onClick={() => setScrimmed(true)}
-            ></img>
-          )}
         </div>
       </dialog>
       <p>
@@ -190,6 +192,7 @@ function About({ section }) {
       <div className="landing-about">
         <DisplayH2 id={id} title={title} />
         <div className="about-content" dangerouslySetInnerHTML={html}></div>
+        <div className="arrow"></div>
         <PartnerIframe />
       </div>
     </section>
