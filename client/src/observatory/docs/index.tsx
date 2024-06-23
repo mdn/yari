@@ -19,12 +19,16 @@ const ITEMS = [
   },
 ];
 
-export function ObservatoryDocsNav() {
-  return <RelatedTopics heading="HTTP Observatory" items={ITEMS} />;
+export function ObservatoryDocsNav({
+  heading = "HTTP Observatory",
+}: {
+  heading: string;
+}) {
+  return <RelatedTopics heading={heading} items={ITEMS} />;
 }
 
 function RelatedTopics({
-  heading = "Related Topics",
+  heading,
   items,
 }: {
   heading: string;
@@ -71,7 +75,7 @@ function ObservatoryDocs({ ...props }) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 
-  const sidebarHeader = <ObservatoryDocsNav />;
+  const sidebarHeader = <ObservatoryDocsNav heading="HTTP Observatory" />;
 
   const fullSlug = `observatory/docs/${slug}`;
 
