@@ -12,9 +12,16 @@ import InternalLink from "../ui/atoms/internal-link";
 import { useIsServer } from "../hooks";
 
 import { ObservatoryResult } from "./types";
-import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
-import { ERROR_MAP, FeedbackLink, formatMinus, Link, PassIcon } from "./utils";
+import {
+  ERROR_MAP,
+  FeedbackLink,
+  formatMinus,
+  Link,
+  PassIcon,
+  useResult,
+  useUpdateResult,
+} from "./utils";
 import ObservatoryBenchmark from "./benchmark";
 import { Tooltip } from "./tooltip";
 import { ObservatoryLayout } from "./layout";

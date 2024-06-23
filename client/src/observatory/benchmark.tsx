@@ -5,8 +5,8 @@ import NoteCard from "../ui/molecules/notecards";
 
 import { GradeDistribution, ObservatoryResult } from "./types";
 import { OBSERVATORY_API_URL } from "../env";
-import { handleJsonResponse } from ".";
 import GradeSVG from "./benchmark-chart";
+import { handleJsonResponse } from "./utils";
 
 export function useGradeDistribution(grade: string | null | undefined) {
   return useSWRImmutable("gradeDistribution", async () => {

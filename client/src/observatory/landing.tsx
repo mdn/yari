@@ -7,10 +7,9 @@ import Container from "../ui/atoms/container";
 import { SidePlacement } from "../ui/organisms/placement";
 
 import { ObservatoryAnalyzeRequest } from "./types";
-import { useUpdateResult } from ".";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
-import { ERROR_MAP, FeedbackLink } from "./utils";
+import { ERROR_MAP, FeedbackLink, useUpdateResult } from "./utils";
 
 import "./landing.scss";
 import { ReactComponent as LandingSVG } from "../../public/assets/observatory/landing-illustration.svg";

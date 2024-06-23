@@ -1,5 +1,9 @@
 import { ReactComponent as PassSVG } from "../../public/assets/observatory/pass-icon.svg";
 import { ReactComponent as FailSVG } from "../../public/assets/observatory/fail-icon.svg";
+import useSWRMutation from "swr/mutation";
+import { OBSERVATORY_API_URL } from "../env";
+import useSWRImmutable from "swr/immutable";
+import { ObservatoryResult } from "./types";
 
 export function Link({ href, children }: { href: string; children: any }) {
   return (
@@ -52,4 +56,43 @@ export function formatMinus(term: string | null | undefined) {
   // MINUS SIGN
   // Unicode: U+2212, UTF-8: E2 88 92
   return `${term}`.replaceAll(/-/g, "−");
+}
+
+export function useUpdateResult(host: string) {
+  return useSWRMutation(
+    host,
+    async (key: string) => {
+      const url = new URL(OBSERVATORY_API_URL + "/api/v2/analyze");
+      url.searchParams.set("host", key);
+      const res = await fetch(url, {
+        method: "POST",
+      });
+      return await handleJsonResponse<ObservatoryResult>(res);
+    },
+    { populateCache: true, throwOnError: false }
+  );
+}
+
+export function useResult(host?: string) {
+  return useSWRImmutable(host, async (key) => {
+    const url = new URL(OBSERVATORY_API_URL + "/api/v2/analyze");
+    url.searchParams.set("host", key);
+    const res = await fetch(url);
+    return await handleJsonResponse<ObservatoryResult>(res);
+  });
+}
+
+export async function handleJsonResponse<T>(res: Response): Promise<T> {
+  if (!res.ok && res.status !== 429) {
+    let message = `${res.status}: ${res.statusText}`;
+    try {
+      const data = await res.json();
+      if (data.error) {
+        message = data.message;
+      }
+    } finally {
+      throw Error(message);
+    }
+  }
+  return await res.json();
 }
