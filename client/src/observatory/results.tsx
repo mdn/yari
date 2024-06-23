@@ -212,7 +212,7 @@ function ObservatoryScanResults({ result, host }) {
                 type="radio"
                 checked={i === selectedTab}
                 onChange={() => {
-                  gleanClick(`${OBSERVATORY}: tab-${t.key}`);
+                  gleanClick(`${OBSERVATORY}: tab ->${t.key}`);
                   setSelectedTab(i);
                 }}
               />
