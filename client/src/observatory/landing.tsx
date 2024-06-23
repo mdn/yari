@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
-import { ObservatoryAnalyzeRequest } from "./types";
 import { useNavigate } from "react-router-dom";
-import { useUpdateResult } from ".";
+
+import { useGleanClick } from "../telemetry/glean-context";
+import { OBSERVATORY } from "../telemetry/constants";
+import Container from "../ui/atoms/container";
 import { SidePlacement } from "../ui/organisms/placement";
 
+import { OBSERVATORY_TITLE_FULL, ObservatoryAnalyzeRequest } from "./types";
+import { ObservatoryLayout } from "./layout";
+import { Progress } from "./progress";
+import { ERROR_MAP, FeedbackLink, useUpdateResult } from "./utils";
+
+import "./landing.scss";
 import { ReactComponent as LandingSVG } from "../../public/assets/observatory/landing-illustration.svg";
 import { ReactComponent as LinesSVG } from "../../public/assets/observatory/lines.svg";
 import { ReactComponent as AssessmentSVG } from "../../public/assets/observatory/assessment.svg";
 import { ReactComponent as ScanningSVG } from "../../public/assets/observatory/scanning.svg";
 import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/security.svg";
 import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
-import Container from "../ui/atoms/container";
-import { ObservatoryLayout } from "./layout";
-import { Progress } from "./progress";
-import { ERROR_MAP, FeedbackLink } from "./utils";
-import { useGleanClick } from "../telemetry/glean-context";
-import { OBSERVATORY } from "../telemetry/constants";
 
 export default function ObservatoryLanding() {
-  document.title = "HTTP Observatory | MDN";
+  document.title = OBSERVATORY_TITLE_FULL;
 
-  const defaultForm: ObservatoryAnalyzeRequest = {
+  const [form, setForm] = useState<ObservatoryAnalyzeRequest>({
     host: "",
-  };
-
-  const [form, setForm] = useState(defaultForm);
-  const [cleanHostname, setCleanHostname] = useState(form.host);
+  });
+  const [cleanHostname, setCleanHostname] = useState("");
   const {
     trigger,
     isMutating,
@@ -74,7 +74,7 @@ export default function ObservatoryLanding() {
   useEffect(() => {
     if (error && !isMutating) {
       gleanClick(
-        `${OBSERVATORY}: error: ${ERROR_MAP[error.name] || error.message}`
+        `${OBSERVATORY}: error -> ${ERROR_MAP[error.name] || error.message}`
       );
     }
   }, [error, isMutating, gleanClick]);
@@ -115,7 +115,7 @@ export default function ObservatoryLanding() {
                     <button
                       type="submit"
                       disabled={isMutating}
-                      onClick={() => gleanClick(`${OBSERVATORY}: click: scan`)}
+                      onClick={() => gleanClick(`${OBSERVATORY}: scan`)}
                     >
                       Scan
                     </button>

@@ -190,6 +190,8 @@
 
   --observatory-bg: rgba(242, 242, 245, 1);
   --observatory-bg-secondary: rgba(255, 255, 255, 1);
+  --observatory-color: #000;
+  --observatory-color-secondary: rgba(105, 105, 105, 1);
   --observatory-accent: rgba(155, 101, 255, 1);
   --observatory-border: rgba(228, 228, 246, 1);
   --observatory-border-accent: rgba(90, 35, 215, 1);
@@ -198,11 +200,7 @@
   --observatory-fail-icon-bg: rgba(250, 229, 229, 1);
   --observatory-fail-icon-color: rgba(211, 0, 56, 1);
   --observatory-table-bg: rgba(255, 255, 255, 1);
-  --observatory-color: #000;
-  --observatory-color-secondary: rgba(105, 105, 105, 1);
   --observatory-table-header-bg: rgba(249, 249, 251, 1);
-  --observatory-alert: #{$mdn-color-light-theme-red-50};
-  --observatory-check: #{$mdn-color-light-theme-green-40};
   --observatory-grade-a-bg: #cdfae080;
   --observatory-grade-a-border: #00793680;
   --observatory-grade-b-bg: #dbf3a980;
@@ -215,6 +213,8 @@
   --observatory-grade-f-border: #aa000080;
   --observatory-tooltip-color: rgba(255, 255, 255, 1);
   --observatory-tooltip-color-secondary: rgba(179, 179, 179, 1);
+  --observatory-arrow-down-color: rgba(158, 0, 39, 1);
+  --observatory-arrow-up-color: rgba(0, 121, 54, 1);
 
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
@@ -497,19 +497,17 @@
 
   --observatory-bg: rgba(52, 52, 52, 1);
   --observatory-bg-secondary: rgba(0, 0, 0, 1);
+  --observatory-color: #fff;
+  --observatory-color-secondary: rgba(249, 249, 251, 1);
   --observatory-accent: rgba(163, 136, 255, 1);
-  --observatory-border: #{$mdn-color-neutral-70};
-  --observatory-border-accent: #{$mdn-color-dark-theme-blue-20};
+  --observatory-border: rgba(105, 105, 105, 1);
+  --observatory-border-accent: rgba(163, 136, 255, 1);
   --observatory-pass-icon-bg: rgba(38, 92, 61, 1);
   --observatory-pass-icon-color: rgba(138, 255, 163, 1);
   --observatory-fail-icon-bg: rgba(92, 38, 38, 1);
   --observatory-fail-icon-color: rgba(255, 121, 155, 1);
   --observatory-table-bg: rgba(0, 0, 0, 1);
-  --observatory-color: #fff;
-  --observatory-color-secondary: rgba(249, 249, 251, 1);
   --observatory-table-header-bg: var(--observatory-bg-secondary);
-  --observatory-alert: #{$mdn-color-dark-theme-red-50};
-  --observatory-check: #{$mdn-color-dark-theme-green-50};
   --observatory-grade-a-bg: #2a664380;
   --observatory-grade-a-border: #00ff6a80;
   --observatory-grade-b-bg: #4e5a3580;
@@ -520,6 +518,8 @@
   --observatory-grade-d-border: #ff6a0080;
   --observatory-grade-f-bg: #5c262680;
   --observatory-grade-f-border: #ff4d4d80;
+  --observatory-arrow-down-color: rgba(255, 112, 127, 1);
+  --observatory-arrow-up-color: rgba(0, 255, 106, 1);
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};

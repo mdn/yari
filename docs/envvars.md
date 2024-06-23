@@ -355,6 +355,6 @@ included this value for `geo.country_iso`.
 
 ### REACT_APP_OBSERVATORY_API_URL
 
-**Default: `https://stage.observatory.mdn.nonprod.webservices.mozgcp.net`**
+**Default: `https://observatory-api.mdn.allizom.net`**
 
 - Base url for the Observatory API server.

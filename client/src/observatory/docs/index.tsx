@@ -1,31 +1,35 @@
 import { useParams, useLocation } from "react-router-dom";
-import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import "./index.scss";
 import { useLocale } from "../../hooks";
 import { ObservatoryLayout } from "../layout";
+import { OBSERVATORY_TITLE, OBSERVATORY_TITLE_FULL } from "../types";
 
 const ITEMS = [
   {
-    slug: "observatory/docs/scoring",
-    title: "Scoring and Grading",
+    slug: "observatory/docs/scoring_methodology",
+    title: "Scoring Methodology",
   },
   {
     slug: "observatory/docs/faq",
     title: "FAQ",
   },
   {
-    slug: "observatory/docs/scoring#tests-and-score-modifiers",
+    slug: "observatory/docs/scoring_methodology#tests-and-score-modifiers",
     title: "Tests",
   },
 ];
 
-export function ObservatoryDocsNav() {
-  return <RelatedTopics heading="HTTP Observatory" items={ITEMS} />;
+export function ObservatoryDocsNav({
+  heading = OBSERVATORY_TITLE,
+}: {
+  heading: string;
+}) {
+  return <RelatedTopics heading={heading} items={ITEMS} />;
 }
 
 function RelatedTopics({
-  heading = "Related Topics",
+  heading,
   items,
 }: {
   heading: string;
@@ -38,7 +42,9 @@ function RelatedTopics({
     <aside className="document-toc-container">
       <section className="document-toc">
         <header>
-          <h2 className="document-toc-heading">{heading}</h2>
+          <h2 className="document-toc-heading">
+            <a href="/en-US/observatory">{heading}</a>
+          </h2>
         </header>
         <ul className="document-toc-list">
           {items.map(({ slug, title }) => {
@@ -70,7 +76,7 @@ function ObservatoryDocs({ ...props }) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 
-  const sidebarHeader = <ObservatoryDocsNav />;
+  const sidebarHeader = <ObservatoryDocsNav heading={OBSERVATORY_TITLE} />;
 
   const fullSlug = `observatory/docs/${slug}`;
 
@@ -89,7 +95,7 @@ function ObservatoryDocs({ ...props }) {
           extraClasses: "plus-docs",
           locale,
           slug: fullSlug,
-          title: MDN_PLUS_TITLE,
+          title: OBSERVATORY_TITLE_FULL,
           sidebarHeader,
           fallbackData: props.hyData ? props : undefined,
         }}

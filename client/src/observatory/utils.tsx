@@ -1,3 +1,12 @@
+import useSWRMutation from "swr/mutation";
+import useSWRImmutable from "swr/immutable";
+
+import { OBSERVATORY_API_URL } from "../env";
+
+import { ObservatoryResult } from "./types";
+import { ReactComponent as PassSVG } from "../../public/assets/observatory/pass-icon.svg";
+import { ReactComponent as FailSVG } from "../../public/assets/observatory/fail-icon.svg";
+
 export function Link({ href, children }: { href: string; children: any }) {
   return (
     <a
@@ -17,45 +26,7 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
   }
   return (
     <span className="obs-pass-icon">
-      {pass ? (
-        <svg
-          aria-hidden="true"
-          className="pass"
-          width="24"
-          height="27"
-          viewBox="0 -2 24 25"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="12" cy="11.8984" r="9" />
-          <path d="M12 1.89844C6.5 1.89844 2 6.39844 2 11.8984C2 17.3984 6.5 21.8984 12 21.8984C17.5 21.8984 22 17.3984 22 11.8984C22 6.39844 17.5 1.89844 12 1.89844ZM10 16.8984L5 11.8984L6.41 10.4884L10 14.0684L17.59 6.47844L19 7.89844L10 16.8984Z" />
-        </svg>
-      ) : (
-        <svg
-          aria-hidden="true"
-          className="fail"
-          width="24"
-          height="27"
-          viewBox="0 -2 24 25"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g clipPath="url(#clip0_6033_1063)">
-            <circle cx="12" cy="11.8984" r="9" />
-            <path d="M12 1.79688C17.53 1.79688 22 6.26687 22 11.7969C22 17.3269 17.53 21.7969 12 21.7969C6.47 21.7969 2 17.3269 2 11.7969C2 6.26687 6.47 1.79688 12 1.79688ZM15.59 6.79688L12 10.3869L8.41 6.79688L7 8.20687L10.59 11.7969L7 15.3869L8.41 16.7969L12 13.2069L15.59 16.7969L17 15.3869L13.41 11.7969L17 8.20687L15.59 6.79688Z" />
-          </g>
-          <defs>
-            <clipPath id="clip0_6033_1063">
-              <rect
-                width="24"
-                height="24"
-                fill="white"
-                transform="translate(0 0.203125)"
-              />
-            </clipPath>
-          </defs>
-        </svg>
-      )}
+      {pass ? <PassSVG /> : <FailSVG />}
       <span className="visually-hidden">{pass ? "Passed" : "Failed"}</span>
     </span>
   );
@@ -63,10 +34,11 @@ export function PassIcon({ pass }: { pass: boolean | null }) {
 
 export function FeedbackLink() {
   return (
+    // eslint-disable-next-line react/jsx-no-target-blank
     <a
       href="https://survey.alchemer.com/s3/7897385/MDN-HTTP-Observatory"
       target="_blank"
-      rel="noreferrer noopener"
+      rel="noopener"
       className="feedback-link"
     >
       Report Feedback
@@ -75,10 +47,10 @@ export function FeedbackLink() {
 }
 
 export const ERROR_MAP = {
-  TypeError: "Observatory is currently down.",
+  TypeError: "Observatory is currently down.", // `fetch()` errors catch-all
 };
 
-export function fixMinusSymbol(term: string | null | undefined) {
+export function formatMinus(term: string | null | undefined) {
   if (!term) {
     return null;
   }
@@ -87,4 +59,43 @@ export function fixMinusSymbol(term: string | null | undefined) {
   // MINUS SIGN
   // Unicode: U+2212, UTF-8: E2 88 92
   return `${term}`.replaceAll(/-/g, "−");
+}
+
+export function useUpdateResult(host: string) {
+  return useSWRMutation(
+    host,
+    async (key: string) => {
+      const url = new URL(OBSERVATORY_API_URL + "/api/v2/analyze");
+      url.searchParams.set("host", key);
+      const res = await fetch(url, {
+        method: "POST",
+      });
+      return await handleJsonResponse<ObservatoryResult>(res);
+    },
+    { populateCache: true, throwOnError: false }
+  );
+}
+
+export function useResult(host?: string) {
+  return useSWRImmutable(host, async (key) => {
+    const url = new URL(OBSERVATORY_API_URL + "/api/v2/analyze");
+    url.searchParams.set("host", key);
+    const res = await fetch(url);
+    return await handleJsonResponse<ObservatoryResult>(res);
+  });
+}
+
+export async function handleJsonResponse<T>(res: Response): Promise<T> {
+  if (!res.ok && res.status !== 429) {
+    let message = `${res.status}: ${res.statusText}`;
+    try {
+      const data = await res.json();
+      if (data.error) {
+        message = data.message;
+      }
+    } finally {
+      throw Error(message);
+    }
+  }
+  return await res.json();
 }

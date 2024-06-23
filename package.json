@@ -1,6 +1,6 @@
 {
   "name": "@mdn/yari",
-  "version": "2.56.0",
+  "version": "2.57.0",
   "repository": "https://github.com/mdn/yari",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
@@ -147,7 +147,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^0.8.6",
-    "web-specs": "^3.9.1"
+    "web-specs": "^3.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
@@ -255,7 +255,7 @@
     "ts-jest": "^29.1.5",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "typescript-eslint": "^7.13.1",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",

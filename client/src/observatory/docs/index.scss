@@ -10,4 +10,16 @@
   .sidebar {
     padding-top: 3rem;
   }
+
+  &,
+  .observatory-wrapper {
+    .document-toc-heading {
+      font-size: var(--type-base-font-size-rem);
+
+      a,
+      a:hover {
+        text-decoration: none;
+      }
+    }
+  }
 }

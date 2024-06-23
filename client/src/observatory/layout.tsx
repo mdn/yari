@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { DocParent } from "../../../libs/types/document";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { TopNavigation } from "../ui/organisms/top-navigation";
+import { DEFAULT_LOCALE } from "../../../libs/constants";
+import { OBSERVATORY_TITLE } from "./types";
 
 export function ObservatoryLayout({
   parents = [],
@@ -17,8 +19,8 @@ export function ObservatoryLayout({
         <ArticleActionsContainer
           parents={[
             {
-              title: "HTTP Observatory",
-              uri: "/en-US/observatory",
+              title: OBSERVATORY_TITLE,
+              uri: `/${DEFAULT_LOCALE}/observatory`,
             },
             ...parents,
           ].filter(Boolean)}
