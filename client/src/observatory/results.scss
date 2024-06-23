@@ -65,11 +65,11 @@
   }
 
   .arrow-down {
-    color: var(--observatory-arrow-down);
+    color: var(--observatory-arrow-down-color);
   }
 
   .arrow-up {
-    color: var(--observatory-arrow-up);
+    color: var(--observatory-arrow-up-color);
   }
 
   .grade-trend {
@@ -177,14 +177,6 @@
       .icon {
         height: 1.3rem;
         width: 1.3rem;
-      }
-
-      .icon-alert-circle {
-        background-color: var(--observatory-alert);
-      }
-
-      .icon-check-circle {
-        background-color: var(--observatory-check);
       }
 
       @media (max-width: #{$screen-lg - 0.02}) {

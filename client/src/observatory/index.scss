@@ -144,8 +144,8 @@
         width: 1.5em;
       }
 
-      + form .input-group {
-        --observatory-border-accent: var(--form-invalid-color);
+      + form input {
+        outline-color: var(--observatory-border-accent);
       }
     }
 
