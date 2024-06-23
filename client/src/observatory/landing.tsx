@@ -22,12 +22,10 @@ import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.sv
 export default function ObservatoryLanding() {
   document.title = OBSERVATORY_TITLE_FULL;
 
-  const defaultForm: ObservatoryAnalyzeRequest = {
+  const [form, setForm] = useState<ObservatoryAnalyzeRequest>({
     host: "",
-  };
-
-  const [form, setForm] = useState(defaultForm);
-  const [cleanHostname, setCleanHostname] = useState(form.host);
+  });
+  const [cleanHostname, setCleanHostname] = useState("");
   const {
     trigger,
     isMutating,
