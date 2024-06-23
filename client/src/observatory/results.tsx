@@ -314,23 +314,24 @@ function ObservatoryRating({
         <section className="data">
           <div>
             <a href="docs/scoring">
-              <span className="label">Score:</span>
-            </a>{" "}
-            {result.scan.score}/100
+              <span className="label">Score</span>
+            </a>
+            : {result.scan.score}/100
           </div>
           <div>
             <a href="#scan_history">
-              <span className="label">Scan Time:</span>
-            </a>{" "}
+              <span className="label">Scan Time</span>
+            </a>
+            :{" "}
             {new Date(result.scan.scanned_at).toLocaleString([], {
               dateStyle: "medium",
               timeStyle: "medium",
             })}
           </div>
           <a href="docs/scoring##tests-and-score-modifiers">
-            <span className="label">Tests Passed:</span>
-          </a>{" "}
-          {result.scan.tests_passed}/{result.scan.tests_quantity}
+            <span className="label">Tests Passed</span>
+          </a>
+          : {result.scan.tests_passed}/{result.scan.tests_quantity}
         </section>
         <section className="actions">
           {!isServer && (
