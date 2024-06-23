@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useUpdateResult } from ".";
 import { SidePlacement } from "../ui/organisms/placement";
 
+import "./landing.scss";
 import { ReactComponent as LandingSVG } from "../../public/assets/observatory/landing-illustration.svg";
 import { ReactComponent as LinesSVG } from "../../public/assets/observatory/lines.svg";
 import { ReactComponent as AssessmentSVG } from "../../public/assets/observatory/assessment.svg";

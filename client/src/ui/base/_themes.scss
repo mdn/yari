@@ -215,6 +215,8 @@
   --observatory-grade-f-border: #aa000080;
   --observatory-tooltip-color: rgba(255, 255, 255, 1);
   --observatory-tooltip-color-secondary: rgba(179, 179, 179, 1);
+  --observatory-arrow-down-color: rgba(158, 0, 39, 1);
+  --observatory-arrow-up-color: rgba(0, 121, 54, 1);
 
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
@@ -518,6 +520,8 @@
   --observatory-grade-d-border: #ff6a0080;
   --observatory-grade-f-bg: #5c262680;
   --observatory-grade-f-border: #ff4d4d80;
+  --observatory-arrow-down-color: rgba(255, 112, 127, 1);
+  --observatory-arrow-up-color: rgba(0, 255, 106, 1);
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};

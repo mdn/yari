@@ -1,5 +1,9 @@
-import { ObservatoryResult } from "./types";
+import { useEffect, useMemo, useState } from "react";
+import useSWRImmutable from "swr/immutable";
 import { Navigate, useLocation } from "react-router";
+
+import "./results.scss";
+import { ObservatoryResult } from "./types";
 import { SidePlacement } from "../ui/organisms/placement";
 import { useResult, useUpdateResult } from ".";
 import ObservatoryCSP from "./csp";
@@ -12,14 +16,11 @@ import {
 } from "./utils";
 import Container from "../ui/atoms/container";
 import { Button } from "../ui/atoms/button";
-import { useEffect, useMemo, useState } from "react";
 import ObservatoryBenchmark from "./benchmark";
-import useSWRImmutable from "swr/immutable";
 import InternalLink from "../ui/atoms/internal-link";
 import { Tooltip } from "./tooltip";
 import { useGleanClick } from "../telemetry/glean-context";
 import { OBSERVATORY } from "../telemetry/constants";
-
 import { ReactComponent as StarsSVG } from "../../public/assets/observatory/stars.svg";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
