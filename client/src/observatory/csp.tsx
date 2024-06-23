@@ -21,10 +21,10 @@ export default function ObservatoryCSP({
   result: ObservatoryResult;
 }) {
   const policy = result.tests["content-security-policy"]?.policy;
-  return policy ? (
-    <section className="tab-content">
-      <figure className="scroll-container">
-        <table className="csp">
+  return (
+    <table className="csp">
+      {policy ? (
+        <>
           <thead>
             <tr>
               <th>Test</th>
@@ -57,20 +57,14 @@ export default function ObservatoryCSP({
               );
             })}
           </tbody>
-        </table>
-      </figure>
-    </section>
-  ) : (
-    <section className="tab-content">
-      <figure className="scroll-container">
-        <table className="csp">
-          <tbody>
-            <tr>
-              <td>No CSP headers detected</td>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
-    </section>
+        </>
+      ) : (
+        <tbody>
+          <tr>
+            <td>No CSP headers detected</td>
+          </tr>
+        </tbody>
+      )}
+    </table>
   );
 }

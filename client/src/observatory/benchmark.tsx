@@ -45,36 +45,30 @@ export default function ObservatoryBenchmark({
   } = useGradeDistribution(result.scan.grade);
   const hasData = !!gradeDistribution;
 
-  return (
-    <section className="tab-content">
-      <figure className="scroll-container">
-        {hasData ? (
-          <>
-            <h2>Performance trends from the past year</h2>
-            {
-              <GradeSVG
-                gradeDistribution={gradeDistribution.slice(
-                  0,
-                  gradeDistribution.length - 1 // do not display "F" grades
-                )}
-                result={result}
-              ></GradeSVG>
-            }
-            <p>
-              Refer to this graph to assess the website's current status. By
-              following the recommendations provided and rescanning, you can
-              expect an improvement in the website's grade.
-            </p>
-          </>
-        ) : isLoading ? (
-          <Loading />
-        ) : (
-          <NoteCard type="error">
-            <h4>Error</h4>
-            <p>{error ? error.message : "An error occurred."}</p>
-          </NoteCard>
-        )}
-      </figure>
-    </section>
+  return hasData ? (
+    <>
+      <h2>Performance trends from the past year</h2>
+      {
+        <GradeSVG
+          gradeDistribution={gradeDistribution.slice(
+            0,
+            gradeDistribution.length - 1 // do not display "F" grades
+          )}
+          result={result}
+        ></GradeSVG>
+      }
+      <p>
+        Refer to this graph to assess the website's current status. By following
+        the recommendations provided and rescanning, you can expect an
+        improvement in the website's grade.
+      </p>
+    </>
+  ) : isLoading ? (
+    <Loading />
+  ) : (
+    <NoteCard type="error">
+      <h4>Error</h4>
+      <p>{error ? error.message : "An error occurred."}</p>
+    </NoteCard>
   );
 }
