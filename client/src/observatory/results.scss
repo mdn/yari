@@ -8,22 +8,18 @@
     mask-position: left;
     mask-repeat: no-repeat;
     mask-size: contain;
-    width: 2rem;
-  }
-
-  h2.document-toc-heading::before {
-    height: 0;
-    width: 0;
   }
 
   h2.summary::before {
     height: 1.4rem;
     mask-image: url("../../public/assets/observatory/summary-icon.svg");
+    width: 2rem;
   }
 
   h2.result::before {
     height: 1.2rem;
     mask-image: url("../../public/assets/observatory/results-icon.svg");
+    width: 2rem;
   }
 
   h2.summary .host {
