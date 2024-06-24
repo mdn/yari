@@ -1,5 +1,5 @@
-import { ObservatoryResult } from "./types";
-import { PassIcon } from "./utils";
+import { ObservatoryResult } from "../types";
+import { PassIcon } from "../utils";
 
 const policyTests = [
   "unsafeInline",

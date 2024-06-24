@@ -29,8 +29,10 @@
     z-index: 1;
   }
 
-  &:hover .tooltip-popup,
-  &:focus .tooltip-popup {
-    visibility: visible;
+  &:hover,
+  &:focus {
+    .tooltip-popup {
+      visibility: visible;
+    }
   }
 }
