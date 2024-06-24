@@ -106,3 +106,20 @@ export function formatDateTime(date: Date): string {
     timeStyle: "medium",
   });
 }
+
+export function hostAsRedirectChain(host, result: ObservatoryResult) {
+  const chain = result.tests.redirection?.route;
+  if (!chain || chain.length < 1) {
+    return host;
+  }
+  try {
+    const firstUrl = new URL(chain[0]);
+    const lastUrl = new URL(chain[chain.length - 1]);
+    if (firstUrl.hostname === lastUrl.hostname) {
+      return host;
+    }
+    return `${firstUrl.hostname} → ${lastUrl.hostname}`;
+  } catch (e) {
+    return host;
+  }
+}
