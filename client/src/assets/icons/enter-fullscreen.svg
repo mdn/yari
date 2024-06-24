@@ -1,0 +1,16 @@
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 32 32">
+  <style>
+    line {
+      stroke: #000;
+      stroke-width: 2px;
+    }
+  </style>
+  <line x1="0" y1="1" x2="9" y2="1" />
+  <line x1="1" y1="0" x2="1" y2="9" />
+  <line x1="15" y1="1" x2="24" y2="1" />
+  <line x1="23" y1="0" x2="23" y2="9" />
+  <line x1="1" y1="15" x2="1" y2="24" />
+  <line x1="0" y1="23" x2="9" y2="23" />
+  <line x1="23" y1="15" x2="23" y2="24" />
+  <line x1="15" y1="23" x2="24" y2="23" />
+</svg>

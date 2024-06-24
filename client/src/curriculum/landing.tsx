@@ -130,24 +130,32 @@ function PartnerIframe() {
 
   return (
     <div className="scrim">
-      <dialog ref={dialog}>
+      <dialog ref={dialog} onCancel={() => setShow(false)}>
         <div className="scrim-with-border">
           <div className="scrim-inner">
             <div className="partner-header">
               <span>Clicking will load content from scrimba.com</span>
-              <button
-                onClick={() => {
-                  if (show) {
-                    dialog.current?.close();
-                    setShow(false);
-                  } else {
-                    dialog.current?.showModal();
-                    setShow(true);
-                  }
-                }}
-              >
-                ⎚<span className="visually-hidden">Toggle fullscreen</span>
-              </button>
+              {scrimmed && (
+                <button
+                  autoFocus
+                  tabIndex={0}
+                  onClick={() => {
+                    if (show) {
+                      dialog.current?.close();
+                      setShow(false);
+                    } else {
+                      dialog.current?.showModal();
+                      setShow(true);
+                    }
+                  }}
+                >
+                  <div
+                    className={`fullscreen-button ${show ? "exit" : "enter"}`}
+                  >
+                    <span className="visually-hidden">Toggle fullscreen</span>
+                  </div>
+                </button>
+              )}
               <a href={SCRIM_URL} className="external">
                 <span className="visually-hidden">Open on scrimba</span>
               </a>
@@ -158,11 +166,20 @@ function PartnerIframe() {
                 title="MDN + Scrimba partnership announcement scrim"
               ></iframe>
             ) : (
-              <img
-                alt="MDN + Scrimba partnership announcement scrim preview"
-                src="/assets/curriculum/scrim.png"
-                onClick={() => setScrimmed(true)}
-              ></img>
+              <>
+                <img
+                  alt="MDN + Scrimba partnership announcement scrim preview"
+                  src="/assets/curriculum/scrim.png"
+                ></img>
+                <button
+                  onClick={() => {
+                    setScrimmed(true);
+                    dialog.current?.showModal();
+                    setShow(true);
+                  }}
+                  className={`fullscreen-overlay ${show ? "exit" : "enter"}`}
+                ></button>
+              </>
             )}
           </div>
         </div>
