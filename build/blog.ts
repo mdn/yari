@@ -36,7 +36,7 @@ import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
 import { buildSitemap } from "./sitemaps.js";
-import { Locale } from "../libs/types/core.js";
+import { type Locale } from "../libs/types/core.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;

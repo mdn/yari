@@ -6,7 +6,6 @@ import { saveFile } from "../../content/document.js";
 import { VALID_LOCALES } from "../../libs/constants/index.js";
 
 import { m2h } from "./index.js";
-import { Locale } from "../../libs/types/core.js";
 
 const { program } = caporal;
 

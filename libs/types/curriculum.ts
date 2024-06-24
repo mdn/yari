@@ -1,4 +1,4 @@
-import { Locale } from "./core.js";
+import { type Locale } from "./core.js";
 import { BuildData, Doc, DocParent } from "./document.js";
 
 export enum Topic {

@@ -35,7 +35,7 @@ import {
 } from "./utils.js";
 import * as Redirect from "./redirect.js";
 import { DocFrontmatter, UnbuiltDocument } from "../libs/types/document.js";
-import { Locale } from "../libs/types/core.js";
+import { type Locale } from "../libs/types/core.js";
 
 export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
 
