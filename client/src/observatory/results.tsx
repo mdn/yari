@@ -20,7 +20,8 @@ import {
   Link,
   PassIcon,
   useResult,
-  useUpdateResult,
+  useUpdateResult as useRescanTrigger,
+  formatDateTime,
 } from "./utils";
 import ObservatoryBenchmark from "./benchmark";
 import { Tooltip } from "./tooltip";
@@ -37,8 +38,13 @@ export default function ObservatoryResults() {
 
   const { data: result, isLoading, error } = useResult(host!);
 
-  // Used for rescan
-  const { trigger, isMutating, error: updateError } = useUpdateResult(host!);
+  // Used for rescanning the current host
+  const {
+    trigger,
+    isMutating,
+    error: updateError,
+  } = useRescanTrigger(host || "");
+
   const gleanClick = useGleanClick();
 
   document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
@@ -53,8 +59,8 @@ export default function ObservatoryResults() {
     }
   }, [combinedError, isMutating, gleanClick]);
 
-  const hasData = !!host && !!result && !isLoading && !isMutating;
-  return !!host ? (
+  const hasData = host && result && !isLoading && !isMutating;
+  return host ? (
     <ObservatoryLayout
       parents={[
         {
@@ -305,11 +311,7 @@ function ObservatoryRating({
             <a href="#scan_history">
               <span className="label">Scan Time</span>
             </a>
-            :{" "}
-            {new Date(result.scan.scanned_at).toLocaleString([], {
-              dateStyle: "medium",
-              timeStyle: "medium",
-            })}
+            : {formatDateTime(new Date(result.scan.scanned_at))}
           </div>
           <a href="/en-US/observatory/docs/scoring#tests-and-score-modifiers">
             <span className="label">Tests Passed</span>
@@ -494,12 +496,7 @@ function ObservatoryHistory({ result }: { result: ObservatoryResult }) {
       <tbody>
         {[...result.history].reverse().map(({ scanned_at, score, grade }) => (
           <tr key={scanned_at}>
-            <td data-header="Date">
-              {new Date(scanned_at).toLocaleString([], {
-                dateStyle: "full",
-                timeStyle: "medium",
-              })}
-            </td>
+            <td data-header="Date">{formatDateTime(new Date(scanned_at))}</td>
             <td data-header="Score">{score}</td>
             <td data-header="Grade">{formatMinus(grade)}</td>
           </tr>
@@ -530,10 +527,7 @@ function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
             <td data-header="Name">{key}</td>
             <td data-header="Expires">
               {value.expires
-                ? new Date(value.expires).toLocaleString([], {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })
+                ? formatDateTime(new Date(value.expires))
                 : "Session"}
             </td>
             <td data-header="Path">

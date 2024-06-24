@@ -99,3 +99,10 @@ export async function handleJsonResponse<T>(res: Response): Promise<T> {
   }
   return await res.json();
 }
+
+export function formatDateTime(date: Date): string {
+  return date.toLocaleString([], {
+    dateStyle: "medium",
+    timeStyle: "medium",
+  });
+}
