@@ -121,7 +121,7 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
 }
 
-const SCRIM_URL = "https://v1.scrimba.com/scrim/co0db40a39c34f3a2a683f095#";
+const SCRIM_URL = "https://v2.scrimba.com/s06i5lr";
 
 function PartnerIframe() {
   const [scrimmed, setScrimmed] = useState(false);
