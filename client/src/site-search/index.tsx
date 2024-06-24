@@ -64,7 +64,7 @@ export function SiteSearch() {
               {page && page !== "1" && `(page ${page})`}
             </h1>
           ) : (
-            <h1>No query, no results.</h1>
+            !isServer && <h1>No query, no results.</h1>
           )}
 
           {!isServer && (
