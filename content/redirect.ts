@@ -12,7 +12,7 @@ type Pair = [string, string];
 type Pairs = Pair[];
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
-const VALID_LOCALES_SET = new Set([...VALID_LOCALES.values()]);
+const VALID_LOCALES_SET = new Set<string>([...VALID_LOCALES.values()]);
 
 function checkURLInvalidSymbols(url: string) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
@@ -68,7 +68,7 @@ function validateFromURL(url: string, locale: string, checkPath = true) {
   if (!url.includes("/docs/")) {
     throw new Error(`From-URL must contain '/docs/' was ${url}`);
   }
-  if (!VALID_LOCALES_SET.has(url.split("/")[1] as Locale)) {
+  if (!VALID_LOCALES_SET.has(url.split("/")[1])) {
     throw new Error(`The locale prefix is not valid or wrong case was ${url}`);
   }
   checkURLInvalidSymbols(url);
