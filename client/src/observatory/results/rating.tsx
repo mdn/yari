@@ -59,7 +59,11 @@ export function ObservatoryRating({
                 {formatMinus(result.scan.grade)}
               </div>
               <Tooltip>
-                <table className="grade-tooltip">
+                <table
+                  className="grade-tooltip"
+                  id="grades-table"
+                  role="tooltip"
+                >
                   <thead>
                     <tr>
                       <th>Grade</th>
