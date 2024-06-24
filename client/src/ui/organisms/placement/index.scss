@@ -15,7 +15,7 @@ section.place {
     border: 1px solid var(--border-primary);
     border-radius: var(--border-radius);
     margin: 0;
-    min-height: 19rem;
+    min-height: 20rem;
     overflow: hidden;
     position: relative;
     width: 11rem;
@@ -26,7 +26,7 @@ section.place {
     }
 
     > div {
-      background: linear-gradient(to top, #111 55%, transparent);
+      background: linear-gradient(to top, #111 9rem, transparent);
       border-radius: var(--border-radius);
       display: flex;
       flex-direction: column;
@@ -168,7 +168,7 @@ section.place {
   &.side {
     flex-direction: column;
     max-width: 12rem;
-    min-height: 20rem;
+    min-height: 22rem;
   }
 
   &.top {
