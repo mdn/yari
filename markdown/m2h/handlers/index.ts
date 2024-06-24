@@ -1,6 +1,7 @@
 import fs from "node:fs";
 
 import { Handler, Handlers, State } from "mdast-util-to-hast";
+
 import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 import { type Locale } from "../../../libs/types/core.js";
 import { code } from "./code.js";
