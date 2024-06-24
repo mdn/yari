@@ -226,7 +226,7 @@ function ObservatoryRating({
 }: {
   result: ObservatoryResult;
   host: string;
-  rescanTrigger: Function;
+  rescanTrigger: () => void;
 }) {
   const gleanClick = useGleanClick();
   const isServer = useIsServer();
@@ -321,7 +321,6 @@ function ObservatoryRating({
         <section className="actions">
           {!isServer && (
             <RescanButton
-              host={host}
               from={new Date(result.scan.scanned_at)}
               duration={60}
               onClickHandler={rescanTrigger}
@@ -384,21 +383,21 @@ function hostAsRedirectChain(host, result: ObservatoryResult) {
 }
 
 function RescanButton({
-  host,
   from,
   duration,
   onClickHandler,
 }: {
-  host: string;
   from: Date;
   duration: number;
-  onClickHandler: Function;
+  onClickHandler: () => void;
 }) {
   function calculateRemainingTime() {
     const endTime = from.getTime() + duration * 1000;
     return Math.max(0, endTime - new Date().getTime());
   }
-  const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
+  const [remainingTime, setRemainingTime] = useState(() =>
+    calculateRemainingTime()
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
