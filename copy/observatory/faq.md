@@ -6,7 +6,7 @@ title: FAQ
 
 ## General
 
-### Do I need to implement CSP, SRI, etc. on my personal blog?
+### Do I have to implement all recommendations?
 
 There is no way to programmatically determine the risk level of any given site.
 While your site may not be high-risk, it is still worth learning about the
@@ -44,11 +44,12 @@ Strict-Transport-Security: max-age=63072000
 X-Content-Type-Options: nosniff
 ```
 
-### If my scan is marked “hidden”, does that mean nobody can see it?
+### Can other people see my test results?
 
-Hidden scans are simply marked as being hidden from home page lists such as the
-“Hall of Fame.” Users and organizations that need truly confidential results
-should download the Observatory scanner and run a private installation.
+Observatory scans are no longer public. In the previous version of Observatory,
+users had the option of making their scan results public, but this is no longer
+the case. On the other hand, anyone can choose to scan any domain, so no public
+website’s observatory test scores can be kept secret.
 
 ## Observatory’s migration to MDN
 
@@ -60,30 +61,23 @@ deserved to evolve and find new audience members to benefit from the security
 knowledge contained within. MDN is a popular site with a large audience of web
 developers who could benefit from this knowledge, so it seemed like a perfect
 new home. In addition, the MDN team was very excited to update the tool’s UI,
-functionality, and documentation, bringing it up-to-date and giving ti some
+functionality, and documentation, bringing it up-to-date and giving it some
 polish.
 
 ### When did the migration occur?
 
-Observatory migrated to MDN in June 2024.
+HTTP Observatory was launched on MDN in June 2024, and the existing Mozilla
+Observatory will be sunset in the coming months.
 
 ### What has changed after the migration?
 
-The Mozilla team has:
+The MDN team has:
 
 Improved the UI to improve the site’s look and make it easier to use. Updated
 the accompanying documentation to bring it up to date and improve legibility.
-Removed some out-of-date tests, such as the HTTP Public Key Pinning test. xx
+Removed some out-of-date tests, such as the HTTP Public Key Pinning tests. xx
 
 ## Test specifics
-
-### (HTTP Public Key Pinning) I passed this test, but I didn't implement HPKP!
-
-HTTP Public Key Pinning is targeted specifically towards large and/or sensitive
-websites and implementing it is considered optional. The only way to fail this
-test is to return an invalid header, such as one that doesn't contain a
-sufficient number of pins. Sites that do HPKP will get a small bonus on their
-final grade.
 
 ### (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
 
@@ -108,57 +102,3 @@ example, to allow your site to be framed by any HTTPS site:
 ```http
 Content-Security-Policy: frame-ancestors https:
 ```
-
-## Third-party integration
-
-### When I initiated a rescan, the third-party results didn't update. What happened?
-
-To reduce load on our third-party providers, the Mozilla Observatory always
-returns cached results from them. However, if you follow a link to your results
-for a third party, most of them will offer the option to scan again. Their
-updated results will then be reflected in the Observatory.
-
-### What is ssllabs.com?
-
-ssllabs.com is a TLS/SSL scanner by [Qualys](https://www.qualys.com/) that
-analyzes your combination of cipher suites, handshake methods, supported
-protocols, and resistance against a variety of TLS attacks. It outputs a grade
-that reflects how secure those choices are.
-
-### What is ImmuniWeb?
-
-https://immuniweb.com/ssl is a TLS/SSL scanner by
-[ImmuniWeb](https://www.immuniweb.com/) that analyzes your combination of cipher
-suites, handshake methods, supported protocols, and resistance against a variety
-of TLS attacks. It outputs a grade that reflects how secure those choices are.
-For sites that need it, it also tests your configuration against requirements
-set by HIPAA, NIST, and PCI-DSS.
-
-### What is tls.imirhil.fr?
-
-https://cryptcheck.fr/ is a TLS/SSL scanner by [Aeris](https://imirhil.fr/). It
-is strongly forward-focused and tests for configurations that are not
-necessarily appropriate for general-purpose websites.
-
-### What is securityheaders.com?
-
-https://securityheaders.com/ is an HTTP header analyzer run by @Scott_Helme that
-performs scans similar to those done by Observatory, by testing HTTP headers.
-The two sites carry out similar tests, however, when it comes to security a
-second opinion is often useful.
-
-### What is hstspreload.org?
-
-hstspreload.org is a site run by Nick Harper that manages the HTTP
-`Strict-Transport-Security` (HSTS) preload list. The preload list is a directory
-of sites that have opted into having browsers connect to their website only over
-HTTPS before the `Strict-Transport-Security` header is read. This helps solve
-the trust-on-first-use issue, where a manipulator-in-the-middle could prevent a
-user from ever upgrading to HTTPS and seeing the HSTS header.
-
-### What is globalcyberalliance.org?
-
-The [Global Cyber Alliance](https://globalcyberalliance.org/) (GCA) is an
-international, cross-sector effort dedicated to reducing cyber risk and
-improving our connected world. They unite global communities, implement concrete
-solutions, and measure the effects.
