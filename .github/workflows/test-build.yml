@@ -1,4 +1,4 @@
-name: XYZ Build
+name: Test Build
 
 env:
   DEFAULT_NOTES: ""
@@ -30,7 +30,7 @@ permissions:
 
 jobs:
   build:
-    environment: xyz
+    environment: test
     runs-on: ubuntu-latest
 
     # Only run the scheduled workflows on the main repo.
@@ -109,14 +109,14 @@ jobs:
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
-          BASE_URL: "https://developer.allizom.xyz"
+          BASE_URL: "https://test.developer.allizom.org"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
-          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
@@ -145,7 +145,7 @@ jobs:
           # No surveys.
 
           # Telemetry.
-          REACT_APP_GLEAN_CHANNEL: xyz
+          REACT_APP_GLEAN_CHANNEL: test
           REACT_APP_GLEAN_ENABLED: true
 
           # Newsletter
@@ -155,7 +155,7 @@ jobs:
           REACT_APP_PLACEMENT_ENABLED: false
 
           # Playground
-          REACT_APP_PLAYGROUND_BASE_HOST: mdnyalp.dev
+          REACT_APP_PLAYGROUND_BASE_HOST: play.test.mdn.allizom.net
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
@@ -166,11 +166,11 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          yarn tool sync-translated-content
+          #yarn tool sync-translated-content
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+          for locale in en-us fr; do
             yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
@@ -202,7 +202,7 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          service_account: deploy-test-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
@@ -219,7 +219,7 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          service_account: deploy-xyz-yari@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          service_account: deploy-test-nonprod-mdn-ingres@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
@@ -237,13 +237,12 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
-          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
-          for region in europe-west1 us-west1 asia-east1; do
-            gcloud beta functions deploy mdn-xyz-$region \
+          for region in europe-west3; do
+            gcloud beta functions deploy mdn-nonprod-test-$region \
             --gen2 \
             --runtime=nodejs18 \
             --region=$region \
@@ -256,13 +255,13 @@ jobs:
             --max-instances=100 \
             --memory=2GB \
             --timeout=120s \
-            --set-env-vars="ORIGIN_MAIN=developer.allizom.xyz" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
-            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
+            --set-env-vars="ORIGIN_MAIN=test.developer.allizom.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.test.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=test.mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
-            --set-env-vars="SENTRY_ENVIRONMENT=xyz" \
+            --set-env-vars="SENTRY_ENVIRONMENT=test" \
             --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
             --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
             --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
