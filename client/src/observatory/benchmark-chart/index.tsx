@@ -60,6 +60,25 @@ export default function GradeSVG({
             </g>
           ))}
         </g>
+        <g>
+          {gradeDistribution.map((item, index) => {
+            // draw the individual grade bars
+            const barHeight =
+              (height - bottomSpace - topSpace) * (item.count / yTickMax);
+            return (
+              <rect
+                key={`bar-${index}`}
+                className={`bar grade-${item.grade.replace(/[+-]/, "").toLowerCase()} ${item.grade === result.scan.grade ? "current-grade" : ""}`}
+                x={xTickOffset + index * xTickIncr - barWidth / 2}
+                y={yTickOffset - barHeight - 1} // do not overlap the y-axis dashed lines
+                rx="4"
+                ry="4"
+                width={barWidth}
+                height={barHeight}
+              ></rect>
+            );
+          })}
+        </g>
         <g
           className="y-axis"
           fill="none"
@@ -90,24 +109,6 @@ export default function GradeSVG({
         </g>
       </g>
       <g>
-        {gradeDistribution.map((item, index) => {
-          // draw the individual grade bars
-          const barHeight =
-            (height - bottomSpace - topSpace) * (item.count / yTickMax);
-          return (
-            <rect
-              key={`bar-${index}`}
-              className={`bar grade-${item.grade.replace(/[+-]/, "").toLowerCase()} ${item.grade === result.scan.grade ? "current-grade" : ""}`}
-              x={xTickOffset + index * xTickIncr - barWidth / 2}
-              y={yTickOffset - barHeight}
-              rx="4"
-              ry="4"
-              width={barWidth}
-              height={barHeight}
-            ></rect>
-          );
-        })}
-
         {gradeDistribution.map((item, index) => {
           // Draw the "This website is here" marker. Drawn explicitly last so it is above all other elements in the drawing.
           if (item.grade === result.scan.grade) {

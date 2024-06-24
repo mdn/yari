@@ -27,6 +27,7 @@
 
     .tick line {
       color: var(--observatory-color-secondary);
+      opacity: 0.9;
       stroke: var(--observatory-border);
       stroke-dasharray: 5, 5;
       stroke-width: 1px;
