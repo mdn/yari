@@ -209,54 +209,6 @@ main.play {
       }
     }
 
-    /*
-@media (min-width: 25rem) {
-  main.play section.preview .place {
-    max-width: 30rem;
-  }
-  main.play section.preview .place .pong-box2, main.play section.preview .place .pong-box {
-
-
-    width: 27rem;
-    height: 21rem;
-  }
-}
-
-
-section.place .pong-box2 > div {
-  background: linear-gradient(to left, #111 85%, transparent);
-  height: 100%;
-  justify-content: end;
-  top: 0;
-  left: 10rem;
-  width: 17rem;
-}
-
-section.place .pong-box2 > img {
-  width: 100%;
-}
-
-section.place .pong-box2 {
-  min-height: 0;
-}
-
-section.place .pong-box2 > div .pong-cta {
-  margin: 0.5rem auto 1rem auto;
-}
-
-
-.pong-box2 > img:nth-child(1) {
-  height: 100%;
-  width: auto;
-}
-
-
-a.external::after {
-  margin-left: 4px;
-}
-
-*/
-
     &.preview {
       align-items: center;
       display: flex;
@@ -286,13 +238,13 @@ a.external::after {
             .pong-box2 {
               height: 21rem;
               min-height: 0;
-              width: 27rem;
+              width: 25rem;
 
               > div {
-                background: linear-gradient(to left, #111 85%, transparent);
+                background: linear-gradient(to left, #111 16rem, transparent);
                 height: 100%;
                 justify-content: end;
-                left: 10rem;
+                left: 8rem;
                 top: 0;
                 width: 17rem;
 
