@@ -91,8 +91,12 @@ export default function ObservatoryLanding() {
               <p>
                 Launched in 2016, HTTP Observatory enhances web security by
                 analyzing compliance with best security practices. It has
-                provided insights to over 6.5 million websites through 47
-                million scans.
+                provided insights to over 6.9 million websites through 47
+                million scans. If you still need to access the previous version
+                of HTTP Observatory,{" "}
+                <a href="https://security.mozilla.org/">click here</a>. Please
+                note the old Observatory is now deprecated and will soon be
+                sunsetted.
               </p>
               {isMutating ? (
                 <Progress message={`Scanning ${cleanHostname}…`} />
@@ -100,7 +104,7 @@ export default function ObservatoryLanding() {
                 <form onSubmit={submit}>
                   <div className="input-group">
                     <label htmlFor="host" className="visually-hidden">
-                      Domain
+                      Domain name or URL
                     </label>
                     <input
                       placeholder="Scan a website for free (e.g. mdn.dev)"
@@ -158,7 +162,7 @@ export default function ObservatoryLanding() {
                     Through its automated scanning process, it provides
                     developers and website administrators with detailed,
                     actionable feedback, focusing on identifying and addressing
-                    potential vulnerabilities.
+                    potential security vulnerabilities.
                   </p>
                 </figcaption>
               </figure>
@@ -168,11 +172,11 @@ export default function ObservatoryLanding() {
                 <figcaption>
                   <p>
                     The tool is instrumental in helping developers and website
-                    administrators to strengthen their sites against common
-                    security threats. The ratings and recommendations are based
-                    on well-established web security trends and guidelines, and
-                    are shaped by Mozilla's expertise and experience in the
-                    field.
+                    administrators strengthen their sites against common
+                    security threats in a constantly advancing digital
+                    environment. The ratings and recommendations are based on
+                    well-established trends and guidelines, and are shaped by
+                    Mozilla's expertise and experience in the field.
                   </p>
                 </figcaption>
               </figure>
@@ -183,10 +187,11 @@ export default function ObservatoryLanding() {
                   <p>
                     As in any area of web development, there may be multiple
                     valid approaches, and our suggestions are guided by our
-                    commitment to a safer and more secure internet. The MDN HTTP
-                    Observatory ensures easy access to security insights,
-                    enabling the development of more secure and resilient
-                    websites in a constantly advancing digital environment.
+                    commitment to a safer and more secure internet. The HTTP
+                    Observatory provides effective security insights, guided by
+                    Mozilla's expertise and commitment to a safer and more
+                    secure internet and based on well-established trends and
+                    guidelines.
                   </p>
                 </figcaption>
               </figure>
