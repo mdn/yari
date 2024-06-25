@@ -85,6 +85,11 @@
   }
 
   .scan-results {
+    .footnote {
+      font-size: var(--type-smaller-font-size);
+      margin-top: 1rem;
+    }
+
     table {
       background: var(--observatory-table-bg);
       border: none;
@@ -116,6 +121,14 @@
 
         &:hover,
         &:active {
+          text-decoration: none;
+        }
+      }
+
+      span.not-counted {
+        color: var(--observatory-color-secondary);
+
+        a {
           text-decoration: none;
         }
       }
