@@ -120,14 +120,14 @@ export default function GradeSVG({
                 className="you-are-here"
                 transform={`translate(${xTickOffset + index * xTickIncr}, ${height - bottomSpace - barHeight - 50})`}
               >
-                <polyline points="-80,0 80,0 80,36 7,36 0,48 -7,36 -80,36"></polyline>
+                <polyline points="-60,0 60,0 60,36 7,36 0,48 -7,36 -60,36"></polyline>
                 <text
                   x="0"
                   y="0"
                   textAnchor="middle"
                   transform="translate(0, 24)"
                 >
-                  This website is here
+                  Current grade
                 </text>
               </g>
             );
