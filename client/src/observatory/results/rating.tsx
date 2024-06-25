@@ -101,7 +101,7 @@ export function ObservatoryRating({
             <a href="docs/scoring">
               <span className="label">Score</span>
             </a>
-            : {result.scan.score}/100
+            : <>{result.scan.score}&thinsp;/&thinsp;100</>
           </div>
           <div>
             <a href="#scan_history">
@@ -112,7 +112,8 @@ export function ObservatoryRating({
           <a href="/en-US/observatory/docs/scoring#tests-and-score-modifiers">
             <span className="label">Tests Passed</span>
           </a>
-          : {result.scan.tests_passed}/{result.scan.tests_quantity}
+          : {result.scan.tests_passed}&thinsp;/&thinsp;
+          {result.scan.tests_quantity}
         </section>
         <section className="actions">
           {!isServer && (
