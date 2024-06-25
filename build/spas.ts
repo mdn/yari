@@ -147,6 +147,8 @@ export async function buildSPAs(options: {
         {
           prefix: "observatory",
           pageTitle: "HTTP Observatory | MDN",
+          pageDescription:
+            "Enhance your web site's security by scanning it with HTTP Observatory. This tool analyzes HTTP headers and other key security configurations, providing actionable insights. Developed by Mozilla.",
         },
         {
           prefix: "observatory/analyze",
@@ -198,10 +200,17 @@ export async function buildSPAs(options: {
         },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
+      for (const {
+        prefix,
+        pageTitle,
+        pageDescription,
+        noIndexing,
+        onlyFollow,
+      } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context: HydrationData = {
           pageTitle,
+          pageDescription,
           locale,
           noIndexing,
           onlyFollow,
