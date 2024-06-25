@@ -8,12 +8,54 @@ export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
       <thead>
         <tr>
           <th>Name</th>
-          <th>Expires</th>
-          <th>Path</th>
-          <th>Secure</th>
-          <th>HttpOnly</th>
-          <th>SameSite</th>
-          <th>Prefixed</th>
+          <th>
+            <a
+              target="_blank"
+              href="/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#expires"
+            >
+              Expires
+            </a>
+          </th>
+          <th>
+            <a
+              target="_blank"
+              href="/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#path"
+            >
+              Path
+            </a>
+          </th>
+          <th>
+            <a
+              target="_blank"
+              href="/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#secure"
+            >
+              Secure
+            </a>
+          </th>
+          <th>
+            <a
+              target="_blank"
+              href="/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#httponly"
+            >
+              HttpOnly
+            </a>
+          </th>
+          <th>
+            <a
+              target="_blank"
+              href="/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#samesite"
+            >
+              SameSite
+            </a>
+          </th>
+          <th>
+            <a
+              target="_blank"
+              href="/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#name"
+            >
+              Prefix
+            </a>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -30,30 +72,15 @@ export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
             </td>
             <td data-header="Secure">
               <PassIcon pass={value.secure} />
-              <span className="visually-hidden">
-                {value.secure ? "True" : "False"}
-              </span>
             </td>
             <td data-header="HttpOnly">
               <PassIcon pass={value.httponly} />
-              <span className="visually-hidden">
-                {value.httponly ? "True" : "False"}
-              </span>
             </td>
             <td data-header="SameSite">
-              {value.samesite && <code>{value.samesite}</code>}
+              {value.samesite ? <code>{capitalize(value.samesite)}</code> : "-"}
             </td>
             <td data-header="Prefixed">
-              {[key]
-                .map((x) => x.startsWith("__Host") || x.startsWith("__Secure"))
-                .map((x) => (
-                  <span key={key}>
-                    <PassIcon pass={x} />
-                    <span className="visually-hidden">
-                      {x ? "True" : "False"}
-                    </span>
-                  </span>
-                ))}
+              <CookiePrefix name={key} />
             </td>
           </tr>
         ))}
@@ -68,4 +95,21 @@ export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
       </tbody>
     </table>
   );
+}
+
+function capitalize(input: string) {
+  return input
+    .split("-")
+    .map((p) => (p ? p[0].toUpperCase() + p.substring(1) : ""))
+    .join("-");
+}
+
+function CookiePrefix({ name }: { name: string }) {
+  if (name.startsWith("__Host")) {
+    return <code>__Host</code>;
+  } else if (name.startsWith("__Secure")) {
+    return <code>__Secure</code>;
+  } else {
+    return <>-</>;
+  }
 }

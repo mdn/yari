@@ -35,10 +35,11 @@
 
     .bar {
       fill: var(--grade-bg);
+      stroke: var(--grade-bg);
+      stroke-width: 1;
 
       &.current-grade {
         stroke: var(--grade-border);
-        stroke-width: 1;
       }
     }
 

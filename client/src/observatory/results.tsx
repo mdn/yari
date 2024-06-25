@@ -117,8 +117,8 @@ function ObservatoryScanResults({ result, host }) {
   const tabs = useMemo(() => {
     return [
       {
-        label: "Overview",
-        key: "overview",
+        label: "Scoring",
+        key: "scoring",
         element: <ObservatoryTests result={result} />,
       },
       {

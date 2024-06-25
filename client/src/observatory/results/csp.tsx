@@ -28,7 +28,7 @@ export default function ObservatoryCSP({
           <thead>
             <tr>
               <th>Test</th>
-              <th>Pass</th>
+              <th>Result</th>
               <th>Info</th>
             </tr>
           </thead>

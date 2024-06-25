@@ -59,7 +59,11 @@ export function ObservatoryRating({
                 {formatMinus(result.scan.grade)}
               </div>
               <Tooltip>
-                <table className="grade-tooltip">
+                <table
+                  className="grade-tooltip"
+                  id="grades-table"
+                  role="tooltip"
+                >
                   <thead>
                     <tr>
                       <th>Grade</th>
@@ -94,21 +98,22 @@ export function ObservatoryRating({
         </section>
         <section className="data">
           <div>
-            <a href="docs/scoring">
+            <a href="docs/scoring_methodology">
               <span className="label">Score</span>
             </a>
-            : {result.scan.score}/100
+            : <>{result.scan.score}&thinsp;/&thinsp;100</>
           </div>
           <div>
-            <a href="#scan_history">
+            <a href="#history">
               <span className="label">Scan Time</span>
             </a>
             : {formatDateTime(new Date(result.scan.scanned_at))}
           </div>
-          <a href="/en-US/observatory/docs/scoring#tests-and-score-modifiers">
+          <a href="/en-US/observatory/docs/scoring_methodology">
             <span className="label">Tests Passed</span>
           </a>
-          : {result.scan.tests_passed}/{result.scan.tests_quantity}
+          : {result.scan.tests_passed}&thinsp;/&thinsp;
+          {result.scan.tests_quantity}
         </section>
         <section className="actions">
           {!isServer && (

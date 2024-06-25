@@ -43,10 +43,11 @@ export function Tooltip({
     <>
       <span
         ref={ref}
+        aria-describedby="grade-table"
         className={`tooltip-popup ${extraClasses || ""}`}
         style={style}
       >
-        <ArrowSVG className="arrow" />
+        <ArrowSVG className="arrow" aria-hidden="true" />
         {children}
       </span>
     </>
