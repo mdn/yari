@@ -108,6 +108,7 @@ export default function ObservatoryLanding() {
                       name="host"
                       id="host"
                       value={form.host}
+                      autoFocus
                       onChange={(e) =>
                         setForm({ ...form, host: e.target.value })
                       }
