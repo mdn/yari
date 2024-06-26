@@ -102,6 +102,10 @@
         vertical-align: top;
       }
 
+      tr:nth-child(odd) {
+        background-color: var(--observatory-table-bg-alternate);
+      }
+
       td {
         overflow-wrap: anywhere;
         padding: 0.5rem 1.5rem;
