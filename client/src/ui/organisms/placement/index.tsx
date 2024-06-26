@@ -516,23 +516,7 @@ function RenderNewSideBanner({
       style={style}
     >
       <p className="pong-box2">
-        <img
-          src={`/pimg/${encodeURIComponent(image || "")}`}
-          aria-hidden={!Boolean(alt)}
-          alt={alt || ""}
-          width={imageWidth}
-          height={imageHeight}
-        ></img>
         <div>
-          <a
-            href="/en-US/advertising"
-            className="pong-note"
-            data-glean="pong: pong->about"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Ad
-          </a>
           <a
             className="pong"
             data-glean={`pong: pong->click ${typ}`}
@@ -542,22 +526,28 @@ function RenderNewSideBanner({
             target="_blank"
             rel="sponsored noreferrer"
           >
-            <strong>{heading}</strong>
-            <span>{copy}</span>
+            <img
+              src={`/pimg/${encodeURIComponent(image || "")}`}
+              aria-hidden={!Boolean(alt)}
+              alt={alt || ""}
+              width={imageWidth}
+              height={imageHeight}
+            ></img>
+            <div className="content">
+              <strong>{heading}</strong>
+              <span>{copy}</span>
+              {cta && <span className="pong-cta external">{cta}</span>}
+            </div>
           </a>
-          {cta && (
-            <a
-              className="pong-cta external"
-              data-glean={`pong: pong->click ${typ}`}
-              href={`/pong/click?code=${encodeURIComponent(
-                click
-              )}&version=${version}`}
-              target="_blank"
-              rel="sponsored noreferrer"
-            >
-              {cta}
-            </a>
-          )}
+          <a
+            href="/en-US/advertising"
+            className="pong-note"
+            data-glean="pong: pong->about"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Ad
+          </a>
         </div>
       </p>
 

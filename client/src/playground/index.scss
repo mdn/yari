@@ -233,7 +233,9 @@ main.play {
           }
 
           &.new-side {
+            height: 12rem;
             max-width: 30rem;
+            min-height: 12rem;
 
             .pong-box2 {
               height: 21rem;
@@ -241,13 +243,6 @@ main.play {
               width: 25rem;
 
               > div {
-                background: linear-gradient(to left, #111 16rem, transparent);
-                height: 100%;
-                justify-content: end;
-                left: 8rem;
-                top: 0;
-                width: 17rem;
-
                 .pong-cta {
                   margin: 0.5rem auto 1rem 1rem;
                 }
@@ -255,11 +250,27 @@ main.play {
                 .pong-note {
                   margin: 0.5rem 0.5rem auto auto;
                 }
-              }
 
-              img {
-                height: 100%;
-                width: auto;
+                .pong {
+                  > img {
+                    height: 100%;
+                    width: auto;
+                  }
+
+                  > div.content {
+                    align-items: end;
+                    background: linear-gradient(
+                      to left,
+                      #111 16rem,
+                      transparent
+                    );
+                    flex-direction: column;
+                    height: 100%;
+                    justify-content: end;
+                    padding-left: 8rem;
+                    width: 100%;
+                  }
+                }
               }
             }
           }
