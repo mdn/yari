@@ -65,7 +65,7 @@ See
 [Secure cookie configuration](/en-US/docs/Web/Security/Practical_implementation_guides/Cookies)
 for guidance.
 
-| Test                                                          | Description                                                                                                                                                    | Modifier |
+| Test result                                                   | Description                                                                                                                                                    | Modifier |
 | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: |
 | cookies-secure-with-httponly-sessions-and-samesite            | All cookies use the `Secure` directive, session cookies use the `HttpOnly` directive, and cross-origin restrictions are in place via the `SameSite` directive. |    5     |
 | cookies-not-found                                             | No cookies detected.                                                                                                                                           |    0     |
@@ -83,7 +83,7 @@ for guidance.
 See [CORS configuration](/en-US/docs/Web/Security/Practical_implementation/CORS)
 for guidance.
 
-| Test                                                                 | Description                                                                                                          | Modifier |
+| Test result                                                          | Description                                                                                                          | Modifier |
 | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | :------: |
 | cross-origin-resource-sharing-<br>implemented-with-public-access     | Public content is visible via cross-origin resource sharing (CORS) `Access-Control-Allow-Origin` header.             |    0     |
 | cross-origin-resource-sharing-<br>implemented-with-restricted-access | Content is visible via cross-origin resource sharing (CORS) files or headers, but is restricted to specific domains. |    0     |
@@ -96,7 +96,7 @@ for guidance.
 See [CSP configuration](/en-US/docs/Web/Security/Practical_implementation/CSP)
 for guidance.
 
-| Test                                                         | Description                                                                                                                                                                                                                                                     | Modifier |
+| Test result                                                  | Description                                                                                                                                                                                                                                                     | Modifier |
 | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: |
 | csp-implemented-with-no-unsafe-default-src-none              | Content Security Policy (CSP) implemented with `default-src 'none'` and without `'unsafe-inline'` or `'unsafe-eval'`.                                                                                                                                           |    10    |
 | csp-implemented-with-no-unsafe                               | Content Security Policy (CSP) implemented without `'unsafe-inline'` or `'unsafe-eval'`.                                                                                                                                                                         |    5     |
@@ -114,7 +114,7 @@ See
 [Strict Transport Security configuration](/en-US/docs/Web/Security/Practical_implementation/TLS#http_strict_transport_security)
 for guidance.
 
-| Test                                              | Description                                                                                              | Modifier |
+| Test result                                       | Description                                                                                              | Modifier |
 | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | :------: |
 | hsts-preloaded                                    | Preloaded via the HTTP Strict Transport Security (HSTS) preloading process.                              |    5     |
 | hsts-implemented-<br>max-age-at-least-six-months  | `Strict-Transport-Security` header set to a minimum of six months (15768000).                            |    0     |
@@ -130,7 +130,7 @@ See
 [Redirections](/en-US/docs/Web/Security/Practical_implementation/TLS#http_redirections)
 for guidance.
 
-| Test                                            | Description                                                                                                      | Modifier |
+| Test result                                     | Description                                                                                                      | Modifier |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | :------: |
 | redirection-all-redirects-preloaded             | All hosts redirected to are in the HTTP Strict Transport Security (HSTS) preload list.                           |    0     |
 | redirection-to-https                            | Initial redirection is to HTTPS on the same host, final destination is HTTPS.                                    |    0     |
@@ -147,7 +147,7 @@ See
 [Referrer Policy](http://localhost:3000/en-US/docs/Web/Security/Practical_implementation/Referrer_policy)
 for guidance.
 
-| Test                            | Description                                                                                                          | Modifier |
+| Test result                     | Description                                                                                                          | Modifier |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------- | :------: |
 | referrer-policy-private         | `Referrer-Policy` header set to `no-referrer`, `same-origin`, `strict-origin`, or `strict-origin-when-cross-origin`. |    5     |
 | referrer-policy-not-implemented | `Referrer-Policy` header not implemented.                                                                            |    0     |
@@ -159,7 +159,7 @@ for guidance.
 See [Subresource Integrity](/en-US/docs/Web/Security/Subresource_Integrity) for
 guidance.
 
-| Test                                                              | Description                                                                                     | Modifier |
+| Test result                                                       | Description                                                                                     | Modifier |
 | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | :------: |
 | sri-implemented-<br>and-all-scripts-loaded-securely               | Subresource Integrity (SRI) is implemented and all scripts are loaded from a similar origin.    |    5     |
 | sri-implemented-<br>and-external-scripts-loaded-securely          | Subresource Integrity (SRI) is implemented and all scripts are loaded securely.                 |    5     |
@@ -178,7 +178,7 @@ See
 [X-Content-Type-Options](/en-US/docs/Web/Security/Practical_implementation/MIME_types)
 for guidance.
 
-| Test                                   | Description                                           | Modifier |
+| Test result                            | Description                                           | Modifier |
 | -------------------------------------- | ----------------------------------------------------- | :------: |
 | x-content-type-options-nosniff         | `X-Content-Type-Options` header set to `nosniff`.     |    0     |
 | x-content-type-options-not-implemented | `X-Content-Type-Options` header not implemented.      |    -5    |
@@ -190,7 +190,7 @@ See
 [X-Frame-Options](/en-US/docs/Web/Security/Practical_implementation/Clickjacking)
 for guidance.
 
-| Test                                | Description                                                                  | Modifier |
+| Test result                         | Description                                                                  | Modifier |
 | ----------------------------------- | ---------------------------------------------------------------------------- | :------: |
 | x-frame-options-implemented-via-csp | `X-Frame-Options` (XFO) implemented via the CSP `frame-ancestors` directive. |    5     |
 | x-frame-options-allow-from-origin   | `X-Frame-Options` (XFO) header uses `ALLOW-FROM uri` directive.              |    0     |
@@ -204,10 +204,10 @@ See
 [CORP implementation](/en-US/docs/Web/Security/Practical_implementation_guides/CORP)
 for guidance.
 
-| [Cross-Origin-Resource-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cross-Origin_Resource_Policy) | Description                                                                                             | Modifier |
-| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | :------: |
-| corp-not-implemented                                                                                           | Cross Origin Resource Policy (CORP) is not implemented (defaults to `cross-origin`).                    |    5     |
-| corp-implemented-with-same-origin                                                                              | Cross Origin Resource Policy (CORP) implemented, preventing leaks into `cross-origin` contexts.         |    0     |
-| corp-implemented-with-same-site                                                                                | Cross Origin Resource Policy (CORP) implemented, preventing leaks into `cross-site` contexts.           |    0     |
-| corp-implemented-with-cross-origin                                                                             | Cross Origin Resource Policy (CORP) implemented, but allows `cross-origin` resource sharing by default. |   -20    |
-| corp-header-invalid                                                                                            | Cross Origin Resource Policy (CORP) cannot be recognized.                                               |   -20    |
+| Test result                        | Description                                                                                             | Modifier |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------- | :------: |
+| corp-not-implemented               | Cross Origin Resource Policy (CORP) is not implemented (defaults to `cross-origin`).                    |    5     |
+| corp-implemented-with-same-origin  | Cross Origin Resource Policy (CORP) implemented, preventing leaks into `cross-origin` contexts.         |    0     |
+| corp-implemented-with-same-site    | Cross Origin Resource Policy (CORP) implemented, preventing leaks into `cross-site` contexts.           |    0     |
+| corp-implemented-with-cross-origin | Cross Origin Resource Policy (CORP) implemented, but allows `cross-origin` resource sharing by default. |   -20    |
+| corp-header-invalid                | Cross Origin Resource Policy (CORP) cannot be recognized.                                               |   -20    |
