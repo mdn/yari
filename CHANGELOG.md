@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.58.0](https://github.com/mdn/yari/compare/v2.57.0...v2.58.0) (2024-06-26)
+
+
+### Features
+
+* **workflows:** add test-build workflow ([#11312](https://github.com/mdn/yari/issues/11312)) ([307e469](https://github.com/mdn/yari/commit/307e469b3d55fc5bb3b6529ec54f7155d2d59248))
+
+
+### Bug Fixes
+
+* **build:** return early on error ([#11352](https://github.com/mdn/yari/issues/11352)) ([0ee33f7](https://github.com/mdn/yari/commit/0ee33f79d3e0ef3d9dd7c93dbcad7436c1b50903))
+* **package:** run render:html on prepack ([#11368](https://github.com/mdn/yari/issues/11368)) ([59ab9f9](https://github.com/mdn/yari/commit/59ab9f973daacbe7ec9630571495057c9b88195a))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.6.3 to 1.6.5 ([#11355](https://github.com/mdn/yari/issues/11355)) ([60717c9](https://github.com/mdn/yari/commit/60717c93e20c1ffcd2659b7f7e1a410213feafd5))
+* **deps-dev:** bump react-router-dom from 6.23.1 to 6.24.0 ([#11363](https://github.com/mdn/yari/issues/11363)) ([9b9897e](https://github.com/mdn/yari/commit/9b9897ed286d87fc4e84cdb9a0d3cbdfc27da5aa))
+* **deps-dev:** bump typescript-eslint from 7.13.1 to 7.14.1 ([#11364](https://github.com/mdn/yari/issues/11364)) ([1d824aa](https://github.com/mdn/yari/commit/1d824aabd735939c75b4f783580565f1770851fd))
+* **deps:** bump @google-cloud/functions-framework from 3.1.3 to 3.4.0 in /cloud-function ([#11315](https://github.com/mdn/yari/issues/11315)) ([bfd20d4](https://github.com/mdn/yari/commit/bfd20d4457f4f5df0ce246a8e35d59ab25c28fe1))
+* **deps:** bump @mdn/browser-compat-data from 5.5.34 to 5.5.35 ([#11370](https://github.com/mdn/yari/issues/11370)) ([616a26d](https://github.com/mdn/yari/commit/616a26d4bc2139c9ee8322d59a0da1bfb100c0fe))
+* **deps:** bump @sentry/node from 8.10.0 to 8.11.0 in the sentry group ([#11353](https://github.com/mdn/yari/issues/11353)) ([9893212](https://github.com/mdn/yari/commit/9893212eab252fc91d593691f483500b7d5ba32c))
+* **deps:** bump @sentry/node from 8.11.0 to 8.12.0 in the sentry group ([#11360](https://github.com/mdn/yari/issues/11360)) ([9e64fa7](https://github.com/mdn/yari/commit/9e64fa79d00e0f1dd325098a1c872d2ddf7bc4cb))
+* **deps:** bump boto3 from 1.34.127 to 1.34.131 in /deployer in the dependencies group ([#11357](https://github.com/mdn/yari/issues/11357)) ([10b9756](https://github.com/mdn/yari/commit/10b975682916435d15b838802f8d66217b6438be))
+* **deps:** bump openai from 4.52.0 to 4.52.1 ([#11371](https://github.com/mdn/yari/issues/11371)) ([90633bc](https://github.com/mdn/yari/commit/90633bc2a4f617bd5f3e5b1a367cc8847224d6b9))
+* **deps:** bump web-specs from 3.10.0 to 3.11.0 ([#11354](https://github.com/mdn/yari/issues/11354)) ([8e37876](https://github.com/mdn/yari/commit/8e378766ef67c8dbca2e989234fbb9a698630bae))
+* **deps:** bump web-specs from 3.11.0 to 3.12.0 ([#11369](https://github.com/mdn/yari/issues/11369)) ([5f6da45](https://github.com/mdn/yari/commit/5f6da45c89c40c9d30592545230700d5f3b2c6c5))
+* **macros/LearnSidebar:** add Japanese translations ([#11351](https://github.com/mdn/yari/issues/11351)) ([acecc93](https://github.com/mdn/yari/commit/acecc93efd8f495b18a199520a99acf787cca3c9))
+* **redirects:** remove retiredLocale parameter ([#11148](https://github.com/mdn/yari/issues/11148)) ([08f38df](https://github.com/mdn/yari/commit/08f38df549c97def866649156181953d39c10b76))
+* **types:** narrow string to Locale where possible ([#11323](https://github.com/mdn/yari/issues/11323)) ([3a20751](https://github.com/mdn/yari/commit/3a20751a3f25b4bf7fa21fea2a5e53476c89b69a))
+
 ## [2.57.0](https://github.com/mdn/yari/compare/v2.56.0...v2.57.0) (2024-06-21)
 
 

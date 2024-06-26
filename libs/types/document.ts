@@ -1,3 +1,4 @@
+import { type Locale } from "./core.js";
 import type { SupportStatus } from "./web-features.js";
 
 export interface Source {
@@ -128,7 +129,7 @@ export type Toc = {
 export interface DocMetadata {
   title: string;
   short_title: string;
-  locale: string;
+  locale: Locale;
   native: string;
   pageTitle: string;
   mdn_url: string;
@@ -222,7 +223,7 @@ export interface NewsItem {
 export interface BuildData {
   url: string;
   rawBody: string;
-  metadata: { locale: string };
+  metadata: { locale: Locale };
   isMarkdown: true;
   fileInfo: {
     path: string;
@@ -232,7 +233,7 @@ export interface BuildData {
 export interface UnbuiltDocument {
   metadata: DocFrontmatter & {
     frontMatterKeys: string[];
-    locale: string;
+    locale: Locale;
     popularity: number;
     modified: any;
     hash: any;

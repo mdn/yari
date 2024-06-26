@@ -36,6 +36,7 @@ import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
 import { buildSitemap } from "./sitemaps.js";
+import { type Locale } from "../libs/types/core.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;
@@ -342,7 +343,7 @@ export async function buildBlogPosts(options: {
 export interface BlogPostDoc {
   url: string;
   rawBody: string;
-  metadata: BlogPostMetadata & { locale: string };
+  metadata: BlogPostMetadata & { locale: Locale };
   isMarkdown: true;
   fileInfo: {
     path: string;
@@ -383,7 +384,7 @@ export async function buildPost(
 
   doc.title = metadata.title || "";
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale as string;
+  doc.locale = metadata.locale;
   doc.native = LANGUAGES_RAW[DEFAULT_LOCALE]?.native;
 
   if ($("math").length > 0) {
