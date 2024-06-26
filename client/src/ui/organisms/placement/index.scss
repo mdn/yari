@@ -20,21 +20,8 @@ section.place {
     position: relative;
     width: 11rem;
 
-    > img {
-      height: auto;
-      width: 100%;
-    }
-
     > div {
-      background: linear-gradient(to top, #111 9rem, transparent);
-      border-radius: var(--border-radius);
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
       height: 100%;
-      justify-content: end;
-      position: absolute;
-      top: 0;
       width: 100%;
 
       .pong-note {
@@ -42,11 +29,14 @@ section.place {
         border-radius: 0.25rem;
         color: #fff;
         font-size: 0.625rem;
-        margin: 0.5rem 0.5rem auto auto;
+        margin: 0.5rem;
         padding: 0 0.25rem;
+        position: absolute;
+        right: 0;
         text-decoration: none;
         text-decoration: underline;
         text-transform: uppercase;
+        top: 0;
         width: max-content;
 
         &:hover {
@@ -56,44 +46,61 @@ section.place {
       }
 
       .pong {
-        color: #fff;
-        display: contents;
         height: 100%;
         width: 100%;
 
-        strong {
-          font-size: 0.8875rem;
-          line-height: 1.25;
-          padding: 0 1rem;
+        > img {
+          height: auto;
+          width: 100%;
         }
 
-        span {
-          font-size: 0.75rem;
-          line-height: 1.25;
-          padding: 0 1rem;
-        }
-      }
+        > div.content {
+          background: linear-gradient(to top, #111 9rem, transparent);
+          border-radius: var(--border-radius);
+          color: #fff;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          height: 100%;
+          justify-content: end;
+          position: absolute;
+          top: 0;
+          width: 100%;
 
-      .pong-cta {
-        --color: #fff;
-        --icon-primary: var(--color);
-        background-color: #fff1;
-        border: solid 2px;
-        border-radius: 2rem;
-        color: var(--color);
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin: 0.5rem auto 1rem 1rem;
-        padding: 0.5em 1em;
-        transition: all 0.3s ease-in-out;
+          strong {
+            font-size: 0.8875rem;
+            line-height: 1.25;
+            padding: 0 1rem;
+          }
 
-        &::after {
-          transition: all 0.3s ease-in-out;
-        }
+          span {
+            font-size: 0.75rem;
+            line-height: 1.25;
+            padding: 0 1rem;
+          }
 
-        &:hover {
-          --color: #111;
-          background-color: #fff;
+          .pong-cta {
+            --color: #fff;
+            --icon-primary: var(--color);
+            background-color: #fff1;
+            border: solid 2px;
+            border-radius: 2rem;
+            color: var(--color);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 0.5rem auto 1rem 1rem;
+            padding: 0.5em 1em;
+            transition: all 0.3s ease-in-out;
+
+            &::after {
+              transition: all 0.3s ease-in-out;
+            }
+
+            &:hover {
+              --color: #111;
+              background-color: #fff;
+            }
+          }
         }
       }
     }
