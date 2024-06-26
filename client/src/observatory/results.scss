@@ -107,6 +107,13 @@
         padding: 0.5rem 1.5rem;
         vertical-align: top;
 
+        &.cookie-name:first-child {
+          max-width: 15rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         &.score > span {
           display: flex;
           flex-direction: row;

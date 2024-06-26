@@ -61,7 +61,9 @@ export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
       <tbody>
         {Object.entries(cookies).map(([key, value]) => (
           <tr key={key}>
-            <td data-header="Name">{key}</td>
+            <td data-header="Name" className="cookie-name">
+              {key}
+            </td>
             <td data-header="Expires">
               {value.expires
                 ? formatDateTime(new Date(value.expires))
@@ -106,9 +108,9 @@ function capitalize(input: string) {
 
 function CookiePrefix({ name }: { name: string }) {
   if (name.startsWith("__Host")) {
-    return <code>__Host</code>;
+    return <code>Host</code>;
   } else if (name.startsWith("__Secure")) {
-    return <code>__Secure</code>;
+    return <code>Secure</code>;
   } else {
     return <>-</>;
   }
