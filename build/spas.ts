@@ -149,9 +149,9 @@ export async function buildSPAs(options: {
         { prefix: "play", pageTitle: "Playground | MDN" },
         {
           prefix: "observatory",
-          pageTitle: OBSERVATORY_TITLE_FULL,
+          pageTitle: `HTTP Header Security Test - ${OBSERVATORY_TITLE_FULL}`,
           pageDescription:
-            "Enhance your web site's security by scanning it with HTTP Observatory. This tool analyzes HTTP headers and other key security configurations, providing actionable insights. Developed by Mozilla.",
+            "Test your site’s HTTP headers, including CSP and HSTS, to find security problems and get actionable recommendations to make your website more secure. Test other websites to see how you compare.",
         },
         {
           prefix: "observatory/analyze",

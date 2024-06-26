@@ -80,7 +80,7 @@ September 2024.
 
 The MDN team has:
 
-- Improved the UI to improve the site's look and make it easier to use.
+- Updated the UI to improve the site's look and make it easier to use.
 - Updated the
   [accompanying documentation](/en-US/docs/Web/Security/Practical_implementation_guides#content_security_fundamentals)
   to bring it up to date and improve legibility.
@@ -100,6 +100,13 @@ The MDN team has:
     [`Referrer-Policy`](/en-US/docs/Web/HTTP/Headers/Referrer-Policy) test to
     update the score modifier for `referrer-policy-unsafe` and remove the
     `referrer-policy-no-referrer-when-downgrade` result.
+
+### Has the HTTP Observatory API been updated to use the new tests?
+
+Not yet. The API will continue using the old test infrastructure for a while,
+therefore you will see some small differences between test scores returned by
+the API and the website. The API will be updated to use the new tests in a
+near-future iteration.
 
 ### (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
 
@@ -129,3 +136,15 @@ example, to allow your site to be framed by any HTTPS site:
 ```http
 Content-Security-Policy: frame-ancestors https:
 ```
+
+## Summary
+
+We would love you to [try out the HTTP Observatory on MDN](/en-US/observatory)!
+Visit it now, scan your site, and fill out our
+[HTTP Observatory survey](https://survey.alchemer.com/s3/7897385/MDN-HTTP-Observatory)
+to let us know what you think of the experience.
+
+HTTP Observatory's documentation, which is linked from the test results, is now
+also found on MDN, in our
+[Practical security implementation guides](/en-US/docs/Web/Security/Practical_implementation_guides)
+section. Again, read through it and let us know how it can be improved.

@@ -24,7 +24,7 @@ import { ReactComponent as SecuritySVG } from "../../public/assets/observatory/s
 import { ReactComponent as MdnSVG } from "../../public/assets/observatory/mdn.svg";
 
 export default function ObservatoryLanding() {
-  document.title = OBSERVATORY_TITLE_FULL;
+  document.title = `HTTP Header Security Test - ${OBSERVATORY_TITLE_FULL}`;
 
   const [form, setForm] = useState<ObservatoryAnalyzeRequest>({
     host: "",
