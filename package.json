@@ -36,7 +36,7 @@
     "install:all:npm": "find . -mindepth 2 -name 'package-lock.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -0 sh -cx 'npm --prefix $(dirname $0) install'",
     "jest": "node --experimental-vm-modules --expose-gc ./node_modules/.bin/jest --logHeapUsage",
     "m2h": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node markdown/m2h/cli.ts",
-    "prepack": "yarn build:dist",
+    "prepack": "yarn render:html && yarn build:dist",
     "prepare": "(husky || true) && yarn install:all && yarn install:all:npm",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
