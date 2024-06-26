@@ -98,10 +98,7 @@ export function ObservatoryRating({
         </section>
         <section className="data">
           <div>
-            <a
-              href="/en-US/observatory/docs/scoring_methodology"
-              target="_blank"
-            >
+            <a href="/en-US/observatory/docs/tests_and_scoring" target="_blank">
               <span className="label">Score</span>
             </a>
             : <>{result.scan.score}&thinsp;/&thinsp;100</>
@@ -112,7 +109,7 @@ export function ObservatoryRating({
             </a>
             : {formatDateTime(new Date(result.scan.scanned_at))}
           </div>
-          <a href="/en-US/observatory/docs/scoring_methodology" target="_blank">
+          <a href="/en-US/observatory/docs/tests_and_scoring" target="_blank">
             <span className="label">Tests Passed</span>
           </a>
           : {result.scan.tests_passed}&thinsp;/&thinsp;

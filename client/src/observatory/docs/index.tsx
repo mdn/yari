@@ -7,16 +7,12 @@ import { OBSERVATORY_TITLE, OBSERVATORY_TITLE_FULL } from "../types";
 
 const ITEMS = [
   {
-    slug: "observatory/docs/scoring_methodology",
-    title: "Scoring Methodology",
+    slug: "observatory/docs/tests_and_scoring",
+    title: "Tests & Scoring",
   },
   {
     slug: "observatory/docs/faq",
     title: "FAQ",
-  },
-  {
-    slug: "observatory/docs/scoring_methodology#tests-and-score-modifiers",
-    title: "Tests",
   },
 ];
 

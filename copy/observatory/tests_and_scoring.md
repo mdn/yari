@@ -1,5 +1,5 @@
 ---
-title: Scoring Methodology
+title: Tests & Scoring
 ---
 
 # HTTP Observatory Scoring Methodology
