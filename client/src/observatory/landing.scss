@@ -148,11 +148,7 @@
         }
 
         stop#stop3 {
-          stop-color: color-mix(
-            in srgb,
-            var(--observatory-accent) 0%,
-            var(--observatory-bg)
-          );
+          stop-color: var(--observatory-bg);
         }
       }
 
