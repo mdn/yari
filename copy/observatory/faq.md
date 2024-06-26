@@ -2,41 +2,42 @@
 title: FAQ
 ---
 
-# Frequently asked questions
+## FAQ
 
-## General
+### Should I implement all recommendations?
 
-### Do I have to implement all recommendations?
+Yes, you should do it if possible. There is no way to programmatically determine
+the risk level of any given site. However, while your site may not be high-risk,
+it is still worth learning about the defensive security standards highlighted by
+Observatory, and implementing them wherever you can.
 
-There is no way to programmatically determine the risk level of any given site.
-While your site may not be high-risk, it is still worth learning about the
-defensive security standards highlighted by Observatory, and implementing them
-wherever you can.
-
-### If I get an A+ on the Observatory, does that mean my site is secure?
+### If I get an A+ grade, does that mean my site is secure?
 
 We'd love to say that any site that gets an A+ Observatory grade is perfectly
-secure, but there are a lot of security considerations that we can’t test.
+secure, but there are a lot of security considerations that we can't test.
 Observatory tests for preventative measures against
 [Cross-site scripting (XSS)](/en-US/docs/Glossary/Cross-site_scripting) attacks,
 [manipulator-in-the-middle (MiTM)](/en-US/docs/Glossary/MitM) attacks,
 cross-domain information leakage, insecure
 [cookies](/en-US/docs/Web/HTTP/Cookies),
 [Content Delivery Network](/en-US/docs/Glossary/CDN) (CDN) compromises, and
-improperly issued certificates. However, it does not test for outdated software
-versions, [SQL injection](/en-US/docs/Glossary/SQL_Injection) vulnerabilities,
-vulnerable content management system plugins, improper creation or storage of
-passwords, and more. These are just as important as the considerations
-Observatory tests, and site operators should not be neglectful of them simply
-because they score well on Observatory.
+improperly issued certificates.
 
-### Is the Mozilla Observatory useful for scanning non-websites, such as API endpoints?
+However, it does not test for outdated software versions,
+[SQL injection](/en-US/docs/Glossary/SQL_Injection) vulnerabilities, vulnerable
+content management system plugins, improper creation or storage of passwords,
+and more. These are just as important as the issues Observatory _does_ test for,
+and site operators should not be neglectful of them simply because they score
+well on Observatory.
+
+### Can I scan non-websites, such as API endpoints?
 
 The HTTP Observatory is designed for scanning websites, not API endpoints. It
 can be used for API endpoints, and the security headers expected by Observatory
 shouldn't cause any negative impact for APIs that return exclusively data, such
 as JSON or XML. However, the results may not accurately reflect the security
-posture of the API. The recommended configuration for API endpoints is:
+posture of the API. API endpoints generally should only be accessible over
+HTTPS. The recommended configuration for API endpoints is:
 
 ```http
 Content-Security-Policy: default-src 'none'; frame-ancestors 'none'
@@ -46,38 +47,59 @@ X-Content-Type-Options: nosniff
 
 ### Can other people see my test results?
 
-Observatory scans are no longer public. In the previous version of Observatory,
-users had the option of making their scan results public, but this is no longer
-the case. On the other hand, anyone can choose to scan any domain, so no public
-website’s observatory test scores can be kept secret.
-
-## Observatory’s migration to MDN
+Anyone can choose to scan any domain, and the scan history for each domain is
+public. However, HTTP Observatory does not store user data related to each scan.
+In the old version of HTTP Observatory, users could choose to set their scan to
+"public" or keep it private (the default), and there was a "recent scans" list
+where domain names were listed. "Recent scans" was the main feature that users
+would potentially wish to opt-out from, but it is no longer supported, hence
+there is now no reason to provide the "public" flag.
 
 ### Why did Mozilla move Observatory to MDN?
 
 Observatory is a well-respected tool in the web and security communities, but it
-hasn’t seen a major update for quite some time. Mozilla decided that the tool
+hasn't seen a major update for quite some time. Mozilla decided that the tool
 deserved to evolve and find new audience members to benefit from the security
 knowledge contained within. MDN is a popular site with a large audience of web
-developers who could benefit from this knowledge, so it seemed like a perfect
-new home. In addition, the MDN team was very excited to update the tool’s UI,
+developers who could benefit from this knowledge, so it is a perfect new home.
+In addition, the MDN team was very excited to update the tool's UI,
 functionality, and documentation, bringing it up-to-date and giving it some
 polish.
 
-### When did the migration occur?
+### When did the move occur?
 
-HTTP Observatory was launched on MDN in June 2024, and the existing Mozilla
-Observatory will be sunset in the coming months.
+HTTP Observatory was launched on MDN on June 27, 2024, with the existing Mozilla
+Observatory site redirecting to it. Other tools like TLS Observatory, SSH
+Observatory, and Third-party tests have been deprecated, and will be sunset in
+September 2024.
+
+> **Note:** Historic scan data has been preserved, and is included in the
+> provided scan history for each domain.
 
 ### What has changed after the migration?
 
 The MDN team has:
 
-Improved the UI to improve the site’s look and make it easier to use. Updated
-the accompanying documentation to bring it up to date and improve legibility.
-Removed some out-of-date tests, such as the HTTP Public Key Pinning tests. xx
-
-## Test specifics
+- Improved the UI to improve the site's look and make it easier to use.
+- Updated the
+  [accompanying documentation](/en-US/docs/Web/Security/Practical_implementation_guides#content_security_fundamentals)
+  to bring it up to date and improve legibility.
+- Changed the "rescan" checkbox and its underlying mechanics:
+  - There is no longer a rescan parameter.
+  - A site can only be scanned and a new result returned every 60 seconds.
+- Updated the
+  [tests](/en-US/observatory/docs/scoring_methodology#tests-and-score-modifiers)
+  to bring them up-to-date with latest security best practices:
+  - Removed the out-of-date `X-XSS-Protection` test.
+  - Removed the out-of-date Flash and Silverlight (`clientaccesspolicy.xml` and
+    `crossdomain.xml`) embedding tests.
+  - Added a
+    [`Cross-Origin-Resource-Policy`](/en-US/docs/Web/HTTP/Headers/Cross-Origin-Resource-Policy)
+    (CORP) test.
+  - Updated the
+    [`Referrer-Policy`](/en-US/docs/Web/HTTP/Headers/Referrer-Policy) test to
+    update the score modifier for `referrer-policy-unsafe` and remove the
+    `referrer-policy-no-referrer-when-downgrade` result.
 
 ### (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
 
@@ -85,10 +107,15 @@ This test is checking whether your web server is making its initial redirection
 from HTTP to HTTPS, on the same hostname, before doing any further redirections.
 This allows the HTTP
 [`Strict-Transport-Security`](/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
-(HSTS) header to be applied properly. For example, this redirection order is
-correct: `http://example.com` → `https://example.com` →
-`https://www.example.com`. An incorrect (and penalized) redirection looks like
-this: `http://example.com` → `https://www.example.com`.
+(HSTS) header to be applied properly.
+
+For example, this redirection order is correct:
+
+`http://example.com` → `https://example.com` → `https://www.example.com`
+
+An incorrect (and penalized) redirection looks like this:
+
+`http://example.com` → `https://www.example.com`
 
 ### (X-Frame-Options) What if I want to allow my site to be framed?
 
