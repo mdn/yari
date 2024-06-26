@@ -16,19 +16,13 @@ const ITEMS = [
   },
 ];
 
-export function ObservatoryDocsNav({
-  heading = OBSERVATORY_TITLE,
-}: {
-  heading: string;
-}) {
-  return <RelatedTopics heading={heading} items={ITEMS} />;
+export function ObservatoryDocsNav() {
+  return <RelatedTopics items={ITEMS} />;
 }
 
 function RelatedTopics({
-  heading,
   items,
 }: {
-  heading: string;
   items: { slug: string; title: string }[];
 }) {
   const locale = useLocale();
@@ -38,9 +32,7 @@ function RelatedTopics({
     <aside className="document-toc-container">
       <section className="document-toc">
         <header>
-          <h2 className="document-toc-heading">
-            <a href="/en-US/observatory">{heading}</a>
-          </h2>
+          <h2 className="document-toc-heading">HTTP Observatory</h2>
         </header>
         <ul className="document-toc-list">
           {items.map(({ slug, title }) => {
@@ -72,7 +64,7 @@ function ObservatoryDocs({ ...props }) {
   const locale = useLocale();
   const { "*": slug } = useParams();
 
-  const sidebarHeader = <ObservatoryDocsNav heading={OBSERVATORY_TITLE} />;
+  const sidebarHeader = <ObservatoryDocsNav />;
 
   const fullSlug = `observatory/docs/${slug}`;
 

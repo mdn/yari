@@ -97,7 +97,7 @@ export default function ObservatoryResults() {
             )}
           </section>
           <nav className="sidebar">
-            <ObservatoryDocsNav heading={"About this tool"} />
+            <ObservatoryDocsNav />
           </nav>
           {hasData && !combinedError && (
             <section className="main">
