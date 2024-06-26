@@ -187,8 +187,14 @@ function ObservatoryScanResults({ result, host }) {
 
   return (
     <section className="scan-results">
-      <h2 className="result">Scan results</h2>
-      <ol className="tabs-list">
+      <h2 className="result" id="scan-results-header">
+        Scan results
+      </h2>
+      <ol
+        className="tabs-list"
+        role="tablist"
+        aria-labelledby="scan-results-header"
+      >
         {tabs.map((t, i) => {
           return (
             <li id={`tabs-${i}`} className="tabs-list-item" key={`tli-${i}`}>
@@ -197,14 +203,23 @@ function ObservatoryScanResults({ result, host }) {
                 id={`tab-${i}`}
                 name="selected"
                 type="radio"
+                role="tab"
                 checked={i === selectedTab}
+                aria-controls={`tab-container-${i}`}
                 onChange={() => {
                   gleanClick(`${OBSERVATORY}: tab -> ${t.key}`);
                   setSelectedTab(i);
                 }}
               />
-              <label htmlFor={`tab-${i}`}>{t.label}</label>
-              <section className="tab-content">
+              <label htmlFor={`tab-${i}`} id={`tab-label-${i}`}>
+                {t.label}
+              </label>
+              <section
+                className="tab-content"
+                role="tabpanel"
+                aria-labelledby={`tab-label-${i}`}
+                id={`tab-container-${i}`}
+              >
                 <figure className="scroll-container">{t.element}</figure>
               </section>
             </li>
