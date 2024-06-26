@@ -107,9 +107,9 @@ function capitalize(input: string) {
 }
 
 function CookiePrefix({ name }: { name: string }) {
-  if (name.startsWith("__Host")) {
+  if (name.startsWith("__Host-")) {
     return <code>Host</code>;
-  } else if (name.startsWith("__Secure")) {
+  } else if (name.startsWith("__Secure-")) {
     return <code>Secure</code>;
   } else {
     return <>-</>;
