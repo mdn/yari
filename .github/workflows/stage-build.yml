@@ -123,6 +123,7 @@ jobs:
           path: mdn/mdn-studio
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
+          ref: http-observatory-launch-announcement
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
