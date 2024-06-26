@@ -1,12 +1,12 @@
 import useSWRImmutable from "swr/immutable";
 
-import { Loading } from "../ui/atoms/loading";
-import NoteCard from "../ui/molecules/notecards";
+import { Loading } from "../../ui/atoms/loading";
+import NoteCard from "../../ui/molecules/notecards";
 
-import { GradeDistribution, ObservatoryResult } from "./types";
-import { OBSERVATORY_API_URL } from "../env";
-import GradeSVG from "./benchmark-chart";
-import { handleJsonResponse } from "./utils";
+import { GradeDistribution, ObservatoryResult } from "../types";
+import { OBSERVATORY_API_URL } from "../../env";
+import GradeSVG from "../benchmark-chart";
+import { handleJsonResponse } from "../utils";
 
 export function useGradeDistribution(grade: string | null | undefined) {
   return useSWRImmutable("gradeDistribution", async () => {

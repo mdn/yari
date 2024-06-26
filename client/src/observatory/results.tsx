@@ -22,7 +22,7 @@ import { ObservatoryHeaders } from "./results/headers";
 import { ObservatoryHistory } from "./results/history";
 import { ObservatoryRating } from "./results/rating";
 import { ObservatoryTests } from "./results/tests";
-import ObservatoryBenchmark from "./benchmark";
+import ObservatoryBenchmark from "./results/benchmark";
 import "./results.scss";
 
 export default function ObservatoryResults() {
