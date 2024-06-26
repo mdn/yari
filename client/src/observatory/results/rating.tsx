@@ -4,12 +4,13 @@ import { useIsServer } from "../../hooks";
 import { useGleanClick } from "../../telemetry/glean-context";
 import InternalLink from "../../ui/atoms/internal-link";
 import { OBSERVATORY } from "../../telemetry/constants";
+import { ReactComponent as StarsSVG } from "../../../public/assets/observatory/stars.svg";
 
 import { ObservatoryResult, SCORING_TABLE } from "../types";
-import { formatDateTime, formatMinus, hostAsRedirectChain } from "../utils";
+import { formatMinus, hostAsRedirectChain } from "../utils";
 import { Tooltip } from "../tooltip";
 import { RescanButton } from "./rescan-button";
-import { ReactComponent as StarsSVG } from "../../../public/assets/observatory/stars.svg";
+import { HumanDuration } from "./human-duration";
 
 export function ObservatoryRating({
   result,
@@ -107,7 +108,10 @@ export function ObservatoryRating({
             <a href="#history">
               <span className="label">Scan Time</span>
             </a>
-            : {formatDateTime(new Date(result.scan.scanned_at))}
+            :{" "}
+            {!isServer && (
+              <HumanDuration date={new Date(result.scan.scanned_at)} />
+            )}
           </div>
           <a href="/en-US/observatory/docs/tests_and_scoring" target="_blank">
             <span className="label">Tests Passed</span>

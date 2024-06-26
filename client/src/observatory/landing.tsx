@@ -98,9 +98,14 @@ export default function ObservatoryLanding() {
                 provided insights to over 6.9 million websites through 47
                 million scans. If you still need to access the previous version
                 of HTTP Observatory,{" "}
-                <a href="https://security.mozilla.org/">click here</a>. Please
-                note the old Observatory is now deprecated and will soon be
-                sunsetted.
+                <a
+                  rel="nofollow"
+                  href="https://observatory.mozilla.org/?no-redirect"
+                >
+                  click here
+                </a>
+                . Please note the old Observatory is now deprecated and will
+                soon be sunsetted.
               </p>
               {isMutating ? (
                 <Progress message={`Scanning ${cleanHostname}…`} />

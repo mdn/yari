@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ObservatoryResult } from "../types";
+import { ObservatoryResult, SORTED_TEST_NAMES } from "../types";
 import { formatMinus, Link, PassIcon } from "../utils";
 
 export function ObservatoryTests({ result }: { result: ObservatoryResult }) {
@@ -22,41 +22,44 @@ export function ObservatoryTests({ result }: { result: ObservatoryResult }) {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(result.tests).map(([name, test]) => {
+          {SORTED_TEST_NAMES.map((name) => {
+            const test = result.tests[name];
             return (
-              <tr key={name}>
-                <td data-header="Test">
-                  <Link href={test.link}>{test.title}</Link>
-                </td>
-                {test.pass === null ? (
-                  <td data-header="Score">-</td>
-                ) : (
-                  <td className="score" data-header="Score">
-                    <span>
-                      <span className="obs-score-value">
-                        <ScoreModifier
-                          overallScore={result.scan.score || 0}
-                          scoreModifier={test.score_modifier}
-                        />
-                      </span>
-                      <PassIcon pass={test.pass} />
-                    </span>
+              test && (
+                <tr key={name}>
+                  <td data-header="Test">
+                    <Link href={test.link}>{test.title}</Link>
                   </td>
-                )}
-                <td
-                  data-header="Reason"
-                  dangerouslySetInnerHTML={{
-                    __html: test.score_description,
-                  }}
-                />
-                <td
-                  data-header="Advice"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      test.recommendation || `<p class="obs-none">None</p>`,
-                  }}
-                />
-              </tr>
+                  {test.pass === null ? (
+                    <td data-header="Score">-</td>
+                  ) : (
+                    <td className="score" data-header="Score">
+                      <span>
+                        <span className="obs-score-value">
+                          <ScoreModifier
+                            overallScore={result.scan.score || 0}
+                            scoreModifier={test.score_modifier}
+                          />
+                        </span>
+                        <PassIcon pass={test.pass} />
+                      </span>
+                    </td>
+                  )}
+                  <td
+                    data-header="Reason"
+                    dangerouslySetInnerHTML={{
+                      __html: test.score_description,
+                    }}
+                  />
+                  <td
+                    data-header="Advice"
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        test.recommendation || `<p class="obs-none">None</p>`,
+                    }}
+                  />
+                </tr>
+              )
             );
           })}
         </tbody>

@@ -26,6 +26,20 @@ export const SCORING_TABLE = [
   { grade: "F", scoreText: "0", score: 0 },
 ];
 
+// Maintain consistent test sorting
+export const SORTED_TEST_NAMES = [
+  "content-security-policy",
+  "cookies",
+  "cross-origin-resource-sharing",
+  "redirection",
+  "referrer-policy",
+  "strict-transport-security",
+  "subresource-integrity",
+  "x-content-type-options",
+  "x-frame-options",
+  "cross-origin-resource-policy",
+];
+
 export interface ObservatoryResult {
   scan: ObservatoryScanResult;
   tests: ObservatoryTestResult;
