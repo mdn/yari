@@ -7,15 +7,13 @@ import { fdir, PathsOutput } from "fdir";
 import got from "got";
 
 import { m2h } from "../markdown/index.js";
-import {
-  OBSERVATORY_TITLE_FULL,
-  OBSERVATORY_TITLE,
-} from "../client/src/observatory/types.js";
 
 import {
   VALID_LOCALES,
   MDN_PLUS_TITLE,
   DEFAULT_LOCALE,
+  OBSERVATORY_TITLE_FULL,
+  OBSERVATORY_TITLE,
 } from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,

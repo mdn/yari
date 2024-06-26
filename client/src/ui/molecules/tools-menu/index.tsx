@@ -1,5 +1,5 @@
+import { OBSERVATORY_TITLE } from "../../../../../libs/constants";
 import { useLocale } from "../../../hooks";
-import { OBSERVATORY_TITLE } from "../../../observatory/types";
 import { Menu } from "../menu";
 
 import "./index.scss";

@@ -3,7 +3,7 @@ import { DocParent } from "../../../libs/types/document";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { TopNavigation } from "../ui/organisms/top-navigation";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
-import { OBSERVATORY_TITLE } from "./types";
+import { OBSERVATORY_TITLE } from "../../../libs/constants";
 
 export function ObservatoryLayout({
   parents = [],

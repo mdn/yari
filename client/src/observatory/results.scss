@@ -278,12 +278,14 @@
         "tab-0 tab-1 tab-2 tab-3 tab-4 tab-5"
         "hr    hr    hr    hr    hr    hr"
         "mod   mod   mod   mod   mod   mod";
-      grid-template-columns: repeat(6, min-content);
       justify-content: space-between;
       margin: 0;
       overflow-x: auto;
       overscroll-behavior-x: none;
       padding: 0;
+      @media (max-width: #{$screen-lg - 0.02}) {
+        grid-template-columns: repeat(6, max-content);
+      }
 
       &::before {
         border: none;

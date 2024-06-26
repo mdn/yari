@@ -5,12 +5,12 @@ import { useGleanClick } from "../telemetry/glean-context";
 import { OBSERVATORY } from "../telemetry/constants";
 import Container from "../ui/atoms/container";
 import { SidePlacement } from "../ui/organisms/placement";
-
 import {
   OBSERVATORY_TITLE,
   OBSERVATORY_TITLE_FULL,
-  ObservatoryAnalyzeRequest,
-} from "./types";
+} from "../../../libs/constants";
+
+import { ObservatoryAnalyzeRequest } from "./types";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ERROR_MAP, FeedbackLink, useUpdateResult } from "./utils";

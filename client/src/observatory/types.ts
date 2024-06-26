@@ -10,9 +10,6 @@ export type ObservatoryScanState =
   | "STARTING"
   | "RUNNING";
 
-export const OBSERVATORY_TITLE = "HTTP Observatory";
-export const OBSERVATORY_TITLE_FULL = "HTTP Observatory | MDN";
-
 export const SCORING_TABLE = [
   { grade: "A+", scoreText: "100+", score: 100, stars: true },
   { grade: "A", scoreText: "90", score: 90, stars: true },
