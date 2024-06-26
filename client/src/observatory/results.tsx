@@ -24,7 +24,10 @@ import { ObservatoryRating } from "./results/rating";
 import { ObservatoryTests } from "./results/tests";
 import ObservatoryBenchmark from "./results/benchmark";
 import "./results.scss";
-import { OBSERVATORY_TITLE, OBSERVATORY_TITLE_FULL } from "./types";
+import {
+  OBSERVATORY_TITLE,
+  OBSERVATORY_TITLE_FULL,
+} from "../../../libs/constants";
 
 export default function ObservatoryResults() {
   const { pathname, search } = useLocation();
