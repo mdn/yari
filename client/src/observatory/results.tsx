@@ -22,8 +22,9 @@ import { ObservatoryHeaders } from "./results/headers";
 import { ObservatoryHistory } from "./results/history";
 import { ObservatoryRating } from "./results/rating";
 import { ObservatoryTests } from "./results/tests";
-import ObservatoryBenchmark from "./benchmark";
+import ObservatoryBenchmark from "./results/benchmark";
 import "./results.scss";
+import { OBSERVATORY_TITLE, OBSERVATORY_TITLE_FULL } from "./types";
 
 export default function ObservatoryResults() {
   const { pathname, search } = useLocation();
@@ -41,7 +42,7 @@ export default function ObservatoryResults() {
 
   const gleanClick = useGleanClick();
 
-  document.title = `Scan results for ${host} | HTTP Observatory | MDN`;
+  document.title = `Scan results for ${host} | ${OBSERVATORY_TITLE_FULL}`;
 
   const combinedError = error || updateError;
 
@@ -68,7 +69,7 @@ export default function ObservatoryResults() {
           <section className="header">
             <section className="heading-and-actions">
               <h1>
-                <span className="accent">HTTP Observatory</span> Report{" "}
+                <span className="accent">{OBSERVATORY_TITLE}</span> Report{" "}
               </h1>
               <FeedbackLink />
             </section>
@@ -97,7 +98,7 @@ export default function ObservatoryResults() {
             )}
           </section>
           <nav className="sidebar">
-            <ObservatoryDocsNav heading={"About this tool"} />
+            <ObservatoryDocsNav />
           </nav>
           {hasData && !combinedError && (
             <section className="main">
