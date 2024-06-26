@@ -1,9 +1,11 @@
 import fs from "node:fs";
 
+import { Handler, Handlers, State } from "mdast-util-to-hast";
+
 import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
+import { type Locale } from "../../../libs/types/core.js";
 import { code } from "./code.js";
 import { asDefinitionList, isDefinitionList } from "./dl.js";
-import { Handler, Handlers, State } from "mdast-util-to-hast";
 
 /* A utilitary function which parses a JSON gettext file
    to return a Map with each key and its corresponding localized string.
@@ -41,7 +43,7 @@ interface NotecardType {
   magicKeyword: string;
 }
 
-function getNotecardType(node: any, locale: string): NotecardType | null {
+function getNotecardType(node: any, locale: Locale): NotecardType | null {
   const types = ["note", "warning", "callout"];
 
   if (!node.children) {
@@ -85,7 +87,7 @@ function getNotecardType(node: any, locale: string): NotecardType | null {
   return null;
 }
 
-export function buildLocalizedHandlers(locale: string): Handlers {
+export function buildLocalizedHandlers(locale: Locale): Handlers {
   /* This is only used for the Notecard parsing where the "magit" word depends on the locale */
   return {
     code,
