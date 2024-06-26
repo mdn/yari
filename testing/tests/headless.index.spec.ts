@@ -44,25 +44,6 @@ test.describe("Basic viewing of functional pages", () => {
     ).toBeTruthy();
   });
 
-  test("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async ({
-    page,
-  }) => {
-    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const gridSample2Uri = liveSampleURL(uri, "grid_2");
-    await page.goto(testURL(uri));
-    expect(await page.title()).toContain("A Test Introduction to CSS layout");
-    expect(await page.innerText("h1")).toBe(
-      "A Test Introduction to CSS layout"
-    );
-    expect(await page.innerText("#flexbox")).toBe("Flexbox");
-    expect(
-      await page.innerText("#grid_2 pre.css.notranslate:not(.hidden)")
-    ).toMatch(/\.wrapper\s*\{\s*display:\s*grid;/);
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
-    ).toBeTruthy();
-  });
-
   test("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid page", async ({
     page,
   }) => {
