@@ -7,6 +7,10 @@ import { fdir, PathsOutput } from "fdir";
 import got from "got";
 
 import { m2h } from "../markdown/index.js";
+import {
+  OBSERVATORY_TITLE_FULL,
+  OBSERVATORY_TITLE,
+} from "../client/src/observatory/types.js";
 
 import {
   VALID_LOCALES,
@@ -146,22 +150,22 @@ export async function buildSPAs(options: {
         { prefix: "play", pageTitle: "Playground | MDN" },
         {
           prefix: "observatory",
-          pageTitle: "HTTP Observatory | MDN",
+          pageTitle: OBSERVATORY_TITLE_FULL,
           pageDescription:
             "Enhance your web site's security by scanning it with HTTP Observatory. This tool analyzes HTTP headers and other key security configurations, providing actionable insights. Developed by Mozilla.",
         },
         {
           prefix: "observatory/analyze",
-          pageTitle: "Scan results - HTTP Observatory | MDN",
+          pageTitle: `Scan results - ${OBSERVATORY_TITLE_FULL}`,
           noIndexing: true,
         },
         {
           prefix: "observatory/docs/tests_and_scoring",
-          pageTitle: "Tests & Scoring - HTTP Observatory | MDN",
+          pageTitle: `Tests & Scoring - ${OBSERVATORY_TITLE_FULL}`,
         },
         {
           prefix: "observatory/docs/faq",
-          pageTitle: "FAQ - HTTP Observatory | MDN",
+          pageTitle: `FAQ - ${OBSERVATORY_TITLE_FULL}`,
         },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
@@ -311,7 +315,7 @@ export async function buildSPAs(options: {
   await buildStaticPages(
     fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
     "observatory/docs",
-    "HTTP Observatory"
+    OBSERVATORY_TITLE
   );
 
   // Build all the home pages in all locales.

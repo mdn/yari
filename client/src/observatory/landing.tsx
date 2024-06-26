@@ -6,7 +6,11 @@ import { OBSERVATORY } from "../telemetry/constants";
 import Container from "../ui/atoms/container";
 import { SidePlacement } from "../ui/organisms/placement";
 
-import { OBSERVATORY_TITLE_FULL, ObservatoryAnalyzeRequest } from "./types";
+import {
+  OBSERVATORY_TITLE,
+  OBSERVATORY_TITLE_FULL,
+  ObservatoryAnalyzeRequest,
+} from "./types";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
 import { ERROR_MAP, FeedbackLink, useUpdateResult } from "./utils";
@@ -86,7 +90,7 @@ export default function ObservatoryLanding() {
           <section className="header">
             <section className="scan-form">
               <h1>
-                <span className="accent">HTTP Observatory</span>
+                <span className="accent">{OBSERVATORY_TITLE}</span>
               </h1>
               <p>
                 Launched in 2016, HTTP Observatory enhances web security by

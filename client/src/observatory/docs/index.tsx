@@ -32,7 +32,7 @@ function RelatedTopics({
     <aside className="document-toc-container">
       <section className="document-toc">
         <header>
-          <h2 className="document-toc-heading">HTTP Observatory</h2>
+          <h2 className="document-toc-heading">{OBSERVATORY_TITLE}</h2>
         </header>
         <ul className="document-toc-list">
           {items.map(({ slug, title }) => {
