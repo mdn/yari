@@ -3,9 +3,9 @@
     polygon {
       stroke-width: 4px;
       stroke: #000;
-      fill: #fff;
+      fill: currentColor;
   </style>
-  <polygon id="angle" points="70,0 90,0 90,90 70,90 0,90, 0,70 70,70" />
+  <polygon id="angle" points="0,0 90,0 90,20 20,20 20,90, 0,90" />
   <g transform="rotate(-270 0 0)
                translate(0 -270)
                ">
