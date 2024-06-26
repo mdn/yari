@@ -1,29 +1,24 @@
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 32 32">
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 350 350">
   <style>
-    line {
+    polygon {
+      stroke-width: 4px;
       stroke: #000;
-      stroke-width: 2px;
-    }
-    line.white {
-      stroke: #fff;
-      stroke-width: 1px;
-
-    }
+      fill: #fff;
   </style>
-  <line x1="0" y1="1" x2="9" y2="1" />
-  <line x1="1" y1="0" x2="1" y2="9" />
-  <line class="white" x1="0.5" y1="1" x2="8.5" y2="1"/>
-  <line class="white" x1="1" y1="0.5" x2="1" y2="8.5" />
-  <line x1="15" y1="1" x2="24" y2="1" />
-  <line x1="23" y1="0" x2="23" y2="9" />
-  <line class="white" x1="15.5" y1="1" x2="23.5" y2="1"/>
-  <line class="white" x1="23" y1="0.5" x2="23" y2="8.5" />
-  <line x1="1" y1="15" x2="1" y2="24" />
-  <line x1="0" y1="23" x2="9" y2="23" />
-  <line class="white" x1="1" y1="15.5" x2="1" y2="23.5"/>
-  <line class="white" x1="0.5" y1="23" x2="8.5" y2="23" />
-  <line x1="23" y1="15" x2="23" y2="24" />
-  <line x1="15" y1="23" x2="24" y2="23" />
-  <line class="white" x1="23" y1="15.5" x2="23" y2="23.5"/>
-  <line class="white" x1="15.5" y1="23" x2="23.5" y2="23" />
+  <polygon id="angle" points="0,0 90,0 90,20 20,20 20,90, 0,90" />
+  <g transform="rotate(-270 0 0)
+               translate(0 -270)
+               ">
+    <use href="#angle" />
+  </g>
+  <g transform="rotate(-180 0 0)
+               translate(-270 -270)
+               ">
+    <use href="#angle" />
+  </g>
+  <g transform="rotate(-90 0 0)
+               translate(-270 0)
+               ">
+    <use href="#angle" />
+  </g>
 </svg>

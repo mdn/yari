@@ -273,18 +273,11 @@
         height: 100%;
         justify-content: center;
         justify-self: center;
-        width: 24rem;
+        max-width: 24rem;
+        width: 100%;
 
         @media (min-width: $screen-lg) {
           justify-self: end;
-        }
-
-        > svg {
-          height: 20rem;
-          left: 4rem;
-          position: absolute;
-          top: 4rem;
-          width: 20rem;
         }
 
         dialog {
@@ -299,10 +292,12 @@
 
             > .scrim-inner {
               --inner-width: 22rem;
+              --inner-max-width: calc(100vw - 2 * var(--gutter));
               align-items: start;
               background-color: #000;
               display: flex;
               flex-direction: column;
+              max-width: var(--inner-max-width);
               width: var(--inner-width);
 
               .partner-header {
@@ -355,32 +350,32 @@
               }
 
               .fullscreen-overlay.enter {
-                background-image: url("../assets/icons/enter-fullscreen.svg");
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: 7rem;
                 cursor: pointer;
                 height: 12.5rem;
                 margin-top: 1.75rem;
+                max-width: var(--inner-max-width);
                 position: absolute;
                 width: var(--inner-width);
 
+                > svg {
+                  color: #fff;
+                  height: 7rem;
+                  width: 7rem;
+                }
+
                 &:hover {
-                  background-color: var(--curriculum-color);
-                  background-image: none;
-                  mask-image: url("../assets/icons/enter-fullscreen.svg");
-                  mask-position: center;
-                  mask-repeat: no-repeat;
-                  mask-size: 7rem;
+                  > svg {
+                    color: var(--curriculum-color);
+                  }
                 }
 
                 &:focus-visible {
-                  background-color: var(--accent-primary);
-                  background-image: none;
-                  mask-image: url("../assets/icons/enter-fullscreen.svg");
-                  mask-position: center;
-                  mask-repeat: no-repeat;
-                  mask-size: 7rem;
+                  > svg {
+                    color: var(--accent-primary);
+                  }
                 }
               }
 
