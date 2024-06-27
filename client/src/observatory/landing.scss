@@ -79,6 +79,11 @@
         flex-grow: 1;
         padding: 0 0.75rem;
         width: 100%;
+
+        &::placeholder {
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
       button {
