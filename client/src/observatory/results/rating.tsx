@@ -38,7 +38,7 @@ export function ObservatoryRating({
     } else {
       return "none";
     }
-  }, [result.history, result.scan.grade]);
+  }, [result.history, result.scan.score]);
 
   return (
     <>
