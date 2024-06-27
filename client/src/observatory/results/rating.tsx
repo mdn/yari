@@ -26,7 +26,7 @@ export function ObservatoryRating({
 
   const arrowState = useMemo(() => {
     const oldScore = result.history.length
-      ? result.history.at(-1)?.score
+      ? result.history.at(-2)?.score
       : undefined;
     const newScore = result.scan.score;
     if (
@@ -38,7 +38,7 @@ export function ObservatoryRating({
     } else {
       return "none";
     }
-  }, [result]);
+  }, [result.history, result.scan.score]);
 
   return (
     <>
