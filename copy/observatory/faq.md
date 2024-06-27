@@ -136,15 +136,3 @@ example, to allow your site to be framed by any HTTPS site:
 ```http
 Content-Security-Policy: frame-ancestors https:
 ```
-
-## Summary
-
-We would love you to [try out the HTTP Observatory on MDN](/en-US/observatory)!
-Visit it now, scan your site, and fill out our
-[HTTP Observatory survey](https://survey.alchemer.com/s3/7897385/MDN-HTTP-Observatory)
-to let us know what you think of the experience.
-
-HTTP Observatory's documentation, which is linked from the test results, is now
-also found on MDN, in our
-[Practical security implementation guides](/en-US/docs/Web/Security/Practical_implementation_guides)
-section. Again, read through it and let us know how it can be improved.
