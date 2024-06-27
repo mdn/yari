@@ -50,10 +50,7 @@ export default function ObservatoryBenchmark({
       <h2>Performance trends from the past year</h2>
       {
         <GradeSVG
-          gradeDistribution={gradeDistribution.slice(
-            0,
-            gradeDistribution.length - 1 // do not display "F" grades
-          )}
+          gradeDistribution={gradeDistribution}
           result={result}
         ></GradeSVG>
       }
