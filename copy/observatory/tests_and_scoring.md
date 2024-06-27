@@ -80,7 +80,8 @@ for guidance.
 
 ## Cross-origin Resource Sharing (CORS)
 
-See [CORS configuration](/en-US/docs/Web/Security/Practical_implementation/CORS)
+See
+[CORS configuration](/en-US/docs/Web/Security/Practical_implementation_guides/CORS)
 for guidance.
 
 | Test result                                                          | Description                                                                                                          | Modifier |
@@ -93,7 +94,8 @@ for guidance.
 
 ## Content Security Policy (CSP)
 
-See [CSP configuration](/en-US/docs/Web/Security/Practical_implementation/CSP)
+See
+[CSP configuration](/en-US/docs/Web/Security/Practical_implementation_guides/CSP)
 for guidance.
 
 | Test result                                                  | Description                                                                                                                                                                                                                                                     | Modifier |
@@ -111,7 +113,7 @@ for guidance.
 ## HTTP Strict Transport Security
 
 See
-[Strict Transport Security configuration](/en-US/docs/Web/Security/Practical_implementation/TLS#http_strict_transport_security)
+[Strict Transport Security configuration](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_strict_transport_security)
 for guidance.
 
 | Test result                                       | Description                                                                                              | Modifier |
@@ -127,7 +129,7 @@ for guidance.
 ## Redirections
 
 See
-[Redirections](/en-US/docs/Web/Security/Practical_implementation/TLS#http_redirections)
+[Redirections](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirections)
 for guidance.
 
 | Test result                                     | Description                                                                                                      | Modifier |
@@ -144,7 +146,7 @@ for guidance.
 ## Referrer Policy
 
 See
-[Referrer Policy](http://localhost:3000/en-US/docs/Web/Security/Practical_implementation/Referrer_policy)
+[Referrer Policy](http://localhost:3000/en-US/docs/Web/Security/Practical_implementation_guides/Referrer_policy)
 for guidance.
 
 | Test result                     | Description                                                                                                          | Modifier |
@@ -175,7 +177,7 @@ guidance.
 ## X-Content-Type-Options
 
 See
-[X-Content-Type-Options](/en-US/docs/Web/Security/Practical_implementation/MIME_types)
+[X-Content-Type-Options](/en-US/docs/Web/Security/Practical_implementation_guides/MIME_types)
 for guidance.
 
 | Test result                            | Description                                           | Modifier |
@@ -187,7 +189,7 @@ for guidance.
 ## X-Frame-Options
 
 See
-[X-Frame-Options](/en-US/docs/Web/Security/Practical_implementation/Clickjacking)
+[X-Frame-Options](/en-US/docs/Web/Security/Practical_implementation_guides/Clickjacking)
 for guidance.
 
 | Test result                         | Description                                                                  | Modifier |
