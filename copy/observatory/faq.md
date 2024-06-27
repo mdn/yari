@@ -2,16 +2,16 @@
 title: FAQ
 ---
 
-## FAQ
+# Frequently asked questions
 
-### Should I implement all recommendations?
+## Should I implement all recommendations?
 
 Yes, you should do it if possible. There is no way to programmatically determine
 the risk level of any given site. However, while your site may not be high-risk,
 it is still worth learning about the defensive security standards highlighted by
 Observatory, and implementing them wherever you can.
 
-### If I get an A+ grade, does that mean my site is secure?
+## If I get an A+ grade, does that mean my site is secure?
 
 We'd love to say that any site that gets an A+ Observatory grade is perfectly
 secure, but there are a lot of security considerations that we can't test.
@@ -30,7 +30,7 @@ and more. These are just as important as the issues Observatory _does_ test for,
 and site operators should not be neglectful of them simply because they score
 well on Observatory.
 
-### Can I scan non-websites, such as API endpoints?
+## Can I scan non-websites, such as API endpoints?
 
 The HTTP Observatory is designed for scanning websites, not API endpoints. It
 can be used for API endpoints, and the security headers expected by Observatory
@@ -45,7 +45,7 @@ Strict-Transport-Security: max-age=63072000
 X-Content-Type-Options: nosniff
 ```
 
-### Can other people see my test results?
+## Can other people see my test results?
 
 Anyone can choose to scan any domain, and the scan history for each domain is
 public. However, HTTP Observatory does not store user data related to each scan.
@@ -55,7 +55,7 @@ where domain names were listed. "Recent scans" was the main feature that users
 would potentially wish to opt-out from, but it is no longer supported, hence
 there is now no reason to provide the "public" flag.
 
-### Why did Mozilla move Observatory to MDN?
+## Why did Mozilla move Observatory to MDN?
 
 Observatory is a well-respected tool in the web and security communities, but it
 hasn't seen a major update for quite some time. Mozilla decided that the tool
@@ -66,7 +66,7 @@ In addition, the MDN team was very excited to update the tool's UI,
 functionality, and documentation, bringing it up-to-date and giving it some
 polish.
 
-### When did the move occur?
+## When did the move occur?
 
 HTTP Observatory was launched on MDN on June 27, 2024, with the existing Mozilla
 Observatory site redirecting to it. Other tools like TLS Observatory, SSH
@@ -76,7 +76,7 @@ September 2024.
 > **Note:** Historic scan data has been preserved, and is included in the
 > provided scan history for each domain.
 
-### What has changed after the migration?
+## What has changed after the migration?
 
 The MDN team has:
 
@@ -101,14 +101,14 @@ The MDN team has:
     update the score modifier for `referrer-policy-unsafe` and remove the
     `referrer-policy-no-referrer-when-downgrade` result.
 
-### Has the HTTP Observatory API been updated to use the new tests?
+## Has the HTTP Observatory API been updated to use the new tests?
 
 Not yet. The API will continue using the old test infrastructure for a while,
 therefore you will see some small differences between test scores returned by
 the API and the website. The API will be updated to use the new tests in a
 near-future iteration.
 
-### (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
+## (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
 
 This test is checking whether your web server is making its initial redirection
 from HTTP to HTTPS, on the same hostname, before doing any further redirections.
@@ -124,7 +124,7 @@ An incorrect (and penalized) redirection looks like this:
 
 `http://example.com` → `https://www.example.com`
 
-### (X-Frame-Options) What if I want to allow my site to be framed?
+## (X-Frame-Options) What if I want to allow my site to be framed?
 
 As long as you are explicit about your preference by using the
 [`Content-Security-Policy`](/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)

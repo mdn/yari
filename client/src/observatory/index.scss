@@ -82,6 +82,7 @@
       --feedback-link-icon: var(--observatory-color-secondary);
       --text-link: var(--observatory-color-secondary);
       color: var(--observatory-color-secondary);
+      display: block;
       font-size: var(--type-tiny-font-size);
       margin-top: 1.5rem;
     }

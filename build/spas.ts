@@ -40,10 +40,16 @@ const FEATURED_ARTICLES = [
 ];
 
 const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-http-observatory-launch/",
   "blog/mdn-curriculum-launch/",
   "blog/baseline-evolution-on-mdn/",
   "blog/introducing-the-mdn-playground/",
 ];
+
+const PAGE_DESCRIPTIONS = Object.freeze({
+  observatory:
+    "Test your site’s HTTP headers, including CSP and HSTS, to find security problems and get actionable recommendations to make your website more secure. Test other websites to see how you compare.",
+});
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
@@ -150,21 +156,23 @@ export async function buildSPAs(options: {
         {
           prefix: "observatory",
           pageTitle: `HTTP Header Security Test - ${OBSERVATORY_TITLE_FULL}`,
-          pageDescription:
-            "Test your site’s HTTP headers, including CSP and HSTS, to find security problems and get actionable recommendations to make your website more secure. Test other websites to see how you compare.",
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
         },
         {
           prefix: "observatory/analyze",
           pageTitle: `Scan results - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
           noIndexing: true,
         },
         {
           prefix: "observatory/docs/tests_and_scoring",
           pageTitle: `Tests & Scoring - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
         },
         {
           prefix: "observatory/docs/faq",
           pageTitle: `FAQ - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
         },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
