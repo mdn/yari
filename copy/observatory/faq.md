@@ -55,17 +55,6 @@ where domain names were listed. "Recent scans" was the main feature that users
 would potentially wish to opt-out from, but it is no longer supported, hence
 there is now no reason to provide the "public" flag.
 
-## Why did Mozilla move Observatory to MDN?
-
-Observatory is a well-respected tool in the web and security communities, but it
-hasn't seen a major update for quite some time. Mozilla decided that the tool
-deserved to evolve and find new audience members to benefit from the security
-knowledge contained within. MDN is a popular site with a large audience of web
-developers who could benefit from this knowledge, so it is a perfect new home.
-In addition, the MDN team was very excited to update the tool's UI,
-functionality, and documentation, bringing it up-to-date and giving it some
-polish.
-
 ## When did the move occur?
 
 HTTP Observatory was launched on MDN on June 27, 2024, with the existing Mozilla
@@ -80,15 +69,19 @@ September 2024.
 
 The MDN team has:
 
-- Updated the UI to improve the site's look and make it easier to use.
+- Updated the user experience to improve the site's look and make it easier to
+  use. For example, the recommendations highlighted by the test results are all
+  shown together, instead of one at a time.
 - Updated the
   [accompanying documentation](/en-US/docs/Web/Security/Practical_implementation_guides#content_security_fundamentals)
   to bring it up to date and improve legibility.
 - Changed the "rescan" checkbox and its underlying mechanics:
   - There is no longer a rescan parameter.
   - A site can only be scanned and a new result returned every 60 seconds.
+  - Deep-linking into a report initiates a rescan if the previous scan data is
+    older than 24 hours.
 - Updated the
-  [tests](/en-US/observatory/docs/scoring_methodology#tests-and-score-modifiers)
+  [tests](/en-US/observatory/docs/tests_and_scoring#tests-and-score-modifiers)
   to bring them up-to-date with latest security best practices:
   - Removed the out-of-date `X-XSS-Protection` test.
   - Removed the out-of-date Flash and Silverlight (`clientaccesspolicy.xml` and
@@ -107,6 +100,12 @@ Not yet. The API will continue using the old test infrastructure for a while,
 therefore you will see some small differences between test scores returned by
 the API and the website. The API will be updated to use the new tests in a
 near-future iteration.
+
+## Does the new HTTP Observatory provide specific TLS and certificate data?
+
+The previous Observatory site included specific results tabs containing TLS and
+certificate analysis data. The new one does not, and there are currently no
+plans to include these features: it provides a clear focus on HTTP data.
 
 ## (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
 
