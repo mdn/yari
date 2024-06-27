@@ -283,19 +283,21 @@
     }
 
     ol.tabs-list {
-      column-gap: 1.75rem;
+      column-gap: 3rem;
       display: grid;
       grid-template-areas:
-        "tab-0 tab-1 tab-2 tab-3 tab-4 tab-5"
-        "hr    hr    hr    hr    hr    hr"
-        "mod   mod   mod   mod   mod   mod";
-      justify-content: space-between;
+        "tab-0 tab-1 tab-2 tab-3 tab-4 tab-5 ."
+        "hr    hr    hr    hr    hr    hr    hr "
+        "mod   mod   mod   mod   mod   mod   mod";
+      grid-template-columns: repeat(6, max-content) 1fr;
       margin: 0;
       overflow-x: auto;
       overscroll-behavior-x: none;
       padding: 0;
+
       @media (max-width: #{$screen-lg - 0.02}) {
-        grid-template-columns: repeat(6, max-content);
+        column-gap: 1.75rem;
+        grid-template-columns: repeat(6, max-content) auto;
       }
 
       &::before {
@@ -312,6 +314,11 @@
 
         > input:checked + label {
           border-bottom: 2px solid var(--observatory-accent);
+          color: var(--text-primary);
+        }
+
+        > input:not(:checked) + label:hover {
+          border-bottom: 2px solid var(--observatory-accent-light);
           color: var(--text-primary);
         }
 
