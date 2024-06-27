@@ -68,7 +68,9 @@ export function ObservatoryTests({ result }: { result: ObservatoryResult }) {
         <section className="footnote" id="bonus-points-explanation">
           <sup>*</sup> Normally awards bonus points, however, in this case they
           are not included in the overall score (
-          <a href="/en-US/observatory/docs/tests_and_scoring">find out why</a>
+          <a href="/en-US/observatory/docs/tests_and_scoring" target="_blank">
+            find out why
+          </a>
           ).
         </section>
       )}
