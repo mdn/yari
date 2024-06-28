@@ -13,7 +13,11 @@ export function HumanDuration({ date }: { date: Date }) {
     return () => clearInterval(interval);
   });
 
-  return <time dateTime={date.toISOString()}>{text}</time>;
+  return (
+    <time dateTime={date.toISOString()} title={formatDateTime(date)}>
+      {text}
+    </time>
+  );
 }
 
 function displayString(date: Date) {
@@ -26,7 +30,7 @@ function displayString(date: Date) {
   }
 
   if (diffSecs < 60) {
-    return diffSecs === 1 ? `Just now` : `${diffSecs} seconds ago`;
+    return `Just now`;
   }
   if (diffSecs < 60 * 60) {
     const minutes = Math.floor(diffSecs / 60);
