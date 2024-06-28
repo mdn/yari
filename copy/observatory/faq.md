@@ -107,11 +107,12 @@ The previous Observatory site included specific results tabs containing TLS and
 certificate analysis data. The new one does not, and there are currently no
 plans to include these features: it provides a clear focus on HTTP data.
 
-## (Redirection) What is the [HTTP redirection test](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection) assessing?
+## (Redirection) What is the HTTP redirection test assessing?
 
-This test is checking whether your web server is making its initial redirection
-from HTTP to HTTPS, on the same hostname, before doing any further redirections.
-This allows the HTTP
+This test is checking whether your web server is making its
+[initial redirection from HTTP to HTTPS](/en-US/docs/Web/Security/Practical_implementation_guides/TLS#http_redirection),
+on the same hostname, before doing any further redirections. This allows the
+HTTP
 [`Strict-Transport-Security`](/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
 (HSTS) header to be applied properly.
 
