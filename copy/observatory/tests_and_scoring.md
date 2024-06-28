@@ -67,9 +67,9 @@ for guidance.
 
 | Test result                                                  | Description                                                                                                                                                                                                                                                     | Modifier |
 | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: |
-| csp-implemented-with-no-unsafe-default-src-none              | Content Security Policy (CSP) implemented with `default-src 'none'`, no `unsafe` and form-action is set to `none` or `self`.                                                                                                                                    |    10    |
+| csp-implemented-with-no-unsafe-default-src-none              | Content Security Policy (CSP) implemented with `default-src 'none'`, no `'unsafe'` and form-action is set to `'none'` or `'self'`.                                                                                                                              |    10    |
 | csp-implemented-with-no-unsafe                               | Content Security Policy (CSP) implemented without `'unsafe-inline'` or `'unsafe-eval'`.                                                                                                                                                                         |    5     |
-| csp-implemented-with-unsafe-inline-in-style-src-only         | Content Security Policy (CSP) implemented with unsafe sources inside style-src. This includes `'unsafe-inline'`, data: or overly broad sources such as `https`. `'form-action'` is set to `'self'`, `'none'` or `'specific source'`.                            |    0     |
+| csp-implemented-with-unsafe-inline-in-style-src-only         | Content Security Policy (CSP) implemented with unsafe sources inside style-src. This includes `'unsafe-inline'`, `data:` or overly broad sources such as `https`. `'form-action'` is set to `'self'`, `'none'` or `'specific source'`.                          |    0     |
 | csp-implemented-with-insecure-scheme-in-passive-content-only | Content Security Policy (CSP) implemented, but secure site allows images or media to be loaded via HTTP.                                                                                                                                                        |   -10    |
 | csp-implemented-with-unsafe-eval                             | Content Security Policy (CSP) implemented, but allows `'unsafe-eval'` and allows forms to be submitted to any source.                                                                                                                                           |   -10    |
 | csp-implemented-with-unsafe-inline                           | Content Security Policy (CSP) implemented unsafely. This includes `'unsafe-inline'` or `data:` inside `script-src`, overly broad sources such as `https:` inside `object-src` or `script-src`, or not restricting the sources for `object-src` or `script-src`. |   -20    |
@@ -88,13 +88,13 @@ for guidance.
 | cookies-secure-with-httponly-sessions-and-samesite        | All cookies use the `Secure` flag, session cookies use the `HttpOnly` flag, and cross-origin restrictions are in place via the `SameSite` flag. |    5     |
 | cookies-secure-with-httponly-sessions                     | All cookies use the `Secure` flag and all session cookies use the `HttpOnly` flag.                                                              |    0     |
 | cookies-not-found                                         | No cookies detected.                                                                                                                            |    0     |
-| cookies-without-secure-flag-but-protected-by-hsts         | Cookies set without using the `Secure` flag, but transmission via HTTP prevented by HSTS.                                                       |    -5    |
-| cookies-session-without-secure-flag-but-protected-by-hsts | Session cookie set without the `Secure` flag, but transmission via HTTP prevented by HSTS.                                                      |   -10    |
-| cookies-without-secure-flag                               | Cookies set without using the `Secure` flag or set via HTTP.                                                                                    |   -20    |
+| cookies-without-secure-flag-but-protected-by-hsts         | Cookies set without using the `Secure` flag, but transmission over HTTP prevented by HSTS.                                                      |    -5    |
+| cookies-session-without-secure-flag-but-protected-by-hsts | Session cookie set without the `Secure` flag, but transmission over HTTP prevented by HSTS.                                                     |   -10    |
+| cookies-without-secure-flag                               | Cookies set without using the `Secure` flag or set over HTTP.                                                                                   |   -20    |
 | cookies-samesite-flag-invalid                             | Cookies use the `SameSite` flag, but set to something other than `Strict` or `Lax`.                                                             |   -20    |
 | cookies-anticsrf-without-samesite-flag                    | Anti-CSRF tokens set without using the `SameSite` flag.                                                                                         |   -20    |
 | cookies-session-without-httponly-flag                     | Session cookie set without using the `HttpOnly` flag.                                                                                           |   -30    |
-| cookies-session-without-secure-flag                       | Session cookie set without using the `Secure` flag or set via HTTP.                                                                             |   -40    |
+| cookies-session-without-secure-flag                       | Session cookie set without using the `Secure` flag or set over HTTP.                                                                            |   -40    |
 
 ## Cross-origin Resource Sharing (CORS)
 
@@ -160,16 +160,16 @@ for guidance.
 See [Subresource Integrity](/en-US/docs/Web/Security/Subresource_Integrity) for
 guidance.
 
-| Test result                                                   | Description                                                                                                                          | Modifier |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | :------: |
-| sri-implemented-and-all-scripts-loaded-securely               | Subresource Integrity (SRI) is implemented and all scripts are loaded from a similar origin.                                         |    5     |
-| sri-implemented-and-external-scripts-loaded-securely          | Subresource Integrity (SRI) is implemented and all scripts are loaded securely.                                                      |    5     |
-| sri-not-implemented-response-not-html                         | Subresource Integrity (SRI) is only needed for HTML resources.                                                                       |    0     |
-| sri-not-implemented-but-no-scripts-loaded                     | Subresource Integrity (SRI) is not needed since the site contains no `<script>` tags.                                                |    0     |
-| sri-not-implemented-but-all-scripts-loaded-from-secure-origin | Subresource Integrity (SRI) not implemented as all scripts are loaded from a similar origin.                                         |    0     |
-| sri-not-implemented-but-external-scripts-loaded-securely      | Subresource Integrity (SRI) not implemented, but all external scripts are loaded over HTTPS.                                         |    -5    |
-| sri-implemented-but-external-scripts-not-loaded-securely      | Subresource Integrity (SRI) implemented, but external scripts are loaded over HTTP or use protocol-relative URLs via `src="//..."`   |   -20    |
-| sri-not-implemented-and-external-scripts-not-loaded-securely  | Subresource Integrity (SRI) is not implemented, and are scripts are loaded over HTTP or use protocol-relative URLs via `src="//..."` |   -50    |
+| Test result                                                   | Description                                                                                                                             | Modifier |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | :------: |
+| sri-implemented-and-all-scripts-loaded-securely               | Subresource Integrity (SRI) is implemented and all scripts are loaded from a similar origin.                                            |    5     |
+| sri-implemented-and-external-scripts-loaded-securely          | Subresource Integrity (SRI) is implemented and all scripts are loaded securely.                                                         |    5     |
+| sri-not-implemented-response-not-html                         | Subresource Integrity (SRI) is only needed for HTML resources.                                                                          |    0     |
+| sri-not-implemented-but-no-scripts-loaded                     | Subresource Integrity (SRI) is not needed since the site contains no `<script>` tags.                                                   |    0     |
+| sri-not-implemented-but-all-scripts-loaded-from-secure-origin | Subresource Integrity (SRI) not implemented, but all scripts are loaded from a similar origin.                                          |    0     |
+| sri-not-implemented-but-external-scripts-loaded-securely      | Subresource Integrity (SRI) not implemented, but all external scripts are loaded over HTTPS.                                            |    -5    |
+| sri-implemented-but-external-scripts-not-loaded-securely      | Subresource Integrity (SRI) implemented, but external scripts are loaded over HTTP or use protocol-relative URLs via `src="//..."`.     |   -20    |
+| sri-not-implemented-and-external-scripts-not-loaded-securely  | Subresource Integrity (SRI) not implemented, and external scripts are loaded over HTTP or use protocol-relative URLs via `src="//..."`. |   -50    |
 
 ## X-Content-Type-Options
 
@@ -209,4 +209,4 @@ for guidance.
 | corp-implemented-with-same-origin  | Cross Origin Resource Policy (CORP) implemented, prevents leaks into cross-origin contexts.           |    10    |
 | corp-implemented-with-same-site    | Cross Origin Resource Policy (CORP) implemented, prevents leaks into cross-site contexts.             |    10    |
 | corp-implemented-with-cross-origin | Cross Origin Resource Policy (CORP) implemented, but allows cross-origin resource sharing by default. |    0     |
-| corp-header-invalid                | Cross Origin Resource Policy (CORP) cannot be recognized.                                             |    -5    |
+| corp-header-invalid                | Cross Origin Resource Policy (CORP) header cannot be recognized.                                      |    -5    |
