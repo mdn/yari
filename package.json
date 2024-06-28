@@ -113,7 +113,7 @@
     "is-svg": "^5.0.1",
     "js-yaml": "^4.1.0",
     "loglevel": "^1.9.1",
-    "lru-cache": "^10.2.2",
+    "lru-cache": "^10.3.0",
     "md5-file": "^5.0.0",
     "mdast-util-from-markdown": "^2.0.1",
     "mdast-util-phrasing": "^4.1.0",
