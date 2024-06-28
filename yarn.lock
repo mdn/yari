@@ -12152,10 +12152,10 @@ pgpass@1.x:
   dependencies:
     split2 "^4.1.0"
 
-pgvector@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/pgvector/-/pgvector-0.1.8.tgz#50c44c7a26b1cb17cf0a001b0772fc0eb5c38762"
-  integrity sha512-mD6aw+XYJrsuLl3Y8s8gHDDfOZQ9ERtfQPdhvjOrC7eOTM7b6sNkxeZxBhHwUdXMfHmyGWIbwU0QbmSnn7pPmg==
+pgvector@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/pgvector/-/pgvector-0.2.0.tgz#3d10f8e7084b4fc849db9acef0930fbbef75d322"
+  integrity sha512-ef9SggYLzgshzpsFHAha77ghSOucf1ebXcuvokgTQK6V01uihqGJv6i0+U+yjEgiDsiVtTdojDrqOHRcSmcECw==
 
 picocolors@^1.0.0, picocolors@^1.0.1:
   version "1.0.1"
