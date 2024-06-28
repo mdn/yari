@@ -208,17 +208,17 @@ pre {
 
 a {
   color: var(--text-link);
+}
 
-  &.external:after {
-    background-color: var(--icon-primary);
-    content: "";
-    display: inline-flex;
-    height: 10px;
-    margin-left: 4px;
-    mask-image: url("./assets/icons/external.svg");
-    mask-size: cover;
-    width: 10px;
-  }
+.external:after {
+  background-color: var(--icon-primary);
+  content: "";
+  display: inline-flex;
+  height: 10px;
+  margin-left: 4px;
+  mask-image: url("./assets/icons/external.svg");
+  mask-size: cover;
+  width: 10px;
 }
 
 button.button[disabled],
