@@ -175,6 +175,10 @@ section.place {
   &.side {
     flex-direction: column;
     max-width: 12rem;
+    min-height: 20rem;
+  }
+
+  &.new-side {
     min-height: 22rem;
   }
 
