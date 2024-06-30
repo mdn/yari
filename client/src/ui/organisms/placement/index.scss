@@ -47,6 +47,7 @@ section.place {
 
       .pong {
         height: 100%;
+        padding: 0;
         width: 100%;
 
         > img {
@@ -175,6 +176,10 @@ section.place {
   &.side {
     flex-direction: column;
     max-width: 12rem;
+    min-height: 22rem;
+  }
+
+  &.new-side {
     min-height: 22rem;
   }
 
