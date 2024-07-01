@@ -9,7 +9,6 @@ import {
 } from "../../../../libs/constants";
 import useSWR from "swr";
 import { OBSERVATORY_API_URL } from "../../env";
-import { Toc } from "../../../../libs/types/document";
 import { Loading } from "../../ui/atoms/loading";
 
 export const ITEMS = [
@@ -164,7 +163,7 @@ function TestAndScoringPage({ ...props }: StaticPageProps) {
     <Loading message="loading data"></Loading>
   ) : (
     <StaticPage {...props} additionalToc={additionalToc}>
-      {slug == "tests_and_scoring" && (
+      {slug === "tests_and_scoring" && (
         <>
           <ObservatoryMatrix data={data} />
         </>
@@ -206,7 +205,7 @@ function ObservatoryDocs({ ...props }) {
       ]}
       withSidebar={true}
     >
-      {slug == "tests_and_scoring" ? (
+      {slug === "tests_and_scoring" ? (
         <TestAndScoringPage {...staticPageProps} />
       ) : (
         <GenericDoc {...staticPageProps} />
