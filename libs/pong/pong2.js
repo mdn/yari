@@ -95,16 +95,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const {
-            copy,
-            image,
-            alt,
-            click,
-            view,
-            cta,
-            colors,
-            heading = {},
-          } = v;
+          const { copy, image, alt, click, view, cta, colors, heading } = v;
           return [
             p,
             {
