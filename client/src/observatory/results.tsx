@@ -222,7 +222,7 @@ function ObservatoryScanResults({ result, host }) {
                 aria-labelledby={`tab-label-${i}`}
                 id={`tab-container-${i}`}
               >
-                <figure className="scroll-container">{t.element}</figure>
+                <div className="scroll-container">{t.element}</div>
               </section>
             </li>
           );
