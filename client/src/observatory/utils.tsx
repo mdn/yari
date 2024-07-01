@@ -46,6 +46,20 @@ export function FeedbackLink() {
   );
 }
 
+export function FaqLink() {
+  return (
+    // eslint-disable-next-line react/jsx-no-target-blank
+    <a
+      href="/en-US/observatory/docs/faq"
+      target="_blank"
+      rel="noopener"
+      className="feedback-link faq-link"
+    >
+      Read our FAQ
+    </a>
+  );
+}
+
 export const ERROR_MAP = {
   TypeError: "Observatory is currently down.", // `fetch()` errors catch-all
 };

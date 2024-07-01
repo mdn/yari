@@ -8,9 +8,11 @@ import { OBSERVATORY_TITLE } from "../../../libs/constants";
 export function ObservatoryLayout({
   parents = [],
   children,
+  withSidebar = false,
 }: {
   parents?: DocParent[];
   children: ReactNode;
+  withSidebar?: boolean;
 }) {
   return (
     <>
@@ -24,7 +26,7 @@ export function ObservatoryLayout({
             },
             ...parents,
           ].filter(Boolean)}
-          withSidebar={false}
+          withSidebar={withSidebar}
         />
       </div>
       {children}

@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 
 import { useGleanClick } from "../telemetry/glean-context";
 import { OBSERVATORY } from "../telemetry/constants";
-import { SidePlacement } from "../ui/organisms/placement";
 import Container from "../ui/atoms/container";
 
 import ObservatoryCSP from "./results/csp";
@@ -28,6 +27,7 @@ import {
   OBSERVATORY_TITLE,
   OBSERVATORY_TITLE_FULL,
 } from "../../../libs/constants";
+import { SidebarContainer } from "../document/organisms/sidebar";
 
 export default function ObservatoryResults() {
   const { pathname, search } = useLocation();
@@ -60,6 +60,7 @@ export default function ObservatoryResults() {
   const hasData = host && result && !isLoading && !isMutating;
   return host ? (
     <ObservatoryLayout
+      withSidebar={true}
       parents={[
         {
           title: `Report: ${host}`,
@@ -100,10 +101,11 @@ export default function ObservatoryResults() {
               </section>
             )}
           </section>
-          <nav className="sidebar">
-            <ObservatoryDocsNav />
-            <SidePlacement />
-          </nav>
+          <div className="sidebar-container">
+            <SidebarContainer doc={{}}>
+              {<ObservatoryDocsNav /> || null}
+            </SidebarContainer>
+          </div>
           {hasData && !combinedError && (
             <section className="main">
               <ObservatoryScanResults result={result} host={host} />

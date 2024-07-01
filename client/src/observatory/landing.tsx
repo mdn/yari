@@ -13,7 +13,7 @@ import {
 import { ObservatoryAnalyzeRequest } from "./types";
 import { ObservatoryLayout } from "./layout";
 import { Progress } from "./progress";
-import { ERROR_MAP, FeedbackLink, useUpdateResult } from "./utils";
+import { ERROR_MAP, FaqLink, FeedbackLink, useUpdateResult } from "./utils";
 
 import "./landing.scss";
 import { ReactComponent as LandingSVG } from "../../public/assets/observatory/landing-illustration.svg";
@@ -93,7 +93,7 @@ export default function ObservatoryLanding() {
                 <span className="accent">{OBSERVATORY_TITLE}</span>
               </h1>
               <p>
-                Launched in 2016, HTTP Observatory enhances web security by
+                Launched in 2016, the HTTP Observatory enhances web security by
                 analyzing compliance with best security practices. It has
                 provided insights to over 6.9 million websites through 47
                 million scans. If you still need to access the previous version
@@ -153,58 +153,56 @@ export default function ObservatoryLanding() {
           <section className="main">
             <section className="about">
               <h2>About the HTTP Observatory</h2>
-              <figure className="assessment">
-                <AssessmentSVG role="none" />
-                <figcaption>
-                  <p>
-                    Developed by Mozilla, the tool performs an in-depth
-                    assessment of a site’s HTTP headers and other key security
-                    configurations.
-                  </p>
-                </figcaption>
-              </figure>
-              <LinesSVG className="lines assessment" role="none" />
-              <figure className="scanning">
-                <ScanningSVG role="none" />
-                <figcaption>
-                  <p>
-                    Through its automated scanning process, it provides
-                    developers and website administrators with detailed,
-                    actionable feedback, focusing on identifying and addressing
-                    potential security vulnerabilities.
-                  </p>
-                </figcaption>
-              </figure>
-              <LinesSVG className="lines scanning" role="none" />
-              <figure className="security">
-                <SecuritySVG role="none" />
-                <figcaption>
-                  <p>
-                    The tool is instrumental in helping developers and website
-                    administrators strengthen their sites against common
-                    security threats in a constantly advancing digital
-                    environment. The ratings and recommendations are based on
-                    well-established trends and guidelines, and are shaped by
-                    Mozilla's expertise and experience in the field.
-                  </p>
-                </figcaption>
-              </figure>
-              <LinesSVG className="lines security" role="none" />
-              <figure className="mdn">
-                <MdnSVG role="none" />
-                <figcaption>
-                  <p>
-                    As in any area of web development, there may be multiple
-                    valid approaches, and our suggestions are guided by our
-                    commitment to a safer and more secure internet. The HTTP
-                    Observatory provides effective security insights, guided by
-                    Mozilla's expertise and commitment to a safer and more
-                    secure internet and based on well-established trends and
-                    guidelines.
-                  </p>
-                </figcaption>
-              </figure>
+              <div className="about-copy">
+                <figure className="assessment">
+                  <AssessmentSVG role="none" />
+                  <figcaption>
+                    <p>
+                      Developed by Mozilla, the HTTP Observatory performs an
+                      in-depth assessment of a site’s HTTP headers and other key
+                      security configurations.
+                    </p>
+                  </figcaption>
+                </figure>
+                <LinesSVG className="lines assessment" role="none" />
+                <figure className="scanning">
+                  <ScanningSVG role="none" />
+                  <figcaption>
+                    <p>
+                      Its automated scanning process provides developers and
+                      website administrators with detailed, actionable feedback,
+                      focusing on identifying and addressing potential security
+                      vulnerabilities.
+                    </p>
+                  </figcaption>
+                </figure>
+                <LinesSVG className="lines scanning" role="none" />
+                <figure className="security">
+                  <SecuritySVG role="none" />
+                  <figcaption>
+                    <p>
+                      The tool is instrumental in helping developers and website
+                      administrators strengthen their sites against common
+                      security threats in a constantly advancing digital
+                      environment.
+                    </p>
+                  </figcaption>
+                </figure>
+                <LinesSVG className="lines security" role="none" />
+                <figure className="mdn">
+                  <MdnSVG role="none" />
+                  <figcaption>
+                    <p>
+                      The HTTP Observatory provides effective security insights,
+                      guided by Mozilla's expertise and commitment to a safer
+                      and more secure internet and based on well-established
+                      trends and guidelines.
+                    </p>
+                  </figcaption>
+                </figure>
+              </div>
             </section>
+            <FaqLink />
             <FeedbackLink />
           </section>
           <SidePlacement />

@@ -82,6 +82,10 @@
       margin-top: 1.5rem;
     }
 
+    .feedback-link.faq-link::before {
+      mask-image: url("../assets/icons/message-question.svg");
+    }
+
     .error {
       color: var(--form-invalid-color);
       margin-top: 0.5rem;
@@ -102,21 +106,6 @@
 
       + form input {
         outline-color: var(--observatory-border-accent);
-      }
-    }
-
-    nav.sidebar {
-      grid-area: sidebar;
-      height: max-content;
-      margin-top: 0;
-      padding-top: 0;
-      position: sticky;
-      // + 1rem for the main top-padding.
-      top: calc(var(--sticky-header-with-actions-height) + 1rem);
-
-      section.place.side,
-      section.place.new-side {
-        display: flex;
       }
     }
 
