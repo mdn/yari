@@ -242,34 +242,28 @@ main.play {
               min-height: 0;
               width: 25rem;
 
-              > div {
-                .pong-cta {
-                  margin: 0.5rem auto 1rem 1rem;
+              .pong-cta {
+                margin: 0.5rem auto 1rem 1rem;
+              }
+
+              .pong-note {
+                margin: 0.5rem 0.5rem auto auto;
+              }
+
+              .pong {
+                > img {
+                  height: 100%;
+                  width: auto;
                 }
 
-                .pong-note {
-                  margin: 0.5rem 0.5rem auto auto;
-                }
-
-                .pong {
-                  > img {
-                    height: 100%;
-                    width: auto;
-                  }
-
-                  > div.content {
-                    align-items: end;
-                    background: linear-gradient(
-                      to left,
-                      #111 16rem,
-                      transparent
-                    );
-                    flex-direction: column;
-                    height: 100%;
-                    justify-content: end;
-                    padding-left: 8rem;
-                    width: 100%;
-                  }
+                > div.content {
+                  align-items: end;
+                  background: linear-gradient(to left, #111 16rem, transparent);
+                  flex-direction: column;
+                  height: 100%;
+                  justify-content: end;
+                  padding-left: 8rem;
+                  width: 100%;
                 }
               }
             }
