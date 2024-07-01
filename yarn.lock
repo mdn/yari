@@ -12146,11 +12146,6 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pify@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pify/-/pify-5.0.0.tgz#1f5eca3f5e87ebec28cc6d54a0e4aaf00acc127f"
-  integrity sha512-eW/gHNMlxdSP6dmG6uJip6FXN0EQBwm2clYYd8Wul42Cwu/DK8HEftzsapcNdYe2MfLiIwZqsDk2RDEsTE79hA==
-
 pinkie-promise@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/pinkie-promise/-/pinkie-promise-2.0.1.tgz#2135d6dfa7a358c069ac9b178776288228450ffa"
@@ -13156,12 +13151,10 @@ react@^18.3.1:
   dependencies:
     loose-envify "^1.1.0"
 
-read-chunk@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/read-chunk/-/read-chunk-4.0.3.tgz#d345230139210fc6d7ba4c607080c93630518310"
-  integrity sha512-wOYymxRWkxn3MlStSt7LxrMLRvynHKjzHVQPTCBbT29ViUwsT3EE09dE5iMDDGYQTL/s5TQZvBLuJTeZFeGQ4g==
-  dependencies:
-    pify "^5.0.0"
+read-chunk@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/read-chunk/-/read-chunk-5.0.0.tgz#ed653bb18d89029bc076f7b981717c1b8b5b066b"
+  integrity sha512-kEiU3Y6ET/R1CEpS29aupxwGd19P4y3Y50x0CNFI5j8jowtgHBlNVLH/z5KjjBT5pxixIb7eTeIMJVKTm200cw==
 
 read-pkg-up@^7.0.1:
   version "7.0.1"
