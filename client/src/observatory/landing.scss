@@ -209,6 +209,11 @@
           display: none;
         }
       }
+      @media (min-width: $screen-md) and (max-width: #{$screen-lg - 1}) {
+        .about-copy {
+          width: 80%;
+        }
+      }
 
       figure {
         align-items: start;
