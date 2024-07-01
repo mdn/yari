@@ -57,7 +57,7 @@ there is now no reason to provide the "public" flag.
 
 ## When did the move occur?
 
-HTTP Observatory was launched on MDN on July 1, 2024, with the existing Mozilla
+HTTP Observatory was launched on MDN on July 2, 2024, with the existing Mozilla
 Observatory site redirecting to it. Other tools like TLS Observatory, SSH
 Observatory, and Third-party tests have been deprecated, and will be sunset in
 September 2024.

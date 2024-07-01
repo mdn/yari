@@ -205,7 +205,7 @@ for guidance.
 
 | Test result                        | Description                                                                                           | Modifier |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------- | :------: |
-| corp-not-implemented               | Cross Origin Resource Policy (CORP) is not implemented (defaults to cross-origin).                    |    0     |
+| corp-not-implemented               | Cross Origin Resource Policy (CORP) is not implemented (defaults to `cross-origin`).                  |    0     |
 | corp-implemented-with-same-origin  | Cross Origin Resource Policy (CORP) implemented, prevents leaks into cross-origin contexts.           |    10    |
 | corp-implemented-with-same-site    | Cross Origin Resource Policy (CORP) implemented, prevents leaks into cross-site contexts.             |    10    |
 | corp-implemented-with-cross-origin | Cross Origin Resource Policy (CORP) implemented, but allows cross-origin resource sharing by default. |    0     |

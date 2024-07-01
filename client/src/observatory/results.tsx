@@ -102,13 +102,13 @@ export default function ObservatoryResults() {
           </section>
           <nav className="sidebar">
             <ObservatoryDocsNav />
+            <SidePlacement />
           </nav>
           {hasData && !combinedError && (
             <section className="main">
               <ObservatoryScanResults result={result} host={host} />
             </section>
           )}
-          <SidePlacement />
         </Container>
       </div>
     </ObservatoryLayout>

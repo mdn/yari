@@ -25,20 +25,22 @@ export function ObservatoryRating({
   const isServer = useIsServer();
 
   const arrowState = useMemo(() => {
-    const oldScore = result.history.length
-      ? result.history.at(-2)?.score
-      : undefined;
+    const [oldScore, oldGrade] = result.history.length
+      ? [result.history.at(-2)?.score, result.history.at(-2)?.grade]
+      : [undefined, undefined];
     const newScore = result.scan.score;
+    const newGrade = result.scan.grade;
     if (
       newScore !== undefined &&
       oldScore !== undefined &&
+      newGrade !== oldGrade &&
       newScore !== oldScore
     ) {
       return oldScore < newScore ? "up" : "down";
     } else {
       return "none";
     }
-  }, [result.history, result.scan.score]);
+  }, [result.history, result.scan.grade, result.scan.score]);
 
   return (
     <>
