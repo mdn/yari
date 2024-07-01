@@ -171,11 +171,13 @@ section.place {
 
   &.side {
     flex-direction: column;
+    height: fit-content;
     max-width: 12rem;
     min-height: 20rem;
   }
 
   &.new-side {
+    height: fit-content;
     min-height: 22rem;
   }
 
