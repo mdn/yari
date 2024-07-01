@@ -15,13 +15,15 @@ interface StaticPageDoc {
   toc: Toc[];
 }
 
-interface StaticPageProps {
+export interface StaticPageProps {
   extraClasses?: string;
   locale: string;
   slug: string;
   fallbackData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
+  children?: React.ReactNode;
+  additionalToc?: Toc[];
 }
 
 function StaticPage({
@@ -31,6 +33,8 @@ function StaticPage({
   fallbackData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
+  children = <></>,
+  additionalToc = [],
 }: StaticPageProps) {
   const baseURL = `/${locale}/${slug}`;
   const featureJSONUrl = `${baseURL}/index.json`;
@@ -71,7 +75,9 @@ function StaticPage({
           <div className="toc-container">
             <aside className="toc">
               <nav>
-                {hyData.toc && !!hyData.toc.length && <TOC toc={hyData.toc} />}
+                {hyData.toc && !!hyData.toc.length && (
+                  <TOC toc={[...hyData.toc, ...additionalToc]} />
+                )}
               </nav>
             </aside>
             {PLACEMENT_ENABLED && <SidePlacement />}
@@ -85,6 +91,7 @@ function StaticPage({
                 dangerouslySetInnerHTML={{ __html: section }}
               ></section>
             ))}
+            {children}
           </article>
         </main>
       </div>
