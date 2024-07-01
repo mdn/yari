@@ -221,7 +221,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.1.1",
     "postcss-normalize": "^10.0.1",
-    "postcss-preset-env": "^9.5.14",
+    "postcss-preset-env": "^9.5.15",
     "prettier": "^3.3.2",
     "prettier-plugin-packagejson": "^2.5.0",
     "prompts": "^2.4.2",
