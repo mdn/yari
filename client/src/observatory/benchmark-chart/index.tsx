@@ -30,113 +30,141 @@ export default function GradeSVG({
   const yTickMax = Math.max(...yMarks);
 
   return (
-    <svg className="chart" viewBox="0 0 1200 380">
-      <g className="axes-g">
-        <g
-          className="x-axis"
-          transform={`translate(${xTickOffset}, ${height - bottomSpace})`}
-        >
+    <>
+      <table id="grade-svg-a11y-table" className="visually-hidden">
+        <caption>Number of sites by grade</caption>
+        <thead>
+          <tr>
+            <th scope="col">Grade</th>
+            <th scope="col">Sites</th>
+          </tr>
+        </thead>
+        <tbody>
           {gradeDistribution.map((item, index) => (
-            <g // x-axis labels
-              key={`tick-x-${index}`}
-              className="tick tick-x"
-              transform={`translate(${index * xTickIncr}, 0)`}
-            >
-              <text
-                fill="currentColor"
-                y="6"
-                dy="1em"
-                className={[
-                  "x-labels",
-                  item.grade === result.scan.grade // highlight the current grade
-                    ? `current grade-${item.grade[0].toLowerCase()}`
-                    : undefined,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
+            <tr key={`grade-svg-a11y-table-row-${index}`}>
+              <th>
                 {formatMinus(item.grade)}
-              </text>
-            </g>
+                {item.grade === result.scan.grade ? " (Current grade)" : ""}
+              </th>
+              <td>{item.count} sites</td>
+            </tr>
           ))}
+        </tbody>
+      </table>
+      <svg
+        className="chart"
+        viewBox="0 0 1200 380"
+        aria-labelledby="grade-svg-title"
+        aria-describedby="grade-svg-a11y-table"
+      >
+        <title id="grade-svg-title">Number of sites by grade</title>
+        <g className="axes-g">
+          <g
+            className="x-axis"
+            transform={`translate(${xTickOffset}, ${height - bottomSpace})`}
+          >
+            {gradeDistribution.map((item, index) => (
+              <g // x-axis labels
+                key={`tick-x-${index}`}
+                className="tick tick-x"
+                transform={`translate(${index * xTickIncr}, 0)`}
+              >
+                <text
+                  fill="currentColor"
+                  y="6"
+                  dy="1em"
+                  className={[
+                    "x-labels",
+                    item.grade === result.scan.grade // highlight the current grade
+                      ? `current grade-${item.grade[0].toLowerCase()}`
+                      : undefined,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {formatMinus(item.grade)}
+                </text>
+              </g>
+            ))}
+          </g>
+          <g>
+            {gradeDistribution.map((item, index) => {
+              // draw the individual grade bars
+              const barHeight =
+                (height - bottomSpace - topSpace) * (item.count / yTickMax);
+              return (
+                <rect
+                  key={`bar-${index}`}
+                  className={`bar grade-${item.grade.replace(/[+-]/, "").toLowerCase()} ${item.grade === result.scan.grade ? "current-grade" : ""}`}
+                  x={xTickOffset + index * xTickIncr - barWidth / 2}
+                  y={yTickOffset - barHeight - 1} // do not overlap the y-axis dashed lines
+                  rx="4"
+                  ry="4"
+                  width={barWidth}
+                  height={barHeight}
+                ></rect>
+              );
+            })}
+          </g>
+          <g
+            className="y-axis"
+            fill="none"
+            textAnchor="end"
+            transform={`translate(${leftSpace}, 0)`}
+          >
+            {yMarks.map((item, index) => (
+              <g
+                key={`tick-y-${index}`}
+                className="tick tick-y"
+                transform={`translate(0, ${yTickOffset - yTickIncr * index})`}
+              >
+                <line
+                  stroke="currentColor"
+                  x2={width - leftSpace - rightSpace + barWidth / 2}
+                ></line>
+                <text
+                  className="y-labels"
+                  fill="currentColor"
+                  x="-25"
+                  dy="0.32em"
+                >
+                  {/* format as kilo-sites, which works well for our current and future ranges below 10^6*/}
+                  {item / 1000}k
+                </text>
+              </g>
+            ))}
+          </g>
         </g>
         <g>
           {gradeDistribution.map((item, index) => {
-            // draw the individual grade bars
-            const barHeight =
-              (height - bottomSpace - topSpace) * (item.count / yTickMax);
-            return (
-              <rect
-                key={`bar-${index}`}
-                className={`bar grade-${item.grade.replace(/[+-]/, "").toLowerCase()} ${item.grade === result.scan.grade ? "current-grade" : ""}`}
-                x={xTickOffset + index * xTickIncr - barWidth / 2}
-                y={yTickOffset - barHeight - 1} // do not overlap the y-axis dashed lines
-                rx="4"
-                ry="4"
-                width={barWidth}
-                height={barHeight}
-              ></rect>
-            );
+            // Draw the "This website is here" marker. Drawn explicitly last so it is above all other elements in the drawing.
+            if (item.grade === result.scan.grade) {
+              const barHeight =
+                (height - bottomSpace - topSpace) * (item.count / yTickMax);
+              return (
+                <g
+                  key="you-are-here"
+                  className="you-are-here"
+                  transform={`translate(${xTickOffset + index * xTickIncr}, ${height - bottomSpace - barHeight - 50})`}
+                >
+                  <polyline points="-60,0 60,0 60,36 7,36 0,48 -7,36 -60,36"></polyline>
+                  <text
+                    x="0"
+                    y="0"
+                    textAnchor="middle"
+                    transform="translate(0, 24)"
+                  >
+                    Current grade
+                  </text>
+                </g>
+              );
+            } else {
+              return [];
+            }
           })}
         </g>
-        <g
-          className="y-axis"
-          fill="none"
-          textAnchor="end"
-          transform={`translate(${leftSpace}, 0)`}
-        >
-          {yMarks.map((item, index) => (
-            <g
-              key={`tick-y-${index}`}
-              className="tick tick-y"
-              transform={`translate(0, ${yTickOffset - yTickIncr * index})`}
-            >
-              <line
-                stroke="currentColor"
-                x2={width - leftSpace - rightSpace + barWidth / 2}
-              ></line>
-              <text
-                className="y-labels"
-                fill="currentColor"
-                x="-25"
-                dy="0.32em"
-              >
-                {/* format as kilo-sites, which works well for our current and future ranges below 10^6*/}
-                {item / 1000}k
-              </text>
-            </g>
-          ))}
-        </g>
-      </g>
-      <g>
-        {gradeDistribution.map((item, index) => {
-          // Draw the "This website is here" marker. Drawn explicitly last so it is above all other elements in the drawing.
-          if (item.grade === result.scan.grade) {
-            const barHeight =
-              (height - bottomSpace - topSpace) * (item.count / yTickMax);
-            return (
-              <g
-                key="you-are-here"
-                className="you-are-here"
-                transform={`translate(${xTickOffset + index * xTickIncr}, ${height - bottomSpace - barHeight - 50})`}
-              >
-                <polyline points="-60,0 60,0 60,36 7,36 0,48 -7,36 -60,36"></polyline>
-                <text
-                  x="0"
-                  y="0"
-                  textAnchor="middle"
-                  transform="translate(0, 24)"
-                >
-                  Current grade
-                </text>
-              </g>
-            );
-          } else {
-            return [];
-          }
-        })}
-      </g>
-    </svg>
+      </svg>
+    </>
   );
 }
 
