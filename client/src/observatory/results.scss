@@ -2,8 +2,9 @@
 
 .observatory-results {
   .sidebar {
-    padding-top: 0;
     grid-area: sidebar;
+    padding-top: 0;
+
     .place {
       display: flex;
     }
