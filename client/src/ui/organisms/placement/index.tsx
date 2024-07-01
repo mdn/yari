@@ -53,7 +53,7 @@ export function SidePlacement() {
 
   return !placementData?.side ? (
     <section className="place side"></section>
-  ) : placementData.side.cta ? (
+  ) : placementData.side.cta && placementData.side.heading ? (
     <PlacementInner
       pong={placementData.side}
       extraClassNames={["side", "new-side"]}
