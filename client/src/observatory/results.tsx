@@ -28,6 +28,9 @@ import {
   OBSERVATORY_TITLE,
   OBSERVATORY_TITLE_FULL,
 } from "../../../libs/constants";
+import { TOC } from "../document/organisms/toc";
+import { SidebarContainer } from "../document/organisms/sidebar";
+import { PLACEMENT_ENABLED } from "../env";
 
 export default function ObservatoryResults() {
   const { pathname, search } = useLocation();
@@ -60,6 +63,7 @@ export default function ObservatoryResults() {
   const hasData = host && result && !isLoading && !isMutating;
   return host ? (
     <ObservatoryLayout
+      withSidebar={true}
       parents={[
         {
           title: `Report: ${host}`,
@@ -100,10 +104,11 @@ export default function ObservatoryResults() {
               </section>
             )}
           </section>
-          <nav className="sidebar">
-            <ObservatoryDocsNav />
-            <SidePlacement />
-          </nav>
+          <div className="sidebar-container">
+            <SidebarContainer doc={{}}>
+              {<ObservatoryDocsNav /> || null}
+            </SidebarContainer>
+          </div>
           {hasData && !combinedError && (
             <section className="main">
               <ObservatoryScanResults result={result} host={host} />

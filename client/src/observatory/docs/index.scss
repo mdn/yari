@@ -8,7 +8,9 @@
   }
 
   .sidebar {
-    padding-top: 3rem;
+    @media (min-width: $screen-md) {
+      padding-top: 3rem;
+    }
   }
 
   &,

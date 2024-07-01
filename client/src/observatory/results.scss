@@ -1,6 +1,14 @@
 @use "../ui/vars" as *;
 
 .observatory-results {
+  .sidebar {
+    padding-top: 0;
+    grid-area: sidebar;
+    .place {
+      display: flex;
+    }
+  }
+
   h2::before {
     background-color: var(--observatory-color);
     content: "";

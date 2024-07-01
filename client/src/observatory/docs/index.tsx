@@ -8,7 +8,7 @@ import {
   OBSERVATORY_TITLE_FULL,
 } from "../../../../libs/constants";
 
-const ITEMS = [
+export const ITEMS = [
   {
     slug: "observatory/docs/tests_and_scoring",
     title: "Tests & Scoring",
@@ -80,6 +80,7 @@ function ObservatoryDocs({ ...props }) {
           uri: pathname,
         },
       ]}
+      withSidebar={true}
     >
       <StaticPage
         {...{

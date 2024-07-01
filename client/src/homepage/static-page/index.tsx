@@ -1,11 +1,15 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
-import { DEV_MODE } from "../../env";
-import { SidebarContainer } from "../../document/organisms/sidebar";
+import { DEV_MODE, PLACEMENT_ENABLED } from "../../env";
+import {
+  RenderSideBar,
+  SidebarContainer,
+} from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { Toc } from "../../../../libs/types/document";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
+import { SidePlacement } from "../../ui/organisms/placement";
 
 interface StaticPageDoc {
   id: string;
@@ -60,17 +64,22 @@ function StaticPage({
     return <Loading />;
   }
 
-  const toc = hyData.toc?.length && <TOC toc={hyData.toc} />;
-
   return (
     <>
       <div className="main-wrapper">
-        <SidebarContainer doc={hyData}>
-          {sidebarHeader || null}
-        </SidebarContainer>
-        <aside className="toc">
-          <nav>{toc || null}</nav>
-        </aside>
+        <div className="sidebar-container">
+          <SidebarContainer doc={hyData}>
+            {sidebarHeader || null}
+          </SidebarContainer>
+          <div className="toc-container">
+            <aside className="toc">
+              <nav>
+                {hyData.toc && !!hyData.toc.length && <TOC toc={hyData.toc} />}
+              </nav>
+            </aside>
+            {PLACEMENT_ENABLED && <SidePlacement />}
+          </div>
+        </div>
         <main id="content" className="main-content" role="main">
           <article className={`main-page-content ${extraClasses || ""}`}>
             {hyData.sections.map((section, index) => (
