@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 
 import { useGleanClick } from "../telemetry/glean-context";
 import { OBSERVATORY } from "../telemetry/constants";
-import { SidePlacement } from "../ui/organisms/placement";
 import Container from "../ui/atoms/container";
 
 import ObservatoryCSP from "./results/csp";
@@ -28,9 +27,7 @@ import {
   OBSERVATORY_TITLE,
   OBSERVATORY_TITLE_FULL,
 } from "../../../libs/constants";
-import { TOC } from "../document/organisms/toc";
 import { SidebarContainer } from "../document/organisms/sidebar";
-import { PLACEMENT_ENABLED } from "../env";
 
 export default function ObservatoryResults() {
   const { pathname, search } = useLocation();

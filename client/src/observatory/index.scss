@@ -82,6 +82,10 @@
       margin-top: 1.5rem;
     }
 
+    .feedback-link.faq-link::before {
+      mask-image: url("../assets/icons/message-question.svg");
+    }
+
     .error {
       color: var(--form-invalid-color);
       margin-top: 0.5rem;

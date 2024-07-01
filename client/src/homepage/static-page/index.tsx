@@ -1,10 +1,7 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
 import { DEV_MODE, PLACEMENT_ENABLED } from "../../env";
-import {
-  RenderSideBar,
-  SidebarContainer,
-} from "../../document/organisms/sidebar";
+import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { Toc } from "../../../../libs/types/document";
 import { PageNotFound } from "../../page-not-found";
