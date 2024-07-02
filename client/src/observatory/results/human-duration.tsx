@@ -43,7 +43,7 @@ function displayString(date: Date) {
   // up to 30 days as days
   if (diffSecs < 60 * 60 * 24 * 30) {
     const days = Math.floor(diffSecs / 86400);
-    return days === 1 ? `Yesterday` : `${days} days ago`;
+    return days === 1 ? `1 day ago` : `${days} days ago`;
   }
 
   // after a week, return the formatted date
