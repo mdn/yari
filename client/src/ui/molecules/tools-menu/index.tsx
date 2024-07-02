@@ -27,7 +27,7 @@ export const ToolsMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: OBSERVATORY_TITLE,
-        url: `/${locale}/observatory`,
+        url: `/en-US/observatory`,
         dot: "New",
       },
       {
