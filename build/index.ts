@@ -548,7 +548,7 @@ export async function buildDocument(
 }
 
 function addBaseline(doc: Partial<Doc>) {
-  if (doc.browserCompat) {
+  if (doc.browserCompat && !doc.mdn_url?.includes("/docs/MDN/")) {
     const filteredBrowserCompat = doc.browserCompat.filter(
       (query) =>
         // temporary blocklist while we wait for per-key baseline statuses
