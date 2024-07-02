@@ -5,9 +5,21 @@
         "msgid": "card_note_label",
         "msgstr": ["Примечание:"]
       },
+      "card_tip_label": {
+        "msgid": "card_tip_label",
+        "msgstr": ["Кончик:"]
+      },
+      "card_important_label": {
+        "msgid": "card_important_label",
+        "msgstr": ["Важный:"]
+      },
       "card_warning_label": {
         "msgid": "card_warning_label",
         "msgstr": ["Предупреждение:"]
+      },
+      "card_caution_label": {
+        "msgid": "card_caution_label",
+        "msgstr": ["Осторожность:"]
       },
       "card_callout_label": {
         "msgid": "card_callout_label",
