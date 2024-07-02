@@ -5,7 +5,6 @@
 @mixin light-theme {
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
-  --text-active: #{$mdn-theme-light-text-active};
   --text-inactive: #{$mdn-theme-light-text-inactive};
   --text-link: #{$mdn-theme-light-text-link};
   --text-visited: #551a8b; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1787-1790
@@ -314,7 +313,6 @@
 @mixin dark-theme {
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
-  --text-active: #{$mdn-theme-dark-text-active};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
   --text-link: #{$mdn-theme-dark-text-link};
   --text-visited: #ffadff; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1794-1797
