@@ -62,8 +62,12 @@
           parent.innerHTML = html;
         } else {
           for (const child of dummy.childNodes) {
-            if (child.nodeType == Node.TEXT_NODE) {
+            if (child.nodeType === Node.TEXT_NODE) {
               parent.appendChild(document.createTextNode(child.textContent));
+              continue;
+            }
+            if (child.nodeType === Node.COMMENT_NODE) {
+              parent.appendChild(document.createComment(child.data));
               continue;
             }
             if (child.nodeType !== Node.ELEMENT_NODE) {
