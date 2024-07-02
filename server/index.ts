@@ -463,9 +463,10 @@ console.log(
     : ""
 );
 
+const HOST = process.env.SERVER_HOST || undefined;
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Listening on ${HOST ? `${HOST}:` : "port "}${PORT}`);
   if (process.env.EDITOR) {
     console.log(`Your EDITOR is set to: ${chalk.bold(process.env.EDITOR)}`);
   } else {

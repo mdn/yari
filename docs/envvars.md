@@ -193,6 +193,12 @@ Flaw types to be fixed when running `fix-flaws`.
 
 ## Server
 
+### `SERVER_HOST`
+
+**Default: (undefined)**
+
+Set this to `0.0.0.0` to access the server from a different local device.
+
 ### `SERVER_PORT`
 
 **Default: `5042`**
