@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ObservatoryResult, SORTED_TEST_NAMES } from "../types";
+import { ObservatoryResult, TEST_NAMES_IN_ORDER } from "../types";
 import { formatMinus, Link, PassIcon } from "../utils";
 
 export function ObservatoryTests({ result }: { result: ObservatoryResult }) {
@@ -22,7 +22,7 @@ export function ObservatoryTests({ result }: { result: ObservatoryResult }) {
           </tr>
         </thead>
         <tbody>
-          {SORTED_TEST_NAMES.map((name) => {
+          {TEST_NAMES_IN_ORDER.map((name) => {
             const test = result.tests[name];
             return (
               test && (

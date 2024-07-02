@@ -26,8 +26,8 @@ export const SCORING_TABLE = [
   { grade: "F", scoreText: "0", score: 0 },
 ];
 
-// Maintain consistent test sorting
-export const SORTED_TEST_NAMES = [
+// Maintain consistent test order.
+export const TEST_NAMES_IN_ORDER = [
   "content-security-policy",
   "cookies",
   "cross-origin-resource-sharing",
