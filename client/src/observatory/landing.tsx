@@ -96,10 +96,11 @@ export default function ObservatoryLanding() {
                 Launched in 2016, the HTTP Observatory enhances web security by
                 analyzing compliance with best security practices. It has
                 provided insights to over 6.9 million websites through 47
-                million scans. If you still need to access the previous version
-                of HTTP Observatory,{" "}
-                <a href="https://observatory.mozilla.org/">click here</a>.
-                Please note the old Observatory is now deprecated and will soon
+                million scans. The{" "}
+                <a href="https://observatory.mozilla.org/">
+                  previous version of HTTP Observatory
+                </a>{" "}
+                is still available, however it is now deprecated and will soon
                 be sunsetted.
               </p>
               {isMutating ? (
