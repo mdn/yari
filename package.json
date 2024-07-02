@@ -127,7 +127,7 @@
     "prismjs": "^1.29.0",
     "react-markdown": "^9.0.1",
     "react-modal": "^3.16.1",
-    "read-chunk": "^4.0.3",
+    "read-chunk": "^5.0.0",
     "rehype-format": "^5.0.0",
     "rehype-parse": "^9.0.0",
     "rehype-raw": "^7.0.0",
