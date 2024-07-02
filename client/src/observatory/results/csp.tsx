@@ -82,7 +82,23 @@ export default function ObservatoryCSP({
       ) : (
         <tbody>
           <tr>
-            <td>No CSP headers detected</td>
+            <td>
+              <p>
+                {result.tests["content-security-policy"]?.result ===
+                "csp-not-implemented-but-reporting-enabled" ? (
+                  <>
+                    <code>Content-Security-Policy-Report-Only</code> header
+                    detected. Implement an enforced policy; see{" "}
+                    <a href="/en-US/docs/Web/HTTP/CSP" target="_blank">
+                      MDN's Content Security Policy (CSP) documentation
+                    </a>
+                    .
+                  </>
+                ) : (
+                  "No CSP headers detected"
+                )}
+              </p>
+            </td>
           </tr>
         </tbody>
       )}
