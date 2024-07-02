@@ -1,10 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 
-// Module-level cache
-const wikiHistoryMaps = new Map();
+type WikiHistory = {
+  modified: string; // ISO 8601 format
+  contributors: string[];
+};
 
-export function getWikiHistories(root, locale) {
+// Module-level cache
+const wikiHistoryMaps = new Map<string, Map<string, WikiHistory>>();
+
+export function getWikiHistories(root: string, locale: string) {
   const localeLC = locale.toLowerCase();
   const folder = path.join(root, localeLC);
   if (!wikiHistoryMaps.has(folder)) {
@@ -12,7 +17,7 @@ export function getWikiHistories(root, locale) {
     const history = fs.existsSync(historyFilePath)
       ? new Map(
           Object.entries(
-            JSON.parse(fs.readFileSync(historyFilePath).toString())
+            JSON.parse(fs.readFileSync(historyFilePath, "utf-8"))
           ).map(([slug, history]) => {
             return [`/${locale}/docs/${slug}`, history];
           })
