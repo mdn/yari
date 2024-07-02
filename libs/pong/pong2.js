@@ -4,14 +4,25 @@ import anonymousIpByCC from "./cc2ip.js";
 
 export function createPong2GetHandler(zoneKeys, coder) {
   return async (body, countryCode, userAgent) => {
-    const { pongs = null } = body;
+    let { pongs = null } = body;
+
+    // Validate.
+    if (!Array.isArray(pongs)) {
+      return { statusCode: 400, payload: { status: "invalid" } };
+    }
+
+    // Sanitize.
+    pongs = pongs.filter((p) => p in zoneKeys);
+
+    if (pongs.length == 0) {
+      return { statusCode: 400, payload: { status: "empty" } };
+    }
+
     const anonymousIp = anonymousIpByCC(countryCode);
 
-    const placements = pongs
-      .filter((p) => p in zoneKeys)
-      .map((p) => {
-        return { name: p, zoneKey: [zoneKeys[p]] };
-      });
+    const placements = pongs.map((p) => {
+      return { name: p, zoneKey: [zoneKeys[p]] };
+    });
 
     const requests = placements.map(async ({ name, zoneKey }) => {
       const res = await (
