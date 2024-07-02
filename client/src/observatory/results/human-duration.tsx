@@ -38,7 +38,7 @@ function displayString(date: Date) {
   }
   if (diffSecs < 60 * 60 * 24) {
     const hours = Math.floor(diffSecs / 3600);
-    return hours === 1 ? `An hour ago` : `${hours} hours ago`;
+    return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
   }
   // up to 30 days as days
   if (diffSecs < 60 * 60 * 24 * 30) {
