@@ -111,6 +111,10 @@ export const CSP_DIRECTIVES = {
     "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
+    // Observatory
+    "https://observatory-api.mdn.allizom.net",
+    "https://observatory-api.mdn.mozilla.net",
+
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -275,6 +279,8 @@ export const VALID_FLAW_CHECKS = new Set([
 
 export const MDN_PLUS_TITLE = "MDN Plus";
 export const CURRICULUM_TITLE = "MDN Curriculum";
+export const OBSERVATORY_TITLE = "HTTP Observatory";
+export const OBSERVATORY_TITLE_FULL = "HTTP Observatory | MDN";
 
 // -------
 // content

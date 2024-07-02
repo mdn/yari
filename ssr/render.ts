@@ -105,6 +105,7 @@ export default function render(
     pageNotFound = false,
     hyData = null,
     pageTitle = null,
+    pageDescription = "",
     possibleLocales = null,
     locale = null,
     noIndexing = false,
@@ -118,7 +119,6 @@ export default function render(
 
   const canonicalURL = `${BASE_URL}${url}`;
 
-  let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
 
   const hydrationData: HydrationData = { url };

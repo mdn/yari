@@ -1,0 +1,28 @@
+@use "../../ui/vars" as *;
+
+.observatory {
+  --category-color: var(--observatory-accent);
+
+  .article-actions-container {
+    display: flex;
+  }
+
+  .sidebar {
+    @media (min-width: $screen-md) {
+      padding-top: 3rem;
+    }
+  }
+
+  &,
+  .observatory-wrapper {
+    .document-toc-heading {
+      font-size: var(--type-base-font-size-rem);
+      margin-top: 1.5rem;
+
+      a,
+      a:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}

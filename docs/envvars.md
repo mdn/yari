@@ -352,3 +352,9 @@ included this value for `geo.country_iso`.
 
 - Sets the host name for the playground iframe. Set this to `localhost:5042`
   when working on playground functionality.
+
+### REACT_APP_OBSERVATORY_API_URL
+
+**Default: `https://observatory-api.mdn.allizom.net`**
+
+- Base url for the Observatory API server.

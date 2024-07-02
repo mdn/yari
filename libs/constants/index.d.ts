@@ -27,3 +27,5 @@ export const HTML_FILENAME: string;
 export const MARKDOWN_FILENAME: string;
 export const VALID_MIME_TYPES: Set<string>;
 export const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE: number;
+export const OBSERVATORY_TITLE: string;
+export const OBSERVATORY_TITLE_FULL: string;
