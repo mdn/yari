@@ -31,8 +31,8 @@ export function ObservatoryRating({
     const newScore = result.scan.score;
     const newGrade = result.scan.grade;
     if (
-      newScore !== undefined &&
-      oldScore !== undefined &&
+      typeof newScore === "number" &&
+      typeof oldScore === "number" &&
       newGrade !== oldGrade &&
       newScore !== oldScore
     ) {
