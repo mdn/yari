@@ -67,7 +67,10 @@ function getCurrentGitBranch(root: string) {
     // Only bother getting fancy if the root is CONTENT_ROOT.
     // For other possible roots, just leave it to the default.
     if (root === CONTENT_ROOT) {
-      if (process.env.GITHUB_REF) {
+      if (
+        process.env.GITHUB_REF &&
+        process.env.GITHUB_REPOSITORY !== "mdn/yari"
+      ) {
         name = process.env.GITHUB_REF.split("/").slice(2).join("/");
       } else {
         // Most probably, you're hacking on the content, using Yari to preview,
