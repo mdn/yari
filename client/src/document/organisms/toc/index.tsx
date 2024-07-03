@@ -5,8 +5,23 @@ import { Toc } from "../../../../../libs/types/document";
 import { useFirstVisibleElement } from "../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { TOC_CLICK } from "../../../telemetry/constants";
+import { useLocale } from "../../../hooks";
+import { DEFAULT_LOCALE } from "../../../../../libs/constants";
+
+const DEFAULT_TITLE = {
+  "en-US": "In this article",
+  es: "En este artículo",
+  fr: "Dans cet article",
+  ja: "この記事では",
+  ko: "이 문서에서는",
+  "pt-BR": "Neste artigo",
+  ru: "В этой статье",
+  "zh-CN": "在本文中",
+  "zh-TW": "在本文中",
+};
 
 export function TOC({ toc, title }: { toc: Toc[]; title?: string }) {
+  const locale = useLocale();
   const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
 
   const observedElements = React.useCallback(() => {
@@ -45,7 +60,7 @@ export function TOC({ toc, title }: { toc: Toc[]; title?: string }) {
         <section className="document-toc">
           <header>
             <h2 className="document-toc-heading">
-              {title || "In this article"}
+              {title || DEFAULT_TITLE[locale] || DEFAULT_TITLE[DEFAULT_LOCALE]}
             </h2>
           </header>
           <ul className="document-toc-list">
