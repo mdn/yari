@@ -28,7 +28,7 @@ two rounds:
 
 Each site tested by Observatory is awarded a grade based on its final score
 after the two rounds. The minimum score is 0, and the highest possible score in
-the HTTP Observatory is currently 135.
+the HTTP Observatory is currently 145.
 
 ## Grading Chart
 
