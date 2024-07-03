@@ -56,7 +56,7 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   const html = document.documentElement;
 
   if (window && html) {
-    html.className = theme;
+    html.classList.toggle(theme, true);
     html.style.backgroundColor = "";
 
     setTimeout(() => {

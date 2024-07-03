@@ -322,6 +322,10 @@ section.place.hp-main {
       }
     }
   }
+
+  html[data-nop] & {
+    display: none;
+  }
 }
 
 div.empty-place {
