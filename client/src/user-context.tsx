@@ -231,6 +231,18 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
 
+      try {
+        if (data?.settings?.noAds) {
+          window.localStorage.setItem("nop", "yes");
+          document.documentElement.dataset["nop"] = "yes";
+        } else {
+          window.localStorage.removeItem("nop");
+          delete document.documentElement.dataset["nop"];
+        }
+      } catch (e) {
+        console.warn("Unable to write nop to localStorage", e);
+      }
+
       // Let's initialize the MDN Worker if applicable.
       if (!window.mdnWorker && data?.offlineSettings?.offline) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {
