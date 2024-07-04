@@ -167,6 +167,20 @@ function setSessionStorageData(data: User) {
   }
 }
 
+function setNoPlacementFlag(noAds: boolean) {
+  try {
+    if (noAds) {
+      window.localStorage.setItem("nop", "yes");
+      document.documentElement.dataset["nop"] = "yes";
+    } else {
+      window.localStorage.removeItem("nop");
+      delete document.documentElement.dataset["nop"];
+    }
+  } catch (e) {
+    console.warn("Unable to write nop to localStorage", e);
+  }
+}
+
 export function UserDataProvider(props: { children: React.ReactNode }) {
   const { data, error, isLoading, mutate } = useSWR<User | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
@@ -230,18 +244,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       // The user is definitely signed in or not signed in.
       data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
-
-      try {
-        if (data?.settings?.noAds) {
-          window.localStorage.setItem("nop", "yes");
-          document.documentElement.dataset["nop"] = "yes";
-        } else {
-          window.localStorage.removeItem("nop");
-          delete document.documentElement.dataset["nop"];
-        }
-      } catch (e) {
-        console.warn("Unable to write nop to localStorage", e);
-      }
+      setNoPlacementFlag(data?.settings?.noAds ?? false);
 
       // Let's initialize the MDN Worker if applicable.
       if (!window.mdnWorker && data?.offlineSettings?.offline) {
