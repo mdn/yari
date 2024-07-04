@@ -102,7 +102,7 @@
     <script>
       /**
        * If we modify this script, we must update the CSP hash as follows:
-       * 1. Run `npx jest testing/tests/csp.test.ts --watch`
+       * 1. Run `yarn run jest testing/tests/csp.test.ts --watch`
        * 2. Open `libs/constants/index.js` and find the current hash in CSP_SCRIPT_SRC_VALUES.
        * 3. Remove the old "previous" hash and replace it with the old "current" hash.
        * 4. Replace the old "current" hash with the new hash from the failing test (step 1).
@@ -124,6 +124,8 @@
           o &&
             ((document.documentElement.className = o),
             (document.documentElement.style.backgroundColor = c[o]));
+          const n = window.localStorage.getItem("nop");
+          n && (document.documentElement.dataset["nop"] = n);
         } catch (e) {
           console.warn("Unable to read theme from localStorage", e);
         }

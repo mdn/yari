@@ -1,6 +1,8 @@
 import { join } from "node:path";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { gzipSync } from "node:zlib";
+
+import { fdir } from "fdir";
 
 import { BASE_URL, BUILD_OUT_ROOT } from "../libs/env/index.js";
 
@@ -18,10 +20,61 @@ export async function buildSitemap(
     pathSuffix = [],
   }: { slugPrefix?: string; pathSuffix?: string[] }
 ) {
+  const txt = entries.map(({ slug }) => `${slugPrefix}${slug}`).join("\n");
   const xml = makeSitemapXML(slugPrefix, entries);
-  const path = await writeSitemap(xml, ...pathSuffix);
 
-  return path;
+  const dirPath = join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    ...pathSuffix.map((p) => p.toLowerCase())
+  );
+  await mkdir(dirPath, { recursive: true });
+
+  const txtPath = join(dirPath, "sitemap.txt");
+  const xmlPath = join(dirPath, "sitemap.xml.gz");
+
+  await Promise.all([
+    writeFile(txtPath, txt, "utf-8"),
+    writeFile(xmlPath, gzipSync(xml)),
+  ]);
+
+  return xmlPath;
+}
+
+export async function buildSitemapIndex() {
+  return Promise.all([buildSitemapIndexTXT(), buildSitemapIndexXML()]);
+}
+
+export async function buildSitemapIndexTXT() {
+  const sitemaps = new fdir()
+    .filter((p) => p.endsWith("/sitemap.txt"))
+    .withFullPaths()
+    .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
+    .sync();
+
+  const file = join(BUILD_OUT_ROOT, "sitemap.txt");
+
+  const content = await makeSitemapIndexTXT(sitemaps);
+
+  await writeFile(file, content, "utf-8");
+
+  return sitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+}
+
+export async function buildSitemapIndexXML() {
+  const sitemaps = new fdir()
+    .filter((p) => p.endsWith("/sitemap.xml.gz"))
+    .withFullPaths()
+    .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
+    .sync()
+    .sort()
+    .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+
+  const file = join(BUILD_OUT_ROOT, "sitemap.xml");
+
+  await writeFile(file, makeSitemapIndexXML(sitemaps));
+
+  return sitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
 }
 
 function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
@@ -62,16 +115,13 @@ export function makeSitemapIndexXML(paths: string[]) {
   ].join("\n");
 }
 
-async function writeSitemap(xml: string, ...paths: string[]) {
-  const dirPath = join(
-    BUILD_OUT_ROOT,
-    "sitemaps",
-    ...paths.map((p) => p.toLowerCase())
-  );
-  await mkdir(dirPath, { recursive: true });
+/**
+ * Creates a global text sitemap by merging all text sitemaps.
+ */
+export async function makeSitemapIndexTXT(paths: string[]) {
+  const maps = await Promise.all(paths.map((p) => readFile(p, "utf-8")));
 
-  const filePath = join(dirPath, "sitemap.xml.gz");
-  await writeFile(filePath, gzipSync(xml));
+  const urls = maps.join("\n").split("\n").filter(Boolean);
 
-  return filePath;
+  return urls.sort().join("\n");
 }
