@@ -76,7 +76,7 @@
     "@mdn/browser-compat-data": "^5.5.36",
     "@mozilla/glean": "5.0.2",
     "@sentry/node": "^8.13.0",
-    "@stripe/stripe-js": "^4.0.0",
+    "@stripe/stripe-js": "^4.1.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.9",
     "@webref/css": "^6.13.0",
@@ -120,7 +120,7 @@
     "mdn-data": "^2.8.0",
     "open": "^10.1.0",
     "open-editor": "^4.1.1",
-    "openai": "^4.52.2",
+    "openai": "^4.52.3",
     "pg": "^8.12.0",
     "pgvector": "^0.2.0",
     "prism-svelte": "^0.5.0",
@@ -147,7 +147,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^0.9.0",
-    "web-specs": "^3.12.1"
+    "web-specs": "^3.13.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
@@ -156,7 +156,7 @@
     "@babel/preset-env": "^7.24.7",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
-    "@playwright/test": "^1.45.0",
+    "@playwright/test": "^1.45.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.6.6",
