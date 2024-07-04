@@ -170,10 +170,10 @@ function setSessionStorageData(data: User) {
 function setNoPlacementFlag(noAds: boolean) {
   try {
     if (noAds) {
-      window.localStorage.setItem("nop", "yes");
+      localStorage.setItem("nop", "yes");
       document.documentElement.dataset["nop"] = "yes";
     } else {
-      window.localStorage.removeItem("nop");
+      localStorage.removeItem("nop");
       delete document.documentElement.dataset["nop"];
     }
   } catch (e) {
