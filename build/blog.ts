@@ -18,9 +18,6 @@ import {
   AuthorFrontmatter,
   AuthorMetadata,
 } from "../libs/types/blog.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import {
   findPostFileBySlug,
   injectLoadingLazyAttributes,
@@ -39,6 +36,7 @@ import { HydrationData } from "../libs/types/hydration.js";
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { memoize } from "../content/utils.js";
 import { buildSitemap } from "./sitemaps.js";
+import { type Locale } from "../libs/types/core.js";
 
 const READ_TIME_FILTER = /[\w<>.,!?]+/;
 const HIDDEN_CODE_BLOCK_MATCH = /```.*hidden[\s\S]*?```/g;
@@ -240,24 +238,24 @@ export async function buildBlogIndex(options: { verbose?: boolean }) {
   const prefix = "blog";
   const locale = DEFAULT_LOCALE;
 
-  const hyData = {
-    posts: await allPostFrontmatter(),
+  const context: HydrationData = {
+    hyData: {
+      posts: await allPostFrontmatter(),
+    },
+    pageTitle: "MDN Blog",
+    url: `/${locale}/${prefix}/`,
   };
-  const context = { hyData, pageTitle: "MDN Blog" };
 
-  const html = renderHTML(`/${locale}/${prefix}/`, context);
   const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), `${prefix}`);
 
   await fs.mkdir(outPath, { recursive: true });
-  const filePath = path.join(outPath, "index.html");
   const jsonFilePath = path.join(outPath, "index.json");
 
   await fs.mkdir(outPath, { recursive: true });
-  await fs.writeFile(filePath, html);
   await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
   if (options.verbose) {
-    console.log("Wrote", filePath);
+    console.log("Wrote", jsonFilePath);
   }
 }
 
@@ -280,8 +278,8 @@ export async function buildBlogPosts(options: {
       continue;
     }
 
-    const url = `/${locale}/blog/${blogMeta.slug}/`;
-    const renderUrl = `/${locale}/blog/${blogMeta.slug}`;
+    const url = `/${locale}/${prefix}/${blogMeta.slug}/`;
+    const renderUrl = `/${locale}/${prefix}/${blogMeta.slug}`;
     const renderDoc: BlogPostDoc = {
       url: renderUrl,
       rawBody: body,
@@ -303,6 +301,7 @@ export async function buildBlogPosts(options: {
       locale,
       noIndexing: options.noIndexing,
       image: blogMeta.image?.file && `${BASE_URL}${url}${blogMeta.image?.file}`,
+      url,
     };
 
     const outPath = path.join(
@@ -330,17 +329,13 @@ export async function buildBlogPosts(options: {
       await fs.copyFile(from, to);
     }
 
-    const html = renderHTML(`/${locale}/${prefix}/${blogMeta.slug}/`, context);
-
-    const filePath = path.join(outPath, "index.html");
     const jsonFilePath = path.join(outPath, "index.json");
 
     await fs.mkdir(outPath, { recursive: true });
-    await fs.writeFile(filePath, html);
     await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", filePath);
+      console.log("Wrote", jsonFilePath);
     }
   }
 }
@@ -348,7 +343,7 @@ export async function buildBlogPosts(options: {
 export interface BlogPostDoc {
   url: string;
   rawBody: string;
-  metadata: BlogPostMetadata & { locale: string };
+  metadata: BlogPostMetadata & { locale: Locale };
   isMarkdown: true;
   fileInfo: {
     path: string;
@@ -389,7 +384,7 @@ export async function buildPost(
 
   doc.title = metadata.title || "";
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale as string;
+  doc.locale = metadata.locale;
   doc.native = LANGUAGES_RAW[DEFAULT_LOCALE]?.native;
 
   if ($("math").length > 0) {

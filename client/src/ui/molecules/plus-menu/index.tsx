@@ -39,7 +39,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         description: "Get real-time assistance and support",
         hasIcon: true,
         iconClasses: "submenu-icon",
-        label: "AI Help (beta)",
+        label: "AI Help",
         url: aiHelpUrl,
       },
       ...(!isServer && isAuthenticated
