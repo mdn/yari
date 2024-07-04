@@ -127,7 +127,6 @@ export const CSP_DIRECTIVES = {
     "mdn.github.io",
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
-    "live-samples.developer.allizom.xyz",
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
 
