@@ -179,7 +179,7 @@ export function Footer() {
 
         <div className="page-footer-moz">
           <a
-            href={`https://www.mozilla.org/${locale}/`}
+            href="https://www.mozilla.org/"
             className="footer-moz-logo-link"
             target="_blank"
             rel="noopener noreferrer"
@@ -189,7 +189,7 @@ export function Footer() {
           <ul className="footer-moz-list">
             <li className="footer-moz-item">
               <a
-                href={`https://www.mozilla.org/${locale}/privacy/websites/`}
+                href="https://www.mozilla.org/privacy/websites/"
                 className="footer-moz-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -199,7 +199,7 @@ export function Footer() {
             </li>
             <li className="footer-moz-item">
               <a
-                href={`https://www.mozilla.org/${locale}/privacy/websites/#cookies`}
+                href="https://www.mozilla.org/privacy/websites/#cookies"
                 className="footer-moz-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -209,7 +209,7 @@ export function Footer() {
             </li>
             <li className="footer-moz-item">
               <a
-                href={`https://www.mozilla.org/${locale}/about/legal/terms/mozilla`}
+                href="https://www.mozilla.org/about/legal/terms/mozilla"
                 className="footer-moz-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -219,7 +219,7 @@ export function Footer() {
             </li>
             <li className="footer-moz-item">
               <a
-                href={`https://www.mozilla.org/${locale}/about/governance/policies/participation/`}
+                href="https://www.mozilla.org/about/governance/policies/participation/"
                 className="footer-moz-link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -233,7 +233,7 @@ export function Footer() {
           <p id="license" className="page-footer-legal-text">
             Visit{" "}
             <a
-              href={`https://www.mozilla.org/${locale}/`}
+              href="https://www.mozilla.org"
               target="_blank"
               rel="noopener noreferrer"
             >
