@@ -1,6 +1,7 @@
 @use "../../ui/vars" as *;
 
 .observatory {
+  --background-toc-active: var(--observatory-border);
   --category-color: var(--observatory-accent);
 
   .article-actions-container {
