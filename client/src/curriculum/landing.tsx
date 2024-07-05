@@ -133,7 +133,21 @@ function About({ section }) {
         <DisplayH2 id={id} title={title} />
         <div className="about-content" dangerouslySetInnerHTML={html}></div>
         <div className="arrow"></div>
-        <PartnerIframe url={SCRIM_URL} />
+        <PartnerIframe url={SCRIM_URL}>
+          <p>
+            Learn our curriculum with high quality, interactive courses from our
+            partner{" "}
+            <a
+              href="https://scrimba.com?via=mdn"
+              className="external"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Scrimba
+            </a>
+            {" !"}
+          </p>
+        </PartnerIframe>
       </div>
     </section>
   );
