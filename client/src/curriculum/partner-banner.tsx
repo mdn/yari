@@ -11,7 +11,12 @@ export function PartnerBanner() {
         <section>
           <h2>
             Learn the curriculum with{" "}
-            <a href="https://scrimba.com?via=mdn" className="external">
+            <a
+              href="https://scrimba.com?via=mdn"
+              target="_blank"
+              rel="origin noreferrer"
+              className="external"
+            >
               Scrimba
             </a>{" "}
             and become job ready
@@ -25,7 +30,7 @@ export function PartnerBanner() {
           <a
             href="https://scrimba.com/learn/frontend?via=mdn"
             target="_blank"
-            rel="noreferrer"
+            rel="origin noreferrer"
             className="external"
           >
             Find out more

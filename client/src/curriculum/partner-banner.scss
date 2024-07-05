@@ -47,9 +47,9 @@
         }
 
         > a {
+          color: var(--curriculum-category-color);
           display: inline-block;
           min-width: max-content;
-          color: var(--curriculum-category-color);
 
           &:visited:not([href^="#"]) {
             color: var(--curriculum-category-color);
@@ -63,6 +63,15 @@
               content: url("../assets/icons/curriculum-partner-underline-large.svg");
             }
           }
+
+          &:hover {
+            text-decoration: none;
+
+            &::before {
+              content: none;
+            }
+          }
+
           &::after {
             background-color: var(--curriculum-category-color);
             height: 0.625em;

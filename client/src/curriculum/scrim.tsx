@@ -40,7 +40,12 @@ export function PartnerIframe({
                   <span className="visually-hidden">Toggle fullscreen</span>
                 </div>
               </button>
-              <a href={url} className="external">
+              <a
+                href={url}
+                target="_blank"
+                rel="origin noreferrer"
+                className="external"
+              >
                 <span className="visually-hidden">Open on scrimba</span>
               </a>
             </div>
