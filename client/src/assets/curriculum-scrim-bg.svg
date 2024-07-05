@@ -1,0 +1,24 @@
+<svg width="352" viewBox="0 0 352 232" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .light {
+      --bg: #fff;
+    }
+
+    .dark {
+      --bg: #000;
+    }
+  </style>
+  <defs>
+    <g id="i">
+
+  <rect width="348" height="228"
+    fill="var(--bg)" />
+        <path transform="translate(316,194)" d="M32 2.41422V34C32 34.5523 32.4477 35 33 35H34C34.5523 35 35 34.5523 35 34V19V3.41421C35 3.149 34.8946 2.89464 34.7071 2.70711L33.7071 1.70711C33.0771 1.07714 32 1.52331 32 2.41422Z" fill="#E3642A" stroke="#E3642A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path transform="translate(316,194)" d="M2.41422 36H34C34.5523 36 35 35.5523 35 35V34C35 33.4477 34.5523 33 34 33H19H3.41421C3.149 33 2.89464 33.1054 2.70711 33.2929L1.70711 34.2929C1.07714 34.9229 1.52331 36 2.41422 36Z" fill="#E3642A" stroke="#E3642A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </defs>
+  <view id="light" />
+  <use href="#i" class="light" />
+  <view id="dark" viewBox="0 255 341 510" />
+  <use y="232" href="#i" class="dark" />
+</svg>

@@ -157,7 +157,7 @@
 
         > a {
           background-color: var(--curriculum-bg-color-list-item-body);
-          border: 1px solid var(--curriculum-border-color-list-item);
+          border: 1px solid var(--curriculum-border-color);
           border-radius: var(--elem-radius);
           box-shadow: var(--curriculum-shadow);
           display: flex;
@@ -172,7 +172,7 @@
           width: 100%;
 
           &:hover {
-            border-color: var(--curriculum-border-color-list-item-hover);
+            border-color: var(--curriculum-border-color-hover);
             text-decoration: none;
           }
 
