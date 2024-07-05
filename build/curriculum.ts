@@ -406,9 +406,16 @@ function setCurriculumTypes($: CheerioAPI) {
 
   $("p.curriculum-resources + ul > li").each((_, child) => {
     const li = $(child);
-
-    if (li.find("a.external").length) {
-      li.addClass("external");
+    const externalLinks = li.find("a.external");
+    if (externalLinks.length) {
+      li.addClass("curriculum-external-li");
+      if (
+        externalLinks[0].attribs["href"]?.match(
+          /https:\/\/(v2\.)?scrimba.com.*/
+        )
+      ) {
+        li.append("<sup>Course partner</sup>");
+      }
     }
   });
 

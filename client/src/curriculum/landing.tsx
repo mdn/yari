@@ -2,13 +2,12 @@ import { ReactComponent as LandingSVG } from "../../public/assets/curriculum/cur
 import { ReactComponent as LandingStairwaySVG1 } from "../../public/assets/curriculum/curriculum-landing-stairway-1.svg";
 import { ReactComponent as LandingStairwaySVG2 } from "../../public/assets/curriculum/curriculum-landing-stairway-2.svg";
 import { ReactComponent as LandingStairwaySVG2Small } from "../../public/assets/curriculum/curriculum-landing-stairway-2-small.svg";
-import { ReactComponent as EnterFullscreen } from "../../public/assets/curriculum/enter-fullscreen.svg";
 import { HydrationData } from "../../../libs/types/hydration";
 import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
 import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
-import { useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";
 import { CurriculumLayout } from "./layout";
 
@@ -16,6 +15,7 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
+import { PartnerIframe } from "./scrim";
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -124,86 +124,6 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
 
 const SCRIM_URL = "https://v2.scrimba.com/s06i5lr";
 
-function PartnerIframe() {
-  const [scrimmed, setScrimmed] = useState(false);
-  const [show, setShow] = useState(false);
-  const dialog = useRef<HTMLDialogElement | null>(null);
-
-  return (
-    <div className="scrim">
-      <dialog ref={dialog} onCancel={() => setShow(false)}>
-        <div className="scrim-with-border">
-          <div className="scrim-inner">
-            <div className="partner-header">
-              <span>Clicking will load content from scrimba.com</span>
-              {scrimmed && (
-                <button
-                  autoFocus
-                  tabIndex={0}
-                  onClick={() => {
-                    if (show) {
-                      dialog.current?.close();
-                      setShow(false);
-                    } else {
-                      dialog.current?.showModal();
-                      setShow(true);
-                    }
-                  }}
-                >
-                  <div
-                    className={`fullscreen-button ${show ? "exit" : "enter"}`}
-                  >
-                    <span className="visually-hidden">Toggle fullscreen</span>
-                  </div>
-                </button>
-              )}
-              <a href={SCRIM_URL} className="external">
-                <span className="visually-hidden">Open on scrimba</span>
-              </a>
-            </div>
-            {scrimmed ? (
-              <iframe
-                src={SCRIM_URL}
-                title="MDN + Scrimba partnership announcement scrim"
-              ></iframe>
-            ) : (
-              <>
-                <img
-                  alt="MDN + Scrimba partnership announcement scrim preview"
-                  src="/assets/curriculum/scrim.png"
-                ></img>
-                <button
-                  onClick={() => {
-                    setScrimmed(true);
-                    dialog.current?.showModal();
-                    setShow(true);
-                  }}
-                  className={`fullscreen-overlay ${show ? "exit" : "enter"}`}
-                >
-                  <EnterFullscreen />
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </dialog>
-      <p>
-        Learn our curriculum with high quality, interactive courses from our
-        partner{" "}
-        <a
-          href="https://scrimba.com"
-          className="external"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Scrimba
-        </a>
-        {" !"}
-      </p>
-    </div>
-  );
-}
-
 function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
@@ -213,7 +133,7 @@ function About({ section }) {
         <DisplayH2 id={id} title={title} />
         <div className="about-content" dangerouslySetInnerHTML={html}></div>
         <div className="arrow"></div>
-        <PartnerIframe />
+        <PartnerIframe url={SCRIM_URL} />
       </div>
     </section>
   );
