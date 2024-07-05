@@ -4,7 +4,13 @@ import { ReactComponent as EnterFullscreen } from "../../public/assets/curriculu
 
 import "./scrim.scss";
 
-export function PartnerIframe({ url }: { url: string }) {
+export function PartnerIframe({
+  url,
+  children,
+}: {
+  url: string;
+  children?: React.ReactNode;
+}) {
   const [scrimmed, setScrimmed] = useState(false);
   const [show, setShow] = useState(false);
   const dialog = useRef<HTMLDialogElement | null>(null);
@@ -34,7 +40,12 @@ export function PartnerIframe({ url }: { url: string }) {
                   <span className="visually-hidden">Toggle fullscreen</span>
                 </div>
               </button>
-              <a href={url} className="external">
+              <a
+                href={url}
+                target="_blank"
+                rel="origin noreferrer"
+                className="external"
+              >
                 <span className="visually-hidden">Open on scrimba</span>
               </a>
             </div>
@@ -64,19 +75,7 @@ export function PartnerIframe({ url }: { url: string }) {
           </div>
         </div>
       </dialog>
-      <p>
-        Learn our curriculum with high quality, interactive courses from our
-        partner{" "}
-        <a
-          href="https://scrimba.com"
-          className="external"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Scrimba
-        </a>
-        {" !"}
-      </p>
+      {children}
     </div>
   );
 }

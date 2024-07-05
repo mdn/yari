@@ -64,6 +64,14 @@
             }
           }
 
+          &:hover {
+            text-decoration: none;
+
+            &::before {
+              content: none;
+            }
+          }
+
           &::after {
             background-color: var(--curriculum-category-color);
             height: 0.625em;

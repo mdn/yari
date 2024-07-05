@@ -19,6 +19,6 @@
   </defs>
   <view id="light" />
   <use href="#i" class="light" />
-  <view id="dark" viewBox="0 255 341 510" />
+  <view id="dark" viewBox="0 232 352 232" />
   <use y="232" href="#i" class="dark" />
 </svg>
