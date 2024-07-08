@@ -40,7 +40,7 @@ export function PartnerBanner() {
         <ThemedPicture
           srcDark={bannerDark}
           srcLight={bannerLight}
-          alt="Screenshot of AI Help"
+          alt="A woman in front of a computer."
         />
       </div>
     </section>
