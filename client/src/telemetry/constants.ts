@@ -24,6 +24,7 @@ export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
+export const OBSERVATORY = "observatory";
 
 export const A11Y_MENU = "a11y_menu";
 

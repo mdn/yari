@@ -23,7 +23,8 @@ export interface PlacementContextData
 const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
   side: {
     typ: "side",
-    pattern: /\/[^/]+\/(play|docs\/|blog\/|curriculum\/[^$]|search$)/i,
+    pattern:
+      /\/[^/]+\/(play|docs\/|blog\/|observatory\/?|curriculum\/[^$]|search$)/i,
   },
   top: {
     typ: "top-banner",

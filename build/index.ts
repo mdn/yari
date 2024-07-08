@@ -373,7 +373,7 @@ export async function buildDocument(
 
   doc.title = metadata.title || "";
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale as string;
+  doc.locale = metadata.locale;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
 
   // metadata doesn't have a browser-compat key on translated docs:

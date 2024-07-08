@@ -131,3 +131,7 @@ export function survey_rates(surveyKey: string): {
   );
   return { rateFrom, rateTill };
 }
+
+export const OBSERVATORY_API_URL =
+  process.env.REACT_APP_OBSERVATORY_API_URL ||
+  "https://observatory-api.mdn.allizom.net";
