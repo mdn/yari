@@ -1,5 +1,5 @@
 import { HydrationData } from "../../../libs/types/hydration";
-import { CurriculumModuleOverview } from "./overview";
+import { CurriculumOverview } from "./overview";
 import { CurriculumModule } from "./module";
 import { CurriculumAbout } from "./about";
 import { CurriculumLanding } from "./landing";
@@ -15,11 +15,12 @@ export function Curriculum(appProps: HydrationData<any, CurriculumDoc>) {
     case Template.Landing:
       return <CurriculumLanding {...appProps} />;
     case Template.Overview:
-      return <CurriculumModuleOverview {...appProps} />;
+      return <CurriculumOverview {...appProps} />;
     case Template.Module:
       return <CurriculumModule {...appProps} />;
     case Template.About:
       return <CurriculumAbout {...appProps} />;
+    case Template.Default:
     default:
       return <CurriculumDefault {...appProps} />;
   }
