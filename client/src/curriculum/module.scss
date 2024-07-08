@@ -65,7 +65,7 @@
             list-style-image: url("../assets/icons/curriculum-ext-resource.svg");
           }
 
-          sup {
+          em {
             background: var(--curriculum-bg-color);
             border-radius: 1em;
             color: var(--text-primary);
@@ -76,6 +76,7 @@
             padding: 0 0.4em;
             text-rendering: optimizeLegibility;
             text-transform: uppercase;
+            vertical-align: super;
           }
         }
       }

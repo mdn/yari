@@ -411,10 +411,6 @@ function setCurriculumTypes($: CheerioAPI) {
     if (externalLinks.length) {
       li.addClass("curriculum-external-li");
     }
-    const em = li.find("em");
-    if (em.length) {
-      em[0].name = "sup";
-    }
   });
 
   $("blockquote").each((_, child) => {
