@@ -410,13 +410,10 @@ function setCurriculumTypes($: CheerioAPI) {
     const externalLinks = li.find("a.external");
     if (externalLinks.length) {
       li.addClass("curriculum-external-li");
-      if (
-        externalLinks[0].attribs["href"]?.match(
-          /https:\/\/(v2\.)?scrimba.com.*/
-        )
-      ) {
-        li.append("<sup>Course partner</sup>");
-      }
+    }
+    const em = li.find("em");
+    if (em.length) {
+      em[0].name = "sup";
     }
   });
 
