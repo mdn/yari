@@ -228,7 +228,27 @@
         border: 0;
         border-radius: var(--elem-radius);
         margin: 1rem;
-        padding: 0.5rem 2rem;
+        padding: 1rem;
+
+        ol,
+        ul {
+          padding-left: 1rem;
+
+          li:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        ol,
+        ul,
+        p {
+          margin-top: 0.5rem;
+        }
+
+        > p:first-child {
+          // The "Notes:" paragraph.
+          margin-top: 0;
+        }
 
         > :last-child {
           margin-bottom: 0;
@@ -251,7 +271,7 @@
 
       ol,
       ul {
-        margin: 1rem 0 2rem;
+        margin: 1rem 0;
         padding-left: 2rem;
 
         ol,
