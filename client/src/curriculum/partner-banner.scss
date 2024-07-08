@@ -90,6 +90,7 @@
       }
 
       > a {
+        color: var(--text-primary);
         grid-area: a;
         margin: 1rem;
         @media screen and (min-width: $screen-md) {
