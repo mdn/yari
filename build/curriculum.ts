@@ -333,6 +333,7 @@ export async function buildCurriculumPage(
   doc.parents = metadata.parents;
   doc.topic = metadata.topic;
   doc.group = metadata.group;
+  doc.template = metadata.template || Template.Default;
 
   return doc as CurriculumDoc;
 }
