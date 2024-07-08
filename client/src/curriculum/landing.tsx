@@ -122,7 +122,7 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
 }
 
-const SCRIM_URL = "https://v2.scrimba.com/s06i5lr";
+const SCRIM_URL = "https://v2.scrimba.com/s06icdv";
 
 function About({ section }) {
   const { title, content, id } = section.value;
