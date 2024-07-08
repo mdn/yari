@@ -3,21 +3,25 @@ import { useState, useRef } from "react";
 import { ReactComponent as EnterFullscreen } from "../../public/assets/curriculum/enter-fullscreen.svg";
 
 import "./scrim.scss";
+import { CURRICULUM_PARTNER } from "../telemetry/constants";
+import { useGleanClick } from "../telemetry/glean-context";
 
-export function PartnerIframe({
+export function ScrimIframe({
   url,
   children,
 }: {
   url: string;
   children?: React.ReactNode;
 }) {
-  const [scrimmed, setScrimmed] = useState(false);
-  const [show, setShow] = useState(false);
+  const [scrimLoaded, setScrimLoaded] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
   const dialog = useRef<HTMLDialogElement | null>(null);
 
+  const gleanClick = useGleanClick();
+
   return (
-    <div className="scrim">
-      <dialog ref={dialog} onCancel={() => setShow(false)}>
+    <section className="scrim">
+      <dialog ref={dialog} onCancel={() => setShowDialog(false)}>
         <div className="scrim-with-border">
           <div className="scrim-inner">
             <div className="partner-header">
@@ -26,17 +30,25 @@ export function PartnerIframe({
                 autoFocus
                 tabIndex={0}
                 onClick={() => {
-                  if (show) {
+                  if (showDialog) {
                     dialog.current?.close();
-                    setShow(false);
+                    setShowDialog(false);
+                    gleanClick(
+                      `${CURRICULUM_PARTNER}: landing_page_scrim_exit_fullscreen`
+                    );
                   } else {
-                    setScrimmed(true);
+                    setScrimLoaded(true);
                     dialog.current?.showModal();
-                    setShow(true);
+                    setShowDialog(true);
+                    gleanClick(
+                      `${CURRICULUM_PARTNER}: landing_page_scrim_enter_fullscreen`
+                    );
                   }
                 }}
               >
-                <div className={`fullscreen-button ${show ? "exit" : "enter"}`}>
+                <div
+                  className={`fullscreen-button ${showDialog ? "exit" : "enter"}`}
+                >
                   <span className="visually-hidden">Toggle fullscreen</span>
                 </div>
               </button>
@@ -49,7 +61,7 @@ export function PartnerIframe({
                 <span className="visually-hidden">Open on scrimba</span>
               </a>
             </div>
-            {scrimmed ? (
+            {scrimLoaded ? (
               <iframe
                 src={url}
                 title="MDN + Scrimba partnership announcement scrim"
@@ -62,13 +74,21 @@ export function PartnerIframe({
                 ></img>
                 <button
                   onClick={() => {
-                    setScrimmed(true);
+                    setScrimLoaded(true);
                     dialog.current?.showModal();
-                    setShow(true);
+                    setShowDialog(true);
+                    gleanClick(
+                      `${CURRICULUM_PARTNER}: landing_page_scrim_loaded`
+                    );
                   }}
-                  className={`fullscreen-overlay ${show ? "exit" : "enter"}`}
+                  className={`fullscreen-overlay ${showDialog ? "exit" : "enter"}`}
                 >
                   <EnterFullscreen />
+                  <span className="visually-hidden">
+                    {showDialog
+                      ? "Close dialog."
+                      : "Load scrim and open dialog."}
+                  </span>
                 </button>
               </>
             )}
@@ -76,6 +96,6 @@ export function PartnerIframe({
         </div>
       </dialog>
       {children}
-    </div>
+    </section>
   );
 }

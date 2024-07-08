@@ -6,7 +6,7 @@ import "./partner-banner.scss";
 
 export function PartnerBanner() {
   return (
-    <section className="partner-banner-container">
+    <section className="curriculum-partner-banner-container">
       <div className="partner-banner">
         <section>
           <h2>
@@ -37,11 +37,7 @@ export function PartnerBanner() {
           </a>
         </section>
 
-        <ThemedPicture
-          srcDark={bannerDark}
-          srcLight={bannerLight}
-          alt="A woman in front of a computer."
-        />
+        <ThemedPicture srcDark={bannerDark} srcLight={bannerLight} alt="" />
       </div>
     </section>
   );

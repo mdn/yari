@@ -15,7 +15,7 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
-import { PartnerIframe } from "./scrim";
+import { ScrimIframe } from "./scrim";
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -133,12 +133,12 @@ function About({ section }) {
         <DisplayH2 id={id} title={title} />
         <div className="about-content" dangerouslySetInnerHTML={html}></div>
         <div className="arrow"></div>
-        <PartnerIframe url={SCRIM_URL}>
+        <ScrimIframe url={SCRIM_URL}>
           <p>
             Learn our curriculum with high quality, interactive courses from our
             partner{" "}
             <a
-              href="https://scrimba.com?via=mdn"
+              href="https://scrimba.com/?via=mdn"
               className="external"
               target="_blank"
               rel="noreferrer"
@@ -147,7 +147,7 @@ function About({ section }) {
             </a>
             {" !"}
           </p>
-        </PartnerIframe>
+        </ScrimIframe>
       </div>
     </section>
   );
