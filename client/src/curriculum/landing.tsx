@@ -14,6 +14,8 @@ import { CurriculumLayout } from "./layout";
 import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
+import { PartnerBanner } from "./partner-banner";
+import { ScrimIframe } from "./scrim";
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -98,6 +100,7 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           return null;
         }}
       />
+      <PartnerBanner />
     </CurriculumLayout>
   );
 }
@@ -119,6 +122,8 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
 }
 
+const SCRIM_URL = "https://v2.scrimba.com/s06icdv";
+
 function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
@@ -126,7 +131,23 @@ function About({ section }) {
     <section key={id} className="landing-about-container">
       <div className="landing-about">
         <DisplayH2 id={id} title={title} />
-        <div dangerouslySetInnerHTML={html}></div>
+        <div className="about-content" dangerouslySetInnerHTML={html}></div>
+        <div className="arrow"></div>
+        <ScrimIframe url={SCRIM_URL}>
+          <p>
+            Learn our curriculum with high quality, interactive courses from our
+            partner{" "}
+            <a
+              href="https://scrimba.com/?via=mdn"
+              className="external"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Scrimba
+            </a>
+            {" !"}
+          </p>
+        </ScrimIframe>
       </div>
     </section>
   );

@@ -15,6 +15,7 @@ export enum Template {
   Overview = "overview",
   Landing = "landing",
   About = "about",
+  Default = "default",
 }
 
 export interface CurriculumCoreMetaData {
@@ -58,6 +59,7 @@ export interface CurriculumDoc extends Doc {
   prevNext?: PrevNext;
   topic?: Topic;
   group?: string;
+  template: Template;
 }
 
 export interface CurriculumData {
