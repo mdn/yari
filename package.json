@@ -240,7 +240,7 @@
     "sass-loader": "^14.2.1",
     "source-map-explorer": "^2.5.3",
     "source-map-loader": "^5.0.0",
-    "style-dictionary": "^3.9.2",
+    "style-dictionary": "^4.0.0",
     "style-loader": "^3.3.4",
     "stylelint": "^15.11.0",
     "stylelint-a11y": "^1.2.3",
