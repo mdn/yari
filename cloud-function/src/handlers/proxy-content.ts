@@ -10,9 +10,11 @@ import { Source, sourceUri } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { isLiveSampleURL } from "../utils.js";
 
-const NOT_FOUND_PATH = "en-us/_spas/404.html";
+const NOT_FOUND_JSON = "en-us/_spas/404.json";
+const NOT_FOUND_HTML = "en-us/_spas/404.html";
 
-let notFoundBuffer: ArrayBuffer;
+let notFoundBufferHtml: ArrayBuffer;
+let notFoundBufferJson: ArrayBuffer;
 
 const target = sourceUri(Source.content);
 
@@ -36,12 +38,22 @@ export const proxyContent = createProxyMiddleware({
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
             return Buffer.from(await tryHtml.arrayBuffer());
-          } else if (!notFoundBuffer) {
-            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
-            notFoundBuffer = await response.arrayBuffer();
+          } else if (!notFoundBufferHtml) {
+            const [htmlResponse, jsonResponse] = await Promise.all([
+              fetch(`${target}${NOT_FOUND_HTML}`),
+              fetch(`${target}${NOT_FOUND_JSON}`),
+            ]);
+            notFoundBufferHtml = await htmlResponse.arrayBuffer();
+            notFoundBufferJson = await jsonResponse.arrayBuffer();
           }
+
+          if (req.url?.endsWith("/index.json")) {
+            res.setHeader("Content-Type", "text/json");
+            return Buffer.from(notFoundBufferJson);
+          }
+
           res.setHeader("Content-Type", "text/html");
-          return Buffer.from(notFoundBuffer);
+          return Buffer.from(notFoundBufferHtml);
         }
 
         return responseBuffer;
