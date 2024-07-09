@@ -98,14 +98,13 @@
 
     li > em {
       background-color: var(--background-toc-active);
-      border-bottom-right-radius: 0.25rem;
       border-left: 2px solid var(--category-color);
-      border-top-right-radius: 0.25rem;
       display: inline-block;
       font-style: normal;
       font-variation-settings: normal;
       font-weight: 600;
-      padding: 0.25rem 0.5rem;
+      padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+      width: 100%;
     }
   }
 }
@@ -229,27 +228,7 @@
         border: 0;
         border-radius: var(--elem-radius);
         margin: 1rem;
-        padding: 1rem;
-
-        ol,
-        ul {
-          padding-left: 1rem;
-
-          li:last-child {
-            margin-bottom: 0;
-          }
-        }
-
-        ol,
-        ul,
-        p {
-          margin-top: 0.5rem;
-        }
-
-        > p:first-child {
-          // The "Notes:" paragraph.
-          margin-top: 0;
-        }
+        padding: 0.5rem 2rem;
 
         > :last-child {
           margin-bottom: 0;
@@ -272,7 +251,7 @@
 
       ol,
       ul {
-        margin: 1rem 0;
+        margin: 1rem 0 2rem;
         padding-left: 2rem;
 
         ol,
