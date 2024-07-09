@@ -58,7 +58,7 @@ export function ScrimIframe({
                 rel="origin noreferrer"
                 className="external"
               >
-                <span className="visually-hidden">Open on scrimba</span>
+                <span className="visually-hidden">Open on Scrimba</span>
               </a>
             </div>
             {scrimLoaded ? (
@@ -69,7 +69,7 @@ export function ScrimIframe({
             ) : (
               <>
                 <img
-                  alt="MDN + Scrimba partnership announcement scrim preview"
+                  alt='A video player showing a 3 minute video titled "Scrimba + MDN partnership", with a thumbnail featuring two laptops with the MDN and Scrimba logos, connected by a handshake animation.'
                   src="/assets/curriculum/scrim.png"
                 ></img>
                 <button
