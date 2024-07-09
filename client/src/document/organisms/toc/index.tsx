@@ -13,7 +13,7 @@ const DEFAULT_TITLE = {
   es: "En este artículo",
   fr: "Dans cet article",
   ja: "この記事では",
-  ko: "이 문서에서는",
+  ko: "목차",
   "pt-BR": "Neste artigo",
   ru: "В этой статье",
   "zh-CN": "在本文中",
