@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 
-import { ReactComponent as EnterFullscreen } from "../../public/assets/curriculum/enter-fullscreen.svg";
+import { ReactComponent as EnterFullscreen } from "../../public/assets/curriculum/fullscreen-enter.svg";
 
 import "./scrim.scss";
-import { CURRICULUM_PARTNER } from "../telemetry/constants";
+import { CURRICULUM } from "../telemetry/constants";
 import { useGleanClick } from "../telemetry/glean-context";
 
 export function ScrimIframe({
@@ -33,16 +33,12 @@ export function ScrimIframe({
                   if (showDialog) {
                     dialog.current?.close();
                     setShowDialog(false);
-                    gleanClick(
-                      `${CURRICULUM_PARTNER}: landing_page_scrim_exit_fullscreen`
-                    );
+                    gleanClick(`${CURRICULUM}: scrim fullscreen -> 0`);
                   } else {
                     setScrimLoaded(true);
                     dialog.current?.showModal();
                     setShowDialog(true);
-                    gleanClick(
-                      `${CURRICULUM_PARTNER}: landing_page_scrim_enter_fullscreen`
-                    );
+                    gleanClick(`${CURRICULUM}: scrim fullscreen -> 1`);
                   }
                 }}
               >
@@ -77,9 +73,7 @@ export function ScrimIframe({
                     setScrimLoaded(true);
                     dialog.current?.showModal();
                     setShowDialog(true);
-                    gleanClick(
-                      `${CURRICULUM_PARTNER}: landing_page_scrim_loaded`
-                    );
+                    gleanClick(`${CURRICULUM}: scrim engage`);
                   }}
                   className={`fullscreen-overlay ${showDialog ? "exit" : "enter"}`}
                 >

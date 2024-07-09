@@ -357,7 +357,7 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await prompt({
+        : await prompt<{ run: boolean }>({
             type: "confirm",
             message: "Proceed?",
             name: "run",
@@ -436,7 +436,7 @@ program
       );
       const { run } = yes
         ? { run: true }
-        : await prompt({
+        : await prompt<{ run: boolean }>({
             type: "confirm",
             message: "Proceed?",
             name: "run",
@@ -791,7 +791,7 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await prompt({
+        : await prompt<{ run: boolean }>({
             type: "confirm",
             message: `Proceed fixing ${flaws} flaws?`,
             name: "run",

@@ -264,6 +264,17 @@
         background-repeat: no-repeat;
         grid-area: arrow;
       }
+
+      .scrim {
+        grid-area: scrim;
+        justify-self: center;
+        margin-top: 1rem;
+
+        @media (min-width: $screen-lg) {
+          justify-self: end;
+          margin-top: 0;
+        }
+      }
     }
   }
 

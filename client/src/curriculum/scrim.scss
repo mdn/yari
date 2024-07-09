@@ -1,19 +1,11 @@
-@use "../ui/vars" as *;
-
 .scrim {
   align-items: center;
   display: flex;
   flex-direction: column;
-  grid-area: scrim;
   height: 100%;
   justify-content: center;
-  justify-self: center;
   max-width: 24rem;
   width: 100%;
-
-  @media (min-width: $screen-lg) {
-    justify-self: end;
-  }
 
   dialog {
     display: contents;
@@ -67,7 +59,7 @@
               width: 1rem;
 
               &.fullscreen-button.enter {
-                mask-image: url("../assets/icons/enter-fullscreen.svg");
+                mask-image: url("../assets/icons/fullscreen-enter.svg");
               }
 
               &.fullscreen-button.exit {
