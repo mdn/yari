@@ -25,7 +25,7 @@ export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
 export const OBSERVATORY = "observatory";
-export const CURRICULUM_PARTNER = "curriculum_partner";
+export const CURRICULUM = "curriculum";
 
 export const A11Y_MENU = "a11y_menu";
 
