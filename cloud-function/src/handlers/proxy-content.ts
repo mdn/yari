@@ -13,8 +13,7 @@ import { isLiveSampleURL } from "../utils.js";
 const NOT_FOUND_JSON = "en-us/_spas/404.json";
 const NOT_FOUND_HTML = "en-us/_spas/404.html";
 
-let notFoundBufferHtml: ArrayBuffer;
-let notFoundBufferJson: ArrayBuffer;
+const bufferCache = new Map<string, ArrayBuffer>();
 
 const target = sourceUri(Source.content);
 
@@ -38,22 +37,18 @@ export const proxyContent = createProxyMiddleware({
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
             return Buffer.from(await tryHtml.arrayBuffer());
-          } else if (!notFoundBufferHtml) {
-            const [htmlResponse, jsonResponse] = await Promise.all([
-              fetch(`${target}${NOT_FOUND_HTML}`),
-              fetch(`${target}${NOT_FOUND_JSON}`),
-            ]);
-            notFoundBufferHtml = await htmlResponse.arrayBuffer();
-            notFoundBufferJson = await jsonResponse.arrayBuffer();
           }
 
+          let buffer: Buffer;
           if (req.url?.endsWith("/index.json")) {
+            buffer = await fetchAsBufferWithCache(`${target}${NOT_FOUND_JSON}`);
             res.setHeader("Content-Type", "text/json");
-            return Buffer.from(notFoundBufferJson);
+          } else {
+            buffer = await fetchAsBufferWithCache(`${target}${NOT_FOUND_HTML}`);
+            res.setHeader("Content-Type", "text/html");
           }
 
-          res.setHeader("Content-Type", "text/html");
-          return Buffer.from(notFoundBufferHtml);
+          return buffer;
         }
 
         return responseBuffer;
@@ -61,3 +56,15 @@ export const proxyContent = createProxyMiddleware({
     ),
   },
 });
+
+async function fetchAsBufferWithCache(url: string) {
+  let buffer = bufferCache.get(url);
+
+  if (!buffer) {
+    const response = await fetch(url);
+    buffer = await response.arrayBuffer();
+    bufferCache.set(url, buffer);
+  }
+
+  return Buffer.from(buffer);
+}
