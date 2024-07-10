@@ -34,13 +34,23 @@ export async function redirectNonCanonicals(
       typeof REDIRECTS[source] == "string" &&
       REDIRECTS[source] !== originalSource
     ) {
-      const target = REDIRECTS[source] + suffix + parsedUrl.search;
-      return redirect(res, target, {
-        status: 301,
-        cacheControlSeconds: THIRTY_DAYS,
-      });
+      const target = joinPath(REDIRECTS[source], suffix) + parsedUrl.search;
+      if (pathname !== target) {
+        return redirect(res, target, {
+          status: 301,
+          cacheControlSeconds: THIRTY_DAYS,
+        });
+      }
     }
   }
 
   next();
+}
+
+function joinPath(a: string, b: string) {
+  if (a.endsWith("/") && b.startsWith("/")) {
+    return a + b.slice(1);
+  } else {
+    return a + b;
+  }
 }
