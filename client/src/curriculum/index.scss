@@ -98,13 +98,14 @@
 
     li > em {
       background-color: var(--background-toc-active);
+      border-bottom-right-radius: 0.25rem;
       border-left: 2px solid var(--category-color);
+      border-top-right-radius: 0.25rem;
       display: inline-block;
       font-style: normal;
       font-variation-settings: normal;
       font-weight: 600;
-      padding: 0.25rem 0.25rem 0.25rem 0.5rem;
-      width: 100%;
+      padding: 0.25rem 0.5rem;
     }
   }
 }

@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.60.0](https://github.com/mdn/yari/compare/v2.59.0...v2.60.0) (2024-07-10)
+
+
+### Features
+
+* **curriculum:** launch Scrimba partnership ([4cb0e63](https://github.com/mdn/yari/commit/4cb0e63ae666d2ff348256a2209a744001c0d583))
+
+
+### Bug Fixes
+
+* **curriculum:** add via to scrim ([#11445](https://github.com/mdn/yari/issues/11445)) ([9763358](https://github.com/mdn/yari/commit/9763358c6c7dbae2b47eb07ca4f9d20a8dbc684f))
+* **curriculum:** avoid underline on focus ([#11443](https://github.com/mdn/yari/issues/11443)) ([cc44904](https://github.com/mdn/yari/commit/cc44904da39135dd5084a9773daf23a28aee2199))
+* **curriculum:** remove autofocus on scrim ([#11444](https://github.com/mdn/yari/issues/11444)) ([ce52c70](https://github.com/mdn/yari/commit/ce52c70e4dcac74928850a1178ac51e03dcc1b59))
+* **observatory:** set sidebar/TOC background-color ([#11420](https://github.com/mdn/yari/issues/11420)) ([895982d](https://github.com/mdn/yari/commit/895982deb35079da6aed4a8ae532310e4667e40b))
+
+
+### Enhancements
+
+* **curriculum:** improve design ([#11064](https://github.com/mdn/yari/issues/11064)) ([702afab](https://github.com/mdn/yari/commit/702afaba0186fbbc8bda3c3dd40a413fab3c1ae4))
+* **sidebar,toc:** improve style of current item ([#11063](https://github.com/mdn/yari/issues/11063)) ([2e15a84](https://github.com/mdn/yari/commit/2e15a841e81660d97479f2ca74bea6c65ac8fc6a))
+* **toc:** localize "In this article" header ([#11303](https://github.com/mdn/yari/issues/11303)) ([439736b](https://github.com/mdn/yari/commit/439736b9a74787b6639874f22aa33fec2c0104a5))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.6.7 to 1.6.13 ([#11428](https://github.com/mdn/yari/issues/11428)) ([fa9df3c](https://github.com/mdn/yari/commit/fa9df3c3dcb2b377ec718129f303f0dd11d3ef5d))
+* **deps-dev:** bump @types/cli-progress from 3.11.5 to 3.11.6 in the types group ([#11427](https://github.com/mdn/yari/issues/11427)) ([11759ac](https://github.com/mdn/yari/commit/11759ac43b10089a1800dc193368f00a40563c5e))
+* **deps-dev:** bump postcss-preset-env from 9.5.15 to 9.6.0 ([#11430](https://github.com/mdn/yari/issues/11430)) ([dcc2e6c](https://github.com/mdn/yari/commit/dcc2e6cfdf7810562293357156305435e56a19ba))
+* **deps-dev:** bump ts-jest from 29.1.5 to 29.2.0 ([#11440](https://github.com/mdn/yari/issues/11440)) ([58353d3](https://github.com/mdn/yari/commit/58353d37287a3e9d596a4d002eb4c08e5ae8cae3))
+* **deps-dev:** bump typescript-eslint from 7.15.0 to 7.16.0 ([#11437](https://github.com/mdn/yari/issues/11437)) ([1ba1fd0](https://github.com/mdn/yari/commit/1ba1fd0d32aa437c2fb0ac22e73c33c7758b0e67))
+* **deps:** bump @mdn/browser-compat-data from 5.5.36 to 5.5.37 ([#11429](https://github.com/mdn/yari/issues/11429)) ([21152da](https://github.com/mdn/yari/commit/21152da95c07242916febe6e27a353259cf3f7ea))
+* **deps:** bump @sentry/node from 8.14.0 to 8.15.0 in the sentry group ([#11421](https://github.com/mdn/yari/issues/11421)) ([8a80079](https://github.com/mdn/yari/commit/8a800790587bd026d718dd9eaff634728f3016fc))
+* **deps:** bump boto3 from 1.34.136 to 1.34.140 in /deployer in the dependencies group ([#11433](https://github.com/mdn/yari/issues/11433)) ([e6e2b5e](https://github.com/mdn/yari/commit/e6e2b5e04386ac1194add9ea2d521d601b2bc32e))
+* **deps:** bump certifi from 2023.7.22 to 2024.7.4 in /deployer ([#11424](https://github.com/mdn/yari/issues/11424)) ([4837b63](https://github.com/mdn/yari/commit/4837b6312bd4ac9b8a0e5f75088792e29929525b))
+* **deps:** bump certifi from 2023.7.22 to 2024.7.4 in /testing/integration ([#11425](https://github.com/mdn/yari/issues/11425)) ([ec98d99](https://github.com/mdn/yari/commit/ec98d9979f7e146455dcdb2297d339bd9eb4d08c))
+* **deps:** bump file-type from 19.0.0 to 19.1.0 ([#11438](https://github.com/mdn/yari/issues/11438)) ([770accb](https://github.com/mdn/yari/commit/770accbc44986b259fc3444c268ea287a0ef5410))
+* **deps:** bump inquirer from 10.0.0 to 10.0.1 ([#11436](https://github.com/mdn/yari/issues/11436)) ([c87068a](https://github.com/mdn/yari/commit/c87068aeef7c6a1d54e34177aeb00b887e695b38))
+* **deps:** bump inquirer from 9.3.3 to 9.3.4 ([#11422](https://github.com/mdn/yari/issues/11422)) ([09629b2](https://github.com/mdn/yari/commit/09629b20086bb06b14406f29f226b4008f2621c4))
+* **deps:** bump inquirer from 9.3.4 to 10.0.0 ([#11432](https://github.com/mdn/yari/issues/11432)) ([52d63db](https://github.com/mdn/yari/commit/52d63dbae6f5093b30857c868e9c82cf6d656720))
+* **deps:** bump lru-cache from 10.3.0 to 10.4.0 ([#11431](https://github.com/mdn/yari/issues/11431)) ([fa448af](https://github.com/mdn/yari/commit/fa448af17fd048d7787f3d3c75f598c3d7ac06dc))
+* **deps:** bump openai from 4.52.3 to 4.52.4 ([#11439](https://github.com/mdn/yari/issues/11439)) ([0e6ff64](https://github.com/mdn/yari/commit/0e6ff64ccbc4392124e58f4115fcb5a71ca034cd))
+
 ## [2.59.0](https://github.com/mdn/yari/compare/v2.58.0...v2.59.0) (2024-07-04)
 
 
