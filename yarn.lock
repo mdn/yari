@@ -15777,10 +15777,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^3.13.0:
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-3.13.0.tgz#3a6e727434e04a2bf9a23419132b0963b7f1f890"
-  integrity sha512-/HVu5Av4fTGWufsZDKbYvOjwm2gMpjU1HDf/gtvKS1VGQCVoUomdnPRwfYf/78hWs4Ix52eGuzaDhEuWPePFxw==
+web-specs@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-3.13.1.tgz#7a0cb662c804d0e2b9206e80d6af04e87acba2fc"
+  integrity sha512-0CBUVnsYZGedsstdS2qzUVL8XRdry2y4IApvwU+ijBMHzH3TcvsXfXDlpeBFIwMhmGgh/tYz5z39/yuC6e39ZQ==
 
 web-streams-polyfill@4.0.0-beta.3:
   version "4.0.0-beta.3"
