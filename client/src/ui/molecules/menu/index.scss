@@ -1,5 +1,5 @@
 .top-level-entry-container {
-  &:not(.active):not(.user-menu):not(:hover) {
+  &:not(.active):not(:focus-within):not(:hover) {
     opacity: 0.775;
   }
 
