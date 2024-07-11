@@ -7513,10 +7513,10 @@ file-type@^10.10.0, file-type@^10.4.0:
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-10.11.0.tgz#2961d09e4675b9fb9a3ee6b69e9cd23f43fd1890"
   integrity sha512-uzk64HRpUZyTGZtVuvrjP0FYxzQrBf4rojot6J65YMEbwBLB0CWm0CLojVpwpmFmxcE/lkvYICgfcGozbBq6rw==
 
-file-type@^19.0.0, file-type@^19.1.0:
-  version "19.1.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-19.1.0.tgz#c813c1575b30ec6a2689881a228fa447225c2367"
-  integrity sha512-5rzeC2/GeStiAlYCenfrbKrQCiEzJTetCExFinFCH1UUz1XL7NlxRpLTwdWXzlVhLReRrWkfkNCH1Ap5zqOXtg==
+file-type@^19.0.0, file-type@^19.1.1:
+  version "19.1.1"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-19.1.1.tgz#44ac8f2f1b0013266eb1cd800ca27da4e5c8ec0c"
+  integrity sha512-FF4rVPjylL7HkybFBpnBfcnpdi4MGNSFuk4s4VvTdt1wm9tVMdGmtBhvXyz+nh8565FJ5qDUMIPXR+WHLrfHew==
   dependencies:
     strtok3 "^7.1.0"
     token-types "^6.0.0"
