@@ -1,6 +1,9 @@
 import { fileURLToPath } from "node:url";
 import nodeExternals from "webpack-node-externals";
 import webpack from "webpack";
+import getClientEnvironment from "../client/config/env.js";
+
+const env = getClientEnvironment();
 
 const config = {
   context: fileURLToPath(new URL(".", import.meta.url)),
@@ -94,6 +97,7 @@ const config = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
     }),
+    new webpack.DefinePlugin(env.stringified),
   ],
   experiments: {
     outputModule: true,

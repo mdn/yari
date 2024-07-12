@@ -19,8 +19,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "checkJs": true
+    "noUnusedParameters": true
   },
   "ts-node": {
     "esm": true,
