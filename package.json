@@ -149,7 +149,7 @@
     "web-specs": "^3.13.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.7",
+    "@babel/core": "^7.24.8",
     "@babel/eslint-parser": "^7.24.8",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.24.7",
