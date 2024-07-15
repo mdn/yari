@@ -67,7 +67,7 @@ function viewed(pong?: PlacementData) {
         pong?.version ? `&version=${pong.version}` : ""
       }`
     );
-  if (pong?.ppa && "" in navigator) {
+  if (pong?.ppa && "privateAttribution" in navigator) {
     try {
       let attribution: Partial<PrivateAttributionImpressionOptions> =
         JSON.parse(atob(pong.ppa));
