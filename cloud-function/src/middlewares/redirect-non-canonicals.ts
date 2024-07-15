@@ -6,7 +6,13 @@ import { THIRTY_DAYS } from "../constants.js";
 import { normalizePath, redirect } from "../utils.js";
 
 const require = createRequire(import.meta.url);
-const REDIRECTS = require("../../canonicals.json");
+const REDIRECTS = (() => {
+  try {
+    return require("../../canonicals.json");
+  } catch {
+    return {};
+  }
+})();
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 export async function redirectNonCanonicals(

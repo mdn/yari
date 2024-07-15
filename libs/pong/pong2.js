@@ -36,6 +36,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
       const {
         ads: [
           {
+            creativeid,
             statlink = null,
             statimp,
             Description,
@@ -70,6 +71,16 @@ export function createPong2GetHandler(zoneKeys, coder) {
                 copy: Description && he.decode(Description),
                 cta: CallToAction && he.decode(CallToAction),
                 heading: Heading && he.decode(Heading),
+                ppa:
+                  creativeid === "655397"
+                    ? btoa(
+                        JSON.stringify({
+                          ad: "moz-mdn-test-1",
+                          index: 0,
+                          target: "irlpodcast.org",
+                        })
+                      )
+                    : undefined,
                 colors: {
                   textColor: TextColor || TextColorLight,
                   backgroundColor: BackgroundColor || BackgroundColorLight,
@@ -106,7 +117,8 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const { copy, image, alt, click, view, cta, colors, heading } = v;
+          const { copy, image, alt, click, view, cta, colors, heading, ppa } =
+            v;
           return [
             p,
             {
@@ -119,6 +131,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
               click,
               view,
               heading,
+              ppa,
               version: 2,
             },
           ];

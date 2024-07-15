@@ -39,6 +39,27 @@ const INTERSECTION_OPTIONS = {
   threshold: 0.5,
 };
 
+// See https://searchfox.org/mozilla-central/source/dom/webidl/PrivateAttribution.webidl
+enum PrivateAttributionImpressionType {
+  View = "view",
+  Click = "click",
+}
+
+interface PrivateAttributionImpressionOptions {
+  type: PrivateAttributionImpressionType;
+  index: number;
+  ad: string;
+  target: string;
+}
+
+declare global {
+  interface Navigator {
+    privateAttribution: {
+      saveImpression: (options: PrivateAttributionImpressionOptions) => void;
+    };
+  }
+}
+
 function viewed(pong?: PlacementData) {
   pong?.view &&
     navigator.sendBeacon?.(
@@ -46,6 +67,19 @@ function viewed(pong?: PlacementData) {
         pong?.version ? `&version=${pong.version}` : ""
       }`
     );
+  if (pong?.ppa && "" in navigator) {
+    try {
+      let attribution: Partial<PrivateAttributionImpressionOptions> =
+        JSON.parse(atob(pong.ppa));
+      navigator?.privateAttribution?.saveImpression?.({
+        type: PrivateAttributionImpressionType.View,
+        ...attribution,
+      } as PrivateAttributionImpressionOptions);
+      console.debug("sent:", attribution);
+    } catch (e) {
+      console.warn(`unable to save impression(${e}): &{pong?.ppa}`);
+    }
+  }
 }
 
 export function SidePlacement() {
