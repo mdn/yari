@@ -56,7 +56,7 @@
     "test:prepare": "yarn build:prepare && yarn build:docs && yarn render:html && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
     "tool": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
-    "watch:ssr": "cd ssr && webpack --mode=production --watch"
+    "watch:ssr": "cd ssr && cross-env NODE_ENV=production webpack --mode=production --watch"
   },
   "resolutions": {
     "http-cache-semantics": ">=4.1.1",
