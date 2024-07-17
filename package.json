@@ -118,7 +118,7 @@
     "mdast-util-phrasing": "^4.1.0",
     "mdn-data": "^2.8.0",
     "open": "^10.1.0",
-    "open-editor": "^4.1.1",
+    "open-editor": "^5.0.0",
     "openai": "^4.52.7",
     "pg": "^8.12.0",
     "pgvector": "^0.2.0",
