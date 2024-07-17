@@ -50,6 +50,19 @@ function viewed(pong?: PlacementData) {
 
 export function SidePlacement() {
   const placementData = usePlacement();
+  const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
+    placementData?.side?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-new-side-background-light", backgroundColor],
+      ["--place-new-side-color-light", textColor],
+      [
+        "--place-new-side-background-dark",
+        backgroundColorDark || backgroundColor,
+      ],
+      ["--place-new-side-color-dark", textColorDark || textColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
 
   return !placementData?.side ? (
     <section className="place side"></section>
@@ -62,6 +75,7 @@ export function SidePlacement() {
       cta={placementData.side.cta}
       renderer={RenderNewSideBanner}
       typ="side"
+      style={css}
     ></PlacementInner>
   ) : (
     <PlacementInner
@@ -510,12 +524,8 @@ function RenderNewSideBanner({
   heading,
 }: PlacementRenderArgs) {
   return (
-    <section
-      ref={place}
-      className={["place", ...extraClassNames].join(" ")}
-      style={style}
-    >
-      <div className="pong-box2">
+    <section ref={place} className={["place", ...extraClassNames].join(" ")}>
+      <div className="pong-box2" style={style}>
         <a
           className="pong"
           data-glean={`pong: pong->click ${typ}`}
