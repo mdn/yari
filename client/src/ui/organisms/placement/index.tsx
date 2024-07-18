@@ -31,6 +31,7 @@ interface PlacementRenderArgs {
   version?: number;
   typ: string;
   heading?: string;
+  ppa?: string;
 }
 
 const INTERSECTION_OPTIONS = {
@@ -60,6 +61,29 @@ declare global {
   }
 }
 
+function saveImpression(
+  ppa: string | undefined,
+  type: PrivateAttributionImpressionType
+) {
+  if (ppa && "privateAttribution" in navigator) {
+    try {
+      let attribution: Partial<PrivateAttributionImpressionOptions> =
+        JSON.parse(atob(ppa));
+      navigator?.privateAttribution?.saveImpression?.({
+        type,
+        ...attribution,
+      } as PrivateAttributionImpressionOptions);
+      console.debug("sent:", attribution);
+    } catch (e) {
+      console.warn(`unable to save ${type} impression(${e}): &{ppa}`);
+    }
+  }
+}
+
+function clicked(ppa?: string) {
+  saveImpression(ppa, PrivateAttributionImpressionType.Click);
+}
+
 function viewed(pong?: PlacementData) {
   pong?.view &&
     navigator.sendBeacon?.(
@@ -67,19 +91,7 @@ function viewed(pong?: PlacementData) {
         pong?.version ? `&version=${pong.version}` : ""
       }`
     );
-  if (pong?.ppa && "privateAttribution" in navigator) {
-    try {
-      let attribution: Partial<PrivateAttributionImpressionOptions> =
-        JSON.parse(atob(pong.ppa));
-      navigator?.privateAttribution?.saveImpression?.({
-        type: PrivateAttributionImpressionType.View,
-        ...attribution,
-      } as PrivateAttributionImpressionOptions);
-      console.debug("sent:", attribution);
-    } catch (e) {
-      console.warn(`unable to save impression(${e}): &{pong?.ppa}`);
-    }
-  }
+  saveImpression(pong?.ppa, PrivateAttributionImpressionType.View);
 }
 
 export function SidePlacement() {
@@ -350,7 +362,7 @@ export function PlacementInner({
     };
   }, [isVisible, isIntersecting, sendViewed]);
 
-  const { image, copy, alt, click, version, heading } = pong || {};
+  const { image, copy, alt, click, version, heading, ppa } = pong || {};
   return (
     <>
       {!isServer &&
@@ -370,6 +382,7 @@ export function PlacementInner({
           version,
           typ,
           heading,
+          ppa,
         })}
     </>
   );
@@ -573,6 +586,7 @@ function RenderNewSideBanner({
   version = 1,
   typ,
   heading,
+  ppa,
 }: PlacementRenderArgs) {
   return (
     <section ref={place} className={["place", ...extraClassNames].join(" ")}>
@@ -585,6 +599,7 @@ function RenderNewSideBanner({
           )}&version=${version}`}
           target="_blank"
           rel="sponsored noreferrer"
+          onClick={() => clicked(ppa)}
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
