@@ -23,6 +23,7 @@ import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
 import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
+import { renderIndexHTML } from "./handlers/render-html.js";
 
 const router = Router();
 router.use(stripForwardedHostHeaders);
@@ -88,6 +89,7 @@ router.get(
   redirectTrailingSlash,
   redirectMovedPages,
   resolveIndexHTML,
+  renderIndexHTML,
   proxyContent
 );
 router.get(
@@ -96,6 +98,7 @@ router.get(
   redirectLocale,
   redirectEnforceTrailingSlash,
   resolveIndexHTML,
+  renderIndexHTML,
   proxyContent
 );
 // MDN Plus, static pages, etc.
@@ -106,6 +109,7 @@ router.get(
   redirectLocale,
   redirectTrailingSlash,
   resolveIndexHTML,
+  renderIndexHTML,
   proxyContent
 );
 router.all("*", notFound);
