@@ -211,10 +211,59 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Upload new files
+      - name: Upload with gsutil (cold)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gcloud storage rsync client/build gs://${{ vars.GCP_BUCKET_NAME }}/main --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt,js,css,map,svg --quiet
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1
+
+      - name: Upload with gsutil (warm)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1
+
+      - name: Upload with gcloud storage (two shot, cold)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1/
+          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude="^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1
+
+      - name: Upload with gcloud storage (two shot, warm)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1/
+          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude="^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1
+
+      - name: Upload with gcloud storage (one shot cp, cold)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-2/
+
+      - name: Upload with gcloud storage (one shot cp, cold)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-2/
+
+      - name: Upload with gcloud storage (one shot rsync, cold)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-3
+
+      - name: Upload with gcloud storage (one shot rsync, warm)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-3
+
+      - name: Upload with gcloud storage (one shot rsync mtimes, cold)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-4
+
+      - name: Upload with gcloud storage (one shot rsync mtimes, warm)
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |-
+          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-4
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -280,18 +329,3 @@ jobs:
       - name: Invalidate CDN
         if: ${{ github.event.inputs.invalidate }}
         run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async
-
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          service_account: deploy-test-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
-          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Delete old files
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage rsync client/build gs://${{ vars.GCP_BUCKET_NAME }}/main --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt,js,css,map,svg --delete-unmatched-destination-objects --quiet
