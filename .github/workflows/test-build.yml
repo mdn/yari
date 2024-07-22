@@ -211,56 +211,24 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Upload with gsutil (cold)
+      - name: Upload with gsutil (two shot)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1
 
-      - name: Upload with gsutil (warm)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1
-
-      - name: Upload with gcloud storage (two shot, cold)
+      - name: Upload with gcloud storage (two shot)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1/
           gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude="^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1
 
-      - name: Upload with gcloud storage (two shot, warm)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1/
-          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude="^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1
-
-      - name: Upload with gcloud storage (one shot cp, cold)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-2/
-
-      - name: Upload with gcloud storage (one shot cp, cold)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-2/
-
-      - name: Upload with gcloud storage (one shot rsync, cold)
+      - name: Upload with gcloud storage (one shot rsync)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-3
 
-      - name: Upload with gcloud storage (one shot rsync, warm)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-3
-
-      - name: Upload with gcloud storage (one shot rsync mtimes, cold)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-4
-
-      - name: Upload with gcloud storage (one shot rsync mtimes, warm)
+      - name: Upload with gcloud storage (one shot rsync mtimes)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-4
