@@ -120,7 +120,7 @@ export function buildLocalizedHandlers(locale: Locale): Handlers {
         if (type.isGFM) {
           // Handle GFM proposed syntax
           node.children[0].children[0].value =
-            node.children[0].children[0].value.replace(/\[!\w+\]\n/, "");
+            node.children[0].children[0].value.replace(/\[!\w+\]\n?/, "");
 
           // If the type isn't a callout, add the magic keyword
           if (!isCallout) {
@@ -136,6 +136,14 @@ export function buildLocalizedHandlers(locale: Locale): Handlers {
             node.children[0].children[1].value =
               (["zh-CN", "zh-TW"].includes(locale) ? "" : " ") +
               node.children[0].children[1].value;
+          }
+
+          // Remove blank line if there is one
+          if (
+            node.children[0].children.length === 1 &&
+            node.children[0].children[0].value === ""
+          ) {
+            node.children.splice(0, 1);
           }
         } else {
           // Remove "Callout:" text
