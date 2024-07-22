@@ -210,7 +210,7 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-resolve": "^29.7.0",
     "jest-watch-typeahead": "^2.2.2",
-    "jsdom": "^24.1.0",
+    "jsdom": "^24.1.1",
     "lint-staged": "^13.2.3",
     "mdast-util-to-hast": "^13.2.0",
     "mini-css-extract-plugin": "^2.9.0",
