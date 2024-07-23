@@ -27,20 +27,7 @@ export async function redirectPreferredLocale(
     return;
   }
 
-  // Check 3: Did the user manually switch the locale?
-
-  if (req.headers.referer) {
-    const source = new URL(req.headers.referer);
-    const [, sourceSlug] = localeAndSlugOf(source);
-
-    if (targetSlug.toLowerCase() === sourceSlug.toLowerCase()) {
-      // User manually switched locale.
-      next();
-      return;
-    }
-  }
-
-  // Check 4: Does the target exist in the preferred locale?
+  // Check 3: Does the target exist in the preferred locale?
 
   const preferredPathname =
     CANONICALS[normalizePath(`/${preferredLocale}/${targetSlug}`)] ?? null;
