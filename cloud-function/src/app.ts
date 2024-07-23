@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 import { Router } from "express";
 
@@ -25,6 +26,7 @@ import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeade
 import { proxyPong } from "./handlers/proxy-pong.js";
 
 const router = Router();
+router.use(cookieParser());
 router.use(stripForwardedHostHeaders);
 router.use(redirectLeadingSlash);
 // MDN Plus plans.
