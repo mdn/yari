@@ -48,7 +48,7 @@ export function TOC({ toc, title }: { toc: Toc[]; title?: string }) {
   }, [observedElements, referencedIds]);
 
   useFirstVisibleElement(observedElements, (element: Element | null) => {
-    const id = element ? idByObservedElement.current.get(element) ?? "" : "";
+    const id = element ? (idByObservedElement.current.get(element) ?? "") : "";
     if (id !== currentViewedTocItem) {
       setCurrentViewedTocItem(id);
     }
