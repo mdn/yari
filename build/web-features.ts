@@ -1,14 +1,14 @@
-import webFeatures from "web-features";
+import { features } from "web-features";
 
-export function getWebFeatureStatus(...features: string[]) {
-  if (features.length === 0) {
+export function getWebFeatureStatus(...bcdKeys: string[]) {
+  if (bcdKeys.length === 0) {
     return;
   }
 
-  for (const feature of Object.values(webFeatures)) {
+  for (const feature of Object.values(features)) {
     if (
       feature.status &&
-      feature.compat_features?.some((feature) => features.includes(feature))
+      feature.compat_features?.some((feature) => bcdKeys.includes(feature))
     ) {
       return feature.status;
     }
