@@ -207,8 +207,6 @@ const CellText = React.memo(
         break;
     }
 
-    console.log("label", label);
-
     return (
       <div
         className={
