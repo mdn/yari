@@ -207,6 +207,8 @@ const CellText = React.memo(
         break;
     }
 
+    console.log("label", label);
+
     return (
       <div
         className={
@@ -400,7 +402,8 @@ function getNotes(
           !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
-                label: "Full support",
+                label:
+                  "Full support (earliest supporting release version unknown)",
               }
             : isNotSupportedAtAll(item)
               ? {
