@@ -13,7 +13,7 @@ import {
 
 // Also specifies the order in which the legend appears
 export const LEGEND_LABELS = {
-  yes: "Full support",
+  yes: "Full support (earliest supporting release version unknown)",
   partial: "Partial support",
   preview: "In development. Supported in a pre-release version.",
   no: "No support",
