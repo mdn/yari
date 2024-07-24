@@ -63,9 +63,12 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
   }`;
 
+  const low_date_range = status.baseline_low_date?.match(/^([^0-9])/)?.[0];
+  const low_date_before = ["<", "≤"].includes(low_date_range || "");
   const low_date = status.baseline_low_date
-    ? new Date(status.baseline_low_date)
+    ? new Date(status.baseline_low_date.slice(low_date_range ? 1 : 0))
     : undefined;
+
   const level = status.baseline
     ? status.baseline
     : status.baseline === false
@@ -151,6 +154,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           <p>
             This feature is well established and works across many devices and
             browser versions. It’s been available across browsers since{" "}
+            {low_date_before && "before "}
             {low_date.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
@@ -159,7 +163,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           </p>
         ) : level === "low" && low_date ? (
           <p>
-            Since{" "}
+            Since {low_date_before && "before "}
             {low_date.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
