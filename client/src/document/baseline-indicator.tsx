@@ -174,8 +174,9 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
         )}
         <ul>
           <li>
+            {/* eslint-disable-next-line react/jsx-no-target-blank */}
             <a
-              href="/en-US/blog/baseline-evolution-on-mdn/"
+              href={`/${locale}/docs/Glossary/Baseline/Compatibility`}
               data-glean={BASELINE.LINK_LEARN_MORE}
               target="_blank"
               className="learn-more"
