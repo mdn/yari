@@ -401,7 +401,9 @@ function getNotes(
             ? {
                 iconName: "footnote",
                 label:
-                  "Full support (earliest supporting release version unknown)",
+                  item?.version_added === true
+                    ? "Full support (earliest supporting release version unknown)"
+                    : "Full support",
               }
             : isNotSupportedAtAll(item)
               ? {
