@@ -1,5 +1,8 @@
 import { type Locale } from "./core.js";
-import type { SupportStatus } from "./web-features.js";
+
+// web-features doesn't export this type directly so we need to do a little typescript magic:
+import type { features } from "web-features";
+type SupportStatus = (typeof features)[keyof typeof features]["status"];
 
 export interface Source {
   folder: string;

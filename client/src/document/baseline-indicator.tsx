@@ -7,14 +7,15 @@ import { useLocation } from "react-router";
 
 import "./baseline-indicator.scss";
 
-import type {
-  SupportStatus,
-  browserIdentifier,
-} from "../../../libs/types/web-features";
+// web-features doesn't export these types directly so we need to do a little typescript magic:
+import type { features } from "web-features";
+type SupportStatus = (typeof features)[keyof typeof features]["status"];
+type BrowserIdentifier =
+  keyof (typeof features)[keyof typeof features]["status"]["support"];
 
 interface BrowserGroup {
   name: string;
-  ids: browserIdentifier[];
+  ids: BrowserIdentifier[];
 }
 
 const ENGINES: {
@@ -62,9 +63,11 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
   }`;
 
+  const low_date_range = status.baseline_low_date?.match(/^([^0-9])/)?.[0];
   const low_date = status.baseline_low_date
-    ? new Date(status.baseline_low_date)
+    ? new Date(status.baseline_low_date.slice(low_date_range ? 1 : 0))
     : undefined;
+
   const level = status.baseline
     ? status.baseline
     : status.baseline === false
