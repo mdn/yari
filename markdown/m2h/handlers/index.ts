@@ -122,22 +122,6 @@ export function buildLocalizedHandlers(locale: Locale): Handlers {
           node.children[0].children[0].value =
             node.children[0].children[0].value.replace(/\[!\w+\]\n?/, "");
 
-          // If the type isn't a callout, add the magic keyword
-          if (!isCallout) {
-            node.children[0].children.unshift({
-              type: "strong",
-              children: [
-                {
-                  type: "text",
-                  value: type.magicKeyword,
-                },
-              ],
-            });
-            node.children[0].children[1].value =
-              (["zh-CN", "zh-TW"].includes(locale) ? "" : " ") +
-              node.children[0].children[1].value;
-          }
-
           // Remove blank line if there is one
           if (
             node.children[0].children.length === 1 &&
@@ -145,8 +129,24 @@ export function buildLocalizedHandlers(locale: Locale): Handlers {
           ) {
             node.children.splice(0, 1);
           }
+
+          // If the type isn't a callout, add the magic keyword
+          if (!isCallout) {
+            node.children.unshift({
+              type: "strong",
+              children: [
+                {
+                  type: "text",
+                  value: type.magicKeyword,
+                },
+              ],
+              properties: {
+                className: ["notecard-title"],
+              },
+            });
+          }
         } else {
-          // Remove "Callout:" text
+          // Remove "Callout:" text from non-GFM notecard
           if (isCallout) {
             if (node.children[0].children.length <= 1) {
               node.children.splice(0, 1);
