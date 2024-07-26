@@ -37,7 +37,7 @@ section.place {
 
     .pong-note {
       background-color: var(--place-new-side-color);
-      border: 1px solid #111a;
+      border: 1px solid var(--place-new-side-background);
       border-radius: 0.25rem;
       color: var(--place-new-side-background);
       font-size: 0.625rem;
