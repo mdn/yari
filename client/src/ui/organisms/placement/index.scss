@@ -36,24 +36,24 @@ section.place {
     width: 11rem;
 
     .pong-note {
-      background-color: #fff6;
+      background-color: var(--place-new-side-color);
       border: 1px solid #111a;
       border-radius: 0.25rem;
-      color: #fff;
+      color: var(--place-new-side-background);
       font-size: 0.625rem;
       margin: 0.5rem;
+      opacity: 0.4;
       padding: 0 0.25rem;
       position: absolute;
       right: 0;
-      text-decoration: none;
       text-decoration: underline;
       text-transform: uppercase;
       top: 0;
       width: max-content;
 
       &:hover {
-        background-color: #fff;
-        color: #111;
+        opacity: unset;
+        text-decoration: none;
       }
     }
 
