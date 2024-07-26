@@ -1,6 +1,34 @@
 @use "../ui/vars" as *;
 @use "../ui/base/mdn" as *;
 
+// Mobile first.
+
 main.contribute {
-  // TODO
+  .desktop-only {
+    display: none;
+  }
+
+  @media (min-width: $screen-lg) {
+    .desktop-only {
+      display: unset;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+  }
+
+  section.community-header {
+    display: grid;
+    grid-template-areas:
+      "illustration"
+      "heading"
+      "description"
+      "buttons";
+    text-align: center;
+
+    .illustration {
+      grid-area: illustration;
+    }
+  }
 }
