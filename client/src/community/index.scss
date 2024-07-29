@@ -3,7 +3,74 @@
 
 // Mobile first.
 
-main.contribute {
+main.community {
+  --light-bg: var(--background-primary);
+  --dark-bg: var(--observatory-bg); // FIXME
+  background-color: var(--dark-bg);
+  margin-top: 3rem;
+
+  h2 {
+    font-size: 1.5rem;
+    text-wrap: balance;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  a[href]:not(.btn) {
+    color: #000;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .btn {
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 0.5em; // sic!
+    text-decoration: none;
+
+    &.primary {
+      background-color: #000;
+      color: #fff;
+    }
+
+    &.secondary {
+      border: 1px solid #000;
+      color: #000;
+    }
+  }
+
+  table {
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+    tr:nth-of-type(odd) {
+      background: var(--dark-bg);
+    }
+
+    th,
+    td {
+      border: none;
+    }
+
+    th {
+      padding: 1.5rem;
+    }
+
+    td {
+      padding: 0.5rem 1.5rem;
+    }
+  }
+
   .desktop-only {
     display: none;
   }
@@ -18,6 +85,12 @@ main.contribute {
     }
   }
 
+  > section {
+    margin-top: 4rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
   section.community-header {
     display: grid;
     grid-template-areas:
@@ -25,10 +98,245 @@ main.contribute {
       "heading"
       "description"
       "buttons";
+    margin-top: 1rem;
     text-align: center;
+
+    > h1 {
+      margin: 0;
+    }
+
+    > p {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      text-wrap: balance;
+    }
+
+    .btn {
+      font-size: 1.2rem;
+    }
 
     .illustration {
       grid-area: illustration;
+    }
+  }
+
+  section.community-stats {
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem 3rem;
+
+    > .stats {
+      --border-width: 0.25rem;
+      --size: 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: calc(-1 * var(--size) + 2 * var(--border-width));
+
+      .number {
+        background-color: rgba(0, 210, 48, 1);
+        border: 0.25rem solid #eee;
+        border-radius: 50%;
+        display: block;
+        //font-size: 1rem;
+        font-weight: 500;
+        height: var(--size);
+        text-align: center;
+        margin: 0 auto;
+        line-height: calc(var(--size) - 2 * var(--border-width));
+        width: var(--size);
+      }
+      .legend {
+        display: block;
+        font-size: 0.875rem;
+        text-align: center;
+      }
+    }
+
+    &::after {
+      content: url("../assets/community/globe.svg");
+      display: block;
+      position: relative;
+      margin-left: auto;
+      margin-right: -3.75rem;
+      margin-bottom: -2.25rem;
+      height: 6rem;
+      width: 6rem;
+    }
+  }
+
+  section.community-contributors {
+    .actions {
+      flex-direction: row;
+    }
+
+    section.contributor-quotes {
+      .quotes {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1rem;
+        overflow-y: scroll;
+        width: 100%;
+
+        blockquote {
+          background-color: #fff;
+          border: 0;
+          border-radius: 0.5rem;
+          padding: 2rem 3rem;
+          flex: 20rem;
+          flex-shrink: 0;
+
+          > p {
+            font-style: italic;
+            font-variation-settings: "slnt" -10;
+
+            &::before {
+              content: url("../assets/community/quote.svg");
+              display: block;
+              position: relative;
+              margin-bottom: -2rem;
+              margin-left: -2rem;
+              height: auto;
+              width: 1rem;
+            }
+            &::after {
+              content: url("../assets/community/quote.svg");
+              display: block;
+              position: relative;
+              margin-left: calc(100% + 1rem);
+              margin-top: -2rem;
+              height: auto;
+              transform: rotate(180deg);
+              width: 1rem;
+            }
+          }
+
+          > footer {
+            margin-top: 2rem;
+          }
+        }
+      }
+    }
+  }
+
+  section.join-us {
+    background-color: #fff;
+    padding-top: 3rem;
+
+    > h2 {
+      margin-top: 0;
+    }
+
+    .notes {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      overflow-x: scroll;
+      padding-top: 1rem;
+      width: 100%;
+
+      .note {
+        position: relative;
+        padding-top: 0.5rem; // Avoid that sticky part overflows.
+
+        .note-inner {
+          align-items: flex-start;
+          display: flex;
+          flex-direction: column;
+          flex-shrink: 0;
+          background-color: #00d230;
+          box-shadow: 8px 8px 4px 0px rgba(103, 158, 116, 0.5);
+          height: auto;
+          min-width: 12.5rem;
+          padding: 1rem;
+          padding-top: 1.5rem;
+        }
+
+        &::before {
+          content: "";
+          display: block;
+          opacity: 0.8;
+          background: #f9f9fb;
+          box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+          left: 50%;
+          transform: translate(-50%);
+          top: -0.5rem;
+          position: absolute;
+          height: 1.5rem;
+          width: 4.5rem;
+        }
+
+        h3 {
+          font-size: 1rem;
+          font-weight: bold;
+          margin-top: 0rem;
+          margin-bottom: 0.5rem;
+        }
+
+        p {
+          flex-grow: 1;
+          margin: 0.5rem 0;
+          text-wrap: balance;
+        }
+
+        .btn {
+          align-self: center;
+          align-content: center;
+          justify-content: center;
+          margin-top: 0.5rem;
+          text-wrap: nowrap;
+        }
+      }
+    }
+  }
+
+  section.community-get-involved,
+  section.celebrate {
+    .labels {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .label {
+      background-color: var(--background-primary);
+      padding: 0.5rem;
+    }
+  }
+
+  section.contact {
+    .channels {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .channels > figure {
+      background-color: var(--light-bg);
+      padding: 2rem;
+
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+
+      svg {
+        align-self: flex-start;
+        height: auto;
+        width: 4.5rem;
+      }
+
+      figcaption {
+        h3 {
+          font-size: 1.5rem;
+          font-weight: 500;
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+
+        p {
+          margin-top: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+      }
     }
   }
 }
