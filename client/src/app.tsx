@@ -22,7 +22,7 @@ import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
 import { getCategoryByPathname } from "./utils";
-import { Contribute } from "./community";
+import { Community } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
@@ -330,7 +330,7 @@ export function App(appProps: HydrationData) {
               path="/community/*"
               element={
                 <StandardLayout>
-                  <Contribute />
+                  <Community />
                 </StandardLayout>
               }
             />
