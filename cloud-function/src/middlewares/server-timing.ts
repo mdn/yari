@@ -20,7 +20,10 @@ export async function addServerTimingHeaders(
     timers.set(id, { finished: true, hrtime: hrtime(timers.get(id)?.hrtime) });
   };
 
+  req.startServerTiming("total");
+
   onHeaders(res, () => {
+    req.endServerTiming("total");
     const header = [...timers]
       .filter(([, { finished }]) => finished)
       .map(

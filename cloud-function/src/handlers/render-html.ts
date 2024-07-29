@@ -45,7 +45,9 @@ export async function renderHTMLForContext(
     if (!contextRes.ok) {
       throw new Error(contextRes.statusText);
     }
+    req.startServerTiming("decodeJSON");
     context = await contextRes.json();
+    req.endServerTiming("decodeJSON");
     res.statusCode = 200;
   } catch {
     context = { url: req.url, pageNotFound: true };
@@ -53,7 +55,9 @@ export async function renderHTMLForContext(
   }
 
   try {
+    req.startServerTiming("addHeaders");
     withRenderedContentResponseHeaders(req, res);
+    req.endServerTiming("addHeaders");
     req.startServerTiming("renderHTML");
     const html = renderHTML(context);
     req.endServerTiming("renderHTML");
