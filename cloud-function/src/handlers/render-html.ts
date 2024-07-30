@@ -46,9 +46,12 @@ export async function renderHTMLForContext(
     if (!contextRes.ok) {
       throw new Error(contextRes.statusText);
     }
-    req.startServerTiming("decodeJSON");
-    context = await contextRes.json();
-    req.endServerTiming("decodeJSON");
+    req.startServerTiming("parseText");
+    const text = await contextRes.text();
+    req.endServerTiming("parseText");
+    req.startServerTiming("parseJSON");
+    context = JSON.parse(text);
+    req.endServerTiming("parseJSON");
     res.statusCode = 200;
   } catch {
     context = { url: req.url, pageNotFound: true };
