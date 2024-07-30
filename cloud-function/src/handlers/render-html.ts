@@ -65,6 +65,7 @@ export async function renderHTMLForContext(
   } catch (e) {
     captureException(e);
     res.statusCode = 500;
+    res.setHeader("Content-Type", "text/plain");
     return "Internal Server Error";
   }
 }
