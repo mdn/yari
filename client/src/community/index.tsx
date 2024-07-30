@@ -160,7 +160,7 @@ export function Community() {
   return (
     <main className="community">
       {/* 1. Header */}
-      <section className="community-header">
+      <section className="hero">
         <h1>MDN Community</h1>
         <p>Contribute, Collaborate and Shape the Future of the Web Together</p>
         <div className="actions">
@@ -178,9 +178,9 @@ export function Community() {
           <MobileHeaderSVG role="none" />
         </div>
         <div className="desktop-only">
-          <Header1 />
-          <Header2 />
-          <Header3 />
+          <Header1 className="top-left" role="none" />
+          <Header2 className="bottom-left" role="none" />
+          <Header3 className="bottom-right" role="none" />
         </div>
       </section>
       {/* 2. Stats */}

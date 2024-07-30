@@ -2,12 +2,14 @@
 @use "../ui/base/mdn" as *;
 
 // Mobile first.
+$desktop-min-width: $screen-sm;
 
 main.community {
   --light-bg: var(--background-primary);
   --dark-bg: var(--observatory-bg); // FIXME
   background-color: var(--dark-bg);
   margin-top: 3rem;
+  padding-bottom: 3rem;
 
   h2 {
     font-size: 1.5rem;
@@ -18,6 +20,7 @@ main.community {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
   }
 
@@ -75,9 +78,13 @@ main.community {
     display: none;
   }
 
-  @media (min-width: $screen-lg) {
+  .mobile-only {
+    display: contents;
+  }
+
+  @media (min-width: $desktop-min-width) {
     .desktop-only {
-      display: unset;
+      display: contents;
     }
 
     .mobile-only {
@@ -91,21 +98,23 @@ main.community {
     padding-right: 0.75rem;
   }
 
-  section.community-header {
+  section.hero {
     display: grid;
     grid-template-areas:
       "illustration"
       "heading"
-      "description"
-      "buttons";
+      "copy"
+      "actions";
     margin-top: 1rem;
     text-align: center;
 
     > h1 {
+      grid-area: heading;
       margin: 0;
     }
 
     > p {
+      grid-area: copy;
       margin-top: 1.5rem;
       margin-bottom: 1rem;
       text-wrap: balance;
@@ -115,8 +124,49 @@ main.community {
       font-size: 1.2rem;
     }
 
+    .actions {
+      grid-area: actions;
+      flex-wrap: wrap;
+      text-wrap: nowrap;
+    }
+
     .illustration {
       grid-area: illustration;
+    }
+
+    @media (min-width: $desktop-min-width) {
+      background-image: url("../assets/community/hero-bg.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto 25rem;
+      column-gap: 2rem;
+
+      grid-template-areas:
+        "top-left . ."
+        "top-left heading . "
+        ". copy ."
+        "bottom-left actions bottom-right"
+        "bottom-left . bottom-right";
+      justify-content: space-around;
+      margin: 0 auto;
+      max-width: 78rem;
+
+      .actions {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .top-left {
+        grid-area: top-left;
+      }
+
+      .bottom-left {
+        grid-area: bottom-left;
+      }
+
+      .bottom-right {
+        grid-area: bottom-right;
+      }
     }
   }
 
