@@ -18,6 +18,7 @@ export async function renderIndexHTML(
   next: NextFunction
 ) {
   if (req.url.endsWith("/index.html")) {
+    req.startServerTiming("totalSSR");
     const html = await renderHTMLForContext(
       req,
       res,
@@ -55,9 +56,7 @@ export async function renderHTMLForContext(
   }
 
   try {
-    req.startServerTiming("addHeaders");
     withRenderedContentResponseHeaders(req, res);
-    req.endServerTiming("addHeaders");
     req.startServerTiming("renderHTML");
     const html = renderHTML(context);
     req.endServerTiming("renderHTML");
