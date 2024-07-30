@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "nodenext",
+    "allowSyntheticDefaultImports": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "exactOptionalPropertyTypes": true,
@@ -19,7 +20,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "ts-node": {
     "esm": true,

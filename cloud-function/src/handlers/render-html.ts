@@ -18,6 +18,7 @@ export async function renderIndexHTML(
   next: NextFunction
 ) {
   if (req.url.endsWith("/index.html")) {
+    req.startServerTiming("totalSSR");
     const html = await renderHTMLForContext(
       req,
       res,
@@ -30,7 +31,7 @@ export async function renderIndexHTML(
 }
 
 export async function renderHTMLForContext(
-  req: IncomingMessage,
+  req: Request,
   res: ServerResponse<IncomingMessage>,
   contextUrl: string
 ) {
@@ -39,11 +40,15 @@ export async function renderHTMLForContext(
   let context;
 
   try {
+    req.startServerTiming("fetchJSON");
     const contextRes = await fetch(contextUrl);
+    req.endServerTiming("fetchJSON");
     if (!contextRes.ok) {
       throw new Error(contextRes.statusText);
     }
+    req.startServerTiming("decodeJSON");
     context = await contextRes.json();
+    req.endServerTiming("decodeJSON");
     res.statusCode = 200;
   } catch {
     context = { url: req.url, pageNotFound: true };
@@ -52,10 +57,14 @@ export async function renderHTMLForContext(
 
   try {
     withRenderedContentResponseHeaders(req, res);
-    return renderHTML(context);
+    req.startServerTiming("renderHTML");
+    const html = renderHTML(context);
+    req.endServerTiming("renderHTML");
+    return html;
   } catch (e) {
     captureException(e);
     res.statusCode = 500;
+    res.setHeader("Content-Type", "text/plain");
     return "Internal Server Error";
   }
 }

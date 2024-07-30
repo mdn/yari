@@ -10,6 +10,8 @@ import { PROXY_TIMEOUT } from "../constants.js";
 import { isLiveSampleURL } from "../utils.js";
 import { renderHTMLForContext } from "./render-html.js";
 
+import type { Request } from "express";
+
 const target = sourceUri(Source.content);
 
 export const proxyContent = createProxyMiddleware({
@@ -21,7 +23,7 @@ export const proxyContent = createProxyMiddleware({
   selfHandleResponse: true,
   on: {
     proxyReq: fixRequestBody,
-    proxyRes: responseInterceptor(
+    proxyRes: responseInterceptor<Request>(
       async (responseBuffer, proxyRes, req, res) => {
         if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
           const html = await renderHTMLForContext(
