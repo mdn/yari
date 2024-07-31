@@ -1,6 +1,6 @@
-import { ReactComponent as Header1 } from "./svg/header-1.svg";
-import { ReactComponent as Header2 } from "./svg/header-2.svg";
-import { ReactComponent as Header3 } from "./svg/header-3.svg";
+import { ReactComponent as DesktopHeaderTopLeftSVG } from "./svg/header-1.svg";
+import { ReactComponent as DesktopHeaderBottomLeftSVG } from "./svg/header-2.svg";
+import { ReactComponent as DesktopHeaderBottomRightSVG } from "./svg/header-3.svg";
 import { ReactComponent as MobileHeaderSVG } from "./svg/header-mobile.svg";
 import { ReactComponent as VideoPreviewSVG } from "./svg/video-preview.svg";
 import { ReactComponent as ChatSVG } from "./svg/chat.svg";
@@ -16,13 +16,71 @@ const STATS = [
 ];
 const LOCALE_COUNT = 9;
 
+const CONTRIBUTORS: { github_id: number; org?: string; user: string }[] = [
+  {
+    github_id: 43580235,
+    org: "@mozilla",
+    user: "bsmth",
+  },
+  {
+    github_id: 47647,
+    user: "chrisdavidmills",
+    org: "Mills Docs Limited",
+  },
+  {
+    github_id: 349114,
+    user: "Elchi3",
+    org: "@openwebdocs",
+  },
+  {
+    github_id: 69888,
+    user: "estelle",
+    org: "Standardista",
+  },
+  {
+    github_id: 5368500,
+    user: "hamishwillee",
+    org: "Jenosam Pty Ltd",
+  },
+  {
+    github_id: 55398995,
+    user: "Josh-Cena",
+    org: "Yale University Very Very Very Long",
+  },
+  {
+    github_id: 11516302,
+    user: "mfuji09",
+  },
+  {
+    github_id: 87750369,
+    user: "OnkarRuikar",
+  },
+  {
+    github_id: 5179191,
+    user: "queengooborg",
+  },
+  {
+    github_id: 194984,
+    user: "sideshowbarker",
+  },
+  {
+    github_id: 1466293,
+    user: "teoli2003",
+  },
+  {
+    github_id: 432915,
+    user: "wbamberg",
+    org: "@openwebdocs",
+  },
+];
+
 const CONTRIBUTE_ACTIONS = [
   {
     title: "Fix issues",
     description: "Submit pull requests to fix reported issues.",
     actions: [
       {
-        url: "https://github.comhttps://github.com/mdn/content/issues",
+        url: "https://github.com/mdn/content/issues",
         label: "Squash bugs",
       },
     ],
@@ -32,7 +90,7 @@ const CONTRIBUTE_ACTIONS = [
     description: "Fix inaccuracies and fill in missing information.",
     actions: [
       {
-        url: "https://github.comhttps://github.com/mdn/content/#readme",
+        url: "https://github.com/mdn/content/#readme",
         label: "Start writing",
       },
     ],
@@ -43,7 +101,7 @@ const CONTRIBUTE_ACTIONS = [
       "Participate in translating content into one of our supported languages.",
     actions: [
       {
-        url: "https://github.comhttps://developer.mozilla.org/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
+        url: "https://developer.mozilla.org/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
         label: "Find your locale",
       },
     ],
@@ -54,7 +112,7 @@ const CONTRIBUTE_ACTIONS = [
       "Share your knowledge and expertise and guide fellow learners.",
     actions: [
       {
-        url: "https://github.comhttps://discord.gg/3MKbs99V4F",
+        url: "https://discord.gg/3MKbs99V4F",
         label: "Help on Discord",
       },
     ],
@@ -64,11 +122,11 @@ const CONTRIBUTE_ACTIONS = [
     description: "Share your stories with us on our Mastodon or X.",
     actions: [
       {
-        url: "https://github.comhttps://twitter.com/mozdevnet",
+        url: "https://twitter.com/mozdevnet",
         label: "X",
       },
       {
-        url: "https://github.comhttps://mozilla.social/@mdn",
+        url: "https://mozilla.social/@mdn",
         label: "Mastodon",
       },
     ],
@@ -174,14 +232,19 @@ export function Community() {
             Join MDN Discord
           </a>
         </div>
-        <div className="illustration mobile-only">
-          <MobileHeaderSVG role="none" />
-        </div>
-        <div className="desktop-only">
-          <Header1 className="top-left" role="none" />
-          <Header2 className="bottom-left" role="none" />
-          <Header3 className="bottom-right" role="none" />
-        </div>
+        <MobileHeaderSVG className="illustration mobile-only" role="none" />
+        <DesktopHeaderTopLeftSVG
+          className="top-left desktop-only"
+          role="none"
+        />
+        <DesktopHeaderBottomLeftSVG
+          className="bottom-left desktop-only"
+          role="none"
+        />
+        <DesktopHeaderBottomRightSVG
+          className="bottom-right desktop-only"
+          role="none"
+        />
       </section>
       {/* 2. Stats */}
       <section className="community-stats">
@@ -207,6 +270,28 @@ export function Community() {
       <section className="community-contributors">
         <section className="contributors desktop-only">
           {/* Left column. */}
+          {CONTRIBUTORS.slice(0, 10).map((contributor, index) => (
+            <figure className="contributor">
+              <img
+                src={`https://avatars.githubusercontent.com/u/${contributor.github_id}?v=4`}
+                alt=""
+              />
+
+              <figcaption>
+                <a
+                  href={`https://github.com/${contributor.user}`}
+                  rel="nofollow noopener noreferrer"
+                  target="_blank"
+                  className="username"
+                >
+                  {contributor.user}
+                </a>
+                {contributor.org && (
+                  <span className="org">{contributor.org}</span>
+                )}
+              </figcaption>
+            </figure>
+          ))}
         </section>
         <section className="meet-our-contributors">
           {/* Right column, top. */}
@@ -241,39 +326,58 @@ export function Community() {
           <div className="quotes">
             <blockquote>
               <p>
-                MDN Web Docs has the most up-to-date and accurate information
-                and the content is presented in an easy-to-understand manner. I
-                also like that it's available in many languages (very
-                important!)
+                There are millions of web developers in China, and many of them
+                begin their developer journey at MDN Web Docs. Contributing to
+                MDN Web Docs is an excellent way to help people who are starting
+                out.
               </p>
               <footer>
-                -Yuji
+                -
+                <a
+                  href="https://github.com/yin1999"
+                  rel="nofollow noreferrer noopener"
+                  target="_blank"
+                >
+                  YiTao Yin
+                </a>
                 <br />
                 (MDN contributor)
               </footer>
             </blockquote>
             <blockquote>
               <p>
-                MDN Web Docs has the most up-to-date and accurate information
-                and the content is presented in an easy-to-understand manner. I
-                also like that it's available in many languages (very
-                important!)
+                Working with the kind and knowledgeable teams on MDN gives me
+                the opportunity to learn, be part of a passionate community, and
+                help improve an extraordinary resource.
               </p>
               <footer>
-                -Yuji
+                -
+                <a
+                  href="https://github.com/cw118"
+                  rel="nofollow noreferrer noopener"
+                  target="_blank"
+                >
+                  Carolyn Wu
+                </a>
                 <br />
                 (MDN contributor)
               </footer>
             </blockquote>
             <blockquote>
               <p>
-                MDN Web Docs has the most up-to-date and accurate information
-                and the content is presented in an easy-to-understand manner. I
-                also like that it's available in many languages (very
-                important!)
+                I find the MDN Web Docs team welcoming and very experienced.
+                Here, I get to learn new stuff. This is the easiest place for
+                anybody to start their open source journey!
               </p>
               <footer>
-                -Yuji
+                -
+                <a
+                  href="https://github.com/OnkarRuikar"
+                  rel="nofollow noreferrer noopener"
+                  target="_blank"
+                >
+                  Onkar Ruikar
+                </a>
                 <br />
                 (MDN contributor)
               </footer>
@@ -322,11 +426,13 @@ export function Community() {
               <div className="note-inner">
                 <h3>{title}</h3>
                 <p>{description}</p>
-                {actions.map(({ url, label }) => (
-                  <a className="btn primary" href={url}>
-                    {label}
-                  </a>
-                ))}
+                <div className="actions">
+                  {actions.map(({ url, label }) => (
+                    <a className="btn primary" href={url}>
+                      {label}
+                    </a>
+                  ))}
+                </div>
               </div>
             </li>
           ))}
