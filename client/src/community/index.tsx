@@ -207,6 +207,7 @@ export function Community() {
       <section className="community-contributors">
         <section className="contributors desktop-only">
           {/* Left column. */}
+          Lorem ipsum
         </section>
         <section className="meet-our-contributors">
           {/* Right column, top. */}

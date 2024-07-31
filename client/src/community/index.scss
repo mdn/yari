@@ -2,13 +2,14 @@
 @use "../ui/base/mdn" as *;
 
 // Mobile first.
-$desktop-min-width: $screen-sm;
+$desktop-min-width: $screen-md;
+$desktop-content-width: 78rem;
 
 main.community {
   --light-bg: var(--background-primary);
   --dark-bg: var(--observatory-bg); // FIXME
   background-color: var(--dark-bg);
-  margin-top: 3rem;
+  padding-top: 3rem;
   padding-bottom: 3rem;
 
   h2 {
@@ -78,13 +79,9 @@ main.community {
     display: none;
   }
 
-  .mobile-only {
-    display: contents;
-  }
-
   @media (min-width: $desktop-min-width) {
     .desktop-only {
-      display: contents;
+      display: unset;
     }
 
     .mobile-only {
@@ -96,6 +93,12 @@ main.community {
     margin-top: 4rem;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+
+    @media (min-width: $desktop-min-width) {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: $desktop-content-width;
+    }
   }
 
   section.hero {
@@ -132,6 +135,10 @@ main.community {
 
     .illustration {
       grid-area: illustration;
+
+      > svg {
+        margin: 0 auto;
+      }
     }
 
     @media (min-width: $desktop-min-width) {
@@ -149,7 +156,6 @@ main.community {
         "bottom-left . bottom-right";
       justify-content: space-around;
       margin: 0 auto;
-      max-width: 78rem;
 
       .actions {
         flex-direction: row;
@@ -200,6 +206,11 @@ main.community {
         display: block;
         font-size: 0.875rem;
         text-align: center;
+      }
+
+      @media (min-width: $desktop-min-width) {
+        flex-direction: row;
+        justify-content: space-around;
       }
     }
 
@@ -267,6 +278,53 @@ main.community {
           }
         }
       }
+    }
+
+    @media (min-width: $desktop-min-width) {
+      display: grid;
+      grid-template-areas:
+        "contributors copy"
+        "contributors quotes";
+      grid-template-columns: 2fr 1fr;
+
+      > section.contributors {
+        grid-area: contributors;
+
+        background-image: url("../assets/community/contributors-bg.svg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100%;
+      }
+
+      > section.meet-our-contributors {
+        grid-area: copy;
+      }
+
+      > section.contributor-quotes {
+        grid-area: quotes;
+      }
+    }
+  }
+
+  section.get-started {
+    display: grid;
+    grid-template-areas: "header" "copy" "figure";
+
+    > h2 {
+      grid-area: header;
+    }
+
+    > p {
+      grid-area: copy;
+    }
+
+    > figure {
+      grid-area: figure;
+    }
+
+    @media (min-width: $desktop-min-width) {
+      grid-template-areas: "header . video" "copy . figure";
+      grid-template-columns: 2fr 1fr 2fr;
     }
   }
 
