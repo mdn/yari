@@ -2598,10 +2598,10 @@
     "@opentelemetry/semantic-conventions" "^1.22.0"
     "@types/connect" "3.4.36"
 
-"@opentelemetry/instrumentation-express@0.41.0":
-  version "0.41.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/instrumentation-express/-/instrumentation-express-0.41.0.tgz#e23f0ad1945cbff3ac27fb1f64f7b4ee3c1e25dd"
-  integrity sha512-/B7fbMdaf3SYe5f1P973tkqd6s7XZirjpfkoJ63E7nltU30qmlgm9tY5XwZOzAFI0rHS9tbrFI2HFPAvQUFe/A==
+"@opentelemetry/instrumentation-express@0.41.1":
+  version "0.41.1"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/instrumentation-express/-/instrumentation-express-0.41.1.tgz#658561df6ffbae86f5ad33e8d7ef2abb7b4967fc"
+  integrity sha512-uRx0V3LPGzjn2bxAnV8eUsDT82vT7NTwI0ezEuPMBOTOsnPpGhWdhcdNdhH80sM4TrWrOfXm9HGEdfWE3TRIww==
   dependencies:
     "@opentelemetry/core" "^1.8.0"
     "@opentelemetry/instrumentation" "^0.52.0"
@@ -2864,25 +2864,25 @@
   resolved "https://registry.yarnpkg.com/@sec-ant/readable-stream/-/readable-stream-0.4.1.tgz#60de891bb126abfdc5410fdc6166aca065f10a0c"
   integrity sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==
 
-"@sentry/core@8.20.0":
-  version "8.20.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.20.0.tgz#c50d082033a44295d2fe9140319f912ba1f946d3"
-  integrity sha512-R81snuw+67VT4aCxr6ShST/s0Y6FlwN2YczhDwaGyzumn5rlvA6A4JtQDeExduNoDDyv4T3LrmW8wlYZn3CJJw==
+"@sentry/core@8.21.0":
+  version "8.21.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.21.0.tgz#0c6b18f931bd69ce94e3e5b606adb62fefed0c41"
+  integrity sha512-1eW0HKxpBz23oWR3yshl7kVpoJSq1DtqnSIRK3JkV72ytO+UD5sbGQ2iCzmXrefJHP555EOrui2eMm+akq2sDA==
   dependencies:
-    "@sentry/types" "8.20.0"
-    "@sentry/utils" "8.20.0"
+    "@sentry/types" "8.21.0"
+    "@sentry/utils" "8.21.0"
 
-"@sentry/node@^8.20.0":
-  version "8.20.0"
-  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.20.0.tgz#dc20f03dfdec8797f2a0074ebe90044d305d1c59"
-  integrity sha512-i4ywT2m0Gw65U3uwI4NwiNcyqp9YF6/RsusfH1pg4YkiL/RYp7FS0MPVgMggfvoue9S3KjCgRVlzTLwFATyPXQ==
+"@sentry/node@^8.21.0":
+  version "8.21.0"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.21.0.tgz#31bb89a63776971bcfec1354ecc00b7842e2ec7a"
+  integrity sha512-AIgRIAqkyIIvaDCO0HS7EsGYRfMra8rcTwmSS6kbJsi5Xo9LLSz7mAq5zUZ/YaqRz0Sn54P+JxryJgB6pZj0NA==
   dependencies:
     "@opentelemetry/api" "^1.9.0"
     "@opentelemetry/context-async-hooks" "^1.25.1"
     "@opentelemetry/core" "^1.25.1"
     "@opentelemetry/instrumentation" "^0.52.1"
     "@opentelemetry/instrumentation-connect" "0.38.0"
-    "@opentelemetry/instrumentation-express" "0.41.0"
+    "@opentelemetry/instrumentation-express" "0.41.1"
     "@opentelemetry/instrumentation-fastify" "0.38.0"
     "@opentelemetry/instrumentation-graphql" "0.42.0"
     "@opentelemetry/instrumentation-hapi" "0.40.0"
@@ -2900,34 +2900,34 @@
     "@opentelemetry/sdk-trace-base" "^1.25.1"
     "@opentelemetry/semantic-conventions" "^1.25.1"
     "@prisma/instrumentation" "5.17.0"
-    "@sentry/core" "8.20.0"
-    "@sentry/opentelemetry" "8.20.0"
-    "@sentry/types" "8.20.0"
-    "@sentry/utils" "8.20.0"
-    import-in-the-middle "^1.10.0"
+    "@sentry/core" "8.21.0"
+    "@sentry/opentelemetry" "8.21.0"
+    "@sentry/types" "8.21.0"
+    "@sentry/utils" "8.21.0"
+    import-in-the-middle "^1.11.0"
   optionalDependencies:
     opentelemetry-instrumentation-fetch-node "1.2.3"
 
-"@sentry/opentelemetry@8.20.0":
-  version "8.20.0"
-  resolved "https://registry.yarnpkg.com/@sentry/opentelemetry/-/opentelemetry-8.20.0.tgz#5e62a361f43e6b53686037a62b82a7de51995578"
-  integrity sha512-NFcLK6+t9wUc4HlGKeuDn6W4KjZxZfZmWlrK2/tgC5KzG1cnVeOnWUrJzGHTa+YDDdIijpjiFUcpXGPkX3rmIg==
+"@sentry/opentelemetry@8.21.0":
+  version "8.21.0"
+  resolved "https://registry.yarnpkg.com/@sentry/opentelemetry/-/opentelemetry-8.21.0.tgz#d258d62e4dccfd3d7c48133a17ec253ba745c401"
+  integrity sha512-EDaHt1GSayCEMcRonYm+J/qf6HH+aZxoTeWxd27xlqUwIcALTo5OdGSk/JpJLQKlJO1WcxWzrpY8HWoZWwhdZw==
   dependencies:
-    "@sentry/core" "8.20.0"
-    "@sentry/types" "8.20.0"
-    "@sentry/utils" "8.20.0"
+    "@sentry/core" "8.21.0"
+    "@sentry/types" "8.21.0"
+    "@sentry/utils" "8.21.0"
 
-"@sentry/types@8.20.0":
-  version "8.20.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-8.20.0.tgz#f0f50c84eb768df8b55ee7b41459fec2d39d0d5e"
-  integrity sha512-6IP278KojOpiAA7vrd1hjhUyn26cl0n0nGsShzic5ztCVs92sTeVRnh7MTB9irDVtAbOEyt/YH6go3h+Jia1pA==
+"@sentry/types@8.21.0":
+  version "8.21.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-8.21.0.tgz#4d6fd33a480414ebe5ae9d6b8f2bc77d5bc67180"
+  integrity sha512-2hF7lhDCGBN8VkIkHTuh9pL3QnJ3QBkIDAcKosFCS5tHGp68zGJgE0VWg2yQvqjZM06DnFT9CUKF9ZGv45FS3w==
 
-"@sentry/utils@8.20.0":
-  version "8.20.0"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-8.20.0.tgz#fcbf46c8e8c8eccbf1db532b087547eb4f6c449c"
-  integrity sha512-+1I5H8dojURiEUGPliDwheQk8dhjp8uV1sMccR/W/zjFrt4wZyPs+Ttp/V7gzm9LDJoNek9tmELert/jQqWTgg==
+"@sentry/utils@8.21.0":
+  version "8.21.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-8.21.0.tgz#f3709bbee6d701e10cccbf4ac71b9a162ed11ffe"
+  integrity sha512-Evq5goV8CKLISuULenqJm8VyIYaKa6wDAYIHfcDmSyCJIEDlEpRb8S7LcKdYsf6h0FdGy9ofv5ksgMPCqYq7eg==
   dependencies:
-    "@sentry/types" "8.20.0"
+    "@sentry/types" "8.21.0"
 
 "@sidvind/better-ajv-errors@2.1.3":
   version "2.1.3"
@@ -9041,10 +9041,10 @@ import-in-the-middle@1.7.1:
     cjs-module-lexer "^1.2.2"
     module-details-from-path "^1.0.3"
 
-import-in-the-middle@^1.10.0, import-in-the-middle@^1.8.1:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-1.10.0.tgz#f15b0841950ded8d899b635058da5646256949b1"
-  integrity sha512-Z1jumVdF2GwnnYfM0a/y2ts7mZbwFMgt5rRuVmLgobgahC6iKgN5MBuXjzfTIOUpq5LSU10vJIPpVKe0X89fIw==
+import-in-the-middle@^1.11.0, import-in-the-middle@^1.8.1:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-1.11.0.tgz#a94c4925b8da18256cde3b3b7b38253e6ca5e708"
+  integrity sha512-5DimNQGoe0pLUHbR9qK84iWaWjjbsxiqXnw6Qz64+azRgleqv9k2kTt5fw7QsOpmaGYtuxxursnPPsnTKEx10Q==
   dependencies:
     acorn "^8.8.2"
     acorn-import-attributes "^1.9.5"
