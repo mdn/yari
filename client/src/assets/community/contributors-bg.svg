@@ -1,9 +1,50 @@
-<svg width="1311" height="1311" viewBox="0 0 1311 1311" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M465.268 557.664C450.736 587.997 443.337 621.253 443.636 654.887C443.936 688.52 451.926 721.639 466.996 751.708" stroke="white" stroke-width="2"/>
-<path d="M493.617 792.725C515.505 819.419 543.356 840.6 574.926 854.563C606.496 868.526 640.904 874.882 675.379 873.118" stroke="white" stroke-width="2"/>
-<path d="M654.106 432.866C621.43 430.754 588.693 435.947 558.275 448.067C527.856 460.187 500.519 478.931 478.249 502.936" stroke="white" stroke-width="2"/>
-<path d="M192.831 589.026C205.146 503.851 240.726 423.726 295.652 357.473" stroke="white" stroke-width="2"/>
-<path d="M334.176 995.568C257.523 923.005 207.672 826.645 192.728 722.157" stroke="white" stroke-width="2"/>
-<path d="M637.814 1122.82C549.762 1119.49 464.443 1091.35 391.686 1041.64" stroke="white" stroke-width="2" stroke-dasharray="30 30"/>
-<path d="M393.495 268.597C454.842 227.087 525.173 200.743 598.695 191.734" stroke="white" stroke-width="2" stroke-dasharray="30 30"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="483.69202"
+   height="932.08527"
+   viewBox="0 0 483.69202 932.08527"
+   fill="none"
+   version="1.1"
+   id="svg7"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs7" />
+  <path
+     d="m 273.52993,365.93 c -14.532,30.333 -21.931,63.589 -21.632,97.223 0.3,33.633 8.29,66.752 23.36,96.821"
+     stroke="#ffffff"
+     stroke-width="2"
+     id="path1" />
+  <path
+     d="m 301.87893,600.991 c 21.888,26.694 49.739,47.875 81.309,61.838 31.57,13.963 65.978,20.319 100.453,18.555"
+     stroke="#ffffff"
+     stroke-width="2"
+     id="path2" />
+  <path
+     d="m 462.36793,241.132 c -32.676,-2.112 -65.413,3.081 -95.831,15.201 -30.419,12.12 -57.756,30.864 -80.026,54.869"
+     stroke="#ffffff"
+     stroke-width="2"
+     id="path3" />
+  <path
+     d="M 1.0929267,397.292 C 13.407927,312.117 48.987927,231.992 103.91393,165.739"
+     stroke="#ffffff"
+     stroke-width="2"
+     id="path4" />
+  <path
+     d="M 142.43793,803.834 C 65.784927,731.271 15.933927,634.911 0.98992674,530.423"
+     stroke="#ffffff"
+     stroke-width="2"
+     id="path5" />
+  <path
+     d="m 446.07593,931.086 c -88.052,-3.33 -173.371,-31.47 -246.128,-81.18"
+     stroke="#ffffff"
+     stroke-width="2"
+     stroke-dasharray="30, 30"
+     id="path6" />
+  <path
+     d="m 201.75693,76.863 c 61.347,-41.51 131.678,-67.854 205.2,-76.863"
+     stroke="#ffffff"
+     stroke-width="2"
+     stroke-dasharray="30, 30"
+     id="path7" />
 </svg>
