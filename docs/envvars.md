@@ -39,7 +39,7 @@ https://github.com/mdn/translated-content.
 
 ### `CONTRIBUTOR_SPOTLIGHT_ROOT`
 
-**Default: `../mdn-contributor-spotlight/contributors`**
+**Example: `../mdn-contributor-spotlight/contributors`**
 
 Path to the contributor spotlight content, cloned from
 https://github.com/mdn/mdn-contributor-spotlight.

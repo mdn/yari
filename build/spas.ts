@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
+import { Octokit } from "octokit";
 
 import { m2h } from "../markdown/index.js";
 
@@ -53,62 +54,78 @@ const PAGE_DESCRIPTIONS = Object.freeze({
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
+});
+
 async function buildContributorSpotlight(
   locale: Locale,
-  options: { verbose?: boolean }
+  options: { verbose?: boolean },
+  onlyFeatured = true
 ) {
+  // TODO: cache/optimize
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
-  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
-    const markdown = fs.readFileSync(
-      `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf-8"
-    );
+  const spotlights = await Promise.all(
+    fs.readdirSync(contributorSpotlightRoot).map(async (contributor) => {
+      const markdown = fs.readFileSync(
+        `${contributorSpotlightRoot}/${contributor}/index.md`,
+        "utf-8"
+      );
 
-    const frontMatter = frontmatter<DocFrontmatter>(markdown);
-    const contributorHTML = await m2h(frontMatter.body, { locale });
+      const frontMatter = frontmatter<DocFrontmatter>(markdown);
+      const contributorHTML = await m2h(frontMatter.body, { locale });
 
-    const { sections } = splitSections(contributorHTML);
+      const { sections } = splitSections(contributorHTML);
 
-    const hyData = {
-      sections: sections,
-      contributorName: frontMatter.attributes.contributor_name,
-      folderName: frontMatter.attributes.folder_name,
-      isFeatured: frontMatter.attributes.is_featured,
-      profileImg,
-      profileImgAlt: frontMatter.attributes.img_alt,
-      usernames: frontMatter.attributes.usernames,
-      quote: frontMatter.attributes.quote,
-    };
-    const context: HydrationData = {
-      hyData,
-      url: `/${locale}/${prefix}/${contributor}`,
-    };
+      const hyData = {
+        sections: sections,
+        contributorName: frontMatter.attributes.contributor_name,
+        folderName: frontMatter.attributes.folder_name,
+        isFeatured: frontMatter.attributes.is_featured,
+        profileImg,
+        profileImgAlt: frontMatter.attributes.img_alt,
+        usernames: frontMatter.attributes.usernames,
+        quote: frontMatter.attributes.quote,
+      };
+      const context: HydrationData = {
+        hyData,
+        url: `/${locale}/${prefix}/${contributor}`,
+      };
 
-    const outPath = path.join(
-      BUILD_OUT_ROOT,
-      locale.toLowerCase(),
-      `${prefix}/${hyData.folderName}`
-    );
-    const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
-    const imgFileDestPath = path.join(outPath, profileImg);
-    const jsonFilePath = path.join(outPath, "index.json");
+      const outPath = path.join(
+        BUILD_OUT_ROOT,
+        locale.toLowerCase(),
+        `${prefix}/${hyData.folderName}`
+      );
+      const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
+      const imgFileDestPath = path.join(outPath, profileImg);
+      const jsonFilePath = path.join(outPath, "index.json");
 
-    fs.mkdirSync(outPath, { recursive: true });
-    fs.copyFileSync(imgFilePath, imgFileDestPath);
-    fs.writeFileSync(jsonFilePath, JSON.stringify(context));
+      fs.mkdirSync(outPath, { recursive: true });
+      fs.copyFileSync(imgFilePath, imgFileDestPath);
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
 
-    if (options.verbose) {
-      console.log("Wrote", jsonFilePath);
-    }
-    if (frontMatter.attributes.is_featured) {
+      if (options.verbose) {
+        console.log("Wrote", jsonFilePath);
+      }
       return {
         contributorName: frontMatter.attributes.contributor_name,
         url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
+        isFeatured: frontMatter.attributes.is_featured,
       };
-    }
+    })
+  );
+
+  if (onlyFeatured) {
+    const { contributorName, url, quote } = spotlights.find(
+      ({ isFeatured }) => isFeatured
+    );
+    return { contributorName, url, quote };
+  } else {
+    return spotlights;
   }
 }
 
@@ -150,6 +167,7 @@ export async function buildSPAs(options: {
       ) {
         continue;
       }
+      const locale = VALID_LOCALES.get(pathLocale) || (pathLocale as Locale);
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
@@ -200,7 +218,19 @@ export async function buildSPAs(options: {
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
-        { prefix: "community", pageTitle: "Contribute to MDN" },
+        {
+          prefix: "community",
+          pageTitle: "Contribute to MDN",
+          hyData: async () => ({
+            // TODO cache across locales
+            recentContributors: await fetchRecentContributors(),
+            contributorSpotlight: contributorSpotlightRoot
+              ? await buildContributorSpotlight(locale, options, false)
+              : null,
+            goodFirstIssues: await fetchGoodFirstIssues(),
+            recentContributions: await fetchRecentContributions(),
+          }),
+        },
         {
           prefix: "advertising",
           pageTitle: "Advertise with us",
@@ -210,13 +240,13 @@ export async function buildSPAs(options: {
           pageTitle: "Stay Informed with MDN",
         },
       ];
-      const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const {
         prefix,
         pageTitle,
         pageDescription,
         noIndexing,
         onlyFollow,
+        hyData,
       } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context: HydrationData = {
@@ -227,6 +257,10 @@ export async function buildSPAs(options: {
           onlyFollow,
           url,
         };
+
+        if (hyData) {
+          context.hyData = await hyData();
+        }
 
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
@@ -489,6 +523,109 @@ async function fetchRecentContributions() {
       })
     ),
   };
+}
+
+async function* fetchGitHubPR(repo: string) {
+  try {
+    const prIterator = octokit.paginate.iterator(octokit.rest.pulls.list, {
+      owner: "mdn",
+      repo,
+      state: "closed",
+      sort: "updated",
+      direction: "desc",
+    });
+    for await (const { data } of prIterator) {
+      for (const pullRequest of data) {
+        if (pullRequest.merged_at) {
+          // TODO: this doesn't return PRs in merged order, but updated order
+          // return in merged order by looking ahead until updated_at === merged_at
+          // alternatively see if search API can return by merged order
+          yield pullRequest;
+        }
+      }
+    }
+  } catch (e) {
+    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+  }
+}
+
+async function* mergeSortedIterators<T, TReturn>(
+  iterators: AsyncIterator<T, TReturn>[],
+  sorter: (a: T, b: T) => number
+) {
+  const sortedValues = (
+    await Promise.all(
+      iterators.map(async (generator, index) => {
+        const { done, value } = await generator.next();
+        if (!done) {
+          return {
+            value: value as T,
+            index,
+          };
+        }
+      })
+    )
+  ).filter((x) => x);
+
+  while (sortedValues.length > 0) {
+    sortedValues.sort((a, b) => sorter(a.value, b.value));
+    const { value, index } = sortedValues.shift();
+    yield value;
+    const { done, value: nextValue } = await iterators[index].next();
+    if (!done) {
+      sortedValues.push({
+        value: nextValue as T,
+        index,
+      });
+    }
+  }
+}
+
+// TODO: define this somewhere the client can access
+interface Contributor {
+  name: string;
+  org_name: string;
+  avatar_url: string;
+}
+
+async function fetchRecentContributors(count = 10) {
+  const repos = ["content", "translated-content"];
+  const contributors = new Map<string, Contributor>();
+  for await (const pr of mergeSortedIterators(
+    repos.map((repo) => fetchGitHubPR(repo)),
+    (a, b) => (a.updated_at < b.updated_at ? 1 : -1)
+  )) {
+    // TODO: filter out Mozilla staff
+    const { login, avatar_url } = pr.user;
+    // TODO: use org rather than company, filter out Mozilla
+    const {
+      data: { name, company },
+    } = await octokit.rest.users.getByUsername({ username: login });
+    contributors.set(login, {
+      name,
+      org_name: company,
+      avatar_url,
+    });
+    if (contributors.size >= count) {
+      break;
+    }
+  }
+  return [...contributors.values()];
+}
+
+async function fetchGoodFirstIssues(count = 10) {
+  const { data } = await octokit.rest.search.issuesAndPullRequests({
+    q: `is:open is:issue repo:mdn/content label:"good first issue","accepting PR" sort:created-asc no:assignee`,
+    per_page: count,
+  });
+  // TODO: cull data
+  return data;
 }
 
 async function fetchLatestNews() {
