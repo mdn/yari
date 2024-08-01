@@ -32,6 +32,13 @@ import { findPostBySlug } from "./blog.js";
 import { buildSitemap } from "./sitemaps.js";
 import { type Locale } from "../libs/types/core.js";
 import { HydrationData } from "../libs/types/hydration.js";
+import {
+  CommunityHyData,
+  Issues,
+  RecentContribution,
+  RecentContributor,
+  SpotlightContributor,
+} from "../libs/types/community.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -62,7 +69,7 @@ async function buildContributorSpotlight(
   locale: Locale,
   options: { verbose?: boolean },
   onlyFeatured = true
-) {
+): Promise<SpotlightContributor[]> {
   // TODO: cache/optimize
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
@@ -120,10 +127,13 @@ async function buildContributorSpotlight(
   );
 
   if (onlyFeatured) {
-    const { contributorName, url, quote } = spotlights.find(
-      ({ isFeatured }) => isFeatured
-    );
-    return { contributorName, url, quote };
+    return spotlights
+      .filter(({ isFeatured }) => isFeatured)
+      .map(({ contributorName, url, quote }) => ({
+        contributorName,
+        url,
+        quote,
+      }));
   } else {
     return spotlights;
   }
@@ -153,6 +163,10 @@ export async function buildSPAs(options: {
   if (options.verbose) {
     console.log("Wrote", jsonFilePath);
   }
+
+  const recentContributors = await fetchRecentContributors();
+  const goodFirstIssues = await fetchGoodFirstIssues();
+  const recentContributions = await fetchRecentContributions();
 
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.
@@ -221,14 +235,14 @@ export async function buildSPAs(options: {
         {
           prefix: "community",
           pageTitle: "Contribute to MDN",
-          hyData: async () => ({
-            // TODO cache across locales
-            recentContributors: await fetchRecentContributors(),
+          hyData: async (): Promise<CommunityHyData> => ({
+            recentContributors,
+            // TODO: cache across spas/homepage
             contributorSpotlight: contributorSpotlightRoot
               ? await buildContributorSpotlight(locale, options, false)
               : null,
-            goodFirstIssues: await fetchGoodFirstIssues(),
-            recentContributions: await fetchRecentContributions(),
+            goodFirstIssues,
+            recentContributions: recentContributions.items,
           }),
         },
         {
@@ -360,8 +374,6 @@ export async function buildSPAs(options: {
   );
 
   // Build all the home pages in all locales.
-  // Fetch merged content PRs for the latest contribution section.
-  const recentContributions = await fetchRecentContributions();
 
   // Fetch latest Hacks articles.
   const latestNews = await fetchLatestNews();
@@ -380,7 +392,7 @@ export async function buildSPAs(options: {
       }
 
       const featuredContributor = contributorSpotlightRoot
-        ? await buildContributorSpotlight(locale, options)
+        ? (await buildContributorSpotlight(locale, options))[0]
         : null;
 
       const featuredArticles = (
@@ -470,7 +482,7 @@ export async function buildSPAs(options: {
   }
 }
 
-async function fetchGitHubPRs(repo, count = 5) {
+async function fetchGitHubPRs(repo: string, count = 5) {
   const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
   const pullRequestsQuery = [
     `repo:${repo}`,
@@ -501,7 +513,9 @@ async function fetchGitHubPRs(repo, count = 5) {
   }
 }
 
-async function fetchRecentContributions() {
+async function fetchRecentContributions(): Promise<{
+  items: RecentContribution[];
+}> {
   const repos = ["mdn/content", "mdn/translated-content"];
   const countPerRepo = 5;
   const pullRequests = (
@@ -587,30 +601,25 @@ async function* mergeSortedIterators<T, TReturn>(
   }
 }
 
-// TODO: define this somewhere the client can access
-interface Contributor {
-  name: string;
-  org_name: string;
-  avatar_url: string;
-}
-
-async function fetchRecentContributors(count = 10) {
+async function fetchRecentContributors(
+  count = 10
+): Promise<RecentContributor[]> {
   const repos = ["content", "translated-content"];
-  const contributors = new Map<string, Contributor>();
+  const contributors = new Map<string, RecentContributor>();
   for await (const pr of mergeSortedIterators(
     repos.map((repo) => fetchGitHubPR(repo)),
     (a, b) => (a.updated_at < b.updated_at ? 1 : -1)
   )) {
     // TODO: filter out Mozilla staff
-    const { login, avatar_url } = pr.user;
+    const { id, login } = pr.user;
     // TODO: use org rather than company, filter out Mozilla
     const {
-      data: { name, company },
+      data: { company },
     } = await octokit.rest.users.getByUsername({ username: login });
     contributors.set(login, {
-      name,
-      org_name: company,
-      avatar_url,
+      github_id: id,
+      org: company,
+      user: login,
     });
     if (contributors.size >= count) {
       break;
@@ -619,13 +628,16 @@ async function fetchRecentContributors(count = 10) {
   return [...contributors.values()];
 }
 
-async function fetchGoodFirstIssues(count = 10) {
+async function fetchGoodFirstIssues(count = 10): Promise<Issues[]> {
   const { data } = await octokit.rest.search.issuesAndPullRequests({
     q: `is:open is:issue repo:mdn/content label:"good first issue","accepting PR" sort:created-asc no:assignee`,
     per_page: count,
   });
-  // TODO: cull data
-  return data;
+  return data.items.map(({ title, html_url, labels }) => ({
+    title,
+    url: html_url,
+    labels: labels.map(({ name }) => name),
+  }));
 }
 
 async function fetchLatestNews() {

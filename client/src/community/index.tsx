@@ -6,6 +6,11 @@ import { ReactComponent as VideoPreviewSVG } from "./svg/video-preview.svg";
 import { ReactComponent as ChatSVG } from "./svg/chat.svg";
 import { ReactComponent as CommunityCallsSVG } from "./svg/community-calls.svg";
 
+import type {
+  RecentContributor,
+  Issues,
+} from "../../../libs/types/community.js";
+
 import "./index.scss";
 
 const STATS = [
@@ -16,7 +21,7 @@ const STATS = [
 ];
 const LOCALE_COUNT = 9;
 
-const CONTRIBUTORS: { github_id: number; org?: string; user: string }[] = [
+const CONTRIBUTORS: RecentContributor[] = [
   {
     github_id: 43580235,
     org: "@mozilla",
@@ -133,7 +138,7 @@ const CONTRIBUTE_ACTIONS = [
   },
 ];
 
-const ISSUES = [
+const ISSUES: Issues[] = [
   {
     title: "Wrong explanation of the example inside Inline formatting context",
     url: "https://github.com/mdn/content/issues/29035",
