@@ -7,11 +7,7 @@ import { useLocation } from "react-router";
 
 import "./baseline-indicator.scss";
 
-// web-features doesn't export these types directly so we need to do a little typescript magic:
-import type { features } from "web-features";
-type SupportStatus = (typeof features)[keyof typeof features]["status"];
-type BrowserIdentifier =
-  keyof (typeof features)[keyof typeof features]["status"]["support"];
+import type { SupportStatus, BrowserIdentifier } from "web-features";
 
 interface BrowserGroup {
   name: string;
