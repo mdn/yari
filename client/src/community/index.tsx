@@ -2,11 +2,13 @@ import { ReactComponent as DesktopHeaderTopLeftSVG } from "./svg/header-1.svg";
 import { ReactComponent as DesktopHeaderBottomLeftSVG } from "./svg/header-2.svg";
 import { ReactComponent as DesktopHeaderBottomRightSVG } from "./svg/header-3.svg";
 import { ReactComponent as MobileHeaderSVG } from "./svg/header-mobile.svg";
-import { ReactComponent as VideoPreviewSVG } from "./svg/video-preview.svg";
 import { ReactComponent as ChatSVG } from "./svg/chat.svg";
 import { ReactComponent as CommunityCallsSVG } from "./svg/community-calls.svg";
+import darkVideo from "./svg/video-preview_dark.svg";
+import lightVideo from "./svg/video-preview_light.svg";
 
 import "./index.scss";
+import ThemedPicture from "../ui/atoms/themed-picture";
 
 const STATS = [
   { id: 1, number: "45k+", legend: "Total contributors" },
@@ -401,7 +403,7 @@ export function Community() {
         </p>
         <figure>
           <a href="https://youtu.be/Xnhnu7PViQE?si=RDDlAqtx-CEKXtFL">
-            <VideoPreviewSVG />
+            <ThemedPicture srcLight={lightVideo} srcDark={darkVideo} />
           </a>
           <figcaption>
             Watch this video on{" "}
