@@ -211,27 +211,27 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Upload with gsutil (two shot)
+      - name: Upload with gsutil
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-1
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -x '^.*/plain.html$'  client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-2
 
-      - name: Upload with gcloud storage (two shot)
+      - name: Upload with gcloud storage
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gcloud storage cp --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1/
-          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude="^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-1
+          gcloud storage rsync --quiet --verbosity=error --continue-on-error --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude='^.*/plain.html$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-5
 
-      - name: Upload with gcloud storage (one shot rsync)
+      - name: Upload with google-github-actions/upload-cloud-storage
         if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --checksums-only --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-3
-
-      - name: Upload with gcloud storage (one shot rsync mtimes)
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage rsync --quiet --continue-on-error --cache-control="public, max-age=3600" --recursive --gzip-in-flight=html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-4
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: client/build
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-1
+          parent: false
+          gzip: true # TODO: benchmark if false is better due to incompressible assets
+          resumable: false
+          concurrency: 100 # TODO: benchmark different values
+          process_gcloudignore: true
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
