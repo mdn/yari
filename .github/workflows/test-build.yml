@@ -268,7 +268,7 @@ jobs:
           parent: false
           gzip: true
           resumable: false
-          concurrency: 10000
+          concurrency: 500
           process_gcloudignore: true
 
       - name: Upload concurrency 100 -> 50
@@ -280,7 +280,7 @@ jobs:
           parent: false
           gzip: true
           resumable: false
-          concurrency: 10
+          concurrency: 50
           process_gcloudignore: true
 
       - name: Authenticate with GCP
