@@ -216,7 +216,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-2
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-8
           parent: false
           gzip: true
           resumable: false
@@ -228,7 +228,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-3
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-9
           parent: false
           gzip: false
           resumable: false
@@ -240,7 +240,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-4
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-10
           parent: false
           gzip: true
           resumable: true
@@ -252,31 +252,31 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-5
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-11
           parent: false
           gzip: true
           resumable: false
           concurrency: 1000
           process_gcloudignore: true
 
-      - name: Upload concurrency 100 -> 10000
+      - name: Upload concurrency 100 -> 500
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-6
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-12
           parent: false
           gzip: true
           resumable: false
           concurrency: 10000
           process_gcloudignore: true
 
-      - name: Upload concurrency 100 -> 10
+      - name: Upload concurrency 100 -> 50
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-7
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-13
           parent: false
           gzip: true
           resumable: false
