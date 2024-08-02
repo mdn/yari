@@ -211,26 +211,76 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Upload with gsutil
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -crj html,json,txt -x '^.*/plain.html$'  client/build gs://${{ vars.GCP_BUCKET_NAME }}/gsutil-2
-
-      - name: Upload with gcloud storage
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gcloud storage rsync --quiet --verbosity=error --continue-on-error --checksums-only --recursive --gzip-in-flight=html,json,txt --exclude='^.*/plain.html$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/gcloud-5
-
-      - name: Upload with google-github-actions/upload-cloud-storage
+      - name: Upload base config
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-1
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-2
           parent: false
-          gzip: true # TODO: benchmark if false is better due to incompressible assets
+          gzip: true
           resumable: false
-          concurrency: 100 # TODO: benchmark different values
+          concurrency: 100
+          process_gcloudignore: true
+
+      - name: Upload gzip true -> false
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: client/build
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-3
+          parent: false
+          gzip: false
+          resumable: false
+          concurrency: 100
+          process_gcloudignore: true
+
+      - name: Upload resumable false -> true
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: client/build
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-4
+          parent: false
+          gzip: true
+          resumable: true
+          concurrency: 100
+          process_gcloudignore: true
+
+      - name: Upload concurrency 100 -> 1000
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: client/build
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-5
+          parent: false
+          gzip: true
+          resumable: false
+          concurrency: 1000
+          process_gcloudignore: true
+
+      - name: Upload concurrency 100 -> 10000
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: client/build
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-6
+          parent: false
+          gzip: true
+          resumable: false
+          concurrency: 10000
+          process_gcloudignore: true
+
+      - name: Upload concurrency 100 -> 10
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: client/build
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-cloud-storage-7
+          parent: false
+          gzip: true
+          resumable: false
+          concurrency: 10
           process_gcloudignore: true
 
       - name: Authenticate with GCP
