@@ -36,9 +36,9 @@ import {
   CommunityHyData,
   Issues,
   RecentContribution,
-  RecentContributor,
   SpotlightContributor,
 } from "../libs/types/community.js";
+import { memoize } from "../content/utils.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -65,12 +65,19 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-async function buildContributorSpotlight(
+interface SpotlightContributorFrontmatter {
+  contributor_name?: string;
+  folder_name?: string;
+  img_alt?: string;
+  usernames?: any;
+  quote?: any;
+  date?: string;
+}
+
+const buildContributorSpotlight = memoize(async function (
   locale: Locale,
-  options: { verbose?: boolean },
-  onlyFeatured = true
+  options: { verbose?: boolean }
 ): Promise<SpotlightContributor[]> {
-  // TODO: cache/optimize
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
@@ -81,7 +88,8 @@ async function buildContributorSpotlight(
         "utf-8"
       );
 
-      const frontMatter = frontmatter<DocFrontmatter>(markdown);
+      const frontMatter =
+        frontmatter<SpotlightContributorFrontmatter>(markdown);
       const contributorHTML = await m2h(frontMatter.body, { locale });
 
       const { sections } = splitSections(contributorHTML);
@@ -90,7 +98,6 @@ async function buildContributorSpotlight(
         sections: sections,
         contributorName: frontMatter.attributes.contributor_name,
         folderName: frontMatter.attributes.folder_name,
-        isFeatured: frontMatter.attributes.is_featured,
         profileImg,
         profileImgAlt: frontMatter.attributes.img_alt,
         usernames: frontMatter.attributes.usernames,
@@ -121,23 +128,19 @@ async function buildContributorSpotlight(
         contributorName: frontMatter.attributes.contributor_name,
         url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
-        isFeatured: frontMatter.attributes.is_featured,
+        date: Date.parse(frontMatter.attributes.date ?? "0"),
       };
     })
   );
 
-  if (onlyFeatured) {
-    return spotlights
-      .filter(({ isFeatured }) => isFeatured)
-      .map(({ contributorName, url, quote }) => ({
-        contributorName,
-        url,
-        quote,
-      }));
-  } else {
-    return spotlights;
-  }
-}
+  return spotlights
+    .sort(({ date: a }, { date: b }) => b - a)
+    .map(({ contributorName, url, quote }) => ({
+      contributorName,
+      url,
+      quote,
+    }));
+});
 
 export async function buildSPAs(options: {
   quiet?: boolean;
@@ -164,7 +167,6 @@ export async function buildSPAs(options: {
     console.log("Wrote", jsonFilePath);
   }
 
-  const recentContributors = await fetchRecentContributors();
   const goodFirstIssues = await fetchGoodFirstIssues();
   const recentContributions = await fetchRecentContributions();
 
@@ -236,13 +238,10 @@ export async function buildSPAs(options: {
           prefix: "community",
           pageTitle: "Contribute to MDN",
           hyData: async (): Promise<CommunityHyData> => ({
-            recentContributors,
-            // TODO: cache across spas/homepage
             contributorSpotlight: contributorSpotlightRoot
-              ? await buildContributorSpotlight(locale, options, false)
+              ? (await buildContributorSpotlight(locale, options)).slice(0, 3)
               : null,
             goodFirstIssues,
-            recentContributions: recentContributions.items,
           }),
         },
         {
@@ -537,95 +536,6 @@ async function fetchRecentContributions(): Promise<{
       })
     ),
   };
-}
-
-async function* fetchGitHubPR(repo: string) {
-  try {
-    const prIterator = octokit.paginate.iterator(octokit.rest.pulls.list, {
-      owner: "mdn",
-      repo,
-      state: "closed",
-      sort: "updated",
-      direction: "desc",
-    });
-    for await (const { data } of prIterator) {
-      for (const pullRequest of data) {
-        if (pullRequest.merged_at) {
-          // TODO: this doesn't return PRs in merged order, but updated order
-          // return in merged order by looking ahead until updated_at === merged_at
-          // alternatively see if search API can return by merged order
-          yield pullRequest;
-        }
-      }
-    }
-  } catch (e) {
-    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
-    if (!DEV_MODE) {
-      console.error(`Error: ${msg}`);
-      throw e;
-    }
-
-    console.warn(`Warning: ${msg}`);
-  }
-}
-
-async function* mergeSortedIterators<T, TReturn>(
-  iterators: AsyncIterator<T, TReturn>[],
-  sorter: (a: T, b: T) => number
-) {
-  const sortedValues = (
-    await Promise.all(
-      iterators.map(async (generator, index) => {
-        const { done, value } = await generator.next();
-        if (!done) {
-          return {
-            value: value as T,
-            index,
-          };
-        }
-      })
-    )
-  ).filter((x) => x);
-
-  while (sortedValues.length > 0) {
-    sortedValues.sort((a, b) => sorter(a.value, b.value));
-    const { value, index } = sortedValues.shift();
-    yield value;
-    const { done, value: nextValue } = await iterators[index].next();
-    if (!done) {
-      sortedValues.push({
-        value: nextValue as T,
-        index,
-      });
-    }
-  }
-}
-
-async function fetchRecentContributors(
-  count = 10
-): Promise<RecentContributor[]> {
-  const repos = ["content", "translated-content"];
-  const contributors = new Map<string, RecentContributor>();
-  for await (const pr of mergeSortedIterators(
-    repos.map((repo) => fetchGitHubPR(repo)),
-    (a, b) => (a.updated_at < b.updated_at ? 1 : -1)
-  )) {
-    // TODO: filter out Mozilla staff
-    const { id, login } = pr.user;
-    // TODO: use org rather than company, filter out Mozilla
-    const {
-      data: { company },
-    } = await octokit.rest.users.getByUsername({ username: login });
-    contributors.set(login, {
-      github_id: id,
-      org: company,
-      user: login,
-    });
-    if (contributors.size >= count) {
-      break;
-    }
-  }
-  return [...contributors.values()];
 }
 
 async function fetchGoodFirstIssues(count = 10): Promise<Issues[]> {

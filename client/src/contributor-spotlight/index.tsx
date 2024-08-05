@@ -16,7 +16,6 @@ type ContributorDetails = {
   sections: [string];
   contributorName: string;
   folderName: string;
-  isFeatured: boolean;
   profileImg: string;
   profileImgAlt: string;
   webLinks: {

@@ -163,12 +163,6 @@ export interface Doc extends DocMetadata {
 }
 
 export interface DocFrontmatter {
-  contributor_name?: string;
-  folder_name?: string;
-  is_featured?: boolean;
-  img_alt?: string;
-  usernames?: any;
-  quote?: any;
   title?: string;
   slug?: string;
   original_slug?: string;

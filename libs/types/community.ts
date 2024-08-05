@@ -8,7 +8,6 @@ export interface SpotlightContributor {
   contributorName: string;
   url: string;
   quote: string;
-  isFeatured?: boolean;
 }
 
 export interface Issues {
@@ -26,8 +25,6 @@ export interface RecentContribution {
 }
 
 export interface CommunityHyData {
-  recentContributors: RecentContributor[];
   contributorSpotlight?: SpotlightContributor[];
   goodFirstIssues: Issues[];
-  recentContributions: RecentContribution[];
 }
