@@ -216,48 +216,48 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-1
+          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-5
           parent: false
           gzip: true
           resumable: false
           concurrency: 500
           process_gcloudignore: true
 
-      - name: Upload files without deleting
-        if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/upload-cloud-storage@v2
-        with:
-          path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-2
-          parent: false
-          gzip: true
-          resumable: false
-          concurrency: 500
-          process_gcloudignore: true
+      # - name: Upload files without deleting
+      #   if: ${{ ! vars.SKIP_BUILD }}
+      #   uses: google-github-actions/upload-cloud-storage@v2
+      #   with:
+      #     path: client/build
+      #     destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-2
+      #     parent: false
+      #     gzip: true
+      #     resumable: false
+      #     concurrency: 500
+      #     process_gcloudignore: true
 
-      - name: Upload files without deleting
-        if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/upload-cloud-storage@v2
-        with:
-          path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-3
-          parent: false
-          gzip: true
-          resumable: false
-          concurrency: 500
-          process_gcloudignore: true
+      # - name: Upload files without deleting
+      #   if: ${{ ! vars.SKIP_BUILD }}
+      #   uses: google-github-actions/upload-cloud-storage@v2
+      #   with:
+      #     path: client/build
+      #     destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-3
+      #     parent: false
+      #     gzip: true
+      #     resumable: false
+      #     concurrency: 500
+      #     process_gcloudignore: true
 
-      - name: Upload files without deleting
-        if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/upload-cloud-storage@v2
-        with:
-          path: client/build
-          destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-4
-          parent: false
-          gzip: true
-          resumable: false
-          concurrency: 500
-          process_gcloudignore: true
+      # - name: Upload files without deleting
+      #   if: ${{ ! vars.SKIP_BUILD }}
+      #   uses: google-github-actions/upload-cloud-storage@v2
+      #   with:
+      #     path: client/build
+      #     destination: ${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-4
+      #     parent: false
+      #     gzip: true
+      #     resumable: false
+      #     concurrency: 500
+      #     process_gcloudignore: true
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -338,19 +338,19 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
           rm -rf client/build/static # necessary to test we don't delete static in the following commands
-          gsutil -mq rsync -ry '^static/' -x '^.*/plain.html$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-1
+          gsutil -m rsync -n -dry '^static/' -x '^.*/plain.html$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-5
 
       - name: Delete old files with gsutil (checksum)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -mq rsync -rcy '^static/' -x '^.*/plain.html$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-2
+          gsutil -m rsync -n -drcy '^static/' -x '^.*/plain.html$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-5
 
       - name: Delete old files with gcloud storage (mtime)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gcloud storage rsync --quiet --verbosity=error --continue-on-error --recursive --exclude='^(.*/plain.html)|(static/.*)$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-3
+          gcloud storage rsync --dry-run --delete-unmatched-destination-objects --quiet --verbosity=error --continue-on-error --recursive --exclude='^(.*/plain.html)|(static/.*)$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-5
 
       - name: Delete old files with gcloud storage (checksum)
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gcloud storage rsync --quiet --verbosity=error --continue-on-error --checksums-only --recursive --exclude='^(.*/plain.html)|(static/.*)$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-4
+          gcloud storage rsync --dry-run --delete-unmatched-destination-objects --quiet --verbosity=error --continue-on-error --checksums-only --recursive --exclude='^(.*/plain.html)|(static/.*)$' client/build gs://${{ vars.GCP_BUCKET_NAME }}/upload-then-delete-5
