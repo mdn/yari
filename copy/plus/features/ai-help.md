@@ -7,7 +7,7 @@ title: AI Help
 > Get real-time assistance and support
 
 AI Help, available for both free and paid MDN Plus subscribers, utilizes OpenAI
-GPT-3.5 for free users and GPT-4 for paying subscribers to enhance the MDN
+GPT-4o mini for free users and GPT-4o for paying subscribers to enhance the MDN
 experience. It offers quick and effective access to MDN's broad database. It
 specializes in searching and summarizing MDN content to directly address your
 queries. Additionally, for web development queries not covered in MDN, AI Help
