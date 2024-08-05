@@ -50,6 +50,10 @@ enum SurveyKey {
   WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
 }
 
+// When adding a survey, make sure it has this JavaScript action (in Alchemer)
+// so the banner is hidden for users who have already submitted it:
+// window.parent && window.parent.postMessage("submit", "*");
+
 export const SURVEYS: Survey[] = [
   {
     key: SurveyKey.WEB_APP_AUGUST_2024,
