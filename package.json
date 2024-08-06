@@ -156,7 +156,7 @@
     "@babel/preset-env": "^7.25.3",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
-    "@playwright/test": "^1.45.3",
+    "@playwright/test": "^1.46.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.7.6",
