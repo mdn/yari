@@ -110,8 +110,7 @@ async function renderSubsection(subsection) {
 
 
 async function renderDirectory(directory) {
-  const path = `${baseURL}${directory}`;
-  const output = await template("ListSubpagesForSidebar", [path, true, true]);
+  const output = await template("ListSubpagesForSidebar", [directory, true, true]);
 
   return output;
 }

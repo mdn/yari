@@ -1,4 +1,4 @@
-import { Locale } from "../types/core.js";
+import { type Locale } from "../types/core.js";
 
 type LocaleStringMap = Record<Locale, string>;
 

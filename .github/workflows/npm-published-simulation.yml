@@ -91,8 +91,8 @@ jobs:
           curl --retry-connrefused --retry 5 -I http://localhost:5042
 
           # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5042/en-US/ > /dev/null
-          curl http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
+          curl --fail http://localhost:5042/en-US/ > /dev/null
+          curl --fail http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
 
       - name: Test viewing the dev server
         env:

@@ -189,12 +189,6 @@
       margin-bottom: 1rem;
       margin-left: 1rem;
 
-      .notecard {
-        p {
-          padding-left: 0;
-        }
-      }
-
       dl {
         /* Nested definition list. */
         border-left: 1px solid var(--border-primary);
@@ -248,13 +242,13 @@
     }
   }
 
-  @media screen and (min-width: $screen-sm) {
+  @media (min-width: $screen-sm) {
     padding: 3rem;
     // Reduce space to article footer.
     padding-bottom: 0;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     // Reduce space to article footer.
     margin-bottom: 0;
     padding: 0;
@@ -374,7 +368,7 @@ h1 {
   margin-bottom: 2rem;
   word-break: break-word;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     font: var(--type-heading-h1);
   }
 }
@@ -471,6 +465,10 @@ pre {
   }
 }
 
+math[display="block"] {
+  margin: 1rem 0 2rem;
+}
+
 .example-good,
 .example-bad {
   padding: 0 1rem;
@@ -519,7 +517,7 @@ pre {
   ul {
     margin: 0.5rem 0 2rem;
 
-    @media screen and (min-width: $screen-xl) {
+    @media (min-width: $screen-xl) {
       columns: 3;
     }
 
@@ -860,7 +858,7 @@ kbd {
   --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
 
-  @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
+  @media (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
     display: flex;
     flex-direction: column;
   }
@@ -870,7 +868,7 @@ kbd {
   top: var(--offset);
   z-index: var(--z-index-sidebar-mobile);
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     z-index: auto;
 
     .sidebar {
@@ -881,7 +879,7 @@ kbd {
       );
     }
 
-    @media screen and not (min-height: $screen-height-place-limit) {
+    @media not (min-height: $screen-height-place-limit) {
       overflow: auto;
     }
   }
@@ -892,7 +890,7 @@ kbd {
       grid-area: toc;
       margin: 0;
     }
-    @media screen and (min-width: $screen-xl) {
+    @media (min-width: $screen-xl) {
       display: flex;
       flex-direction: column;
       gap: 0;
@@ -912,13 +910,13 @@ kbd {
         padding-bottom: 3rem;
       }
     }
-    @media screen and (max-width: #{$screen-md - 1}) {
+    @media (max-width: #{$screen-md - 1}) {
       .place {
         display: none;
       }
     }
   }
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     display: contents;
 
     .sidebar {

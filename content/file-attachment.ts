@@ -54,11 +54,11 @@ function isImage(filePath: string) {
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath, "utf-8"));
   }
-  const buffer = readChunkSync(filePath, { length: 12 });
-  if (buffer.length === 0) {
+  const chunk = readChunkSync(filePath, { length: 12 });
+  if (chunk.length === 0) {
     return false;
   }
-  const type = imageType(buffer);
+  const type = imageType(chunk);
   if (!type) {
     // This happens when there's no match on the "Supported file types"
     // https://github.com/sindresorhus/image-type#supported-file-types

@@ -215,9 +215,9 @@ jobs:
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
-          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/?brand=mozilla
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ?brand=mozilla
-          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/?brand=mozilla
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ
+          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/
 
           REACT_APP_MDN_PLUS_5M_PLAN: price_1KeG02JNcmPzuWtR1oBrw8o6
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
@@ -225,10 +225,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_DISCOVERABILITY_AUG_2023: 1691409600000 # new Date("2023-08-07 12:00:00Z").getTime()
-          REACT_APP_SURVEY_END_DISCOVERABILITY_AUG_2023: 1691841600000 # new Date("2023-08-12 12:00:00Z").getTime()
-          REACT_APP_SURVEY_RATE_FROM_DISCOVERABILITY_AUG_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_DISCOVERABILITY_AUG_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_WEB_APP_AUGUST_2024: 1722816000000 # new Date("2024-08-05Z").getTime()
+          REACT_APP_SURVEY_END_WEB_APP_AUGUST_2024: 1723420800000 # new Date("2024-08-12Z").getTime()
+          REACT_APP_SURVEY_RATE_FROM_WEB_APP_AUGUST_2024: 0.0
+          REACT_APP_SURVEY_RATE_TILL_WEB_APP_AUGUST_2024: 0.05 # 5%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -242,6 +242,9 @@ jobs:
 
           # Playground
           REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
+
+          # Observatory
+          REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.mozilla.net
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
@@ -264,7 +267,7 @@ jobs:
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -274,14 +277,17 @@ jobs:
 
           du -sh client/build
 
-          # Generate sitemap index file
-          yarn build --sitemap-index
-
           # Build the blog
           yarn build:blog
 
           # Build the curriculum
           yarn build:curriculum
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
+          # SSR all pages
+          yarn render:html
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -337,6 +343,7 @@ jobs:
         run: |-
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -360,6 +367,7 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=A9YWJd0eN0+JyqsF5/4sYlFePcOgkAIKtGSnrERJ7zmzK65fqcrdYjmHUlxAV79Fphmwt96Gkyw2F1WmMEUEztgAAABdeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5tb3ppbGxhLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb24iLCJleHBpcnkiOjE3NDk3NDMyNjF9" \
             --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=prod" \

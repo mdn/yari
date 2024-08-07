@@ -12,6 +12,8 @@ import {
   VALID_LOCALES,
   MDN_PLUS_TITLE,
   DEFAULT_LOCALE,
+  OBSERVATORY_TITLE_FULL,
+  OBSERVATORY_TITLE,
 } from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
@@ -19,17 +21,16 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
-  BASE_URL,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
+import { buildSitemap } from "./sitemaps.js";
+import { type Locale } from "../libs/types/core.js";
+import { HydrationData } from "../libs/types/hydration.js";
 
 const FEATURED_ARTICLES = [
   "blog/learn-javascript-console-methods/",
@@ -39,15 +40,21 @@ const FEATURED_ARTICLES = [
 ];
 
 const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-http-observatory-launch/",
   "blog/mdn-curriculum-launch/",
   "blog/baseline-evolution-on-mdn/",
   "blog/introducing-the-mdn-playground/",
 ];
 
+const PAGE_DESCRIPTIONS = Object.freeze({
+  observatory:
+    "Test your site’s HTTP headers, including CSP and HSTS, to find security problems and get actionable recommendations to make your website more secure. Test other websites to see how you compare.",
+});
+
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
 async function buildContributorSpotlight(
-  locale: string,
+  locale: Locale,
   options: { verbose?: boolean }
 ) {
   const prefix = "community/spotlight";
@@ -74,29 +81,26 @@ async function buildContributorSpotlight(
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
-    const context = { hyData };
+    const context: HydrationData = {
+      hyData,
+      url: `/${locale}/${prefix}/${contributor}`,
+    };
 
-    const html = renderCanonicalHTML(
-      `/${locale}/${prefix}/${contributor}`,
-      context
-    );
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
       `${prefix}/${hyData.folderName}`
     );
-    const filePath = path.join(outPath, "index.html");
     const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
     const imgFileDestPath = path.join(outPath, profileImg);
     const jsonFilePath = path.join(outPath, "index.json");
 
     fs.mkdirSync(outPath, { recursive: true });
-    fs.writeFileSync(filePath, html);
     fs.copyFileSync(imgFilePath, imgFileDestPath);
     fs.writeFileSync(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", filePath);
+      console.log("Wrote", jsonFilePath);
     }
     if (frontMatter.attributes.is_featured) {
       return {
@@ -113,18 +117,24 @@ export async function buildSPAs(options: {
   verbose?: boolean;
 }) {
   let buildCount = 0;
+  const sitemap: {
+    url: string;
+  }[] = [];
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const locale = DEFAULT_LOCALE;
   const url = `/${locale}/404.html`;
-  let html = renderHTML(url, { pageNotFound: true });
-  html = setCanonical(html, null);
+  const context: HydrationData = { url, pageNotFound: true };
   const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+  const jsonFilePath = path.join(
+    outPath,
+    path.basename(url).replace(/\.html$/, ".json")
+  );
+  fs.writeFileSync(jsonFilePath, JSON.stringify(context));
   buildCount++;
   if (options.verbose) {
-    console.log("Wrote", path.join(outPath, path.basename(url)));
+    console.log("Wrote", jsonFilePath);
   }
 
   // Basically, this builds one (for example) `search/index.html` for every
@@ -134,12 +144,36 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const pathLocale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, pathLocale)).isDirectory()) {
+      if (
+        !fs.statSync(path.join(root, pathLocale)).isDirectory() ||
+        !isValidLocale(pathLocale)
+      ) {
         continue;
       }
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
+        {
+          prefix: "observatory",
+          pageTitle: `HTTP Header Security Test - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        {
+          prefix: "observatory/analyze",
+          pageTitle: `Scan results - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+          noIndexing: true,
+        },
+        {
+          prefix: "observatory/docs/tests_and_scoring",
+          pageTitle: `Tests & Scoring - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        {
+          prefix: "observatory/docs/faq",
+          pageTitle: `FAQ - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
@@ -177,23 +211,36 @@ export async function buildSPAs(options: {
         },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
+      for (const {
+        prefix,
+        pageTitle,
+        pageDescription,
+        noIndexing,
+        onlyFollow,
+      } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context = {
+        const context: HydrationData = {
           pageTitle,
+          pageDescription,
           locale,
           noIndexing,
           onlyFollow,
+          url,
         };
 
-        const html = renderCanonicalHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
-        const filePath = path.join(outPath, "index.html");
-        fs.writeFileSync(filePath, html);
+        const jsonFilePath = path.join(outPath, "index.json");
+        fs.writeFileSync(jsonFilePath, JSON.stringify(context));
         buildCount++;
         if (options.verbose) {
-          console.log("Wrote", filePath);
+          console.log("Wrote", jsonFilePath);
+        }
+
+        if (!noIndexing && !onlyFollow) {
+          sitemap.push({
+            url,
+          });
         }
       }
     }
@@ -239,12 +286,12 @@ export async function buildSPAs(options: {
         sections,
         toc,
       };
-      const context = {
+      const context: HydrationData = {
         hyData,
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+        url,
       };
 
-      const html = renderCanonicalHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
         pathLocale,
@@ -252,14 +299,18 @@ export async function buildSPAs(options: {
         page
       );
       fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
+      const jsonFilePath = path.join(outPath, "index.json");
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
-        console.log("Wrote", filePath);
+        console.log("Wrote", jsonFilePath);
       }
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));
+
+      sitemap.push({
+        url,
+      });
     }
   }
 
@@ -267,6 +318,11 @@ export async function buildSPAs(options: {
     fileURLToPath(new URL("../copy/plus/", import.meta.url)),
     "plus/docs",
     "MDN Plus"
+  );
+  await buildStaticPages(
+    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
+    "observatory/docs",
+    OBSERVATORY_TITLE
   );
 
   // Build all the home pages in all locales.
@@ -281,7 +337,7 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const localeLC of fs.readdirSync(root)) {
-      const locale = VALID_LOCALES.get(localeLC) || localeLC;
+      const locale = VALID_LOCALES.get(localeLC) || (localeLC as Locale);
       if (!isValidLocale(locale)) {
         continue;
       }
@@ -343,26 +399,36 @@ export async function buildSPAs(options: {
         latestNews,
         featuredArticles,
       };
-      const context = { hyData };
-      const html = renderCanonicalHTML(url, context);
+      const context: HydrationData = { hyData, url };
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
-      buildCount++;
-      if (options.verbose) {
-        console.log("Wrote", filePath);
-      }
+
+      sitemap.push({
+        url,
+      });
 
       // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
-      const filePathContext = path.join(outPath, "index.json");
-      fs.writeFileSync(filePathContext, JSON.stringify(context));
+      const jsonFilePath = path.join(outPath, "index.json");
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
-        console.log("Wrote", filePathContext);
+        console.log("Wrote", jsonFilePath);
       }
     }
+  }
+
+  // Sitemap.
+  const sitemapFilePath = await buildSitemap(
+    sitemap.map(({ url }) => ({
+      slug: url,
+      modified: "",
+    })),
+    { pathSuffix: ["misc"] }
+  );
+
+  if (!options.quiet) {
+    console.log("Wrote", sitemapFilePath);
   }
 
   if (!options.quiet) {
@@ -459,25 +525,4 @@ async function fetchLatestNews() {
   return {
     items,
   };
-}
-
-function renderCanonicalHTML(url: string, context: any) {
-  let html = renderHTML(url, context);
-  html = setCanonical(html, url);
-  return html;
-}
-
-function setCanonical(html: string, url: string | null) {
-  html = html.replace(
-    `<link rel="canonical" href="${BASE_URL}"/>`,
-    url ? `<link rel="canonical" href="${BASE_URL}${url}"/>` : ""
-  );
-  // Better safe than sorry.
-  html = html.replace(
-    `<link rel="canonical" href="https://developer.mozilla.org"/>`,
-    url
-      ? `<link rel="canonical" href="https://developer.mozilla.org${url}"/>`
-      : ""
-  );
-  return html;
 }

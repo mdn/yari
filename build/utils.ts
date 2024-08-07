@@ -110,10 +110,6 @@ export async function downloadAndResizeImage(
       // has to be escaped when working on the command line.
       .replace(/[()]/g, "")
       .replace(/\s+/g, "_")
-      // From legacy we have a lot of images that are named like
-      // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
-      // Take this opportunity to clean that odd looking leading `=`.
-      .replace(/^=/, "")
       .toLowerCase()
   );
   // Before writing to disk, run it through the same imagemin
@@ -388,4 +384,16 @@ export async function importJSON<T>(jsonPath: string): Promise<T> {
   const json = await readFile(jsonPath, "utf-8");
 
   return JSON.parse(json);
+}
+
+export function* chunks<T>(array: T[], size: number): Generator<T[]> {
+  for (let i = 0; i < array.length; i += size) {
+    yield array.slice(i, i + size);
+  }
+}
+
+export function formatDuration(seconds: number) {
+  return seconds > 60
+    ? `${(seconds / 60).toFixed(1)} minutes`
+    : `${seconds.toFixed(1)} seconds`;
 }

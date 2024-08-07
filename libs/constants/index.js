@@ -84,9 +84,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
 
   // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
-  // - Current hash:
   "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
+  // - Current hash:
+  "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -111,6 +111,10 @@ export const CSP_DIRECTIVES = {
     "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
+    // Observatory
+    "https://observatory-api.mdn.allizom.net",
+    "https://observatory-api.mdn.mozilla.net",
+
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -123,10 +127,11 @@ export const CSP_DIRECTIVES = {
     "mdn.github.io",
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
-    "live-samples.developer.allizom.xyz",
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
 
+    "https://v2.scrimba.com",
+    "https://scrimba.com",
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
@@ -275,6 +280,8 @@ export const VALID_FLAW_CHECKS = new Set([
 
 export const MDN_PLUS_TITLE = "MDN Plus";
 export const CURRICULUM_TITLE = "MDN Curriculum";
+export const OBSERVATORY_TITLE = "HTTP Observatory";
+export const OBSERVATORY_TITLE_FULL = "HTTP Observatory | MDN";
 
 // -------
 // content
