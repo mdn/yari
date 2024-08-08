@@ -75,7 +75,7 @@
     "@mdn/browser-compat-data": "^5.5.45",
     "@mozilla/glean": "5.0.3",
     "@sentry/node": "^8.24.0",
-    "@stripe/stripe-js": "^4.1.0",
+    "@stripe/stripe-js": "^4.2.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.9",
     "@webref/css": "^6.14.1",
