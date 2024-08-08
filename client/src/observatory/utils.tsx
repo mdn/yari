@@ -101,14 +101,23 @@ export function useResult(host?: string) {
 
 export async function handleJsonResponse<T>(res: Response): Promise<T> {
   if (!res.ok && res.status !== 429) {
+    // Example error payload we get from the Observatory API:
+    // {
+    //   "statusCode": 422,
+    //   "error": "invalid-hostname-lookup",
+    //   "message": "unknownhostmcunknownhostface.mozilla.org cannot be resolved"
+    // }
+    // We convey the `message` to the user and use the `error` field for glean telemetry.
     let message = `${res.status}: ${res.statusText}`;
+    let errName = "Error";
     try {
       const data = await res.json();
-      if (data.error) {
-        message = data.message;
-      }
+      errName = data.error || errName;
+      message = data.message || message;
     } finally {
-      throw Error(message);
+      const err = new Error(message);
+      err.name = errName;
+      throw err;
     }
   }
   return await res.json();
