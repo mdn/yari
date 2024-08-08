@@ -14,7 +14,7 @@ const NO_CACHE_VALUE = "no-store, must-revalidate";
 
 const HASHED_REGEX = /\.[a-f0-9]{8,32}\./;
 
-export function withContentResponseHeaders(
+export function withProxiedContentResponseHeaders(
   proxyRes: IncomingMessage,
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
@@ -49,6 +49,29 @@ export function withContentResponseHeaders(
   }
 
   const cacheControl = getCacheControl(proxyRes.statusCode ?? 0, url);
+  if (cacheControl) {
+    res.setHeader("Cache-Control", cacheControl);
+  }
+
+  return res;
+}
+
+export function withRenderedContentResponseHeaders(
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage>
+) {
+  if (res.headersSent) {
+    console.warn(
+      `Cannot set content response headers. Headers already sent for: ${req.url}`
+    );
+    return;
+  }
+
+  const url = req.url ?? "";
+
+  setContentResponseHeaders((name, value) => res.setHeader(name, value), {});
+
+  const cacheControl = getCacheControl(res.statusCode ?? 0, url);
   if (cacheControl) {
     res.setHeader("Cache-Control", cacheControl);
   }

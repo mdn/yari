@@ -12,8 +12,9 @@
     "build-canonicals": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/build-canonicals.ts",
     "build-redirects": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/build-redirects.ts",
     "copy-internal": "rm -rf ./src/internal && cp -R ../libs ./src/internal",
+    "copy-ssr": "mkdir -p ./src/internal/ssr && cp ../ssr/dist/main.js ./src/internal/ssr/",
     "gcp-build": "npm run build",
-    "prepare": "([ ! -e ../libs ] || npm run copy-internal)",
+    "prepare": "([ ! -e ../libs ] || npm run copy-internal) && ([ ! -e ../ssr/dist ] || npm run copy-ssr)",
     "proxy": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/proxy.ts",
     "server": "npm run build && functions-framework --target=mdnHandler",
     "server:watch": "nodemon --exec npm run server",
@@ -39,6 +40,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.19.2",
     "http-proxy-middleware": "^3.0.0",
+    "on-headers": "^1.0.2",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
@@ -46,6 +48,7 @@
     "@types/accept-language-parser": "^1.5.3",
     "@types/http-proxy": "^1.17.10",
     "@types/http-server": "^0.12.1",
+    "@types/on-headers": "^1.0.3",
     "cross-env": "^7.0.3",
     "http-proxy": "^1.18.1",
     "http-server": "^14.1.1",
