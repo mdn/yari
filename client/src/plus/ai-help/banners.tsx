@@ -19,14 +19,14 @@ export function AiHelpBanner({
         <Icon name="bell-ring" />
         <strong>
           {isSubscriber
-            ? "GPT-4-powered AI Help."
+            ? "GPT-4o-powered AI Help."
             : "Supercharge your AI Help experience with our paid subscriptions."}
         </strong>
       </p>
       <p>
         {isSubscriber
           ? "Now with chat history, enhanced context, and optimized prompts."
-          : "Upgrade to MDN Plus 5 or MDN Supporter 10 to unlock the potential of GPT-4-powered AI Help."}
+          : "Upgrade to MDN Plus 5 or Supporter 10 to unlock the full potential of GPT-4o-powered AI Help."}
       </p>
       {!isSubscriber && (
         <SignUpLink gleanContext={`${AI_HELP}: upsell-banner`} toPlans={true} />
