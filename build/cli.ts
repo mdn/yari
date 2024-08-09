@@ -6,7 +6,7 @@ import path from "node:path";
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import caporal from "@caporal/core";
-import inquirer from "inquirer";
+import { select } from "@inquirer/prompts";
 
 import { Document, slugToFolder, translationsOf } from "../content/index.js";
 import {
@@ -34,7 +34,6 @@ import { ssrDocument } from "./ssr.js";
 import { HydrationData } from "../libs/types/hydration.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
@@ -100,19 +99,15 @@ async function buildDocumentInteractive(
       throw e;
     }
     console.error(e);
-    const { action } = await prompt<{ action: string }>([
-      {
-        type: "list",
-        message: "What to do?",
-        name: "action",
-        choices: [
-          { name: "re-run", value: "r" },
-          { name: "skip", value: "s" },
-          { name: "quit", value: "q" },
-        ],
-        default: "r",
-      },
-    ]);
+    const action = await select({
+      message: "What to do?",
+      choices: [
+        { name: "re-run", value: "r" },
+        { name: "skip", value: "s" },
+        { name: "quit", value: "q" },
+      ],
+      default: "r",
+    });
     if (action === "r") {
       return await buildDocumentInteractive(documentPath, interactive, true);
     }

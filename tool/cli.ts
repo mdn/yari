@@ -9,7 +9,7 @@ import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-import inquirer from "inquirer";
+import { confirm } from "@inquirer/prompts";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
@@ -42,7 +42,6 @@ import {
 import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -355,14 +354,12 @@ program
           )
         );
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt<{ run: boolean }>({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
         const deletedDocs = await Document.remove(slug, locale, {
           recursive,
@@ -434,14 +431,12 @@ program
           .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
           .join("\n")
       );
-      const { run } = yes
-        ? { run: true }
-        : await prompt<{ run: boolean }>({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
         const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
@@ -789,14 +784,12 @@ program
         console.log(chalk.green("Found no fixable flaws!"));
         return;
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt<{ run: boolean }>({
-            type: "confirm",
-            message: `Proceed fixing ${flaws} flaws?`,
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: `Proceed fixing ${flaws} flaws?`,
+          default: true,
+        }));
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
       }
