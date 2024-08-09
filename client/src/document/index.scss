@@ -858,9 +858,10 @@ kbd {
   --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
 
-  @media (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
+  @media (min-width: $screen-md) {
     display: flex;
     flex-direction: column;
+    overflow: auto;
   }
 
   max-height: var(--max-height);
@@ -870,18 +871,14 @@ kbd {
 
   @media (min-width: $screen-md) {
     z-index: auto;
+  }
 
-    .sidebar {
-      mask-image: linear-gradient(
-        to bottom,
-        rgb(0, 0, 0) 0% calc(100% - 3rem),
-        rgba(0, 0, 0, 0) 100%
-      );
-    }
-
-    @media not (min-height: $screen-height-place-limit) {
-      overflow: auto;
-    }
+  .sidebar {
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0, 0, 0) 0% calc(100% - 3rem),
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 
   &.toc-container,
@@ -918,10 +915,6 @@ kbd {
   }
   @media (min-width: $screen-xl) {
     display: contents;
-
-    .sidebar {
-      mask-image: none;
-    }
   }
 }
 
