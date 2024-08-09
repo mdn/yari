@@ -1,12 +1,9 @@
-import { createRequire } from "node:module";
-
 import { NextFunction, Request, Response } from "express";
 
 import { THIRTY_DAYS } from "../constants.js";
 import { normalizePath, redirect } from "../utils.js";
+import { CANONICALS } from "../canonicals.js";
 
-const require = createRequire(import.meta.url);
-const REDIRECTS = require("../../canonicals.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 export async function redirectNonCanonicals(
@@ -31,10 +28,10 @@ export async function redirectNonCanonicals(
     );
     const source = normalizePath(originalSource);
     if (
-      typeof REDIRECTS[source] == "string" &&
-      REDIRECTS[source] !== originalSource
+      typeof CANONICALS[source] == "string" &&
+      CANONICALS[source] !== originalSource
     ) {
-      const target = joinPath(REDIRECTS[source], suffix) + parsedUrl.search;
+      const target = joinPath(CANONICALS[source], suffix) + parsedUrl.search;
       if (pathname !== target) {
         return redirect(res, target, {
           status: 301,
