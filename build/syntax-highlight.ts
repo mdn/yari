@@ -32,6 +32,7 @@ const loadAllLanguages = lazy(() => {
     "diff",
     "django",
     "glsl",
+    "go",
     "handlebars",
     "http",
     "ignore",
