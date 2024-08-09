@@ -4,6 +4,15 @@
 .header-search {
   max-width: 100%;
 
+  .search-results {
+    max-height: calc(100vh - var(--top-nav-height) - 7rem);
+    overflow-x: auto;
+
+    @media screen and (min-width: $screen-lg) {
+      max-height: calc(100vh - var(--top-nav-height));
+    }
+  }
+
   .search-widget {
     margin: 0 auto;
     max-width: 20rem;
