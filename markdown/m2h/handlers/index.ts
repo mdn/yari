@@ -45,6 +45,8 @@ interface NotecardType {
 
 function getNotecardType(node: any, locale: Locale): NotecardType | null {
   const types = ["note", "warning", "callout"];
+  // The styling and infrastructure is in place to add the following types when ready:
+  // const types = ["note", "tip", "important", "warning", "caution", "callout"];
 
   if (!node.children) {
     return null;
