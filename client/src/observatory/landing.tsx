@@ -78,7 +78,7 @@ export default function ObservatoryLanding() {
   useEffect(() => {
     if (error && !isMutating) {
       gleanClick(
-        `${OBSERVATORY}: error -> ${ERROR_MAP[error.name] || error.message}`
+        `${OBSERVATORY}: error -> ${ERROR_MAP[error.name] || error.name || error.message}`
       );
     }
   }, [error, isMutating, gleanClick]);
