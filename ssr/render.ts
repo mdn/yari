@@ -137,8 +137,8 @@ export default function render(
     // Use the doc's title instead
     escapedPageTitle = htmlEscape(doc.pageTitle);
 
-    if (doc.summary) {
-      pageDescription = htmlEscape(doc.summary);
+    if (doc.pageDescription) {
+      pageDescription = htmlEscape(doc.pageDescription);
     }
 
     hydrationData.doc = doc;
