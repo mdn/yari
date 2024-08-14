@@ -44,6 +44,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { addBaseline } from "./web-features.js";
+import { getPageDescription } from "./page-description.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -540,6 +541,7 @@ export async function buildDocument(
   addBreadcrumbData(document.url, doc);
 
   doc.pageTitle = getPageTitle(doc);
+  doc.pageDescription = getPageDescription(doc, document.metadata["page-type"]);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
