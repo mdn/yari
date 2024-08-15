@@ -27,10 +27,14 @@ export function addBaseline(doc: Partial<Doc>) {
 function getStatuses(bcdKey: string) {
   for (const feature of Object.values(features)) {
     if (feature.status && feature.compat_features?.includes(bcdKey)) {
-      return {
-        featureStatus: feature.status,
-        keyStatus: computeBaseline({ compatKeys: [bcdKey] }),
-      };
+      try {
+        return {
+          featureStatus: feature.status,
+          keyStatus: computeBaseline({ compatKeys: [bcdKey] }),
+        };
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
   return {};
