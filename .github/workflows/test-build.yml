@@ -160,6 +160,7 @@ jobs:
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
         run: |
+          set -eo pipefail
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"

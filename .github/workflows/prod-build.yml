@@ -255,6 +255,7 @@ jobs:
           REACT_APP_AI_FEEDBACK_GITHUB_REPO: mdn/ai-feedback
 
         run: |
+          set -eo pipefail
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"

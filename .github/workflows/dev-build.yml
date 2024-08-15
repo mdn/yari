@@ -131,6 +131,8 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
 
         run: |
+          set -eo pipefail
+
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
