@@ -101,18 +101,21 @@ export function setContentResponseHeaders(
 }
 
 export function withRunnerResponseHeaders(
-  _proxyRes: IncomingMessage,
-  _req: IncomingMessage,
+  proxyRes: IncomingMessage,
+  req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ): void {
-  const hash = createHash("sha256");
-  hash.update(_req.url || "");
-
+  let hash = null;
+  if (proxyRes.headers.etag && req.url) {
+    hash = createHash("sha256");
+    hash.update(proxyRes.headers.etag || "");
+    hash.update(req.url || "");
+  }
   [
     ["X-Content-Type-Options", "nosniff"],
     ["Clear-Site-Data", '"*"'],
     ["Strict-Transport-Security", "max-age=63072000"],
     ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
-    ["ETag", `${_proxyRes.headers.etag}-${hash.digest("hex")}`],
+    hash ? ["ETag", hash.digest("hex")] : [],
   ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }
