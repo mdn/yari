@@ -23,9 +23,9 @@ export function getPageDescription(
       .map(([, text]) => text);
 
     const otherItems = Object.entries({
-      Exceptions: "possible exceptions",
+      Exceptions: "exceptions",
       Examples: "code examples",
-      Specifications: "the current specification",
+      Specifications: "specifications",
       "Browser compatibility": "browser compatibility",
     })
       .filter(([section]) => sections.includes(section))
