@@ -8,25 +8,37 @@ export function getPageDescription(
   if (doc.locale === DEFAULT_LOCALE) {
     const sections = doc.toc?.map(({ text }) => text) ?? [];
 
-    const items = Object.entries({
-      Value: "its type",
-      "Event type": "its type",
-      Syntax: "its syntax",
-      Parameters: "its parameters",
-      Constructor: "its constructor",
-      "Instance properties": "its properties",
-      "Event properties": "its properties",
-      "Instance methods": "its methods",
-      "Return value": "its return value",
+    const syntaxItems = Object.entries({
+      Value: "type",
+      "Event type": "type",
+      Syntax: "syntax",
+      Parameters: "parameters",
+      Constructor: "constructor",
+      "Instance properties": "properties",
+      "Event properties": "properties",
+      "Instance methods": "methods",
+      "Return value": "return value",
+    })
+      .filter(([section]) => sections.includes(section))
+      .map(([, text]) => text);
+
+    const otherItems = Object.entries({
       Exceptions: "possible exceptions",
       Examples: "code examples",
-      Specifications: "links to the current standard documents",
+      Specifications: "the current specification",
       "Browser compatibility": "browser compatibility",
     })
       .filter(([section]) => sections.includes(section))
       .map(([, text]) => text);
 
-    const contents = enumerate(...items);
+    const syntaxContents = enumerate(...syntaxItems);
+    const otherContents = enumerate(...otherItems);
+    const contents = [
+      syntaxContents ? `its ${syntaxContents}` : "",
+      otherContents,
+    ]
+      .filter(Boolean)
+      .join(", ");
 
     switch (pageType) {
       case "web-api-instance-property":
