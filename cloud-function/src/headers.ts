@@ -6,6 +6,7 @@ import {
 } from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
 import { ORIGIN_TRIAL_TOKEN } from "./env.js";
+import { createHash } from "node:crypto";
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
 const DEFAULT_MAX_AGE = 60 * 60;
@@ -127,10 +128,14 @@ export function withRunnerResponseHeaders(
   _req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ): void {
+  const hash = createHash("sha256");
+  hash.update(_req.url || "");
+
   [
     ["X-Content-Type-Options", "nosniff"],
     ["Clear-Site-Data", '"*"'],
     ["Strict-Transport-Security", "max-age=63072000"],
     ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
+    ["ETag", `${_proxyRes.headers.etag}-${hash.digest("hex")}`],
   ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }
