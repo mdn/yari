@@ -1,4 +1,4 @@
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 
 import * as Parser from "./parser.js";
 import { Document, Redirect } from "../../content/index.js";
