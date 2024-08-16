@@ -155,7 +155,7 @@ export function splitSections(rawHTML) {
   const toc = [];
 
   const section = cheerio
-    .load("<div></div>", { decodeEntities: false })("div")
+    .load("<div></div>", { xml: { decodeEntities: false } })("div")
     .eq(0);
 
   const iterable = [...($("#_body")[0] as Element).childNodes];

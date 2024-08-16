@@ -145,7 +145,7 @@ export class HTMLTool {
   constructor(html, pathDescription?: any) {
     this.$ =
       typeof html == "string"
-        ? cheerio.load(html, { decodeEntities: true })
+        ? cheerio.load(html, { xml: { decodeEntities: true } })
         : html;
     this.pathDescription = pathDescription;
   }
