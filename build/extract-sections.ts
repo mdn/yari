@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { Element, ParentNode } from "domhandler";
 import { ProseSection, Section } from "../libs/types/document.js";
 import { extractSpecifications } from "./extract-specifications.js";
 
@@ -15,14 +16,14 @@ export async function extractSections(
     })("div")
     .eq(0);
 
-  const body = $("body")[0] as cheerio.ParentNode;
-  const iterable = [...(body.childNodes as cheerio.Element[])];
+  const body = $("body")[0] as ParentNode;
+  const iterable = [...(body.childNodes as Element[])];
 
   let c = 0;
   for (const child of iterable) {
     if (
-      (child as cheerio.Element).tagName === "h2" ||
-      (child as cheerio.Element).tagName === "h3"
+      (child as Element).tagName === "h2" ||
+      (child as Element).tagName === "h3"
     ) {
       if (c) {
         const [subSections, subFlaws] = await addSections(section.clone());
@@ -164,7 +165,7 @@ export async function extractSections(
  *   }]
  */
 async function addSections(
-  $: cheerio.Cheerio<cheerio.Element>
+  $: cheerio.Cheerio<Element>
 ): Promise<SectionsAndFlaws> {
   const flaws: string[] = [];
 
@@ -216,8 +217,8 @@ async function addSections(
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
-      const div = $[0] as cheerio.ParentNode;
-      const iterable = [...(div.childNodes as cheerio.Element[])];
+      const div = $[0] as ParentNode;
+      const iterable = [...(div.childNodes as Element[])];
       let c = 0;
       let countSpecialDivsFound = 0;
       for (const child of iterable) {
@@ -290,7 +291,7 @@ async function addSections(
 }
 
 async function _addSingleSpecialSection(
-  $: cheerio.Cheerio<cheerio.Element>
+  $: cheerio.Cheerio<Element>
 ): Promise<Section[]> {
   let id: string | null = null;
   let title: string | null = null;
@@ -373,9 +374,7 @@ async function _addSingleSpecialSection(
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 }
 
-function _addSectionProse(
-  $: cheerio.Cheerio<cheerio.Element>
-): SectionsAndFlaws {
+function _addSectionProse($: cheerio.Cheerio<Element>): SectionsAndFlaws {
   let id: string | null = null;
   let title: string | null = null;
   let isH3 = false;

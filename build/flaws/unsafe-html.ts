@@ -6,6 +6,7 @@ import {
 } from "../../libs/env/index.js";
 import { findMatchesInText } from "../matches.js";
 import * as cheerio from "cheerio";
+import { Element } from "domhandler";
 import { Doc } from "../../libs/types/document.js";
 
 const safeIFrameSrcs = [
@@ -32,7 +33,7 @@ function getAndMarkupUnsafeHTMLFlaws(
 ) {
   const flaws: Flaw[] = [];
 
-  function addFlaw(element: cheerio.Element, explanation: string) {
+  function addFlaw(element: Element, explanation: string) {
     const id = `unsafe_html${flaws.length + 1}`;
     let html = $.html($(element));
     $(element).replaceWith($("<code>").addClass("unsafe-html").text(html));

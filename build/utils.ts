@@ -5,6 +5,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
+import { Element } from "domhandler";
 import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
@@ -157,7 +158,7 @@ export function splitSections(rawHTML) {
     .load("<div></div>", { decodeEntities: false })("div")
     .eq(0);
 
-  const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
+  const iterable = [...($("#_body")[0] as Element).childNodes];
   let c = 0;
   iterable.forEach((child) => {
     if ("tagName" in child && child.tagName === "h2") {
