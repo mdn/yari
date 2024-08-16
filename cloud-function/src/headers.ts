@@ -116,6 +116,6 @@ export function withRunnerResponseHeaders(
     ["Clear-Site-Data", '"*"'],
     ["Strict-Transport-Security", "max-age=63072000"],
     ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
-    hash ? ["ETag", hash.digest("hex")] : [],
+    hash ? ["ETag", `W/"${hash.digest("hex")}"`] : [],
   ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }
