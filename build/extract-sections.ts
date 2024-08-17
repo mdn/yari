@@ -10,13 +10,10 @@ export async function extractSections(
 ): Promise<[Section[], string[]]> {
   const flaws: string[] = [];
   const sections: Section[] = [];
-  const section = cheerio
-    .load("<div></div>", {
-      // decodeEntities: false
-    })("div")
-    .eq(0);
+  const section = cheerio.load("<div></div>")("div").eq(0);
 
-  const body = $("body")[0] as ParentNode;
+  const bodies = $("body");
+  const body = bodies[0] as ParentNode;
   const iterable = [...(body.childNodes as Element[])];
 
   let c = 0;
@@ -208,16 +205,13 @@ async function addSections(
      */
     if (countPotentialSpecialDivs > 1) {
       const subSections: Section[] = [];
-      const section = cheerio
-        .load("<div></div>", {
-          // decodeEntities: false
-        })("div")
-        .eq(0);
+      const section = cheerio.load("<div></div>")("div").eq(0);
 
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
       const div = $[0] as ParentNode;
+      console.log({ div });
       const iterable = [...(div.childNodes as Element[])];
       let c = 0;
       let countSpecialDivsFound = 0;

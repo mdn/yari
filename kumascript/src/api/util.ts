@@ -143,10 +143,7 @@ export class HTMLTool {
   private $: cheerio.CheerioAPI;
 
   constructor(html, pathDescription?: any) {
-    this.$ =
-      typeof html == "string"
-        ? cheerio.load(html, { xml: { decodeEntities: true } })
-        : html;
+    this.$ = typeof html == "string" ? cheerio.load(html) : html;
     this.pathDescription = pathDescription;
   }
 
