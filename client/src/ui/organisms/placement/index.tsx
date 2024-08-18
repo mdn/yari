@@ -64,9 +64,8 @@ export function SidePlacement() {
     ].filter(([_, v]) => Boolean(v))
   );
 
-  return !placementData?.side ? (
-    <section className="place side"></section>
-  ) : placementData.side.cta && placementData.side.heading ? (
+  return !placementData?.side ? null : placementData.side.cta &&
+    placementData.side.heading ? (
     <PlacementInner
       pong={placementData.side}
       extraClassNames={["side", "new-side"]}
