@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import { jest } from "@jest/globals";
 
 import { itMacro, describeMacro, beforeEachMacro } from "./utils.js";

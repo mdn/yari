@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import imagesize from "image-size";
 
 const { default: sizeOf } = imagesize;
