@@ -2,6 +2,7 @@ import { Flaw } from "./index.js";
 
 import { getFirstMatchInText } from "../matches.js";
 import * as cheerio from "cheerio";
+import { Element } from "domhandler";
 import { Doc } from "../../libs/types/document.js";
 const escapeHTML = (s: string) =>
   s
@@ -36,7 +37,7 @@ export function getPreTagFlaws(
   //
   // This makes it easier to edit the code in raw form. It also makes it less
   // heavy because any HTML will be replaced with Prism HTML anyway.
-  function addCodeTagFlaw($pre: cheerio.Cheerio<cheerio.Element>) {
+  function addCodeTagFlaw($pre: cheerio.Cheerio<Element>) {
     const id = `bad_pre_tags${flaws.length + 1}`;
     const type = "pre_with_html";
     const explanation = `<pre><code>CODE can be just <pre>CODE`;
