@@ -111,7 +111,7 @@ export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
 
     document
       .querySelectorAll("div.code-example pre:not(.hidden)")
-      .forEach(async (element) => {
+      .forEach((element) => {
         const header = element.parentElement?.querySelector(".example-header");
         // Paused for now
         // addExplainButton(header, element);
@@ -121,12 +121,12 @@ export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
           );
           return;
         } else {
-          await highlightSyntax(
-            element,
-            header?.querySelector(".language-name")?.textContent || "plain"
-          );
           addCopyToClipboardButton(element, header);
         }
+        highlightSyntax(
+          element,
+          header?.querySelector(".language-name")?.textContent || "plain"
+        );
       });
   }, [doc, location, isServer]);
 }
