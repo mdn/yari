@@ -60,6 +60,8 @@ import {
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
 
+Prism.manual = true;
+
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
 const EXAMPLES: { category: Category; query: string }[] = [
@@ -482,13 +484,17 @@ function AIHelpAssistantResponse({
               },
               code: ({ className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || "");
-                const lang = Prism.languages[match?.[1]];
+                const lang = match?.[1];
                 return lang ? (
                   <code
                     {...props}
                     className={className}
                     dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(String(children), lang),
+                      __html: Prism.highlight(
+                        String(children),
+                        Prism.languages[lang],
+                        lang
+                      ),
                     }}
                   />
                 ) : (
