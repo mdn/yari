@@ -11,6 +11,20 @@ section.place {
   }
 
   .pong-box2 {
+    --place-new-side-background-light: #111;
+    --place-new-side-color-light: #fff;
+
+    --place-new-side-background-dark: #111;
+    --place-new-side-color-dark: #fff;
+
+    --place-new-side-background: var(--place-new-side-background-light);
+    --place-new-side-color: var(--place-new-side-color-light);
+
+    @media (prefers-color-scheme: dark) {
+      --place-new-side-background: var(--place-new-side-background-dark);
+      --place-new-side-color: var(--place-new-side-color-dark);
+    }
+
     --border-radius: 0.5rem;
     border: 1px solid var(--border-primary);
     border-radius: var(--border-radius);
@@ -22,23 +36,24 @@ section.place {
     width: 11rem;
 
     .pong-note {
-      background-color: #fff6;
+      background-color: var(--place-new-side-color);
+      border: 1px solid var(--place-new-side-background);
       border-radius: 0.25rem;
-      color: #fff;
+      color: var(--place-new-side-background);
       font-size: 0.625rem;
       margin: 0.5rem;
+      opacity: 0.4;
       padding: 0 0.25rem;
       position: absolute;
       right: 0;
-      text-decoration: none;
       text-decoration: underline;
       text-transform: uppercase;
       top: 0;
       width: max-content;
 
       &:hover {
-        background-color: #fff;
-        color: #111;
+        opacity: unset;
+        text-decoration: none;
       }
     }
 
@@ -53,9 +68,13 @@ section.place {
       }
 
       > div.content {
-        background: linear-gradient(to top, #111 9rem, transparent);
+        background: linear-gradient(
+          to top,
+          var(--place-new-side-background) 9rem,
+          transparent
+        );
         border-radius: var(--border-radius);
-        color: #fff;
+        color: var(--place-new-side-color);
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
@@ -78,7 +97,7 @@ section.place {
         }
 
         .pong-cta {
-          --color: #fff;
+          --color: var(--place-new-side-color);
           --icon-primary: var(--color);
           background-color: #fff1;
           border: solid 2px;
@@ -95,8 +114,8 @@ section.place {
           }
 
           &:hover {
-            --color: #111;
-            background-color: #fff;
+            --color: var(--place-new-side-background);
+            background-color: var(--place-new-side-color);
           }
         }
       }
@@ -253,6 +272,11 @@ section.place {
       width: initial;
     }
   }
+}
+
+.dark section.place .pong-box2 {
+  --place-new-side-background: var(--place-new-side-background-dark);
+  --place-new-side-color: var(--place-new-side-color-dark);
 }
 
 section.place.hp-main {

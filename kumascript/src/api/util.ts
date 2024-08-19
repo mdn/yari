@@ -4,6 +4,7 @@
  */
 import sanitizeFilename from "sanitize-filename";
 import * as cheerio from "cheerio";
+import { Element } from "domhandler";
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
@@ -142,10 +143,7 @@ export class HTMLTool {
   private $: cheerio.CheerioAPI;
 
   constructor(html, pathDescription?: any) {
-    this.$ =
-      typeof html == "string"
-        ? cheerio.load(html, { decodeEntities: true })
-        : html;
+    this.$ = typeof html == "string" ? cheerio.load(html) : html;
     this.pathDescription = pathDescription;
   }
 
@@ -177,7 +175,7 @@ export class HTMLTool {
     // And we ensure all IDs that get added are completely lowercase.
     $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
       const $element = $(element);
-      const $first = $element[0] as cheerio.Element;
+      const $first = $element[0] as Element;
       const isDt = $first.name === "dt";
       // Default is the existing one. Let's see if we need to change it.
       let id = $element.attr("id");
