@@ -116,7 +116,7 @@ export const CSP_DIRECTIVES = {
     "https://observatory-api.mdn.mozilla.net",
 
     // Community
-    "https://api.github.com",
+    "https://api.github.com/search/issues",
 
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
@@ -143,6 +143,7 @@ export const CSP_DIRECTIVES = {
   ],
   "img-src": [
     "'self'",
+    "data:",
 
     // Avatars
     "*.githubusercontent.com",
