@@ -167,7 +167,7 @@
     "@types/imagemin": "^9.0.0",
     "@types/jest": "^29.5.12",
     "@types/mdast": "^4.0.4",
-    "@types/node": "^18.19.44",
+    "@types/node": "^18.19.45",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-modal": "^3.16.3",
