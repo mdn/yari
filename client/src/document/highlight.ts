@@ -12,17 +12,8 @@ const ALIASES = new Map([
   ["vue", "markup"], // See https://github.com/PrismJS/prism/issues/1665#issuecomment-536529608
 ]);
 
-// Over the years we have accumulated some weird <pre> tags whose
-// brush is more or less "junk".
-// TODO: Perhaps, if you have a doc with <pre> tags that matches
-// this, it should become a flaw.
-const IGNORE = new Set(["none", "text", "plain", "unix"]);
-
 export async function highlightSyntax(element: Element, language: string) {
   const resolvedLanguage = ALIASES.get(language) || language;
-  if (IGNORE.has(resolvedLanguage)) {
-    return;
-  }
 
   let prismLanguage = Prism.languages[resolvedLanguage];
   if (!prismLanguage) {
