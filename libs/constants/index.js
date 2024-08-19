@@ -115,6 +115,9 @@ export const CSP_DIRECTIVES = {
     "https://observatory-api.mdn.allizom.net",
     "https://observatory-api.mdn.mozilla.net",
 
+    // Community
+    "https://api.github.com",
+
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -149,6 +152,7 @@ export const CSP_DIRECTIVES = {
     "firefoxusercontent.com",
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
+    "https://github.com",
 
     "mdn.dev",
     "interactive-examples.mdn.mozilla.net",

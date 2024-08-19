@@ -330,7 +330,7 @@ export function App(appProps: HydrationData) {
               path="/community/*"
               element={
                 <StandardLayout>
-                  <Community />
+                  <Community {...appProps} />
                 </StandardLayout>
               }
             />

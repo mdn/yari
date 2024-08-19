@@ -1,593 +1,171 @@
-import { ReactComponent as DesktopHeaderTopLeftSVG } from "./svg/header-1.svg";
-import { ReactComponent as DesktopHeaderBottomLeftSVG } from "./svg/header-2.svg";
-import { ReactComponent as DesktopHeaderBottomRightSVG } from "./svg/header-3.svg";
-import { ReactComponent as MobileHeaderSVG } from "./svg/header-mobile.svg";
-import { ReactComponent as ChatSVG } from "./svg/chat.svg";
-import { ReactComponent as CommunityCallsSVG } from "./svg/community-calls.svg";
-import darkVideo from "./svg/video-preview_dark.svg";
-import lightVideo from "./svg/video-preview_light.svg";
-
 import "./index.scss";
-import ThemedPicture from "../ui/atoms/themed-picture";
+import { HydrationData } from "../../../libs/types/hydration";
+import { useMemo } from "react";
+import useSWRImmutable from "swr/immutable";
+import { Section } from "../../../libs/types/document";
+import useSWR from "swr";
+import { HTTPError } from "../document";
+import { WRITER_MODE } from "../env";
+import { Prose } from "../document/ingredients/prose";
 
-const STATS = [
-  { id: 1, number: "45k+", legend: "Total contributors" },
-  { id: 2, number: "80M+", legend: "Monthly views" },
-  { id: 3, number: "200+", legend: "Weekly commits" },
-  { id: 4, number: "8", legend: "Language communities" },
-];
-const LOCALE_COUNT = 9;
+interface CommunityDoc {
+  title: string;
+  body: Section[];
+}
 
-const CONTRIBUTORS: { github_id: number; org?: string; user: string }[] = [
-  {
-    github_id: 43580235,
-    org: "@mozilla",
-    user: "bsmth",
-  },
-  {
-    github_id: 47647,
-    user: "chrisdavidmills",
-    org: "Mills Docs Limited",
-  },
-  {
-    github_id: 349114,
-    user: "Elchi3",
-    org: "@openwebdocs",
-  },
-  {
-    github_id: 69888,
-    user: "estelle",
-    org: "Standardista",
-  },
-  {
-    github_id: 5368500,
-    user: "hamishwillee",
-    org: "Jenosam Pty Ltd",
-  },
-  {
-    github_id: 55398995,
-    user: "Josh-Cena",
-    org: "Yale University Very Very Very Long",
-  },
-  {
-    github_id: 11516302,
-    user: "mfuji09",
-  },
-  {
-    github_id: 87750369,
-    user: "OnkarRuikar",
-  },
-  {
-    github_id: 5179191,
-    user: "queengooborg",
-  },
-  {
-    github_id: 194984,
-    user: "sideshowbarker",
-  },
-  {
-    github_id: 1466293,
-    user: "teoli2003",
-  },
-  {
-    github_id: 432915,
-    user: "wbamberg",
-    org: "@openwebdocs",
-  },
-];
-
-const CONTRIBUTE_ACTIONS = [
-  {
-    title: "Fix issues",
-    description: "Submit pull requests to fix reported issues.",
-    actions: [
-      {
-        url: "https://github.com/mdn/content/issues",
-        label: "Squash bugs",
-      },
-    ],
-  },
-  {
-    title: "Improve content",
-    description: "Fix inaccuracies and fill in missing information.",
-    actions: [
-      {
-        url: "https://github.com/mdn/content/#readme",
-        label: "Start writing",
-      },
-    ],
-  },
-  {
-    title: "Localize content",
-    description:
-      "Participate in translating content into one of our supported languages.",
-    actions: [
-      {
-        url: "https://developer.mozilla.org/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
-        label: "Find your locale",
-      },
-    ],
-  },
-  {
-    title: "Answer questions",
-    description:
-      "Share your knowledge and expertise and guide fellow learners.",
-    actions: [
-      {
-        url: "https://discord.gg/3MKbs99V4F",
-        label: "Help on Discord",
-      },
-    ],
-  },
-  {
-    title: "Talk about MDN",
-    description: "Share your stories with us on our Mastodon or X.",
-    actions: [
-      {
-        url: "https://twitter.com/mozdevnet",
-        label: "X",
-      },
-      {
-        url: "https://mozilla.social/@mdn",
-        label: "Mastodon",
-      },
-    ],
-  },
-];
-
-const ISSUES = [
-  {
-    title: "Wrong explanation of the example inside Inline formatting context",
-    url: "https://github.com/mdn/content/issues/29035",
-    labels: ["Content:CSS", "good first issue"],
-  },
-  {
-    title: "Document false negatives for navigator.onLine property",
-    url: "https://github.com/mdn/content/issues/30402",
-    labels: ["accepting PR", "Content:WebAPI", "effort: medium"],
-  },
-  {
-    title: "Event not called for modification on sessionStorage",
-    url: "https://github.com/mdn/content/issues/30598",
-    labels: [
-      "accepting PR",
-      "Content:WebAPI",
-      "effort: small",
-      "goal: accuracy",
-    ],
-  },
-  {
-    title: "SharedArrayBuffer is not usable as a source data parameter.",
-    url: "https://github.com/mdn/content/issues/30749",
-    labels: ["accepting PR", "area: WebGL", "Content:WebAPI", "goal: accuracy"],
-  },
-  {
-    title:
-      "update Notifications API content to better explain persistent events and not persistent events",
-    url: "https://github.com/mdn/content/issues/30931",
-    labels: [
-      "accepting PR",
-      "Content:WebAPI",
-      "effort: large",
-      "goal: clarity",
-    ],
-  },
-  {
-    title: "Update usage for {{AvailableInWorkers}}",
-    url: "https://github.com/mdn/content/issues/31675",
-    labels: ["accepting PR", "area: Workers", "Content:WebAPI", "MDN:Project"],
-  },
-  {
-    title: 'C# WebSocket server example: Incompatible type for "offset"',
-    url: "https://github.com/mdn/content/issues/31774",
-    labels: [
-      "area: WebSockets",
-      "Content:WebAPI",
-      "good first issue",
-      "help wanted",
-    ],
-  },
-  {
-    title:
-      "Mention that offsetWidth value is integer and getBoundingClientRect().width is a decimal point number",
-    url: "https://github.com/mdn/content/issues/31779",
-    labels: ["area: DOM/CSSOM", "Content:WebAPI", "good first issue"],
-  },
-  {
-    title: "cancelAnimationFrame using mismatched time values in sample",
-    url: "https://github.com/mdn/content/issues/31840",
-    labels: [
-      "accepting PR",
-      "Content:WebAPI",
-      "effort: small",
-      "goal: accuracy",
-    ],
-  },
-  {
-    title: "Fetch Basic Sample Code 404",
-    url: "https://github.com/mdn/content/issues/31841",
-    labels: [
-      "accepting PR",
-      "area: Fetch/XMLHttpRequest",
-      "Content:WebAPI",
-      "effort: small",
-      "goal: accuracy",
-    ],
-  },
-];
-
-export function Community() {
+export function Community(appProps: HydrationData<any, CommunityDoc>) {
+  const doc = useCommunityDoc(appProps);
   return (
-    <main className="community">
-      {/* 1. Header */}
-      <section className="hero">
-        <h1>MDN Community</h1>
-        <p>Contribute, Collaborate and Shape the Future of the Web Together</p>
-        <div className="actions">
-          <a className="btn primary" href="#join">
-            Start Contributing on GitHub
-          </a>
-          <a
-            className="btn secondary"
-            href="https://developer.mozilla.org/discord"
-          >
-            Join MDN Discord
-          </a>
-        </div>
-        <MobileHeaderSVG className="illustration mobile-only" role="none" />
-        <DesktopHeaderTopLeftSVG
-          className="top-left desktop-only"
-          role="none"
-        />
-        <DesktopHeaderBottomLeftSVG
-          className="bottom-left desktop-only"
-          role="none"
-        />
-        <DesktopHeaderBottomRightSVG
-          className="bottom-right desktop-only"
-          role="none"
-        />
-      </section>
-      {/* 2. Stats */}
-      <section className="community-stats">
-        <ul className="stats">
-          {STATS.map((s) => (
-            <li key={s.id}>
-              <span className="number">{s.number}</span>
-              <span className="legend">{s.legend}</span>
-            </li>
-          ))}
-        </ul>
-        <h2>MDN community powers the web</h2>
-        <p>
-          MDN’s strength comes from the passion and dedication of our global
-          community. Since our founding in 2005, we’ve grown into a thriving
-          network. Together, we’ve created a comprehensive, open, and free
-          resource that serves web developers across the globe. With volunteers
-          leading translation efforts in {LOCALE_COUNT} languages, we’re truly
-          international.
-        </p>
-      </section>
-      {/* 3. Contributors */}
-      <section className="community-contributors">
-        <section className="contributors desktop-only">
-          {/* Left column. */}
-          {CONTRIBUTORS.slice(0, 10).map((contributor, index) => (
-            <figure className="contributor">
-              <img
-                src={`https://avatars.githubusercontent.com/u/${contributor.github_id}?v=4`}
-                alt=""
+    <main className="community-container">
+      <RenderCommunityBody
+        doc={doc}
+        renderer={(section, i) => {
+          if (i === 0) {
+            return (
+              <Header
+                section={section}
+                key={section.value.id}
+                h1={doc?.title}
               />
+            );
+          } else if (section.value.id === "help_us_fix_open_issues") {
+            return <Issues section={section} />;
+          }
+          return null;
+        }}
+      />
+    </main>
+  );
+}
 
-              <figcaption>
-                <a
-                  href={`https://github.com/${contributor.user}`}
-                  rel="nofollow noopener noreferrer"
-                  target="_blank"
-                  className="username"
-                >
-                  {contributor.user}
-                </a>
-                {contributor.org && (
-                  <span className="org">{contributor.org}</span>
-                )}
-              </figcaption>
-            </figure>
-          ))}
-        </section>
-        <section className="meet-our-contributors">
-          {/* Right column, top. */}
-          <h2>Meet our Contributors</h2>
-          <p>
-            We are an open-source community of developers dedicated to building
-            resources for a better web. Our diverse contributors, including
-            developers, technical writers, students, educators, designers, and
-            more, come from various backgrounds and platforms. Anyone can
-            contribute, and each contribution strengthens our community, driving
-            innovation and improving this vital resource for developers
-            worldwide
-          </p>
-          <div className="actions">
-            <a
-              className="btn primary"
-              href="https://developer.mozilla.org/en-US/docs/MDN/Community/Contributing/Getting_started"
-            >
-              Join us
-            </a>
-            <a
-              className="btn secondary"
-              href="https://github.com/mdn/content/graphs/contributors"
-            >
-              View all contributors
-            </a>
-          </div>
-        </section>
-        <section className="contributor-quotes">
-          {/* Right column, bottom. */}
-          <h2>Contributor spotlight</h2>
-          <div className="quotes">
-            <blockquote>
-              <p>
-                There are millions of web developers in China, and many of them
-                begin their developer journey at MDN Web Docs. Contributing to
-                MDN Web Docs is an excellent way to help people who are starting
-                out.
-              </p>
-              <footer>
-                -
-                <a
-                  href="https://github.com/yin1999"
-                  rel="nofollow noreferrer noopener"
-                  target="_blank"
-                >
-                  YiTao Yin
-                </a>
-                <br />
-                (MDN contributor)
-              </footer>
-            </blockquote>
-            <blockquote>
-              <p>
-                Working with the kind and knowledgeable teams on MDN gives me
-                the opportunity to learn, be part of a passionate community, and
-                help improve an extraordinary resource.
-              </p>
-              <footer>
-                -
-                <a
-                  href="https://github.com/cw118"
-                  rel="nofollow noreferrer noopener"
-                  target="_blank"
-                >
-                  Carolyn Wu
-                </a>
-                <br />
-                (MDN contributor)
-              </footer>
-            </blockquote>
-            <blockquote>
-              <p>
-                I find the MDN Web Docs team welcoming and very experienced.
-                Here, I get to learn new stuff. This is the easiest place for
-                anybody to start their open source journey!
-              </p>
-              <footer>
-                -
-                <a
-                  href="https://github.com/OnkarRuikar"
-                  rel="nofollow noreferrer noopener"
-                  target="_blank"
-                >
-                  Onkar Ruikar
-                </a>
-                <br />
-                (MDN contributor)
-              </footer>
-            </blockquote>
-          </div>
-        </section>
+function useCommunityDoc(
+  appProps?: HydrationData<any, CommunityDoc>
+): CommunityDoc | undefined {
+  const { data } = useSWR<CommunityDoc>(
+    "index.json",
+    async () => {
+      const url = new URL(
+        `${window.location.pathname.replace(/\/$/, "")}/index.json`,
+        window.location.origin
+      ).toString();
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        switch (response.status) {
+          case 404:
+            throw new HTTPError(response.status, url, "Page not found");
+        }
+
+        const text = await response.text();
+        throw new HTTPError(response.status, url, text);
+      }
+
+      return (await response.json())?.doc;
+    },
+    {
+      fallbackData: appProps?.doc,
+      revalidateOnFocus: WRITER_MODE,
+      revalidateOnMount: true,
+    }
+  );
+  const doc: CommunityDoc | undefined = data || appProps?.doc || undefined;
+  return doc;
+}
+
+function RenderCommunityBody({
+  doc,
+  renderer = () => null,
+}: {
+  doc?: CommunityDoc;
+  renderer?: (section: Section, i: number) => null | JSX.Element;
+}) {
+  return doc?.body.map((section, i) => {
+    return (
+      renderer(section, i) || (
+        <Prose key={section.value.id} section={section.value} />
+      )
+    );
+  });
+}
+
+function Header({ section, h1 }: { section: any; h1?: string }) {
+  const html = useMemo(
+    () => ({ __html: section.value?.content }),
+    [section.value?.content]
+  );
+  return (
+    <header className="landing-header">
+      <section>
+        <h1>{h1}</h1>
+        <div dangerouslySetInnerHTML={html}></div>
       </section>
-      {/* 4. Learn how to get started */}
-      <section className="get-started">
-        <h2>Learn how to get started</h2>
-        <p>
-          We collaborate on <a href="https://github.com/mdn">GitHub</a>, our
-          project's home, on various tasks such as writing and improving
-          documentation, fixing bugs, and providing review feedback. It starts
-          here, with you. Want to start right away, but not sure how? Follow our
-          guide to{" "}
-          <a href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md#mdn-web-docs-contribution-guide">
-            make your first contribution
-          </a>
-          .
-        </p>
-        <figure>
-          <a href="https://youtu.be/Xnhnu7PViQE?si=RDDlAqtx-CEKXtFL">
-            <ThemedPicture srcLight={lightVideo} srcDark={darkVideo} />
-          </a>
-          <figcaption>
-            Watch this video on{" "}
-            <a href="https://youtu.be/Xnhnu7PViQE?si=RDDlAqtx-CEKXtFL">
-              how to get started with contributing to MDN Web Docs
-            </a>
-          </figcaption>
-        </figure>
-      </section>
-      {/* 5. Join us in shaping a better web */}
-      <section id="join" className="join-us">
-        <h2>Join us in shaping a better web</h2>
-        <p>
-          Become part of this globally cherished group that’s dedicated to
-          documenting web technologies. Whether you’re an expert or a beginner,
-          there’s a place for you in our inclusive community. Check out some of
-          the ways you can contribute and engage.
-        </p>
-        <ul className="notes">
-          {CONTRIBUTE_ACTIONS.map(({ title, description, actions }) => (
-            <li className="note">
-              <div className="note-inner">
-                <h3>{title}</h3>
-                <p>{description}</p>
-                <div className="actions">
-                  {actions.map(({ url, label }) => (
-                    <a className="btn primary" href={url}>
-                      {label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-      {/* 6. Get involved */}
-      <section className="community-get-involved">
-        <h2>Get involved</h2>
-        <p>
-          If you’re a beginner and looking for ways to contribute, GitHub issues
-          labeled as “good first issue” and “accepting PR” are a good place to
-          start.
-        </p>
+    </header>
+  );
+}
+
+function Issues({ section }: { section: any }) {
+  const html = useMemo(
+    () => ({ __html: section.value?.content }),
+    [section.value?.content]
+  );
+  const LABELS = ["good first issue", "accepting PR"];
+  const { data } = useSWRImmutable(
+    `is:open is:issue repo:mdn/content repo:mdn/translated-content repo:mdn/yari label:"good first issue","accepting PR" sort:created-desc no:assignee is:public`,
+    async (query) => {
+      const url = new URL("https://api.github.com/search/issues");
+      url.searchParams.append("per_page", "5");
+      url.searchParams.append("q", query);
+      const res = await fetch(url);
+      if (res.ok) {
+        return await res.json();
+      }
+    }
+  );
+  return (
+    <section aria-labelledby={section.value.id}>
+      <h2 id={section.value.id}>{section.value.title}</h2>
+      <div className="section-content" dangerouslySetInnerHTML={html}></div>
+      <div className="issues-table">
         <table>
           <thead>
             <tr>
               <th>Title</th>
+              <th>Repository</th>
             </tr>
           </thead>
           <tbody>
-            {ISSUES.map((issue) => (
-              <tr>
+            {data?.items.map(({ html_url, title, labels, repository_url }) => (
+              <tr key={html_url}>
                 <td>
-                  <a href={issue.url} rel="noreferrer noopener" target="_blank">
-                    {issue.title}
-                  </a>
-                  <div className="labels">
-                    {issue.labels
-                      .filter((label) =>
-                        ["good first issue", "accepting PR"].includes(label)
-                      )
-                      .map((label) => (
-                        <span className="label">{label}</span>
-                      ))}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p>
-          <a
-            className="btn primary"
-            href="https://github.com/issues?q=is%3Aopen+is%3Aissue+repo%3Amdn%2Fcontent+label%3A%22good+first+issue%22%2C%22accepting+PR%22+sort%3Acreated-asc+no%3Aassignee"
-          >
-            View all issues
-          </a>
-        </p>
-        <p>
-          While working Mozilla spaces, and communities, please adhere to the{" "}
-          <a href="https://www.mozilla.org/en-US/about/governance/policies/participation/">
-            Mozilla Community Participation Guidelines
-          </a>
-          , which promote respect, inclusion, and a harassment-free environment
-          for all community members.
-        </p>
-      </section>
-      {/* 7. Join the conversation */}
-      <section className="contact">
-        <h2>Join the conversation</h2>
-        <div className="channels">
-          <figure className="chat">
-            <ChatSVG role="none" />
-
-            <figcaption>
-              <h3>Chat with us on Discord</h3>
-              <p>
-                Connect with the community. Engage with domain experts. Help
-                others learn.
-              </p>
-              <a
-                className="btn primary"
-                href="https://developer.mozilla.org/discord"
-              >
-                Join MDN Discord
-              </a>
-            </figcaption>
-          </figure>
-          <figure className="call">
-            <CommunityCallsSVG role="none" />
-
-            <figcaption>
-              <h3>Join our Community Calls</h3>
-              <p>
-                Every month, get exclusive updates from the MDN team. Share your
-                ideas and contributions.
-              </p>
-              <a
-                className="btn primary"
-                href="https://github.com/mdn/community-meetings?tab=readme-ov-file#mdn-community-meetings"
-              >
-                RSVP to the next community call
-              </a>
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-      {/* 8. Celebrating community’s impact */}
-      <section className="celebrate">
-        <h2>Celebrating community’s impact</h2>
-        <p>
-          Check out the impact of our community’s efforts! These contributions
-          highlight how volunteers are tirelessly improving web documentation.
-          From fixing issues to translating content, every contribution makes a
-          difference.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Repositories</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ISSUES.map((issue) => (
-              <tr>
-                <td>
-                  <a href={issue.url} rel="noreferrer noopener" target="_blank">
-                    {issue.title}
-                  </a>
-                  <div className="labels">
-                    {issue.labels
-                      .filter((label) =>
-                        ["good first issue", "accepting PR"].includes(label)
-                      )
-                      .map((label) => (
-                        <span className="label">{label}</span>
-                      ))}
+                  <div>
+                    <a href={html_url}>{title}</a>
+                    {labels.map(({ name }) =>
+                      LABELS.includes(name) ? (
+                        <span key={name} className="label">
+                          {name}
+                        </span>
+                      ) : null
+                    )}
                   </div>
                 </td>
                 <td>
                   <a
-                    href="https://github.com/mdn/content"
-                    rel="noreferrer noopener"
-                    target="_blank"
+                    href={repository_url.replace(
+                      "https://api.github.com/repos/",
+                      "https://github.com/"
+                    )}
                   >
-                    Content Repository
+                    {repository_url.replace(
+                      "https://api.github.com/repos/",
+                      ""
+                    )}
                   </a>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </section>
-      {/* 9. Licensing and reuse */}
-      <section className="license">
-        MDN's resources are freely available under various open-source licenses.
-        For detailed information on reusing MDN content, check out our{" "}
-        <a href="https://developer.mozilla.org/en-US/docs/MDN/About#using_mdn_web_docs_content">
-          Attribution and Copyright Licensing
-        </a>{" "}
-        page.
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }
