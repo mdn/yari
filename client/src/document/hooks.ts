@@ -96,15 +96,11 @@ export function useRunSample(doc: Doc | undefined) {
     });
   }, [doc, isServer, locale]);
 }
-export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
+
+export function useDecorateExamples(doc: Doc | undefined) {
   const location = useLocation();
-  const isServer = useIsServer();
 
   useEffect(() => {
-    if (isServer) {
-      return;
-    }
-
     if (!doc) {
       return;
     }
@@ -128,7 +124,7 @@ export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
           header?.querySelector(".language-name")?.textContent || "plain"
         );
       });
-  }, [doc, location, isServer]);
+  }, [doc, location]);
 }
 
 /**
