@@ -6,7 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import * as cheerio from "cheerio";
+import cheerio from "cheerio";
 import md5File from "md5-file";
 
 export async function hashSomeStaticFilesForClientBuild(buildRoot) {
