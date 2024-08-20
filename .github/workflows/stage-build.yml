@@ -269,6 +269,7 @@ jobs:
           SENTRY_RELEASE: ${{ github.sha }}
 
         run: |
+          set -eo pipefail
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"

@@ -154,6 +154,7 @@ export interface DocMetadata {
   browserCompat?: string[];
   baseline?: SupportStatus;
   hash?: string;
+  pageType: string;
 }
 
 export interface Doc extends DocMetadata {
