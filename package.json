@@ -215,7 +215,7 @@
     "jsdom": "^24.1.1",
     "lint-staged": "^13.2.3",
     "mdast-util-to-hast": "^13.2.0",
-    "mini-css-extract-plugin": "^2.9.0",
+    "mini-css-extract-plugin": "^2.9.1",
     "node-dev": "^8.0.0",
     "peggy": "^4.0.3",
     "postcss": "^8.4.41",
