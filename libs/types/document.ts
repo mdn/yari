@@ -135,7 +135,6 @@ export interface DocMetadata {
   locale: Locale;
   native: string;
   pageTitle: string;
-  pageType: string;
   mdn_url: string;
   related_content: any[];
   modified: string;
