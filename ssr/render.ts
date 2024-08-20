@@ -12,6 +12,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import HTML from "../client/build/index.html?raw";
+import { getPageDescription as getMetaDescription } from "./page-description";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -120,6 +121,7 @@ export default function render(
   const canonicalURL = `${BASE_URL}${url}`;
 
   let escapedPageTitle = htmlEscape(pageTitle);
+  let metaDescription = pageDescription;
 
   const hydrationData: HydrationData = { url };
   const translations: string[] = [];
@@ -137,8 +139,9 @@ export default function render(
     // Use the doc's title instead
     escapedPageTitle = htmlEscape(doc.pageTitle);
 
-    if (doc.pageDescription) {
-      pageDescription = htmlEscape(doc.pageDescription);
+    metaDescription = htmlEscape(getMetaDescription(doc));
+    if (doc.summary) {
+      pageDescription = htmlEscape(doc.summary);
     }
 
     hydrationData.doc = doc;
@@ -231,9 +234,9 @@ export default function render(
       return `<meta property="og:${typ}" content="${og.get(typ) || content}"/>`;
     }
   );
-  if (pageDescription) {
+  if (metaDescription) {
     html = html.replace(/<meta name="description" content="[^"]*"\/>/g, () => {
-      return `<meta name="description" content="${pageDescription}"/>`;
+      return `<meta name="description" content="${metaDescription}"/>`;
     });
   }
   html = html.replace("<title>MDN Web Docs</title>", () => `${titleTag}`);

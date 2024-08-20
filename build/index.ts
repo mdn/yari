@@ -541,7 +541,7 @@ export async function buildDocument(
   addBreadcrumbData(document.url, doc);
 
   doc.pageTitle = getPageTitle(doc);
-  doc.pageDescription = getPageDescription(doc, document.metadata["page-type"]);
+  doc.pageType = document.metadata["page-type"];
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
