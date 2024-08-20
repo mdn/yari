@@ -44,7 +44,6 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { addBaseline } from "./web-features.js";
-import { getPageDescription } from "./page-description.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
