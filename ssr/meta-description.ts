@@ -1,10 +1,8 @@
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { Doc } from "../libs/types/document.js";
 
-export function getPageDescription(
-  doc: Partial<Doc>,
-  pageType: string
-): string | undefined {
+export function getMetaDescription(doc: Doc): string {
+  const { pageType } = doc;
   if (doc.locale === DEFAULT_LOCALE) {
     const sections = doc.toc?.map(({ text }) => text) ?? [];
 
