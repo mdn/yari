@@ -24,21 +24,21 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
-                className="icon icon-mastodon"
                 href="https://mozilla.social/@mdn"
                 target="_blank"
                 rel="me noopener noreferrer"
               >
+                <span className="icon icon-mastodon"></span>
                 <span className="visually-hidden">MDN on Mastodon</span>
               </a>
             </li>
             <li>
               <a
-                className="icon icon-twitter-x"
                 href="https://twitter.com/mozdevnet"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                <span className="icon icon-twitter-x"></span>
                 <span className="visually-hidden">
                   MDN on X (formerly Twitter)
                 </span>
@@ -46,20 +46,17 @@ export function Footer() {
             </li>
             <li>
               <a
-                className="icon icon-github-mark-small"
                 href="https://github.com/mdn/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                <span className="icon icon-github-mark-small"></span>
                 <span className="visually-hidden">MDN on GitHub</span>
               </a>
             </li>
             <li>
-              <a
-                className="icon icon-feed"
-                href="/en-US/blog/rss.xml"
-                target="_blank"
-              >
+              <a href="/en-US/blog/rss.xml" target="_blank">
+                <span className="icon icon-feed"></span>
                 <span className="visually-hidden">MDN Blog RSS Feed</span>
               </a>
             </li>
