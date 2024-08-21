@@ -5,14 +5,18 @@ import { DEFAULT_LOCALE } from "../libs/constants/index";
 import {
   ALWAYS_ALLOW_ROBOTS,
   BASE_URL,
-  WEBFONT_TAGS,
+  WEBFONT_URLS,
   GTAG_PATH,
+  ASSET_MANIFEST,
 } from "./include";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import HTML from "../client/build/index.html?raw";
 import { getMetaDescription } from "./meta-description";
+
+import favicon from "../client/public/favicon-48x48.png?public";
+import appleIcon from "../client/public/apple-touch-icon.png?public";
+import manifest from "../client/public/manifest.json?public";
+import ogImage from "../client/public/mdn-social-share.png?public";
+import printCSS from "./print.css?inline";
+import themeJS from "./theme.js?inline";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -28,18 +32,6 @@ const LANGUAGE_TAGS = Object.freeze({
   "zh-CN": "zh-Hans",
   "zh-TW": "zh-Hant",
 });
-
-function htmlEscape(s: string) {
-  if (!s) {
-    return s;
-  }
-  return s
-    .replace(/&/gim, "&amp;")
-    .replace(/"/gim, "&quot;")
-    .replace(/</gim, "&lt;")
-    .replace(/>/gim, "&gt;")
-    .replace(/'/gim, "&apos;");
-}
 
 function getHrefLang(locale: string, allLocales: Array<string>) {
   // In most cases, just return the language code, removing the country
@@ -67,37 +59,6 @@ function getHrefLang(locale: string, allLocales: Array<string>) {
   return hreflang;
 }
 
-const lazy = (creator) => {
-  let res;
-  let processed = false;
-  return (...args) => {
-    if (processed) return res;
-    res = creator.apply(this, ...args);
-    processed = true;
-    return res;
-  };
-};
-
-// Path strings are preferred over URLs here to mitigate Webpack resolution
-
-const readBuildHTML = lazy(() => {
-  if (!HTML.includes('<div id="root"></div>')) {
-    throw new Error(
-      'The render depends on being able to inject into <div id="root"></div>'
-    );
-  }
-  const scripts: string[] = [];
-  const gaScriptPathName = GTAG_PATH;
-  if (gaScriptPathName) {
-    scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
-  }
-
-  const html = HTML.replace('<meta name="SSR_SCRIPTS"/>', () =>
-    scripts.join("")
-  );
-  return html;
-});
-
 export default function render(
   renderApp,
   url: string,
@@ -115,33 +76,28 @@ export default function render(
     blogMeta = null,
   }: HydrationData = { url }
 ) {
-  const buildHtml = readBuildHTML();
-  const rendered = renderToString(renderApp);
-
   const canonicalURL = `${BASE_URL}${url}`;
 
-  let escapedPageTitle = htmlEscape(pageTitle);
+  let realPageTitle = pageTitle;
   let metaDescription = pageDescription;
 
   const hydrationData: HydrationData = { url };
-  const translations: string[] = [];
+  const translations: JSX.Element[] = [];
   if (blogMeta) {
     hydrationData.blogMeta = blogMeta;
   }
   if (pageNotFound) {
-    escapedPageTitle = `🤷🏽‍♀️ Page not found | ${
-      escapedPageTitle || "MDN Web Docs"
-    }`;
+    realPageTitle = `🤷🏽‍♀️ Page not found | ${realPageTitle || "MDN Web Docs"}`;
     hydrationData.pageNotFound = true;
   } else if (hyData) {
     hydrationData.hyData = hyData;
   } else if (doc) {
     // Use the doc's title instead
-    escapedPageTitle = htmlEscape(doc.pageTitle);
+    realPageTitle = doc.pageTitle;
 
-    metaDescription = htmlEscape(getMetaDescription(doc));
+    metaDescription = getMetaDescription(doc);
     if (doc.summary) {
-      pageDescription = htmlEscape(doc.summary);
+      pageDescription = doc.summary;
     }
 
     hydrationData.doc = doc;
@@ -167,12 +123,12 @@ export default function render(
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/specialty/international/localized-versions#language-codes
         translations.push(
-          `<link rel="alternate" title="${htmlEscape(
-            translation.title
-          )}" href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
-            translation.locale,
-            allLocales
-          )}"/>`
+          <link
+            rel="alternate"
+            title={translation.title}
+            href={`https://developer.mozilla.org${translationURL}`}
+            hrefLang={getHrefLang(translation.locale, allLocales)}
+          />
         );
       }
     }
@@ -182,35 +138,11 @@ export default function render(
     hydrationData.possibleLocales = possibleLocales;
   }
 
-  const titleTag = `<title>${escapedPageTitle || "MDN Web Docs"}</title>`;
-
   // Open Graph protocol expects `language_TERRITORY` format.
   const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
     "-",
     "_"
   );
-
-  const og = new Map([
-    ["title", escapedPageTitle],
-    ["url", canonicalURL],
-    ["locale", ogLocale],
-  ]);
-
-  if (pageDescription) {
-    og.set("description", pageDescription);
-  }
-
-  if (image) {
-    og.set("image", image);
-  }
-
-  const root = `<div id="root">${rendered}</div><script type="application/json" id="hydration">${
-    // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
-    JSON.stringify(hydrationData).replace(
-      /<(?=!--|\/?script)/gi,
-      String.raw`\u003c`
-    )
-  }</script>`;
 
   const robotsContent =
     !ALWAYS_ALLOW_ROBOTS || (doc && doc.noIndexing) || noIndexing
@@ -218,35 +150,122 @@ export default function render(
       : onlyFollow
         ? "noindex, follow"
         : "";
-  const robotsMeta = robotsContent
-    ? `<meta name="robots" content="${robotsContent}">`
-    : "";
-  const rssLink = `<link rel="alternate" type="application/rss+xml" title="MDN Blog RSS Feed" href="${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml" hreflang="en" />`;
-  const ssr_data = [...translations, ...WEBFONT_TAGS, rssLink, robotsMeta];
-  let html = buildHtml;
-  html = html.replace(
-    '<html lang="en"',
-    () => `<html lang="${locale || DEFAULT_LOCALE}"`
-  );
-  html = html.replace(
-    /<meta property="og:([^"]*)" content="([^"]*)"\/>/g,
-    (_, typ, content) => {
-      return `<meta property="og:${typ}" content="${og.get(typ) || content}"/>`;
-    }
-  );
-  if (metaDescription) {
-    html = html.replace(/<meta name="description" content="[^"]*"\/>/g, () => {
-      return `<meta name="description" content="${metaDescription}"/>`;
-    });
-  }
-  html = html.replace("<title>MDN Web Docs</title>", () => `${titleTag}`);
 
-  html = html.replace(
-    '<link rel="canonical" href="https://developer.mozilla.org"/>',
-    () => (pageNotFound ? "" : `<link rel="canonical" href="${canonicalURL}"/>`)
-  );
+  return (
+    "<!doctype html>" +
+    renderToString(
+      <html lang={locale || DEFAULT_LOCALE} prefix="og: https://ogp.me/ns#">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  html = html.replace('<meta name="SSR_DATA"/>', () => ssr_data.join(""));
-  html = html.replace('<div id="root"></div>', () => root);
-  return html;
+          <link rel="icon" href={favicon} />
+
+          <link rel="apple-touch-icon" href={appleIcon} />
+
+          <meta name="theme-color" content="#ffffff" />
+
+          <link rel="manifest" href={manifest} />
+
+          <link
+            rel="search"
+            type="application/opensearchdescription+xml"
+            href="/opensearch.xml"
+            title="MDN Web Docs"
+          />
+
+          <title>{realPageTitle || "MDN Web Docs"}</title>
+          {translations}
+          {WEBFONT_URLS.map((url) => (
+            <link
+              rel="preload"
+              as="font"
+              type="font/woff2"
+              href={url}
+              crossOrigin=""
+            />
+          ))}
+          <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="MDN Blog RSS Feed"
+            href={`${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml`}
+            hrefLang="en"
+          />
+          {robotsContent && <meta name="robots" content={robotsContent} />}
+          <meta
+            name="description"
+            content={
+              metaDescription ||
+              "The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
+            }
+          />
+
+          <meta
+            property="og:url"
+            content={canonicalURL || "https://developer.mozilla.org"}
+          />
+          <meta property="og:title" content={realPageTitle || "MDN Web Docs"} />
+          <meta property="og:type" content="website" />
+          <meta property="og:locale" content={ogLocale || "en_US"} />
+          <meta
+            property="og:description"
+            content={
+              pageDescription ||
+              "The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
+            }
+          />
+          <meta property="og:image" content={image || ogImage} />
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:height" content="1080" />
+          <meta property="og:image:width" content="1920" />
+          <meta
+            property="og:image:alt"
+            content="The MDN Web Docs logo, featuring a blue accent color, displayed on a solid black background."
+          />
+          <meta property="og:site_name" content="MDN Web Docs" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:creator" content="MozDevNet" />
+
+          {!pageNotFound && <link rel="canonical" href={canonicalURL} />}
+          <style
+            media="print"
+            dangerouslySetInnerHTML={{
+              __html: printCSS,
+            }}
+          />
+          {GTAG_PATH && <script src={GTAG_PATH} defer />}
+          {ASSET_MANIFEST.entrypoints.map((url) =>
+            url.endsWith(".js") ? <script defer src={`/${url}`} /> : null
+          )}
+          {ASSET_MANIFEST.entrypoints.map((url) =>
+            url.endsWith(".css") ? (
+              <link href={`/${url}`} rel="stylesheet" />
+            ) : null
+          )}
+        </head>
+
+        <body>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: themeJS,
+            }}
+          />
+          <div id="root">{renderApp}</div>
+          <script
+            type="application/json"
+            id="hydration"
+            dangerouslySetInnerHTML={{
+              __html:
+                // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
+                JSON.stringify(hydrationData).replace(
+                  /<(?=!--|\/?script)/gi,
+                  String.raw`\u003c`
+                ),
+            }}
+          />
+        </body>
+      </html>
+    )
+  );
 }

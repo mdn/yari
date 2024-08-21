@@ -37,15 +37,6 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
-function webfontTags(webfontURLs): string {
-  return webfontURLs
-    .map(
-      (url) =>
-        `<link rel="preload" as="font" type="font/woff2" href="${url}" crossorigin>`
-    )
-    .join("");
-}
-
 function gtagScriptPath(relPath = "/static/js/gtag.js") {
   const filePath = relPath.split("/").slice(1).join(path.sep);
   if (fs.existsSync(path.join(BUILD_OUT_ROOT, filePath))) {
@@ -56,16 +47,20 @@ function gtagScriptPath(relPath = "/static/js/gtag.js") {
 
 function prepare() {
   const webfontURLs = extractWebFontURLs();
-  const tags = webfontTags(webfontURLs);
   const gtagPath = gtagScriptPath();
+  const assetManifest = fs.readFileSync(
+    path.join(clientBuildRoot, "asset-manifest.json"),
+    "utf-8"
+  );
 
   fs.writeFileSync(
     path.join(dirname, "ssr", "include.ts"),
     `
-export const WEBFONT_TAGS = ${JSON.stringify(tags)};
+export const WEBFONT_URLS = ${JSON.stringify(webfontURLs)};
 export const GTAG_PATH = ${JSON.stringify(gtagPath)};
 export const BASE_URL = ${JSON.stringify(BASE_URL)};
 export const ALWAYS_ALLOW_ROBOTS = ${JSON.stringify(ALWAYS_ALLOW_ROBOTS)};
+export const ASSET_MANIFEST = ${assetManifest};
 `
   );
 }

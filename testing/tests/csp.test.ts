@@ -22,7 +22,7 @@ describe("Content-Security-Policy", () => {
       .filter((match) => !match[1].includes("src="))
       .map((match) => match[2]);
 
-    // If this assertion fails, an inline script was added to client/public/index.html`.
+    // If this assertion fails, an inline script was added to `ssr/render.tsx`.
     // Please consider merging it with the other inline script, or increment this number.
     expect(inlineScriptContents).toHaveLength(1);
 
@@ -32,7 +32,7 @@ describe("Content-Security-Policy", () => {
       (value) => !CSP_SCRIPT_SRC_VALUES.includes(value)
     );
 
-    // If this assertion fails, an inline script in `client/public/index.html` was
+    // If this assertion fails, an inline script in `ssr/render.tsx` was
     // updated without updating the "script-src" CSP entry in `libs/constants/index.js`.
     expect(missingInlineScriptCspValues).toHaveLength(0);
   });
