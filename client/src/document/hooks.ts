@@ -13,6 +13,7 @@ import {
 } from "./code/playground";
 import { addCopyToClipboardButton } from "./code/copy";
 import { useUIStatus } from "../ui-context";
+import { highlightSyntax } from "./highlight";
 
 export function useDocumentURL() {
   const locale = useLocale();
@@ -95,15 +96,11 @@ export function useRunSample(doc: Doc | undefined) {
     });
   }, [doc, isServer, locale]);
 }
-export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
+
+export function useDecorateExamples(doc: Doc | undefined) {
   const location = useLocation();
-  const isServer = useIsServer();
 
   useEffect(() => {
-    if (isServer) {
-      return;
-    }
-
     if (!doc) {
       return;
     }
@@ -122,8 +119,12 @@ export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
         } else {
           addCopyToClipboardButton(element, header);
         }
+        highlightSyntax(
+          element,
+          header?.querySelector(".language-name")?.textContent || "plain"
+        );
       });
-  }, [doc, location, isServer]);
+  }, [doc, location]);
 }
 
 /**
