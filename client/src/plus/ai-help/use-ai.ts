@@ -450,13 +450,30 @@ export function useAiChat({
             throw new Error("no treeState");
           }
         } catch (e) {
-          setPreviousChatId(undefined);
-          setChatId(convId);
-          setPath([]);
-          dispatchState({
-            type: "reset",
-          });
-          handleError(e);
+          if (e instanceof Error && e.message.startsWith("404")) {
+            setPreviousChatId(undefined);
+            setChatId(undefined);
+            setPath([]);
+            dispatchState({
+              type: "reset",
+            });
+            window.history.replaceState(
+              "",
+              "",
+              window.location.protocol +
+                "//" +
+                window.location.host +
+                window.location.pathname
+            );
+          } else {
+            setPreviousChatId(undefined);
+            setChatId(convId);
+            setPath([]);
+            dispatchState({
+              type: "reset",
+            });
+            handleError(e);
+          }
         }
         setIsHistoryLoading(false);
       };
