@@ -1,7 +1,7 @@
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { Doc } from "../libs/types/document.js";
 
-export function getPageDescription(doc: Doc): string {
+export function getMetaDescription(doc: Doc): string {
   const { pageType } = doc;
   if (doc.locale === DEFAULT_LOCALE) {
     const sections = doc.toc?.map(({ text }) => text) ?? [];
@@ -29,8 +29,12 @@ export function getPageDescription(doc: Doc): string {
       .filter(([section]) => sections.includes(section))
       .map(([, text]) => text);
 
-    const syntaxContents = enumerate(...syntaxItems);
-    const otherContents = enumerate(...otherItems);
+    const listFormatter = new Intl.ListFormat("en", {
+      style: "long",
+      type: "conjunction",
+    });
+    const syntaxContents = listFormatter.format(syntaxItems);
+    const otherContents = listFormatter.format(otherItems);
     const contents = [
       syntaxContents ? `its ${syntaxContents}` : "",
       otherContents,
@@ -70,12 +74,4 @@ export function getPageDescription(doc: Doc): string {
   }
 
   return doc.summary;
-}
-
-function enumerate(...items: string[]) {
-  items = items.filter(Boolean);
-
-  const lastItem = items.pop();
-
-  return [items.join(", "), lastItem].filter(Boolean).join(", and ");
 }

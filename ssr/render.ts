@@ -12,7 +12,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import HTML from "../client/build/index.html?raw";
-import { getPageDescription as getMetaDescription } from "./page-description";
+import { getMetaDescription } from "./meta-description";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
