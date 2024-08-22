@@ -41,7 +41,7 @@
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "render:html": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/ssr-cli.ts",
-    "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
+    "start": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env NODE_ENV=development BABEL_ENV=development PORT=3000 node scripts/start.js",
     "start:server": "node-dev --experimental-loader ts-node/esm server/index.ts",
     "start:static-server": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node server/static.ts",
