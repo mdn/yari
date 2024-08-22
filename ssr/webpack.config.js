@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import nodeExternals from "webpack-node-externals";
+// import nodeExternals from "webpack-node-externals";
 import webpack from "webpack";
 import crypto from "node:crypto";
 import path from "node:path";
@@ -148,7 +148,15 @@ const config = {
       },
     ],
   },
-  externals: nodeExternals(),
+  // // TODO/BUG: this was never working, when we did `cd ssr && webpack`
+  // // but now we do `webpack --config ssr/webpack.config.js` the yari
+  // // node_modules dir gets picked up, and all of that stuff is `require()`ed
+  // // which then makes `dist/main.js` no longer a ESM-compatible module.
+  // // In the future we *do* want to do something like this, because it's faster
+  // // (8s vs 23s) but for now it would break creating a self-contained
+  // // `dist/main.js` file, which we should probably do with another tool (esbuild?).
+  // // Anyway... that's for a future incremental improvement to the client build system:
+  // externals: nodeExternals(),
   devtool: "source-map",
   plugins: [
     // This makes is so that there is only one `ssr/dist/main.js` (and
