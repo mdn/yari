@@ -112,7 +112,7 @@ function correctPathFromEnv(envVarName) {
   if (!pathName) {
     return;
   }
-  pathName = path.join(ROOT, pathName);
+  pathName = path.resolve(ROOT, pathName);
   return pathName;
 }
 
