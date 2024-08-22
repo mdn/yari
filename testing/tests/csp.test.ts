@@ -11,7 +11,7 @@ describe("Content-Security-Policy", () => {
       return `'${algo}-${hash}'`;
     }
 
-    const indexHtmlPath = path.join("client", "build", "index.html");
+    const indexHtmlPath = path.join("client", "build", "en-us", "index.html");
     const indexHtmlContent = fs.readFileSync(indexHtmlPath).toString();
 
     const inlineScriptMatches = [

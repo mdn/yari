@@ -28,8 +28,8 @@ test("all favicons on the home page", () => {
   // Check that every favicon works and resolves
   $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
     const href = $(element).attr("href");
-    // There should always be a 8 character hash in the href
-    expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
+    // There should always be a 20 character hash in the href
+    expect(/\.[a-f0-9]{20}\./.test(href)).toBeTruthy();
     // The favicon href is a URL so to check that it exists on disk we need to
     // strip the leading / and join that with the root of the build.
     const file = path.join(buildRoot, href.slice(1));
