@@ -3,7 +3,8 @@ import nodeExternals from "webpack-node-externals";
 import webpack from "webpack";
 import crypto from "node:crypto";
 import path from "node:path";
-import { BASE_URL, BUILD_OUT_ROOT } from "../libs/env/index.js";
+import { BASE_URL } from "../libs/env/index.js";
+import paths from "../client/config/paths.js";
 
 class GenerateCSPHash {
   /**
@@ -57,7 +58,7 @@ const config = {
               emit: true,
               publicPath: BASE_URL.replace(/\/?$/, "/") || "/",
               filename: "[name].[hash][ext]",
-              outputPath: path.relative(SSR_OUTPUT, BUILD_OUT_ROOT), // relative to output.path set above
+              outputPath: path.relative(SSR_OUTPUT, paths.appBuild), // relative to output.path set above
             },
           },
           {
