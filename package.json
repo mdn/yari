@@ -25,7 +25,7 @@
     "build:docs": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/cli.ts -n",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
     "build:prepare": "yarn build:client && yarn build:ssr && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
-    "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ssr/prepare.ts && cd ssr && webpack --mode=production",
+    "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ssr/prepare.ts && webpack --mode=production --config=ssr/webpack.config.js",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
     "check:tsc": "find . -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P 2 -0 sh -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
@@ -56,7 +56,7 @@
     "test:prepare": "yarn build:prepare && yarn build:docs && yarn render:html && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
     "tool": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
-    "watch:ssr": "cd ssr && webpack --mode=production --watch"
+    "watch:ssr": "webpack --mode=production --watch --config=ssr/webpack.config.js"
   },
   "resolutions": {
     "http-cache-semantics": ">=4.1.1",
