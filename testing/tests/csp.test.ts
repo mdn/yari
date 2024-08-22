@@ -19,7 +19,13 @@ describe("Content-Security-Policy", () => {
     ];
 
     const inlineScriptContents = inlineScriptMatches
-      .filter((match) => !match[1].includes("src="))
+      .filter(
+        (match) =>
+          !(
+            match[1].includes("src=") ||
+            match[1].includes(`type="application/json"`)
+          )
+      )
       .map((match) => match[2]);
 
     // If this assertion fails, an inline script was added to `ssr/render.tsx`.

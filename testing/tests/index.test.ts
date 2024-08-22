@@ -27,7 +27,8 @@ test("all favicons on the home page", () => {
 
   // Check that every favicon works and resolves
   $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
-    const href = $(element).attr("href");
+    const url = $(element).attr("href");
+    const href = new URL(url).pathname;
     // There should always be a 20 character hash in the href
     expect(/\.[a-f0-9]{20}\./.test(href)).toBeTruthy();
     // The favicon href is a URL so to check that it exists on disk we need to
