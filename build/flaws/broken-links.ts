@@ -9,7 +9,6 @@ import {
 } from "../../libs/constants/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import * as cheerio from "cheerio";
-import { Element } from "domhandler";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
 import { ONLY_AVAILABLE_IN_ENGLISH } from "../../libs/l10n/l10n.js";
@@ -44,7 +43,7 @@ function isHomepageURL(url) {
 }
 
 function mutateLink(
-  $element: cheerio.Cheerio<Element>,
+  $element: cheerio.Cheerio<cheerio.Element>,
   suggestion: string = null,
   enUSFallback: string = null,
   isSelfLink = false
@@ -94,7 +93,7 @@ export function getBrokenLinksFlaws(
 
   // A closure function to help making it easier to append flaws
   function addBrokenLink(
-    $element: cheerio.Cheerio<Element>,
+    $element: cheerio.Cheerio<cheerio.Element>,
     index: number,
     href: string,
     suggestion: string = null,
@@ -138,7 +137,11 @@ export function getBrokenLinksFlaws(
     });
   }
 
-  function checkHash(hash: string, a: cheerio.Cheerio<Element>, href: string) {
+  function checkHash(
+    hash: string,
+    a: cheerio.Cheerio<cheerio.Element>,
+    href: string
+  ) {
     if (hash.startsWith(":~:")) {
       // Ignore fragment directives.
       return;
