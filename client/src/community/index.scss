@@ -289,7 +289,8 @@ main.community-container {
     grid-template-columns: 4fr 6fr;
 
     @media (max-width: $screen-md) {
-      --community-circle-height: 0;
+      /* stylelint-disable-next-line length-zero-no-unit */
+      --community-circle-height: 0rem;
       display: block;
     }
 
