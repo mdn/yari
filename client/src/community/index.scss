@@ -207,14 +207,14 @@ main.community-container {
       }
 
       a {
-        text-decoration: none;
-        font: var(--button-font);
         background-color: var(--button-bg);
         border: 1px solid var(--button-border-color);
         border-radius: var(--button-radius);
         color: var(--button-color);
-        padding: var(--button-padding);
         display: inline-block;
+        font: var(--button-font);
+        padding: var(--button-padding);
+        text-decoration: none;
       }
 
       li:last-child a {
@@ -249,8 +249,8 @@ main.community-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        overflow-wrap: anywhere;
         min-width: 7.75rem;
+        overflow-wrap: anywhere;
 
         @media (max-width: $screen-md) {
           align-items: center;
@@ -323,14 +323,14 @@ main.community-container {
         }
 
         a {
-          text-decoration: none;
-          font: var(--button-font);
           background-color: var(--button-bg);
           border: 1px solid var(--button-border-color);
           border-radius: var(--button-radius);
           color: var(--button-color);
-          padding: var(--button-padding);
           display: inline-block;
+          font: var(--button-font);
+          padding: var(--button-padding);
+          text-decoration: none;
         }
 
         li:last-child a {
@@ -626,14 +626,14 @@ main.community-container {
         }
 
         a {
-          text-decoration: none;
-          font: var(--button-font);
           background-color: var(--button-bg);
           border: 1px solid var(--button-border-color);
           border-radius: var(--button-radius);
           color: var(--button-color);
-          padding: var(--button-padding);
           display: inline-block;
+          font: var(--button-font);
+          padding: var(--button-padding);
+          text-decoration: none;
         }
       }
     }
@@ -725,8 +725,8 @@ main.community-container {
       }
 
       li {
-        background: var(--community-card-bg);
         align-items: flex-start;
+        background: var(--community-card-bg);
         border: 1px solid var(--community-table-border);
         border-radius: 0.5rem;
         box-shadow: var(--community-box-shadow);
@@ -773,14 +773,14 @@ main.community-container {
         }
 
         a {
-          text-decoration: none;
-          font: var(--button-font);
           background-color: var(--button-bg);
           border: 1px solid var(--button-border-color);
           border-radius: var(--button-radius);
           color: var(--button-color);
-          padding: var(--button-padding);
           display: inline-block;
+          font: var(--button-font);
+          padding: var(--button-padding);
+          text-decoration: none;
         }
       }
     }
