@@ -407,8 +407,21 @@ export function useAiChat({
     });
   }, [setSearchParams, chatId]);
 
+  const clearParamsFromUrl = () => {
+    window.history.replaceState(
+      "",
+      "",
+      window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname
+    );
+  };
+
   useEffect(() => {
     if (!isHistoryEnabled) {
+      // If we got a chat id passed in without history enabled, clear parameters from URL
+      clearParamsFromUrl();
       return;
     }
     let timeoutID;
@@ -450,28 +463,18 @@ export function useAiChat({
             throw new Error("no treeState");
           }
         } catch (e) {
+          setPreviousChatId(undefined);
+          setPath([]);
+          dispatchState({
+            type: "reset",
+          });
+          // If we got a 404 from the API, reset and remove the parameter from the URL,
+          // do not show an error.
           if (e instanceof Error && e.message.startsWith("404")) {
-            setPreviousChatId(undefined);
             setChatId(undefined);
-            setPath([]);
-            dispatchState({
-              type: "reset",
-            });
-            window.history.replaceState(
-              "",
-              "",
-              window.location.protocol +
-                "//" +
-                window.location.host +
-                window.location.pathname
-            );
+            clearParamsFromUrl();
           } else {
-            setPreviousChatId(undefined);
             setChatId(convId);
-            setPath([]);
-            dispatchState({
-              type: "reset",
-            });
             handleError(e);
           }
         }
