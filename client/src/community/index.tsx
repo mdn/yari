@@ -138,7 +138,9 @@ function Issues({ section }: { section: any }) {
               <tr key={html_url}>
                 <td>
                   <div>
-                    <a href={html_url}>{title}</a>
+                    <a href={html_url} target="_blank" rel="noreferrer">
+                      {title}
+                    </a>
                     {labels.map(({ name }) =>
                       LABELS.includes(name) ? (
                         <span key={name} className="label">
@@ -154,6 +156,8 @@ function Issues({ section }: { section: any }) {
                       "https://api.github.com/repos/",
                       "https://github.com/"
                     )}
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     {repository_url.replace(
                       "https://api.github.com/repos/",
