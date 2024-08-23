@@ -200,7 +200,13 @@ export async function buildSPAs(options: {
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
-        { prefix: "community", pageTitle: "Contribute to MDN" },
+        {
+          prefix: "community",
+          pageTitle: "Contribute to MDN",
+          json: fileURLToPath(
+            new URL("../copy/community/index.json", import.meta.url)
+          ),
+        },
         {
           prefix: "advertising",
           pageTitle: "Advertise with us",
@@ -217,9 +223,10 @@ export async function buildSPAs(options: {
         pageDescription,
         noIndexing,
         onlyFollow,
+        json,
       } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context: HydrationData = {
+        let context: HydrationData = {
           pageTitle,
           pageDescription,
           locale,
@@ -227,6 +234,29 @@ export async function buildSPAs(options: {
           onlyFollow,
           url,
         };
+
+        if (json) {
+          context = JSON.parse(await fs.promises.readFile(json, "utf-8"));
+          const localeReplace = function (obj: any) {
+            try {
+              Object.keys(obj);
+            } catch {
+              return;
+            }
+            for (const key of Object.keys(obj)) {
+              if (typeof obj[key] === "object") {
+                localeReplace(obj[key]);
+              }
+              if (typeof obj[key] === "string") {
+                obj[key] = obj[key]
+                  .replace(/^en-US$/, locale)
+                  .replace(/^\/en-US\//, `/${locale}/`)
+                  .replace(/ href="\/en-US\//g, ` href="/${locale}/`);
+              }
+            }
+          };
+          localeReplace(context);
+        }
 
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });

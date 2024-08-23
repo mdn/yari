@@ -1,0 +1,112 @@
+{
+  "doc": {
+    "locale": "en-US",
+    "title": "MDN Community",
+    "mdn_url": "/en-US/community/",
+    "native": "English (US)",
+    "body": [
+      {
+        "type": "prose",
+        "value": {
+          "id": null,
+          "title": null,
+          "isH3": false,
+          "content": "<p>Where web enthusiasts learn, collaborate, and create</p>\n<ul>\n  <li><a href=\"#join-us-in-shaping-a-better-web\">Start contributing</a></li>\n  <li><a href=\"/discord\">Join MDN Discord</a></li>\n</ul><!--  -->\n<ul>\n  <li><strong>45K+</strong> Total contributors</li>\n  <li><strong>80M+</strong> Monthly views</li>\n  <li><strong>200+</strong> Weekly commits</li>\n  <li><strong>8</strong> Language communities</li>\n</ul>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "mdns_community_powers_the_web",
+          "title": "MDN's community powers the web",
+          "isH3": false,
+          "content": "<p>MDN’s strength comes from the passion and dedication of our global community. Since our founding in 2005, we’ve grown into a thriving network. Together, we’ve created a comprehensive, open, and free resource that serves web developers across the globe. With volunteers leading translation efforts in <a href=\"/en-US/docs/MDN/Community/Contributing/Translated_content\">8 languages</a>, we’re truly international.</p>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "meet_our_contributors",
+          "title": "Meet our contributors",
+          "isH3": false,
+          "content": "<p>We are an open-source community of developers dedicated to building resources for a better web. Our diverse contributors, including developers, technical writers, students, educators, designers, and more, come from various backgrounds and platforms. Anyone can contribute, and each contribution strengthens our community, driving innovation and improving this vital resource for developers worldwide.</p>\n<ul>\n  <li><a href=\"/en-US/docs/MDN/Community/Contributing/Getting_started\">Join us</a></li>\n  <li><a href=\"https://github.com/mdn/content/graphs/contributors\" class=\"external\" target=\"_blank\">View all contributors</a></li>\n</ul><!--  -->\n<ul>\n  <li>\n    <img src=\"https://github.com/JasonLamv-t.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/JasonLamv-t\" class=\"external\" target=\"_blank\">Jason Lam, 林家祥</a>\n    Grantit\n  </li>\n  <li>\n    <img src=\"https://github.com/nicolo-ribaudo.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/nicolo-ribaudo\" class=\"external\" target=\"_blank\">Nicolò Ribaudo</a>\n    Igalia\n  </li>\n  <li>\n    <img src=\"https://github.com/Josh-Cena.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/Josh-Cena\" class=\"external\" target=\"_blank\">Joshua Chen</a>\n  </li>\n  <li>\n    <img src=\"https://github.com/c17an.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/c17an\" class=\"external\" target=\"_blank\">Kimchanmin</a>\n    SK Planet\n  </li>\n  <li>\n    <img src=\"https://github.com/givvemee.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/givvemee\" class=\"external\" target=\"_blank\">Gibbeum Yoon</a>\n  </li>\n  <li>\n    <img src=\"https://github.com/wisedog.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/wisedog\" class=\"external\" target=\"_blank\">Jongha Kim</a>\n  </li>\n  <li>\n    <img src=\"https://github.com/PassionPenguin.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/PassionPenguin\" class=\"external\" target=\"_blank\">Qizhe ZHANG</a>\n  </li>\n  <li>\n    <img src=\"https://github.com/saionaro.png?size=160\" alt=\"GitHub profile picture\" loading=\"lazy\">\n    <a href=\"https://github.com/saionaro\" class=\"external\" target=\"_blank\">Artem Shibakov</a>\n    Bright Data\n  </li>\n</ul>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "contributor_spotlight",
+          "title": "Contributor spotlight",
+          "isH3": false,
+          "content": "<ul>\n  <li>\n    <blockquote>\n      <p>MDN Web Docs has the most up-to-date and accurate information and the content is presented in an easy-to-understand manner. I also like that it's available in many languages (very important!).</p>\n    </blockquote><a href=\"/en-US/community/spotlight/yuji\">Yuji</a>\n    (MDN contributor)\n  </li>\n  <li>\n    <blockquote>\n      <p>There are millions of web developers in China, and many of them begin their developer journey at MDN Web Docs. Contributing to MDN Web Docs is an excellent way to help people who are starting out.</p>\n    </blockquote><a href=\"/en-US/community/spotlight/yitao-yin\">YiTao Yin</a>\n    (MDN contributor)\n  </li>\n  <li>\n    <blockquote>\n      <p>When I visited the forum some months ago and saw people helping each other, I thought, \"This seems like a great way to give something back for the countless hours I spent on MDN!\". Helping others gives me the chance to improve and deepen my own understanding.</p>\n    </blockquote><a href=\"/en-US/community/spotlight/michael-koch\">Michael Koch</a>\n    (MDN contributor)\n  </li>\n</ul>\n<p>If you wish to be a part of the featured contributors here, <a href=\"https://docs.google.com/forms/d/171RuXZoNs1gQmlJtfTiiU-hFo_odvi6rkx5fH-nqXDY/prefill\" class=\"external\" target=\"_blank\">let us know</a>.<br>If you’re featured here and would like to opt-out, <a href=\"https://github.com/mdn/content/issues/new?assignees=&amp;labels=needs+triage&amp;projects=&amp;template=content-bug.yml\" class=\"external\" target=\"_blank\">please file an issue on GitHub</a>.</p>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "learn_how_to_get_started",
+          "title": "Learn how to get started",
+          "isH3": false,
+          "content": "<p>\n  We collaborate on <a href=\"https://github.com/mdn\" class=\"external\" target=\"_blank\">GitHub</a>, our project's home, on various tasks such as writing and improving documentation, fixing bugs, and providing review feedback. It starts here, with you.\n  Want to start right away, but not sure how? Follow <a href=\"https://github.com/mdn/content/blob/main/CONTRIBUTING.md#mdn-web-docs-contribution-guide\" class=\"external\" target=\"_blank\">our guide</a> to make your first contribution.\n</p>\n<p>Watch this video on <a href=\"https://www.youtube.com/watch?v=Xnhnu7PViQE\" class=\"external\" target=\"_blank\">how to get started with contributing to MDN Web Docs</a></p>\n<p><a href=\"https://www.youtube.com/watch?v=Xnhnu7PViQE\" class=\"external\" target=\"_blank\">Video from the community team on contributing to MDN</a></p>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "join_us_in_shaping_a_better_web",
+          "title": "Join us in shaping a better web",
+          "isH3": false,
+          "content": "<p>Become part of this globally cherished group that’s dedicated to documenting web technologies. Whether you’re an expert or a beginner, there’s a place for you in our inclusive community. Check out some of the ways you can contribute and engage.</p>\n<ul>\n  <li>\n    <h3 id=\"fix_issues\">Fix issues</h3>Submit pull requests to fix reported issues.\n    <a href=\"https://github.com/mdn/content/issues\" class=\"external\" target=\"_blank\">Squash bugs</a>\n  </li>\n  <li>\n    <h3 id=\"improve_content\">Improve content</h3>Fix inaccuracies and fill in missing information.\n    <a href=\"https://github.com/mdn/content/#readme\" class=\"external\" target=\"_blank\">Start writing</a>\n  </li>\n  <li>\n    <h3 id=\"localize_content\">Localize content</h3>Participate in translating content into one of our supported languages.\n    <a href=\"/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales\">Find your locale</a>\n  </li>\n  <li>\n    <h3 id=\"answer_questions\">Answer questions</h3>Share your knowledge and expertise and guide fellow learners.\n    <a href=\"/discord\">Help on Discord</a>\n  </li>\n</ul>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "help_us_fix_open_issues",
+          "title": "Help us fix open issues",
+          "isH3": false,
+          "content": "<p>New to MDN or open-source projects? Tackle our beginner-friendly issues to help improve MDN.</p>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "join_the_conversation",
+          "title": "Join the conversation",
+          "isH3": false,
+          "content": "<ul>\n  <li>\n    <h3 id=\"chat_with_us_on_discord\">Chat with us on Discord</h3>Connect with the community. Engage with domain experts. Help others learn.\n    <a href=\"/discord\">Join MDN Discord</a>\n  </li>\n  <li>\n    <h3 id=\"join_our_community_call\">Join our Community Call</h3>Every month, get exclusive updates from the MDN team. Share your ideas and contributions.\n    <a href=\"https://github.com/mdn/community-meetings?tab=readme-ov-file#mdn-community-meetings\" class=\"external\" target=\"_blank\">RSVP to the next community call</a>\n  </li>\n</ul>\n<p>While working in Mozilla spaces and communities, please adhere to the <a href=\"https://www.mozilla.org/about/governance/policies/participation/\" class=\"external\" target=\"_blank\">Mozilla Community Participation Guidelines</a>, which promote respect, inclusion, and a harassment-free environment for all community members.</p>"
+        }
+      },
+      {
+        "type": "prose",
+        "value": {
+          "id": "licensing_and_reuse",
+          "title": "Licensing and reuse",
+          "isH3": false,
+          "content": "<p>MDN's resources are freely available under various open-source licenses. For detailed information on reusing MDN content, check out our <a href=\"https://developer.mozilla.org/en-US/docs/MDN/About#using_mdn_web_docs_content\">Attribution and Copyright Licensing</a> page.</p>"
+        }
+      }
+    ],
+    "pageTitle": "MDN Community",
+    "noIndexing": false,
+    "toc": [
+      {
+        "text": "MDN's community powers the web",
+        "id": "mdns_community_powers_the_web"
+      },
+      { "text": "Meet our contributors", "id": "meet_our_contributors" },
+      { "text": "Contributor spotlight", "id": "contributor_spotlight" },
+      { "text": "Learn how to get started", "id": "learn_how_to_get_started" },
+      {
+        "text": "Join us in shaping a better web",
+        "id": "join_us_in_shaping_a_better_web"
+      },
+      { "text": "Help us fix open issues", "id": "help_us_fix_open_issues" },
+      { "text": "Join the conversation", "id": "join_the_conversation" },
+      { "text": "Licensing and reuse", "id": "licensing_and_reuse" }
+    ]
+  },
+  "pageTitle": "MDN Community",
+  "locale": "en-US",
+  "url": "/en-US/community/"
+}
