@@ -1,13 +1,9 @@
----
-template: community
----
-
 # MDN Community
 
 Where web enthusiasts learn, collaborate, and create
 
-- [Start contributing](#join-us-in-shaping-a-better-web)
-- [Join MDN Discord](/discord)
+- [Start contributing](#join_us_in_shaping_a_better_web)
+- [Join MDN Discord](https://mdn.dev/discord)
 
 <!--  -->
 
@@ -58,6 +54,13 @@ worldwide.
 
 ## Contributor spotlight
 
+- > There are many other things I like about MDN: the openness of its
+  > governance, the respect for contributors' work, the professional
+  > conversations, and the always timely reviews. MDN has consistently
+  > demonstrated the ideal form of an open-source project.
+
+  [Joshua Chen](/en-US/community/spotlight/joshua-chen) (MDN contributor)
+
 - > MDN Web Docs has the most up-to-date and accurate information and the
   > content is presented in an easy-to-understand manner. I also like that it's
   > available in many languages (very important!).
@@ -69,13 +72,6 @@ worldwide.
   > excellent way to help people who are starting out.
 
   [YiTao Yin](/en-US/community/spotlight/yitao-yin) (MDN contributor)
-
-- > When I visited the forum some months ago and saw people helping each other,
-  > I thought, "This seems like a great way to give something back for the
-  > countless hours I spent on MDN!". Helping others gives me the chance to
-  > improve and deepen my own understanding.
-
-  [Michael Koch](/en-US/community/spotlight/michael-koch) (MDN contributor)
 
 If you wish to be a part of the featured contributors here,
 [let us know](https://docs.google.com/forms/d/171RuXZoNs1gQmlJtfTiiU-hFo_odvi6rkx5fH-nqXDY/prefill).<br>
@@ -121,7 +117,7 @@ engage.
 - ### Answer questions
 
   Share your knowledge and expertise and guide fellow learners.
-  [Help on Discord](/discord)
+  [Help on Discord](https://mdn.dev/discord)
 
 ## Help us fix open issues
 
@@ -133,7 +129,7 @@ improve MDN.
 - ### Chat with us on Discord
 
   Connect with the community. Engage with domain experts. Help others learn.
-  [Join MDN Discord](/discord)
+  [Join MDN Discord](https://mdn.dev/discord)
 
 - ### Join our Community Call
 
