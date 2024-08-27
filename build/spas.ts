@@ -33,10 +33,10 @@ import { type Locale } from "../libs/types/core.js";
 import { HydrationData } from "../libs/types/hydration.js";
 
 const FEATURED_ARTICLES = [
+  "blog/mdn-scrimba-partnership/",
   "blog/learn-javascript-console-methods/",
   "blog/introduction-to-web-sustainability/",
   "docs/Web/API/CSS_Custom_Highlight_API",
-  "docs/Web/CSS/color_value",
 ];
 
 const LATEST_NEWS: (NewsItem | string)[] = [
