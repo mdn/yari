@@ -40,10 +40,10 @@ const FEATURED_ARTICLES = [
 ];
 
 const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-scrimba-partnership/",
   "blog/mdn-http-observatory-launch/",
   "blog/mdn-curriculum-launch/",
   "blog/baseline-evolution-on-mdn/",
-  "blog/introducing-the-mdn-playground/",
 ];
 
 const PAGE_DESCRIPTIONS = Object.freeze({
