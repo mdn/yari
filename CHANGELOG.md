@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.62.0](https://github.com/mdn/yari/compare/v2.61.0...v2.62.0) (2024-08-28)
+
+
+### Bug Fixes
+
+* **sidebars:** change slugs for URI documents in HTTP sidebar ([#11700](https://github.com/mdn/yari/issues/11700)) ([e24dd17](https://github.com/mdn/yari/commit/e24dd1790d0725d811556bb64b021dfa0a36f40b))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump typescript-eslint from 8.2.0 to 8.3.0 ([#11694](https://github.com/mdn/yari/issues/11694)) ([6e8985f](https://github.com/mdn/yari/commit/6e8985f733caf8983879c04420f8fe23df1e2e85))
+* **deps:** bump @mdn/browser-compat-data from 5.5.48 to 5.5.49 ([#11695](https://github.com/mdn/yari/issues/11695)) ([a07476c](https://github.com/mdn/yari/commit/a07476cde86c116cd41e87f61cd26c5c4f8e83e7))
+
 ## [2.61.0](https://github.com/mdn/yari/compare/v2.60.1...v2.61.0) (2024-08-26)
 
 
