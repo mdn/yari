@@ -443,13 +443,13 @@ files = [
 
 [[package]]
 name = "pyquery"
-version = "2.0.0"
+version = "2.0.1"
 description = "A jquery-like library for python"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyquery-2.0.0-py3-none-any.whl", hash = "sha256:8dfc9b4b7c5f877d619bbae74b1898d5743f6ca248cfd5d72b504dd614da312f"},
-    {file = "pyquery-2.0.0.tar.gz", hash = "sha256:963e8d4e90262ff6d8dec072ea97285dc374a2f69cad7776f4082abcf6a1d8ae"},
+    {file = "pyquery-2.0.1-py3-none-any.whl", hash = "sha256:aedfa0bd0eb9afc94b3ddbec8f375a6362b32bc9662f46e3e0d866483f4771b0"},
+    {file = "pyquery-2.0.1.tar.gz", hash = "sha256:0194bb2706b12d037db12c51928fe9ebb36b72d9e719565daba5a6c595322faf"},
 ]
 
 [package.dependencies]
@@ -576,4 +576,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "21d119afee436f27ab0abec4d01e51e2e7ddc4adf3c71a61a7f65d7ca647ee11"
+content-hash = "9b746a25738ccc0a6ef1cb0176812e06f62cb90c37b851678275816a5c379566"
