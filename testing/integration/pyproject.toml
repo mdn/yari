@@ -13,7 +13,7 @@ pytest = "^8.3.2"
 pytest-base-url = "^2.1.0"
 pytest-rerunfailures = "^14.0"
 requests = "^2.32.3"
-pyquery = "^2.0.0"
+pyquery = "^2.0.1"
 braceexpand = "^0.1.7"
 
 [tool.poetry.dev-dependencies]
