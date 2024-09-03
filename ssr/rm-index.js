@@ -1,5 +1,5 @@
 // temporary script to delete root index.html for testing
-// seperate from https://github.com/mdn/yari/pull/11672
+// separate from https://github.com/mdn/yari/pull/11672
 import fs from "node:fs";
 import path from "node:path";
 
