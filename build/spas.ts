@@ -62,6 +62,7 @@ async function buildContributorSpotlight(
 ) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
+  let featuredContributorFrontmatter: DocFrontmatter;
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
     const file = `${contributorSpotlightRoot}/${contributor}/index.md`;
@@ -118,14 +119,19 @@ async function buildContributorSpotlight(
     if (options.verbose) {
       console.log("Wrote", jsonFilePath);
     }
+
     if (frontMatter.attributes.is_featured) {
-      return {
-        contributorName: frontMatter.attributes.contributor_name,
-        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
-        quote: frontMatter.attributes.quote,
-      };
+      featuredContributorFrontmatter = frontMatter.attributes;
     }
   }
+
+  return featuredContributorFrontmatter
+    ? {
+        contributorName: featuredContributorFrontmatter.contributor_name,
+        url: `/${locale}/${prefix}/${featuredContributorFrontmatter.folder_name}`,
+        quote: featuredContributorFrontmatter.quote,
+      }
+    : undefined;
 }
 
 export async function buildSPAs(options: {
