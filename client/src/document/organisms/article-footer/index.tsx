@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useSWR from "swr";
 import { Button } from "../../../ui/atoms/button";
 import { OnGitHubLink } from "../../on-github";
 import { ReactComponent as ArticleFooterSVG } from "../../../assets/article-footer/article-footer.svg";
@@ -6,6 +7,8 @@ import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { ARTICLE_FOOTER, THUMBS } from "../../../telemetry/constants";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
+import { WRITER_MODE } from "../../../env";
+import { Loading } from "../../../ui/atoms/loading";
 
 export function LastModified({ value, locale }) {
   if (!value) {
@@ -25,6 +28,62 @@ export function LastModified({ value, locale }) {
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
     </>
+  );
+}
+
+export function Contributors({ url }) {
+  const contributorJSONUrl = `https://api.github.com/repos/mdn/translated-content/commits?path=files/${url}/index.md`;
+
+  const { error, data = [] } = useSWR<any>(contributorJSONUrl, async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`${response.status} on ${url}: ${text}`);
+    }
+    return await response.json();
+  });
+
+  if (error) {
+    return null;
+  } else if (!data) {
+    return <Loading />;
+  }
+
+  const uniqueContributors = Array.from(
+    new Set(data.map((commit) => commit.author.login))
+  ).map((login) => {
+    const commit = data.find((c) => c.author.login === login);
+    return {
+      id: login,
+      profile: commit.author.html_url,
+      avatar: commit.author.avatar_url,
+    };
+  }) as Array<{ id: string; profile: string; avatar: string }>;
+
+  return (
+    <section className="contributors-container">
+      <header>
+        <h6>{uniqueContributors.length} Contributors</h6>
+      </header>
+      <ul className="contributors-grid">
+        {[...uniqueContributors].map(({ id, profile, avatar }) => (
+          <li key={id} className="contributor-item">
+            <a
+              className="contributor-card"
+              href={profile}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                className="contributor-avatar"
+                src={avatar}
+                alt={`${id}'s avatar`}
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -68,6 +127,7 @@ export function ArticleFooter({ doc }) {
     gleanClick(`${ARTICLE_FOOTER}: feedback -> ${reason}`);
   }
 
+  console.log("doc", doc);
   return (
     <aside className="article-footer">
       <div className="article-footer-inner">
@@ -133,11 +193,12 @@ export function ArticleFooter({ doc }) {
         </fieldset>
 
         <Contribute locale={doc.locale} />
+        {doc.isActive && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={doc.locale} /> by{" "}
           <Authors url={doc.mdn_url} />.
         </p>
-        {doc.isActive && <OnGitHubLink doc={doc} />}
+        <Contributors url={doc.source.folder} />
       </div>
     </aside>
   );
