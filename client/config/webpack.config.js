@@ -11,6 +11,7 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from "webpack-manifest-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 import paths from "./paths.js";
 import getClientEnvironment from "./env.js";
@@ -497,6 +498,12 @@ function config(webpackEnv) {
       new ESLintPlugin({
         extensions: ["js", "mjs", "jsx", "ts", "tsx"],
       }),
+      isEnvProduction &&
+        process.env.ANALYZE_BUNDLE &&
+        new BundleAnalyzerPlugin({
+          analyzerMode: "disabled",
+          generateStatsFile: true,
+        }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
