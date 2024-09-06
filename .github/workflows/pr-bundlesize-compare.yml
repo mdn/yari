@@ -35,7 +35,7 @@ jobs:
       - name: Build
         run: yarn build:client
         env:
-          ANALYZE_BUNDLE: true
+          ANALYZE_BUNDLE_PR: true
 
       - name: Upload stats.json
         uses: actions/upload-artifact@v4
@@ -75,7 +75,7 @@ jobs:
       - name: Build
         run: yarn build:client
         env:
-          ANALYZE_BUNDLE: true
+          ANALYZE_BUNDLE_PR: true
 
       - name: Upload stats.json
         uses: actions/upload-artifact@v4

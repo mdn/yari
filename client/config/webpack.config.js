@@ -22,6 +22,10 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 
+// to compare file sizes in PRs we need them to not include hashes
+const analyzeBundlePR = process.env.ANALYZE_BUNDLE_PR;
+const analyzeBundle = analyzeBundlePR || process.env.ANALYZE_BUNDLE;
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 function config(webpackEnv) {
@@ -119,15 +123,20 @@ function config(webpackEnv) {
       // Add /* filename */ comments to generated require()s in the output.
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
-      // In development, it does not produce real files.
-      filename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].js"
-        : isEnvDevelopment && "static/js/bundle.js",
+      filename: analyzeBundlePR
+        ? "static/js/[name].js"
+        : isEnvProduction
+          ? "static/js/[name].[contenthash:8].js"
+          : isEnvDevelopment && "static/js/bundle.js",
       // There are also additional JS chunk files if you use code splitting.
-      chunkFilename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].chunk.js"
-        : isEnvDevelopment && "static/js/[name].chunk.js",
-      assetModuleFilename: "static/media/[name].[hash][ext]",
+      chunkFilename: analyzeBundlePR
+        ? "static/js/[name].chunk.js"
+        : isEnvProduction
+          ? "static/js/[name].[contenthash:8].chunk.js"
+          : isEnvDevelopment && "static/js/[name].chunk.js",
+      assetModuleFilename: analyzeBundlePR
+        ? "static/media/[file]"
+        : "static/media/[name].[hash][ext]",
       publicPath: "/",
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
@@ -252,7 +261,9 @@ function config(webpackEnv) {
                 {
                   loader: resolve.sync("file-loader"),
                   options: {
-                    name: "static/media/[name].[hash].[ext]",
+                    name: analyzeBundlePR
+                      ? "static/media/[path][name].[ext]"
+                      : "static/media/[name].[hash].[ext]",
                   },
                 },
               ],
@@ -429,8 +440,12 @@ function config(webpackEnv) {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: "static/css/[name].[contenthash:8].css",
-          chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
+          filename: analyzeBundlePR
+            ? "static/css/[name].css"
+            : "static/css/[name].[contenthash:8].css",
+          chunkFilename: analyzeBundlePR
+            ? "static/css/[name].chunk.css"
+            : "static/css/[name].[contenthash:8].chunk.css",
         }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
@@ -499,7 +514,7 @@ function config(webpackEnv) {
         extensions: ["js", "mjs", "jsx", "ts", "tsx"],
       }),
       isEnvProduction &&
-        process.env.ANALYZE_BUNDLE &&
+        analyzeBundle &&
         new BundleAnalyzerPlugin({
           analyzerMode: "disabled",
           generateStatsFile: true,
