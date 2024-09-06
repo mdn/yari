@@ -116,16 +116,16 @@
     }
 
     .contributor-card {
-      text-decoration: none;
       color: #333;
+      text-decoration: none;
     }
 
     .contributor-avatar {
-      width: 40px;
-      height: 40px;
       border-radius: 50%;
-      margin-bottom: 10px;
       box-shadow: 5px 5px 5px rgb(128, 128, 128);
+      height: 40px;
+      margin-bottom: 10px;
+      width: 40px;
     }
 
     .last-modified-date {
@@ -139,18 +139,3 @@
     }
   }
 }
-
-// @media (max-width: 768px) {
-//   .contributors-grid {
-//     grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-//   }
-
-//   .contributor-image-container {
-//     width: 40px;
-//     height: 40px;
-//   }
-
-//   .contributor-id {
-//     font-size: 10px;
-//   }
-// }

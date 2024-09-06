@@ -127,7 +127,6 @@ export function ArticleFooter({ doc }) {
     gleanClick(`${ARTICLE_FOOTER}: feedback -> ${reason}`);
   }
 
-  console.log("doc", doc);
   return (
     <aside className="article-footer">
       <div className="article-footer-inner">
