@@ -120,7 +120,7 @@
     "mdn-data": "^2.10.0",
     "open": "^10.1.0",
     "open-editor": "^5.0.0",
-    "openai": "^4.57.1",
+    "openai": "^4.57.3",
     "pg": "^8.12.0",
     "pgvector": "^0.2.0",
     "prism-svelte": "^0.5.0",
@@ -147,7 +147,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^1.2.0",
-    "web-specs": "^3.19.0"
+    "web-specs": "^3.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -183,7 +183,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
-    "diff": "^5.2.0",
+    "diff": "^6.0.0",
     "downshift": "^7.6.1",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
@@ -212,7 +212,7 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-resolve": "^29.7.0",
     "jest-watch-typeahead": "^2.2.2",
-    "jsdom": "^24.1.1",
+    "jsdom": "^25.0.0",
     "lint-staged": "^13.2.3",
     "mdast-util-to-hast": "^13.2.0",
     "mini-css-extract-plugin": "^2.9.1",
