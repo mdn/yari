@@ -51,7 +51,6 @@ const config = {
                 plugins: [{ removeViewBox: false }],
               },
               titleProp: true,
-              throwIfNamespace: false,
               ref: true,
             },
           },
