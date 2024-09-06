@@ -2,7 +2,7 @@
 // License: Apache 2.0 - https://github.com/supabase/supabase/blob/0f1254252f6b066e088a40617f239744e3a1e22b/LICENSE
 import type { OpenAI } from "openai";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { SSE } from "sse.js";
 import useSWR, { mutate } from "swr";
@@ -341,7 +341,6 @@ export interface UseAiChatOptions {
 export function useAiChat({
   messageTemplate = (message) => message,
 }: UseAiChatOptions = {}) {
-  const navigate = useNavigate();
   const gleanClick = useGleanClick();
   const eventSourceRef = useRef<SSE>();
 
@@ -409,13 +408,10 @@ export function useAiChat({
   }, [setSearchParams, chatId]);
 
   const removeChatIdFromUrl = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-
-    searchParams.delete("c");
-
-    navigate(
-      {
-        search: searchParams.toString(),
+    setSearchParams(
+      (prev) => {
+        prev.delete("c");
+        return prev;
       },
       { replace: true }
     );
