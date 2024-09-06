@@ -983,7 +983,9 @@ export function AIHelpInner() {
                 ))}
               </section>
             )}
-            {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
+            {hash === "#debug" && (
+              <pre>{JSON.stringify({ datas, messages, quota }, null, 2)}</pre>
+            )}
           </section>
         )}
       </Container>

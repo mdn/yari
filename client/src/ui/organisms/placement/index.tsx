@@ -10,7 +10,7 @@ import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { Status, usePlacement } from "../../../placement-context";
 import { Payload as PlacementData } from "../../../../../libs/pong/types";
-import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
+import { BANNER_SCRIMBA_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
@@ -94,16 +94,18 @@ function TopPlacementFallbackContent() {
 
   return (
     <p className="fallback-copy">
-      Get real-time assistance with your coding queries. Try{" "}
+      Learn front-end development with high quality, interactive courses from{" "}
       <a
-        href="/en-US/plus/ai-help"
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
         onClick={() => {
-          gleanClick(BANNER_AI_HELP_CLICK);
+          gleanClick(BANNER_SCRIMBA_CLICK);
         }}
       >
-        AI Help
-      </a>{" "}
-      now!
+        Scrimba
+      </a>
+      . Enroll now!
     </p>
   );
 }
