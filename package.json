@@ -238,7 +238,7 @@
     "resolve-url-loader": "^5.0.0",
     "rough-notation": "^0.5.1",
     "sass": "^1.78.0",
-    "sass-loader": "^15.0.0",
+    "sass-loader": "^16.0.1",
     "source-map-explorer": "^2.5.3",
     "source-map-loader": "^5.0.0",
     "style-loader": "^3.3.4",
