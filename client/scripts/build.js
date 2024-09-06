@@ -1,14 +1,12 @@
 // Ensure environment variables are read.
 import "../config/env.js";
 
-import path from "node:path";
 import chalk from "chalk";
 import fs from "fs-extra";
 import webpack from "webpack";
 
 import configFactory from "../config/webpack.config.js";
 import paths from "../config/paths.js";
-import { hashSomeStaticFilesForClientBuild } from "./postprocess-client-build.js";
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -37,17 +35,6 @@ build()
       process.exit(1);
     }
   )
-  .then(async () => {
-    const { results } = await hashSomeStaticFilesForClientBuild(paths.appBuild);
-    console.log(
-      chalk.green(
-        `Hashed ${results.length} files in ${path.join(
-          paths.appBuild,
-          "index.html"
-        )}`
-      )
-    );
-  })
   .catch((err) => {
     if (err && err.message) {
       console.log(err.message);

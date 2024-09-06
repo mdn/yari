@@ -74,7 +74,7 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "https://js.stripe.com",
 
   /*
-   * Inline scripts (defined in `client/public/index.html`).
+   * Inline scripts (imported in `ssr/render.tsx`).
    *
    * If we modify them, we must always update their CSP hash here.
    *
