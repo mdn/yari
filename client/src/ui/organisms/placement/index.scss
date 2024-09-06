@@ -20,11 +20,6 @@ section.place {
     --place-new-side-background: var(--place-new-side-background-light);
     --place-new-side-color: var(--place-new-side-color-light);
 
-    @media (prefers-color-scheme: dark) {
-      --place-new-side-background: var(--place-new-side-background-dark);
-      --place-new-side-color: var(--place-new-side-color-dark);
-    }
-
     --border-radius: 0.5rem;
     border: 1px solid var(--border-primary);
     border-radius: var(--border-radius);
@@ -34,6 +29,11 @@ section.place {
     overflow: hidden;
     position: relative;
     width: 11rem;
+
+    @media (prefers-color-scheme: dark) {
+      --place-new-side-background: var(--place-new-side-background-dark);
+      --place-new-side-color: var(--place-new-side-color-dark);
+    }
 
     .pong-note {
       background-color: var(--place-new-side-color);
@@ -311,17 +311,16 @@ section.place.hp-main {
   --place-top-cta-background: var(--place-top-cta-background-light);
   --place-top-cta-color: var(--place-top-cta-color-light);
 
+  background-color: var(--place-top-background);
+  border-bottom: 1px solid var(--border-primary);
+  height: var(--top-banner-height);
+
   @media (prefers-color-scheme: dark) {
     --place-top-background: var(--place-top-background-dark);
     --place-top-color: var(--place-top-color-dark);
     --place-top-cta-background: var(--place-top-cta-background-dark);
     --place-top-cta-color: var(--place-top-cta-color-dark);
   }
-
-  background-color: var(--place-top-background);
-
-  border-bottom: 1px solid var(--border-primary);
-  height: var(--top-banner-height);
 
   &.fallback {
     position: initial;
