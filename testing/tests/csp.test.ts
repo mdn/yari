@@ -11,7 +11,7 @@ describe("Content-Security-Policy", () => {
       return `'${algo}-${hash}'`;
     }
 
-    const indexHtmlPath = path.join("client", "build", "en-us", "index.html");
+    const indexHtmlPath = path.join("client", "build", "index.html");
     const indexHtmlContent = fs.readFileSync(indexHtmlPath).toString();
 
     const inlineScriptMatches = [
@@ -19,13 +19,7 @@ describe("Content-Security-Policy", () => {
     ];
 
     const inlineScriptContents = inlineScriptMatches
-      .filter(
-        (match) =>
-          !(
-            match[1].includes("src=") ||
-            match[1].includes(`type="application/json"`)
-          )
-      )
+      .filter((match) => !match[1].includes("src="))
       .map((match) => match[2]);
 
     // If this assertion fails, an inline script was added to client/public/index.html`.
