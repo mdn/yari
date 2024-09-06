@@ -254,7 +254,7 @@
   }
   @media (min-width: $screen-md) {
     display: flex;
-    position: sticky;
+    position: relative;
   }
   @media (min-width: $screen-lg), (min-height: $screen-height-place-limit) {
     display: block;
