@@ -240,6 +240,7 @@ function messageReducer(state: MessageTreeState, messageAction: MessageAction) {
             ...newState.currentNode.request,
             messageId,
             parentId,
+            chatId,
           },
         });
         newState.nodes[messageId] = newState.currentNode;
