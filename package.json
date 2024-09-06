@@ -165,6 +165,7 @@
     "@types/cli-progress": "^3.11.6",
     "@types/imagemin": "^9.0.0",
     "@types/jest": "^29.5.12",
+    "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/node": "^18.19.47",
     "@types/react": "^18.3.4",
