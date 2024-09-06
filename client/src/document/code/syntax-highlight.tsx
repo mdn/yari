@@ -1,5 +1,8 @@
 import Prism from "prismjs";
 import components from "prismjs/components";
+import { useMemo, useState, useEffect } from "react";
+
+Prism.manual = true;
 
 const PRISM_LANGUAGES = components.languages as Record<
   string,
@@ -10,8 +13,6 @@ const PRISM_LANGUAGES = components.languages as Record<
     [key: string]: any;
   }
 >;
-
-Prism.manual = true;
 
 // Add things to this list to help make things convenient. Sometimes
 // there are `<pre class="brush: foo">` whose name is not that which
@@ -30,19 +31,63 @@ const ALIASES = new Map([
   }),
 ]);
 
-export async function highlightSyntax(element: Element, language: string) {
+interface HighlightedCodeProps extends React.HTMLAttributes<HTMLElement> {
+  language?: string;
+  children: React.ReactNode;
+}
+
+export function HighlightedElement({
+  language,
+  children,
+  ...props
+}: HighlightedCodeProps) {
+  const initial = useMemo(
+    // needed to prevent flashing
+    () =>
+      language ? highlightStringSync(String(children), language) : undefined,
+    [children, language]
+  );
+  const [html, setHtml] = useState(initial);
+
+  useEffect(() => {
+    (async () => {
+      if (language) {
+        const highlighted = await highlightString(String(children), language);
+        setHtml(highlighted);
+      }
+    })();
+  }, [children, language]);
+
+  return html ? (
+    <code {...props} dangerouslySetInnerHTML={{ __html: html }}></code>
+  ) : (
+    <code {...props}>{children}</code>
+  );
+}
+
+export async function highlightElement(element: Element, language: string) {
+  element.innerHTML = `<code>${await highlightString(element.textContent || "", language)}</code>`;
+}
+
+async function highlightString(text: string, language: string) {
   const resolvedLanguage = ALIASES.get(language) || language;
 
   try {
     await importLanguage(resolvedLanguage);
   } catch {
-    return;
+    return text;
   }
 
+  return highlightStringSync(text, language);
+}
+
+function highlightStringSync(text: string, language: string) {
+  const resolvedLanguage = ALIASES.get(language) || language;
   const prismLanguage = Prism.languages[resolvedLanguage];
   if (prismLanguage) {
-    element.innerHTML = `<code>${Prism.highlight(element.textContent || "", prismLanguage, resolvedLanguage)}</code>`;
+    return Prism.highlight(text, prismLanguage, resolvedLanguage);
   }
+  return text;
 }
 
 async function importLanguage(language: string) {
