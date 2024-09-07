@@ -25,10 +25,10 @@ main.contribute {
     }
 
     h1 {
-      @include mify;
       font-size: 3rem;
       margin-top: 8rem;
       text-align: center;
+      @include mify;
     }
 
     .quote {

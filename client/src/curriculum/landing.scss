@@ -311,14 +311,16 @@
 
       > #stairway1-container {
         --fs: clamp(1rem, calc(3 * calc(100vw / 100)), 1.75rem);
-        @media (min-width: $screen-lg) {
-          --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
-        }
+
         grid-area: a;
         margin: 0;
         position: relative;
         transform: translateX(2vw);
         width: 100%;
+
+        @media (min-width: $screen-lg) {
+          --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
+        }
 
         #stairway1 {
           font-size: var(--fs);
@@ -341,12 +343,14 @@
 
       > #stairway2-container {
         --fs: clamp(0.75rem, calc(1.25 * calc(100vw / 100)), 1rem);
-        @media (min-width: $screen-md) {
-          --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
-        }
+
         grid-area: b;
         position: relative;
         transform: translateX(-5vw);
+
+        @media (min-width: $screen-md) {
+          --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
+        }
 
         #stairway2 {
           font-size: var(--fs);
