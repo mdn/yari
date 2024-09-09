@@ -13,7 +13,6 @@ import {
 } from "./code/playground";
 import { addCopyToClipboardButton } from "./code/copy";
 import { useUIStatus } from "../ui-context";
-import { highlightElement } from "./code/syntax-highlight";
 
 export function useDocumentURL() {
   const locale = useLocale();
@@ -119,10 +118,12 @@ export function useDecorateExamples(doc: Doc | undefined) {
         } else {
           addCopyToClipboardButton(element, header);
         }
-        highlightElement(
-          element,
-          header?.querySelector(".language-name")?.textContent || "plain"
-        );
+        import("./code/syntax-highlight").then(({ highlightElement }) => {
+          highlightElement(
+            element,
+            header?.querySelector(".language-name")?.textContent || "plain"
+          );
+        });
       });
   }, [doc, location]);
 }
