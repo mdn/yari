@@ -162,7 +162,7 @@ function config(webpackEnv) {
       level: "none",
     },
     optimization: {
-      chunkIds: isEnvProduction ? "deterministic" : "named",
+      chunkIds: isEnvProduction ? false : "named",
       moduleIds: isEnvProduction ? "deterministic" : "named",
       minimize: isEnvProduction,
       minimizer: [
@@ -518,6 +518,10 @@ function config(webpackEnv) {
         new BundleAnalyzerPlugin({
           analyzerMode: "disabled",
           generateStatsFile: true,
+        }),
+      isEnvProduction &&
+        new webpack.ids.DeterministicChunkIdsPlugin({
+          maxLength: 4, // this is actually min length
         }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
