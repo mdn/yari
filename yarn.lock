@@ -1500,16 +1500,16 @@
     "@codemirror/view" "^6.0.0"
     "@lezer/common" "^1.0.0"
 
-"@codemirror/lang-css@^6.0.0", "@codemirror/lang-css@^6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-css/-/lang-css-6.2.1.tgz#5dc0a43b8e3c31f6af7aabd55ff07fe9aef2a227"
-  integrity sha512-/UNWDNV5Viwi/1lpr/dIXJNWiwDxpw13I4pTUAsNxZdg6E0mI2kTQb0P2iHczg1Tu+H4EBgJR+hYhKiHKko7qg==
+"@codemirror/lang-css@^6.0.0", "@codemirror/lang-css@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-css/-/lang-css-6.3.0.tgz#607628559f2471b385c6070ec795072a55cffc0b"
+  integrity sha512-CyR4rUNG9OYcXDZwMPvJdtb6PHbBDKUc/6Na2BIwZ6dKab1JQqKa4di+RNRY9Myn7JB81vayKwJeQ7jEdmNVDA==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/language" "^6.0.0"
     "@codemirror/state" "^6.0.0"
     "@lezer/common" "^1.0.2"
-    "@lezer/css" "^1.0.0"
+    "@lezer/css" "^1.1.7"
 
 "@codemirror/lang-html@^6.4.9":
   version "6.4.9"
@@ -2481,16 +2481,17 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@lezer/common@^1.0.0", "@lezer/common@^1.0.2":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@lezer/common/-/common-1.0.3.tgz#1808f70e2b0a7b1fdcbaf5c074723d2d4ed1e4c5"
-  integrity sha512-JH4wAXCgUOcCGNekQPLhVeUtIqjH0yPBs7vvUdSjyQama9618IOKFJwkv2kcqdhF0my8hQEgCTEJU0GIgnahvA==
+"@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.2.0":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@lezer/common/-/common-1.2.1.tgz#198b278b7869668e1bebbe687586e12a42731049"
+  integrity sha512-yemX0ZD2xS/73llMZIK6KplkjIjf2EvAHcinDi/TfJ9hS25G0388+ClHt6/3but0oOxinTcQHJLDXh6w1crzFQ==
 
-"@lezer/css@^1.0.0", "@lezer/css@^1.1.0":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@lezer/css/-/css-1.1.1.tgz#c36dcb0789317cb80c3740767dd3b85e071ad082"
-  integrity sha512-mSjx+unLLapEqdOYDejnGBokB5+AiJKZVclmud0MKQOKx3DLJ5b5VTCstgDDknR6iIV4gVrN6euzsCnj0A2gQA==
+"@lezer/css@^1.1.0", "@lezer/css@^1.1.7":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@lezer/css/-/css-1.1.8.tgz#11fd456dac53bc899b266778794ed4ca9576a5a4"
+  integrity sha512-7JhxupKuMBaWQKjQoLtzhGj83DdnZY9MckEOG5+/iLKNK2ZJqKc6hf6uc0HjwCX7Qlok44jBNqZhHKDhEhZYLA==
   dependencies:
+    "@lezer/common" "^1.2.0"
     "@lezer/highlight" "^1.0.0"
     "@lezer/lr" "^1.0.0"
 
