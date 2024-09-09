@@ -162,8 +162,8 @@ function config(webpackEnv) {
       level: "none",
     },
     optimization: {
-      chunkIds: isEnvProduction ? "natural" : "named",
-      moduleIds: isEnvProduction ? "natural" : "named",
+      chunkIds: isEnvProduction ? "deterministic" : "named",
+      moduleIds: isEnvProduction ? "deterministic" : "named",
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
