@@ -485,7 +485,14 @@ export function useAiChat({
     if (r) {
       reset();
     }
-  }, [isHistoryEnabled, searchParams, chatId, reset, handleError]);
+  }, [
+    isHistoryEnabled,
+    removeChatIdFromUrl,
+    searchParams,
+    chatId,
+    reset,
+    handleError,
+  ]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
