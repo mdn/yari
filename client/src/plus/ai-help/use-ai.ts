@@ -407,7 +407,7 @@ export function useAiChat({
     });
   }, [setSearchParams, chatId]);
 
-  const removeChatIdFromUrl = () => {
+  const removeChatIdFromUrl = useCallback(() => {
     setSearchParams(
       (prev) => {
         prev.delete("c");
@@ -415,7 +415,7 @@ export function useAiChat({
       },
       { replace: true }
     );
-  };
+  }, [setSearchParams]);
 
   useEffect(() => {
     if (!isHistoryEnabled) {
