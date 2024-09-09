@@ -1658,10 +1658,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/media-query-list-parser/-/media-query-list-parser-3.0.1.tgz#9474e08e6d7767cf68c56bf1581b59d203360cb0"
   integrity sha512-HNo8gGD02kHmcbX6PvCoUuOQvn4szyB9ca63vZHKX5A81QytgDG4oxG4IaEfHTlEZSZ6MjPEMWIVU+zF2PZcgw==
 
-"@csstools/normalize.css@*":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.0.0.tgz#a9583a75c3f150667771f30b60d9f059473e62c4"
-  integrity sha512-M0qqxAcwCsIVfpFQSlGN5XjXWu8l5JDZN+fPt1LeW5SZexQTgnaEvgXAY+CeygRw0EeppWHi12JxESWiWrB0Sg==
+"@csstools/normalize.css@12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.1.1.tgz#f0ad221b7280f3fc814689786fd9ee092776ef8f"
+  integrity sha512-YAYeJ+Xqh7fUou1d1j9XHl44BmsuThiTr4iNrgCQ3J27IbhXsxXDGZ1cXv8Qvs99d4rBbLiSKy3+WZiet32PcQ==
 
 "@csstools/postcss-cascade-layers@^5.0.0":
   version "5.0.0"
@@ -12739,14 +12739,14 @@ postcss-normalize-whitespace@^7.0.0:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-normalize@^10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/postcss-normalize/-/postcss-normalize-10.0.1.tgz#464692676b52792a06b06880a176279216540dd7"
-  integrity sha512-+5w18/rDev5mqERcG3W5GZNMJa1eoYYNGo8gB7tEwaos0ajk3ZXAI4mHGcNT47NE+ZnZD1pEpUOFLvltIwmeJA==
+postcss-normalize@^13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/postcss-normalize/-/postcss-normalize-13.0.0.tgz#e61212727c73a2ada863df305b6be9467f45a2f9"
+  integrity sha512-EdlY4gQiS8DluldxUsgsgzMA1+4mRd4FQ7x8yGT934X3IBTJ0ZW3OG6xNneaHTv2BNzwnQ5mrnmrA/7yxVvnYw==
   dependencies:
-    "@csstools/normalize.css" "*"
+    "@csstools/normalize.css" "12.1.1"
     postcss-browser-comments "^4"
-    sanitize.css "*"
+    sanitize.css "13.0.0"
 
 postcss-opacity-percentage@^3.0.0:
   version "3.0.0"
@@ -13954,7 +13954,7 @@ sanitize-filename@^1.6.3:
   dependencies:
     truncate-utf8-bytes "^1.0.0"
 
-sanitize.css@*:
+sanitize.css@13.0.0:
   version "13.0.0"
   resolved "https://registry.yarnpkg.com/sanitize.css/-/sanitize.css-13.0.0.tgz#2675553974b27964c75562ade3bd85d79879f173"
   integrity sha512-ZRwKbh/eQ6w9vmTjkuG0Ioi3HBwPFce0O+v//ve+aOq1oeCy7jMV2qzzAlpsNuqpqCBjjriM1lbtZbF/Q8jVyA==
