@@ -2979,7 +2979,7 @@
     "@sentry/types" "8.29.0"
     "@sentry/utils" "8.29.0"
 
-"@sentry/browser@8.29.0", "@sentry/browser@^8.29.0":
+"@sentry/browser@8.29.0":
   version "8.29.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-8.29.0.tgz#d60a754a26c5235fab05fe2e675ced07209aaa88"
   integrity sha512-aKTy4H/3RI0q9LIeepesjWGlGNeh4HGFfwQjzHME8gcWCQ5LSlzYX4U+hu2yp7r1Jfd9MUTFfOuuLih2HGLGsQ==
