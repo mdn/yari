@@ -1,4 +1,3 @@
-import Prism from "prismjs";
 import {
   Children,
   MutableRefObject,
@@ -59,6 +58,7 @@ import {
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
+import { HighlightedElement } from "../../document/code/syntax-highlight";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -482,19 +482,15 @@ function AIHelpAssistantResponse({
               },
               code: ({ className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || "");
-                const lang = Prism.languages[match?.[1]];
-                return lang ? (
-                  <code
-                    {...props}
+                const lang = match?.[1];
+                return (
+                  <HighlightedElement
+                    language={lang}
                     className={className}
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(String(children), lang),
-                    }}
-                  />
-                ) : (
-                  <code {...props} className={className}>
+                    {...props}
+                  >
                     {children}
-                  </code>
+                  </HighlightedElement>
                 );
               },
             }}
