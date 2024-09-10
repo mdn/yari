@@ -48,9 +48,8 @@ function gtagScriptPath(relPath = "/static/js/gtag.js") {
 function prepare() {
   const webfontURLs = extractWebFontURLs();
   const gtagPath = gtagScriptPath();
-  const assetManifest = fs.readFileSync(
-    path.join(clientBuildRoot, "asset-manifest.json"),
-    "utf-8"
+  const assetManifest = JSON.parse(
+    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
   );
 
   fs.writeFileSync(
@@ -60,7 +59,7 @@ export const WEBFONT_URLS = ${JSON.stringify(webfontURLs)};
 export const GTAG_PATH = ${JSON.stringify(gtagPath)};
 export const BASE_URL = ${JSON.stringify(BASE_URL)};
 export const ALWAYS_ALLOW_ROBOTS = ${JSON.stringify(ALWAYS_ALLOW_ROBOTS)};
-export const ASSET_MANIFEST = ${assetManifest};
+export const ASSET_MANIFEST = ${JSON.stringify(assetManifest)};
 `
   );
 }
