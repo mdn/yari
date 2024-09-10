@@ -85,7 +85,7 @@ main.community-container {
   --button-border-color: var(--button-primary-default);
   --button-color: var(--background-primary);
   --button-font: var(--type-emphasis-m);
-  --button-padding: 0.43em 0.6em;
+  --button-padding: 0.43rem 1rem;
   --button-radius: 0.25rem;
 
   background: var(--community-bg-secondary);
@@ -213,6 +213,7 @@ main.community-container {
         color: var(--button-color);
         display: inline-block;
         font: var(--button-font);
+        letter-spacing: normal;
         padding: var(--button-padding);
         text-decoration: none;
       }
@@ -330,6 +331,7 @@ main.community-container {
           color: var(--button-color);
           display: inline-block;
           font: var(--button-font);
+          letter-spacing: normal;
           padding: var(--button-padding);
           text-decoration: none;
         }
@@ -633,6 +635,7 @@ main.community-container {
           color: var(--button-color);
           display: inline-block;
           font: var(--button-font);
+          letter-spacing: normal;
           padding: var(--button-padding);
           text-decoration: none;
         }
@@ -780,6 +783,7 @@ main.community-container {
           color: var(--button-color);
           display: inline-block;
           font: var(--button-font);
+          letter-spacing: normal;
           padding: var(--button-padding);
           text-decoration: none;
         }

@@ -29,7 +29,7 @@ export function Community(appProps: HydrationData<any, CommunityDoc>) {
               />
             );
           } else if (section.value.id === "help_us_fix_open_issues") {
-            return <Issues section={section} />;
+            return <Issues section={section} key={section.value.id} />;
           }
           return null;
         }}
