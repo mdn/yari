@@ -136,3 +136,43 @@ export function splitQuery(term: string): string[] {
     return term.split(/[ ,.]+/);
   }
 }
+
+export class SWRLocalStorageCache<Data> {
+  #key: string;
+  #data: Map<string, Data>;
+
+  #writeToLocalStorage() {
+    const serialized = JSON.stringify([...this.#data]);
+    localStorage.setItem(this.#key, serialized);
+  }
+
+  constructor(key: string) {
+    this.#key = `cache.${key}`;
+    const serialized = localStorage.getItem(this.#key);
+    try {
+      this.#data = new Map(JSON.parse(serialized || "[]"));
+    } catch {
+      console.warn(`Can't read data from ${this.#key}, resetting the cache`);
+      this.#data = new Map();
+      this.#writeToLocalStorage();
+    }
+  }
+
+  get(key: string): Data | undefined {
+    return this.#data.get(key);
+  }
+
+  set(key: string, value: Data): void {
+    this.#data.set(key, value);
+    this.#writeToLocalStorage();
+  }
+
+  delete(key: string): void {
+    this.#data.delete(key);
+    this.#writeToLocalStorage();
+  }
+
+  keys(): IterableIterator<string> {
+    return this.#data.keys();
+  }
+}
