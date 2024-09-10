@@ -6019,7 +6019,7 @@ cssnano@^7.0.1:
     cssnano-preset-default "^7.0.1"
     lilconfig "^3.1.1"
 
-cssnano@^7.0.5:
+cssnano@^7.0.6:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/cssnano/-/cssnano-7.0.6.tgz#63d54fd42bc017f6aaed69e47d9aaef85b7850ec"
   integrity sha512-54woqx8SCbp8HwvNZYn68ZFAepuouZW4lTwiMVnBErM3VkO7/Sd4oTOt3Zz3bPx3kxQ36aISppyXj2Md4lg8bw==
