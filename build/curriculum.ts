@@ -9,7 +9,7 @@ import { DocParent } from "../libs/types/document.js";
 import { CURRICULUM_TITLE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import * as kumascript from "../kumascript/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
-import { codeHeaders } from "./code-headers.js";
+import { wrapCodeExamples } from "./code-headers.js";
 import {
   escapeRegExp,
   injectLoadingLazyAttributes,
@@ -321,7 +321,7 @@ export async function buildCurriculumPage(
     doc.hasMathML = true;
   }
   $("div.hidden").remove();
-  codeHeaders($);
+  wrapCodeExamples($);
   injectNoTranslate($);
   injectLoadingLazyAttributes($);
   postProcessCurriculumLinks($, (p: string | undefined) => {

@@ -36,7 +36,7 @@ interface HighlightedCodeProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
 }
 
-export function HighlightedElement({
+export function CodeWithSyntaxHighlight({
   language,
   children,
   ...props

@@ -96,7 +96,7 @@ export function useRunSample(doc: Doc | undefined) {
   }, [doc, isServer, locale]);
 }
 
-export function useDecorateExamples(doc: Doc | undefined) {
+export function useDecorateCodeExamples(doc: Doc | undefined) {
   const location = useLocation();
 
   useEffect(() => {

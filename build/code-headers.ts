@@ -10,7 +10,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * Mutate the `$` instance by adding headers to <pre> tags containing code blocks.
  *
  */
-export function codeHeaders($: cheerio.CheerioAPI) {
+export function wrapCodeExamples($: cheerio.CheerioAPI) {
   // Our content will be like this: `<pre class="brush:js">` or
   // `<pre class="brush: js">` so we're technically not looking for an exact
   // match. The wildcard would technically match `<pre class="brushetta">`
