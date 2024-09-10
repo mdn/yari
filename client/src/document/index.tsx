@@ -6,7 +6,7 @@ import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
-import { useDocumentURL, useDecorateExamples, useRunSample } from "./hooks";
+import { useDocumentURL, useDecorateCodeExamples, useRunSample } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -120,7 +120,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
   //useCollectSample(doc);
-  useDecorateExamples(doc);
+  useDecorateCodeExamples(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {

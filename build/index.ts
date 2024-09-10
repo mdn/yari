@@ -28,7 +28,7 @@ import {
 } from "./flaws/index.js";
 import { checkImageReferences, checkImageWidths } from "./check-images.js";
 import { getPageTitle } from "./page-title.js";
-import { codeHeaders } from "./code-headers.js";
+import { wrapCodeExamples } from "./code-headers.js";
 import { formatNotecards } from "./format-notecards.js";
 import buildOptions from "./build-options.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
@@ -457,7 +457,7 @@ export async function buildDocument(
   }
 
   // Add headers to all <pre> tags with code.
-  codeHeaders($);
+  wrapCodeExamples($);
 
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.

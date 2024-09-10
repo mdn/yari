@@ -14,7 +14,7 @@ import {
   BlogPostLimitedMetadata,
   AuthorMetadata,
 } from "../../../libs/types/blog";
-import { useDecorateExamples, useRunSample } from "../document/hooks";
+import { useDecorateCodeExamples, useRunSample } from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { SignUpSection as NewsletterSignUp } from "../newsletter";
 import { TOC } from "../document/organisms/toc";
@@ -187,7 +187,7 @@ export function BlogPost(props: HydrationData) {
   );
   const { doc, blogMeta } = data || props || {};
   useRunSample(doc);
-  useDecorateExamples(doc);
+  useDecorateCodeExamples(doc);
   return (
     <>
       {doc && blogMeta && (

@@ -58,7 +58,7 @@ import {
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
-import { HighlightedElement } from "../../document/code/syntax-highlight";
+import { CodeWithSyntaxHighlight } from "../../document/code/syntax-highlight";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -484,13 +484,13 @@ function AIHelpAssistantResponse({
                 const match = /language-(\w+)/.exec(className || "");
                 const lang = match?.[1];
                 return (
-                  <HighlightedElement
+                  <CodeWithSyntaxHighlight
                     language={lang}
                     className={className}
                     {...props}
                   >
                     {children}
-                  </HighlightedElement>
+                  </CodeWithSyntaxHighlight>
                 );
               },
             }}
