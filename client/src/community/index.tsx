@@ -1,12 +1,12 @@
 import "./index.scss";
 import { HydrationData } from "../../../libs/types/hydration";
 import { useMemo } from "react";
-import useSWRImmutable from "swr/immutable";
 import { Section } from "../../../libs/types/document";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import { HTTPError } from "../document";
 import { WRITER_MODE } from "../env";
 import { Prose } from "../document/ingredients/prose";
+import { SWRLocalStorageCache } from "../utils";
 
 interface CommunityDoc {
   title: string;
@@ -16,25 +16,29 @@ interface CommunityDoc {
 export function Community(appProps: HydrationData<any, CommunityDoc>) {
   const doc = useCommunityDoc(appProps);
   return (
-    <main className="community-container">
-      <RenderCommunityBody
-        doc={doc}
-        renderer={(section, i) => {
-          if (i === 0) {
-            return (
-              <Header
-                section={section}
-                key={section.value.id}
-                h1={doc?.title}
-              />
-            );
-          } else if (section.value.id === "help_us_fix_open_issues") {
-            return <Issues section={section} key={section.value.id} />;
-          }
-          return null;
-        }}
-      />
-    </main>
+    <SWRConfig
+      value={{ provider: () => new SWRLocalStorageCache("community") }}
+    >
+      <main className="community-container">
+        <RenderCommunityBody
+          doc={doc}
+          renderer={(section, i) => {
+            if (i === 0) {
+              return (
+                <Header
+                  section={section}
+                  key={section.value.id}
+                  h1={doc?.title}
+                />
+              );
+            } else if (section.value.id === "help_us_fix_open_issues") {
+              return <Issues section={section} key={section.value.id} />;
+            }
+            return null;
+          }}
+        />
+      </main>
+    </SWRConfig>
   );
 }
 
@@ -109,16 +113,20 @@ function Issues({ section }: { section: any }) {
     [section.value?.content]
   );
   const LABELS = ["good first issue", "accepting PR"];
-  const { data } = useSWRImmutable(
+  const { data } = useSWR(
     `is:open is:issue repo:mdn/content repo:mdn/translated-content repo:mdn/yari label:"good first issue","accepting PR" sort:created-desc no:assignee is:public`,
     async (query) => {
       const url = new URL("https://api.github.com/search/issues");
       url.searchParams.append("per_page", "5");
       url.searchParams.append("q", query);
       const res = await fetch(url);
-      if (res.ok) {
-        return await res.json();
+      if (!res.ok) {
+        throw new Error(res.status.toString());
       }
+      return await res.json();
+    },
+    {
+      revalidateOnFocus: false,
     }
   );
   return (
