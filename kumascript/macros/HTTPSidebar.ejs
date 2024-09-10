@@ -18,7 +18,7 @@ var text = mdn.localStringMap({
     'Concepts': 'HTTP concepts',
     'Overview': 'Overview of HTTP',
     'Evolution': 'Evolution of HTTP',
-    'ResourcesURI': 'URIs and resources',
+    'URIsResources': 'URIs and resources',
     'Identifying': 'Identifying resources on the Web',
     'DataURLs': 'Data URLs',
     'MIMETypes': 'Introduction to MIME types',
@@ -60,7 +60,7 @@ var text = mdn.localStringMap({
     'Concepts': 'Guía de HTTP',
     'Overview': 'Generalidades de HTTP',
     'Evolution': 'Evolución de HTTP',
-    'ResourcesURI': 'Recursos y URIs',
+    'URIsResources': 'Recursos y URIs',
     'Identifying': 'Identificación de recursos en la Web',
     'DataURLs': 'URLs de Datos',
     'MIMETypes': 'Presentación de tipos MIME',
@@ -98,7 +98,7 @@ var text = mdn.localStringMap({
     'Concepts': 'Guide HTTP',
     'Overview': 'Aperçu de HTTP',
     'Evolution': 'Évolution de HTTP',
-    'ResourcesURI': 'Ressources et URI',
+    'URIsResources': 'Ressources et URI',
     'Identifying': 'Identifier des ressources sur le Web',
     'DataURLs': 'URL de données',
     'MIMETypes': 'Introduction aux types MIME',
@@ -140,7 +140,7 @@ var text = mdn.localStringMap({
     'Concepts': 'HTTP ガイド',
     'Overview': 'HTTP の概要',
     'Evolution': 'HTTP の進化',
-    'ResourcesURI': 'リソースと URI',
+    'URIsResources': 'リソースと URI',
     'Identifying': 'ウェブ上のリソースの識別',
     'DataURLs': 'データ URL',
     'MIMETypes': 'MIME タイプ入門',
@@ -182,7 +182,7 @@ var text = mdn.localStringMap({
     'Concepts': 'HTTP 안내서',
     'Overview': 'HTTP 개요',
     'Evolution': 'HTTP의 진화',
-    'ResourcesURI': '리소스와 URIs',
+    'URIsResources': '리소스와 URIs',
     'Identifying': '웹의 리소스 식별하기',
     'DataURLs': '데이터 URLs',
     'MIMETypes': 'MIME 타입 소개',
@@ -224,7 +224,7 @@ var text = mdn.localStringMap({
     'Concepts': 'Руководство по HTTP',
     'Overview': 'Обзор протокола HTTP',
     'Evolution': 'Эволюция протокола HTTP',
-    'ResourcesURI': 'Ресурсы и URI-адреса',
+    'URIsResources': 'Ресурсы и URI-адреса',
     'Identifying': 'Идентификация ресурсов в Вебе',
     'DataURLs': 'Data URL',
     'MIMETypes': 'Введение в MIME типы',
@@ -266,7 +266,7 @@ var text = mdn.localStringMap({
     'Concepts': 'HTTP 指南',
     'Overview': 'HTTP 概述',
     'Evolution': 'HTTP 的发展',
-    'ResourcesURI': '资源和 URI',
+    'URIsResources': '资源和 URI',
     'Identifying': '标识互联网上的内容',
     'DataURLs': 'Data URL',
     'MIMETypes': 'MIME 类型介绍',
@@ -312,46 +312,37 @@ var text = mdn.localStringMap({
     <li class="section"><%-web.smartLink(`/${locale}/docs/Web/HTTP`, null, text['HTTP'])%></li>
     <li class="section no-link"><%=text['Guides']%></li>
     <li class="toggle">
-        <details>
-            <summary><%=text['Concepts']%></summary>
-            <ol>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Overview`, null, text['Overview'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Messages`, null, text['Messages'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Session`, null, text['Session'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Compression`, null, text['Compression'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Content_negotiation`, null, text['ContentNego'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Content_negotiation`, null, text['Proxies'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Connection_management_in_HTTP_1.x`, null, text['Connection1x'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Protocol_upgrade_mechanism`, null, text['ProtocolUpgradeMech'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Evolution_of_HTTP`, null, text['Evolution'])%></li>
-              </ol>
-        </details>
+      <details>
+        <summary><%=text['Concepts']%></summary>
+        <ol>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Overview`, null, text['Overview'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Messages`, null, text['Messages'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers`, null, text['Headers'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Methods`, null, text['Methods'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Status`, null, text['Status'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Session`, null, text['Session'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Compression`, null, text['Compression'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Content_negotiation`, null, text['ContentNego'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Proxy_servers_and_tunneling`, null, text['Proxies'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Connection_management_in_HTTP_1.x`, null, text['Connection1x'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Protocol_upgrade_mechanism`, null, text['ProtocolUpgradeMech'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Evolution_of_HTTP`, null, text['Evolution'])%></li>
+        </ol>
+      </details>
     </li>
     <li class="toggle">
       <details>
-          <summary><%=text['ResourcesURI']%></summary>
-          <ol>
-              <li><%-web.smartLink(`/${locale}/docs/Web/URI`, null, text['Identifying'])%></li>
-              <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/MIME_types`, null, text['MIMETypes'])%></li>
-              <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/MIME_types/Common_types`, null, text['ListMIMETypes'])%></li>
-              <li><%-web.smartLink(`/${locale}/docs/Web/URI/Schemes/data`, null, text['DataURLs'])%></li>
-              <li><%-web.smartLink(`/${locale}/docs/Web/URI/Authority/Choosing_between_www_and_non-www_URLs`, null, text['WWWorNotWWW'])%></li>
-          </ol>
+        <summary><%=text['Security']%></summary>
+        <ol>
+          <li><%-web.smartLink(`/${locale}/docs/Web/Security/Practical_implementation_guides`, null, text['SecurityGuides'])%></li>
+          <li><a href="/en-US/observatory">HTTP Observatory</a></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Permissions_Policy`, null, text['Permissions_Policy'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/CSP`, null, text['CSP'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/CORS`, null, text['CORS'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Cross-Origin_Resource_Policy`, null, text['CORP'])%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/Strict-Transport-Security`, null, "HTTP Strict Transport Security (HSTS)")%></li>
+        </ol>
       </details>
-  </li>
-    <li class="toggle">
-        <details>
-            <summary><%=text['Security']%></summary>
-            <ol>
-                <li><%-web.smartLink(`/${locale}/docs/Web/Security/Practical_implementation_guides`, null, text['SecurityGuides'])%></li>
-                <li><a href="/en-US/observatory">HTTP Observatory</a></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Permissions_Policy`, null, text['Permissions_Policy'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/CSP`, null, text['CSP'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/CORS`, null, text['CORS'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Cross-Origin_Resource_Policy`, null, text['CORP'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/Strict-Transport-Security`, null, "HTTP Strict Transport Security (HSTS)")%></li>
-            </ol>
-        </details>
     </li>
     <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Authentication`, null, text['Authentication'])%></li>
     <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Caching`, null, text['Caching'])%></li>
@@ -361,43 +352,44 @@ var text = mdn.localStringMap({
     <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Range_requests`, null, text['Ranges'])%></li>
     <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Redirections`, null, text['Redirects'])%></li>
     <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Resources_and_specifications`, null, text['Specifications'])%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/URI`, null, text['URIsResources'])%></li>
 
     <li class="section no-link"><%=text['Reference']%></li>
     <li class="toggle">
-        <details <%=state('Web/HTTP/Headers')%>>
-            <summary><%=text['Headers']%></summary>
-            <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Headers'])%>
-        </details>
+      <details <%=state('Web/HTTP/Headers')%>>
+        <summary><%=text['Headers']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Headers'])%>
+      </details>
     </li>
     <li class="toggle">
-        <details <%=state('Web/HTTP/Methods')%>>
-            <summary><%=text['Methods']%></summary>
-            <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Methods'])%>
-        </details>
+      <details <%=state('Web/HTTP/Methods')%>>
+        <summary><%=text['Methods']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Methods'])%>
+      </details>
     </li>
     <li class="toggle">
-        <details <%=state('Web/HTTP/Status')%>>
-          <summary><%=text['Status']%></summary>
-          <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Status'])%>
-        </details>
+      <details <%=state('Web/HTTP/Status')%>>
+        <summary><%=text['Status']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Status'])%>
+      </details>
     </li>
     <li class="toggle">
-        <details <%=state('Web/HTTP/Headers/Content-Security-Policy')%>>
-          <summary><%=text['CSPDirectives']%></summary>
-          <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Headers/Content-Security-Policy'])%>
-        </details>
+      <details <%=state('Web/HTTP/Headers/Content-Security-Policy')%>>
+        <summary><%=text['CSPDirectives']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Headers/Content-Security-Policy'])%>
+      </details>
     </li>
     <li class="toggle">
-        <details <%=state('Web/HTTP/CORS/Errors')%>>
-          <summary><%=text['CORS_errors']%></summary>
-          <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/CORS/Errors', 1])%>
-        </details>
+      <details <%=state('Web/HTTP/CORS/Errors')%>>
+        <summary><%=text['CORS_errors']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/CORS/Errors', 1])%>
+      </details>
     </li>
     <li class="toggle">
-        <details <%=state('Web/HTTP/Headers/Permissions-Policy')%>>
-          <summary><%=text['PermissionsPolicyDirectives']%></summary>
-          <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Headers/Permissions-Policy', 1])%>
-        </details>
+      <details <%=state('Web/HTTP/Headers/Permissions-Policy')%>>
+        <summary><%=text['PermissionsPolicyDirectives']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTTP/Headers/Permissions-Policy', 1])%>
+      </details>
     </li>
   </ol>
 </section>
