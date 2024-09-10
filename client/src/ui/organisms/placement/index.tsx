@@ -92,7 +92,22 @@ export function SidePlacement() {
 function TopPlacementFallbackContent() {
   const gleanClick = useGleanClick();
 
-  return (
+  return Date.now() < Date.parse("2024-10-12") ? (
+    <p className="fallback-copy">
+      This month only - learn front-end development with a 30% discount on{" "}
+      <a
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => {
+          gleanClick(BANNER_SCRIMBA_CLICK);
+        }}
+      >
+        Scrimba
+      </a>{" "}
+      exclusively for MDN users.
+    </p>
+  ) : (
     <p className="fallback-copy">
       Learn front-end development with high quality, interactive courses from{" "}
       <a
