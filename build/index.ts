@@ -43,7 +43,7 @@ import {
   postProcessExternalLinks,
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
-import { getWebFeatureStatus } from "./web-features.js";
+import { addBaseline } from "./web-features.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -67,7 +67,10 @@ function getCurrentGitBranch(root: string) {
     // Only bother getting fancy if the root is CONTENT_ROOT.
     // For other possible roots, just leave it to the default.
     if (root === CONTENT_ROOT) {
-      if (process.env.GITHUB_REF) {
+      if (
+        process.env.GITHUB_REF &&
+        process.env.GITHUB_REPOSITORY !== "mdn/yari"
+      ) {
         name = process.env.GITHUB_REF.split("/").slice(2).join("/");
       } else {
         // Most probably, you're hacking on the content, using Yari to preview,
@@ -526,6 +529,8 @@ export async function buildDocument(
 
   doc.other_translations = document.translations || [];
 
+  doc.pageType = metadata["page-type"] || "unknown";
+
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {
@@ -545,54 +550,6 @@ export async function buildDocument(
     document.metadata.slug.startsWith("conflicting/");
 
   return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
-}
-
-function addBaseline(doc: Partial<Doc>) {
-  if (doc.browserCompat) {
-    const filteredBrowserCompat = doc.browserCompat.filter(
-      (query) =>
-        // temporary blocklist while we wait for per-key baseline statuses
-        // or another solution to the baseline/bcd table discrepancy problem
-        ![
-          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
-          "api.Clipboard.read",
-          "api.Clipboard.readText",
-          "api.Clipboard.write",
-          "api.Clipboard.writeText",
-          "api.ClipboardEvent",
-          "api.ClipboardEvent.ClipboardEvent",
-          "api.ClipboardEvent.clipboardData",
-          "api.ClipboardItem",
-          "api.ClipboardItem.ClipboardItem",
-          "api.ClipboardItem.getType",
-          "api.ClipboardItem.presentationStyle",
-          "api.ClipboardItem.types",
-          "api.Navigator.clipboard",
-          "api.Permissions.permission_clipboard-read",
-          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
-          "api.CustomElementRegistry",
-          "api.CustomElementRegistry.builtin_element_support",
-          "api.CustomElementRegistry.define",
-          "api.Window.customElements",
-          "css.selectors.defined",
-          "css.selectors.host",
-          "css.selectors.host-context",
-          "css.selectors.part",
-          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
-          "api.Element.input_event",
-          "api.InputEvent.InputEvent",
-          "api.InputEvent.data",
-          "api.InputEvent.dataTransfer",
-          "api.InputEvent.getTargetRanges",
-          "api.InputEvent.inputType",
-          // https://github.com/web-platform-dx/web-features/issues/1038
-          // https://github.com/web-platform-dx/web-features/blob/64d2cfd/features/screen-orientation-lock.dist.yml
-          "api.ScreenOrientation.lock",
-          "api.ScreenOrientation.unlock",
-        ].includes(query)
-    );
-    return getWebFeatureStatus(...filteredBrowserCompat);
-  }
 }
 
 interface BuiltLiveSamplePage {

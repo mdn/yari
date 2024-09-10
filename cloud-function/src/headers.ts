@@ -81,7 +81,7 @@ function getCacheMaxAgeForUrl(url: string): number {
 }
 
 function parseContentType(value: unknown): string {
-  const firstValue = Array.isArray(value) ? value[0] ?? "" : value;
+  const firstValue = Array.isArray(value) ? (value[0] ?? "") : value;
 
   return typeof firstValue === "string" ? firstValue : "";
 }

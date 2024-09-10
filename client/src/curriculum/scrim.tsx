@@ -27,7 +27,6 @@ export function ScrimIframe({
             <div className="partner-header">
               <span>Clicking will load content from scrimba.com</span>
               <button
-                autoFocus
                 tabIndex={0}
                 onClick={() => {
                   if (showDialog) {

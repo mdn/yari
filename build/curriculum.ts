@@ -99,12 +99,16 @@ export async function buildCurriculumIndex(
     const entry = mapper(meta);
     if (currentLevel > 2) {
       if (last) {
-        last.children.push(entry);
+        if (!last.children) {
+          last.children = [entry];
+        } else {
+          last.children.push(entry);
+        }
         return item;
       }
     }
 
-    item.push({ children: [], ...entry });
+    item.push({ ...entry });
     return item;
   }, []);
 
@@ -127,10 +131,10 @@ function prevNextFromIndex(
   const prevEntry = i > 0 ? index[i - 1] : undefined;
   const nextEntry = i < index.length - 1 ? index[i + 1] : undefined;
 
-  prevEntry && "children" in prevEntry && delete prevEntry.children;
-  nextEntry && "children" in nextEntry && delete nextEntry.children;
+  const prev = prevEntry && { url: prevEntry.url, title: prevEntry.title };
+  const next = nextEntry && { url: nextEntry.url, title: nextEntry.title };
 
-  return { prev: prevEntry, next: nextEntry };
+  return { prev, next };
 }
 
 async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
@@ -205,13 +209,34 @@ async function readCurriculumPage(
   let group: string;
   if (!options?.forIndex) {
     if (attributes.template === Template.Landing) {
-      modules = (await buildCurriculumIndex())?.filter(
-        (x) => x.children?.length
-      );
+      modules = (await buildCurriculumIndex())
+        ?.filter((x) => x.children?.length)
+        .map(({ url, title, summary, topic, slug, children }) => ({
+          url,
+          title,
+          summary,
+          topic,
+          slug,
+          children: children.length
+            ? children.map(({ url, title, summary, topic, slug }) => ({
+                url,
+                title,
+                summary,
+                topic,
+                slug,
+              }))
+            : undefined,
+        }));
     } else if (attributes.template === Template.Overview) {
-      modules = (await buildCurriculumIndex())?.find(
-        (x) => x.slug === slug
-      )?.children;
+      modules = (await buildCurriculumIndex())
+        ?.find((x) => x.slug === slug)
+        ?.children.map(({ url, title, summary, topic, slug }) => ({
+          url,
+          title,
+          summary,
+          topic,
+          slug,
+        }));
     }
     if (attributes.template === Template.Module) {
       prevNext = await buildPrevNextModule(slug);

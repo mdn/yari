@@ -16,15 +16,15 @@
 
   em {
     background-color: var(--background-toc-active);
+    border-bottom-right-radius: 0.25rem;
     border-left: 2px solid var(--category-color);
+    border-top-right-radius: 0.25rem;
     display: inline-block;
     font-style: normal;
     font-variation-settings: normal;
     font-weight: 600;
     hyphens: auto;
-    padding: 0.25rem;
-    padding-left: 0.5rem;
-    width: 100%;
+    padding: 0.25rem 0.5rem;
   }
 
   a {
@@ -254,6 +254,7 @@
   }
   @media (min-width: $screen-md) {
     display: flex;
+    position: relative;
   }
   @media (min-width: $screen-lg), (min-height: $screen-height-place-limit) {
     display: block;

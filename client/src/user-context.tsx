@@ -218,7 +218,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         subscriptionType:
           data.subscription_type === "core"
             ? SubscriptionType.MDN_CORE
-            : data.subscription_type ?? null,
+            : (data.subscription_type ?? null),
         subscriberNumber: data.subscriber_number || null,
         email: data.email || null,
         geo: {
