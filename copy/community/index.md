@@ -35,21 +35,21 @@ worldwide.
 
 <!--  -->
 
-- ![GitHub profile picture](https://github.com/JasonLamv-t.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/JasonLamv-t?size=160)
   [Jason Lam, 林家祥](https://github.com/JasonLamv-t) Grantit
-- ![GitHub profile picture](https://github.com/nicolo-ribaudo.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/nicolo-ribaudo?size=160)
   [Nicolò Ribaudo](https://github.com/nicolo-ribaudo) Igalia
-- ![GitHub profile picture](https://github.com/Josh-Cena.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/Josh-Cena?size=160)
   [Joshua Chen](https://github.com/Josh-Cena)
-- ![GitHub profile picture](https://github.com/c17an.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/c17an?size=160)
   [Kimchanmin](https://github.com/c17an) SK Planet
-- ![GitHub profile picture](https://github.com/givvemee.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/givvemee?size=160)
   [Gibbeum Yoon](https://github.com/givvemee)
-- ![GitHub profile picture](https://github.com/wisedog.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/wisedog?size=160)
   [Jongha Kim](https://github.com/wisedog)
-- ![GitHub profile picture](https://github.com/PassionPenguin.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/PassionPenguin?size=160)
   [Qizhe ZHANG](https://github.com/PassionPenguin)
-- ![GitHub profile picture](https://github.com/saionaro.png?size=160)
+- ![GitHub profile picture](https://avatars.githubusercontent.com/saionaro?size=160)
   [Artem Shibakov](https://github.com/saionaro) Bright Data
 
 ## Contributor spotlight
