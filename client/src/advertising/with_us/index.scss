@@ -25,10 +25,10 @@ main.advertise-with-us {
     }
 
     h1 {
-      @include mify;
       font-size: 3rem;
       margin-top: 8rem;
       text-align: center;
+      @include mify;
 
       &::before {
         background-color: var(--mdn-color-ads);

@@ -31,7 +31,7 @@ export default function OfferOverviewFeatures() {
           <p>
             No need to scroll through page after page to find your answers.
             Introducing an AI assistant that can answer all your web development
-            questions in real time. Powered by OpenAI GPT-3.5 and GPT-4.
+            questions in real time. Powered by OpenAI GPT-4o and GPT-4o mini.
           </p>
           <Button href="/en-US/plus/docs/features/ai-help" target="_self">
             Learn more →

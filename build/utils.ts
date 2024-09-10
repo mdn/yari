@@ -148,40 +148,6 @@ export function getImageminPlugin(fileName: string) {
   throw new Error(`No imagemin plugin for ${extension}`);
 }
 
-export function splitSections(rawHTML) {
-  const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
-  const blocks = [];
-  const toc = [];
-
-  const section = cheerio
-    .load("<div></div>", { decodeEntities: false })("div")
-    .eq(0);
-
-  const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
-  let c = 0;
-  iterable.forEach((child) => {
-    if ("tagName" in child && child.tagName === "h2") {
-      if (c) {
-        blocks.push(section.clone());
-        section.empty();
-        c = 0;
-      }
-      const text = $(child).text();
-      const id = text.replace(/[ .,!?]+/g, "-").toLowerCase();
-      toc.push({ id, text });
-      child.attribs = { ...(child.attribs || {}), id };
-    }
-    c++;
-    section.append(child);
-  });
-  if (c) {
-    blocks.push(section.clone());
-  }
-
-  const sections = blocks.map((block) => block.html().trim());
-  return { sections, toc };
-}
-
 /**
  * Return an array of all images that are inside the documents source folder.
  *

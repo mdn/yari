@@ -322,10 +322,10 @@ program
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .option("-r, --recursive", "Delete content recursively", { default: false })
+  .option("-r, --recursive", "Delete children", { default: false })
   .option(
     "--redirect <redirect>",
-    "Redirect document (and its children, if --recursive is true) to the URL <redirect>"
+    "Redirect document, and its children (if --recursive is true), to the URL <redirect>"
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(

@@ -529,6 +529,8 @@ export async function buildDocument(
 
   doc.other_translations = document.translations || [];
 
+  doc.pageType = metadata["page-type"] || "unknown";
+
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {

@@ -42,12 +42,15 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           }
           if (section.value.id === "modules") {
             const { title, id } = (section as ProseSection).value;
+            console.log(title);
             return (
               <>
                 <section key={`${id}-1`} className="modules">
                   {title && <DisplayH2 id={id} title={title} />}
                   {doc?.modules && <ModulesListList modules={doc.modules} />}
                 </section>
+                <PartnerBanner />
+
                 <section key={`${id}-2`} className="landing-stairway">
                   <div>
                     <div id="stairway1-container">
@@ -100,7 +103,6 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           return null;
         }}
       />
-      <PartnerBanner />
     </CurriculumLayout>
   );
 }
