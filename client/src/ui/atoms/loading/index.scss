@@ -1,11 +1,11 @@
 @use "~@mdn/minimalist/sass/mixins/animation" as *;
 
 .generic-loading {
-  @include slow-pulse();
   align-items: center;
   /* add short delay so the animation starts from white instead of dark gray */
   animation-delay: 1s;
   display: flex;
   justify-content: center;
   width: 100%;
+  @include slow-pulse();
 }
