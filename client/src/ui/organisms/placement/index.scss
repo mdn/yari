@@ -272,6 +272,10 @@ section.place {
       width: initial;
     }
   }
+
+  html[data-nop] & {
+    display: none;
+  }
 }
 
 .dark section.place .pong-box2 {
