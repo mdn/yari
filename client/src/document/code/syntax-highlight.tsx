@@ -66,28 +66,40 @@ export function HighlightedElement({
 }
 
 export async function highlightElement(element: Element, language: string) {
-  element.innerHTML = `<code>${await highlightString(element.textContent || "", language)}</code>`;
+  const highlighted = await highlightString(
+    element.textContent || "",
+    language
+  );
+  if (highlighted) {
+    element.innerHTML = `<code>${highlighted}</code>`;
+  }
 }
 
-async function highlightString(text: string, language: string) {
+async function highlightString(
+  text: string,
+  language: string
+): Promise<string | undefined> {
   const resolvedLanguage = ALIASES.get(language) || language;
 
   try {
     await importLanguage(resolvedLanguage);
   } catch {
-    return text;
+    return;
   }
 
   return highlightStringSync(text, language);
 }
 
-function highlightStringSync(text: string, language: string) {
+function highlightStringSync(
+  text: string,
+  language: string
+): string | undefined {
   const resolvedLanguage = ALIASES.get(language) || language;
   const prismLanguage = Prism.languages[resolvedLanguage];
   if (prismLanguage) {
     return Prism.highlight(text, prismLanguage, resolvedLanguage);
   }
-  return text;
+  return;
 }
 
 async function importLanguage(language: string) {

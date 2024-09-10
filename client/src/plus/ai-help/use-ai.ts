@@ -408,21 +408,20 @@ export function useAiChat({
     });
   }, [setSearchParams, chatId]);
 
-  const clearParamsFromUrl = () => {
-    window.history.replaceState(
-      "",
-      "",
-      window.location.protocol +
-        "//" +
-        window.location.host +
-        window.location.pathname
+  const removeChatIdFromUrl = useCallback(() => {
+    setSearchParams(
+      (prev) => {
+        prev.delete("c");
+        return prev;
+      },
+      { replace: true }
     );
-  };
+  }, [setSearchParams]);
 
   useEffect(() => {
     if (!isHistoryEnabled) {
       // If we got a chat id passed in without history enabled, clear parameters from URL
-      clearParamsFromUrl();
+      removeChatIdFromUrl();
       return;
     }
     let timeoutID;
@@ -473,7 +472,7 @@ export function useAiChat({
           // do not show an error.
           if (e instanceof Error && e.message.startsWith("404")) {
             setChatId(undefined);
-            clearParamsFromUrl();
+            removeChatIdFromUrl();
           } else {
             setChatId(convId);
             handleError(e);
@@ -487,7 +486,14 @@ export function useAiChat({
     if (r) {
       reset();
     }
-  }, [isHistoryEnabled, searchParams, chatId, reset, handleError]);
+  }, [
+    isHistoryEnabled,
+    removeChatIdFromUrl,
+    searchParams,
+    chatId,
+    reset,
+    handleError,
+  ]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {
