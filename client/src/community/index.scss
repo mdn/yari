@@ -370,11 +370,11 @@ main.community-container {
 
             li,
             a {
+              align-items: center;
               display: flex;
               flex-direction: column;
-              align-items: center;
-              text-align: center;
               flex-shrink: 0;
+              text-align: center;
             }
 
             li {
@@ -386,9 +386,9 @@ main.community-container {
               background: var(--community-circle-img-border);
               border: 6px var(--community-circle-img-border) solid;
               border-radius: 50%;
+              flex-shrink: 0;
               height: var(--community-list-img-size);
               width: var(--community-list-img-size);
-              flex-shrink: 0;
             }
 
             a {
@@ -414,11 +414,11 @@ main.community-container {
               --offset-distance: calc(
                 var(--community-circle-angle) * 50% + 25%
               );
-              height: var(--community-list-img-size);
-              offset-distance: calc(var(--offset-distance) - 1%);
               // necessary because Firefox seems to have a bug where the links aren't
               // clickable until we force some kind of re-render which an animation does:
               animation: community-circle 1s forwards;
+              height: var(--community-list-img-size);
+              offset-distance: calc(var(--offset-distance) - 1%);
               // matches first svg defined in --community-circle-bg:
               offset-path: ellipse(100% 50% at right center);
               offset-rotate: 0deg;
