@@ -33,24 +33,25 @@ worldwide.
 - [Join us](/en-US/docs/MDN/Community/Contributing/Getting_started)
 - [View all contributors](https://github.com/mdn/content/graphs/contributors)
 
-<!--  -->
+<contributor-list>
 
-- ![GitHub profile picture](https://avatars.githubusercontent.com/JasonLamv-t?size=160)
-  [Jason Lam, 林家祥](https://github.com/JasonLamv-t) Grantit
-- ![GitHub profile picture](https://avatars.githubusercontent.com/nicolo-ribaudo?size=160)
-  [Nicolò Ribaudo](https://github.com/nicolo-ribaudo) Igalia
-- ![GitHub profile picture](https://avatars.githubusercontent.com/Josh-Cena?size=160)
-  [Joshua Chen](https://github.com/Josh-Cena)
-- ![GitHub profile picture](https://avatars.githubusercontent.com/c17an?size=160)
-  [Kimchanmin](https://github.com/c17an) SK Planet
-- ![GitHub profile picture](https://avatars.githubusercontent.com/givvemee?size=160)
-  [Gibbeum Yoon](https://github.com/givvemee)
-- ![GitHub profile picture](https://avatars.githubusercontent.com/wisedog?size=160)
-  [Jongha Kim](https://github.com/wisedog)
-- ![GitHub profile picture](https://avatars.githubusercontent.com/PassionPenguin?size=160)
-  [Qizhe ZHANG](https://github.com/PassionPenguin)
-- ![GitHub profile picture](https://avatars.githubusercontent.com/saionaro?size=160)
-  [Artem Shibakov](https://github.com/saionaro) Bright Data
+- Jason Lam, 林家祥 https://github.com/JasonLamv-t Grantit
+- Nicolò Ribaudo https://github.com/nicolo-ribaudo Igalia
+- Joshua Chen https://github.com/Josh-Cena
+- Kimchanmin https://github.com/c17an SK Planet
+- Gibbeum Yoon https://github.com/givvemee
+- Jongha Kim https://github.com/wisedog
+- Qizhe ZHANG https://github.com/PassionPenguin
+- Artem Shibakov https://github.com/saionaro Bright Data
+- HoChan Lee https://github.com/hochan222 11STREET
+- Sangchul Lee https://github.com/1ilsang WoowaBros
+- Park Sunhee https://github.com/sunhpark42 WoowaBros
+- FU CHUNHUI https://github.com/fuchunhui Baidu
+- Estelle Weyl https://github.com/estelle Open Web Docs
+- Yitao Yin https://github.com/yin1999 Northwestern Polytechnical University
+- Florian Scholz https://github.com/Elchi3 Open Web Docs
+
+</contributor-list>
 
 ## Contributor spotlight
 

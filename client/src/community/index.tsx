@@ -1,6 +1,6 @@
 import "./index.scss";
 import { HydrationData } from "../../../libs/types/hydration";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Section } from "../../../libs/types/document";
 import useSWR, { SWRConfig } from "swr";
 import { HTTPError } from "../document";
@@ -16,6 +16,11 @@ interface CommunityDoc {
 
 export function Community(appProps: HydrationData<any, CommunityDoc>) {
   const doc = useCommunityDoc(appProps);
+
+  useEffect(() => {
+    import("./contributor-list");
+  }, []);
+
   return (
     <SWRConfig
       value={{ provider: () => new SWRLocalStorageCache("community") }}
