@@ -1,12 +1,13 @@
 import "./index.scss";
 import { HydrationData } from "../../../libs/types/hydration";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Section } from "../../../libs/types/document";
 import useSWR, { SWRConfig } from "swr";
 import { HTTPError } from "../document";
 import { WRITER_MODE } from "../env";
 import { Prose } from "../document/ingredients/prose";
 import { SWRLocalStorageCache } from "../utils";
+import { useIsServer } from "../hooks";
 
 interface CommunityDoc {
   title: string;
@@ -15,6 +16,11 @@ interface CommunityDoc {
 
 export function Community(appProps: HydrationData<any, CommunityDoc>) {
   const doc = useCommunityDoc(appProps);
+
+  useEffect(() => {
+    import("./contributor-list");
+  }, []);
+
   return (
     <SWRConfig
       value={{ provider: () => new SWRLocalStorageCache("community") }}
@@ -112,9 +118,11 @@ function Issues({ section }: { section: any }) {
     () => ({ __html: section.value?.content }),
     [section.value?.content]
   );
+  const isServer = useIsServer();
   const LABELS = ["good first issue", "accepting PR"];
   const { data } = useSWR(
-    `is:open is:issue repo:mdn/content repo:mdn/translated-content repo:mdn/yari label:"good first issue","accepting PR" sort:created-desc no:assignee is:public`,
+    !isServer &&
+      `is:open is:issue repo:mdn/content repo:mdn/translated-content repo:mdn/yari label:"good first issue","accepting PR" sort:created-desc no:assignee is:public`,
     async (query) => {
       const url = new URL("https://api.github.com/search/issues");
       url.searchParams.append("per_page", "5");

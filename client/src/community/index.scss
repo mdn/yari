@@ -303,87 +303,98 @@ main.community-container {
       grid-template-rows: auto auto auto var(--community-circle-height);
       margin-top: var(--community-section-gap);
 
-      .section-content {
-        display: contents;
-      }
-
       h2,
       .section-content > * {
         grid-column: 2;
       }
 
-      ul:first-of-type {
-        // contributor buttons
+      .section-content {
+        display: contents;
 
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-top: 1.5rem;
+        > ul {
+          // contributor buttons
 
-        @media (max-width: $screen-md) {
-          justify-content: center;
-        }
-
-        a {
-          background-color: var(--button-bg);
-          border: 1px solid var(--button-border-color);
-          border-radius: var(--button-radius);
-          color: var(--button-color);
-          display: inline-block;
-          font: var(--button-font);
-          letter-spacing: normal;
-          padding: var(--button-padding);
-          text-decoration: none;
-        }
-
-        li:last-child a {
-          --button-color: var(--button-bg);
-          background: transparent;
-        }
-      }
-
-      ul:last-of-type {
-        // contributor list
-
-        --community-list-img-size: 3.75rem;
-        --community-list-width: 10rem;
-        align-content: start;
-        display: grid;
-        gap: 2rem 1rem;
-        grid-column: 1;
-        grid-row: 1/5;
-        grid-template-columns: repeat(
-          auto-fit,
-          minmax(var(--community-list-width), 1fr)
-        );
-        justify-items: center;
-        min-width: 0;
-
-        @media (max-width: $screen-md) {
           display: flex;
-          margin-top: 2rem;
-          overflow-x: auto;
+          flex-wrap: wrap;
+          gap: 1rem;
+          margin-top: 1.5rem;
+
+          @media (max-width: $screen-md) {
+            justify-content: center;
+          }
+
+          a {
+            background-color: var(--button-bg);
+            border: 1px solid var(--button-border-color);
+            border-radius: var(--button-radius);
+            color: var(--button-color);
+            display: inline-block;
+            font: var(--button-font);
+            letter-spacing: normal;
+            padding: var(--button-padding);
+            text-decoration: none;
+          }
+
+          li:last-child a {
+            --button-color: var(--button-bg);
+            background: transparent;
+          }
         }
 
-        li {
-          align-items: center;
-          color: var(--community-text-primary);
-          display: flex;
-          flex-direction: column;
-          flex-shrink: 0;
-          text-align: center;
-          width: var(--community-list-width);
-        }
+        > contributor-list {
+          --community-list-img-size: 3.75rem;
+          --community-list-width: 10rem;
+          grid-column: 1;
+          grid-row: 1/5;
+          min-width: 0;
 
-        img {
-          border: 6px var(--community-circle-img-border) solid;
-          border-radius: 50%;
-          height: var(--community-list-img-size);
-          width: var(--community-list-img-size);
-        }
+          > * {
+            display: none;
+          }
 
-        a {
-          font-weight: 500;
+          ul.rendered {
+            align-content: start;
+            display: grid;
+            gap: 2rem 1rem;
+            grid-template-columns: repeat(
+              auto-fit,
+              minmax(var(--community-list-width), 1fr)
+            );
+            justify-items: center;
+
+            @media (max-width: $screen-md) {
+              display: flex;
+              margin-top: 2rem;
+              overflow-x: auto;
+            }
+
+            li,
+            a {
+              align-items: center;
+              display: flex;
+              flex-direction: column;
+              flex-shrink: 0;
+              text-align: center;
+            }
+
+            li {
+              color: var(--community-text-primary);
+              width: var(--community-list-width);
+            }
+
+            img {
+              background: var(--community-circle-img-border);
+              border: 6px var(--community-circle-img-border) solid;
+              border-radius: 50%;
+              flex-shrink: 0;
+              height: var(--community-list-img-size);
+              width: var(--community-list-img-size);
+            }
+
+            a {
+              font-weight: 500;
+            }
+          }
         }
       }
     }
@@ -391,9 +402,7 @@ main.community-container {
     @supports (offset-path: ellipse(100% 50% at right center)) {
       @media (min-width: $screen-xxl) {
         &[aria-labelledby="meet_our_contributors"] {
-          ul:last-of-type {
-            // contributor semi-circle
-
+          contributor-list ul.rendered {
             background-image: var(--community-circle-bg);
             display: block;
             height: var(--community-circle-height);
@@ -402,11 +411,23 @@ main.community-container {
             position: relative;
 
             li {
+              --offset-distance: calc(
+                var(--community-circle-angle) * 50% + 25%
+              );
+              // necessary because Firefox seems to have a bug where the links aren't
+              // clickable until we force some kind of re-render which an animation does:
+              animation: community-circle 1s forwards;
               height: var(--community-list-img-size);
-              offset-distance: calc(var(--community-circle-angle) * 50% + 25%);
-              // matches first svg defined in --community-circle-bg
+              offset-distance: calc(var(--offset-distance) - 1%);
+              // matches first svg defined in --community-circle-bg:
               offset-path: ellipse(100% 50% at right center);
               offset-rotate: 0deg;
+
+              @keyframes community-circle {
+                to {
+                  offset-distance: var(--offset-distance);
+                }
+              }
 
               &:nth-child(n + 6) {
                 --community-list-img-size: 5rem;
