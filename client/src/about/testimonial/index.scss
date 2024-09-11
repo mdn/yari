@@ -7,7 +7,7 @@
   padding: 2rem 0;
   width: 100%;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     flex-direction: row;
   }
 
@@ -15,7 +15,7 @@
     height: 50vw;
     padding: 0;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       height: initial;
       width: 48%;
     }
@@ -26,7 +26,7 @@
     max-width: 18rem;
     text-align: center;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       margin: initial;
       text-align: initial;
     }
@@ -34,7 +34,7 @@
     img {
       margin: 0 auto;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         margin: initial;
       }
     }

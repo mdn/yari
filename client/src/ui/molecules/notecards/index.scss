@@ -31,7 +31,7 @@
     mask-repeat: no-repeat;
     mask-size: contain;
     position: absolute;
-    top: 1.5rem;
+    top: 1.35rem;
     width: 1rem;
   }
 
@@ -127,17 +127,24 @@
 
   // extra classes added to fix specificity.
 
-  ul,
-  ol {
-    padding-left: 2rem;
-  }
+  &,
+  .main-page-content &,
+  dd & {
+    ul,
+    ol {
+      padding-left: 1rem;
+    }
 
-  ul,
-  p {
-    padding-bottom: 0.5rem;
+    ul,
+    ol,
+    li,
+    p {
+      margin: 0;
+      padding-bottom: 0.5rem;
 
-    &:last-child {
-      padding-bottom: 0;
+      &:last-child {
+        padding-bottom: 0;
+      }
     }
   }
 

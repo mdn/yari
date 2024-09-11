@@ -10,7 +10,7 @@ import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { Status, usePlacement } from "../../../placement-context";
 import { Payload as PlacementData } from "../../../../../libs/pong/types";
-import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
+import { BANNER_SCRIMBA_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
@@ -30,6 +30,7 @@ interface PlacementRenderArgs {
   style: object;
   version?: number;
   typ: string;
+  heading?: string;
 }
 
 const INTERSECTION_OPTIONS = {
@@ -49,9 +50,33 @@ function viewed(pong?: PlacementData) {
 
 export function SidePlacement() {
   const placementData = usePlacement();
+  const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
+    placementData?.side?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-new-side-background-light", backgroundColor],
+      ["--place-new-side-color-light", textColor],
+      [
+        "--place-new-side-background-dark",
+        backgroundColorDark || backgroundColor,
+      ],
+      ["--place-new-side-color-dark", textColorDark || textColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
 
   return !placementData?.side ? (
     <section className="place side"></section>
+  ) : placementData.side.cta && placementData.side.heading ? (
+    <PlacementInner
+      pong={placementData.side}
+      extraClassNames={["side", "new-side"]}
+      imageWidth={125}
+      imageHeight={125}
+      cta={placementData.side.cta}
+      renderer={RenderNewSideBanner}
+      typ="side"
+      style={css}
+    ></PlacementInner>
   ) : (
     <PlacementInner
       pong={placementData.side}
@@ -69,16 +94,18 @@ function TopPlacementFallbackContent() {
 
   return (
     <p className="fallback-copy">
-      Get real-time assistance with your coding queries. Try{" "}
+      Learn front-end development with high quality, interactive courses from{" "}
       <a
-        href="/en-US/plus/ai-help"
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
         onClick={() => {
-          gleanClick(BANNER_AI_HELP_CLICK);
+          gleanClick(BANNER_SCRIMBA_CLICK);
         }}
       >
-        AI Help
-      </a>{" "}
-      now!
+        Scrimba
+      </a>
+      . Enroll now!
     </p>
   );
 }
@@ -274,7 +301,7 @@ export function PlacementInner({
     };
   }, [isVisible, isIntersecting, sendViewed]);
 
-  const { image, copy, alt, click, version } = pong || {};
+  const { image, copy, alt, click, version, heading } = pong || {};
   return (
     <>
       {!isServer &&
@@ -293,6 +320,7 @@ export function PlacementInner({
           style,
           version,
           typ,
+          heading,
         })}
     </>
   );
@@ -327,7 +355,7 @@ function RenderSideOrTopBanner({
             click
           )}&version=${version}`}
           target="_blank"
-          rel="noreferrer"
+          rel="sponsored noreferrer"
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
@@ -346,7 +374,7 @@ function RenderSideOrTopBanner({
               click
             )}&version=${version}`}
             target="_blank"
-            rel="noreferrer"
+            rel="sponsored noreferrer"
           >
             {cta}
           </a>
@@ -405,7 +433,7 @@ function RenderHpPlacement({
           click
         )}&version=${version}`}
         target="_blank"
-        rel="noreferrer"
+        rel="sponsored noreferrer"
       >
         <img
           src={`/pimg/${encodeURIComponent(image || "")}`}
@@ -445,7 +473,7 @@ function RenderBottomBanner({
             click
           )}&version=${version}`}
           target="_blank"
-          rel="noreferrer"
+          rel="sponsored noreferrer"
         >
           <img
             src={`/pimg/${encodeURIComponent(image || "")}`}
@@ -478,5 +506,74 @@ function RenderBottomBanner({
         </a>
       </section>
     </div>
+  );
+}
+
+function RenderNewSideBanner({
+  place,
+  extraClassNames = [],
+  click,
+  image,
+  alt,
+  imageWidth,
+  imageHeight,
+  copy,
+  cta,
+  user,
+  style,
+  version = 1,
+  typ,
+  heading,
+}: PlacementRenderArgs) {
+  return (
+    <section ref={place} className={["place", ...extraClassNames].join(" ")}>
+      <div className="pong-box2" style={style}>
+        <a
+          className="pong"
+          data-glean={`pong: pong->click ${typ}`}
+          href={`/pong/click?code=${encodeURIComponent(
+            click
+          )}&version=${version}`}
+          target="_blank"
+          rel="sponsored noreferrer"
+        >
+          <img
+            src={`/pimg/${encodeURIComponent(image || "")}`}
+            aria-hidden={!Boolean(alt)}
+            alt={alt || ""}
+            width={imageWidth}
+            height={imageHeight}
+          ></img>
+          <div className="content">
+            <strong>{heading}</strong>
+            <span>{copy}</span>
+            {cta && <span className="pong-cta external">{cta}</span>}
+          </div>
+        </a>
+        <a
+          href="/en-US/advertising"
+          className="pong-note"
+          data-glean="pong: pong->about"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Ad
+        </a>
+      </div>
+
+      <a
+        className="no-pong"
+        data-glean={
+          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+        }
+        href={
+          user?.isSubscriber
+            ? "/en-US/plus/settings?ref=nope"
+            : "/en-US/plus?ref=nope#subscribe"
+        }
+      >
+        Don't want to see ads?
+      </a>
+    </section>
   );
 }

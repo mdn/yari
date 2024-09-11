@@ -54,7 +54,7 @@
           margin-top: -0.125rem;
         }
 
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           li > div > button {
             .button-wrap {
               --button-color: var(--text-secondary);

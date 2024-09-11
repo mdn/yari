@@ -106,8 +106,8 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Add-ons"]%></summary>
             <ol>
-              <li><%-web.smartLink(`${addonsURL}WebExtensions`, null, text["Browser_extensions"])%></li>
-              <li><%-web.smartLink(`${addonsURL}Themes`, null, text["Themes"])%></li>
+              <li><%-web.smartLink(`${baseURL}Add-ons/WebExtensions`, null, text["Browser_extensions"])%></li>
+              <li><a href="https://extensionworkshop.com/documentation/themes/"><%=text["Themes"]%></a></li>
             </ol>
         </details>
     </li>

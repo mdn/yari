@@ -8,7 +8,7 @@ import * as cheerio from "cheerio";
 import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
-import imageminPngquantPkg from "imagemin-pngquant";
+import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
@@ -21,8 +21,6 @@ import {
 } from "../libs/constants/index.js";
 import { FileAttachment } from "../content/index.js";
 import { BLOG_ROOT } from "../libs/env/index.js";
-
-const { default: imageminPngquant } = imageminPngquantPkg;
 
 export function escapeRegExp(str: string) {
   return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
@@ -112,10 +110,6 @@ export async function downloadAndResizeImage(
       // has to be escaped when working on the command line.
       .replace(/[()]/g, "")
       .replace(/\s+/g, "_")
-      // From legacy we have a lot of images that are named like
-      // `/@api/deki/files/247/=HTMLBlinkElement.gif` for example.
-      // Take this opportunity to clean that odd looking leading `=`.
-      .replace(/^=/, "")
       .toLowerCase()
   );
   // Before writing to disk, run it through the same imagemin
@@ -152,40 +146,6 @@ export function getImageminPlugin(fileName: string) {
     return imageminSvgo();
   }
   throw new Error(`No imagemin plugin for ${extension}`);
-}
-
-export function splitSections(rawHTML) {
-  const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
-  const blocks = [];
-  const toc = [];
-
-  const section = cheerio
-    .load("<div></div>", { decodeEntities: false })("div")
-    .eq(0);
-
-  const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
-  let c = 0;
-  iterable.forEach((child) => {
-    if ("tagName" in child && child.tagName === "h2") {
-      if (c) {
-        blocks.push(section.clone());
-        section.empty();
-        c = 0;
-      }
-      const text = $(child).text();
-      const id = text.replace(/[ .,!?]+/g, "-").toLowerCase();
-      toc.push({ id, text });
-      child.attribs = { ...(child.attribs || {}), id };
-    }
-    c++;
-    section.append(child);
-  });
-  if (c) {
-    blocks.push(section.clone());
-  }
-
-  const sections = blocks.map((block) => block.html().trim());
-  return { sections, toc };
 }
 
 /**
@@ -390,4 +350,16 @@ export async function importJSON<T>(jsonPath: string): Promise<T> {
   const json = await readFile(jsonPath, "utf-8");
 
   return JSON.parse(json);
+}
+
+export function* chunks<T>(array: T[], size: number): Generator<T[]> {
+  for (let i = 0; i < array.length; i += size) {
+    yield array.slice(i, i + size);
+  }
+}
+
+export function formatDuration(seconds: number) {
+  return seconds > 60
+    ? `${(seconds / 60).toFixed(1)} minutes`
+    : `${seconds.toFixed(1)} seconds`;
 }

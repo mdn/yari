@@ -43,8 +43,7 @@ import {
   postProcessExternalLinks,
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
-import { getWebFeatureStatus } from "./web-features.js";
-import { rewritePageTitleForSEO } from "./seo.js";
+import { addBaseline } from "./web-features.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -68,7 +67,10 @@ function getCurrentGitBranch(root: string) {
     // Only bother getting fancy if the root is CONTENT_ROOT.
     // For other possible roots, just leave it to the default.
     if (root === CONTENT_ROOT) {
-      if (process.env.GITHUB_REF) {
+      if (
+        process.env.GITHUB_REF &&
+        process.env.GITHUB_REPOSITORY !== "mdn/yari"
+      ) {
         name = process.env.GITHUB_REF.split("/").slice(2).join("/");
       } else {
         // Most probably, you're hacking on the content, using Yari to preview,
@@ -374,7 +376,7 @@ export async function buildDocument(
 
   doc.title = metadata.title || "";
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale as string;
+  doc.locale = metadata.locale;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
 
   // metadata doesn't have a browser-compat key on translated docs:
@@ -527,6 +529,8 @@ export async function buildDocument(
 
   doc.other_translations = document.translations || [];
 
+  doc.pageType = metadata["page-type"] || "unknown";
+
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {
@@ -537,8 +541,7 @@ export async function buildDocument(
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
-  const pageTitle = getPageTitle(doc);
-  doc.pageTitle = rewritePageTitleForSEO(doc.mdn_url, pageTitle);
+  doc.pageTitle = getPageTitle(doc);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
@@ -547,50 +550,6 @@ export async function buildDocument(
     document.metadata.slug.startsWith("conflicting/");
 
   return { doc: doc as Doc, liveSamples, fileAttachmentMap, plainHTML };
-}
-
-function addBaseline(doc: Partial<Doc>) {
-  if (doc.browserCompat) {
-    const filteredBrowserCompat = doc.browserCompat.filter(
-      (query) =>
-        // temporary blocklist while we wait for per-key baseline statuses
-        // or another solution to the baseline/bcd table discrepancy problem
-        ![
-          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/async-clipboard.yml
-          "api.Clipboard.read",
-          "api.Clipboard.readText",
-          "api.Clipboard.write",
-          "api.Clipboard.writeText",
-          "api.ClipboardEvent",
-          "api.ClipboardEvent.ClipboardEvent",
-          "api.ClipboardEvent.clipboardData",
-          "api.ClipboardItem",
-          "api.ClipboardItem.ClipboardItem",
-          "api.ClipboardItem.getType",
-          "api.ClipboardItem.presentationStyle",
-          "api.ClipboardItem.types",
-          "api.Navigator.clipboard",
-          "api.Permissions.permission_clipboard-read",
-          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/custom-elements.yml
-          "api.CustomElementRegistry",
-          "api.CustomElementRegistry.builtin_element_support",
-          "api.CustomElementRegistry.define",
-          "api.Window.customElements",
-          "css.selectors.defined",
-          "css.selectors.host",
-          "css.selectors.host-context",
-          "css.selectors.part",
-          // https://github.com/web-platform-dx/web-features/blob/cf718ad/feature-group-definitions/input-event.yml
-          "api.Element.input_event",
-          "api.InputEvent.InputEvent",
-          "api.InputEvent.data",
-          "api.InputEvent.dataTransfer",
-          "api.InputEvent.getTargetRanges",
-          "api.InputEvent.inputType",
-        ].includes(query)
-    );
-    return getWebFeatureStatus(...filteredBrowserCompat);
-  }
 }
 
 interface BuiltLiveSamplePage {

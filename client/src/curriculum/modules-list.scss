@@ -23,7 +23,7 @@
       margin: 0;
       padding: 0;
 
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         grid-template-areas:
           "started core  extensions spacer"
           "hr      hr    hr         hr"
@@ -62,8 +62,12 @@
           outline-style: auto;
         }
 
+        > input:not(:checked) + label {
+          color: var(--text-secondary);
+          opacity: 0.775;
+        }
+
         > label {
-          color: var(--text-inactive);
           cursor: pointer;
           width: max-content;
         }
@@ -84,7 +88,7 @@
           > input {
             grid-area: core;
 
-            @media screen and (min-width: $screen-sm) {
+            @media (min-width: $screen-sm) {
               margin-left: 2rem;
             }
           }
@@ -99,7 +103,7 @@
           > input {
             grid-area: extensions;
 
-            @media screen and (min-width: $screen-sm) {
+            @media (min-width: $screen-sm) {
               margin-left: 2rem;
             }
           }
@@ -120,7 +124,7 @@
           margin-top: 2rem;
           width: fit-content;
 
-          @media screen and (min-width: $screen-md) {
+          @media (min-width: $screen-md) {
             margin-left: 0;
           }
         }
@@ -137,7 +141,7 @@
       padding: 0.5rem;
       scroll-snap-type: inline mandatory;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         overflow: inherit;
         padding: 0;
       }
@@ -153,7 +157,7 @@
 
         > a {
           background-color: var(--curriculum-bg-color-list-item-body);
-          border: 1px solid var(--curriculum-border-color-list-item);
+          border: 1px solid var(--curriculum-border-color);
           border-radius: var(--elem-radius);
           box-shadow: var(--curriculum-shadow);
           display: flex;
@@ -168,11 +172,11 @@
           width: 100%;
 
           &:hover {
-            border-color: var(--curriculum-border-color-list-item-hover);
+            border-color: var(--curriculum-border-color-hover);
             text-decoration: none;
           }
 
-          @media screen and (min-width: $screen-md) {
+          @media (min-width: $screen-md) {
             min-width: initial;
           }
 
@@ -230,11 +234,11 @@
         }
       }
 
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         grid-template-columns: 1fr 1fr;
       }
 
-      @media screen and (min-width: $screen-xxl) {
+      @media (min-width: $screen-xxl) {
         grid-template-columns: 1fr 1fr 1fr;
       }
     }

@@ -62,8 +62,12 @@
           parent.innerHTML = html;
         } else {
           for (const child of dummy.childNodes) {
-            if (child.nodeType == Node.TEXT_NODE) {
+            if (child.nodeType === Node.TEXT_NODE) {
               parent.appendChild(document.createTextNode(child.textContent));
+              continue;
+            }
+            if (child.nodeType === Node.COMMENT_NODE) {
+              parent.appendChild(document.createComment(child.data));
               continue;
             }
             if (child.nodeType !== Node.ELEMENT_NODE) {
@@ -104,7 +108,7 @@
       }
 
       let initialized = false;
-      function init(state) {
+      async function init(state) {
         if (initialized) {
           return;
         }
@@ -116,6 +120,13 @@
 
         document.body.innerHTML = "";
         setHTML(document.body, state.html);
+
+        for (const script of document.querySelectorAll("script[src]")) {
+          await new Promise((resolve) => {
+            script.addEventListener("load", resolve);
+            script.addEventListener("error", resolve);
+          });
+        }
 
         const script = document.createElement("script");
         script.textContent = state.js;
@@ -129,10 +140,10 @@
 
         initialized = true;
       }
-      window.addEventListener("message", (event) => {
+      window.addEventListener("message", async (event) => {
         const e = event.data;
         if (e.typ === "init") {
-          init(e.state);
+          await init(e.state);
         }
         if (e.typ === "reload") {
           window.location.reload();

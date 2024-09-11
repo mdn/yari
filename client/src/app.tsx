@@ -42,6 +42,7 @@ const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 const Playground = React.lazy(() => import("./playground"));
+const Observatory = React.lazy(() => import("./observatory"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
@@ -62,7 +63,7 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && pageType !== "curriculum" && (
+        {!["document-page", "curriculum", "observatory"].includes(pageType) && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
           </div>
@@ -87,6 +88,7 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 function LazyStandardLayout(props: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
@@ -101,14 +103,18 @@ function LazyStandardLayout(props: {
 }
 
 function StandardLayout({
+  pageType,
   extraClasses,
   children,
 }: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
+    <Layout pageType={pageType || `standard-page ${extraClasses || ""}`}>
+      {children}
+    </Layout>
   );
 }
 function DocumentLayout({ children }) {
@@ -263,6 +269,14 @@ export function App(appProps: HydrationData) {
               element={
                 <LazyStandardLayout>
                   <Playground />
+                </LazyStandardLayout>
+              }
+            />
+            <Route
+              path="observatory/*"
+              element={
+                <LazyStandardLayout pageType="observatory">
+                  <Observatory {...appProps} />
                 </LazyStandardLayout>
               }
             />

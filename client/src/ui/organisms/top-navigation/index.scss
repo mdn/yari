@@ -13,7 +13,7 @@
     flex-flow: row wrap;
     gap: var(--gutter);
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       background-color: transparent;
     }
   }
@@ -40,7 +40,7 @@
   }
 }
 
-@media screen and (min-width: $screen-lg) {
+@media (min-width: $screen-lg) {
   .main-menu-toggle {
     display: none;
   }

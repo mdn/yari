@@ -234,6 +234,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("https://developer.mozilla.org/") &&
       !href.startsWith("https://developer.mozilla.org/en-US/curriculum/") &&
+      !href.startsWith("https://developer.mozilla.org/en-US/observatory") &&
       !href.startsWith("https://developer.mozilla.org/en-US/blog/")
     ) {
       // It might be a working 200 OK link but the link just shouldn't
@@ -285,7 +286,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("/") &&
       !href.startsWith("//") &&
-      !/^\/(discord|en-US\/(blog|curriculum))(\/|$)/.test(href)
+      !/^\/(discord|en-US\/(blog|curriculum|observatory))(\/|$)/.test(href)
     ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");

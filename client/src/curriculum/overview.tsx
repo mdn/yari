@@ -8,11 +8,14 @@ import { CurriculumLayout } from "./layout";
 
 import "./index.scss";
 
-export function CurriculumModuleOverview(
-  props: HydrationData<any, CurriculumDoc>
-) {
+export function CurriculumOverview(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props as CurriculumData);
-  const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
+  // ["Getting", "started", "modules"]
+  const titleParts = doc?.title?.split(" ") || [];
+  // "Getting started"
+  const coloredTitle = titleParts.slice(0, -1).join(" ");
+  // "modules"
+  const restTitle = titleParts.at(-1);
   return (
     <CurriculumLayout
       doc={doc}
@@ -20,7 +23,7 @@ export function CurriculumModuleOverview(
     >
       <header>
         <h1>
-          <span>{coloredTitle}</span> {restTitle.join(" ")}
+          <span>{coloredTitle}</span> {restTitle}
         </h1>
       </header>
       <RenderCurriculumBody doc={doc} />

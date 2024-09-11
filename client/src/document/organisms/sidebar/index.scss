@@ -16,20 +16,20 @@
 
   em {
     background-color: var(--background-toc-active);
+    border-bottom-right-radius: 0.25rem;
     border-left: 2px solid var(--category-color);
+    border-top-right-radius: 0.25rem;
     display: inline-block;
     font-style: normal;
     font-variation-settings: normal;
     font-weight: 600;
     hyphens: auto;
-    padding: 0.25rem;
-    padding-left: 0.5rem;
-    width: 100%;
+    padding: 0.25rem 0.5rem;
   }
 
   a {
     color: var(--text-secondary);
-    display: inline-flex;
+    display: inline-block;
     hyphens: auto;
     padding: 0.25rem;
 
@@ -63,17 +63,15 @@
       padding-left: 0.5rem;
     }
 
-    ol {
-      li {
-        .icon {
-          margin-right: 0.01em;
-        }
+    li {
+      .icon {
+        margin-right: 0.01em;
+      }
 
-        &.no-bullet {
-          display: block;
-          font-weight: var(--font-body-strong-weight);
-          list-style-type: none;
-        }
+      &.no-bullet {
+        display: block;
+        font-weight: var(--font-body-strong-weight);
+        list-style-type: none;
       }
     }
   }
@@ -89,7 +87,7 @@
       margin-top: 0.5rem;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media (max-width: $screen-md) {
       height: unset;
       margin-top: unset;
       padding-bottom: unset;
@@ -159,7 +157,7 @@
   }
 
   // apply drawer styles only to the sizes that need them.
-  @media screen and (max-width: #{$screen-md - 1}) {
+  @media (max-width: #{$screen-md - 1}) {
     height: 100vh;
     left: 0;
     max-height: 100vh;
@@ -194,7 +192,7 @@
         padding-bottom: 3rem;
       }
 
-      @media screen and (min-height: $screen-height-place-limit) {
+      @media (min-height: $screen-height-place-limit) {
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -247,20 +245,20 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     .place {
       display: none;
     }
   }
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: flex;
+    position: relative;
   }
-  @media screen and (min-width: $screen-lg),
-    screen and (min-height: $screen-height-place-limit) {
+  @media (min-width: $screen-lg), (min-height: $screen-height-place-limit) {
     display: block;
     overflow: auto;
   }
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     max-height: var(--max-height);
     position: sticky;
     top: var(--offset);

@@ -19,7 +19,7 @@
     grid-auto-flow: row;
     max-width: 52rem;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -65,16 +65,16 @@
     }
 
     p {
+      font: var(--type-smaller-font-size);
+      line-height: var(--base-line-height);
+      margin: 0;
       @include line-clamp(
         3,
         var(--base-line-height),
         var(--background-primary)
       );
-      font: var(--type-smaller-font-size);
-      line-height: var(--base-line-height);
-      margin: 0;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         min-height: calc(3em * var(--base-line-height));
       }
     }

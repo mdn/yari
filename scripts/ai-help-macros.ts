@@ -22,7 +22,7 @@ import {
 } from "@mdn/browser-compat-data/types";
 import { h2mSync } from "../markdown/index.js";
 
-const EMBEDDING_MODEL = "text-embedding-ada-002";
+const EMBEDDING_MODEL = "text-embedding-3-small";
 const EMBEDDING_MODEL_NEXT = "text-embedding-3-small";
 
 const { program } = caporal;
@@ -214,7 +214,7 @@ export async function updateEmbeddings(
         const [{ total_tokens, embedding }, embedding_next] = await Promise.all(
           [
             createEmbedding(text, EMBEDDING_MODEL),
-            EMBEDDING_MODEL_NEXT
+            EMBEDDING_MODEL_NEXT && EMBEDDING_MODEL_NEXT !== EMBEDDING_MODEL
               ? createEmbedding(text, EMBEDDING_MODEL_NEXT).then(
                   ({ embedding }) => embedding
                 )
@@ -257,7 +257,7 @@ export async function updateEmbeddings(
             markdown_hash,
             total_tokens,
             pgvector.toSql(embedding),
-            embedding_next ? pgvector.toSql(embedding_next) : null,
+            pgvector.toSql(embedding_next ?? embedding),
             text_hash,
           ],
           rowMode: "array",
