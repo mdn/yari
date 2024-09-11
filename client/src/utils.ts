@@ -148,12 +148,16 @@ export class SWRLocalStorageCache<Data> {
 
   constructor(key: string) {
     this.#key = `cache.${key}`;
-    const serialized = localStorage.getItem(this.#key);
     try {
+      const serialized = localStorage.getItem(this.#key);
       this.#data = new Map(JSON.parse(serialized || "[]"));
     } catch {
-      console.warn(`Can't read data from ${this.#key}, resetting the cache`);
       this.#data = new Map();
+      if (typeof localStorage === "undefined") {
+        // we're on the server
+        return;
+      }
+      console.warn(`Can't read data from ${this.#key}, resetting the cache`);
       this.#writeToLocalStorage();
     }
   }
