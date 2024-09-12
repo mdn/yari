@@ -178,7 +178,8 @@ jobs:
 
           #yarn tool sync-translated-content
 
-          rari popularities
+          #rari popularities
+          cp popularities.json $CONTENT_ROOT/en-us/
           rari build
 
           # Generate sitemap index file
