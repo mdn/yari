@@ -7,11 +7,31 @@
 }
 
 .language-menu {
+  li {
+    &:not(:first-child) {
+      padding-top: 1px;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 1px;
+    }
+  }
+
   .submenu-item {
-    padding: 0.5rem;
+    padding: 0.5rem !important;
   }
 
   @media (min-width: $screen-md) {
     right: 0;
+  }
+
+  .locale-redirect-setting {
+    border-bottom: 1px solid var(--border-secondary);
+    font-size: var(--type-tiny-font-size);
+    padding: 0.25em 0.5em;
+
+    .glean-thumbs {
+      margin-top: 0.25em;
+    }
   }
 }

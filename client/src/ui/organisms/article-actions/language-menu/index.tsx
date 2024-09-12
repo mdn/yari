@@ -10,9 +10,17 @@ import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
 import { LANGUAGE } from "../../../../telemetry/constants";
+import {
+  deleteCookie,
+  getCookieValue,
+  setCookieValue,
+} from "../../../../utils";
+import { GleanThumbs } from "../../../atoms/thumbs";
+import { Switch } from "../../../atoms/switch";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+const REDIRECT_LOCALE_COOKIE_NAME = "redirectlocale";
 
 export function LanguageMenu({
   onClose,
@@ -33,27 +41,13 @@ export function LanguageMenu({
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
     if (preferredLocale !== locale) {
-      let cookieValueBefore = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
-      if (cookieValueBefore && cookieValueBefore.includes("=")) {
-        cookieValueBefore = cookieValueBefore.split("=")[1];
-      }
+      const cookieValueBefore = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
 
       for (const translation of translations) {
         if (translation.locale === preferredLocale) {
-          let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
-            translation.locale
-          };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-          if (
-            !(
-              document.location.hostname === "localhost" ||
-              document.location.hostname === "localhost.org"
-            )
-          ) {
-            cookieValue += ";secure";
-          }
-          document.cookie = cookieValue;
+          setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
+            maxAge: 60 * 60 * 24 * 365 * 3,
+          });
         }
       }
 
@@ -65,15 +59,20 @@ export function LanguageMenu({
   const menuEntry = {
     label: "Languages",
     id: menuId,
-    items: translations.map((translation) => ({
-      component: () => (
-        <LanguageMenuItem
-          native={native}
-          translation={translation}
-          changeLocale={changeLocale}
-        />
-      ),
-    })),
+    items: [
+      {
+        component: () => <LocaleRedirectSetting />,
+      },
+      ...translations.map((translation) => ({
+        component: () => (
+          <LanguageMenuItem
+            native={native}
+            translation={translation}
+            changeLocale={changeLocale}
+          />
+        ),
+      })),
+    ],
   };
 
   return (
@@ -125,5 +124,39 @@ function LanguageMenuItem({
     >
       <span>{translation.native}</span>
     </a>
+  );
+}
+
+function LocaleRedirectSetting() {
+  const TRUE_VALUE = "true";
+  const [value, setValue] = useState(
+    () => getCookieValue(REDIRECT_LOCALE_COOKIE_NAME) === TRUE_VALUE
+  );
+
+  function toggle(event) {
+    const newValue = event.target.checked;
+    if (newValue) {
+      setCookieValue(REDIRECT_LOCALE_COOKIE_NAME, TRUE_VALUE, {
+        maxAge: 60 * 60 * 24 * 365 * 3,
+      });
+    } else {
+      deleteCookie(REDIRECT_LOCALE_COOKIE_NAME);
+    }
+    setValue(event.target.checked);
+  }
+
+  return (
+    <form className="locale-redirect-setting">
+      <label>
+        <Switch name="locale-redirect" checked={value} toggle={toggle}>
+          Automatic redirect
+        </Switch>
+      </label>
+      <GleanThumbs
+        feature="locale-redirect"
+        question="Is this useful?"
+        confirmation="Thanks for your feedback! ❤️"
+      />
+    </form>
   );
 }
