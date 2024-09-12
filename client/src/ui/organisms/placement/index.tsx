@@ -94,7 +94,7 @@ function TopPlacementFallbackContent() {
 
   return Date.now() < Date.parse("2024-10-12") ? (
     <p className="fallback-copy">
-      This month only - learn front-end development with a 30% discount on{" "}
+      Learn front-end development with a 30% discount on{" "}
       <a
         href="https://scrimba.com/learn/frontend?via=mdn"
         target="_blank"
@@ -105,7 +105,7 @@ function TopPlacementFallbackContent() {
       >
         Scrimba
       </a>{" "}
-      exclusively for MDN users.
+      - Limited time offer!
     </p>
   ) : (
     <p className="fallback-copy">
