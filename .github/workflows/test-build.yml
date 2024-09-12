@@ -111,6 +111,7 @@ jobs:
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://test.developer.allizom.org"
+          BUILD_OUT_ROOT: "client/build"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -165,7 +166,7 @@ jobs:
           if [ ! -d $HOME/.bin ]; then mkdir $HOME/.bin; fi
           export PATH=$HOME/.bin:$PATH
 
-          curl -L https://github.com/mdn/rari/releases/latest/download/rari-x86_64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
+          curl -L https://github.com/mdn/rari/releases/download/v0.0.1-pre-8/rari-x86_64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
