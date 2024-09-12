@@ -7,7 +7,7 @@
     height: 0;
     margin: 0;
     opacity: 0;
-    width: 3rem;
+    width: 3em;
 
     &:checked + .slider {
       background-color: var(--text-link);
@@ -45,5 +45,9 @@
       top: 7.5%;
       transition: 0.4s;
     }
+  }
+
+  .label {
+    margin-left: 0.5em;
   }
 }
