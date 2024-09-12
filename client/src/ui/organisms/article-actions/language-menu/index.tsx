@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useGleanClick } from "../../../../telemetry/glean-context";
@@ -129,9 +129,11 @@ function LanguageMenuItem({
 
 function LocaleRedirectSetting() {
   const TRUE_VALUE = "true";
-  const [value, setValue] = useState(
-    () => getCookieValue(REDIRECT_LOCALE_COOKIE_NAME) === TRUE_VALUE
-  );
+  const [value, setValue] = useState(false);
+
+  useEffect(() => {
+    setValue(getCookieValue(REDIRECT_LOCALE_COOKIE_NAME) === TRUE_VALUE);
+  }, [setValue]);
 
   function toggle(event) {
     const newValue = event.target.checked;
