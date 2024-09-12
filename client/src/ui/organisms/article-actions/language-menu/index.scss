@@ -8,7 +8,7 @@
 
 .language-menu {
   .submenu-item {
-    padding: 0.5rem;
+    padding: 0.5rem !important;
   }
 
   @media (min-width: $screen-md) {
@@ -16,8 +16,7 @@
   }
 
   .locale-redirect-setting {
-    border: 1px solid var(--border-secondary);
-    border-radius: 1rem;
+    border-bottom: 1px solid var(--border-secondary);
     font-size: var(--type-tiny-font-size);
     padding: 0.25em 0.5em;
 
