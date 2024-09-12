@@ -9,7 +9,7 @@ import { Submenu } from "../../../molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
-import { LANGUAGE } from "../../../../telemetry/constants";
+import { LANGUAGE, LANGUAGE_REDIRECT } from "../../../../telemetry/constants";
 import {
   deleteCookie,
   getCookieValue,
@@ -129,6 +129,7 @@ function LanguageMenuItem({
 
 function LocaleRedirectSetting() {
   const TRUE_VALUE = "true";
+  const gleanClick = useGleanClick();
   const locale = useLocale();
   const [value, setValue] = useState(false);
 
@@ -151,6 +152,7 @@ function LocaleRedirectSetting() {
       deleteCookie(REDIRECT_LOCALE_COOKIE_NAME);
     }
     setValue(event.target.checked);
+    gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
   }
 
   return (
