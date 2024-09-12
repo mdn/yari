@@ -155,7 +155,7 @@ function LocaleRedirectSetting() {
       <GleanThumbs
         feature="locale-redirect"
         question="Is this useful?"
-        confirmation="Thanks! ❤️"
+        confirmation="Thanks for your feedback! ❤️"
       />
     </form>
   );
