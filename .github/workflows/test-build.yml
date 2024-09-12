@@ -111,7 +111,12 @@ jobs:
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://test.developer.allizom.org"
+
+          # rari
           BUILD_OUT_ROOT: "client/build"
+          GENERIC_PAGES_ROOT: "copy"
+          LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
+          INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -166,7 +171,7 @@ jobs:
           if [ ! -d $HOME/.bin ]; then mkdir $HOME/.bin; fi
           export PATH=$HOME/.bin:$PATH
 
-          curl -L https://github.com/mdn/rari/releases/download/v0.0.1-pre-9/rari-x86_64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
+          curl -L https://github.com/mdn/rari/releases/download/v0.0.1-pre-10/rari-x86_64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -178,8 +183,7 @@ jobs:
 
           #yarn tool sync-translated-content
 
-          #rari popularities
-          cp popularities.json $CONTENT_ROOT/en-us/
+          rari popularities
           rari build
 
           # Generate sitemap index file
