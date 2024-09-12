@@ -7,6 +7,16 @@
 }
 
 .language-menu {
+  li {
+    &:not(:first-child) {
+      padding-top: 1px;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 1px;
+    }
+  }
+
   .submenu-item {
     padding: 0.5rem !important;
   }
