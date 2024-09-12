@@ -7,11 +7,12 @@ export async function redirectPreferredLocale(
   res: Response,
   next: NextFunction
 ) {
-  // Check 1: Does the user prefer a locale?
+  // Check 1: Does the user prefer a locale and has redirect enabled?
 
   const preferredLocale = req.cookies["preferredlocale"];
+  const redirectLocale = req.cookies["redirectLocale"];
 
-  if (!preferredLocale) {
+  if (!preferredLocale || !redirectLocale) {
     next();
     return;
   }

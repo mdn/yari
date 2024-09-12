@@ -152,10 +152,15 @@ export function getCookieValue(name: string) {
 export function setCookieValue(
   name: string,
   value: string,
-  { maxAge, path = "/" }: { maxAge: number; path?: string }
+  {
+    expires,
+    maxAge,
+    path = "/",
+  }: { expires?: Date; maxAge?: number; path?: string }
 ) {
   const cookieValue = [
     `${name}=${value}`,
+    expires && `expires=${expires.toUTCString()}`,
     maxAge && `max-age=${maxAge}`,
     `path=${path}`,
     document.location.hostname !== "localhost" && "secure",
@@ -164,4 +169,8 @@ export function setCookieValue(
     .join(";");
 
   document.cookie = cookieValue;
+}
+
+export function deleteCookie(name: string) {
+  setCookieValue(name, "", { expires: new Date(0) });
 }

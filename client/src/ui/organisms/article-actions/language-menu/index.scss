@@ -14,4 +14,15 @@
   @media (min-width: $screen-md) {
     right: 0;
   }
+
+  .locale-redirect-setting {
+    border: 1px solid var(--border-secondary);
+    border-radius: 1rem;
+    font-size: var(--type-tiny-font-size);
+    padding: 0.25em 0.5em;
+
+    .glean-thumbs {
+      margin-top: 0.25em;
+    }
+  }
 }
