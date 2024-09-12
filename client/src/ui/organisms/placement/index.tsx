@@ -10,7 +10,7 @@ import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { Status, usePlacement } from "../../../placement-context";
 import { Payload as PlacementData } from "../../../../../libs/pong/types";
-import { BANNER_AI_HELP_CLICK } from "../../../telemetry/constants";
+import { BANNER_SCRIMBA_CLICK } from "../../../telemetry/constants";
 
 interface Timer {
   timeout: number | null;
@@ -50,6 +50,19 @@ function viewed(pong?: PlacementData) {
 
 export function SidePlacement() {
   const placementData = usePlacement();
+  const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
+    placementData?.side?.colors || {};
+  const css = Object.fromEntries(
+    [
+      ["--place-new-side-background-light", backgroundColor],
+      ["--place-new-side-color-light", textColor],
+      [
+        "--place-new-side-background-dark",
+        backgroundColorDark || backgroundColor,
+      ],
+      ["--place-new-side-color-dark", textColorDark || textColor],
+    ].filter(([_, v]) => Boolean(v))
+  );
 
   return !placementData?.side ? (
     <section className="place side"></section>
@@ -62,6 +75,7 @@ export function SidePlacement() {
       cta={placementData.side.cta}
       renderer={RenderNewSideBanner}
       typ="side"
+      style={css}
     ></PlacementInner>
   ) : (
     <PlacementInner
@@ -78,18 +92,35 @@ export function SidePlacement() {
 function TopPlacementFallbackContent() {
   const gleanClick = useGleanClick();
 
-  return (
+  return Date.now() < Date.parse("2024-10-12") ? (
     <p className="fallback-copy">
-      Get real-time assistance with your coding queries. Try{" "}
+      Learn front-end development with a 30% discount on{" "}
       <a
-        href="/en-US/plus/ai-help"
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
         onClick={() => {
-          gleanClick(BANNER_AI_HELP_CLICK);
+          gleanClick(BANNER_SCRIMBA_CLICK);
         }}
       >
-        AI Help
+        Scrimba
       </a>{" "}
-      now!
+      &mdash; limited time offer!
+    </p>
+  ) : (
+    <p className="fallback-copy">
+      Learn front-end development with high quality, interactive courses from{" "}
+      <a
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => {
+          gleanClick(BANNER_SCRIMBA_CLICK);
+        }}
+      >
+        Scrimba
+      </a>
+      . Enroll now!
     </p>
   );
 }
@@ -510,12 +541,8 @@ function RenderNewSideBanner({
   heading,
 }: PlacementRenderArgs) {
   return (
-    <section
-      ref={place}
-      className={["place", ...extraClassNames].join(" ")}
-      style={style}
-    >
-      <div className="pong-box2">
+    <section ref={place} className={["place", ...extraClassNames].join(" ")}>
+      <div className="pong-box2" style={style}>
         <a
           className="pong"
           data-glean={`pong: pong->click ${typ}`}

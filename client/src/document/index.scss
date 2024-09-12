@@ -189,12 +189,6 @@
       margin-bottom: 1rem;
       margin-left: 1rem;
 
-      .notecard {
-        p {
-          padding-left: 0;
-        }
-      }
-
       dl {
         /* Nested definition list. */
         border-left: 1px solid var(--border-primary);
@@ -450,6 +444,7 @@ code,
   border-radius: var(--elem-radius);
   font-family: var(--font-code);
   font-size: var(--type-smaller-font-size);
+  tab-size: 4;
 }
 
 code {
@@ -864,15 +859,15 @@ kbd {
   --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
 
-  @media (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
-    display: flex;
-    flex-direction: column;
-  }
-
   max-height: var(--max-height);
   position: sticky;
   top: var(--offset);
   z-index: var(--z-index-sidebar-mobile);
+
+  @media (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
+    display: flex;
+    flex-direction: column;
+  }
 
   @media (min-width: $screen-md) {
     z-index: auto;

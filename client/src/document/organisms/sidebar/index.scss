@@ -63,17 +63,15 @@
       padding-left: 0.5rem;
     }
 
-    ol {
-      li {
-        .icon {
-          margin-right: 0.01em;
-        }
+    li {
+      .icon {
+        margin-right: 0.01em;
+      }
 
-        &.no-bullet {
-          display: block;
-          font-weight: var(--font-body-strong-weight);
-          list-style-type: none;
-        }
+      &.no-bullet {
+        display: block;
+        font-weight: var(--font-body-strong-weight);
+        list-style-type: none;
       }
     }
   }
@@ -254,6 +252,7 @@
   }
   @media (min-width: $screen-md) {
     display: flex;
+    position: relative;
   }
   @media (min-width: $screen-lg), (min-height: $screen-height-place-limit) {
     display: block;

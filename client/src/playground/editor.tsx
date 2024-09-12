@@ -77,7 +77,10 @@ function cmExtensions(colorScheme: string, language: string) {
   ];
 }
 
-const Editor = forwardRef<EditorHandle, any>(function EditorInner(
+const Editor = forwardRef<
+  EditorHandle,
+  { language: string; callback: () => void }
+>(function EditorInner(
   {
     language,
     callback = () => {},

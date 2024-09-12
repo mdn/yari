@@ -103,7 +103,7 @@ export default function ObservatoryResults() {
           </section>
           <div className="sidebar-container">
             <SidebarContainer doc={{}}>
-              {<ObservatoryDocsNav /> || null}
+              <ObservatoryDocsNav />
             </SidebarContainer>
           </div>
           {hasData && !combinedError && (
