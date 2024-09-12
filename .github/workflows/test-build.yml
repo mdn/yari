@@ -44,6 +44,7 @@ jobs:
         with:
           repository: mdn/content
           path: mdn/content
+          ref: rari
           # Yes, this means fetch EVERY COMMIT EVER.
           # It's probably not sustainable in the far future (e.g. past 2021)
           # but for now it's good enough. We'll need all the history
@@ -161,6 +162,10 @@ jobs:
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
         run: |
           set -eo pipefail
+          if [ ! -d $HOME/.bin ]; then mkdir $HOME/.bin; fi
+          export PATH=$HOME/.bin:$PATH
+
+          curl -L https://github.com/mdn/rari/releases/latest/download/rari-x86_64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -172,24 +177,8 @@ jobs:
 
           #yarn tool sync-translated-content
 
-          # Build using one process per locale.
-          # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us fr; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
-            pids+=($!)
-          done
-
-          for pid in "${pids[@]}"; do
-            wait $pid
-          done
-
-          du -sh client/build
-
-          # Build the blog
-          yarn build:blog
-
-          # Build the curriculum
-          yarn build:curriculum
+          rari popularities
+          rari build
 
           # Generate sitemap index file
           yarn build --sitemap-index
