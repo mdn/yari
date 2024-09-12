@@ -10,6 +10,7 @@ import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
 import { LANGUAGE } from "../../../../telemetry/constants";
+import { getCookieValue, setCookieValue } from "../../../../utils";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -33,27 +34,13 @@ export function LanguageMenu({
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
     if (preferredLocale !== locale) {
-      let cookieValueBefore = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
-      if (cookieValueBefore && cookieValueBefore.includes("=")) {
-        cookieValueBefore = cookieValueBefore.split("=")[1];
-      }
+      const cookieValueBefore = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
 
       for (const translation of translations) {
         if (translation.locale === preferredLocale) {
-          let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
-            translation.locale
-          };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-          if (
-            !(
-              document.location.hostname === "localhost" ||
-              document.location.hostname === "localhost.org"
-            )
-          ) {
-            cookieValue += ";secure";
-          }
-          document.cookie = cookieValue;
+          setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
+            maxAge: 60 * 60 * 24 * 365 * 3,
+          });
         }
       }
 

@@ -136,3 +136,32 @@ export function splitQuery(term: string): string[] {
     return term.split(/[ ,.]+/);
   }
 }
+
+export function getCookieValue(name: string) {
+  let value = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`));
+
+  if (value && value.includes("=")) {
+    value = value.split("=")[1];
+  }
+
+  return value;
+}
+
+export function setCookieValue(
+  name: string,
+  value: string,
+  { maxAge, path = "/" }: { maxAge: number; path?: string }
+) {
+  const cookieValue = [
+    `${name}=${value}`,
+    maxAge && `max-age=${maxAge}`,
+    `path=${path}`,
+    document.location.hostname !== "localhost" && "secure",
+  ]
+    .filter(Boolean)
+    .join(";");
+
+  document.cookie = cookieValue;
+}
