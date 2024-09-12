@@ -9,7 +9,7 @@ import { Submenu } from "../../../molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
-import { LANGUAGE } from "../../../../telemetry/constants";
+import { LANGUAGE, LANGUAGE_REDIRECT } from "../../../../telemetry/constants";
 import {
   deleteCookie,
   getCookieValue,
@@ -129,6 +129,8 @@ function LanguageMenuItem({
 
 function LocaleRedirectSetting() {
   const TRUE_VALUE = "true";
+  const gleanClick = useGleanClick();
+  const locale = useLocale();
   const [value, setValue] = useState(false);
 
   useEffect(() => {
@@ -138,6 +140,11 @@ function LocaleRedirectSetting() {
   function toggle(event) {
     const newValue = event.target.checked;
     if (newValue) {
+      if (!getCookieValue(PREFERRED_LOCALE_COOKIE_NAME)) {
+        setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, locale, {
+          maxAge: 60 * 60 * 24 * 365 * 3,
+        });
+      }
       setCookieValue(REDIRECT_LOCALE_COOKIE_NAME, TRUE_VALUE, {
         maxAge: 60 * 60 * 24 * 365 * 3,
       });
@@ -145,6 +152,7 @@ function LocaleRedirectSetting() {
       deleteCookie(REDIRECT_LOCALE_COOKIE_NAME);
     }
     setValue(event.target.checked);
+    gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
   }
 
   return (
