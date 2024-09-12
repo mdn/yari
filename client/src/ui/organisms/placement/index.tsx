@@ -105,7 +105,7 @@ function TopPlacementFallbackContent() {
       >
         Scrimba
       </a>{" "}
-      - Limited time offer!
+      &mdash; limited time offer!
     </p>
   ) : (
     <p className="fallback-copy">
