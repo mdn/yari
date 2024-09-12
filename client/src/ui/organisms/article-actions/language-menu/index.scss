@@ -19,19 +19,29 @@
 
   .submenu-item {
     padding: 0.5rem !important;
+
+    &.locale-redirect-setting {
+      &:hover {
+        background-color: unset;
+      }
+
+      border-bottom: 1px solid var(--border-secondary) !important;
+      border-radius: 0 !important;
+      font-size: var(--type-tiny-font-size);
+      display: block;
+      padding: 0.25em 0.5em;
+
+      .switch {
+        display: flex;
+      }
+
+      .glean-thumbs {
+        margin-top: 0.25em;
+      }
+    }
   }
 
   @media (min-width: $screen-md) {
     right: 0;
-  }
-
-  .locale-redirect-setting {
-    border-bottom: 1px solid var(--border-secondary);
-    font-size: var(--type-tiny-font-size);
-    padding: 0.25em 0.5em;
-
-    .glean-thumbs {
-      margin-top: 0.25em;
-    }
   }
 }

@@ -156,17 +156,11 @@ function LocaleRedirectSetting() {
   }
 
   return (
-    <form className="locale-redirect-setting">
-      <label>
-        <Switch name="locale-redirect" checked={value} toggle={toggle}>
-          Automatic redirect
-        </Switch>
-      </label>
-      <GleanThumbs
-        feature="locale-redirect"
-        question="Is this useful?"
-        confirmation="Thanks for your feedback! ❤️"
-      />
+    <form className="submenu-item locale-redirect-setting">
+      <Switch name="locale-redirect" checked={value} toggle={toggle}>
+        Remember language
+      </Switch>
+      <GleanThumbs feature="locale-redirect" question="Is this useful?" />
     </form>
   );
 }
