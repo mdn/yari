@@ -117,7 +117,7 @@
     "md5-file": "^5.0.0",
     "mdast-util-from-markdown": "^2.0.1",
     "mdast-util-phrasing": "^4.1.0",
-    "mdn-data": "^2.11.0",
+    "mdn-data": "^2.11.1",
     "open": "^10.1.0",
     "open-editor": "^5.0.0",
     "openai": "^4.59.0",
