@@ -72,63 +72,11 @@ export default function MainMenu({ isOpenOnMobile }) {
     }
   }
 
-  return (
-    <nav className="main-nav" aria-label="Main menu">
-      <ul className="main-menu nojs" ref={mainMenuRef}>
-        <ReferenceMenu
-          visibleSubMenuId={visibleSubMenuId}
-          toggleMenu={toggleMenu}
-        />
-        <GuidesMenu
-          visibleSubMenuId={visibleSubMenuId}
-          toggleMenu={toggleMenu}
-        />
-        {PLUS_IS_ENABLED && (
-          <PlusMenu
-            visibleSubMenuId={visibleSubMenuId}
-            toggleMenu={toggleMenu}
-          />
-        )}
-        <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>
-        <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
-        <ToolsMenu
-          visibleSubMenuId={visibleSubMenuId}
-          toggleMenu={toggleMenu}
-        />
-      </ul>
-    </nav>
-  );
-}
-
-function TopLevelMenuLink({
-  to,
-  children,
-}: {
-  to: string;
-  children: React.ReactNode;
-}) {
-  const { pathname } = useLocation();
-  const gleanClick = useGleanClick();
-
-  const isActive = pathname.startsWith(to.split("#", 2)[0]);
-
-  return (
-    <li className={`top-level-entry-container ${isActive ? "active" : ""}`}>
-      <a
-        className="top-level-entry menu-link"
-        href={to}
-        onClick={() => gleanClick(`${MENU.CLICK_LINK}: top-level -> ${to}`)}
-      >
-        {children}
-      </a>
-    </li>
-  );
-}
-
-function ReferenceMenu({ visibleSubMenuId, toggleMenu }) {
   const locale = useLocale();
 
-  const menu = {
+  // References.
+
+  const referencesMenu = {
     id: "references",
     label: "References",
     to: `/${locale}/docs/Web`,
@@ -200,15 +148,9 @@ function ReferenceMenu({ visibleSubMenuId, toggleMenu }) {
     ],
   };
 
-  const isOpen = visibleSubMenuId === menu.id;
+  // Guides.
 
-  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
-}
-
-function GuidesMenu({ visibleSubMenuId, toggleMenu }) {
-  const locale = useLocale();
-
-  const menu = {
+  const guidesMenu = {
     id: "guides",
     label: "Guides",
     to: `/${locale}/docs/Learn`,
@@ -262,14 +204,9 @@ function GuidesMenu({ visibleSubMenuId, toggleMenu }) {
       },
     ],
   };
-  const isOpen = visibleSubMenuId === menu.id;
 
-  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
-}
-
-function PlusMenu({ visibleSubMenuId, toggleMenu }) {
+  // Plus menu.
   const plusUrl = usePlusUrl();
-  const locale = useLocale();
   const isServer = useIsServer();
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
@@ -279,7 +216,7 @@ function PlusMenu({ visibleSubMenuId, toggleMenu }) {
   // Avoid that "Plus" and "AI Help" are both active.
   const { pathname } = useLocation();
   const aiHelpUrl = `/${locale}/plus/ai-help`;
-  const isActive =
+  const isPlusActive =
     pathname.startsWith(plusUrl.split("#", 2)[0]) &&
     !pathname.startsWith(aiHelpUrl);
 
@@ -341,22 +278,10 @@ function PlusMenu({ visibleSubMenuId, toggleMenu }) {
       },
     ],
   };
-  const isOpen = visibleSubMenuId === plusMenu.id;
 
-  return (
-    <Menu
-      menu={plusMenu}
-      isActive={isActive}
-      isOpen={isOpen}
-      toggle={toggleMenu}
-    />
-  );
-}
+  // Tools.
 
-function ToolsMenu({ visibleSubMenuId, toggleMenu }) {
-  const locale = useLocale();
-
-  const menu = {
+  const toolsMenu = {
     id: "tools",
     label: "Tools",
     items: [
@@ -383,7 +308,61 @@ function ToolsMenu({ visibleSubMenuId, toggleMenu }) {
       },
     ],
   };
-  const isOpen = visibleSubMenuId === menu.id;
 
-  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
+  return (
+    <nav className="main-nav" aria-label="Main menu">
+      <ul className="main-menu nojs" ref={mainMenuRef}>
+        <Menu
+          menu={referencesMenu}
+          isOpen={visibleSubMenuId === referencesMenu.id}
+          toggle={toggleMenu}
+        />
+        <Menu
+          menu={guidesMenu}
+          isOpen={visibleSubMenuId === guidesMenu.id}
+          toggle={toggleMenu}
+        />
+        {PLUS_IS_ENABLED && (
+          <Menu
+            menu={plusMenu}
+            isActive={isPlusActive}
+            isOpen={visibleSubMenuId === plusMenu.id}
+            toggle={toggleMenu}
+          />
+        )}
+        <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>
+        <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
+        <Menu
+          menu={toolsMenu}
+          isOpen={visibleSubMenuId === toolsMenu.id}
+          toggle={toggleMenu}
+        />
+      </ul>
+    </nav>
+  );
+}
+
+function TopLevelMenuLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  const { pathname } = useLocation();
+  const gleanClick = useGleanClick();
+
+  const isActive = pathname.startsWith(to.split("#", 2)[0]);
+
+  return (
+    <li className={`top-level-entry-container ${isActive ? "active" : ""}`}>
+      <a
+        className="top-level-entry menu-link"
+        href={to}
+        onClick={() => gleanClick(`${MENU.CLICK_LINK}: top-level -> ${to}`)}
+      >
+        {children}
+      </a>
+    </li>
+  );
 }
