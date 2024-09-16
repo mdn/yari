@@ -93,7 +93,15 @@ const config = {
           {
             // now our "normal", client-side emulating module rules
             // TODO: deduplicate with client webpack config
-            rules: [
+            oneOf: [
+              {
+                resourceQuery: /raw/,
+                type: "asset/source",
+              },
+              {
+                resourceQuery: /url/,
+                type: "asset/resource",
+              },
               {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,

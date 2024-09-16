@@ -7,7 +7,7 @@ import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
 import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
-import { useMemo } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";
 import { CurriculumLayout } from "./layout";
 
@@ -15,7 +15,8 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
-import { ScrimIframe } from "./scrim";
+
+const ScrimInline = lazy(() => import("./scrim-inline"));
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -135,7 +136,12 @@ function About({ section }) {
         <DisplayH2 id={id} title={title} />
         <div className="about-content" dangerouslySetInnerHTML={html}></div>
         <div className="arrow"></div>
-        <ScrimIframe url={SCRIM_URL}>
+        <section className="scrim-wrapper">
+          <div className="scrim-border">
+            <Suspense fallback={<scrim-inline />}>
+              <ScrimInline url={SCRIM_URL} />
+            </Suspense>
+          </div>
           <p>
             Learn our curriculum with high quality, interactive courses from our
             partner{" "}
@@ -149,7 +155,7 @@ function About({ section }) {
             </a>
             {" !"}
           </p>
-        </ScrimIframe>
+        </section>
       </div>
     </section>
   );

@@ -161,14 +161,17 @@ const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
-  const button = (ev?.target as HTMLElement | null)?.closest("button");
+  const target = ev.composedPath()?.[0] || ev.target;
+  const button = (target as HTMLElement | null)?.closest("button");
   if (button instanceof HTMLButtonElement && button.dataset.glean) {
+    console.log(button.dataset);
     click(button.dataset.glean);
   }
 }
 
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
-  const anchor = (ev?.target as HTMLElement | null)?.closest("a");
+  const target = ev.composedPath()?.[0] || ev.target;
+  const anchor = (target as HTMLElement | null)?.closest("a");
   if (anchor instanceof HTMLAnchorElement) {
     if (anchor.dataset.glean) {
       click(anchor.dataset.glean);
