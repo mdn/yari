@@ -179,7 +179,8 @@ jobs:
           echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn build:prepare
+          yarn build:client
+          yarn build:ssr
 
           #yarn tool sync-translated-content
 
@@ -187,7 +188,7 @@ jobs:
           rari build
 
           # Generate sitemap index file
-          yarn build --sitemap-index
+          # yarn build --sitemap-index
 
           # SSR all pages
           yarn render:html
