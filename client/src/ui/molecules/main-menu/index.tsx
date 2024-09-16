@@ -12,10 +12,9 @@ import { PLUS_IS_ENABLED } from "../../../env";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { MENU } from "../../../telemetry/constants";
 import { useLocation } from "react-router";
-import { useIsServer, useLocale, useViewedState } from "../../../hooks";
+import { useIsServer, useLocale } from "../../../hooks";
 import { usePlusUrl } from "../../../plus/utils";
 import { MenuEntry } from "../submenu";
-import { FeatureId } from "../../../constants";
 import { useUserData } from "../../../user-context";
 import { OBSERVATORY_TITLE } from "../../../../../libs/constants";
 
@@ -79,8 +78,6 @@ export default function MainMenu({ isOpenOnMobile }) {
   const isServer = useIsServer();
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
-
-  const { isViewed } = useViewedState();
 
   // Avoid that "Plus" and "AI Help" are both active.
   const { pathname } = useLocation();
@@ -251,11 +248,6 @@ export default function MainMenu({ isOpenOnMobile }) {
           hasIcon: true,
           iconClasses: "submenu-icon",
           label: "Updates",
-          dot:
-            Date.now() < 1675209600000 && // new Date("2023-02-01 00:00:00Z").getTime()
-            !isViewed(FeatureId.PLUS_UPDATES_V2)
-              ? "New feature"
-              : undefined,
           url: `/${locale}/plus/updates`,
         },
         {
