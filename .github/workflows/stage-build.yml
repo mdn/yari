@@ -365,6 +365,8 @@ jobs:
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
+          set -eo pipefail
+
           for region in europe-west1 us-west1 asia-east1; do
             gcloud beta functions deploy mdn-nonprod-stage-$region \
             --gen2 \
