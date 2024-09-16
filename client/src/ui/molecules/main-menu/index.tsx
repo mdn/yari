@@ -1,15 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 
-import { GuidesMenu } from "../guides-menu";
-import { ReferenceMenu } from "../reference-menu";
-import { PlusMenu } from "../plus-menu";
+import { Menu } from "../menu";
 
 import "./index.scss";
+import "./references.scss";
+import "./guides.scss";
+import "./plus.scss";
+import "./tools.scss";
+
 import { PLUS_IS_ENABLED } from "../../../env";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { MENU } from "../../../telemetry/constants";
 import { useLocation } from "react-router";
-import { ToolsMenu } from "../tools-menu";
+import { useIsServer, useLocale, useViewedState } from "../../../hooks";
+import { usePlusUrl } from "../../../plus/utils";
+import { MenuEntry } from "../submenu";
+import { FeatureId } from "../../../constants";
+import { useUserData } from "../../../user-context";
+import { OBSERVATORY_TITLE } from "../../../../../libs/constants";
 
 export default function MainMenu({ isOpenOnMobile }) {
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
@@ -115,4 +123,267 @@ function TopLevelMenuLink({
       </a>
     </li>
   );
+}
+
+function ReferenceMenu({ visibleSubMenuId, toggleMenu }) {
+  const locale = useLocale();
+
+  const menu = {
+    id: "references",
+    label: "References",
+    to: `/${locale}/docs/Web`,
+    items: [
+      {
+        description: "Web technology reference for developers",
+        hasIcon: true,
+        extraClasses: "apis-link-container mobile-only",
+        iconClasses: "submenu-icon",
+        label: "Overview / Web Technology",
+        url: `/${locale}/docs/Web`,
+      },
+      {
+        description: "Structure of content on the web",
+        extraClasses: "html-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon html",
+        label: "HTML",
+        url: `/${locale}/docs/Web/HTML`,
+      },
+      {
+        description: "Code used to describe document style",
+        extraClasses: "css-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon css",
+        label: "CSS",
+        url: `/${locale}/docs/Web/CSS`,
+      },
+      {
+        description: "General-purpose scripting language",
+        extraClasses: "javascript-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon javascript",
+        label: "JavaScript",
+        url: `/${locale}/docs/Web/JavaScript`,
+      },
+      {
+        description: "Protocol for transmitting web resources",
+        extraClasses: "http-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon http",
+        label: "HTTP",
+        url: `/${locale}/docs/Web/HTTP`,
+      },
+      {
+        description: "Interfaces for building web applications",
+        extraClasses: "apis-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon apis",
+        label: "Web APIs",
+        url: `/${locale}/docs/Web/API`,
+      },
+      {
+        description: "Developing extensions for web browsers",
+        extraClasses: "apis-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Web Extensions",
+        url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
+      },
+      {
+        description: "Web technology reference for developers",
+        extraClasses: "apis-link-container desktop-only",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Web Technology",
+        url: `/${locale}/docs/Web`,
+      },
+    ],
+  };
+
+  const isOpen = visibleSubMenuId === menu.id;
+
+  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
+}
+
+function GuidesMenu({ visibleSubMenuId, toggleMenu }) {
+  const locale = useLocale();
+
+  const menu = {
+    id: "guides",
+    label: "Guides",
+    to: `/${locale}/docs/Learn`,
+    items: [
+      {
+        description: "Learn web development",
+        hasIcon: true,
+        extraClasses: "apis-link-container mobile-only",
+        iconClasses: "submenu-icon learn",
+        label: "Overview / MDN Learning Area",
+        url: `/${locale}/docs/Learn`,
+      },
+      {
+        description: "Learn web development",
+        extraClasses: "apis-link-container desktop-only",
+        hasIcon: true,
+        iconClasses: "submenu-icon learn",
+        label: "MDN Learning Area",
+        url: `/${locale}/docs/Learn`,
+      },
+      {
+        description: "Learn to structure web content with HTML",
+        extraClasses: "html-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon html",
+        label: "HTML",
+        url: `/${locale}/docs/Learn/HTML`,
+      },
+      {
+        description: "Learn to style content using CSS",
+        extraClasses: "css-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon css",
+        label: "CSS",
+        url: `/${locale}/docs/Learn/CSS`,
+      },
+      {
+        description: "Learn to run scripts in the browser",
+        extraClasses: "javascript-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon javascript",
+        label: "JavaScript",
+        url: `/${locale}/docs/Learn/JavaScript`,
+      },
+      {
+        description: "Learn to make the web accessible to all",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Accessibility",
+        url: `/${locale}/docs/Web/Accessibility`,
+      },
+    ],
+  };
+  const isOpen = visibleSubMenuId === menu.id;
+
+  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
+}
+
+function PlusMenu({ visibleSubMenuId, toggleMenu }) {
+  const plusUrl = usePlusUrl();
+  const locale = useLocale();
+  const isServer = useIsServer();
+  const userData = useUserData();
+  const isAuthenticated = userData && userData.isAuthenticated;
+
+  const { isViewed } = useViewedState();
+
+  // Avoid that "Plus" and "AI Help" are both active.
+  const { pathname } = useLocation();
+  const aiHelpUrl = `/${locale}/plus/ai-help`;
+  const isActive =
+    pathname.startsWith(plusUrl.split("#", 2)[0]) &&
+    !pathname.startsWith(aiHelpUrl);
+
+  const plusMenu: MenuEntry = {
+    label: "Plus",
+    id: "mdn-plus",
+    to: plusUrl,
+    items: [
+      {
+        description: "A customized MDN experience",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Overview",
+        url: plusUrl,
+      },
+      {
+        description: "Get real-time assistance and support",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "AI Help",
+        url: aiHelpUrl,
+      },
+      ...(!isServer && isAuthenticated
+        ? [
+            {
+              description: "Your saved articles from across MDN",
+              hasIcon: true,
+              iconClasses: "submenu-icon",
+              label: "Collections",
+              url: `/${locale}/plus/collections`,
+            },
+          ]
+        : []),
+      {
+        description: "All browser compatibility updates at a glance",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Updates",
+        dot:
+          Date.now() < 1675209600000 && // new Date("2023-02-01 00:00:00Z").getTime()
+          !isViewed(FeatureId.PLUS_UPDATES_V2)
+            ? "New feature"
+            : undefined,
+        url: `/${locale}/plus/updates`,
+      },
+      {
+        description: "Learn how to use MDN Plus",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Documentation",
+        url: `/en-US/plus/docs/features/overview`,
+      },
+      {
+        description: "Frequently asked questions about MDN Plus",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "FAQ",
+        url: `/en-US/plus/docs/faq`,
+      },
+    ],
+  };
+  const isOpen = visibleSubMenuId === plusMenu.id;
+
+  return (
+    <Menu
+      menu={plusMenu}
+      isActive={isActive}
+      isOpen={isOpen}
+      toggle={toggleMenu}
+    />
+  );
+}
+
+function ToolsMenu({ visibleSubMenuId, toggleMenu }) {
+  const locale = useLocale();
+
+  const menu = {
+    id: "tools",
+    label: "Tools",
+    items: [
+      {
+        description: "Write, test and share your code",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Playground",
+        url: `/${locale}/play`,
+      },
+      {
+        description: "Scan a website for free",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: OBSERVATORY_TITLE,
+        url: `/en-US/observatory`,
+      },
+      {
+        description: "Get real-time assistance and support",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "AI Help",
+        url: `/en-US/plus/ai-help`,
+      },
+    ],
+  };
+  const isOpen = visibleSubMenuId === menu.id;
+
+  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
 }
