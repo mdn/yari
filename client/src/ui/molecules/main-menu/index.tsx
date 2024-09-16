@@ -3,9 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Menu } from "../menu";
 
 import "./index.scss";
-import "./references.scss";
-import "./guides.scss";
-import "./plus.scss";
 import "./tools.scss";
 
 import { PLUS_IS_ENABLED } from "../../../env";
@@ -78,124 +75,125 @@ export default function MainMenu({ isOpenOnMobile }) {
   const isServer = useIsServer();
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
+  const { pathname } = useLocation();
 
   const menus = [
     {
-      id: "references",
-      label: "References",
-      to: `/${locale}/docs/Web`,
+      id: "html",
+      label: "HTML",
+      to: `/${locale}/docs/Web/HTML`,
+      isActive:
+        pathname.startsWith(`/${locale}/docs/Learn/HTML`) ||
+        pathname.startsWith(`/${locale}/docs/Web/HTML`),
       items: [
         {
-          description: "Web technology reference for developers",
-          hasIcon: true,
-          extraClasses: "apis-link-container mobile-only",
-          iconClasses: "submenu-icon",
-          label: "Overview / Web Technology",
-          url: `/${locale}/docs/Web`,
-        },
-        {
-          description: "Structure of content on the web",
-          extraClasses: "html-link-container",
+          description: "Learn to structure web content with HTML",
           hasIcon: true,
           iconClasses: "submenu-icon html",
-          label: "HTML",
+          label: "Learn HTML",
+          url: `/${locale}/docs/Learn/HTML`,
+        },
+        {
+          description: "Look up elements, attributes, and more",
+          hasIcon: true,
+          iconClasses: "submenu-icon html",
+          label: "HTML references",
           url: `/${locale}/docs/Web/HTML`,
-        },
-        {
-          description: "Code used to describe document style",
-          extraClasses: "css-link-container",
-          hasIcon: true,
-          iconClasses: "submenu-icon css",
-          label: "CSS",
-          url: `/${locale}/docs/Web/CSS`,
-        },
-        {
-          description: "General-purpose scripting language",
-          extraClasses: "javascript-link-container",
-          hasIcon: true,
-          iconClasses: "submenu-icon javascript",
-          label: "JavaScript",
-          url: `/${locale}/docs/Web/JavaScript`,
-        },
-        {
-          description: "Protocol for transmitting web resources",
-          extraClasses: "http-link-container",
-          hasIcon: true,
-          iconClasses: "submenu-icon http",
-          label: "HTTP",
-          url: `/${locale}/docs/Web/HTTP`,
-        },
-        {
-          description: "Interfaces for building web applications",
-          extraClasses: "apis-link-container",
-          hasIcon: true,
-          iconClasses: "submenu-icon apis",
-          label: "Web APIs",
-          url: `/${locale}/docs/Web/API`,
-        },
-        {
-          description: "Developing extensions for web browsers",
-          extraClasses: "apis-link-container",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "Web Extensions",
-          url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
-        },
-        {
-          description: "Web technology reference for developers",
-          extraClasses: "apis-link-container desktop-only",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "Web Technology",
-          url: `/${locale}/docs/Web`,
         },
       ],
     },
     {
-      id: "guides",
-      label: "Guides",
-      to: `/${locale}/docs/Learn`,
+      id: "css",
+      label: "CSS",
+      to: `/${locale}/docs/Web/CSS`,
+      isActive:
+        pathname.startsWith(`/${locale}/docs/Learn/CSS`) ||
+        pathname.startsWith(`/${locale}/docs/Web/CSS`),
       items: [
         {
-          description: "Learn web development",
-          hasIcon: true,
-          extraClasses: "apis-link-container mobile-only",
-          iconClasses: "submenu-icon learn",
-          label: "Overview / MDN Learning Area",
-          url: `/${locale}/docs/Learn`,
-        },
-        {
-          description: "Learn web development",
-          extraClasses: "apis-link-container desktop-only",
-          hasIcon: true,
-          iconClasses: "submenu-icon learn",
-          label: "MDN Learning Area",
-          url: `/${locale}/docs/Learn`,
-        },
-        {
-          description: "Learn to structure web content with HTML",
-          extraClasses: "html-link-container",
-          hasIcon: true,
-          iconClasses: "submenu-icon html",
-          label: "HTML",
-          url: `/${locale}/docs/Learn/HTML`,
-        },
-        {
           description: "Learn to style content using CSS",
-          extraClasses: "css-link-container",
           hasIcon: true,
           iconClasses: "submenu-icon css",
-          label: "CSS",
+          label: "Learn CSS",
           url: `/${locale}/docs/Learn/CSS`,
         },
         {
+          description: "Look up properties, selectors, and more",
+          hasIcon: true,
+          iconClasses: "submenu-icon css",
+          label: "CSS references",
+          url: `/${locale}/docs/Web/CSS`,
+        },
+      ],
+    },
+    {
+      id: "js",
+      label: (
+        <>
+          <span className="short">JS</span>
+          <span className="long">JavaScript</span>
+        </>
+      ),
+      to: `/${locale}/docs/Web/JavaScript`,
+      isActive:
+        pathname.startsWith(`/${locale}/docs/Learn/JavaScript`) ||
+        pathname.startsWith(`/${locale}/docs/Web/JavaScript`),
+      items: [
+        {
           description: "Learn to run scripts in the browser",
-          extraClasses: "javascript-link-container",
           hasIcon: true,
           iconClasses: "submenu-icon javascript",
-          label: "JavaScript",
+          label: "Learn JavaScript",
           url: `/${locale}/docs/Learn/JavaScript`,
         },
+        {
+          description: "Look up objects, expressions, and more",
+          hasIcon: true,
+          iconClasses: "submenu-icon javascript",
+          label: "JavaScript references",
+          url: `/${locale}/docs/Web/JavaScript`,
+        },
+      ],
+    },
+    {
+      id: "apis",
+      label: (
+        <>
+          <span className="short">APIs</span>
+          <span className="long">Web APIs</span>
+        </>
+      ),
+      to: `/${locale}/docs/Web/API`,
+      isActive: pathname.startsWith(`/${locale}/docs/Web/API`),
+      items: [
+        {
+          description: "Look up all the APIs and interfaces",
+          hasIcon: true,
+          iconClasses: "submenu-icon apis",
+          label: "Web API references",
+          url: `/${locale}/docs/Web/API`,
+        },
+      ],
+    },
+    {
+      id: "http",
+      label: "HTTP",
+      to: `/${locale}/docs/Web/HTTP`,
+      isActive: pathname.startsWith(`/${locale}/docs/Web/HTTP`),
+      items: [
+        {
+          description: "Look up status codes, headers, and more",
+          hasIcon: true,
+          iconClasses: "submenu-icon http",
+          label: "HTTP references",
+          url: `/${locale}/docs/Web/HTTP`,
+        },
+      ],
+    },
+    {
+      id: "more",
+      label: "More",
+      items: [
         {
           description: "Learn to make the web accessible to all",
           hasIcon: true,
@@ -203,10 +201,54 @@ export default function MainMenu({ isOpenOnMobile }) {
           label: "Accessibility",
           url: `/${locale}/docs/Web/Accessibility`,
         },
+        {
+          description: "Develop extensions for web browsers",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Web Extensions",
+          url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
+        },
       ],
     },
-    <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>,
-    <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>,
+    {
+      id: "learn",
+      label: "Learn",
+      to: `/${locale}/docs/Learn`,
+      isActive:
+        pathname.startsWith("/en-US/curriculum/") ||
+        pathname.startsWith(`/${locale}/docs/Learn`),
+      items: [
+        {
+          description: "Essential skills for front-end developers",
+          hasIcon: true,
+          iconClasses: "submenu-icon curriculum",
+          label: "MDN Curriculum",
+          url: "/en-US/curriculum/",
+        },
+        {
+          description: "Learn web development",
+          hasIcon: true,
+          iconClasses: "submenu-icon learn",
+          label: "MDN Learning Area",
+          url: `/${locale}/docs/Learn`,
+        },
+      ],
+    },
+    {
+      id: "blog",
+      label: "Blog",
+      to: "/en-US/blog/",
+      isActive: pathname.startsWith("/en-US/blog/"),
+      items: [
+        {
+          description: "Learn about web features, and MDN",
+          hasIcon: true,
+          iconClasses: "submenu-icon blog",
+          label: "MDN Blog",
+          url: "/en-US/blog/",
+        },
+      ],
+    },
     {
       id: "tools",
       label: "Tools",

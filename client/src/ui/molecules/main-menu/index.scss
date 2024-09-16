@@ -40,8 +40,22 @@ ul.main-menu {
     }
   }
 
+  .top-level-entry .long {
+    display: none;
+  }
+
   @media (min-width: ($screen-xl)) {
     gap: 1rem;
+
+    .top-level-entry {
+      .long {
+        display: unset;
+      }
+
+      .short {
+        display: none;
+      }
+    }
   }
 }
 
@@ -76,5 +90,53 @@ ul.main-menu {
     .watch-submenu {
       display: none;
     }
+  }
+}
+
+@media screen and (min-width: $screen-lg) {
+  #more-button {
+    display: flex;
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.submenu-icon {
+  &.html {
+    background-color: var(--html-accent-color);
+  }
+
+  &.css {
+    background-color: var(--css-accent-color);
+  }
+
+  &.javascript {
+    background-color: var(--js-accent-color);
+  }
+
+  &.http {
+    background-color: var(--http-accent-color);
+  }
+
+  &.apis {
+    background-color: var(--apis-accent-color);
+  }
+
+  &.learn {
+    background-color: var(--learn-accent-color);
+  }
+
+  &.plus {
+    background-color: var(--plus-accent-color);
+  }
+
+  &.curriculum {
+    background-color: var(--curriculum-color);
+  }
+
+  &.blog {
+    background-color: var(--apis-accent-color);
   }
 }
