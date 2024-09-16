@@ -301,20 +301,6 @@ export default function MainMenu({ isOpenOnMobile }) {
                 label: "Updates",
                 url: `/${locale}/plus/updates`,
               },
-              {
-                description: "Learn how to use MDN Plus",
-                hasIcon: true,
-                iconClasses: "submenu-icon plus",
-                label: "MDN Plus Docs",
-                url: `/en-US/plus/docs/features/overview`,
-              },
-              {
-                description: "Frequently asked questions about MDN Plus",
-                hasIcon: true,
-                iconClasses: "submenu-icon plus",
-                label: "MDN Plus FAQ",
-                url: `/en-US/plus/docs/faq`,
-              },
             ]
           : []),
       ],
