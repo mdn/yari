@@ -25,7 +25,7 @@
     "build:docs": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/cli.ts -n",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
     "build:prepare": "yarn build:client && yarn build:ssr && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
-    "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ssr/prepare.ts && cd ssr && webpack --mode=production",
+    "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ssr/prepare.ts && webpack --mode=production --config=ssr/webpack.config.js",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
     "check:tsc": "find . -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P 2 -0 sh -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
@@ -41,7 +41,7 @@
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "render:html": "cross-env NODE_ENV=production NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node build/ssr-cli.ts",
-    "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
+    "start": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env NODE_ENV=development BABEL_ENV=development PORT=3000 node scripts/start.js",
     "start:server": "node-dev --experimental-loader ts-node/esm server/index.ts",
     "start:static-server": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node server/static.ts",
@@ -56,7 +56,7 @@
     "test:prepare": "yarn build:prepare && yarn build:docs && yarn render:html && yarn start:static-server",
     "test:testing": "yarn jest --rootDir testing",
     "tool": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node ./tool/cli.ts",
-    "watch:ssr": "cd ssr && webpack --mode=production --watch"
+    "watch:ssr": "webpack --mode=production --watch --config=ssr/webpack.config.js"
   },
   "resolutions": {
     "http-cache-semantics": ">=4.1.1",
@@ -183,6 +183,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
+    "cssnano": "^7.0.6",
     "diff": "^7.0.0",
     "downshift": "^7.6.1",
     "eslint": "^8.57.0",
@@ -251,6 +252,7 @@
     "stylelint-prettier": "^4.1.0",
     "stylelint-scss": "^5.3.2",
     "swr": "^2.2.5",
+    "terser-loader": "^2.0.3",
     "terser-webpack-plugin": "^5.3.10",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
