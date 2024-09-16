@@ -79,13 +79,6 @@ export default function MainMenu({ isOpenOnMobile }) {
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
 
-  // Avoid that "Plus" and "AI Help" are both active.
-  const { pathname } = useLocation();
-  const aiHelpUrl = `/${locale}/plus/ai-help`;
-  const isPlusActive =
-    pathname.startsWith(plusUrl.split("#", 2)[0]) &&
-    !pathname.startsWith(aiHelpUrl);
-
   const menus = [
     {
       id: "references",
@@ -212,60 +205,6 @@ export default function MainMenu({ isOpenOnMobile }) {
         },
       ],
     },
-    PLUS_IS_ENABLED && {
-      label: "Plus",
-      id: "mdn-plus",
-      isActive: isPlusActive,
-      to: plusUrl,
-      items: [
-        {
-          description: "A customized MDN experience",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "Overview",
-          url: plusUrl,
-        },
-        {
-          description: "Get real-time assistance and support",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "AI Help",
-          url: aiHelpUrl,
-        },
-        ...(!isServer && isAuthenticated
-          ? [
-              {
-                description: "Your saved articles from across MDN",
-                hasIcon: true,
-                iconClasses: "submenu-icon",
-                label: "Collections",
-                url: `/${locale}/plus/collections`,
-              },
-            ]
-          : []),
-        {
-          description: "All browser compatibility updates at a glance",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "Updates",
-          url: `/${locale}/plus/updates`,
-        },
-        {
-          description: "Learn how to use MDN Plus",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "Documentation",
-          url: `/en-US/plus/docs/features/overview`,
-        },
-        {
-          description: "Frequently asked questions about MDN Plus",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "FAQ",
-          url: `/en-US/plus/docs/faq`,
-        },
-      ],
-    },
     <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>,
     <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>,
     {
@@ -286,13 +225,56 @@ export default function MainMenu({ isOpenOnMobile }) {
           label: OBSERVATORY_TITLE,
           url: `/en-US/observatory`,
         },
-        {
-          description: "Get real-time assistance and support",
-          hasIcon: true,
-          iconClasses: "submenu-icon",
-          label: "AI Help",
-          url: `/en-US/plus/ai-help`,
-        },
+        ...(PLUS_IS_ENABLED
+          ? [
+              {
+                description: "A customized MDN experience",
+                hasIcon: true,
+                iconClasses: "submenu-icon plus",
+                label: "MDN Plus",
+                url: plusUrl,
+              },
+              {
+                description: "Get real-time assistance and support",
+                hasIcon: true,
+                iconClasses: "submenu-icon plus",
+                label: "AI Help",
+                url: `/en-US/plus/ai-help`,
+              },
+              ...(!isServer && isAuthenticated
+                ? [
+                    {
+                      description: "Your saved articles from across MDN",
+                      hasIcon: true,
+                      iconClasses: "submenu-icon plus",
+                      label: "Collections",
+                      url: `/${locale}/plus/collections`,
+                    },
+                  ]
+                : []),
+              {
+                description: "All browser compatibility updates at a glance",
+                hasIcon: true,
+                iconClasses: "submenu-icon plus",
+                label: "Updates",
+                url: `/${locale}/plus/updates`,
+              },
+              {
+                description: "Learn how to use MDN Plus",
+                hasIcon: true,
+                iconClasses: "submenu-icon plus",
+                label: "MDN Plus Docs",
+                url: `/en-US/plus/docs/features/overview`,
+              },
+              {
+                description: "Frequently asked questions about MDN Plus",
+                hasIcon: true,
+                iconClasses: "submenu-icon plus",
+                label: "MDN Plus FAQ",
+                url: `/en-US/plus/docs/faq`,
+              },
+            ]
+          : []),
       ],
     },
   ].filter(Boolean) as (MenuEntry | React.ReactElement)[];
