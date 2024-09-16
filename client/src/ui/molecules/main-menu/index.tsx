@@ -74,137 +74,6 @@ export default function MainMenu({ isOpenOnMobile }) {
 
   const locale = useLocale();
 
-  // References.
-
-  const referencesMenu = {
-    id: "references",
-    label: "References",
-    to: `/${locale}/docs/Web`,
-    items: [
-      {
-        description: "Web technology reference for developers",
-        hasIcon: true,
-        extraClasses: "apis-link-container mobile-only",
-        iconClasses: "submenu-icon",
-        label: "Overview / Web Technology",
-        url: `/${locale}/docs/Web`,
-      },
-      {
-        description: "Structure of content on the web",
-        extraClasses: "html-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon html",
-        label: "HTML",
-        url: `/${locale}/docs/Web/HTML`,
-      },
-      {
-        description: "Code used to describe document style",
-        extraClasses: "css-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon css",
-        label: "CSS",
-        url: `/${locale}/docs/Web/CSS`,
-      },
-      {
-        description: "General-purpose scripting language",
-        extraClasses: "javascript-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon javascript",
-        label: "JavaScript",
-        url: `/${locale}/docs/Web/JavaScript`,
-      },
-      {
-        description: "Protocol for transmitting web resources",
-        extraClasses: "http-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon http",
-        label: "HTTP",
-        url: `/${locale}/docs/Web/HTTP`,
-      },
-      {
-        description: "Interfaces for building web applications",
-        extraClasses: "apis-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon apis",
-        label: "Web APIs",
-        url: `/${locale}/docs/Web/API`,
-      },
-      {
-        description: "Developing extensions for web browsers",
-        extraClasses: "apis-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Web Extensions",
-        url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
-      },
-      {
-        description: "Web technology reference for developers",
-        extraClasses: "apis-link-container desktop-only",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Web Technology",
-        url: `/${locale}/docs/Web`,
-      },
-    ],
-  };
-
-  // Guides.
-
-  const guidesMenu = {
-    id: "guides",
-    label: "Guides",
-    to: `/${locale}/docs/Learn`,
-    items: [
-      {
-        description: "Learn web development",
-        hasIcon: true,
-        extraClasses: "apis-link-container mobile-only",
-        iconClasses: "submenu-icon learn",
-        label: "Overview / MDN Learning Area",
-        url: `/${locale}/docs/Learn`,
-      },
-      {
-        description: "Learn web development",
-        extraClasses: "apis-link-container desktop-only",
-        hasIcon: true,
-        iconClasses: "submenu-icon learn",
-        label: "MDN Learning Area",
-        url: `/${locale}/docs/Learn`,
-      },
-      {
-        description: "Learn to structure web content with HTML",
-        extraClasses: "html-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon html",
-        label: "HTML",
-        url: `/${locale}/docs/Learn/HTML`,
-      },
-      {
-        description: "Learn to style content using CSS",
-        extraClasses: "css-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon css",
-        label: "CSS",
-        url: `/${locale}/docs/Learn/CSS`,
-      },
-      {
-        description: "Learn to run scripts in the browser",
-        extraClasses: "javascript-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon javascript",
-        label: "JavaScript",
-        url: `/${locale}/docs/Learn/JavaScript`,
-      },
-      {
-        description: "Learn to make the web accessible to all",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Accessibility",
-        url: `/${locale}/docs/Web/Accessibility`,
-      },
-    ],
-  };
-
   // Plus menu.
   const plusUrl = usePlusUrl();
   const isServer = useIsServer();
@@ -220,126 +89,244 @@ export default function MainMenu({ isOpenOnMobile }) {
     pathname.startsWith(plusUrl.split("#", 2)[0]) &&
     !pathname.startsWith(aiHelpUrl);
 
-  const plusMenu: MenuEntry = {
-    label: "Plus",
-    id: "mdn-plus",
-    to: plusUrl,
-    items: [
-      {
-        description: "A customized MDN experience",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Overview",
-        url: plusUrl,
-      },
-      {
-        description: "Get real-time assistance and support",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "AI Help",
-        url: aiHelpUrl,
-      },
-      ...(!isServer && isAuthenticated
-        ? [
-            {
-              description: "Your saved articles from across MDN",
-              hasIcon: true,
-              iconClasses: "submenu-icon",
-              label: "Collections",
-              url: `/${locale}/plus/collections`,
-            },
-          ]
-        : []),
-      {
-        description: "All browser compatibility updates at a glance",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Updates",
-        dot:
-          Date.now() < 1675209600000 && // new Date("2023-02-01 00:00:00Z").getTime()
-          !isViewed(FeatureId.PLUS_UPDATES_V2)
-            ? "New feature"
-            : undefined,
-        url: `/${locale}/plus/updates`,
-      },
-      {
-        description: "Learn how to use MDN Plus",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Documentation",
-        url: `/en-US/plus/docs/features/overview`,
-      },
-      {
-        description: "Frequently asked questions about MDN Plus",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "FAQ",
-        url: `/en-US/plus/docs/faq`,
-      },
-    ],
-  };
-
-  // Tools.
-
-  const toolsMenu = {
-    id: "tools",
-    label: "Tools",
-    items: [
-      {
-        description: "Write, test and share your code",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Playground",
-        url: `/${locale}/play`,
-      },
-      {
-        description: "Scan a website for free",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: OBSERVATORY_TITLE,
-        url: `/en-US/observatory`,
-      },
-      {
-        description: "Get real-time assistance and support",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "AI Help",
-        url: `/en-US/plus/ai-help`,
-      },
-    ],
-  };
+  const menus = [
+    {
+      id: "references",
+      label: "References",
+      to: `/${locale}/docs/Web`,
+      items: [
+        {
+          description: "Web technology reference for developers",
+          hasIcon: true,
+          extraClasses: "apis-link-container mobile-only",
+          iconClasses: "submenu-icon",
+          label: "Overview / Web Technology",
+          url: `/${locale}/docs/Web`,
+        },
+        {
+          description: "Structure of content on the web",
+          extraClasses: "html-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon html",
+          label: "HTML",
+          url: `/${locale}/docs/Web/HTML`,
+        },
+        {
+          description: "Code used to describe document style",
+          extraClasses: "css-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon css",
+          label: "CSS",
+          url: `/${locale}/docs/Web/CSS`,
+        },
+        {
+          description: "General-purpose scripting language",
+          extraClasses: "javascript-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon javascript",
+          label: "JavaScript",
+          url: `/${locale}/docs/Web/JavaScript`,
+        },
+        {
+          description: "Protocol for transmitting web resources",
+          extraClasses: "http-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon http",
+          label: "HTTP",
+          url: `/${locale}/docs/Web/HTTP`,
+        },
+        {
+          description: "Interfaces for building web applications",
+          extraClasses: "apis-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon apis",
+          label: "Web APIs",
+          url: `/${locale}/docs/Web/API`,
+        },
+        {
+          description: "Developing extensions for web browsers",
+          extraClasses: "apis-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Web Extensions",
+          url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
+        },
+        {
+          description: "Web technology reference for developers",
+          extraClasses: "apis-link-container desktop-only",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Web Technology",
+          url: `/${locale}/docs/Web`,
+        },
+      ],
+    },
+    {
+      id: "guides",
+      label: "Guides",
+      to: `/${locale}/docs/Learn`,
+      items: [
+        {
+          description: "Learn web development",
+          hasIcon: true,
+          extraClasses: "apis-link-container mobile-only",
+          iconClasses: "submenu-icon learn",
+          label: "Overview / MDN Learning Area",
+          url: `/${locale}/docs/Learn`,
+        },
+        {
+          description: "Learn web development",
+          extraClasses: "apis-link-container desktop-only",
+          hasIcon: true,
+          iconClasses: "submenu-icon learn",
+          label: "MDN Learning Area",
+          url: `/${locale}/docs/Learn`,
+        },
+        {
+          description: "Learn to structure web content with HTML",
+          extraClasses: "html-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon html",
+          label: "HTML",
+          url: `/${locale}/docs/Learn/HTML`,
+        },
+        {
+          description: "Learn to style content using CSS",
+          extraClasses: "css-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon css",
+          label: "CSS",
+          url: `/${locale}/docs/Learn/CSS`,
+        },
+        {
+          description: "Learn to run scripts in the browser",
+          extraClasses: "javascript-link-container",
+          hasIcon: true,
+          iconClasses: "submenu-icon javascript",
+          label: "JavaScript",
+          url: `/${locale}/docs/Learn/JavaScript`,
+        },
+        {
+          description: "Learn to make the web accessible to all",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Accessibility",
+          url: `/${locale}/docs/Web/Accessibility`,
+        },
+      ],
+    },
+    PLUS_IS_ENABLED && {
+      label: "Plus",
+      id: "mdn-plus",
+      isActive: isPlusActive,
+      to: plusUrl,
+      items: [
+        {
+          description: "A customized MDN experience",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Overview",
+          url: plusUrl,
+        },
+        {
+          description: "Get real-time assistance and support",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "AI Help",
+          url: aiHelpUrl,
+        },
+        ...(!isServer && isAuthenticated
+          ? [
+              {
+                description: "Your saved articles from across MDN",
+                hasIcon: true,
+                iconClasses: "submenu-icon",
+                label: "Collections",
+                url: `/${locale}/plus/collections`,
+              },
+            ]
+          : []),
+        {
+          description: "All browser compatibility updates at a glance",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Updates",
+          dot:
+            Date.now() < 1675209600000 && // new Date("2023-02-01 00:00:00Z").getTime()
+            !isViewed(FeatureId.PLUS_UPDATES_V2)
+              ? "New feature"
+              : undefined,
+          url: `/${locale}/plus/updates`,
+        },
+        {
+          description: "Learn how to use MDN Plus",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Documentation",
+          url: `/en-US/plus/docs/features/overview`,
+        },
+        {
+          description: "Frequently asked questions about MDN Plus",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "FAQ",
+          url: `/en-US/plus/docs/faq`,
+        },
+      ],
+    },
+    <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>,
+    <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>,
+    {
+      id: "tools",
+      label: "Tools",
+      items: [
+        {
+          description: "Write, test and share your code",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "Playground",
+          url: `/${locale}/play`,
+        },
+        {
+          description: "Scan a website for free",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: OBSERVATORY_TITLE,
+          url: `/en-US/observatory`,
+        },
+        {
+          description: "Get real-time assistance and support",
+          hasIcon: true,
+          iconClasses: "submenu-icon",
+          label: "AI Help",
+          url: `/en-US/plus/ai-help`,
+        },
+      ],
+    },
+  ].filter(Boolean) as (MenuEntry | React.ReactElement)[];
 
   return (
     <nav className="main-nav" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
-        <Menu
-          menu={referencesMenu}
-          isOpen={visibleSubMenuId === referencesMenu.id}
-          toggle={toggleMenu}
-        />
-        <Menu
-          menu={guidesMenu}
-          isOpen={visibleSubMenuId === guidesMenu.id}
-          toggle={toggleMenu}
-        />
-        {PLUS_IS_ENABLED && (
-          <Menu
-            menu={plusMenu}
-            isActive={isPlusActive}
-            isOpen={visibleSubMenuId === plusMenu.id}
-            toggle={toggleMenu}
-          />
+        {menus.map((menu) =>
+          isMenuEntry(menu) ? (
+            <Menu
+              menu={menu}
+              isActive={menu.isActive}
+              isOpen={visibleSubMenuId === menu.id}
+              toggle={toggleMenu}
+            />
+          ) : (
+            menu
+          )
         )}
-        <TopLevelMenuLink to="/en-US/curriculum/">Curriculum</TopLevelMenuLink>
-        <TopLevelMenuLink to="/en-US/blog/">Blog</TopLevelMenuLink>
-        <Menu
-          menu={toolsMenu}
-          isOpen={visibleSubMenuId === toolsMenu.id}
-          toggle={toggleMenu}
-        />
       </ul>
     </nav>
   );
+}
+
+function isMenuEntry(menu: any): menu is MenuEntry {
+  return typeof menu.id === "string";
 }
 
 function TopLevelMenuLink({
