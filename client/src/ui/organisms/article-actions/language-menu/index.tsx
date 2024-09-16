@@ -20,7 +20,6 @@ import { Switch } from "../../../atoms/switch";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
-const REDIRECT_LOCALE_COOKIE_NAME = "redirectlocale";
 
 export function LanguageMenu({
   onClose,
@@ -37,22 +36,23 @@ export function LanguageMenu({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const changeLocale: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
-    const preferredLocale = event.currentTarget.dataset.locale;
+    const newLocale = event.currentTarget.dataset.locale;
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
-    if (preferredLocale !== locale) {
+    if (newLocale !== locale) {
       const cookieValueBefore = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
 
-      for (const translation of translations) {
-        if (translation.locale === preferredLocale) {
-          setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
-            maxAge: 60 * 60 * 24 * 365 * 3,
-          });
+      if (cookieValueBefore === locale) {
+        for (const translation of translations) {
+          if (translation.locale === newLocale) {
+            setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
+              maxAge: 60 * 60 * 24 * 365 * 3,
+            });
+          }
         }
       }
 
-      const oldValue = cookieValueBefore || "none";
-      gleanClick(`${LANGUAGE}: ${oldValue} -> ${preferredLocale}`);
+      gleanClick(`${LANGUAGE}: ${locale} -> ${newLocale}`);
     }
   };
 
@@ -128,13 +128,12 @@ function LanguageMenuItem({
 }
 
 function LocaleRedirectSetting() {
-  const TRUE_VALUE = "true";
   const gleanClick = useGleanClick();
   const locale = useLocale();
   const [value, setValue] = useState(false);
 
   useEffect(() => {
-    setValue(getCookieValue(REDIRECT_LOCALE_COOKIE_NAME) === TRUE_VALUE);
+    setValue(!!getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
   }, [setValue]);
 
   function toggle(event) {
@@ -145,11 +144,8 @@ function LocaleRedirectSetting() {
           maxAge: 60 * 60 * 24 * 365 * 3,
         });
       }
-      setCookieValue(REDIRECT_LOCALE_COOKIE_NAME, TRUE_VALUE, {
-        maxAge: 60 * 60 * 24 * 365 * 3,
-      });
     } else {
-      deleteCookie(REDIRECT_LOCALE_COOKIE_NAME);
+      deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
     }
     setValue(event.target.checked);
     gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
