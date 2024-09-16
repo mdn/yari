@@ -263,7 +263,7 @@ export default function MainMenu({ isOpenOnMobile }) {
         {
           description: "Scan a website for free",
           hasIcon: true,
-          iconClasses: "submenu-icon",
+          iconClasses: "submenu-icon observatory",
           label: OBSERVATORY_TITLE,
           url: `/en-US/observatory`,
         },

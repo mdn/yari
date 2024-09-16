@@ -139,4 +139,8 @@ ul.main-menu {
   &.blog {
     background-color: var(--apis-accent-color);
   }
+
+  &.observatory {
+    background-color: var(--observatory-accent);
+  }
 }
