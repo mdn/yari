@@ -97,12 +97,21 @@ function highlightStringSync(
   const resolvedLanguage = ALIASES.get(language) || language;
   const prismLanguage = Prism.languages[resolvedLanguage];
   if (prismLanguage) {
-    return Prism.highlight(text, prismLanguage, resolvedLanguage);
+    try {
+      return Prism.highlight(text, prismLanguage, resolvedLanguage);
+    } catch {
+      console.warn("Syntax highlighting: prism error");
+    }
   }
   return;
 }
 
-async function importLanguage(language: string) {
+async function importLanguage(language: string, recursiveDepth = 0) {
+  if (recursiveDepth > 100) {
+    console.warn("Syntax highlighting: recursion error");
+    throw new Error("Syntax highlighting: recursion error");
+  }
+
   const prismLanguage = Prism.languages[language];
 
   if (!prismLanguage) {
@@ -113,7 +122,9 @@ async function importLanguage(language: string) {
           "prism-svelte"
         );
       } catch (e) {
-        console.warn(`Failed to import ${language} prism language`);
+        console.warn(
+          `Syntax highlighting: failed to import ${language} prism language`
+        );
         throw e;
       }
     } else {
@@ -124,7 +135,9 @@ async function importLanguage(language: string) {
             (typeof config.require === "string"
               ? [config.require]
               : config.require
-            ).map((dependency) => importLanguage(dependency))
+            ).map((dependency) =>
+              importLanguage(dependency, recursiveDepth + 1)
+            )
           );
         } catch {
           return;
@@ -135,7 +148,7 @@ async function importLanguage(language: string) {
           (typeof config.optional === "string"
             ? [config.optional]
             : config.optional
-          ).map((dependency) => importLanguage(dependency))
+          ).map((dependency) => importLanguage(dependency, recursiveDepth + 1))
         );
       }
       try {
@@ -145,7 +158,9 @@ async function importLanguage(language: string) {
           `prismjs/components/prism-${language}.js`
         );
       } catch (e) {
-        console.warn(`Failed to import ${language} prism language`);
+        console.warn(
+          `Syntax highlighting: failed to import ${language} prism language`
+        );
         throw e;
       }
     }
