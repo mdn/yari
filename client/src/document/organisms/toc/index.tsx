@@ -14,7 +14,7 @@ const DEFAULT_TITLE = {
   es: "En este artículo",
   fr: "Dans cet article",
   ja: "この記事では",
-  ko: "이 문서에서는",
+  ko: "목차",
   "pt-BR": "Neste artigo",
   ru: "В этой статье",
   "zh-CN": "在本文中",
@@ -49,7 +49,7 @@ export function TOC({ toc, title }: { toc: Toc[]; title?: string }) {
   }, [observedElements, referencedIds]);
 
   useFirstVisibleElement(observedElements, (element: Element | null) => {
-    const id = element ? idByObservedElement.current.get(element) ?? "" : "";
+    const id = element ? (idByObservedElement.current.get(element) ?? "") : "";
     if (id !== currentViewedTocItem) {
       setCurrentViewedTocItem(id);
     }

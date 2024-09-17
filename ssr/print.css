@@ -1,0 +1,22 @@
+.article-actions-container,
+.main-menu-toggle,
+.document-toc-container,
+.on-github,
+.sidebar,
+.top-navigation-main,
+.page-footer,
+.top-banner,
+.place,
+ul.prev-next,
+.language-menu {
+  display: none !important;
+}
+
+.main-page-content,
+.main-page-content pre {
+  padding: 2px;
+}
+
+.main-page-content pre {
+  border-left-width: 2px;
+}

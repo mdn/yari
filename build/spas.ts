@@ -7,11 +7,14 @@ import { fdir, PathsOutput } from "fdir";
 import got from "got";
 
 import { m2h } from "../markdown/index.js";
+import * as kumascript from "../kumascript/index.js";
 
 import {
   VALID_LOCALES,
   MDN_PLUS_TITLE,
   DEFAULT_LOCALE,
+  OBSERVATORY_TITLE_FULL,
+  OBSERVATORY_TITLE,
 } from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
@@ -22,45 +25,68 @@ import {
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
-import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
+import { getSlugByBlogPostUrl, makeTOC } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 import { buildSitemap } from "./sitemaps.js";
+import { type Locale } from "../libs/types/core.js";
 import { HydrationData } from "../libs/types/hydration.js";
+import { extractSections } from "./extract-sections.js";
+import { wrapTables } from "./wrap-tables.js";
 
 const FEATURED_ARTICLES = [
+  "blog/mdn-scrimba-partnership/",
   "blog/learn-javascript-console-methods/",
   "blog/introduction-to-web-sustainability/",
   "docs/Web/API/CSS_Custom_Highlight_API",
-  "docs/Web/CSS/color_value",
 ];
 
 const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-scrimba-partnership/",
+  "blog/mdn-http-observatory-launch/",
   "blog/mdn-curriculum-launch/",
   "blog/baseline-evolution-on-mdn/",
-  "blog/introducing-the-mdn-playground/",
 ];
+
+const PAGE_DESCRIPTIONS = Object.freeze({
+  observatory:
+    "Test your site’s HTTP headers, including CSP and HSTS, to find security problems and get actionable recommendations to make your website more secure. Test other websites to see how you compare.",
+});
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
 async function buildContributorSpotlight(
-  locale: string,
+  locale: Locale,
   options: { verbose?: boolean }
 ) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
+  let featuredContributorFrontmatter: DocFrontmatter;
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
-    const markdown = fs.readFileSync(
-      `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf-8"
-    );
+    const file = `${contributorSpotlightRoot}/${contributor}/index.md`;
+    const markdown = fs.readFileSync(file, "utf-8");
+    const url = `/${locale}/${prefix}/${contributor}`;
 
     const frontMatter = frontmatter<DocFrontmatter>(markdown);
     const contributorHTML = await m2h(frontMatter.body, { locale });
+    const d = {
+      url,
+      rawBody: contributorHTML,
+      metadata: {
+        locale: DEFAULT_LOCALE,
+        slug: `${prefix}/${contributor}`,
+        url,
+      },
 
-    const { sections } = splitSections(contributorHTML);
+      isMarkdown: true,
+      fileInfo: {
+        path: file,
+      },
+    };
+    const [$] = await kumascript.render(url, {}, d);
+    const [sections] = await extractSections($);
 
     const hyData = {
       sections: sections,
@@ -93,14 +119,19 @@ async function buildContributorSpotlight(
     if (options.verbose) {
       console.log("Wrote", jsonFilePath);
     }
+
     if (frontMatter.attributes.is_featured) {
-      return {
-        contributorName: frontMatter.attributes.contributor_name,
-        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
-        quote: frontMatter.attributes.quote,
-      };
+      featuredContributorFrontmatter = frontMatter.attributes;
     }
   }
+
+  return featuredContributorFrontmatter
+    ? {
+        contributorName: featuredContributorFrontmatter.contributor_name,
+        url: `/${locale}/${prefix}/${featuredContributorFrontmatter.folder_name}`,
+        quote: featuredContributorFrontmatter.quote,
+      }
+    : undefined;
 }
 
 export async function buildSPAs(options: {
@@ -144,6 +175,27 @@ export async function buildSPAs(options: {
 
       const SPAs = [
         { prefix: "play", pageTitle: "Playground | MDN" },
+        {
+          prefix: "observatory",
+          pageTitle: `HTTP Header Security Test - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        {
+          prefix: "observatory/analyze",
+          pageTitle: `Scan results - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+          noIndexing: true,
+        },
+        {
+          prefix: "observatory/docs/tests_and_scoring",
+          pageTitle: `Tests & Scoring - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        {
+          prefix: "observatory/docs/faq",
+          pageTitle: `FAQ - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
         { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
@@ -181,10 +233,17 @@ export async function buildSPAs(options: {
         },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing, onlyFollow } of SPAs) {
+      for (const {
+        prefix,
+        pageTitle,
+        pageDescription,
+        noIndexing,
+        onlyFollow,
+      } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context: HydrationData = {
           pageTitle,
+          pageDescription,
           locale,
           noIndexing,
           onlyFollow,
@@ -240,9 +299,26 @@ export async function buildSPAs(options: {
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
       const rawHTML = await m2h(frontMatter.body, { locale });
 
-      const { sections, toc } = splitSections(rawHTML);
-
       const url = `/${locale}/${slug}/${page}`;
+      const d = {
+        url,
+        rawBody: rawHTML,
+        metadata: {
+          locale: DEFAULT_LOCALE,
+          slug: `${slug}/${page}`,
+          url,
+        },
+
+        isMarkdown: true,
+        fileInfo: {
+          path: file,
+        },
+      };
+      const [$] = await kumascript.render(url, {}, d);
+      wrapTables($);
+      const [sections] = await extractSections($);
+      const toc = makeTOC({ body: sections });
+
       const hyData = {
         id: page,
         ...frontMatter.attributes,
@@ -282,6 +358,11 @@ export async function buildSPAs(options: {
     "plus/docs",
     "MDN Plus"
   );
+  await buildStaticPages(
+    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
+    "observatory/docs",
+    OBSERVATORY_TITLE
+  );
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
@@ -295,7 +376,7 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const localeLC of fs.readdirSync(root)) {
-      const locale = VALID_LOCALES.get(localeLC) || localeLC;
+      const locale = VALID_LOCALES.get(localeLC) || (localeLC as Locale);
       if (!isValidLocale(locale)) {
         continue;
       }

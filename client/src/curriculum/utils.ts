@@ -16,6 +16,14 @@ export enum Topic {
   Tooling = "Tooling",
   None = "",
 }
+export enum Template {
+  Module = "module",
+  Overview = "overview",
+  Landing = "landing",
+  About = "about",
+  Default = "default",
+}
+
 export function topic2css(topic?: Topic) {
   switch (topic) {
     case Topic.WebStandards:
@@ -69,7 +77,7 @@ export function useCurriculumDoc(
     {
       fallbackData: appProps?.doc,
       revalidateOnFocus: WRITER_MODE,
-      revalidateOnMount: !appProps?.doc?.modified,
+      revalidateOnMount: !appProps?.doc?.template,
     }
   );
   const doc: CurriculumDoc | undefined = data || appProps?.doc || undefined;

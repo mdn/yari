@@ -50,8 +50,10 @@ export function AIHelpLanding() {
             <figure>
               <GPT4SVG role="none" />
               <figcaption>
-                <h3>GPT-4-Powered</h3>
-                <p>Unlock GPT-4's potential with our paid subscriptions</p>
+                <h3>GPT-4o-Powered</h3>
+                <p>
+                  Unlock GPT-4o's full potential with our paid subscriptions
+                </p>
               </figcaption>
             </figure>
           </div>

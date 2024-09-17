@@ -100,7 +100,7 @@ async function buildDocumentInteractive(
       throw e;
     }
     console.error(e);
-    const { action } = await prompt([
+    const { action } = await prompt<{ action: string }>([
       {
         type: "list",
         message: "What to do?",

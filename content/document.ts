@@ -35,6 +35,7 @@ import {
 } from "./utils.js";
 import * as Redirect from "./redirect.js";
 import { DocFrontmatter, UnbuiltDocument } from "../libs/types/document.js";
+import { type Locale } from "../libs/types/core.js";
 
 export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
 
@@ -195,7 +196,7 @@ export const read = memoize(
     let filePath: string = null;
     let folder: string = null;
     let root: string = null;
-    let locale: string = null;
+    let locale: Locale = null;
 
     if (fs.existsSync(folderOrFilePath)) {
       filePath = folderOrFilePath;
@@ -633,7 +634,10 @@ export async function remove(
   if (children.length > 0 && redirect && !recursive) {
     throw new Error("unable to remove and redirect a document with children");
   }
-  const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
+  const docs = [
+    slug,
+    ...(recursive ? children.map(({ metadata }) => metadata.slug) : []),
+  ];
 
   if (dry) {
     if (redirectUrl) {
@@ -643,24 +647,35 @@ export async function remove(
   }
 
   const removed = [];
-  for (const { metadata } of children) {
-    const slug = metadata.slug;
-    await updateWikiHistory(
-      path.join(root, metadata.locale.toLowerCase()),
-      slug
-    );
-    removed.push(buildURL(locale, slug));
+  if (recursive) {
+    for (const { metadata } of children) {
+      const slug = metadata.slug;
+      await updateWikiHistory(
+        path.join(root, metadata.locale.toLowerCase()),
+        slug
+      );
+      removed.push(buildURL(locale, slug));
+    }
   }
 
-  execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
+  if (recursive) {
+    execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
+  } else {
+    execGit(["rm", fileInfo.path], { cwd: root });
+  }
+
+  console.log("Removed files");
 
   if (redirectUrl) {
-    Redirect.add(locale, [
-      [url, redirectUrl],
-      ...children.map(
-        ({ url: childUrl }) => [childUrl, redirectUrl] as [string, string]
-      ),
-    ]);
+    Redirect.add(locale, [[url, redirectUrl]]);
+
+    if (recursive) {
+      Redirect.add(locale, [
+        ...children.map(
+          ({ url: childUrl }) => [childUrl, redirectUrl] as [string, string]
+        ),
+      ]);
+    }
   } else {
     Redirect.remove(locale, [url, ...removed]);
   }

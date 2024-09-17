@@ -1,0 +1,26 @@
+<svg viewBox="0 0 94 91" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Curly arrow pointing to the left.</title>
+  <style>
+    .light {
+      --bg: #fff;
+    }
+
+    .dark {
+      --bg: #000;
+    }
+  </style>
+  <defs>
+    <g id="i">
+      <path
+        d="M5.57191 26.5569C5.57191 26.5569 3.95815 38.5445 7.59724 44.3728C19.0161 62.6608 34.6297 55.1038 34.6297 55.1038"
+        stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 6" />
+      <path
+        d="M39.2316 51.7305C39.2316 51.7305 44.7062 44.0498 51.7901 44.358C55.002 44.4978 58.3698 46.7923 60.4296 49.4025C63.6921 53.5368 60.611 60.2035 59.0172 61.7867C57.4235 63.3699 52.906 65.9735 52.2848 60.6307C51.6636 55.2879 59.0036 48.1225 66.0077 43.8613C72.4208 39.9597 84.3406 39.7672 84.3406 39.7672M84.3406 39.7672C84.3406 39.7672 80.6482 38.8088 78.4057 37.8198C76.5059 36.982 73.7105 35.2683 73.7105 35.2683M84.3406 39.7672C84.3406 39.7672 80.3283 41.8929 78.2312 43.9547C76.4626 45.6936 74.3352 49.079 74.3352 49.079"
+        stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </defs>
+  <view id="light" />
+  <use href="#i" class="light" />
+  <view id="dark" viewBox="0 91 94 91" />
+  <use y="91" href="#i" class="dark" />
+</svg>

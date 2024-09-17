@@ -333,11 +333,11 @@ var text = mdn.localStringMap({
         <details>
             <summary><%=text['ResourcesURI']%></summary>
             <ol>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web`, null, text['Identifying'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Data_URLs`, null, text['DataURLs'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/URI`, null, text['Identifying'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/URI/Schemes/data`, null, text['DataURLs'])%></li>
                 <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/MIME_types`, null, text['MIMETypes'])%></li>
                 <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types`, null, text['ListMIMETypes'])%></li>
-                <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Basics_of_HTTP/Choosing_between_www_and_non-www_URLs`, null, text['WWWorNotWWW'])%></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/URI/Authority/Choosing_between_www_and_non-www_URLs`, null, text['WWWorNotWWW'])%></li>
             </ol>
         </details>
     </li>
@@ -364,8 +364,8 @@ var text = mdn.localStringMap({
                 <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/X-Content-Type-Options`, null, "X-Content-Type-Options")%></li>
                 <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/X-Frame-Options`, null, "X-Frame-Options")%></li>
                 <li><%-web.smartLink(`/${locale}/docs/Web/HTTP/Headers/X-XSS-Protection`, null, "X-XSS-Protection")%></li>
-                <li><a href="https://wiki.mozilla.org/Security/Guidelines/Web_Security">Mozilla web security guidelines</a></li>
-                <li><a href="https://observatory.mozilla.org/">Mozilla Observatory</a></li>
+                <li><%-web.smartLink(`/${locale}/docs/Web/Security/Practical_implementation_guides`)%></li>
+                <li><a href="/en-US/observatory">HTTP Observatory</a></li>
             </ol>
         </details>
     </li>
