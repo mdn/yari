@@ -80,9 +80,6 @@ export default function MainMenu({ isOpenOnMobile }) {
       id: "html",
       label: "HTML",
       to: `/${locale}/docs/Web/HTML`,
-      isActive:
-        pathname.startsWith(`/${locale}/docs/Learn/HTML`) ||
-        pathname.startsWith(`/${locale}/docs/Web/HTML`),
       items: [
         {
           description: "Learn to structure web content with HTML",
@@ -104,9 +101,6 @@ export default function MainMenu({ isOpenOnMobile }) {
       id: "css",
       label: "CSS",
       to: `/${locale}/docs/Web/CSS`,
-      isActive:
-        pathname.startsWith(`/${locale}/docs/Learn/CSS`) ||
-        pathname.startsWith(`/${locale}/docs/Web/CSS`),
       items: [
         {
           description: "Learn to style content using CSS",
@@ -133,9 +127,6 @@ export default function MainMenu({ isOpenOnMobile }) {
         </>
       ),
       to: `/${locale}/docs/Web/JavaScript`,
-      isActive:
-        pathname.startsWith(`/${locale}/docs/Learn/JavaScript`) ||
-        pathname.startsWith(`/${locale}/docs/Web/JavaScript`),
       items: [
         {
           description: "Learn to run scripts in the browser",
@@ -162,7 +153,6 @@ export default function MainMenu({ isOpenOnMobile }) {
         </>
       ),
       to: `/${locale}/docs/Web/API`,
-      isActive: pathname.startsWith(`/${locale}/docs/Web/API`),
       items: [
         {
           description: "Look up all the APIs and interfaces",
@@ -177,7 +167,6 @@ export default function MainMenu({ isOpenOnMobile }) {
       id: "http",
       label: "HTTP",
       to: `/${locale}/docs/Web/HTTP`,
-      isActive: pathname.startsWith(`/${locale}/docs/Web/HTTP`),
       items: [
         {
           description: "Look up status codes, headers, and more",
@@ -212,9 +201,6 @@ export default function MainMenu({ isOpenOnMobile }) {
       id: "learn",
       label: "Learn",
       to: `/${locale}/docs/Learn`,
-      isActive:
-        pathname.startsWith("/en-US/curriculum/") ||
-        pathname.startsWith(`/${locale}/docs/Learn`),
       items: [
         {
           description: "Essential skills for front-end developers",
@@ -236,7 +222,6 @@ export default function MainMenu({ isOpenOnMobile }) {
       id: "blog",
       label: "Blog",
       to: "/en-US/blog/",
-      isActive: pathname.startsWith("/en-US/blog/"),
       items: [
         {
           description: "Learn about web features, and MDN",
@@ -312,7 +297,9 @@ export default function MainMenu({ isOpenOnMobile }) {
           isMenuEntry(menu) ? (
             <Menu
               menu={menu}
-              isActive={menu.isActive}
+              isActive={menu.items.some(
+                ({ url }) => url && pathname.startsWith(url)
+              )}
               isOpen={visibleSubMenuId === menu.id}
               toggle={toggleMenu}
             />
