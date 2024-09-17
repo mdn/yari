@@ -164,7 +164,6 @@ function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
   const target = ev.composedPath()?.[0] || ev.target;
   const button = (target as HTMLElement | null)?.closest("button");
   if (button instanceof HTMLButtonElement && button.dataset.glean) {
-    console.log(button.dataset);
     click(button.dataset.glean);
   }
 }
