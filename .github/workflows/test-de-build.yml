@@ -150,7 +150,7 @@ jobs:
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
           # Now is not the time to worry about flaws.
-          BUILD_FLAW_LEVELS: "*:ignore"
+          #BUILD_FLAW_LEVELS: "*:ignore"
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
