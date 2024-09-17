@@ -386,7 +386,7 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
-            --set-env-vars="ORIGIN_TRIAL_TOKEN=A708kbzhofFLGMe7BHKr3aym5saxaywBDqhAzxv4vU9sM6B49iYwec+xy2Y3Imt0+nhR03/jmbuNY0BRvM+Ng5cAAABdeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5hbGxpem9tLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb24iLCJleHBpcnkiOjE3NDk3NDMzMDB9" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=AwIRl96ZjeFFEsdas+GXmpHvd3ARcQPYgBIGhQzZtyG9PpESvUi8ea4gpiQq9QsYRsVAWBeeBgBYqp/oLQPna0YAAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5hbGxpem9tLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
             --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=stage" \
