@@ -1,7 +1,7 @@
-import { css, html, LitElement, unsafeCSS } from "lit";
+import { css, html, LitElement, PropertyValues, unsafeCSS } from "lit";
 import { customElement } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { styleMap } from "lit/directives/style-map.js";
+import { StyleInfo, styleMap } from "lit/directives/style-map.js";
 import { createComponent } from "@lit/react";
 import React from "react";
 import { CURRICULUM } from "../telemetry/constants";
@@ -15,7 +15,12 @@ import playSvg from "../assets/curriculum/scrim-play.svg?raw";
 @customElement("scrim-inline")
 class ScrimInline extends LitElement {
   url?: string;
+  _fullUrl?: string;
+  _scrimId?: string;
+
   img?: string;
+  _imgStyle: StyleInfo = {};
+
   _fullscreen = false;
   _scrimLoaded = false;
 
@@ -157,22 +162,36 @@ class ScrimInline extends LitElement {
     }
   `;
 
+  willUpdate(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has("url")) {
+      if (this.url) {
+        const url = new URL(this.url);
+        url.searchParams.set("via", "mdn");
+        this._fullUrl = url.toString();
+
+        this._scrimId = url.pathname.slice(1);
+      } else {
+        this._fullUrl = undefined;
+        this._scrimId = undefined;
+      }
+    }
+
+    if (changedProperties.has("img")) {
+      this._imgStyle = this.img
+        ? {
+            "--img": `url(${this.img})`,
+          }
+        : {};
+    }
+  }
+
   render() {
-    if (!this.url) {
+    if (!this.url || !this._fullUrl) {
       return html``;
     }
 
-    const styles = this.img
-      ? {
-          "--img": `url(${this.img})`,
-        }
-      : {};
-
-    const url = new URL(this.url);
-    url.searchParams.set("via", "mdn");
-
     return html`
-      <dialog @close=${this.#dialogClosed} style=${styleMap(styles)}>
+      <dialog @close=${this.#dialogClosed} style=${styleMap(this._imgStyle)}>
         <div class="inner">
           <div class="header">
             <span>Clicking will load content from scrimba.com</span>
@@ -184,7 +203,7 @@ class ScrimInline extends LitElement {
               <span class="visually-hidden">Toggle fullscreen</span>
             </button>
             <a
-              href="${url.toString()}"
+              href="${this._fullUrl}"
               target="_blank"
               rel="origin noreferrer"
               class="external"
@@ -195,7 +214,7 @@ class ScrimInline extends LitElement {
           ${this._scrimLoaded
             ? html`
                 <iframe
-                  src="${url.toString()}"
+                  src="${this._fullUrl}"
                   title="MDN + Scrimba partnership announcement scrim"
                 ></iframe>
               `
@@ -203,7 +222,7 @@ class ScrimInline extends LitElement {
                 <button
                   @click="${this.#open}"
                   class="open"
-                  data-glean=${`${CURRICULUM}: scrim engage`}
+                  data-glean=${`${CURRICULUM}: scrim engage id:${this._scrimId}`}
                 >
                   ${unsafeHTML(playSvg)}
                   <span class="visually-hidden">
@@ -219,7 +238,7 @@ class ScrimInline extends LitElement {
   #toggle(e: MouseEvent) {
     if (e.target) {
       (e.target as HTMLElement).dataset.glean =
-        `${CURRICULUM}: scrim fullscreen -> ${this._fullscreen ? 0 : 1}`;
+        `${CURRICULUM}: scrim fullscreen -> ${this._fullscreen ? 0 : 1} id:${this._scrimId}`;
     }
     if (this._fullscreen) {
       this.#close();
