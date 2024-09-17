@@ -46,9 +46,6 @@ yarn-error.log*
 /server/*.js
 /server/*.js.map
 /ssr/dist/
-/ssr/*.js
-!/ssr/mozilla.dnthelper.min.js
-!/ssr/webpack.config.js
 /ssr/*.js.map
 /tool/*.js
 /tool/*.js.map
