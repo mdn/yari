@@ -4229,10 +4229,10 @@ babel-jest@^29.7.0:
     graceful-fs "^4.2.9"
     slash "^3.0.0"
 
-babel-loader@^9.2.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-9.2.0.tgz#e1c6fae52e0715962819ec45aed1eb4f84c23144"
-  integrity sha512-s4qfbvr85H17Rk7ozQJBIIMcVVjX8eu6NjJHzkPRswOzZcE5h+XSKAgT4KElsdkvywaWezwlu0BptTQivZ6eMQ==
+babel-loader@^9.2.1:
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-9.2.1.tgz#04c7835db16c246dd19ba0914418f3937797587b"
+  integrity sha512-fqe8naHt46e0yIdkjUZYqddSXfej3AHajX+CSO5X7oy0EmPc6o5Xh+RClNoHjnieWz9AW4kZxW9yyFMhVB1QLA==
   dependencies:
     find-cache-dir "^4.0.0"
     schema-utils "^4.0.0"
