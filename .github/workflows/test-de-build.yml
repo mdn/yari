@@ -186,6 +186,7 @@ jobs:
           # Playground
           REACT_APP_PLAYGROUND_BASE_HOST: play.de.test.mdn.allizom.net
         run: |
+          set -eo pipefail
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
