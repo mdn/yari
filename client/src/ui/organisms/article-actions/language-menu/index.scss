@@ -7,8 +7,44 @@
 }
 
 .language-menu {
+  li {
+    &:not(:first-child) {
+      padding-top: 1px;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 1px;
+    }
+  }
+
   .submenu-item {
-    padding: 0.5rem;
+    padding: 0.5rem !important;
+
+    &.locale-redirect-setting {
+      border-bottom: 1px solid var(--border-secondary) !important;
+      border-radius: 0 !important;
+      display: block;
+      font-size: var(--type-tiny-font-size);
+      padding: 0.25em 0.5em;
+
+      &:hover {
+        background-color: unset;
+      }
+
+      .switch {
+        display: flex;
+      }
+
+      .glean-thumbs {
+        font-style: italic;
+        font-variation-settings: "slnt" -10;
+        margin-top: 0.5em;
+
+        .icon {
+          margin-right: unset;
+        }
+      }
+    }
   }
 
   @media (min-width: $screen-md) {
