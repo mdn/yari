@@ -1,0 +1,23 @@
+@use "sass:color";
+@use "../../vars" as *;
+
+.mdn-plus {
+  .submenu-icon {
+    background-color: var(--plus-accent-color);
+  }
+
+  .note {
+    background-color: var(--background-information);
+
+    .submenu-item-description {
+      display: block;
+      margin: 0.125rem;
+    }
+  }
+
+  @media (min-width: $screen-lg) {
+    .mobile-only {
+      display: none;
+    }
+  }
+}

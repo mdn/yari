@@ -10,7 +10,7 @@ export const SignUpLink = ({ toPlans = false, gleanContext = "" }) => {
   const loginUrl = useLoginUrl();
 
   const href = toPlans ? plansUrl : loginUrl;
-  const label = toPlans ? "Upgrade Now" : "Sign up";
+  const label = toPlans ? "Upgrade Now" : "Sign up for free";
   const rel = toPlans ? undefined : "nofollow";
 
   return (
