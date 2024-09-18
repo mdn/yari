@@ -1,7 +1,6 @@
 name: Compare bundle size
 
 on:
-  # this action will error unless run in a pr context
   pull_request:
 
 jobs:
@@ -14,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{github.event.pull_request.head.ref}}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -94,7 +93,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/download-artifact@v4
-      - uses: github/webpack-bundlesize-compare-action@v1.8.2
+      - uses: github/webpack-bundlesize-compare-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           current-stats-json-path: ./head-stats/stats.json
