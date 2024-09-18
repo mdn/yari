@@ -3325,7 +3325,7 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.12.tgz#12bb1e2be27293c1406acb6af1c3f3a1481d98c6"
   integrity sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==
 
-"@types/qs@*", "@types/qs@^6.9.15":
+"@types/qs@*":
   version "6.9.15"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.15.tgz#adde8a060ec9c305a82de1babc1056e73bd64dce"
   integrity sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==
@@ -11072,20 +11072,18 @@ open@^10.0.3, open@^10.1.0:
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openai@^4.61.1:
-  version "4.61.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.61.1.tgz#1fe2fa231b6de54fad32785528d7628dbbf68ab4"
-  integrity sha512-jZ2WRn+f4QWZkYnrUS+xzEUIBllsGN75dUCaXmMIHcv2W9yn7O8amaReTbGHCNEYkL43vuDOcxPUWfNPUmoD3Q==
+openai@^4.62.0:
+  version "4.62.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.62.0.tgz#41266a62277b1ca90f2a1511e52af5b2ffaeadf6"
+  integrity sha512-cPSsarEXoJENNwYMx/Xh/wuvnyYf8lPSR4zDVSnRvbcMHmKkDIzXhUVvPPfuI4M4T83x25gVnlW7huWEGKG+SA==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
-    "@types/qs" "^6.9.15"
     abort-controller "^3.0.0"
     agentkeepalive "^4.2.1"
     form-data-encoder "1.7.2"
     formdata-node "^4.3.2"
     node-fetch "^2.6.7"
-    qs "^6.10.3"
 
 opener@^1.5.2:
   version "1.5.2"
@@ -12369,7 +12367,7 @@ pure-rand@^6.0.0:
   resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-6.1.0.tgz#d173cf23258231976ccbdb05247c9787957604f2"
   integrity sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==
 
-qs@6.13.0, qs@^6.10.3:
+qs@6.13.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.13.0.tgz#6ca3bd58439f7e245655798997787b0d88a51906"
   integrity sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==
