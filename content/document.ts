@@ -474,6 +474,7 @@ export async function findAll({
   for (const root of roots) {
     const api = new fdir()
       .withFullPaths()
+      .withSymlinks({ resolvePaths: false })
       .withErrors()
       .filter((filePath) => {
         // Exit early if it's not a sane kind of file we expect
