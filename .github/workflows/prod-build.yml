@@ -370,7 +370,7 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
-            --set-env-vars="ORIGIN_TRIAL_TOKEN=A9YWJd0eN0+JyqsF5/4sYlFePcOgkAIKtGSnrERJ7zmzK65fqcrdYjmHUlxAV79Fphmwt96Gkyw2F1WmMEUEztgAAABdeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5tb3ppbGxhLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb24iLCJleHBpcnkiOjE3NDk3NDMyNjF9" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=AxVILwizhbMjxFeHOn1P3R8niO1RJY/smaK4B4d1rLzc1gTaxtXMSaTi+FoigYgCw40uFRDwFcEAeqDR+vVLOW4AAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5tb3ppbGxhLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
             --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=prod" \
