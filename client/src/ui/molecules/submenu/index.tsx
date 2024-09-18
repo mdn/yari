@@ -17,7 +17,6 @@ export type SubmenuItem = {
 
 export type MenuEntry = {
   id: string;
-  isActive?: boolean;
   items: SubmenuItem[];
   label: string | ReactNode;
   to?: string;

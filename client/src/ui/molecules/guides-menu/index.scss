@@ -1,0 +1,23 @@
+@use "sass:color";
+@use "../../vars" as *;
+
+.guides {
+  .submenu .submenu-item-heading {
+    font-size: var(--type-smaller-font-size);
+    font-weight: initial;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  @media (min-width: $screen-lg) {
+    .desktop-only {
+      display: inherit;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+  }
+}

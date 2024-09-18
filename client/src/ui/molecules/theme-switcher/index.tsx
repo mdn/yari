@@ -82,7 +82,7 @@ export const ThemeSwitcher = () => {
           setIsOpen(!isOpen);
         }}
       >
-        <span className="visually-hidden">Theme</span>
+        Theme
       </Button>
 
       <DropdownMenu>
