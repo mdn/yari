@@ -78,6 +78,10 @@
 main.community-container {
   --community-stats-height: 5.75rem;
   --community-section-gap: 10rem;
+  --max-width: 74rem;
+  --negative-space: calc(
+    max(0px, 100vw - var(--max-width)) * -0.5 - var(--gutter)
+  );
 
   --button-bg: var(--button-primary-default);
   --button-bg-hover: var(--button-primary-hover);
@@ -493,6 +497,7 @@ main.community-container {
         margin-left: -1rem;
         overflow-x: auto;
         padding: 2.41rem 1rem;
+        margin-right: var(--negative-space);
 
         @media (max-width: $screen-md) {
           margin-left: calc(var(--gutter) * -1);
