@@ -1,4 +1,5 @@
 @use "../ui/vars" as *;
+@use "mixins" as curriculum;
 
 .curriculum {
   --background-toc-active: var(--curriculum-bg-color);
@@ -227,35 +228,7 @@
       }
 
       blockquote.curriculum-notes {
-        background-color: var(--curriculum-bg-color-note);
-        border: 0;
-        border-radius: var(--elem-radius);
-        margin: 1rem;
-        padding: 1rem;
-
-        ol,
-        ul {
-          padding-left: 1rem;
-
-          li:last-child {
-            margin-bottom: 0;
-          }
-        }
-
-        ol,
-        ul,
-        p {
-          margin-top: 0.5rem;
-        }
-
-        > p:first-child {
-          // The "Notes:" paragraph.
-          margin-top: 0;
-        }
-
-        > :last-child {
-          margin-bottom: 0;
-        }
+        @include curriculum.note;
       }
 
       p.curriculum-outcomes {
