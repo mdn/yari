@@ -135,7 +135,7 @@
     "rehype-stringify": "^10.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.0",
+    "remark-rehype": "^11.1.1",
     "remark-stringify": "^11.0.0",
     "sanitize-filename": "^1.6.3",
     "send": "^0.19.0",
