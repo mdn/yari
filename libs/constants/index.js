@@ -116,6 +116,7 @@ export const CSP_DIRECTIVES = {
     "https://observatory-api.mdn.mozilla.net",
 
     "stats.g.doubleclick.net",
+    "*.sentry.io",
     "https://api.stripe.com",
   ],
   "font-src": ["'self'"],

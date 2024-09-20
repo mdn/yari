@@ -3,7 +3,10 @@ import path from "node:path";
 
 import chalk from "chalk";
 import * as cheerio from "cheerio";
-import * as Sentry from "@sentry/node";
+import {
+  setContext as setSentryContext,
+  setTags as setSentryTags,
+} from "@sentry/node";
 
 import {
   MacroInvocationError,
@@ -182,12 +185,12 @@ export async function buildDocument(
   document,
   documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
-  Sentry.setContext("doc", {
+  setSentryContext("doc", {
     path: document?.fileInfo?.path,
     title: document?.metadata?.title,
     url: document?.url,
   });
-  Sentry.setTags({
+  setSentryTags({
     doc_slug: document?.metadata?.slug,
     doc_locale: document?.metadata?.locale,
   });
