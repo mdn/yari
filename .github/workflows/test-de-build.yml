@@ -151,7 +151,6 @@ jobs:
 
           # Now is not the time to worry about flaws.
           #BUILD_FLAW_LEVELS: "*:ignore"
-          REACT_APP_WRITER_MODE: true
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
