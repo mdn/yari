@@ -18,6 +18,7 @@
   }
 
   .submenu-item {
+    // Reduce padding compared to other menus.
     padding: 0.5rem !important;
 
     &.locale-redirect-setting {
@@ -25,7 +26,6 @@
       border-radius: 0 !important;
       display: block;
       font-size: var(--type-tiny-font-size);
-      padding: 0.25em 0.5em;
 
       &:hover {
         background-color: unset;
