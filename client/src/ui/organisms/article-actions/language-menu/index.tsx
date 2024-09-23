@@ -20,6 +20,7 @@ import { Switch } from "../../../atoms/switch";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+const PREFERRED_LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 3; // 3 years.
 
 export function LanguageMenu({
   onClose,
@@ -46,7 +47,7 @@ export function LanguageMenu({
         for (const translation of translations) {
           if (translation.locale === newLocale) {
             setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
-              maxAge: 60 * 60 * 24 * 365 * 3,
+              maxAge: PREFERRED_LOCALE_COOKIE_MAX_AGE,
             });
           }
         }
@@ -133,8 +134,8 @@ function LocaleRedirectSetting() {
   const [value, setValue] = useState(false);
 
   useEffect(() => {
-    setValue(!!getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
-  }, [setValue]);
+    setValue(Boolean(getCookieValue(PREFERRED_LOCALE_COOKIE_NAME)));
+  }, []);
 
   function toggle(event) {
     const newValue = event.target.checked;
@@ -147,7 +148,7 @@ function LocaleRedirectSetting() {
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
     }
-    setValue(event.target.checked);
+    setValue(newValue);
     gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
   }
 
