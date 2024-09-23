@@ -133,8 +133,8 @@ function LocaleRedirectSetting() {
   const [value, setValue] = useState(false);
 
   useEffect(() => {
-    setValue(!!getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
-  }, [setValue]);
+    setValue(Boolean(getCookieValue(PREFERRED_LOCALE_COOKIE_NAME)));
+  }, []);
 
   function toggle(event) {
     const newValue = event.target.checked;
@@ -147,7 +147,7 @@ function LocaleRedirectSetting() {
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
     }
-    setValue(event.target.checked);
+    setValue(newValue);
     gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
   }
 
