@@ -20,6 +20,7 @@ import { Switch } from "../../../atoms/switch";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+const PREFERRED_LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 3; // 3 years.
 
 export function LanguageMenu({
   onClose,
@@ -46,7 +47,7 @@ export function LanguageMenu({
         for (const translation of translations) {
           if (translation.locale === newLocale) {
             setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
-              maxAge: 60 * 60 * 24 * 365 * 3,
+              maxAge: PREFERRED_LOCALE_COOKIE_MAX_AGE,
             });
           }
         }
