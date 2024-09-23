@@ -1,9 +1,11 @@
 import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
+import styles from "./contributor-list.scss?css" with { type: "css" };
+
 interface ContributorData {
   name: string;
-  github?: string;
+  github: string;
   org?: string;
 }
 
@@ -15,10 +17,7 @@ export class ContributorList extends LitElement {
     _contributors: { state: true },
   };
 
-  createRenderRoot() {
-    // use light DOM
-    return this;
-  }
+  static styles = styles;
 
   constructor() {
     super();
@@ -34,7 +33,7 @@ export class ContributorList extends LitElement {
         const [name, github, org] = [...contributor.childNodes].map(
           (node) => node?.textContent?.trim() || undefined
         );
-        if (!name) {
+        if (!name || !github) {
           index--;
           continue;
         }
@@ -45,29 +44,37 @@ export class ContributorList extends LitElement {
         });
       }
       this._contributors = randomContributors;
-      contributorList.remove();
     }
   }
 
   render() {
-    return html`<ul class="rendered">
-      ${this._contributors.map(({ name, github, org }) => {
-        const imgSrc = `https://avatars.githubusercontent.com/${github
-          ?.split("/")
-          .slice(-1)}`;
-        return html`<li>
-          <a href="${github}">
-            <img
-              src="${imgSrc}?size=80"
-              srcset="${imgSrc}?size=160 2x"
-              loading="lazy"
-            />
-            ${name}
-          </a>
-          ${org}
-        </li>`;
-      })}
-    </ul>`;
+    return html`<div class="wrap">
+      <div class="inner">
+        <ul>
+          <svg>
+            <ellipse id="outer-circle" cx="100%" cy="50%" rx="100%" ry="50%" />
+            <ellipse id="inner-circle" cx="100%" cy="50%" rx="50%" ry="25%" />
+          </svg>
+          ${this._contributors.map(({ name, github, org }) => {
+            const imgSrc = `https://avatars.githubusercontent.com/${github
+              ?.split("/")
+              .slice(-1)}`;
+            return html`<li>
+              <a href="${github}" target="_blank" rel="nofollow noreferrer">
+                <img
+                  src="${imgSrc}?size=80"
+                  srcset="${imgSrc}?size=160 2x"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                />
+                ${name}
+              </a>
+              <span class="org">${org}</span>
+            </li>`;
+          })}
+        </ul>
+      </div>
+    </div>`;
   }
 }
 

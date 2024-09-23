@@ -1,0 +1,159 @@
+@use "../ui/vars" as *;
+
+* {
+  box-sizing: border-box;
+}
+
+.wrap {
+  --img-size: 3.75em;
+  --li-size: calc(var(--img-size) * 2.5);
+}
+
+ul {
+  --circle-border-size: 0.375em;
+  align-content: start;
+  display: grid;
+  gap: 2rem 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(var(--li-size), 1fr));
+  justify-items: center;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: $screen-md) {
+    display: flex;
+    margin-top: 2rem;
+    overflow-x: auto;
+  }
+}
+
+li,
+a {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+li {
+  color: var(--community-text-primary);
+  width: var(--li-size);
+}
+
+img {
+  background: var(--community-circle-img-border);
+  border: var(--circle-border-size) var(--community-circle-img-border) solid;
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: var(--img-size);
+  width: var(--img-size);
+}
+
+a {
+  color: unset;
+  font-weight: 500;
+}
+
+svg {
+  display: none;
+}
+
+@supports (offset-path: url("#outer-circle")) {
+  @media (min-width: $screen-md) {
+    .wrap {
+      container-type: size;
+      height: 100%;
+      width: 100%;
+    }
+
+    .inner {
+      font-size: min(1rem, 3.5cqmin);
+      padding: calc(var(--img-size) / 2) calc(var(--li-size) / 2);
+    }
+
+    ul {
+      aspect-ratio: 1 / 2;
+      display: block;
+      margin-left: auto;
+      max-height: var(--community-circle-height);
+      min-height: 0;
+      min-width: 0;
+      position: relative;
+    }
+
+    svg {
+      clip-path: inset(calc(-1 * var(--circle-border-size)));
+      display: block;
+      fill: none;
+      height: 100%;
+      overflow: visible;
+      position: absolute;
+      stroke: var(--community-circle-img-border);
+      stroke-width: var(--circle-border-size);
+      width: 100%;
+    }
+
+    li {
+      --offset-distance: calc(var(--community-circle-angle) * 50% + 25%);
+      // necessary because Firefox seems to have a bug where the links aren't
+      // clickable until we force some kind of re-render which an animation does:
+      animation: community-circle 0.1ms forwards;
+      offset-anchor: center calc(0.5 * var(--img-size));
+      offset-distance: var(--offset-distance);
+      offset-path: url("#outer-circle");
+      offset-rotate: 0deg;
+
+      @keyframes community-circle {
+        from {
+          offset-distance: calc(var(--offset-distance) - 0.1%);
+        }
+      }
+
+      &:nth-of-type(n + 6) {
+        --img-size: 5em;
+        offset-path: url("#inner-circle");
+      }
+
+      &:nth-of-type(1) {
+        --community-circle-angle: 0;
+      }
+
+      &:nth-of-type(2) {
+        --community-circle-angle: 1/4;
+      }
+
+      &:nth-of-type(3) {
+        --community-circle-angle: 2/4;
+      }
+
+      &:nth-of-type(4) {
+        --community-circle-angle: 3/4;
+      }
+
+      &:nth-of-type(5) {
+        --community-circle-angle: 1;
+      }
+
+      &:nth-of-type(6) {
+        --community-circle-angle: 0;
+      }
+
+      &:nth-of-type(7) {
+        --community-circle-angle: 1/2;
+      }
+
+      &:nth-of-type(8) {
+        --community-circle-angle: 1;
+      }
+    }
+
+    .org {
+      -webkit-box-orient: vertical;
+      /* stylelint-disable-next-line value-no-vendor-prefix */
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+  }
+}

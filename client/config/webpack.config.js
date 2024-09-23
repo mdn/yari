@@ -11,6 +11,7 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from "webpack-manifest-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 import paths from "./paths.js";
 import getClientEnvironment from "./env.js";
@@ -20,6 +21,10 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
+
+// to compare file sizes in PRs we need them to not include hashes
+const analyzeBundlePR = process.env.ANALYZE_BUNDLE_PR;
+const analyzeBundle = analyzeBundlePR || process.env.ANALYZE_BUNDLE;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -35,12 +40,13 @@ function config(webpackEnv) {
   const env = getClientEnvironment();
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, extract = true) => {
     const loaders = [
-      isEnvDevelopment && resolve.sync("style-loader"),
-      isEnvProduction && {
-        loader: MiniCssExtractPlugin.loader,
-      },
+      extract && isEnvDevelopment && resolve.sync("style-loader"),
+      extract &&
+        isEnvProduction && {
+          loader: MiniCssExtractPlugin.loader,
+        },
       {
         loader: resolve.sync("css-loader"),
         options: cssOptions,
@@ -118,15 +124,20 @@ function config(webpackEnv) {
       // Add /* filename */ comments to generated require()s in the output.
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
-      // In development, it does not produce real files.
-      filename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].js"
-        : isEnvDevelopment && "static/js/bundle.js",
+      filename: analyzeBundlePR
+        ? "static/js/[name].js"
+        : isEnvProduction
+          ? "static/js/[name].[contenthash:8].js"
+          : isEnvDevelopment && "static/js/bundle.js",
       // There are also additional JS chunk files if you use code splitting.
-      chunkFilename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].chunk.js"
-        : isEnvDevelopment && "static/js/[name].chunk.js",
-      assetModuleFilename: "static/media/[name].[hash][ext]",
+      chunkFilename: analyzeBundlePR
+        ? "static/js/[name].chunk.js"
+        : isEnvProduction
+          ? "static/js/[name].[contenthash:8].chunk.js"
+          : isEnvDevelopment && "static/js/[name].chunk.js",
+      assetModuleFilename: analyzeBundlePR
+        ? "static/media/[file]"
+        : "static/media/[name].[hash][ext]",
       publicPath: "/",
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
@@ -152,8 +163,8 @@ function config(webpackEnv) {
       level: "none",
     },
     optimization: {
-      chunkIds: isEnvProduction ? "natural" : "named",
-      moduleIds: isEnvProduction ? "natural" : "named",
+      chunkIds: isEnvProduction ? "deterministic" : "named",
+      moduleIds: isEnvProduction ? "deterministic" : "named",
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
@@ -259,7 +270,9 @@ function config(webpackEnv) {
                 {
                   loader: resolve.sync("file-loader"),
                   options: {
-                    name: "static/media/[name].[hash].[ext]",
+                    name: analyzeBundlePR
+                      ? "static/media/[path][name].[ext]"
+                      : "static/media/[name].[hash].[ext]",
                   },
                 },
               ],
@@ -352,6 +365,22 @@ function config(webpackEnv) {
             // Opt-in support for SASS (using .scss or .sass extensions).
             {
               test: /\.(scss|sass)$/,
+              with: { type: "css" },
+              use: getStyleLoaders(
+                {
+                  importLoaders: 3,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                  exportType: "css-style-sheet",
+                },
+                "sass-loader",
+                false
+              ),
+              sideEffects: true,
+            },
+            {
+              test: /\.(scss|sass)$/,
               use: getStyleLoaders(
                 {
                   importLoaders: 3,
@@ -421,8 +450,12 @@ function config(webpackEnv) {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: "static/css/[name].[contenthash:8].css",
-          chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
+          filename: analyzeBundlePR
+            ? "static/css/[name].css"
+            : "static/css/[name].[contenthash:8].css",
+          chunkFilename: analyzeBundlePR
+            ? "static/css/[name].chunk.css"
+            : "static/css/[name].[contenthash:8].chunk.css",
         }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
@@ -490,6 +523,12 @@ function config(webpackEnv) {
       new ESLintPlugin({
         extensions: ["js", "mjs", "jsx", "ts", "tsx"],
       }),
+      isEnvProduction &&
+        analyzeBundle &&
+        new BundleAnalyzerPlugin({
+          analyzerMode: "disabled",
+          generateStatsFile: true,
+        }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
