@@ -15,6 +15,7 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
+import { useIsServer } from "../hooks";
 
 const ScrimInline = lazy(() => import("./scrim-inline"));
 
@@ -130,6 +131,8 @@ const SCRIM_URL = "https://v2.scrimba.com/s06icdv?via=mdn";
 function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
+  const isServer = useIsServer();
+
   return (
     <section key={id} className="landing-about-container">
       <div className="landing-about">
@@ -138,9 +141,7 @@ function About({ section }) {
         <div className="arrow"></div>
         <section className="scrim-wrapper">
           <div className="scrim-border">
-            <Suspense fallback={<scrim-inline />}>
-              <ScrimInline url={SCRIM_URL} />
-            </Suspense>
+            <Suspense>{!isServer && <ScrimInline url={SCRIM_URL} />}</Suspense>
           </div>
           <p>
             Learn our curriculum with high quality, interactive courses from our
