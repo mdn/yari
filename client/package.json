@@ -4,6 +4,9 @@
   "license": "MPL-2.0",
   "type": "module",
   "babel": {
+    "generatorOpts": {
+      "importAttributesKeyword": "with"
+    },
     "presets": [
       "react-app"
     ]

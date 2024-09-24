@@ -40,12 +40,13 @@ function config(webpackEnv) {
   const env = getClientEnvironment();
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, extract = true) => {
     const loaders = [
-      isEnvDevelopment && resolve.sync("style-loader"),
-      isEnvProduction && {
-        loader: MiniCssExtractPlugin.loader,
-      },
+      extract && isEnvDevelopment && resolve.sync("style-loader"),
+      extract &&
+        isEnvProduction && {
+          loader: MiniCssExtractPlugin.loader,
+        },
       {
         loader: resolve.sync("css-loader"),
         options: cssOptions,
@@ -362,6 +363,22 @@ function config(webpackEnv) {
               sideEffects: true,
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
+            {
+              test: /\.(scss|sass)$/,
+              with: { type: "css" },
+              use: getStyleLoaders(
+                {
+                  importLoaders: 3,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                  exportType: "css-style-sheet",
+                },
+                "sass-loader",
+                false
+              ),
+              sideEffects: true,
+            },
             {
               test: /\.(scss|sass)$/,
               use: getStyleLoaders(
