@@ -131,10 +131,10 @@ function LanguageMenuItem({
 function LocaleRedirectSetting() {
   const gleanClick = useGleanClick();
   const locale = useLocale();
-  const [value, setValue] = useState(false);
+  const [preferredLocale, setPreferredLocale] = useState<string | undefined>();
 
   useEffect(() => {
-    setValue(Boolean(getCookieValue(PREFERRED_LOCALE_COOKIE_NAME)));
+    setPreferredLocale(getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
   }, []);
 
   function toggle(event) {
@@ -145,16 +145,21 @@ function LocaleRedirectSetting() {
           maxAge: 60 * 60 * 24 * 365 * 3,
         });
       }
+      setPreferredLocale(locale);
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
+      setPreferredLocale(undefined);
     }
-    setValue(newValue);
     gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
   }
 
   return (
     <form className="submenu-item locale-redirect-setting">
-      <Switch name="locale-redirect" checked={value} toggle={toggle}>
+      <Switch
+        name="locale-redirect"
+        checked={locale === preferredLocale}
+        toggle={toggle}
+      >
         Remember language
       </Switch>
       <GleanThumbs feature="locale-redirect" question="Is this useful?" />
