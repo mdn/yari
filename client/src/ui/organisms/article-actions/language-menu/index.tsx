@@ -20,6 +20,7 @@ import { Switch } from "../../../atoms/switch";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+const PREFERRED_LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 3; // 3 years.
 
 export function LanguageMenu({
   onClose,
@@ -46,7 +47,7 @@ export function LanguageMenu({
         for (const translation of translations) {
           if (translation.locale === newLocale) {
             setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
-              maxAge: 60 * 60 * 24 * 365 * 3,
+              maxAge: PREFERRED_LOCALE_COOKIE_MAX_AGE,
             });
           }
         }
@@ -130,11 +131,11 @@ function LanguageMenuItem({
 function LocaleRedirectSetting() {
   const gleanClick = useGleanClick();
   const locale = useLocale();
-  const [value, setValue] = useState(false);
+  const [preferredLocale, setPreferredLocale] = useState<string | undefined>();
 
   useEffect(() => {
-    setValue(!!getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
-  }, [setValue]);
+    setPreferredLocale(getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
+  }, []);
 
   function toggle(event) {
     const newValue = event.target.checked;
@@ -144,16 +145,21 @@ function LocaleRedirectSetting() {
           maxAge: 60 * 60 * 24 * 365 * 3,
         });
       }
+      setPreferredLocale(locale);
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
+      setPreferredLocale(undefined);
     }
-    setValue(event.target.checked);
     gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
   }
 
   return (
     <form className="submenu-item locale-redirect-setting">
-      <Switch name="locale-redirect" checked={value} toggle={toggle}>
+      <Switch
+        name="locale-redirect"
+        checked={locale === preferredLocale}
+        toggle={toggle}
+      >
         Remember language
       </Switch>
       <GleanThumbs feature="locale-redirect" question="Is this useful?" />
