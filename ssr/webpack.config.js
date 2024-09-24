@@ -99,10 +99,6 @@ const config = {
                 type: "asset/source",
               },
               {
-                resourceQuery: /url/,
-                type: "asset/resource",
-              },
-              {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: [
