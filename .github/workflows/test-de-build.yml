@@ -81,24 +81,11 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
-          repository: mdn/translated-content
+          repository: mdn/translated-content-de
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
-
-      - uses: actions/checkout@v4
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        with:
-          repository: mdn/translated-content-de
-          path: mdn/translated-content-de
-          # See matching warning for mdn/content checkout step
-          fetch-depth: 0
           token: ${{ secrets.MDN_MTC_PAT }}
-
-      - name: Move de into translated-content
-        run: |
-          mv mdn/translated-content-de/files/de mdn/translated-content/files
-          rm -rf mdn/translated-content-de
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
