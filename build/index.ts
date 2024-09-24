@@ -158,12 +158,6 @@ function injectSource(doc, document, metadata) {
     last_commit_url: getLastCommitURL(root, metadata.hash),
     filename,
   };
-  if (doc.locale === "de") {
-    doc.source.github_url = doc.source.github_url.replace(
-      "translated-content",
-      "translated-content-de"
-    );
-  }
 }
 
 export interface BuiltDocument {

@@ -35,7 +35,7 @@ Path to the content files, cloned from https://github.com/mdn/content.
 **Default: `../translated-content/files`**
 
 Path to the translated content files, cloned from
-https://github.com/mdn/translated-content.
+https://github.com/mdn/translated-content-de.
 
 ### `CONTRIBUTOR_SPOTLIGHT_ROOT`
 

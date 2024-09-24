@@ -55,7 +55,7 @@ function NewIssueOnGitHubLink({
 
   url.pathname =
     locale !== "en-US"
-      ? "/mdn/translated-content/issues/new"
+      ? "/mdn/translated-content-de/issues/new"
       : "/mdn/content/issues/new";
   sp.set(
     "template",
