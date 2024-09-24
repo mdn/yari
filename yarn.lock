@@ -15055,10 +15055,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-features@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/web-features/-/web-features-1.3.0.tgz#d5d0eb53a6d36cd7f3ee8eff288ca628b18c52c6"
-  integrity sha512-gHOlpqzygByOqgmzx3477M459tGJVJF2chdkhvgNSJw+enfS4makj5l53zjkaXte2C/A8YoeLezp6gnxrCHb4A==
+web-features@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/web-features/-/web-features-1.4.0.tgz#ea1387a6e9bb72255893ba7f3b190421a100a474"
+  integrity sha512-vnjqxTx20h0avWsp0OUl0SJSRAH3GkUe4mL+NmILr+qdOHFGZJqNs+rDPyJMAaBrjhs8X43WS3b/TTSfx7NWAQ==
 
 web-namespaces@^2.0.0:
   version "2.0.1"
