@@ -21,15 +21,7 @@
     ]
   },
   "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "react/jsx-no-target-blank": [
-        "error",
-        {
-          "allowReferrer": true
-        }
-      ]
-    }
+    "extends": "react-app"
   },
   "jest": {
     "collectCoverageFrom": [
