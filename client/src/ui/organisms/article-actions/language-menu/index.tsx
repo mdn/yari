@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-target-blank */
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -168,7 +167,7 @@ function LocaleRedirectSetting() {
         </Switch>
         <a
           href="https://github.com/orgs/mdn/discussions/739"
-          rel="external noopener"
+          rel="external noopener noreferrer"
           target="_blank"
           title="Enable this setting to automatically switch to this language when it's available. (Click to learn more.)"
         >
