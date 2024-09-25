@@ -148,7 +148,7 @@ function LocaleRedirectSetting() {
         maxAge: 60 * 60 * 24 * 365 * 3,
       });
       setPreferredLocale(locale);
-      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue} -> ${locale}`);
+      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue ?? 0} -> ${locale}`);
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
       setPreferredLocale(undefined);
