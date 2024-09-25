@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -17,6 +18,7 @@ import {
 } from "../../../../utils";
 import { GleanThumbs } from "../../../atoms/thumbs";
 import { Switch } from "../../../atoms/switch";
+import { Icon } from "../../../atoms/icon";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -154,15 +156,26 @@ function LocaleRedirectSetting() {
     }
   }
 
+  // eslint-disable react/jsx-no-target-blank
   return (
     <form className="submenu-item locale-redirect-setting">
-      <Switch
-        name="locale-redirect"
-        checked={locale === preferredLocale}
-        toggle={toggle}
-      >
-        Remember language
-      </Switch>
+      <div className="group">
+        <Switch
+          name="locale-redirect"
+          checked={locale === preferredLocale}
+          toggle={toggle}
+        >
+          Remember language
+        </Switch>
+        <a
+          href="https://github.com/orgs/mdn/discussions"
+          rel="external noopener"
+          target="_blank"
+          title="Enable this setting to automatically switch to this language when it's available. (Click to learn more.)"
+        >
+          <Icon name="question-mark" />
+        </a>
+      </div>
       <GleanThumbs feature="locale-redirect" question="Is this useful?" />
     </form>
   );
