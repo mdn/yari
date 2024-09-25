@@ -223,13 +223,6 @@ export async function buildSPAs(options: {
         },
         { prefix: "about", pageTitle: "About MDN" },
         {
-          prefix: "community",
-          pageTitle: "Contribute to MDN",
-          json: fileURLToPath(
-            new URL("../copy/community/index.json", import.meta.url)
-          ),
-        },
-        {
           prefix: "advertising",
           pageTitle: "Advertise with us",
         },
