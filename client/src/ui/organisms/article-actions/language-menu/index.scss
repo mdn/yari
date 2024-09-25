@@ -31,6 +31,12 @@
         background-color: unset;
       }
 
+      .group {
+        align-items: center;
+        display: flex;
+        gap: 0.5em;
+      }
+
       .switch {
         display: flex;
       }
@@ -39,9 +45,17 @@
         font-style: italic;
         font-variation-settings: "slnt" -10;
         margin-top: 0.5em;
+      }
 
-        .icon {
-          margin-right: unset;
+      .icon {
+        margin-right: unset;
+      }
+
+      a[href] .icon-question-mark {
+        background-color: var(--icon-secondary);
+
+        &:hover {
+          background-color: var(--text-link);
         }
       }
     }
