@@ -28,7 +28,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { slugToFolder } from "../libs/slug-utils/index.js";
-import { syntaxHighlight } from "./syntax-highlight.js";
+import { wrapCodeExamples } from "./code-headers.js";
 import { wrapTables } from "./wrap-tables.js";
 import { Doc } from "../libs/types/document.js";
 import { extractSections } from "./extract-sections.js";
@@ -391,7 +391,7 @@ export async function buildPost(
     doc.hasMathML = true;
   }
   $("div.hidden").remove();
-  syntaxHighlight($, doc);
+  wrapCodeExamples($);
   injectNoTranslate($);
   injectLoadingLazyAttributes($);
   postProcessExternalLinks($);
