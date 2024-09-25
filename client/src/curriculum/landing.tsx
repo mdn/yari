@@ -16,6 +16,7 @@ import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
 import { useIsServer } from "../hooks";
+import scrimBg from "../assets/curriculum/landing-scrim.png";
 
 const ScrimInline = lazy(() => import("./scrim-inline"));
 
@@ -141,7 +142,15 @@ function About({ section }) {
         <div className="arrow"></div>
         <section className="scrim-wrapper">
           <div className="scrim-border">
-            <Suspense>{!isServer && <ScrimInline url={SCRIM_URL} />}</Suspense>
+            <Suspense>
+              {!isServer && (
+                <ScrimInline
+                  url={SCRIM_URL}
+                  img={scrimBg}
+                  scrimTitle="MDN + Scrimba partnership announcement scrim"
+                />
+              )}
+            </Suspense>
           </div>
           <p>
             Learn our curriculum with high quality, interactive courses from our

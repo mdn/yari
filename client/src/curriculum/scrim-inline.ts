@@ -2,10 +2,12 @@ import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { StyleInfo, styleMap } from "lit/directives/style-map.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { createComponent } from "@lit/react";
 import React from "react";
 import { CURRICULUM } from "../telemetry/constants";
 
+import "./scrim-inline.global.css";
 import styles from "./scrim-inline.scss?css" with { type: "css" };
 import playSvg from "../assets/curriculum/scrim-play.svg?raw";
 
@@ -18,12 +20,15 @@ class ScrimInline extends LitElement {
   img?: string;
   _imgStyle: StyleInfo = {};
 
+  scrimTitle?: string;
+
   _fullscreen = false;
   _scrimLoaded = false;
 
   static properties = {
     url: { type: String },
     img: { type: String },
+    scrimTitle: { type: String },
     _fullscreen: { state: true },
     _scrimLoaded: { state: true },
   };
@@ -47,7 +52,7 @@ class ScrimInline extends LitElement {
     if (changedProperties.has("img")) {
       this._imgStyle = this.img
         ? {
-            "--img": `url(${this.img})`,
+            "--scrim-img": `url(${this.img})`,
           }
         : {};
     }
@@ -83,10 +88,26 @@ class ScrimInline extends LitElement {
             ? html`
                 <iframe
                   src="${this._fullUrl}"
-                  title="MDN + Scrimba partnership announcement scrim"
+                  title="${ifDefined(this.scrimTitle)}"
                 ></iframe>
               `
             : html`
+                ${this.scrimTitle && !this.img
+                  ? html`<div class="background">
+                      <div class="background-noise">
+                        <svg width="0" height="0">
+                          <filter id="noise">
+                            <feTurbulence
+                              type="fractalNoise"
+                              baseFrequency="0.7"
+                              numOctaves="4"
+                            />
+                          </filter>
+                        </svg>
+                      </div>
+                      <h1>${this.scrimTitle}</h1>
+                    </div>`
+                  : null}
                 <button
                   @click="${this.#open}"
                   class="open"
