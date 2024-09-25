@@ -245,10 +245,9 @@ export async function buildSPAs(options: {
         pageDescription,
         noIndexing,
         onlyFollow,
-        json,
       } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        let context: HydrationData = {
+        const context: HydrationData = {
           pageTitle,
           pageDescription,
           locale,
@@ -256,29 +255,6 @@ export async function buildSPAs(options: {
           onlyFollow,
           url,
         };
-
-        if (json) {
-          context = JSON.parse(await fs.promises.readFile(json, "utf-8"));
-          const localeReplace = function (obj: any) {
-            try {
-              Object.keys(obj);
-            } catch {
-              return;
-            }
-            for (const key of Object.keys(obj)) {
-              if (typeof obj[key] === "object") {
-                localeReplace(obj[key]);
-              }
-              if (typeof obj[key] === "string") {
-                obj[key] = obj[key]
-                  .replace(/^en-US$/, locale)
-                  .replace(/^\/en-US\//, `/${locale}/`)
-                  .replace(/ href="\/en-US\//g, ` href="/${locale}/`);
-              }
-            }
-          };
-          localeReplace(context);
-        }
 
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
@@ -392,6 +368,11 @@ export async function buildSPAs(options: {
     fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
     "observatory/docs",
     OBSERVATORY_TITLE
+  );
+  await buildStaticPages(
+    fileURLToPath(new URL("../copy/community/", import.meta.url)),
+    "community",
+    "Contribute to MDN"
   );
 
   // Build all the home pages in all locales.
