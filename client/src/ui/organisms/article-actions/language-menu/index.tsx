@@ -17,6 +17,7 @@ import {
 } from "../../../../utils";
 import { GleanThumbs } from "../../../atoms/thumbs";
 import { Switch } from "../../../atoms/switch";
+import { Icon } from "../../../atoms/icon";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -146,7 +147,7 @@ function LocaleRedirectSetting() {
         maxAge: 60 * 60 * 24 * 365 * 3,
       });
       setPreferredLocale(locale);
-      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue} -> ${locale}`);
+      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue ?? 0} -> ${locale}`);
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
       setPreferredLocale(undefined);
@@ -156,13 +157,23 @@ function LocaleRedirectSetting() {
 
   return (
     <form className="submenu-item locale-redirect-setting">
-      <Switch
-        name="locale-redirect"
-        checked={locale === preferredLocale}
-        toggle={toggle}
-      >
-        Remember language
-      </Switch>
+      <div className="group">
+        <Switch
+          name="locale-redirect"
+          checked={locale === preferredLocale}
+          toggle={toggle}
+        >
+          Remember language
+        </Switch>
+        <a
+          href="https://github.com/orgs/mdn/discussions/739"
+          rel="external noopener noreferrer"
+          target="_blank"
+          title="Enable this setting to automatically switch to this language when it's available. (Click to learn more.)"
+        >
+          <Icon name="question-mark" />
+        </a>
+      </div>
       <GleanThumbs feature="locale-redirect" question="Is this useful?" />
     </form>
   );
