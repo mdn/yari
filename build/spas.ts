@@ -268,16 +268,9 @@ export async function buildSPAs(options: {
   }
 
   // Building the MDN Plus pages.
-
-  /**
-   *
-   * @param {string} dirpath
-   * @param {string} slug
-   * @param {string} title
-   */
   async function buildStaticPages(
     dirpath: string,
-    slug: string,
+    slugPrefix?: string,
     title = "MDN"
   ) {
     const crawler = new fdir()
@@ -298,13 +291,14 @@ export async function buildSPAs(options: {
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
       const rawHTML = await m2h(frontMatter.body, { locale });
 
-      const url = `/${locale}/${slug}/${page}`;
+      const slug = slugPrefix ? `${slugPrefix}/${page}` : `${page}`;
+      const url = `/${locale}/${slug}`;
       const d = {
         url,
         rawBody: rawHTML,
         metadata: {
           locale: DEFAULT_LOCALE,
-          slug: `${slug}/${page}`,
+          slug,
           url,
         },
 
@@ -330,12 +324,7 @@ export async function buildSPAs(options: {
         url,
       };
 
-      const outPath = path.join(
-        BUILD_OUT_ROOT,
-        pathLocale,
-        ...slug.split("/"),
-        page
-      );
+      const outPath = path.join(BUILD_OUT_ROOT, pathLocale, ...slug.split("/"));
       fs.mkdirSync(outPath, { recursive: true });
       const jsonFilePath = path.join(outPath, "index.json");
       fs.writeFileSync(jsonFilePath, JSON.stringify(context));
@@ -364,7 +353,7 @@ export async function buildSPAs(options: {
   );
   await buildStaticPages(
     fileURLToPath(new URL("../copy/community/", import.meta.url)),
-    "community",
+    "",
     "Contribute to MDN"
   );
 

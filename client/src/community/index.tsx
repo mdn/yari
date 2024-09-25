@@ -11,7 +11,7 @@ import { useIsServer } from "../hooks";
 
 interface CommunityDoc {
   title: string;
-  body: Section[];
+  sections: Section[];
 }
 
 export function Community(appProps: HydrationData<any, CommunityDoc>) {
@@ -70,15 +70,15 @@ function useCommunityDoc(
         throw new HTTPError(response.status, url, text);
       }
 
-      return (await response.json())?.doc;
+      return (await response.json())?.hyData;
     },
     {
-      fallbackData: appProps?.doc,
+      fallbackData: appProps?.hyData,
       revalidateOnFocus: WRITER_MODE,
       revalidateOnMount: true,
     }
   );
-  const doc: CommunityDoc | undefined = data || appProps?.doc || undefined;
+  const doc: CommunityDoc | undefined = data || appProps?.hyData || undefined;
   return doc;
 }
 
@@ -89,7 +89,7 @@ function RenderCommunityBody({
   doc?: CommunityDoc;
   renderer?: (section: Section, i: number) => null | JSX.Element;
 }) {
-  return doc?.body.map((section, i) => {
+  return doc?.sections.map((section, i) => {
     return (
       renderer(section, i) || (
         <Prose key={section.value.id} section={section.value} />
@@ -105,10 +105,7 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
   return (
     <header className="landing-header">
-      <section>
-        <h1>{h1}</h1>
-        <div dangerouslySetInnerHTML={html}></div>
-      </section>
+      <section dangerouslySetInnerHTML={html}></section>
     </header>
   );
 }
