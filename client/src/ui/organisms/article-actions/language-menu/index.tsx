@@ -168,7 +168,7 @@ function LocaleRedirectSetting() {
           Remember language
         </Switch>
         <a
-          href="https://github.com/orgs/mdn/discussions"
+          href="https://github.com/orgs/mdn/discussions/739"
           rel="external noopener"
           target="_blank"
           title="Enable this setting to automatically switch to this language when it's available. (Click to learn more.)"
