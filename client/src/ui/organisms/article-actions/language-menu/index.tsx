@@ -140,11 +140,9 @@ function LocaleRedirectSetting() {
   function toggle(event) {
     const newValue = event.target.checked;
     if (newValue) {
-      if (!getCookieValue(PREFERRED_LOCALE_COOKIE_NAME)) {
-        setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, locale, {
-          maxAge: 60 * 60 * 24 * 365 * 3,
-        });
-      }
+      setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, locale, {
+        maxAge: 60 * 60 * 24 * 365 * 3,
+      });
       setPreferredLocale(locale);
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
