@@ -245,10 +245,6 @@ function config(webpackEnv) {
               type: "asset/source",
             },
             {
-              resourceQuery: /url/,
-              type: "asset/resource",
-            },
-            {
               test: [/\.avif$/, /\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
               type: "asset/resource",
             },
