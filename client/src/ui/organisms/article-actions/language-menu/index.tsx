@@ -156,7 +156,6 @@ function LocaleRedirectSetting() {
     }
   }
 
-  // eslint-disable react/jsx-no-target-blank
   return (
     <form className="submenu-item locale-redirect-setting">
       <div className="group">
