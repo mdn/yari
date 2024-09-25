@@ -41,14 +41,15 @@ export function LanguageMenu({
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
     if (newLocale !== locale) {
-      const cookieValueBefore = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
+      const oldLocale = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
 
-      if (cookieValueBefore === locale) {
+      if (oldLocale === locale) {
         for (const translation of translations) {
           if (translation.locale === newLocale) {
-            setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, translation.locale, {
+            setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, newLocale, {
               maxAge: PREFERRED_LOCALE_COOKIE_MAX_AGE,
             });
+            gleanClick(`${LANGUAGE_REMEMBER}: ${oldLocale} -> ${newLocale}`);
           }
         }
       }
@@ -138,17 +139,19 @@ function LocaleRedirectSetting() {
   }, []);
 
   function toggle(event) {
+    const oldValue = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
     const newValue = event.target.checked;
     if (newValue) {
       setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, locale, {
         maxAge: 60 * 60 * 24 * 365 * 3,
       });
       setPreferredLocale(locale);
+      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue} -> ${locale}`);
     } else {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
       setPreferredLocale(undefined);
+      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue} -> 0`);
     }
-    gleanClick(`${LANGUAGE_REMEMBER}: ${locale} -> ${Number(newValue)}`);
   }
 
   return (
