@@ -9,7 +9,7 @@ import { Submenu } from "../../../molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
-import { LANGUAGE, LANGUAGE_REDIRECT } from "../../../../telemetry/constants";
+import { LANGUAGE, LANGUAGE_REMEMBER } from "../../../../telemetry/constants";
 import {
   deleteCookie,
   getCookieValue,
@@ -150,7 +150,7 @@ function LocaleRedirectSetting() {
       deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
       setPreferredLocale(undefined);
     }
-    gleanClick(`${LANGUAGE_REDIRECT}: ${locale} -> ${Number(newValue)}`);
+    gleanClick(`${LANGUAGE_REMEMBER}: ${locale} -> ${Number(newValue)}`);
   }
 
   return (
