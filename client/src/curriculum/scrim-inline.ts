@@ -84,41 +84,43 @@ class ScrimInline extends LitElement {
               <span class="visually-hidden">Open on Scrimba</span>
             </a>
           </div>
-          ${this._scrimLoaded
-            ? html`
-                <iframe
-                  src="${this._fullUrl}"
-                  title="${ifDefined(this.scrimTitle)}"
-                ></iframe>
-              `
-            : html`
-                ${this.scrimTitle && !this.img
-                  ? html`<div class="background">
-                      <div class="background-noise">
-                        <svg width="0" height="0">
-                          <filter id="noise">
-                            <feTurbulence
-                              type="fractalNoise"
-                              baseFrequency="0.7"
-                              numOctaves="4"
-                            />
-                          </filter>
-                        </svg>
-                      </div>
-                      <h1>${this.scrimTitle}</h1>
-                    </div>`
-                  : null}
-                <button
-                  @click="${this.#open}"
-                  class="open"
-                  data-glean=${`${CURRICULUM}: scrim engage id:${this._scrimId}`}
-                >
-                  ${unsafeHTML(playSvg)}
-                  <span class="visually-hidden">
-                    "Load scrim and open dialog."
-                  </span>
-                </button>
-              `}
+          <div class="body">
+            ${this._scrimLoaded
+              ? html`
+                  <iframe
+                    src="${this._fullUrl}"
+                    title="${ifDefined(this.scrimTitle)}"
+                  ></iframe>
+                `
+              : html`
+                  ${this.scrimTitle && !this.img
+                    ? html`<div class="background">
+                        <div class="background-noise">
+                          <svg width="0" height="0">
+                            <filter id="noise">
+                              <feTurbulence
+                                type="fractalNoise"
+                                baseFrequency="0.7"
+                                numOctaves="4"
+                              />
+                            </filter>
+                          </svg>
+                        </div>
+                        <h1>${this.scrimTitle}</h1>
+                      </div>`
+                    : null}
+                  <button
+                    @click="${this.#open}"
+                    class="open"
+                    data-glean=${`${CURRICULUM}: scrim engage id:${this._scrimId}`}
+                  >
+                    ${unsafeHTML(playSvg)}
+                    <span class="visually-hidden">
+                      "Load scrim and open dialog."
+                    </span>
+                  </button>
+                `}
+          </div>
         </div>
       </dialog>
     `;
