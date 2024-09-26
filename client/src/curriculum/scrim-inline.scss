@@ -46,6 +46,10 @@ dialog {
   height: 100%;
   position: relative;
   width: 100%;
+
+  > * {
+    font-size: 4cqmin;
+  }
 }
 
 .header {
@@ -116,7 +120,6 @@ dialog {
     auto 0.6em,
     contain,
     cover;
-  font-size: 4cqmin;
   inset: 0;
   position: absolute;
 
@@ -164,9 +167,9 @@ iframe {
   }
 
   svg {
-    height: 7rem;
+    height: 9em;
     stroke-width: 2px;
-    width: 7rem;
+    width: auto;
 
     circle {
       fill: var(--color);
