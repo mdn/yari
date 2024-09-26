@@ -40,16 +40,12 @@ dialog {
 
 .inner {
   background-color: #000;
+  border: 1px solid #000;
   container-type: size;
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: relative;
   width: 100%;
-
-  > * {
-    font-size: 4cqmin;
-  }
 }
 
 .header {
@@ -61,7 +57,6 @@ dialog {
   min-height: 1.75rem;
   padding: 0 0.5rem;
   width: 100%;
-  z-index: 1;
 
   span {
     color: #fff;
@@ -106,13 +101,19 @@ dialog {
   mask-size: 75%;
 }
 
+.body {
+  flex: 1;
+  font-size: 4cqmin;
+  position: relative;
+}
+
 .background {
   background-color: #453c78;
   background-image: url("../assets/curriculum/scrimba-logo.svg"),
     url("../assets/curriculum/scrim-hexagons.svg"),
     url("../assets/curriculum/scrim-bg.png");
   background-position:
-    calc(100% - 3em) calc(100% - 3.2em),
+    1.5em 1.5em,
     right,
     center;
   background-repeat: no-repeat;
@@ -131,7 +132,7 @@ dialog {
     font-weight: 600;
     left: 0;
     line-height: 1;
-    margin: 1em;
+    margin: 0.5em;
     position: absolute;
     text-transform: uppercase;
     text-wrap: balance;
@@ -148,10 +149,10 @@ dialog {
 
 .open,
 iframe {
-  border: 1px solid #000;
+  border: none;
   height: 100%;
+  position: absolute;
   width: 100%;
-  z-index: 1;
 }
 
 .open {
@@ -161,6 +162,7 @@ iframe {
   background-repeat: no-repeat;
   background-size: cover;
   cursor: pointer;
+  font-size: inherit;
 
   &:hover {
     --color: #8cb4ffe5;
