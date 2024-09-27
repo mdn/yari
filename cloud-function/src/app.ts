@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 import { Router } from "express";
 
@@ -16,6 +17,7 @@ import { redirectMovedPages } from "./middlewares/redirect-moved-pages.js";
 import { redirectEnforceTrailingSlash } from "./middlewares/redirect-enforce-trailing-slash.js";
 import { redirectFundamental } from "./middlewares/redirect-fundamental.js";
 import { redirectLocale } from "./middlewares/redirect-locale.js";
+import { redirectPreferredLocale } from "./middlewares/redirect-preferred-locale.js";
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
@@ -25,6 +27,7 @@ import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeade
 import { proxyPong } from "./handlers/proxy-pong.js";
 
 const router = Router();
+router.use(cookieParser());
 router.use(stripForwardedHostHeaders);
 router.use(redirectLeadingSlash);
 // MDN Plus plans.
@@ -85,6 +88,7 @@ router.get(
   requireOrigin(Origin.main),
   redirectFundamental,
   redirectLocale,
+  redirectPreferredLocale,
   redirectTrailingSlash,
   redirectMovedPages,
   resolveIndexHTML,

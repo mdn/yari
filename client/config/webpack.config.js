@@ -241,6 +241,14 @@ function config(webpackEnv) {
           // back to the "file" loader at the end of the loader list.
           oneOf: [
             {
+              resourceQuery: /raw/,
+              type: "asset/source",
+            },
+            {
+              resourceQuery: /url/,
+              type: "asset/resource",
+            },
+            {
               test: [/\.avif$/, /\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
               type: "asset/resource",
             },
