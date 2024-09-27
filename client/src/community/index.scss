@@ -327,19 +327,19 @@ main.community-container {
         position: relative;
 
         &::after {
-          content: "";
-          display: block;
-          position: absolute;
           background: linear-gradient(
             to right,
             transparent,
             var(--community-bg-secondary)
           );
+          bottom: 0;
+          content: "";
+          display: block;
+          pointer-events: none;
+          position: absolute;
           right: 0;
           top: 0;
-          bottom: 0;
           width: 3rem;
-          pointer-events: none;
 
           @media (max-width: $screen-md) {
             display: none;
