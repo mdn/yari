@@ -58,7 +58,7 @@ svg {
   display: none;
 }
 
-@supports (offset-path: url("#outer-circle")) {
+@supports (offset-path: ellipse(100% 50% at 100% 50%)) {
   @media (min-width: $screen-md) {
     .wrap {
       container-type: size;
@@ -100,7 +100,7 @@ svg {
       animation: community-circle 0.1ms forwards;
       offset-anchor: center calc(0.5 * var(--img-size));
       offset-distance: var(--offset-distance);
-      offset-path: url("#outer-circle");
+      offset-path: ellipse(100% 50% at 100% 50%);
       offset-rotate: 0deg;
 
       @keyframes community-circle {
@@ -111,7 +111,7 @@ svg {
 
       &:nth-of-type(n + 6) {
         --img-size: 5em;
-        offset-path: url("#inner-circle");
+        offset-path: ellipse(50% 25% at 100% 50%);
       }
 
       &:nth-of-type(1) {

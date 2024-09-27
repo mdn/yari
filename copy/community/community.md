@@ -8,9 +8,8 @@ Where web enthusiasts learn, collaborate, and create
 <!--  -->
 
 - **45K+** Total contributors
-- **80M+** Monthly views
 - **200+** Weekly commits
-- **8** Language communities
+- **7** Language communities
 
 ## MDN's community powers the web
 
@@ -18,15 +17,15 @@ MDN’s strength comes from the passion and dedication of our global community.
 Since our founding in 2005, we’ve grown into a thriving network. Together, we’ve
 created a comprehensive, open, and free resource that serves web developers
 across the globe. With volunteers leading translation efforts in
-[8 languages](/en-US/docs/MDN/Community/Contributing/Translated_content), we’re
+[7 languages](/en-US/docs/MDN/Community/Contributing/Translated_content), we’re
 truly international.
 
 ## Meet our contributors
 
-We are an open-source community of developers dedicated to building resources
-for a better web. Our diverse contributors, including developers, technical
-writers, students, educators, designers, and more, come from various backgrounds
-and platforms. Anyone can contribute, and each contribution strengthens our
+We are an open-source community dedicated to building resources for a better
+web. Our diverse contributors, including developers, technical writers,
+students, educators, designers, and more, come from various backgrounds and
+platforms. Anyone can contribute, and each contribution strengthens our
 community, driving innovation and improving this vital resource for developers
 worldwide.
 
@@ -75,8 +74,8 @@ worldwide.
   [YiTao Yin](/en-US/community/spotlight/yitao-yin) (MDN contributor)
 
 If you wish to be a part of the featured contributors here,
-[let us know](https://docs.google.com/forms/d/171RuXZoNs1gQmlJtfTiiU-hFo_odvi6rkx5fH-nqXDY/prefill).<br>
-If you’re featured here and would like to opt-out,
+[let us know](https://forms.gle/7yk13Nn1WRLnuLvy5).<br> If you’re featured here
+and would like to opt-out,
 [please file an issue on GitHub](https://github.com/mdn/content/issues/new?assignees=&labels=needs+triage&projects=&template=content-bug.yml).
 
 ## Learn how to get started
@@ -89,7 +88,7 @@ but not sure how? Follow
 to make your first contribution.
 
 Watch this video on
-[how to get started with contributing to MDN Web Docs](https://www.youtube.com/watch?v=Xnhnu7PViQE)
+[how to get started with contributing to MDN](https://www.youtube.com/watch?v=Xnhnu7PViQE).
 
 [Video from the community team on contributing to MDN](https://www.youtube.com/watch?v=Xnhnu7PViQE)
 

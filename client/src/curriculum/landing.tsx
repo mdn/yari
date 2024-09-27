@@ -153,17 +153,16 @@ function About({ section }) {
             </Suspense>
           </div>
           <p>
-            Learn our curriculum with high quality, interactive courses from our
-            partner{" "}
+            Learn our curriculum with Scrimba's interactive{" "}
             <a
-              href="https://scrimba.com/?via=mdn"
+              href="https://scrimba.com/learn/frontend?via=mdn"
               className="external"
               target="_blank"
               rel="noreferrer"
             >
-              Scrimba
+              Frontend Developer Career Path
             </a>
-            {" !"}
+            .
           </p>
         </section>
       </div>

@@ -300,7 +300,6 @@ main.community-container {
         contributor-list {
           grid-column: 1;
           grid-row: 1/5;
-          margin-left: calc(var(--negative-space) + var(--gutter));
           min-width: 0;
 
           > ul {
@@ -324,18 +323,43 @@ main.community-container {
         margin-bottom: 0;
       }
 
+      .section-content {
+        position: relative;
+
+        &::after {
+          background: linear-gradient(
+            to right,
+            transparent,
+            var(--community-bg-secondary)
+          );
+          bottom: 0;
+          content: "";
+          display: block;
+          pointer-events: none;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 3rem;
+
+          @media (max-width: $screen-md) {
+            display: none;
+          }
+        }
+      }
+
       ul {
         display: flex;
         gap: 2rem;
         margin-bottom: 1.5rem;
         margin-left: -1rem;
-        margin-right: var(--negative-space);
         overflow-x: auto;
         padding: 2.41rem 1rem;
+        padding-right: 3rem;
 
         @media (max-width: $screen-md) {
           margin-left: calc(var(--gutter) * -1);
           margin-right: calc(var(--gutter) * -1);
+          padding-right: 1rem;
         }
       }
 

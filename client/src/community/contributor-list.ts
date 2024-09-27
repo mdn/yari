@@ -52,8 +52,8 @@ export class ContributorList extends LitElement {
       <div class="inner">
         <ul>
           <svg>
-            <ellipse id="outer-circle" cx="100%" cy="50%" rx="100%" ry="50%" />
-            <ellipse id="inner-circle" cx="100%" cy="50%" rx="50%" ry="25%" />
+            <ellipse rx="100%" ry="50%" cx="100%" cy="50%" />
+            <ellipse rx="50%" ry="25%" cx="100%" cy="50%" />
           </svg>
           ${this._contributors.map(({ name, github, org }) => {
             const imgSrc = `https://avatars.githubusercontent.com/${github
