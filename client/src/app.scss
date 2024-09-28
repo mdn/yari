@@ -355,7 +355,7 @@ sup.new {
 
 .sticky-header-container {
   position: sticky;
-  top: -1px;
+  top: -0.1px;
   z-index: var(--z-index-main-header);
 }
 
