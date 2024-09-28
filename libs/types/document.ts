@@ -153,6 +153,7 @@ export interface DocMetadata {
   browserCompat?: string[];
   baseline?: SupportStatus;
   hash?: string;
+  pageType: string;
 }
 
 export interface Doc extends DocMetadata {
@@ -227,7 +228,7 @@ export interface BuildData {
   url: string;
   rawBody: string;
   metadata: { locale: Locale };
-  isMarkdown: true;
+  isMarkdown: boolean;
   fileInfo: {
     path: string;
   };
