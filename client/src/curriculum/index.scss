@@ -112,6 +112,8 @@
 
 .curriculum-content-container {
   > .curriculum-content {
+    max-width: 100%;
+
     h1,
     h2,
     h3,
@@ -284,6 +286,12 @@
       li {
         list-style-type: disc;
         margin: 0.5rem 0;
+      }
+
+      scrim-inline {
+        display: block;
+        height: 14.25rem;
+        width: 22rem;
       }
     }
   }

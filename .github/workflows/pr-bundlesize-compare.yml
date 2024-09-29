@@ -1,0 +1,100 @@
+name: Compare bundle size
+
+on:
+  pull_request:
+
+jobs:
+  # Build current and upload stats.json
+  build-head:
+    name: "Build head"
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: yarn
+
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: yarn build:client
+        env:
+          ANALYZE_BUNDLE_PR: true
+
+      - name: Upload stats.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: head-stats
+          path: ./client/build/stats.json
+
+  # Build base for comparison and upload stats.json
+  build-base:
+    name: "Build base"
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: yarn
+
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
+      - name: Install all yarn packages
+        run: yarn --frozen-lockfile
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: yarn build:client
+        env:
+          ANALYZE_BUNDLE_PR: true
+
+      - name: Upload stats.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-stats
+          path: ./client/build/stats.json
+
+  # run the action against the stats.json files
+  compare:
+    name: "Compare base & head bundle sizes"
+    runs-on: ubuntu-latest
+    needs: [build-base, build-head]
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/download-artifact@v4
+      - uses: github/webpack-bundlesize-compare-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          current-stats-json-path: ./head-stats/stats.json
+          base-stats-json-path: ./base-stats/stats.json

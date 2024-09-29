@@ -28,7 +28,7 @@ import {
 } from "./flaws/index.js";
 import { checkImageReferences, checkImageWidths } from "./check-images.js";
 import { getPageTitle } from "./page-title.js";
-import { syntaxHighlight } from "./syntax-highlight.js";
+import { wrapCodeExamples } from "./code-headers.js";
 import { formatNotecards } from "./format-notecards.js";
 import buildOptions from "./build-options.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
@@ -457,8 +457,8 @@ export async function buildDocument(
     plainHTML = $.html();
   }
 
-  // Apply syntax highlighting all <pre> tags.
-  syntaxHighlight($, doc);
+  // Add headers to all <pre> tags with code.
+  wrapCodeExamples($);
 
   // Post process HTML so that the right elements gets tagged so they
   // *don't* get translated by tools like Google Translate.
@@ -529,6 +529,8 @@ export async function buildDocument(
   doc.modified = metadata.modified || null;
 
   doc.other_translations = document.translations || [];
+
+  doc.pageType = metadata["page-type"] || "unknown";
 
   injectSource(doc, document, metadata);
 

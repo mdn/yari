@@ -1,4 +1,3 @@
-import Prism from "prismjs";
 import {
   Children,
   MutableRefObject,
@@ -59,6 +58,7 @@ import {
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
+import { CodeWithSyntaxHighlight } from "../../document/code/syntax-highlight";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -482,19 +482,15 @@ function AIHelpAssistantResponse({
               },
               code: ({ className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || "");
-                const lang = Prism.languages[match?.[1]];
-                return lang ? (
-                  <code
-                    {...props}
+                const lang = match?.[1];
+                return (
+                  <CodeWithSyntaxHighlight
+                    language={lang}
                     className={className}
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(String(children), lang),
-                    }}
-                  />
-                ) : (
-                  <code {...props} className={className}>
+                    {...props}
+                  >
                     {children}
-                  </code>
+                  </CodeWithSyntaxHighlight>
                 );
               },
             }}
@@ -610,7 +606,7 @@ export function AIHelpInner() {
   const isQuotaLoading = quota === undefined;
   const hasQuota = !isQuotaLoading && quota !== null;
   const hasConversation = messages.length > 0;
-  const gptVersion = isPlusSubscriber(user) ? "GPT-4" : "GPT-3.5";
+  const gptVersion = isPlusSubscriber(user) ? "GPT-4o" : "GPT-4o mini";
 
   function isQuotaExceeded(quota: Quota | null | undefined): quota is Quota {
     return quota ? quota.remaining <= 0 : false;
@@ -920,8 +916,8 @@ export function AIHelpInner() {
                       </header>
                       <div className="modal-body">
                         <p>
-                          Our AI Help feature integrates GPT-3.5 for MDN Plus
-                          free users and GPT-4 for paying subscribers,
+                          Our AI Help feature integrates GPT-4o mini for MDN
+                          Plus free users and GPT-4o for paying subscribers,
                           leveraging Large Language Models (LLMs) developed by{" "}
                           <a
                             href="https://platform.openai.com/docs/api-reference/models"
@@ -983,7 +979,9 @@ export function AIHelpInner() {
                 ))}
               </section>
             )}
-            {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
+            {hash === "#debug" && (
+              <pre>{JSON.stringify({ datas, messages, quota }, null, 2)}</pre>
+            )}
           </section>
         )}
       </Container>
@@ -1111,7 +1109,7 @@ function ReportIssueOnGitHubLink({
       .join("\n") || "(None)"
   );
   // TODO Persist model in messages and read it from there.
-  sp.set("model", isSubscriber ? "gpt-4" : "gpt-3.5");
+  sp.set("model", isSubscriber ? "gpt-4o" : "gpt-4o mini");
   sp.set("template", "ai-help-answer.yml");
 
   url.search = sp.toString();

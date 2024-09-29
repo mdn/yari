@@ -7,7 +7,7 @@ import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
 import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
-import { useMemo } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";
 import { CurriculumLayout } from "./layout";
 
@@ -15,7 +15,9 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
-import { ScrimIframe } from "./scrim";
+import { useIsServer } from "../hooks";
+
+const ScrimInline = lazy(() => import("./scrim-inline"));
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -42,12 +44,15 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           }
           if (section.value.id === "modules") {
             const { title, id } = (section as ProseSection).value;
+            console.log(title);
             return (
               <>
                 <section key={`${id}-1`} className="modules">
                   {title && <DisplayH2 id={id} title={title} />}
                   {doc?.modules && <ModulesListList modules={doc.modules} />}
                 </section>
+                <PartnerBanner />
+
                 <section key={`${id}-2`} className="landing-stairway">
                   <div>
                     <div id="stairway1-container">
@@ -100,7 +105,6 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           return null;
         }}
       />
-      <PartnerBanner />
     </CurriculumLayout>
   );
 }
@@ -127,27 +131,31 @@ const SCRIM_URL = "https://v2.scrimba.com/s06icdv?via=mdn";
 function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
+  const isServer = useIsServer();
+
   return (
     <section key={id} className="landing-about-container">
       <div className="landing-about">
         <DisplayH2 id={id} title={title} />
         <div className="about-content" dangerouslySetInnerHTML={html}></div>
         <div className="arrow"></div>
-        <ScrimIframe url={SCRIM_URL}>
+        <section className="scrim-wrapper">
+          <div className="scrim-border">
+            <Suspense>{!isServer && <ScrimInline url={SCRIM_URL} />}</Suspense>
+          </div>
           <p>
-            Learn our curriculum with high quality, interactive courses from our
-            partner{" "}
+            Learn our curriculum with Scrimba's interactive{" "}
             <a
-              href="https://scrimba.com/?via=mdn"
+              href="https://scrimba.com/learn/frontend?via=mdn"
               className="external"
               target="_blank"
               rel="noreferrer"
             >
-              Scrimba
+              Frontend Developer Career Path
             </a>
-            {" !"}
+            .
           </p>
-        </ScrimIframe>
+        </section>
       </div>
     </section>
   );
