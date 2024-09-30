@@ -129,7 +129,6 @@ jobs:
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
-          ref: "next"
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
