@@ -321,7 +321,9 @@ export async function buildSPAs(options: {
       };
       const context: HydrationData = {
         hyData,
-        pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+        pageTitle: frontMatter.attributes.title
+          ? `${frontMatter.attributes.title} | ${title}`
+          : title,
         url,
       };
 

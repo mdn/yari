@@ -52,8 +52,32 @@ export class ContributorList extends LitElement {
       <div class="inner">
         <ul>
           <svg>
-            <ellipse rx="100%" ry="50%" cx="100%" cy="50%" />
-            <ellipse rx="50%" ry="25%" cx="100%" cy="50%" />
+            <defs>
+              <mask id="hide-half">
+                <rect
+                  x="0%"
+                  y="0%"
+                  width="100%"
+                  height="100%"
+                  fill="#fff"
+                  stroke="#fff"
+                />
+              </mask>
+            </defs>
+            <ellipse
+              rx="100%"
+              ry="50%"
+              cx="100%"
+              cy="50%"
+              mask="url(#hide-half)"
+            />
+            <ellipse
+              rx="50%"
+              ry="25%"
+              cx="100%"
+              cy="50%"
+              mask="url(#hide-half)"
+            />
           </svg>
           ${this._contributors.map(({ name, github, org }) => {
             const imgSrc = `https://avatars.githubusercontent.com/${github
@@ -80,5 +104,6 @@ export class ContributorList extends LitElement {
 
 function popRandom<T>(array: Array<T>) {
   const i = Math.floor(Math.random() * array.length);
+  // mutate the array:
   return array.splice(i, 1)[0];
 }
