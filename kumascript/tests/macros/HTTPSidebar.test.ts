@@ -59,10 +59,10 @@ const fixtureData = JSON.parse(
 
 const locales = {
   "en-US": {
-    ResourcesURI: "HTTP concepts",
+    ResourcesURI: "Security and privacy",
   },
   es: {
-    ResourcesURI: "Guía de HTTP",
+    ResourcesURI: "Seguridad en HTTP",
   },
 };
 
