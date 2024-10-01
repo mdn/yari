@@ -292,3 +292,5 @@ name causing the problem.
 
 You may need to adjust the path to `libpng16.a` depending on the version of
 `libpng` you have installed.
+
+this is a test
