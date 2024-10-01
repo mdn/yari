@@ -82,7 +82,6 @@ svg {
     }
 
     svg {
-      clip-path: inset(calc(-1 * var(--circle-border-size)));
       display: block;
       fill: none;
       height: 100%;
