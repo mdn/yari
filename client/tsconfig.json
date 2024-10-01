@@ -7,7 +7,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "es2021"],
-    "module": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "Node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
