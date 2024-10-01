@@ -104,5 +104,6 @@ export class ContributorList extends LitElement {
 
 function popRandom<T>(array: Array<T>) {
   const i = Math.floor(Math.random() * array.length);
+  // mutate the array:
   return array.splice(i, 1)[0];
 }

@@ -153,7 +153,6 @@ export const CSP_DIRECTIVES = {
     "firefoxusercontent.com",
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
-    "https://github.com",
 
     "mdn.dev",
     "interactive-examples.mdn.mozilla.net",
