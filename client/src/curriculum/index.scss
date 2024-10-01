@@ -289,9 +289,15 @@
       }
 
       scrim-inline {
+        aspect-ratio: 1.5;
         display: block;
-        height: 14.25rem;
-        width: 22rem;
+        margin: 0.5rem auto;
+        max-width: 36rem;
+        width: 100%;
+      }
+
+      p:has(> scrim-inline:only-child) {
+        margin: 1rem 0;
       }
     }
   }
