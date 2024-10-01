@@ -94,7 +94,6 @@ svg {
     }
 
     li {
-      --offset-distance: calc(var(--community-circle-angle) * 50% + 25%);
       // necessary because Firefox seems to have a bug where the links aren't
       // clickable until we force some kind of re-render which an animation does:
       animation: community-circle 0.1ms forwards;
@@ -109,41 +108,28 @@ svg {
         }
       }
 
-      &:nth-of-type(n + 6) {
+      $outer-elements: 5;
+      $inner-elements: 3;
+
+      @for $i from 1 through $outer-elements {
+        &:nth-of-type(#{$i}) {
+          --offset-distance: #{calc(
+              75% - (($i - 1) * 50% / ($outer-elements - 1))
+            )};
+        }
+      }
+
+      &:nth-of-type(n + #{$outer-elements + 1}) {
         --img-size: 5em;
         offset-path: ellipse(50% 25% at 100% 50%);
       }
 
-      &:nth-of-type(1) {
-        --community-circle-angle: 0;
-      }
-
-      &:nth-of-type(2) {
-        --community-circle-angle: 1/4;
-      }
-
-      &:nth-of-type(3) {
-        --community-circle-angle: 2/4;
-      }
-
-      &:nth-of-type(4) {
-        --community-circle-angle: 3/4;
-      }
-
-      &:nth-of-type(5) {
-        --community-circle-angle: 1;
-      }
-
-      &:nth-of-type(6) {
-        --community-circle-angle: 0;
-      }
-
-      &:nth-of-type(7) {
-        --community-circle-angle: 1/2;
-      }
-
-      &:nth-of-type(8) {
-        --community-circle-angle: 1;
+      @for $i from 1 through $inner-elements {
+        &:nth-of-type(#{$outer-elements + $i}) {
+          --offset-distance: #{calc(
+              75% - (($i - 1) * 50% / ($inner-elements - 1))
+            )};
+        }
       }
     }
 
