@@ -74,5 +74,9 @@ export function LocalizedContentNote({
     : "https://github.com/mdn/translated-content-de/blob/main/PEERS_GUIDELINES.md#activating-a-locale";
 
   const type = isActive ? "neutral" : "warning";
-  return <NoteBanner linkText={linkText} url={url} type={type} />;
+  return (
+    <NoteBanner url={url} type={type}>
+      {linkText}
+    </NoteBanner>
+  );
 }
