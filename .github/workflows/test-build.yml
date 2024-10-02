@@ -44,6 +44,7 @@ jobs:
         with:
           repository: mdn/content
           path: mdn/content
+          ref: rari
           # Yes, this means fetch EVERY COMMIT EVER.
           # It's probably not sustainable in the far future (e.g. past 2021)
           # but for now it's good enough. We'll need all the history
@@ -111,6 +112,12 @@ jobs:
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://test.developer.allizom.org"
 
+          # rari
+          BUILD_OUT_ROOT: "client/build"
+          GENERIC_PAGES_ROOT: "copy"
+          LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
+          INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
@@ -161,6 +168,10 @@ jobs:
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
         run: |
           set -eo pipefail
+          if [ ! -d $HOME/.bin ]; then mkdir $HOME/.bin; fi
+          export PATH=$HOME/.bin:$PATH
+
+          curl -L https://github.com/mdn/rari/releases/latest/download/rari-aarch64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -168,31 +179,13 @@ jobs:
           echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn build:prepare
+          yarn build:client
+          yarn build:ssr
 
           #yarn tool sync-translated-content
 
-          # Build using one process per locale.
-          # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us fr; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
-            pids+=($!)
-          done
-
-          for pid in "${pids[@]}"; do
-            wait $pid
-          done
-
-          du -sh client/build
-
-          # Build the blog
-          yarn build:blog
-
-          # Build the curriculum
-          yarn build:curriculum
-
-          # Generate sitemap index file
-          yarn build --sitemap-index
+          rari popularities
+          rari build --issues client/build/issues.json --templ-stats
 
           # SSR all pages
           yarn render:html
@@ -241,12 +234,11 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
-          set -eo pipefail
-
           for region in europe-west3; do
             gcloud beta functions deploy mdn-nonprod-test-$region \
             --gen2 \
@@ -266,7 +258,6 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=test.mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
-            --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=test" \
             --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
@@ -274,7 +265,6 @@ jobs:
             --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
             --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
             --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
-            --set-secrets="BSA_ZONE_KEYS=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-bsa-zone-keys/versions/latest" \
             2>&1 | sed "s/^/[$region] /" &
             pids+=($!)
           done
