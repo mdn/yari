@@ -9,8 +9,15 @@ export function LocalizedContentNote({
 }) {
   const activeLocaleNoteContent = {
     de: {
-      linkText: "Diese Seite wurde automatisch aus dem Englischen übersetzt.",
-      url: "/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
+      linkText: (
+        <>
+          Diese Seite wurde mit GPT-4o aus dem Englischen übersetzt.
+          <br />
+          <strong>Disclaimer</strong>: Dies ist eine Vorschau. Übersetzungen
+          können unvollständig oder fehlerhaft sein.
+        </>
+      ),
+      url: "https://github.com/orgs/mdn/discussions/741",
     },
     "en-US": {
       linkText:
