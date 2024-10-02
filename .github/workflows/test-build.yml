@@ -171,7 +171,7 @@ jobs:
           if [ ! -d $HOME/.bin ]; then mkdir $HOME/.bin; fi
           export PATH=$HOME/.bin:$PATH
 
-          curl -L https://github.com/mdn/rari/releases/latest/download/rari-aarch64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
+          curl -L https://github.com/mdn/rari/releases/latest/download/rari-x86_64-unknown-linux-musl.tar.gz | tar -xz -C $HOME/.bin/
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
