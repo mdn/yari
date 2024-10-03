@@ -193,7 +193,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-gitignore": "^0.1.0",
     "eslint-plugin-flowtype": "^8.0.3",
-    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.8.3",
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-n": "^17.10.3",
