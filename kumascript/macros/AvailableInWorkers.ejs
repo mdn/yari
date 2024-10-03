@@ -4,15 +4,20 @@
 // Parameters:
 //
 //  $0 - workerType (optional):
-//      'window_and_dedicated': only in DedicatedWorker (and in Window)
-//      'dedicated': only in DedicatedWorker
-//      'window_and_worker_except_service': all workers but ServiceWorker (and in Window)
-//      'window_and_worker_except_shared': all workers but shared workers (and in Window)
-//      'worker_except_service': all workers but ServiceWorker (and no window)
-//      'window_and_service': only in ServiceWorker (and in Window)
-//      'service': only in ServiceWorker
-//      'worker': All workers (and no Window)
 //      null: (default) All workers (and in Window)
+//      'worker': All workers (and no Window)
+//      'window_and_worker_except_service': all workers but ServiceWorker (and in Window)
+//      'window_and_worker_except_shared': all workers but SharedWorker (and in Window)
+//      'window_and_worker_except_dedicated': all workers but DedicatedWorker (and in Window)
+//      'worker_except_service': all workers but ServiceWorker (and no window)
+//      'worker_except_shared': all workers but SharedWorker (and no window)
+//      'worker_except_dedicated': all workers but DedicatedWorker (and no window)
+//      'window_and_service': only in ServiceWorker (and in Window)
+//      'window_and_shared': only in ServiceWorker (and in Window)
+//      'window_and_dedicated': only in DedicatedWorker (and in Window)
+//      'service': only in ServiceWorker (and no window)
+//      'shared': only in SharedWorker (and no window)
+//      'dedicated': only in DedicatedWorker (and no window)
 //
 //  {{AvailableInWorkers}}
 //  {{AvailableInWorkers("worker_except_service")}}
@@ -60,22 +65,22 @@ const textNotShared = mdn.localString({
   "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括<a href="/${locale}/docs/Web/API/SharedWorkerGlobalScope">共享 Web Worker</a>）中可用。`,
 });
 
+const textNotDedicated = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
+});
+
 const textNotServiceNotWindow = mdn.localString({
   "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
   "ja": `この機能は<a href="/${locale}/docs/Web/API/Web_Workers_API">ウェブワーカー</a>内でのみ利用可能ですが、<a href="/${locale}/docs/Web/API/Service_Worker_API">サービスワーカー</a>では使用できません。`,
   "zh-CN": `此特性仅在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中可用。`,
 });
 
-const textDedicated = mdn.localString({
-  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
-  "ja": `この機能は<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">専用ウェブワーカー</a>内で利用可能です。`,
-  "zh-CN": `此特性在<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">专用 Web Worker</a>中可用。`,
+const textNotSharedNotWindow = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/SharedWorkerGlobalScope">Shared Web Workers</a>.`,
 });
 
-const textDedicatedOnly = mdn.localString({
-  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
-  "ja": `この機能は<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">専用ウェブワーカー</a>内でのみ利用可能です。`,
-  "zh-CN": `此特性仅在<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">专用 Web Worker</a> 中可用。`,
+const textNotDedicatedNotWindow = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
 });
 
 const textService = mdn.localString({
@@ -84,11 +89,31 @@ const textService = mdn.localString({
   "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a> 中可用。`,
 });
 
+const textShared = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/SharedWorkerGlobalScope">Shared Web Workers</a>.`,
+});
+
+const textDedicated = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">専用ウェブワーカー</a>内で利用可能です。`,
+  "zh-CN": `此特性在<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">专用 Web Worker</a>中可用。`,
+});
+
 const textServiceOnly = mdn.localString({
   "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
   "ja": `この機能は<a href="/${locale}/docs/Web/API/Service_Worker_API">サービスワーカー</a>内でのみ利用可能です。`,
   "zh-CN": `此特性仅在 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a> 中可用。`,
 })
+
+const textSharedOnly = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/SharedWorkerGlobalScope">Shared Web Workers</a>.`,
+})
+
+const textDedicatedOnly = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">専用ウェブワーカー</a>内でのみ利用可能です。`,
+  "zh-CN": `此特性仅在<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">专用 Web Worker</a> 中可用。`,
+});
 
 const workerType = $0 || 'default';
 
@@ -97,11 +122,16 @@ const associatedText = {
   worker: () => textWorker,
   window_and_worker_except_service: () => textNotService,
   window_and_worker_except_shared: () => textNotShared,
+  window_and_worker_except_dedicated: () => textNotDedicated,
   worker_except_service: () => textNotServiceNotWindow,
-  window_and_dedicated: () => textDedicated,
-  dedicated: () => textDedicatedOnly,
+  worker_except_shared: () => textNotSharedNotWindow,
+  worker_except_dedicated: () => textNotDedicatedNotWindow,
   window_and_service: () => textService,
+  window_and_shared: () => textShared,
+  window_and_dedicated: () => textDedicated,
   service: () => textServiceOnly,
+  shared: () => textSharedOnly,
+  dedicated: () => textDedicatedOnly,
 };
 
 if (!associatedText[workerType]) {
