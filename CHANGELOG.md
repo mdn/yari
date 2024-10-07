@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.64.1](https://github.com/mdn/yari/compare/v2.64.0...v2.64.1) (2024-10-02)
+
+
+### Bug Fixes
+
+* **build:** don't run bundlesize action on PRs from forks ([#11887](https://github.com/mdn/yari/issues/11887)) ([9ddf73e](https://github.com/mdn/yari/commit/9ddf73e50f3469b9bc728a143d870c77c3c8cd4e))
+* **macros/jsxref:** fix dot handling ([#11869](https://github.com/mdn/yari/issues/11869)) ([de1a76a](https://github.com/mdn/yari/commit/de1a76a2d53c450dddc7b26e297fc360de65d36d))
+
+
+### Enhancements
+
+* **build:** improve expected document path error message ([#11606](https://github.com/mdn/yari/issues/11606)) ([afa30bc](https://github.com/mdn/yari/commit/afa30bcaf032d986a46247efb5edc15594e49a88))
+* **curriculum:** add inline scrim design to custom element ([#11866](https://github.com/mdn/yari/issues/11866)) ([540505b](https://github.com/mdn/yari/commit/540505ba3168e2e502341cd661997b4be5673f42))
+* **language-menu:** explain "Remember language" + link announcement ([#11865](https://github.com/mdn/yari/issues/11865)) ([ca0300d](https://github.com/mdn/yari/commit/ca0300d28810fa6294bd3a189531800227dbdc50))
+* **seo:** link technologies in homepage hero ([#11877](https://github.com/mdn/yari/issues/11877)) ([2bce115](https://github.com/mdn/yari/commit/2bce115c9af3344895dc5e57c4d23570d86bd069))
+
+
+### Miscellaneous
+
+* **curriculum:** add styling for pdf download banner ([#11834](https://github.com/mdn/yari/issues/11834)) ([8e5c55e](https://github.com/mdn/yari/commit/8e5c55ebd484ccae1a92141f90ab17808a95f93a))
+* **curriculum:** change scrimba copy/links ([#11874](https://github.com/mdn/yari/issues/11874)) ([c90c6fc](https://github.com/mdn/yari/commit/c90c6fca8260fa48158c8fbabadb1bd5c606dce1))
+* **deps-dev:** bump @swc/core from 1.7.26 to 1.7.28 ([#11862](https://github.com/mdn/yari/issues/11862)) ([233402a](https://github.com/mdn/yari/commit/233402a7f5eea1895ea243a2645338e2e2e81c83))
+* **deps-dev:** bump @types/node from 18.19.51 to 18.19.53 in the types group ([#11870](https://github.com/mdn/yari/issues/11870)) ([56541b3](https://github.com/mdn/yari/commit/56541b3e426d9b43c6fd1326a287a9267168bf94))
+* **deps-dev:** bump browserslist from 4.23.3 to 4.24.0 ([#11863](https://github.com/mdn/yari/issues/11863)) ([72122f0](https://github.com/mdn/yari/commit/72122f0478fc42f0ba4f8975245332c8c6cf798c))
+* **deps-dev:** bump eslint-plugin-react from 7.36.1 to 7.37.0 ([#11876](https://github.com/mdn/yari/issues/11876)) ([0f5a50b](https://github.com/mdn/yari/commit/0f5a50b84ff958bec546ce274f41e8d46283bdac))
+* **deps-dev:** bump eslint-plugin-react from 7.37.0 to 7.37.1 ([#11896](https://github.com/mdn/yari/issues/11896)) ([e072309](https://github.com/mdn/yari/commit/e07230970d00e4452fed90445a2a64fcb7cbc316))
+* **deps-dev:** bump html-validate from 8.23.0 to 8.24.0 ([#11860](https://github.com/mdn/yari/issues/11860)) ([ca1821c](https://github.com/mdn/yari/commit/ca1821c024184e76bff4c342bbd8b18142f165ff))
+* **deps-dev:** bump sass from 1.79.3 to 1.79.4 ([#11882](https://github.com/mdn/yari/issues/11882)) ([c4516ad](https://github.com/mdn/yari/commit/c4516ad5cb1769ee6e5343b3a648f36f271d6947))
+* **deps-dev:** bump the types group with 2 updates ([#11879](https://github.com/mdn/yari/issues/11879)) ([4c25d57](https://github.com/mdn/yari/commit/4c25d57cbd4ef09d9994c8bfa1bcb3853e55acf4))
+* **deps-dev:** bump typescript-eslint from 8.7.0 to 8.8.0 ([#11890](https://github.com/mdn/yari/issues/11890)) ([9a856d8](https://github.com/mdn/yari/commit/9a856d871b1cea2d1028ec8cff27bcdb86fd2b16))
+* **deps-dev:** bump webpack from 5.94.0 to 5.95.0 ([#11871](https://github.com/mdn/yari/issues/11871)) ([123a233](https://github.com/mdn/yari/commit/123a2334dccbafa48330adf93276eb21cded5f2a))
+* **deps-dev:** bump webpack from 5.94.0 to 5.95.0 in /client/pwa ([#11868](https://github.com/mdn/yari/issues/11868)) ([c5ccaf1](https://github.com/mdn/yari/commit/c5ccaf1b85ad9fac7362e333d8f029c0a1c056df))
+* **deps:** bump @mdn/browser-compat-data from 5.6.2 to 5.6.3 ([#11861](https://github.com/mdn/yari/issues/11861)) ([7fbcd36](https://github.com/mdn/yari/commit/7fbcd364ae8b0623f89ae3d3fa8eb42354d2aceb))
+* **deps:** bump @mdn/browser-compat-data from 5.6.3 to 5.6.4 ([#11881](https://github.com/mdn/yari/issues/11881)) ([1a98631](https://github.com/mdn/yari/commit/1a986314369e595b2173b0e005455648aee0ae57))
+* **deps:** bump @stripe/stripe-js from 4.5.0 to 4.6.0 ([#11889](https://github.com/mdn/yari/issues/11889)) ([510d943](https://github.com/mdn/yari/commit/510d94317de76c1e72cdfb17627af200a2f7c589))
+* **deps:** bump @webref/css from 6.15.2 to 6.16.0 ([#11892](https://github.com/mdn/yari/issues/11892)) ([690b997](https://github.com/mdn/yari/commit/690b99742d707e1a9ba1e3af07bd1a1184d3c6fc))
+* **deps:** bump boto3 from 1.35.24 to 1.35.29 in /deployer in the dependencies group ([#11878](https://github.com/mdn/yari/issues/11878)) ([9790fdf](https://github.com/mdn/yari/commit/9790fdf491c47e207b8da3a8d5626cbf3cec3376))
+* **deps:** bump fdir from 6.3.0 to 6.4.0 ([#11880](https://github.com/mdn/yari/issues/11880)) ([991e4e0](https://github.com/mdn/yari/commit/991e4e0b377d537486bd0b30f3d7ccd409089165))
+* **deps:** bump openai from 4.63.0 to 4.64.0 ([#11872](https://github.com/mdn/yari/issues/11872)) ([3f7ad43](https://github.com/mdn/yari/commit/3f7ad4336c3621dfa479e3eeec5f8a4e6e721e0b))
+* **deps:** bump openai from 4.64.0 to 4.65.0 ([#11875](https://github.com/mdn/yari/issues/11875)) ([cd27679](https://github.com/mdn/yari/commit/cd276790c604f62f2a62d321cbed32125dd58fc6))
+* **deps:** bump openai from 4.65.0 to 4.66.1 ([#11891](https://github.com/mdn/yari/issues/11891)) ([131e39b](https://github.com/mdn/yari/commit/131e39bc71dcc73be99d9e8deaf884c3621edb1d))
+* **deps:** bump openai from 4.66.1 to 4.67.0 ([#11897](https://github.com/mdn/yari/issues/11897)) ([694798a](https://github.com/mdn/yari/commit/694798a6bdb3765524a63572d47490b71f12f04c))
+* **deps:** bump rehype-parse from 9.0.0 to 9.0.1 ([#11884](https://github.com/mdn/yari/issues/11884)) ([71cf8a9](https://github.com/mdn/yari/commit/71cf8a93e352a7211bd63a3d2d8b17ec6610b971))
+* **deps:** bump rehype-stringify from 10.0.0 to 10.0.1 ([#11883](https://github.com/mdn/yari/issues/11883)) ([b21152a](https://github.com/mdn/yari/commit/b21152a904178cec7c5e5a9bd063929c48dc8545))
+* **macros/HTTPSidebar:** Reorg HTTP sidebar after doc reshuffle, delete 'Basics of HTTP' ([#11753](https://github.com/mdn/yari/issues/11753)) ([1536571](https://github.com/mdn/yari/commit/1536571e3c9f28110065ac4da9ecfd7c698753de))
+* **macros:** add "except shared" condition to AvailableinWorkers ([#11888](https://github.com/mdn/yari/issues/11888)) ([41ad479](https://github.com/mdn/yari/commit/41ad4797a608cfa194f5265e16025794d5cd9f25))
+
 ## [2.64.0](https://github.com/mdn/yari/compare/v2.63.1...v2.64.0) (2024-09-25)
 
 
