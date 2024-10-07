@@ -11775,10 +11775,10 @@ postcss-attribute-case-insensitive@^7.0.0:
   dependencies:
     postcss-selector-parser "^6.1.0"
 
-postcss-browser-comments@^4:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-browser-comments/-/postcss-browser-comments-4.0.0.tgz#bcfc86134df5807f5d3c0eefa191d42136b5e72a"
-  integrity sha512-X9X9/WN3KIvY9+hNERUqX9gncsgBA25XaeR+jshHz2j8+sYyHktHw1JdKuMjeLpGktXidqDhA7b/qm1mrBDmgg==
+postcss-browser-comments@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/postcss-browser-comments/-/postcss-browser-comments-6.0.1.tgz#1a2735c734c3fe2bdcf723e49df8864ac90ed195"
+  integrity sha512-VE5mVLOW+L31a+Eyi7i5j7PmzOydObKLA9VwGBpTZy2OYB3XY1E7/xHxv4tURtEI/qb5h2TyyGHPhZ31sXOEXg==
 
 postcss-calc@^10.0.2:
   version "10.0.2"
@@ -12128,13 +12128,13 @@ postcss-normalize-whitespace@^7.0.0:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-normalize@^13.0.0:
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-normalize/-/postcss-normalize-13.0.0.tgz#e61212727c73a2ada863df305b6be9467f45a2f9"
-  integrity sha512-EdlY4gQiS8DluldxUsgsgzMA1+4mRd4FQ7x8yGT934X3IBTJ0ZW3OG6xNneaHTv2BNzwnQ5mrnmrA/7yxVvnYw==
+postcss-normalize@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/postcss-normalize/-/postcss-normalize-13.0.1.tgz#4e367c8933caba83557c6150af5aa4774b2a1c99"
+  integrity sha512-oGfXG7IQ44FUIMFco2N2Uz71UotM+tZ9trEmT1bHIUR5gAplyG3RnHqpMDEcCx1r+1bwBJTrI5uhiQr4YOpqhQ==
   dependencies:
     "@csstools/normalize.css" "12.1.1"
-    postcss-browser-comments "^4"
+    postcss-browser-comments "^6.0.1"
     sanitize.css "13.0.0"
 
 postcss-opacity-percentage@^3.0.0:
