@@ -102,21 +102,25 @@ engage.
 - ### Fix issues
 
   Submit pull requests to fix reported issues.
+
   [Squash bugs](https://github.com/mdn/content/issues)
 
 - ### Improve content
 
   Fix inaccuracies and fill in missing information.
+
   [Start writing](https://github.com/mdn/content/#readme)
 
 - ### Localize content
 
   Participate in translating content into one of our supported languages.
+
   [Find your locale](/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales)
 
 - ### Answer questions
 
   Share your knowledge and expertise and guide fellow learners.
+
   [Help on Discord](https://mdn.dev/discord)
 
 ## Help us fix open issues
