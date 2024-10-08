@@ -474,12 +474,12 @@ main.community-container {
             content: "";
             display: block;
             height: 30%;
-            left: 45% - 40% / 2;
+            left: calc(45% - 40% / 2);
             outline-color: var(--accent-primary);
             outline-offset: 1px;
             outline-style: auto;
             position: absolute;
-            top: 50% - 30% / 2;
+            top: calc(50% - 30% / 2);
             width: 40%;
           }
 
