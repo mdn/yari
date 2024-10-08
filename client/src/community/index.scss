@@ -467,7 +467,21 @@ main.community-container {
           color: transparent;
           display: block;
           overflow: hidden;
+          position: relative;
           text-indent: -100rem;
+
+          &:focus-visible::after {
+            content: "";
+            display: block;
+            height: 30%;
+            left: 45% - 40% / 2;
+            outline-color: var(--accent-primary);
+            outline-offset: 1px;
+            outline-style: auto;
+            position: absolute;
+            top: 50% - 30% / 2;
+            width: 40%;
+          }
 
           @media (max-width: $screen-md) {
             width: 28rem;
