@@ -196,7 +196,7 @@
     ol,
     ul {
       li > p {
-        display: contents;
+        margin: 0;
       }
     }
   }
