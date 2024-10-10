@@ -253,5 +253,8 @@ app.get("/*", async (req, res) => {
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 });
 
+const HOST = process.env.SERVER_HOST || undefined;
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, HOST, () =>
+  console.log(`Listening on ${HOST ? `${HOST}:` : "port "}${PORT}`)
+);
