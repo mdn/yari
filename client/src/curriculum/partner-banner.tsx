@@ -9,23 +9,19 @@ export function PartnerBanner() {
     <section className="curriculum-partner-banner-container">
       <div className="partner-banner">
         <section>
-          <h2>
-            Learn the curriculum with{" "}
+          <h2>Learn the curriculum with Scrimba and become job ready</h2>
+          <p>
             <a
-              href="https://scrimba.com?via=mdn"
+              href="https://scrimba.com/learn/frontend?via=mdn"
               target="_blank"
               rel="origin noreferrer"
               className="external"
             >
-              Scrimba
+              Scrimba's Frontend Developer Career Path
             </a>{" "}
-            and become job ready
-          </h2>
-          <p>
-            Scrimba's Frontend Developer Career Path teaches the MDN Curriculum
-            Core with fun interactive lessons and challenges, knowledgeable
-            teachers, and a supportive community. Go from zero to landing your
-            first front-end job!
+            teaches the MDN Curriculum Core with fun interactive lessons and
+            challenges, knowledgeable teachers, and a supportive community. Go
+            from zero to landing your first front-end job!
           </p>
           <a
             href="https://scrimba.com/learn/frontend?via=mdn"

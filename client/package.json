@@ -4,6 +4,9 @@
   "license": "MPL-2.0",
   "type": "module",
   "babel": {
+    "generatorOpts": {
+      "importAttributesKeyword": "with"
+    },
     "presets": [
       "react-app"
     ]
@@ -21,7 +24,15 @@
     ]
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "react/jsx-no-target-blank": [
+        "error",
+        {
+          "allowReferrer": true
+        }
+      ]
+    }
   },
   "jest": {
     "collectCoverageFrom": [
