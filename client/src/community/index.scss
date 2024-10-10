@@ -678,6 +678,10 @@ main.community-container {
         a {
           @include button.primary;
         }
+
+        p {
+          margin: 0;
+        }
       }
     }
   }

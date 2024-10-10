@@ -133,12 +133,14 @@ improve MDN.
 - ### Chat with us on Discord
 
   Connect with the community. Engage with domain experts. Help others learn.
+
   [Join MDN Discord](https://mdn.dev/discord)
 
 - ### Join our Community Call
 
   Every month, get exclusive updates from the MDN team. Share your ideas and
   contributions.
+
   [RSVP to the next community call](https://github.com/mdn/community-meetings?tab=readme-ov-file#mdn-community-meetings)
 
 While working in Mozilla spaces and communities, please adhere to the
