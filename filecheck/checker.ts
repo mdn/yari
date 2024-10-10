@@ -15,6 +15,7 @@ import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import isSvg from "is-svg";
+import sanitizeFilename from "sanitize-filename";
 
 import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
@@ -63,23 +64,10 @@ function getRelativePath(filePath: string): string {
   return path.relative(process.cwd(), filePath);
 }
 
-export async function checkFile(
+export async function checkBinaryFile(
   filePath: string,
   options: CheckerOptions = {}
 ) {
-  // Check that the filename is always lowercase.
-  const expectedPath = path.join(
-    path.dirname(filePath),
-    path.basename(filePath).toLowerCase()
-  );
-  if (filePath !== expectedPath) {
-    throw new Error(
-      `Base name must be lowercase (not ${path.basename(
-        filePath
-      )}). Please rename the file and update its usages.`
-    );
-  }
-
   // Check that the file size is >0 and <MAX_FILE_SIZE.
   const stat = await fs.stat(filePath);
   if (!stat.size) {
@@ -249,7 +237,7 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
     const formattedAfter = formatSize(sizeAfter);
 
     // this check should only be done if we want to save the compressed file
-    if (sizeAfter > MAX_FILE_SIZE) {
+    if (sizeAfter > MAX_FILE_SIZE && sizeBefore > MAX_FILE_SIZE) {
       throw new Error(
         `${getRelativePath(
           filePath
@@ -288,14 +276,15 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
   }
 }
 
-function canCheckFile(filePath: string) {
-  const filePathParts = filePath.split(path.sep);
-
+function isRelevantFile(filePath: string) {
   return (
-    filePathParts.includes("files") &&
-    !filePathParts.includes("node_modules") &&
-    !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
+    filePath.includes(`files${path.sep}`) &&
+    !/\.(DS_Store|ini)$/i.test(filePath)
   );
+}
+
+function needsChecking(filePath: string) {
+  return !/\.(html|json|jsonc|md|txt|yml|drawio)$/i.test(filePath);
 }
 
 async function resolveDirectory(file: string): Promise<string[]> {
@@ -304,14 +293,73 @@ async function resolveDirectory(file: string): Promise<string[]> {
     const api = new fdir()
       .withErrors()
       .withFullPaths()
-      .filter((filePath) => canCheckFile(filePath))
+      .filter((filePath) => isRelevantFile(filePath))
       .crawl(file);
     return api.withPromise() as Promise<PathsOutput>;
-  } else if (stats.isFile() && canCheckFile(file)) {
+  } else if (stats.isFile() && isRelevantFile(file)) {
     return [file];
   } else {
     return [];
   }
+}
+
+function validatePath(filePath: string): string[] {
+  const errors = [];
+
+  const shortPath = path.join(
+    path.basename(path.dirname(filePath)),
+    path.basename(filePath)
+  );
+
+  // TODO: Read allowed extensions from `mdn/content` repo and check here.
+
+  // All characters must be lower case.
+  if (shortPath !== shortPath.toLowerCase() && !shortPath.endsWith(".json")) {
+    errors.push(
+      `Error: Invalid path: ${filePath}. All characters must be lowercase.`
+    );
+  }
+
+  // Whitespaces are not allowed.
+  if (shortPath.includes(" ")) {
+    errors.push(
+      `Error: Invalid path: ${filePath}. File path must not include whitespaces.`
+    );
+  }
+
+  if (shortPath.includes("\u200b")) {
+    errors.push(
+      `Error: Invalid path: ${filePath}. File path must not include zero width whitespaces.`
+    );
+  }
+
+  // Use only ASCII characters
+  const normalized = shortPath.normalize("NFD");
+  if (shortPath !== normalized) {
+    errors.push(
+      `Error: Invalid path: ${filePath}. Use only plain ASCII characters.`
+    );
+  }
+
+  // File path should't contain banned characters: `(`, `)`
+  const bannedCharsRegExp = /[()]/;
+  if (bannedCharsRegExp.test(shortPath)) {
+    errors.push(
+      `Error: Invalid path: ${filePath}. File path must not include characters: '(', ')'`
+    );
+  }
+
+  const sanitizedPath = shortPath
+    .split(/\\|\//g)
+    .map((p) => sanitizeFilename(p))
+    .join(path.sep);
+  if (shortPath !== sanitizedPath) {
+    errors.push(
+      `Error: Invalid path: ${shortPath}. Change to ${sanitizedPath}`
+    );
+  }
+
+  return errors;
 }
 
 export async function runChecker(
@@ -319,17 +367,22 @@ export async function runChecker(
   options: CheckerOptions
 ) {
   const errors = [];
-
-  const files = (
+  let files = (
     await Promise.all(filesAndDirectories.map(resolveDirectory))
   ).flat();
+
+  // Validate file paths.
+  files.forEach((f) => errors.push(...validatePath(f)));
+
+  // Check binary files.
+  files = files.filter((f) => needsChecking(f));
 
   const progressBar = new cliProgress.SingleBar({ etaBuffer: 100 });
   progressBar.start(files.length, 0);
 
   await eachLimit(files, os.cpus().length, async (file) => {
     try {
-      await checkFile(file, options);
+      await checkBinaryFile(file, options);
     } catch (error) {
       errors.push(error);
     } finally {
