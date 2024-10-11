@@ -126,7 +126,7 @@ like the complete response header listing. The important metrics like `score` an
 `grade` are still included. We encourage you to migrate to the new API as soon
 as possible. The old one will be shut down Oct 31, 2024.
 
-For reference, the v1 API returned
+For reference, the v1 API returned a JSON payload with the following structure:
 
 ```json
 {
