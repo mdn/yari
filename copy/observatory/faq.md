@@ -121,7 +121,7 @@ JSON payload like this:
 }
 ```
 
-We have removed a number of fields that were not too useful for CI integration,
+We have removed several fields that were of limited use for CI integration,
 like the complete listing of headers. The important metrics like `score` and the
 `grade` are still there and we encourage you to migrate to the new API as soon
 as possible. The old one will be shut down Oct 31, 2024.
