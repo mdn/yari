@@ -57,10 +57,9 @@ there is now no reason to provide the "public" flag.
 
 ## When did the move occur?
 
-The new HTTP Observatory was launched on MDN on July 2, 2024. The
-[old Mozilla Observatory](https://observatory.mozilla.org/) — containing HTTP
-Observatory plus other tools like TLS Observatory, SSH Observatory, and
-Third-party tests — has been deprecated and will be sunset in September 2024.
+The new HTTP Observatory was launched on MDN on July 2, 2024. The old Mozilla
+Observatory — containing HTTP Observatory plus other tools like TLS Observatory,
+SSH Observatory, and Third-party tests — has been sunset in October 2024.
 
 > **Note:** Historic scan data has been preserved, and is included in the
 > provided scan history for each domain.
