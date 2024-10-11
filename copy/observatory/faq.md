@@ -124,7 +124,7 @@ JSON payload like this:
 We have removed several fields that were of limited use for CI integration,
 like the complete response header listing. The important metrics like `score` and
 `grade` are still included. We encourage you to migrate to the new API as soon
-as possible. The old one will be shut down Oct 31, 2024.
+as possible: The v1 endpoint will be shut down on October 31, 2024.
 
 For reference, the v1 API returned a JSON payload with the following structure:
 
