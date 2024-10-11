@@ -101,7 +101,7 @@ the API and the website. The API will be updated to use the new tests in a
 near-future iteration.~~
 
 Yes. The new v2 API is available at an updated URL — `https://observatory-api.mdn.mozilla.net/api/v2/scan` — and the
-response a little bit. A POST call to
+response is now more concise. For example, a [`POST`](/en-US/docs/Web/HTTP/Methods/POST) request to
 `https://observatory-api.mdn.mozilla.net/api/v2/scan?host=mdn.net` will return a
 JSON payload like this:
 
