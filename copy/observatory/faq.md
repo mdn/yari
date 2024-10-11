@@ -100,7 +100,7 @@ therefore you will see some small differences between test scores returned by
 the API and the website. The API will be updated to use the new tests in a
 near-future iteration.~~
 
-Yes. It lives under a new URL (see below) and we have cleaned up the API
+Yes. The new v2 API is available at an updated URL — `https://observatory-api.mdn.mozilla.net/api/v2/scan` — and the
 response a little bit. A POST call to
 `https://observatory-api.mdn.mozilla.net/api/v2/scan?host=mdn.net` will return a
 JSON payload like this:
