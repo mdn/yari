@@ -45,7 +45,7 @@
     --button-border-color: var(--button-secondary-border-focus);
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     border-bottom: 0;
     margin-bottom: 0;
 
@@ -70,6 +70,8 @@
 .theme-switcher-menu,
 .languages-switcher-menu {
   > .button {
+    display: block;
+
     .button-wrap:after {
       background-color: var(--icon-secondary);
       content: "";
@@ -88,7 +90,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     > .button {
       .button-wrap:after {
         content: unset;

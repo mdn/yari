@@ -11,6 +11,7 @@ $mdn-color-neutral-40: #9e9e9e;
 $mdn-color-neutral-50: #858585;
 $mdn-color-neutral-60: #696969;
 $mdn-color-neutral-70: #4e4e4e;
+$mdn-color-neutral-75: #313131;
 $mdn-color-neutral-80: #343434;
 $mdn-color-neutral-90: #1b1b1b;
 
@@ -154,12 +155,14 @@ $mdn-color-ads: #00d0aa;
 
 $mdn-theme-light-text-primary: $mdn-color-neutral-90;
 $mdn-theme-light-text-secondary: $mdn-color-neutral-70;
+$mdn-theme-light-text-active: #{$mdn-color-neutral-50};
 $mdn-theme-light-text-inactive: #{$mdn-color-neutral-40}a6;
 $mdn-theme-light-text-link: $mdn-color-light-theme-blue-60;
 $mdn-theme-light-text-invert: $mdn-color-white;
+$mdn-theme-light-text-muted: #6f6f6f;
 $mdn-theme-light-background-primary: $mdn-color-white;
 $mdn-theme-light-background-secondary: $mdn-color-neutral-light-70;
-$mdn-theme-light-background-tertiary: $mdn-color-white;
+$mdn-theme-light-background-tertiary: #ebeaea;
 $mdn-theme-light-background-toc-active: $mdn-color-neutral-light-90;
 $mdn-theme-light-border-primary: $mdn-color-neutral-20;
 $mdn-theme-light-border-secondary: $mdn-color-neutral-20;
@@ -200,12 +203,14 @@ $mdn-theme-light-code-background-block: $mdn-color-neutral-light-80;
 
 $mdn-theme-dark-text-primary: $mdn-color-white;
 $mdn-theme-dark-text-secondary: $mdn-color-neutral-20;
+$mdn-theme-dark-text-active: #{$mdn-color-neutral-50};
 $mdn-theme-dark-text-inactive: #{$mdn-color-neutral-20}a6;
 $mdn-theme-dark-text-link: $mdn-color-dark-theme-blue-30;
 $mdn-theme-dark-text-invert: $mdn-color-neutral-90;
+$mdn-theme-dark-text-muted: #858585;
 $mdn-theme-dark-background-primary: $mdn-color-neutral-90;
-$mdn-theme-dark-background-secondary: $mdn-color-neutral-80;
-$mdn-theme-dark-background-tertiary: $mdn-color-neutral-70;
+$mdn-theme-dark-background-secondary: $mdn-color-neutral-75;
+$mdn-theme-dark-background-tertiary: #858585;
 $mdn-theme-dark-background-toc-active: $mdn-color-neutral-80;
 $mdn-theme-dark-border-primary: $mdn-color-neutral-50;
 $mdn-theme-dark-border-secondary: $mdn-color-neutral-60;
@@ -249,12 +254,3 @@ $screen-xxl: 1441px;
 
 // screen is to small for sticky placement
 $screen-height-place-limit: 44rem;
-
-/*
- * z-index scale
- */
-$send-to-back: -1;
-$bring-to-front: 9999;
-$bottom-layer: 100;
-$middle-layer: 200;
-$top-layer: 300;

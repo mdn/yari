@@ -1,11 +1,12 @@
 @use "../../vars" as *;
 
 .document-survey {
+  --margin-vertical: 0.75rem;
+  // Same color for light and dark theme.
   background-color: $mdn-color-light-theme-violet-10;
-  border: 5px solid $mdn-color-light-theme-violet-70;
   border-radius: 0.5rem;
   color: $mdn-color-neutral-90;
-  padding: 1em;
+  padding: 1rem;
 
   &::before {
     background: transparent url("../../../assets/icons/survey.svg") center
@@ -13,13 +14,14 @@
     background-size: cover;
     content: "";
     display: inline-block;
-    height: 33px;
+    height: 49px;
     position: absolute;
-    width: 32px;
+    width: 53px;
   }
 
   iframe {
     border: 0;
+    border-radius: 0.5rem;
   }
 
   button[type="button"],
@@ -27,7 +29,16 @@
     cursor: pointer;
   }
 
+  details {
+    iframe {
+      margin-top: var(--margin-vertical);
+    }
+  }
+
   summary {
+    // Same color for light and dark theme.
+    color: #6800cf;
+    margin-top: var(--margin-vertical);
     text-decoration: underline;
 
     &:focus,
@@ -42,11 +53,28 @@
   }
 
   .survey-header,
-  .survey-container {
-    padding-left: 2.5em;
+  .survey-container summary,
+  .survey-footer {
+    margin-left: 4rem;
   }
 
-  .survey-dismiss svg.icon {
-    color: $mdn-color-neutral-90;
+  .survey-footer {
+    font-size: var(--type-smaller-font-size);
+    font-style: italic;
+    font-variation-settings: "slnt" -10;
+    margin-top: var(--margin-vertical);
+  }
+
+  .survey-dismiss {
+    // Avoid the parent container to grow from 28px to 30px.
+    margin-top: -2px;
+
+    .icon {
+      background-color: $mdn-color-neutral-60;
+
+      &:hover {
+        background-color: $mdn-color-neutral-90;
+      }
+    }
   }
 }

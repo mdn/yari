@@ -2,59 +2,91 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
 
 import { m2h } from "../markdown/index.js";
+import * as kumascript from "../kumascript/index.js";
 
 import {
   VALID_LOCALES,
   MDN_PLUS_TITLE,
   DEFAULT_LOCALE,
+  OBSERVATORY_TITLE_FULL,
+  OBSERVATORY_TITLE,
 } from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
+  DEV_MODE,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
-import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
-import { splitSections } from "./utils.js";
+import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
+import { getSlugByBlogPostUrl, makeTOC } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
+import { findPostBySlug } from "./blog.js";
+import { buildSitemap } from "./sitemaps.js";
+import { type Locale } from "../libs/types/core.js";
+import { HydrationData } from "../libs/types/hydration.js";
+import { extractSections } from "./extract-sections.js";
+import { wrapTables } from "./wrap-tables.js";
 
 const FEATURED_ARTICLES = [
-  "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
-  "Web/CSS/CSS_Container_Queries",
-  "Web/API/Performance_API",
-  "Web/CSS/font-palette",
+  "blog/mdn-scrimba-partnership/",
+  "blog/learn-javascript-console-methods/",
+  "blog/introduction-to-web-sustainability/",
+  "docs/Web/API/CSS_Custom_Highlight_API",
 ];
+
+const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-scrimba-partnership/",
+  "blog/mdn-http-observatory-launch/",
+  "blog/mdn-curriculum-launch/",
+  "blog/baseline-evolution-on-mdn/",
+];
+
+const PAGE_DESCRIPTIONS = Object.freeze({
+  observatory:
+    "Test your site’s HTTP headers, including CSP and HSTS, to find security problems and get actionable recommendations to make your website more secure. Test other websites to see how you compare.",
+});
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
 async function buildContributorSpotlight(
-  locale: string,
+  locale: Locale,
   options: { verbose?: boolean }
 ) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
+  let featuredContributorFrontmatter: DocFrontmatter;
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
-    const markdown = fs.readFileSync(
-      `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf-8"
-    );
+    const file = `${contributorSpotlightRoot}/${contributor}/index.md`;
+    const markdown = fs.readFileSync(file, "utf-8");
+    const url = `/${locale}/${prefix}/${contributor}`;
 
     const frontMatter = frontmatter<DocFrontmatter>(markdown);
     const contributorHTML = await m2h(frontMatter.body, { locale });
+    const d = {
+      url,
+      rawBody: contributorHTML,
+      metadata: {
+        locale: DEFAULT_LOCALE,
+        slug: `${prefix}/${contributor}`,
+        url,
+      },
 
-    const { sections } = splitSections(contributorHTML);
+      isMarkdown: true,
+      fileInfo: {
+        path: file,
+      },
+    };
+    const [$] = await kumascript.render(url, {}, d);
+    const [sections] = await extractSections($);
 
     const hyData = {
       sections: sections,
@@ -66,35 +98,40 @@ async function buildContributorSpotlight(
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
-    const context = { hyData };
+    const context: HydrationData = {
+      hyData,
+      url: `/${locale}/${prefix}/${contributor}`,
+    };
 
-    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale.toLowerCase(),
       `${prefix}/${hyData.folderName}`
     );
-    const filePath = path.join(outPath, "index.html");
     const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
     const imgFileDestPath = path.join(outPath, profileImg);
     const jsonFilePath = path.join(outPath, "index.json");
 
     fs.mkdirSync(outPath, { recursive: true });
-    fs.writeFileSync(filePath, html);
     fs.copyFileSync(imgFilePath, imgFileDestPath);
     fs.writeFileSync(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", filePath);
+      console.log("Wrote", jsonFilePath);
     }
+
     if (frontMatter.attributes.is_featured) {
-      return {
-        contributorName: frontMatter.attributes.contributor_name,
-        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
-        quote: frontMatter.attributes.quote,
-      };
+      featuredContributorFrontmatter = frontMatter.attributes;
     }
   }
+
+  return featuredContributorFrontmatter
+    ? {
+        contributorName: featuredContributorFrontmatter.contributor_name,
+        url: `/${locale}/${prefix}/${featuredContributorFrontmatter.folder_name}`,
+        quote: featuredContributorFrontmatter.quote,
+      }
+    : undefined;
 }
 
 export async function buildSPAs(options: {
@@ -102,20 +139,24 @@ export async function buildSPAs(options: {
   verbose?: boolean;
 }) {
   let buildCount = 0;
+  const sitemap: {
+    url: string;
+  }[] = [];
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = `/${DEFAULT_LOCALE}/404.html`;
-  const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(
-    BUILD_OUT_ROOT,
-    DEFAULT_LOCALE.toLowerCase(),
-    "_spas"
-  );
+  const locale = DEFAULT_LOCALE;
+  const url = `/${locale}/404.html`;
+  const context: HydrationData = { url, pageNotFound: true };
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
   fs.mkdirSync(outPath, { recursive: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+  const jsonFilePath = path.join(
+    outPath,
+    path.basename(url).replace(/\.html$/, ".json")
+  );
+  fs.writeFileSync(jsonFilePath, JSON.stringify(context));
   buildCount++;
   if (options.verbose) {
-    console.log("Wrote", path.join(outPath, path.basename(url)));
+    console.log("Wrote", jsonFilePath);
   }
 
   // Basically, this builds one (for example) `search/index.html` for every
@@ -125,13 +166,42 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const pathLocale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, pathLocale)).isDirectory()) {
+      if (
+        !fs.statSync(path.join(root, pathLocale)).isDirectory() ||
+        !isValidLocale(pathLocale)
+      ) {
         continue;
       }
 
       const SPAs = [
-        { prefix: "search", pageTitle: "Search" },
+        { prefix: "play", pageTitle: "Playground | MDN" },
+        {
+          prefix: "observatory",
+          pageTitle: `HTTP Header Security Test - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        {
+          prefix: "observatory/analyze",
+          pageTitle: `Scan results - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+          noIndexing: true,
+        },
+        {
+          prefix: "observatory/docs/tests_and_scoring",
+          pageTitle: `Tests & Scoring - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        {
+          prefix: "observatory/docs/faq",
+          pageTitle: `FAQ - ${OBSERVATORY_TITLE_FULL}`,
+          pageDescription: PAGE_DESCRIPTIONS.observatory,
+        },
+        { prefix: "search", pageTitle: "Search", onlyFollow: true },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
+        {
+          prefix: "plus/ai-help",
+          pageTitle: `AI Help | ${MDN_PLUS_TITLE}`,
+        },
         {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
@@ -145,7 +215,6 @@ export async function buildSPAs(options: {
         {
           prefix: "plus/updates",
           pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
         },
         {
           prefix: "plus/settings",
@@ -158,24 +227,42 @@ export async function buildSPAs(options: {
           prefix: "advertising",
           pageTitle: "Advertise with us",
         },
+        {
+          prefix: "newsletter",
+          pageTitle: "Stay Informed with MDN",
+        },
       ];
       const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
-      for (const { prefix, pageTitle, noIndexing } of SPAs) {
+      for (const {
+        prefix,
+        pageTitle,
+        pageDescription,
+        noIndexing,
+        onlyFollow,
+      } of SPAs) {
         const url = `/${locale}/${prefix}`;
-        const context = {
+        const context: HydrationData = {
           pageTitle,
+          pageDescription,
           locale,
           noIndexing,
+          onlyFollow,
+          url,
         };
 
-        const html = renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
-        const filePath = path.join(outPath, "index.html");
-        fs.writeFileSync(filePath, html);
+        const jsonFilePath = path.join(outPath, "index.json");
+        fs.writeFileSync(jsonFilePath, JSON.stringify(context));
         buildCount++;
         if (options.verbose) {
-          console.log("Wrote", filePath);
+          console.log("Wrote", jsonFilePath);
+        }
+
+        if (!noIndexing && !onlyFollow) {
+          sitemap.push({
+            url,
+          });
         }
       }
     }
@@ -205,42 +292,64 @@ export async function buildSPAs(options: {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
-      const locale = DEFAULT_LOCALE.toLowerCase();
+      const locale = DEFAULT_LOCALE;
+      const pathLocale = locale.toLowerCase();
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
       const rawHTML = await m2h(frontMatter.body, { locale });
 
-      const { sections, toc } = splitSections(rawHTML);
-
       const url = `/${locale}/${slug}/${page}`;
+      const d = {
+        url,
+        rawBody: rawHTML,
+        metadata: {
+          locale: DEFAULT_LOCALE,
+          slug: `${slug}/${page}`,
+          url,
+        },
+
+        isMarkdown: true,
+        fileInfo: {
+          path: file,
+        },
+      };
+      const [$] = await kumascript.render(url, {}, d);
+      wrapTables($);
+      const [sections] = await extractSections($);
+      const toc = makeTOC({ body: sections });
+
       const hyData = {
         id: page,
         ...frontMatter.attributes,
         sections,
         toc,
       };
-      const context = {
+      const context: HydrationData = {
         hyData,
         pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+        url,
       };
 
-      const html = renderHTML(url, context);
       const outPath = path.join(
         BUILD_OUT_ROOT,
-        locale,
+        pathLocale,
         ...slug.split("/"),
         page
       );
       fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
+      const jsonFilePath = path.join(outPath, "index.json");
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
-        console.log("Wrote", filePath);
+        console.log("Wrote", jsonFilePath);
       }
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));
+
+      sitemap.push({
+        url,
+      });
     }
   }
 
@@ -248,6 +357,11 @@ export async function buildSPAs(options: {
     fileURLToPath(new URL("../copy/plus/", import.meta.url)),
     "plus/docs",
     "MDN Plus"
+  );
+  await buildStaticPages(
+    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
+    "observatory/docs",
+    OBSERVATORY_TITLE
   );
 
   // Build all the home pages in all locales.
@@ -262,7 +376,7 @@ export async function buildSPAs(options: {
       continue;
     }
     for (const localeLC of fs.readdirSync(root)) {
-      const locale = VALID_LOCALES.get(localeLC) || localeLC;
+      const locale = VALID_LOCALES.get(localeLC) || (localeLC as Locale);
       if (!isValidLocale(locale)) {
         continue;
       }
@@ -277,19 +391,41 @@ export async function buildSPAs(options: {
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
-            const document =
-              findByURL(`/${locale}/docs/${url}`) ||
-              findByURL(`/${DEFAULT_LOCALE}/docs/${url}`);
-            if (document) {
-              const {
-                doc: { mdn_url, summary, title, parents },
-              } = await buildDocument(document);
-              return {
-                mdn_url,
-                summary,
-                title,
-                tag: parents.length > 2 ? parents[1] : null,
-              };
+            const segment = url.split("/")[0];
+            if (segment === "docs") {
+              const document =
+                findByURL(`/${locale}/${url}`) ||
+                findByURL(`/${DEFAULT_LOCALE}/${url}`);
+              if (document) {
+                const {
+                  doc: { mdn_url, summary, title, parents },
+                } = await buildDocument(document);
+                return {
+                  mdn_url,
+                  summary,
+                  title,
+                  tag: parents.length > 2 ? parents[1] : null,
+                };
+              }
+            } else if (segment === "blog") {
+              const post = await findPostBySlug(
+                getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+              );
+              if (post) {
+                const {
+                  doc: { title },
+                  blogMeta: { description, slug },
+                } = post;
+                return {
+                  mdn_url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+                  summary: description,
+                  title,
+                  tag: {
+                    uri: `/${DEFAULT_LOCALE}/blog/`,
+                    title: "Blog",
+                  } satisfies DocParent,
+                };
+              }
             }
           })
         )
@@ -302,26 +438,36 @@ export async function buildSPAs(options: {
         latestNews,
         featuredArticles,
       };
-      const context = { hyData };
-      const html = renderHTML(url, context);
+      const context: HydrationData = { hyData, url };
       const outPath = path.join(BUILD_OUT_ROOT, localeLC);
       fs.mkdirSync(outPath, { recursive: true });
-      const filePath = path.join(outPath, "index.html");
-      fs.writeFileSync(filePath, html);
-      buildCount++;
-      if (options.verbose) {
-        console.log("Wrote", filePath);
-      }
+
+      sitemap.push({
+        url,
+      });
 
       // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
-      const filePathContext = path.join(outPath, "index.json");
-      fs.writeFileSync(filePathContext, JSON.stringify(context));
+      const jsonFilePath = path.join(outPath, "index.json");
+      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
       buildCount++;
       if (options.verbose) {
-        console.log("Wrote", filePathContext);
+        console.log("Wrote", jsonFilePath);
       }
     }
+  }
+
+  // Sitemap.
+  const sitemapFilePath = await buildSitemap(
+    sitemap.map(({ url }) => ({
+      slug: url,
+      modified: "",
+    })),
+    { pathSuffix: ["misc"] }
+  );
+
+  if (!options.quiet) {
+    console.log("Wrote", sitemapFilePath);
   }
 
   if (!options.quiet) {
@@ -339,14 +485,25 @@ async function fetchGitHubPRs(repo, count = 5) {
     "sort:updated",
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
-  const pullRequestsData = (await got(pullRequestUrl).json()) as {
-    items: any[];
-  };
-  const prDataRepo = pullRequestsData.items.map((item) => ({
-    ...item,
-    repo: { name: repo, url: `https://github.com/${repo}` },
-  }));
-  return prDataRepo;
+  try {
+    const pullRequestsData = (await got(pullRequestUrl).json()) as {
+      items: any[];
+    };
+    const prDataRepo = pullRequestsData.items.map((item) => ({
+      ...item,
+      repo: { name: repo, url: `https://github.com/${repo}` },
+    }));
+    return prDataRepo;
+  } catch (e) {
+    const msg = `Couldn't fetch recent GitHub contributions for repo ${repo}!`;
+    if (!DEV_MODE) {
+      console.error(`Error: ${msg}`);
+      throw e;
+    }
+
+    console.warn(`Warning: ${msg}`);
+    return [];
+  }
 }
 
 async function fetchRecentContributions() {
@@ -374,49 +531,35 @@ async function fetchRecentContributions() {
 }
 
 async function fetchLatestNews() {
-  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
-
-  const $ = cheerio.load(xml, { xmlMode: true });
-
-  const items: NewsItem[] = [];
-
-  items.push(
-    {
-      title: "Experimenting with advertising on MDN",
-      url: `/${DEFAULT_LOCALE}/advertising`,
-      author: "Mozilla",
-      published_at: new Date("2023-02-15 15:00Z").toString(),
-      source: {
-        name: "developer.mozilla.org",
-        url: "/",
-      },
-    },
-    {
-      title: "A shared and open roadmap for MDN",
-      url: "https://blog.mozilla.org/en/mozilla/mdn-web-documentation-collaboration/",
-      author: "Mozilla",
-      published_at: new Date("2023-02-08").toString(),
-      source: {
-        name: "blog.mozilla.org",
-        url: "https://blog.mozilla.org/",
-      },
-    }
-  );
-
-  $("item").each((i, item) => {
-    const $item = $(item);
-
-    items.push({
-      title: $item.find("title").text(),
-      url: $item.find("guid").text(),
-      author: $item.find("dc\\:creator").text(),
-      published_at: $item.find("pubDate").text(),
-      source: {
-        name: "hacks.mozilla.org",
-        url: "https://hacks.mozilla.org/category/mdn/",
-      },
-    });
-  });
+  const items: NewsItem[] = (
+    await Promise.all(
+      LATEST_NEWS.map(async (itemOrUrl) => {
+        if (typeof itemOrUrl !== "string") {
+          return itemOrUrl;
+        }
+        const url = itemOrUrl;
+        const post = await findPostBySlug(
+          getSlugByBlogPostUrl(`/${DEFAULT_LOCALE}/${url}`)
+        );
+        if (post) {
+          const {
+            doc: { title },
+            blogMeta: { author, date, slug },
+          } = post;
+          return {
+            title,
+            url: `/${DEFAULT_LOCALE}/blog/${slug}/`,
+            author: author?.name || "The MDN Team",
+            published_at: new Date(date).toString(),
+            source: {
+              name: "developer.mozilla.org",
+              url: `/${DEFAULT_LOCALE}/blog/`,
+            },
+          };
+        }
+      })
+    )
+  ).filter(Boolean);
 
   return {
     items,

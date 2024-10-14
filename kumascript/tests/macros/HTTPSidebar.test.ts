@@ -59,10 +59,10 @@ const fixtureData = JSON.parse(
 
 const locales = {
   "en-US": {
-    ResourcesURI: "Resources and URIs",
+    ResourcesURI: "Security and privacy",
   },
   es: {
-    ResourcesURI: "Recursons y URIs",
+    ResourcesURI: "Seguridad en HTTP",
   },
 };
 
@@ -74,12 +74,18 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
+    // Mock calls to env.recordNonFatalError, called from web.smartLink().
+    macro.ctx.env.recordNonFatalError = () => {
+      return {
+        macroSource: "foo",
+      };
+    };
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {
     macro.ctx.env.locale = "en-US";
-    return macro.call().then(function (result) {
-      expect(lintHTML(result)).toBeFalsy();
+    return macro.call().then(async function (result) {
+      expect(await lintHTML(result)).toBeFalsy();
       const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
@@ -87,8 +93,8 @@ describeMacro("HTTPSidebar", function () {
 
   itMacro("Creates a sidebar object for es", function (macro) {
     macro.ctx.env.locale = "es";
-    return macro.call().then(function (result) {
-      expect(lintHTML(result)).toBeFalsy();
+    return macro.call().then(async function (result) {
+      expect(await lintHTML(result)).toBeFalsy();
       const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "es");
     });

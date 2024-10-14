@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
@@ -51,30 +51,33 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
       - name: Install all npm packages
         run: npm ci
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -123,30 +126,27 @@ jobs:
 
           # This just makes sure the Google Analytics script gets used even if
           # it goes nowhere.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-XXXXXXXX
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true
 
         run: |
+          set -eo pipefail
+
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           npm run build:prepare
-
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          npm run tool popularities
 
           npm run tool sync-translated-content
 
           # Spread the work across 2 processes. Why 2? Because that's what you
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          npm run build -- --locale     en-us --locale     ja --locale     fr &
+          npm run build:docs -- --locale     en-us --locale     ja --locale     fr &
           build1=$!
-          npm run build -- --not-locale en-us --not-locale ja --not-locale fr &
+          npm run build:docs -- --not-locale en-us --not-locale ja --not-locale fr &
           build2=$!
 
           # You must explicitly specify the job you're waiting-on to ensure
@@ -161,6 +161,9 @@ jobs:
 
           # Generate sitemap index file
           npm run build --sitemap-index
+
+          # SSR all pages
+          npm run render:html
 
           # Generate whatsdeployed files.
           npm run tool whatsdeployed -- --output client/build/_whatsdeployed/code.json
@@ -203,7 +206,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}

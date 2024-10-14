@@ -2,6 +2,7 @@ import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
 import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
+import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 
 const SUMMARIES = {
   "en-US": [
@@ -29,7 +30,7 @@ const SUMMARIES = {
     "概念",
     "ユーザーインターフェイス",
     "逆引きリファレンス",
-    "JavaScript API 群",
+    "JavaScript APIs",
     "Manifest keys",
     "Extension Workshop",
     "チャンネル",
@@ -92,38 +93,33 @@ function getMockResultForGetChildren(doc_url) {
   ];
 }
 
-function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
+async function checkSidebarResult(html, locale) {
   // Lint the HTML
-  expect(lintHTML(html)).toBeFalsy();
+  expect(await lintHTML(html)).toBeFalsy();
   const dom = JSDOM.fragment(html);
   const section = dom.querySelector("section#Quick_links");
+
   // Check the basics
   expect(section).toBeTruthy();
+
   // Check the total number of top-level list items that can be toggled
-  expect(section.querySelectorAll("ol > li.toggle")).toHaveLength(
+  expect(section.querySelectorAll("ol > li > details")).toHaveLength(
     SUMMARIES[locale].length
   );
-  // Check that all links reference the proper locale or use https
+
+  // Check that all links reference the proper locale, the fallback or use https
   const num_total_links = section.querySelectorAll("a[href]").length;
-  const num_valid_links = section.querySelectorAll(
-    `a[href^="/${locale}/docs/Mozilla/Add-ons"], a[href^="https://"]`
-  ).length;
+  const num_valid_links = section.querySelectorAll(`
+    a[href^="/${locale}/docs/Mozilla/Add-ons"],
+    a[href^="/${DEFAULT_LOCALE}/docs/Mozilla/Add-ons"],
+    a[href^="https://"]`).length;
   expect(num_valid_links).toBe(num_total_links);
-  // Check whether the 'JavaScript APIs' summary, and only that summary,
-  // is open, or if all of the summaries are closed, which depends on
-  // whether or not the slug of the page is under the "WebExtensions/API".
-  const num_details_open = section.querySelectorAll(
-    "ol > li.toggle > details[open]"
-  ).length;
-  if (isUnderWebExtAPI) {
-    expect(num_details_open).toBe(1);
-  } else {
-    expect(num_details_open).toBe(0);
-  }
+
   // Check a sample of the DOM for localized content
   for (const node of section.querySelectorAll("summary")) {
     expect(SUMMARIES[locale]).toContain(node.textContent);
   }
+
   // Check for the "WebExtensions/manifest.json" details, which should have
   // been added by the call to wiki.tree within AddonSidebar.ejs.
   for (const name of ["author", "background", "theme", "version"]) {
@@ -142,23 +138,29 @@ describeMacro("AddonSidebar", function () {
     // Mock calls to info.getChildren, which indirectly mocks the
     // call to wiki.tree within AddonSidebar.ejs.
     macro.ctx.info.getChildren = jest.fn(getMockResultForGetChildren);
+    // Mock calls to env.recordNonFatalError, called from web.smartLink().
+    macro.ctx.env.recordNonFatalError = () => {
+      return {
+        macroSource: "foo",
+      };
+    };
   });
 
   for (const locale of ["en-US", "fr", "ja"]) {
     itMacro(`with locale ${locale}`, function (macro) {
       macro.ctx.env.locale = locale;
       macro.ctx.env.slug = "Mozilla/Add-ons/AMO";
-      return macro.call().then(function (result) {
+      return macro.call().then(async function (result) {
         expect(macro.ctx.template).toHaveBeenCalledTimes(1);
-        checkSidebarResult(result, locale);
+        await checkSidebarResult(result, locale);
       });
     });
     itMacro(`with locale ${locale} under WebExtensions/API`, function (macro) {
       macro.ctx.env.locale = locale;
       macro.ctx.env.slug = "Mozilla/Add-ons/WebExtensions/API/alarms";
-      return macro.call().then(function (result) {
+      return macro.call().then(async function (result) {
         expect(macro.ctx.template).toHaveBeenCalledTimes(1);
-        checkSidebarResult(result, locale, true);
+        await checkSidebarResult(result, locale);
       });
     });
   }

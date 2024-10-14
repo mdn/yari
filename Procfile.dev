@@ -1,4 +1,4 @@
-server: npm run start:dev-server
+server: npm run start:server
 type-check: cd client && tsc --noEmit --watch
 web: npm run start:client
 ssr: npm run watch:ssr

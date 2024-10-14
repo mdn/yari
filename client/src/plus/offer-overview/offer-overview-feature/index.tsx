@@ -1,5 +1,6 @@
 import { Button } from "../../../ui/atoms/button";
 import "./index.scss";
+import screenshotAiHelp from "../../../../public/assets/ai-help/ai-help_light.png";
 
 function OfferOverviewFeature({ id, img, imgAlt, children }) {
   return (
@@ -23,6 +24,38 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
+      <OfferOverviewFeature id="ai-help" img={screenshotAiHelp} imgAlt="">
+        <section aria-labelledby="ai-help-section-title">
+          <h2 id="ai-help-section-title">AI Help</h2>
+          <h3>Get real-time assistance and support.</h3>
+          <p>
+            No need to scroll through page after page to find your answers.
+            Introducing an AI assistant that can answer all your web development
+            questions in real time. Powered by OpenAI GPT-4o and GPT-4o mini.
+          </p>
+          <Button href="/en-US/plus/docs/features/ai-help" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
+      <OfferOverviewFeature
+        id="playground"
+        img="/assets/playground.png"
+        imgAlt=""
+      >
+        <section aria-labelledby="playground-section-title">
+          <h2 id="playground-section-title">Playground</h2>
+          <h3>Write,Test and Share your code.</h3>
+          <p>
+            Your playground to learn and share your amazing work with the world.
+            By simply logging in, you can now spread your creativity far and
+            wide.
+          </p>
+          <Button href="/en-US/plus/docs/features/playground" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
       <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
         <section aria-labelledby="updates-section-title">
           <h2 id="updates-section-title">Updates</h2>

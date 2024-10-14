@@ -25,7 +25,7 @@
     */
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     margin: initial;
   }
 }

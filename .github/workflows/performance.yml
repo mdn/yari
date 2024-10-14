@@ -13,26 +13,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Needed because of
           # https://github.com/GoogleChrome/lighthouse-ci/issues/172
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
       - name: Install all npm packages
         run: npm ci
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build select important pages
         env:
@@ -42,11 +51,12 @@ jobs:
 
           # Make sure it's set to something so that the build uses the
           # Google Analytics tag which is most realistic.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-XXXXXXXX
         run: |
           npm run build:prepare
-          # BUILD_FOLDERSEARCH=mdn/kitchensink npm run build
-          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach npm run build
+          # BUILD_FOLDERSEARCH=mdn/kitchensink npm run build:docs
+          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach npm run build:docs
+          npm run render:html
 
       - name: Serve and lhci
         env:

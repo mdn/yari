@@ -2,7 +2,13 @@ import fs from "node:fs";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
+import {
+  beforeEachMacro,
+  describeMacro,
+  itMacro,
+  lintHTML,
+  parsePagesFixture,
+} from "./utils.js";
 
 /**
  * Load all the fixtures.
@@ -12,7 +18,7 @@ const pagesFixturePath = new URL(
   "./fixtures/defaultapisidebar/pages.json",
   import.meta.url
 );
-const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf-8"));
+const pagesJSON = parsePagesFixture(pagesFixturePath);
 const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"],
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
@@ -242,9 +248,9 @@ function checkSubList(name, config, details, checker, next) {
  * config.expected contains the expected results, and we use other bits
  * of config, most notably locale.
  */
-function checkResult(html, config) {
+async function checkResult(html, config) {
   // Lint the HTML
-  expect(lintHTML(html)).toBeFalsy();
+  expect(await lintHTML(html)).toBeFalsy();
 
   const dom = JSDOM.fragment(html);
   // Check that all links reference the proper locale or use https
@@ -256,7 +262,7 @@ function checkResult(html, config) {
 
   if (config.expected.overview) {
     // Test overview link
-    const overviewLink = dom.querySelector("ol>li>strong");
+    const overviewLink = dom.querySelector("ol>li.section");
     checkItem(config.expected.overview, overviewLink, config.locale);
   }
 
@@ -285,8 +291,8 @@ function testMacro(config) {
       macro.ctx.page.subpagesExpand = jest.fn(() => {
         return config.subpages;
       });
-      return macro.call(config.argument).then(function (result) {
-        checkResult(result, config);
+      return macro.call(config.argument).then(async function (result) {
+        await checkResult(result, config);
       });
     });
   }

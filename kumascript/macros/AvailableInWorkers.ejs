@@ -3,12 +3,19 @@
 //
 // Parameters:
 //
-//  $0 - workerType (optional)
-//
-// The optional first argument has to be one of the ['notservice'].
+//  $0 - workerType (optional):
+//      'window_and_dedicated': only in DedicatedWorker (and in Window)
+//      'dedicated': only in DedicatedWorker
+//      'window_and_worker_except_service': all workers but ServiceWorker (and in Window)
+//      'window_and_worker_except_shared': all workers but shared workers (and in Window)
+//      'worker_except_service': all workers but ServiceWorker (and no window)
+//      'window_and_service': only in ServiceWorker (and in Window)
+//      'service': only in ServiceWorker
+//      'worker': All workers (and no Window)
+//      null: (default) All workers (and in Window)
 //
 //  {{AvailableInWorkers}}
-//  {{AvailableInWorkers("notservice")}}
+//  {{AvailableInWorkers("worker_except_service")}}
 //
 
 const locale = env.locale;
@@ -17,41 +24,91 @@ const note = mdn.localString({
     "en-US": "Note:",
     "es": "Nota:",
     "fr": "Note:",
-    "ja": "注:",
+    "ja": "メモ:",
     "ko": "참고:",
     "ru": "Примечание:",
     "zh-CN": "备注：",
-    "zh-TW": "備註："
+    "zh-TW": "備註：",
 });
 
 const textDefault = mdn.localString({
-  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`,
-  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 中可用`,
-  "zh-TW": `此功能可在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 中使用`,
-  "es": `Esta característica está disponible en <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`,
-  "fr": `Cette fonctionnalité est disponible via les <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`,
-  "ja": `この機能は <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 内で利用可能です`,
-  "ko": `이 기능은 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>에서 사용할 수 있습니다`,
-  "ru": `Эта возможность доступна в <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>`
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>.`,
+  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 中可用。`,
+  "zh-TW": `此功能可在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 中使用。`,
+  "es": `Esta característica está disponible en <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>.`,
+  "fr": `Cette fonctionnalité est disponible via les <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/Web_Workers_API">ウェブワーカー</a>内で利用可能です。`,
+  "ko": `이 기능은 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>에서 사용할 수 있습니다.`,
+  "ru": `Эта возможность доступна в <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>.`,
 });
 
-const textServiceWorkers = mdn.localString({
-  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>`,
-  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中可用`,
-  "zh-TW": `此功能可在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中使用`
+const textWorker = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/Web_Workers_API">ウェブワーカー</a>内でのみ利用可能です。`,
+  "zh-CN": `此特性仅在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a> 中可用。`,
+});
+
+const textNotService = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/Web_Workers_API">ウェブワーカー</a>内で利用可能ですが、<a href="/${locale}/docs/Web/API/Service_Worker_API">サービスワーカー</a>では使用できません。`,
+  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中可用。`,
+  "zh-TW": `此功能可在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中使用。`,
+});
+
+const textNotShared = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/SharedWorkerGlobalScope">Shared Web Workers</a>.`,
+  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括<a href="/${locale}/docs/Web/API/SharedWorkerGlobalScope">共享 Web Worker</a>）中可用。`,
+});
+
+const textNotServiceNotWindow = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Workers</a>, except for <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/Web_Workers_API">ウェブワーカー</a>内でのみ利用可能ですが、<a href="/${locale}/docs/Web/API/Service_Worker_API">サービスワーカー</a>では使用できません。`,
+  "zh-CN": `此特性仅在 <a href="/${locale}/docs/Web/API/Web_Workers_API">Web Worker</a>（不包括 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a>）中可用。`,
+});
+
+const textDedicated = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">専用ウェブワーカー</a>内で利用可能です。`,
+  "zh-CN": `此特性在<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">专用 Web Worker</a>中可用。`,
+});
+
+const textDedicatedOnly = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">Dedicated Web Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">専用ウェブワーカー</a>内でのみ利用可能です。`,
+  "zh-CN": `此特性仅在<a href="/${locale}/docs/Web/API/DedicatedWorkerGlobalScope">专用 Web Worker</a> 中可用。`,
+});
+
+const textService = mdn.localString({
+  "en-US": `This feature is available in <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/Service_Worker_API">サービスワーカー</a>内で利用可能です。`,
+  "zh-CN": `此特性在 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a> 中可用。`,
+});
+
+const textServiceOnly = mdn.localString({
+  "en-US": `This feature is only available in <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Workers</a>.`,
+  "ja": `この機能は<a href="/${locale}/docs/Web/API/Service_Worker_API">サービスワーカー</a>内でのみ利用可能です。`,
+  "zh-CN": `此特性仅在 <a href="/${locale}/docs/Web/API/Service_Worker_API">Service Worker</a> 中可用。`,
 })
 
-const workerType = $0;
+const workerType = $0 || 'default';
 
-let text = "";
+const associatedText = {
+  default: () => textDefault,
+  worker: () => textWorker,
+  window_and_worker_except_service: () => textNotService,
+  window_and_worker_except_shared: () => textNotShared,
+  worker_except_service: () => textNotServiceNotWindow,
+  window_and_dedicated: () => textDedicated,
+  dedicated: () => textDedicatedOnly,
+  window_and_service: () => textService,
+  service: () => textServiceOnly,
+};
 
-if (workerType === "notservice") {
-  text = textServiceWorkers;
-} else if (workerType) {
+if (!associatedText[workerType]) {
   throw new Error(`'${workerType}' is not a recognized argument to this macro`);
-} else {
-  text = textDefault;
 }
+
+const text = associatedText[workerType]();
 
 %>
 

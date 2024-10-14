@@ -24,22 +24,40 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
-                className="icon icon-twitter"
-                href="https://twitter.com/mozdevnet"
+                href="https://mozilla.social/@mdn"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
               >
-                <span className="visually-hidden">MDN on Twitter</span>
+                <span className="icon icon-mastodon"></span>
+                <span className="visually-hidden">MDN on Mastodon</span>
               </a>
             </li>
             <li>
               <a
-                className="icon icon-github-mark-small"
+                href="https://twitter.com/mozdevnet"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="icon icon-twitter-x"></span>
+                <span className="visually-hidden">
+                  MDN on X (formerly Twitter)
+                </span>
+              </a>
+            </li>
+            <li>
+              <a
                 href="https://github.com/mdn/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                <span className="icon icon-github-mark-small"></span>
                 <span className="visually-hidden">MDN on GitHub</span>
+              </a>
+            </li>
+            <li>
+              <a href="/en-US/blog/rss.xml" target="_blank">
+                <span className="icon icon-feed"></span>
+                <span className="visually-hidden">MDN Blog RSS Feed</span>
               </a>
             </li>
           </ul>
@@ -52,17 +70,11 @@ export function Footer() {
               <a href={`/en-US/about`}>About</a>
             </li>
             <li className="footer-nav-item">
-              <a
-                href="https://hacks.mozilla.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Hacks Blog
-              </a>
+              <a href={`/en-US/blog/`}>Blog</a>
             </li>
             <li className="footer-nav-item">
               <a
-                href="https://www.mozilla.org/en-US/careers/listings/?team=Marketing"
+                href="https://www.mozilla.org/en-US/careers/listings/?team=ProdOps"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -120,7 +132,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href="https://wiki.mozilla.org/Matrix"
+                href="/discord"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -150,6 +162,15 @@ export function Footer() {
                 </a>
               </li>
             )}
+            <li className="footer-nav-item">
+              <a
+                href="https://hacks.mozilla.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacks Blog
+              </a>
+            </li>
           </ul>
         </div>
 

@@ -1,0 +1,28 @@
+@use "../../ui/vars" as *;
+
+.login-banner {
+  align-items: center;
+  background-color: var(--background-success);
+  border: 2px solid var(--background-success);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+
+  .plus-link {
+    color: var(--text-primary);
+    font-style: normal;
+    font-variation-settings: normal;
+    text-decoration: underline;
+    text-decoration-thickness: 0.15rem;
+    text-underline-offset: 0.1em;
+  }
+
+  .auth-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0;
+    margin-left: auto;
+  }
+}

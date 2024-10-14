@@ -42,6 +42,12 @@ on:
         required: false
         default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
   workflow_call:
     secrets:
       GCP_PROJECT_NAME:
@@ -54,27 +60,24 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "next"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: stage
-    runs-on: ubuntu-latest-4core
+    runs-on: ubuntu-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    # We only ever want to deploy the `next` branch to stage.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'next' }}
 
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/checkout@v3
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        with:
-          repository: mdn/content
-          path: mdn/content
-          # Yes, this means fetch EVERY COMMIT EVER.
-          # It's probably not sustainable in the far future (e.g. past 2021)
-          # but for now it's good enough. We'll need all the history
-          # so we can figure out each document's last-modified date.
-          fetch-depth: 0
-
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
       # trigger we rely on the inputs and only the inputs. That way, the user can
@@ -87,7 +90,47 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge main
+        run: |
+          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
+          git config --global user.name "mdn-bot"
+          git status
+          git pull
+          git checkout main
+          git status
+          git checkout -
+          git merge main --no-edit
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/content
+          path: mdn/content
+          # Yes, this means fetch EVERY COMMIT EVER.
+          # It's probably not sustainable in the far future (e.g. past 2021)
+          # but for now it's good enough. We'll need all the history
+          # so we can figure out each document's last-modified date.
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          lfs: true
+          token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
+
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -95,7 +138,7 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
@@ -103,19 +146,22 @@ jobs:
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
       - name: Install all npm packages
         if: ${{ ! vars.SKIP_BUILD }}
         run: npm ci
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -152,12 +198,19 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
+          BASE_URL: "https://developer.allizom.org"
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
-          BUILD_LIVE_SAMPLES_BASE_URL: https://live-samples.mdn.allizom.net
+          BUILD_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          BUILD_LEGACY_LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+
+          # Sign key for code samples
+          BUILD_SAMPLE_SIGN_KEY: ${{ secrets.SAMPLE_SIGN_KEY }}
 
           # Use the stage version of interactive examples.
           BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
@@ -165,11 +218,11 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # This is the Google Analytics account ID for developer.mozilla.org
-          # If it's used on other domains (e.g. stage or dev builds), it's OK
-          # because ultimately Google Analytics will filter it out since the
-          # origin domain isn't what that account expects.
-          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
+          # These are the Google Analytics measurement IDs for:
+          # - developer.mozilla.org (UA)
+          # - developer.allizom.org (GA4)
+          # Using measurement ids on other domains is okay, as GA will filter these events.
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5,G-ZG5HNVZRY0
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -190,10 +243,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
           # Surveys.
-          REACT_APP_SURVEY_START_WEB_COMPONENTS_2023: 0 # stage
-          REACT_APP_SURVEY_END_WEB_COMPONENTS_2023: 1680264000000 # (new Date("2023-03-31 12:00:00Z").getTime())
-          REACT_APP_SURVEY_RATE_FROM_WEB_COMPONENTS_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_WEB_COMPONENTS_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_WEB_APP_AUGUST_2024: 0 # stage
+          REACT_APP_SURVEY_END_WEB_APP_AUGUST_2024: 1723593600000 # new Date("2024-08-14Z").getTime()
+          REACT_APP_SURVEY_RATE_FROM_WEB_APP_AUGUST_2024: 0.0
+          REACT_APP_SURVEY_RATE_TILL_WEB_APP_AUGUST_2024: 0.05 # 5%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
@@ -205,26 +258,34 @@ jobs:
           # Placement
           REACT_APP_PLACEMENT_ENABLED: true
 
+          # Playground
+          REACT_APP_PLAYGROUND_BASE_HOST: mdnyalp.dev
+
+          # Observatory
+          REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
+
+          # Sentry.
+          SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
+          SENTRY_ENVIRONMENT: stage
+          SENTRY_RELEASE: ${{ github.sha }}
+
         run: |
+          set -eo pipefail
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           npm run build:sw
           npm run build:prepare
-
-          # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'build:prepare'.
-          # See https://github.com/mdn/yari/issues/4217
-          npm run tool popularities
 
           npm run tool sync-translated-content
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            npm run build -- --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            npm run build:docs -- --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -234,53 +295,34 @@ jobs:
 
           du -sh client/build
 
+          # Build the blog
+          npm run build:blog
+
+          # Build the curriculum
+          npm run build:curriculum
+
           # Generate sitemap index file
           npm run build --sitemap-index
+
+          # SSR all pages
+          npm run render:html
 
           # Generate whatsdeployed files.
           npm run tool whatsdeployed -- --output client/build/_whatsdeployed/code.json
           npm run tool whatsdeployed $CONTENT_ROOT -- --output client/build/_whatsdeployed/content.json
           npm run tool whatsdeployed $CONTENT_TRANSLATED_ROOT -- --output client/build/_whatsdeployed/translated-content.json
 
-      - name: Deploy with deployer
-        if: ${{ ! (vars.SKIP_BUILD || vars.SKIP_AWS) }}
+      - name: Update search index
+        if: ${{ ! vars.SKIP_BUILD }}
         env:
-          GITHUB_SHA: ${{ env.GITHUB_SHA }}
-          GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
-          GITHUB_ACTION: ${{ env.GITHUB_ACTION }}
-
-          # Set the CONTENT_ROOT first
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-
-          DEPLOYER_BUCKET_NAME: mdn-content-stage
-
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
-
-          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_SITE_ID }}
-          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_NETWORK_ID }}
-          SIGN_SECRET: ${{ secrets.DEPLOYER_STAGE_SIGN_SECRET }}
-
         run: |
-
-          # Info about which CONTENT_* environment variables were set and to what.
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-
           cd deployer
-
-          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
-
-          poetry run deployer upload --prune ../client/build
           poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-stage-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
@@ -288,18 +330,17 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
 
-      - name: Sync Yari Content
+      - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/static
-          gsutil -q -m -h "Cache-Control: public, max-age=86400" rsync -cdrj html,json,txt client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
-      # Deploy Function
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
           service_account: deploy-stage-nonprod-mdn-ingre@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
@@ -307,7 +348,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
@@ -320,10 +361,13 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
+          set -eo pipefail
+
           for region in europe-west1 us-west1 asia-east1; do
             gcloud beta functions deploy mdn-nonprod-stage-$region \
             --gen2 \
@@ -337,11 +381,14 @@ jobs:
             --min-instances=1 \
             --max-instances=100 \
             --memory=2GB \
-            --timeout=30s \
+            --timeout=120s \
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
-            --set-env-vars="ORIGIN_LIVE_SAMPLES=live-samples.mdn.allizom.net" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=AwIRl96ZjeFFEsdas+GXmpHvd3ARcQPYgBIGhQzZtyG9PpESvUi8ea4gpiQq9QsYRsVAWBeeBgBYqp/oLQPna0YAAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5hbGxpem9tLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
+            --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=stage" \
             --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
@@ -349,8 +396,7 @@ jobs:
             --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
             --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
             --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
-            --set-secrets="CARBON_ZONE_KEY=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-carbon-zone-key/versions/latest" \
-            --set-secrets="CARBON_FALLBACK_ENABLED=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-fallback-enabled/versions/latest" \
+            --set-secrets="BSA_ZONE_KEYS=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-bsa-zone-keys/versions/latest" \
             2>&1 | sed "s/^/[$region] /" &
             pids+=($!)
           done
@@ -358,6 +404,12 @@ jobs:
           for pid in "${pids[@]}"; do
             wait $pid
           done
+
+      - name: Update AI Help index with macros
+        run: npm run ai-help-macros update-index
+        env:
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          PG_URI: ${{ secrets.PG_URI }}
 
       - name: Slack Notification
         if: failure()
@@ -371,38 +423,6 @@ jobs:
           SLACK_FOOTER: "Powered by stage-build.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  invalidate:
-    environment: stage
-    needs: build
-    if: ${{ ! vars.SKIP_INVALIDATE }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS Credentials
-        if: ${{ ! vars.SKIP_AWS }}
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
       - name: Invalidate CDN
-        if: ${{ ! vars.SKIP_AWS }}
-        env:
-          DISTRIBUTION: E2MLRMA1VTVDHX
-          PATHS: /*
-        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
-
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          token_format: access_token
-          service_account: deploy-stage-nonprod-mdn-ingre@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
-          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-
-      - name: Invalidate CDN
-        run: |-
-          gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*"
+        if: ${{ github.event.inputs.invalidate }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async

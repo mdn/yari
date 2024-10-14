@@ -13,22 +13,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
       - name: Install all npm packages
         run: npm ci
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -43,7 +52,7 @@ jobs:
           # The following env vars is what we do in npm-publish.yml
           # Each variable set is documented there.
 
-          REACT_APP_CRUD_MODE: true
+          REACT_APP_WRITER_MODE: true
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |
@@ -82,8 +91,8 @@ jobs:
           curl --retry-connrefused --retry 5 -I http://localhost:5042
 
           # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5042/en-US/ > /dev/null
-          curl http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
+          curl --fail http://localhost:5042/en-US/ > /dev/null
+          curl --fail http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
 
       - name: Test viewing the dev server
         env:

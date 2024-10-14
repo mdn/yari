@@ -32,6 +32,17 @@ function* walker(root) {
   }
 }
 
+function extractMatchesFromString(pattern: RegExp, str: string) {
+  const matches = [];
+
+  let match: string[];
+  while ((match = pattern.exec(str)) !== null) {
+    matches.push(match[1] ?? match[0]);
+  }
+
+  return matches;
+}
+
 describe("fixing flaws", () => {
   const pattern = path.join("web", "fixable_flaws");
   const baseDir = path.resolve(".");
@@ -79,12 +90,13 @@ describe("fixing flaws", () => {
   });
 
   it("can be run in dry-run mode", () => {
+    const root = path.join(tempContentDir, "files");
     const stdout = execSync("npm run build", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
         {
-          CONTENT_ROOT: path.join(tempContentDir, "files"),
+          CONTENT_ROOT: root,
           BUILD_OUT_ROOT: tempBuildDir,
           BUILD_FIX_FLAWS: "true",
           BUILD_FIX_FLAWS_DRY_RUN: "true",
@@ -94,15 +106,25 @@ describe("fixing flaws", () => {
       ),
     }).toString();
 
-    const regexPattern = /Would modify "(.*)"./g;
-    const dryRunNotices = stdout
-      .split("\n")
-      .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices).toHaveLength(4);
-    expect(dryRunNotices[0]).toContain(pattern);
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[3]).toContain(path.join(pattern, "images"));
+    const wouldModify = extractMatchesFromString(
+      /Would modify "(.*)"./g,
+      stdout
+    );
+
+    expect(wouldModify).toHaveLength(4);
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "bad_pre_tags", "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "deprecated_macros", "index.html")
+    );
+    expect(wouldModify).toContain(
+      path.join(root, "en-us", pattern, "images", "index.html")
+    );
+
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles).toHaveLength(0);
   });

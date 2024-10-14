@@ -11,7 +11,6 @@ from .map_301 import (
     LEGACY_URLS,
     MARIONETTE_URLS,
     MISC_REDIRECT_URLS,
-    MOZILLADEMOS_URLS,
     REDIRECT_URLS,
     SCL3_REDIRECT_URLS,
     WEBEXT_URLS,
@@ -34,14 +33,6 @@ def test_redirects(url, base_url):
     "url", GITHUB_IO_URLS, ids=[item["url"] for item in GITHUB_IO_URLS]
 )
 def test_github_redirects(url, base_url):
-    url["base_url"] = base_url
-    assert_valid_url(**url)
-
-
-@pytest.mark.parametrize(
-    "url", MOZILLADEMOS_URLS, ids=[item["url"] for item in MOZILLADEMOS_URLS]
-)
-def test_mozillademos_redirects(url, base_url):
     url["base_url"] = base_url
     assert_valid_url(**url)
 
@@ -117,58 +108,3 @@ def test_firefox_source_docs_redirects(url, base_url):
 def test_misc_redirects(url, base_url):
     url["base_url"] = base_url
     assert_valid_url(**url)
-
-
-@pytest.mark.parametrize(
-    "retired_locale",
-    (
-        "ar",
-        "bg",
-        "bn",
-        "ca",
-        "el",
-        "fa",
-        "fi",
-        "he",
-        "hi-IN",
-        "hu",
-        "id",
-        "it",
-        "kab",
-        "ms",
-        "my",
-        "nl",
-        "pt-PT",
-        "sv-SE",
-        "th",
-        "tr",
-        "uk",
-        "vi",
-    ),
-)
-@pytest.mark.parametrize(
-    "slug",
-    [
-        "",
-        "/",
-        "/docs/Web",
-        "/docs/Web/",
-        "/search",
-        "/search/",
-        "/search?q=video",
-        "/search/?q=video",
-        "/settings",
-    ],
-)
-def test_retired_locale_redirects(base_url, slug, retired_locale):
-    """Ensure that requests for retired locales properly redirect."""
-    resp = request("get", f"{base_url}/{retired_locale}{slug}")
-    assert resp.status_code == 302
-    slug_parts = slug.split("?")
-    expected_slug = slug_parts[0].lstrip("/")
-    expected_qs = f"?retiredLocale={retired_locale}"
-    if len(slug_parts) > 1:
-        expected_qs += f"&{slug_parts[1]}"
-    assert (
-        resp.headers["Location"] == f"/en-US/{expected_slug}{expected_qs}"
-    ), f"{resp.headers['Location']} is not /en-US/{expected_slug}{expected_qs}"

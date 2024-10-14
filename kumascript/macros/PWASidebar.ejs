@@ -6,18 +6,32 @@ const sidebar = {
     {
       name: "/docs/Web/Progressive_web_apps/Guides",
       contents: [
+        "/docs/Web/Progressive_web_apps/Guides/What_is_a_progressive_web_app",
+        "/docs/Web/Progressive_web_apps/Guides/Installing",
         "/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable",
         "/docs/Web/Progressive_web_apps/Guides/Offline_and_background_operation",
-        "/docs/Web/Progressive_web_apps/Guides/Structural_overview",
+        "/docs/Web/Progressive_web_apps/Guides/Caching",
+        "/docs/Web/Progressive_web_apps/Guides/Best_practices",
       ],
     },
     {
       name: "/docs/Web/Progressive_web_apps/Tutorials",
       contents: [
         {
+          name: "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker",
+          contents: [
+            "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker",
+            "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker/HTML_and_CSS",
+            "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker/Secure_connection",
+            "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker/JavaScript_functionality",
+            "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker/Manifest_file",
+            "/docs/Web/Progressive_web_apps/Tutorials/CycleTracker/Service_workers",
+          ],
+        },
+        {
           name: "/docs/Web/Progressive_web_apps/Tutorials/js13kGames",
           contents: [
-            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Introduction",
+            "/docs/Web/Progressive_web_apps/Tutorials/js13kGames",
             "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/App_structure",
             "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers",
             "/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Installable_PWAs",
@@ -30,9 +44,14 @@ const sidebar = {
     {
       name: "/docs/Web/Progressive_web_apps/How_to",
       contents: [
+        "/docs/Web/Progressive_web_apps/How_to/Trigger_install_prompt",
+        "/docs/Web/Progressive_web_apps/How_to/Define_app_icons",
         "/docs/Web/Progressive_web_apps/How_to/Create_a_standalone_app",
         "/docs/Web/Progressive_web_apps/How_to/Customize_your_app_colors",
         "/docs/Web/Progressive_web_apps/How_to/Display_badge_on_app_icon",
+        "/docs/Web/Progressive_web_apps/How_to/Expose_common_actions_as_shortcuts",
+        "/docs/Web/Progressive_web_apps/How_to/Share_data_between_apps",
+        "/docs/Web/Progressive_web_apps/How_to/Associate_files_with_your_PWA",
       ],
     },
     {
@@ -56,7 +75,7 @@ async function getTitle(pageSlug) {
 }
 
 async function renderRootItem(item) {
-  return `<li><a href="${getLink(item)}"><strong>${await getTitle(item)}</strong></a></li>`
+  return `<li class="section"><a href="${getLink(item)}">${await getTitle(item)}</a></li>`
 }
 
 async function renderItem(item) {

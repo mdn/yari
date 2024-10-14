@@ -10,10 +10,23 @@
     position: relative;
     width: 100%;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       align-items: center;
       display: flex;
       gap: 0.5rem;
+    }
+  }
+
+  .search-widget:focus-within .search-input-field,
+  .search-input-field:focus,
+  .search-input-field:valid {
+    width: inherit;
+
+    /* When the search input has focus or has content,
+          show the clear search button */
+    ~ .button.clear-search-button {
+      display: block;
+      right: 2.8rem;
     }
   }
 
@@ -42,21 +55,9 @@
       }
     }
 
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       &:invalid {
         width: 1rem;
-      }
-    }
-
-    &:focus,
-    &:valid {
-      width: inherit;
-
-      /* When the search input has focus or has content,
-          show the clear search button */
-      ~ .button.clear-search-button {
-        display: block;
-        right: 2.8rem;
       }
     }
 
@@ -93,7 +94,9 @@
 
     &:focus {
       border-color: var(--category-color);
-      box-shadow: 0 0 0 3px var(--blend-color), 0 0 0 3px var(--category-color);
+      box-shadow:
+        0 0 0 3px var(--blend-color),
+        0 0 0 3px var(--category-color);
       outline: 0 none;
     }
 
@@ -137,6 +140,7 @@
 
     .nothing-found {
       font-style: italic;
+      font-variation-settings: "slnt" -10;
     }
 
     .result-item {
@@ -230,7 +234,7 @@
     background: transparent;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     right: 1.2rem;
     width: 1.5rem;
   }

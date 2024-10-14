@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation, useMatch } from "react-router-dom";
+import {
+  Navigate,
+  Routes,
+  Route,
+  useLocation,
+  useMatch,
+} from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
+import { WRITER_MODE, PLACEMENT_ENABLED, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -20,25 +26,29 @@ import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
-import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
 import { HydrationData } from "../../libs/types/hydration";
+import { TopPlacement } from "./ui/organisms/placement";
+import { Blog } from "./blog";
+import { Newsletter } from "./newsletter";
+import { Curriculum } from "./curriculum";
+import { useGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
+const Playground = React.lazy(() => import("./playground"));
+const Observatory = React.lazy(() => import("./observatory"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
-
-  const isServer = useIsServer();
 
   React.useEffect(() => {
     setCategory(getCategoryByPathname(pathname));
@@ -47,14 +57,16 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {!isServer && <Banner />}
       <div
         className={`page-wrapper  ${
           category ? `category-${category}` : ""
         } ${pageType}`}
       >
-        {pageType !== "document-page" && (
-          <TopNavigation extraClasses="main-document-header-container" />
+        <TopPlacement />
+        {!["document-page", "curriculum", "observatory"].includes(pageType) && (
+          <div className="sticky-header-container without-actions">
+            <TopNavigation />
+          </div>
         )}
         {children}
       </div>
@@ -76,10 +88,14 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 function LazyStandardLayout(props: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
-  return (
+  const isServer = useIsServer();
+  return isServer ? (
+    <LoadingFallback />
+  ) : (
     <React.Suspense fallback={<LoadingFallback />}>
       <StandardLayout {...props}></StandardLayout>
     </React.Suspense>
@@ -87,14 +103,18 @@ function LazyStandardLayout(props: {
 }
 
 function StandardLayout({
+  pageType,
   extraClasses,
   children,
 }: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
+    <Layout pageType={pageType || `standard-page ${extraClasses || ""}`}>
+      {children}
+    </Layout>
   );
 }
 function DocumentLayout({ children }) {
@@ -121,7 +141,8 @@ export function App(appProps: HydrationData) {
   );
 
   usePing();
-  useGleanPage(pageNotFound);
+  useGleanPage(pageNotFound, appProps.doc);
+  useScrollDepthMeasurement();
 
   const localeMatch = useMatch("/:locale/*");
 
@@ -133,11 +154,11 @@ export function App(appProps: HydrationData) {
 
   const isServer = useIsServer();
 
-  // When preparing a build for use in the NPM package, CRUD_MODE is always true.
+  // When preparing a build for use in the NPM package, WRITER_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
-  // is true. So you have to have `isServer && CRUD_MODE` at the same time.
+  // is true. So you have to have `isServer && WRITER_MODE` at the same time.
   const homePage =
-    !isServer && CRUD_MODE ? (
+    !isServer && WRITER_MODE ? (
       <LazyStandardLayout>
         <WritersHomepage />
       </LazyStandardLayout>
@@ -154,15 +175,34 @@ export function App(appProps: HydrationData) {
       {/*
         Note, this can only happen in local development.
         In production, all traffic at `/` is redirected to at least
-        having a locale. So it'll be `/en-US` (for example) by the
+        having a locale. So it'll be `/en-US/` (for example) by the
         time it hits any React code.
        */}
-      <Route path="/" element={homePage} />
+      <Route
+        path="/"
+        element={WRITER_MODE ? homePage : <Navigate to="/en-US/" />}
+      />
+      <Route
+        path="/en-US/curriculum/*"
+        element={
+          <Layout pageType="curriculum">
+            <Curriculum {...appProps} />
+          </Layout>
+        }
+      />
+      <Route
+        path="/en-US/blog/*"
+        element={
+          <StandardLayout extraClasses="blog">
+            <Blog {...appProps} />
+          </StandardLayout>
+        }
+      />
       <Route
         path="/:locale/*"
         element={
           <Routes>
-            {CRUD_MODE && (
+            {WRITER_MODE && (
               <>
                 <Route
                   path="/_flaws"
@@ -200,7 +240,7 @@ export function App(appProps: HydrationData) {
                 {/*
                 This route exclusively exists for development on the <Homepage>
                 component itself.
-                Normally, you get to the home page by NOT being in CRUD_MODE, but
+                Normally, you get to the home page by NOT being in WRITER_MODE, but
                 if you want to use the hot-reloading app, it might be convenient
                 to be able to run it locally
                  */}
@@ -224,6 +264,22 @@ export function App(appProps: HydrationData) {
               </>
             )}
             <Route path="/" element={homePage} />
+            <Route
+              path="/play"
+              element={
+                <LazyStandardLayout>
+                  <Playground />
+                </LazyStandardLayout>
+              }
+            />
+            <Route
+              path="observatory/*"
+              element={
+                <LazyStandardLayout pageType="observatory">
+                  <Observatory {...appProps} />
+                </LazyStandardLayout>
+              }
+            />
             <Route
               path="/search"
               element={
@@ -287,6 +343,14 @@ export function App(appProps: HydrationData) {
               }
             />
             <Route
+              path="/newsletter"
+              element={
+                <StandardLayout>
+                  <Newsletter />
+                </StandardLayout>
+              }
+            />
+            <Route
               path="*"
               element={
                 <StandardLayout>
@@ -300,4 +364,47 @@ export function App(appProps: HydrationData) {
     </Routes>
   );
   return routes;
+}
+
+function useScrollDepthMeasurement(thresholds = [25, 50, 75]) {
+  const timeoutID = React.useRef<number | null>();
+  const [currentDepth, setScrollDepth] = React.useState(0);
+  const { gtag } = useGA();
+
+  useEffect(() => {
+    const listener = () => {
+      if (timeoutID.current) {
+        window.clearTimeout(timeoutID.current);
+      }
+      timeoutID.current = window.setTimeout(() => {
+        const { scrollHeight } = document.documentElement;
+        const { innerHeight, scrollY } = window;
+        const scrollPosition = innerHeight + scrollY;
+        const depth = (100 * scrollPosition) / scrollHeight;
+
+        const matchingThresholds = thresholds.filter(
+          (threshold) => currentDepth < threshold && threshold <= depth
+        );
+
+        matchingThresholds.forEach((threshold) => {
+          gtag("event", "scroll", {
+            percent_scrolled: String(threshold),
+          });
+        });
+
+        const lastThreshold = matchingThresholds.at(-1);
+        if (lastThreshold) {
+          setScrollDepth(lastThreshold);
+        }
+
+        timeoutID.current = null;
+      }, 100);
+    };
+
+    window.addEventListener("scroll", listener);
+
+    return () => window.removeEventListener("scroll", listener);
+  });
+
+  return currentDepth;
 }

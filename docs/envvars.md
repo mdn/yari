@@ -44,6 +44,12 @@ https://github.com/mdn/translated-content.
 Path to the contributor spotlight content, cloned from
 https://github.com/mdn/mdn-contributor-spotlight.
 
+### `CURRICULUM_ROOT`
+
+**Default: `../curriculum`**
+
+Path to the curriculum content, cloned from https://github.com/mdn/curriculum.
+
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -115,7 +121,7 @@ information about fixable flaws instead of actually fixing it on disk.
 
 ### `BUILD_LIVE_SAMPLES_BASE_URL`
 
-**Default: `https://mdn.mozillademos.org`**
+**Default: `https://live.mdnplay.dev`**
 
 When generating live samples `<iframe>` tags, the `src` attribute gets this set
 as a prefix. The ultimate reason why it's meant to be different is because the
@@ -125,29 +131,31 @@ of the site.
 When doing local development, it's recommended to set this to
 `http://localhost:5042` in your personal `.env`.
 
+### `BUILD_LEGACY_LIVE_SAMPLES_BASE_URL`
+
+**Default: `https://live-samples.mdn.mozilla.net`**
+
+Used to serve legacy lives samples that do not support playground rendering.
+
 ### `BUILD_INTERACTIVE_EXAMPLES_BASE_URL`
 
 **Default: `https://interactive-examples.mdn.mozilla.net`**
 
 The base URL used in the Interactive Example iframes.
 
-### `BUILD_GOOGLE_ANALYTICS_ACCOUNT`
+### `BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID`
 
 **Default: `''`**
 
 If set, the rendered HTML will have a Google Analytics snippet. For example, to
-test use: `export BUILD_GOOGLE_ANALYTICS_ACCOUNT=UA-00000000-0`. By default it's
-disabled (empty string).
+test use: `export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=G-XXXXXXXX`. By default
+it's disabled (empty string).
 
-### `BUILD_GOOGLE_ANALYTICS_DEBUG`
+For dual tagging (UA + GA4), multiple IDs can be separated by a comma:
 
-**Default: `false`**
-
-If true, and when `BUILD_GOOGLE_ANALYTICS_ACCOUNT` is truthy, when it injects
-the Google Analytics script tag it will use
-`<script src="https://www.google-analytics.com/analytics_debug.js"></script>`
-instead which triggers additional console logging which is useful for
-developers.
+```env
+export BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID=UA-00000000-0,G-XXXXXXXX
+```
 
 ### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
@@ -184,6 +192,12 @@ How many RSS feed entries to display on the home page.
 Flaw types to be fixed when running `fix-flaws`.
 
 ## Server
+
+### `SERVER_HOST`
+
+**Default: (undefined)**
+
+Set this to `0.0.0.0` to access the server from a different local device.
 
 ### `SERVER_PORT`
 
@@ -227,6 +241,12 @@ automatically included in XHR calls on `http://localhost.org:3000`.
 Note that even if you set this, you can still continue to use
 `http://localhost:3000`.
 
+### `REACT_APP_AI_FEEDBACK_GITHUB_REPO`
+
+**Default: `mdn/private-ai-feedback`**
+
+The GitHub repository to use for reporting issues with AI Help answers.
+
 ### `REACT_APP_BCD_BASE_URL`
 
 **Default: `https://bcd.developer.allizom.org`**
@@ -254,26 +274,29 @@ name instead. That means you can log in _from_ Yari with a single click.
 This removes sign-in and `whoami` XHR fetching. Useful when using Yari purely
 for content editing as authentication is then not required.
 
-### `REACT_APP_CRUD_MODE`
+### `REACT_APP_DEV_MODE`
 
-**Default: `NODE_ENV==='development'`**
+**Default: `false`**
+
+Enables features or setup which only make sense in local development.
+
+### `REACT_APP_WRITER_MODE`
+
+**Default: `false`**
 
 Basically, these are the optional, lazy-loaded features of the app that only
 make sense when you're working on authoring the content. For example the Toolbar
 bar appears based on this.
 
-It defaults to `NODE_ENV==='development'` if not set which means that it's
-enable by default when doing development with the `localhost:3000` dev server.
-
-### `REACT_APP_CRUD_MODE_HOSTNAMES`
+### `REACT_APP_WRITER_MODE_HOSTNAMES`
 
 **Default: `localhost, localhost.org, 127.0.0.1`**
 
-Only applicable if `REACT_APP_CRUD_MODE` is truthy. Essentially you can disable
-certain CRUD mode features depending on the hostname you use. So if you built
-the static assets (the React code) with `REACT_APP_CRUD_MODE=true` it might
-disable certain features if you use a `window.location.hostname` that is _not_
-in this list.
+Only applicable if `REACT_APP_WRITER_MODE` is truthy. Essentially you can
+disable certain CRUD mode features depending on the hostname you use. So if you
+built the static assets (the React code) with `REACT_APP_WRITER_MODE=true` it
+might disable certain features if you use a `window.location.hostname` that is
+_not_ in this list.
 
 The use case for this is when you build the site in a pull request and want
 flaws to _appear_ but without the "Fix fixable flaws" link or the "Open in your
@@ -284,7 +307,7 @@ make sense to present the "Fix fixable flaws" button for example.
 
 ### `REACT_APP_ENABLE_PLUS`
 
-**Default: `NODE_ENV==='development'`**
+**Default: `false`**
 
 Determines if the MDN++ SPA should be reachable or not.
 
@@ -295,6 +318,14 @@ Determines if the MDN++ SPA should be reachable or not.
 If the `/api/v1/whoami` does not include a `geo.country` value, fall back on
 this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
 included this value for `geo.country`.
+
+### `REACT_APP_DEFAULT_GEO_COUNTRY_ISO`
+
+**Default: `US`**
+
+If the `/api/v1/whoami` does not include a `geo.country_iso` value, fall back on
+this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
+included this value for `geo.country_iso`.
 
 ## Glean (Analytics)
 
@@ -320,3 +351,16 @@ included this value for `geo.country`.
   - Be aware of flipping this between true/false as any persisted metrics,
     events and pings (other than first_run_date and first_run_hour) are cleared.
     [More info](https://mozilla.github.io/glean/book/reference/general/initializing.html#when-upload-is-disabled)
+
+### REACT_APP_PLAYGROUND_BASE_HOST
+
+**Default: mdnplay.dev**
+
+- Sets the host name for the playground iframe. Set this to `localhost:5042`
+  when working on playground functionality.
+
+### REACT_APP_OBSERVATORY_API_URL
+
+**Default: `https://observatory-api.mdn.allizom.net`**
+
+- Base url for the Observatory API server.

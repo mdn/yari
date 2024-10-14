@@ -3,7 +3,13 @@ import fs from "node:fs";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
+import {
+  beforeEachMacro,
+  describeMacro,
+  itMacro,
+  lintHTML,
+  parsePagesFixture,
+} from "./utils.js";
 
 /**
  * Load all the fixtures.
@@ -13,9 +19,7 @@ const subpagesFixturePath = new URL(
   "./fixtures/apiref/subpages.json",
   import.meta.url
 );
-const subpagesFixture = JSON.parse(
-  fs.readFileSync(subpagesFixturePath, "utf-8")
-);
+const subpagesFixture = parsePagesFixture(subpagesFixturePath);
 const commonl10nFixturePath = new URL(
   "./fixtures/apiref/commonl10n.json",
   import.meta.url
@@ -493,9 +497,9 @@ function checkItemList(
  * config.expected contains the expected results, and we use other bits
  * of config, most notably locale
  */
-function checkResult(html, config) {
+async function checkResult(html, config) {
   // Lint the HTML
-  expect(lintHTML(html)).toBeFalsy();
+  expect(await lintHTML(html)).toBeFalsy();
 
   const dom = JSDOM.fragment(html);
   // Check that all links reference the proper locale or use https
@@ -506,7 +510,7 @@ function checkResult(html, config) {
   expect(num_valid_links).toEqual(num_total_links);
 
   // Test main interface link
-  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li>strong>a");
+  const mainIfLink = dom.querySelector<HTMLAnchorElement>("ol>li.section>a");
   expect(mainIfLink.textContent).toEqual(config.expected.mainIfLink.text);
 
   if (mainIfLink.href !== "") {
@@ -663,12 +667,12 @@ function testMacro(config) {
         throw new Error(`Unimplmeneted mock fixture ${name}`);
       });
       if (config.argument) {
-        return macro.call(config.argument).then(function (result) {
-          checkResult(result, config);
+        return macro.call(config.argument).then(async function (result) {
+          await checkResult(result, config);
         });
       }
-      return macro.call().then(function (result) {
-        checkResult(result, config);
+      return macro.call().then(async function (result) {
+        await checkResult(result, config);
       });
     });
   }
@@ -680,6 +684,9 @@ describeMacro("APIRef", function () {
     macro.ctx.page.subpagesExpand = jest.fn((page) => {
       expect(page).toEqual("/en-US/docs/Web/API/TestInterface");
       return subpagesFixture;
+    });
+    macro.ctx.wiki.getPage = jest.fn((url) => {
+      return subpagesFixture.find((doc) => doc.url === url) ?? {};
     });
   });
 

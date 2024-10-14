@@ -8,7 +8,8 @@ import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
-import inquirer from "inquirer";
+import cliProgress from "cli-progress";
+import { confirm } from "@inquirer/prompts";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
@@ -28,11 +29,8 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_ACCOUNT,
-  GOOGLE_ANALYTICS_DEBUG,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
@@ -44,7 +42,6 @@ import {
 import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -179,14 +176,6 @@ interface PopularitiesActionParameters extends ActionParameters {
   logger: Logger;
 }
 
-interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
-  options: {
-    account: string;
-    debug: boolean;
-    outfile: string;
-  };
-}
-
 interface BuildRobotsTxtActionParameters extends ActionParameters {
   options: {
     outfile: string;
@@ -204,16 +193,10 @@ interface MacrosActionParameters extends ActionParameters {
   };
 }
 
-interface OptimizeClientBuildActionParameters extends ActionParameters {
-  args: {
-    buildroot: string;
-  };
-}
-
 interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
-    format: "md-table" | "json";
+    format: "md-table" | "csv" | "json";
     unusedOnly: boolean;
   };
 }
@@ -236,7 +219,11 @@ function tryOrExit<T extends ActionParameters>(
       await f({ options, ...args } as T);
     } catch (e) {
       const error = e as Error;
-      if (options.verbose || options.v) {
+      if (
+        options.verbose ||
+        options.v ||
+        (error instanceof Error && !error.message)
+      ) {
         console.error(chalk.red(error.stack));
       }
       throw error;
@@ -335,17 +322,17 @@ program
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .option("-r, --recursive", "Delete content recursively", { default: false })
+  .option("-r, --recursive", "Delete children", { default: false })
   .option(
     "--redirect <redirect>",
-    "Redirect document (and its children, if --recursive is true) to the URL <redirect>"
+    "Redirect document, and its children (if --recursive is true), to the URL <redirect>"
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
     tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
-      const changes = Document.remove(slug, locale, {
+      const changes = await Document.remove(slug, locale, {
         recursive,
         redirect,
         dry: true,
@@ -367,16 +354,14 @@ program
           )
         );
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
-        const deletedDocs = Document.remove(slug, locale, {
+        const deletedDocs = await Document.remove(slug, locale, {
           recursive,
           redirect,
         });
@@ -433,7 +418,7 @@ program
     tryOrExit(async ({ args, options }: MoveActionParameters) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
-      const changes = Document.move(oldSlug, newSlug, locale, {
+      const changes = await Document.move(oldSlug, newSlug, locale, {
         dry: true,
       });
       console.log(
@@ -446,16 +431,14 @@ program
           .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
           .join("\n")
       );
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
-        const moved = Document.move(oldSlug, newSlug, locale);
+        const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
     })
@@ -714,7 +697,7 @@ program
             redirectedDocs,
             renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(locale);
+          } = await syncAllTranslatedContent(locale);
           console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
@@ -749,15 +732,28 @@ program
       const allDocs = await Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
+      const progressBar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_grey
+      );
+      progressBar.start(allDocs.count, 0);
+
       for (const document of allDocs.iterDocs()) {
-        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
-          await buildDocument(document, {
-            fixFlaws: true,
-            fixFlawsTypes: new Set(fixFlawsTypes),
-            fixFlawsVerbose: true,
-          });
+        try {
+          if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+            await buildDocument(document, {
+              fixFlaws: true,
+              fixFlawsTypes: new Set(fixFlawsTypes),
+              fixFlawsVerbose: true,
+            });
+          }
+        } catch (e) {
+          console.error(e);
         }
+        progressBar.increment();
       }
+
+      progressBar.stop();
     })
   )
 
@@ -788,84 +784,21 @@ program
         console.log(chalk.green("Found no fixable flaws!"));
         return;
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: `Proceed fixing ${flaws} flaws?`,
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: `Proceed fixing ${flaws} flaws?`,
+          default: true,
+        }));
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
       }
     })
   )
 
-  .command("redundant-translations", "Find redundant translations")
-  .action(
-    tryOrExit(async () => {
-      if (!CONTENT_TRANSLATED_ROOT) {
-        throw new Error("CONTENT_TRANSLATED_ROOT not set");
-      }
-      if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
-        throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
-      }
-      const documents = await Document.findAll();
-      if (!documents.count) {
-        throw new Error("No documents to analyze");
-      }
-      // Build up a map of translations by their `translation_of`
-      const map = new Map();
-      for (const document of documents.iterDocs()) {
-        if (!document.isTranslated) continue;
-        const { translation_of, locale } = document.metadata;
-        if (!map.has(translation_of)) {
-          map.set(translation_of, new Map());
-        }
-        if (!map.get(translation_of).has(locale)) {
-          map.get(translation_of).set(locale, []);
-        }
-        map
-          .get(translation_of)
-          .get(locale)
-          .push(
-            Object.assign(
-              { filePath: document.fileInfo.path },
-              document.metadata
-            )
-          );
-      }
-      // Now, let's investigate those with more than 1
-      let sumENUS = 0;
-      let sumTotal = 0;
-      for (const [translation_of, localeMap] of map) {
-        for (const [, metadatas] of localeMap) {
-          if (metadatas.length > 1) {
-            // console.log(translation_of, locale, metadatas);
-            sumENUS++;
-            sumTotal += metadatas.length;
-            console.log(
-              `https://developer.allizom.org/en-US/docs/${translation_of}`
-            );
-            for (const metadata of metadatas) {
-              console.log(metadata);
-            }
-          }
-        }
-      }
-      console.warn(
-        `${sumENUS} en-US documents have multiple translations with the same locale`
-      );
-      console.log(
-        `In total, ${sumTotal} translations that share the same translation_of`
-      );
-    })
-  )
-
   .command(
     "popularities",
-    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
+    "Convert Glean-derived page view CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
     default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
@@ -915,72 +848,6 @@ program
         )
       );
     })
-  )
-
-  .command(
-    "google-analytics-code",
-    "Generate a .js file that can be used in SSR rendering"
-  )
-  .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "ga.js"),
-  })
-  .option(
-    "--debug",
-    "whether to use the Google Analytics debug file (defaults to value of $GOOGLE_ANALYTICS_DEBUG)",
-    {
-      default: GOOGLE_ANALYTICS_DEBUG,
-    }
-  )
-  .option(
-    "--account <id>",
-    "Google Analytics account ID (defaults to value of $GOOGLE_ANALYTICS_ACCOUNT)",
-    {
-      default: GOOGLE_ANALYTICS_ACCOUNT,
-    }
-  )
-  .action(
-    tryOrExit(
-      async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, debug, account } = options;
-        if (account) {
-          const dntHelperCode = fs
-            .readFileSync(
-              new URL("mozilla.dnthelper.min.js", import.meta.url),
-              "utf-8"
-            )
-            .trim();
-
-          const gaScriptURL = `https://www.google-analytics.com/${
-            debug ? "analytics_debug" : "analytics"
-          }.js`;
-
-          const code = `
-// Mozilla DNT Helper
-${dntHelperCode}
-// only load GA if DNT is not enabled
-if (Mozilla && !Mozilla.dntEnabled()) {
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', '${account}', 'mozilla.org');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
-
-    var gaScript = document.createElement('script');
-    gaScript.async = 1; gaScript.src = '${gaScriptURL}';
-    document.head.appendChild(gaScript);
-}`.trim();
-          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
-          logger.info(
-            chalk.green(
-              `Generated ${outfile} for SSR rendering using ${account}${
-                debug ? " (debug mode)" : ""
-              }.`
-            )
-          );
-        } else {
-          logger.info(chalk.yellow("No Google Analytics code file generated"));
-        }
-      }
-    )
   )
 
   .command(
@@ -1113,7 +980,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 console.log(`${flaw.macroSource} --> ${suggestion}`);
               }
               console.groupEnd();
-              Document.update(
+              await Document.update(
                 document.url,
                 document.rawBody,
                 document.metadata
@@ -1134,7 +1001,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
-          Document.update(document.url, newRawHTML, document.metadata);
+          await Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;
         } else {
@@ -1183,47 +1050,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   )
 
   .command(
-    "optimize-client-build",
-    "After the client code has been built there are things to do that react-scripts can't."
-  )
-  .argument("<buildroot>", "directory where react-scripts built", {
-    default: path.join("client", "build"),
-  })
-  .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-        logger,
-      }: OptimizeClientBuildActionParameters) => {
-        const { buildroot } = args;
-        const { results } = await runOptimizeClientBuild(buildroot);
-        if (options.verbose) {
-          for (const result of results) {
-            logger.info(`${result.filePath} -> ${result.hashedHref}`);
-          }
-        } else {
-          logger.info(
-            chalk.green(
-              `Hashed ${results.length} files in ${path.join(
-                buildroot,
-                "index.html"
-              )}`
-            )
-          );
-        }
-      }
-    )
-  )
-
-  .command(
     "macro-usage-report",
     "Counts occurrences of each macro and prints it as a table."
   )
   .option("--deprecated-only", "Only reports deprecated macros.")
   .option("--format <type>", "Format of the report.", {
     default: "md-table",
-    validator: ["json", "md-table"],
+    validator: ["json", "md-table", "csv"],
   })
   .option("--unused-only", "Only reports unused macros.")
   .action(

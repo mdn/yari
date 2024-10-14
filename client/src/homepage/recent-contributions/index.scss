@@ -8,7 +8,7 @@
   padding: 0 1rem;
   width: 100%;
 
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     padding: 0;
   }
 
@@ -27,7 +27,7 @@
     justify-content: space-between;
     padding: 0.7rem;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       flex-direction: revert;
     }
 
@@ -50,13 +50,13 @@
     gap: 0.125rem;
     line-height: var(--base-line-height);
     margin: 0;
+    overflow-wrap: break-word;
 
     a {
       color: var(--text-primary);
 
       &:hover {
         color: var(--text-primary);
-        text-decoration: underline;
       }
     }
 

@@ -1,0 +1,85 @@
+@use "../ui/vars" as *;
+
+.curriculum-content-container.curriculum-module {
+  .curriculum-content {
+    > header {
+      column-gap: 1.5rem;
+      display: grid;
+      grid-template-areas:
+        ". group"
+        "icon heading"
+        "icon category";
+      justify-content: flex-start;
+
+      .topic-icon {
+        --background-primary: var(--curriculum-bg-color-topic);
+        align-self: flex-start;
+        grid-area: icon;
+        height: 4rem;
+        width: 4rem;
+
+        + h1 {
+          grid-area: heading;
+          margin-bottom: 0;
+        }
+      }
+
+      p.module-topic {
+        color: var(--curriculum-color-topic);
+        font-size: var(--type-smaller-font-size);
+        grid-area: category;
+        margin: 0;
+        margin-top: 0.5rem;
+
+        &::before {
+          content: "Category: ";
+        }
+      }
+
+      p.module-group {
+        align-self: center;
+        background-color: var(--curriculum-module-label-bg-color);
+        border-radius: var(--elem-radius);
+        color: var(--curriculum-module-label-color);
+        font-size: var(--type-smaller-font-size);
+        grid-area: group;
+        height: max-content;
+        margin: 0;
+        margin-bottom: 0.25rem;
+        padding: 0.125rem 0.5rem;
+        width: fit-content;
+      }
+    }
+
+    p.curriculum-resources {
+      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+
+      + ul {
+        padding-left: 2rem;
+
+        > li {
+          list-style-image: var(--curriculum-module-mdn-resource);
+
+          &.curriculum-external-li {
+            list-style-image: url("../assets/icons/curriculum-ext-resource.svg");
+          }
+
+          em {
+            background: var(--curriculum-bg-color);
+            border-radius: 1em;
+            color: var(--text-primary);
+            display: inline-block;
+            font-size: 0.5rem;
+            font-weight: bold;
+            line-height: 1.7;
+            padding: 0 0.4em;
+            text-rendering: optimizeLegibility;
+            text-transform: uppercase;
+            vertical-align: super;
+          }
+        }
+      }
+    }
+  }
+}

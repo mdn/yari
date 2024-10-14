@@ -23,7 +23,7 @@
       position: relative;
       top: -0.2rem;
 
-      @media screen and (min-width: $screen-lg) {
+      @media (min-width: $screen-lg) {
         position: absolute;
         right: 10rem;
         top: 50%;
@@ -66,8 +66,10 @@
     h1 span,
     p {
       // improve text contrast against mandala
-      text-shadow: 2px 2px 3px var(--plus-header),
-        2px -2px 3px var(--plus-header), -2px -2px 3px var(--plus-header),
+      text-shadow:
+        2px 2px 3px var(--plus-header),
+        2px -2px 3px var(--plus-header),
+        -2px -2px 3px var(--plus-header),
         -2px 2px 3px var(--plus-header);
     }
 
@@ -83,15 +85,16 @@
   }
 }
 
+.ai-help,
 .collections,
 .updates {
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     .container {
       max-width: 43rem;
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     .container {
       max-width: 52rem;
     }

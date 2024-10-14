@@ -1,0 +1,613 @@
+@use "../ui/vars" as *;
+
+.curriculum-content-container.curriculum-landing {
+  background-color: var(--curriculum-bg-color-landing);
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+  width: 100%;
+
+  > article {
+    > header,
+    > section {
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+      width: 100%;
+    }
+  }
+
+  .curriculum-content {
+    padding-top: 0;
+
+    ol.modules-list {
+      @media (min-width: $screen-sm) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (min-width: $screen-md) {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @media (min-width: $screen-lg) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+    }
+  }
+
+  header.landing-header {
+    display: grid;
+    grid-template-areas: "copy" "svg";
+    @media (min-width: $screen-md) {
+      grid-template-areas: "copy svg";
+      grid-template-columns: 30rem auto;
+    }
+
+    > svg {
+      align-self: end;
+      grid-area: svg;
+      justify-self: end;
+      margin-bottom: 3rem;
+      max-width: 28rem;
+      width: 100%;
+      z-index: 1;
+      @media (min-width: $screen-md) {
+        margin-bottom: 0;
+      }
+
+      #icons-bg {
+        fill: var(--curriculum-bg-color-landing-top-icon);
+      }
+
+      .laptop {
+        fill: var(--curriculum-color-landing-laptop);
+      }
+    }
+
+    > section {
+      grid-area: copy;
+      margin-right: auto;
+      margin-top: 3rem;
+      max-width: 30rem;
+      padding-right: 1rem;
+      @media (min-width: $screen-md) {
+        margin-bottom: 4rem;
+      }
+
+      h1 {
+        color: var(--curriculum-color-topic);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        @media (min-width: $screen-md) {
+          font-size: 2.5rem;
+        }
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
+        @media (min-width: $screen-md) {
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
+      }
+
+      p {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .landing-about-container {
+    background-color: var(--curriculum-bg-large-color);
+    margin: 0;
+    margin-top: -6rem;
+    max-width: 100%;
+
+    .landing-about {
+      display: grid;
+      grid-template-areas:
+        "li"
+        "h2"
+        "p1"
+        "p2"
+        "p3"
+        "p4"
+        "scrim";
+      grid-template-columns: 1fr;
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+      @media (min-width: $screen-lg) {
+        column-gap: 1rem;
+        grid-template-areas:
+          "li li    li "
+          "h2 .     scrim"
+          "p1 .     scrim"
+          "p2 .     scrim"
+          "p3 arrow scrim"
+          "p4 arrow scrim";
+        grid-template-columns: 1fr 7rem 24rem;
+      }
+
+      h2 {
+        grid-area: h2;
+        margin: 1rem 0;
+      }
+
+      > div.about-content {
+        display: contents;
+
+        ul {
+          align-items: start;
+          background-color: var(--curriculum-bg-color-landing-about-ul);
+          border-radius: var(--elem-radius);
+          box-shadow: var(--curriculum-shadow-landing-about-ul);
+          color: var(--text-secondary);
+          display: grid;
+          grid-area: li;
+          grid-template-columns: auto auto auto;
+          justify-content: center;
+          margin: auto;
+          min-height: 5rem;
+          padding: 1rem;
+          transform: translateY(-1rem);
+          width: 100%;
+          @media (min-width: $screen-sm) {
+            align-items: center;
+            gap: 1rem;
+          }
+          @media (min-width: $screen-md) {
+            justify-content: start;
+          }
+          @media (min-width: $screen-lg) {
+            justify-content: center;
+          }
+
+          > li {
+            margin: 0 0.5rem;
+            text-align: center;
+            @media (min-width: $screen-sm) {
+              margin: 0 1rem;
+              width: max-content;
+            }
+            @media (min-width: $screen-md) {
+              align-items: center;
+              display: inline-flex;
+              gap: 1rem;
+            }
+
+            &::before {
+              display: block;
+              height: 3rem;
+              margin: 0 auto;
+              width: 3rem;
+              @media (min-width: $screen-md) {
+                display: initial;
+                margin: 0;
+              }
+            }
+
+            &:nth-child(1)::before {
+              content: var(--curriculum-landing-about-beginner);
+            }
+
+            &:nth-child(2)::before {
+              content: var(--curriculum-landing-about-pace);
+            }
+
+            &:nth-child(3)::before {
+              content: var(--curriculum-landing-about-free);
+            }
+          }
+        }
+
+        p {
+          align-items: center;
+          color: var(--text-secondary);
+          display: grid;
+          grid-template-columns: auto auto;
+          justify-content: start;
+          margin: 1rem 0;
+
+          &::before {
+            align-self: start;
+            display: block;
+            height: 4rem;
+            width: 4rem;
+          }
+
+          &:nth-child(2) {
+            grid-area: p1;
+
+            &::before {
+              content: var(--curriculum-landing-about-bullet);
+            }
+          }
+
+          &:nth-child(3) {
+            grid-area: p2;
+
+            &::before {
+              content: var(--curriculum-landing-about-bullet);
+            }
+          }
+
+          &:nth-child(4) {
+            grid-area: p3;
+
+            &::before {
+              content: var(--curriculum-landing-about-bullet);
+            }
+          }
+
+          &:nth-child(5) {
+            grid-area: p4;
+
+            a {
+              color: var(--text-primary);
+              font-weight: var(--font-body-strong-weight);
+              margin-left: 4rem;
+              text-decoration: underline;
+
+              &:hover,
+              &:active {
+                text-decoration: none;
+              }
+            }
+          }
+        }
+      }
+
+      > div.arrow {
+        background-image: var(--curriculum-landing-arrow);
+        background-position: center;
+        background-repeat: no-repeat;
+        grid-area: arrow;
+      }
+
+      .scrim-wrapper {
+        display: flex;
+        flex-direction: column;
+        grid-area: scrim;
+        justify-content: center;
+        justify-self: center;
+        margin-top: 1rem;
+        max-width: 24rem;
+
+        @media (min-width: $screen-lg) {
+          justify-self: end;
+          margin-top: 0;
+        }
+
+        .scrim-border {
+          background-image: var(--curriculum-scrim-bg);
+          background-position: bottom right;
+          background-repeat: no-repeat;
+          height: 16rem;
+          width: 100%;
+        }
+
+        scrim-inline {
+          background: #000;
+          display: block;
+          height: 14.25rem;
+          max-width: calc(100vw - var(--gutter) * 2);
+          width: 22rem;
+        }
+
+        p {
+          margin: 0;
+          padding: 1rem 0;
+        }
+      }
+    }
+  }
+
+  .landing-stairway {
+    background-color: var(--background-secondary);
+    margin: 0;
+    max-width: 100%;
+
+    > div {
+      color: var(--text-secondary);
+      display: grid;
+      grid-template-areas: "a" "b";
+      grid-template-columns: auto;
+      grid-template-rows: auto auto;
+      justify-content: center;
+      margin: 0 auto 3rem;
+      max-width: min(var(--max-width), 74rem);
+      padding: 2rem;
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+      width: 100%;
+
+      @media (min-width: $screen-md) {
+        grid-template-columns: min(100%, 34rem);
+      }
+      @media (min-width: $screen-lg) {
+        grid-template-areas: "a b";
+        grid-template-columns: 1fr 1.4fr;
+      }
+
+      svg {
+        width: 100%;
+      }
+
+      > #stairway1-container {
+        --fs: clamp(1rem, calc(3 * calc(100vw / 100)), 1.75rem);
+
+        grid-area: a;
+        margin: 0;
+        position: relative;
+        transform: translateX(2vw);
+        width: 100%;
+
+        @media (min-width: $screen-lg) {
+          --fs: clamp(1rem, calc(2 * calc(100vw / 100)), 1.75rem);
+        }
+
+        #stairway1 {
+          font-size: var(--fs);
+          left: 32%;
+          position: absolute;
+          top: 18%;
+
+          > span {
+            display: block;
+            line-height: calc(1.25 * var(--fs));
+            text-wrap: nowrap;
+            width: max-content;
+          }
+
+          .color {
+            color: var(--curriculum-color);
+          }
+        }
+      }
+
+      > #stairway2-container {
+        --fs: clamp(0.75rem, calc(1.25 * calc(100vw / 100)), 1rem);
+
+        grid-area: b;
+        position: relative;
+        transform: translateX(-5vw);
+
+        @media (min-width: $screen-md) {
+          --fs: clamp(0.75rem, calc(100vw / 100), 0.825rem);
+        }
+
+        #stairway2 {
+          font-size: var(--fs);
+          height: 100%;
+          left: 0;
+          margin: 0;
+          position: absolute;
+          top: 0;
+          width: calc(100% + 5vw);
+
+          > span {
+            display: block;
+            line-height: calc(1.25 * var(--fs));
+            max-width: 10rem;
+            position: absolute;
+            text-wrap: wrap;
+            @media (min-width: $screen-md) {
+              max-width: initial;
+              text-wrap: nowrap;
+            }
+          }
+
+          #stair-1 {
+            left: 47%;
+            top: 36%;
+          }
+
+          #stair-2 {
+            left: 33%;
+            top: 52%;
+          }
+
+          #stair-3 {
+            left: 23%;
+            top: 71%;
+          }
+
+          #stair-4 {
+            left: 8%;
+            top: 86%;
+          }
+          @media (min-width: $screen-md) {
+            #stair-1 {
+              left: 35%;
+              top: 53%;
+            }
+
+            #stair-2 {
+              left: 27%;
+              top: 65%;
+            }
+
+            #stair-3 {
+              left: 13%;
+              top: 77%;
+            }
+
+            #stair-4 {
+              left: 0%;
+              top: 90%;
+            }
+          }
+        }
+
+        > svg {
+          &#stairway2large {
+            display: none;
+            grid-area: b;
+            @media (min-width: $screen-md) {
+              display: initial;
+            }
+          }
+
+          &#stairway2small {
+            grid-area: b;
+            max-width: 100%;
+            @media (min-width: $screen-md) {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #dont_know_where_toget_started {
+    line-height: 3rem;
+    margin: 1rem auto 5rem;
+    text-align: center;
+    width: fit-content;
+
+    &::after {
+      content: url("../assets/icons/curriculum-started-underline.svg");
+      position: absolute;
+      transform: translate3d(-6em, 1.25rem, 0);
+      width: 6em;
+    }
+
+    ~ div {
+      > ul {
+        display: grid;
+        gap: 1rem;
+        grid-template-areas: "beginner advanced employ educator";
+        margin: 0 auto;
+        max-width: 52rem;
+        overflow: scroll;
+        scroll-snap-type: inline mandatory;
+        @media (min-width: $screen-md) {
+          gap: 5rem 4rem;
+          grid-template-areas:
+            "beginner advanced"
+            "employ educator";
+          grid-template-columns: auto auto;
+        }
+        @media (min-width: $screen-lg) {
+          gap: 5rem 8rem;
+        }
+
+        > li {
+          align-items: center;
+          background-color: var(--curriculum-bg-large-color);
+          border-radius: var(--elem-radius);
+          color: var(--text-secondary);
+          display: grid;
+          gap: 1rem;
+          grid-template-areas:
+            "i h"
+            "p p"
+            "c c";
+          grid-template-columns: 3rem 1fr;
+          grid-template-rows: 4rem minmax(7rem, max-content) max-content;
+          height: max-content;
+          padding: 1rem 0.5rem;
+          scroll-snap-align: center;
+          width: 80vw;
+
+          @media (min-width: $screen-md) {
+            align-items: start;
+            background-color: initial;
+            gap: 1rem 2rem;
+            grid-template-areas:
+              "i h"
+              "i p"
+              "i c";
+            grid-template-columns: auto auto;
+            grid-template-rows: 4rem auto max-content;
+            height: initial;
+            padding: 0;
+            width: initial;
+          }
+
+          &::before {
+            align-self: start;
+            display: inline-block;
+            height: 3rem;
+            width: 3rem;
+            @media (min-width: $screen-md) {
+              grid-area: i;
+              height: 5rem;
+              width: 5rem;
+            }
+          }
+
+          &:nth-child(1)::before {
+            content: var(--curriculum-landing-started-beginner);
+          }
+
+          &:nth-child(2)::before {
+            content: var(--curriculum-landing-started-advanced);
+          }
+
+          &:nth-child(3)::before {
+            content: var(--curriculum-landing-started-employment);
+          }
+
+          &:nth-child(4)::before {
+            content: var(--curriculum-landing-started-educator);
+          }
+
+          h3 {
+            color: var(--text-primary);
+            font-weight: var(--font-body-strong-weight);
+            margin-top: 0;
+          }
+
+          em {
+            align-self: start;
+            grid-area: p;
+          }
+
+          a {
+            // Mimic the button in content as we only have an <a>
+            --button-bg: var(--button-primary-default);
+            --button-bg-hover: var(--button-primary-hover);
+            --button-bg-active: var(--button-primary-active);
+            --button-border-color: var(--button-primary-default);
+            --button-focus-effect: var(--focus-effect);
+            --button-height: var(--form-elem-height, 2rem);
+            --button-color: var(--background-primary);
+            --button-font: var(--type-emphasis-m);
+            --button-radius: var(--elem-radius, 0.25rem);
+            align-items: center;
+            background-color: var(--button-bg);
+            border: 1px solid var(--button-border-color);
+            border-radius: var(--button-radius);
+            color: var(--button-color);
+            cursor: pointer;
+            display: flex;
+            font: var(--button-font);
+            gap: 0.25rem;
+
+            grid-area: c;
+            justify-content: center;
+            justify-self: center;
+            min-height: var(--button-height);
+            padding: 0.5rem;
+            padding-left: var(--button-padding);
+            padding-right: var(--button-padding);
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            width: fit-content;
+            @media (min-width: $screen-md) {
+              justify-self: start;
+            }
+
+            &:hover {
+              background-color: var(--button-bg-hover, var(--button-bg));
+            }
+          }
+        }
+      }
+    }
+  }
+}

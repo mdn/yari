@@ -10,15 +10,21 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
 import { getBCDDataForPath } from "@mdn/bcd-utils-api";
+import sanitizeFilename from "sanitize-filename";
 
 import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } from "../build/index.js";
-import { findDocumentTranslations } from "../content/translations.js";
-import { Document, Redirect, Image } from "../content/index.js";
-import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { findTranslations } from "../content/translations.js";
+import { Document, Redirect, FileAttachment } from "../content/index.js";
+import {
+  ANY_ATTACHMENT_REGEXP,
+  CSP_VALUE,
+  DEFAULT_LOCALE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
+} from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
@@ -27,6 +33,7 @@ import {
   OFFLINE_CONTENT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  BLOG_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -35,13 +42,20 @@ import { searchIndexRoute } from "./search-index.js";
 import flawsRoute from "./flaws.js";
 import { router as translationsRouter } from "./translations.js";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares.js";
-import { getRoot } from "../content/utils.js";
+import { MEMOIZE_INVALIDATE, getRoot } from "../content/utils.js";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
+import {
+  allPostFrontmatter,
+  findPostLiveSampleBySlug,
+  findPostBySlug,
+  findPostPathBySlug,
+} from "../build/blog.js";
+import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;
@@ -51,7 +65,10 @@ async function buildDocumentFromURL(url) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
     // the phase that happens when you do a regular `npm run build`.
-    document.translations = findDocumentTranslations(document);
+    document.translations = findTranslations(
+      document.metadata.slug,
+      document.metadata.locale
+    );
   }
   return await buildDocument(document, documentOptions);
 }
@@ -92,7 +109,7 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
-const pongProxy = createProxyMiddleware({
+const stageApiProxy = createProxyMiddleware({
   target: `https://developer.allizom.org`,
   changeOrigin: true,
   proxyTimeout: 20000,
@@ -111,8 +128,9 @@ const contentProxy =
     // timeout: 20000,
   });
 
-app.use("/pong/*", pongProxy);
-app.use("/pimg/*", pongProxy);
+app.use("/pong/*", stageApiProxy);
+app.use("/pimg/*", stageApiProxy);
+app.use("/api/v1/stripe/plans", stageApiProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
@@ -219,7 +237,83 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
+app.get(
+  [
+    "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
+    "/:locale/curriculum/index.json",
+  ],
+  async (req, res) => {
+    const { slug = "" } = req.params;
+    const data = await findCurriculumPageBySlug(slug);
+    if (!data) {
+      return res.status(404).send("Nothing here 🤷‍♂️");
+    }
+    return res.json(data);
+  }
+);
+
+app.get("/:locale/blog/index.json", async (_, res) => {
+  const posts = await allPostFrontmatter(
+    { includeUnpublished: true },
+    MEMOIZE_INVALIDATE
+  );
+  return res.json({ hyData: { posts } });
+});
+app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+  const { slug, asset } = req.params;
+  return send(
+    req,
+    path.resolve(
+      BLOG_ROOT,
+      "..",
+      "authors",
+      sanitizeFilename(slug),
+      sanitizeFilename(asset)
+    )
+  ).pipe(res);
+});
+if (BLOG_ROOT) {
+  app.get("/:locale/blog/:slug/index.json", async (req, res) => {
+    const { slug } = req.params;
+    const data = await findPostBySlug(slug);
+    if (!data) {
+      return res.status(404).send("Nothing here 🤷‍♂️");
+    }
+    return res.json(data);
+  });
+  app.get(
+    ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
+    async (req, res) => {
+      return res
+        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .status(200)
+        .sendFile(path.join(STATIC_ROOT, "runner.html"));
+    }
+  );
+  app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
+    const { slug, id } = req.params;
+    try {
+      return res.send(await findPostLiveSampleBySlug(slug, id));
+    } catch (e) {
+      return res.status(404).send(e.toString());
+    }
+  });
+  app.get("/:locale/blog/:slug/:asset", async (req, res) => {
+    const { slug, asset } = req.params;
+    const p = findPostPathBySlug(slug);
+    if (p) {
+      return send(
+        req,
+        path.resolve(path.join(p, sanitizeFilename(asset)))
+      ).pipe(res);
+    }
+    return res.status(404).send("Nothing here 🤷‍♂️");
+  });
+} else {
+  console.warn("'BLOG_ROOT' not set in .env file");
+}
 app.get("/*", async (req, res, ...args) => {
+  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
@@ -238,9 +332,18 @@ app.get("/*", async (req, res, ...args) => {
     return contentProxy(req, res, ...args);
   }
 
+  if (parsedUrl.pathname.endsWith("/runner.html")) {
+    return res
+      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+      .status(200)
+      .sendFile(path.join(STATIC_ROOT, "runner.html"));
+  }
   if (req.url.includes("/_sample_.")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.path));
+      return res
+        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+        .status(200)
+        .send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }
@@ -255,14 +358,12 @@ app.get("/*", async (req, res, ...args) => {
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
-  // TODO: Would be nice to have a list of all supported file extensions
-  // in a constants file.
-  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
-    // Remember, Image.findByURLWithFallback() will return the absolute file path
+  if (ANY_ATTACHMENT_REGEXP.test(req.path)) {
+    // Remember, FileAttachment.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
     // Using a "fallback" strategy here so that images embedded in live samples
     // are resolved if they exist in en-US but not in <locale>
-    const filePath = Image.findByURLWithFallback(req.path);
+    const filePath = FileAttachment.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
@@ -347,7 +448,7 @@ app.get("/*", async (req, res, ...args) => {
     res.json({ doc: document });
   } else {
     res.header("Content-Security-Policy", CSP_VALUE);
-    res.send(renderHTML(lookupURL, { doc: document }));
+    res.send(renderHTML({ doc: document, url: lookupURL }));
   }
 });
 
@@ -362,9 +463,10 @@ console.log(
     : ""
 );
 
+const HOST = process.env.SERVER_HOST || undefined;
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Listening on ${HOST ? `${HOST}:` : "port "}${PORT}`);
   if (process.env.EDITOR) {
     console.log(`Your EDITOR is set to: ${chalk.bold(process.env.EDITOR)}`);
   } else {

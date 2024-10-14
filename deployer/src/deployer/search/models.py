@@ -45,7 +45,7 @@ yari_word_delimiter = token_filter(
     "yari_word_delimiter",
     type="word_delimiter",
     # When it splits on 'Array.prototype.forEach' it first of all becomes
-    # 'array', 'protoype', and 'foreach'. But also, still includes
+    # 'array', 'prototype', and 'foreach'. But also, still includes
     # as a word 'array.prototype.foreach'.
     # With this configuration we'll get good matches for both
     # 'array foreach' and if people type the full 'array.prototype.foreach'.
@@ -71,21 +71,29 @@ custom_stopwords = token_filter(
     #
     #   "at"
     #   https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
-    #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
-    #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/at
     #
     #   "is"
+    #   https://developer.mozilla.org/en-US/docs/Web/CSS/:is
     #   https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/is
-    #   http://localhost:3000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+    #   https://developer.mozilla.org/en-US/docs/WebAssembly/JavaScript_interface/Exception/is
+    #
+    #   "not"
+    #   https://developer.mozilla.org/en-US/docs/Web/CSS/:not
+    #   https://developer.mozilla.org/en-US/docs/Web/XPath/Functions/not
     #
     #   "of"
     #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
     #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/of
+    #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/of
     #   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/of
     #
     #   "to"
-    #   https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/To
     #   https://developer.mozilla.org/en-US/docs/Web/API/CSSNumericValue/to
+    #   https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/To
     #
     # If we discover that there are other words that are too important to our
     # context, we can simply pluck them out of the list below.
@@ -101,7 +109,6 @@ custom_stopwords = token_filter(
         "into",
         "it",
         "no",
-        "not",
         "on",
         "or",
         "such",

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import useSWR, { KeyedMutator } from "swr";
+import { SWRInfiniteResponse } from "swr/infinite";
 import { useScrollToTop, useLocale } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
@@ -10,7 +11,7 @@ import { camelWrap, charSlice, getCategoryByPathname } from "../../utils";
 import { FrequentlyViewedItem, Item, useCollection, useItems } from "./api";
 import NoteCard from "../../ui/molecules/notecards";
 import { DocMetadata } from "../../../../libs/types/document";
-import { Authors, LastModified } from "../../document/organisms/metadata";
+import { Authors, LastModified } from "../../document/organisms/article-footer";
 import { ArticleActions } from "../../ui/organisms/article-actions";
 import { MDN_PLUS_TITLE } from "../../constants";
 
@@ -22,7 +23,14 @@ import {
   FrequentlyViewedCollection,
   useFrequentlyViewed,
 } from "./frequently-viewed";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { PLUS_COLLECTIONS } from "../../telemetry/constants";
 dayjs.extend(relativeTime);
+
+// "swr/infinite" doesn't export InfiniteKeyedMutator directly
+type InfiniteKeyedMutator<T> = SWRInfiniteResponse<
+  T extends (infer I)[] ? I : T
+>["mutate"];
 
 export function CollectionComponent() {
   const { collectionId } = useParams();
@@ -81,8 +89,8 @@ export function CollectionComponent() {
               {itemLoading
                 ? "Loading..."
                 : itemError
-                ? "Error (try again)"
-                : "Show more"}
+                  ? "Error (try again)"
+                  : "Show more"}
             </Button>
           </div>
         )}
@@ -168,12 +176,13 @@ function ItemComponent({
 }: {
   addNoteEnabled?: boolean;
   item: Item | FrequentlyViewedItem;
-  mutate?: KeyedMutator<Item[][]>;
+  mutate?: KeyedMutator<Item[][]> | InfiniteKeyedMutator<Item[][]>;
 }) {
   const [slicedNote, setSlicedNote] = useState<string>();
   const [note, setNote] = useState<string>();
 
   const locale = useLocale();
+  const gleanClick = useGleanClick();
 
   useEffect(() => {
     const slicedNote = item.notes && charSlice(item.notes, 0, 180);
@@ -255,7 +264,10 @@ function ItemComponent({
               <Button
                 icon="edit"
                 type="action"
-                onClickHandler={openBookmarkMenu}
+                onClickHandler={(e) => {
+                  gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_EDIT);
+                  return openBookmarkMenu(e);
+                }}
               >
                 <span className="visually-hidden">Edit note</span>
               </Button>
@@ -294,7 +306,10 @@ function ItemComponent({
           extraClasses="add-note"
           icon="edit"
           type="action"
-          onClickHandler={openBookmarkMenu}
+          onClickHandler={(e) => {
+            gleanClick(PLUS_COLLECTIONS.ACTIONS_NOTE_ADD);
+            return openBookmarkMenu(e);
+          }}
         >
           Add note
         </Button>

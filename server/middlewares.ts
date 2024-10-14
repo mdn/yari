@@ -1,25 +1,36 @@
 import express from "express";
 
-import { CSP_VALUE } from "../libs/constants/index.js";
+import {
+  CSP_VALUE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
+} from "../libs/constants/index.js";
 import { STATIC_ROOT } from "../libs/env/index.js";
 import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
 import { getLocale } from "../libs/locale-utils/index.js";
-import { devMiddlewares } from "./dev.js";
 
-// Lowercase every request because every possible file we might have
-// on disk is always in lowercase.
-// This only helps when you're on a filesystem (e.g. Linux) that is case
-// sensitive.
-const slugRewrite = (req, res, next) => {
+const slugLowercase = (req, res, next) => {
   req.url = req.url.toLowerCase();
   next();
 };
+
+const staticServer = express.static(STATIC_ROOT, {
+  setHeaders: (res) => {
+    if (res.req.path.endsWith("/runner.html")) {
+      res.setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE);
+    } else {
+      res.setHeader("Content-Security-Policy", CSP_VALUE);
+    }
+  },
+});
+
+// This is necessary for case-sensitive filesystems, such as on Linux 🐧
+export const staticMiddlewares = [staticServer, slugLowercase, staticServer];
 
 /**
  * This function is returns an object with {url:string, status:number}
  * if there's some place to redirect to, otherwise an empty object.
  */
-const originRequest = (req, res, next) => {
+export const originRequestMiddleware = (req, res, next) => {
   const { url: fundamentalRedirectUrl, status } = resolveFundamental(req.url);
   if (fundamentalRedirectUrl && status) {
     res.redirect(status, fundamentalRedirectUrl);
@@ -48,14 +59,3 @@ const originRequest = (req, res, next) => {
     next();
   }
 };
-
-export const staticMiddlewares = [
-  ...devMiddlewares,
-  slugRewrite,
-  express.static(STATIC_ROOT, {
-    setHeaders: (res) => {
-      res.setHeader("Content-Security-Policy", CSP_VALUE);
-    },
-  }),
-];
-export const originRequestMiddleware = originRequest;

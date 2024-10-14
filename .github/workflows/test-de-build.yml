@@ -1,0 +1,24 @@
+name: Test-DE Build
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 */24 * * *"
+
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ${DEFAULT_NOTES}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `test-de` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "test-de"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}

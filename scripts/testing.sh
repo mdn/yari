@@ -23,7 +23,8 @@ echo "----------------------"
 export ENV_FILE=".env.testing"
 
 npm run build:prepare
-npm run build
+npm run build:docs
+npm run render:html
 
 nohup npm run start:static-server > testing.log 2>&1 &
 PID=$!

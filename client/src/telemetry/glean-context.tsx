@@ -4,15 +4,33 @@ import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import {
+  DEV_MODE,
+  GLEAN_CHANNEL,
+  GLEAN_DEBUG,
+  GLEAN_LOG_CLICK,
+  GLEAN_ENABLED,
+} from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
 import { VIEWPORT_BREAKPOINTS } from "./constants";
+import { Doc } from "../../../libs/types/document";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
+
+const UTM_PARAMETER_NAMES = [
+  "source",
+  "medium",
+  "campaign",
+  "term",
+  "content",
+] as const;
+type UTMParameters = Partial<
+  Record<(typeof UTM_PARAMETER_NAMES)[number], string>
+>;
 
 export type PageProps = {
   referrer: string | undefined;
@@ -20,10 +38,11 @@ export type PageProps = {
   httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
-  userAgent: string | undefined;
+  geo_iso: string | undefined;
+  userLanguages: string[];
   viewportBreakpoint: ViewportBreakpoint | undefined;
-  viewportRatio: number;
-  viewportHorizontalCoverage: number;
+  isBaseline?: string;
+  utm: UTMParameters;
 };
 
 export type PageEventProps = {
@@ -44,6 +63,17 @@ export type GleanAnalytics = {
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
 const GLEAN_APP_ID = "mdn-yari";
 
+function urlOrNull(url?: string, base?: string | URL) {
+  if (!url) {
+    return null;
+  }
+  try {
+    return new URL(url, base);
+  } catch (_) {
+    return null;
+  }
+}
+
 function glean(): GleanAnalytics {
   if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
@@ -59,43 +89,46 @@ function glean(): GleanAnalytics {
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
-    maxEvents: 1,
+    enableAutoPageLoadEvents: true,
     channel: GLEAN_CHANNEL,
-    serverEndpoint: CRUD_MODE
+    serverEndpoint: DEV_MODE
       ? "https://developer.allizom.org"
       : document.location.origin,
   });
 
-  if (CRUD_MODE) {
+  if (DEV_MODE) {
     Glean.setDebugViewTag("mdn-dev");
+    Glean.setLogPings(GLEAN_DEBUG);
   }
-  Glean.setLogPings(GLEAN_DEBUG);
 
   const gleanContext = {
     page: (page: PageProps) => {
-      if (page.path) {
-        pageMetric.path.set(page.path);
+      const path = urlOrNull(page.path);
+      if (path) {
+        pageMetric.path.setUrl(path);
       }
-      if (page.referrer) {
-        pageMetric.referrer.set(page.referrer);
+      const referrer = urlOrNull(page.referrer, window?.location.href);
+      if (referrer) {
+        pageMetric.referrer.setUrl(referrer);
+      }
+      if (page.isBaseline) {
+        pageMetric.isBaseline.set(page.isBaseline);
+      }
+      for (const param in page.utm) {
+        pageMetric.utm[param].set(page.utm[param]);
       }
       pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
       }
-      if (page.userAgent) {
-        navigatorMetric.userAgent.set(page.userAgent);
+      if (page.geo_iso) {
+        navigatorMetric.geoIso.set(page.geo_iso);
+      }
+      if (page.userLanguages) {
+        navigatorMetric.userLanguages.set(page.userLanguages);
       }
       if (page.viewportBreakpoint) {
         navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
-      }
-      if (page.viewportRatio) {
-        navigatorMetric.viewportRatio.set(page.viewportRatio);
-      }
-      if (page.viewportHorizontalCoverage) {
-        navigatorMetric.viewportHorizontalCoverage.set(
-          page.viewportHorizontalCoverage
-        );
       }
       navigatorMetric.subscriptionType.set(page.subscriptionType);
       return () => pings.page.submit();
@@ -117,6 +150,7 @@ function glean(): GleanAnalytics {
   };
   window?.addEventListener("click", (ev) => {
     handleLinkClick(ev, gleanClick);
+    handleButtonClick(ev, gleanClick);
     handleSidebarClick(ev, gleanClick);
   });
 
@@ -126,14 +160,22 @@ function glean(): GleanAnalytics {
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
 
+function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
+  const target = ev.composedPath()?.[0] || ev.target;
+  const button = (target as HTMLElement | null)?.closest("button");
+  if (button instanceof HTMLButtonElement && button.dataset.glean) {
+    click(button.dataset.glean);
+  }
+}
+
 function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
-  const anchor = ev?.target as Element;
-  if (anchor?.nodeName === "A") {
-    if (anchor?.classList.contains("external")) {
+  const target = ev.composedPath()?.[0] || ev.target;
+  const anchor = (target as HTMLElement | null)?.closest("a");
+  if (anchor instanceof HTMLAnchorElement) {
+    if (anchor.dataset.glean) {
+      click(anchor.dataset.glean);
+    } else if (anchor.classList.contains("external")) {
       click(`external-link: ${anchor.getAttribute("href") || ""}`);
-    }
-    if (anchor?.hasAttribute?.("data-pong")) {
-      click(`pong: ${anchor.getAttribute("data-pong") || ""}`);
     }
   }
 }
@@ -150,7 +192,7 @@ export function useGlean() {
   return React.useContext(GleanContext);
 }
 
-export function useGleanPage(pageNotFound: boolean) {
+export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
   const loc = useLocation();
   const userData = useUserData();
   const path = useRef<String | null>(null);
@@ -161,30 +203,49 @@ export function useGleanPage(pageNotFound: boolean) {
       referrer: document?.referrer,
       // on port 3000 this will always return "200":
       httpStatus: pageNotFound ? "404" : "200",
-      userAgent: navigator?.userAgent,
+      userLanguages: Array.from(navigator?.languages || []),
       geo: userData?.geo?.country,
+      geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
       viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
         ([_, width]) => width <= window.innerWidth
       )?.[0],
-      viewportRatio: Math.round((100 * window.innerWidth) / window.innerHeight),
-      viewportHorizontalCoverage: Math.round(
-        (100 * window.innerWidth) / window.screen.width
-      ),
+      isBaseline: doc?.baseline?.baseline
+        ? `baseline_${doc.baseline.baseline}`
+        : doc?.baseline?.baseline === false
+          ? "not_baseline"
+          : undefined,
+      utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData, pageNotFound]);
+  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.baseline]);
 }
 
 export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
-  return (source: string) =>
-    glean.click({
-      source,
-      subscriptionType: userData?.subscriptionType || "none",
-    });
+  return React.useCallback(
+    (source: string) => {
+      if (GLEAN_LOG_CLICK && !source.includes("pong")) {
+        console.log({ gleanClick: source });
+      }
+
+      glean.click({
+        source,
+        subscriptionType: userData?.subscriptionType || "none",
+      });
+    },
+    [glean, userData?.subscriptionType]
+  );
+}
+
+function getUTMParameters(): UTMParameters {
+  const searchParams = new URLSearchParams(document.location.search);
+  return UTM_PARAMETER_NAMES.reduce((acc, name): UTMParameters => {
+    const param = searchParams.get(`utm_${name}`);
+    return param ? { ...acc, [name]: param } : acc;
+  }, {});
 }

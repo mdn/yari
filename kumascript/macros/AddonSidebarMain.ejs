@@ -42,10 +42,10 @@ var text = mdn.localStringMap({
   'zh-CN': {
     'WebExtensions': '浏览器扩展程序',
     'Themes': '主题',
+    'Community_and_Support': '社区和支持',
     'Channels': '渠道',
-    'Blog': 'Add-ons博客',
-    'Forums': 'Add-ons论坛',
-    'Chat': 'Add-ons chat',
+    'Blog': '附加组件博客',
+    'Forums': '附加组件论坛',
     'Contact_us': '联系我们'
   },
   'es': {
@@ -63,9 +63,9 @@ var text = mdn.localStringMap({
 
 <section id="Quick_links" data-macro="AddonSidebarMain">
   <ol>
-    <li><a href="<%=baseURL%>WebExtensions"><strong><%=text['WebExtensions']%></strong></a></li>
-    <li><a href="https://extensionworkshop.com/documentation/themes/"><strong><%=text['Themes']%></strong></a></li>
-    <li><a href="https://discourse.mozilla.org/c/add-ons"><strong><%=text['Community_and_Support']%></strong></a></li>
+    <li class="section"><%-web.smartLink(`${baseURL}WebExtensions`, null, text['WebExtensions'])%></li>
+    <li class="section"><a href="https://extensionworkshop.com/documentation/themes/"><%=text['Themes']%></a></li>
+    <li class="section"><a href="https://discourse.mozilla.org/c/add-ons"><%=text['Community_and_Support']%></a></li>
     <li class="toggle">
       <details>
         <summary><%=text['Channels']%></summary>
@@ -73,7 +73,7 @@ var text = mdn.localStringMap({
           <li><a href="https://blog.mozilla.org/addons"><%=text['Blog']%></a></li>
           <li><a href="https://discourse.mozilla.org/c/add-ons"><%=text['Forums']%></a></li>
           <li><a href="https://stackoverflow.com/questions/tagged/firefox-addon">Stack Overflow</a></li>
-          <li><a href="<%=baseURL%>#Contact_us"><%=text['#Contact_us']%></a></li>
+          <li><%-web.smartLink(`${baseURL}#contact_us`, null, text['#Contact_us'])%></li>
         </ol>
       </details>
     </li>

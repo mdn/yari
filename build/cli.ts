@@ -2,36 +2,38 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import caporal from "@caporal/core";
-import inquirer from "inquirer";
+import { select } from "@inquirer/prompts";
 
 import { Document, slugToFolder, translationsOf } from "../content/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   BUILD_OUT_ROOT,
+  SENTRY_DSN_BUILD,
 } from "../libs/env/index.js";
-import { VALID_LOCALES } from "../libs/constants/index.js";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import options from "./build-options.js";
 import {
   buildDocument,
   BuiltDocument,
   renderContributorsTxt,
 } from "./index.js";
-import { DocMetadata, Flaws } from "../libs/types/document.js";
+import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { buildSitemapIndex, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
+import { initSentry } from "./sentry.js";
+import { macroRenderTimes } from "../kumascript/src/render.js";
+import { ssrDocument } from "./ssr.js";
+import { HydrationData } from "../libs/types/hydration.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
@@ -50,9 +52,23 @@ interface GlobalMetadata {
   [locale: string]: Array<DocMetadata>;
 }
 
+interface BuildMetadata {
+  [locale: string]: {
+    baseline?: {
+      total: number;
+      high: number;
+      highPaths: string[];
+      low: number;
+      lowPaths: string[];
+      not: number;
+      notPaths: string[];
+    };
+  };
+}
+
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -65,33 +81,33 @@ async function buildDocumentInteractive(
     }
 
     if (!interactive) {
-      const translations = await translationsOf(document.metadata);
-      if (translations && translations.length > 0) {
-        document.translations = translations;
-      } else {
-        document.translations = [];
-      }
+      document.translations = translationsOf(
+        document.metadata.slug,
+        document.metadata.locale
+      );
     }
 
-    return { document, doc: await buildDocument(document), skip: false };
+    return {
+      document,
+      doc: await buildDocument(document, {
+        plainHTML: document.metadata.locale === DEFAULT_LOCALE,
+      }),
+      skip: false,
+    };
   } catch (e) {
     if (!interactive) {
       throw e;
     }
     console.error(e);
-    const { action } = await prompt([
-      {
-        type: "list",
-        message: "What to do?",
-        name: "action",
-        choices: [
-          { name: "re-run", value: "r" },
-          { name: "skip", value: "s" },
-          { name: "quit", value: "q" },
-        ],
-        default: "r",
-      },
-    ]);
+    const action = await select({
+      message: "What to do?",
+      choices: [
+        { name: "re-run", value: "r" },
+        { name: "skip", value: "s" },
+        { name: "quit", value: "q" },
+      ],
+      default: "r",
+    });
     if (action === "r") {
       return await buildDocumentInteractive(documentPath, interactive, true);
     }
@@ -132,6 +148,33 @@ async function buildDocuments(
   }
 
   const metadata: GlobalMetadata = {};
+  const buildMetadata: BuildMetadata = {};
+
+  function updateBaselineBuildMetadata(doc: Doc) {
+    if (typeof doc.baseline?.baseline === "undefined") {
+      return;
+    }
+
+    if (typeof buildMetadata[doc.locale] === "undefined") {
+      buildMetadata[doc.locale] = {};
+    }
+    if (typeof buildMetadata[doc.locale].baseline === "undefined") {
+      buildMetadata[doc.locale].baseline = {
+        total: 0,
+        high: 0,
+        highPaths: [],
+        low: 0,
+        lowPaths: [],
+        not: 0,
+        notPaths: [],
+      };
+    }
+
+    buildMetadata[doc.locale].baseline.total++;
+    const key = doc.baseline.baseline || "not";
+    buildMetadata[doc.locale].baseline[key]++;
+    buildMetadata[doc.locale].baseline[`${key}Paths`].push(doc.mdn_url);
+  }
 
   const documents = await Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -139,7 +182,7 @@ async function buildDocuments(
     cliProgress.Presets.shades_grey
   );
 
-  const docPerLocale = {};
+  const docPerLocale: Record<string, { slug: string; modified: string }[]> = {};
   const searchIndex = new SearchIndex();
 
   if (!documents.count) {
@@ -168,15 +211,16 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments },
+      doc: { doc: builtDocument, liveSamples, fileAttachmentMap, plainHTML },
       document,
     } = result;
 
@@ -187,16 +231,25 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
+    if (builtDocument.baseline) {
+      updateBaselineBuildMetadata(builtDocument);
+    }
+
+    const context: HydrationData = {
+      doc: builtDocument,
+      url: builtDocument.mdn_url,
+    };
+
     if (!noHTML) {
-      fs.writeFileSync(
-        path.join(outPath, "index.html"),
-        renderHTML(document.url, { doc: builtDocument })
-      );
+      fs.writeFileSync(path.join(outPath, "index.html"), ssrDocument(context));
+    }
+    if (plainHTML) {
+      fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
     // mutating the built document which makes this not great and refactor-worthy.
-    const docString = JSON.stringify({ doc: builtDocument });
+    const docString = JSON.stringify(context);
     fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
@@ -206,15 +259,31 @@ async function buildDocuments(
       )
     );
 
-    for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+    for (const { id, html, slug } of liveSamples) {
+      let liveSamplePath: string;
+      if (slug) {
+        // Since we no longer build all live samples we have to build live samples
+        // for foreign slugs. If slug is truthy it's a different slug than the current
+        // document. So we need to set up the folder.
+        console.warn(
+          `Building live sample from another page: ${id} in ${documentPath}`
+        );
+        const liveSampleBasePath = path.join(
+          BUILD_OUT_ROOT,
+          slugToFolder(slug)
+        );
+        liveSamplePath = path.join(liveSampleBasePath, `_sample_.${id}.html`);
+        fs.mkdirSync(liveSampleBasePath, { recursive: true });
+      } else {
+        liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
+      }
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    for (const filePath of fileAttachments) {
+    for (const [basename, filePath] of fileAttachmentMap) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      fs.copyFileSync(filePath, path.join(outPath, basename));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -268,17 +337,10 @@ async function buildDocuments(
   }
 
   for (const [locale, docs] of Object.entries(docPerLocale)) {
-    const sitemapDir = path.join(
-      BUILD_OUT_ROOT,
-      "sitemaps",
-      locale.toLowerCase()
-    );
-    fs.mkdirSync(sitemapDir, { recursive: true });
-    const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-    fs.writeFileSync(
-      sitemapFilePath,
-      zlib.gzipSync(makeSitemapXML(locale, docs))
-    );
+    await buildSitemap(docs, {
+      slugPrefix: `/${locale}/docs/`,
+      pathSuffix: [locale],
+    });
   }
 
   searchIndex.sort();
@@ -290,12 +352,17 @@ async function buildDocuments(
   }
 
   for (const [locale, meta] of Object.entries(metadata)) {
+    const sortedMeta = meta
+      .slice()
+      .sort((a, b) => a.mdn_url.localeCompare(b.mdn_url));
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
-      JSON.stringify(meta)
+      JSON.stringify(sortedMeta)
     );
   }
 
+  // allBrowserCompat.txt is used by differy, see:
+  // https://github.com/search?q=repo%3Amdn%2Fdiffery+allBrowserCompat&type=code
   const allBrowserCompat = new Set<string>();
   Object.values(metadata).forEach((localeMeta) =>
     localeMeta.forEach((doc) =>
@@ -304,8 +371,23 @@ async function buildDocuments(
   );
   fs.writeFileSync(
     path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
-    [...allBrowserCompat].join(" ")
+    [...allBrowserCompat].sort().join(" ")
   );
+
+  for (const [locale, meta] of Object.entries(buildMetadata)) {
+    if (meta.baseline) {
+      // Sort to avoid build difference.
+      meta.baseline.highPaths.sort();
+      meta.baseline.lowPaths.sort();
+      meta.baseline.notPaths.sort();
+    }
+
+    // have to write per-locale because we build each locale concurrently
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "build.json"),
+      JSON.stringify(meta)
+    );
+  }
 
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
@@ -327,6 +409,42 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
+function nsToMs(bigint: bigint) {
+  return Number(bigint / BigInt(1_000)) / 1_000;
+}
+
+function formatMacroRenderReport(header = "Macro render report") {
+  const out = ["\n"];
+  out.push(header);
+
+  // Prepare data.
+  const stats = Object.entries(macroRenderTimes).map(([name, times]) => {
+    const sortedTimes = times.slice().sort(compareBigInt);
+    return {
+      name,
+      min: sortedTimes.at(0),
+      max: sortedTimes.at(-1),
+      count: times.length,
+      sum: times.reduce((acc, value) => acc + value, BigInt(0)),
+    };
+  });
+
+  // Sort by total render time.
+  stats.sort(({ sum: a }, { sum: b }) => Number(b - a));
+
+  // Format data.
+  out.push(
+    ["name", "count", "min (ms)", "avg (ms)", "max (ms)", "sum (ms)"].join(",")
+  );
+  for (const { name, min, max, count, sum } of stats) {
+    const avg = sum / BigInt(count);
+    out.push([name, count, ...[min, avg, max, sum].map(nsToMs)].join(","));
+  }
+
+  out.push("\n");
+  return out.join("\n");
+}
+
 interface BuildArgsAndOptions {
   args: {
     files?: string[];
@@ -341,12 +459,16 @@ interface BuildArgsAndOptions {
   };
 }
 
+if (SENTRY_DSN_BUILD) {
+  initSentry(SENTRY_DSN_BUILD);
+}
+
 program
   .name("build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
-  .option("-n, --nohtml", "Do not build index.html", {
+  .option("-n, --nohtml", "Do not render index.html", {
     default: false,
   })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
@@ -363,6 +485,12 @@ program
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }: BuildArgsAndOptions) => {
     try {
+      if (!options.nohtml) {
+        console.warn(
+          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari v3. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
+        );
+      }
+
       if (!options.quiet) {
         const roots = [
           ["CONTENT_ROOT", CONTENT_ROOT],
@@ -381,35 +509,16 @@ program
         if (!options.quiet) {
           console.log(chalk.yellow("Building sitemap index file..."));
         }
-        const sitemapsBuilt = [];
-        const locales = [];
-        for (const locale of VALID_LOCALES.keys()) {
-          const sitemapFilePath = path.join(
-            BUILD_OUT_ROOT,
-            "sitemaps",
-            locale,
-            "sitemap.xml.gz"
-          );
-          if (fs.existsSync(sitemapFilePath)) {
-            sitemapsBuilt.push(sitemapFilePath);
-            locales.push(locale);
-          }
-        }
-
-        const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-        fs.writeFileSync(
-          sitemapIndexFilePath,
-          makeSitemapIndexXML(
-            sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
-          )
-        );
+        const sitemapsBuilt = await buildSitemapIndex();
 
         if (!options.quiet) {
-          console.log(
-            chalk.green(
-              `Sitemap index file built with locales: ${locales.join(", ")}.`
-            )
-          );
+          for (const sitemaps of sitemapsBuilt) {
+            console.log(
+              chalk.green(
+                `Wrote sitemap index referencing ${sitemaps.length} sitemaps:\n${sitemaps.map((s) => `- ${s}`).join("\n")}`
+              )
+            );
+          }
         }
         return;
       }
@@ -481,6 +590,7 @@ program
         }
         console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
         console.log(formatTotalFlaws(totalFlaws));
+        console.log(formatMacroRenderReport());
       }
     } catch (error) {
       // So you get a stacktrace in the CLI output
@@ -491,3 +601,12 @@ program
   });
 
 program.run();
+function compareBigInt(a: bigint, b: bigint): number {
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+}

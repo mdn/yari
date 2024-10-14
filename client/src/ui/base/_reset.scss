@@ -62,6 +62,11 @@ picture {
   max-width: 100%;
 }
 
+/* Fix Inter font bug: 'em' not slanted in Safari. See issue: https://github.com/mdn/yari/issues/7203 */
+em {
+  font-variation-settings: "slnt" -10;
+}
+
 /* Inherit fonts for inputs and buttons */
 input,
 button,

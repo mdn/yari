@@ -58,6 +58,17 @@ export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   if (window && html) {
     html.className = theme;
     html.style.backgroundColor = "";
+
+    setTimeout(() => {
+      const meta = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]'
+      );
+      const color = getComputedStyle(document.body).backgroundColor;
+      if (meta && color) {
+        meta.content = color;
+      }
+    }, 1);
+
     try {
       window.localStorage.setItem("theme", theme);
     } catch (err) {
@@ -109,4 +120,57 @@ export function charSlice(string: string, start?: number, end?: number) {
 
 export function range(start: number, stop: number) {
   return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
+}
+
+/**
+ * Used by quicksearch and sidebar filters.
+ */
+export function splitQuery(term: string): string[] {
+  term = term.trim().toLowerCase();
+
+  if (term.startsWith(".") || term.endsWith(".")) {
+    // Dot is probably meaningful.
+    return term.split(/[ ,]+/);
+  } else {
+    // Dot is probably just a word separator.
+    return term.split(/[ ,.]+/);
+  }
+}
+
+export function getCookieValue(name: string) {
+  let value = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`));
+
+  if (value && value.includes("=")) {
+    value = value.split("=")[1];
+  }
+
+  return value;
+}
+
+export function setCookieValue(
+  name: string,
+  value: string,
+  {
+    expires,
+    maxAge,
+    path = "/",
+  }: { expires?: Date; maxAge?: number; path?: string }
+) {
+  const cookieValue = [
+    `${name}=${value}`,
+    expires && `expires=${expires.toUTCString()}`,
+    maxAge && `max-age=${maxAge}`,
+    `path=${path}`,
+    document.location.hostname !== "localhost" && "secure",
+  ]
+    .filter(Boolean)
+    .join(";");
+
+  document.cookie = cookieValue;
+}
+
+export function deleteCookie(name: string) {
+  setCookieValue(name, "", { expires: new Date(0) });
 }

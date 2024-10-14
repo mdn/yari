@@ -45,54 +45,44 @@ const text = mdn.localStringMap({
   },
   'zh-CN': {
     'Tutorials': '教程',
-    'Reference': '参考：',
+    'Reference': '参考',
     'Elements': '元素',
     'Attributes': '属性',
-    'Guides': '指南：',
+    'Guides': '指南',
+    'Introducing SVG from scratch': '从零开始介绍 SVG'
   },
 });
-
-const sidebarURL = `/docs/Web/SVG/`;
-const baseURL = `/${env.locale}${sidebarURL}`;
-
-async function getTitle(pageSlug) {
-  let page = await wiki.getPage(`${baseURL}${pageSlug}`);
-  if (!page.title) {
-    page = await wiki.getPage(`/en-US${sidebarURL}${pageSlug}`);
-  }
-  return mdn.htmlEscape(page.title);
-}
 
 %>
 <section id="Quick_links" data-macro="SVGRef">
  <ol>
-  <li><a href="/<%=locale%>/docs/Web/SVG"><strong>SVG</strong></a></li>
-  <li><strong><%=text['Tutorials']%></strong></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/SVG`)%></li>
+  <li class="section no-link"><%=text['Tutorials']%></li>
   <li class="toggle">
     <details>
       <summary><%=text['Introducing SVG from scratch']%></summary>
       <ol>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Introduction"><%=await getTitle("Tutorial/Introduction")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Getting_Started"><%=await getTitle("Tutorial/Getting_Started")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Positions"><%=await getTitle("Tutorial/Positions")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Basic_Shapes"><%=await getTitle("Tutorial/Basic_Shapes")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Paths"><%=await getTitle("Tutorial/Paths")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Fills_and_Strokes"><%=await getTitle("Tutorial/Fills_and_Strokes")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Gradients"><%=await getTitle("Tutorial/Gradients")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Patterns"><%=await getTitle("Tutorial/Patterns")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Texts"><%=await getTitle("Tutorial/Texts")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Basic_Transformations"><%=await getTitle("Tutorial/Basic_Transformations")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Clipping_and_masking"><%=await getTitle("Tutorial/Clipping_and_masking")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Other_content_in_SVG"><%=await getTitle("Tutorial/Other_content_in_SVG")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Filter_effects"><%=await getTitle("Tutorial/Filter_effects")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/SVG_fonts"><%=await getTitle("Tutorial/SVG_fonts")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/SVG_Image_Tag"><%=await getTitle("Tutorial/SVG_Image_Tag")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/Tools_for_SVG"><%=await getTitle("Tutorial/Tools_for_SVG")%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/SVG/Tutorial/SVG_and_CSS"><%=await getTitle("Tutorial/SVG_and_CSS")%></a></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Introduction`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Getting_Started`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Positions`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Basic_Shapes`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Paths`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Fills_and_Strokes`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Gradients`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Patterns`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Texts`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Basic_Transformations`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Clipping_and_masking`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Other_content_in_SVG`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Filter_effects`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/SVG_fonts`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/SVG_Image_Tag`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/Tools_for_SVG`)%></li>
+          <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Tutorial/SVG_and_CSS`)%></li>
       </ol>
     </details>
   </li>
-  <li><strong><%=text['Reference']%></strong></li>
+  <li class="section no-link"><%=text['Reference']%></li>
   <li class="toggle">
     <details>
       <summary><%=text['Elements']%></summary>
@@ -105,14 +95,14 @@ async function getTitle(pageSlug) {
       <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/SVG/Attribute'])%>
     </details>
   </li>
-  <li><strong><%=text['Guides']%></strong></li>
+  <li class="section no-link"><%=text['Guides']%></li>
   <li>
     <ol>
-    <li><a href="/<%=locale%>/docs/Web/SVG/Applying_SVG_effects_to_HTML_content"><%=await getTitle("Applying_SVG_effects_to_HTML_content")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/SVG/Content_type"><%=await getTitle("Content_type")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/SVG/Namespaces_Crash_Course"><%=await getTitle("Namespaces_Crash_Course")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/SVG/SVG_animation_with_SMIL"><%=await getTitle("SVG_animation_with_SMIL")%></a></li>
-    <li><a href="/<%=locale%>/docs/Web/SVG/SVG_as_an_Image"><%=await getTitle("SVG_as_an_Image")%></a></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Applying_SVG_effects_to_HTML_content`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Content_type`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/SVG/Namespaces_Crash_Course`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/SVG/SVG_animation_with_SMIL`)%></li>
+    <li><%-web.smartLink(`/${locale}/docs/Web/SVG/SVG_as_an_Image`)%></li>
     </ol>
   </li>
  </ol>

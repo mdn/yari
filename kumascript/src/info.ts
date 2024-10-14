@@ -2,8 +2,10 @@ import cheerio from "cheerio";
 
 import * as Parser from "./parser.js";
 import { Document, Redirect } from "../../content/index.js";
+import { translationsOf } from "../../content/translations.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import { m2hSync } from "../../markdown/index.js";
+import { findPostFileBySlug, getSlugByBlogPostUrl } from "../../build/utils.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -11,23 +13,16 @@ const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
   "apiref",
   "jsref",
   "compat",
-  "index",
   "page",
-  "obsolete_header",
   "deprecated_header",
   "previous",
   "previousmenu",
   "previousnext",
   "previousmenunext",
-  "wiki.localize",
   "quicklinkswithsubpages",
 ]);
 
-const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set([
-  "draft",
-  "glossary",
-  "anch",
-]);
+const MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT = new Set(["glossary"]);
 
 function repairURL(url) {
   // Returns a lowercase URI with common irregularities repaired.
@@ -113,7 +108,7 @@ export const info = {
   },
 
   // TODO
-  getTranslations(url) {
+  getTranslations(url: string) {
     // function buildTranslationObjects(data) {
     //   // Builds a list of translation objects suitable for
     //   // consumption by Kumascript macros, using the translation
@@ -153,11 +148,11 @@ export const info = {
     //   }
     //   return result;
     // }
-    return info.getPageByURL(url, { throwIfDoesNotExist: true }).translations;
+    return info.getPageByURL(url, { throwIfDoesNotExist: true }).translations();
   },
 
   getPageByURL(
-    url,
+    url: string,
     { throwIfDoesNotExist = false, followRedirects = true } = {}
   ) {
     // Always start by looking it up *without* following redirects.
@@ -200,7 +195,10 @@ export const info = {
       status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
-      translations: [], // TODO Object.freeze(buildTranslationObjects(data)),
+      // Let translations be lazy loaded.
+      translations() {
+        return translationsOf(document.metadata.slug, document.metadata.locale);
+      },
       summary() {
         // Back in the old Kuma days we used to store the summary as another piece
         // of metadata on each document. It was always available, with any kumascript
@@ -261,8 +259,12 @@ export const info = {
     };
   },
 
-  hasPage(url) {
-    return Boolean(Document.findByURL(info.cleanURL(url)));
+  hasPage(url): boolean {
+    if (Document.findByURL(info.cleanURL(url))) {
+      return true;
+    }
+    const slug = getSlugByBlogPostUrl(url);
+    return Boolean(slug) && Boolean(findPostFileBySlug(slug));
   },
 };
 
@@ -319,10 +321,6 @@ function postProcessSummaryHTMLSnippet(text, document) {
 
     if (MACROS_IN_SUMMARY_TO_REPLACE_WITH_FIRST_ARGUMENT.has(macroName)) {
       output += token.args[0];
-    } else if (macroName === "interwiki") {
-      // Include the last one. E.g.
-      //   {{Interwiki("wikipedia","Flynn%27s_taxonomy","classification of computer")}}
-      output += token.args[token.args.length - 1];
     } else {
       output += `<code>${token.args[0]}</code>`;
     }

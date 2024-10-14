@@ -61,7 +61,7 @@ directories: `~/yari` and `~/content`. And you want to know if some edit to the
 First of all, make you relevant edits in `~/yari` then run:
 
     export REACT_APP_DISABLE_AUTH=true
-    export REACT_APP_CRUD_MODE=true
+    export REACT_APP_WRITER_MODE=true
     npm run build:prepare
     echo .git/info/exclude >> .npmignore
     echo .env >> .npmignore

@@ -6,6 +6,7 @@ import { decodePath, slugToFolder } from "../libs/slug-utils/index.js";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import { getRoot } from "./utils.js";
+import { type Locale } from "../libs/types/core.js";
 
 type Pair = [string, string];
 type Pairs = Pair[];
@@ -67,7 +68,7 @@ function validateFromURL(url: string, locale: string, checkPath = true) {
   if (!url.includes("/docs/")) {
     throw new Error(`From-URL must contain '/docs/' was ${url}`);
   }
-  if (!VALID_LOCALES_SET.has(url.split("/")[1])) {
+  if (!VALID_LOCALES_SET.has(url.split("/")[1] as Locale)) {
     throw new Error(`The locale prefix is not valid or wrong case was ${url}`);
   }
   checkURLInvalidSymbols(url);
@@ -121,7 +122,7 @@ function validateURLLocale(url: string) {
     throw new Error(`The URL is expected to start with /$locale/docs/: ${url}`);
   }
   const validValues = [...VALID_LOCALES.values()];
-  if (!validValues.includes(locale)) {
+  if (!validValues.includes(locale as Locale)) {
     throw new Error(`'${locale}' not in ${validValues}`);
   }
 }
@@ -317,7 +318,7 @@ export function validateLocale(locale: string, strict = false) {
 }
 
 function redirectFilePathForLocale(locale: string, throws = false) {
-  const makeFilePath = (root) =>
+  const makeFilePath = (root: string) =>
     path.join(root, locale.toLowerCase(), "_redirects.txt");
 
   const filePath = makeFilePath(CONTENT_ROOT);
@@ -361,7 +362,7 @@ export function load(
   }
 }
 
-export const resolve = (url) => {
+export const resolve = (url: string) => {
   if (!redirects.size) {
     load();
   }
@@ -395,7 +396,10 @@ function shortCuts(pairs: Pairs, throws = false): Pairs {
   const transitiveDag = new Map<string, string>();
 
   // Expand all "edges" and keep track of the nodes we traverse.
-  const transit = (s, froms = []) => {
+  const transit = (
+    s: string,
+    froms: string[] = []
+  ): [string[], string] | [] => {
     const next = dg.get(s);
     if (next) {
       froms.push(s);
@@ -412,7 +416,7 @@ function shortCuts(pairs: Pairs, throws = false): Pairs {
     return [froms, s];
   };
 
-  const sortTuples = ([a, b], [c, d]) => {
+  const sortTuples = ([a, b]: Pair, [c, d]: Pair) => {
     if (a > c) {
       return 1;
     }

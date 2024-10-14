@@ -27,7 +27,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: grid;
     gap: 3rem;
     grid-template-areas: "sidebar main";
@@ -45,6 +45,7 @@
     .sidebar {
       align-self: start;
       grid-area: sidebar;
+      padding-top: unset;
     }
 
     .main-content {
@@ -52,7 +53,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     display: grid;
     gap: 3rem;
     grid-template-areas: "sidebar main toc";
@@ -61,7 +62,7 @@
     padding-right: 1rem;
 
     .toc {
-      --offset: var(--main-document-header-height);
+      --offset: var(--sticky-header-with-actions-height);
 
       display: block;
       grid-area: toc;

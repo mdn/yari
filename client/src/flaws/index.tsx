@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  createSearchParams,
-  Link,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
 
 import { humanizeFlawName } from "../flaw-utils";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Paginator } from "../ui/molecules/paginator";
+import { useLocale } from "../hooks";
 
 interface DocumentPopularity {
   value: number;
@@ -156,7 +153,7 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
 }
 
 export default function AllFlaws() {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const [filters] = useFiltersURL();
   const [lastData, setLastData] = useState<Data | null>(null);
 
@@ -582,7 +579,7 @@ function DocumentsTable({
     return (
       <th onClick={() => setSort(id)} className="sortable">
         {title}{" "}
-        {filters.sort_by === id ? (filters.sort_reverse ? "🔽" : "🔼") : null}
+        {filters.sort_by === id ? (filters.sort_reverse ? "↓" : "↑") : null}
       </th>
     );
   }
@@ -632,7 +629,7 @@ function DocumentsTable({
         )}
       </h3>
       {!counts.built ? (
-        <WarnAboutNothingBuilt />
+        <WarnAboutNothingBuilt locale={locale} />
       ) : (
         <h4 className="subheader">
           {counts.built.toLocaleString()} documents built ({locale})
@@ -686,66 +683,18 @@ function DocumentsTable({
         </tbody>
       </table>
 
-      {pageCount > 1 && (
-        <p className="pagination">
-          <PageLink number={1} disabled={page === 1}>
-            ⇤ First page
-          </PageLink>{" "}
-          {page > 2 && <PageLink number={page - 1}>← Previous page</PageLink>}{" "}
-          {page}{" "}
-          {page < pageCount - 1 && (
-            <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-              Next page →
-            </PageLink>
-          )}
-          <PageLink number={pageCount} disabled={page === pageCount}>
-            Last page ({pageCount}) ⇥
-          </PageLink>
-        </p>
-      )}
+      <Paginator last={pageCount} />
     </div>
   );
 }
 
-function PageLink({
-  number,
-  disabled,
-  children,
-}: {
-  number: number;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  const [filters] = useFiltersURL();
-  // Unfortunately TS's Partial<T> is not quite the right return type of this function,
-  // as it implies the object could have keys set to undefined, which isn't true here.
-  // Hence we have to use type coercion (any)
-  const newFilters = withoutDefaultFilters({ ...filters, page: number }) as any;
-  if (newFilters.page) {
-    newFilters.page = String(newFilters.page);
-  }
-  return (
-    <Link
-      to={"?" + createSearchParams(newFilters).toString()}
-      className={disabled ? "disabled" : ""}
-      onClick={(event) => {
-        if (disabled) {
-          event.preventDefault();
-        }
-      }}
-    >
-      {children}
-    </Link>
-  );
-}
-
-function WarnAboutNothingBuilt() {
+function WarnAboutNothingBuilt({ locale }) {
   return (
     <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
       <p>
-        At the moment, you have to use the command line tools to build documents
-        that we can analyze.
+        Run <code>npm run build --locale {locale.toLowerCase()}</code> to build
+        all documents for the current locale.
       </p>
     </div>
   );

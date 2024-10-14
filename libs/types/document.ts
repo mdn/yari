@@ -1,3 +1,9 @@
+import { type Locale } from "./core.js";
+
+// web-features doesn't export this type directly so we need to do a little typescript magic:
+import type { features } from "web-features";
+type SupportStatus = (typeof features)[keyof typeof features]["status"];
+
 export interface Source {
   folder: string;
   github_url: string;
@@ -126,7 +132,7 @@ export type Toc = {
 export interface DocMetadata {
   title: string;
   short_title: string;
-  locale: string;
+  locale: Locale;
   native: string;
   pageTitle: string;
   mdn_url: string;
@@ -134,7 +140,6 @@ export interface DocMetadata {
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
-  translation_of?: string;
   parents?: DocParent[];
   source: Source;
   contributors: string[];
@@ -146,7 +151,9 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
+  baseline?: SupportStatus;
   hash?: string;
+  pageType: string;
 }
 
 export interface Doc extends DocMetadata {
@@ -177,7 +184,6 @@ export interface ProseSection {
     title: string | null;
     isH3: boolean;
     content?: string;
-    titleAsText?: string;
   };
 }
 
@@ -216,4 +222,38 @@ export interface NewsItem {
     url: string;
   };
   published_at: string;
+}
+
+export interface BuildData {
+  url: string;
+  rawBody: string;
+  metadata: { locale: Locale };
+  isMarkdown: boolean;
+  fileInfo: {
+    path: string;
+  };
+}
+
+export interface UnbuiltDocument {
+  metadata: DocFrontmatter & {
+    frontMatterKeys: string[];
+    locale: Locale;
+    popularity: number;
+    modified: any;
+    hash: any;
+    contributors: any;
+  };
+  url: string;
+  rawContent: string;
+  rawBody: string;
+  isMarkdown: boolean;
+  isTranslated: boolean;
+  isActive: boolean;
+  fileInfo: {
+    folder: string;
+    path: string;
+    frontMatterOffset: number;
+    root: string;
+  };
+  translations?: Translation[];
 }

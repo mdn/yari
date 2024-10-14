@@ -1,14 +1,125 @@
+@use "../../vars" as *;
+
 section.place {
   display: flex;
-  flex-direction: column;
   margin: 1rem 0;
-  max-width: 12rem;
-  min-height: 20rem;
 
   a:not(.button),
   a {
     color: var(--text-primary);
     text-decoration: none;
+  }
+
+  .pong-box2 {
+    --place-new-side-background-light: #111;
+    --place-new-side-color-light: #fff;
+
+    --place-new-side-background-dark: #111;
+    --place-new-side-color-dark: #fff;
+
+    --place-new-side-background: var(--place-new-side-background-light);
+    --place-new-side-color: var(--place-new-side-color-light);
+
+    --border-radius: 0.5rem;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    height: 100%;
+    margin: 0;
+    min-height: 20rem;
+    overflow: hidden;
+    position: relative;
+    width: 11rem;
+
+    @media (prefers-color-scheme: dark) {
+      --place-new-side-background: var(--place-new-side-background-dark);
+      --place-new-side-color: var(--place-new-side-color-dark);
+    }
+
+    .pong-note {
+      background-color: var(--place-new-side-color);
+      border: 1px solid var(--place-new-side-background);
+      border-radius: 0.25rem;
+      color: var(--place-new-side-background);
+      font-size: 0.625rem;
+      margin: 0.5rem;
+      opacity: 0.4;
+      padding: 0 0.25rem;
+      position: absolute;
+      right: 0;
+      text-decoration: underline;
+      text-transform: uppercase;
+      top: 0;
+      width: max-content;
+
+      &:hover {
+        opacity: unset;
+        text-decoration: none;
+      }
+    }
+
+    .pong {
+      height: 100%;
+      padding: 0;
+      width: 100%;
+
+      > img {
+        height: auto;
+        width: 100%;
+      }
+
+      > div.content {
+        background: linear-gradient(
+          to top,
+          var(--place-new-side-background) 9rem,
+          transparent
+        );
+        border-radius: var(--border-radius);
+        color: var(--place-new-side-color);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        height: 100%;
+        justify-content: end;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        strong {
+          font-size: 0.8875rem;
+          line-height: 1.25;
+          padding: 0 1rem;
+        }
+
+        span {
+          font-size: 0.75rem;
+          line-height: 1.25;
+          padding: 0 1rem;
+        }
+
+        .pong-cta {
+          --color: var(--place-new-side-color);
+          --icon-primary: var(--color);
+          background-color: #fff1;
+          border: solid 2px;
+          border-radius: 2rem;
+          color: var(--color);
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin: 0.5rem auto 1rem 1rem;
+          padding: 0.5em 1em;
+          transition: all 0.3s ease-in-out;
+
+          &::after {
+            transition: all 0.3s ease-in-out;
+          }
+
+          &:hover {
+            --color: var(--place-new-side-background);
+            background-color: var(--place-new-side-color);
+          }
+        }
+      }
+    }
   }
 
   .pong-box {
@@ -47,14 +158,280 @@ section.place {
       width: max-content;
     }
   }
+
+  &.top .pong-note,
+  .no-pong {
+    text-decoration: none;
+
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.side .pong-note,
+  &.bottom-banner .pong-note {
+    text-decoration: underline;
+
+    &:focus,
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .no-pong {
+    color: var(--text-secondary);
+    font-size: 0.6rem;
+    margin-bottom: 0.5rem;
+    max-width: 12rem;
+    padding: 0;
+    width: 100%;
+  }
+
+  &.side {
+    flex-direction: column;
+    height: fit-content;
+    max-width: 12rem;
+    min-height: 20rem;
+  }
+
+  &.new-side {
+    height: fit-content;
+    min-height: 22rem;
+  }
+
+  &.top {
+    align-items: center;
+    display: grid;
+    font-size: 0.625rem;
+
+    grid-template-areas: "pong cta" "no note";
+    height: var(--top-banner-height);
+    margin: 0 auto;
+    width: 100%;
+
+    @media (min-width: $screen-md) {
+      grid-template-areas: "pong cta note" "pong cta no";
+      grid-template-columns: fit-content(100%) auto fit-content(100%);
+    }
+
+    .pong-box {
+      border: none;
+      display: contents;
+      width: 100%;
+
+      .pong {
+        color: var(--place-top-color);
+        flex-direction: row;
+        grid-area: pong;
+        padding: 0.125rem;
+        text-decoration: none;
+
+        img {
+          height: var(--top-banner-inner-height);
+          max-height: var(--top-banner-inner-height);
+          width: auto;
+        }
+
+        span {
+          color: var(--place-top-color);
+          max-height: var(--top-banner-inner-height);
+          overflow: auto;
+          padding: 0 1rem;
+        }
+      }
+
+      .pong-cta {
+        background-color: var(--place-top-cta-background);
+        border-radius: var(--elem-radius);
+        color: var(--place-top-cta-color);
+        font-size: var(--type-smaller-font-size);
+        grid-area: cta;
+        height: fit-content;
+        margin-right: auto;
+        padding: 0.25rem 1rem;
+        text-align: center;
+      }
+
+      .pong-note {
+        background-color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        border-radius: 0 0 0.5rem 0.5rem;
+        border-top: none;
+        color: var(--background-secondary);
+        grid-area: note;
+        margin: 0 0 auto auto;
+        padding: 0 0.5rem 0.125rem;
+      }
+    }
+
+    .no-pong {
+      color: var(--place-top-color);
+      grid-area: no;
+      margin: auto 0 0 2rem;
+      width: initial;
+    }
+  }
+
+  html[data-nop] & {
+    display: none;
+  }
 }
 
-.no-pong {
-  color: var(--text-secondary);
-  font-size: 0.6rem;
-  margin-bottom: 0.5rem;
-  max-width: 12rem;
-  padding: 0;
-  text-decoration: underline;
+.dark section.place .pong-box2 {
+  --place-new-side-background: var(--place-new-side-background-dark);
+  --place-new-side-color: var(--place-new-side-color-dark);
+}
+
+section.place.hp-main {
+  background-color: var(--place-hp-main-background);
+  margin: 0;
   width: 100%;
+
+  a {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    img {
+      height: auto;
+    }
+  }
+}
+
+.top-banner {
+  --place-top-background-light: var(--background-secondary);
+  --place-top-color-light: var(--text-primary);
+  --place-top-cta-background-light: var(--text-primary);
+  --place-top-cta-color-light: var(--background-secondary);
+
+  --place-top-background-dark: var(--background-secondary);
+  --place-top-color-dark: var(--text-primary);
+  --place-top-cta-background-dark: var(--text-primary);
+  --place-top-cta-color-dark: var(--background-secondary);
+
+  --place-top-background: var(--place-top-background-light);
+  --place-top-color: var(--place-top-color-light);
+  --place-top-cta-background: var(--place-top-cta-background-light);
+  --place-top-cta-color: var(--place-top-cta-color-light);
+
+  background-color: var(--place-top-background);
+  border-bottom: 1px solid var(--border-primary);
+  height: var(--top-banner-height);
+
+  @media (prefers-color-scheme: dark) {
+    --place-top-background: var(--place-top-background-dark);
+    --place-top-color: var(--place-top-color-dark);
+    --place-top-cta-background: var(--place-top-cta-background-dark);
+    --place-top-cta-color: var(--place-top-cta-color-dark);
+  }
+
+  &.fallback {
+    position: initial;
+  }
+
+  @media (max-width: #{$screen-md - 1}) {
+    display: none;
+  }
+
+  .fallback-copy {
+    font-size: 1rem;
+    grid-column: 1/4;
+    line-height: var(--top-banner-height);
+    margin: 0 auto;
+
+    a:not(.button) {
+      color: var(--apis-accent-color);
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  html[data-nop] & {
+    display: none;
+  }
+}
+
+div.empty-place {
+  &.bottom-banner {
+    height: 152px;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+.dark .top-banner {
+  --place-top-background: var(--place-top-background-dark);
+  --place-top-color: var(--place-top-color-dark);
+  --place-top-cta-background: var(--place-top-cta-background-dark);
+  --place-top-cta-color: var(--place-top-cta-color-dark);
+}
+
+.bottom-banner-container {
+  background-color: var(
+    --place-bottom-banner-background,
+    var(--background-primary)
+  );
+  color: var(--place-bottom-banner-color, var(--text-primary));
+  margin: 0;
+  width: 100%;
+
+  > section.place.bottom-banner {
+    column-gap: 3rem;
+    display: grid;
+    grid-template-areas:
+      "nope pong note"
+      "nope pong no";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 0 1rem;
+
+    .pong {
+      grid-area: pong;
+      justify-self: center;
+
+      img {
+        height: auto;
+      }
+    }
+
+    .pong-note {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: note;
+      margin-top: 0.5rem;
+    }
+
+    .no-pong {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: no;
+      margin-top: auto;
+    }
+
+    @media (max-width: $screen-xl) {
+      grid-template-areas:
+        "pong note"
+        "pong no";
+      grid-template-columns: auto max-content;
+      grid-template-rows: auto 2rem;
+    }
+
+    @media (max-width: $screen-lg) {
+      grid-template-areas:
+        "pong pong"
+        "note no";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 2rem;
+
+      .no-pong {
+        justify-self: end;
+        width: fit-content;
+      }
+    }
+  }
 }

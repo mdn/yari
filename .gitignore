@@ -43,8 +43,6 @@ __pycache__/
 /server/*.js
 /server/*.js.map
 /ssr/dist/
-/ssr/*.js
-!/ssr/webpack.config.js
 /ssr/*.js.map
 /tool/*.js
 /tool/*.js.map
@@ -100,6 +98,8 @@ testing/content/files/en-us/markdown/tool/m2h/index.html
 # eslintcache
 client/.eslintcache
 popularities.json
+source-commit.json
+source-commit-invalid-report.txt
 
 client/src/.linaria_cache
 ssr/.linaria-cache/

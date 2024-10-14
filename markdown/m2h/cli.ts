@@ -44,7 +44,7 @@ program
 
   .option("--locale", "Targets a specific locale", {
     default: "all",
-    validator: Array.from(VALID_LOCALES.values()).concat("all"),
+    validator: [...VALID_LOCALES.values(), "all"],
   })
   .argument("[folder]", "convert by folder")
   .action(

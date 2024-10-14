@@ -14,16 +14,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
-      - name: Install all npm packages
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
+      - name: Install all npm packages (ROOT)
+        run: npm ci
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install all npm packages (pwa)
+        working-directory: client/pwa
         run: npm ci
 
       - name: Lint prettier
@@ -42,20 +55,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
 
+      - name: Cache @vscode/ripgrep bin
+        uses: actions/cache@v4
+        with:
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
+          path: node_modules/@vscode/ripgrep/bin/
+
       - name: Install all npm packages
         run: npm ci
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Unit testing client
         run: npm run test:client
+
+      - name: Unit testing libs
+        run: npm run test:libs
 
       - name: Build and start server
         id: server
@@ -63,7 +88,8 @@ jobs:
           ENV_FILE: .env.testing
         run: |
           npm run build:prepare
-          npm run build
+          npm run build:docs
+          npm run render:html
 
           npm run start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1

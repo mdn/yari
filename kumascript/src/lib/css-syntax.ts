@@ -32,18 +32,21 @@ export async function getCSSSyntax(
       fragment: "asterisk",
       tooltip: localString({
         "en-US": "Asterisk: the entity may occur zero, one or several times",
+        "zh-CN": "星号：该实体可以出现零次、一次或多次",
       }),
     },
     "+": {
       fragment: "plus",
       tooltip: localString({
         "en-US": "Plus: the entity may occur one or several times",
+        "zh-CN": "加号：该实体可以出现一次或多次",
       }),
     },
     "?": {
       fragment: "question_mark",
       tooltip: localString({
         "en-US": "Question mark: the entity is optional",
+        "zh-CN": "问号：该实体是可选的",
       }),
     },
     "{}": {
@@ -51,6 +54,8 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity, or a single integer defining the exact number required",
+        "zh-CN":
+          "花括号：包含两个整数，定义实体的最少和最多出现次数；或包含单个整数，定义所需的确切数量",
       }),
     },
     "#": {
@@ -58,12 +63,14 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Hash mark: the entity is repeated one or several times, each occurence separated by a comma",
+        "zh-CN": "井号：该实体重复一次或多次，每个实体由逗号分隔",
       }),
     },
     "!": {
       fragment: "exclamation_point_!",
       tooltip: localString({
         "en-US": "Exclamation point: the group must produce at least one value",
+        "zh-CN": "感叹号：该组必须产生至少一个值",
       }),
     },
     "[]": {
@@ -71,12 +78,15 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Brackets: enclose several entities, combinators, and multipliers to transform them as a single component",
+        "zh-CN":
+          "方括号：将多个实体、组合符号和数量符号组合在一起，将它们转换为单个组件",
       }),
     },
     "|": {
       fragment: "single_bar",
       tooltip: localString({
         "en-US": "Single bar: exactly one of the entities must be present",
+        "zh-CN": "“互斥”组合符：必须恰好存在其中的一个实体",
       }),
     },
     "||": {
@@ -84,6 +94,7 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Double bar: one or several of the entities must be present, in any order",
+        "zh-CN": "“或”组合符：必须存在一个或多个实体，顺序不限",
       }),
     },
     "&&": {
@@ -91,18 +102,15 @@ export async function getCSSSyntax(
       tooltip: localString({
         "en-US":
           "Double ampersand: all of the entities must be present, in any order",
+        "zh-CN": "“与”组合符：必须存在所有实体，顺序不限",
       }),
     },
   };
 
   // get the contents of webref
-  const parsedWebRef = (await webRefData.listAll()) as unknown;
+  const parsedWebRef = await getParsedWebRef();
 
-  // get all the value syntaxes
-  let valuespaces = {};
-  for (const spec of Object.values(parsedWebRef)) {
-    valuespaces = { ...valuespaces, ...spec.valuespaces };
-  }
+  const values = await getAllValueSyntaxes();
 
   /**
    * Get the spec shortnames for an item, given:
@@ -187,15 +195,20 @@ export async function getCSSSyntax(
     const specs = getSpecsForItem(atRuleName, "atrules");
     // Look through all the specs that define the at-rule, for the one
     // that defines this descriptor.
+    let spec_values = [];
     for (const spec of specs) {
       const atRule = parsedWebRef[spec].atrules[atRuleName];
       for (const descriptor of atRule.descriptors) {
         if (descriptor.name === atRuleDescriptorName) {
-          return descriptor.value;
+          spec_values.push({ spec, value: descriptor.value });
         }
       }
     }
-    return "";
+    if (spec_values.length > 1) {
+      // Filter out specs that end "-n" where n is a number.
+      spec_values = spec_values.filter(({ spec }) => !/-\d+$/.test(spec));
+    }
+    return spec_values[0]?.value || "";
   }
 
   /**
@@ -215,18 +228,19 @@ export async function getCSSSyntax(
         if (itemName.endsWith("_value")) {
           itemName = itemName.replace("_value", "");
         }
-        itemName = `<${itemName}>`;
         // not all types have an entry in the syntax
-        if (valuespaces[itemName]) {
-          itemSyntax = valuespaces[itemName].value;
+        if (values[itemName]) {
+          itemSyntax = values[itemName].value;
         }
+        itemName = `<${itemName}>`;
         break;
       case "css-function":
-        itemName = `<${itemName}()>`;
+        itemName = `${itemName}()`;
         // not all functions have an entry in the syntax
-        if (valuespaces[itemName]) {
-          itemSyntax = valuespaces[itemName].value;
+        if (values[itemName]) {
+          itemSyntax = values[itemName].value;
         }
+        itemName = `<${itemName}>`;
         break;
       case "css-at-rule":
         itemSyntax = getAtRuleSyntax(itemName);
@@ -279,7 +293,13 @@ export async function getCSSSyntax(
   function renderNode(name, node) {
     switch (node.type) {
       case "Property": {
-        return `<span class="token property">${name}</span>`;
+        const encoded = name.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        const span = `<span class="token property">${encoded}</span>`;
+        const linkSlug = name.match(/^<'(.*)'>$/)?.[1];
+        if (linkSlug) {
+          return `<a href="/${locale}/docs/Web/CSS/${linkSlug}">${span}</a>`;
+        }
+        return span;
       }
       case "Type": {
         // encode < and >
@@ -289,7 +309,9 @@ export async function getCSSSyntax(
         const span = `<span class="token property">${encoded}</span>`;
         // If the type is not included in the syntax, or is in "typesToLink",
         // link to its dedicated page (don't expand it)
-        if (valuespaces[name]?.value && !typesToLink.includes(name)) {
+        // Remove surrounding angle brackets, and range/choice brackets.
+        const key = name.replace(/(^<|>$)/g, "").replace(/ ?\[.*\]$/, "");
+        if (values[key]?.value && !typesToLink.includes(name)) {
           return span;
         } else {
           let slug;
@@ -331,8 +353,8 @@ export async function getCSSSyntax(
           `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">[</a>`
         );
         name = name.replace(
-          /\]$/,
-          `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">]</a>`
+          /\]([^']?)$/,
+          `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">]</a>$1`
         );
 
         // link from combinators (except " ") to the value definition syntax docs
@@ -433,8 +455,16 @@ export async function getCSSSyntax(
       if (typesToLink.includes(`<${node.name}>`)) {
         return;
       }
-      if (node.type === "Type" && !constituents.includes(node.name)) {
-        constituents.push(node.name);
+      if (
+        node.type === "Type" &&
+        !constituents.some((n) => n.name === node.name && n.type === node.type)
+      ) {
+        constituents.push(node);
+      } else if (
+        node.type === "Property" &&
+        !constituents.some((n) => n.name === node.name && n.type === node.type)
+      ) {
+        constituents.push(node);
       }
     }
 
@@ -467,10 +497,16 @@ export async function getCSSSyntax(
       // and then get the types in those syntaxes
       constituentSyntaxes = [];
       for (const constituent of allConstituents.slice(oldConstituentsLength)) {
-        const constituentSyntaxEntry = valuespaces[`<${constituent}>`];
+        let constituentSyntaxEntry;
+        if (constituent.type === "Type") {
+          constituentSyntaxEntry =
+            values[constituent.name.replace(/^'|'$/g, "")]?.value;
+        } else if (constituent.type === "Property") {
+          constituentSyntaxEntry = getPropertySyntax(constituent.name);
+        }
 
-        if (constituentSyntaxEntry?.value) {
-          constituentSyntaxes.push(constituentSyntaxEntry.value);
+        if (constituentSyntaxEntry) {
+          constituentSyntaxes.push(constituentSyntaxEntry);
         }
       }
     }
@@ -491,15 +527,21 @@ export async function getCSSSyntax(
     output += renderSyntax(itemName, itemSyntax);
     output += "<br/>";
     // collect all the constituent types for the property
-    const types = getConstituentTypes(itemSyntax);
+    const nodes = getConstituentTypes(itemSyntax);
 
     // and write each one out
-    for (const type of types) {
-      if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
-        output += renderSyntax(
-          `&lt;${type}&gt;`,
-          valuespaces[`<${type}>`].value
-        );
+    for (const node of nodes) {
+      let value;
+      let name;
+      if (node.type === "Type") {
+        name = node.name;
+        value = values[node.name]?.value;
+      } else if (node.type === "Property") {
+        name = node.name;
+        value = getPropertySyntax(node.name);
+      }
+      if (name && value) {
+        output += renderSyntax(`&lt;${name}&gt;`, value);
         output += "<br/>";
       }
     }
@@ -519,4 +561,132 @@ export async function getCSSSyntax(
     output = writeFormalSyntax(name, syntax);
   }
   return output;
+}
+
+let parsedWebRefCache: null | Promise<WebRefObjectData> = null;
+async function getParsedWebRef(): Promise<WebRefObjectData> {
+  if (!parsedWebRefCache) {
+    parsedWebRefCache = getRawWebRefData().then((rawItems) => {
+      const sortedRawItems = [...Object.entries(rawItems)];
+      sortedRawItems.sort(([a], [b]) => {
+        if (a === b) {
+          return 0;
+        }
+        if (/-\d+$/.test(a) && a.replace(/-\d+$/, "") === b) {
+          return -1;
+        }
+        if (/-\d+$/.test(b) && b.replace(/-\d+$/, "") === a) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        return 0;
+      });
+      return Object.fromEntries(
+        sortedRawItems.map(([name, { spec, properties, atrules, values }]) => [
+          name,
+          {
+            spec,
+            properties: byName(properties),
+            atrules: byName(atrules),
+            values: byName(values),
+          },
+        ])
+      );
+    });
+  }
+
+  return parsedWebRefCache;
+}
+
+let valueSyntaxesCache = null;
+async function getAllValueSyntaxes() {
+  if (!valueSyntaxesCache) {
+    valueSyntaxesCache = getParsedWebRef().then((parsedWebRef) => {
+      let values = {};
+      for (const spec of Object.values(parsedWebRef)) {
+        // Add parent values.
+        values = { ...values, ...spec.values };
+        // Add child values.
+        [
+          ...Object.values(spec.properties),
+          ...Object.values(spec.values),
+        ].forEach((value) => {
+          if ("values" in value && Array.isArray(value.values)) {
+            values = { ...byName(value.values), ...values };
+          }
+        });
+      }
+      return values;
+    });
+  }
+
+  return valueSyntaxesCache;
+}
+
+function byName<T extends Named>(items: T[]): Record<string, T> {
+  return Object.fromEntries(
+    items.map((item) => [normalizeName(item.name), item])
+  );
+}
+
+function normalizeName(name: string): string {
+  return name.replace(/(^<|>$)/g, "");
+}
+
+async function getRawWebRefData(): Promise<WebRefArrayData> {
+  return (await webRefData.listAll()) as WebRefArrayData;
+}
+
+// @webref/css v5 interfaces.
+
+type WebRefObjectData = Record<string, WebRefObjectDataItem>;
+interface WebRefObjectDataItem {
+  spec: WebRefSpecEntry;
+  properties: Record<string, WebRefPropertyEntry>;
+  atrules: Record<string, WebRefAtruleEntry>;
+  values: Record<string, WebRefValuespaceEntry>;
+}
+
+// @webref/css v6 interfaces.
+
+type WebRefArrayData = Record<string, WebRefArrayDataItem>;
+interface WebRefArrayDataItem {
+  spec: WebRefSpecEntry;
+  properties: (WebRefPropertyEntry & Named)[];
+  atrules: (WebRefAtruleEntry & Named)[];
+  values: (WebRefValuespaceEntry & Named)[];
+}
+
+interface Named {
+  name: string;
+}
+
+// Common interfaces.
+
+interface WebRefSpecEntry {
+  title: string;
+  url: string;
+}
+
+interface WebRefPropertyEntry {
+  value: string;
+  newValues: string;
+}
+
+interface WebRefAtruleEntry {
+  descriptors: {
+    name: string;
+    value: string;
+  }[];
+  value: string;
+}
+
+interface WebRefValuespaceEntry {
+  prose?: string;
+  value?: string;
 }

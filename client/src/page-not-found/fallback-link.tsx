@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useSWR from "swr";
 
 import { Doc } from "../../../libs/types";
@@ -7,6 +7,7 @@ import NoteCard from "../ui/molecules/notecards";
 
 import LANGUAGES_RAW from "../../../libs/languages";
 import { RETIRED_LOCALES } from "../../../libs/constants";
+import { useLocale } from "../hooks";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -22,7 +23,7 @@ const LANGUAGES = new Map(
 // like "Did you mean: <a href=$url>$doctitle</a>?"
 
 export default function FallbackLink({ url }: { url: string }) {
-  const { locale = "en-US" } = useParams();
+  const locale = useLocale();
   const location = useLocation();
 
   const [fallbackCheckURL, setFallbackCheckURL] = React.useState<null | string>(

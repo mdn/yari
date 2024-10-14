@@ -4,44 +4,54 @@ import useSWR from "swr";
 import { PLACEMENT_ENABLED } from "./env";
 import { useUserData } from "./user-context";
 import { useLocation } from "react-router";
+import { Payload as PlacementData } from "../../libs/pong/types";
 
 export enum Status {
   success = "success",
   geoUnsupported = "geo_unsupported",
   capReached = "cap_reached",
+  loading = "loading",
+  empty = "empty",
 }
 
-export interface Fallback {
-  click: string;
-  view: string;
-  copy: string;
-  image: string;
-  by: string;
+type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
+export interface PlacementContextData
+  extends Partial<Record<PlacementType, PlacementData>> {
+  status: Status;
 }
 
-export interface PlacementError {
-  status: Status.geoUnsupported | Status.capReached;
-}
+const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
+  side: {
+    typ: "side",
+    pattern:
+      /\/[^/]+\/(play|docs\/|blog\/|observatory\/?|curriculum\/[^$]|search$)/i,
+  },
+  top: {
+    typ: "top-banner",
+    pattern: /\/[^/]+\/(?!$|_homepage$).*/i,
+  },
+  hpMain: {
+    typ: "hp-main",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
+  },
+  hpFooter: {
+    typ: "hp-footer",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
+  },
+  bottom: {
+    typ: "bottom-banner",
+    pattern: /\/[^/]+\/docs\//i,
+  },
+};
 
-export interface PlacementStatus {
-  status: Status.success;
-  click: string;
-  view: string;
-  copy?: string;
-  image?: string;
-  fallback?: Fallback;
-}
-
-export type PlacementData = PlacementStatus | PlacementError;
-
-const PLACEMENT_PATH_RE = /\/[^/]+\/(docs\/|search$)/i;
-
-function hasPlacement(pathname: string): boolean {
-  return PLACEMENT_PATH_RE.test(pathname);
+function placementTypes(pathname: string): string[] {
+  return Object.entries(PLACEMENT_MAP)
+    .map(([k, { pattern: re }]) => re.test(pathname) && k)
+    .filter(Boolean) as string[];
 }
 
 export const PlacementContext = React.createContext<
-  PlacementData | null | undefined
+  PlacementContextData | null | undefined
 >(undefined);
 
 export function PlacementProvider(props: { children: React.ReactNode }) {
@@ -54,10 +64,10 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
     isLoading,
     isValidating,
     mutate,
-  } = useSWR<PlacementData>(
+  } = useSWR<PlacementContextData>(
     !PLACEMENT_ENABLED ||
       user?.settings?.noAds ||
-      !hasPlacement(location.pathname)
+      !placementTypes(location.pathname)
       ? null
       : "/pong/get",
     async (url) => {
@@ -66,7 +76,10 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ keywords: [] }),
+        body: JSON.stringify({
+          keywords: [],
+          pongs: placementTypes(location.pathname),
+        }),
       });
 
       gleanClick(`pong: pong->fetched ${response.status}`);
@@ -76,8 +89,13 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
       }
 
       try {
-        const placementResponse: PlacementData = await response.json();
-        gleanClick(`pong: pong->status ${placementResponse.status}`);
+        const placementResponse: PlacementContextData = await response.json();
+        const typs = Object.entries(PLACEMENT_MAP)
+          .filter(([key]) => key in placementResponse)
+          .map(([, { typ }]) => typ);
+        if (typs.length) {
+          gleanClick(`pong: pong->served ${typs.join()}`);
+        }
         return placementResponse;
       } catch (e) {
         throw Error(response.statusText);
@@ -98,7 +116,9 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
   }, [location.pathname, mutate]);
 
   return (
-    <PlacementContext.Provider value={isLoading || isValidating ? null : pong}>
+    <PlacementContext.Provider
+      value={isLoading || isValidating ? { status: Status.loading } : pong}
+    >
       {props.children}
     </PlacementContext.Provider>
   );

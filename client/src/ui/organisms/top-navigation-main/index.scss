@@ -40,7 +40,7 @@
     margin-bottom: 1.5rem;
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     .theme-toggle {
       align-self: initial;
       margin-bottom: initial;
@@ -70,7 +70,7 @@
     border-top: 1px solid var(--border-secondary);
     color: var(--text-secondary);
     cursor: pointer;
-    display: block;
+    display: flex;
     padding: 1rem 0.5rem;
     text-align: left;
     width: 100%;
@@ -81,11 +81,17 @@
     }
 
     &.menu-toggle {
-      min-height: 53px;
       padding: 0.5rem;
     }
 
-    @media screen and (max-width: $screen-lg) {
+    sup.new {
+      --new-background: var(--text-primary-blue);
+      --new-background-beta: var(--learn-accent-color);
+      --new-color: var(--background-primary);
+      align-self: flex-start;
+    }
+
+    @media (max-width: #{$screen-lg - 1}) {
       &.button {
         --button-color: var(--text-secondary);
         --button-padding: 0;
@@ -104,9 +110,14 @@
           --button-focus-effect: none;
         }
       }
+
+      &.menu-link {
+        min-height: 53px;
+        padding: 0.5rem;
+      }
     }
 
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       border-radius: var(--elem-radius);
       border-top: none;
       padding: 0.5rem;
@@ -150,7 +161,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     align-items: center;
     display: flex;
     flex: 1;

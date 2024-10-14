@@ -6,6 +6,9 @@ import { getSurveyState, writeSurveyState } from "./utils";
 import { useIsServer } from "../../../hooks";
 import { Icon } from "../../atoms/icon";
 import { useLocation } from "react-router";
+import { DEV_MODE, WRITER_MODE } from "../../../env";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { SURVEY } from "../../../telemetry/constants";
 
 const FORCE_SURVEY_PREFIX = "#FORCE_SURVEY=";
 
@@ -18,7 +21,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
   const survey = React.useMemo(
     () =>
       SURVEYS.find((survey) => {
-        if (isServer) {
+        if (isServer || (WRITER_MODE && !DEV_MODE)) {
           return false;
         }
 
@@ -48,6 +51,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
 }
 
 function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
+  const gleanClick = useGleanClick();
   const details = React.useRef<HTMLDetailsElement | null>(null);
 
   const [originalState] = React.useState(() => getSurveyState(survey.bucket));
@@ -57,7 +61,28 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
     writeSurveyState(survey.bucket, state);
   }, [state, survey.bucket]);
 
+  const measure = React.useCallback(
+    (action: string) => gleanClick(`${SURVEY}: ${action} ${survey.bucket}`),
+    [gleanClick, survey.bucket]
+  );
+
+  const seen = React.useCallback(() => {
+    setState((state) => {
+      if (state.seen_at) {
+        return state;
+      }
+
+      measure("seen");
+
+      return {
+        ...state,
+        seen_at: Date.now(),
+      };
+    });
+  }, [measure]);
+
   function dismiss() {
+    measure("dismissed");
     setState({
       ...state,
       dismissed_at: Date.now(),
@@ -65,6 +90,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
   }
 
   function submitted() {
+    measure("submitted");
     setState({
       ...state,
       submitted_at: Date.now(),
@@ -79,6 +105,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
     const listener = () => {
       if (current.open && !state.opened_at) {
+        measure("opened");
         setState({
           ...state,
           opened_at: Date.now(),
@@ -89,16 +116,9 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
     current.addEventListener("toggle", listener);
 
     return () => current.removeEventListener("toggle", listener);
-  }, [details, state, survey]);
+  }, [details, state, survey, measure]);
 
-  React.useEffect(() => {
-    if (!state.seen_at) {
-      setState({
-        ...state,
-        seen_at: Date.now(),
-      });
-    }
-  }, [state]);
+  React.useEffect(seen, [seen]);
 
   React.useEffect(() => {
     // For this to work, the Survey needs this JavaScript action:
@@ -148,10 +168,13 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
             title={survey.question}
             src={survey.src}
             height={500}
-            style={{ overflow: "hidden", width: "100%" }}
+            style={{ overflow: "hidden" }}
           ></iframe>
         )}
       </details>
+      {survey.footnote && (
+        <section className="survey-footer">({survey.footnote})</section>
+      )}
     </div>
   );
 }

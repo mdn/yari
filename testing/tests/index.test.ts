@@ -27,9 +27,10 @@ test("all favicons on the home page", () => {
 
   // Check that every favicon works and resolves
   $('link[rel="icon"], link[rel="apple-touch-icon"]').each((i, element) => {
-    const href = $(element).attr("href");
-    // There should always be a 8 character hash in the href
-    expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
+    const url = $(element).attr("href");
+    const href = new URL(url).pathname;
+    // There should always be a 20 character hash in the href
+    expect(/\.[a-f0-9]{20}\./.test(href)).toBeTruthy();
     // The favicon href is a URL so to check that it exists on disk we need to
     // strip the leading / and join that with the root of the build.
     const file = path.join(buildRoot, href.slice(1));
@@ -50,8 +51,8 @@ test("all favicons on the home page", () => {
   $('meta[property="og:image"]').each((i, element) => {
     const url = $(element).attr("content");
     const href = new URL(url).pathname;
-    // There should always be a 8 character hash in the href
-    expect(/\.[a-f0-9]{8}\./.test(href)).toBeTruthy();
+    // There should always be a 20 character hash in the href
+    expect(/\.[a-f0-9]{20}\./.test(href)).toBeTruthy();
     const file = path.join(buildRoot, href.slice(1));
     expect(fs.existsSync(file)).toBeTruthy();
   });
@@ -119,19 +120,21 @@ test("content built foo page", () => {
     `https://developer.mozilla.org${doc.mdn_url}`
   );
 
-  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
 
   // The HTML should contain the Google Analytics snippet.
   // The ID should match what's set in `.env.testing`.
-  expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
+  expect($('script[src="/static/js/gtag.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
+  const toEnUSURL = $('link[rel="alternate"][hreflang="en"]')
+    .first()
+    .attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
   // building static assets for Dev or Stage, you don't know what domain is
@@ -176,8 +179,8 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -212,7 +215,7 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
-test("content built zh-CN page for hreflang tag testing", () => {
+test("content built zh-CN page for hreflang tag and copying image testing", () => {
   const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
@@ -232,15 +235,20 @@ test("content built zh-CN page for hreflang tag testing", () => {
   const $ = cheerio.load(html);
   // The built page should not have duplicate hreflang tags,
   // when zh-TW translation is also available.
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-CN");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh_CN");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 测试网页 | MDN"
   );
+
+  // The image should be in the built folder,
+  // even though it's not referenced in the translated content.
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
 });
 
 test("content built zh-TW page with en-US fallback image", () => {
@@ -261,18 +269,21 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(4);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"]')).toHaveLength(5);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
-  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh_TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
   );
   expect($("#content img").attr("src")).toBe(
-    "/en-US/docs/Web/Foo/screenshot.png"
+    "/zh-TW/docs/Web/Foo/screenshot.png"
   );
+
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
 });
 
 test("content built French Embeddable page", () => {
@@ -284,7 +295,7 @@ test("content built French Embeddable page", () => {
   expect(doc.flaws.translation_differences).toHaveLength(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
-    "Differences in the important macros (0 in common of 4 possible)"
+    "Differences in the important macros (0 in common of 5 possible)"
   );
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.suggestion).toBeFalsy();
@@ -1075,6 +1086,21 @@ test("image flaws with bad images", () => {
         "File not present on disk, an empty file, or not an image"
     ).length
   ).toBe(4);
+  // Check the line and column numbers for html <img> tags in markdown
+  expect({
+    line: flaws.images[2].line,
+    column: flaws.images[2].column,
+  }).toEqual({
+    line: 16,
+    column: 12,
+  });
+  expect({
+    line: flaws.images[3].line,
+    column: flaws.images[3].column,
+  }).toEqual({
+    line: 25,
+    column: 17,
+  });
 });
 
 test("linked to local files", () => {
@@ -1154,8 +1180,8 @@ test("404 page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
   expect($("h1").text()).toContain("Page not found");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
+  expect($('meta[name="robots"]')).toHaveLength(0);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en_US");
 });
 
 test("plus page", () => {
@@ -1165,7 +1191,7 @@ test("plus page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
+  expect($('meta[name="robots"]')).toHaveLength(0);
 });
 
 test("plus collections page", () => {
@@ -1354,7 +1380,7 @@ test("img tags without 'src' should not crash", () => {
   expect(doc.flaws).toEqual({});
 });
 
-test("/Web/Embeddable should have 3 valid live samples", () => {
+test("/Web/Embeddable should have 4 valid live samples", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1365,15 +1391,16 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("iframe")).toHaveLength(3);
+  expect($("iframe")).toHaveLength(4);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws).toEqual({});
+  expect(doc.flaws.macros[0].name).toEqual("MacroDeprecatedError");
 
-  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  // Only the transplanted live sample has a file.
+  const builtFiles = fs.readdirSync(path.join(builtFolder, "legacy"));
   expect(
     builtFiles
       .filter((f) => f.includes("_sample_."))
@@ -1381,7 +1408,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
         const startOffset = "_sample_.".length;
         return f.substr(startOffset, f.length - startOffset - ".html".length);
       })
-  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
+  ).toEqual(expect.arrayContaining(["foo"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {
@@ -1411,14 +1438,9 @@ test("headings with HTML should be rendered as HTML", () => {
     doc: Doc;
   };
   const [section1, section2] = doc.body as ProseSection[];
-  // Because the title contains HTML, you can expect a 'titleAsText'
   expect(section1.value.title).toBe("Here's some <code>code</code>");
-  expect(section1.value.titleAsText).toBe("Here's some code");
   expect(section2.value.title).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
-  );
-  expect(section2.value.titleAsText).toBe(
-    "You can use escaped HTML tags like <pre> still"
   );
 });
 
@@ -1548,7 +1570,7 @@ test("basic markdown rendering", () => {
   expect($("article em")).toHaveLength(1);
   expect($("article ul li")).toHaveLength(6);
   expect($('article a[href^="/"]')).toHaveLength(2);
-  expect($('article a[href^="#"]')).toHaveLength(5);
+  expect($('article a[href^="#"]')).toHaveLength(6);
   expect($("article pre")).toHaveLength(4);
   expect($("article pre.notranslate")).toHaveLength(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
@@ -1592,23 +1614,27 @@ test("translated content broken links can fall back to en-us", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
+
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
-  expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
-    "Can use the English (en-US) link as a fallback"
-  );
-  expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
-    "Can use the English (en-US) link as a fallback"
-  );
+  expect(map.get("/fr/docs/Web/CSS/dumber")).toMatchObject({
+    explanation: "Can't resolve /fr/docs/Web/CSS/dumber",
+    suggestion: "/fr/docs/Web/CSS/number",
+    fixable: true,
+    line: 19,
+    column: 16,
+  });
+  expect(map.get("/fr/docs/Web/CSS/number")).toBeUndefined();
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('article a[href="/fr/docs/Web/CSS/dumber"]')).toHaveLength(0);
   expect($('article a[href="/fr/docs/Web/CSS/number"]')).toHaveLength(0);
+  // Localized docs don't exist, but fallback to en-US is possible
   expect($('article a[href="/en-US/docs/Web/CSS/number"]')).toHaveLength(2);
   expect($("article a.only-in-en-us")).toHaveLength(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
-    "Currently only available in English (US)"
+    "Cette page est actuellement disponible uniquement en anglais"
   );
 });
 

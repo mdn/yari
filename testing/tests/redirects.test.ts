@@ -488,61 +488,6 @@ const GITHUB_IO_URLS = [].concat(
   )
 );
 
-const MOZILLADEMOS_URLS = [].concat(
-  url_test(
-    "/samples/canvas-tutorial/images/backdrop.png",
-    "https://mdn.mozillademos.org/files/5395/backdrop.png"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/bg_gallery.png",
-    "https://mdn.mozillademos.org/files/5415/bg_gallery.png"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_1.jpg",
-    "https://mdn.mozillademos.org/files/5399/gallery_1.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_2.jpg",
-    "https://mdn.mozillademos.org/files/5401/gallery_2.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_3.jpg",
-    "https://mdn.mozillademos.org/files/5403/gallery_3.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_4.jpg",
-    "https://mdn.mozillademos.org/files/5405/gallery_4.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_5.jpg",
-    "https://mdn.mozillademos.org/files/5407/gallery_5.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_6.jpg",
-    "https://mdn.mozillademos.org/files/5409/gallery_6.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_7.jpg",
-    "https://mdn.mozillademos.org/files/5411/gallery_7.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/gallery_8.jpg",
-    "https://mdn.mozillademos.org/files/5413/gallery_8.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/picture_frame.png",
-    "https://mdn.mozillademos.org/files/242/Canvas_picture_frame.png"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/rhino.jpg",
-    "https://mdn.mozillademos.org/files/5397/rhino.jpg"
-  ),
-  url_test(
-    "/samples/canvas-tutorial/images/wallpaper.png",
-    "https://mdn.mozillademos.org/files/222/Canvas_createpattern.png"
-  )
-);
-
 const DEFAULT_SAMPLES_URLS = [].concat(
   url_test("/samples/cssref/background.html", null, { statusCode: 302 }),
   url_test("/samples/html/progress.html", null, { statusCode: 302 })
@@ -994,7 +939,7 @@ const LOCALE_ALIAS_URLS = [].concat(
   url_test("/en-gb/docs/Foo/bar", null, { statusCode: 404 }),
   url_test("/en_gb/docs/Foo/bar", null, { statusCode: 404 }),
 
-  url_test("/PT-PT/docs/Foo/bar", "/en-US/docs/Foo/bar?retiredLocale=pt-PT", {
+  url_test("/PT-PT/docs/Foo/bar", "/en-US/docs/Foo/bar", {
     statusCode: 302,
   }),
   url_test("/XY-PQ/docs/Foo/bar", null, { statusCode: 404 }),
@@ -1021,186 +966,180 @@ const LOCALE_ALIAS_URLS = [].concat(
 );
 
 const RETIRED_LOCALE_URLS = [].concat(
-  url_test("/ar", "/en-US/?retiredLocale=ar", { statusCode: 302 }),
-  url_test("/ar/", "/en-US/?retiredLocale=ar", { statusCode: 302 }),
-  url_test("/bg", "/en-US/?retiredLocale=bg", { statusCode: 302 }),
-  url_test("/bg/", "/en-US/?retiredLocale=bg", { statusCode: 302 }),
-  url_test("/bn", "/en-US/?retiredLocale=bn", { statusCode: 302 }),
-  url_test("/bn/", "/en-US/?retiredLocale=bn", { statusCode: 302 }),
-  url_test("/ca", "/en-US/?retiredLocale=ca", { statusCode: 302 }),
-  url_test("/ca/", "/en-US/?retiredLocale=ca", { statusCode: 302 }),
-  url_test("/el", "/en-US/?retiredLocale=el", { statusCode: 302 }),
-  url_test("/el/", "/en-US/?retiredLocale=el", { statusCode: 302 }),
-  url_test("/fa", "/en-US/?retiredLocale=fa", { statusCode: 302 }),
-  url_test("/FA/", "/en-US/?retiredLocale=fa", { statusCode: 302 }),
-  url_test("/fi", "/en-US/?retiredLocale=fi", { statusCode: 302 }),
-  url_test("/fi/", "/en-US/?retiredLocale=fi", { statusCode: 302 }),
-  url_test("/he", "/en-US/?retiredLocale=he", { statusCode: 302 }),
-  url_test("/he/", "/en-US/?retiredLocale=he", { statusCode: 302 }),
-  url_test("/hi-In", "/en-US/?retiredLocale=hi-IN", { statusCode: 302 }),
-  url_test("/hi-IN/", "/en-US/?retiredLocale=hi-IN", { statusCode: 302 }),
-  url_test("/hu", "/en-US/?retiredLocale=hu", { statusCode: 302 }),
-  url_test("/hu/", "/en-US/?retiredLocale=hu", { statusCode: 302 }),
-  url_test("/id", "/en-US/?retiredLocale=id", { statusCode: 302 }),
-  url_test("/ID/", "/en-US/?retiredLocale=id", { statusCode: 302 }),
-  url_test("/it", "/en-US/?retiredLocale=it", { statusCode: 302 }),
-  url_test("/it/", "/en-US/?retiredLocale=it", { statusCode: 302 }),
-  url_test("/kab", "/en-US/?retiredLocale=kab", { statusCode: 302 }),
-  url_test("/KaB/", "/en-US/?retiredLocale=kab", { statusCode: 302 }),
-  url_test("/ms", "/en-US/?retiredLocale=ms", { statusCode: 302 }),
-  url_test("/ms/", "/en-US/?retiredLocale=ms", { statusCode: 302 }),
-  url_test("/my", "/en-US/?retiredLocale=my", { statusCode: 302 }),
-  url_test("/my/", "/en-US/?retiredLocale=my", { statusCode: 302 }),
-  url_test("/nl", "/en-US/?retiredLocale=nl", { statusCode: 302 }),
-  url_test("/nl/", "/en-US/?retiredLocale=nl", { statusCode: 302 }),
-  url_test("/pt-Pt", "/en-US/?retiredLocale=pt-PT", { statusCode: 302 }),
-  url_test("/pt-PT/", "/en-US/?retiredLocale=pt-PT", { statusCode: 302 }),
-  url_test("/sv-SE", "/en-US/?retiredLocale=sv-SE", { statusCode: 302 }),
-  url_test("/sv-se/", "/en-US/?retiredLocale=sv-SE", { statusCode: 302 }),
-  url_test("/th", "/en-US/?retiredLocale=th", { statusCode: 302 }),
-  url_test("/th/", "/en-US/?retiredLocale=th", { statusCode: 302 }),
-  url_test("/tr", "/en-US/?retiredLocale=tr", { statusCode: 302 }),
-  url_test("/tr/", "/en-US/?retiredLocale=tr", { statusCode: 302 }),
-  url_test("/uk", "/en-US/?retiredLocale=uk", { statusCode: 302 }),
-  url_test("/uk/", "/en-US/?retiredLocale=uk", { statusCode: 302 }),
-  url_test("/vi", "/en-US/?retiredLocale=vi", { statusCode: 302 }),
-  url_test("/vi/", "/en-US/?retiredLocale=vi", { statusCode: 302 }),
-  url_test("/ar/docs/Web", "/en-US/docs/Web?retiredLocale=ar", {
+  url_test("/ar", "/en-US/", { statusCode: 302 }),
+  url_test("/ar/", "/en-US/", { statusCode: 302 }),
+  url_test("/bg", "/en-US/", { statusCode: 302 }),
+  url_test("/bg/", "/en-US/", { statusCode: 302 }),
+  url_test("/bn", "/en-US/", { statusCode: 302 }),
+  url_test("/bn/", "/en-US/", { statusCode: 302 }),
+  url_test("/ca", "/en-US/", { statusCode: 302 }),
+  url_test("/ca/", "/en-US/", { statusCode: 302 }),
+  url_test("/el", "/en-US/", { statusCode: 302 }),
+  url_test("/el/", "/en-US/", { statusCode: 302 }),
+  url_test("/fa", "/en-US/", { statusCode: 302 }),
+  url_test("/FA/", "/en-US/", { statusCode: 302 }),
+  url_test("/fi", "/en-US/", { statusCode: 302 }),
+  url_test("/fi/", "/en-US/", { statusCode: 302 }),
+  url_test("/he", "/en-US/", { statusCode: 302 }),
+  url_test("/he/", "/en-US/", { statusCode: 302 }),
+  url_test("/hi-In", "/en-US/", { statusCode: 302 }),
+  url_test("/hi-IN/", "/en-US/", { statusCode: 302 }),
+  url_test("/hu", "/en-US/", { statusCode: 302 }),
+  url_test("/hu/", "/en-US/", { statusCode: 302 }),
+  url_test("/id", "/en-US/", { statusCode: 302 }),
+  url_test("/ID/", "/en-US/", { statusCode: 302 }),
+  url_test("/it", "/en-US/", { statusCode: 302 }),
+  url_test("/it/", "/en-US/", { statusCode: 302 }),
+  url_test("/kab", "/en-US/", { statusCode: 302 }),
+  url_test("/KaB/", "/en-US/", { statusCode: 302 }),
+  url_test("/ms", "/en-US/", { statusCode: 302 }),
+  url_test("/ms/", "/en-US/", { statusCode: 302 }),
+  url_test("/my", "/en-US/", { statusCode: 302 }),
+  url_test("/my/", "/en-US/", { statusCode: 302 }),
+  url_test("/nl", "/en-US/", { statusCode: 302 }),
+  url_test("/nl/", "/en-US/", { statusCode: 302 }),
+  url_test("/pt-Pt", "/en-US/", { statusCode: 302 }),
+  url_test("/pt-PT/", "/en-US/", { statusCode: 302 }),
+  url_test("/sv-SE", "/en-US/", { statusCode: 302 }),
+  url_test("/sv-se/", "/en-US/", { statusCode: 302 }),
+  url_test("/th", "/en-US/", { statusCode: 302 }),
+  url_test("/th/", "/en-US/", { statusCode: 302 }),
+  url_test("/tr", "/en-US/", { statusCode: 302 }),
+  url_test("/tr/", "/en-US/", { statusCode: 302 }),
+  url_test("/uk", "/en-US/", { statusCode: 302 }),
+  url_test("/uk/", "/en-US/", { statusCode: 302 }),
+  url_test("/vi", "/en-US/", { statusCode: 302 }),
+  url_test("/vi/", "/en-US/", { statusCode: 302 }),
+  url_test("/ar/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/bg/docs/Web/", "/en-US/docs/Web/?retiredLocale=bg", {
+  url_test("/bg/docs/Web/", "/en-US/docs/Web/", {
     statusCode: 302,
   }),
-  url_test("/bn/docs/Web", "/en-US/docs/Web?retiredLocale=bn", {
+  url_test("/bn/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/Ca/docs/Web/", "/en-US/docs/Web/?retiredLocale=ca", {
+  url_test("/Ca/docs/Web/", "/en-US/docs/Web/", {
     statusCode: 302,
   }),
-  url_test("/el/docs/Web", "/en-US/docs/Web?retiredLocale=el", {
+  url_test("/el/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/FA/docs/Web", "/en-US/docs/Web?retiredLocale=fa", {
+  url_test("/FA/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/fi/docs/Web", "/en-US/docs/Web?retiredLocale=fi", {
+  url_test("/fi/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/he/docs/Web", "/en-US/docs/Web?retiredLocale=he", {
+  url_test("/he/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/hi-IN/docs/Web", "/en-US/docs/Web?retiredLocale=hi-IN", {
+  url_test("/hi-IN/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/hu/docs/Web", "/en-US/docs/Web?retiredLocale=hu", {
+  url_test("/hu/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/ID/docs/Web", "/en-US/docs/Web?retiredLocale=id", {
+  url_test("/ID/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/it/docs/Web", "/en-US/docs/Web?retiredLocale=it", {
+  url_test("/it/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/KaB/docs/Web", "/en-US/docs/Web?retiredLocale=kab", {
+  url_test("/KaB/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/ms/docs/Web", "/en-US/docs/Web?retiredLocale=ms", {
+  url_test("/ms/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/my/docs/Web", "/en-US/docs/Web?retiredLocale=my", {
+  url_test("/my/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/nl/docs/Web", "/en-US/docs/Web?retiredLocale=nl", {
+  url_test("/nl/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/pt-PT/docs/Web", "/en-US/docs/Web?retiredLocale=pt-PT", {
+  url_test("/pt-PT/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/sv-se/docs/Web", "/en-US/docs/Web?retiredLocale=sv-SE", {
+  url_test("/sv-se/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/th/docs/Web", "/en-US/docs/Web?retiredLocale=th", {
+  url_test("/th/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/tr/docs/Web", "/en-US/docs/Web?retiredLocale=tr", {
+  url_test("/tr/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/uk/docs/Web", "/en-US/docs/Web?retiredLocale=uk", {
+  url_test("/uk/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/vi/docs/Web", "/en-US/docs/Web?retiredLocale=vi", {
+  url_test("/vi/docs/Web", "/en-US/docs/Web", {
     statusCode: 302,
   }),
-  url_test("/ar/search?q=video", "/en-US/search?q=video&retiredLocale=ar", {
+  url_test("/ar/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/bg/search?q=video", "/en-US/search?q=video&retiredLocale=bg", {
+  url_test("/bg/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/bn/search?q=video", "/en-US/search?q=video&retiredLocale=bn", {
+  url_test("/bn/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/Ca/search?q=video", "/en-US/search?q=video&retiredLocale=ca", {
+  url_test("/Ca/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/el/search?q=video", "/en-US/search?q=video&retiredLocale=el", {
+  url_test("/el/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/FA/search?q=video", "/en-US/search?q=video&retiredLocale=fa", {
+  url_test("/FA/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/fi/search?q=video", "/en-US/search?q=video&retiredLocale=fi", {
+  url_test("/fi/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/he/search?q=video", "/en-US/search?q=video&retiredLocale=he", {
+  url_test("/he/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test(
-    "/hi-IN/search?q=video",
-    "/en-US/search?q=video&retiredLocale=hi-IN",
-    { statusCode: 302 }
-  ),
-  url_test("/hu/search?q=video", "/en-US/search?q=video&retiredLocale=hu", {
+  url_test("/hi-IN/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/ID/search?q=video", "/en-US/search?q=video&retiredLocale=id", {
+  url_test("/hu/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/it/search?q=video", "/en-US/search?q=video&retiredLocale=it", {
+  url_test("/ID/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/KaB/search?q=video", "/en-US/search?q=video&retiredLocale=kab", {
+  url_test("/it/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/ms/search?q=video", "/en-US/search?q=video&retiredLocale=ms", {
+  url_test("/KaB/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/my/search?q=video", "/en-US/search?q=video&retiredLocale=my", {
+  url_test("/ms/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/nl/search?q=video", "/en-US/search?q=video&retiredLocale=nl", {
+  url_test("/my/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test(
-    "/pt-PT/search?q=video",
-    "/en-US/search?q=video&retiredLocale=pt-PT",
-    { statusCode: 302 }
-  ),
-  url_test(
-    "/sv-se/search?q=video",
-    "/en-US/search?q=video&retiredLocale=sv-SE",
-    { statusCode: 302 }
-  ),
-  url_test("/th/search?q=video", "/en-US/search?q=video&retiredLocale=th", {
+  url_test("/nl/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/tr/search?q=video", "/en-US/search?q=video&retiredLocale=tr", {
+  url_test("/pt-PT/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/uk/search?q=video", "/en-US/search?q=video&retiredLocale=uk", {
+  url_test("/sv-se/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   }),
-  url_test("/vi/search?q=video", "/en-US/search?q=video&retiredLocale=vi", {
+  url_test("/th/search?q=video", "/en-US/search?q=video", {
+    statusCode: 302,
+  }),
+  url_test("/tr/search?q=video", "/en-US/search?q=video", {
+    statusCode: 302,
+  }),
+  url_test("/uk/search?q=video", "/en-US/search?q=video", {
+    statusCode: 302,
+  }),
+  url_test("/vi/search?q=video", "/en-US/search?q=video", {
     statusCode: 302,
   })
 );
@@ -1277,14 +1216,26 @@ const MISC_REDIRECT_URLS = [].concat(
     "/en-US/DragDrop/Drag_and_Drop/",
     "/en-US/docs/DragDrop/Drag_and_Drop"
   ),
+  url_test(
+    "/en-US/ECMAScript_DontEnum_attribute",
+    "/en-US/docs/ECMAScript_DontEnum_attribute"
+  ),
   url_test("/en-US/HTML", "/en-US/docs/HTML"),
   url_test("/en-US/HTML/", "/en-US/docs/HTML"),
   url_test("/en-US/HTML/Canvas/", "/en-US/docs/HTML/Canvas"),
   url_test("/en-US/JavaScript", "/en-US/docs/JavaScript"),
   url_test("/en-US/JavaScript/", "/en-US/docs/JavaScript"),
   url_test(
+    "/en-US/JavaScript_typed_arrays/ArrayBuffer",
+    "/en-US/docs/JavaScript_typed_arrays/ArrayBuffer"
+  ),
+  url_test(
     "/en-US/JavaScript/Reference/About/",
     "/en-US/docs/JavaScript/Reference/About"
+  ),
+  url_test(
+    "/en-US/Media_formats_supported_by_the_audio_and_video_elements",
+    "/en-US/docs/Media_formats_supported_by_the_audio_and_video_elements"
   ),
   url_test("/en-US/SVG", "/en-US/docs/SVG"),
   url_test("/en-US/SVG/", "/en-US/docs/SVG"),
@@ -1294,6 +1245,10 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test(
     "/en-US/Tools/Memory/Treemap_view/",
     "/en-US/docs/Tools/Memory/Treemap_view"
+  ),
+  url_test(
+    "/en-US/Using_audio_and_video_in_Firefox",
+    "/en-US/docs/Using_audio_and_video_in_Firefox"
   ),
   url_test(
     "/en-US/Using_files_from_web_applications",
@@ -1322,12 +1277,6 @@ describe("scl3 redirects", () => {
 
 describe("github io redirects", () => {
   for (const [url, t] of GITHUB_IO_URLS) {
-    it(url, t);
-  }
-});
-
-describe("mozilla demos redirects", () => {
-  for (const [url, t] of MOZILLADEMOS_URLS) {
     it(url, t);
   }
 });

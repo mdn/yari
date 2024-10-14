@@ -21,7 +21,8 @@ To run these tests, first run:
 ```sh
 export ENV_FILE=.env.testing
 npm run build:prepare
-npm run build
+npm run build:docs
+npm run render:html
 npm run start:static-server
 ```
 
@@ -100,7 +101,7 @@ developers would see. To run these you first need to run, in one terminal:
 npm run dev
 ```
 
-> NOTE: Ensure that you have `REACT_APP_CRUD_MODE` set to `true` in the `.env`
+> NOTE: Ensure that you have `REACT_APP_WRITER_MODE` set to `true` in the `.env`
 > at the root of the project before running `npm run dev`.
 
 And in another terminal, run:

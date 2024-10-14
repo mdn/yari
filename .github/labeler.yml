@@ -1,22 +1,88 @@
+blog:
+  - changed-files:
+      - any-glob-to-any-file: "**/blog/**/*"
+
 browser-compat:
-  - "client/src/document/ingredients/browser-compatability-table/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "**/browser-compatability-table/**/*"
+
 macros:
-  - "kumascript/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "kumascript/**/*"
+
+cloud-function:
+  - changed-files:
+      - any-glob-to-any-file: "cloud-function/**/*"
+
+copy:
+  - changed-files:
+      - any-glob-to-any-file: "copy/**/*"
+
 dependencies:
-  - "**/poetry.lock"
-  - "**/package-lock.json"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/poetry.lock"
+          - "**/package-lock.json"
 deployer:
-  - "deployer/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "deployer/**/*"
+
+filecheck:
+  - changed-files:
+      - any-glob-to-any-file: "filecheck/**/*"
+
 flaw-system:
-  - "build/flaws/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "build/flaws/**/*"
+
 github-actions:
-  - ".github/workflows/**/*"
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**/*"
+
 markdown:
-  - "markdown/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "markdown/**/*"
+
+metrics:
+  - changed-files:
+      - any-glob-to-any-file: "**/telemetry/**/*"
+
+placement:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/placement/**/*"
+          - "**/pong/**/*"
+
 plus:
-  - "client/src/plus/**/*"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/plus/**/*"
+          - "**/plus-docs/**/*"
+
+plus:ai-help:
+  - changed-files:
+      - any-glob-to-any-file: "**/ai-help/**/*"
+
 plus:offline:
-  - "client/pwa/src/**/*"
-  - "client/src/offline-settings/**/*"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "client/pwa/src/**/*"
+          - "client/src/offline-settings/**/*"
+
+plus:playground:
+  - changed-files:
+      - any-glob-to-any-file: "**/playground/**/*"
+
+plus:updates:
+  - changed-files:
+      - any-glob-to-any-file: "client/src/plus/updates/**/*"
+
 python:
-  - "**/*.py"
+  - changed-files:
+      - any-glob-to-any-file: "**/*.py"
+
+redirects:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "cloud-function/src/middlewares/redirect-*"
+          - "libs/fundamental-redirects/**/*"

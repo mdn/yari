@@ -5,21 +5,28 @@
 //  $0 - The ID of the header block containing the sample
 //  $1 - The width of the iframe (optional)
 //  $2 - The height of the iframe (optional)
-//  $3 - The url of a screenshot of the sample working as intended (optional)
+//  $3 - (Deprecated) The url of a screenshot of the sample working as intended (optional)
 //  $4 - (Deprecated) The slug from which to load the sample (optional; current page used if not provided)
 //  $5 - (Deprecated) The class name of the frame; defaults to "sample-code-frame". If you
 //       pass this parameter and give it a value other than "sample-code-frame",
 //       then the "Open in CodePen"/"Open in JSFiddle" buttons will not be displayed.
-//  $6 - (Deprecated) Allowed features, separated by semicolons (optional)
+//  $6 - Allowed features (like geolocation, microphone), separated by semicolons (optional).
+//       Defaults to ''.
 //
 // See also : LiveSampleLink
 
-// We have deprecated the use of the $4 to $6 parameters
-// If one of this parameter is not empty, we raise a MacroDeprecationError flaw
-// When there will be 0 use left on translated-content (May 2022: 203 occurrences for $4),
+// We have deprecated the $3, $4, and $5 parameters.
+// If a non-empty value is provided for a deprecated parameter, we raise a MacroDeprecationError flaw
+// When there are 0 uses in translated-content,
 // we will be able to simplify this macro (and likely the whole of MDN).
-if ($4 !== "" || $5 !== "" || $6 !== "") {
-  mdn.deprecatedParams("The fourth to sixth parameters of 'EmbedLiveSample' are deprecated");
+if ($3 !== "") {
+  mdn.deprecatedParams("'EmbedLiveSample' parameter $3 is deprecated (no screenshot URLs).");
+}
+if ($4 !== "") {
+  mdn.deprecatedParams("'EmbedLiveSample' parameter $4 is deprecated (no sample slug).");
+}
+if ($5 !== "") {
+  mdn.deprecatedParams("'EmbedLiveSample' parameter $5 is deprecated (no iframe classes).");
 }
 
 var sampleIdOrOffset = $0 || $token.location.start.offset;
@@ -68,7 +75,8 @@ if (sampleSlug) {
       }
     }
 }
-var url = await template('LiveSampleURL', [sampleIdOrOffset, sampleUrl]);
+var id = web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset));
+var url = await template('LiveSampleURL', [id, sampleUrl]);
 
 if (hasScreenshot) {
 %><table class="sample-code-table"><%
@@ -85,12 +93,12 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="<%= className %>"<%
-%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
+%><div class="code-example"><div class="example-header"></div><iframe class="<%= className %>"<%
+%> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
-%>></iframe><%
+%> sandbox="allow-same-origin allow-scripts"></iframe></div><%
 if (hasScreenshot) { %></td></tr></tbody></table><% } %>

@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../env";
+import { WRITER_MODE, WRITER_MODE_HOSTNAMES } from "../env";
 import { useLocale } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { MainContentContainer } from "../ui/atoms/page-content";
@@ -399,7 +399,7 @@ function Breadcrumb({
   const root = pathname.split("/").slice(0, 2);
   root.push("_sitemap");
 
-  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+  const isReadOnly = !WRITER_MODE_HOSTNAMES.includes(window.location.hostname);
 
   return (
     <>
@@ -429,7 +429,7 @@ function Breadcrumb({
               <Link to={thisDoc.url}>
                 <em>{thisDoc.title}</em>
               </Link>{" "}
-              {CRUD_MODE && !isReadOnly && (
+              {WRITER_MODE && !isReadOnly && (
                 <small>
                   (
                   <a
@@ -469,7 +469,7 @@ function ShowTree({
   openInYourEditor: (url: string) => void;
 }) {
   const locale = useLocale();
-  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+  const isReadOnly = !WRITER_MODE_HOSTNAMES.includes(window.location.hostname);
   return (
     <div className="tree">
       <ul>

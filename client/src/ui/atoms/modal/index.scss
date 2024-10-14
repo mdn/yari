@@ -15,7 +15,7 @@ body.ReactModal__Body--open {
   position: fixed;
   right: 0;
   top: 0;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-modal-overlay);
 
   &.wait {
     &,
@@ -30,7 +30,7 @@ body.ReactModal__Body--open {
   flex-basis: 32.5rem;
   outline: none;
   padding: 1.5rem;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-modal-content);
 }
 
 .modal-header {
@@ -40,6 +40,12 @@ body.ReactModal__Body--open {
   padding-bottom: 1.5rem;
 
   .button.has-icon {
+    --button-color: var(--icon-secondary);
+
+    &:hover {
+      --button-color: var(--icon-primary);
+    }
+
     .button-wrap {
       height: auto;
       margin: -0.5rem;
@@ -49,7 +55,6 @@ body.ReactModal__Body--open {
   }
 
   .icon {
-    background-color: #000;
     height: 1.25rem;
     margin: 0;
     width: 1.25rem;
@@ -79,13 +84,7 @@ body.ReactModal__Body--open {
   }
 
   .mdn-form-item {
-    padding-top: 1.5rem;
-
-    &:first-child {
-      padding-top: 0;
-    }
-
-    @media screen and (max-width: $screen-lg) {
+    @media (max-width: $screen-lg) {
       &:last-child {
         padding-bottom: 1.5rem;
       }
@@ -97,28 +96,14 @@ body.ReactModal__Body--open {
       gap: 1.5rem;
       justify-content: flex-start;
     }
-
-    label,
-    textarea,
-    [type="text"] {
-      font-size: 1rem;
-      font-weight: normal;
-    }
   }
 
   button {
     flex: 1;
   }
-
-  .button-wrap {
-    font-size: 1rem;
-    height: auto;
-    line-height: 1.5;
-    padding: 0.5rem 2rem;
-  }
 }
 
-@media screen and (min-width: $screen-lg) {
+@media (min-width: $screen-lg) {
   body.ReactModal__Body--open {
     overflow: unset;
   }

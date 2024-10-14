@@ -1,11 +1,14 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { Response } from "express";
 
-import { CSP_VALUE } from "./internal/constants/index.js";
+import {
+  CSP_VALUE,
+  PLAYGROUND_UNSAFE_CSP_VALUE,
+} from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
+import { ORIGIN_TRIAL_TOKEN } from "./env.js";
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
-const DEFAULT_MAX_AGE = 60 * 60 * 24;
+const DEFAULT_MAX_AGE = 60 * 60;
 
 const NO_CACHE_VALUE = "no-store, must-revalidate";
 
@@ -36,7 +39,11 @@ export function withContentResponseHeaders(
     xFrame: !isLiveSample,
   });
 
-  if (req.url?.endsWith("/sitemap.xml.gz")) {
+  if (req.url?.endsWith("/contributors.txt")) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  }
+
+  if (res.statusCode === 200 && req.url?.endsWith("/sitemap.xml.gz")) {
     res.setHeader("Content-Type", "application/xml");
     res.setHeader("Content-Encoding", "gzip");
   }
@@ -74,20 +81,9 @@ function getCacheMaxAgeForUrl(url: string): number {
 }
 
 function parseContentType(value: unknown): string {
-  const firstValue = Array.isArray(value) ? value[0] ?? "" : value;
+  const firstValue = Array.isArray(value) ? (value[0] ?? "") : value;
 
   return typeof firstValue === "string" ? firstValue : "";
-}
-
-export function withResponseHeaders(
-  res: Response,
-  options?: { csp?: boolean; xFrame?: boolean }
-): Response {
-  setContentResponseHeaders(
-    (name, value) => res.set(name, value),
-    options ?? {}
-  );
-  return res;
 }
 
 export function setContentResponseHeaders(
@@ -95,10 +91,23 @@ export function setContentResponseHeaders(
   { csp = true, xFrame = true }: { csp?: boolean; xFrame?: boolean }
 ): void {
   [
-    ["X-XSS-Protection", "1; mode=block"],
     ["X-Content-Type-Options", "nosniff"],
     ["Strict-Transport-Security", "max-age=63072000"],
     ...(csp ? [["Content-Security-Policy", CSP_VALUE]] : []),
     ...(xFrame ? [["X-Frame-Options", "DENY"]] : []),
+    ...(ORIGIN_TRIAL_TOKEN ? [["Origin-Trial", ORIGIN_TRIAL_TOKEN]] : []),
   ].forEach(([k, v]) => k && v && setHeader(k, v));
+}
+
+export function withRunnerResponseHeaders(
+  _proxyRes: IncomingMessage,
+  _req: IncomingMessage,
+  res: ServerResponse<IncomingMessage>
+): void {
+  [
+    ["X-Content-Type-Options", "nosniff"],
+    ["Clear-Site-Data", '"*"'],
+    ["Strict-Transport-Security", "max-age=63072000"],
+    ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
+  ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }

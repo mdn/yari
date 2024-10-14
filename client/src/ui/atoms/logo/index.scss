@@ -3,17 +3,20 @@
 .logo {
   align-items: center;
   display: flex;
+  // Width of largest logo ("mdn web docs").
+  width: 160px;
 
   svg {
     height: 1.5rem;
     margin-top: 0.3rem;
   }
-}
 
-/* DARK AND HIGH CONTRACT BLACK MODE */
-.dark,
-.high-contrast-black {
+  .logo-m,
+  .logo-_ {
+    fill: var(--text-link);
+  }
+
   .logo-text {
-    fill: #fff;
+    fill: var(--text-primary);
   }
 }

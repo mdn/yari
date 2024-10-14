@@ -54,6 +54,19 @@ var text = mdn.localStringMap({
       'Loading_and_running' : 'Загрузка и запуск кода WebAssembly',
       'Exported_functions' : 'Экспортируемые функции WebAssembly',
     'JavaScript_interface' : 'JavaScript interface'
+  },
+  'zh-CN': {
+    'WebAssembly_home_page' : 'WebAssembly',
+    'Tutorials' : '教程',
+      'WebAssembly_concepts' : 'WebAssembly 概念',
+      'Compiling_to_wasm' : '将 C/C++ 编译为 WebAssembly',
+      'Compiling_rust_to_wasm' : '将 Rust 编译为 WebAssembly',
+      'JavaScript_API' : '使用 WebAssembly JavaScript API',
+      'Text_format' : '理解 WebAssembly 文本格式',
+      'Text_format_to_wasm' : '将 WebAssembly 文本格式转换为 wasm',
+      'Loading_and_running' : '加载和运行 WebAssembly 代码',
+      'Exported_functions' : '导出的 WebAssembly 函数',
+    'JavaScript_interface' : 'JavaScript 接口'
   }
 });
 %>
@@ -61,19 +74,19 @@ var text = mdn.localStringMap({
 <section id="Quick_links" data-macro="WebAssemblySidebar">
 
 <ol>
-  <li data-default-state="open"><a href="<%=baseURL%>"><strong><%=text['WebAssembly_home_page']%></strong></a>
+  <li class="section"><%-web.smartLink(`${baseURL}`, null, text['WebAssembly_home_page'])%>
   <li class="toggle">
     <details open>
       <summary><%=text['Tutorials']%></summary>
       <ol>
-        <li><a href="<%=baseURL%>/Concepts"><%=text['WebAssembly_concepts']%></a></li>
-        <li><a href="<%=baseURL%>/C_to_wasm"><%=text['Compiling_to_wasm']%></a></li>
-        <li><a href="<%=baseURL%>/Rust_to_wasm"><%=text['Compiling_rust_to_wasm']%></a></li>
-        <li><a href="<%=baseURL%>/Using_the_JavaScript_API"><%=text['JavaScript_API']%></a></li>
-        <li><a href="<%=baseURL%>/Understanding_the_text_format"><%=text['Text_format']%></a></li>
-        <li><a href="<%=baseURL%>/Text_format_to_wasm"><%=text['Text_format_to_wasm']%></a></li>
-        <li><a href="<%=baseURL%>/Loading_and_running"><%=text['Loading_and_running']%></a></li>
-        <li><a href="<%=baseURL%>/Exported_functions"><%=text['Exported_functions']%></a></li>
+        <li><%-web.smartLink(`${baseURL}/Concepts`, null, text['WebAssembly_concepts'])%></li>
+        <li><%-web.smartLink(`${baseURL}/C_to_wasm`, null, text['Compiling_to_wasm'])%></li>
+        <li><%-web.smartLink(`${baseURL}/Rust_to_wasm`, null, text['Compiling_rust_to_wasm'])%></li>
+        <li><%-web.smartLink(`${baseURL}/Using_the_JavaScript_API`, null, text['JavaScript_API'])%></li>
+        <li><%-web.smartLink(`${baseURL}/Understanding_the_text_format`, null, text['Text_format'])%></li>
+        <li><%-web.smartLink(`${baseURL}/Text_format_to_wasm`, null, text['Text_format_to_wasm'])%></li>
+        <li><%-web.smartLink(`${baseURL}/Loading_and_running`, null, text['Loading_and_running'])%></li>
+        <li><%-web.smartLink(`${baseURL}/Exported_functions`, null, text['Exported_functions'])%></li>
       </ol>
     </details>
   </li>

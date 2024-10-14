@@ -1,7 +1,6 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly NODE_ENV: "development" | "production" | "test";
-    readonly PUBLIC_URL: string;
   }
 }
 
@@ -30,12 +29,37 @@ declare module "*.jpeg" {
   export default src;
 }
 
+declare module "*.mp3" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.mp4" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.ogg" {
+  const src: string;
+  export default src;
+}
+
 declare module "*.png" {
   const src: string;
   export default src;
 }
 
+declare module "*.webm" {
+  const src: string;
+  export default src;
+}
+
 declare module "*.webp" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.woff2" {
   const src: string;
   export default src;
 }
@@ -51,6 +75,19 @@ declare module "*.svg" {
   export default src;
 }
 
+declare module "*?raw" {
+  const src: string;
+  export default src;
+}
+
+// once https://github.com/microsoft/TypeScript/issues/46135 is fixed
+// we'll be able to do something like:
+// declare module '*' with {type: 'css'} {
+declare module "*?css" {
+  const sheet: CSSStyleSheet;
+  export default sheet;
+}
+
 declare module "*.module.css" {
   const classes: { readonly [key: string]: string };
   export default classes;
@@ -64,4 +101,14 @@ declare module "*.module.scss" {
 declare module "*.module.sass" {
   const classes: { readonly [key: string]: string };
   export default classes;
+}
+
+declare module "*?inline" {
+  const source: string;
+  export default source;
+}
+
+declare module "*?public" {
+  const src: string;
+  export default src;
 }
