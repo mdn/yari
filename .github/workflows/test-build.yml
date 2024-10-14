@@ -185,6 +185,7 @@ jobs:
           #yarn tool sync-translated-content
 
           rari popularities
+          rari git-history
           rari build --issues client/build/issues.json --templ-stats
 
           # SSR all pages
