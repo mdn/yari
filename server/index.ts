@@ -20,6 +20,7 @@ import {
 import { findTranslations } from "../content/translations.js";
 import { Document, Redirect, FileAttachment } from "../content/index.js";
 import {
+  ANY_ATTACHMENT_EXT,
   ANY_ATTACHMENT_REGEXP,
   CSP_VALUE,
   DEFAULT_LOCALE,
@@ -30,10 +31,10 @@ import {
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
-  OFFLINE_CONTENT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   BLOG_ROOT,
+  CURRICULUM_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -70,7 +71,23 @@ async function buildDocumentFromURL(url: string) {
       document.metadata.locale
     );
   }
-  return await buildDocument(document, documentOptions);
+  const built = await buildDocument(document, documentOptions);
+
+  if (built) {
+    return built.doc;
+  } else if (
+    url.split("/")[1] &&
+    url.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
+    !CONTENT_TRANSLATED_ROOT
+  ) {
+    // Such a common mistake. You try to view a URL that is not en-US but
+    // you forgot to set CONTENT_TRANSLATED_ROOT.
+    console.warn(
+      `URL is for locale '${
+        url.split("/")[1]
+      }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
+    );
+  }
 }
 
 const app = express();
@@ -237,42 +254,53 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
-app.get(
-  [
-    "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
-    "/:locale/curriculum/index.json",
-  ],
-  async (req, res) => {
-    const { slug = "" } = req.params;
-    const data = await findCurriculumPageBySlug(slug);
-    if (!data) {
-      return res.status(404).send("Nothing here 🤷‍♂️");
-    }
-    return res.json(data);
-  }
-);
+app.get("/*/runner.html", (_, res) => {
+  return res
+    .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+    .status(200)
+    .sendFile(path.join(STATIC_ROOT, "runner.html"));
+});
 
-app.get("/:locale/blog/index.json", async (_, res) => {
-  const posts = await allPostFrontmatter(
-    { includeUnpublished: true },
-    MEMOIZE_INVALIDATE
+if (CURRICULUM_ROOT) {
+  app.get(
+    [
+      "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
+      "/:locale/curriculum/index.json",
+    ],
+    async (req, res) => {
+      const { slug = "" } = req.params;
+      const data = await findCurriculumPageBySlug(slug);
+      if (!data) {
+        return res.status(404).send("Nothing here 🤷‍♂️");
+      }
+      return res.json(data);
+    }
   );
-  return res.json({ hyData: { posts } });
-});
-app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
-  const { slug, asset } = req.params;
-  return send(
-    req,
-    path.resolve(
-      BLOG_ROOT,
-      "..",
-      "authors",
-      sanitizeFilename(slug),
-      sanitizeFilename(asset)
-    )
-  ).pipe(res);
-});
+} else {
+  console.warn("'CURRICULUM_ROOT' not set in .env file");
+}
+
 if (BLOG_ROOT) {
+  app.get("/:locale/blog/index.json", async (_, res) => {
+    const posts = await allPostFrontmatter(
+      { includeUnpublished: true },
+      MEMOIZE_INVALIDATE
+    );
+    return res.json({ hyData: { posts } });
+  });
+  app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+    const { slug, asset } = req.params;
+    return send(
+      req,
+      path.resolve(
+        BLOG_ROOT,
+        "..",
+        "authors",
+        sanitizeFilename(slug),
+        sanitizeFilename(asset)
+      )
+    ).pipe(res);
+  });
   app.get("/:locale/blog/:slug/index.json", async (req, res) => {
     const { slug } = req.params;
     const data = await findPostBySlug(slug);
@@ -280,23 +308,6 @@ if (BLOG_ROOT) {
       return res.status(404).send("Nothing here 🤷‍♂️");
     }
     return res.json(data);
-  });
-  app.get(
-    ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
-    async (req, res) => {
-      return res
-        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-        .status(200)
-        .sendFile(path.join(STATIC_ROOT, "runner.html"));
-    }
-  );
-  app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
-    const { slug, id } = req.params;
-    try {
-      return res.send(await findPostLiveSampleBySlug(slug, id));
-    } catch (e) {
-      return res.status(404).send(e.toString());
-    }
   });
   app.get("/:locale/blog/:slug/:asset", async (req, res) => {
     const { slug, asset } = req.params;
@@ -312,33 +323,14 @@ if (BLOG_ROOT) {
 } else {
   console.warn("'BLOG_ROOT' not set in .env file");
 }
-app.get("/*", async (req, res, ...args) => {
-  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
-  if (req.url.startsWith("/_")) {
-    // URLs starting with _ is exclusively for the meta-work and if there
-    // isn't already a handler, it's something wrong.
-    return res.status(404).send("Page not found");
-  }
 
-  // If the catch-all gets one of these something's gone wrong
-  if (req.url.startsWith("/static")) {
-    return res.status(404).send("Page not found");
-  }
-  if (OFFLINE_CONTENT) {
-    return res.status(404).send("Offline");
-  }
-  if (contentProxy) {
+if (contentProxy) {
+  app.get("/*", async (req, res, ...args) => {
     console.log(`proxying: ${req.url}`);
     return contentProxy(req, res, ...args);
-  }
-
-  if (parsedUrl.pathname.endsWith("/runner.html")) {
-    return res
-      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-      .status(200)
-      .sendFile(path.join(STATIC_ROOT, "runner.html"));
-  }
-  if (req.url.includes("/_sample_.")) {
+  });
+} else {
+  app.get("/*/_sample_.*", async (req, res) => {
     try {
       return res
         .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
@@ -347,109 +339,90 @@ app.get("/*", async (req, res, ...args) => {
     } catch (e) {
       return res.status(404).send(e.toString());
     }
-  }
-
-  if (!req.url.includes("/docs/")) {
-    // If it's a known SPA, like `/en-US/search` then that should have been
-    // matched to its file and not end up here in the catchall handler.
-    // Simulate what we do in the Lambda@Edge.
-    return res
-      .status(404)
-      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (ANY_ATTACHMENT_REGEXP.test(req.path)) {
-    // Remember, FileAttachment.findByURLWithFallback() will return the absolute file path
-    // iff it exists on disk.
-    // Using a "fallback" strategy here so that images embedded in live samples
-    // are resolved if they exist in en-US but not in <locale>
-    const filePath = FileAttachment.findByURLWithFallback(req.path);
-    if (filePath) {
-      // The second parameter to `send()` has to be either a full absolute
-      // path or a path that doesn't start with `../` otherwise you'd
-      // get a 403 Forbidden.
-      // See https://github.com/mdn/yari/issues/1297
-      return send(req, path.resolve(filePath)).pipe(res);
+  });
+  app.get(
+    `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
+    async (req, res) => {
+      const filePath = FileAttachment.findByURLWithFallback(req.path);
+      if (filePath) {
+        // The second parameter to `send()` has to be either a full absolute
+        // path or a path that doesn't start with `../` otherwise you'd
+        // get a 403 Forbidden.
+        // See https://github.com/mdn/yari/issues/1297
+        return send(req, path.resolve(filePath)).pipe(res);
+      }
+      return res.status(404).send("File not found on disk");
     }
-    return res.status(404).send("File not found on disk");
-  }
+  );
+  app.get("/*/docs/*", async (req, res) => {
+    let lookupURL = decodeURI(req.path);
+    let extraSuffix = "";
+    let isMetadata = false;
+    let isDocument = false;
 
-  let lookupURL = decodeURI(req.path);
-  let extraSuffix = "";
-  let isMetadata = false;
-  let isDocument = false;
-
-  if (req.path.endsWith("index.json")) {
-    // It's a bit special then.
-    // The URL like me something like
-    // /en-US/docs/HTML/Global_attributes/index.json
-    // and that won't be found in getRedirectUrl() since that doesn't
-    // index things with the '/index.json' suffix. So we need to
-    // temporarily remove it and remember to but it back when we're done.
-    isDocument = true;
-    extraSuffix = "/index.json";
-    lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (req.path.endsWith("metadata.json")) {
-    isMetadata = true;
-    extraSuffix = "/metadata.json";
-    lookupURL = lookupURL.replace(extraSuffix, "");
-  }
-
-  const isJSONRequest = extraSuffix.endsWith(".json");
-
-  let document;
-  try {
-    console.time(`buildDocumentFromURL(${lookupURL})`);
-    const built = await buildDocumentFromURL(lookupURL);
-    if (built) {
-      document = built.doc;
-    } else if (
-      lookupURL.split("/")[1] &&
-      lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
-      !CONTENT_TRANSLATED_ROOT
-    ) {
-      // Such a common mistake. You try to view a URL that is not en-US but
-      // you forgot to set CONTENT_TRANSLATED_ROOT.
-      console.warn(
-        `URL is for locale '${
-          lookupURL.split("/")[1]
-        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
-      );
+    if (req.path.endsWith("index.json")) {
+      // It's a bit special then.
+      // The URL like me something like
+      // /en-US/docs/HTML/Global_attributes/index.json
+      // and that won't be found in getRedirectUrl() since that doesn't
+      // index things with the '/index.json' suffix. So we need to
+      // temporarily remove it and remember to but it back when we're done.
+      isDocument = true;
+      extraSuffix = "/index.json";
+      lookupURL = lookupURL.replace(extraSuffix, "");
+    } else if (req.path.endsWith("metadata.json")) {
+      isMetadata = true;
+      extraSuffix = "/metadata.json";
+      lookupURL = lookupURL.replace(extraSuffix, "");
     }
-  } catch (error) {
-    console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
-    return res.status(500).send(error.toString());
-  } finally {
-    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
-  }
 
-  if (!document) {
-    const redirectURL = Redirect.resolve(lookupURL);
-    if (redirectURL !== lookupURL) {
-      return res.redirect(301, redirectURL + extraSuffix);
+    const isJSONRequest = extraSuffix.endsWith(".json");
+
+    let document;
+    try {
+      console.time(`buildDocumentFromURL(${lookupURL})`);
+      document = await buildDocumentFromURL(lookupURL);
+    } catch (error) {
+      console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
+      return res.status(500).send(error.toString());
+    } finally {
+      console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
     }
-    return res
-      .status(404)
-      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
 
-  if (isDocument) {
-    res.json({ doc: document });
-  } else if (isMetadata) {
-    const docString = JSON.stringify({ doc: document });
+    if (!document) {
+      const redirectURL = Redirect.resolve(lookupURL);
+      if (redirectURL !== lookupURL) {
+        return res.redirect(301, redirectURL + extraSuffix);
+      }
+      return res
+        .status(404)
+        .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+    }
 
-    const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
-    builtMetadata.hash = hash;
+    if (isDocument) {
+      res.json({ doc: document });
+    } else if (isMetadata) {
+      const docString = JSON.stringify({ doc: document });
 
-    res.json(builtMetadata);
-  } else if (isJSONRequest) {
-    // TODO: what's this for?
-    res.json({ doc: document });
-  } else {
-    res.header("Content-Security-Policy", CSP_VALUE);
-    res.send(renderHTML({ doc: document, url: lookupURL }));
-  }
+      const hash = crypto.createHash("sha256").update(docString).digest("hex");
+      const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
+      builtMetadata.hash = hash;
+
+      res.json(builtMetadata);
+    } else if (isJSONRequest) {
+      // TODO: what's this for?
+      res.json({ doc: document });
+    } else {
+      res.header("Content-Security-Policy", CSP_VALUE);
+      res.send(renderHTML({ doc: document, url: lookupURL }));
+    }
+  });
+}
+
+app.get("/*", (_, res) => {
+  return res
+    .status(404)
+    .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 });
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
