@@ -217,8 +217,8 @@ def to_search(file, _index=None):
         return
     doc = data["doc"]
 
-    if doc["mdn_url"].startswith("/en-US/curriculum/"):
-        # Skip curriculum content for now.
+    if "/docs/" not in doc["mdn_url"]:
+        # Skip non docs content for now.
         return
 
     locale, slug = doc["mdn_url"].split("/docs/", 1)
