@@ -28,19 +28,19 @@ jobs:
         if: steps.release.outputs.release_created
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: npm
           registry-url: "https://registry.npmjs.org"
 
       - name: Cache @vscode/ripgrep bin
         uses: actions/cache@v4
         if: steps.release.outputs.release_created
         with:
-          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
           path: node_modules/@vscode/ripgrep/bin/
 
-      - name: Install
+      - name: Install all npm packages
         if: steps.release.outputs.release_created
-        run: yarn --frozen-lockfile
+        run: npm ci
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,14 +57,14 @@ jobs:
           # whoami endpoint.
           REACT_APP_DISABLE_AUTH: true
 
-          # The 'yarn build:prepare' command is going to try to build up a
+          # The 'npm run build:prepare' command is going to try to build up a
           # file for the git history so it can have an index of each files.
           # This makes sense in most of the cases where you have a CONTENT_ROOT
           # which you'll want to build. But the CONTENT_ROOT can't be empty
           # so you have to set it to something. So let's (ab)use the content
           # we use for the end-to-end testing.
           CONTENT_ROOT: testing/content/files
-        run: yarn build:prepare
+        run: npm run build:prepare
 
       - name: Publish
         if: steps.release.outputs.release_created

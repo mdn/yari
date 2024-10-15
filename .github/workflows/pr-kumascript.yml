@@ -16,7 +16,7 @@ on:
       - .github/workflows/pr-kumascript.yml
       - jest.config.json
       - package.json
-      - yarn.lock
+      - package-lock.json
 
 jobs:
   test:
@@ -29,22 +29,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
-      - name: Cache @vscode/ripgrep bin
-        uses: actions/cache@v4
-        with:
-          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
-          path: node_modules/@vscode/ripgrep/bin/
-
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
-        env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install all npm packages
+        run: npm ci
 
       - name: Unit testing kumascript
         env:
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn test:kumascript
+          npm run test:kumascript

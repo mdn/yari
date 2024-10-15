@@ -126,11 +126,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
-      - name: Install all yarn packages
+      - name: Install all npm packages
         if: ${{ ! vars.SKIP_BUILD }}
-        run: yarn --frozen-lockfile
+        run: npm ci
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -260,15 +261,15 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn build:sw
-          yarn build:prepare
+          npm run build:sw
+          npm run build:prepare
 
-          yarn tool sync-translated-content
+          npm run tool sync-translated-content
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
           for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            npm run build:docs -- --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -279,21 +280,21 @@ jobs:
           du -sh client/build
 
           # Build the blog
-          yarn build:blog
+          npm run build:blog
 
           # Build the curriculum
-          yarn build:curriculum
+          npm run build:curriculum
 
           # Generate sitemap index file
-          yarn build --sitemap-index
+          npm run build --sitemap-index
 
           # SSR all pages
-          yarn render:html
+          npm run render:html
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          npm run tool whatsdeployed -- --output client/build/_whatsdeployed/code.json
+          npm run tool whatsdeployed $CONTENT_ROOT -- --output client/build/_whatsdeployed/content.json
+          npm run tool whatsdeployed $CONTENT_TRANSLATED_ROOT -- --output client/build/_whatsdeployed/translated-content.json
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
@@ -389,7 +390,7 @@ jobs:
           done
 
       - name: Update AI Help index with macros
-        run: yarn ai-help-macros update-index
+        run: npm run ai-help-macros update-index
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           PG_URI: ${{ secrets.PG_URI }}

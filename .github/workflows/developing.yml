@@ -19,16 +19,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Cache @vscode/ripgrep bin
         uses: actions/cache@v4
         with:
-          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
           path: node_modules/@vscode/ripgrep/bin/
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Install all npm packages
+        run: npm ci
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,8 +56,8 @@ jobs:
           # the content if loading this page fails.
           ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
-          yarn build:prepare
-          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+          npm run build:prepare
+          npm run start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Wait for servers
         run: |
@@ -68,7 +69,7 @@ jobs:
 
       - name: Test viewing the dev server
         run: |
-          yarn test:developing
+          npm run test:developing
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()

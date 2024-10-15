@@ -36,7 +36,7 @@ function buildLocaleMap(locale: string) {
 }
 
 program
-  .bin("yarn m2h")
+  .bin("npm run m2h")
   .name("m2h")
   .version("0.0.1")
   .disableGlobalOption("--silent")

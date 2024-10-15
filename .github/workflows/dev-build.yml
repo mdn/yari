@@ -67,10 +67,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Install all npm packages
+        run: npm ci
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -118,7 +119,7 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # Uncomment when hacking on this workflow. It means the `yarn build`
+          # Uncomment when hacking on this workflow. It means the `npm run build`
           # finishes much sooner, which can be helpful debugging the other stuff
           # the workflow needs to do.
           # BUILD_FOLDERSEARCH: web/html
@@ -136,16 +137,16 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn build:prepare
+          npm run build:prepare
 
-          yarn tool sync-translated-content
+          npm run tool sync-translated-content
 
           # Spread the work across 2 processes. Why 2? Because that's what you
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build:docs --locale     en-us --locale     ja --locale     fr &
+          npm run build:docs -- --locale     en-us --locale     ja --locale     fr &
           build1=$!
-          yarn build:docs --not-locale en-us --not-locale ja --not-locale fr &
+          npm run build:docs -- --not-locale en-us --not-locale ja --not-locale fr &
           build2=$!
 
           # You must explicitly specify the job you're waiting-on to ensure
@@ -159,15 +160,15 @@ jobs:
           du -sh client/build
 
           # Generate sitemap index file
-          yarn build --sitemap-index
+          npm run build --sitemap-index
 
           # SSR all pages
-          yarn render:html
+          npm run render:html
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          npm run tool whatsdeployed -- --output client/build/_whatsdeployed/code.json
+          npm run tool whatsdeployed $CONTENT_ROOT -- --output client/build/_whatsdeployed/content.json
+          npm run tool whatsdeployed $CONTENT_TRANSLATED_ROOT -- --output client/build/_whatsdeployed/translated-content.json
 
       - name: Deploy with deployer
         env:

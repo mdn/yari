@@ -2,7 +2,7 @@
 /* eslint-disable n/no-unsupported-features/node-builtins */
 /**
  * If we modify this script, we must update the CSP hash as follows:
- * 1. Run `yarn build:ssr`
+ * 1. Run `npm run build:ssr`
  * 2. Open `libs/constants/index.js` and find the current hash in CSP_SCRIPT_SRC_VALUES.
  * 3. Remove the old "previous" hash and replace it with the old "current" hash.
  * 4. Replace the old "current" hash with the new hash from the failing test (step 1).

@@ -260,7 +260,7 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
         `${getRelativePath(
           filePath
         )} is too large (${formattedBefore} > ${formattedMax}), but can be compressed to ${formattedAfter}.`,
-        `yarn filecheck '${getRelativePath(filePath)}' --save-compression`
+        `npm run filecheck -- '${getRelativePath(filePath)}' --save-compression`
       );
     }
 
@@ -279,7 +279,9 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
           )} and can be compressed to ${formatSize(
             sizeAfter
           )} (${reductionPercentage.toFixed(0)}%)`,
-          `yarn filecheck '${getRelativePath(filePath)}' --save-compression`
+          `npm run filecheck -- '${getRelativePath(
+            filePath
+          )}' --save-compression`
         );
       }
     }

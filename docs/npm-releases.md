@@ -22,7 +22,7 @@ the repository for the content can be exclusively about the content.
 ## Version numbers
 
 First of all, the version numbers don't matter. We're basically using NPM
-releases instead of relying on `git submodule` because tools like `yarn` is
+releases instead of relying on `git submodule` because tools like `npm` is
 easier to use.
 
 For every commit to `main` our GitHub Action for NPM publishing will make a

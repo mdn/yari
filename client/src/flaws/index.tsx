@@ -693,8 +693,8 @@ function WarnAboutNothingBuilt({ locale }) {
     <div className="notecard warning document-warnings">
       <h4>No documents have been built, so no flaws can be found</h4>
       <p>
-        Run <code>yarn build --locale {locale.toLowerCase()}</code> to build all
-        documents for the current locale.
+        Run <code>npm run build --locale {locale.toLowerCase()}</code> to build
+        all documents for the current locale.
       </p>
     </div>
   );

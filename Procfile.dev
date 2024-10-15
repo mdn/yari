@@ -1,4 +1,4 @@
-server: yarn start:server
+server: npm run start:server
 type-check: cd client && tsc --noEmit --watch
-web: yarn start:client
-ssr: yarn watch:ssr
+web: npm run start:client
+ssr: npm run watch:ssr

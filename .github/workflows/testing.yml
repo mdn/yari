@@ -20,39 +20,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
-          cache-dependency-path: |
-            yarn.lock
-            client/pwa/yarn.lock
-            libs/**/*.js
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Cache @vscode/ripgrep bin
         uses: actions/cache@v4
         with:
-          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
           path: node_modules/@vscode/ripgrep/bin/
 
-      - name: Install all yarn packages (ROOT)
-        run: yarn --frozen-lockfile
+      - name: Install all npm packages (ROOT)
+        run: npm ci
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install all yarn packages (pwa)
+      - name: Install all npm packages (pwa)
         working-directory: client/pwa
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Lint prettier
-        run: yarn prettier-check
+        run: npm run prettier-check
 
       - name: Lint ESLint
-        run: yarn eslint
+        run: npm run eslint
 
       - name: Lint stylelint
-        run: yarn stylelint
+        run: npm run stylelint
 
       - name: Check TypeScript
-        run: yarn check:tsc
+        run: npm run check:tsc
 
   test:
     runs-on: ubuntu-latest
@@ -64,49 +61,50 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Cache @vscode/ripgrep bin
         uses: actions/cache@v4
         with:
-          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
+          key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
           path: node_modules/@vscode/ripgrep/bin/
 
-      - name: Install all yarn packages
-        run: yarn --frozen-lockfile
+      - name: Install all npm packages
+        run: npm ci
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Unit testing client
-        run: yarn test:client
+        run: npm run test:client
 
       - name: Unit testing libs
-        run: yarn test:libs
+        run: npm run test:libs
 
       - name: Build and start server
         id: server
         env:
           ENV_FILE: .env.testing
         run: |
-          yarn build:prepare
-          yarn build:docs
-          yarn render:html
+          npm run build:prepare
+          npm run build:docs
+          npm run render:html
 
-          yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
+          npm run start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1
           curl --fail --retry-connrefused --retry 5 http://localhost:5042 > /dev/null
 
       - name: Functional testing
         run: |
-          yarn test:testing
-          yarn test:headless
+          npm run test:testing
+          npm run test:headless
 
       - name: Basic m2h tool testing
         env:
           ENV_FILE: .env.testing
         run: |
-          yarn m2h markdown/tool/m2h --locale en-US
+          npm run m2h -- markdown/tool/m2h --locale en-US
           diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
 
       - name: Debug server's stdout and stderr if tests failed

@@ -1,1 +1,1 @@
-yarn install --ignore-scripts && yarn lint-staged
+npm install --ignore-scripts && npx lint-staged

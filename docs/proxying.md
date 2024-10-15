@@ -18,8 +18,8 @@ responses in a local Kuma. The quickest way to accomplish this is as follows:
 and not the usual <http://localhost:3000> so the browser sends your "Kuma
 cookie".
 
-**Note!** When you edit your root `.env` file, you need to stop `yarn dev` and
-start it up again.
+**Note!** When you edit your root `.env` file, you need to stop `npm run dev`
+and start it up again.
 
 ## Logging in
 

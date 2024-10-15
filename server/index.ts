@@ -64,7 +64,7 @@ async function buildDocumentFromURL(url: string) {
   if (CONTENT_TRANSLATED_ROOT) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
-    // the phase that happens when you do a regular `yarn build`.
+    // the phase that happens when you do a regular `npm run build`.
     document.translations = findTranslations(
       document.metadata.slug,
       document.metadata.locale

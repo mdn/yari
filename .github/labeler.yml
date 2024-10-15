@@ -22,8 +22,7 @@ dependencies:
   - changed-files:
       - any-glob-to-any-file:
           - "**/poetry.lock"
-          - "**/yarn.lock"
-
+          - "**/package-lock.json"
 deployer:
   - changed-files:
       - any-glob-to-any-file: "deployer/**/*"

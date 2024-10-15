@@ -36,7 +36,7 @@ https://popularities.mdn.mozilla.net/current.csv.
 ## Run the CLI tool
 
 ```bash
-yarn tool popularities
+npm run tool popularities
 ```
 
 This should now download the latest popularities csv and update the file
