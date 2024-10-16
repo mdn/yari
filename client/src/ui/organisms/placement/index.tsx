@@ -1,9 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  useIsIntersecting,
-  useIsServer,
-  usePageVisibility,
-} from "../../../hooks";
+import { useIsServer, useViewed } from "../../../hooks";
 import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
@@ -11,10 +6,6 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 import { Status, usePlacement } from "../../../placement-context";
 import { Payload as PlacementData } from "../../../../../libs/pong/types";
 import { BANNER_SCRIMBA_CLICK } from "../../../telemetry/constants";
-
-interface Timer {
-  timeout: number | null;
-}
 
 interface PlacementRenderArgs {
   place: any;
@@ -32,12 +23,6 @@ interface PlacementRenderArgs {
   typ: string;
   heading?: string;
 }
-
-const INTERSECTION_OPTIONS = {
-  root: null,
-  rootMargin: "0px",
-  threshold: 0.5,
-};
 
 function viewed(pong?: PlacementData) {
   pong?.view &&
@@ -262,44 +247,12 @@ export function PlacementInner({
 }) {
   const isServer = useIsServer();
   const user = useUserData();
-  const isVisible = usePageVisibility();
   const gleanClick = useGleanClick();
 
-  const timer = useRef<Timer>({ timeout: null });
-
-  const [node, setNode] = useState<HTMLElement>();
-  const isIntersecting = useIsIntersecting(node, INTERSECTION_OPTIONS);
-
-  const sendViewed = useCallback(() => {
+  const place = useViewed(() => {
     viewed(pong);
     gleanClick(`pong: pong->viewed ${typ}`);
-    timer.current = { timeout: -1 };
-  }, [pong, gleanClick, typ]);
-
-  const place = useCallback((node: HTMLElement | null) => {
-    if (node) {
-      setNode(node);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (timer.current.timeout !== -1) {
-      // timeout !== -1 means the viewed has not been sent
-      if (isVisible && isIntersecting) {
-        if (timer.current.timeout === null) {
-          timer.current = {
-            timeout: window.setTimeout(sendViewed, 1000),
-          };
-        }
-      }
-    }
-    return () => {
-      if (timer.current.timeout !== null && timer.current.timeout !== -1) {
-        clearTimeout(timer.current.timeout);
-        timer.current = { timeout: null };
-      }
-    };
-  }, [isVisible, isIntersecting, sendViewed]);
+  });
 
   const { image, copy, alt, click, version, heading } = pong || {};
   return (
