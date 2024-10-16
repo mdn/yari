@@ -15,8 +15,10 @@ import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
 import { PartnerBanner } from "./partner-banner";
-import { useIsServer } from "../hooks";
+import { useIsServer, useViewed } from "../hooks";
 import scrimBg from "../assets/curriculum/landing-scrim.png";
+import { useGleanClick } from "../telemetry/glean-context";
+import { CURRICULUM } from "../telemetry/constants";
 
 const ScrimInline = lazy(() => import("./scrim-inline"));
 
@@ -133,6 +135,12 @@ function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
   const isServer = useIsServer();
+  const gleanClick = useGleanClick();
+  const observedNode = useViewed(() => {
+    const url = new URL(SCRIM_URL);
+    const id = url.pathname.slice(1);
+    gleanClick(`${CURRICULUM}: scrim view id:${id}`);
+  });
 
   return (
     <section key={id} className="landing-about-container">
@@ -148,6 +156,7 @@ function About({ section }) {
                   url={SCRIM_URL}
                   img={scrimBg}
                   scrimTitle="MDN + Scrimba partnership announcement scrim"
+                  ref={observedNode}
                 />
               )}
             </Suspense>

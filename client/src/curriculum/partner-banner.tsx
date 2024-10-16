@@ -1,12 +1,21 @@
 import ThemedPicture from "../ui/atoms/themed-picture";
+import { useGleanClick } from "../telemetry/glean-context";
+import { useViewed } from "../hooks";
+import { CURRICULUM } from "../telemetry/constants";
+
 import bannerDark from "../../public/assets/curriculum/curriculum-partner-banner-illustration-large-dark.svg";
 import bannerLight from "../../public/assets/curriculum/curriculum-partner-banner-illustration-large-light.svg";
 
 import "./partner-banner.scss";
 
 export function PartnerBanner() {
+  const gleanClick = useGleanClick();
+  const observedNode = useViewed(() => {
+    gleanClick(`${CURRICULUM}: partner banner view`);
+  });
+
   return (
-    <section className="curriculum-partner-banner-container">
+    <section className="curriculum-partner-banner-container" ref={observedNode}>
       <div className="partner-banner">
         <section>
           <h2>Learn the curriculum with Scrimba and become job ready</h2>

@@ -5,7 +5,10 @@ import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { Status, usePlacement } from "../../../placement-context";
 import { Payload as PlacementData } from "../../../../../libs/pong/types";
-import { BANNER_SCRIMBA_CLICK } from "../../../telemetry/constants";
+import {
+  BANNER_SCRIMBA_CLICK,
+  BANNER_SCRIMBA_VIEW,
+} from "../../../telemetry/constants";
 
 interface PlacementRenderArgs {
   place: any;
@@ -76,6 +79,9 @@ export function SidePlacement() {
 
 function TopPlacementFallbackContent() {
   const gleanClick = useGleanClick();
+  const observedNode = useViewed(() => {
+    gleanClick(BANNER_SCRIMBA_VIEW);
+  });
 
   return (
     <p className="fallback-copy">
@@ -84,6 +90,7 @@ function TopPlacementFallbackContent() {
         href="https://scrimba.com/learn/frontend?via=mdn"
         target="_blank"
         rel="noreferrer"
+        ref={observedNode}
         onClick={() => {
           gleanClick(BANNER_SCRIMBA_CLICK);
         }}
