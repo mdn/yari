@@ -51,9 +51,11 @@ jobs:
     if: github.repository == 'mdn/yari' && github.ref_name == 'test-de'
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (yari)
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
+      - name: Checkout (content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -64,7 +66,8 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-studio)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -72,13 +75,15 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (curriculum)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
-      - uses: actions/checkout@v4
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content-de
@@ -87,34 +92,36 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.MDN_MTC_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (contributor-spotlight)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
           cache: yarn
 
-      - name: Install all yarn packages
+      - name: Install
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
         env:
           # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print information about build
+      - name: Print notes
+        if: github.event.inputs.notes
         run: |
-          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+          echo "notes: ${{ github.event.inputs.notes }}"
 
-      - name: Print information about CPU
+      - name: Print CPU info
         run: cat /proc/cpuinfo
 
-      - name: Build everything
+      - name: Build
         if: ${{ ! vars.SKIP_BUILD }}
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
@@ -214,7 +221,7 @@ jobs:
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
-      - name: Authenticate with GCP
+      - name: Auth (Cloud Storage)
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -230,7 +237,7 @@ jobs:
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
 
-      - name: Authenticate with GCP
+      - name: Auth (Cloud Function)
         if: ${{ ! vars.SKIP_FUNCTION }}
         uses: google-github-actions/auth@v2
         with:
@@ -255,7 +262,7 @@ jobs:
           npm run build-redirects
           npm run build-canonicals
 
-      - name: Deploy Function
+      - name: Deploy function
         if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
           set -eo pipefail
