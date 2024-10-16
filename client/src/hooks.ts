@@ -276,27 +276,19 @@ export const useScrollToAnchor = () => {
   });
 };
 
-interface Timer {
+interface ViewedTimer {
   timeout: number | null;
 }
 
-const INTERSECTION_OPTIONS = {
-  root: null,
-  rootMargin: "0px",
-  threshold: 0.5,
-};
-
 export function useViewed(callback: Function) {
-  const timer = useRef<Timer>({ timeout: null });
+  const timer = useRef<ViewedTimer>({ timeout: null });
   const isVisible = usePageVisibility();
-
   const [node, setNode] = useState<HTMLElement>();
-  const isIntersecting = useIsIntersecting(node, INTERSECTION_OPTIONS);
-
-  const sendViewed = useCallback(() => {
-    timer.current = { timeout: -1 };
-    callback();
-  }, [callback]);
+  const isIntersecting = useIsIntersecting(node, {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.5,
+  });
 
   useEffect(() => {
     if (timer.current.timeout !== -1) {
@@ -304,7 +296,10 @@ export function useViewed(callback: Function) {
       if (isVisible && isIntersecting) {
         if (timer.current.timeout === null) {
           timer.current = {
-            timeout: window.setTimeout(sendViewed, 1000),
+            timeout: window.setTimeout(() => {
+              timer.current = { timeout: -1 };
+              callback();
+            }, 1000),
           };
         }
       }
@@ -315,7 +310,7 @@ export function useViewed(callback: Function) {
         timer.current = { timeout: null };
       }
     };
-  }, [isVisible, isIntersecting, sendViewed]);
+  }, [isVisible, isIntersecting, callback]);
 
   return useCallback((node: HTMLElement | null) => {
     if (node) {
