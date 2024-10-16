@@ -25,6 +25,9 @@ export function PartnerBanner() {
               target="_blank"
               rel="origin noreferrer"
               className="external"
+              onClick={() => {
+                gleanClick(`${CURRICULUM}: partner banner click`);
+              }}
             >
               Scrimba's Frontend Developer Career Path
             </a>{" "}
@@ -37,6 +40,9 @@ export function PartnerBanner() {
             target="_blank"
             rel="origin noreferrer"
             className="external"
+            onClick={() => {
+              gleanClick(`${CURRICULUM}: partner banner click`);
+            }}
           >
             Find out more
           </a>
