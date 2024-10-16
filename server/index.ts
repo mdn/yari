@@ -35,6 +35,7 @@ import {
   CONTENT_TRANSLATED_ROOT,
   BLOG_ROOT,
   CURRICULUM_ROOT,
+  BUILD_OUT_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -57,37 +58,56 @@ import {
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
 async function buildDocumentFromURL(url: string) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  const documentOptions = {};
-  if (CONTENT_TRANSLATED_ROOT) {
-    // When you're running the dev server and build documents
-    // every time a URL is requested, you won't have had the chance to do
-    // the phase that happens when you do a regular `yarn build`.
-    document.translations = findTranslations(
-      document.metadata.slug,
-      document.metadata.locale
-    );
-  }
-  const built = await buildDocument(document, documentOptions);
+  try {
+    console.time(`buildDocumentFromURL(${url})`);
+    const document = Document.findByURL(url);
+    if (!document) {
+      return null;
+    }
+    const documentOptions = {};
+    if (CONTENT_TRANSLATED_ROOT) {
+      // When you're running the dev server and build documents
+      // every time a URL is requested, you won't have had the chance to do
+      // the phase that happens when you do a regular `yarn build`.
+      document.translations = findTranslations(
+        document.metadata.slug,
+        document.metadata.locale
+      );
+    }
+    const built = await buildDocument(document, documentOptions);
 
-  if (built) {
-    return built.doc;
-  } else if (
-    url.split("/")[1] &&
-    url.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
-    !CONTENT_TRANSLATED_ROOT
-  ) {
-    // Such a common mistake. You try to view a URL that is not en-US but
-    // you forgot to set CONTENT_TRANSLATED_ROOT.
-    console.warn(
-      `URL is for locale '${
-        url.split("/")[1]
-      }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
-    );
+    if (built) {
+      return built;
+    } else if (
+      url.split("/")[1] &&
+      url.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
+      !CONTENT_TRANSLATED_ROOT
+    ) {
+      // Such a common mistake. You try to view a URL that is not en-US but
+      // you forgot to set CONTENT_TRANSLATED_ROOT.
+      console.warn(
+        `URL is for locale '${
+          url.split("/")[1]
+        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
+      );
+    }
+  } catch (error) {
+    console.error(`Error in buildDocumentFromURL(${url})`, error);
+    return res.status(500).json(JSON.stringify(error.toString()));
+  } finally {
+    console.timeEnd(`buildDocumentFromURL(${url})`);
   }
+}
+
+function redirectOr404(url, suffix = "") {
+  const redirectURL = Redirect.resolve(url);
+  if (redirectURL !== url) {
+    // This was and is broken for redirects with anchors...
+    return res.redirect(301, redirectURL + suffix);
+  }
+  return res
+    .status(404)
+    .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 }
 
 const app = express();
@@ -340,6 +360,33 @@ if (contentProxy) {
       return res.status(404).send(e.toString());
     }
   });
+  app.get("/*/docs/*/index.json", async (req, res) => {
+    const url = decodeURI(req.path.replace(/\/index.json$/, ""));
+    const doc = await buildDocumentFromURL(url);
+    if (!doc) {
+      return redirectOr404(url, "/index.json");
+    }
+    return res.json(doc);
+  });
+  app.get("/*/docs/*/metadata.json", async (req, res) => {
+    const url = decodeURI(req.path.replace(/\/metadata.json$/, ""));
+    const doc = await buildDocumentFromURL(url);
+    if (!doc) {
+      return redirectOr404(url, "/metadata.json");
+    }
+    const docString = JSON.stringify(doc);
+
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const {
+      body: _,
+      toc: __,
+      sidebarHTML: ___,
+      ...builtMetadata
+    } = doc.doc || {};
+    builtMetadata.hash = hash;
+
+    return res.json(builtMetadata);
+  });
   app.get(
     `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
     async (req, res) => {
@@ -355,74 +402,19 @@ if (contentProxy) {
     }
   );
   app.get("/*/docs/*", async (req, res) => {
-    let lookupURL = decodeURI(req.path);
-    let extraSuffix = "";
-    let isMetadata = false;
-    let isDocument = false;
-
-    if (req.path.endsWith("index.json")) {
-      // It's a bit special then.
-      // The URL like me something like
-      // /en-US/docs/HTML/Global_attributes/index.json
-      // and that won't be found in getRedirectUrl() since that doesn't
-      // index things with the '/index.json' suffix. So we need to
-      // temporarily remove it and remember to but it back when we're done.
-      isDocument = true;
-      extraSuffix = "/index.json";
-      lookupURL = lookupURL.replace(extraSuffix, "");
-    } else if (req.path.endsWith("metadata.json")) {
-      isMetadata = true;
-      extraSuffix = "/metadata.json";
-      lookupURL = lookupURL.replace(extraSuffix, "");
+    const url = req.path;
+    const doc = await buildDocumentFromURL(url);
+    if (!doc) {
+      return redirectOr404(url);
     }
-
-    const isJSONRequest = extraSuffix.endsWith(".json");
-
-    let document;
-    try {
-      console.time(`buildDocumentFromURL(${lookupURL})`);
-      document = await buildDocumentFromURL(lookupURL);
-    } catch (error) {
-      console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
-      return res.status(500).send(error.toString());
-    } finally {
-      console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
-    }
-
-    if (!document) {
-      const redirectURL = Redirect.resolve(lookupURL);
-      if (redirectURL !== lookupURL) {
-        return res.redirect(301, redirectURL + extraSuffix);
-      }
-      return res
-        .status(404)
-        .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-    }
-
-    if (isDocument) {
-      res.json({ doc: document });
-    } else if (isMetadata) {
-      const docString = JSON.stringify({ doc: document });
-
-      const hash = crypto.createHash("sha256").update(docString).digest("hex");
-      const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
-      builtMetadata.hash = hash;
-
-      res.json(builtMetadata);
-    } else if (isJSONRequest) {
-      // TODO: what's this for?
-      res.json({ doc: document });
-    } else {
-      res.header("Content-Security-Policy", CSP_VALUE);
-      res.send(renderHTML({ doc: document, url: lookupURL }));
-    }
+    res.header("Content-Security-Policy", CSP_VALUE);
+    return res.send(renderHTML(doc));
   });
 }
-
 app.get("/*", (_, res) => {
   return res
     .status(404)
-    .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+    .sendFile(path.join(BUILD_OUT_ROOT, "en-us", "_spas", "404.html"));
 });
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
