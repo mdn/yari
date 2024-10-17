@@ -21,7 +21,6 @@ import { findTranslations } from "../content/translations.js";
 import { Document, Redirect, FileAttachment } from "../content/index.js";
 import {
   ANY_ATTACHMENT_EXT,
-  ANY_ATTACHMENT_REGEXP,
   CSP_VALUE,
   DEFAULT_LOCALE,
   PLAYGROUND_UNSAFE_CSP_VALUE,
@@ -35,7 +34,6 @@ import {
   CONTENT_TRANSLATED_ROOT,
   BLOG_ROOT,
   CURRICULUM_ROOT,
-  BUILD_OUT_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -57,7 +55,7 @@ import {
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
-async function buildDocumentFromURL(url: string) {
+async function buildDocumentFromURL(res, url: string) {
   try {
     console.time(`buildDocumentFromURL(${url})`);
     const document = Document.findByURL(url);
@@ -99,12 +97,16 @@ async function buildDocumentFromURL(url: string) {
   }
 }
 
-function redirectOr404(url, suffix = "") {
+function redirectOr404(res, url, suffix = "") {
   const redirectURL = Redirect.resolve(url);
   if (redirectURL !== url) {
     // This was and is broken for redirects with anchors...
     return res.redirect(301, redirectURL + suffix);
   }
+  return send404(res);
+}
+
+function send404(res) {
   return res
     .status(404)
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
@@ -297,7 +299,10 @@ if (CURRICULUM_ROOT) {
     }
   );
 } else {
-  console.warn("'CURRICULUM_ROOT' not set in .env file");
+  app.get("/*/curriculum/*", (_, res) => {
+    console.warn("'CURRICULUM_ROOT' not set in .env file");
+    return send404(res);
+  });
 }
 
 if (BLOG_ROOT) {
@@ -341,7 +346,10 @@ if (BLOG_ROOT) {
     return res.status(404).send("Nothing here 🤷‍♂️");
   });
 } else {
-  console.warn("'BLOG_ROOT' not set in .env file");
+  app.get("/*/blog/*", (_, res) => {
+    console.warn("'BLOG_ROOT' not set in .env file");
+    return send404(res);
+  });
 }
 
 if (contentProxy) {
@@ -362,17 +370,17 @@ if (contentProxy) {
   });
   app.get("/*/docs/*/index.json", async (req, res) => {
     const url = decodeURI(req.path.replace(/\/index.json$/, ""));
-    const doc = await buildDocumentFromURL(url);
+    const doc = await buildDocumentFromURL(res, url);
     if (!doc) {
-      return redirectOr404(url, "/index.json");
+      return redirectOr404(res, url, "/index.json");
     }
     return res.json(doc);
   });
   app.get("/*/docs/*/metadata.json", async (req, res) => {
     const url = decodeURI(req.path.replace(/\/metadata.json$/, ""));
-    const doc = await buildDocumentFromURL(url);
+    const doc = await buildDocumentFromURL(res, url);
     if (!doc) {
-      return redirectOr404(url, "/metadata.json");
+      return redirectOr404(res, url, "/metadata.json");
     }
     const docString = JSON.stringify(doc);
 
@@ -403,19 +411,15 @@ if (contentProxy) {
   );
   app.get("/*/docs/*", async (req, res) => {
     const url = req.path;
-    const doc = await buildDocumentFromURL(url);
+    const doc = await buildDocumentFromURL(res, url);
     if (!doc) {
-      return redirectOr404(url);
+      return redirectOr404(res, url);
     }
     res.header("Content-Security-Policy", CSP_VALUE);
     return res.send(renderHTML(doc));
   });
 }
-app.get("/*", (_, res) => {
-  return res
-    .status(404)
-    .sendFile(path.join(BUILD_OUT_ROOT, "en-us", "_spas", "404.html"));
-});
+app.get("/*", (_, res) => send404(res));
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
