@@ -198,7 +198,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-n": "^17.11.1",
     "eslint-plugin-react": "^7.37.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-unicorn": "^56.0.0",
     "eslint-webpack-plugin": "^4.2.0",
     "extend": "^3.0.2",
