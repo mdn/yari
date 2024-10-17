@@ -75,7 +75,7 @@ async function buildDocumentFromURL(res, url: string) {
     const built = await buildDocument(document, documentOptions);
 
     if (built) {
-      return built;
+      return { doc: built?.doc, url };
     } else if (
       url.split("/")[1] &&
       url.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
