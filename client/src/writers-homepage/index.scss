@@ -1,9 +1,21 @@
 #writers-homepage {
-  .homepage-hero-search {
+  .homepage-hero,
+  .container {
     margin-bottom: 60px;
+  }
 
-    .search-button {
-      top: 0.25rem;
+  #tools {
+    li {
+      display: inline-block;
+      margin: 1em;
     }
+  }
+
+  ul li ul {
+    margin-left: 1em;
+  }
+
+  h2 {
+    margin-top: 1em;
   }
 }
