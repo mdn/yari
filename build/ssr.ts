@@ -14,11 +14,13 @@ export function ssrDocument(context: HydrationData) {
 }
 
 interface SSROptions {
-  noDocs?: boolean;
+  skipDocs?: boolean;
 }
 
-export async function ssrAllDocuments({ noDocs = false }: SSROptions = {}) {
-  const files = await findDocuments({ noDocs });
+export async function ssrAllDocuments({
+  skipDocs: skipDocs = false,
+}: SSROptions = {}) {
+  const files = await findDocuments({ skipDocs });
 
   const start = Date.now();
 
@@ -41,14 +43,15 @@ export async function ssrAllDocuments({ noDocs = false }: SSROptions = {}) {
   );
 }
 
-async function findDocuments(options: Pick<SSROptions, "noDocs">) {
+async function findDocuments(options: Pick<SSROptions, "skipDocs">) {
   const api = new fdir()
     .withFullPaths()
     .withErrors()
-    .exclude((dirName) => options.noDocs && dirName === "docs")
+    .exclude((dirName) => options.skipDocs && dirName === "docs")
     .filter(
       (filePath) =>
-        filePath.endsWith("index.json") || filePath.endsWith("404.json")
+        !filePath.endsWith("search-index.json") &&
+        (filePath.endsWith("index.json") || filePath.endsWith("404.json"))
     )
     .crawl(BUILD_OUT_ROOT);
   const docs = await api.withPromise();

@@ -12,11 +12,11 @@ if (SENTRY_DSN_BUILD) {
 }
 
 program
-  .option("-n, --no-docs", "Do not build docs (only spas, blog...)", {
+  .option("-s, --skip-docs", "Do not build docs (only spas, blog...)", {
     default: false,
   })
   .action(async ({ options }) => {
-    await ssrAllDocuments({ noDocs: Boolean(options?.noDocs) });
+    await ssrAllDocuments({ skipDocs: Boolean(options?.skipDocs) });
   });
 
 program.run();
