@@ -28,6 +28,7 @@ dotenv.config({
 // build
 // -----
 
+export const RARI = Boolean(parse(process.env.RARI || "false"));
 export const BASE_URL = process.env.BASE_URL || "https://developer.mozilla.org";
 
 export const BUILD_OUT_ROOT =
@@ -178,6 +179,8 @@ export const PROXY_HOSTNAME =
 export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
 
 export const FAKE_V1_API = parse(process.env.SERVER_FAKE_V1_API || false);
+export const EXTERNAL_DEV_SERVER =
+  process.env.EXTERNAL_DEV_SERVER || "http://localhost:8083";
 
 // ----
 // tool
