@@ -34,6 +34,8 @@ import {
   CONTENT_TRANSLATED_ROOT,
   BLOG_ROOT,
   CURRICULUM_ROOT,
+  EXTERNAL_DEV_SERVER,
+  RARI,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -54,28 +56,43 @@ import {
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
+async function fetch_from_rari(path: string, res = null) {
+  const external_url = `${EXTERNAL_DEV_SERVER}${path}`;
+  console.log(`using ${external_url}`);
+  // eslint-disable-next-line n/no-unsupported-features/node-builtins
+  return await (await fetch(external_url)).json();
+}
+
 async function buildDocumentFromURL(url: string) {
   try {
     console.time(`buildDocumentFromURL(${url})`);
-    const document = Document.findByURL(url);
-    if (!document) {
-      return null;
+    let built;
+    if (!RARI) {
+      const document = Document.findByURL(url);
+      if (!document) {
+        return null;
+      }
+      const documentOptions = {};
+      if (CONTENT_TRANSLATED_ROOT) {
+        // When you're running the dev server and build documents
+        // every time a URL is requested, you won't have had the chance to do
+        // the phase that happens when you do a regular `yarn build`.
+        document.translations = findTranslations(
+          document.metadata.slug,
+          document.metadata.locale
+        );
+      }
+      built = await buildDocument(document, documentOptions);
+      if (built) {
+        return { doc: built?.doc, url };
+      }
+    } else {
+      built = await fetch_from_rari(url);
+      if (built) {
+        return built;
+      }
     }
-    const documentOptions = {};
-    if (CONTENT_TRANSLATED_ROOT) {
-      // When you're running the dev server and build documents
-      // every time a URL is requested, you won't have had the chance to do
-      // the phase that happens when you do a regular `yarn build`.
-      document.translations = findTranslations(
-        document.metadata.slug,
-        document.metadata.locale
-      );
-    }
-    const built = await buildDocument(document, documentOptions);
-
-    if (built) {
-      return { doc: built?.doc, url };
-    } else if (
+    if (
       url.split("/")[1] &&
       url.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
       !CONTENT_TRANSLATED_ROOT
@@ -293,8 +310,17 @@ if (CURRICULUM_ROOT) {
       "/:locale/curriculum/index.json",
     ],
     async (req, res) => {
-      const { slug = "" } = req.params;
-      const data = await findCurriculumPageBySlug(slug);
+      let data;
+      if (!RARI) {
+        const { slug = "" } = req.params;
+        data = await findCurriculumPageBySlug(slug);
+      } else {
+        try {
+          data = await fetch_from_rari(req.path, res);
+        } catch (error) {
+          return res.status(500).json(JSON.stringify(error.toString()));
+        }
+      }
       if (!data) {
         return res.status(404).send("Nothing here 🤷‍♂️");
       }
@@ -309,12 +335,21 @@ if (CURRICULUM_ROOT) {
 }
 
 if (BLOG_ROOT) {
-  app.get("/:locale/blog/index.json", async (_, res) => {
-    const posts = await allPostFrontmatter(
-      { includeUnpublished: true },
-      MEMOIZE_INVALIDATE
-    );
-    return res.json({ hyData: { posts } });
+  app.get("/:locale/blog/index.json", async (req, res) => {
+    if (!RARI) {
+      const posts = await allPostFrontmatter(
+        { includeUnpublished: true },
+        MEMOIZE_INVALIDATE
+      );
+      return res.json({ hyData: { posts } });
+    } else {
+      try {
+        const index = await fetch_from_rari(req.path, res);
+        return res.json(index);
+      } catch (error) {
+        return res.status(500).json(JSON.stringify(error.toString()));
+      }
+    }
   });
   app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
     const { slug, asset } = req.params;
@@ -330,12 +365,21 @@ if (BLOG_ROOT) {
     ).pipe(res);
   });
   app.get("/:locale/blog/:slug/index.json", async (req, res) => {
-    const { slug } = req.params;
-    const data = await findPostBySlug(slug);
-    if (!data) {
-      return res.status(404).send("Nothing here 🤷‍♂️");
+    if (!RARI) {
+      const { slug } = req.params;
+      const data = await findPostBySlug(slug);
+      if (!data) {
+        return res.status(404).send("Nothing here 🤷‍♂️");
+      }
+      return res.json(data);
+    } else {
+      try {
+        const index = await fetch_from_rari(req.path, res);
+        return res.json(index);
+      } catch (error) {
+        return res.status(500).json(JSON.stringify(error.toString()));
+      }
     }
-    return res.json(data);
   });
   app.get("/:locale/blog/:slug/:asset", async (req, res) => {
     const { slug, asset } = req.params;
@@ -430,6 +474,29 @@ if (contentProxy) {
     }
   });
 }
+if (RARI) {
+  app.get(
+    [
+      "/en-US/community",
+      "/en-US/community/index.json",
+      "/en-US/plus/docs/*",
+      "/en-US/observatory/docs/*",
+    ],
+    async (req, res) => {
+      try {
+        const index = await fetch_from_rari(req.path, res);
+        if (req.path.endsWith(".json")) {
+          return res.json(index);
+        }
+        res.header("Content-Security-Policy", CSP_VALUE);
+        return res.send(renderHTML(index));
+      } catch (error) {
+        return res.status(500).json(JSON.stringify(error.toString()));
+      }
+    }
+  );
+}
+
 app.get("/*", (_, res) => send404(res));
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
