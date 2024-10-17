@@ -80,6 +80,7 @@ class ScrimInline extends LitElement {
               target="_blank"
               rel="origin noreferrer"
               class="external"
+              data-glean="${CURRICULUM}: scrim link id:${this._scrimId}"
             >
               <span class="visually-hidden">Open on Scrimba</span>
             </a>
