@@ -90,7 +90,8 @@ function resolve(slug: string) {
   }
   const url = buildURL(DEFAULT_LOCALE_LC, slug);
   const resolved = Redirect.resolve(url);
-  const doc = Document.read(Document.urlToFolderPath(resolved));
+  const [resolvedWithoutHash] = resolved.split("#");
+  const doc = Document.read(Document.urlToFolderPath(resolvedWithoutHash));
   return doc?.metadata.slug ?? slug;
 }
 
