@@ -1,11 +1,21 @@
-import React, { useState, useMemo } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 
 import SearchNavigateWidget from "../../../search";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
-import { QUICKSEARCH } from "../../../telemetry/constants";
+import {
+  QUICKSEARCH,
+  SEARCH,
+  SEARCH_ACTIONS,
+} from "../../../telemetry/constants";
 
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
@@ -33,6 +43,50 @@ export function Search({
   const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
 
   const gleanClick = useGleanClick();
+  const lastFocus = useRef(isFocused);
+  const lastValue = useRef(value);
+  const [hasOpened, setHasOpened] = useState(false);
+  const [hasEdited, setHasEdited] = useState(false);
+  const [hasClicked, setHasClicked] = useState(false);
+
+  const name = isHomepageSearch ? "hp" : "top";
+
+  const measure = useCallback(
+    (action: string, value?: string) => {
+      gleanClick(
+        `${SEARCH}: ${name} ${action}` + (value ? ` -> ${value}` : "")
+      );
+    },
+    [gleanClick, name]
+  );
+
+  useEffect(() => {
+    if (isFocused !== lastFocus.current) {
+      if (isFocused) {
+        measure(SEARCH_ACTIONS.OPEN);
+        setHasOpened(true);
+      } else {
+        if (!hasClicked) {
+          measure(SEARCH_ACTIONS.CLOSE);
+        }
+        // Search completed.
+        setHasOpened(false);
+        setHasEdited(false);
+        setHasClicked(false);
+      }
+      lastFocus.current = isFocused;
+    }
+  }, [isFocused, hasOpened, hasClicked, measure]);
+
+  useEffect(() => {
+    if (value !== lastValue.current) {
+      if (!hasEdited) {
+        measure(SEARCH_ACTIONS.EDIT);
+        setHasEdited(true);
+      }
+      lastValue.current = value;
+    }
+  }, [value, hasEdited, measure]);
 
   const searchProps = useMemo(
     () => ({
@@ -45,12 +99,14 @@ export function Search({
       onChangeSelection: (selection) => setDefaultSelection(selection),
       onResultClick: (
         value: string,
-        _event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+        event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
       ) => {
         gleanClick(`${QUICKSEARCH}: ${value}`);
+        measure(SEARCH_ACTIONS.CLICK, event.currentTarget.href);
+        setHasClicked(true);
       },
     }),
-    [id, value, isFocused, defaultSelection, setValue, gleanClick]
+    [id, value, isFocused, defaultSelection, setValue, gleanClick, measure]
   );
 
   return (
