@@ -76,29 +76,27 @@ export function LatestNews(props: HydrationData<any>) {
     <section className="latest-news">
       <h2>Latest news</h2>
       <ul className="news-list">
-        {newsItems.map((newsItem, index) => {
-          return (
-            <li className="news-item" key={newsItem.url}>
-              <p className="news-title">
-                <span>
-                  <NewsItemTitle
-                    newsItem={newsItem}
-                    data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.NEWS} ${index + 1}`}
-                  />
-                </span>
-                <span>
-                  <NewsItemSource
-                    newsItem={newsItem}
-                    data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.NEWS_SOURCE} ${index + 1}`}
-                  />
-                </span>
-              </p>
-              <span className="news-date" suppressHydrationWarning>
-                <NewsItemDate newsItem={newsItem} />
+        {newsItems.map((newsItem, index) => (
+          <li className="news-item" key={newsItem.url}>
+            <p className="news-title">
+              <span>
+                <NewsItemTitle
+                  newsItem={newsItem}
+                  data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.NEWS} ${index + 1}`}
+                />
               </span>
-            </li>
-          );
-        })}
+              <span>
+                <NewsItemSource
+                  newsItem={newsItem}
+                  data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.NEWS_SOURCE} ${index + 1}`}
+                />
+              </span>
+            </p>
+            <span className="news-date" suppressHydrationWarning>
+              <NewsItemDate newsItem={newsItem} />
+            </span>
+          </li>
+        ))}
       </ul>
     </section>
   );

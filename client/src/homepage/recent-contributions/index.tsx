@@ -35,32 +35,30 @@ function RecentContributions(props: HydrationData<any>) {
       <h2>Recent contributions</h2>
       <ul className="contribution-list">
         {hyData.recentContributions.items.map(
-          ({ number, url, title, updated_at, repo }, index) => {
-            return (
-              <li className="request-item" key={number}>
-                <p className="request-title">
+          ({ number, url, title, updated_at, repo }, index) => (
+            <li className="request-item" key={number}>
+              <p className="request-title">
+                <a
+                  href={url}
+                  data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.CONTRIBUTION} ${index + 1}`}
+                >
+                  {title}
+                </a>
+                <span>
                   <a
-                    href={url}
-                    data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.CONTRIBUTION} ${index + 1}`}
+                    className="request-repo"
+                    href={repo.url}
+                    data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.CONTRIBUTION_REPO} ${index + 1}`}
                   >
-                    {title}
+                    {repo.name}
                   </a>
-                  <span>
-                    <a
-                      className="request-repo"
-                      href={repo.url}
-                      data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.CONTRIBUTION_REPO} ${index + 1}`}
-                    >
-                      {repo.name}
-                    </a>
-                  </span>
-                </p>
-                <span className="request-date" suppressHydrationWarning>
-                  {dayjs(updated_at).fromNow()}
                 </span>
-              </li>
-            );
-          }
+              </p>
+              <span className="request-date" suppressHydrationWarning>
+                {dayjs(updated_at).fromNow()}
+              </span>
+            </li>
+          )
         )}
       </ul>
     </section>
