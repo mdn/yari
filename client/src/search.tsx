@@ -8,7 +8,6 @@ import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
-import { useGleanClick } from "./telemetry/glean-context";
 import { splitQuery } from "./utils";
 
 const PRELOAD_WAIT_MS = 500;
@@ -31,10 +30,6 @@ type ResultItem = {
   url: string;
   positions: Set<number>;
 };
-
-function quicksearchPing(input: string) {
-  return `quick-search: ${input}`;
-}
 
 function useSearchIndex(): readonly [
   null | SearchIndex,
@@ -171,12 +166,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
+    onResultClick,
     defaultSelection,
   } = props;
 
   const formId = `${id}-form`;
   const locale = useLocale();
-  const gleanClick = useGleanClick();
 
   const [searchIndex, searchIndexError, initializeSearchIndex] =
     useSearchIndex();
@@ -244,8 +239,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     [searchPath]
   );
 
-  const resultClick: React.MouseEventHandler<HTMLAnchorElement> = () => {
-    gleanClick(quicksearchPing(inputValue));
+  const resultClick: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
+    onResultClick(inputValue, event);
   };
 
   const {

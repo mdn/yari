@@ -4,6 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import SearchNavigateWidget from "../../../search";
 
 import "./index.scss";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { QUICKSEARCH } from "../../../telemetry/constants";
 
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
@@ -30,19 +32,25 @@ export function Search({
   const [isFocused, setIsFocused] = useState(false);
   const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
 
+  const gleanClick = useGleanClick();
+
   const searchProps = useMemo(
     () => ({
       id,
       inputValue: value,
       onChangeInputValue: (value) => setValue(value),
       isFocused,
-      onChangeIsFocused: (isFocused) => {
-        setIsFocused(isFocused);
-      },
+      onChangeIsFocused: (isFocused) => setIsFocused(isFocused),
       defaultSelection,
       onChangeSelection: (selection) => setDefaultSelection(selection),
+      onResultClick: (
+        value: string,
+        _event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+      ) => {
+        gleanClick(`${QUICKSEARCH}: ${value}`);
+      },
     }),
-    [id, value, isFocused, defaultSelection, setValue]
+    [id, value, isFocused, defaultSelection, setValue, gleanClick]
   );
 
   return (
