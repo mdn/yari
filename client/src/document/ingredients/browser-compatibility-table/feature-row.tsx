@@ -400,7 +400,10 @@ function getNotes(
           !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
-                label: "Full support",
+                label:
+                  item?.version_added === true
+                    ? "Full support (earliest supporting release version unknown)"
+                    : "Full support",
               }
             : isNotSupportedAtAll(item)
               ? {
