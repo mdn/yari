@@ -1,0 +1,23 @@
+.debug {
+  .scroll-depth {
+    --color: #f00;
+
+    .depth {
+      background-color: var(--color);
+      height: 1px;
+      left: 0;
+      position: absolute;
+      width: 100%;
+
+      &::after {
+        background-color: var(--background-primary);
+        border: 1px solid var(--color);
+        content: attr(data-text);
+        left: 50%;
+        padding: 0 5px;
+        position: absolute;
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+  }
+}
