@@ -1,8 +1,10 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
+
 import { DEV_MODE } from "../../env";
 import { HydrationData } from "../../../../libs/types/hydration";
+import { HOMEPAGE, HOMEPAGE_ITEMS } from "../../telemetry/constants";
 
 import "./index.scss";
 
@@ -33,12 +35,21 @@ function RecentContributions(props: HydrationData<any>) {
       <h2>Recent contributions</h2>
       <ul className="contribution-list">
         {hyData.recentContributions.items.map(
-          ({ number, url, title, updated_at, repo }) => (
+          ({ number, url, title, updated_at, repo }, index) => (
             <li className="request-item" key={number}>
               <p className="request-title">
-                <a href={url}>{title}</a>
+                <a
+                  href={url}
+                  data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.CONTRIBUTION} ${index + 1}`}
+                >
+                  {title}
+                </a>
                 <span>
-                  <a className="request-repo" href={repo.url}>
+                  <a
+                    className="request-repo"
+                    href={repo.url}
+                    data-glean={`${HOMEPAGE}: ${HOMEPAGE_ITEMS.CONTRIBUTION_REPO} ${index + 1}`}
+                  >
                     {repo.name}
                   </a>
                 </span>
