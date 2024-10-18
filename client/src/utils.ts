@@ -218,3 +218,17 @@ export class SWRLocalStorageCache<Data> {
     return this.#data.keys();
   }
 }
+
+/**
+ * Resolves the href of the given anchor.
+ *
+ * For same-origin links, returns the relative URL.
+ * For cross-origin links, returns the full URL.
+ */
+export function resolveAnchor(a: HTMLAnchorElement): string {
+  if (a.origin === document.location.origin) {
+    return a.pathname + a.search + a.hash;
+  } else {
+    return a.href;
+  }
+}

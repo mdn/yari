@@ -6,6 +6,10 @@ export type SearchProps = {
   onChangeInputValue: (value: string) => void;
   isFocused: boolean;
   onChangeIsFocused: (isFocused: boolean) => void;
+  onResultClick: (
+    value: string,
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => void;
 };
 
 export function useFocusViaKeyboard(

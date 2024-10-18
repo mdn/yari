@@ -95,3 +95,16 @@ export const HOMEPAGE_ITEMS = Object.freeze({
   CONTRIBUTION: "contribution",
   CONTRIBUTION_REPO: "contribution_repo",
 });
+
+export const QUICKSEARCH = "quick-search";
+export const SEARCH = "search";
+export const SEARCH_ACTIONS = Object.freeze({
+  /** Opening means focusing it (it stays focused while navigating result). */
+  OPEN: "open",
+  /** Editing means _start_ typing, or _start_ changing the value after opening. */
+  EDIT: "edit",
+  /** Clicking means clicking any item in the results. */
+  CLICK: "click",
+  /** Closing means unfocusing it. */
+  CLOSE: "close",
+});
