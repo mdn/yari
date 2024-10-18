@@ -131,7 +131,7 @@ function BreadcrumbURI({
   return <small>{keep.join(" / ")}</small>;
 }
 
-type InnerSearchNavigateWidgetProps = SearchProps & {
+export type SearchNavigateWidgetProps = SearchProps & {
   defaultSelection: [number, number];
 };
 
@@ -159,7 +159,7 @@ function useHasNotChangedFor(value: string, ms: number) {
   return hasNotChanged;
 }
 
-function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
+function InnerSearchNavigateWidget(props: SearchNavigateWidgetProps) {
   const {
     id,
     inputValue,
@@ -541,7 +541,7 @@ class SearchErrorBoundary extends React.Component<{
   }
 }
 
-export default function SearchNavigateWidget(props) {
+export default function SearchNavigateWidget(props: SearchNavigateWidgetProps) {
   return (
     <SearchErrorBoundary>
       <InnerSearchNavigateWidget {...props} />

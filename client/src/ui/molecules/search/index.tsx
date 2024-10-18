@@ -7,7 +7,9 @@ import React, {
 } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import SearchNavigateWidget from "../../../search";
+import SearchNavigateWidget, {
+  SearchNavigateWidgetProps,
+} from "../../../search";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
@@ -40,7 +42,6 @@ export function Search({
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
-  const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
 
   const gleanClick = useGleanClick();
   const lastFocus = useRef(isFocused);
@@ -88,15 +89,14 @@ export function Search({
     }
   }, [value, hasEdited, measure]);
 
-  const searchProps = useMemo(
+  const searchProps: SearchNavigateWidgetProps = useMemo(
     () => ({
       id,
       inputValue: value,
       onChangeInputValue: (value) => setValue(value),
       isFocused,
       onChangeIsFocused: (isFocused) => setIsFocused(isFocused),
-      defaultSelection,
-      onChangeSelection: (selection) => setDefaultSelection(selection),
+      defaultSelection: [0, 0],
       onResultClick: (
         value: string,
         event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -106,7 +106,7 @@ export function Search({
         setHasClicked(true);
       },
     }),
-    [id, value, isFocused, defaultSelection, setValue, gleanClick, measure]
+    [id, value, isFocused, setValue, gleanClick, measure]
   );
 
   return (
