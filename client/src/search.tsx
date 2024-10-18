@@ -239,9 +239,8 @@ function InnerSearchNavigateWidget(props: SearchNavigateWidgetProps) {
     [searchPath]
   );
 
-  const resultClick: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
+  const resultClick: React.MouseEventHandler<HTMLAnchorElement> = (event) =>
     onResultClick(inputValue, event);
-  };
 
   const {
     getInputProps,
