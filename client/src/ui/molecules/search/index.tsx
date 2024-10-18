@@ -46,9 +46,7 @@ export function Search({
   );
 
   return (
-    <div
-      className={isHomepageSearch ? "homepage-hero-search" : "header-search"}
-    >
+    <div className={isHomepageSearch ? "homepage-search" : "header-search"}>
       <SearchNavigateWidget {...searchProps} />
     </div>
   );
