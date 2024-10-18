@@ -395,7 +395,6 @@ function useScrollDepthMeasurement(thresholds = [25, 50, 75]) {
         );
 
         matchingThresholds.forEach((threshold) => {
-          console.log({ threshold });
           gtag("event", "scroll", {
             percent_scrolled: String(threshold),
           });
