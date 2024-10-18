@@ -176,7 +176,6 @@ export const STATIC_ROOT =
 export const PROXY_HOSTNAME =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 export const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
-export const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
 
 export const FAKE_V1_API = parse(process.env.SERVER_FAKE_V1_API || false);
 

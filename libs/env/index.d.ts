@@ -26,7 +26,6 @@ export const INTERACTIVE_EXAMPLES_BASE_URL: string;
 export const STATIC_ROOT: string;
 export const PROXY_HOSTNAME: string;
 export const CONTENT_HOSTNAME: string;
-export const OFFLINE_CONTENT: boolean;
 export const FAKE_V1_API: boolean;
 export const SENTRY_DSN_BUILD: string;
 export const OPENAI_KEY: string;
