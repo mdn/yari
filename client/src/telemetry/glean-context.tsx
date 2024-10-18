@@ -176,10 +176,13 @@ function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
       click(anchor.dataset.glean);
     }
     if (anchor.href) {
-      const url = new URL(anchor.href, document.location.href);
-      if (url.origin !== document.location.origin) {
-        click(`external-link: ${url.href}`);
-      }
+      try {
+        const url = new URL(anchor.href, document.location.href);
+        if (url.origin !== document.location.origin) {
+          // use normalized href from `url`:
+          click(`external-link: ${url.href}`);
+        }
+      } catch {}
     }
   }
 }
