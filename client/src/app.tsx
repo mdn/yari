@@ -44,7 +44,7 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 const Playground = React.lazy(() => import("./playground"));
 const Observatory = React.lazy(() => import("./observatory"));
 const Debug = React.lazy(
-  () => /* webpackChunkName: "debug" */ import("./ui/molecules/debug")
+  () => import(/* webpackChunkName: "debug" */ "./ui/molecules/debug")
 );
 
 function Layout({ pageType, children }) {
