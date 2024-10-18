@@ -18,6 +18,7 @@ import {
   SEARCH,
   SEARCH_ACTIONS,
 } from "../../../telemetry/constants";
+import { resolveAnchor } from "../../../utils";
 
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
@@ -102,7 +103,7 @@ export function Search({
         event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
       ) => {
         gleanClick(`${QUICKSEARCH}: ${value}`);
-        measure(SEARCH_ACTIONS.CLICK, event.currentTarget.href);
+        measure(SEARCH_ACTIONS.CLICK, resolveAnchor(event.currentTarget));
         setHasClicked(true);
       },
     }),
