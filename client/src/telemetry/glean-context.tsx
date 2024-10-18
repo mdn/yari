@@ -174,8 +174,18 @@ function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   if (anchor instanceof HTMLAnchorElement) {
     if (anchor.dataset.glean) {
       click(anchor.dataset.glean);
-    } else if (anchor.classList.contains("external")) {
-      click(`external-link: ${anchor.getAttribute("href") || ""}`);
+    }
+    if (anchor.href) {
+      let url: URL | undefined;
+      try {
+        url = new URL(anchor.href, document.location.href);
+      } catch {
+        click(`invalid-link: ${anchor.href}`);
+      }
+      if (url && url.origin !== document.location.origin) {
+        // use normalized href from `url`:
+        click(`external-link: ${url.href}`);
+      }
     }
   }
 }
