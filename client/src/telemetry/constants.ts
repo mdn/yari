@@ -87,3 +87,12 @@ export const LANGUAGE_REMEMBER = "language_remember";
 export const THEME_SWITCHER = "theme_switcher";
 export const SURVEY = "survey";
 export const HOMEPAGE_HERO = "homepage_hero";
+export const HOMEPAGE = "homepage";
+export const HOMEPAGE_ITEMS = Object.freeze({
+  ARTICLE: "article",
+  ARTICLE_TAG: "article_tag",
+  NEWS: "news",
+  NEWS_SOURCE: "news_source",
+  CONTRIBUTION: "contribution",
+  CONTRIBUTION_REPO: "contribution_repo",
+});
