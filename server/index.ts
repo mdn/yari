@@ -113,19 +113,25 @@ async function buildDocumentFromURL(url: string) {
   }
 }
 
-function redirectOr404(res: express.Response, url, suffix = "") {
+async function redirectOr404(res: express.Response, url, suffix = "") {
   const redirectURL = Redirect.resolve(url);
   if (redirectURL !== url) {
     // This was and is broken for redirects with anchors...
     return res.redirect(301, redirectURL + suffix);
   }
-  return send404(res);
+  return await send404(res);
 }
 
-function send404(res: express.Response) {
-  return res
-    .status(404)
-    .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+async function send404(res: express.Response) {
+  if (!RARI) {
+    return res
+      .status(404)
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+  } else {
+    const index = fetch_from_rari("/en-US/404");
+    res.header("Content-Security-Policy", CSP_VALUE);
+    return res.send(renderHTML(index));
+  }
 }
 
 const app = express();
@@ -328,9 +334,9 @@ if (CURRICULUM_ROOT) {
     }
   );
 } else {
-  app.get("/[^/]+/curriculum/*", (_, res) => {
+  app.get("/[^/]+/curriculum/*", async (_, res) => {
     console.warn("'CURRICULUM_ROOT' not set in .env file");
-    return send404(res);
+    return await send404(res);
   });
 }
 
@@ -393,9 +399,9 @@ if (BLOG_ROOT) {
     return res.status(404).send("Nothing here 🤷‍♂️");
   });
 } else {
-  app.get("/[^/]+/blog/*", (_, res) => {
+  app.get("/[^/]+/blog/*", async (_, res) => {
     console.warn("'BLOG_ROOT' not set in .env file");
-    return send404(res);
+    return await send404(res);
   });
 }
 
@@ -420,7 +426,7 @@ if (contentProxy) {
     try {
       const doc = await buildDocumentFromURL(url);
       if (!doc) {
-        return redirectOr404(res, url, "/index.json");
+        return await redirectOr404(res, url, "/index.json");
       }
       return res.json(doc);
     } catch (error) {
@@ -431,7 +437,7 @@ if (contentProxy) {
     const url = decodeURI(req.path.replace(/\/metadata.json$/, ""));
     const doc = await buildDocumentFromURL(url);
     if (!doc) {
-      return redirectOr404(res, url, "/metadata.json");
+      return await redirectOr404(res, url, "/metadata.json");
     }
     const docString = JSON.stringify(doc);
 
@@ -465,7 +471,7 @@ if (contentProxy) {
     try {
       const doc = await buildDocumentFromURL(url);
       if (!doc) {
-        return redirectOr404(res, url);
+        return await redirectOr404(res, url);
       }
       res.header("Content-Security-Policy", CSP_VALUE);
       return res.send(renderHTML(doc));
@@ -481,6 +487,7 @@ if (RARI) {
       "/en-US/community/index.json",
       "/en-US/plus/docs/*",
       "/en-US/observatory/docs/*",
+      "/:locale/",
     ],
     async (req, res) => {
       try {
@@ -497,7 +504,7 @@ if (RARI) {
   );
 }
 
-app.get("/*", (_, res) => send404(res));
+app.get("/*", async (_, res) => await send404(res));
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
