@@ -73,7 +73,7 @@
     "@inquirer/prompts": "^7.0.0",
     "@lit/react": "^1.0.6",
     "@mdn/bcd-utils-api": "^0.0.7",
-    "@mdn/browser-compat-data": "^5.6.7",
+    "@mdn/browser-compat-data": "^5.6.8",
     "@mozilla/glean": "5.0.3",
     "@sentry/node": "^8.34.0",
     "@stripe/stripe-js": "^4.8.0",
