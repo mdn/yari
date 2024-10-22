@@ -22,6 +22,7 @@ export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
 export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const BANNER_SCRIMBA_CLICK = "banner_scrimba_click";
+export const BANNER_SCRIMBA_VIEW = "banner_scrimba_view";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
@@ -108,3 +109,5 @@ export const SEARCH_ACTIONS = Object.freeze({
   /** Closing means unfocusing it. */
   CLOSE: "close",
 });
+
+export const EXTERNAL_LINK = "external-link";
