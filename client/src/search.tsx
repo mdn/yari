@@ -245,7 +245,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 
   const resultClick: React.MouseEventHandler<HTMLAnchorElement> = () => {
-    gleanClick(quicksearchPing(`${inputValue} ${id}`));
+    gleanClick(quicksearchPing(`${id} -> ${inputValue}`));
   };
 
   const {
