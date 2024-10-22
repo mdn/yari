@@ -6,6 +6,9 @@ import {
 } from "./internal/constants/index.js";
 
 import { DEFAULT_COUNTRY } from "./constants.js";
+import stageLookup from "./stripe-plans/stage.js";
+import prodLookup from "./stripe-plans/prod.js";
+import { ORIGIN_MAIN } from "./env.js";
 
 export function getRequestCountry(req: Request): string {
   const value = req.headers["cloudfront-viewer-country"];

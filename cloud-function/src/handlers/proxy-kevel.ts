@@ -9,9 +9,12 @@ import {
   fetchImage,
 } from "../internal/pong/index.js";
 
+import stageLookup from "../stripe-plans/stage.js";
+import prodLookup from "../stripe-plans/prod.js";
 import * as env from "../env.js";
 
 import { getRequestCountry } from "../utils.js";
+import { ORIGIN_MAIN } from "../env.js";
 
 const { KEVEL_SITE_ID, KEVEL_NETWORK_ID, SIGN_SECRET } = env;
 
@@ -23,9 +26,13 @@ const coder = new Coder(SIGN_SECRET);
 const handleGet = createPongGetHandler(client, coder, env);
 const handleClick = createPongClickHandler(coder);
 const handleViewed = createPongViewedHandler(coder);
+const lookupData =
+  ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 
 export async function proxyKevel(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
+
+  const plusAvailable = Boolean(lookupData.countryToCurrency[countryCode]);
 
   const userAgent = req.headers["user-agent"] ?? "";
 
@@ -44,6 +51,8 @@ export async function proxyKevel(req: Request, res: Response) {
       countryCode,
       userAgent
     );
+
+    payload.plusAvailabe = plusAvailable;
 
     return res
       .status(status)
