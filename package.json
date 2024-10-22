@@ -180,7 +180,7 @@
     "babel-preset-react-app": "^10.0.1",
     "bfj": "^8.0.0",
     "braces": "^3.0.3",
-    "browserslist": "^4.24.0",
+    "browserslist": "^4.24.2",
     "camelcase": "^8.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "cross-env": "^7.0.3",
