@@ -11,7 +11,7 @@ export function createPong2GetHandler(
   userAgent: string
 ) => Promise<{
   statusCode: number;
-  payload: { plusAvailabe?: bool; [index: string]: Payload };
+  payload: { plusAvailable?: bool; [index: string]: Payload };
 }>;
 
 export function createPong2ClickHandler(coder: Coder): (
