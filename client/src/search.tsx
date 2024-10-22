@@ -245,7 +245,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 
   const resultClick: React.MouseEventHandler<HTMLAnchorElement> = () => {
-    gleanClick(quicksearchPing(inputValue));
+    gleanClick(quicksearchPing(`${id} -> ${inputValue}`));
   };
 
   const {
@@ -324,6 +324,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       })
     );
   }, [resultItems, inputValue]);
+
+  const [hasChanged, setHasChanged] = useState(false);
 
   const searchResults = (() => {
     if (!isOpen || !inputValue.trim()) {
@@ -493,6 +495,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onChange(event) {
             if (event.target instanceof HTMLInputElement) {
               onChangeInputValue(event.target.value);
+              if (!hasChanged) {
+                gleanClick(`quick-search-change: ${id}`);
+                setHasChanged(true);
+              }
             }
           },
           ref: (input) => {
