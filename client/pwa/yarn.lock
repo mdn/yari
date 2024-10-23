@@ -65,10 +65,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@types/dexie@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@types/dexie/-/dexie-1.3.1.tgz#accca262f9071f1ed963a40255fcf4bc7af67e15"
-  integrity sha1-rMyiYvkHHx7ZY6QCVfz0vHr2fhU=
+"@types/dexie@1.3.35":
+  version "1.3.35"
+  resolved "https://registry.yarnpkg.com/@types/dexie/-/dexie-1.3.35.tgz#eb48f72158bf34860826dad8b14e7e20d1ac81f7"
+  integrity sha512-keAw90MplDOBAOtlPE+Nrt8eLzLgq7I3USMkofDweJwMScCG9l98jGgl5m67rpyB6zatHExx675VIBknWkIpUw==
   dependencies:
     dexie "*"
 
