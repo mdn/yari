@@ -31,7 +31,7 @@ const plusLookup =
 export async function proxyKevel(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
 
-  const plusAvailable = countryCode in plusLookup;
+  const plusAvailable = countryCode in plusLookup.countryToCurrency;
 
   const userAgent = req.headers["user-agent"] ?? "";
 

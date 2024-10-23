@@ -26,7 +26,7 @@ const plusLookup =
 export async function proxyBSA(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
 
-  const plusAvailable = countryCode in plusLookup;
+  const plusAvailable = countryCode in plusLookup.countryToCurrency;
 
   const userAgent = req.headers["user-agent"] ?? "";
 
