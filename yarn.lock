@@ -4643,12 +4643,11 @@ batch@0.6.1:
   resolved "https://registry.yarnpkg.com/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==
 
-bfj@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/bfj/-/bfj-8.0.0.tgz#d15931bd5ef1ef5c874a59e6ef00653de8416568"
-  integrity sha512-6KJe4gFrZ4lhmvWcUIj37yFAs36mi2FZXuTkw6udZ/QsX/znFypW4SatqcLA5K5T4BAWgJZD73UFEJJQxuJjoA==
+bfj@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/bfj/-/bfj-9.1.1.tgz#913f7cbf87b14ac63975e89f21c64ad18e83c502"
+  integrity sha512-f3uU0MzqtuOvnB62ZUyzr2qqHVy5zFu3KV9H0MBVacdb7hsRxKSa18KtiwLZCF/5oRE3O4udraOxOC3F3A+kzA==
   dependencies:
-    bluebird "^3.7.2"
     check-types "^11.2.3"
     hoopy "^0.1.4"
     jsonpath "^1.1.1"
@@ -4719,11 +4718,6 @@ bl@^1.0.0:
   dependencies:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
-
-bluebird@^3.7.2:
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
-  integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
 
 body-parser@1.20.3:
   version "1.20.3"
