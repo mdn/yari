@@ -96,7 +96,7 @@ async function buildDocumentFromURL(url: string) {
   }
 }
 
-function redirectOr404(res, url, suffix = "") {
+function redirectOr404(res: express.Response, url, suffix = "") {
   const redirectURL = Redirect.resolve(url);
   if (redirectURL !== url) {
     // This was and is broken for redirects with anchors...
@@ -105,7 +105,7 @@ function redirectOr404(res, url, suffix = "") {
   return send404(res);
 }
 
-function send404(res) {
+function send404(res: express.Response) {
   return res
     .status(404)
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
