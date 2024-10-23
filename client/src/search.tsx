@@ -374,8 +374,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           [
             ...resultItems.map((item, i) => (
               <div
+                key={item.url}
                 {...getItemProps({
-                  key: item.url,
                   className: `result-item ${
                     i === highlightedIndex ? "highlight " : ""
                   }`,
@@ -394,11 +394,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               </div>
             )),
             <div
+              key="nothing-found"
               {...getItemProps({
                 className:
                   "nothing-found result-item " +
                   (highlightedIndex === resultItems.length ? "highlight" : ""),
-                key: "nothing-found",
                 item: onlineSearch,
                 index: resultItems.length,
               })}
