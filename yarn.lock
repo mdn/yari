@@ -1790,10 +1790,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@fast-csv/parse@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@fast-csv/parse/-/parse-5.0.0.tgz#091665753f9e58f0dda6a55ae30f582526042903"
-  integrity sha512-ecF8tCm3jVxeRjEB6VPzmA+1wGaJ5JgaUX2uesOXdXD6qQp0B3EdshOIed4yT1Xlj/F2f8v4zHSo0Oi31L697g==
+"@fast-csv/parse@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@fast-csv/parse/-/parse-5.0.2.tgz#204000dfd661b580a10a8cd035a0e986fc6954a9"
+  integrity sha512-gMu1Btmm99TP+wc0tZnlH30E/F1Gw1Tah3oMDBHNPe9W8S68ixVHjt89Wg5lh7d9RuQMtwN+sGl5kxR891+fzw==
   dependencies:
     lodash.escaperegexp "^4.1.2"
     lodash.groupby "^4.6.0"
