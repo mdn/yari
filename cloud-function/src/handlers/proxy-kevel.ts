@@ -9,14 +9,13 @@ import {
   fetchImage,
 } from "../internal/pong/index.js";
 
-import stageLookup from "../stripe-plans/stage.js";
-import prodLookup from "../stripe-plans/prod.js";
+import stagePlusLookup from "../stripe-plans/stage.js";
+import prodPlusLookup from "../stripe-plans/prod.js";
 import * as env from "../env.js";
 
 import { getRequestCountry } from "../utils.js";
-import { ORIGIN_MAIN } from "../env.js";
 
-const { KEVEL_SITE_ID, KEVEL_NETWORK_ID, SIGN_SECRET } = env;
+const { KEVEL_SITE_ID, KEVEL_NETWORK_ID, ORIGIN_MAIN, SIGN_SECRET } = env;
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
@@ -26,13 +25,13 @@ const coder = new Coder(SIGN_SECRET);
 const handleGet = createPongGetHandler(client, coder, env);
 const handleClick = createPongClickHandler(coder);
 const handleViewed = createPongViewedHandler(coder);
-const lookupData =
-  ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
+const plusLookup =
+  ORIGIN_MAIN === "developer.mozilla.org" ? prodPlusLookup : stagePlusLookup;
 
 export async function proxyKevel(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
 
-  const plusAvailable = Boolean(lookupData.countryToCurrency[countryCode]);
+  const plusAvailable = countryCode in plusLookup;
 
   const userAgent = req.headers["user-agent"] ?? "";
 
