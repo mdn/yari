@@ -49,13 +49,12 @@ import { MEMOIZE_INVALIDATE, getRoot } from "../content/utils.js";
 import { renderHTML } from "../ssr/dist/main.js";
 import {
   allPostFrontmatter,
-  findPostLiveSampleBySlug,
   findPostBySlug,
   findPostPathBySlug,
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
-async function buildDocumentFromURL(res, url: string) {
+async function buildDocumentFromURL(url: string) {
   try {
     console.time(`buildDocumentFromURL(${url})`);
     const document = Document.findByURL(url);
@@ -91,7 +90,7 @@ async function buildDocumentFromURL(res, url: string) {
     }
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${url})`, error);
-    return res.status(500).json(JSON.stringify(error.toString()));
+    throw error;
   } finally {
     console.timeEnd(`buildDocumentFromURL(${url})`);
   }
@@ -267,13 +266,17 @@ app.get("/*/contributors.txt", async (req, res) => {
   if (!document) {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
-  const { doc: builtDocument } = await buildDocument(document);
-  res.send(
-    renderContributorsTxt(
-      document.metadata.contributors,
-      builtDocument.source.github_url.replace("/blob/", "/commits/")
-    )
-  );
+  try {
+    const { doc: builtDocument } = await buildDocument(document);
+    res.send(
+      renderContributorsTxt(
+        document.metadata.contributors,
+        builtDocument.source.github_url.replace("/blob/", "/commits/")
+      )
+    );
+  } catch (error) {
+    return res.status(500).json(JSON.stringify(error.toString()));
+  }
 });
 
 app.get("/*/runner.html", (_, res) => {
@@ -299,7 +302,7 @@ if (CURRICULUM_ROOT) {
     }
   );
 } else {
-  app.get("/*/curriculum/*", (_, res) => {
+  app.get("/[^/]+/curriculum/*", (_, res) => {
     console.warn("'CURRICULUM_ROOT' not set in .env file");
     return send404(res);
   });
@@ -346,7 +349,7 @@ if (BLOG_ROOT) {
     return res.status(404).send("Nothing here 🤷‍♂️");
   });
 } else {
-  app.get("/*/blog/*", (_, res) => {
+  app.get("/[^/]+/blog/*", (_, res) => {
     console.warn("'BLOG_ROOT' not set in .env file");
     return send404(res);
   });
@@ -368,17 +371,21 @@ if (contentProxy) {
       return res.status(404).send(e.toString());
     }
   });
-  app.get("/*/docs/*/index.json", async (req, res) => {
+  app.get("/[^/]+/docs/*/index.json", async (req, res) => {
     const url = decodeURI(req.path.replace(/\/index.json$/, ""));
-    const doc = await buildDocumentFromURL(res, url);
-    if (!doc) {
-      return redirectOr404(res, url, "/index.json");
+    try {
+      const doc = await buildDocumentFromURL(url);
+      if (!doc) {
+        return redirectOr404(res, url, "/index.json");
+      }
+      return res.json(doc);
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
     }
-    return res.json(doc);
   });
-  app.get("/*/docs/*/metadata.json", async (req, res) => {
+  app.get("/[^/]+/docs/*/metadata.json", async (req, res) => {
     const url = decodeURI(req.path.replace(/\/metadata.json$/, ""));
-    const doc = await buildDocumentFromURL(res, url);
+    const doc = await buildDocumentFromURL(url);
     if (!doc) {
       return redirectOr404(res, url, "/metadata.json");
     }
@@ -409,14 +416,18 @@ if (contentProxy) {
       return res.status(404).send("File not found on disk");
     }
   );
-  app.get("/*/docs/*", async (req, res) => {
+  app.get("/[^/]+/docs/*", async (req, res) => {
     const url = req.path;
-    const doc = await buildDocumentFromURL(res, url);
-    if (!doc) {
-      return redirectOr404(res, url);
+    try {
+      const doc = await buildDocumentFromURL(url);
+      if (!doc) {
+        return redirectOr404(res, url);
+      }
+      res.header("Content-Security-Policy", CSP_VALUE);
+      return res.send(renderHTML(doc));
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
     }
-    res.header("Content-Security-Policy", CSP_VALUE);
-    return res.send(renderHTML(doc));
   });
 }
 app.get("/*", (_, res) => send404(res));
