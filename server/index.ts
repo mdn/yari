@@ -397,7 +397,7 @@ if (contentProxy) {
       toc: __,
       sidebarHTML: ___,
       ...builtMetadata
-    } = doc.doc || {};
+    } = (doc.doc as any) || {};
     builtMetadata.hash = hash;
 
     return res.json(builtMetadata);
