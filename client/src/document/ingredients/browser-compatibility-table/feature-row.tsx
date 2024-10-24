@@ -12,6 +12,7 @@ import {
   versionIsPreview,
   SupportStatementExtended,
   bugURLToString,
+  SimpleSupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
@@ -136,6 +137,20 @@ function getCurrentStatus(
 ) {
   const currentSupport = getCurrentSupport(support);
 
+  return getStatus(currentSupport, supportClassName, browser);
+}
+
+function getStatus(
+  currentSupport: SimpleSupportStatementExtended | undefined,
+  supportClassName:
+    | "no"
+    | "yes"
+    | "partial"
+    | "preview"
+    | "removed-partial"
+    | "unknown",
+  browser: BCD.BrowserStatement
+) {
   const added = currentSupport?.version_added ?? null;
   const lastVersion = currentSupport?.version_last ?? null;
 
@@ -145,6 +160,7 @@ function getCurrentStatus(
         isSupported: "no" | "yes" | "partial" | "preview" | "removed-partial";
         label?: React.ReactNode;
       };
+
   switch (added) {
     case null:
       status = { isSupported: "unknown" };
