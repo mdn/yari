@@ -18,7 +18,7 @@ import {
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
-function getCurrentSupportType(
+export function getCurrentSupportType(
   support: SupportStatementExtended | undefined,
   browser: BCD.BrowserStatement
 ): SupportType {
