@@ -25,6 +25,7 @@ interface PlacementRenderArgs {
   version?: number;
   typ: string;
   heading?: string;
+  showNoAds: boolean;
 }
 
 function viewed(pong?: PlacementData) {
@@ -255,6 +256,8 @@ export function PlacementInner({
   const isServer = useIsServer();
   const user = useUserData();
   const gleanClick = useGleanClick();
+  const { plusAvailable } = usePlacement() || {};
+  const showNoAds = Boolean(user?.isSubscriber || plusAvailable);
 
   const place = useViewed(() => {
     viewed(pong);
@@ -281,6 +284,7 @@ export function PlacementInner({
           version,
           typ,
           heading,
+          showNoAds,
         })}
     </>
   );
@@ -300,6 +304,7 @@ function RenderSideOrTopBanner({
   style,
   version = 1,
   typ,
+  showNoAds,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -350,19 +355,21 @@ function RenderSideOrTopBanner({
         </a>
       </p>
 
-      <a
-        className="no-pong"
-        data-glean={
-          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-        }
-        href={
-          user?.isSubscriber
-            ? "/en-US/plus/settings?ref=nope"
-            : "/en-US/plus?ref=nope#subscribe"
-        }
-      >
-        Don't want to see ads?
-      </a>
+      {showNoAds && (
+        <a
+          className="no-pong"
+          data-glean={
+            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+          }
+          href={
+            user?.isSubscriber
+              ? "/en-US/plus/settings?ref=nope"
+              : "/en-US/plus?ref=nope"
+          }
+        >
+          Don't want to see ads?
+        </a>
+      )}
     </section>
   );
 }
@@ -419,6 +426,7 @@ function RenderBottomBanner({
   style,
   version = 1,
   typ,
+  showNoAds,
 }: PlacementRenderArgs) {
   return (
     <div className="bottom-banner-container" style={style}>
@@ -451,19 +459,21 @@ function RenderBottomBanner({
         >
           Mozilla ads
         </a>
-        <a
-          className="no-pong"
-          data-glean={
-            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-          }
-          href={
-            user?.isSubscriber
-              ? "/en-US/plus/settings?ref=nope"
-              : "/en-US/plus?ref=nope#subscribe"
-          }
-        >
-          Don't want to see ads?
-        </a>
+        {showNoAds && (
+          <a
+            className="no-pong"
+            data-glean={
+              "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+            }
+            href={
+              user?.isSubscriber
+                ? "/en-US/plus/settings?ref=nope"
+                : "/en-US/plus?ref=nope"
+            }
+          >
+            Don't want to see ads?
+          </a>
+        )}
       </section>
     </div>
   );
@@ -484,6 +494,7 @@ function RenderNewSideBanner({
   version = 1,
   typ,
   heading,
+  showNoAds,
 }: PlacementRenderArgs) {
   return (
     <section ref={place} className={["place", ...extraClassNames].join(" ")}>
@@ -521,19 +532,21 @@ function RenderNewSideBanner({
         </a>
       </div>
 
-      <a
-        className="no-pong"
-        data-glean={
-          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-        }
-        href={
-          user?.isSubscriber
-            ? "/en-US/plus/settings?ref=nope"
-            : "/en-US/plus?ref=nope#subscribe"
-        }
-      >
-        Don't want to see ads?
-      </a>
+      {showNoAds && (
+        <a
+          className="no-pong"
+          data-glean={
+            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+          }
+          href={
+            user?.isSubscriber
+              ? "/en-US/plus/settings?ref=nope"
+              : "/en-US/plus?ref=nope"
+          }
+        >
+          Don't want to see ads?
+        </a>
+      )}
     </section>
   );
 }
