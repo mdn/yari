@@ -133,10 +133,11 @@ function FeatureListAccordion({
                 support,
                 browserInfo[browser]
               );
-              const supportAttributes = getCurrentSupportAttributes(support);
-              const attrs = Object.entries({ ...supportAttributes })
-                .filter(([, value]) => value)
-                .map(([key]) => key);
+              const { ...supportAttributes } =
+                getCurrentSupportAttributes(support);
+              const attrs = Object.keys(supportAttributes).filter(
+                (key) => supportAttributes[key]
+              );
               gleanClick(
                 `${BCD_TABLE}: click ${browser} ${query} -> ${feature.name} = ${supportType} [${attrs.join(",")}]`
               );
