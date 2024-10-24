@@ -17,6 +17,7 @@ import {
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
+import { BCD_TABLE } from "../../../telemetry/constants";
 
 export function getCurrentSupportType(
   support: SupportStatementExtended | undefined,
@@ -590,7 +591,11 @@ export const FeatureRow = React.memo(
         `/${locale}/docs`
       );
       titleNode = (
-        <a href={href} className="bc-table-row-header">
+        <a
+          href={href}
+          className="bc-table-row-header"
+          data-glean={`${BCD_TABLE}: link -> ${href}`}
+        >
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>
