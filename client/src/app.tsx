@@ -43,9 +43,12 @@ const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 const Playground = React.lazy(() => import("./playground"));
 const Observatory = React.lazy(() => import("./observatory"));
+const Debug = React.lazy(
+  () => import(/* webpackChunkName: "debug" */ "./ui/molecules/debug")
+);
 
 function Layout({ pageType, children }) {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
     getCategoryByPathname(pathname)
   );
@@ -71,6 +74,11 @@ function Layout({ pageType, children }) {
         {children}
       </div>
       <Footer />
+      {hash === "#debug" && (
+        <React.Suspense>
+          <Debug />
+        </React.Suspense>
+      )}
     </>
   );
 }
