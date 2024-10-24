@@ -12,6 +12,14 @@ export interface SimpleSupportStatementExtended
   version_last?: BCD.VersionValue;
 }
 
+export type SupportType =
+  | "no"
+  | "yes"
+  | "partial"
+  | "preview"
+  | "removed-partial"
+  | "unknown";
+
 export type SupportStatementExtended =
   | SimpleSupportStatementExtended
   | SimpleSupportStatementExtended[];

@@ -11,6 +11,7 @@ import {
   isTruthy,
   versionIsPreview,
   SupportStatementExtended,
+  SupportType,
   bugURLToString,
   SimpleSupportStatementExtended,
 } from "./utils";
@@ -20,7 +21,7 @@ import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 export function getCurrentSupportType(
   support: SupportStatementExtended | undefined,
   browser: BCD.BrowserStatement
-): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
+): SupportType {
   if (!support) {
     return "unknown";
   }
@@ -135,40 +136,26 @@ function versionLabelFromSupport(
 
 function getCurrentStatus(
   support: BCD.SupportStatement | undefined,
-  supportClassName:
-    | "no"
-    | "yes"
-    | "partial"
-    | "preview"
-    | "removed-partial"
-    | "unknown",
+  supportType: SupportType,
   browser: BCD.BrowserStatement
 ) {
   const currentSupport = getCurrentSupport(support);
 
-  return getStatus(currentSupport, supportClassName, browser);
+  return getStatus(currentSupport, supportType, browser);
 }
 
 function getStatus(
   currentSupport: SimpleSupportStatementExtended | undefined,
-  supportClassName:
-    | "no"
-    | "yes"
-    | "partial"
-    | "preview"
-    | "removed-partial"
-    | "unknown",
+  supportType: SupportType,
   browser: BCD.BrowserStatement
 ) {
   const added = currentSupport?.version_added ?? null;
   const lastVersion = currentSupport?.version_last ?? null;
 
-  let status:
-    | { isSupported: "unknown" }
-    | {
-        isSupported: "no" | "yes" | "partial" | "preview" | "removed-partial";
-        label?: React.ReactNode;
-      };
+  let status: {
+    isSupported: SupportType;
+    label?: React.ReactNode;
+  };
 
   switch (added) {
     case null:
@@ -185,7 +172,7 @@ function getStatus(
       break;
     default:
       status = {
-        isSupported: supportClassName,
+        isSupported: supportType,
         label: versionLabelFromSupport(added, lastVersion, browser),
       };
       break;
@@ -204,8 +191,8 @@ const CellText = React.memo(
     timeline?: boolean;
   }) => {
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
-    const supportClassName = getCurrentSupportType(support, browser);
-    const status = getCurrentStatus(support, supportClassName, browser);
+    const supportType = getCurrentSupportType(support, browser);
+    const status = getCurrentStatus(support, supportType, browser);
 
     let label: string | React.ReactNode;
     let title = "";
@@ -256,9 +243,9 @@ const CellText = React.memo(
           <span className="icon-wrap">
             <abbr
               className={`
-              bc-level-${supportClassName}
+              bc-level-${supportType}
               icon
-              icon-${supportClassName}`}
+              icon-${supportType}`}
               title={title}
             >
               <span className="bc-support-level">{title}</span>
