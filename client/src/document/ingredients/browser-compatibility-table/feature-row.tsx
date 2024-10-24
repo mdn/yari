@@ -17,7 +17,7 @@ import {
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
-function getSupportClassName(
+export function getCurrentSupportType(
   support: SupportStatementExtended | undefined,
   browser: BCD.BrowserStatement
 ): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
@@ -25,8 +25,17 @@ function getSupportClassName(
     return "unknown";
   }
 
+  const currentSupport = getCurrentSupport(support)!;
+
+  return getSupportType(currentSupport, browser);
+}
+
+function getSupportType(
+  support: SimpleSupportStatementExtended,
+  browser: BCD.BrowserStatement
+) {
   let { flags, version_added, version_removed, partial_implementation } =
-    getCurrentSupport(support)!;
+    support;
 
   let className;
   if (version_added === null) {
@@ -195,7 +204,7 @@ const CellText = React.memo(
     timeline?: boolean;
   }) => {
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
-    const supportClassName = getSupportClassName(support, browser);
+    const supportClassName = getCurrentSupportType(support, browser);
     const status = getCurrentStatus(support, supportClassName, browser);
 
     let label: string | React.ReactNode;
@@ -448,7 +457,7 @@ function getNotes(
             <React.Fragment key={i}>
               <div className="bc-notes-wrapper">
                 <dt
-                  className={`bc-supports-${getSupportClassName(
+                  className={`bc-supports-${getCurrentSupportType(
                     item,
                     browser
                   )} bc-supports`}
@@ -492,7 +501,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getSupportClassName(support, browserInfo);
+  const supportClassName = getCurrentSupportType(support, browserInfo);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
