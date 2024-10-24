@@ -11,21 +11,33 @@ import {
   isTruthy,
   versionIsPreview,
   SupportStatementExtended,
+  SupportType,
   bugURLToString,
+  SimpleSupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
+import { BCD_TABLE } from "../../../telemetry/constants";
 
-function getSupportClassName(
+export function getCurrentSupportType(
   support: SupportStatementExtended | undefined,
   browser: BCD.BrowserStatement
-): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
+): SupportType {
   if (!support) {
     return "unknown";
   }
 
+  const currentSupport = getCurrentSupport(support)!;
+
+  return getSupportType(currentSupport, browser);
+}
+
+function getSupportType(
+  support: SimpleSupportStatementExtended,
+  browser: BCD.BrowserStatement
+) {
   let { flags, version_added, version_removed, partial_implementation } =
-    getCurrentSupport(support)!;
+    support;
 
   let className;
   if (version_added === null) {
@@ -123,6 +135,52 @@ function versionLabelFromSupport(
   );
 }
 
+function getCurrentStatus(
+  support: BCD.SupportStatement | undefined,
+  supportType: SupportType,
+  browser: BCD.BrowserStatement
+) {
+  const currentSupport = getCurrentSupport(support);
+
+  return getStatus(currentSupport, supportType, browser);
+}
+
+function getStatus(
+  currentSupport: SimpleSupportStatementExtended | undefined,
+  supportType: SupportType,
+  browser: BCD.BrowserStatement
+) {
+  const added = currentSupport?.version_added ?? null;
+  const lastVersion = currentSupport?.version_last ?? null;
+
+  let status: {
+    isSupported: SupportType;
+    label?: React.ReactNode;
+  };
+
+  switch (added) {
+    case null:
+      status = { isSupported: "unknown" };
+      break;
+    case true:
+      status = { isSupported: lastVersion ? "no" : "yes" };
+      break;
+    case false:
+      status = { isSupported: "no" };
+      break;
+    case "preview":
+      status = { isSupported: "preview" };
+      break;
+    default:
+      status = {
+        isSupported: supportType,
+        label: versionLabelFromSupport(added, lastVersion, browser),
+      };
+      break;
+  }
+  return status;
+}
+
 const CellText = React.memo(
   ({
     support,
@@ -133,40 +191,9 @@ const CellText = React.memo(
     browser: BCD.BrowserStatement;
     timeline?: boolean;
   }) => {
-    const currentSupport = getCurrentSupport(support);
-
-    const added = currentSupport?.version_added ?? null;
-    const lastVersion = currentSupport?.version_last ?? null;
-
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
-    const supportClassName = getSupportClassName(support, browser);
-
-    let status:
-      | { isSupported: "unknown" }
-      | {
-          isSupported: "no" | "yes" | "partial" | "preview" | "removed-partial";
-          label?: React.ReactNode;
-        };
-    switch (added) {
-      case null:
-        status = { isSupported: "unknown" };
-        break;
-      case true:
-        status = { isSupported: lastVersion ? "no" : "yes" };
-        break;
-      case false:
-        status = { isSupported: "no" };
-        break;
-      case "preview":
-        status = { isSupported: "preview" };
-        break;
-      default:
-        status = {
-          isSupported: supportClassName,
-          label: versionLabelFromSupport(added, lastVersion, browser),
-        };
-        break;
-    }
+    const supportType = getCurrentSupportType(support, browser);
+    const status = getCurrentStatus(support, supportType, browser);
 
     let label: string | React.ReactNode;
     let title = "";
@@ -217,9 +244,9 @@ const CellText = React.memo(
           <span className="icon-wrap">
             <abbr
               className={`
-              bc-level-${supportClassName}
+              bc-level-${supportType}
               icon
-              icon-${supportClassName}`}
+              icon-${supportType}`}
               title={title}
             >
               <span className="bc-support-level">{title}</span>
@@ -260,20 +287,39 @@ function Icon({ name }: { name: string }) {
 }
 
 function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
-  const supportItem = getCurrentSupport(support);
-  if (!supportItem) {
+  const attrs = getCurrentSupportAttributes(support);
+
+  if (!attrs) {
     return null;
   }
 
   const icons = [
-    supportItem.prefix && <Icon key="prefix" name="prefix" />,
-    hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
-    supportItem.alternative_name && <Icon key="altname" name="altname" />,
-    supportItem.flags && <Icon key="disabled" name="disabled" />,
-    hasMore(support) && <Icon key="more" name="more" />,
+    attrs.pre && <Icon key="prefix" name="prefix" />,
+    attrs.note && <Icon key="footnote" name="footnote" />,
+    attrs.alt && <Icon key="altname" name="altname" />,
+    attrs.flag && <Icon key="disabled" name="disabled" />,
+    attrs.more && <Icon key="more" name="more" />,
   ].filter(Boolean);
 
   return icons.length ? <div className="bc-icons">{icons}</div> : null;
+}
+
+export function getCurrentSupportAttributes(
+  support: BCD.SimpleSupportStatement | BCD.SimpleSupportStatement[] | undefined
+) {
+  const supportItem = getCurrentSupport(support);
+
+  if (!supportItem) {
+    return null;
+  }
+
+  return {
+    pre: !!supportItem.prefix,
+    note: hasNoteworthyNotes(supportItem),
+    alt: !!supportItem.alternative_name,
+    flag: !!supportItem.flags,
+    more: hasMore(support),
+  };
 }
 
 function FlagsNote({
@@ -418,7 +464,7 @@ function getNotes(
             <React.Fragment key={i}>
               <div className="bc-notes-wrapper">
                 <dt
-                  className={`bc-supports-${getSupportClassName(
+                  className={`bc-supports-${getCurrentSupportType(
                     item,
                     browser
                   )} bc-supports`}
@@ -462,7 +508,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getSupportClassName(support, browserInfo);
+  const supportClassName = getCurrentSupportType(support, browserInfo);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
@@ -545,7 +591,11 @@ export const FeatureRow = React.memo(
         `/${locale}/docs`
       );
       titleNode = (
-        <a href={href} className="bc-table-row-header">
+        <a
+          href={href}
+          className="bc-table-row-header"
+          data-glean={`${BCD_TABLE}: link -> ${href}`}
+        >
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>
