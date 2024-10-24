@@ -3,7 +3,11 @@ import { useLocation } from "react-router-dom";
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
-import { FeatureRow } from "./feature-row";
+import {
+  FeatureRow,
+  getCurrentSupportAttributes,
+  getCurrentSupportType,
+} from "./feature-row";
 import { Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
@@ -87,11 +91,13 @@ type CellIndex = [number, number];
 function FeatureListAccordion({
   features,
   browsers,
+  browserInfo,
   locale,
   query,
 }: {
   features: ReturnType<typeof listFeatures>;
   browsers: BCD.BrowserName[];
+  browserInfo: BCD.Browsers;
   locale: string;
   query: string;
 }) {
@@ -120,8 +126,19 @@ function FeatureListAccordion({
             const cell = `${column}:${row}`;
             if (!clickedCells.current.has(cell)) {
               clickedCells.current.add(cell);
+              const feature = features[row];
+              const browser = browsers[column];
+              const support = feature.compat.support[browser];
+              const supportType = getCurrentSupportType(
+                support,
+                browserInfo[browser]
+              );
+              const supportAttributes = getCurrentSupportAttributes(support);
+              const attrs = Object.entries({ ...supportAttributes })
+                .filter(([, value]) => value)
+                .map(([key]) => key);
               gleanClick(
-                `${BCD_TABLE}: click ${browsers[column]} ${query} -> ${features[row].name}`
+                `${BCD_TABLE}: click ${browser} ${query} -> ${feature.name} = ${supportType} [${attrs.join(",")}]`
               );
             }
             dispatchCellToggle([row, column]);
@@ -210,6 +227,7 @@ export default function BrowserCompatibilityTable({
               <tbody>
                 <FeatureListAccordion
                   browsers={browsers}
+                  browserInfo={browserInfo}
                   features={listFeatures(data, "", name)}
                   locale={locale}
                   query={query}
