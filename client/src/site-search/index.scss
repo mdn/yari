@@ -8,10 +8,14 @@
 .site-search {
   display: block;
 
-  article {
+  .main-content {
     @media (max-width: $screen-md) {
       display: flex;
       flex-direction: column;
+    }
+
+    article {
+      display: contents;
     }
 
     .place {
