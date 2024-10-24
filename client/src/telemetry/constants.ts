@@ -28,6 +28,7 @@ export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
 export const OBSERVATORY = "observatory";
 export const CURRICULUM = "curriculum";
+export const BCD_TABLE = "bcd_table";
 
 export const A11Y_MENU = "a11y_menu";
 

@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
@@ -7,6 +7,9 @@ import { FeatureRow } from "./feature-row";
 import { Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
+import { useViewed } from "../../../hooks";
+import { BCD_TABLE } from "../../../telemetry/constants";
+import { useGleanClick } from "../../../telemetry/glean-context";
 
 // Note! Don't import any SCSS here inside *this* component.
 // It's done in the component that lazy-loads this component.
@@ -85,10 +88,12 @@ function FeatureListAccordion({
   features,
   browsers,
   locale,
+  query,
 }: {
   features: ReturnType<typeof listFeatures>;
   browsers: BCD.BrowserName[];
   locale: string;
+  query: string;
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
     React.Reducer<CellIndex | [null, null], CellIndex>
@@ -100,6 +105,9 @@ function FeatureListAccordion({
     [null, null]
   );
 
+  const gleanClick = useGleanClick();
+  const clickedCells = useRef(new Set<string>());
+
   return (
     <>
       {features.map((feature, i) => (
@@ -109,6 +117,13 @@ function FeatureListAccordion({
           index={i}
           activeCell={activeRow === i ? activeColumn : null}
           onToggleCell={([row, column]: [number, number]) => {
+            const cell = `${column}:${row}`;
+            if (!clickedCells.current.has(cell)) {
+              clickedCells.current.add(cell);
+              gleanClick(
+                `${BCD_TABLE}: click ${browsers[column]} ${query} -> ${features[row].name}`
+              );
+            }
             dispatchCellToggle([row, column]);
           }}
           locale={locale}
@@ -130,6 +145,11 @@ export default function BrowserCompatibilityTable({
   locale: string;
 }) {
   const location = useLocation();
+  const gleanClick = useGleanClick();
+
+  const observedNode = useViewed(() => {
+    gleanClick(`${BCD_TABLE}: view`);
+  });
 
   if (!data || !Object.keys(data).length) {
     throw new Error(
@@ -177,7 +197,11 @@ export default function BrowserCompatibilityTable({
         </a>
         <figure className="table-container">
           <figure className="table-container-inner">
-            <table key="bc-table" className="bc-table bc-table-web">
+            <table
+              key="bc-table"
+              className="bc-table bc-table-web"
+              ref={observedNode}
+            >
               <Headers
                 platforms={platforms}
                 browsers={browsers}
@@ -188,6 +212,7 @@ export default function BrowserCompatibilityTable({
                   browsers={browsers}
                   features={listFeatures(data, "", name)}
                   locale={locale}
+                  query={query}
                 />
               </tbody>
             </table>
