@@ -13,7 +13,7 @@ import {
 
 import { Doc } from "../libs/types/document.js";
 import { Document, execGit, slugToFolder } from "../content/index.js";
-import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
+import { CONTENT_ROOT } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
 import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants/index.js";
@@ -44,6 +44,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { addBaseline } from "./web-features.js";
+import { getRepositoryByLocale } from "../libs/locale-utils/index.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -133,7 +134,10 @@ function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
  * @param {String} folder - the current folder we're processing.
  */
 function getGitHubURL(root: string, folder: string, filename: string) {
-  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+  const [locale] = folder.split("/", 2);
+  const repo = getRepositoryByLocale(locale);
+  const baseURL = `https://github.com/mdn/${repo}/`;
+
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
   )}/files/${folder}/${filename}`;
@@ -143,8 +147,9 @@ function getGitHubURL(root: string, folder: string, filename: string) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-export function getLastCommitURL(root: string, hash: string) {
-  const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
+export function getLastCommitURL(locale: string, hash: string) {
+  const repo = getRepositoryByLocale(locale);
+  const baseURL = `https://github.com/mdn/${repo}`;
   return `${baseURL}/commit/${hash}`;
 }
 
@@ -155,7 +160,7 @@ function injectSource(doc, document, metadata) {
   doc.source = {
     folder,
     github_url: getGitHubURL(root, folder, filename),
-    last_commit_url: getLastCommitURL(root, metadata.hash),
+    last_commit_url: getLastCommitURL(doc.locale, metadata.hash),
     filename,
   };
 }

@@ -75,3 +75,14 @@ export function getLocale(request, fallback = DEFAULT_LOCALE) {
 export function isValidLocale(locale) {
   return typeof locale === "string" && VALID_LOCALES.has(locale.toLowerCase());
 }
+
+export function getRepositoryByLocale(locale) {
+  switch (locale.toLowerCase()) {
+    case "en-us":
+      return "content";
+    case "de":
+      return "translated-content-de";
+    default:
+      return "translated-content";
+  }
+}

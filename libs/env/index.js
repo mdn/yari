@@ -91,20 +91,12 @@ export const BLOG_ROOT = correctContentPathFromEnv("BLOG_ROOT");
 
 export const CURRICULUM_ROOT = correctPathFromEnv("CURRICULUM_ROOT");
 
-// This makes it possible to know, give a root folder, what is the name of
-// the repository on GitHub.
-// E.g. `'https://github.com/' + REPOSITORY_URLS[document.fileInfo.root]`
-export const REPOSITORY_URLS = {
-  [CONTENT_ROOT]: "mdn/content",
-};
-
 // Make a combined array of all truthy roots. This way, you don't
 // need to constantly worry about CONTENT_TRANSLATED_ROOT potentially being
 // null.
 export const ROOTS = [CONTENT_ROOT];
 if (CONTENT_TRANSLATED_ROOT) {
   ROOTS.push(CONTENT_TRANSLATED_ROOT);
-  REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content-de";
 }
 
 function correctPathFromEnv(envVarName) {

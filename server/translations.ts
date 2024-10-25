@@ -304,7 +304,7 @@ async function getDocument(filePath) {
 
   async function packageEdits(document, parentDocument) {
     const {
-      fileInfo: { root: fileRoot, folder: fileFolder },
+      fileInfo: { folder: fileFolder },
       metadata: { hash: fileHash, modified, l10n },
     } = document;
     const {
@@ -312,13 +312,13 @@ async function getDocument(filePath) {
       metadata: { hash: parentFileHash, parentModified },
     } = parentDocument;
 
-    const commitURL = getLastCommitURL(fileRoot, fileHash);
-    const parentCommitURL = getLastCommitURL(parentFileRoot, parentFileHash);
+    const commitURL = getLastCommitURL(document.locale, fileHash);
+    const parentCommitURL = getLastCommitURL(document.locale, parentFileHash);
     let sourceCommitURL;
     let sourceCommitsBehindCount;
 
     if (l10n?.sourceCommit) {
-      sourceCommitURL = getLastCommitURL(CONTENT_ROOT, l10n.sourceCommit);
+      sourceCommitURL = getLastCommitURL(DEFAULT_LOCALE, l10n.sourceCommit);
       sourceCommitsBehindCount = await getCommitBehindFromLatest(
         fileFolder,
         parentFilePath.replace(parentFileRoot, "files"),
@@ -394,10 +394,7 @@ async function gatherL10NstatsSection({
   }
 
   function packageEdits(document) {
-    const commitURL = getLastCommitURL(
-      document.fileInfo.root,
-      document.metadata.hash
-    );
+    const commitURL = getLastCommitURL(locale, document.metadata.hash);
     const modified = document.metadata.modified;
     return {
       commitURL,

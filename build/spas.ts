@@ -502,7 +502,7 @@ async function fetchGitHubPRs(repo, count = 5) {
 }
 
 async function fetchRecentContributions() {
-  const repos = ["mdn/content", "mdn/translated-content-de"];
+  const repos = ["mdn/content", "mdn/translated-content"];
   const countPerRepo = 5;
   const pullRequests = (
     await Promise.all(

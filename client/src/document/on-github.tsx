@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { getRepositoryByLocale } from "../../../libs/locale-utils";
 import { Doc } from "../../../libs/types/document";
 
 export function OnGitHubLink({ doc }: { doc: Doc }) {
@@ -53,10 +55,9 @@ function NewIssueOnGitHubLink({
   const url = new URL("https://github.com/");
   const sp = new URLSearchParams();
 
-  url.pathname =
-    locale !== "en-US"
-      ? "/mdn/translated-content-de/issues/new"
-      : "/mdn/content/issues/new";
+  const repo = useMemo(() => getRepositoryByLocale(locale), [locale]);
+
+  url.pathname = `/mdn/${repo}/issues/new`;
   sp.set(
     "template",
     locale !== "en-US"
