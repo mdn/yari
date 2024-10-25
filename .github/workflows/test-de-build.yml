@@ -90,7 +90,6 @@ jobs:
           path: mdn/translated-content-de
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
-          token: ${{ secrets.MDN_MTC_PAT }}
 
       - name: Checkout (contributor-spotlight)
         uses: actions/checkout@v4
