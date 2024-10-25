@@ -80,7 +80,7 @@ export function LocalizedContentNote({
       activeLocaleNoteContent["en-US"].url
     : "https://github.com/mdn/translated-content-de/blob/main/PEERS_GUIDELINES.md#activating-a-locale";
 
-  const type = isActive ? "neutral" : "warning";
+  const type = locale === "de" ? "experimental" : isActive ? "info" : "warning";
   return (
     <NoteBanner url={url} type={type}>
       {linkText}
