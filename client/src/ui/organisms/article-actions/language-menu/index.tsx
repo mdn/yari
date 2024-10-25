@@ -95,6 +95,7 @@ export function LanguageMenu({
         onClickHandler={() => setIsOpen(!isOpen)}
       >
         {native}
+        <LocaleStatusIcon locale={locale} />
       </Button>
 
       <DropdownMenu alwaysRenderChildren>
@@ -126,6 +127,7 @@ function LanguageMenuItem({
       className="button submenu-item"
     >
       <span>{translation.native}</span>
+      <LocaleStatusIcon locale={translation.locale} />
     </a>
   );
 }
@@ -177,4 +179,18 @@ function LocaleRedirectSetting() {
       <GleanThumbs feature="locale-redirect" question="Is this useful?" />
     </form>
   );
+}
+
+function LocaleStatusIcon({ locale }: { locale: string }) {
+  switch (locale) {
+    case "de":
+      return (
+        <span title="This locale is experimental.">
+          <Icon name="experimental" />
+        </span>
+      );
+
+    default:
+      return null;
+  }
 }
