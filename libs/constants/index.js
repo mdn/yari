@@ -10,7 +10,6 @@ export const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
-    //"de",
     "el",
     "fa",
     "fi",

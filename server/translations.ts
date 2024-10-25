@@ -394,7 +394,7 @@ async function gatherL10NstatsSection({
   }
 
   function packageEdits(document) {
-    const commitURL = getLastCommitURL(locale, document.metadata.hash);
+    const commitURL = getLastCommitURL(document.locale, document.metadata.hash);
     const modified = document.metadata.modified;
     return {
       commitURL,
