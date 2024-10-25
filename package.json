@@ -121,7 +121,7 @@
     "mdn-data": "^2.11.1",
     "open": "^10.1.0",
     "open-editor": "^5.0.0",
-    "openai": "^4.68.2",
+    "openai": "^4.68.4",
     "pg": "^8.13.0",
     "pgvector": "^0.2.0",
     "prism-svelte": "^0.5.0",
@@ -147,7 +147,7 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
-    "web-features": "^2.1.0",
+    "web-features": "^2.2.0",
     "web-specs": "^3.23.0"
   },
   "devDependencies": {
@@ -226,7 +226,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.1.1",
     "postcss-normalize": "^13.0.1",
-    "postcss-preset-env": "^10.0.7",
+    "postcss-preset-env": "^10.0.8",
     "prettier": "^3.3.3",
     "prettier-plugin-packagejson": "^2.5.3",
     "prompts": "^2.4.2",
