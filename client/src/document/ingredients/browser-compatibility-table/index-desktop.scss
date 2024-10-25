@@ -1,6 +1,8 @@
+@use "../../../ui/vars";
+
 // Style for desktop.
 
-@media (min-width: $screen-sm) {
+@media (min-width: vars.$screen-sm) {
   .bc-table {
     thead {
       display: table-header-group;

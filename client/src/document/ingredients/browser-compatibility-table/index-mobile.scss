@@ -1,6 +1,8 @@
+@use "../../../ui/vars";
+
 // Style for mobile.
 
-@media (max-width: $screen-sm - 1px) {
+@media (max-width: vars.$screen-sm - 1px) {
   .bc-table {
     thead {
       display: none;

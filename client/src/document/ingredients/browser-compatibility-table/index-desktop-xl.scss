@@ -1,4 +1,6 @@
-@media (min-width: $screen-xl) {
+@use "../../../ui/vars";
+
+@media (min-width: vars.$screen-xl) {
   .table-container {
     margin: 0;
     width: 100%;

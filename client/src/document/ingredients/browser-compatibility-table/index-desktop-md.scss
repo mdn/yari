@@ -1,4 +1,6 @@
-@media (min-width: $screen-md) {
+@use "../../../ui/vars";
+
+@media (min-width: vars.$screen-md) {
   .table-container {
     width: calc(100% + 6rem);
   }
