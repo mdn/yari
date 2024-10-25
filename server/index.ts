@@ -386,18 +386,13 @@ if (contentProxy) {
   app.get("/[^/]+/docs/*/metadata.json", async (req, res) => {
     const url = decodeURI(req.path.replace(/\/metadata.json$/, ""));
     const doc = await buildDocumentFromURL(url);
-    if (!doc) {
+    if (!doc?.doc) {
       return redirectOr404(res, url, "/metadata.json");
     }
     const docString = JSON.stringify(doc);
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const {
-      body: _,
-      toc: __,
-      sidebarHTML: ___,
-      ...builtMetadata
-    } = (doc.doc as any) || {};
+    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = doc.doc;
     builtMetadata.hash = hash;
 
     return res.json(builtMetadata);
