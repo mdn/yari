@@ -456,8 +456,6 @@ export async function findAll({
   files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
-  sort = false,
-  from = null,
 } = {}) {
   if (!(files instanceof Set)) {
     throw new TypeError("'files' not a Set");
@@ -529,22 +527,6 @@ export async function findAll({
     const output: PathsOutput = await api.withPromise();
     filePaths.push(...output);
   }
-
-  if (sort) {
-    filePaths.sort();
-  }
-
-  if (from) {
-    const fromPath = filePaths
-      .slice()
-      .sort()
-      .find((path) => path.includes(from));
-    console.log({ after: from, lastItem: fromPath });
-    filePaths
-      .filter((path) => path.localeCompare(fromPath) < 0)
-      .forEach((path) => filePaths.splice(filePaths.indexOf(path), 1));
-  }
-
   return {
     count: filePaths.length,
     *iterPaths() {

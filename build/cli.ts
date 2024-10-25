@@ -135,16 +135,13 @@ async function buildDocuments(
   quiet = false,
   interactive = false,
   noHTML = false,
-  locales: Map<string, string> = new Map(),
-  { sort = false, from = null }: { sort?: boolean; from?: string }
+  locales: Map<string, string> = new Map()
 ): Promise<BuiltDocuments> {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
   const findAllOptions = {
     ...options,
     locales,
-    sort,
-    from,
   };
   if (files) {
     findAllOptions.files = new Set(files);
@@ -458,9 +455,7 @@ interface BuildArgsAndOptions {
     nohtml?: boolean;
     locale?: string[];
     notLocale?: string[];
-    sort?: boolean;
     sitemapIndex?: boolean;
-    from?: string;
   };
 }
 
@@ -484,14 +479,8 @@ program
     default: [],
     validator: [...VALID_LOCALES.keys()],
   })
-  .option("--sort", "Build pages in alphabetical order", {
-    default: false,
-  })
   .option("--sitemap-index", "Build a sitemap index file", {
     default: false,
-  })
-  .option("--from <needle>", "Build from the first path matching this needle", {
-    default: null,
   })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }: BuildArgsAndOptions) => {
@@ -572,8 +561,7 @@ program
         Boolean(options.quiet),
         Boolean(options.interactive),
         Boolean(options.nohtml),
-        locales,
-        { sort: options.sort ?? false, from: options.from ?? null }
+        locales
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
