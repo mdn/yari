@@ -64,7 +64,7 @@ function mutateLink(
     $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
-    const locale = $element.attr("href").match(/^\/([^/]+)\//)[1];
+    const locale = $element.attr("href")?.match(/^\/([^/]+)\//)?.[1] || "en-US";
     const titleWhenMissing = (mdn as any).getLocalString.call(
       { env: { locale } },
       web.getJSONData("L10n-Common"),

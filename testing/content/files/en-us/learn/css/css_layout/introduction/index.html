@@ -15,6 +15,7 @@ tags:
   - flexbox
   - flow
 ---
+
 <div>{{LearnSidebar}}</div>
 
 <!--
@@ -23,17 +24,13 @@ the code can handle a mix of live samples, some from the page itself,
 and some from other pages.
 -->
 
-<h2 id="Flexbox">Flexbox</h2>
-<p>{{ EmbedLiveSample('Flex_1', '300', '200', "", "Learn/CSS/CSS_layout/Introduction/Flex") }}</p>
-<p>{{ EmbedLiveSample('Flex_2', '300', '200', "", "Learn/CSS/CSS_layout/Introduction/Flex") }}</p>
-
 <h2 id="Grid_Layout">Grid Layout</h2>
-<p>{{ EmbedLiveSample('Grid_1', '300', '330', "", "Learn/CSS/CSS_layout/Introduction/Grid") }}</p>
 <div id="Grid_2">
-<div class="hidden">
-<h6 id="Grid_example_2">Grid example 2</h6>
+  <div class="hidden">
+    <h6 id="Grid_example_2">Grid example 2</h6>
 
-<pre class="brush: css hidden">    * {box-sizing: border-box;}
+    <pre class="brush: css hidden">
+    * {box-sizing: border-box;}
 
     .wrapper &gt; div {
         border-radius: 5px;
@@ -41,9 +38,10 @@ and some from other pages.
         padding: 1em;
     }
     </pre>
-</div>
+  </div>
 
-<pre class="brush: css">.wrapper {
+  <pre class="brush: css">
+.wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 100px 100px;
@@ -64,14 +62,17 @@ and some from other pages.
     grid-row: 2;
     grid-column: 3;
 }
-</pre>
+</pre
+  >
 
-<pre class="brush: html">&lt;div class="wrapper"&gt;
+  <pre class="brush: html">
+&lt;div class="wrapper"&gt;
     &lt;div class="box1"&gt;One&lt;/div&gt;
     &lt;div class="box2"&gt;Two&lt;/div&gt;
     &lt;div class="box3"&gt;Three&lt;/div&gt;
 &lt;/div&gt;
-</pre>
+</pre
+  >
 </div>
 
-<p>{{ EmbedLiveSample('Grid_2', '300', '330') }}</p>
+<p>{{ EmbedLiveSample('Grid_Layout', '300', '330') }}</p>
