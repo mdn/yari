@@ -116,7 +116,7 @@
     "loglevel": "^1.9.2",
     "lru-cache": "^10.4.3",
     "md5-file": "^5.0.0",
-    "mdast-util-from-markdown": "^2.0.1",
+    "mdast-util-from-markdown": "^2.0.2",
     "mdast-util-phrasing": "^4.1.0",
     "mdn-data": "^2.11.1",
     "open": "^10.1.0",
