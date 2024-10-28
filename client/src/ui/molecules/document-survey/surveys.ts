@@ -12,7 +12,7 @@ export interface Survey {
   // Proportion slice of users to target.
   rateFrom: number;
   rateTill: number;
-  src: string;
+  src: string | ((doc: Doc) => string);
   teaser: string;
   question: string;
   footnote?: string;
