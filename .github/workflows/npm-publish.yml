@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   build:
     if: github.repository == 'mdn/yari'
@@ -16,8 +12,10 @@ jobs:
 
     steps:
       - name: Release
-        uses: google-github-actions/release-please-action@v4
+        uses: googleapis/release-please-action@v4
         id: release
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_PAT }}
 
       - name: Checkout
         uses: actions/checkout@v4

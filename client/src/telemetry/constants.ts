@@ -96,3 +96,5 @@ export const HOMEPAGE_ITEMS = Object.freeze({
   CONTRIBUTION: "contribution",
   CONTRIBUTION_REPO: "contribution_repo",
 });
+
+export const EXTERNAL_LINK = "external-link";
