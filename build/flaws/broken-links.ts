@@ -71,6 +71,7 @@ function mutateLink(
       "summary"
     );
     $element.attr("title", titleWhenMissing);
+    $element.attr("href", null);
   }
 }
 
