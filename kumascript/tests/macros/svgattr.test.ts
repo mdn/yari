@@ -7,7 +7,7 @@ describeMacro("SVGAttr", () => {
         macro.ctx.env.locale = locale;
         return assert.eventually.equal(
           macro.call(attr),
-          `<code><a href="/${locale}/docs/Web/SVG/Attribute/${attr}">${attr}</a></code>`
+          `<a href="/${locale}/docs/Web/SVG/Attribute/${attr}"><code>${attr}</code></a>`
         );
       });
     }
