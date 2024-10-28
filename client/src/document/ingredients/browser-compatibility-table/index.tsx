@@ -166,7 +166,7 @@ export default function BrowserCompatibilityTable({
   const gleanClick = useGleanClick();
 
   const observedNode = useViewed(() => {
-    gleanClick(`${BCD_TABLE}: view`);
+    gleanClick(`${BCD_TABLE}: view -> ${query}`);
   });
 
   if (!data || !Object.keys(data).length) {
