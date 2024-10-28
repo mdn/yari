@@ -24,6 +24,7 @@ enum SurveyBucket {
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
   DE_LOCALE_2024 = "DE_LOCALE_2024",
+  DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
@@ -40,6 +41,7 @@ enum SurveyKey {
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
   CSS_CASCADE_2022_B = "CSS_CASCADE_2022_B",
   DE_LOCALE_2024 = "DE_LOCALE_2024",
+  DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
@@ -66,5 +68,24 @@ export const SURVEYS: Survey[] = [
       "In the past year, have you built an installable web application?",
     ...survey_duration(SurveyBucket.WEB_APP_AUGUST_2024),
     ...survey_rates(SurveyKey.WEB_APP_AUGUST_2024),
+  },
+  {
+    key: SurveyKey.DE_LOCALE_2024_EVAL,
+    bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
+    show: (doc: Doc) => /de(\/|$)/i.test(doc.mdn_url),
+    src: (doc: Doc) => {
+      const url = new URL(
+        "https://survey.alchemer.com/s3/8073795/Feedback-zur-deutschen-Version-von-MDN"
+      );
+      url.searchParams.set("referrer", doc.mdn_url);
+      return url.toString();
+    },
+    teaser:
+      "Wir arbeiten daran, die deutsche Übersetzung von MDN zu verbessern.",
+    question: "Hätten Sie 2 Minuten, um uns 4 Fragen zu beantworten?",
+    rateFrom: 0,
+    rateTill: 1,
+    start: 0,
+    end: Infinity,
   },
 ];
