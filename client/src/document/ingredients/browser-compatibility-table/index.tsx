@@ -215,15 +215,12 @@ export default function BrowserCompatibilityTable({
         </a>
         <figure className="table-container">
           <figure className="table-container-inner">
-            <table
-              key="bc-table"
-              className="bc-table bc-table-web"
-              ref={observedNode}
-            >
+            <table key="bc-table" className="bc-table bc-table-web">
               <Headers
                 platforms={platforms}
                 browsers={browsers}
                 browserInfo={browserInfo}
+                ref={observedNode}
               />
               <tbody>
                 <FeatureListAccordion
