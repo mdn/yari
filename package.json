@@ -70,7 +70,7 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@fast-csv/parse": "^5.0.2",
-    "@inquirer/prompts": "^7.0.0",
+    "@inquirer/prompts": "^7.0.1",
     "@lit/react": "^1.0.6",
     "@mdn/bcd-utils-api": "^0.0.7",
     "@mdn/browser-compat-data": "^5.6.9",
