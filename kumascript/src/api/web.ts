@@ -180,7 +180,7 @@ const web = {
       "summary"
     );
     content ??= href;
-    return `<a class="page-not-created" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
+    return `<a href="${href}" class="page-not-created" title="${titleWhenMissing}"${flawAttribute}>${content}</a>`;
   },
 
   // Try calling "decodeURIComponent", but if there's an error, just
