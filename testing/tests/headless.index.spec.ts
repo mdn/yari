@@ -7,16 +7,6 @@ function testURL(pathname = "/") {
   return `http://localhost:${PORT}${pathname}`;
 }
 
-function liveSampleURL(uri: string, id: string, legacy = false) {
-  const params = new URLSearchParams([
-    ["id", id],
-    ...(legacy ? [["url", uri]] : []),
-  ]);
-  return `${uri}/${
-    legacy ? `_sample_.${id}` : "runner"
-  }.html?${params.toString()}`;
-}
-
 test.describe("Basic viewing of functional pages", () => {
   test("open the /en-US/docs/Web/Foo page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
