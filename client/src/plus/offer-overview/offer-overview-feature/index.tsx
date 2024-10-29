@@ -24,6 +24,21 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
+      <OfferOverviewFeature id="afree" img="/assets/afree.png" imgAlt="">
+        <section aria-labelledby="afree-section-title">
+          <h2 id="afree-section-title">Go ads free</h2>
+          <h3>Enjoy MDN ads-free with an MDN Plus subscription.</h3>
+          <p>
+            Support MDN and enjoy a focused, ad-free experience alongside other
+            features such as curated collections, custom web platform updates,
+            offline access, and more. Subscribers to paid tiers of MDN Plus have
+            the option to browse MDN without ads.
+          </p>
+          <Button href="/en-US/advertising" target="_self">
+            Learn more →
+          </Button>
+        </section>
+      </OfferOverviewFeature>
       <OfferOverviewFeature id="ai-help" img={screenshotAiHelp} imgAlt="">
         <section aria-labelledby="ai-help-section-title">
           <h2 id="ai-help-section-title">AI Help</h2>
@@ -92,35 +107,6 @@ export default function OfferOverviewFeatures() {
             for convenient consultation.
           </p>
           <Button href="/en-US/plus/docs/features/collections" target="_self">
-            Learn more →
-          </Button>
-        </section>
-      </OfferOverviewFeature>
-      <OfferOverviewFeature id="offline" img="/assets/offline.png" imgAlt="">
-        <section aria-labelledby="offline-section-title">
-          <h2 id="offline-section-title">MDN Offline</h2>
-          <h3>MDN's entire library at your fingertips: offline</h3>
-          <p>
-            Taking your projects beyond the nearest wifi signal? Say goodbye to
-            inaccessible pages or cluttered tabs. With MDN Plus, have the fully
-            navigable resources of MDN at your disposal even when offline.
-          </p>
-          <Button href="/en-US/plus/docs/features/offline" target="_self">
-            Learn more →
-          </Button>
-        </section>
-      </OfferOverviewFeature>
-      <OfferOverviewFeature id="afree" img="/assets/afree.png" imgAlt="">
-        <section aria-labelledby="afree-section-title">
-          <h2 id="afree-section-title">Go ads free</h2>
-          <h3>Enjoy MDN ads-free with an MDN Plus subscription.</h3>
-          <p>
-            Support MDN and enjoy a focused, ad-free experience alongside other
-            features such as curated collections, custom web platform updates,
-            offline access, and more. Subscribers to paid tiers of MDN Plus have
-            the option to browse MDN without ads.
-          </p>
-          <Button href="/en-US/advertising" target="_self">
             Learn more →
           </Button>
         </section>

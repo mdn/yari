@@ -95,10 +95,56 @@ The MDN team has:
 
 ## Has the HTTP Observatory API been updated to use the new tests?
 
-Not yet. The API will continue using the old test infrastructure for a while,
-therefore you will see some small differences between test scores returned by
-the API and the website. The API will be updated to use the new tests in a
-near-future iteration.
+Yes. The new v2 API is available at an updated URL —
+`https://observatory-api.mdn.mozilla.net/api/v2/scan` — and the response is now
+more concise. For example, a [`POST`](/en-US/docs/Web/HTTP/Methods/POST) request
+to `https://observatory-api.mdn.mozilla.net/api/v2/scan?host=mdn.net` will
+return a JSON payload like this:
+
+```json
+{
+  "id": 53494870,
+  "details_url": "https://developer.mozilla.org/en-US/observatory/analyze?host=mdn.dev",
+  "algorithm_version": 4,
+  "scanned_at": "2024-10-11T13:21:36.453Z",
+  "error": null,
+  "grade": "A+",
+  "score": 105,
+  "status_code": 200,
+  "tests_failed": 0,
+  "tests_passed": 10,
+  "tests_quantity": 10
+}
+```
+
+We have removed several fields that were of limited use for CI integration, like
+the complete response header listing. The important metrics like `score` and
+`grade` are still included. We encourage you to migrate to the new API as soon
+as possible: The v1 endpoint will be shut down on October 31, 2024.
+
+For reference, the v1 API returned a JSON payload with the following structure:
+
+```json
+{
+  "algorithm_version": 3,
+  "end_time": "Fri, 11 Oct 2024 13:19:31 GMT",
+  "grade": "A+",
+  "hidden": false,
+  "likelihood_indicator": "LOW",
+  "response_headers": {
+    "Accept-Ranges": "none",
+    "Another-Header": "another-value"
+  },
+  "scan_id": 56728847,
+  "score": 100,
+  "start_time": "Fri, 11 Oct 2024 13:19:30 GMT",
+  "state": "FINISHED",
+  "status_code": 200,
+  "tests_failed": 0,
+  "tests_passed": 10,
+  "tests_quantity": 10
+}
+```
 
 ## Does the new HTTP Observatory provide specific TLS and certificate data?
 

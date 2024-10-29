@@ -4,15 +4,11 @@
  */
 import sanitizeFilename from "sanitize-filename";
 import * as cheerio from "cheerio";
+import chalk from "chalk";
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
-const INJECT_SECTION_ID_TAGS = new Set([
-  ...HEADING_TAGS,
-  "section",
-  "div",
-  "dt",
-]);
+const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section", "dt"]);
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
@@ -130,7 +126,6 @@ function collectClosestCode($start) {
       ];
     });
     if (pairs.some(([, code]) => !!code)) {
-      $start.prop("title", $level.first(":header").text());
       return Object.fromEntries(pairs);
     }
   }
@@ -316,6 +311,11 @@ export class HTMLTool {
       // We're here because we can't find the sectionID, so instead we're going
       // to find the live-sample iframe by its id (iframeID, NOT sectionID), and
       // then collect the closest blocks of code for the live sample.
+      console.warn(
+        chalk.yellow(
+          `invalid header id in live sample ${sectionID} within ${this.pathDescription}`
+        )
+      );
       result = collectClosestCode(findSectionStart(this.$, iframeID));
       if (!result) {
         throw new KumascriptError(

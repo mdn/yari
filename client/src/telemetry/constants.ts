@@ -22,6 +22,7 @@ export const BANNER_BLOG_LAUNCH_CLICK = "banner_blog_launch_click";
 export const AI_HELP = "ai_help";
 export const BANNER_AI_HELP_CLICK = "banner_ai_help_click";
 export const BANNER_SCRIMBA_CLICK = "banner_scrimba_click";
+export const BANNER_SCRIMBA_VIEW = "banner_scrimba_view";
 export const PLAYGROUND = "play_action";
 export const AI_EXPLAIN = "ai_explain";
 export const SETTINGS = "settings";
@@ -86,3 +87,14 @@ export const LANGUAGE_REMEMBER = "language_remember";
 export const THEME_SWITCHER = "theme_switcher";
 export const SURVEY = "survey";
 export const HOMEPAGE_HERO = "homepage_hero";
+export const HOMEPAGE = "homepage";
+export const HOMEPAGE_ITEMS = Object.freeze({
+  ARTICLE: "article",
+  ARTICLE_TAG: "article_tag",
+  NEWS: "news",
+  NEWS_SOURCE: "news_source",
+  CONTRIBUTION: "contribution",
+  CONTRIBUTION_REPO: "contribution_repo",
+});
+
+export const EXTERNAL_LINK = "external-link";
