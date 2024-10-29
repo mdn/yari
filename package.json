@@ -168,7 +168,7 @@
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
-    "@types/node": "^18.19.59",
+    "@types/node": "^18.19.60",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
