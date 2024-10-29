@@ -641,15 +641,29 @@ program
       }
       let filesWritten = 0;
       for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const sorted = [...Object.entries(history)];
+        sorted.sort(([a], [b]) => {
+          if (a > b) {
+            return 1;
+          }
+          if (a < b) {
+            return -1;
+          }
+          return 0;
+        });
         const root = getRoot(locale);
         const outputFile = path.join(root, locale, "_githistory.json");
-        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        fs.writeFileSync(
+          outputFile,
+          JSON.stringify(Object.fromEntries(sorted), null, 2),
+          "utf-8"
+        );
         filesWritten += 1;
         if (verbose) {
           console.log(
             chalk.green(
               `Wrote '${locale}' ${Object.keys(
-                history
+                sorted
               ).length.toLocaleString()} paths into ${outputFile}`
             )
           );
