@@ -44,6 +44,7 @@ jobs:
         with:
           repository: mdn/content
           path: mdn/content
+          ref: rari
           # Yes, this means fetch EVERY COMMIT EVER.
           # It's probably not sustainable in the far future (e.g. past 2021)
           # but for now it's good enough. We'll need all the history
@@ -111,6 +112,12 @@ jobs:
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://test.developer.allizom.org"
 
+          # rari
+          BUILD_OUT_ROOT: "client/build"
+          GENERIC_PAGES_ROOT: "copy"
+          LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
+          INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
@@ -168,31 +175,14 @@ jobs:
           echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn build:prepare
+          yarn build:client
+          yarn build:ssr
 
-          #yarn tool sync-translated-content
+          yarn rari content sync-translated-content
 
-          # Build using one process per locale.
-          # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us fr; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
-            pids+=($!)
-          done
-
-          for pid in "${pids[@]}"; do
-            wait $pid
-          done
-
-          du -sh client/build
-
-          # Build the blog
-          yarn build:blog
-
-          # Build the curriculum
-          yarn build:curriculum
-
-          # Generate sitemap index file
-          yarn build --sitemap-index
+          yarn rari popularities
+          yarn rari git-history
+          yarn rari build --issues client/build/issues.json --templ-stats
 
           # SSR all pages
           yarn render:html
@@ -241,6 +231,7 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}

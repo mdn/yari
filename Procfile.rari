@@ -1,0 +1,3 @@
+server: yarn start:server
+web: yarn start:client
+rari: yarn rari -- serve -vv

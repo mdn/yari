@@ -331,7 +331,7 @@ function Flaws({
               />
             );
           default:
-            throw new Error(`Unknown flaw check '${flaw.name}'`);
+            return <Unknown key="unknown" flaws={doc.flaws.unknown || []} />;
         }
       })}
     </div>
@@ -531,6 +531,20 @@ function BrokenLinks({
   );
 }
 
+function Unknown({ flaws }: { flaws: GenericFlaw[] }) {
+  return (
+    <div className="flaw flaw__unkown">
+      <h3>{humanizeFlawName("unknown")}</h3>
+      <ul>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            <code>{flaw.explanation}</code>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 function BadBCDQueries({ flaws }: { flaws: BadBCDQueryFlaw[] }) {
   return (
     <div className="flaw flaw__bad_bcd_queries">

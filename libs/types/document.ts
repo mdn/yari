@@ -110,6 +110,7 @@ export type Flaws = Partial<{
   heading_links: HeadingLinksFlaw[];
   translation_differences: TranslationDifferenceFlaw[];
   unsafe_html: UnsafeHTMLFlaw[];
+  unknown: GenericFlaw[];
 }>;
 
 export type Translation = {
