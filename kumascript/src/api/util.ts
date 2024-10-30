@@ -222,7 +222,7 @@ export class HTMLTool {
         // Link the first element child to the ID.
         const firstContent = $element.contents().first();
         if (!firstContent.is("a") && firstContent.find("a").length === 0) {
-          $(firstContent).wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
+          $(firstContent).wrap(`<a href="#${id}"></a>`);
         }
       }
     });
