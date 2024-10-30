@@ -290,7 +290,7 @@ export function useViewed(
 ) {
   const timer = useRef<ViewedTimer>({ timeout: null });
   const isVisible = usePageVisibility();
-  const [node, setNode] = useState<HTMLElement>();
+  const [node, setNode] = useState<HTMLElement | undefined>();
   const isIntersecting = useIsIntersecting(node, intersectionObserverOptions);
 
   useEffect(() => {
@@ -301,6 +301,7 @@ export function useViewed(
           timer.current = {
             timeout: window.setTimeout(() => {
               timer.current = { timeout: -1 };
+              setNode(undefined);
               callback();
             }, 1000),
           };
