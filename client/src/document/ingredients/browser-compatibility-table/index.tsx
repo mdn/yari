@@ -165,9 +165,14 @@ export default function BrowserCompatibilityTable({
   const location = useLocation();
   const gleanClick = useGleanClick();
 
-  const observedNode = useViewed(() => {
-    gleanClick(`${BCD_TABLE}: view -> ${query}`);
-  });
+  const observedNode = useViewed(
+    () => {
+      gleanClick(`${BCD_TABLE}: view -> ${query}`);
+    },
+    {
+      threshold: 0,
+    }
+  );
 
   if (!data || !Object.keys(data).length) {
     throw new Error(
