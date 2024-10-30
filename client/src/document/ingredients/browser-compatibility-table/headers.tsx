@@ -1,6 +1,5 @@
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserName } from "./browser-info";
-import { forwardRef } from "react";
 
 function PlatformHeaders({
   platforms,
@@ -64,16 +63,17 @@ export function browserToIconName(browser: string) {
   return browserStart === "firefox" ? "simple-firefox" : browserStart;
 }
 
-export const Headers = forwardRef<
-  HTMLTableSectionElement,
-  {
-    platforms: string[];
-    browsers: BCD.BrowserName[];
-    browserInfo: BCD.Browsers;
-  }
->(function Headers({ platforms, browsers, browserInfo }, ref) {
+export function Headers({
+  platforms,
+  browsers,
+  browserInfo,
+}: {
+  platforms: string[];
+  browsers: BCD.BrowserName[];
+  browserInfo: BCD.Browsers;
+}) {
   return (
-    <thead ref={ref}>
+    <thead>
       <PlatformHeaders
         platforms={platforms}
         browsers={browsers}
@@ -82,4 +82,4 @@ export const Headers = forwardRef<
       <BrowserHeaders browsers={browsers} />
     </thead>
   );
-});
+}
