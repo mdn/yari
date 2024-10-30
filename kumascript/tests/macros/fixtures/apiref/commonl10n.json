@@ -102,5 +102,12 @@
     "fr": "Interfaces",
     "ja": "インターフェイス",
     "es": "Interfaces"
+  },
+
+  "summary": {
+    "en-US": "The documentation about this has not yet been written; please consider contributing!",
+    "fr": "Cette documentation n'a pas encore été rédigée, vous pouvez aider en contribuant!",
+    "ja": "この項目についての文書はまだ書かれていません。書いてみませんか？",
+    "es": "La documentación acerca de este tema no ha sido escrita todavía. ¡Por favor considera contribuir!"
   }
 }

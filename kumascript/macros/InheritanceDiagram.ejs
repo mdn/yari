@@ -40,7 +40,7 @@ function rectWithText(x, y, fill, interfaceName, reverse) {
   const rectWidth = calculateRectWidth(interfaceName);
   if (reverse) x -= rectWidth;
   return `
-  <a style="text-decoration: none;" xlink:href="${href+interfaceName}">
+  <a style="text-decoration: none;" href="${href+interfaceName}">
     <rect x="${x}" y="${y}" width="${rectWidth}" height="25" fill="${fill}" stroke="#D4DDE4" stroke-width="2px" />
     <text x="${x+rectWidth/2}" y="${y+16}" font-size="10px" fill="#4D4E53" text-anchor="middle">
       ${interfaceName}
