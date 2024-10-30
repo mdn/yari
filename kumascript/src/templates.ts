@@ -27,19 +27,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import ejs from "ejs";
-import { LRUCache } from "lru-cache";
 
 const DEFAULT_MACROS_DIRECTORY = path.normalize(
   fileURLToPath(new URL("../macros", import.meta.url))
 );
-
-const RENDER_CACHE = new LRUCache<string, string>({ max: 100 });
-
-export let isRenderCacheEnabled = false;
-
-export function toggleRenderCache(value: boolean) {
-  isRenderCacheEnabled = value;
-}
 
 export default class Templates {
   private macroDirectory: string;
@@ -111,27 +102,14 @@ export default class Templates {
       throw new ReferenceError(`Unknown macro ${name}`);
     }
     try {
-      const cacheKey = `${args?.env?.locale}:${name}:${JSON.stringify(args.$$)}`;
-
-      let output = RENDER_CACHE.get(cacheKey);
-
-      if (!output) {
-        output = await ejs.renderFile(path, args, {
-          async: true,
-          cache: args.cache || process.env.NODE_ENV === "production",
-        });
-        output = output.trim();
-      }
-
-      if (isRenderCacheEnabled) {
-        RENDER_CACHE.set(cacheKey, output);
-        toggleRenderCache(false);
-      }
-
-      return output;
+      const rendered = await ejs.renderFile(path, args, {
+        async: true,
+        cache: args.cache || process.env.NODE_ENV === "production",
+      });
+      return rendered.trim();
     } catch (error) {
       console.error(
-        `The ${name} macro on ${args?.env?.url} failed to render.`,
+        `The ${name} macro on ${args.env.url} failed to render.`,
         error
       );
       throw error;

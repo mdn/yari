@@ -1,6 +1,4 @@
 <%
-mdn.cache();
-
 async function renderRootItem(slug) {
   const [link, title] = await getPageLinkAndTitle(slug);
   return `<li class="section"><a href="${link}">${title}</a></li>`

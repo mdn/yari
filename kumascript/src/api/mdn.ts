@@ -1,7 +1,6 @@
 import got from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
-import { toggleRenderCache } from "../templates.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;
@@ -121,10 +120,6 @@ const mdn = {
    * Given a string, escapes all quotes within it.
    */
   escapeQuotes: util.escapeQuotes,
-
-  cache(this: KumaThis) {
-    toggleRenderCache(true);
-  },
 
   /**
    * Throw a deprecation error.

@@ -6,6 +6,7 @@
 //
 //  $0  A list of pages to output instead of the subpages of the current page;
 //      OPTIONAL.
+
 function pageSorter(a, b) {
     return a.title.localeCompare(b.title);
 }
@@ -14,7 +15,6 @@ var termList;
 var html = "";
 
 if ($0 && ($0 != undefined)) {
-    mdn.cache();
     termList = JSON.parse($0);
 } else {
     termList = await page.subpagesExpand();
