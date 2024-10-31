@@ -44,7 +44,7 @@ import {
   postProcessSmallerHeadingIDs,
 } from "./utils.js";
 import { addBaseline } from "./web-features.js";
-import { getRepositoryByLocale } from "../libs/locale-utils/index.js";
+import { getRepositoryUrlByLocale } from "../libs/locale-utils/index.js";
 export { default as SearchIndex } from "./search-index.js";
 export { gather as gatherGitHistory } from "./git-history.js";
 export { buildSPAs } from "./spas.js";
@@ -132,11 +132,10 @@ function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
 /**
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
- */
+ */ r;
 function getGitHubURL(root: string, folder: string, filename: string) {
   const [locale] = folder.split("/", 2);
-  const repo = getRepositoryByLocale(locale);
-  const baseURL = `https://github.com/mdn/${repo}`;
+  const baseURL = getRepositoryUrlByLocale(locale);
 
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
@@ -148,8 +147,7 @@ function getGitHubURL(root: string, folder: string, filename: string) {
  * @param {String} hash - the full hash to point to.
  */
 export function getLastCommitURL(locale: string, hash: string) {
-  const repo = getRepositoryByLocale(locale);
-  const baseURL = `https://github.com/mdn/${repo}`;
+  const baseURL = getRepositoryUrlByLocale(locale);
   return `${baseURL}/commit/${hash}`;
 }
 
