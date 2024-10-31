@@ -1,0 +1,2 @@
+server: yarn start:rari-server
+web: yarn start:client
