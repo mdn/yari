@@ -3413,10 +3413,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.9.3.tgz#6356df2647de9eac569f9a52eda3480fa9e70b4d"
   integrity sha512-01s+ac4qerwd6RHD+mVbOEsraDHSgUaefQlEdBbUolnQFjKwCr7luvAlEwW1RFojh67u0z4OUTjPn9LEl4zIkA==
 
-"@types/node@^18.11.18", "@types/node@^18.19.61":
-  version "18.19.61"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.61.tgz#f31be6f643e2e628fffcca359fe59f214bb77923"
-  integrity sha512-z8fH66NcVkDzBItOao+Nyh0fiy7CYdxIyxnNCcZ60aY0I+EA/y4TSi/S/W9i8DIQvwVo7a0pgzAxmDeNnqrpkw==
+"@types/node@^18.11.18", "@types/node@^18.19.62":
+  version "18.19.62"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.62.tgz#7f72e51bbee9d34a91b04faa1c5d098617410b48"
+  integrity sha512-UOGhw+yZV/icyM0qohQVh3ktpY40Sp7tdTW7HxG3pTd7AiMrlFlAJNUrGK9t5mdW0+ViQcFV74zCSIx9ZJpncA==
   dependencies:
     undici-types "~5.26.4"
 
