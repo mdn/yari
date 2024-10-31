@@ -136,7 +136,7 @@ function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
 function getGitHubURL(root: string, folder: string, filename: string) {
   const [locale] = folder.split("/", 2);
   const repo = getRepositoryByLocale(locale);
-  const baseURL = `https://github.com/mdn/${repo}/`;
+  const baseURL = `https://github.com/mdn/${repo}`;
 
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
