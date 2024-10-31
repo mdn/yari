@@ -82,14 +82,26 @@ jobs:
           repository: mdn/curriculum
           path: mdn/curriculum
 
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content
+          path: mdn/translated-content
+          # See matching warning for mdn/content checkout step
+          fetch-depth: 0
+
       - name: Checkout (translated-content-de)
         uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content-de
           path: mdn/translated-content-de
-          # See matching warning for mdn/content checkout step
-          fetch-depth: 0
+
+      - name: Move de into translated-content
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
 
       - name: Checkout (contributor-spotlight)
         uses: actions/checkout@v4
@@ -126,7 +138,7 @@ jobs:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content-de/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
@@ -192,7 +204,7 @@ jobs:
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us de; do
+          for locale in en-us de es fr ja ko pt-br ru zh-cn zh-tw; do
             yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
@@ -255,7 +267,7 @@ jobs:
         working-directory: cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content-de/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
         run: |
           npm ci
           npm run build-redirects
