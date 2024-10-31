@@ -127,6 +127,13 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
+          repository: mdn/generic-content
+          path: mdn/generic-content
+          token: ${{ secrets.GENERIC_CONTENT_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
@@ -199,6 +206,7 @@ jobs:
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
+          GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
           BASE_URL: "https://developer.allizom.org"
 
           # The default for this environment variable is geared for writers

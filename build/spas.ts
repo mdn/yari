@@ -22,6 +22,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
+  GENERIC_CONTENT_ROOT,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
@@ -343,21 +344,23 @@ export async function buildSPAs(options: {
     }
   }
 
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/plus/", import.meta.url)),
-    "plus/docs",
-    "MDN Plus"
-  );
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
-    "observatory/docs",
-    OBSERVATORY_TITLE
-  );
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/community/", import.meta.url)),
-    "",
-    "Contribute to MDN"
-  );
+  if (GENERIC_CONTENT_ROOT) {
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "plus"),
+      "plus/docs",
+      "MDN Plus"
+    );
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "observatory"),
+      "observatory/docs",
+      OBSERVATORY_TITLE
+    );
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "community"),
+      "",
+      "Contribute to MDN"
+    );
+  }
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
