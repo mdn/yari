@@ -13,6 +13,7 @@ import {
 } from "../libs/env/index.js";
 import {
   ACTIVE_LOCALES,
+  DEFAULT_LOCALE,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
@@ -302,9 +303,27 @@ export const read = memoize(
 
     // The last-modified is always coming from the git logs. Independent of
     // which root it is.
-    const gitHistory = getGitHistories(root, locale).get(
-      path.relative(root, filePath)
-    );
+    const historyArgs =
+      locale === "de"
+        ? {
+            root: CONTENT_ROOT,
+            locale: DEFAULT_LOCALE,
+            filePath: filePath.replace(
+              /.*\/files\/de(?=\/)/,
+              path.join(CONTENT_ROOT, DEFAULT_LOCALE.toLowerCase())
+            ),
+          }
+        : {
+            root,
+            locale,
+            filePath,
+          };
+
+    const gitHistory = getGitHistories(
+      historyArgs.root,
+      historyArgs.locale
+    ).get(path.relative(historyArgs.root, historyArgs.filePath));
+
     let modified = null;
     let hash = null;
     if (gitHistory) {
