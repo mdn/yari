@@ -3,13 +3,16 @@ import { Search } from "../../ui/molecules/search";
 import Mandala from "../../ui/molecules/mandala";
 import { useLocale } from "../../hooks";
 import { HOMEPAGE_HERO } from "../../telemetry/constants";
+import { DocumentSurvey } from "../../ui/molecules/document-survey";
+import { useLocation } from "react-router";
 
 export function HomepageHero() {
+  const { pathname } = useLocation();
   const locale = useLocale();
-
   return (
     <div className="homepage-hero dark">
       <section>
+        <DocumentSurvey doc={{ mdn_url: pathname }} />
         <h1>
           Resources for <u>Developers</u>,
           <br /> by Developers

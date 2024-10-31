@@ -4,13 +4,13 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
       <SourceOnGitHubLink doc={doc}>
-        {doc.locale !== "de"
+        {doc.locale !== "fr"
           ? "View this page on GitHub"
           : "Übersetzung auf GitHub anzeigen"}
       </SourceOnGitHubLink>{" "}
       •{" "}
       <NewIssueOnGitHubLink doc={doc}>
-        {doc.locale !== "de"
+        {doc.locale !== "fr"
           ? "Report a problem with this content"
           : "Fehler mit dieser Übersetzung melden"}
       </NewIssueOnGitHubLink>
@@ -35,7 +35,7 @@ const METADATA_TEMPLATE = `
 function fillMetadata(string, doc) {
   let { folder, github_url, last_commit_url } = doc.source;
 
-  if (doc.locale === "de") {
+  if (doc.locale === "fr") {
     github_url = github_url.replace(
       "/translated-content/",
       "/translated-content-de/"
@@ -74,7 +74,7 @@ function NewIssueOnGitHubLink({
       ? "/mdn/translated-content/issues/new"
       : "/mdn/content/issues/new";
 
-  if (locale === "de") {
+  if (locale === "fr") {
     url.pathname = "/mdn/translated-content-de/issues/new";
   }
 
@@ -110,7 +110,7 @@ function SourceOnGitHubLink({
 }) {
   let { github_url, folder } = doc.source;
 
-  if (doc.locale === "de") {
+  if (doc.locale === "fr") {
     github_url = github_url.replace(
       "/translated-content/",
       "/translated-content-de/"
