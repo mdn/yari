@@ -132,7 +132,7 @@ function injectNotecardOnWarnings($: cheerio.CheerioAPI) {
 /**
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
- */ r;
+ */
 function getGitHubURL(root: string, folder: string, filename: string) {
   const [locale] = folder.split("/", 2);
   const baseURL = getRepositoryUrlByLocale(locale);
