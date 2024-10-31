@@ -163,6 +163,7 @@ export const CSP_DIRECTIVES = {
 
     // Shared assets.
     "https://mdn.github.io/shared-assets/",
+    "https://storage.googleapis.com/mdn-dev-static-site/",
 
     // GA4.
     "https://*.google-analytics.com",

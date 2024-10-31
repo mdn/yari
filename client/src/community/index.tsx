@@ -1,21 +1,14 @@
 import "./index.scss";
 import { HydrationData } from "../../../libs/types/hydration";
-import { useEffect, useMemo } from "react";
-import { Section } from "../../../libs/types/document";
+import { useEffect } from "react";
 import useSWR, { SWRConfig } from "swr";
-import { HTTPError } from "../document";
-import { WRITER_MODE } from "../env";
 import { Prose } from "../document/ingredients/prose";
 import { SWRLocalStorageCache } from "../utils";
 import { useIsServer } from "../hooks";
+import { AboutDoc, AboutSection, Header, useAboutDoc } from "../about";
 
-interface CommunityDoc {
-  title: string;
-  sections: Section[];
-}
-
-export function Community(appProps: HydrationData<any, CommunityDoc>) {
-  const doc = useCommunityDoc(appProps);
+export function Community(appProps: HydrationData<any, AboutDoc>) {
+  const doc = useAboutDoc(appProps);
 
   useEffect(() => {
     import("./contributor-list");
@@ -30,13 +23,7 @@ export function Community(appProps: HydrationData<any, CommunityDoc>) {
           doc={doc}
           renderer={(section, i) => {
             if (i === 0) {
-              return (
-                <Header
-                  section={section}
-                  key={section.value.id}
-                  h1={doc?.title}
-                />
-              );
+              return <Header section={section} key={section.value.id} />;
             } else if (section.value.id === "help_us_fix_open_issues") {
               return <Issues section={section} key={section.value.id} />;
             }
@@ -48,46 +35,12 @@ export function Community(appProps: HydrationData<any, CommunityDoc>) {
   );
 }
 
-function useCommunityDoc(
-  appProps?: HydrationData<any, CommunityDoc>
-): CommunityDoc | undefined {
-  const { data } = useSWR<CommunityDoc>(
-    "index.json",
-    async () => {
-      const url = new URL(
-        `${window.location.pathname.replace(/\/$/, "")}/index.json`,
-        window.location.origin
-      ).toString();
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        switch (response.status) {
-          case 404:
-            throw new HTTPError(response.status, url, "Page not found");
-        }
-
-        const text = await response.text();
-        throw new HTTPError(response.status, url, text);
-      }
-
-      return (await response.json())?.hyData;
-    },
-    {
-      fallbackData: appProps?.hyData,
-      revalidateOnFocus: WRITER_MODE,
-      revalidateOnMount: true,
-    }
-  );
-  const doc: CommunityDoc | undefined = data || appProps?.hyData || undefined;
-  return doc;
-}
-
 function RenderCommunityBody({
   doc,
   renderer = () => null,
 }: {
-  doc?: CommunityDoc;
-  renderer?: (section: Section, i: number) => null | JSX.Element;
+  doc?: AboutDoc;
+  renderer?: (section: AboutSection, i: number) => null | JSX.Element;
 }) {
   return doc?.sections.map((section, i) => {
     return (
@@ -98,23 +51,7 @@ function RenderCommunityBody({
   });
 }
 
-function Header({ section, h1 }: { section: any; h1?: string }) {
-  const html = useMemo(
-    () => ({ __html: section.value?.content }),
-    [section.value?.content]
-  );
-  return (
-    <header className="landing-header">
-      <section dangerouslySetInnerHTML={html}></section>
-    </header>
-  );
-}
-
-function Issues({ section }: { section: any }) {
-  const html = useMemo(
-    () => ({ __html: section.value?.content }),
-    [section.value?.content]
-  );
+function Issues({ section }: { section: AboutSection }) {
   const isServer = useIsServer();
   const LABELS = ["good first issue", "accepting PR"];
   const { data } = useSWR(
@@ -134,10 +71,13 @@ function Issues({ section }: { section: any }) {
       revalidateOnFocus: false,
     }
   );
-  return (
+  return section.value.id && section.value.content ? (
     <section aria-labelledby={section.value.id}>
       <h2 id={section.value.id}>{section.value.title}</h2>
-      <div className="section-content" dangerouslySetInnerHTML={html}></div>
+      <div
+        className="section-content"
+        dangerouslySetInnerHTML={{ __html: section.value.content }}
+      ></div>
       <div className="issues-table">
         <table>
           <thead>
@@ -184,5 +124,5 @@ function Issues({ section }: { section: any }) {
         </table>
       </div>
     </section>
-  );
+  ) : null;
 }

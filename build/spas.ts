@@ -360,6 +360,11 @@ export async function buildSPAs(options: {
       "",
       "Contribute to MDN"
     );
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "about"),
+      "",
+      "About MDN"
+    );
   }
 
   // Build all the home pages in all locales.

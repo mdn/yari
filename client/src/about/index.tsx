@@ -1,74 +1,178 @@
-import { useLocale } from "../hooks";
-import { GetInvolved } from "../ui/molecules/get_involved";
+import { HydrationData } from "../../../libs/types/hydration";
+import { useEffect, useState } from "react";
+import { ProseSection } from "../../../libs/types/document";
+import useSWR from "swr";
+import { HTTPError } from "../document";
+import { WRITER_MODE } from "../env";
+import { Prose } from "../document/ingredients/prose";
+
 import "./index.scss";
+import "./custom-elements";
 
-export function About() {
-  const locale = useLocale();
+export interface AboutSection extends ProseSection {
+  H3s?: AboutSection[];
+}
+
+export interface AboutDoc {
+  title: string;
+  sections: AboutSection[];
+}
+
+export function About(appProps: HydrationData<any, AboutDoc>) {
+  const doc = useAboutDoc(appProps);
+
   return (
-    <div className="about">
-      <div className="about-container">
-        <h1 className="mify">Build it better</h1>
-        <p>
-          MDN Web Docs is an open-source, collaborative project documenting Web
-          platform technologies, including{" "}
-          <a href={`/${locale}/docs/Web/CSS`}>CSS</a>,{" "}
-          <a href={`/${locale}/docs/Web/HTML`}>HTML</a>,{" "}
-          <a href={`/${locale}/docs/Web/JavaScript`}>JavaScript</a>, and{" "}
-          <a href={`/${locale}/docs/Web/API/`}>Web APIs</a>. We also provide an
-          extensive set of{" "}
-          <a href={`/${locale}/docs/Learn`}>learning resources</a> for beginning
-          developers and students.
-        </p>
+    <main className="about-container">
+      <RenderAboutBody
+        doc={doc}
+        renderer={(section, i) => {
+          if (i === 0) {
+            return <Header section={section} key={section.value.id} />;
+          } else if (section.H3s) {
+            return <Tabs section={section} key={section.value.id} />;
+          }
+          return null;
+        }}
+      />
+    </main>
+  );
+}
 
-        <header>
-          <span className="headline">
-            <b>
-              MDN's mission is to{" "}
-              <u>provide a blueprint for a better internet</u> and empower a new
-              generation of developers and content creators to build it.
-            </b>
-          </span>
-        </header>
-        <p>
-          We're always striving to connect developers more seamlessly with the
-          tools and information they need to easily build projects on the{" "}
-          <a href="/">open Web</a>. Since our beginnings in 2005, Mozilla and
-          the community have amassed around 45,000 pages of free, open-source
-          content.
-        </p>
-        {/*<Testimonial />*/}
-        <h2 className="_ify">
-          Independent and unbiased - across browsers and technologies
-        </h2>
-        <p>
-          This guiding principle has made MDN Web Docs the go-to repository of
-          independent information for developers, regardless of brand, browser
-          or platform. We are an open community of devs, writers, and other
-          technologists building resources for a better Web, with over 17
-          million monthly MDN users from all over the world. Anyone can
-          contribute, and each of the 45,000 individuals who have done so over
-          the past decades has strengthened and improved the resource. We also
-          receive content contributions from our partners, including Microsoft,
-          Google, Samsung, Igalia, W3C and others. Together we continue to drive
-          innovation on the Web and serve the common good.
-        </p>
-        <h2 className="_ify">Accurate and vetted for quality</h2>
-        <p>
-          Through our GitHub documentation repository, contributors can make
-          changes, submit pull requests, have their contributions reviewed and
-          then merged with existing content. Through{" "}
-          <a
-            href="https://mdn-contributor-docs.mozilla.org/"
-            target="_blank"
-            rel="nofollow noreferrer"
-          >
-            this workflow
-          </a>
-          , we welcome the vast knowledge and experience of our developer
-          community while maintaining a high level of quality, accurate content.
-        </p>
-      </div>
-      <GetInvolved />
-    </div>
+export function useAboutDoc(
+  appProps?: HydrationData<any, AboutDoc>
+): AboutDoc | undefined {
+  const { data } = useSWR<AboutDoc>(
+    "index.json",
+    async () => {
+      const url = new URL(
+        `${window.location.pathname.replace(/\/$/, "")}/index.json`,
+        window.location.origin
+      ).toString();
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        switch (response.status) {
+          case 404:
+            throw new HTTPError(response.status, url, "Page not found");
+        }
+
+        const text = await response.text();
+        throw new HTTPError(response.status, url, text);
+      }
+
+      return (await response.json())?.hyData;
+    },
+    {
+      fallbackData: appProps?.hyData,
+      revalidateOnFocus: WRITER_MODE,
+      revalidateOnMount: true,
+    }
+  );
+  const doc: AboutDoc | undefined = data || appProps?.hyData || undefined;
+  return doc;
+}
+
+function RenderAboutBody({
+  doc,
+  renderer = () => null,
+}: {
+  doc?: AboutDoc;
+  renderer?: (section: AboutSection, i: number) => null | JSX.Element;
+}) {
+  const sections = Array.from(doc?.sections || []).reduce<AboutSection[]>(
+    (acc, curr) => {
+      if (curr.value.isH3) {
+        const prev = acc.at(-1);
+        if (prev) {
+          prev.H3s ? prev.H3s.push(curr) : (prev.H3s = [curr]);
+        }
+      } else {
+        acc.push(Object.assign({}, curr));
+      }
+      return acc;
+    },
+    []
+  );
+  return sections.map((section, i) => {
+    return (
+      renderer(section, i) || (
+        <Prose key={section.value.id} section={section.value} />
+      )
+    );
+  });
+}
+
+export function Header({ section }: { section: AboutSection }) {
+  return section.value.content ? (
+    <header>
+      <section
+        dangerouslySetInnerHTML={{ __html: section.value.content }}
+      ></section>
+    </header>
+  ) : null;
+}
+
+function Tabs({ section }: { section: AboutSection }) {
+  const [activeTab, setActiveTab] = useState(0);
+
+  useEffect(() => {
+    const hash = document.location.hash.startsWith("#our_team")
+      ? "#our_team"
+      : document.location.hash;
+    const tab = section.H3s?.findIndex(({ value }) => `#${value.id}` === hash);
+    if (tab && tab > 0) {
+      setActiveTab(tab);
+    }
+  }, [section.H3s]);
+
+  return (
+    section.value.id &&
+    section.value.content && (
+      <section aria-labelledby={section.value.id}>
+        <h2 id={section.value.id}>{section.value.title}</h2>
+        <div
+          className="section-content"
+          dangerouslySetInnerHTML={{ __html: section.value.content }}
+        />
+        {section.H3s && (
+          <div className="tabs">
+            <div className="tablist-wrapper">
+              <div className="tablist" role="tablist">
+                {section.H3s?.map(
+                  ({ value }, i) =>
+                    value.id &&
+                    value.content && (
+                      <a
+                        id={`${value.id}-tab`}
+                        href={`#${value.id}`}
+                        className={i === activeTab ? "active" : ""}
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls={`${value.id}-panel`}
+                        onClick={() => setActiveTab(i)}
+                      >
+                        {value.title}
+                      </a>
+                    )
+                )}
+              </div>
+            </div>
+            {section.H3s?.map(
+              ({ value }, i) =>
+                value.id &&
+                value.content && (
+                  <div
+                    id={`${value.id}-panel`}
+                    className={`tabpanel ${i === activeTab ? "active" : ""}`}
+                    role="tabpanel"
+                    tabIndex={0}
+                    dangerouslySetInnerHTML={{ __html: value.content }}
+                  />
+                )
+            )}
+          </div>
+        )}
+      </section>
+    )
   );
 }
