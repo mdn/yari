@@ -138,6 +138,18 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content-de
+          path: mdn/translated-content-de
+
+      - name: Move de into translated-content
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
@@ -283,7 +295,7 @@ jobs:
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
+          for locale in en-us de es fr ja ko pt-br ru zh-cn zh-tw; do
             yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
