@@ -291,7 +291,7 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          yarn tool sync-translated-content
+          yarn tool sync-translated-content es fr ja ko pt-br ru zh-cn zh-tw
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
