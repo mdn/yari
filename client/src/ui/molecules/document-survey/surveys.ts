@@ -82,7 +82,7 @@ export const SURVEYS: Survey[] = [
     },
     teaser:
       "Wir arbeiten daran, die deutsche Übersetzung von MDN zu verbessern.",
-    question: "Hätten Sie 2 Minuten, um uns 4 Fragen zu beantworten?",
+    question: "Hätten Sie 2 Minuten, um uns ein paar Fragen zu beantworten?",
     rateFrom: 0,
     rateTill: 1,
     start: 0,
