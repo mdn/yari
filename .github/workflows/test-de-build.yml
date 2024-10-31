@@ -281,7 +281,7 @@ jobs:
           for region in europe-west3; do
             gcloud beta functions deploy mdn-nonprod-test-de-$region \
             --gen2 \
-            --runtime=nodejs18 \
+            --runtime=nodejs20 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \

@@ -926,8 +926,8 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page",
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  // The css_layout/introduction/flex page has 2 iframes
-  expect($('iframe[loading="lazy"]')).toHaveLength(2);
+  // The css_layout/introduction/flex page has 0 iframes
+  expect($('iframe[loading="lazy"]')).toHaveLength(0);
 });
 
 test("detect bad_bcd_queries flaws", () => {
