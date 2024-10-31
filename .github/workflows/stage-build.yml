@@ -146,6 +146,7 @@ jobs:
           path: mdn/translated-content-de
 
       - name: Move de into translated-content
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         run: |
           mv mdn/translated-content-de/files/de mdn/translated-content/files/
           rm -rf mdn/translated-content-de
