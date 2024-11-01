@@ -86,7 +86,7 @@
     "cheerio": "1.0.0-rc.12",
     "cli-progress": "^3.12.0",
     "codemirror": "^6.0.1",
-    "compression": "^1.7.4",
+    "compression": "^1.7.5",
     "compute-baseline": "^0.1.1",
     "cookie": "^0.7.2",
     "cookie-parser": "^1.4.7",
