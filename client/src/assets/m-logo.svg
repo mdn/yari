@@ -1,5 +1,6 @@
-<svg version="1.1" id="m-logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg version="1.1" id="m-logo" role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 302 302" xml:space="preserve">
+	 <title>MDN Logo</title>
 	<g>
 		<path d="M120,14.2L35.3,287.8H0.4L85.2,14.2H120z"/>
 		<path d="M150.9,14.2v273.6h-30.8V14.2H150.9z"/>
