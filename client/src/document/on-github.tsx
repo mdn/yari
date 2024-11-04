@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-import { getRepositoryByLocale } from "../../../libs/locale-utils";
 import { Doc } from "../../../libs/types/document";
 
 export function OnGitHubLink({ doc }: { doc: Doc }) {
@@ -31,7 +29,19 @@ const METADATA_TEMPLATE = `
 `;
 
 function fillMetadata(string, doc) {
-  const { folder, github_url, last_commit_url } = doc.source;
+  let { folder, github_url, last_commit_url } = doc.source;
+
+  if (doc.locale === "de") {
+    github_url = github_url.replace(
+      "/translated-content/",
+      "/translated-content-de/"
+    );
+    last_commit_url = last_commit_url.replace(
+      "/translated-content/",
+      "/translated-content-de/"
+    );
+  }
+
   return string
     .replace(/\$PATHNAME/g, doc.mdn_url)
     .replace(/\$FOLDER/g, folder)
@@ -55,9 +65,15 @@ function NewIssueOnGitHubLink({
   const url = new URL("https://github.com/");
   const sp = new URLSearchParams();
 
-  const repo = useMemo(() => getRepositoryByLocale(locale), [locale]);
+  url.pathname =
+    locale !== "en-US"
+      ? "/mdn/translated-content/issues/new"
+      : "/mdn/content/issues/new";
 
-  url.pathname = `/mdn/${repo}/issues/new`;
+  if (locale === "de") {
+    url.pathname = "/mdn/translated-content-de/issues/new";
+  }
+
   sp.set(
     "template",
     locale !== "en-US"
@@ -88,7 +104,15 @@ function SourceOnGitHubLink({
   doc: Doc;
   children: React.ReactNode;
 }) {
-  const { github_url, folder } = doc.source;
+  let { github_url, folder } = doc.source;
+
+  if (doc.locale === "de") {
+    github_url = github_url.replace(
+      "/translated-content/",
+      "/translated-content-de/"
+    );
+  }
+
   return (
     <a
       href={`${github_url}?plain=1`}

@@ -15,6 +15,9 @@ export const CONTENT_TRANSLATED_ROOT: string;
 export const CONTRIBUTOR_SPOTLIGHT_ROOT: string;
 export const BLOG_ROOT: string;
 export const CURRICULUM_ROOT: string;
+export const REPOSITORY_URLS: {
+  [path: string]: string;
+};
 export const ROOTS: string[];
 export const MAX_FILE_SIZE: number;
 export const LIVE_SAMPLES_BASE_URL: string;
