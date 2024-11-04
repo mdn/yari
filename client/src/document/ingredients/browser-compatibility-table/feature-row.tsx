@@ -18,7 +18,7 @@ import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 import { BCD_TABLE } from "../../../telemetry/constants";
 
-function getCurrentSupportType(
+function getSupportClassName(
   support: SupportStatementExtended | undefined,
   browser: BCD.BrowserStatement
 ): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
@@ -26,17 +26,8 @@ function getCurrentSupportType(
     return "unknown";
   }
 
-  const currentSupport = getCurrentSupport(support)!;
-
-  return getSupportType(currentSupport, browser);
-}
-
-function getSupportType(
-  support: SimpleSupportStatementExtended,
-  browser: BCD.BrowserStatement
-) {
   let { flags, version_added, version_removed, partial_implementation } =
-    support;
+    getCurrentSupport(support)!;
 
   let className;
   if (version_added === null) {
@@ -205,7 +196,7 @@ const CellText = React.memo(
     timeline?: boolean;
   }) => {
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
-    const supportClassName = getCurrentSupportType(support, browser);
+    const supportClassName = getSupportClassName(support, browser);
     const status = getCurrentStatus(support, supportClassName, browser);
 
     let label: string | React.ReactNode;
@@ -458,7 +449,7 @@ function getNotes(
             <React.Fragment key={i}>
               <div className="bc-notes-wrapper">
                 <dt
-                  className={`bc-supports-${getCurrentSupportType(
+                  className={`bc-supports-${getSupportClassName(
                     item,
                     browser
                   )} bc-supports`}
@@ -502,7 +493,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getCurrentSupportType(support, browserInfo);
+  const supportClassName = getSupportClassName(support, browserInfo);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
