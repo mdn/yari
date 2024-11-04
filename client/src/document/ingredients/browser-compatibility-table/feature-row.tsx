@@ -124,51 +124,6 @@ function versionLabelFromSupport(
   );
 }
 
-function getCurrentStatus(
-  support: BCD.SupportStatement | undefined,
-  supportClassName:
-    | "no"
-    | "yes"
-    | "partial"
-    | "preview"
-    | "removed-partial"
-    | "unknown",
-  browser: BCD.BrowserStatement
-) {
-  const currentSupport = getCurrentSupport(support);
-
-  const added = currentSupport?.version_added ?? null;
-  const lastVersion = currentSupport?.version_last ?? null;
-
-  let status:
-    | { isSupported: "unknown" }
-    | {
-        isSupported: "no" | "yes" | "partial" | "preview" | "removed-partial";
-        label?: React.ReactNode;
-      };
-  switch (added) {
-    case null:
-      status = { isSupported: "unknown" };
-      break;
-    case true:
-      status = { isSupported: lastVersion ? "no" : "yes" };
-      break;
-    case false:
-      status = { isSupported: "no" };
-      break;
-    case "preview":
-      status = { isSupported: "preview" };
-      break;
-    default:
-      status = {
-        isSupported: supportClassName,
-        label: versionLabelFromSupport(added, lastVersion, browser),
-      };
-      break;
-  }
-  return status;
-}
-
 const CellText = React.memo(
   ({
     support,
@@ -179,9 +134,40 @@ const CellText = React.memo(
     browser: BCD.BrowserStatement;
     timeline?: boolean;
   }) => {
+    const currentSupport = getCurrentSupport(support);
+
+    const added = currentSupport?.version_added ?? null;
+    const lastVersion = currentSupport?.version_last ?? null;
+
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
     const supportClassName = getSupportClassName(support, browser);
-    const status = getCurrentStatus(support, supportClassName, browser);
+
+    let status:
+      | { isSupported: "unknown" }
+      | {
+          isSupported: "no" | "yes" | "partial" | "preview" | "removed-partial";
+          label?: React.ReactNode;
+        };
+    switch (added) {
+      case null:
+        status = { isSupported: "unknown" };
+        break;
+      case true:
+        status = { isSupported: lastVersion ? "no" : "yes" };
+        break;
+      case false:
+        status = { isSupported: "no" };
+        break;
+      case "preview":
+        status = { isSupported: "preview" };
+        break;
+      default:
+        status = {
+          isSupported: supportClassName,
+          label: versionLabelFromSupport(added, lastVersion, browser),
+        };
+        break;
+    }
 
     let label: string | React.ReactNode;
     let title = "";
