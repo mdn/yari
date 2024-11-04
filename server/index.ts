@@ -285,6 +285,12 @@ app.get("/*/runner.html", (_, res) => {
     .status(200)
     .sendFile(path.join(STATIC_ROOT, "runner.html"));
 });
+app.get(["/*/play-runner.html", "/play-runner.html"], (_, res) => {
+  return res
+    .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+    .status(200)
+    .sendFile(path.join(STATIC_ROOT, "play-runner.html"));
+});
 
 if (CURRICULUM_ROOT) {
   app.get(

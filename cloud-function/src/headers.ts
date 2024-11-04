@@ -106,7 +106,7 @@ export function withRunnerResponseHeaders(
 ): void {
   [
     ["X-Content-Type-Options", "nosniff"],
-    ["Clear-Site-Data", '"*"'],
+    ["Clear-Site-Data", '"cache", "cookies", "storage"'],
     ["Strict-Transport-Security", "max-age=63072000"],
     ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
   ].forEach(([k, v]) => k && v && res.setHeader(k, v));

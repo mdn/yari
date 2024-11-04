@@ -48,7 +48,14 @@ router.all("/pong/*", requireOrigin(Origin.main), express.json(), proxyPong);
 router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
 // Playground.
 router.get(
-  ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
+  [
+    "/[^/]+/docs/*/runner.html",
+    "/[^/]+/blog/*/runner.html",
+    "/runner.html",
+    "/[^/]+/docs/*/play-runner.html",
+    "/[^/]+/blog/*/play-runner.html",
+    "/play-runner.html",
+  ],
   requireOrigin(Origin.play),
   resolveRunnerHtml,
   proxyRunner

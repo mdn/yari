@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  <body>
+    <script>
+      const url = new URL(window.location);
+      const data = JSON.parse(atob(url.searchParams.get("state") || "{}"));
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/play-runner.js", { scope: "/" })
+          .then((registration) => {
+            console.log("Service worker registration succeeded:", registration);
+          })
+          .catch((error) => {
+            console.error(`Service worker registration failed: ${error}`);
+          });
+        navigator.serviceWorker.ready.then((registration) => {
+          console.log(`tying to load code: ${JSON.stringify(data)}`);
+          if (
+            window.frameElement !== null ||
+            window.confirm(`load code? ${JSON.stringify(data)}`)
+          ) {
+            console.log(`loading code: ${JSON.stringify(data)}`);
+            let sp = new URLSearchParams(window.location.search);
+            sp.set("id", globalThis.crypto.randomUUID());
+            window.location.search = sp.toString();
+          } else {
+            registration.unregister().then((success) => {
+              console.log("unregistered", success);
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

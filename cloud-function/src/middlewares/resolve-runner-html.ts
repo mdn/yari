@@ -6,8 +6,13 @@ export async function resolveRunnerHtml(
   next: NextFunction
 ) {
   const urlParsed = new URL(req.url, `${req.protocol}://${req.headers.host}`);
-  if (urlParsed.pathname && urlParsed.pathname.endsWith("/runner.html")) {
-    urlParsed.pathname = "/runner.html";
+  const runner = urlParsed.pathname?.endsWith("/runner.html")
+    ? "/runner.html"
+    : urlParsed.pathname?.endsWith("/play-runner.html")
+      ? "/play-runner.html"
+      : undefined;
+  if (runner) {
+    urlParsed.pathname = runner;
     req.url = urlParsed.toString();
     // Workaround for http-proxy-middleware v2 using `req.originalUrl`.
     // See: https://github.com/chimurai/http-proxy-middleware/pull/731
