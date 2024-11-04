@@ -127,89 +127,93 @@ function FeatureListAccordion({
           index={i}
           activeCell={activeRow === i ? activeColumn : null}
           onToggleCell={([row, column]: [number, number]) => {
-            const cell = `${column}:${row}`;
-            if (!clickedCells.current.has(cell)) {
-              clickedCells.current.add(cell);
-              const feature = features[row];
-              const browser = browsers[column];
-              const support = feature.compat.support[browser];
-
-              function getCurrentSupportType(
-                support: SupportStatementExtended | undefined,
-                browser: BCD.BrowserStatement
-              ):
-                | "no"
-                | "yes"
-                | "partial"
-                | "preview"
-                | "removed"
-                | "removed-partial"
-                | "unknown" {
-                if (!support) {
-                  return "unknown";
-                }
-
-                const currentSupport = getCurrentSupport(support)!;
-
-                const {
-                  flags,
-                  version_added,
-                  version_removed,
-                  partial_implementation,
-                } = currentSupport;
-
-                if (version_added === null) {
-                  return "unknown";
-                } else if (versionIsPreview(version_added, browser)) {
-                  return "preview";
-                } else if (version_added) {
-                  if (version_removed) {
-                    if (partial_implementation) {
-                      return "removed-partial";
-                    } else {
-                      return "removed";
-                    }
-                  } else if (flags && flags.length) {
-                    return "no";
-                  } else if (partial_implementation) {
-                    return "partial";
-                  } else {
-                    return "yes";
-                  }
-                } else {
-                  return "no";
-                }
-              }
-
-              function getCurrentSupportAttributes(
-                support: SupportStatementExtended | undefined
-              ): string[] {
-                const supportItem = getCurrentSupport(support);
-
-                if (!supportItem) {
-                  return [];
-                }
-
-                return [
-                  !!supportItem.prefix && "pre",
-                  hasNoteworthyNotes(supportItem) && "note",
-                  !!supportItem.alternative_name && "alt",
-                  !!supportItem.flags && "flag",
-                  hasMore(support) && "more",
-                ].filter((value) => typeof value === "string");
-              }
-
-              const supportType = getCurrentSupportType(
-                support,
-                browserInfo[browser]
-              );
-              const attrs = getCurrentSupportAttributes(support);
-
-              gleanClick(
-                `${BCD_TABLE}: click ${browser} ${query} -> ${feature.name} = ${supportType} [${attrs.join(",")}]`
-              );
-            }
             dispatchCellToggle([row, column]);
+
+            const cell = `${column}:${row}`;
+            if (clickedCells.current.has(cell)) {
+              return;
+            } else {
+              clickedCells.current.add(cell);
+            }
+
+            const feature = features[row];
+            const browser = browsers[column];
+            const support = feature.compat.support[browser];
+
+            function getCurrentSupportType(
+              support: SupportStatementExtended | undefined,
+              browser: BCD.BrowserStatement
+            ):
+              | "no"
+              | "yes"
+              | "partial"
+              | "preview"
+              | "removed"
+              | "removed-partial"
+              | "unknown" {
+              if (!support) {
+                return "unknown";
+              }
+
+              const currentSupport = getCurrentSupport(support)!;
+
+              const {
+                flags,
+                version_added,
+                version_removed,
+                partial_implementation,
+              } = currentSupport;
+
+              if (version_added === null) {
+                return "unknown";
+              } else if (versionIsPreview(version_added, browser)) {
+                return "preview";
+              } else if (version_added) {
+                if (version_removed) {
+                  if (partial_implementation) {
+                    return "removed-partial";
+                  } else {
+                    return "removed";
+                  }
+                } else if (flags && flags.length) {
+                  return "no";
+                } else if (partial_implementation) {
+                  return "partial";
+                } else {
+                  return "yes";
+                }
+              } else {
+                return "no";
+              }
+            }
+
+            function getCurrentSupportAttributes(
+              support: SupportStatementExtended | undefined
+            ): string[] {
+              const supportItem = getCurrentSupport(support);
+
+              if (!supportItem) {
+                return [];
+              }
+
+              return [
+                !!supportItem.prefix && "pre",
+                hasNoteworthyNotes(supportItem) && "note",
+                !!supportItem.alternative_name && "alt",
+                !!supportItem.flags && "flag",
+                hasMore(support) && "more",
+              ].filter((value) => typeof value === "string");
+            }
+
+            const supportType = getCurrentSupportType(
+              support,
+              browserInfo[browser]
+            );
+            const attrs = getCurrentSupportAttributes(support);
+
+            gleanClick(
+              `${BCD_TABLE}: click ${browser} ${query} -> ${feature.name} = ${supportType} [${attrs.join(",")}]`
+            );
           }}
           locale={locale}
         />
