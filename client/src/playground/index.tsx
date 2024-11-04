@@ -11,7 +11,7 @@ import prettierPluginHTML from "prettier/plugins/html";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { EditorContent, SESSION_KEY, updatePlayIframe } from "./utils";
+import { EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
