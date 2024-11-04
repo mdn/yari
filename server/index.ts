@@ -182,8 +182,6 @@ app.use(cookieParser());
 
 app.use(originRequestMiddleware);
 
-app.use(staticMiddlewares);
-
 app.use(express.urlencoded({ extended: true }));
 
 app.post(
@@ -431,6 +429,9 @@ if (contentProxy) {
     }
   });
 }
+
+app.use(staticMiddlewares);
+
 app.get("/*", (_, res) => send404(res));
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {

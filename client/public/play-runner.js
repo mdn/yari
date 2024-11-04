@@ -14,7 +14,7 @@ function html(code = null) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
+        await navigator.serviceWorker
           .register("/play-runner.js", {scope: "/"})
           .then((registration) => {
 
@@ -77,27 +77,8 @@ function html(code = null) {
         },
       });
 
-      //window.console = consoleProxy;
+      window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
-
-      let initialized = ${initialized ? "true" : "false"};
-      function init(state) {
-        if (initialized) {
-          return;
-        }
-        initialized = true;
-        window.parent.postMessage({ typ: "console", prop: "clear" }, "*");
-        navigator.serviceWorker.controller?.postMessage?.({ type: "init", state });
-      }
-      window.addEventListener("message", (event) => {
-        const e = event.data;
-        if (e.typ === "init") {
-          init(e.state);
-        }
-        if (e.typ === "reload") {
-          window.location.reload();
-        }
-      });
     </script>
     <script>${js}</script>
   </head>

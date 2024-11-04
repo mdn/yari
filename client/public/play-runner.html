@@ -21,7 +21,7 @@
         navigator.serviceWorker.ready.then((registration) => {
           console.log(`tying to load code: ${JSON.stringify(data)}`);
           if (
-            window.frameElement !== null ||
+            window.parent !== window ||
             window.confirm(`load code? ${JSON.stringify(data)}`)
           ) {
             console.log(`loading code: ${JSON.stringify(data)}`);
