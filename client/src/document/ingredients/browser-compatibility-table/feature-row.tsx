@@ -35,22 +35,19 @@ export function getCurrentSupportType(
 function getSupportType(
   support: SimpleSupportStatementExtended,
   browser: BCD.BrowserStatement
-): SupportType {
+) {
   let { flags, version_added, version_removed, partial_implementation } =
     support;
 
-  let className: SupportType;
+  let className;
   if (version_added === null) {
     className = "unknown";
   } else if (versionIsPreview(version_added, browser)) {
     className = "preview";
   } else if (version_added) {
-    if (version_removed) {
-      className = "removed";
-    } else if (flags && flags.length) {
+    className = "yes";
+    if (version_removed || (flags && flags.length)) {
       className = "no";
-    } else {
-      className = "yes";
     }
   } else {
     className = "no";
@@ -60,14 +57,6 @@ function getSupportType(
   }
 
   return className;
-}
-
-function getSupportClassName(supportType: SupportType): string {
-  if (supportType === "removed") {
-    return "no";
-  }
-
-  return supportType;
 }
 
 function getSupportBrowserReleaseDate(
@@ -204,7 +193,6 @@ const CellText = React.memo(
   }) => {
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
     const supportType = getCurrentSupportType(support, browser);
-    const supportClassName = getSupportClassName(supportType);
     const status = getCurrentStatus(support, supportType, browser);
 
     let label: string | React.ReactNode;
@@ -231,7 +219,6 @@ const CellText = React.memo(
         break;
 
       case "no":
-      case "removed":
         title = "No support";
         label = status.label || "No";
         break;
@@ -257,9 +244,9 @@ const CellText = React.memo(
           <span className="icon-wrap">
             <abbr
               className={`
-              bc-level-${supportClassName}
+              bc-level-${supportType}
               icon
-              icon-${supportClassName}`}
+              icon-${supportType}`}
               title={title}
             >
               <span className="bc-support-level">{title}</span>
@@ -521,8 +508,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportType = getCurrentSupportType(support, browserInfo);
-  const supportClassName = getSupportClassName(supportType);
+  const supportClassName = getCurrentSupportType(support, browserInfo);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)

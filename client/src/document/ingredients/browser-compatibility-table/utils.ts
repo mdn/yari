@@ -17,7 +17,6 @@ export type SupportType =
   | "yes"
   | "partial"
   | "preview"
-  | "removed"
   | "removed-partial"
   | "unknown";
 
