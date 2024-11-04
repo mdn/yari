@@ -59,12 +59,10 @@ const FEEDBACK_REASONS: Partial<Record<FeedbackReason, string>> = {
   other: "Other",
 };
 
-const FEEDBACK_REASONS_DE: Required<Record<FeedbackReason, string>> = {
+const FEEDBACK_REASONS_DE: Partial<Record<FeedbackReason, string>> = {
   technical: "Übersetzung enthält fachliche Fehler",
   consistency: "Begriffe sind inkonsistent übersetzt",
-  outdated: "Übersetzung ist veraltet",
-  incomplete: "Übersetzung ist unvollständig",
-  incomprehensible: "Übersetzung nicht verständlich",
+  incomprehensible: "Übersetzung ist nicht verständlich",
   linguistic: "Übersetzung enthält sprachliche Fehler",
   code_examples: "Code-Beispiele funktionieren nicht",
   other: "Sonstige",
