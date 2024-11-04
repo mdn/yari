@@ -3,14 +3,18 @@ import { useLocation } from "react-router-dom";
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
-import {
-  FeatureRow,
-  getCurrentSupportAttributes,
-  getCurrentSupportType,
-} from "./feature-row";
+import { FeatureRow } from "./feature-row";
 import { Headers } from "./headers";
 import { Legend } from "./legend";
-import { listFeatures } from "./utils";
+import {
+  getCurrentSupport,
+  hasMore,
+  hasNoteworthyNotes,
+  listFeatures,
+  SimpleSupportStatementExtended,
+  SupportStatementExtended,
+  versionIsPreview,
+} from "./utils";
 import { useViewed } from "../../../hooks";
 import { BCD_TABLE } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
@@ -129,15 +133,87 @@ function FeatureListAccordion({
               const feature = features[row];
               const browser = browsers[column];
               const support = feature.compat.support[browser];
+
+              function getCurrentSupportType(
+                support: SupportStatementExtended | undefined,
+                browser: BCD.BrowserStatement
+              ) {
+                if (!support) {
+                  return "unknown";
+                }
+                const currentSupport = getCurrentSupport(support)!;
+
+                return getSupportType(currentSupport, browser);
+              }
+
+              function getSupportType(
+                support: SimpleSupportStatementExtended,
+                browser: BCD.BrowserStatement
+              ):
+                | "no"
+                | "yes"
+                | "partial"
+                | "preview"
+                | "removed"
+                | "removed-partial"
+                | "unknown" {
+                const {
+                  flags,
+                  version_added,
+                  version_removed,
+                  partial_implementation,
+                } = support;
+
+                if (version_added === null) {
+                  return "unknown";
+                } else if (versionIsPreview(version_added, browser)) {
+                  return "preview";
+                } else if (version_added) {
+                  if (version_removed) {
+                    if (partial_implementation) {
+                      return "removed-partial";
+                    } else {
+                      return "removed";
+                    }
+                  } else if (flags && flags.length) {
+                    return "no";
+                  } else if (partial_implementation) {
+                    return "partial";
+                  } else {
+                    return "yes";
+                  }
+                } else {
+                  return "no";
+                }
+              }
+
+              function getCurrentSupportAttributes(
+                support:
+                  | BCD.SimpleSupportStatement
+                  | BCD.SimpleSupportStatement[]
+                  | undefined
+              ): string[] {
+                const supportItem = getCurrentSupport(support);
+
+                if (!supportItem) {
+                  return [];
+                }
+
+                return [
+                  !!supportItem.prefix && "pre",
+                  hasNoteworthyNotes(supportItem) && "note",
+                  !!supportItem.alternative_name && "alt",
+                  !!supportItem.flags && "flag",
+                  hasMore(support) && "more",
+                ].filter((value) => typeof value === "string");
+              }
+
               const supportType = getCurrentSupportType(
                 support,
                 browserInfo[browser]
               );
-              const { ...supportAttributes } =
-                getCurrentSupportAttributes(support);
-              const attrs = Object.keys(supportAttributes).filter(
-                (key) => supportAttributes[key]
-              );
+              const attrs = getCurrentSupportAttributes(support);
+
               gleanClick(
                 `${BCD_TABLE}: click ${browser} ${query} -> ${feature.name} = ${supportType} [${attrs.join(",")}]`
               );
