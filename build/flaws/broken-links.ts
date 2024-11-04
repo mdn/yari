@@ -12,6 +12,8 @@ import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
 import { ONLY_AVAILABLE_IN_ENGLISH } from "../../libs/l10n/l10n.js";
+import web from "../../kumascript/src/api/web.js";
+import mdn from "../../kumascript/src/api/mdn.js";
 
 const _safeToHttpsDomains = new Map();
 
@@ -62,7 +64,14 @@ function mutateLink(
     $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
-    $element.attr("title", "This is a link to an unwritten page");
+    const locale = $element.attr("href")?.match(/^\/([^/]+)\//)?.[1] || "en-US";
+    const titleWhenMissing = (mdn as any).getLocalString.call(
+      { env: { locale } },
+      web.getJSONData("L10n-Common"),
+      "summary"
+    );
+    $element.attr("title", titleWhenMissing);
+    $element.attr("href", null);
   }
 }
 

@@ -487,7 +487,7 @@ program
     try {
       if (!options.nohtml) {
         console.warn(
-          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari v3. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
+          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari in the near future. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
         );
       }
 

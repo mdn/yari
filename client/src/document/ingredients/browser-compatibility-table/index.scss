@@ -1,3 +1,4 @@
+@use "sass:meta";
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
@@ -383,10 +384,10 @@ dl.bc-notes-list {
   }
 }
 
-@import "./index-mobile";
-@import "./index-desktop";
-@import "./index-desktop-md";
-@import "./index-desktop-xl";
+@include meta.load-css("index-mobile");
+@include meta.load-css("index-desktop");
+@include meta.load-css("index-desktop-md");
+@include meta.load-css("index-desktop-xl");
 
 .bcd-cell-text-wrapper {
   display: flex;
