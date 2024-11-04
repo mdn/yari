@@ -11,7 +11,6 @@ import {
   hasMore,
   hasNoteworthyNotes,
   listFeatures,
-  SimpleSupportStatementExtended,
   SupportStatementExtended,
   versionIsPreview,
 } from "./utils";
