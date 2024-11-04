@@ -36,30 +36,30 @@ function getSupportType(
   support: SimpleSupportStatementExtended,
   browser: BCD.BrowserStatement
 ): SupportType {
-  const { flags, version_added, version_removed, partial_implementation } =
+  let { flags, version_added, version_removed, partial_implementation } =
     support;
 
+  let className: SupportType;
   if (version_added === null) {
-    return "unknown";
+    className = "unknown";
   } else if (versionIsPreview(version_added, browser)) {
-    return "preview";
+    className = "preview";
   } else if (version_added) {
     if (version_removed) {
-      if (partial_implementation) {
-        return "removed-partial";
-      } else {
-        return "removed";
-      }
+      className = "removed";
     } else if (flags && flags.length) {
-      return "no";
-    } else if (partial_implementation) {
-      return "partial";
+      className = "no";
     } else {
-      return "yes";
+      className = "yes";
     }
   } else {
-    return "no";
+    className = "no";
   }
+  if (partial_implementation) {
+    className = version_removed ? "removed-partial" : "partial";
+  }
+
+  return className;
 }
 
 function getSupportClassName(supportType: SupportType): string {
