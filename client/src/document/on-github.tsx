@@ -4,11 +4,15 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
       <SourceOnGitHubLink doc={doc}>
-        View this page on GitHub
+        {doc.locale !== "de"
+          ? "View this page on GitHub"
+          : "Übersetzung auf GitHub anzeigen"}
       </SourceOnGitHubLink>{" "}
       •{" "}
       <NewIssueOnGitHubLink doc={doc}>
-        Report a problem with this content
+        {doc.locale !== "de"
+          ? "Report a problem with this content"
+          : "Fehler mit dieser Übersetzung melden"}
       </NewIssueOnGitHubLink>
     </div>
   );
