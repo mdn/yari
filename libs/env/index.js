@@ -104,7 +104,7 @@ export const REPOSITORY_URLS = {
 export const ROOTS = [CONTENT_ROOT];
 if (CONTENT_TRANSLATED_ROOT) {
   ROOTS.push(CONTENT_TRANSLATED_ROOT);
-  REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content-de";
+  REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
 function correctPathFromEnv(envVarName) {
