@@ -60,6 +60,8 @@ router.get(
   resolveRunnerHtml,
   proxyRunner
 );
+// Playground service worker. Make sure this only works for Origin.play!
+router.get(["/play-runner.js"], requireOrigin(Origin.play), proxyRunner);
 // Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
