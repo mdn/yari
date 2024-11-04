@@ -11,8 +11,8 @@ export function LocalizedContentNote({
     de: {
       linkText: (
         <>
-          <strong>Experimentell</strong>: Dieser Inhalt wurde mit GPT-4o aus dem
-          Englischen übersetzt, und kann fehlerhaft sein.
+          <strong>Experimentell</strong>: Dieser Inhalt wurde automatisch aus
+          dem Englischen übersetzt, und kann Fehler enthalten.
         </>
       ),
       url: "https://github.com/orgs/mdn/discussions/741",
