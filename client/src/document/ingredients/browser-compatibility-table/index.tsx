@@ -137,18 +137,6 @@ function FeatureListAccordion({
               function getCurrentSupportType(
                 support: SupportStatementExtended | undefined,
                 browser: BCD.BrowserStatement
-              ) {
-                if (!support) {
-                  return "unknown";
-                }
-                const currentSupport = getCurrentSupport(support)!;
-
-                return getSupportType(currentSupport, browser);
-              }
-
-              function getSupportType(
-                support: SimpleSupportStatementExtended,
-                browser: BCD.BrowserStatement
               ):
                 | "no"
                 | "yes"
@@ -157,12 +145,18 @@ function FeatureListAccordion({
                 | "removed"
                 | "removed-partial"
                 | "unknown" {
+                if (!support) {
+                  return "unknown";
+                }
+
+                const currentSupport = getCurrentSupport(support)!;
+
                 const {
                   flags,
                   version_added,
                   version_removed,
                   partial_implementation,
-                } = support;
+                } = currentSupport;
 
                 if (version_added === null) {
                   return "unknown";
@@ -188,10 +182,7 @@ function FeatureListAccordion({
               }
 
               function getCurrentSupportAttributes(
-                support:
-                  | BCD.SimpleSupportStatement
-                  | BCD.SimpleSupportStatement[]
-                  | undefined
+                support: SupportStatementExtended | undefined
               ): string[] {
                 const supportItem = getCurrentSupport(support);
 
