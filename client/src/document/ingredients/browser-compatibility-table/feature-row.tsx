@@ -19,7 +19,7 @@ import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 import { BCD_TABLE } from "../../../telemetry/constants";
 
-export function getCurrentSupportType(
+function getCurrentSupportType(
   support: SupportStatementExtended | undefined,
   browser: BCD.BrowserStatement
 ): SupportType {
