@@ -287,39 +287,20 @@ function Icon({ name }: { name: string }) {
 }
 
 function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
-  const attrs = getCurrentSupportAttributes(support);
-
-  if (!attrs) {
-    return null;
-  }
-
-  const icons = [
-    attrs.pre && <Icon key="prefix" name="prefix" />,
-    attrs.note && <Icon key="footnote" name="footnote" />,
-    attrs.alt && <Icon key="altname" name="altname" />,
-    attrs.flag && <Icon key="disabled" name="disabled" />,
-    attrs.more && <Icon key="more" name="more" />,
-  ].filter(Boolean);
-
-  return icons.length ? <div className="bc-icons">{icons}</div> : null;
-}
-
-export function getCurrentSupportAttributes(
-  support: BCD.SimpleSupportStatement | BCD.SimpleSupportStatement[] | undefined
-) {
   const supportItem = getCurrentSupport(support);
-
   if (!supportItem) {
     return null;
   }
 
-  return {
-    pre: !!supportItem.prefix,
-    note: hasNoteworthyNotes(supportItem),
-    alt: !!supportItem.alternative_name,
-    flag: !!supportItem.flags,
-    more: hasMore(support),
-  };
+  const icons = [
+    supportItem.prefix && <Icon key="prefix" name="prefix" />,
+    hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
+    supportItem.alternative_name && <Icon key="altname" name="altname" />,
+    supportItem.flags && <Icon key="disabled" name="disabled" />,
+    hasMore(support) && <Icon key="more" name="more" />,
+  ].filter(Boolean);
+
+  return icons.length ? <div className="bc-icons">{icons}</div> : null;
 }
 
 function FlagsNote({
