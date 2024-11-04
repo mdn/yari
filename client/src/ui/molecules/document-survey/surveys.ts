@@ -72,7 +72,20 @@ export const SURVEYS: Survey[] = [
   {
     key: SurveyKey.DE_LOCALE_2024_EVAL,
     bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
-    show: (doc: Doc) => /de(\/|$)/i.test(doc.mdn_url),
+    show: (doc: Doc) => {
+      if (!doc.mdn_url.startsWith("/de/docs/")) {
+        // Exclude other languages.
+        return false;
+      }
+
+      try {
+        // Exclude initial page view.
+        const referrer = new URL(document.referrer);
+        return referrer.pathname.startsWith("/de/docs/");
+      } catch (e) {
+        return false;
+      }
+    },
     src: (doc: Doc) => {
       const url = new URL(
         "https://survey.alchemer.com/s3/8073795/Feedback-zur-deutschen-Version-von-MDN"
