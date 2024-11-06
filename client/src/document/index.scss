@@ -954,6 +954,10 @@ html a.only-in-en-us:after {
   vertical-align: super;
 }
 
+html[lang="de"] a.only-in-en-us:after {
+  content: "(engl.)";
+}
+
 html[lang="es"] a.only-in-en-us:after {
   content: "(inglés)";
 }

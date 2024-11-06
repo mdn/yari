@@ -9,6 +9,7 @@ if (/^\d/.test($0)) {
 }
 
 const note = mdn.localString({
+  "de": "Veraltet",
   "en-US": "Deprecated",
   "es": "Obsoleto",
   "fr": "Obsolète",
@@ -20,6 +21,7 @@ const note = mdn.localString({
 });
 
 const desc = mdn.localString({
+  "de":    "Diese Funktion wird nicht mehr empfohlen. Obwohl einige Browser sie möglicherweise noch unterstützen, kann sie bereits aus den relevanten Webstandards entfernt worden sein, befindet sich im Prozess der Entfernung oder wird nur aus Kompatibilitätsgründen beibehalten. Vermeiden Sie die Verwendung und aktualisieren Sie gegebenenfalls bestehenden Code; siehe die <a href='#browser-kompatibilität'>Kompatibilitätstabelle</a> am Ende dieser Seite, um Ihre Entscheidung zu treffen. Beachten Sie, dass diese Funktion jederzeit nicht mehr funktionieren kann.",
   "en-US": "This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the <a href='#browser_compatibility'>compatibility table</a> at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.",
   "es":    "Esta característica ya no se recomienda. Aunque es posible que algunos navegadores aún lo admitan, probablemente ya se ha eliminado de los estándares web relevantes, está en proceso de eliminación o solo se conserva por motivos de compatibilidad. Evite usarlo y actualice el código existente si es posible; consulte la <a href='#browser_compatibility'>tabla de compatibilidad</a> en la parte inferior de esta página para orientar su decisión. Tenga en cuenta que esta característica puede dejar de funcionar en cualquier momento.",
   "fr":    "Cette fonctionnalité a été supprimée des standards du Web. Bien que quelques navigateurs puissent encore la supporter, elle est en cours d'éradication. Ne l'utilisez ni dans d'anciens projets, ni dans de nouveaux. Les pages et applications Web l'utilisant peuvent cesser de fonctionner à tout moment.",

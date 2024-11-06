@@ -4,6 +4,7 @@ type NotecardType =
   | "deprecated"
   | "error"
   | "negative"
-  | "info";
+  | "info"
+  | "experimental";
 
 export type { NotecardType };

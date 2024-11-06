@@ -47,15 +47,31 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
     [doc, isServer, location.hash, force]
   );
 
-  return survey ? <SurveyDisplay survey={survey} force={force} /> : <></>;
+  return survey ? (
+    <SurveyDisplay doc={doc} survey={survey} force={force} />
+  ) : (
+    <></>
+  );
 }
 
-function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
+function SurveyDisplay({
+  doc,
+  survey,
+  force,
+}: {
+  doc: Doc;
+  survey: Survey;
+  force: boolean;
+}) {
   const gleanClick = useGleanClick();
   const details = React.useRef<HTMLDetailsElement | null>(null);
 
   const [originalState] = React.useState(() => getSurveyState(survey.bucket));
   const [state, setState] = React.useState(() => originalState);
+  const source = React.useMemo(
+    () => (typeof survey.src === "function" ? survey.src(doc) : survey.src),
+    [survey, doc]
+  );
 
   React.useEffect(() => {
     writeSurveyState(survey.bucket, state);
@@ -166,7 +182,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
         {state.opened_at && (
           <iframe
             title={survey.question}
-            src={survey.src}
+            src={source}
             height={500}
             style={{ overflow: "hidden" }}
           ></iframe>
