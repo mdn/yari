@@ -185,7 +185,7 @@ function LocaleStatusIcon({ locale }: { locale: string }) {
   switch (locale) {
     case "de":
       return (
-        <span title="Diese Sprache ist experimentell.">
+        <span title="Diese Übersetzung ist noch in der Erprobungsphase.">
           <Icon name="experimental" />
         </span>
       );

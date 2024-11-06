@@ -93,8 +93,7 @@ export const SURVEYS: Survey[] = [
       url.searchParams.set("referrer", doc.mdn_url);
       return url.toString();
     },
-    teaser:
-      "Wir arbeiten daran, die deutsche Übersetzung von MDN zu verbessern.",
+    teaser: "Die deutsche Übersetzung von MDN ist noch in der Erprobungsphase.",
     question: "Hätten Sie 2 Minuten, um uns ein paar Fragen zu beantworten?",
     rateFrom: 0,
     rateTill: 1,
