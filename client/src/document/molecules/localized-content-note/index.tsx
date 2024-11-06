@@ -9,8 +9,12 @@ export function LocalizedContentNote({
 }) {
   const activeLocaleNoteContent = {
     de: {
-      linkText:
-        "Dieser Inhalt wurde automatisch aus dem Englischen übersetzt, und kann Fehler enthalten.",
+      linkText: (
+        <>
+          <strong>Experiment</strong>: Dieser Inhalt wurde automatisch aus dem
+          Englischen übersetzt, und kann Fehler enthalten.
+        </>
+      ),
       url: "https://github.com/orgs/mdn/discussions/741",
     },
     "en-US": {
