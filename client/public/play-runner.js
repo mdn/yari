@@ -14,7 +14,7 @@ function html(code = null) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       if ("serviceWorker" in navigator) {
-        await navigator.serviceWorker
+        navigator.serviceWorker
           .register("/play-runner.js", {scope: "/"})
           .then((registration) => {
 
