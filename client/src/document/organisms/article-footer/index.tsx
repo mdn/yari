@@ -42,18 +42,35 @@ enum ArticleFooterView {
   Thanks,
 }
 
-type FeedbackReason = "outdated" | "incomplete" | "code_examples" | "other";
+type FeedbackReason =
+  | "outdated"
+  | "incomplete"
+  | "code_examples"
+  | "technical"
+  | "consistency"
+  | "incomprehensible"
+  | "linguistic"
+  | "other";
 
-const FEEDBACK_REASONS: Required<Record<FeedbackReason, string>> = {
+const FEEDBACK_REASONS: Partial<Record<FeedbackReason, string>> = {
   outdated: "Content is out of date",
   incomplete: "Missing information",
   code_examples: "Code examples not working as expected",
   other: "Other",
 };
 
+const FEEDBACK_REASONS_DE: Partial<Record<FeedbackReason, string>> = {
+  technical: "Übersetzung enthält fachliche Fehler",
+  consistency: "Begriffe sind inkonsistent übersetzt",
+  incomprehensible: "Übersetzung ist nicht verständlich",
+  linguistic: "Übersetzung enthält sprachliche Fehler",
+  code_examples: "Code-Beispiele funktionieren nicht",
+  other: "Sonstige",
+};
+
 export function ArticleFooter({ doc }) {
   const [view, setView] = useState<ArticleFooterView>(ArticleFooterView.Vote);
-  const [reason, setReason] = useState<FeedbackReason>();
+  const [reason, setReason] = useState<string>();
 
   const gleanClick = useGleanClick();
 
@@ -74,33 +91,43 @@ export function ArticleFooter({ doc }) {
         <div className="svg-container">
           <ArticleFooterSVG role="none" />
         </div>
-        <h2>Help improve MDN</h2>
+        <h2>{doc.locale !== "de" ? "Help improve MDN" : "MDN-Feedback-Box"}</h2>
 
         <fieldset className="feedback">
           {view === ArticleFooterView.Vote ? (
             <>
-              <label>Was this page helpful to you?</label>
+              <label>
+                {doc.locale !== "de"
+                  ? "Was this page helpfuul to you?"
+                  : "War diese Übersetzung hilfreich?"}
+              </label>
               <div className="button-container">
                 <Button
                   icon="thumbs-up"
                   extraClasses="yes"
                   onClickHandler={() => handleVote(true)}
                 >
-                  Yes
+                  {doc.locale !== "de" ? "Yes" : "Ja"}
                 </Button>
                 <Button
                   icon="thumbs-down"
                   extraClasses="no"
                   onClickHandler={() => handleVote(false)}
                 >
-                  No
+                  {doc.locale !== "de" ? "No" : "Nein"}
                 </Button>
               </div>
             </>
           ) : view === ArticleFooterView.Feedback ? (
             <>
-              <label>Why was this page not helpful to you?</label>
-              {Object.entries(FEEDBACK_REASONS).map(([key, label]) => (
+              <label>
+                {doc.locale !== "de"
+                  ? "Why was this page not helpful to you?"
+                  : "Warum war diese Übersetzung nicht hilfreich?"}
+              </label>
+              {Object.entries(
+                doc.locale !== "de" ? FEEDBACK_REASONS : FEEDBACK_REASONS_DE
+              ).map(([key, label]) => (
                 <div className="radio-container" key={key}>
                   <input
                     type="radio"
@@ -108,9 +135,7 @@ export function ArticleFooter({ doc }) {
                     name="reason"
                     value={key}
                     checked={reason === key}
-                    onChange={(event) =>
-                      setReason(event.target.value as FeedbackReason)
-                    }
+                    onChange={(event) => setReason(event.target.value)}
                   />
                   <label htmlFor={`reason_${key}`}>{label}</label>
                 </div>
@@ -121,21 +146,30 @@ export function ArticleFooter({ doc }) {
                   isDisabled={!reason}
                   onClickHandler={() => handleFeedback()}
                 >
-                  Submit
+                  {doc.locale !== "de" ? "Submit" : "Abschicken"}
                 </Button>
               </div>
             </>
           ) : (
             <span className="thank-you">
-              Thank you for your feedback! <span className="emoji">❤️</span>
+              {doc.locale !== "de"
+                ? "Thank you for your feedback!"
+                : "Vielen Dank für die Rückmeldung!"}{" "}
+              <span className="emoji">❤️</span>
             </span>
           )}
         </fieldset>
 
-        <Contribute locale={doc.locale} />
+        {doc.locale !== "de" && <Contribute locale={doc.locale} />}
         <p className="last-modified-date">
-          <LastModified value={doc.modified} locale={doc.locale} /> by{" "}
-          <Authors url={doc.mdn_url} />.
+          {doc.locale !== "de" ? (
+            <>
+              <LastModified value={doc.modified} locale={doc.locale} /> by{" "}
+              <Authors url={doc.mdn_url} />.
+            </>
+          ) : (
+            <>Diese Seite wurde automatisch aus dem Englischen übersetzt.</>
+          )}
         </p>
         {doc.isActive && <OnGitHubLink doc={doc} />}
       </div>

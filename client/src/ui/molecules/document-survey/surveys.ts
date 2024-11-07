@@ -12,7 +12,7 @@ export interface Survey {
   // Proportion slice of users to target.
   rateFrom: number;
   rateTill: number;
-  src: string;
+  src: string | ((doc: Doc) => string);
   teaser: string;
   question: string;
   footnote?: string;
@@ -24,6 +24,7 @@ enum SurveyBucket {
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
   DE_LOCALE_2024 = "DE_LOCALE_2024",
+  DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
@@ -40,6 +41,7 @@ enum SurveyKey {
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
   CSS_CASCADE_2022_B = "CSS_CASCADE_2022_B",
   DE_LOCALE_2024 = "DE_LOCALE_2024",
+  DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
@@ -66,5 +68,36 @@ export const SURVEYS: Survey[] = [
       "In the past year, have you built an installable web application?",
     ...survey_duration(SurveyBucket.WEB_APP_AUGUST_2024),
     ...survey_rates(SurveyKey.WEB_APP_AUGUST_2024),
+  },
+  {
+    key: SurveyKey.DE_LOCALE_2024_EVAL,
+    bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
+    show: (doc: Doc) => {
+      if (!doc.mdn_url.startsWith("/de/docs/")) {
+        // Exclude other languages.
+        return false;
+      }
+
+      try {
+        // Exclude initial page view.
+        const referrer = new URL(document.referrer);
+        return referrer.pathname.startsWith("/de/docs/");
+      } catch (e) {
+        return false;
+      }
+    },
+    src: (doc: Doc) => {
+      const url = new URL(
+        "https://survey.alchemer.com/s3/8073795/Feedback-zur-deutschen-Version-von-MDN"
+      );
+      url.searchParams.set("referrer", doc.mdn_url);
+      return url.toString();
+    },
+    teaser: "Diese deutsche Übersetzung von MDN ist Teil eines Experiments.",
+    question: "Hätten Sie 2 Minuten, um uns ein paar Fragen zu beantworten?",
+    rateFrom: 0,
+    rateTill: 1,
+    start: 0,
+    end: Infinity,
   },
 ];
