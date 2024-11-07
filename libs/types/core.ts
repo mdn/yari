@@ -1,4 +1,5 @@
 export type Locale =
+  | "de"
   | "en-US"
   | "es"
   | "fr"

@@ -144,6 +144,10 @@ export default function render(
     "_"
   );
 
+  if (locale === "de") {
+    // Prevent experimental German locale from being indexed.
+    onlyFollow = true;
+  }
   const robotsContent =
     !ALWAYS_ALLOW_ROBOTS || (doc && doc.noIndexing) || noIndexing
       ? "noindex, nofollow"
