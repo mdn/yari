@@ -351,7 +351,7 @@ function RenderSideOrTopBanner({
           target="_blank"
           rel="noreferrer"
         >
-          Mozilla ads
+          Ad
         </a>
       </p>
 
@@ -391,7 +391,12 @@ function RenderHpPlacement({
     <section
       ref={place}
       className={["place", ...extraClassNames].join(" ")}
-      style={style}
+      style={
+        {
+          "--place-hp-width": `${imageWidth}px`,
+          ...style,
+        } as React.CSSProperties
+      }
     >
       <a
         className="pong"
@@ -409,6 +414,15 @@ function RenderHpPlacement({
           height={imageHeight}
         ></img>
       </a>
+      <a
+        href="/en-US/advertising"
+        className="pong-note"
+        data-glean="pong: pong->about"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Ad
+      </a>{" "}
     </section>
   );
 }
@@ -457,23 +471,8 @@ function RenderBottomBanner({
           target="_blank"
           rel="noreferrer"
         >
-          Mozilla ads
+          Ad
         </a>
-        {showNoAds && (
-          <a
-            className="no-pong"
-            data-glean={
-              "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-            }
-            href={
-              user?.isSubscriber
-                ? "/en-US/plus/settings?ref=nope"
-                : "/en-US/plus?ref=nope"
-            }
-          >
-            Don't want to see ads?
-          </a>
-        )}
       </section>
     </div>
   );

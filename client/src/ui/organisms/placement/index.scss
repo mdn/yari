@@ -10,6 +10,25 @@ section.place {
     text-decoration: none;
   }
 
+  a.pong-note {
+    background-color: var(--text-secondary);
+    border: 1px solid var(--background-secondary);
+    border-radius: 0.25rem;
+    color: var(--background-secondary);
+    font-size: 0.625rem;
+    opacity: 0.5;
+    padding: 0 0.25rem;
+    text-decoration: underline;
+    text-transform: uppercase;
+    width: max-content;
+
+    &:focus,
+    &:hover {
+      opacity: unset;
+      text-decoration: none;
+    }
+  }
+
   .pong-box2 {
     --place-new-side-background-light: #111;
     --place-new-side-color-light: #fff;
@@ -36,20 +55,10 @@ section.place {
     }
 
     .pong-note {
-      background-color: var(--place-new-side-color);
-      border: 1px solid var(--place-new-side-background);
-      border-radius: 0.25rem;
-      color: var(--place-new-side-background);
-      font-size: 0.625rem;
       margin: 0.5rem;
-      opacity: 0.4;
-      padding: 0 0.25rem;
       position: absolute;
       right: 0;
-      text-decoration: underline;
-      text-transform: uppercase;
       top: 0;
-      width: max-content;
 
       &:hover {
         opacity: unset;
@@ -147,36 +156,6 @@ section.place {
         padding: 0.5rem;
       }
     }
-
-    .pong-note {
-      color: var(--text-secondary);
-      display: flex;
-      font-size: 0.625rem;
-      justify-content: space-between;
-      margin: 1rem 0.25rem 0 auto;
-      text-decoration: underline;
-      width: max-content;
-    }
-  }
-
-  &.top .pong-note,
-  .no-pong {
-    text-decoration: none;
-
-    &:focus,
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  &.side .pong-note,
-  &.bottom-banner .pong-note {
-    text-decoration: underline;
-
-    &:focus,
-    &:hover {
-      text-decoration: none;
-    }
   }
 
   .no-pong {
@@ -186,6 +165,12 @@ section.place {
     max-width: 12rem;
     padding: 0;
     width: 100%;
+
+    &:focus,
+    &:hover {
+      opacity: unset;
+      text-decoration: none;
+    }
   }
 
   &.side {
@@ -254,14 +239,8 @@ section.place {
       }
 
       .pong-note {
-        background-color: var(--text-primary);
-        border: 1px solid var(--border-primary);
-        border-radius: 0 0 0.5rem 0.5rem;
-        border-top: none;
-        color: var(--background-secondary);
         grid-area: note;
-        margin: 0 0 auto auto;
-        padding: 0 0.5rem 0.125rem;
+        margin: 0.25rem 0 auto auto;
       }
     }
 
@@ -285,17 +264,27 @@ section.place {
 
 section.place.hp-main {
   background-color: var(--place-hp-main-background);
+  display: grid;
+  grid-template-areas: "left place right";
+  grid-template-columns: auto min(var(--place-hp-width), 100vw) auto;
   margin: 0;
   width: 100%;
 
-  a {
+  a.pong {
     display: flex;
+    grid-area: place;
+    grid-column: 1/4;
     justify-content: center;
-    width: 100%;
 
     img {
       height: auto;
     }
+  }
+
+  .pong-note {
+    grid-area: place;
+    grid-column: 2;
+    margin: 0.5rem 0.5rem auto auto;
   }
 }
 
@@ -400,10 +389,8 @@ div.empty-place {
     }
 
     .pong-note {
-      color: var(--place-bottom-banner-color, var(--text-primary));
-      font-size: 0.625rem;
-      grid-area: note;
-      margin-top: 0.5rem;
+      grid-area: pong;
+      margin: 0.25rem 0.25rem auto auto;
     }
 
     .no-pong {
