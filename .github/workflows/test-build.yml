@@ -73,6 +73,19 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content-de
+          path: mdn/translated-content-de
+
+      - name: Move de into translated-content
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
@@ -117,6 +130,7 @@ jobs:
           GENERIC_PAGES_ROOT: "copy"
           LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
