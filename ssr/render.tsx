@@ -159,7 +159,7 @@ export default function render(
   return (
     "<!doctype html>" +
     renderToString(
-      <html lang={locale} prefix="og: https://ogp.me/ns#">
+      <html lang={DEFAULT_LOCALE} prefix="og: https://ogp.me/ns#">
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1" />
