@@ -98,7 +98,7 @@ export function ArticleFooter({ doc }) {
             <>
               <label>
                 {doc.locale !== "de"
-                  ? "Was this page helpfuul to you?"
+                  ? "Was this page helpful to you?"
                   : "War diese Übersetzung hilfreich?"}
               </label>
               <div className="button-container">
