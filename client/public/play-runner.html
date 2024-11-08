@@ -7,8 +7,22 @@
 
   <body>
     <script>
-      const url = new URL(window.location);
-      const data = JSON.parse(atob(url.searchParams.get("state") || "{}"));
+      async function decompressFromBase64(base64String) {
+        function base64ToBytes(base64) {
+          const binString = atob(base64);
+          return Uint8Array.from(binString, (m) => m.codePointAt(0));
+        }
+        const bytes = base64ToBytes(base64String);
+
+        const decompressionStream = new DecompressionStream("deflate-raw");
+
+        const decompressedStream = new Response(
+          new Blob([bytes]).stream().pipeThrough(decompressionStream)
+        ).arrayBuffer();
+
+        return new TextDecoder().decode(await decompressedStream);
+      }
+
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker
           .register("/play-runner.js", { scope: "/" })
@@ -18,7 +32,11 @@
           .catch((error) => {
             console.error(`Service worker registration failed: ${error}`);
           });
-        navigator.serviceWorker.ready.then((registration) => {
+        navigator.serviceWorker.ready.then(async (registration) => {
+          const url = new URL(window.location);
+          const data = JSON.parse(
+            (await decompressFromBase64(url.searchParams.get("state"))) || "{}"
+          );
           console.log(`tying to load code: ${JSON.stringify(data)}`);
           if (
             window.parent !== window ||

@@ -36,6 +36,26 @@ enum DialogState {
   flag,
 }
 
+async function compressAndBase64Encode(inputString: string) {
+  function bytesToBase64(bytes: ArrayBuffer) {
+    const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
+      String.fromCodePoint(byte)
+    ).join("");
+    return btoa(binString);
+  }
+  const inputArray = new Blob([inputString]);
+
+  const compressionStream = new CompressionStream("deflate-raw");
+
+  const compressedStream = new Response(
+    inputArray.stream().pipeThrough(compressionStream)
+  ).arrayBuffer();
+
+  const base64String = bytesToBase64(await compressedStream);
+
+  return base64String;
+}
+
 async function save(editorContent: EditorContent) {
   const res = await fetch("/api/v1/play/", {
     method: "POST",
@@ -107,8 +127,10 @@ export default function Playground() {
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
-  const updateWithCode = (code: EditorContent) => {
-    const sp = new URLSearchParams([["state", btoa(JSON.stringify(code))]]);
+  const updateWithCode = async (code: EditorContent) => {
+    const sp = new URLSearchParams([
+      ["state", await compressAndBase64Encode(JSON.stringify(code))],
+    ]);
 
     if (iframe.current) {
       const url = new URL(iframe.current.src);

@@ -1,10 +1,9 @@
 function html(code = null) {
   const initialized = code !== null;
-  const { css, html, js, heades } = code || {
+  const { css, html, js } = code || {
     css: "",
     html: "",
     js: "",
-    headers: null,
   };
   return `
 <!doctype html>
@@ -13,20 +12,20 @@ function html(code = null) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/play-runner.js", {scope: "/"})
-          .then((registration) => {
+      //if ("serviceWorker" in navigator) {
+      //  navigator.serviceWorker
+      //    .register("/play-runner.js", {scope: "/"})
+      //    .then((registration) => {
 
-            console.log("Service worker registration succeeded in play:", registration);
-            registration.unregister().then((success) => {
-              console.log("unregistered", success);
-            });
-          })
-          .catch((error) => {
-            console.error("Service worker registration failed:", error);
-          });
-        }
+      //      console.log("Service worker registration succeeded in play:", registration);
+      //      registration.unregister().then((success) => {
+      //        console.log("unregistered", success);
+      //      });
+      //    })
+      //    .catch((error) => {
+      //      console.error("Service worker registration failed:", error);
+      //    });
+      //  }
     </script>
     <style>
       /* Legacy css to support existing live samples */
@@ -87,6 +86,22 @@ function html(code = null) {
 `;
 }
 
+async function decompressFromBase64(base64String) {
+  function base64ToBytes(base64) {
+    const binString = atob(base64);
+    return Uint8Array.from(binString, (m) => m.codePointAt(0));
+  }
+  const bytes = base64ToBytes(base64String);
+
+  const decompressionStream = new DecompressionStream("deflate-raw");
+
+  const decompressedStream = new Response(
+    new Blob([bytes]).stream().pipeThrough(decompressionStream)
+  ).arrayBuffer();
+
+  return new TextDecoder().decode(await decompressedStream);
+}
+
 self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
@@ -95,20 +110,26 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(clients.claim());
 });
 
-self.addEventListener("fetch", async (e) => {
-  const url = new URL(e.request.url);
-  console.log(`proxying ${url}`);
-  if (!url.pathname.endsWith("/play-runner.html")) {
-    return;
-  }
-  const data = JSON.parse(atob(url.searchParams.get("state")));
-  console.log(`proxying ${JSON.stringify(data)}`);
+self.addEventListener("fetch", (e) => {
   e.respondWith(
-    new Response(html(data), {
-      headers: {
-        "Content-Type": "text/html",
-        Server: "MDN",
-      },
-    })
+    (async () => {
+      const url = new URL(e.request.url);
+      console.log(`proxying ${url}`);
+      if (!url.pathname.endsWith("/play-runner.html")) {
+        return;
+      }
+      let res;
+      let data = await decompressFromBase64(url.searchParams.get("state"));
+      const json = JSON.parse(data);
+
+      console.log(`proxying ${data}`);
+
+      return new Response(html(json), {
+        headers: {
+          "Content-Type": "text/html",
+          Server: "MDN",
+        },
+      });
+    })()
   );
 });
