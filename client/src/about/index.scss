@@ -131,6 +131,7 @@ main.about-container {
   h5,
   h6 {
     color: var(--about-heading-color);
+    letter-spacing: 0;
   }
 
   > header {
@@ -575,9 +576,13 @@ main.about-container {
       }
     }
 
-    #our_team-panel {
+    #our_team-panel,
+    #our_partners-panel > div {
+      --team-grid-gap: 2.5rem;
+      --team-card-padding: 1.5rem;
+
       display: grid;
-      gap: 2.5rem;
+      gap: var(--team-grid-gap);
       grid-auto-flow: dense;
       grid-template-columns: [full-start] 1fr 1fr 1fr [full-end];
 
@@ -586,9 +591,22 @@ main.about-container {
         grid-template-columns: [full-start] 1fr 1fr [full-end];
       }
 
-      > p {
+      > h4,
+      p {
         grid-column: full;
         margin: 0;
+      }
+
+      h4,
+      h5 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 0;
+        text-transform: none;
+
+        @media (max-width: $screen-md) {
+          font-size: 1rem;
+        }
       }
 
       team-member {
@@ -596,7 +614,7 @@ main.about-container {
         box-shadow: var(--about-team-shadow);
         color: var(--about-team-color);
         cursor: pointer;
-        padding: 1.5rem;
+        padding: var(--team-card-padding);
         scroll-margin-top: calc(
           var(--sticky-header-without-actions-height) + 1.5rem
         );
@@ -605,15 +623,9 @@ main.about-container {
           grid-column: full;
         }
 
-        h4 {
-          font-size: 1.75rem;
-          font-weight: 600;
-          margin: 0;
+        h4,
+        h5 {
           margin-bottom: 0.5rem;
-
-          @media (max-width: $screen-md) {
-            font-size: 1rem;
-          }
         }
 
         li:first-of-type {
@@ -624,6 +636,7 @@ main.about-container {
         img {
           aspect-ratio: 1;
           margin: 0.5rem 0;
+          width: 100%;
         }
 
         a[href^="https://github.com"]
@@ -658,16 +671,21 @@ main.about-container {
           align-content: start;
           cursor: unset;
           display: grid;
-          gap: 0 1.5rem;
+          gap: 0 var(--team-card-padding);
           grid-column: span 2;
           grid-template-areas:
-            "name    name  name"
-            "title   title title"
-            "picture bio   bio"
-            ".       bio   bio";
-          grid-template-columns: 1fr 5rem 1fr;
+            "name    name"
+            "title   title"
+            "picture bio"
+            ".       bio";
+          grid-template-columns:
+            calc(
+              (100% - var(--team-grid-gap) - 2 * var(--team-card-padding)) / 2
+            )
+            1fr;
 
-          h4 {
+          h4,
+          h5 {
             grid-area: name;
           }
 
@@ -682,7 +700,7 @@ main.about-container {
               grid-area: picture;
             }
 
-            li:nth-of-type(3) {
+            li:nth-of-type(3):not(:last-of-type) {
               align-self: end;
               grid-area: picture;
             }
@@ -706,7 +724,7 @@ main.about-container {
               "bio    bio";
             grid-template-columns: 1fr 1fr;
 
-            ul li:nth-of-type(3) {
+            ul li:nth-of-type(3):not(:last-of-type) {
               align-self: start;
               grid-area: github;
 
@@ -724,7 +742,7 @@ main.about-container {
               "bio";
             grid-template-columns: 1fr;
 
-            ul li:nth-of-type(3) {
+            ul li:nth-of-type(3):not(:last-of-type) {
               align-self: end;
               grid-area: picture;
 
@@ -734,6 +752,14 @@ main.about-container {
             }
           }
         }
+      }
+    }
+
+    #our_partners-panel > div {
+      margin-top: 2.5rem;
+
+      &:not(:last-of-type) {
+        margin-bottom: 5rem;
       }
     }
 

@@ -118,7 +118,9 @@ function Tabs({ section }: { section: AboutSection }) {
   useEffect(() => {
     const hash = document.location.hash.startsWith("#our_team")
       ? "#our_team"
-      : document.location.hash;
+      : document.location.hash.startsWith("#our_partners")
+        ? "#our_partners"
+        : document.location.hash;
     const tab = section.H3s?.findIndex(({ value }) => `#${value.id}` === hash);
     if (tab && tab > 0) {
       setActiveTab(tab);

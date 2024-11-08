@@ -34,9 +34,11 @@ export class TeamMember extends LitElement {
     if (this.renderRoot instanceof HTMLElement) {
       this.renderRoot.tabIndex = 0;
 
-      const h4 = this.renderRoot.querySelector("h4");
-      if (h4) {
-        this.renderRoot.id = `our_team_${h4.id}`;
+      const hx = this.renderRoot.querySelector("h4, h5");
+      const panel = hx?.closest(".tabpanel");
+      if (hx && panel) {
+        const id = panel.id.replace("-panel", "");
+        this.renderRoot.id = `${id}_${hx.id}`;
       }
 
       this.renderRoot.addEventListener("focus", ({ currentTarget }) => {
