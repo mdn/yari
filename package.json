@@ -153,7 +153,7 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
-    "web-features": "^2.4.0",
+    "web-features": "^2.5.0",
     "web-specs": "^3.24.0"
   },
   "devDependencies": {
@@ -201,7 +201,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.9.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-n": "^17.13.0",
+    "eslint-plugin-n": "^17.13.1",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-unicorn": "^56.0.0",
