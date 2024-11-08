@@ -23,7 +23,9 @@
         return new TextDecoder().decode(await decompressedStream);
       }
 
-      if ("serviceWorker" in navigator) {
+      const url = new URL(window.location);
+      const state = url.searchParams.get("state");
+      if ("serviceWorker" in navigator && state) {
         navigator.serviceWorker
           .register("/play-runner.js", { scope: "/" })
           .then((registration) => {
@@ -33,10 +35,7 @@
             console.error(`Service worker registration failed: ${error}`);
           });
         navigator.serviceWorker.ready.then(async (registration) => {
-          const url = new URL(window.location);
-          const data = JSON.parse(
-            (await decompressFromBase64(url.searchParams.get("state"))) || "{}"
-          );
+          const data = JSON.parse((await decompressFromBase64(state)) || "{}");
           console.log(`tying to load code: ${JSON.stringify(data)}`);
           if (
             window.parent !== window ||

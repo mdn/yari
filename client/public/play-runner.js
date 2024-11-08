@@ -12,20 +12,20 @@ function html(code = null) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
-      //if ("serviceWorker" in navigator) {
-      //  navigator.serviceWorker
-      //    .register("/play-runner.js", {scope: "/"})
-      //    .then((registration) => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/play-runner.js", {scope: "/"})
+          .then((registration) => {
 
-      //      console.log("Service worker registration succeeded in play:", registration);
-      //      registration.unregister().then((success) => {
-      //        console.log("unregistered", success);
-      //      });
-      //    })
-      //    .catch((error) => {
-      //      console.error("Service worker registration failed:", error);
-      //    });
-      //  }
+            console.log("Service worker registration succeeded in play:", registration);
+            registration.unregister().then((success) => {
+              console.log("unregistered", success);
+            });
+          })
+          .catch((error) => {
+            console.error("Service worker registration failed:", error);
+          });
+        }
     </script>
     <style>
       /* Legacy css to support existing live samples */

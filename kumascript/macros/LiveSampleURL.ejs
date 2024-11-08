@@ -12,7 +12,7 @@ let id = $0;
 let remoteUrl = $1;
 let pagePath = env.url;
 let baseUrl = env.live_samples.base_url;
-let samplePath = `${pagePath}/runner.html`.replace(/\/\/+/g, "/");
+let samplePath = `${pagePath}/play-runner.html`.replace(/\/\/+/g, "/");
 
 if (remoteUrl && remoteUrl.length > 0) {
     pagePath = remoteUrl;

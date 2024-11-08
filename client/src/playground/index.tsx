@@ -11,7 +11,7 @@ import prettierPluginHTML from "prettier/plugins/html";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { EditorContent, SESSION_KEY } from "./utils";
+import { compressAndBase64Encode, EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
@@ -34,26 +34,6 @@ enum DialogState {
   none,
   share,
   flag,
-}
-
-async function compressAndBase64Encode(inputString: string) {
-  function bytesToBase64(bytes: ArrayBuffer) {
-    const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
-      String.fromCodePoint(byte)
-    ).join("");
-    return btoa(binString);
-  }
-  const inputArray = new Blob([inputString]);
-
-  const compressionStream = new CompressionStream("deflate-raw");
-
-  const compressedStream = new Response(
-    inputArray.stream().pipeThrough(compressionStream)
-  ).arrayBuffer();
-
-  const base64String = bytesToBase64(await compressedStream);
-
-  return base64String;
 }
 
 async function save(editorContent: EditorContent) {
