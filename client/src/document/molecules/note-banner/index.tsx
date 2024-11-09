@@ -1,19 +1,22 @@
+import * as React from "react";
+
 import NoteCard from "../../../ui/molecules/notecards";
+import { NotecardType } from "../../../types/notecards";
 
 export function NoteBanner({
-  linkText,
   url,
   type,
+  children,
 }: {
-  linkText: string;
   url: string;
-  type: "neutral" | "warning";
+  type: NotecardType;
+  children: React.ReactNode;
 }) {
   return (
-    <NoteCard extraClasses={`localized-content-note ${type || ""}`}>
+    <NoteCard type={type} extraClasses="localized-content-note">
       <p>
         <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
-          {linkText}
+          {children}
         </a>
       </p>
     </NoteCard>
