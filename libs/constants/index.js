@@ -132,7 +132,7 @@ export const CSP_DIRECTIVES = {
     "live-samples.mdn.allizom.net",
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
-    "*,play.test.mdn.allizom.net",
+    "*.play.test.mdn.allizom.net",
 
     "https://v2.scrimba.com",
     "https://scrimba.com",
