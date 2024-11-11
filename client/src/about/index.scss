@@ -8,12 +8,12 @@ main.about-container {
   --max-width: 74rem;
   --inner-width: calc(min(var(--max-width), 100vw) - 2 * var(--gutter));
 
+  background: var(--about-bg-primary);
+  color: var(--about-color);
+
   @media (max-width: $screen-md) {
     --about-section-gap: 3rem;
   }
-
-  background: var(--about-bg-primary);
-  color: var(--about-color);
 
   @include about.layout;
 
