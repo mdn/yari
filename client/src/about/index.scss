@@ -8,6 +8,10 @@ main.about-container {
   --max-width: 74rem;
   --inner-width: calc(min(var(--max-width), 100vw) - 2 * var(--gutter));
 
+  @media (max-width: $screen-md) {
+    --about-section-gap: 3rem;
+  }
+
   background: var(--about-bg-primary);
   color: var(--about-color);
 
@@ -59,6 +63,7 @@ main.about-container {
       --about-core-values-shadow: 0 4px 15px 0 rgba(179, 179, 179, 0.2);
       --about-team-title-color: #007936;
       --about-team-bg: #fff;
+      --about-team-github-bg: rgba(255, 255, 255, 0.75);
       --about-team-shadow: 0 4px 15px 0 rgba(179, 179, 179, 0.2);
       --about-team-color: #000;
       --about-journey-line-color: #007936;
@@ -108,11 +113,12 @@ main.about-container {
       --about-color: #b3b3b3;
       --about-heading-color: #fff;
       --about-core-values-bg: #000;
-      --about-core-values-bg-secondary: #d7f5dc;
-      --about-core-values-color: #b25c35;
+      --about-core-values-bg-secondary: #007936;
+      --about-core-values-color: #fff;
       --about-core-values-shadow: 0 4px 15px 0 rgba(179, 179, 179, 0.2);
       --about-team-title-color: #8ff295;
       --about-team-bg: #000;
+      --about-team-github-bg: rgba(0, 0, 0, 0.7);
       --about-team-shadow: 0 4px 15px 0 rgba(179, 179, 179, 0.2);
       --about-team-color: #fff;
       --about-journey-line-color: #8ff295;
@@ -131,6 +137,10 @@ main.about-container {
   h5,
   h6 {
     color: var(--about-heading-color);
+    letter-spacing: 0;
+  }
+
+  strong {
     letter-spacing: 0;
   }
 
@@ -230,8 +240,19 @@ main.about-container {
 
     #what_we_offer-panel {
       ul {
-        gap: 5rem 8.5rem;
         @include about.boxes;
+
+        @media (min-width: $screen-md) {
+          gap: 5rem;
+        }
+
+        @media (min-width: $screen-lg) {
+          gap: 5rem 8.5rem;
+        }
+
+        li {
+          justify-content: flex-start;
+        }
 
         @for $i from 1 through 5 {
           li:nth-of-type(#{$i}) {
@@ -243,7 +264,7 @@ main.about-container {
     }
 
     #our_journey-panel {
-      --image-inner-height: calc(720px / 2);
+      --image-inner-height: calc(720px * 0.45);
       --image-border-size: 4px;
       --image-height: calc(
         var(--image-inner-height) + var(--image-border-size) * 2
@@ -252,10 +273,14 @@ main.about-container {
         var(--image-inner-height) * 16 / 9 + var(--image-border-size) * 2
       );
       --dot-height: 3rem;
-      --separator-width: 6rem;
+      --separator-width: 10rem;
       --list-width: calc(
         var(--inner-width) - var(--separator-width) - var(--image-width)
       );
+
+      @media (max-width: $screen-xl) {
+        --separator-width: 6rem;
+      }
 
       > p {
         margin-bottom: 1rem;
@@ -274,21 +299,28 @@ main.about-container {
         }
 
         li {
-          margin: 2rem 0;
+          margin: 8rem 0;
           min-height: var(--image-height);
           padding-right: 2rem;
           position: relative;
+
+          &:first-of-type {
+            margin-top: 2rem;
+          }
+
+          &:last-of-type {
+            margin-bottom: 2rem;
+          }
 
           @media (max-width: $screen-lg) {
             padding-left: 2rem;
           }
 
           &::after {
+            // dot on vertical dashed line
             background-image: var(--about-journey-dot);
             background-position: center center;
             background-repeat: no-repeat;
-            // dot on vertical dashed line
-
             content: "";
             display: block;
             height: var(--dot-height);
@@ -313,19 +345,19 @@ main.about-container {
           font-size: 1.375rem;
           font-weight: 600;
           line-height: 1.5;
-          margin-top: 0;
+          margin: 0;
           position: relative;
           text-decoration-line: underline;
           top: -0.75em;
 
           @media (max-width: $screen-lg) {
             font-size: 1.25rem;
+            margin-bottom: -0.75em;
           }
 
           &::before {
-            background: var(--about-journey-line-color);
             // horizontal line to dot
-
+            background: var(--about-journey-line-color);
             content: "";
             display: none;
             height: 10px;
@@ -344,6 +376,7 @@ main.about-container {
           }
 
           ~ p:last-of-type::after {
+            // image
             background-color: var(--about-journey-image-border);
             background-position: center center;
             background-repeat: no-repeat;
@@ -351,8 +384,6 @@ main.about-container {
             border: var(--image-border-size) solid
               var(--about-journey-image-border);
             box-shadow: var(--about-journey-shadow);
-            // image
-
             content: "";
             display: none;
             height: var(--image-height);
@@ -444,10 +475,17 @@ main.about-container {
         }
       }
 
+      h4 {
+        font-size: 1.75rem;
+        font-weight: 600;
+      }
+
       mdn-image-history ul {
         display: flex;
         gap: 1rem;
+        margin-bottom: -1rem;
         overflow-x: auto;
+        padding-bottom: 1rem; // space for scrollbar
 
         li {
           flex-shrink: 0;
@@ -455,6 +493,9 @@ main.about-container {
 
         img {
           aspect-ratio: 16 / 9;
+          border: var(--image-border-size) solid
+            var(--about-journey-image-border);
+          box-sizing: content-box;
           height: calc(720px / 4);
         }
       }
@@ -462,6 +503,7 @@ main.about-container {
 
     #our_core_values-panel {
       li {
+        border-radius: 0.5rem;
         color: var(--about-core-values-color);
 
         h4 {
@@ -475,7 +517,6 @@ main.about-container {
 
         &:not(:last-of-type) {
           background: var(--about-core-values-bg-secondary);
-          border-radius: 0.5rem;
           margin: 1rem auto;
           padding: 2rem;
 
@@ -505,7 +546,6 @@ main.about-container {
 
         &:last-of-type {
           background: var(--about-core-values-bg);
-          box-shadow: var(--about-core-values-shadow);
           margin-top: 2rem;
           padding: 2rem;
         }
@@ -528,8 +568,17 @@ main.about-container {
 
           &:not(:last-of-type) {
             background: var(--about-core-values-bg);
-            border-radius: 0;
             margin: 0 auto;
+
+            &:not(:first-of-type) {
+              border-top-left-radius: 0;
+              border-top-right-radius: 0;
+            }
+
+            &:not(:nth-last-of-type(2)) {
+              border-bottom-left-radius: 0;
+              border-bottom-right-radius: 0;
+            }
 
             h4 {
               --icon-size: 60px;
@@ -587,7 +636,7 @@ main.about-container {
       grid-template-columns: [full-start] 1fr 1fr 1fr [full-end];
 
       @media (max-width: $screen-lg) {
-        gap: 2rem;
+        --team-grid-gap: 2rem;
         grid-template-columns: [full-start] 1fr 1fr [full-end];
       }
 
@@ -610,10 +659,20 @@ main.about-container {
       }
 
       team-member {
+        align-content: start;
         background: var(--about-team-bg);
         box-shadow: var(--about-team-shadow);
         color: var(--about-team-color);
         cursor: pointer;
+        display: grid;
+        gap: 0;
+        grid-row: span 4;
+        grid-template-areas:
+          "name"
+          "title"
+          "picture"
+          "bio";
+        grid-template-rows: subgrid;
         padding: var(--team-card-padding);
         scroll-margin-top: calc(
           var(--sticky-header-without-actions-height) + 1.5rem
@@ -625,12 +684,33 @@ main.about-container {
 
         h4,
         h5 {
+          grid-area: name;
           margin-bottom: 0.5rem;
+        }
+
+        ul {
+          display: contents;
         }
 
         li:first-of-type {
           color: var(--about-team-title-color);
           font-weight: 600;
+          grid-area: title;
+        }
+
+        li:nth-of-type(2) {
+          grid-area: picture;
+        }
+
+        li:nth-of-type(3):not(:last-of-type) {
+          align-self: end;
+          grid-area: picture;
+        }
+
+        li:last-of-type {
+          grid-area: bio;
+          line-height: 1.75;
+          @include line-clamp(3, 1.75, var(--about-team-bg));
         }
 
         img {
@@ -641,11 +721,12 @@ main.about-container {
 
         a[href^="https://github.com"]
         {
-          background: var(--about-team-bg);
+          background: var(--about-team-github-bg);
           border-top-right-radius: 0.5rem;
           color: var(--about-team-color);
-          margin-top: -2rem;
-          padding-right: 0.5rem;
+          margin-top: -2.75rem;
+          padding: 0.25rem 0.5rem;
+          padding-right: 0.7rem;
           position: absolute;
 
           &::before {
@@ -660,11 +741,6 @@ main.about-container {
             vertical-align: middle;
             width: 1.2em;
           }
-        }
-
-        li:last-of-type {
-          line-height: 1.75;
-          @include line-clamp(3, 1.75, var(--about-team-bg));
         }
 
         &:focus {
@@ -684,45 +760,30 @@ main.about-container {
             )
             1fr;
 
-          h4,
-          h5 {
-            grid-area: name;
-          }
+          li:last-of-type {
+            max-height: unset;
 
-          ul {
-            display: contents;
-
-            li:first-of-type {
-              grid-area: title;
-            }
-
-            li:nth-of-type(2) {
-              grid-area: picture;
-            }
-
-            li:nth-of-type(3):not(:last-of-type) {
-              align-self: end;
-              grid-area: picture;
-            }
-
-            li:last-of-type {
-              grid-area: bio;
-              max-height: unset;
-
-              &::after {
-                display: none;
-              }
+            &::after {
+              display: none;
             }
           }
 
           @media (max-width: $screen-md) {
             grid-template-areas:
-              "name   name"
+              "name   picture"
               "title  picture"
               "github picture"
               ".      picture"
               "bio    bio";
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns:
+              calc(
+                (100% - var(--team-grid-gap) - 2 * var(--team-card-padding)) / 2
+              )
+              1fr;
+
+            img {
+              margin-top: 0;
+            }
 
             ul li:nth-of-type(3):not(:last-of-type) {
               align-self: start;
@@ -741,6 +802,10 @@ main.about-container {
               "picture"
               "bio";
             grid-template-columns: 1fr;
+
+            img {
+              margin-top: 0.5rem;
+            }
 
             ul li:nth-of-type(3):not(:last-of-type) {
               align-self: end;
@@ -819,7 +884,7 @@ main.about-container {
         background-color: transparent;
         background-position: center bottom;
         background-size: 100% 10rem;
-        padding: 1rem;
+        padding: 1rem 0;
         padding-bottom: 12rem;
       }
     }

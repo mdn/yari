@@ -178,6 +178,7 @@
 @mixin boxes {
   display: grid;
   gap: 2rem;
+  grid-auto-rows: 1fr;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
 
   li {
@@ -211,10 +212,6 @@
     p {
       color: var(--boxes-main-color);
       margin: 0;
-
-      &:first-of-type {
-        margin: auto 0;
-      }
     }
   }
 }
