@@ -393,7 +393,7 @@ function RenderHpPlacement({
       className={["place", ...extraClassNames].join(" ")}
       style={
         {
-          "--place-hp-width": `${imageWidth}px`,
+          "--place-banner-width": `${imageWidth}px`,
           ...style,
         } as React.CSSProperties
       }
@@ -443,7 +443,15 @@ function RenderBottomBanner({
   showNoAds,
 }: PlacementRenderArgs) {
   return (
-    <div className="bottom-banner-container" style={style}>
+    <div
+      className="bottom-banner-container"
+      style={
+        {
+          "--place-banner-width": `${imageWidth}px`,
+          ...style,
+        } as React.CSSProperties
+      }
+    >
       <section
         ref={place}
         className={["place", "bottom-banner", ...extraClassNames].join(" ")}

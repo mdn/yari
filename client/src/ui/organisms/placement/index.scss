@@ -262,11 +262,12 @@ section.place {
   --place-new-side-color: var(--place-new-side-color-dark);
 }
 
-section.place.hp-main {
+section.place.hp-main,
+section.place.bottom-banner {
   background-color: var(--place-hp-main-background);
   display: grid;
   grid-template-areas: "left place right";
-  grid-template-columns: auto min(var(--place-hp-width), 100vw) auto;
+  grid-template-columns: auto min(var(--place-banner-width), 100vw) auto;
   margin: 0;
   width: 100%;
 
@@ -357,68 +358,4 @@ div.empty-place {
   --place-top-color: var(--place-top-color-dark);
   --place-top-cta-background: var(--place-top-cta-background-dark);
   --place-top-cta-color: var(--place-top-cta-color-dark);
-}
-
-.bottom-banner-container {
-  background-color: var(
-    --place-bottom-banner-background,
-    var(--background-primary)
-  );
-  color: var(--place-bottom-banner-color, var(--text-primary));
-  margin: 0;
-  width: 100%;
-
-  > section.place.bottom-banner {
-    column-gap: 3rem;
-    display: grid;
-    grid-template-areas:
-      "nope pong note"
-      "nope pong no";
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
-    margin: 0 auto;
-    max-width: var(--max-width);
-    padding: 0 1rem;
-
-    .pong {
-      grid-area: pong;
-      justify-self: center;
-
-      img {
-        height: auto;
-      }
-    }
-
-    .pong-note {
-      grid-area: pong;
-      margin: 0.25rem 0.25rem auto auto;
-    }
-
-    .no-pong {
-      color: var(--place-bottom-banner-color, var(--text-primary));
-      font-size: 0.625rem;
-      grid-area: no;
-      margin-top: auto;
-    }
-
-    @media (max-width: $screen-xl) {
-      grid-template-areas:
-        "pong note"
-        "pong no";
-      grid-template-columns: auto max-content;
-      grid-template-rows: auto 2rem;
-    }
-
-    @media (max-width: $screen-lg) {
-      grid-template-areas:
-        "pong pong"
-        "note no";
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto 2rem;
-
-      .no-pong {
-        justify-self: end;
-        width: fit-content;
-      }
-    }
-  }
 }
