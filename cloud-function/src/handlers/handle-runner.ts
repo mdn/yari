@@ -72,9 +72,11 @@ function renderHtml(code: State | null = null) {
       window.console = consoleProxy;
       window.addEventListener("error", (e) => console.log(e.error));
     </script>
-    <script>${js}</script>
   </head>
-  <body>${html}</body>
+  <body>
+    ${html}
+    <script>${js}</script>
+  </body>
 </html>
 `;
 }
