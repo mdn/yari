@@ -176,7 +176,7 @@ jobs:
           REACT_APP_PLACEMENT_ENABLED: true
 
           # Playground
-          REACT_APP_PLAYGROUND_BASE_HOST: play.test.mdn.allizom.net
+          REACT_APP_PLAYGROUND_BASE_HOST: test.mdnyalp.dev
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
