@@ -53,6 +53,7 @@ import {
   findPostPathBySlug,
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
+import { handleRunner } from "../cloud-function/src/handlers/handle-runner.js";
 
 async function buildDocumentFromURL(url: string) {
   try {
@@ -182,8 +183,6 @@ app.use(cookieParser());
 
 app.use(originRequestMiddleware);
 
-app.use(staticMiddlewares);
-
 app.use(express.urlencoded({ extended: true }));
 
 app.post(
@@ -279,11 +278,8 @@ app.get("/*/contributors.txt", async (req, res) => {
   }
 });
 
-app.get("/*/runner.html", (_, res) => {
-  return res
-    .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-    .status(200)
-    .sendFile(path.join(STATIC_ROOT, "runner.html"));
+app.get("/*/runner.html", (req, res) => {
+  handleRunner(req, res);
 });
 
 if (CURRICULUM_ROOT) {
@@ -425,6 +421,9 @@ if (contentProxy) {
     }
   });
 }
+
+app.use(staticMiddlewares);
+
 app.get("/*", (_, res) => send404(res));
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {

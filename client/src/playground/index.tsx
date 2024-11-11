@@ -11,7 +11,7 @@ import prettierPluginHTML from "prettier/plugins/html";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { EditorContent, SESSION_KEY, updatePlayIframe } from "./utils";
+import { compressAndBase64Encode, EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
@@ -107,6 +107,18 @@ export default function Playground() {
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
+  const updateWithCode = async (code: EditorContent) => {
+    const sp = new URLSearchParams([
+      ["state", await compressAndBase64Encode(JSON.stringify(code))],
+    ]);
+
+    if (iframe.current) {
+      const url = new URL(iframe.current.src);
+      url.search = sp.toString();
+      iframe.current.src = url.href;
+    }
+  };
+
   useEffect(() => {
     if (initialCode) {
       store(SESSION_KEY, initialCode);
@@ -127,33 +139,28 @@ export default function Playground() {
     return code;
   }, [initialCode?.src]);
 
-  let messageListener = useCallback(
-    ({ data: { typ, prop, message } }) => {
-      if (typ === "console") {
-        if (prop === "clear") {
-          setVConsole([]);
-        } else if (
-          (prop === "log" || prop === "error" || prop === "warn") &&
-          typeof message === "string"
-        ) {
-          setVConsole((vConsole) => [...vConsole, { prop, message }]);
-        } else {
-          const warning = "[Playground] Unsupported console message";
-          setVConsole((vConsole) => [
-            ...vConsole,
-            {
-              prop: "warn",
-              message: `${warning} (see browser console)`,
-            },
-          ]);
-          console.warn(warning, { prop, message });
-        }
-      } else if (typ === "ready") {
-        updatePlayIframe(iframe.current, getEditorContent());
+  let messageListener = useCallback(({ data: { typ, prop, message } }) => {
+    if (typ === "console") {
+      if (prop === "clear") {
+        setVConsole([]);
+      } else if (
+        (prop === "log" || prop === "error" || prop === "warn") &&
+        typeof message === "string"
+      ) {
+        setVConsole((vConsole) => [...vConsole, { prop, message }]);
+      } else {
+        const warning = "[Playground] Unsupported console message";
+        setVConsole((vConsole) => [
+          ...vConsole,
+          {
+            prop: "warn",
+            message: `${warning} (see browser console)`,
+          },
+        ]);
+        console.warn(warning, { prop, message });
       }
-    },
-    [getEditorContent]
-  );
+    }
+  }, []);
 
   const setEditorContent = ({ html, css, js, src }: EditorContent) => {
     htmlRef.current?.setContent(html);
@@ -169,6 +176,9 @@ export default function Playground() {
     if (state === State.initial || state === State.remote) {
       if (initialCode && Object.values(initialCode).some(Boolean)) {
         setEditorContent(initialCode);
+        if (!gistId) {
+          updateWithCode(initialCode);
+        }
       } else {
         setEditorContent({
           html: HTML_DEFAULT,
@@ -178,7 +188,7 @@ export default function Playground() {
       }
       setState(State.ready);
     }
-  }, [initialCode, state]);
+  }, [initialCode, state, gistId]);
 
   useEffect(() => {
     window.addEventListener("message", messageListener);
@@ -237,14 +247,7 @@ export default function Playground() {
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
-    iframe.current?.contentWindow?.postMessage(
-      {
-        typ: "reload",
-      },
-      {
-        targetOrigin: "*",
-      }
-    );
+    updateWithCode({ html, css, js });
   };
 
   const format = async () => {

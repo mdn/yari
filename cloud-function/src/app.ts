@@ -21,10 +21,10 @@ import { redirectPreferredLocale } from "./middlewares/redirect-preferred-locale
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
-import { resolveRunnerHtml } from "./middlewares/resolve-runner-html.js";
 import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
+import { handleRunner } from "./handlers/handle-runner.js";
 
 const router = Router();
 router.use(cookieParser());
@@ -50,9 +50,10 @@ router.all("/pimg/*", requireOrigin(Origin.main), proxyPong);
 router.get(
   ["/[^/]+/docs/*/runner.html", "/[^/]+/blog/*/runner.html", "/runner.html"],
   requireOrigin(Origin.play),
-  resolveRunnerHtml,
-  proxyRunner
+  handleRunner
 );
+// Playground service worker. Make sure this only works for Origin.play!
+router.get(["/play-runner.js"], requireOrigin(Origin.play), proxyRunner);
 // Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],

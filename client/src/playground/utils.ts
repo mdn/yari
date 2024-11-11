@@ -1,3 +1,5 @@
+import { PLAYGROUND_BASE_HOST } from "../env";
+
 export const SESSION_KEY = "playground-session-code";
 
 export interface EditorContent {
@@ -44,28 +46,53 @@ export function codeToMarkdown(code: EditorContent): string {
   return parts.join("\n\n");
 }
 
-export function initPlayIframe(
+export async function initPlayIframe(
   iframe: HTMLIFrameElement | null,
-  editorContent: EditorContent | null
+  editorContent: EditorContent | null,
+  fullscreen: boolean = false
 ) {
   if (!iframe || !editorContent) {
     return;
   }
 
-  const message: Message = {
-    typ: "init",
-    state: editorContent,
-  };
-  iframe.contentWindow?.postMessage?.(message, { targetOrigin: "*" });
-  const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
-    const id = new URL(iframe.src, "https://example.com").searchParams.get(
-      "id"
+  const sp = new URLSearchParams([
+    ["state", await compressAndBase64Encode(JSON.stringify(editorContent))],
+  ]);
+
+  if (fullscreen) {
+    const url = new URL(
+      `${window.location.protocol}//${
+        PLAYGROUND_BASE_HOST.startsWith("localhost")
+          ? ""
+          : `${crypto.randomUUID()}.`
+      }${PLAYGROUND_BASE_HOST}`
     );
-    if (id === prop["id"]) {
-      if (typ === "ready") {
-        iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });
-      }
-    }
-  };
-  window.addEventListener("message", deferred);
+    url.pathname = "/runner.html";
+    url.search = sp.toString();
+    window.location.href = url.href;
+  } else if (iframe) {
+    const url = new URL(iframe.src);
+    url.search = sp.toString();
+    iframe.src = url.href;
+  }
+}
+
+export async function compressAndBase64Encode(inputString: string) {
+  function bytesToBase64(bytes: ArrayBuffer) {
+    const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
+      String.fromCodePoint(byte)
+    ).join("");
+    return btoa(binString);
+  }
+  const inputArray = new Blob([inputString]);
+
+  const compressionStream = new CompressionStream("deflate-raw");
+
+  const compressedStream = new Response(
+    inputArray.stream().pipeThrough(compressionStream)
+  ).arrayBuffer();
+
+  const base64String = bytesToBase64(await compressedStream);
+
+  return base64String;
 }
