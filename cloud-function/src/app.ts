@@ -21,7 +21,6 @@ import { redirectPreferredLocale } from "./middlewares/redirect-preferred-locale
 import { redirectTrailingSlash } from "./middlewares/redirect-trailing-slash.js";
 import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
-import { proxyRunner } from "./handlers/proxy-runner.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
 import { handleRunner } from "./handlers/handle-runner.js";
@@ -52,8 +51,6 @@ router.get(
   requireOrigin(Origin.play),
   handleRunner
 );
-// Playground service worker. Make sure this only works for Origin.play!
-router.get(["/play-runner.js"], requireOrigin(Origin.play), proxyRunner);
 // Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
