@@ -1,9 +1,10 @@
+import { Doc } from "../../../../../libs/types/document";
 import { survey_duration, survey_rates } from "../../../env";
 
 export interface Survey {
   key: SurveyKey;
   bucket: SurveyBucket;
-  show: (doc: { mdn_url: string }) => boolean;
+  show: (doc: Pick<Doc, "mdn_url">) => boolean;
   // Start in milliseconds since 1970.
   start: number;
   // End in milliseconds since 1970.
@@ -11,7 +12,7 @@ export interface Survey {
   // Proportion slice of users to target.
   rateFrom: number;
   rateTill: number;
-  src: string | ((doc: { mdn_url: string }) => string);
+  src: string | ((doc: Pick<Doc, "mdn_url">) => string);
   teaser: string;
   question: string;
   footnote?: string;
@@ -61,7 +62,7 @@ export const SURVEYS: Survey[] = [
   {
     key: SurveyKey.DE_LOCALE_2024_EVAL,
     bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
-    show: (doc: { mdn_url: string }) => {
+    show: (doc: Pick<Doc, "mdn_url">) => {
       if (!doc.mdn_url.startsWith("/de/docs/")) {
         // Exclude other languages.
         return false;
@@ -75,7 +76,7 @@ export const SURVEYS: Survey[] = [
         return false;
       }
     },
-    src: (doc: { mdn_url: string }) => {
+    src: (doc: Pick<Doc, "mdn_url">) => {
       const url = new URL(
         "https://survey.alchemer.com/s3/8073795/Feedback-zur-deutschen-Version-von-MDN"
       );
@@ -92,7 +93,7 @@ export const SURVEYS: Survey[] = [
   {
     key: SurveyKey.HOMEPAGE_FEEDBACK_2024,
     bucket: SurveyBucket.HOMEPAGE_FEEDBACK_2024,
-    show: (doc: { mdn_url: string }) => /[^/]+\/$/i.test(doc.mdn_url),
+    show: (doc: Pick<Doc, "mdn_url">) => /[^/]+\/$/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/8075407/MDN-Homepage-Improvements",
     teaser: "We are refreshing our homepage and would love",
     question: "your input",
