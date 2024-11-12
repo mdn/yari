@@ -59,19 +59,6 @@ enum SurveyKey {
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.WEB_APP_AUGUST_2024,
-    bucket: SurveyBucket.WEB_APP_AUGUST_2024,
-    show: (doc: { mdn_url: string }) =>
-      /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7942186/MDN-Web-App-Survey",
-    teaser:
-      "We're working with our partners to learn how developers are building web apps. Share your thoughts and experience in this short survey:",
-    question:
-      "In the past year, have you built an installable web application?",
-    ...survey_duration(SurveyBucket.WEB_APP_AUGUST_2024),
-    ...survey_rates(SurveyKey.WEB_APP_AUGUST_2024),
-  },
-  {
     key: SurveyKey.DE_LOCALE_2024_EVAL,
     bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
     show: (doc: { mdn_url: string }) => {
@@ -108,7 +95,7 @@ export const SURVEYS: Survey[] = [
     show: (doc: { mdn_url: string }) => /[^/]+\/$/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/8075407/MDN-Homepage-Improvements",
     teaser: "We are refreshing out homepage and would love",
-    question: "your input!",
+    question: "your input",
     ...survey_duration(SurveyBucket.HOMEPAGE_FEEDBACK_2024),
     ...survey_rates(SurveyKey.HOMEPAGE_FEEDBACK_2024),
   },
