@@ -652,7 +652,12 @@ program
           return 0;
         });
         const root = getRoot(locale);
-        const outputFile = path.join(root, locale, "_githistory.json");
+        const outputDir = path.join(root, locale);
+        if (!fs.existsSync(outputDir)) {
+          console.log(chalk.yellow(`Skipping ${locale}`));
+          continue;
+        }
+        const outputFile = path.join(outputDir, "_githistory.json");
         fs.writeFileSync(
           outputFile,
           JSON.stringify(Object.fromEntries(sorted), null, 2),
