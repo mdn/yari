@@ -23,7 +23,6 @@ import {
   ANY_ATTACHMENT_EXT,
   CSP_VALUE,
   DEFAULT_LOCALE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
 } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
@@ -35,6 +34,7 @@ import {
   BLOG_ROOT,
   CURRICULUM_ROOT,
 } from "../libs/env/index.js";
+import { PLAYGROUND_UNSAFE_CSP_VALUE } from "../libs/play/index.js";
 
 import documentRouter from "./document.js";
 import fakeV1APIRouter from "./fake-v1-api.js";
@@ -53,7 +53,7 @@ import {
   findPostPathBySlug,
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
-import { handleRunner } from "../cloud-function/src/handlers/handle-runner.js";
+import { handleRunner } from "../libs/play/index.js";
 
 async function buildDocumentFromURL(url: string) {
   try {

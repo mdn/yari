@@ -1,0 +1,13 @@
+{
+  "name": "@yari-internal/play",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.js",
+  "dependencies": {
+    "he": "^1.2.0"
+  },
+  "export": "index.js"
+}

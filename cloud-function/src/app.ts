@@ -23,7 +23,7 @@ import { requireOrigin } from "./middlewares/require-origin.js";
 import { notFound } from "./middlewares/not-found.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
-import { handleRunner } from "./handlers/handle-runner.js";
+import { handleRunner } from "./internal/play/index.js";
 
 const router = Router();
 router.use(cookieParser());
