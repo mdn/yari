@@ -94,7 +94,7 @@ export const SURVEYS: Survey[] = [
     bucket: SurveyBucket.HOMEPAGE_FEEDBACK_2024,
     show: (doc: { mdn_url: string }) => /[^/]+\/$/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/8075407/MDN-Homepage-Improvements",
-    teaser: "We are refreshing out homepage and would love",
+    teaser: "We are refreshing our homepage and would love",
     question: "your input",
     ...survey_duration(SurveyBucket.HOMEPAGE_FEEDBACK_2024),
     ...survey_rates(SurveyKey.HOMEPAGE_FEEDBACK_2024),
