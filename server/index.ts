@@ -278,7 +278,7 @@ app.get("/*/contributors.txt", async (req, res) => {
   }
 });
 
-app.get("/*/runner.html", (req, res) => {
+app.get(["/*/runner.html", "/runner.html"], (req, res) => {
   handleRunner(req, res);
 });
 
