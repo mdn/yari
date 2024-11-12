@@ -2,7 +2,8 @@ import type BCD from "@mdn/browser-compat-data/types";
 
 // Extended for the fields, beyond the bcd types, that are extra-added
 // exclusively in Yari.
-interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
+export interface SimpleSupportStatementExtended
+  extends BCD.SimpleSupportStatement {
   // Known for some support statements where the browser *version* is known,
   // as opposed to just "true" and if the version release date is known.
   release_date?: string;
@@ -116,7 +117,7 @@ export function versionIsPreview(
 
 export function hasNoteworthyNotes(support: BCD.SimpleSupportStatement) {
   return (
-    (support.notes?.length || support.impl_url?.length) &&
+    !!(support.notes?.length || support.impl_url?.length) &&
     !support.version_removed &&
     !support.partial_implementation
   );
