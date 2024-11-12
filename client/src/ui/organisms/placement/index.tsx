@@ -218,6 +218,7 @@ export function BottomBanner() {
   const { backgroundColor, textColor } = placementData?.colors || {};
   const css = Object.fromEntries(
     [
+      ["--place-hp-main-background", backgroundColor],
       ["--place-bottom-banner-background", backgroundColor],
       ["--place-bottom-banner-color", textColor],
     ].filter(([_, v]) => Boolean(v))
