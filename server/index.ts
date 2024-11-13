@@ -129,7 +129,7 @@ async function send404(res: express.Response) {
       .status(404)
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   } else {
-    const index = fetch_from_rari("/en-US/404");
+    const index = await fetch_from_rari("/en-US/404");
     res.header("Content-Security-Policy", CSP_VALUE);
     return res.send(renderHTML(index));
   }
