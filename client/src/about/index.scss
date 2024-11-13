@@ -148,31 +148,15 @@ main.about-container {
     --header-stats-height: var(--about-stats-height);
     @include about.header;
 
-    h1 {
-      position: relative;
-      width: max-content;
-
-      &::after {
-        background: var(--header-text-primary);
-        content: "";
-        display: block;
-        height: 2rem;
-        mask-image: url("../assets/about/sparkle.svg");
-        mask-position: center;
-        mask-repeat: no-repeat;
-        mask-size: contain;
-        position: absolute;
-        right: -1.5rem;
-        top: -1rem;
-        width: 2rem;
-      }
-    }
-
     h1 + p {
       font-size: 2rem;
       font-weight: 600;
       line-height: 120%;
       max-width: 43rem;
+
+      @media (max-width: $screen-md) {
+        font-size: 1.25rem;
+      }
     }
 
     ul {
@@ -412,11 +396,11 @@ main.about-container {
             }
 
             ~ p:last-of-type::after {
-              background-image: url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20050121103200-1280x720@0.5x.png");
+              background-image: url("https://mdn.dev/generic-content/about/screenshots/20050121103200-1280x720@0.5x.png");
               background-image: image-set(
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20050121103200-1280x720@0.5x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20050121103200-1280x720@0.5x.png")
                   1x,
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20050121103200-1280x720@1x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20050121103200-1280x720@1x.png")
                   2x
               );
             }
@@ -429,11 +413,11 @@ main.about-container {
             }
 
             ~ p:last-of-type::after {
-              background-image: url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20100901014818-1280x720@0.5x.png");
+              background-image: url("https://mdn.dev/generic-content/about/screenshots/20100901014818-1280x720@0.5x.png");
               background-image: image-set(
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20100901014818-1280x720@0.5x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20100901014818-1280x720@0.5x.png")
                   1x,
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20100901014818-1280x720@1x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20100901014818-1280x720@1x.png")
                   2x
               );
             }
@@ -446,11 +430,11 @@ main.about-container {
             }
 
             ~ p:last-of-type::after {
-              background-image: url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20200103045709-1280x720@0.5x.png");
+              background-image: url("https://mdn.dev/generic-content/about/screenshots/20200103045709-1280x720@0.5x.png");
               background-image: image-set(
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20200103045709-1280x720@0.5x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20200103045709-1280x720@0.5x.png")
                   1x,
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20200103045709-1280x720@1x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20200103045709-1280x720@1x.png")
                   2x
               );
             }
@@ -463,11 +447,11 @@ main.about-container {
             }
 
             ~ p:last-of-type::after {
-              background-image: url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20220402010722-1280x720@0.5x.png");
+              background-image: url("https://mdn.dev/generic-content/about/screenshots/20220402010722-1280x720@0.5x.png");
               background-image: image-set(
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20220402010722-1280x720@0.5x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20220402010722-1280x720@0.5x.png")
                   1x,
-                url("https://storage.googleapis.com/mdn-dev-static-site/generic-content/about/screenshots/20220402010722-1280x720@1x.png")
+                url("https://mdn.dev/generic-content/about/screenshots/20220402010722-1280x720@1x.png")
                   2x
               );
             }

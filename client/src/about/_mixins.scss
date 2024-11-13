@@ -87,6 +87,10 @@
 
   section {
     padding-top: 5rem;
+
+    @media (max-width: $screen-md) {
+      padding-top: 0;
+    }
   }
 
   h1 {
