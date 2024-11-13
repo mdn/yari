@@ -56,6 +56,7 @@ import {
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function fetch_from_rari(path: string, res = null) {
   const external_url = `${EXTERNAL_DEV_SERVER}${path}`;
   console.log(`using ${external_url}`);
