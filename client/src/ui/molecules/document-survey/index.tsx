@@ -1,4 +1,5 @@
 import React from "react";
+import { Doc } from "../../../../../libs/types/document";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./utils";
@@ -11,7 +12,7 @@ import { SURVEY } from "../../../telemetry/constants";
 
 const FORCE_SURVEY_PREFIX = "#FORCE_SURVEY=";
 
-export function DocumentSurvey({ doc }: { doc: { mdn_url: string } }) {
+export function DocumentSurvey({ doc }: { doc: Pick<Doc, "mdn_url"> }) {
   const isServer = useIsServer();
   const location = useLocation();
 
@@ -58,7 +59,7 @@ function SurveyDisplay({
   survey,
   force,
 }: {
-  doc: { mdn_url: string };
+  doc: Pick<Doc, "mdn_url">;
   survey: Survey;
   force: boolean;
 }) {
