@@ -20,7 +20,7 @@ main.about-container {
   @include about.theme-setup using ($mode) {
     @if $mode == light {
       --header-next-section-bg: #f2f2f5;
-      --header-text-primary: #007936;
+      --header-text-primary: #000;
       --header-text-secondary: #343434;
       --header-bg: #fff;
       --stats-bg: #fff;
@@ -76,7 +76,7 @@ main.about-container {
 
     @if $mode == dark {
       --header-next-section-bg: #1b1b1b;
-      --header-text-primary: #8ff295;
+      --header-text-primary: #fff;
       --header-text-secondary: #b3b3b3;
       --header-bg: #101010;
       --stats-bg: #000;
@@ -150,7 +150,7 @@ main.about-container {
 
     h1 + p {
       font-size: 2rem;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 120%;
       max-width: 43rem;
 

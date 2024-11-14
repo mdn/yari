@@ -1,5 +1,5 @@
 import { HydrationData } from "../../../libs/types/hydration";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ProseSection } from "../../../libs/types/document";
 import useSWR from "swr";
 import { HTTPError } from "../document";
@@ -8,6 +8,8 @@ import { Prose } from "../document/ingredients/prose";
 
 import "./index.scss";
 import "./custom-elements";
+import { useGleanClick } from "../telemetry/glean-context";
+import { ABOUT } from "../telemetry/constants";
 
 export interface AboutSection extends ProseSection {
   H3s?: AboutSection[];
@@ -114,6 +116,22 @@ export function Header({ section }: { section: AboutSection }) {
 
 function Tabs({ section }: { section: AboutSection }) {
   const [activeTab, setActiveTab] = useState(0);
+  const tabs = useRef<HTMLDivElement>(null);
+  const gleanClick = useGleanClick();
+
+  const changeTab = useCallback(
+    (i: number) => {
+      const id = section.H3s?.[i].value.id;
+      if (id) {
+        setActiveTab(i);
+        if (tabs.current && tabs.current.getBoundingClientRect().top < 0) {
+          tabs.current.scrollIntoView({ block: "start", inline: "nearest" });
+        }
+        gleanClick(`${ABOUT}: tab -> ${id}`);
+      }
+    },
+    [section.H3s, gleanClick]
+  );
 
   useEffect(() => {
     const hash = document.location.hash.startsWith("#our_team")
@@ -125,7 +143,7 @@ function Tabs({ section }: { section: AboutSection }) {
     if (tab && tab > 0) {
       setActiveTab(tab);
     }
-  }, [section.H3s]);
+  }, [section.H3s, changeTab]);
 
   return (
     section.value.id &&
@@ -137,7 +155,7 @@ function Tabs({ section }: { section: AboutSection }) {
           dangerouslySetInnerHTML={{ __html: section.value.content }}
         />
         {section.H3s && (
-          <div className="tabs">
+          <div className="tabs" ref={tabs}>
             <div className="tablist-wrapper">
               <div className="tablist" role="tablist">
                 {section.H3s?.map(
@@ -151,7 +169,7 @@ function Tabs({ section }: { section: AboutSection }) {
                         role="tab"
                         aria-selected="false"
                         aria-controls={`${value.id}-panel`}
-                        onClick={() => setActiveTab(i)}
+                        onClick={() => changeTab(i)}
                       >
                         {value.title}
                       </a>
