@@ -706,7 +706,9 @@ function Macros({
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {flaws.map((flaw) => {
-        const inPrerequisiteMacro = !flaw.filepath.includes(sourceFilePath);
+        const inPrerequisiteMacro = flaw.filepath
+          ? !flaw.filepath.includes(sourceFilePath)
+          : false;
         return (
           <details
             key={flaw.id}

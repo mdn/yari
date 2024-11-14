@@ -44,7 +44,6 @@ jobs:
         with:
           repository: mdn/content
           path: mdn/content
-          ref: rari
           # Yes, this means fetch EVERY COMMIT EVER.
           # It's probably not sustainable in the far future (e.g. past 2021)
           # but for now it's good enough. We'll need all the history
