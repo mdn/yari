@@ -54,17 +54,15 @@ export async function initPlayIframe(
   if (!iframe || !editorContent) {
     return;
   }
-
-  const sp = new URLSearchParams([
-    ["state", await compressAndBase64Encode(JSON.stringify(editorContent))],
-  ]);
+  const { state, hash } = await compressAndBase64Encode(
+    JSON.stringify(editorContent)
+  );
+  const sp = new URLSearchParams([["state", state]]);
 
   if (fullscreen) {
     const url = new URL(
       `${window.location.protocol}//${
-        PLAYGROUND_BASE_HOST.startsWith("localhost")
-          ? ""
-          : `${crypto.randomUUID()}.`
+        PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
       }${PLAYGROUND_BASE_HOST}`
     );
     url.pathname = "/runner.html";
@@ -92,7 +90,9 @@ export async function compressAndBase64Encode(inputString: string) {
     inputArray.stream().pipeThrough(compressionStream)
   ).arrayBuffer();
 
-  const base64String = bytesToBase64(await compressedStream);
+  const compressed = await compressedStream;
+  const hash = await window.crypto.subtle.digest("SHA-256", compressed);
+  const state = bytesToBase64(compressed);
 
-  return base64String;
+  return { state, hash };
 }

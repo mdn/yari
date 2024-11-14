@@ -1,6 +1,6 @@
 /** @import { IncomingMessage, ServerResponse } from "http" */
 /**
- * @typedef {State}
+ * @typedef State
  * @property {string} html
  * @property {string} css
  * @property {string} js
@@ -16,12 +16,16 @@ export function withRunnerResponseHeaders(
   _req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ): void;
-export type withRunnerResponseHeaders = State;
 /**
  * @param {State | null} state
- * @param {string} href
+ * @param {string} hrefWithCode
+ * @param {string} searchWithState
  */
-export function renderWarning(state: State | null, href: string): string;
+export function renderWarning(
+  state: State | null,
+  hrefWithCode: string,
+  searchWithState: string
+): string;
 /**
  * @param {State | null} [state=null]
  */
@@ -29,18 +33,19 @@ export function renderHtml(state?: State | null): string;
 /**
  * @param {string | null} base64String
  */
-export function decompressFromBase64(
-  base64String: string | null
-): Promise<string>;
-/**
- * @param {express.Request} req
- * @param {express.Response} res
- */
-export function handleRunner(
-  req: express.Request,
-  res: express.Response
-): Promise<express.Response<any, Record<string, any>>>;
+export function decompressFromBase64(base64String: string | null): Promise<{
+  state: string;
+  hash: ArrayBuffer;
+}>;
+export function handleRunner(req: any, res: any): Promise<any>;
+export const ORIGIN_PLAY: string;
+export const ORIGIN_MAIN: string;
 export const PLAYGROUND_UNSAFE_CSP_VALUE: string;
+export type State = {
+  html: string;
+  css: string;
+  js: string;
+  src?: string;
+};
 import type { IncomingMessage } from "http";
 import type { ServerResponse } from "http";
-import * as express from "express";

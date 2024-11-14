@@ -9,5 +9,8 @@
   "dependencies": {
     "he": "^1.2.0"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "export": "index.js"
 }

@@ -3,6 +3,9 @@ import * as crypto from "node:crypto";
 
 import he from "he";
 
+export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
+export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
+
 /** @import { IncomingMessage, ServerResponse } from "http" */
 
 /**
@@ -253,9 +256,10 @@ export function renderHtml(state = null) {
  */
 export async function decompressFromBase64(base64String) {
   if (!base64String) {
-    return "null";
+    return { state: null, hash: null };
   }
   const bytes = Buffer.from(base64String, "base64");
+  const hash = await crypto.subtle.digest("SHA-256", bytes);
 
   // eslint-disable-next-line n/no-unsupported-features/node-builtins
   const decompressionStream = new DecompressionStream("deflate-raw");
@@ -265,7 +269,8 @@ export async function decompressFromBase64(base64String) {
     new Blob([bytes]).stream().pipeThrough(decompressionStream)
   ).arrayBuffer();
 
-  return new TextDecoder().decode(await decompressedStream);
+  const state = new TextDecoder().decode(await decompressedStream);
+  return { state, hash };
 }
 
 /**
@@ -273,10 +278,46 @@ export async function decompressFromBase64(base64String) {
  * @param {express.Response} res
  */
 
+const ORIGIN_PLAY_SUFFIX = `.${ORIGIN_PLAY}`;
+
+/**
+ *
+ * @param {string} hostname
+ */
+function playSubdomain(hostname) {
+  if (hostname.endsWith(ORIGIN_PLAY_SUFFIX)) {
+    return hostname.split(0, -1 * ORIGIN_PLAY_SUFFIX.length);
+  }
+  return "";
+}
+
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
-  const data = await decompressFromBase64(url.searchParams.get("state"));
-  const json = JSON.parse(data);
+  const referer = new URL(
+    req.headers["referer"] || "https://example.com",
+    "https://example.com"
+  );
+  const { state, hash } = await decompressFromBase64(
+    url.searchParams.get("state")
+  );
+  // If there's no state or
+  // if we're not on localhost and neither:
+  // the hash and subdomain don't match
+  // or we're in and iframe on mdn
+  // then 404.
+  if (
+    !state ||
+    !(
+      req.hostname === "localhost" ||
+      playSubdomain(req.hostname) === hash ||
+      (referer.hostname === ORIGIN_MAIN &&
+        req.headers["sec-fetch-dest"] === "iframe")
+    )
+  ) {
+    return res.status(404).end();
+  }
+
+  const json = JSON.parse(state);
   const codeParam = url.searchParams.get("code");
   const codeCookie = req.cookies["code"];
   if (req.headers["sec-fetch-dest"] === "iframe" || codeParam === codeCookie) {
@@ -286,7 +327,7 @@ export async function handleRunner(req, res) {
   } else {
     const rand = crypto.randomUUID();
     res.cookie("code", rand, {
-      expires: new Date(Date.now() + 60_000),
+      expires: new Date(Date.now() + 60000),
       httpOnly: true,
       sameSite: "strict",
       secure: true,

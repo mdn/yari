@@ -108,9 +108,8 @@ export default function Playground() {
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
   const updateWithCode = async (code: EditorContent) => {
-    const sp = new URLSearchParams([
-      ["state", await compressAndBase64Encode(JSON.stringify(code))],
-    ]);
+    const { state } = await compressAndBase64Encode(JSON.stringify(code));
+    const sp = new URLSearchParams([["state", state]]);
 
     if (iframe.current) {
       const url = new URL(iframe.current.src);
