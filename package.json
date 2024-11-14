@@ -79,7 +79,7 @@
     "@stripe/stripe-js": "^4.10.0",
     "@use-it/interval": "^1.0.0",
     "@vscode/ripgrep": "^1.15.9",
-    "@webref/css": "^6.17.1",
+    "@webref/css": "^6.17.2",
     "accept-language-parser": "^1.5.0",
     "async": "^3.2.6",
     "chalk": "^5.3.0",
