@@ -24,6 +24,7 @@ import { notFound } from "./middlewares/not-found.js";
 import { stripForwardedHostHeaders } from "./middlewares/stripForwardedHostHeaders.js";
 import { proxyPong } from "./handlers/proxy-pong.js";
 import { handleRunner } from "./internal/play/index.js";
+import { proxyContentAssets } from "./handlers/proxy-content-assets.js";
 
 const router = Router();
 router.use(cookieParser());
@@ -77,7 +78,7 @@ router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
   requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
-  proxyContent
+  proxyContentAssets
 );
 // Pages.
 router.use(redirectNonCanonicals);
