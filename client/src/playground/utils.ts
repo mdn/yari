@@ -59,19 +59,15 @@ export async function initPlayIframe(
   );
   const sp = new URLSearchParams([["state", state]]);
 
+  const url = new URL(iframe.src);
+  url.host = `${
+    PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
+  }${PLAYGROUND_BASE_HOST}`;
+  url.search = sp.toString();
+  iframe.src = url.href;
+
   if (fullscreen) {
-    const url = new URL(
-      `${window.location.protocol}//${
-        PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
-      }${PLAYGROUND_BASE_HOST}`
-    );
-    url.pathname = "/runner.html";
-    url.search = sp.toString();
     window.location.href = url.href;
-  } else if (iframe) {
-    const url = new URL(iframe.src);
-    url.search = sp.toString();
-    iframe.src = url.href;
   }
 }
 
