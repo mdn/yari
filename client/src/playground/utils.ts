@@ -87,7 +87,9 @@ export async function compressAndBase64Encode(inputString: string) {
   ).arrayBuffer();
 
   const compressed = await compressedStream;
-  const hash = await window.crypto.subtle.digest("SHA-256", compressed);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", compressed);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   const state = bytesToBase64(compressed);
 
   return { state, hash };
