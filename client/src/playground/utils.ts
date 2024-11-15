@@ -71,13 +71,14 @@ export async function initPlayIframe(
   }
 }
 
+export function bytesToBase64(bytes: ArrayBuffer) {
+  const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
+    String.fromCodePoint(byte)
+  ).join("");
+  return btoa(binString);
+}
+
 export async function compressAndBase64Encode(inputString: string) {
-  function bytesToBase64(bytes: ArrayBuffer) {
-    const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
-      String.fromCodePoint(byte)
-    ).join("");
-    return btoa(binString);
-  }
   const inputArray = new Blob([inputString]);
 
   const compressionStream = new CompressionStream("deflate-raw");
@@ -88,8 +89,7 @@ export async function compressAndBase64Encode(inputString: string) {
 
   const compressed = await compressedStream;
   const hashBuffer = await window.crypto.subtle.digest("SHA-256", compressed);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const hash = bytesToBase64(hashBuffer);
   const state = bytesToBase64(compressed);
 
   return { state, hash };

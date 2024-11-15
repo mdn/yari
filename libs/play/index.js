@@ -141,6 +141,18 @@ export function renderHtml(state = null) {
 }
 
 /**
+ *
+ * @param {ArrayBuffer} bytes
+ * @returns
+ */
+export function bytesToBase64(bytes) {
+  const binString = Array.from(new Uint8Array(bytes), (byte) =>
+    String.fromCodePoint(byte)
+  ).join("");
+  return btoa(binString);
+}
+
+/**
  * @param {string | null} base64String
  */
 export async function decompressFromBase64(base64String) {
@@ -149,8 +161,7 @@ export async function decompressFromBase64(base64String) {
   }
   const bytes = Buffer.from(base64String, "base64");
   const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const hash = bytesToBase64(hashBuffer);
 
   // eslint-disable-next-line n/no-unsupported-features/node-builtins
   const decompressionStream = new DecompressionStream("deflate-raw");
