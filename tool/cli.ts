@@ -9,7 +9,7 @@ import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-import inquirer from "inquirer";
+import { confirm } from "@inquirer/prompts";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
@@ -42,7 +42,6 @@ import {
 import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -323,10 +322,10 @@ program
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .option("-r, --recursive", "Delete content recursively", { default: false })
+  .option("-r, --recursive", "Delete children", { default: false })
   .option(
     "--redirect <redirect>",
-    "Redirect document (and its children, if --recursive is true) to the URL <redirect>"
+    "Redirect document, and its children (if --recursive is true), to the URL <redirect>"
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
@@ -355,14 +354,12 @@ program
           )
         );
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
         const deletedDocs = await Document.remove(slug, locale, {
           recursive,
@@ -434,14 +431,12 @@ program
           .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
           .join("\n")
       );
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
         const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
@@ -635,7 +630,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         const locale = relPath.split(path.sep)[0];
-        if (!isValidLocale(locale)) {
+        if (!isValidLocale(locale) && locale !== "de") {
           continue;
         }
         allHistory[relPath] = value;
@@ -646,15 +641,34 @@ program
       }
       let filesWritten = 0;
       for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const sorted = [...Object.entries(history)];
+        sorted.sort(([a], [b]) => {
+          if (a > b) {
+            return 1;
+          }
+          if (a < b) {
+            return -1;
+          }
+          return 0;
+        });
         const root = getRoot(locale);
-        const outputFile = path.join(root, locale, "_githistory.json");
-        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        const outputDir = path.join(root, locale);
+        if (!fs.existsSync(outputDir)) {
+          console.log(chalk.yellow(`Skipping ${locale}`));
+          continue;
+        }
+        const outputFile = path.join(outputDir, "_githistory.json");
+        fs.writeFileSync(
+          outputFile,
+          JSON.stringify(Object.fromEntries(sorted), null, 2),
+          "utf-8"
+        );
         filesWritten += 1;
         if (verbose) {
           console.log(
             chalk.green(
               `Wrote '${locale}' ${Object.keys(
-                history
+                sorted
               ).length.toLocaleString()} paths into ${outputFile}`
             )
           );
@@ -789,14 +803,12 @@ program
         console.log(chalk.green("Found no fixable flaws!"));
         return;
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: `Proceed fixing ${flaws} flaws?`,
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: `Proceed fixing ${flaws} flaws?`,
+          default: true,
+        }));
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
       }

@@ -10,6 +10,118 @@ section.place {
     text-decoration: none;
   }
 
+  .pong-box2 {
+    --place-new-side-background-light: #111;
+    --place-new-side-color-light: #fff;
+
+    --place-new-side-background-dark: #111;
+    --place-new-side-color-dark: #fff;
+
+    --place-new-side-background: var(--place-new-side-background-light);
+    --place-new-side-color: var(--place-new-side-color-light);
+
+    --border-radius: 0.5rem;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    height: 100%;
+    margin: 0;
+    min-height: 20rem;
+    overflow: hidden;
+    position: relative;
+    width: 11rem;
+
+    @media (prefers-color-scheme: dark) {
+      --place-new-side-background: var(--place-new-side-background-dark);
+      --place-new-side-color: var(--place-new-side-color-dark);
+    }
+
+    .pong-note {
+      background-color: var(--place-new-side-color);
+      border: 1px solid var(--place-new-side-background);
+      border-radius: 0.25rem;
+      color: var(--place-new-side-background);
+      font-size: 0.625rem;
+      margin: 0.5rem;
+      opacity: 0.4;
+      padding: 0 0.25rem;
+      position: absolute;
+      right: 0;
+      text-decoration: underline;
+      text-transform: uppercase;
+      top: 0;
+      width: max-content;
+
+      &:hover {
+        opacity: unset;
+        text-decoration: none;
+      }
+    }
+
+    .pong {
+      height: 100%;
+      padding: 0;
+      width: 100%;
+
+      > img {
+        height: auto;
+        width: 100%;
+      }
+
+      > div.content {
+        background: linear-gradient(
+          to top,
+          var(--place-new-side-background) 9rem,
+          transparent
+        );
+        border-radius: var(--border-radius);
+        color: var(--place-new-side-color);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        height: 100%;
+        justify-content: end;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        strong {
+          font-size: 0.8875rem;
+          line-height: 1.25;
+          padding: 0 1rem;
+        }
+
+        span {
+          font-size: 0.75rem;
+          line-height: 1.25;
+          padding: 0 1rem;
+        }
+
+        .pong-cta {
+          --color: var(--place-new-side-color);
+          --icon-primary: var(--color);
+          background-color: #fff1;
+          border: solid 2px;
+          border-radius: 2rem;
+          color: var(--color);
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin: 0.5rem auto 1rem 1rem;
+          padding: 0.5em 1em;
+          transition: all 0.3s ease-in-out;
+
+          &::after {
+            transition: all 0.3s ease-in-out;
+          }
+
+          &:hover {
+            --color: var(--place-new-side-background);
+            background-color: var(--place-new-side-color);
+          }
+        }
+      }
+    }
+  }
+
   .pong-box {
     background-color: var(--background-secondary);
     border: 1px solid var(--border-primary);
@@ -78,8 +190,14 @@ section.place {
 
   &.side {
     flex-direction: column;
+    height: fit-content;
     max-width: 12rem;
     min-height: 20rem;
+  }
+
+  &.new-side {
+    height: fit-content;
+    min-height: 22rem;
   }
 
   &.top {
@@ -92,7 +210,7 @@ section.place {
     margin: 0 auto;
     width: 100%;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       grid-template-areas: "pong cta note" "pong cta no";
       grid-template-columns: fit-content(100%) auto fit-content(100%);
     }
@@ -154,6 +272,15 @@ section.place {
       width: initial;
     }
   }
+
+  html[data-nop] & {
+    display: none;
+  }
+}
+
+.dark section.place .pong-box2 {
+  --place-new-side-background: var(--place-new-side-background-dark);
+  --place-new-side-color: var(--place-new-side-color-dark);
 }
 
 section.place.hp-main {
@@ -188,6 +315,10 @@ section.place.hp-main {
   --place-top-cta-background: var(--place-top-cta-background-light);
   --place-top-cta-color: var(--place-top-cta-color-light);
 
+  background-color: var(--place-top-background);
+  border-bottom: 1px solid var(--border-primary);
+  height: var(--top-banner-height);
+
   @media (prefers-color-scheme: dark) {
     --place-top-background: var(--place-top-background-dark);
     --place-top-color: var(--place-top-color-dark);
@@ -195,16 +326,11 @@ section.place.hp-main {
     --place-top-cta-color: var(--place-top-cta-color-dark);
   }
 
-  background-color: var(--place-top-background);
-
-  border-bottom: 1px solid var(--border-primary);
-  height: var(--top-banner-height);
-
   &.fallback {
     position: initial;
   }
 
-  @media screen and (max-width: #{$screen-md - 1}) {
+  @media (max-width: #{$screen-md - 1}) {
     display: none;
   }
 
@@ -222,6 +348,10 @@ section.place.hp-main {
         text-decoration: underline;
       }
     }
+  }
+
+  html[data-nop] & {
+    display: none;
   }
 }
 
@@ -283,7 +413,7 @@ div.empty-place {
       margin-top: auto;
     }
 
-    @media screen and (max-width: $screen-xl) {
+    @media (max-width: $screen-xl) {
       grid-template-areas:
         "pong note"
         "pong no";
@@ -291,7 +421,7 @@ div.empty-place {
       grid-template-rows: auto 2rem;
     }
 
-    @media screen and (max-width: $screen-lg) {
+    @media (max-width: $screen-lg) {
       grid-template-areas:
         "pong pong"
         "note no";

@@ -8,6 +8,15 @@ export function LocalizedContentNote({
   locale: string;
 }) {
   const activeLocaleNoteContent = {
+    de: {
+      linkText: (
+        <>
+          <strong>Experiment</strong>: Dieser Inhalt wurde automatisch aus dem
+          Englischen übersetzt, und kann Fehler enthalten.
+        </>
+      ),
+      url: "https://github.com/orgs/mdn/discussions/741",
+    },
     "en-US": {
       linkText:
         "This page was translated from English by the community. Learn more and join the MDN Web Docs community.",
@@ -31,6 +40,11 @@ export function LocalizedContentNote({
     ko: {
       linkText:
         "이 페이지는 영어로부터 커뮤니티에 의하여 번역되었습니다. MDN Web Docs에서 한국 커뮤니티에 가입하여 자세히 알아보세요.",
+    },
+    "pt-BR": {
+      linkText:
+        "Esta página foi traduzida do inglês pela comunidade. Saiba mais e junte-se à comunidade MDN Web Docs.",
+      url: "/pt-BR/docs/MDN/Community/Contributing/Translated_content#locais_ativos",
     },
     ru: {
       linkText:
@@ -64,6 +78,10 @@ export function LocalizedContentNote({
       activeLocaleNoteContent["en-US"].url
     : "https://github.com/mdn/translated-content/blob/main/PEERS_GUIDELINES.md#activating-a-locale";
 
-  const type = isActive ? "neutral" : "warning";
-  return <NoteBanner linkText={linkText} url={url} type={type} />;
+  const type = locale === "de" ? "experimental" : isActive ? "info" : "warning";
+  return (
+    <NoteBanner url={url} type={type}>
+      {linkText}
+    </NoteBanner>
+  );
 }

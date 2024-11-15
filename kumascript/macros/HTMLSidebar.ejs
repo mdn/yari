@@ -12,6 +12,50 @@ function state(section) {
 }
 
 var text = mdn.localStringMap({
+  'de': {
+    'Tutorials': 'Tutorials',
+    'HTML_basics': 'HTML-Grundlagen',
+    'Introduction_to_HTML': 'Einführung in HTML',
+      'Introduction_to_HTML_overview': 'Übersicht zur Einführung in HTML',
+      'Getting_started_with_HTML': 'Erste Schritte mit HTML',
+      'Whats_in_the_head_metadata_in_HTML': 'Was ist im Kopf? Metadaten in HTML',
+      'HTML_text_fundamentals': 'Grundlagen der HTML-Texte',
+      'Creating_hyperlinks': 'Erstellen von Hyperlinks',
+      'Advanced_text_formatting': 'Erweiterte Textformatierung',
+      'Document_and_website_structure': 'Dokument- und Webseitenstruktur',
+      'Debugging_HTML': 'Debugging von HTML',
+      'Assessment_Marking_up_a_letter': 'Aufgabe: Briefauszeichnung',
+      'Assessment_Structuring_a_page_of_content': 'Aufgabe: Strukturierung einer Inhaltsseite',
+    'Multimedia_and_embedding': 'Multimedia und Einbettung',
+      'Multimedia_and_embedding_overview': 'Übersicht zu Multimedia und Einbettung',
+      'Images_in_HTML': 'Bilder in HTML',
+      'Video_and_audio_content': 'Video- und Audioinhalte',
+      'From_object_to_iframe_other_embedding_technologies': 'Von Object zu Iframe - andere Einbettungstechnologien',
+      'Adding_vector_graphics_to_the_web': 'Hinzufügen von Vektorgrafiken zum Web',
+      'Responsive_images': 'Responsive Bilder',
+      'Assessment_Mozilla_splash_page': 'Aufgabe: Mozilla-Startseite',
+    'HTML_tables' : 'HTML-Tabellen',
+      'HTML_tables_overview' : 'Übersicht zu HTML-Tabellen',
+      'HTML_table_basics' : 'Grundlagen der HTML-Tabellen',
+      'HTML_table_advanced_features_and_accessibility' : 'Erweiterte Funktionen und Zugänglichkeit von HTML-Tabellen',
+      'Assessment_Structuring_planet_data' : 'Aufgabe: Strukturierung von Planetendaten',
+    'Reference': 'Referenzen',
+    'HTML_Elements': 'HTML-Elemente',
+    'Global_attributes': 'Globale Attribute',
+    'Attributes': 'Attribute',
+    'Input_types': '<code>&lt;input&gt;</code>-Typen',
+    'Guides': 'Anleitungen',
+      'Content_categories': 'Inhaltskategorien',
+      'Allowing_cross-origin_images_and_canvas': 'Erlauben der Cross-Origin-Nutzung von Bildern und Canvas',
+      'Block-level_elements': 'Block-Elemente',
+      'Inline_elements': 'Inline-Elemente',
+      'Date_and_time_formats': 'Datums- und Zeitformate in HTML',
+      'Constraint_validation': 'Einschränkungsvalidierung',
+      'Microdata': 'Mikrodaten',
+      'Microformats': 'Mikroformate',
+      'Quirks_Mode_and_Standards_Mode': 'Quirks-Modus und Standards-Modus',
+      'Viewport_meta_tag': 'Viewport-Meta-Tag',
+  },
   'en-US': {
     'Tutorials': 'Tutorials',
     'HTML_basics': 'HTML basics',
@@ -315,7 +359,7 @@ var text = mdn.localStringMap({
 %>
 <section id="Quick_links" data-macro="HTMLSidebar">
  <ol>
-  <li class="section"><a href="/<%=locale%>/docs/Web/HTML">HTML</a></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/HTML`, null, "HTML")%></li>
   <li class="section"><%-web.smartLink(`${learnBaseURL}HTML`, null, text['Tutorials'])%></li>
   <li><%-web.smartLink(`${learnBaseURL}Getting_started_with_the_web/HTML_basics`, null, text['HTML_basics'])%></li>
   <li class="toggle">
@@ -360,7 +404,7 @@ var text = mdn.localStringMap({
       </ol>
     </details>
   </li>
-  <li class="section"><a href="/<%=locale%>/docs/Web/HTML/Reference"><%=text['Reference']%></a></li>
+  <li class="section"><%-web.smartLink(`/${locale}/docs/Web/HTML/Reference`, null, text['Reference'])%></li>
   <li class="toggle">
     <details <%=state('HTML_Elements')%>>
       <summary><%=text['HTML_Elements']%></summary>
@@ -403,16 +447,16 @@ var text = mdn.localStringMap({
   <li class="section no-link"><%=text['Guides']%></li>
   <li>
     <ol>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Content_categories"><%=text["Content_categories"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Block-level_elements"><%=text["Block-level_elements"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Inline_elements"><%=text["Inline_elements"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Quirks_Mode_and_Standards_Mode"><%=text["Quirks_Mode_and_Standards_Mode"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Date_and_time_formats"><%=text["Date_and_time_formats"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Constraint_validation"><%=text["Constraint_validation"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Microdata"><%=text["Microdata"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/microformats"><%=text["Microformats"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Viewport_meta_tag"><%=text["Viewport_meta_tag"]%></a></li>
-      <li><a href="/<%=locale%>/docs/Web/HTML/CORS_enabled_image"><%=text["Allowing_cross-origin_images_and_canvas"]%></a></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/Content_categories`, null, text["Content_categories"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Glossary/Block-level_content`, null, text["Block-level_elements"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Glossary/Inline-level_content`, null, text["Inline_elements"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/Quirks_Mode_and_Standards_Mode`, null, text["Quirks_Mode_and_Standards_Mode"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/Date_and_time_formats`, null, text["Date_and_time_formats"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/Constraint_validation`, null, text["Constraint_validation"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/Microdata`, null, text["Microdata"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/microformats`, null, text["Microformats"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/Viewport_meta_tag`, null, text["Viewport_meta_tag"])%></li>
+      <li><%-web.smartLink(`/${locale}/docs/Web/HTML/CORS_enabled_image`, null, text["Allowing_cross-origin_images_and_canvas"])%></li>
     </ol>
   </li>
  </ol>

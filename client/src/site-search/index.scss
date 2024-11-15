@@ -8,16 +8,21 @@
 .site-search {
   display: block;
 
-  article {
-    @media screen and (max-width: $screen-md) {
+  .main-content {
+    @media (max-width: $screen-md) {
       display: flex;
       flex-direction: column;
+      padding: 3rem 3rem 0;
+    }
+
+    article {
+      display: contents;
     }
 
     .place {
       float: right;
       padding: 1rem;
-      @media screen and (max-width: $screen-md) {
+      @media (max-width: $screen-md) {
         align-self: center;
         float: none;
         order: 4;

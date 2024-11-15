@@ -1,5 +1,3 @@
-import * as url from "node:url";
-
 import type { Request, Response } from "express";
 
 import { Coder } from "../internal/pong/index.js";
@@ -10,23 +8,29 @@ import {
   fetchImage,
 } from "../internal/pong/index.js";
 
+import stagePlusLookup from "../stripe-plans/stage.js";
+import prodPlusLookup from "../stripe-plans/prod.js";
 import * as env from "../env.js";
 
 import { getRequestCountry } from "../utils.js";
 
-const { SIGN_SECRET, BSA_ZONE_KEYS } = env;
+const { SIGN_SECRET, BSA_ZONE_KEYS, ORIGIN_MAIN } = env;
 
 const coder = new Coder(SIGN_SECRET);
 const handleGet = createPong2GetHandler(BSA_ZONE_KEYS, coder, env);
 const handleClick = createPong2ClickHandler(coder);
 const handleViewed = createPong2ViewedHandler(coder);
+const plusLookup =
+  ORIGIN_MAIN === "developer.mozilla.org" ? prodPlusLookup : stagePlusLookup;
 
 export async function proxyBSA(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
 
+  const plusAvailable = countryCode in plusLookup.countryToCurrency;
+
   const userAgent = req.headers["user-agent"] ?? "";
 
-  const parsedUrl = url.parse(req.url);
+  const parsedUrl = new URL(req.url, `${req.protocol}://${req.headers.host}/`);
   const pathname = parsedUrl.pathname ?? "";
   const search = parsedUrl.search ?? "";
 
@@ -41,6 +45,8 @@ export async function proxyBSA(req: Request, res: Response) {
       countryCode,
       userAgent
     );
+
+    payload.plusAvailable = plusAvailable;
 
     return res
       .status(status)

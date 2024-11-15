@@ -50,4 +50,15 @@
       padding: 0.2rem 0.4rem;
     }
   }
+
+  h2 {
+    a {
+      color: var(--text-primary);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }

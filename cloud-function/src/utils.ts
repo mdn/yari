@@ -59,3 +59,7 @@ const ANY_ATTACHMENT_REGEXP = createRegExpFromExtensions(
 export function isAsset(url: string) {
   return ANY_ATTACHMENT_REGEXP.test(url);
 }
+
+export function normalizePath(path: string) {
+  return path.toLowerCase().replace(/\/$/, "");
+}

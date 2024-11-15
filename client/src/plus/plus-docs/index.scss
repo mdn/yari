@@ -34,7 +34,7 @@
         font: var(--type-heading-h1-mobile);
         margin-bottom: 2rem;
 
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           font: var(--type-heading-h1);
         }
       }

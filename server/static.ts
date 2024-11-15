@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 
 import { staticMiddlewares } from "./middlewares.js";
 import { resolveFundamental } from "../content/index.js";
-import { STATIC_ROOT } from "../libs/env/index.js";
+import { BUILD_OUT_ROOT } from "../libs/env/index.js";
 
 const app = express();
 app.use(express.json());
@@ -250,8 +250,11 @@ app.get("/*", async (req, res) => {
   console.log(`Don't know how to mock: ${req.path}`, req.query);
   res
     .status(404)
-    .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+    .sendFile(path.join(BUILD_OUT_ROOT, "en-us", "_spas", "404.html"));
 });
 
+const HOST = process.env.SERVER_HOST || undefined;
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, HOST, () =>
+  console.log(`Listening on ${HOST ? `${HOST}:` : "port "}${PORT}`)
+);

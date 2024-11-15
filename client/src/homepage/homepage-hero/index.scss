@@ -24,6 +24,18 @@
     padding: 0 1rem;
     width: 100%;
 
+    .document-survey {
+      margin-top: 1rem;
+
+      &:not(:has(details[open])) {
+        max-width: 32rem;
+      }
+
+      ~ h1 {
+        display: none;
+      }
+    }
+
     h1 {
       /* Title */
       font-size: 2.2rem;
@@ -32,11 +44,11 @@
       line-height: 120%;
       margin: 0;
 
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         font-size: 2.5rem;
       }
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         font-size: 3rem;
       }
     }
@@ -71,7 +83,7 @@
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         transform: translate(12rem, -8rem);
       }
     }

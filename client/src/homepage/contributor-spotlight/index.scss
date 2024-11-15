@@ -103,7 +103,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     .wrapper {
       align-items: initial;
       flex-direction: row;

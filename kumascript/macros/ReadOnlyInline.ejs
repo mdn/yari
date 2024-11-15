@@ -1,5 +1,6 @@
 <%
 var str = mdn.localString({
+    "de": "Nur lesbar ",
     "en-US": "Read only ",
     "fr": "Lecture seule ",
     "ja": "読取専用 ",
@@ -10,6 +11,7 @@ var str = mdn.localString({
 });
 
 var title = mdn.localString({
+    "de": "Dieser Wert kann nicht geändert werden.",
     "en-US": "This value may not be changed.",
     "fr": "Cette valeur ne peut pas être changée.",
     "ko": "이 값은 변경 할 수 없습니다.",
@@ -18,4 +20,4 @@ var title = mdn.localString({
     "zh-CN": "该属性的值无法更改",
 });
 %>
-<span title="<%= title %>" class="badge inline readonly"><%= str %></span>
+<span class="badge inline readonly" title="<%= title %>"><%= str %></span>

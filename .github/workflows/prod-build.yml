@@ -115,6 +115,19 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content-de
+          path: mdn/translated-content-de
+
+      - name: Move de into translated-content
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
@@ -215,9 +228,9 @@ jobs:
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
-          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/?brand=mozilla
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ?brand=mozilla
-          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/?brand=mozilla
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.firefox.com/subscriptions/products/prod_LKvr8fYGbBxcaZ
+          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/
 
           REACT_APP_MDN_PLUS_5M_PLAN: price_1KeG02JNcmPzuWtR1oBrw8o6
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
@@ -225,10 +238,10 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_DISCOVERABILITY_AUG_2023: 1691409600000 # new Date("2023-08-07 12:00:00Z").getTime()
-          REACT_APP_SURVEY_END_DISCOVERABILITY_AUG_2023: 1691841600000 # new Date("2023-08-12 12:00:00Z").getTime()
-          REACT_APP_SURVEY_RATE_FROM_DISCOVERABILITY_AUG_2023: 0.0
-          REACT_APP_SURVEY_RATE_TILL_DISCOVERABILITY_AUG_2023: 0.10 # 10%
+          REACT_APP_SURVEY_START_HOMEPAGE_FEEDBACK_2024: 1731369600000 # new Date("2024-11-12Z").getTime()
+          REACT_APP_SURVEY_END_HOMEPAGE_FEEDBACK_2024: 1732665600000 # new Date("2024-11-27Z").getTime()
+          REACT_APP_SURVEY_RATE_FROM_HOMEPAGE_FEEDBACK_2024: 0.0
+          REACT_APP_SURVEY_RATE_TILL_HOMEPAGE_FEEDBACK_2024: 1 # 100%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -243,6 +256,9 @@ jobs:
           # Playground
           REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
 
+          # Observatory
+          REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.mozilla.net
+
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
           SENTRY_ENVIRONMENT: prod
@@ -252,6 +268,7 @@ jobs:
           REACT_APP_AI_FEEDBACK_GITHUB_REPO: mdn/ai-feedback
 
         run: |
+          set -eo pipefail
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
@@ -259,12 +276,12 @@ jobs:
           yarn build:sw
           yarn build:prepare
 
-          yarn tool sync-translated-content
+          yarn tool sync-translated-content es fr ja ko pt-br ru zh-cn zh-tw
 
           # Build using one process per locale.
           # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+          for locale in en-us de es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
             pids+=($!)
           done
 
@@ -274,14 +291,17 @@ jobs:
 
           du -sh client/build
 
-          # Generate sitemap index file
-          yarn build --sitemap-index
-
           # Build the blog
           yarn build:blog
 
           # Build the curriculum
           yarn build:curriculum
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
+          # SSR all pages
+          yarn render:html
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -337,14 +357,17 @@ jobs:
         run: |-
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
         run: |-
+          set -eo pipefail
+
           for region in europe-west1 us-west1 asia-east1; do
             gcloud beta functions deploy mdn-prod-prod-$region \
             --gen2 \
-            --runtime=nodejs18 \
+            --runtime=nodejs20 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \
@@ -360,6 +383,7 @@ jobs:
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
             --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=AxVILwizhbMjxFeHOn1P3R8niO1RJY/smaK4B4d1rLzc1gTaxtXMSaTi+FoigYgCw40uFRDwFcEAeqDR+vVLOW4AAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5tb3ppbGxhLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
             --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
             --set-env-vars="SENTRY_ENVIRONMENT=prod" \

@@ -9,7 +9,7 @@ import { DocParent } from "../libs/types/document.js";
 import { CURRICULUM_TITLE, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import * as kumascript from "../kumascript/index.js";
 import LANGUAGES_RAW from "../libs/languages/index.js";
-import { syntaxHighlight } from "./syntax-highlight.js";
+import { wrapCodeExamples } from "./code-headers.js";
 import {
   escapeRegExp,
   injectLoadingLazyAttributes,
@@ -37,8 +37,8 @@ import { HydrationData } from "../libs/types/hydration.js";
 import { memoize, slugToFolder } from "../content/utils.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import { CheerioAPI } from "cheerio";
+import { buildSitemap } from "./sitemaps.js";
 
 export const allFiles = memoize(async () => {
   const api = new fdir()
@@ -99,12 +99,16 @@ export async function buildCurriculumIndex(
     const entry = mapper(meta);
     if (currentLevel > 2) {
       if (last) {
-        last.children.push(entry);
+        if (!last.children) {
+          last.children = [entry];
+        } else {
+          last.children.push(entry);
+        }
         return item;
       }
     }
 
-    item.push({ children: [], ...entry });
+    item.push({ ...entry });
     return item;
   }, []);
 
@@ -127,10 +131,10 @@ function prevNextFromIndex(
   const prevEntry = i > 0 ? index[i - 1] : undefined;
   const nextEntry = i < index.length - 1 ? index[i + 1] : undefined;
 
-  prevEntry && "children" in prevEntry && delete prevEntry.children;
-  nextEntry && "children" in nextEntry && delete nextEntry.children;
+  const prev = prevEntry && { url: prevEntry.url, title: prevEntry.title };
+  const next = nextEntry && { url: nextEntry.url, title: nextEntry.title };
 
-  return { prev: prevEntry, next: nextEntry };
+  return { prev, next };
 }
 
 async function buildPrevNextOverview(slug: string): Promise<PrevNext> {
@@ -205,13 +209,34 @@ async function readCurriculumPage(
   let group: string;
   if (!options?.forIndex) {
     if (attributes.template === Template.Landing) {
-      modules = (await buildCurriculumIndex())?.filter(
-        (x) => x.children?.length
-      );
+      modules = (await buildCurriculumIndex())
+        ?.filter((x) => x.children?.length)
+        .map(({ url, title, summary, topic, slug, children }) => ({
+          url,
+          title,
+          summary,
+          topic,
+          slug,
+          children: children.length
+            ? children.map(({ url, title, summary, topic, slug }) => ({
+                url,
+                title,
+                summary,
+                topic,
+                slug,
+              }))
+            : undefined,
+        }));
     } else if (attributes.template === Template.Overview) {
-      modules = (await buildCurriculumIndex())?.find(
-        (x) => x.slug === slug
-      )?.children;
+      modules = (await buildCurriculumIndex())
+        ?.find((x) => x.slug === slug)
+        ?.children.map(({ url, title, summary, topic, slug }) => ({
+          url,
+          title,
+          summary,
+          topic,
+          slug,
+        }));
     }
     if (attributes.template === Template.Module) {
       prevNext = await buildPrevNextModule(slug);
@@ -296,7 +321,7 @@ export async function buildCurriculumPage(
     doc.hasMathML = true;
   }
   $("div.hidden").remove();
-  syntaxHighlight($, doc);
+  wrapCodeExamples($);
   injectNoTranslate($);
   injectLoadingLazyAttributes($);
   postProcessCurriculumLinks($, (p: string | undefined) => {
@@ -333,6 +358,7 @@ export async function buildCurriculumPage(
   doc.parents = metadata.parents;
   doc.topic = metadata.topic;
   doc.group = metadata.group;
+  doc.template = metadata.template || Template.Default;
 
   return doc as CurriculumDoc;
 }
@@ -367,6 +393,7 @@ export async function buildCurriculum(options: {
       pageTitle: meta.title,
       locale,
       noIndexing: options.noIndexing,
+      url: `/${locale}/${meta.slug}/`,
     };
 
     const outPath = path.join(
@@ -377,17 +404,13 @@ export async function buildCurriculum(options: {
 
     await fs.mkdir(outPath, { recursive: true });
 
-    const html: string = renderHTML(`/${locale}/${meta.slug}/`, context);
-
-    const filePath = path.join(outPath, "index.html");
     const jsonFilePath = path.join(outPath, "index.json");
 
     await fs.mkdir(outPath, { recursive: true });
-    await fs.writeFile(filePath, html);
     await fs.writeFile(jsonFilePath, JSON.stringify(context));
 
     if (options.verbose) {
-      console.log("Wrote", filePath);
+      console.log("Wrote", jsonFilePath);
     }
   }
 }
@@ -409,9 +432,9 @@ function setCurriculumTypes($: CheerioAPI) {
 
   $("p.curriculum-resources + ul > li").each((_, child) => {
     const li = $(child);
-
-    if (li.find("a.external").length) {
-      li.addClass("external");
+    const externalLinks = li.find("a.external");
+    if (externalLinks.length) {
+      li.addClass("curriculum-external-li");
     }
   });
 
@@ -427,4 +450,26 @@ function setCurriculumTypes($: CheerioAPI) {
       }
     }
   });
+}
+
+export async function buildCurriculumSitemap(options: { verbose?: boolean }) {
+  const index = await buildCurriculumIndex();
+  const items = [];
+  while (index.length) {
+    const current = index.shift();
+    items.push({
+      slug: current.url,
+    });
+    if (current.children) {
+      index.push(...current.children);
+    }
+  }
+
+  const sitemapFilePath = await buildSitemap(items, {
+    pathSuffix: [DEFAULT_LOCALE, "curriculum"],
+  });
+
+  if (options.verbose) {
+    console.log("Wrote", sitemapFilePath);
+  }
 }

@@ -4,6 +4,16 @@ const locale = env.locale;
 const baseURL = `/${locale}/docs/`;
 
 const l10nStrings = mdn.localStringMap({
+  "de": {
+    "Accessibility" : "Barrierefreiheit",
+    "Guides" : "Anleitungen",
+    "Learn" : "Barrierefreiheit lernen",
+    "ARIA" : "ARIA",
+    "ARIA_guides" : "ARIA-Anleitungen",
+    "ARIA states and properties": "ARIA-Zustände und -Eigenschaften",
+    "ARIA roles": "ARIA-Rollen",
+    "WCAG": "WCAG",
+  },
   "en-US": {
     "Accessibility" : "Accessibility",
     "Guides" : "Guides",
@@ -110,8 +120,7 @@ async function renderSubsection(subsection) {
 
 
 async function renderDirectory(directory) {
-  const path = `${baseURL}${directory}`;
-  const output = await template("ListSubpagesForSidebar", [path, true, true]);
+  const output = await template("ListSubpagesForSidebar", [directory, true, true]);
 
   return output;
 }

@@ -8,9 +8,7 @@ import { CurriculumLayout } from "./layout";
 
 import "./index.scss";
 
-export function CurriculumModuleOverview(
-  props: HydrationData<any, CurriculumDoc>
-) {
+export function CurriculumOverview(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props as CurriculumData);
   // ["Getting", "started", "modules"]
   const titleParts = doc?.title?.split(" ") || [];

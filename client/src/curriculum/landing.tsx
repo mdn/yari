@@ -7,13 +7,20 @@ import { CurriculumDoc, CurriculumData } from "../../../libs/types/curriculum";
 import { ModulesListList } from "./modules-list";
 import { useCurriculumDoc } from "./utils";
 import { RenderCurriculumBody } from "./body";
-import { useMemo } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { DisplayH2 } from "../document/ingredients/utils";
 import { CurriculumLayout } from "./layout";
 
 import "./index.scss";
 import "./landing.scss";
 import { ProseSection } from "../../../libs/types/document";
+import { PartnerBanner } from "./partner-banner";
+import { useIsServer, useViewed } from "../hooks";
+import scrimBg from "../assets/curriculum/landing-scrim.png";
+import { useGleanClick } from "../telemetry/glean-context";
+import { CURRICULUM } from "../telemetry/constants";
+
+const ScrimInline = lazy(() => import("./scrim-inline"));
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);
@@ -40,12 +47,15 @@ export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
           }
           if (section.value.id === "modules") {
             const { title, id } = (section as ProseSection).value;
+            console.log(title);
             return (
               <>
                 <section key={`${id}-1`} className="modules">
                   {title && <DisplayH2 id={id} title={title} />}
                   {doc?.modules && <ModulesListList modules={doc.modules} />}
                 </section>
+                <PartnerBanner />
+
                 <section key={`${id}-2`} className="landing-stairway">
                   <div>
                     <div id="stairway1-container">
@@ -119,14 +129,51 @@ function Header({ section, h1 }: { section: any; h1?: string }) {
   );
 }
 
+const SCRIM_URL = "https://v2.scrimba.com/s06icdv?via=mdn";
+
 function About({ section }) {
   const { title, content, id } = section.value;
   const html = useMemo(() => ({ __html: content }), [content]);
+  const isServer = useIsServer();
+  const gleanClick = useGleanClick();
+  const observedNode = useViewed(() => {
+    const url = new URL(SCRIM_URL);
+    const id = url.pathname.slice(1);
+    gleanClick(`${CURRICULUM}: scrim view id:${id}`);
+  });
+
   return (
     <section key={id} className="landing-about-container">
       <div className="landing-about">
         <DisplayH2 id={id} title={title} />
-        <div dangerouslySetInnerHTML={html}></div>
+        <div className="about-content" dangerouslySetInnerHTML={html}></div>
+        <div className="arrow"></div>
+        <section className="scrim-wrapper">
+          <div className="scrim-border">
+            <Suspense>
+              {!isServer && (
+                <ScrimInline
+                  url={SCRIM_URL}
+                  img={scrimBg}
+                  scrimTitle="MDN + Scrimba partnership announcement scrim"
+                  ref={observedNode}
+                />
+              )}
+            </Suspense>
+          </div>
+          <p>
+            Learn our curriculum with Scrimba's interactive{" "}
+            <a
+              href="https://scrimba.com/learn/frontend?via=mdn"
+              className="external"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Frontend Developer Career Path
+            </a>
+            .
+          </p>
+        </section>
       </div>
     </section>
   );

@@ -53,17 +53,30 @@
 
     p.curriculum-resources {
       margin-bottom: 0.5rem;
+      margin-top: 2rem;
 
       + ul {
         padding-left: 2rem;
 
         > li {
-          &:not(.external) {
-            list-style-image: var(--curriculum-module-mdn-resource);
+          list-style-image: var(--curriculum-module-mdn-resource);
+
+          &.curriculum-external-li {
+            list-style-image: url("../assets/icons/curriculum-ext-resource.svg");
           }
 
-          &.external {
-            list-style-image: url("../assets/icons/curriculum-ext-resource.svg");
+          em {
+            background: var(--curriculum-bg-color);
+            border-radius: 1em;
+            color: var(--text-primary);
+            display: inline-block;
+            font-size: 0.5rem;
+            font-weight: bold;
+            line-height: 1.7;
+            padding: 0 0.4em;
+            text-rendering: optimizeLegibility;
+            text-transform: uppercase;
+            vertical-align: super;
           }
         }
       }

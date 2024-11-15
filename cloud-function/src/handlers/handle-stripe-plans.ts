@@ -19,8 +19,6 @@ export async function handleStripePlans(req: Request, res: Response) {
   const lookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 
-  const localeHeader = req.headers["accept-language"];
-
   const countryCode = getRequestCountry(req);
 
   const supportedCurrency = lookupData.countryToCurrency[countryCode];
@@ -29,6 +27,7 @@ export async function handleStripePlans(req: Request, res: Response) {
     return res.sendStatus(404).end();
   }
 
+  const localeHeader = req.headers["accept-language"];
   const acceptLanguage = typeof localeHeader === "string" ? localeHeader : null;
 
   let supportedLanguageOrDefault;

@@ -12,6 +12,8 @@ import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
 import { ONLY_AVAILABLE_IN_ENGLISH } from "../../libs/l10n/l10n.js";
+import web from "../../kumascript/src/api/web.js";
+import mdn from "../../kumascript/src/api/mdn.js";
 
 const _safeToHttpsDomains = new Map();
 
@@ -62,7 +64,14 @@ function mutateLink(
     $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
-    $element.attr("title", "This is a link to an unwritten page");
+    const locale = $element.attr("href")?.match(/^\/([^/]+)\//)?.[1] || "en-US";
+    const titleWhenMissing = (mdn as any).getLocalString.call(
+      { env: { locale } },
+      web.getJSONData("L10n-Common"),
+      "summary"
+    );
+    $element.attr("title", titleWhenMissing);
+    $element.attr("href", null);
   }
 }
 
@@ -234,6 +243,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("https://developer.mozilla.org/") &&
       !href.startsWith("https://developer.mozilla.org/en-US/curriculum/") &&
+      !href.startsWith("https://developer.mozilla.org/en-US/observatory") &&
       !href.startsWith("https://developer.mozilla.org/en-US/blog/")
     ) {
       // It might be a working 200 OK link but the link just shouldn't
@@ -285,7 +295,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("/") &&
       !href.startsWith("//") &&
-      !/^\/(discord|en-US\/(blog|curriculum))(\/|$)/.test(href)
+      !/^\/(discord|en-US\/(blog|curriculum|observatory))(\/|$)/.test(href)
     ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");

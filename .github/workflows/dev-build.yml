@@ -131,6 +131,8 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
 
         run: |
+          set -eo pipefail
+
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
@@ -141,9 +143,9 @@ jobs:
           # Spread the work across 2 processes. Why 2? Because that's what you
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build --locale     en-us --locale     ja --locale     fr &
+          yarn build:docs --locale     en-us --locale     ja --locale     fr &
           build1=$!
-          yarn build --not-locale en-us --not-locale ja --not-locale fr &
+          yarn build:docs --not-locale en-us --not-locale ja --not-locale fr &
           build2=$!
 
           # You must explicitly specify the job you're waiting-on to ensure
@@ -158,6 +160,9 @@ jobs:
 
           # Generate sitemap index file
           yarn build --sitemap-index
+
+          # SSR all pages
+          yarn render:html
 
           # Generate whatsdeployed files.
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json

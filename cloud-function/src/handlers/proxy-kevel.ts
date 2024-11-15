@@ -1,5 +1,3 @@
-import * as url from "node:url";
-
 import { Client } from "@adzerk/decision-sdk";
 import type { Request, Response } from "express";
 
@@ -11,11 +9,13 @@ import {
   fetchImage,
 } from "../internal/pong/index.js";
 
+import stagePlusLookup from "../stripe-plans/stage.js";
+import prodPlusLookup from "../stripe-plans/prod.js";
 import * as env from "../env.js";
 
 import { getRequestCountry } from "../utils.js";
 
-const { KEVEL_SITE_ID, KEVEL_NETWORK_ID, SIGN_SECRET } = env;
+const { KEVEL_SITE_ID, KEVEL_NETWORK_ID, ORIGIN_MAIN, SIGN_SECRET } = env;
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
@@ -25,13 +25,17 @@ const coder = new Coder(SIGN_SECRET);
 const handleGet = createPongGetHandler(client, coder, env);
 const handleClick = createPongClickHandler(coder);
 const handleViewed = createPongViewedHandler(coder);
+const plusLookup =
+  ORIGIN_MAIN === "developer.mozilla.org" ? prodPlusLookup : stagePlusLookup;
 
 export async function proxyKevel(req: Request, res: Response) {
   const countryCode = getRequestCountry(req);
 
+  const plusAvailable = countryCode in plusLookup.countryToCurrency;
+
   const userAgent = req.headers["user-agent"] ?? "";
 
-  const parsedUrl = url.parse(req.url);
+  const parsedUrl = new URL(req.url, `${req.protocol}://${req.headers.host}`);
   const pathname = parsedUrl.pathname ?? "";
   const search = parsedUrl.search ?? "";
 
@@ -46,6 +50,8 @@ export async function proxyKevel(req: Request, res: Response) {
       countryCode,
       userAgent
     );
+
+    payload.plusAvailable = plusAvailable;
 
     return res
       .status(status)

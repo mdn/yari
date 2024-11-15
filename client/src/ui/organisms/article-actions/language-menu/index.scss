@@ -7,8 +7,64 @@
 }
 
 .language-menu {
+  li {
+    &:not(:first-child) {
+      padding-top: 1px;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 1px;
+    }
+  }
+
   .submenu-item {
-    padding: 0.5rem;
+    // Reduce padding compared to other menus.
+    padding: 0.5rem !important;
+
+    &.locale-redirect-setting {
+      border-bottom: 1px solid var(--border-secondary) !important;
+      border-radius: 0 !important;
+      display: block;
+      font-size: var(--type-tiny-font-size);
+
+      &:hover {
+        background-color: unset;
+      }
+
+      .group {
+        align-items: center;
+        display: flex;
+        gap: 0.5em;
+      }
+
+      .switch {
+        display: flex;
+      }
+
+      .glean-thumbs {
+        font-style: italic;
+        font-variation-settings: "slnt" -10;
+        margin-top: 0.5em;
+      }
+
+      .icon {
+        margin-right: unset;
+      }
+
+      a[href] .icon-question-mark {
+        background-color: var(--icon-secondary);
+
+        &:hover {
+          background-color: var(--text-link);
+        }
+      }
+    }
+
+    .icon-experimental {
+      background-color: var(--icon-primary);
+      margin-left: 0.5em;
+      vertical-align: text-top;
+    }
   }
 
   @media (min-width: $screen-md) {

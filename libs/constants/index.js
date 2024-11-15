@@ -1,5 +1,5 @@
 export const VALID_LOCALES = new Map(
-  ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+  ["de", "en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
     (x) => [x.toLowerCase(), x]
   )
 );
@@ -10,7 +10,6 @@ export const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
-    "de",
     "el",
     "fa",
     "fi",
@@ -49,6 +48,7 @@ export const LOCALE_ALIASES = new Map([
 // gets set in the client!
 export const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 export const ACTIVE_LOCALES = new Set([
+  "de",
   "en-us",
   "es",
   "fr",
@@ -74,7 +74,7 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "https://js.stripe.com",
 
   /*
-   * Inline scripts (defined in `client/public/index.html`).
+   * Inline scripts (imported in `ssr/render.tsx`).
    *
    * If we modify them, we must always update their CSP hash here.
    *
@@ -84,9 +84,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
 
   // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
-  // - Current hash:
   "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
+  // - Current hash:
+  "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -111,6 +111,13 @@ export const CSP_DIRECTIVES = {
     "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
+    // Observatory
+    "https://observatory-api.mdn.allizom.net",
+    "https://observatory-api.mdn.mozilla.net",
+
+    // Community
+    "https://api.github.com/search/issues",
+
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -123,10 +130,11 @@ export const CSP_DIRECTIVES = {
     "mdn.github.io",
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
-    "live-samples.developer.allizom.xyz",
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
 
+    "https://v2.scrimba.com",
+    "https://scrimba.com",
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
@@ -135,6 +143,7 @@ export const CSP_DIRECTIVES = {
   ],
   "img-src": [
     "'self'",
+    "data:",
 
     // Avatars
     "*.githubusercontent.com",
@@ -275,6 +284,8 @@ export const VALID_FLAW_CHECKS = new Set([
 
 export const MDN_PLUS_TITLE = "MDN Plus";
 export const CURRICULUM_TITLE = "MDN Curriculum";
+export const OBSERVATORY_TITLE = "HTTP Observatory";
+export const OBSERVATORY_TITLE_FULL = "HTTP Observatory | MDN";
 
 // -------
 // content

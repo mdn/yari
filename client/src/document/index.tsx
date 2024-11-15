@@ -1,16 +1,12 @@
 import React from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
-import {
-  useDocumentURL,
-  useCopyExamplesToClipboardAndAIExplain,
-  useRunSample,
-} from "./hooks";
+import { useDocumentURL, useDecorateCodeExamples, useRunSample } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -25,7 +21,6 @@ import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
-import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { ArticleFooter } from "./organisms/article-footer";
@@ -74,7 +69,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const locale = useLocale();
-  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
@@ -126,7 +120,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
   //useCollectSample(doc);
-  useCopyExamplesToClipboardAndAIExplain(doc);
+  useDecorateCodeExamples(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
@@ -213,8 +207,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const retiredLocale = searchParams.get("retiredLocale");
-
   return (
     <>
       <div className="sticky-header-container">
@@ -223,16 +215,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
       </div>
       {/* only include this if we are not server-side rendering */}
       {!isServer && <OfflineStatusBar />}
-      {doc.isTranslated ? (
+      {doc.isTranslated && (
         <div className="container">
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
         </div>
-      ) : (
-        retiredLocale && (
-          <div className="container">
-            <RetiredLocaleNote locale={retiredLocale} />
-          </div>
-        )
       )}
       <div className="main-wrapper">
         <div className="sidebar-container">

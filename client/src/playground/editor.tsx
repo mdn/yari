@@ -77,7 +77,10 @@ function cmExtensions(colorScheme: string, language: string) {
   ];
 }
 
-const Editor = forwardRef<EditorHandle, any>(function EditorInner(
+const Editor = forwardRef<
+  EditorHandle,
+  { language: string; callback: () => void }
+>(function EditorInner(
   {
     language,
     callback = () => {},
@@ -125,27 +128,23 @@ const Editor = forwardRef<EditorHandle, any>(function EditorInner(
     return () => {};
   }, [language, colorScheme]);
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        getContent() {
-          return editor.current?.state.doc.toString();
-        },
-        setContent(content: string) {
-          let state = EditorState.create({
-            doc: content,
-            extensions: [
-              ...cmExtensions(colorScheme, language),
-              updateListenerExtension.current,
-            ],
-          });
-          editor.current?.setState(state);
-        },
-      };
-    },
-    [language, colorScheme]
-  );
+  useImperativeHandle(ref, () => {
+    return {
+      getContent() {
+        return editor.current?.state.doc.toString();
+      },
+      setContent(content: string) {
+        let state = EditorState.create({
+          doc: content,
+          extensions: [
+            ...cmExtensions(colorScheme, language),
+            updateListenerExtension.current,
+          ],
+        });
+        editor.current?.setState(state);
+      },
+    };
+  }, [language, colorScheme]);
   return (
     <details className="editor-container" open={true}>
       <summary>{language.toUpperCase()}</summary>

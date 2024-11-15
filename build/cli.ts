@@ -2,12 +2,11 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import caporal from "@caporal/core";
-import inquirer from "inquirer";
+import { select } from "@inquirer/prompts";
 
 import { Document, slugToFolder, translationsOf } from "../content/index.js";
 import {
@@ -19,7 +18,6 @@ import {
 import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { renderHTML } from "../ssr/dist/main.js";
 import options from "./build-options.js";
 import {
   buildDocument,
@@ -28,13 +26,14 @@ import {
 } from "./index.js";
 import { Doc, DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { buildSitemapIndex, buildSitemap } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
 import { initSentry } from "./sentry.js";
 import { macroRenderTimes } from "../kumascript/src/render.js";
+import { ssrDocument } from "./ssr.js";
+import { HydrationData } from "../libs/types/hydration.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
@@ -100,19 +99,15 @@ async function buildDocumentInteractive(
       throw e;
     }
     console.error(e);
-    const { action } = await prompt([
-      {
-        type: "list",
-        message: "What to do?",
-        name: "action",
-        choices: [
-          { name: "re-run", value: "r" },
-          { name: "skip", value: "s" },
-          { name: "quit", value: "q" },
-        ],
-        default: "r",
-      },
-    ]);
+    const action = await select({
+      message: "What to do?",
+      choices: [
+        { name: "re-run", value: "r" },
+        { name: "skip", value: "s" },
+        { name: "quit", value: "q" },
+      ],
+      default: "r",
+    });
     if (action === "r") {
       return await buildDocumentInteractive(documentPath, interactive, true);
     }
@@ -240,20 +235,21 @@ async function buildDocuments(
       updateBaselineBuildMetadata(builtDocument);
     }
 
-    if (!noHTML) {
-      fs.writeFileSync(
-        path.join(outPath, "index.html"),
-        renderHTML(document.url, { doc: builtDocument })
-      );
-    }
+    const context: HydrationData = {
+      doc: builtDocument,
+      url: builtDocument.mdn_url,
+    };
 
+    if (!noHTML) {
+      fs.writeFileSync(path.join(outPath, "index.html"), ssrDocument(context));
+    }
     if (plainHTML) {
       fs.writeFileSync(path.join(outPath, "plain.html"), plainHTML);
     }
 
     // This is exploiting the fact that renderHTML has the side-effect of
     // mutating the built document which makes this not great and refactor-worthy.
-    const docString = JSON.stringify({ doc: builtDocument });
+    const docString = JSON.stringify(context);
     fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
@@ -341,17 +337,10 @@ async function buildDocuments(
   }
 
   for (const [locale, docs] of Object.entries(docPerLocale)) {
-    const sitemapDir = path.join(
-      BUILD_OUT_ROOT,
-      "sitemaps",
-      locale.toLowerCase()
-    );
-    fs.mkdirSync(sitemapDir, { recursive: true });
-    const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-    fs.writeFileSync(
-      sitemapFilePath,
-      zlib.gzipSync(makeSitemapXML(locale, docs))
-    );
+    await buildSitemap(docs, {
+      slugPrefix: `/${locale}/docs/`,
+      pathSuffix: [locale],
+    });
   }
 
   searchIndex.sort();
@@ -479,7 +468,7 @@ program
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
-  .option("-n, --nohtml", "Do not build index.html", {
+  .option("-n, --nohtml", "Do not render index.html", {
     default: false,
   })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
@@ -496,6 +485,12 @@ program
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }: BuildArgsAndOptions) => {
     try {
+      if (!options.nohtml) {
+        console.warn(
+          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari in the near future. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
+        );
+      }
+
       if (!options.quiet) {
         const roots = [
           ["CONTENT_ROOT", CONTENT_ROOT],
@@ -514,35 +509,16 @@ program
         if (!options.quiet) {
           console.log(chalk.yellow("Building sitemap index file..."));
         }
-        const sitemapsBuilt = [];
-        const locales = [];
-        for (const locale of VALID_LOCALES.keys()) {
-          const sitemapFilePath = path.join(
-            BUILD_OUT_ROOT,
-            "sitemaps",
-            locale,
-            "sitemap.xml.gz"
-          );
-          if (fs.existsSync(sitemapFilePath)) {
-            sitemapsBuilt.push(sitemapFilePath);
-            locales.push(locale);
-          }
-        }
-
-        const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-        fs.writeFileSync(
-          sitemapIndexFilePath,
-          makeSitemapIndexXML(
-            sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
-          )
-        );
+        const sitemapsBuilt = await buildSitemapIndex();
 
         if (!options.quiet) {
-          console.log(
-            chalk.green(
-              `Sitemap index file built with locales: ${locales.join(", ")}.`
-            )
-          );
+          for (const sitemaps of sitemapsBuilt) {
+            console.log(
+              chalk.green(
+                `Wrote sitemap index referencing ${sitemaps.length} sitemaps:\n${sitemaps.map((s) => `- ${s}`).join("\n")}`
+              )
+            );
+          }
         }
         return;
       }

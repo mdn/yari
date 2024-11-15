@@ -20,7 +20,7 @@ import {
 import { findTranslations } from "../content/translations.js";
 import { Document, Redirect, FileAttachment } from "../content/index.js";
 import {
-  ANY_ATTACHMENT_REGEXP,
+  ANY_ATTACHMENT_EXT,
   CSP_VALUE,
   DEFAULT_LOCALE,
   PLAYGROUND_UNSAFE_CSP_VALUE,
@@ -30,10 +30,10 @@ import {
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
-  OFFLINE_CONTENT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   BLOG_ROOT,
+  CURRICULUM_ROOT,
 } from "../libs/env/index.js";
 
 import documentRouter from "./document.js";
@@ -49,28 +49,66 @@ import { MEMOIZE_INVALIDATE, getRoot } from "../content/utils.js";
 import { renderHTML } from "../ssr/dist/main.js";
 import {
   allPostFrontmatter,
-  findPostLiveSampleBySlug,
   findPostBySlug,
   findPostPathBySlug,
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 
 async function buildDocumentFromURL(url: string) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
+  try {
+    console.time(`buildDocumentFromURL(${url})`);
+    const document = Document.findByURL(url);
+    if (!document) {
+      return null;
+    }
+    const documentOptions = {};
+    if (CONTENT_TRANSLATED_ROOT) {
+      // When you're running the dev server and build documents
+      // every time a URL is requested, you won't have had the chance to do
+      // the phase that happens when you do a regular `yarn build`.
+      document.translations = findTranslations(
+        document.metadata.slug,
+        document.metadata.locale
+      );
+    }
+    const built = await buildDocument(document, documentOptions);
+
+    if (built) {
+      return { doc: built?.doc, url };
+    } else if (
+      url.split("/")[1] &&
+      url.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
+      !CONTENT_TRANSLATED_ROOT
+    ) {
+      // Such a common mistake. You try to view a URL that is not en-US but
+      // you forgot to set CONTENT_TRANSLATED_ROOT.
+      console.warn(
+        `URL is for locale '${
+          url.split("/")[1]
+        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
+      );
+    }
+  } catch (error) {
+    console.error(`Error in buildDocumentFromURL(${url})`, error);
+    throw error;
+  } finally {
+    console.timeEnd(`buildDocumentFromURL(${url})`);
   }
-  const documentOptions = {};
-  if (CONTENT_TRANSLATED_ROOT) {
-    // When you're running the dev server and build documents
-    // every time a URL is requested, you won't have had the chance to do
-    // the phase that happens when you do a regular `yarn build`.
-    document.translations = findTranslations(
-      document.metadata.slug,
-      document.metadata.locale
-    );
+}
+
+function redirectOr404(res: express.Response, url, suffix = "") {
+  const redirectURL = Redirect.resolve(url);
+  if (redirectURL !== url) {
+    // This was and is broken for redirects with anchors...
+    return res.redirect(301, redirectURL + suffix);
   }
-  return await buildDocument(document, documentOptions);
+  return send404(res);
+}
+
+function send404(res: express.Response) {
+  return res
+    .status(404)
+    .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 }
 
 const app = express();
@@ -228,51 +266,69 @@ app.get("/*/contributors.txt", async (req, res) => {
   if (!document) {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
-  const { doc: builtDocument } = await buildDocument(document);
-  res.send(
-    renderContributorsTxt(
-      document.metadata.contributors,
-      builtDocument.source.github_url.replace("/blob/", "/commits/")
-    )
-  );
-});
-
-app.get(
-  [
-    "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
-    "/:locale/curriculum/index.json",
-  ],
-  async (req, res) => {
-    const { slug = "" } = req.params;
-    const data = await findCurriculumPageBySlug(slug);
-    if (!data) {
-      return res.status(404).send("Nothing here 🤷‍♂️");
-    }
-    return res.json(data);
+  try {
+    const { doc: builtDocument } = await buildDocument(document);
+    res.send(
+      renderContributorsTxt(
+        document.metadata.contributors,
+        builtDocument.source.github_url.replace("/blob/", "/commits/")
+      )
+    );
+  } catch (error) {
+    return res.status(500).json(JSON.stringify(error.toString()));
   }
-);
+});
 
-app.get("/:locale/blog/index.json", async (_, res) => {
-  const posts = await allPostFrontmatter(
-    { includeUnpublished: true },
-    MEMOIZE_INVALIDATE
+app.get("/*/runner.html", (_, res) => {
+  return res
+    .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
+    .status(200)
+    .sendFile(path.join(STATIC_ROOT, "runner.html"));
+});
+
+if (CURRICULUM_ROOT) {
+  app.get(
+    [
+      "/:locale/curriculum/:slug([\\S\\/]+)/index.json",
+      "/:locale/curriculum/index.json",
+    ],
+    async (req, res) => {
+      const { slug = "" } = req.params;
+      const data = await findCurriculumPageBySlug(slug);
+      if (!data) {
+        return res.status(404).send("Nothing here 🤷‍♂️");
+      }
+      return res.json(data);
+    }
   );
-  return res.json({ hyData: { posts } });
-});
-app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
-  const { slug, asset } = req.params;
-  return send(
-    req,
-    path.resolve(
-      BLOG_ROOT,
-      "..",
-      "authors",
-      sanitizeFilename(slug),
-      sanitizeFilename(asset)
-    )
-  ).pipe(res);
-});
+} else {
+  app.get("/[^/]+/curriculum/*", (_, res) => {
+    console.warn("'CURRICULUM_ROOT' not set in .env file");
+    return send404(res);
+  });
+}
+
 if (BLOG_ROOT) {
+  app.get("/:locale/blog/index.json", async (_, res) => {
+    const posts = await allPostFrontmatter(
+      { includeUnpublished: true },
+      MEMOIZE_INVALIDATE
+    );
+    return res.json({ hyData: { posts } });
+  });
+  app.get("/:locale/blog/author/:slug/:asset", async (req, res) => {
+    const { slug, asset } = req.params;
+    return send(
+      req,
+      path.resolve(
+        BLOG_ROOT,
+        "..",
+        "authors",
+        sanitizeFilename(slug),
+        sanitizeFilename(asset)
+      )
+    ).pipe(res);
+  });
   app.get("/:locale/blog/:slug/index.json", async (req, res) => {
     const { slug } = req.params;
     const data = await findPostBySlug(slug);
@@ -280,23 +336,6 @@ if (BLOG_ROOT) {
       return res.status(404).send("Nothing here 🤷‍♂️");
     }
     return res.json(data);
-  });
-  app.get(
-    ["/:locale/blog/:slug/runner.html", "/:locale/blog/:slug/runner.html"],
-    async (req, res) => {
-      return res
-        .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-        .status(200)
-        .sendFile(path.join(STATIC_ROOT, "runner.html"));
-    }
-  );
-  app.get("/:locale/blog/:slug/_sample_.:id.html", async (req, res) => {
-    const { slug, id } = req.params;
-    try {
-      return res.send(await findPostLiveSampleBySlug(slug, id));
-    } catch (e) {
-      return res.status(404).send(e.toString());
-    }
   });
   app.get("/:locale/blog/:slug/:asset", async (req, res) => {
     const { slug, asset } = req.params;
@@ -310,35 +349,19 @@ if (BLOG_ROOT) {
     return res.status(404).send("Nothing here 🤷‍♂️");
   });
 } else {
-  console.warn("'BLOG_ROOT' not set in .env file");
+  app.get("/[^/]+/blog/*", (_, res) => {
+    console.warn("'BLOG_ROOT' not set in .env file");
+    return send404(res);
+  });
 }
-app.get("/*", async (req, res, ...args) => {
-  const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
-  if (req.url.startsWith("/_")) {
-    // URLs starting with _ is exclusively for the meta-work and if there
-    // isn't already a handler, it's something wrong.
-    return res.status(404).send("Page not found");
-  }
 
-  // If the catch-all gets one of these something's gone wrong
-  if (req.url.startsWith("/static")) {
-    return res.status(404).send("Page not found");
-  }
-  if (OFFLINE_CONTENT) {
-    return res.status(404).send("Offline");
-  }
-  if (contentProxy) {
+if (contentProxy) {
+  app.get("/*", async (req, res, ...args) => {
     console.log(`proxying: ${req.url}`);
     return contentProxy(req, res, ...args);
-  }
-
-  if (parsedUrl.pathname.endsWith("/runner.html")) {
-    return res
-      .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-      .status(200)
-      .sendFile(path.join(STATIC_ROOT, "runner.html"));
-  }
-  if (req.url.includes("/_sample_.")) {
+  });
+} else {
+  app.get("/*/_sample_.*", async (req, res) => {
     try {
       return res
         .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
@@ -347,110 +370,62 @@ app.get("/*", async (req, res, ...args) => {
     } catch (e) {
       return res.status(404).send(e.toString());
     }
-  }
-
-  if (!req.url.includes("/docs/")) {
-    // If it's a known SPA, like `/en-US/search` then that should have been
-    // matched to its file and not end up here in the catchall handler.
-    // Simulate what we do in the Lambda@Edge.
-    return res
-      .status(404)
-      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (ANY_ATTACHMENT_REGEXP.test(req.path)) {
-    // Remember, FileAttachment.findByURLWithFallback() will return the absolute file path
-    // iff it exists on disk.
-    // Using a "fallback" strategy here so that images embedded in live samples
-    // are resolved if they exist in en-US but not in <locale>
-    const filePath = FileAttachment.findByURLWithFallback(req.path);
-    if (filePath) {
-      // The second parameter to `send()` has to be either a full absolute
-      // path or a path that doesn't start with `../` otherwise you'd
-      // get a 403 Forbidden.
-      // See https://github.com/mdn/yari/issues/1297
-      return send(req, path.resolve(filePath)).pipe(res);
+  });
+  app.get("/[^/]+/docs/*/index.json", async (req, res) => {
+    const url = decodeURI(req.path.replace(/\/index.json$/, ""));
+    try {
+      const doc = await buildDocumentFromURL(url);
+      if (!doc) {
+        return redirectOr404(res, url, "/index.json");
+      }
+      return res.json(doc);
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
     }
-    return res.status(404).send("File not found on disk");
-  }
-
-  let lookupURL = decodeURI(req.path);
-  let extraSuffix = "";
-  let isMetadata = false;
-  let isDocument = false;
-
-  if (req.path.endsWith("index.json")) {
-    // It's a bit special then.
-    // The URL like me something like
-    // /en-US/docs/HTML/Global_attributes/index.json
-    // and that won't be found in getRedirectUrl() since that doesn't
-    // index things with the '/index.json' suffix. So we need to
-    // temporarily remove it and remember to but it back when we're done.
-    isDocument = true;
-    extraSuffix = "/index.json";
-    lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (req.path.endsWith("metadata.json")) {
-    isMetadata = true;
-    extraSuffix = "/metadata.json";
-    lookupURL = lookupURL.replace(extraSuffix, "");
-  }
-
-  const isJSONRequest = extraSuffix.endsWith(".json");
-
-  let document;
-  try {
-    console.time(`buildDocumentFromURL(${lookupURL})`);
-    const built = await buildDocumentFromURL(lookupURL);
-    if (built) {
-      document = built.doc;
-    } else if (
-      lookupURL.split("/")[1] &&
-      lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
-      !CONTENT_TRANSLATED_ROOT
-    ) {
-      // Such a common mistake. You try to view a URL that is not en-US but
-      // you forgot to set CONTENT_TRANSLATED_ROOT.
-      console.warn(
-        `URL is for locale '${
-          lookupURL.split("/")[1]
-        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
-      );
+  });
+  app.get("/[^/]+/docs/*/metadata.json", async (req, res) => {
+    const url = decodeURI(req.path.replace(/\/metadata.json$/, ""));
+    const doc = await buildDocumentFromURL(url);
+    if (!doc?.doc) {
+      return redirectOr404(res, url, "/metadata.json");
     }
-  } catch (error) {
-    console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
-    return res.status(500).send(error.toString());
-  } finally {
-    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
-  }
-
-  if (!document) {
-    const redirectURL = Redirect.resolve(lookupURL);
-    if (redirectURL !== lookupURL) {
-      return res.redirect(301, redirectURL + extraSuffix);
-    }
-    return res
-      .status(404)
-      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (isDocument) {
-    res.json({ doc: document });
-  } else if (isMetadata) {
-    const docString = JSON.stringify({ doc: document });
+    const docString = JSON.stringify(doc);
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
+    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = doc.doc;
     builtMetadata.hash = hash;
 
-    res.json(builtMetadata);
-  } else if (isJSONRequest) {
-    // TODO: what's this for?
-    res.json({ doc: document });
-  } else {
-    res.header("Content-Security-Policy", CSP_VALUE);
-    res.send(renderHTML(lookupURL, { doc: document }));
-  }
-});
+    return res.json(builtMetadata);
+  });
+  app.get(
+    `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
+    async (req, res) => {
+      const filePath = FileAttachment.findByURLWithFallback(req.path);
+      if (filePath) {
+        // The second parameter to `send()` has to be either a full absolute
+        // path or a path that doesn't start with `../` otherwise you'd
+        // get a 403 Forbidden.
+        // See https://github.com/mdn/yari/issues/1297
+        return send(req, path.resolve(filePath)).pipe(res);
+      }
+      return res.status(404).send("File not found on disk");
+    }
+  );
+  app.get("/[^/]+/docs/*", async (req, res) => {
+    const url = req.path;
+    try {
+      const doc = await buildDocumentFromURL(url);
+      if (!doc) {
+        return redirectOr404(res, url);
+      }
+      res.header("Content-Security-Policy", CSP_VALUE);
+      return res.send(renderHTML(doc));
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
+    }
+  });
+}
+app.get("/*", (_, res) => send404(res));
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
@@ -463,9 +438,10 @@ console.log(
     : ""
 );
 
+const HOST = process.env.SERVER_HOST || undefined;
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Listening on ${HOST ? `${HOST}:` : "port "}${PORT}`);
   if (process.env.EDITOR) {
     console.log(`Your EDITOR is set to: ${chalk.bold(process.env.EDITOR)}`);
   } else {

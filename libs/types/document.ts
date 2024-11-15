@@ -1,4 +1,8 @@
-import type { SupportStatus } from "./web-features.js";
+import { type Locale } from "./core.js";
+
+// web-features doesn't export this type directly so we need to do a little typescript magic:
+import type { features } from "web-features";
+type SupportStatus = (typeof features)[keyof typeof features]["status"];
 
 export interface Source {
   folder: string;
@@ -128,7 +132,7 @@ export type Toc = {
 export interface DocMetadata {
   title: string;
   short_title: string;
-  locale: string;
+  locale: Locale;
   native: string;
   pageTitle: string;
   mdn_url: string;
@@ -149,6 +153,7 @@ export interface DocMetadata {
   browserCompat?: string[];
   baseline?: SupportStatus;
   hash?: string;
+  pageType: string;
 }
 
 export interface Doc extends DocMetadata {
@@ -222,8 +227,8 @@ export interface NewsItem {
 export interface BuildData {
   url: string;
   rawBody: string;
-  metadata: { locale: string };
-  isMarkdown: true;
+  metadata: { locale: Locale };
+  isMarkdown: boolean;
   fileInfo: {
     path: string;
   };
@@ -232,7 +237,7 @@ export interface BuildData {
 export interface UnbuiltDocument {
   metadata: DocFrontmatter & {
     frontMatterKeys: string[];
-    locale: string;
+    locale: Locale;
     popularity: number;
     modified: any;
     hash: any;

@@ -8,21 +8,21 @@
     "newsletter";
   width: 100%;
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     grid-template-areas:
       "post toc"
       "newsletter toc";
     grid-template-columns: minmax(auto, 100%) minmax(0, 12rem);
   }
 
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     grid-template-areas:
       "nothing post toc"
       "nothing newsletter toc";
     grid-template-columns: minmax(auto, 1fr) minmax(0, 52rem) minmax(15rem, 1fr);
   }
 
-  @media screen and (min-width: $screen-xxl) {
+  @media (min-width: $screen-xxl) {
     grid-template-areas:
       "toc post place"
       "toc newsletter place";
@@ -36,7 +36,7 @@
     --offset: var(--top-nav-height);
     display: none;
 
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       display: flex;
       flex-direction: column;
       grid-area: toc;
@@ -45,7 +45,7 @@
         margin-top: 2rem;
       }
     }
-    @media screen and (min-width: $screen-xxl) {
+    @media (min-width: $screen-xxl) {
       display: contents;
 
       .place.side,
@@ -67,6 +67,7 @@
         grid-area: place;
         margin-top: 0;
 
+        > .pong-box2,
         > .pong-box {
           margin-top: 2rem;
         }
@@ -91,7 +92,7 @@
       display: flex;
       gap: 1rem;
 
-      @media screen and (max-width: $screen-md) {
+      @media (max-width: $screen-md) {
         flex-direction: column-reverse;
       }
 
@@ -110,7 +111,7 @@
           background: none;
         }
 
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           &.previous,
           &.next {
             &::before,

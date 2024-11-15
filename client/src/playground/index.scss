@@ -25,7 +25,7 @@ main.play {
   grid-template-columns: 1fr;
   min-height: var(--play-height);
   padding: 1rem;
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -201,7 +201,7 @@ main.play {
             min-height: 100%;
             width: 100%;
 
-            @media screen and (max-width: $screen-sm) {
+            @media (max-width: $screen-sm) {
               font-size: 1rem;
             }
           }
@@ -213,12 +213,13 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
-      @media screen and (min-width: 25rem) {
+      @media (min-width: 25rem) {
         .place {
           align-self: flex-end;
           max-width: 20rem;
           min-height: 10rem;
 
+          .pong-box2,
           .pong-box {
             width: 100%;
 
@@ -228,6 +229,47 @@ main.play {
 
             .pong-note {
               margin-top: 0;
+            }
+          }
+
+          &.new-side {
+            height: 12rem;
+            max-width: 30rem;
+            min-height: 12rem;
+
+            .pong-box2 {
+              height: 21rem;
+              min-height: 0;
+              width: 25rem;
+
+              .pong-cta {
+                margin: 0.5rem auto 1rem 1rem;
+              }
+
+              .pong-note {
+                margin: 0.5rem 0.5rem auto auto;
+              }
+
+              .pong {
+                > img {
+                  height: 100%;
+                  width: auto;
+                }
+
+                > div.content {
+                  align-items: end;
+                  background: linear-gradient(
+                    to left,
+                    var(--place-new-side-background) 16rem,
+                    transparent
+                  );
+                  flex-direction: column;
+                  height: 100%;
+                  justify-content: end;
+                  padding-left: 8rem;
+                  width: 100%;
+                }
+              }
             }
           }
         }
