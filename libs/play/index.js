@@ -148,7 +148,7 @@ export async function decompressFromBase64(base64String) {
     return { state: null, hash: null };
   }
   const bytes = Buffer.from(base64String, "base64");
-  const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
+  const hashBuffer = await crypto.subtle.digest("SHA-1", bytes);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
