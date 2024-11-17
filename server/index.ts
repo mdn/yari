@@ -277,7 +277,16 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-app.use("/:locale/search-index.json", searchIndexRoute);
+if (RARI) {
+  app.use("/:locale/search-index.json", async (req, res) => {
+    const { locale } = req.params;
+    const json = await fetch_from_rari(`/${locale}/search-index.json`, res);
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json(json);
+  });
+} else {
+  app.use("/:locale/search-index.json", searchIndexRoute);
+}
 
 app.get("/_flaws", flawsRoute);
 
