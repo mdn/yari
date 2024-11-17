@@ -177,7 +177,7 @@ const ORIGIN_PLAY_SUFFIX = `.${ORIGIN_PLAY}`;
  */
 function playSubdomain(hostname) {
   if (hostname.endsWith(ORIGIN_PLAY_SUFFIX)) {
-    return hostname.split(0, -1 * ORIGIN_PLAY_SUFFIX.length);
+    return hostname.slice(0, -1 * ORIGIN_PLAY_SUFFIX.length);
   }
   return "";
 }
