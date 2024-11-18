@@ -51,6 +51,7 @@ export function useCollectSample(doc: any) {
 export function useRunSample(doc: Doc | undefined) {
   const isServer = useIsServer();
   const locale = useLocale();
+  const { hash } = useLocation();
 
   useEffect(() => {
     if (isServer) {
@@ -91,9 +92,10 @@ export function useRunSample(doc: Doc | undefined) {
         code,
         locale
       );
-      initPlayIframe(iframe, code);
+      const fullscreen = hash === `#livesample_fullscreen=${id}`;
+      initPlayIframe(iframe, code, fullscreen);
     });
-  }, [doc, isServer, locale]);
+  }, [doc, isServer, locale, hash]);
 }
 
 export function useDecorateCodeExamples(doc: Doc | undefined) {

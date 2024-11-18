@@ -23,7 +23,6 @@ import {
   ANY_ATTACHMENT_EXT,
   CSP_VALUE,
   DEFAULT_LOCALE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
 } from "../libs/constants/index.js";
 import {
   STATIC_ROOT,
@@ -37,6 +36,7 @@ import {
   EXTERNAL_DEV_SERVER,
   RARI,
 } from "../libs/env/index.js";
+import { PLAYGROUND_UNSAFE_CSP_VALUE } from "../libs/play/index.js";
 
 import documentRouter from "./document.js";
 import fakeV1APIRouter from "./fake-v1-api.js";
@@ -55,6 +55,7 @@ import {
   findPostPathBySlug,
 } from "../build/blog.js";
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
+import { handleRunner } from "../libs/play/index.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function fetch_from_rari(path: string, res = null) {
@@ -206,8 +207,6 @@ app.use(cookieParser());
 
 app.use(originRequestMiddleware);
 
-app.use(staticMiddlewares);
-
 app.use(express.urlencoded({ extended: true }));
 
 app.post(
@@ -325,11 +324,8 @@ app.get("/*/contributors.txt", async (req, res) => {
   }
 });
 
-app.get("/*/runner.html", (_, res) => {
-  return res
-    .setHeader("Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE)
-    .status(200)
-    .sendFile(path.join(STATIC_ROOT, "runner.html"));
+app.get(["/*/runner.html", "/runner.html"], (req, res) => {
+  handleRunner(req, res);
 });
 
 if (CURRICULUM_ROOT) {
@@ -521,6 +517,8 @@ if (RARI) {
     }
   );
 }
+
+app.use(staticMiddlewares);
 
 app.get("/*", async (_, res) => await send404(res));
 

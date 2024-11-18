@@ -1,3 +1,5 @@
+import { PLAYGROUND_BASE_HOST } from "../env";
+
 export const SESSION_KEY = "playground-session-code";
 
 export interface EditorContent {
@@ -44,28 +46,51 @@ export function codeToMarkdown(code: EditorContent): string {
   return parts.join("\n\n");
 }
 
-export function initPlayIframe(
+export async function initPlayIframe(
   iframe: HTMLIFrameElement | null,
-  editorContent: EditorContent | null
+  editorContent: EditorContent | null,
+  fullscreen: boolean = false
 ) {
   if (!iframe || !editorContent) {
     return;
   }
+  const { state, hash } = await compressAndBase64Encode(
+    JSON.stringify(editorContent)
+  );
+  const sp = new URLSearchParams([["state", state]]);
+  const host = `${
+    PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
+  }${PLAYGROUND_BASE_HOST}`;
+  const url = new URL(iframe.src);
+  url.host = host;
+  url.search = sp.toString();
+  iframe.src = url.href;
 
-  const message: Message = {
-    typ: "init",
-    state: editorContent,
-  };
-  iframe.contentWindow?.postMessage?.(message, { targetOrigin: "*" });
-  const deferred = ({ data: { typ = null, prop = {} } = {} } = {}) => {
-    const id = new URL(iframe.src, "https://example.com").searchParams.get(
-      "id"
-    );
-    if (id === prop["id"]) {
-      if (typ === "ready") {
-        iframe.contentWindow?.postMessage(message, { targetOrigin: "*" });
-      }
-    }
-  };
-  window.addEventListener("message", deferred);
+  if (fullscreen) {
+    window.location.href = url.href;
+  }
+}
+
+export async function compressAndBase64Encode(inputString: string) {
+  function bytesToBase64(bytes: ArrayBuffer) {
+    const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
+      String.fromCodePoint(byte)
+    ).join("");
+    return btoa(binString);
+  }
+  const inputArray = new Blob([inputString]);
+
+  const compressionStream = new CompressionStream("deflate-raw");
+
+  const compressedStream = new Response(
+    inputArray.stream().pipeThrough(compressionStream)
+  ).arrayBuffer();
+
+  const compressed = await compressedStream;
+  const hashBuffer = await window.crypto.subtle.digest("SHA-1", compressed);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const state = bytesToBase64(compressed);
+
+  return { state, hash };
 }

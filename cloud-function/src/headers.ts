@@ -1,9 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-import {
-  CSP_VALUE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
-} from "./internal/constants/index.js";
+import { CSP_VALUE } from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
 import { ORIGIN_TRIAL_TOKEN } from "./env.js";
 
@@ -97,17 +94,4 @@ export function setContentResponseHeaders(
     ...(xFrame ? [["X-Frame-Options", "DENY"]] : []),
     ...(ORIGIN_TRIAL_TOKEN ? [["Origin-Trial", ORIGIN_TRIAL_TOKEN]] : []),
   ].forEach(([k, v]) => k && v && setHeader(k, v));
-}
-
-export function withRunnerResponseHeaders(
-  _proxyRes: IncomingMessage,
-  _req: IncomingMessage,
-  res: ServerResponse<IncomingMessage>
-): void {
-  [
-    ["X-Content-Type-Options", "nosniff"],
-    ["Clear-Site-Data", '"*"'],
-    ["Strict-Transport-Security", "max-age=63072000"],
-    ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
-  ].forEach(([k, v]) => k && v && res.setHeader(k, v));
 }
