@@ -29,11 +29,10 @@
   "dependencies": {
     "@adzerk/decision-sdk": "^1.0.0-beta.20",
     "@google-cloud/functions-framework": "^3.4.2",
-    "@sentry/google-cloud-serverless": "^8.37.1",
+    "@sentry/google-cloud-serverless": "^8.38.0",
     "@yari-internal/constants": "file:src/internal/constants",
     "@yari-internal/fundamental-redirects": "file:src/internal/fundamental-redirects",
     "@yari-internal/locale-utils": "file:src/internal/locale-utils",
-    "@yari-internal/play": "file:src/internal/play",
     "@yari-internal/pong": "file:src/internal/pong",
     "@yari-internal/slug-utils": "file:src/internal/slug-utils",
     "accept-language-parser": "^1.5.0",
