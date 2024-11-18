@@ -17,16 +17,6 @@ export function withRunnerResponseHeaders(
   res: ServerResponse<IncomingMessage>
 ): void;
 /**
- * @param {State | null} state
- * @param {string} hrefWithCode
- * @param {string} searchWithState
- */
-export function renderWarning(
-  state: State | null,
-  hrefWithCode: string,
-  searchWithState: string
-): string;
-/**
  * @param {State | null} [state=null]
  */
 export function renderHtml(state?: State | null): string;
@@ -35,7 +25,7 @@ export function renderHtml(state?: State | null): string;
  */
 export function decompressFromBase64(base64String: string | null): Promise<{
   state: string;
-  hash: ArrayBuffer;
+  hash: string;
 }>;
 export function handleRunner(req: any, res: any): Promise<any>;
 export const ORIGIN_PLAY: string;
