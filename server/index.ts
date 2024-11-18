@@ -293,22 +293,35 @@ app.get("/_flaws", flawsRoute);
 app.use("/_translations", translationsRouter);
 
 app.get("/*/contributors.txt", async (req, res) => {
-  const url = req.path.replace(/\/contributors\.txt$/, "");
-  const document = Document.findByURL(url);
-  res.setHeader("content-type", "text/plain");
-  if (!document) {
-    return res.status(404).send(`Document not found by URL (${url})`);
-  }
-  try {
-    const { doc: builtDocument } = await buildDocument(document);
-    res.send(
-      renderContributorsTxt(
-        document.metadata.contributors,
-        builtDocument.source.github_url.replace("/blob/", "/commits/")
-      )
-    );
-  } catch (error) {
-    return res.status(500).json(JSON.stringify(error.toString()));
+  if (!RARI) {
+    const url = req.path.replace(/\/contributors\.txt$/, "");
+    const document = Document.findByURL(url);
+    res.setHeader("content-type", "text/plain");
+    if (!document) {
+      return res.status(404).send(`Document not found by URL (${url})`);
+    }
+    try {
+      const { doc: builtDocument } = await buildDocument(document);
+      res.send(
+        renderContributorsTxt(
+          document.metadata.contributors,
+          builtDocument.source.github_url.replace("/blob/", "/commits/")
+        )
+      );
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
+    }
+  } else {
+    try {
+      const external_url = `${EXTERNAL_DEV_SERVER}${req.path}`;
+      console.log(`contributors.txt: using ${external_url}`);
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      const text = await (await fetch(external_url)).text();
+      res.setHeader("content-type", "text/plain");
+      return res.send(text);
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
+    }
   }
 });
 
