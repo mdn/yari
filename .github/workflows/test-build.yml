@@ -85,6 +85,16 @@ jobs:
           mv mdn/translated-content-de/files/de mdn/translated-content/files/
           rm -rf mdn/translated-content-de
 
+      - name: Clean and commit de
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/translated-content
+        run: |
+          cp de/_redirects.txt de/_redirects.txt.bak
+          sed -n -E '/^#.*|(.*\thttp.*)|(.*\t\/en-US|de\/.*)/I p' de/_redirects.txt.bak > de/_redirects.txt
+          rm de/_redirects.txt.bak
+          git add files/de
+          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
