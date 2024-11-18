@@ -1578,7 +1578,7 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@csstools/postcss-random-function@^1.0.0":
+"@csstools/postcss-random-function@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@csstools/postcss-random-function/-/postcss-random-function-1.0.1.tgz#73a0b62b5dbbc03c25a28f085235eb61b09a2fb0"
   integrity sha512-Ab/tF8/RXktQlFwVhiC70UNfpFQRhtE5fQQoP2pO+KCPGLsLdWFiOuHgSRtBOqEshCVAzR4H6o38nhvRZq8deA==
@@ -1605,10 +1605,10 @@
   dependencies:
     postcss-selector-parser "^7.0.0"
 
-"@csstools/postcss-sign-functions@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@csstools/postcss-sign-functions/-/postcss-sign-functions-1.0.0.tgz#37ea7c85874cef5710a1a8878bf0e2b26d4270fd"
-  integrity sha512-cUpr5W8eookBi5TiLSvx1HL6DFoTTgcj2pmiVNd63y2JHhvtpnJs3sfsFMmLhB42yTRS02tFPsNz3Q5zeN8ZVA==
+"@csstools/postcss-sign-functions@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@csstools/postcss-sign-functions/-/postcss-sign-functions-1.1.0.tgz#a524fae1374b0e167729f612ca875d7b1b334262"
+  integrity sha512-SLcc20Nujx/kqbSwDmj6oaXgpy3UjFhBy1sfcqPgDkHfOIfUtUVH7OXO+j7BU4v/At5s61N5ZX6shvgPwluhsA==
   dependencies:
     "@csstools/css-calc" "^2.1.0"
     "@csstools/css-parser-algorithms" "^3.0.4"
@@ -12123,10 +12123,10 @@ postcss-place@^10.0.0:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-preset-env@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-10.1.0.tgz#b9c85d25b26c7581a8b11792b1883469c4b69cbf"
-  integrity sha512-OfzbinZWpFcmuLB3mabsGa0NArzx5DVVtZ9G1k326iLvU7Jj9q/G3ihBu/Msi0mt96CjrM23HpbuEewDvT71KQ==
+postcss-preset-env@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-10.1.1.tgz#6ee631272353fb1c4a9711943e9b80a178ffce44"
+  integrity sha512-wqqsnBFD6VIwcHHRbhjTOcOi4qRVlB26RwSr0ordPj7OubRRxdWebv/aLjKLRR8zkZrbxZyuus03nOIgC5elMQ==
   dependencies:
     "@csstools/postcss-cascade-layers" "^5.0.1"
     "@csstools/postcss-color-function" "^4.0.6"
@@ -12152,10 +12152,10 @@ postcss-preset-env@^10.1.0:
     "@csstools/postcss-normalize-display-values" "^4.0.0"
     "@csstools/postcss-oklab-function" "^4.0.6"
     "@csstools/postcss-progressive-custom-properties" "^4.0.0"
-    "@csstools/postcss-random-function" "^1.0.0"
+    "@csstools/postcss-random-function" "^1.0.1"
     "@csstools/postcss-relative-color-syntax" "^3.0.6"
     "@csstools/postcss-scope-pseudo-class" "^4.0.1"
-    "@csstools/postcss-sign-functions" "^1.0.0"
+    "@csstools/postcss-sign-functions" "^1.1.0"
     "@csstools/postcss-stepped-value-functions" "^4.0.5"
     "@csstools/postcss-text-decoration-shorthand" "^4.0.1"
     "@csstools/postcss-trigonometric-functions" "^4.0.5"
