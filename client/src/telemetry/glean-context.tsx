@@ -204,7 +204,10 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
 
   return useEffect(() => {
     const submit = gleanAnalytics.page({
-      path: window?.location.toString(),
+      path: new URL(
+        `${loc.pathname}${loc.search}${loc.hash}`,
+        document.location.origin
+      ).toString(),
       referrer: document?.referrer,
       // on port 3000 this will always return "200":
       httpStatus: pageNotFound ? "404" : "200",
@@ -220,13 +223,20 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
         : doc?.baseline?.baseline === false
           ? "not_baseline"
           : undefined,
-      utm: getUTMParameters(),
+      utm: getUTMParameters(loc.search),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
     }
-  }, [loc.pathname, userData, pageNotFound, doc?.baseline?.baseline]);
+  }, [
+    loc.pathname,
+    loc.search,
+    loc.hash,
+    userData,
+    pageNotFound,
+    doc?.baseline?.baseline,
+  ]);
 }
 
 export function useGleanClick() {
@@ -247,8 +257,8 @@ export function useGleanClick() {
   );
 }
 
-function getUTMParameters(): UTMParameters {
-  const searchParams = new URLSearchParams(document.location.search);
+function getUTMParameters(search): UTMParameters {
+  const searchParams = new URLSearchParams(search);
   return UTM_PARAMETER_NAMES.reduce((acc, name): UTMParameters => {
     const param = searchParams.get(`utm_${name}`);
     return param ? { ...acc, [name]: param } : acc;
