@@ -645,6 +645,7 @@ main.about-container {
       team-member {
         align-content: start;
         background: var(--about-team-bg);
+        border: 1px solid var(--about-team-bg);
         box-shadow: var(--about-team-shadow);
         color: var(--about-team-color);
         cursor: pointer;
@@ -657,13 +658,17 @@ main.about-container {
           "picture"
           "bio";
         grid-template-rows: subgrid;
-        padding: var(--team-card-padding);
+        padding: calc(var(--team-card-padding) - 1px);
         scroll-margin-top: calc(
           var(--sticky-header-without-actions-height) + 1.5rem
         );
 
         @media (max-width: $screen-sm) {
           grid-column: full;
+        }
+
+        &:hover {
+          border-color: var(--text-inactive);
         }
 
         h4,
@@ -868,6 +873,7 @@ main.about-container {
         background-color: transparent;
         background-position: center bottom;
         background-size: 100% 10rem;
+        border: none;
         padding: 1rem 0;
         padding-bottom: 12rem;
       }

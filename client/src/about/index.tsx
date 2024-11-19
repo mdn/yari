@@ -163,6 +163,7 @@ function Tabs({ section }: { section: AboutSection }) {
                     value.id &&
                     value.content && (
                       <a
+                        key={value.id}
                         id={`${value.id}-tab`}
                         href={`#${value.id}`}
                         className={i === activeTab ? "active" : ""}
@@ -182,6 +183,7 @@ function Tabs({ section }: { section: AboutSection }) {
                 value.id &&
                 value.content && (
                   <div
+                    key={value.id}
                     id={`${value.id}-panel`}
                     className={`tabpanel ${i === activeTab ? "active" : ""}`}
                     role="tabpanel"
