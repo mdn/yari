@@ -21,7 +21,7 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
  * @param {IncomingMessage} _req
  * @param {ServerResponse<IncomingMessage>} res
  */
-export function withRunnerResponseHeaders(_proxyRes, _req, res) {
+export function withRunnerResponseHeaders(res) {
   [
     ["X-Content-Type-Options", "nosniff"],
     ["Clear-Site-Data", '"cache", "cookies", "storage"'],
@@ -275,11 +275,6 @@ export async function decompressFromBase64(base64String) {
   return { state, hash };
 }
 
-/**
- * @param {express.Request} req
- * @param {express.Response} res
- */
-
 const ORIGIN_PLAY_SUFFIX = `.${ORIGIN_PLAY}`;
 
 /**
@@ -293,6 +288,10 @@ function playSubdomain(hostname) {
   return "";
 }
 
+/**
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   const referer = new URL(
@@ -324,7 +323,7 @@ export async function handleRunner(req, res) {
   const codeCookie = req.cookies["code"];
   if (req.headers["sec-fetch-dest"] === "iframe" || codeParam === codeCookie) {
     const html = renderHtml(json);
-    withRunnerResponseHeaders(null, req, res);
+    withRunnerResponseHeaders(res);
     return res.status(200).send(html);
   } else {
     const rand = crypto.randomUUID();
