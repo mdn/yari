@@ -65,7 +65,6 @@ export async function initPlayIframe(
   url.host = host;
   url.search = sp.toString();
   iframe.src = url.href;
-
   if (fullscreen) {
     window.location.href = url.href;
   }
