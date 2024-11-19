@@ -45,7 +45,7 @@
     "start:client": "cd client && cross-env NODE_ENV=development BABEL_ENV=development PORT=3000 node scripts/start.js",
     "start:rari": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && cross-env RARI=true nf -j Procfile.rari start",
     "start:rari-external": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && cross-env RARI=true nf -j Procfile.start start",
-    "start:rari-server": "node-dev --experimental-loader ts-node/esm server/cli.ts",
+    "start:rari-server": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node server/cli.ts",
     "start:server": "node-dev --experimental-loader ts-node/esm server/index.ts",
     "start:static-server": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node server/static.ts",
     "stylelint": "stylelint \"**/*.scss\"",
