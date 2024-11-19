@@ -171,10 +171,13 @@ main.play {
 
         background-color: var(--background-secondary);
         border: var(--editor-header-border-width) solid var(--border-primary);
-        display: flex;
-        flex-direction: column;
         min-height: var(--editor-header-height);
         width: 100%;
+
+        /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+        &::details-content {
+          display: contents;
+        }
 
         &[open] {
           height: 100%;
