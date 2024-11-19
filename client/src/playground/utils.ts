@@ -58,9 +58,9 @@ export async function initPlayIframe(
     JSON.stringify(editorContent)
   );
   const sp = new URLSearchParams([["state", state]]);
-  const host = `${
-    PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
-  }${PLAYGROUND_BASE_HOST}`;
+  const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
+    ? PLAYGROUND_BASE_HOST
+    : `${hash}.${PLAYGROUND_BASE_HOST}`;
   const url = new URL(iframe.src);
   url.host = host;
   url.search = sp.toString();
