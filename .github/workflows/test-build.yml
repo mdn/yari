@@ -109,7 +109,8 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
+          # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print information about build
