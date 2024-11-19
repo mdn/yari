@@ -89,9 +89,6 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         working-directory: mdn/translated-content
         run: |
-          cp files/de/_redirects.txt files/de/_redirects.txt.bak
-          sed -n -E '/^#.*|(.*\thttp.*)|(.*\t\/en-US|de\/.*)/I p' files/de/_redirects.txt.bak > files/de/_redirects.txt
-          rm files/de/_redirects.txt.bak
           git add files/de
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
