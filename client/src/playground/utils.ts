@@ -58,9 +58,10 @@ export async function initPlayIframe(
     JSON.stringify(editorContent)
   );
   const sp = new URLSearchParams([["state", state]]);
-  const host = `${
-    PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
-  }${PLAYGROUND_BASE_HOST}`;
+  const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
+    ? PLAYGROUND_BASE_HOST
+    : `${hash}.${PLAYGROUND_BASE_HOST}`;
+  // We're modifying most parts but keep path, protocoll, port and hash.
   const url = new URL(iframe.src);
   url.host = host;
   url.search = sp.toString();
@@ -70,13 +71,14 @@ export async function initPlayIframe(
   }
 }
 
+function bytesToBase64(bytes: ArrayBuffer) {
+  const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
+    String.fromCodePoint(byte)
+  ).join("");
+  return btoa(binString);
+}
+
 export async function compressAndBase64Encode(inputString: string) {
-  function bytesToBase64(bytes: ArrayBuffer) {
-    const binString = Array.from(new Uint8Array(bytes), (byte: number) =>
-      String.fromCodePoint(byte)
-    ).join("");
-    return btoa(binString);
-  }
   const inputArray = new Blob([inputString]);
 
   const compressionStream = new CompressionStream("deflate-raw");

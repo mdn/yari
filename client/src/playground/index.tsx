@@ -176,6 +176,7 @@ export default function Playground() {
       if (initialCode && Object.values(initialCode).some(Boolean)) {
         setEditorContent(initialCode);
         if (!gistId) {
+          // don't auto run shared code
           updateWithCode(initialCode);
         }
       } else {
