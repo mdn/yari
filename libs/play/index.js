@@ -86,13 +86,11 @@ export function renderWarning(state, hrefWithCode, searchWithState) {
         font-family: system-ui, sans-serif;
         display: grid;
         margin: 2rem auto;
-        max-width: min(40rem, 90vw);
-        grid-area: ;
+        max-width: min(40rem, 100%);
         grid-template-areas: "warn heading heading" ". p p" ". code code" ". leave continue";
         grid-template-columns: auto 1fr auto;
         gap: 1rem;
       }
-
       .icon {
         grid-area: warn;
         font-size: 4rem;
@@ -120,6 +118,7 @@ export function renderWarning(state, hrefWithCode, searchWithState) {
       pre {
         border: 1px solid lightgrey;
         padding: .5rem;
+        overflow: scroll;
       }
 
       a.leave, a.continue {
@@ -135,7 +134,7 @@ export function renderWarning(state, hrefWithCode, searchWithState) {
         align-items: center;
         text-decoration: none;
         min-width: 12rem;
-        max-with: fit-content;
+        max-width: fit-content;
         justify-content: center;
       }
 
@@ -149,6 +148,17 @@ export function renderWarning(state, hrefWithCode, searchWithState) {
         grid-area: continue;
         background-color: blue;
       }
+
+      @media screen and (max-width: 640px) {
+        main {
+          grid-template-areas: "warn warn " "heading heading" "p p" "code code" ". leave" ". continue";
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .leave {
+          margin: 0;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -298,22 +308,19 @@ export async function handleRunner(req, res) {
     req.headers["referer"] || "https://example.com",
     "https://example.com"
   );
-  const { state, hash } = await decompressFromBase64(
-    url.searchParams.get("state")
-  );
-  // If there's no state or
-  // if we're not on localhost and neither:
-  // the hash and subdomain don't match
-  // or we're in and iframe on mdn
-  // then 404.
+  const stateParam = url.searchParams.get("state");
+  const { state, hash } = await decompressFromBase64(stateParam);
+
+  const isLocalhost = req.hostname === "localhost";
+  const hasMatchingHash = playSubdomain(req.hostname) === hash;
+  const isIframeOnMDN =
+    referer.hostname === ORIGIN_MAIN &&
+    req.headers["sec-fetch-dest"] === "iframe";
+
   if (
+    !stateParam ||
     !state ||
-    !(
-      req.hostname === "localhost" ||
-      playSubdomain(req.hostname) === hash ||
-      (referer.hostname === ORIGIN_MAIN &&
-        req.headers["sec-fetch-dest"] === "iframe")
-    )
+    !(isLocalhost || hasMatchingHash || isIframeOnMDN)
   ) {
     return res.status(404).end();
   }
@@ -334,7 +341,12 @@ export async function handleRunner(req, res) {
       secure: true,
     });
     const urlWithCode = new URL(url);
-    urlWithCode.searchParams.set("code", rand);
+    const searchParams = new URLSearchParams([
+      ["state", stateParam],
+      ["code", rand],
+    ]);
+    // Explicitly set search and drop potential other params.
+    urlWithCode.search = searchParams.toString();
     return res
       .status(200)
       .send(
