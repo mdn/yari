@@ -50,6 +50,13 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
+      - name: Check out PR
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/content
+        run: |
+          git fetch origin pull/36502/head:pr
+          git checkout pr
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
