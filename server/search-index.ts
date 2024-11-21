@@ -38,7 +38,7 @@ function populateSearchIndex(searchIndex, localeLC) {
 export async function searchIndexRoute(req, res) {
   // Remember, this is always in lowercase because of a middleware
   // that lowercases all incoming requests' pathname.
-  const locale = req.params.locale;
+  const locale = req.params.locale.toLowerCase();
   if (locale !== "en-us" && !CONTENT_TRANSLATED_ROOT) {
     res.status(500).send("CONTENT_TRANSLATE_ROOT not set\n");
     return;
