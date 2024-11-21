@@ -318,7 +318,7 @@ export async function handleRunner(req, res) {
   if (
     !stateParam ||
     !state ||
-    !(isLocalhost || hasMatchingHash || isIframeOnMDN)
+    (!isLocalhost && !hasMatchingHash && !isIframeOnMDN)
   ) {
     return res.status(404).end();
   }
