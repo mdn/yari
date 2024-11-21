@@ -1,12 +1,12 @@
-import * as express from "express";
 import * as crypto from "node:crypto";
 
-import he from "he";
+import * as he from "he";
 
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
 
 /** @import { IncomingMessage, ServerResponse } from "http" */
+/** @import * as express from "express" */
 
 /**
  * @typedef State
@@ -17,8 +17,6 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
  */
 
 /**
- * @param {IncomingMessage | null} _proxyRes
- * @param {IncomingMessage} _req
  * @param {ServerResponse<IncomingMessage>} res
  */
 export function withRunnerResponseHeaders(res) {
