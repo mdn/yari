@@ -5,6 +5,7 @@
     "checkJs": true,
     "strict": true,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true
   }
 }

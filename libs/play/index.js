@@ -1,6 +1,6 @@
 import * as crypto from "node:crypto";
 
-import * as he from "he";
+import he from "he";
 
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
