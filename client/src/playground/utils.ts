@@ -57,13 +57,14 @@ export async function initPlayIframe(
   const { state, hash } = await compressAndBase64Encode(
     JSON.stringify(editorContent)
   );
+  const path = iframe.getAttribute("data-play-path");
   const sp = new URLSearchParams([["state", state]]);
-  const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
-    ? PLAYGROUND_BASE_HOST
-    : `${hash}.${PLAYGROUND_BASE_HOST}`;
+  const baseUrl = PLAYGROUND_BASE_HOST.startsWith("localhost")
+    ? `http://${PLAYGROUND_BASE_HOST}`
+    : `https://${hash}.${PLAYGROUND_BASE_HOST}`;
   // We're modifying most parts but keep path, protocoll, port and hash.
-  const url = new URL(iframe.src);
-  url.host = host;
+  const url = new URL(baseUrl);
+  url.pathname = `${path || ""}${path?.endsWith("/") ? "" : "/"}runner.html`;
   url.search = sp.toString();
   iframe.src = url.href;
   if (fullscreen) {

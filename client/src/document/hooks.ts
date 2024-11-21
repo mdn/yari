@@ -62,18 +62,15 @@ export function useRunSample(doc: Doc | undefined) {
       return;
     }
     document.querySelectorAll("iframe").forEach((iframe) => {
-      const src = new URL(iframe.src || "", "https://example.com");
-      if (!(src && src.pathname.toLowerCase().endsWith(`/runner.html`))) {
-        return null;
-      }
-      const id = src.searchParams.get("id");
+      const id = iframe.getAttribute("data-live-id") || null;
+      const path = iframe.getAttribute("data-live-path") || "/";
       if (!id) {
         return null;
       }
 
       const r =
-        getCodeAndNodesForIframeBySampleClass(id, src.pathname) ||
-        getCodeAndNodesForIframe(id, iframe, src.pathname);
+        getCodeAndNodesForIframeBySampleClass(id, path) ||
+        getCodeAndNodesForIframe(id, iframe, path);
       if (r === null) {
         return null;
       }

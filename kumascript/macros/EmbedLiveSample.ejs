@@ -97,7 +97,7 @@ if (hasScreenshot) {
 %> title="<%= title %> sample" id="frame_<%= id %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
-%> src="<%- url %>"<%
+%> src="about:blank" "data-live-path="<%=env.url%>" data-live-id="<%=id%>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
 if ($token) { %> data-token="<%= JSON.stringify($token) %>"<% }
 %> sandbox="allow-same-origin allow-scripts"></iframe></div><%
