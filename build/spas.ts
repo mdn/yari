@@ -26,7 +26,12 @@ import {
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
-import { getSlugByBlogPostUrl, makeTOC } from "./utils.js";
+import {
+  getSlugByBlogPostUrl,
+  injectLoadingLazyAttributes,
+  makeTOC,
+  postProcessExternalLinks,
+} from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
@@ -310,6 +315,8 @@ export async function buildSPAs(options: {
       };
       const [$] = await kumascript.render(url, {}, d);
       wrapTables($);
+      postProcessExternalLinks($);
+      injectLoadingLazyAttributes($);
       const [sections] = await extractSections($);
       const toc = makeTOC({ body: sections });
 
