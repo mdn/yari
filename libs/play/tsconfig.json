@@ -1,0 +1,11 @@
+{
+  "include": ["*.js"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true
+  }
+}
