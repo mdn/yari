@@ -9,29 +9,6 @@ export interface EditorContent {
   src?: string;
 }
 
-export interface Message {
-  typ: string;
-  state: EditorContent;
-}
-
-export function updatePlayIframe(
-  iframe: HTMLIFrameElement | null,
-  editorContent: EditorContent | null
-) {
-  if (!iframe || !editorContent) {
-    return;
-  }
-
-  const message: Message = {
-    typ: "init",
-    state: editorContent,
-  };
-
-  iframe.contentWindow?.postMessage(message, {
-    targetOrigin: "*",
-  });
-}
-
 export function codeToMarkdown(code: EditorContent): string {
   const parts: string[] = [];
   if (code.html) {
@@ -58,7 +35,6 @@ export async function initPlayIframe(
     JSON.stringify(editorContent)
   );
   const path = iframe.getAttribute("data-play-path");
-  const sp = new URLSearchParams([["state", state]]);
   const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
     ? PLAYGROUND_BASE_HOST
     : `${hash}.${PLAYGROUND_BASE_HOST}`;
@@ -67,9 +43,13 @@ export async function initPlayIframe(
     window.location.origin
   );
   url.host = host;
-  url.search = sp.toString();
+  url.search = "";
+  url.searchParams.set("state", state);
   iframe.src = url.href;
   if (fullscreen) {
+    const urlWithoutHash = new URL(window.location.href);
+    urlWithoutHash.hash = "";
+    window.history.replaceState(null, "", urlWithoutHash);
     window.location.href = url.href;
   }
 }
@@ -91,8 +71,8 @@ export async function compressAndBase64Encode(inputString: string) {
   ).arrayBuffer();
 
   const compressed = await compressedStream;
-  const hashBuffer = await window.crypto.subtle.digest("SHA-1", compressed);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", compressed);
+  const hashArray = Array.from(new Uint8Array(hashBuffer)).slice(0, 20);
   const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   const state = bytesToBase64(compressed);
 

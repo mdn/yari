@@ -267,8 +267,8 @@ export async function decompressFromBase64(base64String) {
     return { state: null, hash: null };
   }
   const bytes = Buffer.from(base64String, "base64");
-  const hashBuffer = await crypto.subtle.digest("SHA-1", bytes);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
+  const hashArray = Array.from(new Uint8Array(hashBuffer)).slice(0, 20);
   const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
   // eslint-disable-next-line n/no-unsupported-features/node-builtins
@@ -339,12 +339,9 @@ export async function handleRunner(req, res) {
       secure: true,
     });
     const urlWithCode = new URL(url);
-    const searchParams = new URLSearchParams([
-      ["state", stateParam],
-      ["code", rand],
-    ]);
-    // Explicitly set search and drop potential other params.
-    urlWithCode.search = searchParams.toString();
+    urlWithCode.search = "";
+    urlWithCode.searchParams.set("state", stateParam);
+    urlWithCode.searchParams.set("code", rand);
     return res
       .status(200)
       .send(

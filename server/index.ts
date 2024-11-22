@@ -174,8 +174,6 @@ app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
 
-// The proxy middleware has to come before all other middleware to avoid modifying the requests we proxy.
-
 app.use(express.json());
 
 // Needed because we read cookies in the code that mimics what we do in Lambda@Edge.
