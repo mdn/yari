@@ -11,13 +11,16 @@ Keyboard & screen reader skip link menu
   z-index: var(--z-index-a11y);
 
   a {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--background-primary);
     font-weight: var(--font-body-strong-weight);
     left: 0;
-    padding: 0.5rem;
+    padding: 0.8rem;
     position: absolute;
     right: 0;
     text-align: center;
+    @media (max-width: #{$screen-md - 1}) {
+      padding: 1.125rem;
+    }
 
     &:hover,
     &:focus {
