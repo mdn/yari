@@ -195,9 +195,7 @@ export default function Playground() {
         } else if (stateParam) {
           try {
             let { state } = await decompressFromBase64(stateParam);
-            console.log(state);
             let code = JSON.parse(state || "{}") as EditorContent;
-            console.log(code);
             setEditorContent(code);
           } catch (e) {
             console.error(e);
