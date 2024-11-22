@@ -1,5 +1,5 @@
 import React from "react";
-import { StaticRouter } from "react-router-dom/server";
+import { StaticRouter } from "react-router-dom";
 
 import { App } from "../client/src/app";
 import render from "./render";
