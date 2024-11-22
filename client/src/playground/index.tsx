@@ -11,7 +11,12 @@ import prettierPluginHTML from "prettier/plugins/html";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { compressAndBase64Encode, EditorContent, SESSION_KEY } from "./utils";
+import {
+  compressAndBase64Encode,
+  decompressFromBase64,
+  EditorContent,
+  SESSION_KEY,
+} from "./utils";
 
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
@@ -68,6 +73,7 @@ export default function Playground() {
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
   const gistId = searchParams.get("id");
+  const stateParam = searchParams.get("state");
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
@@ -80,7 +86,9 @@ export default function Playground() {
     null
   );
   let { data: initialCode } = useSWRImmutable<EditorContent>(
-    !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
+    !stateParam && !shared && gistId
+      ? `/api/v1/play/${encodeURIComponent(gistId)}`
+      : null,
     async (url) => {
       const response = await fetch(url);
 
@@ -98,7 +106,11 @@ export default function Playground() {
     },
     {
       fallbackData:
-        (!gistId && state === State.initial && load(SESSION_KEY)) || undefined,
+        (!stateParam &&
+          !gistId &&
+          state === State.initial &&
+          load(SESSION_KEY)) ||
+        undefined,
     }
   );
   const htmlRef = useRef<EditorHandle | null>(null);
@@ -172,23 +184,33 @@ export default function Playground() {
   };
 
   useEffect(() => {
-    if (state === State.initial || state === State.remote) {
-      if (initialCode && Object.values(initialCode).some(Boolean)) {
-        setEditorContent(initialCode);
-        if (!gistId) {
-          // don't auto run shared code
-          updateWithCode(initialCode);
+    (async () => {
+      if (state === State.initial || state === State.remote) {
+        if (initialCode && Object.values(initialCode).some(Boolean)) {
+          setEditorContent(initialCode);
+          if (!gistId) {
+            // don't auto run shared code
+            updateWithCode(initialCode);
+          }
+        } else if (stateParam) {
+          try {
+            let { state } = await decompressFromBase64(stateParam);
+            let code = JSON.parse(state || "{}") as EditorContent;
+            setEditorContent(code);
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          setEditorContent({
+            html: HTML_DEFAULT,
+            css: CSS_DEFAULT,
+            js: JS_DEFAULT,
+          });
         }
-      } else {
-        setEditorContent({
-          html: HTML_DEFAULT,
-          css: CSS_DEFAULT,
-          js: JS_DEFAULT,
-        });
+        setState(State.ready);
       }
-      setState(State.ready);
-    }
-  }, [initialCode, state, gistId]);
+    })();
+  }, [initialCode, state, gistId, stateParam]);
 
   useEffect(() => {
     window.addEventListener("message", messageListener);
