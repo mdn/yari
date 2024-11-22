@@ -14,6 +14,8 @@
   h4,
   h5,
   h6 {
+    font-variant-ligatures: no-contextual;
+
     a:link,
     a:visited {
       color: var(--text-primary);
