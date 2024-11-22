@@ -1,0 +1,41 @@
+{
+  "pages": {
+    "community": {
+      "titleSuffix": "Contribute to MDN"
+    },
+    "plus": {
+      "slugPrefix": "plus/docs",
+      "titleSuffix": "MDN Plus"
+    },
+    "observatory": {
+      "slugPrefix": "observatory/docs",
+      "titleSuffix": "HTTP Observatory"
+    }
+  },
+  "spas": {
+    "about": {
+      "slug": "about",
+      "pageTitle": "About MDN",
+      "pageDescription": null,
+      "trailingSlash": false,
+      "enUsOnly": false,
+      "data": { "onlyFollow": false, "noIndexing": false }
+    },
+    "advertising": {
+      "slug": "advertising",
+      "pageTitle": "Advertise with us",
+      "pageDescription": null,
+      "trailingSlash": false,
+      "enUsOnly": false,
+      "data": { "onlyFollow": false, "noIndexing": false }
+    },
+    "plus": {
+      "slug": "plus",
+      "pageTitle": "MDN Plus",
+      "pageDescription": null,
+      "trailingSlash": false,
+      "enUsOnly": false,
+      "data": { "onlyFollow": false, "noIndexing": false }
+    }
+  }
+}
