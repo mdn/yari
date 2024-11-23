@@ -34,7 +34,7 @@ export async function initPlayIframe(
   const { state, hash } = await compressAndBase64Encode(
     JSON.stringify(editorContent)
   );
-  const path = iframe.getAttribute("data-play-path");
+  const path = iframe.getAttribute("data-live-path");
   const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
     ? PLAYGROUND_BASE_HOST
     : `${hash}.${PLAYGROUND_BASE_HOST}`;
