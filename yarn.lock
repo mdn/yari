@@ -8143,10 +8143,10 @@ html-url-attributes@^3.0.0:
   resolved "https://registry.yarnpkg.com/html-url-attributes/-/html-url-attributes-3.0.1.tgz#83b052cd5e437071b756cd74ae70f708870c2d87"
   integrity sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==
 
-html-validate@^8.25.0:
-  version "8.25.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.25.0.tgz#0cb6e17f5fb3e2a10f603c5d74e911c6e40ffecf"
-  integrity sha512-ZMQcxHxQJ7vrj8o9mKGexkCBENfuyXSZOeBop2CanbbyeBgHwKhIKhksmc2TmhT8+chi657O+XqdDWZLAhMCJA==
+html-validate@^8.25.1:
+  version "8.25.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-8.25.1.tgz#b4cb54cd07f2cd71e7746b5662bafd49a919a1f3"
+  integrity sha512-61n9Ukbe4/gL6heRrGQZBBGqKB8d/JfUp0bFwwyJmr/2O8WGX2CrfM1W2CDCOA05Ixavg+lHS6qRbEukILyMng==
   dependencies:
     "@html-validate/stylish" "^4.1.0"
     "@sidvind/better-ajv-errors" "3.0.1"
