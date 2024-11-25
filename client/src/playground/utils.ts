@@ -34,7 +34,7 @@ export async function initPlayIframe(
   const { state, hash } = await compressAndBase64Encode(
     JSON.stringify(editorContent)
   );
-  const path = iframe.getAttribute("data-play-path");
+  const path = iframe.getAttribute("data-live-path");
   const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
     ? PLAYGROUND_BASE_HOST
     : `${hash}.${PLAYGROUND_BASE_HOST}`;
@@ -76,5 +76,34 @@ export async function compressAndBase64Encode(inputString: string) {
   const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   const state = bytesToBase64(compressed);
 
+  return { state, hash };
+}
+
+function base64ToBytes(base64: string): ArrayBuffer {
+  const binString = atob(base64);
+  const len = binString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+export async function decompressFromBase64(base64String: string) {
+  if (!base64String) {
+    return { state: null, hash: null };
+  }
+  const bytes = base64ToBytes(base64String);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", bytes);
+  const hashArray = Array.from(new Uint8Array(hashBuffer)).slice(0, 20);
+  const hash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+  const decompressionStream = new DecompressionStream("deflate-raw");
+
+  const decompressedStream = new Response(
+    new Blob([bytes]).stream().pipeThrough(decompressionStream)
+  ).arrayBuffer();
+
+  const state = new TextDecoder().decode(await decompressedStream);
   return { state, hash };
 }
