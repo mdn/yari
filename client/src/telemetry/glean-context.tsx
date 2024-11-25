@@ -134,6 +134,15 @@ function glean(): GleanAnalytics {
       return () => pings.page.submit();
     },
     click: (event: ElementClickedProps) => {
+      const path = urlOrNull(window?.location.toString());
+      if (path) {
+        pageMetric.path.setUrl(path);
+      }
+      const referrer = urlOrNull(document?.referrer, window?.location.href);
+      if (referrer) {
+        pageMetric.referrer.setUrl(referrer);
+      }
+
       const { source, subscriptionType: subscription_type } = event;
       elementMetric.clicked.record({
         source,
