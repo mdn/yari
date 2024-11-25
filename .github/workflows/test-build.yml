@@ -134,7 +134,7 @@ jobs:
 
           # rari
           BUILD_OUT_ROOT: "client/build"
-          GENERIC_PAGES_ROOT: "copy"
+          GENERIC_CONTENT_ROOT: "copy"
           LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
           ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
