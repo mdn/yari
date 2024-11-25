@@ -171,6 +171,7 @@ main.play {
 
         background-color: var(--background-secondary);
         border: var(--editor-header-border-width) solid var(--border-primary);
+        height: 0;
         min-height: var(--editor-header-height);
         width: 100%;
 
