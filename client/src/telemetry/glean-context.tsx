@@ -203,11 +203,20 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
   const path = useRef<String | null>(null);
 
   return useEffect(() => {
+    const windowLocation = window?.location.toString();
+    const reactLocation = new URL(
+      `${loc.pathname}${loc.search}${loc.hash}`,
+      document.location.origin
+    ).toString();
+    if (windowLocation !== reactLocation) {
+      console.warn("React and Window location don't match:", {
+        windowLocation,
+        reactLocation,
+      });
+    }
+
     const submit = gleanAnalytics.page({
-      path: new URL(
-        `${loc.pathname}${loc.search}${loc.hash}`,
-        document.location.origin
-      ).toString(),
+      path: reactLocation,
       referrer: document?.referrer,
       // on port 3000 this will always return "200":
       httpStatus: pageNotFound ? "404" : "200",
