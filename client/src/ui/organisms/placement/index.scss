@@ -71,6 +71,7 @@ section.place {
         background: linear-gradient(
           to top,
           var(--place-new-side-background) 9rem,
+          transparent 12rem,
           transparent
         );
         border-radius: var(--border-radius);
@@ -431,6 +432,66 @@ div.empty-place {
       .no-pong {
         justify-self: end;
         width: fit-content;
+      }
+    }
+  }
+}
+
+@media (min-width: 25rem) {
+  .place.horizontal {
+    align-self: flex-end;
+    max-width: 20rem;
+    min-height: 10rem;
+
+    .pong-box2,
+    .pong-box {
+      width: 100%;
+
+      .pong {
+        flex-direction: row;
+      }
+
+      .pong-note {
+        margin-top: 0;
+      }
+    }
+
+    &.new-side {
+      height: 12rem;
+      max-width: 30rem;
+      min-height: 12rem;
+
+      .pong-box2 {
+        height: 21rem;
+        min-height: 0;
+        width: 25rem;
+
+        .pong-cta {
+          margin: 0.5rem auto 1rem 1rem;
+        }
+
+        .pong-note {
+          margin: 0.5rem 0.5rem auto auto;
+        }
+
+        .pong {
+          > img {
+            height: 100%;
+            position: absolute;
+            width: auto;
+            z-index: 1;
+          }
+
+          > div.content {
+            align-items: end;
+            background: var(--place-new-side-background);
+            flex-direction: column;
+            height: 100%;
+            justify-content: end;
+            padding-left: 10rem;
+            width: 100%;
+          }
+        }
       }
     }
   }

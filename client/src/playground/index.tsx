@@ -414,7 +414,7 @@ export default function Playground() {
             sandbox="allow-scripts allow-same-origin allow-forms"
           ></iframe>
           <Console vConsole={vConsole} />
-          <SidePlacement />
+          <SidePlacement extraClasses={["horizontal"]} />
         </section>
       </main>
     </>

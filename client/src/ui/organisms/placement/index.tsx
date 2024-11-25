@@ -37,7 +37,11 @@ function viewed(pong?: PlacementData) {
     );
 }
 
-export function SidePlacement() {
+export function SidePlacement({
+  extraClasses = [],
+}: {
+  extraClasses?: string[];
+} = {}) {
   const placementData = usePlacement();
   const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
     placementData?.side?.colors || {};
@@ -54,11 +58,11 @@ export function SidePlacement() {
   );
 
   return !placementData?.side ? (
-    <section className="place side"></section>
+    <section className={["place", "side", ...extraClasses].join(" ")}></section>
   ) : placementData.side.cta && placementData.side.heading ? (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side", "new-side"]}
+      extraClassNames={["side", "new-side", ...extraClasses]}
       imageWidth={125}
       imageHeight={125}
       cta={placementData.side.cta}
@@ -69,7 +73,7 @@ export function SidePlacement() {
   ) : (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side"]}
+      extraClassNames={["side", ...extraClasses]}
       imageWidth={130}
       imageHeight={100}
       renderer={RenderSideOrTopBanner}
