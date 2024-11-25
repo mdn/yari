@@ -6,7 +6,7 @@ import pg from "pg";
 import pgvector from "pgvector/pg";
 import { fdir } from "fdir";
 import OpenAI from "openai";
-import { load as cheerio } from "cheerio";
+import { load as cheerio, CheerioAPI } from "cheerio";
 
 import { DocMetadata } from "../libs/types/document.js";
 import { BUILD_OUT_ROOT, OPENAI_KEY, PG_URI } from "../libs/env/index.js";
@@ -21,6 +21,7 @@ import {
   VersionValue,
 } from "@mdn/browser-compat-data/types";
 import { h2mSync } from "../markdown/index.js";
+import { Doc as JSONDoc } from "../libs/types/document.js";
 
 const EMBEDDING_MODEL = "text-embedding-3-small";
 const EMBEDDING_MODEL_NEXT = "text-embedding-3-small";
@@ -60,7 +61,8 @@ type EmbeddingUpdate = Pick<Doc, "mdn_url" | "text"> & {
 
 export async function updateEmbeddings(
   directory: string,
-  updateFormatting: boolean
+  updateFormatting: boolean,
+  usePlainHtml: boolean
 ) {
   if (!OPENAI_KEY || !PG_URI) {
     throw Error("Please set these environment variables: OPENAI_KEY, PG_URI");
@@ -125,7 +127,8 @@ export async function updateEmbeddings(
   const embeddingUpdates: EmbeddingUpdate[] = [];
 
   for await (const { mdn_url, title, title_short, markdown, text } of builtDocs(
-    directory
+    directory,
+    usePlainHtml
   )) {
     seenUrls.add(mdn_url);
 
@@ -379,8 +382,8 @@ export async function updateEmbeddings(
   pgClient.end();
 }
 
-async function formatDocs(directory: string) {
-  for await (const { markdown, text } of builtDocs(directory)) {
+async function formatDocs(directory: string, usePlainHtml: boolean) {
+  for await (const { markdown, text } of builtDocs(directory, usePlainHtml)) {
     console.log(markdown, text);
   }
 }
@@ -399,19 +402,55 @@ async function* builtPaths(directory: string) {
   }
 }
 
-async function* builtDocs(directory: string) {
+async function* builtDocs(directory: string, usePlainHtml: boolean) {
   for await (const metadataPath of builtPaths(directory)) {
     try {
       const raw = await readFile(metadataPath, "utf-8");
       const { title, short_title, mdn_url, hash } = JSON.parse(
         raw
       ) as DocMetadata;
+      let $: CheerioAPI;
 
-      const plainPath = path.join(path.dirname(metadataPath), "plain.html");
-      const plainHTML = await readFile(plainPath, "utf-8");
+      if (usePlainHtml) {
+        const plainPath = path.join(path.dirname(metadataPath), "plain.html");
+        const plainHTML = await readFile(plainPath, "utf-8");
 
-      // reformat HTML version, used as context
-      const $ = cheerio(plainHTML);
+        // reformat HTML version, used as context
+        $ = cheerio(plainHTML);
+      } else {
+        const jsonPath = path.join(path.dirname(metadataPath), "index.json");
+        const json = JSON.parse(await readFile(jsonPath, "utf-8"));
+        const doc = json.doc as JSONDoc;
+
+        // Assemble the interim HTML from the json data
+        $ = cheerio("<html><head></head><body></body></html>");
+        for (const section of doc.body) {
+          const tag = section.value.isH3 ? "h3" : "h2";
+          if (section.value.title) {
+            $("body").append("\n");
+            $("body").append(
+              `<${tag} id="${section.value.id ?? ""}">${section.value.title}</${tag}>`
+            );
+          }
+          switch (section.type) {
+            case "prose": {
+              $("body").append("\n");
+              $("body").append(section.value.content);
+              break;
+            }
+            case "specifications":
+              break;
+            case "browser_compatibility": {
+              $("body").append("\n");
+              $("body").append(
+                ` <div>${buildBCDTable(section.value.query)}</div> `
+              );
+              break;
+            }
+          }
+        }
+        $("span.language-name").remove();
+      }
       $("#specifications, .bc-specs").remove();
       $("body").prepend(`<h1>${title}</h1>`);
       $("head").prepend(`<title>${title}</title>`);
@@ -422,6 +461,7 @@ async function* builtDocs(directory: string) {
       $(".bc-data[data-query]").each((_, el) => {
         $(el).replaceWith(buildBCDTable($(el).data("query") as string));
       });
+
       const html = $.html();
       const markdown = h2mSync(html);
 
@@ -673,23 +713,36 @@ program
     default: path.join(BUILD_OUT_ROOT, "en-us", "docs"),
   })
   .option(
+    "--use-plain-html",
+    "Use `plain.html` files instead of `index.json` files."
+  )
+  .option(
     "--update-formatting",
     "Even if hashes match, update without generating a new embedding."
   )
   .action(function (params) {
     const { directory } = params.args as { directory: string };
-    const { updateFormatting } = params.options as {
+    const { updateFormatting, usePlainHtml } = params.options as {
       updateFormatting: boolean;
+      usePlainHtml: boolean;
     };
-    return updateEmbeddings(directory, updateFormatting);
+    return updateEmbeddings(directory, updateFormatting, usePlainHtml);
   })
+
   .command("format-docs", "Generates formatted docs for local debugging")
   .argument("<directory>", "Path in which to execute it", {
     default: path.join(BUILD_OUT_ROOT, "en-us", "docs"),
   })
+  .option(
+    "--use-plain-html",
+    "Use `plain.html` files instead of `index.json` files."
+  )
   .action(function (params) {
-    const { directory } = params.args as { directory: string };
-    return formatDocs(directory);
+    const { directory, usePlainHtml } = params.args as {
+      directory: string;
+      usePlainHtml: boolean;
+    };
+    return formatDocs(directory, usePlainHtml);
   });
 
 program.run();
