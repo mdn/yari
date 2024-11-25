@@ -69,7 +69,14 @@ export async function runMakePopularitiesFile({
         pageviews.slice(0, maxUris).forEach(([uri, popularity]) => {
           popularities[uri] = parseFloat(popularity.toFixed(5));
         });
-        fs.writeFileSync(outfile, JSON.stringify(popularities, null, 2));
+        fs.writeFileSync(
+          outfile,
+          JSON.stringify(
+            { popularities: popularities, date: new Date().toISOString() },
+            null,
+            2
+          )
+        );
         resolve({ rowCount, popularities, pageviews });
       });
   });
