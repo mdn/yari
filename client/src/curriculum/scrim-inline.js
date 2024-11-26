@@ -1,41 +1,53 @@
-import { html, LitElement, PropertyValues } from "lit";
-import { customElement } from "lit/decorators.js";
+import { html, LitElement, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { StyleInfo, styleMap } from "lit/directives/style-map.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { createComponent } from "@lit/react";
 import React from "react";
-import { CURRICULUM } from "../telemetry/constants";
+import { CURRICULUM } from "../telemetry/constants.ts";
 
 import "./scrim-inline.global.css";
 import styles from "./scrim-inline.scss?css" with { type: "css" };
 import playSvg from "../assets/curriculum/scrim-play.svg?raw";
 
-@customElement("scrim-inline")
 class ScrimInline extends LitElement {
-  url?: string;
-  _fullUrl?: string;
-  _scrimId?: string;
-
-  img?: string;
-  _imgStyle: StyleInfo = {};
-
-  scrimTitle?: string;
-
-  _fullscreen = false;
-  _scrimLoaded = false;
-
   static properties = {
     url: { type: String },
     img: { type: String },
-    scrimTitle: { type: String },
+    scrimTitle: { type: String, attribute: "scrimtitle" },
     _fullscreen: { state: true },
     _scrimLoaded: { state: true },
   };
 
   static styles = styles;
 
-  willUpdate(changedProperties: PropertyValues<this>) {
+  constructor() {
+    super();
+    /** @type {string | undefined} */
+    this.url = undefined;
+    /** @type {string | undefined} */
+    this._fullUrl = undefined;
+    /** @type {string | undefined} */
+    this._scrimId = undefined;
+
+    /** @type {string | undefined} */
+    this.img = undefined;
+    /** @type {import("lit/directives/style-map.js").StyleInfo} */
+    this._imgStyle = {};
+
+    /** @type {string | undefined} */
+    this.scrimTitle = undefined;
+
+    /** @type {boolean} */
+    this._fullscreen = false;
+    /** @type {boolean} */
+    this._scrimLoaded = false;
+  }
+
+  /**
+   * @param {import("lit").PropertyValues<this>} changedProperties
+   */
+  willUpdate(changedProperties) {
     if (changedProperties.has("url")) {
       if (this.url) {
         const url = new URL(this.url);
@@ -60,7 +72,7 @@ class ScrimInline extends LitElement {
 
   render() {
     if (!this.url || !this._fullUrl) {
-      return html``;
+      return nothing;
     }
 
     return html`
@@ -70,13 +82,13 @@ class ScrimInline extends LitElement {
             <span>Clicking will load content from scrimba.com</span>
             <button
               tabindex="0"
-              @click="${this.#toggle}"
+              @click=${this.#toggle}
               class="toggle ${this._fullscreen ? "exit" : "enter"}"
             >
               <span class="visually-hidden">Toggle fullscreen</span>
             </button>
             <a
-              href="${this._fullUrl}"
+              href=${this._fullUrl}
               target="_blank"
               rel="origin noreferrer"
               class="external"
@@ -89,8 +101,8 @@ class ScrimInline extends LitElement {
             ${this._scrimLoaded
               ? html`
                   <iframe
-                    src="${this._fullUrl}"
-                    title="${ifDefined(this.scrimTitle)}"
+                    src=${this._fullUrl}
+                    title=${ifDefined(this.scrimTitle)}
                   ></iframe>
                 `
               : html`
@@ -111,7 +123,7 @@ class ScrimInline extends LitElement {
                       </div>`
                     : null}
                   <button
-                    @click="${this.#open}"
+                    @click=${this.#open}
                     class="open"
                     data-glean=${`${CURRICULUM}: scrim engage id:${this._scrimId}`}
                   >
@@ -127,9 +139,13 @@ class ScrimInline extends LitElement {
     `;
   }
 
-  #toggle(e: MouseEvent) {
+  /**
+   * @param {MouseEvent} e
+   */
+  #toggle(e) {
     if (e.target) {
-      (e.target as HTMLElement).dataset.glean =
+      /** @type {HTMLElement} */
+      (e.target).dataset.glean =
         `${CURRICULUM}: scrim fullscreen -> ${this._fullscreen ? 0 : 1} id:${this._scrimId}`;
     }
     if (this._fullscreen) {
@@ -158,16 +174,7 @@ class ScrimInline extends LitElement {
   }
 }
 
-declare module "react/jsx-runtime" {
-  namespace JSX {
-    interface IntrinsicElements {
-      "scrim-inline": React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
-    }
-  }
-}
+customElements.define("scrim-inline", ScrimInline);
 
 export default createComponent({
   tagName: "scrim-inline",

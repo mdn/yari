@@ -24,14 +24,20 @@
     ]
   },
   "eslintConfig": {
-    "extends": "react-app",
+    "extends": [
+      "react-app",
+      "plugin:wc/best-practice",
+      "plugin:lit/all"
+    ],
     "rules": {
+      "lit/no-template-map": "off",
       "react/jsx-no-target-blank": [
         "error",
         {
           "allowReferrer": true
         }
-      ]
+      ],
+      "wc/guard-super-call": "off"
     }
   },
   "jest": {
