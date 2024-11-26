@@ -103,7 +103,8 @@ function TopPlacementFallbackContent() {
     </p>
   ) : now < Date.parse("2024-12-25") ? (
     <p className="fallback-copy">
-      Take our daily challenges until 24th December and win exciting prizes.{" "}
+      Take our daily challenges on Scrimba until 24th December and win exciting
+      prizes.{" "}
       <a
         href="https://scrimba.com/learn/frontend?via=mdn"
         target="_blank"
