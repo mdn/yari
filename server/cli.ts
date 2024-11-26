@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { concurrently } from "concurrently";
 import { rariBin } from "@mdn/rari";
 import { filename } from "./filename.js";
