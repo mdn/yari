@@ -8,7 +8,6 @@ const { commands, result } = concurrently(
       command: `node ${filename}`,
       name: "server",
       env: {
-        NODE_OPTIONS: "--no-warnings=ExperimentalWarning --loader ts-node/esm",
         RARI: true,
       },
       prefixColor: "red",

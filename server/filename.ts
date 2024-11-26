@@ -1,2 +1,2 @@
 import { fileURLToPath } from "node:url";
-export const filename = fileURLToPath(import.meta.resolve("./index.ts"));
+export const filename = fileURLToPath(import.meta.resolve("./index.js"));
