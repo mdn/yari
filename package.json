@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@caporal/core": "^2.0.7",
-    "@codemirror/lang-css": "^6.3.0",
+    "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/state": "^6.4.1",
