@@ -704,7 +704,7 @@ main.about-container {
 
         img {
           aspect-ratio: 1;
-          margin: 0.5rem 0;
+          margin-bottom: 0.5rem;
           width: 100%;
         }
 
@@ -757,33 +757,6 @@ main.about-container {
             }
           }
 
-          @media (max-width: $screen-md) {
-            grid-template-areas:
-              "name   picture"
-              "title  picture"
-              "github picture"
-              ".      picture"
-              "bio    bio";
-            grid-template-columns:
-              calc(
-                (100% - var(--team-grid-gap) - 2 * var(--team-card-padding)) / 2
-              )
-              1fr;
-
-            img {
-              margin-top: 0;
-            }
-
-            ul li:nth-of-type(3):not(:last-of-type) {
-              align-self: start;
-              grid-area: github;
-
-              a {
-                position: relative;
-              }
-            }
-          }
-
           @media (max-width: $screen-sm) {
             grid-template-areas:
               "name"
@@ -791,10 +764,6 @@ main.about-container {
               "picture"
               "bio";
             grid-template-columns: 1fr;
-
-            img {
-              margin-top: 0.5rem;
-            }
 
             ul li:nth-of-type(3):not(:last-of-type) {
               align-self: end;
