@@ -57,8 +57,7 @@ import {
 import { findCurriculumPageBySlug } from "../build/curriculum.js";
 import { handleRunner } from "../libs/play/index.js";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function fetch_from_rari(path: string, res = null) {
+async function fetch_from_rari(path: string) {
   const external_url = `${EXTERNAL_DEV_SERVER}${path}`;
   console.log(`using ${external_url}`);
   // eslint-disable-next-line n/no-unsupported-features/node-builtins
@@ -130,9 +129,13 @@ async function send404(res: express.Response) {
       .status(404)
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   } else {
-    const index = await fetch_from_rari("/en-US/404");
-    res.header("Content-Security-Policy", CSP_VALUE);
-    return res.send(renderHTML(index));
+    try {
+      const index = await fetch_from_rari("/en-US/404");
+      res.header("Content-Security-Policy", CSP_VALUE);
+      return res.send(renderHTML(index));
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
+    }
   }
 }
 
@@ -279,9 +282,13 @@ if (!RARI) {
 } else {
   app.use("/:locale/search-index.json", async (req, res) => {
     const { locale } = req.params;
-    const json = await fetch_from_rari(`/${locale}/search-index.json`, res);
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    return res.json(json);
+    try {
+      const json = await fetch_from_rari(`/${locale}/search-index.json`);
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      return res.json(json);
+    } catch (error) {
+      return res.status(500).json(JSON.stringify(error.toString()));
+    }
   });
 }
 
@@ -339,7 +346,7 @@ if (CURRICULUM_ROOT) {
         data = await findCurriculumPageBySlug(slug);
       } else {
         try {
-          data = await fetch_from_rari(req.path, res);
+          data = await fetch_from_rari(req.path);
         } catch (error) {
           return res.status(500).json(JSON.stringify(error.toString()));
         }
@@ -367,7 +374,7 @@ if (BLOG_ROOT) {
       return res.json({ hyData: { posts } });
     } else {
       try {
-        const index = await fetch_from_rari(req.path, res);
+        const index = await fetch_from_rari(req.path);
         return res.json(index);
       } catch (error) {
         return res.status(500).json(JSON.stringify(error.toString()));
@@ -397,7 +404,7 @@ if (BLOG_ROOT) {
       return res.json(data);
     } else {
       try {
-        const index = await fetch_from_rari(req.path, res);
+        const index = await fetch_from_rari(req.path);
         return res.json(index);
       } catch (error) {
         return res.status(500).json(JSON.stringify(error.toString()));
@@ -504,7 +511,7 @@ if (RARI) {
     ],
     async (req, res) => {
       try {
-        const index = await fetch_from_rari(req.path, res);
+        const index = await fetch_from_rari(req.path);
         if (req.path.endsWith(".json")) {
           return res.json(index);
         }
