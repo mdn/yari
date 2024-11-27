@@ -2208,10 +2208,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mdn/rari@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.0.24.tgz#174b7bb36efea1c579be7b4cdf83c7b3ca5cfa00"
-  integrity sha512-eusZzOuM0xZUkLGtMU3BqKJqqlHHYndKzO7A20KcYeK02sTkLYYdRx/2i/QRSlM96orrYMDOIYOsdhnxYCzZ3A==
+"@mdn/rari@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.0.25.tgz#719b6a72eb8239dca48b6bf090f1f38490380be7"
+  integrity sha512-5r1P9CAGLC93O6hZgc2fdO0Z4B/uI8PbAworRRlMthPlXUjyiyfIdzijwGCkr8JN5H6950oCLfjwJAEd4NGUPQ==
   dependencies:
     extract-zip "^2.0.1"
     https-proxy-agent "^7.0.2"
@@ -12408,7 +12408,7 @@ prettier-plugin-packagejson@^2.5.6:
     sort-package-json "2.12.0"
     synckit "0.9.2"
 
-prettier@^3.4.1:
+prettier@^3.2.5, prettier@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.4.1.tgz#e211d451d6452db0a291672ca9154bc8c2579f7b"
   integrity sha512-G+YdqtITVZmOJje6QkXQWzl3fSfMxFwm1tjTyo9exhkmWSqC4Yhd1+lug++IlR2mvRVAxEDDWYkQdeSztajqgg==
