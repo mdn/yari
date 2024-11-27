@@ -1,9 +1,7 @@
 import express from "express";
 
-import {
-  CSP_VALUE,
-  PLAYGROUND_UNSAFE_CSP_VALUE,
-} from "../libs/constants/index.js";
+import { CSP_VALUE } from "../libs/constants/index.js";
+import { PLAYGROUND_UNSAFE_CSP_VALUE } from "../libs/play/index.js";
 import { STATIC_ROOT } from "../libs/env/index.js";
 import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
 import { getLocale } from "../libs/locale-utils/index.js";
