@@ -201,9 +201,8 @@ jobs:
           yarn tool build-robots-txt
 
           yarn rari content sync-translated-content
-
-          yarn rari popularities
           yarn rari git-history
+
           yarn rari build --issues client/build/issues.json --templ-stats
 
           # SSR all pages
