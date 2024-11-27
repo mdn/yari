@@ -133,14 +133,14 @@ function ObservatoryScanResults({ result, host }) {
         element: <ObservatoryCSP result={result} />,
       },
       {
-        label: "Raw server headers",
-        key: "headers",
-        element: <ObservatoryHeaders result={result} />,
-      },
-      {
         label: "Cookies",
         key: "cookies",
         element: <ObservatoryCookies result={result} />,
+      },
+      {
+        label: "Raw server headers",
+        key: "headers",
+        element: <ObservatoryHeaders result={result} />,
       },
       {
         label: "Scan history",

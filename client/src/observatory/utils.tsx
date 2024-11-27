@@ -130,7 +130,7 @@ export function formatDateTime(date: Date): string {
   });
 }
 
-export function hostAsRedirectChain(host, result: ObservatoryResult) {
+export function hostAsRedirectChain(host: string, result: ObservatoryResult) {
   const chain = result.tests.redirection?.route;
   if (!chain || chain.length < 1) {
     return host;
