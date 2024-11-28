@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
