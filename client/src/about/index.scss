@@ -615,7 +615,7 @@ main.about-container {
       --team-card-padding: 1.5rem;
 
       display: grid;
-      gap: var(--team-grid-gap);
+      gap: 0 var(--team-grid-gap);
       grid-auto-flow: dense;
       grid-template-columns: [full-start] 1fr 1fr 1fr [full-end];
 
@@ -624,17 +624,30 @@ main.about-container {
         grid-template-columns: [full-start] 1fr 1fr [full-end];
       }
 
+      > * {
+        margin: calc(var(--team-grid-gap) / 2) 0;
+        scroll-margin-top: calc(
+          var(--sticky-header-without-actions-height) + 1.5rem + 1rem
+        );
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
       > h4,
       p {
         grid-column: full;
-        margin: 0;
       }
 
       h4,
       h5 {
         font-size: 1.75rem;
         font-weight: 600;
-        margin: 0;
         text-transform: none;
 
         @media (max-width: $screen-md) {
@@ -651,17 +664,15 @@ main.about-container {
         cursor: pointer;
         display: grid;
         gap: 0;
-        grid-row: span 4;
+        grid-row: span 5;
         grid-template-areas:
           "name"
           "title"
           "picture"
-          "bio";
+          "bio"
+          ".";
         grid-template-rows: subgrid;
         padding: calc(var(--team-card-padding) - 1px);
-        scroll-margin-top: calc(
-          var(--sticky-header-without-actions-height) + 1.5rem
-        );
 
         @media (max-width: $screen-sm) {
           grid-column: full;
@@ -674,6 +685,7 @@ main.about-container {
         h4,
         h5 {
           grid-area: name;
+          margin: 0;
           margin-bottom: 0.5rem;
         }
 
@@ -685,6 +697,7 @@ main.about-container {
           color: var(--about-team-title-color);
           font-weight: 600;
           grid-area: title;
+          margin-bottom: 0.75rem;
         }
 
         li:nth-of-type(2) {
@@ -704,7 +717,7 @@ main.about-container {
 
         img {
           aspect-ratio: 1;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.75rem;
           width: 100%;
         }
 
@@ -713,7 +726,7 @@ main.about-container {
           background: var(--about-team-github-bg);
           border-top-right-radius: 0.5rem;
           color: var(--about-team-color);
-          margin-top: -2.75rem;
+          margin-top: -2.9rem;
           padding: 0.25rem 0.5rem;
           padding-right: 0.7rem;
           position: absolute;
@@ -732,7 +745,7 @@ main.about-container {
           }
         }
 
-        &:focus {
+        &.open {
           align-content: start;
           cursor: unset;
           display: grid;
@@ -742,6 +755,7 @@ main.about-container {
             "name    name"
             "title   title"
             "picture bio"
+            ".       bio"
             ".       bio";
           grid-template-columns:
             calc(
@@ -780,10 +794,6 @@ main.about-container {
 
     #our_partners-panel > div {
       margin-top: 2.5rem;
-
-      &:not(:last-of-type) {
-        margin-bottom: 5rem;
-      }
     }
 
     &[aria-labelledby="global_impact"] {

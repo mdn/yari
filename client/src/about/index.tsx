@@ -136,7 +136,9 @@ function Tabs({ section }: { section: AboutSection }) {
   useEffect(() => {
     const hash = document.location.hash.startsWith("#our_team")
       ? "#our_team"
-      : document.location.hash.startsWith("#our_partners")
+      : document.location.hash.startsWith("#our_partners") ||
+          document.location.hash === "#pab" ||
+          document.location.hash === "#owd"
         ? "#our_partners"
         : document.location.hash;
     const tab = section.H3s?.findIndex(({ value }) => `#${value.id}` === hash);
@@ -168,7 +170,7 @@ function Tabs({ section }: { section: AboutSection }) {
                         href={`#${value.id}`}
                         className={i === activeTab ? "active" : ""}
                         role="tab"
-                        aria-selected="false"
+                        aria-selected={i === activeTab ? "true" : "false"}
                         aria-controls={`${value.id}-panel`}
                         onClick={() => changeTab(i)}
                       >
@@ -187,7 +189,6 @@ function Tabs({ section }: { section: AboutSection }) {
                     id={`${value.id}-panel`}
                     className={`tabpanel ${i === activeTab ? "active" : ""}`}
                     role="tabpanel"
-                    tabIndex={0}
                     dangerouslySetInnerHTML={{ __html: value.content }}
                   />
                 )
