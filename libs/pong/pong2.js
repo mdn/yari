@@ -2,6 +2,16 @@
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
+function fixupColor(hash) {
+  if (typeof hash !== "string" && typeof hash !== "number") {
+    return undefined;
+  } else if (hash?.startsWith?.("rgb") || hash?.startsWith?.("#")) {
+    return hash;
+  } else {
+    return `#${hash}`;
+  }
+}
+
 export function createPong2GetHandler(zoneKeys, coder) {
   return async (body, countryCode, userAgent) => {
     let { pongs = null } = body;
@@ -71,14 +81,16 @@ export function createPong2GetHandler(zoneKeys, coder) {
                 cta: CallToAction && he.decode(CallToAction),
                 heading: Heading && he.decode(Heading),
                 colors: {
-                  textColor: TextColor || TextColorLight,
-                  backgroundColor: BackgroundColor || BackgroundColorLight,
-                  ctaTextColor: CtaTextColorLight,
-                  ctaBackgroundColor: CtaBackgroundColorLight,
-                  textColorDark: TextColorDark,
-                  backgroundColorDark: BackgroundColorDark,
-                  ctaTextColorDark: CtaTextColorDark,
-                  ctaBackgroundColorDark: CtaBackgroundColorDark,
+                  textColor: fixupColor(TextColor || TextColorLight),
+                  backgroundColor: fixupColor(
+                    BackgroundColor || BackgroundColorLight
+                  ),
+                  ctaTextColor: fixupColor(CtaTextColorLight),
+                  ctaBackgroundColor: fixupColor(CtaBackgroundColorLight),
+                  textColorDark: fixupColor(TextColorDark),
+                  backgroundColorDark: fixupColor(BackgroundColorDark),
+                  ctaTextColorDark: fixupColor(CtaTextColorDark),
+                  ctaBackgroundColorDark: fixupColor(CtaBackgroundColorDark),
                 },
               },
       };
