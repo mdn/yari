@@ -818,12 +818,6 @@ math[display="block"] {
   }
 }
 
-.only-in-en-us {
-  span {
-    font-size: 0.8125rem;
-  }
-}
-
 a.page-not-created {
   cursor: not-allowed;
 
@@ -958,30 +952,37 @@ html a.only-in-en-us:after {
 
 html[lang="de"] a.only-in-en-us:after {
   content: "(engl.)";
+  margin-left: 0.5ch;
 }
 
 html[lang="es"] a.only-in-en-us:after {
   content: "(inglés)";
+  margin-left: 0.5ch;
 }
 
 html[lang="fr"] a.only-in-en-us:after {
   content: "(angl.)";
+  margin-left: 0.5ch;
 }
 
 html[lang="ja"] a.only-in-en-us:after {
   content: "(英語)";
+  margin-left: 0.5ch;
 }
 
 html[lang="ko"] a.only-in-en-us:after {
   content: "(영어)";
+  margin-left: 0.5ch;
 }
 
 html[lang="ru"] a.only-in-en-us:after {
   content: "(англ.)";
+  margin-left: 0.5ch;
 }
 
 html[lang="pt-BR"] a.only-in-en-us:after {
   content: "(inglês)";
+  margin-left: 0.5ch;
 }
 
 html[lang="zh-CN"] a.only-in-en-us:after {
