@@ -6,6 +6,7 @@ import { OBSERVATORY_API_URL } from "../env";
 import { ObservatoryResult } from "./types";
 import { ReactComponent as PassSVG } from "../../public/assets/observatory/pass-icon.svg";
 import { ReactComponent as FailSVG } from "../../public/assets/observatory/fail-icon.svg";
+import { HumanDuration } from "./results/human-duration";
 
 export function Link({ href, children }: { href: string; children: any }) {
   return (
@@ -121,6 +122,24 @@ export async function handleJsonResponse<T>(res: Response): Promise<T> {
     }
   }
   return await res.json();
+}
+
+export function Timestamp({ expires }: { expires: string }) {
+  const d = new Date(expires);
+  if (d.toString() === "Invalid Date") {
+    return <div className="iso-date">{expires}</div>;
+  }
+  const ts = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()} UTC`;
+  return (
+    <>
+      <div className="iso-date">
+        <code>{ts}</code>
+      </div>
+      <div className="humanized-duration">
+        (<HumanDuration date={new Date(expires)} />)
+      </div>
+    </>
+  );
 }
 
 export function formatDateTime(date: Date): string {

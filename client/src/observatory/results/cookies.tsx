@@ -1,14 +1,16 @@
 import { ObservatoryResult } from "../types";
-import { Link, PassIcon } from "../utils";
-import { HumanDuration } from "./human-duration";
+import { PassIcon, Timestamp } from "../utils";
 
 export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
   const cookies = result.tests["cookies"]?.data;
+  const pass = result.tests["cookies"]?.pass;
   return cookies && Object.keys(cookies).length !== 0 ? (
     <>
       <div className="detail-header">
         <div>
-          <p className="arrow">→</p>
+          <p className="arrow">
+            <PassIcon pass={pass} />
+          </p>
         </div>
         <div
           className="detail-header-content"
@@ -81,14 +83,7 @@ export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
               </td>
               <td data-header="Expires">
                 {value.expires ? (
-                  <>
-                    <div className="iso-date">
-                      <code>{value.expires}</code>
-                    </div>
-                    <div className="humanized-duration">
-                      (<HumanDuration date={new Date(value.expires)} />)
-                    </div>
-                  </>
+                  <Timestamp expires={value.expires} />
                 ) : (
                   "Session"
                 )}

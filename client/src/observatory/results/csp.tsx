@@ -36,12 +36,16 @@ export default function ObservatoryCSP({
     "unsafeObjects",
   ];
 
+  const pass = result.tests["content-security-policy"]?.pass;
+
   // cookies && Object.keys(cookies).length !== 0 ?
   return policy ? (
     <>
       <div className="detail-header">
         <div>
-          <p className="arrow">→</p>
+          <p className="arrow">
+            <PassIcon pass={pass} />
+          </p>
         </div>
         <div
           className="detail-header-content"
