@@ -503,6 +503,8 @@ if (contentProxy) {
 if (RARI) {
   app.get(
     [
+      "/en-US/about",
+      "/en-US/about/index.json",
       "/en-US/community",
       "/en-US/community/index.json",
       "/en-US/plus/docs/*",
