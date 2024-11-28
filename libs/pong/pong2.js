@@ -3,9 +3,9 @@ import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
 function fixupColor(hash) {
-  if (!hash) {
+  if (typeof hash !== "string" && typeof hash !== "number") {
     return undefined;
-  } else if (hash.startsWith("rgb") || hash?.startsWith("#")) {
+  } else if (hash?.startsWith?.("rgb") || hash?.startsWith?.("#")) {
     return hash;
   } else {
     return `#${hash}`;
