@@ -272,7 +272,7 @@ export async function buildSPAs(options: {
   async function buildStaticPages(
     dirpath: string,
     slugPrefix?: string,
-    title = "MDN"
+    title?: string
   ) {
     const crawler = new fdir()
       .withFullPaths()
@@ -283,7 +283,7 @@ export async function buildSPAs(options: {
 
     for (const filepath of filepaths) {
       const file = filepath.replace(dirpath, "");
-      const page = file.split(".")[0];
+      const page = file.split(".")[0].slice(1);
 
       const locale = DEFAULT_LOCALE;
       const pathLocale = locale.toLowerCase();
@@ -321,9 +321,9 @@ export async function buildSPAs(options: {
       };
       const context: HydrationData = {
         hyData,
-        pageTitle: frontMatter.attributes.title
+        pageTitle: title
           ? `${frontMatter.attributes.title} | ${title}`
-          : title,
+          : frontMatter.attributes.title,
         url,
       };
 
@@ -355,11 +355,7 @@ export async function buildSPAs(options: {
       "observatory/docs",
       OBSERVATORY_TITLE
     );
-    await buildStaticPages(
-      path.join(GENERIC_CONTENT_ROOT, "community"),
-      "",
-      "Contribute to MDN"
-    );
+    await buildStaticPages(path.join(GENERIC_CONTENT_ROOT, "community"));
   }
 
   // Build all the home pages in all locales.
