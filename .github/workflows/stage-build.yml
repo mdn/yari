@@ -151,6 +151,13 @@ jobs:
           mv mdn/translated-content-de/files/de mdn/translated-content/files/
           rm -rf mdn/translated-content-de
 
+      - name: Clean and commit de
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/translated-content
+        run: |
+          git add files/de
+          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
@@ -168,7 +175,8 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
+          # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
@@ -213,6 +221,13 @@ jobs:
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           BASE_URL: "https://developer.allizom.org"
+
+          # rari
+          BUILD_OUT_ROOT: "client/build"
+          GENERIC_CONTENT_ROOT: "copy"
+          LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
+          INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -290,31 +305,14 @@ jobs:
           echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn build:prepare
+          yarn build:client
+          yarn build:ssr
+          yarn tool build-robots-txt
 
-          yarn tool sync-translated-content es fr ja ko pt-br ru zh-cn zh-tw
+          yarn rari content sync-translated-content
+          yarn rari git-history
 
-          # Build using one process per locale.
-          # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us de es fr ja ko pt-br ru zh-cn zh-tw; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
-            pids+=($!)
-          done
-
-          for pid in "${pids[@]}"; do
-            wait $pid
-          done
-
-          du -sh client/build
-
-          # Build the blog
-          yarn build:blog
-
-          # Build the curriculum
-          yarn build:curriculum
-
-          # Generate sitemap index file
-          yarn build --sitemap-index
+          yarn rari build --issues client/build/issues.json --templ-stats
 
           # SSR all pages
           yarn render:html
