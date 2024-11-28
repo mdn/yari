@@ -280,15 +280,18 @@ interface ViewedTimer {
   timeout: number | null;
 }
 
-export function useViewed(callback: Function) {
-  const timer = useRef<ViewedTimer>({ timeout: null });
-  const isVisible = usePageVisibility();
-  const [node, setNode] = useState<HTMLElement>();
-  const isIntersecting = useIsIntersecting(node, {
+export function useViewed(
+  callback: Function,
+  intersectionObserverOptions: IntersectionObserverInit = {
     root: null,
     rootMargin: "0px",
     threshold: 0.5,
-  });
+  }
+) {
+  const timer = useRef<ViewedTimer>({ timeout: null });
+  const isVisible = usePageVisibility();
+  const [node, setNode] = useState<HTMLElement>();
+  const isIntersecting = useIsIntersecting(node, intersectionObserverOptions);
 
   useEffect(() => {
     if (timer.current.timeout !== -1) {

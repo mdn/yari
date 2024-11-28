@@ -1,5 +1,5 @@
 export const VALID_LOCALES = new Map(
-  ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+  ["de", "en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
     (x) => [x.toLowerCase(), x]
   )
 );
@@ -10,7 +10,6 @@ export const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
-    "de",
     "el",
     "fa",
     "fi",
@@ -49,6 +48,7 @@ export const LOCALE_ALIASES = new Map([
 // gets set in the client!
 export const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 export const ACTIVE_LOCALES = new Set([
+  "de",
   "en-us",
   "es",
   "fr",
@@ -132,6 +132,7 @@ export const CSP_DIRECTIVES = {
     "live-samples.mdn.allizom.net",
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
+    "*.play.test.mdn.allizom.net",
 
     "https://v2.scrimba.com",
     "https://scrimba.com",
@@ -189,31 +190,6 @@ export const cspToString = (csp) =>
     .join(" ");
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
-
-const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
-  "'self'",
-  "https:",
-  "'unsafe-eval'",
-  "'unsafe-inline'",
-  "'wasm-unsafe-eval'",
-];
-
-export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
-  "default-src": ["'self'", "https:"],
-  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "style-src": [
-    "'report-sample'",
-    "'self'",
-    "https:",
-    "'unsafe-inline'",
-    "'unsafe-eval'",
-  ],
-  "img-src": ["'self'", "blob:", "https:", "data:"],
-  "base-uri": ["'self'"],
-  "worker-src": ["'self'"],
-  "manifest-src": ["'self'"],
-});
 
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];

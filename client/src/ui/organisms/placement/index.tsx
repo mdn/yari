@@ -37,7 +37,11 @@ function viewed(pong?: PlacementData) {
     );
 }
 
-export function SidePlacement() {
+export function SidePlacement({
+  extraClasses = [],
+}: {
+  extraClasses?: string[];
+} = {}) {
   const placementData = usePlacement();
   const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
     placementData?.side?.colors || {};
@@ -54,11 +58,11 @@ export function SidePlacement() {
   );
 
   return !placementData?.side ? (
-    <section className="place side"></section>
+    <section className={["place", "side", ...extraClasses].join(" ")}></section>
   ) : placementData.side.cta && placementData.side.heading ? (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side", "new-side"]}
+      extraClassNames={["side", "new-side", ...extraClasses]}
       imageWidth={125}
       imageHeight={125}
       cta={placementData.side.cta}
@@ -69,7 +73,7 @@ export function SidePlacement() {
   ) : (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side"]}
+      extraClassNames={["side", ...extraClasses]}
       imageWidth={130}
       imageHeight={100}
       renderer={RenderSideOrTopBanner}
@@ -83,8 +87,41 @@ function TopPlacementFallbackContent() {
   const observedNode = useViewed(() => {
     gleanClick(BANNER_SCRIMBA_VIEW);
   });
+  const now = Date.now();
 
-  return (
+  return now < Date.parse("2024-12-01") ? (
+    <p className="fallback-copy">
+      Learn front-end with MDN’s course partner{" "}
+      <a
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
+        ref={observedNode}
+        onClick={() => {
+          gleanClick(BANNER_SCRIMBA_CLICK);
+        }}
+      >
+        Scrimba
+      </a>{" "}
+      - 30% discount this week!
+    </p>
+  ) : now < Date.parse("2024-12-25") ? (
+    <p className="fallback-copy">
+      Take our daily challenges on Scrimba until 24th December and win exciting
+      prizes.{" "}
+      <a
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
+        ref={observedNode}
+        onClick={() => {
+          gleanClick(BANNER_SCRIMBA_CLICK);
+        }}
+      >
+        Join now
+      </a>
+    </p>
+  ) : (
     <p className="fallback-copy">
       Learn front-end development with high quality, interactive courses from{" "}
       <a

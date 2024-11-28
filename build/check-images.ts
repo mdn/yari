@@ -133,7 +133,10 @@ export function checkImageReferences(
           // might be something like `screenshot.png` for the sake of rendering
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
-        } else {
+        } else if (
+          absoluteURL.hostname !== "mdn.github.io" ||
+          !absoluteURL.pathname.startsWith("/shared-assets/")
+        ) {
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,

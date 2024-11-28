@@ -59,6 +59,12 @@
         }
       }
     }
+
+    .icon-experimental {
+      background-color: var(--icon-primary);
+      margin-left: 0.5em;
+      vertical-align: text-top;
+    }
   }
 
   @media (min-width: $screen-md) {

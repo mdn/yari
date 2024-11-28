@@ -14,6 +14,8 @@
   h4,
   h5,
   h6 {
+    font-variant-ligatures: no-contextual;
+
     a:link,
     a:visited {
       color: var(--text-primary);
@@ -952,6 +954,10 @@ html a.only-in-en-us:after {
   display: inline-block;
   font-size: var(--type-tiny-font-size);
   vertical-align: super;
+}
+
+html[lang="de"] a.only-in-en-us:after {
+  content: "(engl.)";
 }
 
 html[lang="es"] a.only-in-en-us:after {

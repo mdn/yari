@@ -8,6 +8,15 @@ export function LocalizedContentNote({
   locale: string;
 }) {
   const activeLocaleNoteContent = {
+    de: {
+      linkText: (
+        <>
+          <strong>Experiment</strong>: Dieser Inhalt wurde automatisch aus dem
+          Englischen übersetzt, und kann Fehler enthalten.
+        </>
+      ),
+      url: "https://github.com/orgs/mdn/discussions/741",
+    },
     "en-US": {
       linkText:
         "This page was translated from English by the community. Learn more and join the MDN Web Docs community.",
@@ -69,6 +78,10 @@ export function LocalizedContentNote({
       activeLocaleNoteContent["en-US"].url
     : "https://github.com/mdn/translated-content/blob/main/PEERS_GUIDELINES.md#activating-a-locale";
 
-  const type = isActive ? "neutral" : "warning";
-  return <NoteBanner linkText={linkText} url={url} type={type} />;
+  const type = locale === "de" ? "experimental" : isActive ? "info" : "warning";
+  return (
+    <NoteBanner url={url} type={type}>
+      {linkText}
+    </NoteBanner>
+  );
 }
