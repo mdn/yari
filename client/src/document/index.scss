@@ -818,12 +818,6 @@ math[display="block"] {
   }
 }
 
-.only-in-en-us {
-  span {
-    font-size: 0.8125rem;
-  }
-}
-
 a.page-not-created {
   cursor: not-allowed;
 
@@ -953,6 +947,7 @@ html a.only-in-en-us:after {
   content: "(en-US)";
   display: inline-block;
   font-size: var(--type-tiny-font-size);
+  margin-left: 0.5ch;
   vertical-align: super;
 }
 
@@ -986,10 +981,12 @@ html[lang="pt-BR"] a.only-in-en-us:after {
 
 html[lang="zh-CN"] a.only-in-en-us:after {
   content: "（英语）";
+  margin-left: unset;
   vertical-align: baseline;
 }
 
 html[lang="zh-TW"] a.only-in-en-us:after {
   content: "（英語）";
+  margin-left: unset;
   vertical-align: baseline;
 }
