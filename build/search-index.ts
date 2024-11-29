@@ -1,7 +1,8 @@
 import { getPopularities } from "../content/index.js";
 
 // getPopularities() is memoized so it's fast to call repeatedly
-const getPopularity = (item) => getPopularities().get(item.url) || 0;
+const getPopularity = (item) =>
+  getPopularities().get(item.url.replace("/de/docs/", "/en-US/docs/")) || 0;
 
 type Locale = string;
 interface SearchItem {
