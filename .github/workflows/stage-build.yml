@@ -103,7 +103,7 @@ jobs:
           git checkout main
           git status
           git checkout -
-          git merge main --no-edit
+          git merge main --no-edit || git merge --abort
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
