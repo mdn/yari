@@ -93,7 +93,7 @@
     "codemirror": "^6.0.1",
     "compression": "^1.7.5",
     "compute-baseline": "^0.1.1",
-    "concurrently": "^9.0.1",
+    "concurrently": "^9.1.0",
     "cookie": "^0.7.2",
     "cookie-parser": "^1.4.7",
     "css-tree": "^2.3.1",
