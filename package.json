@@ -10,7 +10,7 @@
     "yari-build": "build/cli.js",
     "yari-build-blog": "build/build-blog.js",
     "yari-filecheck": "filecheck/cli.js",
-    "yari-render-html": "build/cli-ssr.js",
+    "yari-render-html": "build/ssr-cli.js",
     "yari-server": "server/index.js",
     "yari-tool": "tool/cli.js"
   },
