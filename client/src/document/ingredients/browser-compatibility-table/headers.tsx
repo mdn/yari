@@ -60,7 +60,21 @@ function BrowserHeaders({ browsers }: { browsers: BCD.BrowserName[] }) {
 
 export function browserToIconName(browser: string) {
   const browserStart = browser.split("_")[0];
-  return browserStart === "firefox" ? "simple-firefox" : browserStart;
+  const browserEnd = browser.split("_")[1];
+  let browserIconName = browserStart;
+
+  switch (browserStart) {
+    case "firefox":
+      browserIconName = "simple-firefox";
+      break;
+    case "webview":
+      browserIconName = browserEnd === "android" ? "webview" : "safari";
+      break;
+    default:
+      browserIconName = browserStart;
+  }
+
+  return browserIconName;
 }
 
 export function Headers({
