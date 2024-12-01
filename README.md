@@ -269,6 +269,14 @@ this, you can pick any unused port (e.g., 6000) and run the following:
 
     echo SERVER_PORT=6000 >> .env
 
+### Problems running with rari on Windows
+
+Download and install:
+
+Microsoft Visual C++ Redistributable for Visual Studio 2019 (
+[x86](https://aka.ms/vs/16/release/VC_redist.x86.exe),
+[ARM64](https://aka.ms/vs/16/release/VC_redist.arm64.exe) )
+
 ### Yarn install errors
 
 If you get errors while installing dependencies via yarn on a Mac, you may need

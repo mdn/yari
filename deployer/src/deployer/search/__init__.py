@@ -248,7 +248,7 @@ def to_search(file, _index=None):
             )
         ),
         popularity=doc["popularity"],
-        summary=doc["summary"],
+        summary=doc.get("summary", ""),
         # Note! We're always lowercasing the 'slug'. This way we can search on it,
         # still as a `keyword` index, but filtering by prefix.
         # E.g. in kuma; ?slug_prefix=weB/Css
