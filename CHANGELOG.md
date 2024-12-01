@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.0.1](https://github.com/mdn/yari/compare/v3.0.0...v3.0.1) (2024-12-01)
+
+
+### Bug Fixes
+
+* **bcd:** use Safari icon for iOS WebView ([#12214](https://github.com/mdn/yari/issues/12214)) ([f800c24](https://github.com/mdn/yari/commit/f800c248a6b6a5dcd7a504b44235d1407fe0780e))
+* **livesamples:** livesamples must not use port from parent ([#12216](https://github.com/mdn/yari/issues/12216)) ([1c12a81](https://github.com/mdn/yari/commit/1c12a81da823e6bcdc378f8d93386b36bdd82ac8))
+* **stage-build:** abort main merge on conflict ([#12206](https://github.com/mdn/yari/issues/12206)) ([ab03594](https://github.com/mdn/yari/commit/ab035949340ede06b7f615c24fc76e28ffa2b44f))
+
+
+### Enhancements
+
+* **layout:** add margin for "(en-US)" indicator ([#12204](https://github.com/mdn/yari/issues/12204)) ([450e433](https://github.com/mdn/yari/commit/450e433f9c555cfb566573e9d6799061f7d9d870))
+
+
+### Miscellaneous
+
+* **ai-help:** use index.json instead of plain.html for embedding sources ([#12182](https://github.com/mdn/yari/issues/12182)) ([ab93f16](https://github.com/mdn/yari/commit/ab93f163ac378bded4c4dafac7a2f79db24b3ec1))
+* **deps-dev:** bump html-validate from 8.26.0 to 8.27.0 ([#12217](https://github.com/mdn/yari/issues/12217)) ([f9bf33e](https://github.com/mdn/yari/commit/f9bf33e91e2adc367f19efd631f62b6125cc9bc4))
+* **deps:** bump @mdn/browser-compat-data from 5.6.19 to 5.6.20 ([#12218](https://github.com/mdn/yari/issues/12218)) ([7732f91](https://github.com/mdn/yari/commit/7732f91bef0f08ae0bbb4222259749f3a99402ee))
+* **deps:** bump @mdn/rari from 0.0.25 to 0.0.26 ([#12219](https://github.com/mdn/yari/issues/12219)) ([faab651](https://github.com/mdn/yari/commit/faab6515d8394ce7cffcbcefc1091e29cefe072d))
+* **deps:** bump concurrently from 9.0.1 to 9.1.0 ([#12209](https://github.com/mdn/yari/issues/12209)) ([8e0d1f9](https://github.com/mdn/yari/commit/8e0d1f9a7afd96bbef3e3abb550bd496ee4f30f0))
+* **ssr:** let search engines index German locale ([#12210](https://github.com/mdn/yari/issues/12210)) ([5340802](https://github.com/mdn/yari/commit/53408027c2728cd952d194b0b0db059ef87497e0))
+* **workflows:** remove test-de build ([#12207](https://github.com/mdn/yari/issues/12207)) ([50b72fc](https://github.com/mdn/yari/commit/50b72fc78c93e9f48e548124d1684b1c8c1888b1))
+
 ## [3.0.0](https://github.com/mdn/yari/compare/v2.65.1...v3.0.0) (2024-11-29)
 
 
