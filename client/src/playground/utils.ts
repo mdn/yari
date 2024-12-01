@@ -42,6 +42,7 @@ export async function initPlayIframe(
     `${path || ""}${path?.endsWith("/") ? "" : "/"}runner.html`,
     window.location.origin
   );
+  url.port = "";
   url.host = host;
   url.search = "";
   url.searchParams.set("state", state);
