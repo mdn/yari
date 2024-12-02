@@ -1,3 +1,7 @@
+---
+title: Contribute to MDN
+---
+
 # MDN Community
 
 Where web enthusiasts learn, collaborate, and create

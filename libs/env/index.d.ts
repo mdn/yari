@@ -1,5 +1,6 @@
 export const BUILD_OUT_ROOT: string;
 export const DEFAULT_FLAW_LEVELS: string;
+export const RARI: boolean;
 export const BASE_URL: string;
 export const FILES: string;
 export const FOLDERSEARCH: string;
@@ -27,6 +28,7 @@ export const STATIC_ROOT: string;
 export const PROXY_HOSTNAME: string;
 export const CONTENT_HOSTNAME: string;
 export const FAKE_V1_API: boolean;
+export const EXTERNAL_DEV_SERVER: sting;
 export const SENTRY_DSN_BUILD: string;
 export const OPENAI_KEY: string;
 export const PG_URI: string;
