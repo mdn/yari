@@ -44,7 +44,7 @@ export class TeamMember extends LitElement {
     }
   }
 
-  _focusout({ relatedTarget }) {
+  _focusout() {
     const hx = this.querySelector("h4, h5");
     const panel = hx?.closest(".tabpanel");
     window.history.pushState({}, "", `#${panel?.id || ""}`);
@@ -54,6 +54,12 @@ export class TeamMember extends LitElement {
     return this;
   }
 
+  _mousedown(ev) {
+    if (ev?.target?.tagName === "A") {
+      ev?.preventDefault?.();
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.tabIndex = 0;
@@ -61,12 +67,14 @@ export class TeamMember extends LitElement {
     if (window.location.hash === `#${this.id}`) {
       setTimeout(() => this.focus(), 100);
     }
+    this.addEventListener("mousedown", this._mousedown);
     this.addEventListener("focusin", this._focusin);
     this.addEventListener("focusout", this._focusout);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.removeEventListener("mousedown", this._mousedown);
     this.removeEventListener("focusin", this._focusin);
     this.removeEventListener("focusout", this._focusout);
   }
