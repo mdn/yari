@@ -86,6 +86,7 @@ export default function Playground() {
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
   );
+  const [runCount, setRunCount] = useState(1);
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !stateParam && !shared && gistId
       ? `/api/v1/play/${encodeURIComponent(gistId)}`
@@ -134,10 +135,13 @@ export default function Playground() {
       );
       setVConsole([]);
       url.searchParams.set("state", state);
+      // ensure iframe reloads even if code doesn't change
+      url.searchParams.set("r", runCount.toString());
       url.pathname = `${codeSrc || code.src || ""}/runner.html`;
       setIframeSrc(url.href);
+      setRunCount(runCount + 1);
     },
-    [codeSrc, setVConsole, setIframeSrc]
+    [codeSrc, setVConsole, setIframeSrc, runCount, setRunCount]
   );
 
   useEffect(() => {
