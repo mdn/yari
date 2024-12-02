@@ -126,11 +126,13 @@ export default function Playground() {
 
       // We're using a random subdomain for origin isolation.
       const url = new URL(
-        `${window.location.protocol}//${
-          PLAYGROUND_BASE_HOST.startsWith("localhost")
-            ? ""
-            : `${subdomain.current}.`
-        }${PLAYGROUND_BASE_HOST}`
+        window.location.hostname.endsWith("localhost")
+          ? window.location.origin
+          : `${window.location.protocol}//${
+              PLAYGROUND_BASE_HOST.startsWith("localhost")
+                ? ""
+                : `${subdomain.current}.`
+            }${PLAYGROUND_BASE_HOST}`
       );
       setVConsole([]);
       url.searchParams.set("state", state);
