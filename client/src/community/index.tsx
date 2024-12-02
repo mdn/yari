@@ -18,7 +18,7 @@ export function Community(appProps: HydrationData<any, AboutDoc>) {
     <SWRConfig
       value={{ provider: () => new SWRLocalStorageCache("community") }}
     >
-      <main className="community-container">
+      <main id="content" className="community-container">
         <RenderCommunityBody
           doc={doc}
           renderer={(section, i) => {

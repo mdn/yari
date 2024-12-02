@@ -359,7 +359,7 @@ main.about-container {
             }
           }
 
-          ~ p:last-of-type::after {
+          ~ p:last-of-type > img {
             // image
             background-color: var(--about-journey-image-border);
             background-position: center center;
@@ -368,10 +368,9 @@ main.about-container {
             border: var(--image-border-size) solid
               var(--about-journey-image-border);
             box-shadow: var(--about-journey-shadow);
-            content: "";
-            display: none;
             height: var(--image-height);
             left: calc(var(--inner-width) - var(--image-width));
+            max-width: var(--image-width);
             position: absolute;
             top: calc(var(--dot-height) / -2);
             width: var(--image-width);
@@ -383,6 +382,7 @@ main.about-container {
               left: auto;
               margin: 2rem auto;
               max-height: var(--image-inner-height);
+              max-width: 100%;
               position: relative;
               top: auto;
               width: auto;
@@ -394,32 +394,12 @@ main.about-container {
             ~ p:last-of-type::after {
               display: block;
             }
-
-            ~ p:last-of-type::after {
-              background-image: url("https://mdn.dev/generic-content/about/screenshots/20050121103200-1280x720@0.5x.png");
-              background-image: image-set(
-                url("https://mdn.dev/generic-content/about/screenshots/20050121103200-1280x720@0.5x.png")
-                  1x,
-                url("https://mdn.dev/generic-content/about/screenshots/20050121103200-1280x720@1x.png")
-                  2x
-              );
-            }
           }
 
           &[id="2010"] {
             &::before,
             ~ p:last-of-type::after {
               display: block;
-            }
-
-            ~ p:last-of-type::after {
-              background-image: url("https://mdn.dev/generic-content/about/screenshots/20100901014818-1280x720@0.5x.png");
-              background-image: image-set(
-                url("https://mdn.dev/generic-content/about/screenshots/20100901014818-1280x720@0.5x.png")
-                  1x,
-                url("https://mdn.dev/generic-content/about/screenshots/20100901014818-1280x720@1x.png")
-                  2x
-              );
             }
           }
 
@@ -428,32 +408,12 @@ main.about-container {
             ~ p:last-of-type::after {
               display: block;
             }
-
-            ~ p:last-of-type::after {
-              background-image: url("https://mdn.dev/generic-content/about/screenshots/20200103045709-1280x720@0.5x.png");
-              background-image: image-set(
-                url("https://mdn.dev/generic-content/about/screenshots/20200103045709-1280x720@0.5x.png")
-                  1x,
-                url("https://mdn.dev/generic-content/about/screenshots/20200103045709-1280x720@1x.png")
-                  2x
-              );
-            }
           }
 
           &[id="2022"] {
             &::before,
             ~ p:last-of-type::after {
               display: block;
-            }
-
-            ~ p:last-of-type::after {
-              background-image: url("https://mdn.dev/generic-content/about/screenshots/20220402010722-1280x720@0.5x.png");
-              background-image: image-set(
-                url("https://mdn.dev/generic-content/about/screenshots/20220402010722-1280x720@0.5x.png")
-                  1x,
-                url("https://mdn.dev/generic-content/about/screenshots/20220402010722-1280x720@1x.png")
-                  2x
-              );
             }
           }
         }

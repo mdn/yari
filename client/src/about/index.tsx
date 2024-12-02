@@ -24,7 +24,7 @@ export function About(appProps: HydrationData<any, AboutDoc>) {
   const doc = useAboutDoc(appProps);
 
   return (
-    <main className="about-container">
+    <main id="content" className="about-container">
       <RenderAboutBody
         doc={doc}
         renderer={(section, i) => {
