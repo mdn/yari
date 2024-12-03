@@ -13,7 +13,7 @@ import {
 } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
-import { useUserData } from "../user-context";
+import { UserData, useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
 import { EXTERNAL_LINK, VIEWPORT_BREAKPOINTS } from "./constants";
 import { Doc } from "../../../libs/types/document";
@@ -201,31 +201,46 @@ export function useGlean() {
   return React.useContext(GleanContext);
 }
 
+function getPageProps(
+  userData: UserData,
+  {
+    pageNotFound,
+    isBaseline,
+  }: { pageNotFound?: boolean; isBaseline?: "high" | "low" | false } = {}
+): PageProps {
+  return {
+    path: window?.location.toString(),
+    referrer: document?.referrer,
+    // on port 3000 this will always return "200":
+    httpStatus: pageNotFound ? "404" : "200",
+    userLanguages: Array.from(navigator?.languages || []),
+    geo: userData?.geo?.country,
+    geo_iso: userData?.geo?.country_iso,
+    subscriptionType: userData?.subscriptionType || "anonymous",
+    viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
+      ([_, width]) => width <= window.innerWidth
+    )?.[0],
+    isBaseline: isBaseline
+      ? `baseline_${isBaseline}`
+      : isBaseline === false
+        ? "not_baseline"
+        : undefined,
+    utm: getUTMParameters(),
+  };
+}
+
 export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
   const loc = useLocation();
   const userData = useUserData();
   const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    const submit = gleanAnalytics.page({
-      path: window?.location.toString(),
-      referrer: document?.referrer,
-      // on port 3000 this will always return "200":
-      httpStatus: pageNotFound ? "404" : "200",
-      userLanguages: Array.from(navigator?.languages || []),
-      geo: userData?.geo?.country,
-      geo_iso: userData?.geo?.country_iso,
-      subscriptionType: userData?.subscriptionType || "anonymous",
-      viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
-        ([_, width]) => width <= window.innerWidth
-      )?.[0],
-      isBaseline: doc?.baseline?.baseline
-        ? `baseline_${doc.baseline.baseline}`
-        : doc?.baseline?.baseline === false
-          ? "not_baseline"
-          : undefined,
-      utm: getUTMParameters(),
-    });
+    const submit = gleanAnalytics.page(
+      getPageProps(userData, {
+        pageNotFound,
+        isBaseline: doc?.baseline?.baseline,
+      })
+    );
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
