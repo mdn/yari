@@ -245,7 +245,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 
   const resultClick: React.MouseEventHandler<HTMLAnchorElement> = () => {
-    gleanClick(quicksearchPing(inputValue));
+    gleanClick(quicksearchPing(`${id} -> ${inputValue}`));
   };
 
   const {
@@ -325,6 +325,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     );
   }, [resultItems, inputValue]);
 
+  const [hasChanged, setHasChanged] = useState(false);
+
   const searchResults = (() => {
     if (!isOpen || !inputValue.trim()) {
       return null;
@@ -372,8 +374,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           [
             ...resultItems.map((item, i) => (
               <div
+                key={item.url}
                 {...getItemProps({
-                  key: item.url,
                   className: `result-item ${
                     i === highlightedIndex ? "highlight " : ""
                   }`,
@@ -392,11 +394,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               </div>
             )),
             <div
+              key="nothing-found"
               {...getItemProps({
                 className:
                   "nothing-found result-item " +
                   (highlightedIndex === resultItems.length ? "highlight" : ""),
-                key: "nothing-found",
                 item: onlineSearch,
                 index: resultItems.length,
               })}
@@ -493,6 +495,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onChange(event) {
             if (event.target instanceof HTMLInputElement) {
               onChangeInputValue(event.target.value);
+              if (!hasChanged) {
+                gleanClick(`quick-search-change: ${id}`);
+                setHasChanged(true);
+              }
             }
           },
           ref: (input) => {

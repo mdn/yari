@@ -1,20 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  useIsIntersecting,
-  useIsServer,
-  usePageVisibility,
-} from "../../../hooks";
+import { useIsServer, useViewed } from "../../../hooks";
 import { User, useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { Status, usePlacement } from "../../../placement-context";
 import { Payload as PlacementData } from "../../../../../libs/pong/types";
-import { BANNER_SCRIMBA_CLICK } from "../../../telemetry/constants";
-
-interface Timer {
-  timeout: number | null;
-}
+import {
+  BANNER_SCRIMBA_CLICK,
+  BANNER_SCRIMBA_VIEW,
+} from "../../../telemetry/constants";
 
 interface PlacementRenderArgs {
   place: any;
@@ -31,13 +25,8 @@ interface PlacementRenderArgs {
   version?: number;
   typ: string;
   heading?: string;
+  showNoAds: boolean;
 }
-
-const INTERSECTION_OPTIONS = {
-  root: null,
-  rootMargin: "0px",
-  threshold: 0.5,
-};
 
 function viewed(pong?: PlacementData) {
   pong?.view &&
@@ -48,7 +37,11 @@ function viewed(pong?: PlacementData) {
     );
 }
 
-export function SidePlacement() {
+export function SidePlacement({
+  extraClasses = [],
+}: {
+  extraClasses?: string[];
+} = {}) {
   const placementData = usePlacement();
   const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
     placementData?.side?.colors || {};
@@ -65,11 +58,11 @@ export function SidePlacement() {
   );
 
   return !placementData?.side ? (
-    <section className="place side"></section>
+    <section className={["place", "side", ...extraClasses].join(" ")}></section>
   ) : placementData.side.cta && placementData.side.heading ? (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side", "new-side"]}
+      extraClassNames={["side", "new-side", ...extraClasses]}
       imageWidth={125}
       imageHeight={125}
       cta={placementData.side.cta}
@@ -80,7 +73,7 @@ export function SidePlacement() {
   ) : (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side"]}
+      extraClassNames={["side", ...extraClasses]}
       imageWidth={130}
       imageHeight={100}
       renderer={RenderSideOrTopBanner}
@@ -91,21 +84,42 @@ export function SidePlacement() {
 
 function TopPlacementFallbackContent() {
   const gleanClick = useGleanClick();
+  const observedNode = useViewed(() => {
+    gleanClick(BANNER_SCRIMBA_VIEW);
+  });
+  const now = Date.now();
 
-  return Date.now() < Date.parse("2024-10-12") ? (
+  return now < Date.parse("2024-12-01") ? (
     <p className="fallback-copy">
-      Learn front-end development with a 30% discount on{" "}
+      Learn front-end with MDN’s course partner{" "}
       <a
         href="https://scrimba.com/learn/frontend?via=mdn"
         target="_blank"
         rel="noreferrer"
+        ref={observedNode}
         onClick={() => {
           gleanClick(BANNER_SCRIMBA_CLICK);
         }}
       >
         Scrimba
       </a>{" "}
-      &mdash; limited time offer!
+      - 30% discount this week!
+    </p>
+  ) : now < Date.parse("2024-12-25") ? (
+    <p className="fallback-copy">
+      Take our daily challenges on Scrimba until 24th December and win exciting
+      prizes.{" "}
+      <a
+        href="https://scrimba.com/learn/frontend?via=mdn"
+        target="_blank"
+        rel="noreferrer"
+        ref={observedNode}
+        onClick={() => {
+          gleanClick(BANNER_SCRIMBA_CLICK);
+        }}
+      >
+        Join now
+      </a>
     </p>
   ) : (
     <p className="fallback-copy">
@@ -114,6 +128,7 @@ function TopPlacementFallbackContent() {
         href="https://scrimba.com/learn/frontend?via=mdn"
         target="_blank"
         rel="noreferrer"
+        ref={observedNode}
         onClick={() => {
           gleanClick(BANNER_SCRIMBA_CLICK);
         }}
@@ -277,44 +292,14 @@ export function PlacementInner({
 }) {
   const isServer = useIsServer();
   const user = useUserData();
-  const isVisible = usePageVisibility();
   const gleanClick = useGleanClick();
+  const { plusAvailable } = usePlacement() || {};
+  const showNoAds = Boolean(user?.isSubscriber || plusAvailable);
 
-  const timer = useRef<Timer>({ timeout: null });
-
-  const [node, setNode] = useState<HTMLElement>();
-  const isIntersecting = useIsIntersecting(node, INTERSECTION_OPTIONS);
-
-  const sendViewed = useCallback(() => {
+  const place = useViewed(() => {
     viewed(pong);
     gleanClick(`pong: pong->viewed ${typ}`);
-    timer.current = { timeout: -1 };
-  }, [pong, gleanClick, typ]);
-
-  const place = useCallback((node: HTMLElement | null) => {
-    if (node) {
-      setNode(node);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (timer.current.timeout !== -1) {
-      // timeout !== -1 means the viewed has not been sent
-      if (isVisible && isIntersecting) {
-        if (timer.current.timeout === null) {
-          timer.current = {
-            timeout: window.setTimeout(sendViewed, 1000),
-          };
-        }
-      }
-    }
-    return () => {
-      if (timer.current.timeout !== null && timer.current.timeout !== -1) {
-        clearTimeout(timer.current.timeout);
-        timer.current = { timeout: null };
-      }
-    };
-  }, [isVisible, isIntersecting, sendViewed]);
+  });
 
   const { image, copy, alt, click, version, heading } = pong || {};
   return (
@@ -336,6 +321,7 @@ export function PlacementInner({
           version,
           typ,
           heading,
+          showNoAds,
         })}
     </>
   );
@@ -355,6 +341,7 @@ function RenderSideOrTopBanner({
   style,
   version = 1,
   typ,
+  showNoAds,
 }: PlacementRenderArgs) {
   return (
     <section
@@ -405,19 +392,21 @@ function RenderSideOrTopBanner({
         </a>
       </p>
 
-      <a
-        className="no-pong"
-        data-glean={
-          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-        }
-        href={
-          user?.isSubscriber
-            ? "/en-US/plus/settings?ref=nope"
-            : "/en-US/plus?ref=nope#subscribe"
-        }
-      >
-        Don't want to see ads?
-      </a>
+      {showNoAds && (
+        <a
+          className="no-pong"
+          data-glean={
+            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+          }
+          href={
+            user?.isSubscriber
+              ? "/en-US/plus/settings?ref=nope"
+              : "/en-US/plus?ref=nope"
+          }
+        >
+          Don't want to see ads?
+        </a>
+      )}
     </section>
   );
 }
@@ -474,6 +463,7 @@ function RenderBottomBanner({
   style,
   version = 1,
   typ,
+  showNoAds,
 }: PlacementRenderArgs) {
   return (
     <div className="bottom-banner-container" style={style}>
@@ -506,19 +496,21 @@ function RenderBottomBanner({
         >
           Mozilla ads
         </a>
-        <a
-          className="no-pong"
-          data-glean={
-            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-          }
-          href={
-            user?.isSubscriber
-              ? "/en-US/plus/settings?ref=nope"
-              : "/en-US/plus?ref=nope#subscribe"
-          }
-        >
-          Don't want to see ads?
-        </a>
+        {showNoAds && (
+          <a
+            className="no-pong"
+            data-glean={
+              "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+            }
+            href={
+              user?.isSubscriber
+                ? "/en-US/plus/settings?ref=nope"
+                : "/en-US/plus?ref=nope"
+            }
+          >
+            Don't want to see ads?
+          </a>
+        )}
       </section>
     </div>
   );
@@ -539,6 +531,7 @@ function RenderNewSideBanner({
   version = 1,
   typ,
   heading,
+  showNoAds,
 }: PlacementRenderArgs) {
   return (
     <section ref={place} className={["place", ...extraClassNames].join(" ")}>
@@ -576,19 +569,21 @@ function RenderNewSideBanner({
         </a>
       </div>
 
-      <a
-        className="no-pong"
-        data-glean={
-          "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-        }
-        href={
-          user?.isSubscriber
-            ? "/en-US/plus/settings?ref=nope"
-            : "/en-US/plus?ref=nope#subscribe"
-        }
-      >
-        Don't want to see ads?
-      </a>
+      {showNoAds && (
+        <a
+          className="no-pong"
+          data-glean={
+            "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
+          }
+          href={
+            user?.isSubscriber
+              ? "/en-US/plus/settings?ref=nope"
+              : "/en-US/plus?ref=nope"
+          }
+        >
+          Don't want to see ads?
+        </a>
+      )}
     </section>
   );
 }

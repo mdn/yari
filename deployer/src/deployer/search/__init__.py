@@ -217,8 +217,8 @@ def to_search(file, _index=None):
         return
     doc = data["doc"]
 
-    if doc["mdn_url"].startswith("/en-US/curriculum/"):
-        # Skip curriculum content for now.
+    if "/docs/" not in doc["mdn_url"]:
+        # Skip non docs content for now.
         return
 
     locale, slug = doc["mdn_url"].split("/docs/", 1)
@@ -248,7 +248,7 @@ def to_search(file, _index=None):
             )
         ),
         popularity=doc["popularity"],
-        summary=doc["summary"],
+        summary=doc.get("summary", ""),
         # Note! We're always lowercasing the 'slug'. This way we can search on it,
         # still as a `keyword` index, but filtering by prefix.
         # E.g. in kuma; ?slug_prefix=weB/Css

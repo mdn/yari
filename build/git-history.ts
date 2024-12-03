@@ -80,10 +80,7 @@ export function gather(contentRoots, previousFile = null) {
       // the git root. For example "../README.md" and since those aren't documents
       // exclude them.
       // We also only care about documents.
-      if (
-        !key.startsWith(".") &&
-        (key.endsWith("index.html") || key.endsWith("index.md"))
-      ) {
+      if (!key.startsWith(".") && key.endsWith("index.md")) {
         map.set(key, Object.assign(value, { merged: parents.get(value.hash) }));
       }
     }

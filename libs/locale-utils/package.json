@@ -9,6 +9,6 @@
   "types": "index.d.ts",
   "dependencies": {
     "accept-language-parser": "^1.5.0",
-    "cookie": "^0.5.0"
+    "cookie": "^0.7.0"
   }
 }

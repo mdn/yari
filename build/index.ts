@@ -200,9 +200,10 @@ export async function buildDocument(
   };
   const { metadata, fileInfo } = document;
 
-  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+  const expectedFolderPath = Document.urlToFolderPath(document.url);
+  if (expectedFolderPath !== document.fileInfo.folder) {
     throw new Error(
-      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder}): expected path (${expectedFolderPath})`
     );
   }
 

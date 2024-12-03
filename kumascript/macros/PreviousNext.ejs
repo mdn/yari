@@ -1,40 +1,5 @@
 <%
-/*
-
-Parameter
-    $0 (first parameter):  path of Previous page
-    $1 (second parameter): path of Next page
-
-Issue
-    * Problem of Apostrophe (https://developer.mozilla.org/fr/docs/JavaScript_Guide/Op%C3%A9rateurs/Op%C3%A9rateurs_sp%C3%A9ciaux)
-
-*/
-
-var lang = env.locale;
-var strPrevious = "";
-var strNext = "";
-
-var s_PreviousNext = mdn.localString({
-    "en-US": ["« Previous",          "Next  »"],
-    "es"   : ["« Anterior",     "Siguiente  »"],
-    "fr"   : ["« Précédent",      "Suivant  »"],
-    "ja"   : ["« 前のページ",                        "次のページ »"],
-    "ko"   : ["« 이전",                              "다음  »"],
-    "ru"   : ["« Предыдущая статья", "Следующая статья  »"],
-    "zh-CN": ["« 上一页",                            "下一页  »"],
-    "zh-TW": ["« 前頁",                              "次頁  »"]
-});
-
-
-if ($0) {
-    strPrevious = '<li><a class="button secondary" href="/' + lang + '/docs/' + $0.replace(/ /g, '_') + '">' + s_PreviousNext[0] + '</a></li>';
-}
-
-if ($1) {
-    strNext = '<li><a class="button secondary" href="/' + lang + '/docs/' + $1.replace(/ /g, '_') + '">' + s_PreviousNext[1] + '</a></li>';
-}
+/* two parameters: path of previous page and path to next */
+/* Calls PreviousMenuNext to avoid duplication of translations */
 %>
-<ul class="prev-next">
-    <%- strPrevious %>
-    <%- strNext %>
-</ul>
+<%- await template("PreviousMenuNext", [$0, $1]) %>

@@ -76,6 +76,10 @@ export default function render(
     blogMeta = null,
   }: HydrationData = { url }
 ) {
+  if (!locale) {
+    locale = (doc && doc.locale) || DEFAULT_LOCALE;
+  }
+
   const canonicalURL = `${BASE_URL}${url}`;
 
   let realPageTitle = pageTitle;
@@ -139,10 +143,7 @@ export default function render(
   }
 
   // Open Graph protocol expects `language_TERRITORY` format.
-  const ogLocale = (locale || (doc && doc.locale) || DEFAULT_LOCALE).replace(
-    "-",
-    "_"
-  );
+  const ogLocale = locale.replace("-", "_");
 
   const robotsContent =
     !ALWAYS_ALLOW_ROBOTS || (doc && doc.noIndexing) || noIndexing
@@ -154,7 +155,7 @@ export default function render(
   return (
     "<!doctype html>" +
     renderToString(
-      <html lang={locale || DEFAULT_LOCALE} prefix="og: https://ogp.me/ns#">
+      <html lang={DEFAULT_LOCALE} prefix="og: https://ogp.me/ns#">
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1" />

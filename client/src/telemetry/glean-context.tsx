@@ -15,7 +15,7 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { VIEWPORT_BREAKPOINTS } from "./constants";
+import { EXTERNAL_LINK, VIEWPORT_BREAKPOINTS } from "./constants";
 import { Doc } from "../../../libs/types/document";
 
 export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
@@ -174,8 +174,13 @@ function handleLinkClick(ev: MouseEvent, click: (source: string) => void) {
   if (anchor instanceof HTMLAnchorElement) {
     if (anchor.dataset.glean) {
       click(anchor.dataset.glean);
-    } else if (anchor.classList.contains("external")) {
-      click(`external-link: ${anchor.getAttribute("href") || ""}`);
+    }
+    if (
+      anchor.href &&
+      anchor.origin &&
+      anchor.origin !== document.location.origin
+    ) {
+      click(`${EXTERNAL_LINK}: ${anchor.href}`);
     }
   }
 }

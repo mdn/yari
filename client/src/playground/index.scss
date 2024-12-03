@@ -171,10 +171,14 @@ main.play {
 
         background-color: var(--background-secondary);
         border: var(--editor-header-border-width) solid var(--border-primary);
-        display: flex;
-        flex-direction: column;
+        height: 0;
         min-height: var(--editor-header-height);
         width: 100%;
+
+        /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+        &::details-content {
+          display: contents;
+        }
 
         &[open] {
           height: 100%;
@@ -213,67 +217,6 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
-      @media (min-width: 25rem) {
-        .place {
-          align-self: flex-end;
-          max-width: 20rem;
-          min-height: 10rem;
-
-          .pong-box2,
-          .pong-box {
-            width: 100%;
-
-            .pong {
-              flex-direction: row;
-            }
-
-            .pong-note {
-              margin-top: 0;
-            }
-          }
-
-          &.new-side {
-            height: 12rem;
-            max-width: 30rem;
-            min-height: 12rem;
-
-            .pong-box2 {
-              height: 21rem;
-              min-height: 0;
-              width: 25rem;
-
-              .pong-cta {
-                margin: 0.5rem auto 1rem 1rem;
-              }
-
-              .pong-note {
-                margin: 0.5rem 0.5rem auto auto;
-              }
-
-              .pong {
-                > img {
-                  height: 100%;
-                  width: auto;
-                }
-
-                > div.content {
-                  align-items: end;
-                  background: linear-gradient(
-                    to left,
-                    var(--place-new-side-background) 16rem,
-                    transparent
-                  );
-                  flex-direction: column;
-                  height: 100%;
-                  justify-content: end;
-                  padding-left: 8rem;
-                  width: 100%;
-                }
-              }
-            }
-          }
-        }
-      }
 
       button.flag-example {
         align-self: flex-end;
