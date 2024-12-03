@@ -56,8 +56,8 @@ export type ElementClickedProps = {
 };
 
 export type GleanAnalytics = {
-  page: (arg: PageProps) => () => void;
-  click: (arg: ElementClickedProps) => void;
+  page: (page: PageProps) => () => void;
+  click: (page: PageProps, element: ElementClickedProps) => void;
 };
 
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
@@ -79,7 +79,7 @@ function glean(): GleanAnalytics {
     //SSR return noop.
     return {
       page: (page: PageProps) => () => {},
-      click: (element: ElementClickedProps) => {},
+      click: (page: PageProps, element: ElementClickedProps) => {},
     };
   }
   const userIsOptedOut = document.cookie
@@ -137,7 +137,8 @@ function glean(): GleanAnalytics {
       updatePageMetrics(page);
       return () => pings.page.submit();
     },
-    click: (event: ElementClickedProps) => {
+    click: (page: PageProps, event: ElementClickedProps) => {
+      updatePageMetrics(page);
       const { source, subscriptionType: subscription_type } = event;
       elementMetric.clicked.record({
         source,
@@ -262,12 +263,12 @@ export function useGleanClick() {
         console.log({ gleanClick: source });
       }
 
-      glean.click({
+      glean.click(getPageProps(userData), {
         source,
         subscriptionType: userData?.subscriptionType || "none",
       });
     },
-    [glean, userData?.subscriptionType]
+    [glean, userData]
   );
 }
 
