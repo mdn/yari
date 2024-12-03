@@ -86,6 +86,7 @@ export default function Playground() {
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
   );
+  const [flipFlop, setFlipFlop] = useState(0);
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !stateParam && !shared && gistId
       ? `/api/v1/play/${encodeURIComponent(gistId)}`
@@ -134,10 +135,14 @@ export default function Playground() {
       );
       setVConsole([]);
       url.searchParams.set("state", state);
+      // ensure iframe reloads even if code doesn't change
+      url.searchParams.set("f", flipFlop.toString());
       url.pathname = `${codeSrc || code.src || ""}/runner.html`;
       setIframeSrc(url.href);
+      // using an updater function causes the second "run" to not reload properly:
+      setFlipFlop((flipFlop + 1) % 2);
     },
-    [codeSrc, setVConsole, setIframeSrc]
+    [codeSrc, setVConsole, setIframeSrc, flipFlop, setFlipFlop]
   );
 
   useEffect(() => {
