@@ -101,36 +101,40 @@ function glean(): GleanAnalytics {
     Glean.setLogPings(GLEAN_DEBUG);
   }
 
+  const updatePageMetrics = (page: PageProps) => {
+    const path = urlOrNull(page.path);
+    if (path) {
+      pageMetric.path.setUrl(path);
+    }
+    const referrer = urlOrNull(page.referrer, window?.location.href);
+    if (referrer) {
+      pageMetric.referrer.setUrl(referrer);
+    }
+    if (page.isBaseline) {
+      pageMetric.isBaseline.set(page.isBaseline);
+    }
+    for (const param in page.utm) {
+      pageMetric.utm[param].set(page.utm[param]);
+    }
+    pageMetric.httpStatus.set(page.httpStatus);
+    if (page.geo) {
+      navigatorMetric.geo.set(page.geo);
+    }
+    if (page.geo_iso) {
+      navigatorMetric.geoIso.set(page.geo_iso);
+    }
+    if (page.userLanguages) {
+      navigatorMetric.userLanguages.set(page.userLanguages);
+    }
+    if (page.viewportBreakpoint) {
+      navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
+    }
+    navigatorMetric.subscriptionType.set(page.subscriptionType);
+  };
+
   const gleanContext = {
     page: (page: PageProps) => {
-      const path = urlOrNull(page.path);
-      if (path) {
-        pageMetric.path.setUrl(path);
-      }
-      const referrer = urlOrNull(page.referrer, window?.location.href);
-      if (referrer) {
-        pageMetric.referrer.setUrl(referrer);
-      }
-      if (page.isBaseline) {
-        pageMetric.isBaseline.set(page.isBaseline);
-      }
-      for (const param in page.utm) {
-        pageMetric.utm[param].set(page.utm[param]);
-      }
-      pageMetric.httpStatus.set(page.httpStatus);
-      if (page.geo) {
-        navigatorMetric.geo.set(page.geo);
-      }
-      if (page.geo_iso) {
-        navigatorMetric.geoIso.set(page.geo_iso);
-      }
-      if (page.userLanguages) {
-        navigatorMetric.userLanguages.set(page.userLanguages);
-      }
-      if (page.viewportBreakpoint) {
-        navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
-      }
-      navigatorMetric.subscriptionType.set(page.subscriptionType);
+      updatePageMetrics(page);
       return () => pings.page.submit();
     },
     click: (event: ElementClickedProps) => {
