@@ -89,28 +89,12 @@ function TopPlacementFallbackContent() {
   });
   const now = Date.now();
 
-  return now < Date.parse("2024-12-01") ? (
-    <p className="fallback-copy">
-      Learn front-end with MDN’s course partner{" "}
-      <a
-        href="https://scrimba.com/learn/frontend?via=mdn"
-        target="_blank"
-        rel="noreferrer"
-        ref={observedNode}
-        onClick={() => {
-          gleanClick(BANNER_SCRIMBA_CLICK);
-        }}
-      >
-        Scrimba
-      </a>{" "}
-      - 30% discount this week!
-    </p>
-  ) : now < Date.parse("2024-12-25") ? (
+  return now < Date.parse("2024-12-25") ? (
     <p className="fallback-copy">
       Take our daily challenges on Scrimba until 24th December and win exciting
       prizes.{" "}
       <a
-        href="https://scrimba.com/learn/frontend?via=mdn"
+        href="https://scrimba.com/javascriptmas?via=mdn"
         target="_blank"
         rel="noreferrer"
         ref={observedNode}
