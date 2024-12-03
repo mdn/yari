@@ -146,23 +146,28 @@ function glean(): GleanAnalytics {
       pings.action.submit();
     },
   };
-  const gleanClick = (source: string) => {
-    gleanContext.click({
-      source,
-      subscriptionType: "",
-    });
-  };
-  window?.addEventListener("click", (ev) => {
-    handleLinkClick(ev, gleanClick);
-    handleButtonClick(ev, gleanClick);
-    handleSidebarClick(ev, gleanClick);
-  });
 
   return gleanContext;
 }
 
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
+
+export function useGlobalGleanClickHandlers() {
+  const gleanClick = useGleanClick();
+
+  useEffect(() => {
+    const handler = (ev) => {
+      handleLinkClick(ev, gleanClick);
+      handleButtonClick(ev, gleanClick);
+      handleSidebarClick(ev, gleanClick);
+    };
+
+    window.addEventListener("click", handler);
+
+    return () => window.removeEventListener("click", handler);
+  });
+}
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
   const target = ev.composedPath()?.[0] || ev.target;
