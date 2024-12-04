@@ -203,14 +203,31 @@ jobs:
           echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn build:client
-          yarn build:ssr
-          yarn tool build-robots-txt
+          yarn build:prepare
 
-          yarn rari content sync-translated-content
-          yarn rari git-history
+          yarn tool sync-translated-content es fr ja ko pt-br ru zh-cn zh-tw
 
-          yarn rari build --issues client/build/issues.json --templ-stats
+          # Build using one process per locale.
+          # Note: We have 4 cores, but 9 processes is a reasonable number.
+          for locale in en-us de es fr ja ko pt-br ru zh-cn zh-tw; do
+            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+          du -sh client/build
+
+          # Build the blog
+          yarn build:blog
+
+          # Build the curriculum
+          yarn build:curriculum
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
 
           # SSR all pages
           yarn render:html
