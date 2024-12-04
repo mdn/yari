@@ -37,35 +37,45 @@ export class TeamMember extends LitElement {
     }
   }
 
-  _focus({ currentTarget }) {
+  _focusin({ currentTarget }) {
     if (currentTarget instanceof HTMLElement) {
       window.history.pushState({}, "", `#${currentTarget.id}`);
-      this.classList.add("open");
       this.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
   }
 
-  _focusout({ relatedTarget }) {
-    if (!(relatedTarget instanceof Node && this.contains(relatedTarget))) {
-      this.classList.remove("open");
-    }
+  _focusout() {
+    const hx = this.querySelector("h4, h5");
+    const panel = hx?.closest(".tabpanel");
+    window.history.pushState({}, "", `#${panel?.id || ""}`);
   }
 
   createRenderRoot() {
     return this;
   }
 
+  _mousedown(ev) {
+    if (ev?.target?.tagName === "A") {
+      ev?.preventDefault?.();
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.tabIndex = 0;
     this._setID();
-    this.addEventListener("focus", this._focus);
+    if (window.location.hash === `#${this.id}`) {
+      setTimeout(() => this.focus(), 100);
+    }
+    this.addEventListener("mousedown", this._mousedown);
+    this.addEventListener("focusin", this._focusin);
     this.addEventListener("focusout", this._focusout);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener("focus", this._focus);
+    this.removeEventListener("mousedown", this._mousedown);
+    this.removeEventListener("focusin", this._focusin);
     this.removeEventListener("focusout", this._focusout);
   }
 }

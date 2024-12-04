@@ -705,7 +705,7 @@ main.about-container {
           }
         }
 
-        &.open {
+        &:focus-within {
           align-content: start;
           cursor: unset;
           display: grid;
