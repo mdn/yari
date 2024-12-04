@@ -1,13 +1,11 @@
 import { LitElement } from "lit";
-import { customElement } from "lit/decorators.js";
 
-@customElement("mdn-image-history")
 export class MDNImageHistory extends LitElement {
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
+  createRenderRoot() {
     return this;
   }
 
-  protected firstUpdated(): void {
+  firstUpdated() {
     this.renderRoot.querySelectorAll("img").forEach((img) => {
       const regex = /@([0-9]+(?:\.[0-9]+)?)(?=x\.[a-z]+$)/;
       const match = img.src.match(regex);
@@ -24,7 +22,8 @@ export class MDNImageHistory extends LitElement {
   }
 }
 
-@customElement("team-member")
+customElements.define("mdn-image-history", MDNImageHistory);
+
 export class TeamMember extends LitElement {
   _setID() {
     const hx = this.querySelector("h4, h5");
@@ -37,6 +36,7 @@ export class TeamMember extends LitElement {
     }
   }
 
+  /** @param {FocusEvent} ev */
   _focusin({ currentTarget }) {
     if (currentTarget instanceof HTMLElement) {
       window.history.pushState({}, "", `#${currentTarget.id}`);
@@ -54,6 +54,7 @@ export class TeamMember extends LitElement {
     return this;
   }
 
+  /** @param {MouseEvent} ev */
   _mousedown(ev) {
     if (ev?.target?.tagName === "A") {
       ev?.preventDefault?.();
@@ -79,3 +80,5 @@ export class TeamMember extends LitElement {
     this.removeEventListener("focusout", this._focusout);
   }
 }
+
+customElements.define("team-member", TeamMember);
