@@ -41,7 +41,7 @@
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "render:html": "cross-env NODE_ENV=production NODE_OPTIONS=\"--no-warnings=ExperimentalWarning --loader ts-node/esm\" node build/ssr-cli.ts",
-    "start": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/_spas || yarn tool spas) && (test -d client/build/en-us/_spas/404.html || yarn render:html -s) && nf -j Procfile.start start",
+    "start": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -f popularities.json || yarn tool popularities) && (test -d client/build/en-us/404 || yarn tool spas) && (test -d client/build/en-us/404/index.html || yarn render:html -s) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env NODE_ENV=development BABEL_ENV=development PORT=3000 node scripts/start.js",
     "start:rari": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && cross-env RARI=true nf -j Procfile.rari start",
     "start:rari-external": "(test -f client/build/asset-manifest.json || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && cross-env RARI=true nf -j Procfile.start start",

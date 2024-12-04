@@ -250,7 +250,7 @@ app.get("/*", async (req, res) => {
   console.log(`Don't know how to mock: ${req.path}`, req.query);
   res
     .status(404)
-    .sendFile(path.join(BUILD_OUT_ROOT, "en-us", "_spas", "404.html"));
+    .sendFile(path.join(BUILD_OUT_ROOT, "en-us", "404", "index.html"));
 });
 
 const HOST = process.env.SERVER_HOST || undefined;
