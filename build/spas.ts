@@ -147,7 +147,7 @@ export async function buildSPAs(options: {
   const locale = DEFAULT_LOCALE;
   const url = `/${locale}/404.html`;
   const context: HydrationData = { url, pageNotFound: true };
-  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase());
   fs.mkdirSync(outPath, { recursive: true });
   const jsonFilePath = path.join(
     outPath,
