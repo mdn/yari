@@ -25,4 +25,11 @@ async function main() {
   writeFileSync(outputPath ?? inputPath, JSON.stringify(result), "utf-8");
 }
 
-main();
+try {
+  main();
+} catch (e) {
+  console.error(e);
+  if (process.env.GITHUB_ACTIONS) {
+    console.log(`::error::${e.toString()} `);
+  }
+}
