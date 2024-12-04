@@ -145,7 +145,7 @@ export async function buildSPAs(options: {
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const locale = DEFAULT_LOCALE;
-  const url = `/${locale}/404.html`;
+  const url = `/${locale}/404/index.html`;
   const context: HydrationData = { url, pageNotFound: true };
   const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase());
   fs.mkdirSync(outPath, { recursive: true });
