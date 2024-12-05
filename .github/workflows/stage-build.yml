@@ -356,7 +356,7 @@ jobs:
         with:
           path: client/build/
           glob: "{*.*,static/**,assets/**}"
-          bucket: ${{ vars.GCP_BUCKET_NAME }}/client/
+          destination: ${{ vars.GCP_BUCKET_NAME }}/client/
           headers: |-
             cache-control: 'public, max-age=3600'
 
@@ -365,7 +365,7 @@ jobs:
         with:
           path: client/build/
           glob: "{*.*,static/**,assets/**,sitemaps/**}"
-          bucket: ${{ vars.GCP_BUCKET_NAME }}/${{ env.DEPLOYMENT_ID }}/
+          destination: ${{ vars.GCP_BUCKET_NAME }}/${{ env.DEPLOYMENT_ID }}/
           headers: |-
             cache-control: 'public, max-age=3600'
 
