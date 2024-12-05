@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import webpack from "webpack";
