@@ -9,7 +9,7 @@ import prettierPluginESTree from "prettier/plugins/estree.mjs";
 import prettierPluginHTML from "prettier/plugins/html";
 
 import { Button } from "../ui/atoms/button";
-import Editor, { EditorHandle } from "./editor";
+import { ReactPlayEditor, PlayEditor } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
 import {
   compressAndBase64Encode,
@@ -24,6 +24,7 @@ import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
+import { useUIStatus } from "../ui-context";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -70,6 +71,7 @@ function load(session: string) {
 }
 
 export default function Playground() {
+  const { colorScheme } = useUIStatus();
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
   const gistId = searchParams.get("id");
@@ -115,9 +117,9 @@ export default function Playground() {
         undefined,
     }
   );
-  const htmlRef = useRef<EditorHandle | null>(null);
-  const cssRef = useRef<EditorHandle | null>(null);
-  const jsRef = useRef<EditorHandle | null>(null);
+  const htmlRef = useRef<PlayEditor | null>(null);
+  const cssRef = useRef<PlayEditor | null>(null);
+  const jsRef = useRef<PlayEditor | null>(null);
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
@@ -156,9 +158,9 @@ export default function Playground() {
 
   const getEditorContent = useCallback(() => {
     const code = {
-      html: htmlRef.current?.getContent() || HTML_DEFAULT,
-      css: cssRef.current?.getContent() || CSS_DEFAULT,
-      js: jsRef.current?.getContent() || JS_DEFAULT,
+      html: htmlRef.current?.value || HTML_DEFAULT,
+      css: cssRef.current?.value || CSS_DEFAULT,
+      js: jsRef.current?.value || JS_DEFAULT,
       src: initialCode?.src || initialContent?.src,
     };
     store(SESSION_KEY, code);
@@ -187,9 +189,15 @@ export default function Playground() {
   }, []);
 
   const setEditorContent = ({ html, css, js, src }: EditorContent) => {
-    htmlRef.current?.setContent(html);
-    cssRef.current?.setContent(css);
-    jsRef.current?.setContent(js);
+    if (htmlRef.current) {
+      htmlRef.current.value = html;
+    }
+    if (cssRef.current) {
+      cssRef.current.value = css;
+    }
+    if (jsRef.current) {
+      jsRef.current.value = js;
+    }
     if (src) {
       setCodeSrc(src);
     }
@@ -382,21 +390,24 @@ export default function Playground() {
               )}
             </menu>
           </aside>
-          <Editor
+          <ReactPlayEditor
             ref={htmlRef}
             language="html"
-            callback={updateWithEditorContent}
-          ></Editor>
-          <Editor
+            colorScheme={colorScheme}
+            onUpdate={updateWithEditorContent}
+          ></ReactPlayEditor>
+          <ReactPlayEditor
             ref={cssRef}
             language="css"
-            callback={updateWithEditorContent}
-          ></Editor>
-          <Editor
+            colorScheme={colorScheme}
+            onUpdate={updateWithEditorContent}
+          ></ReactPlayEditor>
+          <ReactPlayEditor
             ref={jsRef}
             language="javascript"
-            callback={updateWithEditorContent}
-          ></Editor>
+            colorScheme={colorScheme}
+            onUpdate={updateWithEditorContent}
+          ></ReactPlayEditor>
         </section>
         <section className="preview">
           {gistId && (
