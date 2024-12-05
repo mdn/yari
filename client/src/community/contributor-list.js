@@ -2,12 +2,7 @@ import { LitElement, html } from "lit";
 
 import styles from "./contributor-list.scss?css" with { type: "css" };
 
-/**
- * @typedef {Object} ContributorData
- * @property {string} name
- * @property {string} github
- * @property {string} [org]
- */
+/** @import { ContributorData } from "./types" */
 
 export class ContributorList extends LitElement {
   static properties = {

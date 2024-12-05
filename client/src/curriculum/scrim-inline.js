@@ -143,10 +143,8 @@ class ScrimInline extends LitElement {
    * @param {MouseEvent} e
    */
   #toggle(e) {
-    if (e.target) {
-      /** @type {HTMLElement} */
-      (e.target).dataset.glean =
-        `${CURRICULUM}: scrim fullscreen -> ${this._fullscreen ? 0 : 1} id:${this._scrimId}`;
+    if (e.target instanceof HTMLElement) {
+      e.target.dataset.glean = `${CURRICULUM}: scrim fullscreen -> ${this._fullscreen ? 0 : 1} id:${this._scrimId}`;
     }
     if (this._fullscreen) {
       this.#close();
