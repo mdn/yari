@@ -129,7 +129,10 @@ export function Timestamp({ expires }: { expires: string }) {
   if (d.toString() === "Invalid Date") {
     return <div className="iso-date">{expires}</div>;
   }
-  const ts = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")} UTC`;
+  const ts = d
+    .toISOString()
+    .replace("T", " ")
+    .replace(/\....Z/, " UTC");
   return (
     <>
       <div className="iso-date">

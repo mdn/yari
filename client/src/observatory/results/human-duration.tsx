@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { formatDateTime } from "../utils";
 
 export function HumanDuration({ date }: { date: Date }) {
@@ -8,7 +7,7 @@ export function HumanDuration({ date }: { date: Date }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setText(displayString(date));
-    }, 1000);
+    }, 10000);
 
     return () => clearInterval(interval);
   });
@@ -20,52 +19,32 @@ export function HumanDuration({ date }: { date: Date }) {
   );
 }
 
+// breakpoints for humanized time durations
+const MINUTE = 60;
+const HOUR = MINUTE * 60;
+const DAY = HOUR * 24;
+const MONTH = DAY * 30;
+const YEAR = DAY * 364;
+
 function displayString(date: Date) {
   const currentTime = new Date().getTime();
   const targetTime = date.getTime();
-  const diffSecs = Math.round((currentTime - targetTime) / 1000);
-  let direction_postfix = " ago";
-  let direction_prefix = "";
+  const diffSecs = Math.round((targetTime - currentTime) / 1000);
 
-  if (diffSecs < 0) {
-    direction_postfix = "";
-    direction_prefix = "in about ";
-    // return formatDateTime(date);
-  }
+  const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
+  const absSecs = Math.abs(diffSecs);
 
-  if (Math.abs(diffSecs) < 60) {
-    return `Just now`;
+  if (absSecs < MINUTE) {
+    return diffSecs < 0 ? "Just now" : "Very soon";
+  } else if (absSecs < HOUR) {
+    return rtf.format(Math.floor(diffSecs / MINUTE), "minute");
+  } else if (absSecs < DAY) {
+    return rtf.format(Math.floor(diffSecs / HOUR), "hour");
+  } else if (absSecs < MONTH) {
+    return rtf.format(Math.floor(diffSecs / DAY), "day");
+  } else if (absSecs < YEAR) {
+    return rtf.format(Math.floor(diffSecs / MONTH), "month");
+  } else {
+    return rtf.format(Math.floor(diffSecs / YEAR), "year");
   }
-  if (Math.abs(diffSecs) < 60 * 60) {
-    const minutes = Math.abs(Math.floor(diffSecs / 60));
-    return minutes === 1
-      ? `${direction_prefix}1 minute${direction_postfix}`
-      : `${direction_prefix}${minutes} minutes${direction_postfix}`;
-  }
-  if (Math.abs(diffSecs) < 60 * 60 * 24) {
-    const hours = Math.abs(Math.floor(diffSecs / 3600));
-    return hours === 1
-      ? `${direction_prefix}1 hour${direction_postfix}`
-      : `${direction_prefix}${hours} hours${direction_postfix}`;
-  }
-  // up to 30 days as days
-  if (Math.abs(diffSecs) < 60 * 60 * 24 * 30) {
-    const days = Math.abs(Math.floor(diffSecs / 86400));
-    return days === 1
-      ? `${direction_prefix}1 day${direction_postfix}`
-      : `${direction_prefix}${days} days${direction_postfix}`;
-  }
-  // up to 350 days as months
-  if (Math.abs(diffSecs) < 60 * 60 * 24 * 350) {
-    const months = Math.abs(Math.floor(diffSecs / 2592000));
-    return months === 1
-      ? `${direction_prefix}1 month${direction_postfix}`
-      : `${direction_prefix}${months} months${direction_postfix}`;
-  }
-
-  // after 350 days return as years
-  const years = Math.abs(Math.floor(diffSecs / 31622400));
-  return years === 1
-    ? `${direction_prefix}1 year${direction_postfix}`
-    : `${direction_prefix}${years} years${direction_postfix}`;
 }
