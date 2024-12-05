@@ -42,11 +42,9 @@ export default function ObservatoryCSP({
   return policy ? (
     <>
       <div className="detail-header">
-        <div>
-          <p className="arrow">
-            <PassIcon pass={pass} />
-          </p>
-        </div>
+        <p className="arrow">
+          <PassIcon pass={pass} />
+        </p>
         <div
           className="detail-header-content"
           dangerouslySetInnerHTML={{

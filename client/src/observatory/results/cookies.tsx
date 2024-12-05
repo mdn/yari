@@ -7,11 +7,9 @@ export function ObservatoryCookies({ result }: { result: ObservatoryResult }) {
   return cookies && Object.keys(cookies).length !== 0 ? (
     <>
       <div className="detail-header">
-        <div>
-          <p className="arrow">
-            <PassIcon pass={pass} />
-          </p>
-        </div>
+        <p className="arrow">
+          <PassIcon pass={pass} />
+        </p>
         <div
           className="detail-header-content"
           dangerouslySetInnerHTML={{
