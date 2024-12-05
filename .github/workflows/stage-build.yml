@@ -77,6 +77,9 @@ jobs:
     # We only ever want to deploy the `next` branch to stage.
     if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'next' }}
 
+    env:
+      DEPLOYMENT_ID: ${{ github.run_number }}-${{ github.run_attempt }}
+
     steps:
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
@@ -348,11 +351,23 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Sync build
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+      - name: Sync build fast (client)
+        uses: "google-github-actions/upload-cloud-storage@v2"
+        with:
+          path: client/build/
+          glob: "{*.*,static/**,assets/**}"
+          bucket: ${{ vars.GCP_BUCKET_NAME }}/client/
+          headers: |-
+            cache-control: 'public, max-age=3600'
+
+      - name: Sync build fast (everything)
+        uses: "google-github-actions/upload-cloud-storage@v2"
+        with:
+          path: client/build/
+          glob: "{*.*,static/**,assets/**,sitemaps/**}"
+          bucket: ${{ vars.GCP_BUCKET_NAME }}/${{ env.DEPLOYMENT_ID }}/
+          headers: |-
+            cache-control: 'public, max-age=3600'
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -401,7 +416,8 @@ jobs:
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
-            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
+            --set-env-vars="SOURCE_CLIENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/client/" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ env.DEPLOYMENT_ID }}/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="ORIGIN_TRIAL_TOKEN=AwIRl96ZjeFFEsdas+GXmpHvd3ARcQPYgBIGhQzZtyG9PpESvUi8ea4gpiQq9QsYRsVAWBeeBgBYqp/oLQPna0YAAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5hbGxpem9tLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
             --set-env-vars="BSA_ENABLED=true" \

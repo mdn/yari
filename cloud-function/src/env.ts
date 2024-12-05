@@ -19,6 +19,7 @@ export enum Origin {
 }
 
 export enum Source {
+  client = "client",
   content = "content",
   liveSamples = "liveSamples",
   api = "rumba",
@@ -29,6 +30,8 @@ export const ORIGIN_LIVE_SAMPLES: string =
   process.env["ORIGIN_LIVE_SAMPLES"] || "localhost";
 export const ORIGIN_PLAY: string = process.env["ORIGIN_PLAY"] || "localhost";
 
+export const SOURCE_CLIENT: string =
+  process.env["SOURCE_CLIENT"] || LOCAL_CONTENT;
 export const SOURCE_CONTENT: string =
   process.env["SOURCE_CONTENT"] || LOCAL_CONTENT;
 export const SOURCE_API: string =
@@ -57,6 +60,8 @@ export function sourceUri(source: Source): string {
   switch (source) {
     case Source.content:
       return SOURCE_CONTENT;
+    case Source.client:
+      return SOURCE_CLIENT;
     case Source.api:
       return SOURCE_API;
     default:
