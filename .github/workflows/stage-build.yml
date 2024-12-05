@@ -314,6 +314,9 @@ jobs:
 
           yarn rari build --issues client/build/issues.json --templ-stats
 
+          # Sort DE search index by en-US popularity.
+          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
+
           # SSR all pages
           yarn render:html
 
@@ -321,6 +324,9 @@ jobs:
           yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
           yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+
+          # Sort DE search index by en-US popularity.
+          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
