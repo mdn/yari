@@ -356,6 +356,9 @@ jobs:
         with:
           path: client/build/
           glob: "{*.*,static/**,assets/**}"
+          concurrency: "500"
+          resumable: false
+          process_gcloudignore: true
           destination: ${{ vars.GCP_BUCKET_NAME }}/client/
           parent: false
           headers: |-
@@ -365,6 +368,9 @@ jobs:
         uses: "google-github-actions/upload-cloud-storage@v2"
         with:
           path: client/build/
+          concurrency: "500"
+          resumable: false
+          process_gcloudignore: true
           destination: ${{ vars.GCP_BUCKET_NAME }}/${{ env.DEPLOYMENT_ID }}/
           parent: false
           headers: |-
