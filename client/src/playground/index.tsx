@@ -21,9 +21,10 @@ import {
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
-import { Console, VConsole } from "./console";
+import { ReactPlayConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
+import type { VConsole } from "./types";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -418,7 +419,7 @@ export default function Playground() {
             src={iframeSrc}
             sandbox="allow-scripts allow-same-origin allow-forms"
           ></iframe>
-          <Console vConsole={vConsole} />
+          <ReactPlayConsole vConsole={vConsole} />
           <SidePlacement extraClasses={["horizontal"]} />
         </section>
       </main>
