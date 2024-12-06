@@ -1,0 +1,29 @@
+{
+  "pages": {
+    "community": {
+      "titleSuffix": "Contribute to MDN"
+    },
+    "plus": {
+      "slugPrefix": "plus/docs",
+      "titleSuffix": "MDN Plus"
+    },
+    "observatory": {
+      "slugPrefix": "observatory/docs",
+      "titleSuffix": "HTTP Observatory"
+    }
+  },
+  "spas": {
+    "about": {
+      "slug": "about",
+      "pageTitle": "About MDN"
+    },
+    "advertising": {
+      "slug": "advertising",
+      "pageTitle": "Advertise with us"
+    },
+    "plus": {
+      "slug": "plus",
+      "pageTitle": "MDN Plus"
+    }
+  }
+}

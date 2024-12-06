@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { fileURLToPath } from "node:url";
 // TODO: fix nodeExternals (see note below, where it was used)
 // import nodeExternals from "webpack-node-externals";
