@@ -96,7 +96,7 @@ export type ObservatoryCookiesData = Record<
 
 export interface ObservatoryIndividualCookie {
   domain: string;
-  expires: number;
+  expires: string;
   httponly: boolean;
   path: string;
   samesite: string;
