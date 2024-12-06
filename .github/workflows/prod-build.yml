@@ -94,7 +94,6 @@ jobs:
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
-          token: ${{ secrets.GENERIC_CONTENT_PAT }}
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
