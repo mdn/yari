@@ -346,7 +346,7 @@ if (CURRICULUM_ROOT) {
         data = await findCurriculumPageBySlug(slug);
       } else {
         try {
-          data = await fetch_from_rari(req.path);
+          data = await fetch_from_rari(req.path.replace(/index\.json$/, ""));
         } catch (error) {
           return res.status(500).json(JSON.stringify(error.toString()));
         }
@@ -374,7 +374,9 @@ if (BLOG_ROOT) {
       return res.json({ hyData: { posts } });
     } else {
       try {
-        const index = await fetch_from_rari(req.path);
+        const index = await fetch_from_rari(
+          req.path.replace(/index\.json$/, "")
+        );
         return res.json(index);
       } catch (error) {
         return res.status(500).json(JSON.stringify(error.toString()));
@@ -404,7 +406,9 @@ if (BLOG_ROOT) {
       return res.json(data);
     } else {
       try {
-        const index = await fetch_from_rari(req.path);
+        const index = await fetch_from_rari(
+          req.path.replace(/index\.json$/, "")
+        );
         return res.json(index);
       } catch (error) {
         return res.status(500).json(JSON.stringify(error.toString()));
@@ -446,7 +450,7 @@ if (contentProxy) {
     }
   });
   app.get("/[^/]+/docs/*/index.json", async (req, res) => {
-    const url = decodeURI(req.path.replace(/\/index.json$/, ""));
+    const url = decodeURI(req.path.replace(/\/index\.json$/, ""));
     try {
       const doc = await buildDocumentFromURL(url);
       if (!doc) {
@@ -513,7 +517,9 @@ if (RARI) {
     ],
     async (req, res) => {
       try {
-        const index = await fetch_from_rari(req.path);
+        const index = await fetch_from_rari(
+          req.path.replace(/index\.json$/, "")
+        );
         if (req.path.endsWith(".json")) {
           return res.json(index);
         }
