@@ -50,6 +50,12 @@ https://github.com/mdn/mdn-contributor-spotlight.
 
 Path to the curriculum content, cloned from https://github.com/mdn/curriculum.
 
+### `GENERIC_CONTENT_ROOT`
+
+**Default: `../generic-content/files`**
+
+Path to the generic content.
+
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
