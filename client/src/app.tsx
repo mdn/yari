@@ -233,7 +233,7 @@ export function App(appProps: HydrationData) {
                 to simulate it.
                  */}
                 <Route
-                  path="/_404/*"
+                  path="/404/*"
                   element={
                     <StandardLayout>
                       <PageNotFound />
