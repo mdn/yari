@@ -589,6 +589,11 @@ main.about-container {
         scroll-margin-top: calc(
           var(--sticky-header-without-actions-height) + 1.5rem + 1rem
         );
+      }
+
+      > h4,
+      p {
+        grid-column: full;
 
         &:first-child {
           margin-top: 0;
@@ -597,11 +602,6 @@ main.about-container {
         &:last-child {
           margin-bottom: 0;
         }
-      }
-
-      > h4,
-      p {
-        grid-column: full;
       }
 
       h4,
@@ -633,6 +633,7 @@ main.about-container {
           ".";
         grid-template-rows: subgrid;
         padding: calc(var(--team-card-padding) - 1px);
+        user-select: none;
 
         @media (max-width: $screen-sm) {
           grid-column: full;
@@ -722,6 +723,7 @@ main.about-container {
               (100% - var(--team-grid-gap) - 2 * var(--team-card-padding)) / 2
             )
             1fr;
+          user-select: auto;
 
           li:last-of-type {
             max-height: unset;
