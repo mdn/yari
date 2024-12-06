@@ -24,7 +24,7 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
-                href="https://mozilla.social/@mdn"
+                href="https://mastodon.social/@mdn"
                 target="_blank"
                 rel="me noopener noreferrer"
               >
