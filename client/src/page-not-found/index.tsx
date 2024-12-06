@@ -8,7 +8,7 @@ const FallbackLink = React.lazy(() => import("./fallback-link"));
 
 // NOTE! To hack on this component, you have to use a trick to even get to this
 // unless you use the Express server on localhost:5042.
-// To get here, use http://localhost:3000/en-US/_404/Whatever/you/like
+// To get here, use http://localhost:3000/en-US/404/Whatever/you/like
 // Now hot-reloading works and you can iterate faster.
 // Otherwise, you can use http://localhost:5042/en-US/docs/Whatever/you/like
 // (note the :5042 port) and that'll test it a bit more realistically.

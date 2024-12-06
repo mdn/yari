@@ -21,6 +21,8 @@ async function getPageLinkAndTitle(slug) {
 <section id="Quick_links" data-macro="GlossarySidebar">
   <ol>
     <%- await renderRootItem("/docs/Glossary") %>
+    <li class="toggle">
     <%- await template("ListSubpagesForSidebar", ['/docs/Glossary', 1]) %>
+    </li>
   </ol>
 </section>

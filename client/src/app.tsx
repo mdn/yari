@@ -22,7 +22,7 @@ import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
 import { getCategoryByPathname } from "./utils";
-import { Contribute } from "./community";
+import { Community } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
@@ -229,7 +229,7 @@ export function App(appProps: HydrationData) {
                 to simulate it.
                  */}
                 <Route
-                  path="/_404/*"
+                  path="/404/*"
                   element={
                     <StandardLayout>
                       <PageNotFound />
@@ -322,7 +322,7 @@ export function App(appProps: HydrationData) {
               path="/about/*"
               element={
                 <StandardLayout>
-                  <About />
+                  <About {...appProps} />
                 </StandardLayout>
               }
             />
@@ -330,7 +330,7 @@ export function App(appProps: HydrationData) {
               path="/community/*"
               element={
                 <StandardLayout>
-                  <Contribute />
+                  <Community {...appProps} />
                 </StandardLayout>
               }
             />

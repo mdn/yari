@@ -9,6 +9,7 @@ import { useLocale } from "../../../hooks";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
 
 const DEFAULT_TITLE = {
+  de: "In diesem Artikel",
   "en-US": "In this article",
   es: "En este artículo",
   fr: "Dans cet article",

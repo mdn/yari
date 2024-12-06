@@ -192,6 +192,13 @@
         color: var(--text-visited);
       }
     }
+
+    ol,
+    ul {
+      li > p {
+        margin: 0;
+      }
+    }
   }
 
   &.with-sidebar {

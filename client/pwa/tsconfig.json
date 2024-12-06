@@ -2,6 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "es2021", "webworker"],
+    "allowImportingTsExtensions": false,
     "noEmit": false,
     "preserveConstEnums": true,
     "strictNullChecks": false,

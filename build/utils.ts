@@ -196,6 +196,10 @@ export function postProcessExternalLinks($) {
       // But we haven't applied all fixable flaws yet and we still have to
       // support translated content which is quite a long time away from
       // being entirely treated with the fixable flaws cleanup.
+      $a.attr(
+        "href",
+        $a.attr("href").replace("https://developer.mozilla.org", "") || "/"
+      );
       return;
     }
     $a.addClass("external");

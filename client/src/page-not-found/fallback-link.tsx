@@ -67,10 +67,10 @@ export default function FallbackLink({ url }: { url: string }) {
       // What if we attempt to see if it would be something there in English?
       // We'll use the `index.json` version of the URL
       let enUSURL = url.replace(`/${locale}/`, "/en-US/");
-      // But of the benefit of local development, devs can use `/_404/`
+      // But of the benefit of local development, devs can use `/404/`
       // instead of `/docs/` to simulate getting to the Page not found page.
       // So remove that when constructing the English index.json URL.
-      enUSURL = enUSURL.replace("/_404/", "/docs/");
+      enUSURL = enUSURL.replace("/en-US/404/", "/en-US/docs/");
 
       // The fallback check URL should not force append index.json so it can
       // follow any redirects

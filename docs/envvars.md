@@ -50,6 +50,12 @@ https://github.com/mdn/mdn-contributor-spotlight.
 
 Path to the curriculum content, cloned from https://github.com/mdn/curriculum.
 
+### `GENERIC_CONTENT_ROOT`
+
+**Default: `../generic-content/files`**
+
+Path to the generic content.
+
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -192,6 +198,12 @@ How many RSS feed entries to display on the home page.
 Flaw types to be fixed when running `fix-flaws`.
 
 ## Server
+
+### `SERVER_HOST`
+
+**Default: (undefined)**
+
+Set this to `0.0.0.0` to access the server from a different local device.
 
 ### `SERVER_PORT`
 

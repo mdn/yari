@@ -56,8 +56,8 @@ export function SiteSearch() {
   return (
     <div className="main-wrapper site-search">
       <MainContentContainer>
+        <SidePlacement />
         <article className="main-page-content">
-          <SidePlacement />
           {query ? (
             <h1>
               Search results for: <span className="query-string">{query}</span>{" "}
