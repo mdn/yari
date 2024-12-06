@@ -89,28 +89,12 @@ function TopPlacementFallbackContent() {
   });
   const now = Date.now();
 
-  return now < Date.parse("2024-12-01") ? (
-    <p className="fallback-copy">
-      Learn front-end with MDN’s course partner{" "}
-      <a
-        href="https://scrimba.com/learn/frontend?via=mdn"
-        target="_blank"
-        rel="noreferrer"
-        ref={observedNode}
-        onClick={() => {
-          gleanClick(BANNER_SCRIMBA_CLICK);
-        }}
-      >
-        Scrimba
-      </a>{" "}
-      - 30% discount this week!
-    </p>
-  ) : now < Date.parse("2024-12-25") ? (
+  return now < Date.parse("2024-12-25") ? (
     <p className="fallback-copy">
       Take our daily challenges on Scrimba until 24th December and win exciting
       prizes.{" "}
       <a
-        href="https://scrimba.com/learn/frontend?via=mdn"
+        href="https://scrimba.com/javascriptmas?via=mdn"
         target="_blank"
         rel="noreferrer"
         ref={observedNode}
@@ -143,6 +127,7 @@ function TopPlacementFallbackContent() {
 export function TopPlacement() {
   const isServer = useIsServer();
   const placementData = usePlacement();
+  const data = placementData?.hpTop || placementData?.top;
   const {
     textColor,
     backgroundColor,
@@ -152,7 +137,7 @@ export function TopPlacement() {
     backgroundColorDark,
     ctaTextColorDark,
     ctaBackgroundColorDark,
-  } = placementData?.top?.colors || {};
+  } = data?.colors || {};
   const css = Object.fromEntries(
     [
       ["--place-top-background-light", backgroundColor],
@@ -172,13 +157,13 @@ export function TopPlacement() {
   const status =
     isServer || placementData?.status === Status.loading
       ? "loading"
-      : placementData?.top
+      : data
         ? "visible"
         : "fallback";
 
   return (
     <div className={`top-banner ${status}`} style={css}>
-      {isServer || !placementData?.top ? (
+      {isServer || !data ? (
         <section className="place top container">
           {!isServer && placementData?.status !== Status.loading && (
             <TopPlacementFallbackContent />
@@ -186,9 +171,9 @@ export function TopPlacement() {
         </section>
       ) : (
         <PlacementInner
-          pong={placementData.top}
+          pong={data}
           extraClassNames={["top", "container"]}
-          cta={placementData.top?.cta}
+          cta={data?.cta}
           imageHeight={50}
           renderer={RenderSideOrTopBanner}
           typ="top-banner"

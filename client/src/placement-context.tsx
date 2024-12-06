@@ -14,7 +14,13 @@ export enum Status {
   empty = "empty",
 }
 
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
+type PlacementType =
+  | "side"
+  | "top"
+  | "hpTop"
+  | "hpMain"
+  | "hpFooter"
+  | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   plusAvailable?: boolean;
@@ -30,6 +36,10 @@ const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
   top: {
     typ: "top-banner",
     pattern: /\/[^/]+\/(?!$|_homepage$).*/i,
+  },
+  hpTop: {
+    typ: "top-banner",
+    pattern: /\/[^/]+\/($|_homepage$)/i,
   },
   hpMain: {
     typ: "hp-main",

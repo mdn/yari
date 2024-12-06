@@ -127,7 +127,7 @@ async function send404(res: express.Response) {
   if (!RARI) {
     return res
       .status(404)
-      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
+      .sendFile(path.join(STATIC_ROOT, "en-us", "404", "index.html"));
   } else {
     try {
       const index = await fetch_from_rari("/en-US/404");
