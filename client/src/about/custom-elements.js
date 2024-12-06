@@ -46,7 +46,7 @@ export class TeamMember extends LitElement {
 
   /** @param {MouseEvent} ev */
   _mousedown(ev) {
-    if (ev.target?.tagName === "A") {
+    if (ev.target instanceof HTMLAnchorElement) {
       ev.preventDefault();
     }
   }
