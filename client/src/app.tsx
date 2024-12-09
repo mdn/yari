@@ -26,7 +26,10 @@ import { Community } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
-import { useGleanPage } from "./telemetry/glean-context";
+import {
+  useGlobalGleanClickHandlers,
+  useGleanPage,
+} from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 import { Advertising } from "./advertising";
@@ -142,6 +145,7 @@ export function App(appProps: HydrationData) {
 
   usePing();
   useGleanPage(pageNotFound, appProps.doc);
+  useGlobalGleanClickHandlers();
   useScrollDepthMeasurement();
 
   const localeMatch = useMatch("/:locale/*");
