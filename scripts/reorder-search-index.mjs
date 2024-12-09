@@ -7,19 +7,29 @@ async function main() {
   const getSlug = ({ url }) => url.replace(/^\/[^/]+\/docs\//, "");
 
   // Read reference (e.g. "client/build/en-us/search-index.json").
-  const ref = readJson(refPath).map(getSlug);
+  const ref = readJson(refPath);
+  const refSlugs = ref.map(getSlug);
 
   // Read index (e.g. "client/build/de/search-index.json").
   const input = readJson(inputPath);
-
-  const getIndex = (slug) => ref.indexOf(slug);
+  const inputSlugs = input.map(getSlug);
 
   const result = [];
-  for (const [fromIndex, toIndex] of input
-    .map(getSlug)
-    .map(getIndex)
-    .entries()) {
-    result[toIndex] = input[fromIndex];
+
+  // Add entry for each reference item.
+  for (const [refIndex, slug] of refSlugs.entries()) {
+    const inputIndex = inputSlugs.indexOf(slug);
+    // Use reference item if it's currently missing in index.
+    const item = inputIndex !== -1 ? input[inputIndex] : ref[refIndex];
+    result.push(item);
+  }
+
+  // Add entry for any item that is NOT in the reference (e.g. moved/removed).
+  for (const [inputIndex, slug] of inputSlugs.entries()) {
+    if (!refSlugs.includes(slug)) {
+      const item = input[inputIndex];
+      result.push(item);
+    }
   }
 
   writeFileSync(outputPath ?? inputPath, JSON.stringify(result), "utf-8");
