@@ -320,9 +320,6 @@ jobs:
 
           yarn rari build --all --issues client/build/issues.json --templ-stats
 
-          # Sort DE search index by en-US popularity.
-          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
-
           # SSR all pages
           yarn render:html
 
