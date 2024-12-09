@@ -1,0 +1,53 @@
+@use "../ui/vars" as *;
+
+:host {
+  display: contents;
+}
+
+.container {
+  --editor-header-height: 2.25rem;
+  --editor-header-padding: 0.25rem;
+  --editor-header-border-width: 1px;
+
+  background-color: var(--background-secondary);
+  border: var(--editor-header-border-width) solid var(--border-primary);
+  height: 0;
+  min-height: var(--editor-header-height);
+  width: 100%;
+
+  /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+  &::details-content {
+    display: contents;
+  }
+
+  &[open] {
+    height: 100%;
+  }
+
+  &:not(:focus-within) summary {
+    color: var(--text-inactive);
+  }
+
+  summary {
+    cursor: pointer;
+    padding: var(--editor-header-padding);
+  }
+
+  .editor {
+    height: calc(
+      100% - var(--editor-header-height) - 2 *
+        var(--editor-header-padding) - var(--editor-header-border-width)
+    );
+    margin: 0.5rem 0 0;
+    overflow-y: scroll;
+
+    .cm-editor {
+      min-height: 100%;
+      width: 100%;
+
+      @media (max-width: $screen-sm) {
+        font-size: 1rem;
+      }
+    }
+  }
+}
