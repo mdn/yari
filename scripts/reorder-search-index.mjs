@@ -16,15 +16,15 @@ async function main() {
 
   const result = [];
 
-  // Add all reference items that are in the reference.
+  // Add entry for each reference item.
   for (const [refIndex, slug] of refSlugs.entries()) {
     const inputIndex = inputSlugs.indexOf(slug);
-    // Use reference item where index does not have this item.
+    // Use reference item if it's currently missing in index.
     const item = inputIndex !== -1 ? input[inputIndex] : ref[refIndex];
     result.push(item);
   }
 
-  // Add items that are NOT in the reference (e.g. moved/removed).
+  // Add entry for any item that is NOT in the reference (e.g. moved/removed).
   for (const [inputIndex, slug] of inputSlugs.entries()) {
     if (!refSlugs.includes(slug)) {
       const item = input[inputIndex];
