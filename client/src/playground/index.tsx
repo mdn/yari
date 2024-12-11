@@ -11,19 +11,14 @@ import prettierPluginHTML from "prettier/plugins/html";
 import { Button } from "../ui/atoms/button";
 import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import {
-  compressAndBase64Encode,
-  decompressFromBase64,
-  EditorContent,
-  SESSION_KEY,
-} from "./utils";
+import { decompressFromBase64, EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
-import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
 import { Console, VConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
+import { ReactPlayRunner } from "./runner";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -79,14 +74,12 @@ export default function Playground() {
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
+  const [code, setCode] = useState<EditorContent>();
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
-  let [iframeSrc, setIframeSrc] = useState("about:blank");
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
-  const subdomain = useRef<string>(crypto.randomUUID());
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
   );
-  const [flipFlop, setFlipFlop] = useState(0);
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !stateParam && !shared && gistId
       ? `/api/v1/play/${encodeURIComponent(gistId)}`
@@ -118,34 +111,11 @@ export default function Playground() {
   const htmlRef = useRef<EditorHandle | null>(null);
   const cssRef = useRef<EditorHandle | null>(null);
   const jsRef = useRef<EditorHandle | null>(null);
-  const iframe = useRef<HTMLIFrameElement | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
-  const updateWithCode = useCallback(
-    async (code: EditorContent) => {
-      const { state } = await compressAndBase64Encode(JSON.stringify(code));
-
-      // We're using a random subdomain for origin isolation.
-      const url = new URL(
-        window.location.hostname.endsWith("localhost")
-          ? window.location.origin
-          : `${window.location.protocol}//${
-              PLAYGROUND_BASE_HOST.startsWith("localhost")
-                ? ""
-                : `${subdomain.current}.`
-            }${PLAYGROUND_BASE_HOST}`
-      );
-      setVConsole([]);
-      url.searchParams.set("state", state);
-      // ensure iframe reloads even if code doesn't change
-      url.searchParams.set("f", flipFlop.toString());
-      url.pathname = `${codeSrc || code.src || ""}/runner.html`;
-      setIframeSrc(url.href);
-      // using an updater function causes the second "run" to not reload properly:
-      setFlipFlop((flipFlop + 1) % 2);
-    },
-    [codeSrc, setVConsole, setIframeSrc, flipFlop, setFlipFlop]
-  );
+  useEffect(() => {
+    setVConsole([]);
+  }, [code, setVConsole]);
 
   useEffect(() => {
     if (initialCode) {
@@ -167,26 +137,9 @@ export default function Playground() {
     return code;
   }, [initialContent?.src, initialCode?.src]);
 
-  let messageListener = useCallback(({ data: { typ, prop, message } }) => {
-    if (typ === "console") {
-      if (
-        (prop === "log" || prop === "error" || prop === "warn") &&
-        typeof message === "string"
-      ) {
-        setVConsole((vConsole) => [...vConsole, { prop, message }]);
-      } else {
-        const warning = "[Playground] Unsupported console message";
-        setVConsole((vConsole) => [
-          ...vConsole,
-          {
-            prop: "warn",
-            message: `${warning} (see browser console)`,
-          },
-        ]);
-        console.warn(warning, { prop, message });
-      }
-    }
-  }, []);
+  const onConsole = ({ detail }: CustomEvent<VConsole>) => {
+    setVConsole((vConsole) => [...vConsole, detail]);
+  };
 
   const setEditorContent = ({ html, css, js, src }: EditorContent) => {
     htmlRef.current?.setContent(html);
@@ -205,7 +158,7 @@ export default function Playground() {
           setEditorContent(initialCode);
           if (!gistId) {
             // don't auto run shared code
-            updateWithCode(initialCode);
+            setCode(initialCode);
           }
         } else if (stateParam) {
           try {
@@ -225,14 +178,7 @@ export default function Playground() {
         setState(State.ready);
       }
     })();
-  }, [initialCode, state, gistId, stateParam, updateWithCode]);
-
-  useEffect(() => {
-    window.addEventListener("message", messageListener);
-    return () => {
-      window.removeEventListener("message", messageListener);
-    };
-  }, [messageListener]);
+  }, [initialCode, state, gistId, stateParam, setCode]);
 
   const clear = async () => {
     setSearchParams([], { replace: true });
@@ -284,7 +230,7 @@ export default function Playground() {
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
-    updateWithCode({ html, css, js, src });
+    setCode({ html, css, js, src });
   };
 
   const format = async () => {
@@ -414,12 +360,11 @@ export default function Playground() {
               Seeing something inappropriate?
             </button>
           )}
-          <iframe
-            title="runner"
-            ref={iframe}
-            src={iframeSrc}
-            sandbox="allow-scripts allow-same-origin allow-forms"
-          ></iframe>
+          <ReactPlayRunner
+            code={code}
+            srcPrefix={codeSrc}
+            onConsole={onConsole}
+          />
           <Console vConsole={vConsole} />
           <SidePlacement extraClasses={["horizontal"]} />
         </section>
