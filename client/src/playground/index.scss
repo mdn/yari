@@ -235,37 +235,6 @@ main.play {
         height: 100%;
         width: 100%;
       }
-
-      #play-console {
-        display: flex;
-        flex-direction: column;
-        font-size: smaller;
-        margin: 0;
-        width: 100%;
-
-        > span {
-          background-color: var(--code-background-inline);
-          font-weight: 600;
-          text-align: center;
-          width: 100%;
-        }
-
-        ul {
-          background-color: var(--code-background-inline);
-          height: 6rem;
-          max-height: 6rem;
-          overflow: auto;
-          width: 100%;
-
-          li {
-            padding: 0 1rem;
-
-            &::before {
-              content: ">";
-            }
-          }
-        }
-      }
     }
   }
 }
