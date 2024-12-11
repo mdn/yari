@@ -55,12 +55,12 @@ router.get(
 );
 // Assets.
 router.get(
-  ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
+  ["/assets/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
   proxyClient
 );
 router.get(
-  "/[^/]+/search-index.json",
+  ["/sitemaps/*", "/[^/]+/search-index.json"],
   requireOrigin(Origin.main),
   lowercasePathname,
   proxyContent
