@@ -35,15 +35,17 @@ export async function initPlayIframe(
     JSON.stringify(editorContent)
   );
   const path = iframe.getAttribute("data-live-path");
-  const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
-    ? PLAYGROUND_BASE_HOST
-    : `${hash}.${PLAYGROUND_BASE_HOST}`;
   const url = new URL(
     `${path || ""}${path?.endsWith("/") ? "" : "/"}runner.html`,
     window.location.origin
   );
-  url.port = "";
-  url.host = host;
+  if (!window.location.hostname.endsWith("localhost")) {
+    const host = PLAYGROUND_BASE_HOST.startsWith("localhost")
+      ? PLAYGROUND_BASE_HOST
+      : `${hash}.${PLAYGROUND_BASE_HOST}`;
+    url.port = "";
+    url.host = host;
+  }
   url.search = "";
   url.searchParams.set("state", state);
   iframe.src = url.href;
@@ -90,6 +92,9 @@ function base64ToBytes(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
+/*
+ * This is the browser verision of `libs/play/index.js`. Keep in sync!
+ */
 export async function decompressFromBase64(base64String: string) {
   if (!base64String) {
     return { state: null, hash: null };
