@@ -42,19 +42,23 @@ export class PlayEditor extends LitElement {
     super();
     this.language = "";
     this.colorScheme = "os-default";
+    this._value = "";
   }
 
   /** @param {string} value */
   set value(value) {
-    let state = EditorState.create({
-      doc: value,
-      extensions: this._extensions(),
-    });
-    this._editor?.setState(state);
+    this._value = value;
+    if (this._editor) {
+      let state = EditorState.create({
+        doc: value,
+        extensions: this._extensions(),
+      });
+      this._editor.setState(state);
+    }
   }
 
   get value() {
-    return this._editor?.state.doc.toString() || "";
+    return this._editor ? this._editor.state.doc.toString() : this._value;
   }
 
   _extensions() {
@@ -125,6 +129,7 @@ export class PlayEditor extends LitElement {
 
   firstUpdated() {
     let startState = EditorState.create({
+      doc: this._value,
       extensions: this._extensions(),
     });
     this._editor = new EditorView({
