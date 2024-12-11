@@ -108,6 +108,48 @@ export class PlayEditor extends LitElement {
     ];
   }
 
+  async format() {
+    const prettier = await import("prettier/standalone");
+    const config = (() => {
+      switch (this.language) {
+        case "javascript":
+          return {
+            parser: "babel",
+            plugins: [
+              import("prettier/plugins/babel"),
+              // XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
+              import("prettier/plugins/estree.mjs"),
+            ],
+          };
+        case "html":
+          return {
+            parser: "html",
+            plugins: [
+              import("prettier/plugins/html"),
+              import("prettier/plugins/postcss"),
+              import("prettier/plugins/babel"),
+              // XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
+              import("prettier/plugins/estree.mjs"),
+            ],
+          };
+        case "css":
+          return {
+            parser: "css",
+            plugins: [import("prettier/plugins/postcss")],
+          };
+        default:
+          return undefined;
+      }
+    })();
+    if (config) {
+      const plugins = await Promise.all(config.plugins);
+      this.value = await prettier.format(this.value, {
+        parser: config.parser,
+        plugins,
+      });
+    }
+  }
+
   /** @param {PropertyValues} changedProperties */
   willUpdate(changedProperties) {
     if (
