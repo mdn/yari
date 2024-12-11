@@ -32,6 +32,10 @@ jobs:
           key: vscode-ripgrep-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('yarn.lock') }}
           path: node_modules/@vscode/ripgrep/bin/
 
+      - name: Install all npm packages (libs/play)
+        working-directory: libs/play
+        run: npm ci
+
       - name: Install all yarn packages (ROOT)
         run: yarn --frozen-lockfile
         env:
