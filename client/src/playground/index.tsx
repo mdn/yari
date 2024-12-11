@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/standalone";
-import prettierPluginBabel from "prettier/plugins/babel";
-import prettierPluginCSS from "prettier/plugins/postcss";
-// XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
-import prettierPluginESTree from "prettier/plugins/estree.mjs";
-import prettierPluginHTML from "prettier/plugins/html";
-
 import { Button } from "../ui/atoms/button";
 import { ReactPlayEditor, PlayEditor } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
@@ -296,33 +289,17 @@ export default function Playground() {
   };
 
   const format = async () => {
-    const { html, css, js } = getEditorContent();
-
     try {
-      const formatted = {
-        html: await prettier.format(html, {
-          parser: "html",
-          plugins: [
-            prettierPluginHTML,
-            prettierPluginCSS,
-            prettierPluginBabel,
-            prettierPluginESTree,
-          ],
-        }),
-        css: await prettier.format(css, {
-          parser: "css",
-          plugins: [prettierPluginCSS],
-        }),
-        js: await prettier.format(js, {
-          parser: "babel",
-          plugins: [prettierPluginBabel, prettierPluginESTree],
-        }),
-      };
-      setEditorContent(formatted);
+      await Promise.all([
+        htmlRef.current?.format(),
+        cssRef.current?.format(),
+        jsRef.current?.format(),
+      ]);
     } catch (e) {
       console.error(e);
     }
   };
+
   const share = useCallback(async () => {
     const { url, id } = await save(getEditorContent());
     setSearchParams([["id", id]], { replace: true });
