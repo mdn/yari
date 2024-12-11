@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { formatDateTime } from "../utils";
 
 export function HumanDuration({ date }: { date: Date }) {
@@ -8,7 +7,7 @@ export function HumanDuration({ date }: { date: Date }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setText(displayString(date));
-    }, 1000);
+    }, 10000);
 
     return () => clearInterval(interval);
   });
@@ -20,32 +19,32 @@ export function HumanDuration({ date }: { date: Date }) {
   );
 }
 
+// breakpoints for humanized time durations
+const MINUTE = 60;
+const HOUR = MINUTE * 60;
+const DAY = HOUR * 24;
+const MONTH = DAY * 30;
+const YEAR = DAY * 364;
+
 function displayString(date: Date) {
   const currentTime = new Date().getTime();
   const targetTime = date.getTime();
-  const diffSecs = Math.round((currentTime - targetTime) / 1000);
+  const diffSecs = Math.round((targetTime - currentTime) / 1000);
 
-  if (diffSecs < 0) {
-    return formatDateTime(date);
-  }
+  const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
+  const absSecs = Math.abs(diffSecs);
 
-  if (diffSecs < 60) {
-    return `Just now`;
+  if (absSecs < MINUTE) {
+    return diffSecs < 0 ? "Just now" : "Very soon";
+  } else if (absSecs < HOUR) {
+    return rtf.format(Math.floor(diffSecs / MINUTE), "minute");
+  } else if (absSecs < DAY) {
+    return rtf.format(Math.floor(diffSecs / HOUR), "hour");
+  } else if (absSecs < MONTH) {
+    return rtf.format(Math.floor(diffSecs / DAY), "day");
+  } else if (absSecs < YEAR) {
+    return rtf.format(Math.floor(diffSecs / MONTH), "month");
+  } else {
+    return rtf.format(Math.floor(diffSecs / YEAR), "year");
   }
-  if (diffSecs < 60 * 60) {
-    const minutes = Math.floor(diffSecs / 60);
-    return minutes === 1 ? `1 minute ago` : `${minutes} minutes ago`;
-  }
-  if (diffSecs < 60 * 60 * 24) {
-    const hours = Math.floor(diffSecs / 3600);
-    return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
-  }
-  // up to 30 days as days
-  if (diffSecs < 60 * 60 * 24 * 30) {
-    const days = Math.floor(diffSecs / 86400);
-    return days === 1 ? `1 day ago` : `${days} days ago`;
-  }
-
-  // after a week, return the formatted date
-  return formatDateTime(date);
 }

@@ -20,6 +20,8 @@ function config(app) {
   app.use(`**/*.(gif|jpeg|jpg|mp3|mp4|ogg|png|svg|webm|webp|woff2)`, proxy);
   // All those root-level images like /favicon-48x48.png
   app.use("/*.(png|webp|gif|jpe?g|svg)", proxy);
+  // Proxy play runner
+  app.use("**/runner.html", proxy);
 }
 
 export default config;
