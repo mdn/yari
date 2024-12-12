@@ -12,6 +12,8 @@ from unidiff import PatchSet
 
 from .utils import log
 
+MAX_COMMENT_BODY_LENGTH = 65500
+
 hidden_comment_regex = re.compile(
     r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
 )
@@ -80,7 +82,7 @@ def analyze_pr(build_directory: Path, config):
                         break
 
             else:
-                github_issue.create_comment(combined_comment)
+                github_issue.create_comment(combined_comment[:MAX_COMMENT_BODY_LENGTH])
 
     return combined_comment
 
