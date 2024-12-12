@@ -21,7 +21,7 @@ export class PlayConsole extends LitElement {
 
   render() {
     return html`
-      <span>Console</span>
+      <span class="header">Console</span>
       <ul>
         ${this.vConsole.map(({ message }) => {
           return html`
