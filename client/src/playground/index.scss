@@ -231,7 +231,8 @@ main.play {
         }
       }
 
-      iframe {
+      play-runner {
+        border: 1px solid var(--border-primary);
         height: 100%;
         width: 100%;
       }
