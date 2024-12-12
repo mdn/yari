@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
@@ -22,10 +21,16 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
+  GENERIC_CONTENT_ROOT,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
-import { getSlugByBlogPostUrl, makeTOC } from "./utils.js";
+import {
+  getSlugByBlogPostUrl,
+  injectLoadingLazyAttributes,
+  makeTOC,
+  postProcessExternalLinks,
+} from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
@@ -145,9 +150,9 @@ export async function buildSPAs(options: {
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const locale = DEFAULT_LOCALE;
-  const url = `/${locale}/404.html`;
+  const url = `/${locale}/404/index.html`;
   const context: HydrationData = { url, pageNotFound: true };
-  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "404");
   fs.mkdirSync(outPath, { recursive: true });
   const jsonFilePath = path.join(
     outPath,
@@ -271,7 +276,7 @@ export async function buildSPAs(options: {
   async function buildStaticPages(
     dirpath: string,
     slugPrefix?: string,
-    title = "MDN"
+    title?: string
   ) {
     const crawler = new fdir()
       .withFullPaths()
@@ -282,7 +287,7 @@ export async function buildSPAs(options: {
 
     for (const filepath of filepaths) {
       const file = filepath.replace(dirpath, "");
-      const page = file.split(".")[0];
+      const page = file.split(".")[0].slice(1);
 
       const locale = DEFAULT_LOCALE;
       const pathLocale = locale.toLowerCase();
@@ -309,6 +314,8 @@ export async function buildSPAs(options: {
       };
       const [$] = await kumascript.render(url, {}, d);
       wrapTables($);
+      postProcessExternalLinks($);
+      injectLoadingLazyAttributes($);
       const [sections] = await extractSections($);
       const toc = makeTOC({ body: sections });
 
@@ -320,9 +327,9 @@ export async function buildSPAs(options: {
       };
       const context: HydrationData = {
         hyData,
-        pageTitle: frontMatter.attributes.title
+        pageTitle: title
           ? `${frontMatter.attributes.title} | ${title}`
-          : title,
+          : frontMatter.attributes.title,
         url,
       };
 
@@ -343,21 +350,20 @@ export async function buildSPAs(options: {
     }
   }
 
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/plus/", import.meta.url)),
-    "plus/docs",
-    "MDN Plus"
-  );
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
-    "observatory/docs",
-    OBSERVATORY_TITLE
-  );
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/community/", import.meta.url)),
-    "",
-    "Contribute to MDN"
-  );
+  if (GENERIC_CONTENT_ROOT) {
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "plus"),
+      "plus/docs",
+      "MDN Plus"
+    );
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "observatory"),
+      "observatory/docs",
+      OBSERVATORY_TITLE
+    );
+    await buildStaticPages(path.join(GENERIC_CONTENT_ROOT, "community"));
+    await buildStaticPages(path.join(GENERIC_CONTENT_ROOT, "about"));
+  }
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.

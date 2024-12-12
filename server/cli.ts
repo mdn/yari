@@ -2,6 +2,13 @@
 import { concurrently } from "concurrently";
 import { rariBin } from "@mdn/rari";
 import { filename } from "./filename.js";
+import { config } from "dotenv";
+import path from "node:path";
+import { cwd } from "node:process";
+
+config({
+  path: path.join(cwd(), process.env.ENV_FILE || ".env"),
+});
 
 const { commands, result } = concurrently(
   [
@@ -17,6 +24,9 @@ const { commands, result } = concurrently(
       command: `${rariBin} serve -vv`,
       name: "rari",
       prefixColor: "blue",
+      env: {
+        ...process.env,
+      },
     },
   ],
   {

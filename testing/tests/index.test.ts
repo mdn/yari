@@ -1173,9 +1173,9 @@ test("images that are in the folder but not in <img> tags", () => {
 });
 
 test("404 page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "_spas");
+  const builtFolder = path.join(buildRoot, "en-us");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "404.html");
+  const htmlFile = path.join(builtFolder, "404", "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
