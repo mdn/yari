@@ -86,7 +86,6 @@ def analyze_pr(build_directory: Path, config):
 
     return combined_comment
 
-# Truncates the content of a comment if it exceeds the maximum length of 64k (a GH API constraint).
 def truncate_comment(comment):
     if len(comment) > MAX_COMMENT_BODY_LENGTH:
         return comment[:MAX_COMMENT_BODY_LENGTH] + "…\n\nTRUNCATED!"
