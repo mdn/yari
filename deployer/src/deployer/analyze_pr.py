@@ -86,10 +86,12 @@ def analyze_pr(build_directory: Path, config):
 
     return combined_comment
 
+
 def truncate_comment(comment):
     if len(comment) > MAX_COMMENT_BODY_LENGTH:
         return comment[:MAX_COMMENT_BODY_LENGTH] + "…\n\nTRUNCATED!"
     return comment
+
 
 def post_about_deployment(build_directory: Path, **config):
     links = []
