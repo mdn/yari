@@ -301,7 +301,7 @@ jobs:
           yarn build:sw
           yarn build:client
           yarn build:ssr
-          yarn tool build-robots-txt
+          yarn tool:legacy build-robots-txt
 
           yarn rari content sync-translated-content
           yarn rari git-history
