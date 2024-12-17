@@ -513,7 +513,7 @@ if (RARI) {
       "/en-US/community/index.json",
       "/en-US/plus/docs/*",
       "/en-US/observatory/docs/*",
-      "/:locale/",
+      "/:locale([a-z]{2}(?:(?:-[A-Z]{2})?))/",
     ],
     async (req, res) => {
       try {

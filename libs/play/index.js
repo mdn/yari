@@ -261,6 +261,8 @@ export function renderHtml(state = null) {
 
 /**
  * @param {string | null} base64String
+ *
+ * This is the Node.js version of `client/src/playground/utils.ts`. Keep in sync!
  */
 export async function decompressFromBase64(base64String) {
   if (!base64String) {
