@@ -143,7 +143,6 @@ jobs:
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
-          ref: MP-1798-combined-link-fixes
 
       - name: Checkout (translated-content-de)
         uses: actions/checkout@v4
