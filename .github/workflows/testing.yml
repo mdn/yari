@@ -89,7 +89,7 @@ jobs:
         env:
           ENV_FILE: .env.testing
         run: |
-          yarn build:prepare
+          yarn build:legacy:prepare
           yarn build:legacy
           yarn render:html
 

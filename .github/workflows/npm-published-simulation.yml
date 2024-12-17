@@ -55,7 +55,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn build:prepare
+          yarn build:legacy:prepare
 
       - name: Build and install tarball
         run: |
