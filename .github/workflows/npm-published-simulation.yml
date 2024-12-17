@@ -107,7 +107,7 @@ jobs:
       - name: SSR build a page
         working-directory: mdn/content
         run: |
-          yarn build files/en-us/mdn/kitchensink/index.md
+          yarn rari-build -f ${PWD}/files/en-us/mdn/kitchensink/index.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()
