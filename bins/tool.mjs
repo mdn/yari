@@ -14,4 +14,4 @@ config({
 
 process.env.BUILD_OUT_ROOT = process.env.BUILD_OUT_ROOT || BUILD_OUT_ROOT;
 
-spawn(rariBin, ["content"], { stdio: "inherit" });
+spawn(rariBin, ["content", ...process.argv.slice(2)], { stdio: "inherit" });

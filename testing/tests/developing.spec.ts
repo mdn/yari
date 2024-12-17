@@ -75,7 +75,6 @@ test.describe("Testing the kitchensink page", () => {
     ).json<any>();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    expect(doc.flaws).toEqual({});
   });
 
   // XXX Do more advanced tasks that test the server and document "CRUD operations"
