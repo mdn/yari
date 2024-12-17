@@ -12723,10 +12723,10 @@ react-markdown@^9.0.1:
     unist-util-visit "^5.0.0"
     vfile "^6.0.0"
 
-react-modal@^3.16.1:
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.16.1.tgz#34018528fc206561b1a5467fc3beeaddafb39b2b"
-  integrity sha512-VStHgI3BVcGo7OXczvnJN7yT2TWHJPDXZWyI/a0ssFNhGZWsPmB8cF0z33ewDXq4VfYMO1vXgiv/g8Nj9NDyWg==
+react-modal@^3.16.2:
+  version "3.16.2"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.16.2.tgz#8a6e7cf329a7284212dff5926ca203e1d3751e3e"
+  integrity sha512-pTV7MC9/1UJ0BokLos19SAzshF57a6tpTqeJ5ZP6K8tKAOhbj8WwaOZVMvrbhqhLjdyojS3JIMuFcpqPW5ZNaw==
   dependencies:
     exenv "^1.2.0"
     prop-types "^15.7.2"
