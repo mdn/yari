@@ -140,7 +140,7 @@
     "prism-svelte": "^0.5.0",
     "prismjs": "^1.29.0",
     "react-markdown": "^9.0.1",
-    "react-modal": "^3.16.1",
+    "react-modal": "^3.16.3",
     "read-chunk": "^5.0.0",
     "rehype-format": "^5.0.1",
     "rehype-parse": "^9.0.1",
