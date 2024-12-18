@@ -11,3 +11,4 @@ cloud-function/**/*.js
 filecheck/*.js
 mdn/content/
 tool/*.js
+bins/*.mjs

@@ -8,16 +8,13 @@ Run the CLI tool:
 yarn tool --help
 ```
 
+### Or run the legacy version
+
+```sh
+yarn tool:legacy --help
+```
+
 ## Commands
-
-### validate-redirect
-
-Validates the content of the `_redirects.txt` files(s). (This does not verify
-that _to URLs_ exist)
-
-### test-redirect
-
-Test whether an URL path is a redirect and display the according target.
 
 ### add-redirect
 
@@ -34,25 +31,50 @@ redirects).
 Move a document and its children. Adds the according redirects and stages
 changes in `git` (except for redirects).
 
-### edit
+### sync-translated-content
+
+Syncs translated content for all or a list of locales.
+
+### fmt-sidebars
+
+Formats all sidebars in content.
+
+### sync-sidebars
+
+Sync sidebars with redirects in content.
+
+### fix-redirects
+
+Fixes redirects across all locales.
+
+### validate-redirect (only in legacy)
+
+Validates the content of the `_redirects.txt` files(s). (This does not verify
+that _to URLs_ exist)
+
+### test-redirect (only in legacy)
+
+Test whether an URL path is a redirect and display the according target.
+
+### edit (only in legacy)
 
 Open a document by its slug in the preferred editor (as per the `EDITOR`
 environment variable).
 
-### create
+### create (only in legacy)
 
 Open a _new_ document by its slug in the preferred editor (as per the `EDITOR`
 environment variable).
 
-### validate
+### validate (only in legacy)
 
 Run basic validation for a document (only verifies the slug for now).
 
-### preview
+### preview (only in legacy)
 
 Open a preview of a given slug in your browser. This depends on a running
 dev-server (`yarn start`).
 
-### flaws
+### flaws (only in legacy)
 
 Show and optionally fix fixable flaws for a given slug.
