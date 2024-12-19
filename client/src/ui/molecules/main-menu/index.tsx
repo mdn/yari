@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { GuidesMenu } from "../guides-menu";
+import { LearnMenu } from "../learn-menu";
 import { ReferenceMenu } from "../reference-menu";
 import { PlusMenu } from "../plus-menu";
 
@@ -71,7 +71,7 @@ export default function MainMenu({ isOpenOnMobile }) {
           visibleSubMenuId={visibleSubMenuId}
           toggleMenu={toggleMenu}
         />
-        <GuidesMenu
+        <LearnMenu
           visibleSubMenuId={visibleSubMenuId}
           toggleMenu={toggleMenu}
         />
