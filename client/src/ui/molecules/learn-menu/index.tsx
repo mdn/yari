@@ -3,13 +3,13 @@ import { Menu } from "../menu";
 
 import "./index.scss";
 
-export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
+export const LearnMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
 
   const menu = {
-    id: "guides",
-    label: "Guides",
-    to: `/${locale}/docs/Learn`,
+    id: "learn",
+    label: "Learn",
+    to: `/${locale}/docs/Learn_web_development`,
     items: [
       {
         description: "Learn web development",
@@ -17,7 +17,7 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         extraClasses: "apis-link-container mobile-only",
         iconClasses: "submenu-icon learn",
         label: "Overview / MDN Learning Area",
-        url: `/${locale}/docs/Learn`,
+        url: `/${locale}/docs/Learn_web_development`,
       },
       {
         description: "Learn web development",
@@ -25,7 +25,7 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon learn",
         label: "MDN Learning Area",
-        url: `/${locale}/docs/Learn`,
+        url: `/${locale}/docs/Learn_web_development`,
       },
       {
         description: "Learn to structure web content with HTML",
@@ -33,7 +33,7 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon html",
         label: "HTML",
-        url: `/${locale}/docs/Learn/HTML`,
+        url: `/${locale}/docs/Learn_web_development/Core/Structuring_content`,
       },
       {
         description: "Learn to style content using CSS",
@@ -41,7 +41,7 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon css",
         label: "CSS",
-        url: `/${locale}/docs/Learn/CSS`,
+        url: `/${locale}/docs/Learn_web_development/Core/Styling_basics`,
       },
       {
         description: "Learn to run scripts in the browser",
@@ -49,14 +49,7 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon javascript",
         label: "JavaScript",
-        url: `/${locale}/docs/Learn/JavaScript`,
-      },
-      {
-        description: "Learn to make the web accessible to all",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Accessibility",
-        url: `/${locale}/docs/Web/Accessibility`,
+        url: `/${locale}/docs/Learn_web_development/Core/Scripting`,
       },
     ],
   };
