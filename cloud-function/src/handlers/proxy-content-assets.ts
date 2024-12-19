@@ -32,7 +32,7 @@ export const proxyContentAssets = createProxyMiddleware({
           ACTIVE_LOCALES.has(locale.toLowerCase())
         ) {
           const enUsAsset = await fetch(
-            `${target}${req.url?.slice(1).replace(locale, "en-US")}`
+            `${target}${req.url?.slice(1).replace(locale, "en-us")}`
           );
           if (enUsAsset?.ok) {
             res.statusCode = enUsAsset.status;
