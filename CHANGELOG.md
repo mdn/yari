@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.0.1](https://github.com/mdn/yari/compare/v4.0.0...v4.0.1) (2024-12-19)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump eslint-plugin-jest from 28.9.0 to 28.10.0 ([#12340](https://github.com/mdn/yari/issues/12340)) ([a0db3a4](https://github.com/mdn/yari/commit/a0db3a47f28807a0208663feb485bcd48f230075))
+* **deps-dev:** bump resolve from 1.22.9 to 1.22.10 ([#12342](https://github.com/mdn/yari/issues/12342)) ([18cef57](https://github.com/mdn/yari/commit/18cef57e1e7285c913fbf06397be4d251f9eebc9))
+* **deps:** bump @mdn/rari from 0.1.8 to 0.1.9 ([#12341](https://github.com/mdn/yari/issues/12341)) ([e1c20ea](https://github.com/mdn/yari/commit/e1c20eaa5c812ffa5185e10f8e640bf6764d01c5))
+
 ## [4.0.0](https://github.com/mdn/yari/compare/v3.1.0...v4.0.0) (2024-12-19)
 
 
