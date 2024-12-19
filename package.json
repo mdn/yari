@@ -206,7 +206,7 @@
     "eslint-gitignore": "^0.1.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.9.0",
+    "eslint-plugin-jest": "^28.10.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-lit": "^1.15.0",
     "eslint-plugin-n": "^17.15.0",
