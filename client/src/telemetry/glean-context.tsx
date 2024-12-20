@@ -13,7 +13,7 @@ import {
 } from "../env";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
-import { useUserData } from "../user-context";
+import { UserData, useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
 import { EXTERNAL_LINK, VIEWPORT_BREAKPOINTS } from "./constants";
 import { Doc } from "../../../libs/types/document";
@@ -56,8 +56,8 @@ export type ElementClickedProps = {
 };
 
 export type GleanAnalytics = {
-  page: (arg: PageProps) => () => void;
-  click: (arg: ElementClickedProps) => void;
+  page: (page: PageProps) => () => void;
+  click: (page: PageProps, element: ElementClickedProps) => void;
 };
 
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
@@ -79,7 +79,7 @@ function glean(): GleanAnalytics {
     //SSR return noop.
     return {
       page: (page: PageProps) => () => {},
-      click: (element: ElementClickedProps) => {},
+      click: (page: PageProps, element: ElementClickedProps) => {},
     };
   }
   const userIsOptedOut = document.cookie
@@ -101,39 +101,44 @@ function glean(): GleanAnalytics {
     Glean.setLogPings(GLEAN_DEBUG);
   }
 
+  const updatePageMetrics = (page: PageProps) => {
+    const path = urlOrNull(page.path);
+    if (path) {
+      pageMetric.path.setUrl(path);
+    }
+    const referrer = urlOrNull(page.referrer, window?.location.href);
+    if (referrer) {
+      pageMetric.referrer.setUrl(referrer);
+    }
+    if (page.isBaseline) {
+      pageMetric.isBaseline.set(page.isBaseline);
+    }
+    for (const param in page.utm) {
+      pageMetric.utm[param].set(page.utm[param]);
+    }
+    pageMetric.httpStatus.set(page.httpStatus);
+    if (page.geo) {
+      navigatorMetric.geo.set(page.geo);
+    }
+    if (page.geo_iso) {
+      navigatorMetric.geoIso.set(page.geo_iso);
+    }
+    if (page.userLanguages) {
+      navigatorMetric.userLanguages.set(page.userLanguages);
+    }
+    if (page.viewportBreakpoint) {
+      navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
+    }
+    navigatorMetric.subscriptionType.set(page.subscriptionType);
+  };
+
   const gleanContext = {
     page: (page: PageProps) => {
-      const path = urlOrNull(page.path);
-      if (path) {
-        pageMetric.path.setUrl(path);
-      }
-      const referrer = urlOrNull(page.referrer, window?.location.href);
-      if (referrer) {
-        pageMetric.referrer.setUrl(referrer);
-      }
-      if (page.isBaseline) {
-        pageMetric.isBaseline.set(page.isBaseline);
-      }
-      for (const param in page.utm) {
-        pageMetric.utm[param].set(page.utm[param]);
-      }
-      pageMetric.httpStatus.set(page.httpStatus);
-      if (page.geo) {
-        navigatorMetric.geo.set(page.geo);
-      }
-      if (page.geo_iso) {
-        navigatorMetric.geoIso.set(page.geo_iso);
-      }
-      if (page.userLanguages) {
-        navigatorMetric.userLanguages.set(page.userLanguages);
-      }
-      if (page.viewportBreakpoint) {
-        navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
-      }
-      navigatorMetric.subscriptionType.set(page.subscriptionType);
+      updatePageMetrics(page);
       return () => pings.page.submit();
     },
-    click: (event: ElementClickedProps) => {
+    click: (page: PageProps, event: ElementClickedProps) => {
+      updatePageMetrics(page);
       const { source, subscriptionType: subscription_type } = event;
       elementMetric.clicked.record({
         source,
@@ -142,23 +147,28 @@ function glean(): GleanAnalytics {
       pings.action.submit();
     },
   };
-  const gleanClick = (source: string) => {
-    gleanContext.click({
-      source,
-      subscriptionType: "",
-    });
-  };
-  window?.addEventListener("click", (ev) => {
-    handleLinkClick(ev, gleanClick);
-    handleButtonClick(ev, gleanClick);
-    handleSidebarClick(ev, gleanClick);
-  });
 
   return gleanContext;
 }
 
 const gleanAnalytics = glean();
 const GleanContext = React.createContext(gleanAnalytics);
+
+export function useGlobalGleanClickHandlers() {
+  const gleanClick = useGleanClick();
+
+  useEffect(() => {
+    const handler = (ev) => {
+      handleLinkClick(ev, gleanClick);
+      handleButtonClick(ev, gleanClick);
+      handleSidebarClick(ev, gleanClick);
+    };
+
+    window.addEventListener("click", handler);
+
+    return () => window.removeEventListener("click", handler);
+  });
+}
 
 function handleButtonClick(ev: MouseEvent, click: (source: string) => void) {
   const target = ev.composedPath()?.[0] || ev.target;
@@ -197,31 +207,46 @@ export function useGlean() {
   return React.useContext(GleanContext);
 }
 
+function getPageProps(
+  userData: UserData,
+  {
+    pageNotFound,
+    isBaseline,
+  }: { pageNotFound?: boolean; isBaseline?: "high" | "low" | false } = {}
+): PageProps {
+  return {
+    path: window?.location.toString(),
+    referrer: document?.referrer,
+    // on port 3000 this will always return "200":
+    httpStatus: pageNotFound ? "404" : "200",
+    userLanguages: Array.from(navigator?.languages || []),
+    geo: userData?.geo?.country,
+    geo_iso: userData?.geo?.country_iso,
+    subscriptionType: userData?.subscriptionType || "anonymous",
+    viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
+      ([_, width]) => width <= window.innerWidth
+    )?.[0],
+    isBaseline: isBaseline
+      ? `baseline_${isBaseline}`
+      : isBaseline === false
+        ? "not_baseline"
+        : undefined,
+    utm: getUTMParameters(),
+  };
+}
+
 export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
   const loc = useLocation();
   const userData = useUserData();
   const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    const submit = gleanAnalytics.page({
-      path: window?.location.toString(),
-      referrer: document?.referrer,
-      // on port 3000 this will always return "200":
-      httpStatus: pageNotFound ? "404" : "200",
-      userLanguages: Array.from(navigator?.languages || []),
-      geo: userData?.geo?.country,
-      geo_iso: userData?.geo?.country_iso,
-      subscriptionType: userData?.subscriptionType || "anonymous",
-      viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
-        ([_, width]) => width <= window.innerWidth
-      )?.[0],
-      isBaseline: doc?.baseline?.baseline
-        ? `baseline_${doc.baseline.baseline}`
-        : doc?.baseline?.baseline === false
-          ? "not_baseline"
-          : undefined,
-      utm: getUTMParameters(),
-    });
+    const submit = gleanAnalytics.page(
+      getPageProps(userData, {
+        pageNotFound,
+        isBaseline: doc?.baseline?.baseline,
+      })
+    );
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
       path.current = loc.pathname;
       submit();
@@ -238,12 +263,12 @@ export function useGleanClick() {
         console.log({ gleanClick: source });
       }
 
-      glean.click({
+      glean.click(getPageProps(userData), {
         source,
         subscriptionType: userData?.subscriptionType || "none",
       });
     },
-    [glean, userData?.subscriptionType]
+    [glean, userData]
   );
 }
 
