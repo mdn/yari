@@ -221,7 +221,7 @@ const CellText = React.memo(
               bc-level-${supportClassName}
               icon
               icon-${supportClassName}`}
-              title={title}
+              title={`${title}\n${browser.name} ${added ? added : ""}`}
             >
               <span className="bc-support-level">{title}</span>
             </abbr>
