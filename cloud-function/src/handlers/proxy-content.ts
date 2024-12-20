@@ -10,7 +10,7 @@ import { Source, sourceUri } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { isLiveSampleURL } from "../utils.js";
 
-const NOT_FOUND_PATH = "en-us/_spas/404.html";
+const NOT_FOUND_PATH = "en-us/404/index.html";
 
 let notFoundBuffer: ArrayBuffer;
 

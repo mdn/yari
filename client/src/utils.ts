@@ -7,13 +7,39 @@ const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
 const CATEGORIES = ["html", "javascript", "css", "api", "http"];
 
+function learnCategory(category: string, sub: string) {
+  switch (`${category}/${sub || ""}`) {
+    case "core/structuring_content":
+    case "getting_started/web_standards":
+      return "html";
+    case "core/css_layout":
+    case "core/design_for_developers":
+    case "core/styling_basics":
+    case "extensions/TRansform_animate":
+      return "css";
+    case "core/scripting":
+    case "core/frameworks_libraries":
+    case "extensions/advanced_javascript_objects":
+    case "extensions/async_js":
+      return "javascript";
+    case "extensions/client-side_apis":
+    case "extensions/forms":
+      return "api";
+    default:
+      return "learn";
+  }
+}
+
 export function getCategoryByPathname(pathname = ""): string | null {
-  const [, , , webOrLearn, category] = pathname.toLowerCase().split("/");
-  if (webOrLearn === "learn" || webOrLearn === "web") {
+  const [, , , webOrLearn, category, sub] = pathname.toLowerCase().split("/");
+  if (webOrLearn === "web") {
     if (CATEGORIES.includes(category)) {
       return category;
     }
     return webOrLearn;
+  }
+  if (webOrLearn === "learn_web_development") {
+    return learnCategory(category, sub);
   }
   if (isHomePage(pathname)) {
     return "home";

@@ -55,7 +55,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn build:prepare
+          yarn build:legacy:prepare
 
       - name: Build and install tarball
         run: |
@@ -107,7 +107,7 @@ jobs:
       - name: SSR build a page
         working-directory: mdn/content
         run: |
-          yarn build files/en-us/mdn/kitchensink/index.md
+          yarn rari-build -f ${PWD}/files/en-us/mdn/kitchensink/index.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()

@@ -21,9 +21,10 @@ import {
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
-import { Console, VConsole } from "./console";
+import { ReactPlayConsole } from "./console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
+import type { VConsole } from "./types";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -80,11 +81,13 @@ export default function Playground() {
   let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
   let [codeSrc, setCodeSrc] = useState<string | undefined>();
+  let [iframeSrc, setIframeSrc] = useState("about:blank");
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const subdomain = useRef<string>(crypto.randomUUID());
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
   );
+  const [flipFlop, setFlipFlop] = useState(0);
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !stateParam && !shared && gistId
       ? `/api/v1/play/${encodeURIComponent(gistId)}`
@@ -119,16 +122,31 @@ export default function Playground() {
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
-  const updateWithCode = async (code: EditorContent) => {
-    const { state } = await compressAndBase64Encode(JSON.stringify(code));
-    const sp = new URLSearchParams([["state", state]]);
+  const updateWithCode = useCallback(
+    async (code: EditorContent) => {
+      const { state } = await compressAndBase64Encode(JSON.stringify(code));
 
-    if (iframe.current) {
-      const url = new URL(iframe.current.src);
-      url.search = sp.toString();
-      iframe.current.src = url.href;
-    }
-  };
+      // We're using a random subdomain for origin isolation.
+      const url = new URL(
+        window.location.hostname.endsWith("localhost")
+          ? window.location.origin
+          : `${window.location.protocol}//${
+              PLAYGROUND_BASE_HOST.startsWith("localhost")
+                ? ""
+                : `${subdomain.current}.`
+            }${PLAYGROUND_BASE_HOST}`
+      );
+      setVConsole([]);
+      url.searchParams.set("state", state);
+      // ensure iframe reloads even if code doesn't change
+      url.searchParams.set("f", flipFlop.toString());
+      url.pathname = `${codeSrc || code.src || ""}/runner.html`;
+      setIframeSrc(url.href);
+      // using an updater function causes the second "run" to not reload properly:
+      setFlipFlop((flipFlop + 1) % 2);
+    },
+    [codeSrc, setVConsole, setIframeSrc, flipFlop, setFlipFlop]
+  );
 
   useEffect(() => {
     if (initialCode) {
@@ -144,17 +162,15 @@ export default function Playground() {
       html: htmlRef.current?.getContent() || HTML_DEFAULT,
       css: cssRef.current?.getContent() || CSS_DEFAULT,
       js: jsRef.current?.getContent() || JS_DEFAULT,
-      src: initialCode?.src,
+      src: initialCode?.src || initialContent?.src,
     };
     store(SESSION_KEY, code);
     return code;
-  }, [initialCode?.src]);
+  }, [initialContent?.src, initialCode?.src]);
 
   let messageListener = useCallback(({ data: { typ, prop, message } }) => {
     if (typ === "console") {
-      if (prop === "clear") {
-        setVConsole([]);
-      } else if (
+      if (
         (prop === "log" || prop === "error" || prop === "warn") &&
         typeof message === "string"
       ) {
@@ -178,7 +194,7 @@ export default function Playground() {
     cssRef.current?.setContent(css);
     jsRef.current?.setContent(js);
     if (src) {
-      setCodeSrc(src.split("/").slice(0, -1).join("/"));
+      setCodeSrc(src);
     }
     setIsEmpty(!html && !css && !js);
   };
@@ -210,7 +226,7 @@ export default function Playground() {
         setState(State.ready);
       }
     })();
-  }, [initialCode, state, gistId, stateParam]);
+  }, [initialCode, state, gistId, stateParam, updateWithCode]);
 
   useEffect(() => {
     window.addEventListener("message", messageListener);
@@ -222,8 +238,8 @@ export default function Playground() {
   const clear = async () => {
     setSearchParams([], { replace: true });
     setCodeSrc(undefined);
-    setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
     setInitialContent(null);
+    setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
 
     updateWithEditorContent();
   };
@@ -253,7 +269,7 @@ export default function Playground() {
   };
 
   const updateWithEditorContent = () => {
-    const { html, css, js } = getEditorContent();
+    const { html, css, js, src } = getEditorContent();
     setIsEmpty(!html && !css && !js);
 
     const loading = [
@@ -269,7 +285,7 @@ export default function Playground() {
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
-    updateWithCode({ html, css, js });
+    updateWithCode({ html, css, js, src });
   };
 
   const format = async () => {
@@ -306,16 +322,6 @@ export default function Playground() {
     setShared(true);
     setShareUrl(url);
   }, [setSearchParams, setShareUrl, setShared, getEditorContent]);
-
-  // We're using a random subdomain for origin isolation.
-  const src = new URL(
-    `${window.location.protocol}//${
-      PLAYGROUND_BASE_HOST.startsWith("localhost")
-        ? ""
-        : `${subdomain.current}.`
-    }${PLAYGROUND_BASE_HOST}`
-  );
-  src.pathname = `${codeSrc || ""}/runner.html`;
 
   const cleanDialog = () => {
     if (dialogState === DialogState.share) {
@@ -412,11 +418,11 @@ export default function Playground() {
           <iframe
             title="runner"
             ref={iframe}
-            src={src.toString()}
+            src={iframeSrc}
             sandbox="allow-scripts allow-same-origin allow-forms"
           ></iframe>
-          <Console vConsole={vConsole} />
-          <SidePlacement />
+          <ReactPlayConsole vConsole={vConsole} />
+          <SidePlacement extraClasses={["horizontal"]} />
         </section>
       </main>
     </>

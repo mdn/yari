@@ -37,7 +37,11 @@ function viewed(pong?: PlacementData) {
     );
 }
 
-export function SidePlacement() {
+export function SidePlacement({
+  extraClasses = [],
+}: {
+  extraClasses?: string[];
+} = {}) {
   const placementData = usePlacement();
   const { textColor, backgroundColor, textColorDark, backgroundColorDark } =
     placementData?.side?.colors || {};
@@ -54,11 +58,11 @@ export function SidePlacement() {
   );
 
   return !placementData?.side ? (
-    <section className="place side"></section>
+    <section className={["place", "side", ...extraClasses].join(" ")}></section>
   ) : placementData.side.cta && placementData.side.heading ? (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side", "new-side"]}
+      extraClassNames={["side", "new-side", ...extraClasses]}
       imageWidth={125}
       imageHeight={125}
       cta={placementData.side.cta}
@@ -69,7 +73,7 @@ export function SidePlacement() {
   ) : (
     <PlacementInner
       pong={placementData.side}
-      extraClassNames={["side"]}
+      extraClassNames={["side", ...extraClasses]}
       imageWidth={130}
       imageHeight={100}
       renderer={RenderSideOrTopBanner}
@@ -83,8 +87,25 @@ function TopPlacementFallbackContent() {
   const observedNode = useViewed(() => {
     gleanClick(BANNER_SCRIMBA_VIEW);
   });
+  const now = Date.now();
 
-  return (
+  return now < Date.parse("2024-12-25") ? (
+    <p className="fallback-copy">
+      Take our daily challenges on Scrimba until 24th December and win exciting
+      prizes.{" "}
+      <a
+        href="https://scrimba.com/javascriptmas?via=mdn"
+        target="_blank"
+        rel="noreferrer"
+        ref={observedNode}
+        onClick={() => {
+          gleanClick(BANNER_SCRIMBA_CLICK);
+        }}
+      >
+        Join now
+      </a>
+    </p>
+  ) : (
     <p className="fallback-copy">
       Learn front-end development with high quality, interactive courses from{" "}
       <a
@@ -106,6 +127,7 @@ function TopPlacementFallbackContent() {
 export function TopPlacement() {
   const isServer = useIsServer();
   const placementData = usePlacement();
+  const data = placementData?.hpTop || placementData?.top;
   const {
     textColor,
     backgroundColor,
@@ -115,7 +137,7 @@ export function TopPlacement() {
     backgroundColorDark,
     ctaTextColorDark,
     ctaBackgroundColorDark,
-  } = placementData?.top?.colors || {};
+  } = data?.colors || {};
   const css = Object.fromEntries(
     [
       ["--place-top-background-light", backgroundColor],
@@ -135,13 +157,13 @@ export function TopPlacement() {
   const status =
     isServer || placementData?.status === Status.loading
       ? "loading"
-      : placementData?.top
+      : data
         ? "visible"
         : "fallback";
 
   return (
     <div className={`top-banner ${status}`} style={css}>
-      {isServer || !placementData?.top ? (
+      {isServer || !data ? (
         <section className="place top container">
           {!isServer && placementData?.status !== Status.loading && (
             <TopPlacementFallbackContent />
@@ -149,9 +171,9 @@ export function TopPlacement() {
         </section>
       ) : (
         <PlacementInner
-          pong={placementData.top}
+          pong={data}
           extraClassNames={["top", "container"]}
-          cta={placementData.top?.cta}
+          cta={data?.cta}
           imageHeight={50}
           renderer={RenderSideOrTopBanner}
           typ="top-banner"
