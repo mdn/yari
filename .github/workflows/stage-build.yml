@@ -324,9 +324,9 @@ jobs:
           yarn render:html
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
           # Sort DE search index by en-US popularity.
           node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
