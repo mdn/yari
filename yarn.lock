@@ -12745,10 +12745,20 @@ react-router-dom@^7.0.2:
   dependencies:
     react-router "7.0.2"
 
-react-router@7.0.2, react-router@^7.0.2:
+react-router@7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.0.2.tgz#2820e107cb8cec8acc5db15a17470c056ea86022"
   integrity sha512-m5AcPfTRUcjwmhBzOJGEl6Y7+Crqyju0+TgTQxoS4SO+BkWbhOrcfZNq6wSWdl2BBbJbsAoBUb8ZacOFT+/JlA==
+  dependencies:
+    "@types/cookie" "^0.6.0"
+    cookie "^1.0.1"
+    set-cookie-parser "^2.6.0"
+    turbo-stream "2.4.0"
+
+react-router@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.1.0.tgz#85911e27aae8c4a57482f2404aef65ac9ca68a10"
+  integrity sha512-VcFhWqkNIcojDRYaUO8qV0Jib52s9ULpCp3nkBbmrvtoCVFRp6tmk3tJ2w9BZauVctA1YRnJlFYDn9iJRuCpGA==
   dependencies:
     "@types/cookie" "^0.6.0"
     cookie "^1.0.1"
