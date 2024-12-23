@@ -11273,10 +11273,10 @@ onetime@^7.0.0:
   dependencies:
     mimic-function "^5.0.0"
 
-open-editor@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/open-editor/-/open-editor-5.0.0.tgz#685bfacf4b54fac276eeaf618c09b60f0b7c1765"
-  integrity sha512-fRHi4my03WQSbWfqChs9AdFfSp6SLalB3zadfwfYIojoKanLDBfv2uAdiZCfzdvom7TBdlXu2UeiiydBc56/EQ==
+open-editor@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/open-editor/-/open-editor-5.1.0.tgz#50bfb02c2833d8abea2b7c3909446a43d637280d"
+  integrity sha512-KkNqM6FdoegD6WhY2YXmWcovOux45NV+zBped2+G3+V74zkDPkIl4cqh6hte2zNDojtwO2nBOV8U+sgziWfPrg==
   dependencies:
     env-editor "^1.1.0"
     execa "^9.3.0"
