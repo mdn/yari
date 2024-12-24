@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.0.2](https://github.com/mdn/yari/compare/v4.0.1...v4.0.2) (2024-12-24)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump react-router-dom from 7.0.2 to 7.1.0 ([#12356](https://github.com/mdn/yari/issues/12356)) ([be09aa1](https://github.com/mdn/yari/commit/be09aa1099167906ec19fd76dcff0d87dcc079eb))
+* **deps-dev:** bump react-router-dom from 7.1.0 to 7.1.1 ([#12368](https://github.com/mdn/yari/issues/12368)) ([d02e97e](https://github.com/mdn/yari/commit/d02e97e7025f711c3c4a3c5cfbf2f8483b23b524))
+* **deps-dev:** bump swr from 2.2.5 to 2.3.0 ([#12370](https://github.com/mdn/yari/issues/12370)) ([8f33dc2](https://github.com/mdn/yari/commit/8f33dc2ab142f82b2b95ab23ea18825d7c7566ff))
+* **deps-dev:** bump typescript-eslint from 8.18.1 to 8.18.2 ([#12371](https://github.com/mdn/yari/issues/12371)) ([1ebac4b](https://github.com/mdn/yari/commit/1ebac4ba24c30ed61b3e72e6ee25ccf9b8c3fa59))
+* **deps:** bump @inquirer/prompts from 7.2.0 to 7.2.1 ([#12354](https://github.com/mdn/yari/issues/12354)) ([91fcfaa](https://github.com/mdn/yari/commit/91fcfaa5d66b282f394134edc43e94ff874c0972))
+* **deps:** bump @mdn/rari from 0.1.10 to 0.1.11 ([#12366](https://github.com/mdn/yari/issues/12366)) ([834630c](https://github.com/mdn/yari/commit/834630cab220cff7c2378f021e051a90b9a4a9fd))
+* **deps:** bump chalk from 5.3.0 to 5.4.1 ([#12353](https://github.com/mdn/yari/issues/12353)) ([94d918d](https://github.com/mdn/yari/commit/94d918d2abe9bfb8b0f2851885a7e7f761af34c3))
+* **deps:** bump image-size from 1.1.1 to 1.2.0 ([#12357](https://github.com/mdn/yari/issues/12357)) ([1919108](https://github.com/mdn/yari/commit/1919108d4085af701e15fdc68a5fa073608882fb))
+* **deps:** bump open-editor from 5.0.0 to 5.1.0 ([#12355](https://github.com/mdn/yari/issues/12355)) ([097eb74](https://github.com/mdn/yari/commit/097eb742a6a6d438f29083dc8319a2c1a308e47a))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#12363](https://github.com/mdn/yari/issues/12363)) ([e735486](https://github.com/mdn/yari/commit/e735486ddc357860973f63d8952a137f50d24b34))
+* **deps:** bump web-features from 2.14.0 to 2.15.0 ([#12360](https://github.com/mdn/yari/issues/12360)) ([883708f](https://github.com/mdn/yari/commit/883708f4ef6f336aad0d517bef39e8755e9d97f3))
+
 ## [4.0.1](https://github.com/mdn/yari/compare/v4.0.0...v4.0.1) (2024-12-20)
 
 
