@@ -72,7 +72,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Accessibility",
-        url: `/${locale}/docs/Web/Accessibility`,
+        url: `/${locale}/docs/Learn_web_development/Core/Accessibility`,
       },
       {
         description: "Web technology reference for developers",
