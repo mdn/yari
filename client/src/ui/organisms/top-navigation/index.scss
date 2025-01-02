@@ -45,7 +45,13 @@
     display: none;
   }
 
-  .top-navigation .top-navigation-wrap {
-    flex: 0;
+  .top-navigation {
+    .container {
+      flex-wrap: nowrap;
+    }
+
+    .top-navigation-wrap {
+      flex: 0;
+    }
   }
 }
