@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { MainContentContainer } from "../ui/atoms/page-content";
-import { useGA } from "../ga-context";
 import { useGleanClick } from "../telemetry/glean-context";
 import "./index.scss";
 import { SidePlacement } from "../ui/organisms/placement";
