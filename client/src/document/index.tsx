@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
-import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
 import { useDocumentURL, useDecorateCodeExamples, useRunSample } from "./hooks";
