@@ -14,7 +14,6 @@ const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
   const isServer = useIsServer();
-  const { gtag } = useGA();
   const gleanClick = useGleanClick();
   const [searchParams] = useSearchParams();
 
@@ -34,24 +33,14 @@ export function SiteSearch() {
 
   const mountCounter = React.useRef(0);
   React.useEffect(() => {
-    if (gtag) {
-      if (mountCounter.current > 0) {
-        const location = window.location.toString();
-        // 'dimension19' means it's a client-side navigation.
-        // I.e. not the initial load but the location has now changed.
-        // Note that in local development, where you use `localhost:3000`
-        // this will always be true because it's always client-side navigation.
-        gtag("event", "pageview", {
-          dimension19: "Yes",
-          page_location: location,
-        });
-        gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
-      }
-      // By counting every time a document is mounted, we can use this to know if
-      // a client-side navigation happened.
-      mountCounter.current++;
+    if (mountCounter.current > 0) {
+      const location = window.location.toString();
+      gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
     }
-  }, [query, page, gtag, gleanClick]);
+    // By counting every time a document is mounted, we can use this to know if
+    // a client-side navigation happened.
+    mountCounter.current++;
+  }, [query, page, gleanClick]);
 
   return (
     <div className="main-wrapper site-search">

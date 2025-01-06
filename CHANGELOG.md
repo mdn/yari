@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.1](https://github.com/mdn/yari/compare/v4.0.0...v4.0.1) (2024-12-20)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump eslint-plugin-jest from 28.9.0 to 28.10.0 ([#12340](https://github.com/mdn/yari/issues/12340)) ([a0db3a4](https://github.com/mdn/yari/commit/a0db3a47f28807a0208663feb485bcd48f230075))
+* **deps-dev:** bump eslint-plugin-n from 17.15.0 to 17.15.1 ([#12345](https://github.com/mdn/yari/issues/12345)) ([7850cad](https://github.com/mdn/yari/commit/7850cad797d5e70a38c8da9e93f09c02bf831a3b))
+* **deps-dev:** bump resolve from 1.22.9 to 1.22.10 ([#12342](https://github.com/mdn/yari/issues/12342)) ([18cef57](https://github.com/mdn/yari/commit/18cef57e1e7285c913fbf06397be4d251f9eebc9))
+* **deps:** bump @mdn/browser-compat-data from 5.6.25 to 5.6.26 ([#12348](https://github.com/mdn/yari/issues/12348)) ([d1d253e](https://github.com/mdn/yari/commit/d1d253ef30082cbd5573780eda61f8ff228f76a0))
+* **deps:** bump @mdn/rari from 0.1.8 to 0.1.9 ([#12341](https://github.com/mdn/yari/issues/12341)) ([e1c20ea](https://github.com/mdn/yari/commit/e1c20eaa5c812ffa5185e10f8e640bf6764d01c5))
+* **deps:** bump @mdn/rari from 0.1.9 to 0.1.10 ([#12350](https://github.com/mdn/yari/issues/12350)) ([bc7e5a1](https://github.com/mdn/yari/commit/bc7e5a12a649ef9a713c77cddb572d612c6fd163))
+* **deps:** bump @stripe/stripe-js from 5.3.0 to 5.4.0 ([#12346](https://github.com/mdn/yari/issues/12346)) ([d0271a4](https://github.com/mdn/yari/commit/d0271a44f7db58afda99577ba3eaa470bf82474b))
+* **deps:** bump web-specs from 3.30.0 to 3.31.0 ([#12347](https://github.com/mdn/yari/issues/12347)) ([cd15a4a](https://github.com/mdn/yari/commit/cd15a4a4b4621ee4d0de0575fb21bdb60cffb3d2))
+
 ## [4.0.0](https://github.com/mdn/yari/compare/v3.1.0...v4.0.0) (2024-12-19)
 
 
