@@ -18,5 +18,5 @@ const child = spawn(rariBin, ["build", ...process.argv.slice(2)], {
 });
 
 child.on("close", (code) => {
-  process.exit(code);
+  process.exitCode = code;
 });
