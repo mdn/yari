@@ -4,13 +4,13 @@ import { styleMap } from "lit/directives/style-map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { createComponent } from "@lit/react";
 import React from "react";
-import { CURRICULUM } from "../telemetry/constants.ts";
+import { CURRICULUM } from "../../telemetry/constants.ts";
 
 import "./scrim-inline.global.css";
 import styles from "./scrim-inline.scss?css" with { type: "css" };
-import playSvg from "../assets/curriculum/scrim-play.svg?raw";
+import playSvg from "../../assets/curriculum/scrim-play.svg?raw";
 
-class ScrimInline extends LitElement {
+export class ScrimInline extends LitElement {
   static properties = {
     url: { type: String },
     img: { type: String },

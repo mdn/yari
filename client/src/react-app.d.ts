@@ -78,39 +78,3 @@ declare module "*.svg" {
   const src: string;
   export default src;
 }
-
-declare module "*?raw" {
-  const src: string;
-  export default src;
-}
-
-// once https://github.com/microsoft/TypeScript/issues/46135 is fixed
-// we'll be able to do something like:
-// declare module '*' with {type: 'css'} {
-declare module "*?css" {
-  const sheet: CSSStyleSheet;
-  export default sheet;
-}
-
-// once https://github.com/microsoft/TypeScript/issues/46135 is fixed
-// we'll be able to do something like:
-// declare module '*' with {type: 'css'} {
-declare module "*?css" {
-  const sheet: CSSStyleSheet;
-  export default sheet;
-}
-
-declare module "*.module.css" {
-  const classes: { readonly [key: string]: string };
-  export default classes;
-}
-
-declare module "*.module.scss" {
-  const classes: { readonly [key: string]: string };
-  export default classes;
-}
-
-declare module "*.module.sass" {
-  const classes: { readonly [key: string]: string };
-  export default classes;
-}

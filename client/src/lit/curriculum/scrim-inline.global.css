@@ -4,5 +4,5 @@
   font-display: block;
   src:
     local("BarlowCondensed-SemiBold"),
-    url("../assets/fonts/BarlowCondensed-SemiBold.woff2") format("woff2");
+    url("../../assets/fonts/BarlowCondensed-SemiBold.woff2") format("woff2");
 }

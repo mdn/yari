@@ -11,7 +11,7 @@ export function Community(appProps: HydrationData<any, AboutDoc>) {
   const doc = useAboutDoc(appProps);
 
   useEffect(() => {
-    import("./contributor-list");
+    import("../lit/community/contributor-list");
   }, []);
 
   return (

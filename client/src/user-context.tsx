@@ -121,8 +121,8 @@ function getSessionStorageData() {
     }
   } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
-    return undefined;
   }
+  return undefined;
 }
 
 export function cleanupUserData() {
@@ -184,7 +184,7 @@ function setNoPlacementFlag(noAds: boolean) {
 export function UserDataProvider(props: { children: React.ReactNode }) {
   const { data, error, isLoading, mutate } = useSWR<User | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
-    async (url) => {
+    async (url: string) => {
       const response = await fetch(url);
       if (!response.ok) {
         removeSessionStorageData();

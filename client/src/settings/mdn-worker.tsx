@@ -35,7 +35,7 @@ export class MDNWorker {
     this.timeout = setTimeout(() => this.autoUpdate(), 60 * 60 * 1000);
   }
 
-  messageHandler(event) {
+  messageHandler(event: MessageEvent) {
     switch (event.data.type) {
       case "pong":
         console.log("pong");

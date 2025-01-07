@@ -88,16 +88,16 @@ dialog {
 
 .toggle {
   &.enter {
-    mask-image: url("../assets/icons/fullscreen-enter.svg");
+    mask-image: url("../../assets/icons/fullscreen-enter.svg");
   }
 
   &.exit {
-    mask-image: url("../assets/icons/cancel.svg");
+    mask-image: url("../../assets/icons/cancel.svg");
   }
 }
 
 .external {
-  mask-image: url("../assets/icons/external.svg");
+  mask-image: url("../../assets/icons/external.svg");
   mask-size: 75%;
 }
 
@@ -109,9 +109,9 @@ dialog {
 
 .background {
   background-color: #453c78;
-  background-image: url("../assets/curriculum/scrimba-logo.svg"),
-    url("../assets/curriculum/scrim-hexagons.svg"),
-    url("../assets/curriculum/scrim-bg.png");
+  background-image: url("../../assets/curriculum/scrimba-logo.svg"),
+    url("../../assets/curriculum/scrim-hexagons.svg"),
+    url("../../assets/curriculum/scrim-bg.png");
   background-position:
     1.5em 1.5em,
     right,
