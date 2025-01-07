@@ -92,6 +92,9 @@ function base64ToBytes(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
+/*
+ * This is the browser verision of `libs/play/index.js`. Keep in sync!
+ */
 export async function decompressFromBase64(base64String: string) {
   if (!base64String) {
     return { state: null, hash: null };

@@ -12,6 +12,8 @@ from unidiff import PatchSet
 
 from .utils import log
 
+MAX_COMMENT_BODY_LENGTH = 65000
+
 hidden_comment_regex = re.compile(
     r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
 )
@@ -75,14 +77,20 @@ def analyze_pr(build_directory: Path, config):
                     if hidden_comment_regex.search(comment.body):
                         now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
                         combined_comment += f"\n\n*(comment last updated: {now})*"
-                        comment.edit(body=combined_comment)
+                        comment.edit(body=truncate_comment(combined_comment))
                         print(f"Updating existing comment ({comment})")
                         break
 
             else:
-                github_issue.create_comment(combined_comment)
+                github_issue.create_comment(truncate_comment(combined_comment))
 
     return combined_comment
+
+
+def truncate_comment(comment):
+    if len(comment) > MAX_COMMENT_BODY_LENGTH:
+        return comment[:MAX_COMMENT_BODY_LENGTH] + "…\n\nTRUNCATED!"
+    return comment
 
 
 def post_about_deployment(build_directory: Path, **config):

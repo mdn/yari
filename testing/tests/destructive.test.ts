@@ -91,7 +91,7 @@ describe("fixing flaws", () => {
 
   it("can be run in dry-run mode", () => {
     const root = path.join(tempContentDir, "files");
-    const stdout = execSync("yarn build", {
+    const stdout = execSync("yarn build:legacy", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(
@@ -130,7 +130,7 @@ describe("fixing flaws", () => {
   });
 
   it("can actually change the files", () => {
-    const stdout = execSync("yarn build", {
+    const stdout = execSync("yarn build:legacy", {
       cwd: baseDir,
       windowsHide: true,
       env: Object.assign(

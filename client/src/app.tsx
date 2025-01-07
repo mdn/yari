@@ -326,7 +326,7 @@ export function App(appProps: HydrationData) {
               path="/about/*"
               element={
                 <StandardLayout>
-                  <About />
+                  <About {...appProps} />
                 </StandardLayout>
               }
             />

@@ -4,23 +4,26 @@ async function main() {
   const [refPath, inputPath, outputPath = null] = process.argv.slice(2);
 
   const readJson = (path) => JSON.parse(readFileSync(path, "utf-8"));
-  const getSlug = ({ url }) => url.replace(/^\/[^/]+\/docs\//, "");
+  const slugify = (url) => url.replace(/^\/[^/]+\/docs\//, "");
 
-  // Read reference (e.g. "client/build/en-us/search-index.json").
-  const ref = readJson(refPath).map(getSlug);
+  // Read reference (e.g. "client/build/en-us/search-index.json")
+  // into map: slug -> index-in-ref
+  const ref = Object.fromEntries(
+    readJson(refPath).map(({ url }, i) => [slugify(url), i])
+  );
 
   // Read index (e.g. "client/build/de/search-index.json").
   const input = readJson(inputPath);
 
-  const getIndex = (slug) => ref.indexOf(slug);
+  // Array of tuples (index-in-ref, input-entry).
+  const indexed = input.map(({ title, url }) => [
+    ref[slugify(url)] ?? Infinity,
+    { title, url },
+  ]);
+  // Sort by index-in-ref.
+  indexed.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
 
-  const result = [];
-  for (const [fromIndex, toIndex] of input
-    .map(getSlug)
-    .map(getIndex)
-    .entries()) {
-    result[toIndex] = input[fromIndex];
-  }
+  const result = indexed.map(([, entry]) => entry);
 
   writeFileSync(outputPath ?? inputPath, JSON.stringify(result), "utf-8");
 }
