@@ -101,7 +101,7 @@ export const SURVEYS: Survey[] = [
       /^\/[^/]+\/docs\/(Web|Learn_web_development)($|\/.*$)|/i.test(
         doc.mdn_url
       ),
-    src: "https://survey.alchemer.com/s3/8145183/MDN-short-survey-for-ads-team",
+    src: "https://survey.alchemer.com/s3/8145183/MDN-short-survey",
     teaser:
       "We'd love to hear more about your role and the company you work for",
     question: "Please help us by answering a few questions.",
