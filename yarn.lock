@@ -13037,10 +13037,10 @@ react-lifecycles-compat@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-markdown@^9.0.2:
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-9.0.2.tgz#e7c7a1f8530f96086210414c48a75acbd6acb485"
-  integrity sha512-98UgODUv+Mqls+xD53jqFIs/kZK8QIoCBvtzb1tRbWZH7n4FSp8IP6Z7/UcRIKmVZ/Q1zO1SXfjnaksG5Jf2SQ==
+react-markdown@^9.0.3:
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-9.0.3.tgz#c12bf60dad05e9bf650b86bcc612d80636e8456e"
+  integrity sha512-Yk7Z94dbgYTOrdk41Z74GoKA7rThnsbbqBTRYuxoe08qvfQ9tJVhmAKw6BJS/ZORG7kTy/s1QvYzSuaoBA1qfw==
   dependencies:
     "@types/hast" "^3.0.0"
     devlop "^1.0.0"
