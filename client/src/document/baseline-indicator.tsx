@@ -127,7 +127,7 @@ export function BaselineIndicator({
                   ? "Widely available"
                   : low_date?.getFullYear()}
               </span>
-              {status.asterisk ? " *" : ""}
+              {status.asterisk && " *"}
             </>
           ) : (
             <span className="not-bold">Limited availability</span>
@@ -180,6 +180,9 @@ export function BaselineIndicator({
             This feature is not Baseline because it does not work in some of the
             most widely-used browsers.
           </p>
+        )}
+        {status.asterisk && (
+          <p>* Some parts of this feature may have varying levels of support</p>
         )}
         <ul>
           <li>
