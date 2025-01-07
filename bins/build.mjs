@@ -13,4 +13,10 @@ config({
 
 process.env.BUILD_OUT_ROOT = process.env.BUILD_OUT_ROOT || BUILD_OUT_ROOT;
 
-spawn(rariBin, ["build", ...process.argv.slice(2)], { stdio: "inherit" });
+const child = spawn(rariBin, ["build", ...process.argv.slice(2)], {
+  stdio: "inherit",
+});
+
+child.on("close", (code) => {
+  process.exitCode = code;
+});
