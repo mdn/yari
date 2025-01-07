@@ -34,6 +34,7 @@ enum SurveyBucket {
   WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
   HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
   WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
+  HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
 }
 
 enum SurveyKey {
@@ -54,6 +55,7 @@ enum SurveyKey {
   WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
   HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
   WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
+  HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
 }
 
 // When adding a survey, make sure it has this JavaScript action (in Alchemer)
@@ -93,14 +95,18 @@ export const SURVEYS: Survey[] = [
     end: Infinity,
   },
   {
-    key: SurveyKey.HOMEPAGE_FEEDBACK_2024,
-    bucket: SurveyBucket.HOMEPAGE_FEEDBACK_2024,
-    show: (doc: Pick<Doc, "mdn_url">) => /^\/[^/]+\/$/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/8075407/MDN-Homepage-Improvements",
-    teaser: "We are refreshing our homepage and would love",
-    question: "your input",
-    ...survey_duration(SurveyBucket.HOMEPAGE_FEEDBACK_2024),
-    ...survey_rates(SurveyKey.HOMEPAGE_FEEDBACK_2024),
+    key: SurveyKey.HOUSE_SURVEY_2025,
+    bucket: SurveyBucket.HOUSE_SURVEY_2025,
+    show: (doc: Pick<Doc, "mdn_url">) =>
+      /^\/[^/]+\/docs\/(Web|Learn_web_development)($|\/.*$)|/i.test(
+        doc.mdn_url
+      ),
+    src: "https://survey.alchemer.com/s3/8145183/MDN-short-survey",
+    teaser:
+      "We'd love to hear more about your role and the company you work for",
+    question: "Please help us by answering a few questions.",
+    ...survey_duration(SurveyBucket.HOUSE_SURVEY_2025),
+    ...survey_rates(SurveyKey.HOUSE_SURVEY_2025),
   },
   {
     key: SurveyKey.WEBDX_EDITING_2024,
