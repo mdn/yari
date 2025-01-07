@@ -152,7 +152,7 @@ export interface DocMetadata {
   popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
-  baseline?: SupportStatus;
+  baseline?: SupportStatus & { asterisk?: boolean };
   hash?: string;
   pageType: string;
 }

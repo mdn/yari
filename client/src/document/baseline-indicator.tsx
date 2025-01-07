@@ -55,7 +55,11 @@ const LOCALIZED_BCD_IDS = {
 const SURVEY_URL =
   "https://survey.alchemer.com/s3/7634825/MDN-baseline-feedback";
 
-export function BaselineIndicator({ status }: { status: SupportStatus }) {
+export function BaselineIndicator({
+  status,
+}: {
+  status: SupportStatus & { asterisk?: boolean };
+}) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
   const { pathname } = useLocation();
@@ -123,6 +127,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
                   ? "Widely available"
                   : low_date?.getFullYear()}
               </span>
+              {status.asterisk ? " *" : ""}
             </>
           ) : (
             <span className="not-bold">Limited availability</span>
