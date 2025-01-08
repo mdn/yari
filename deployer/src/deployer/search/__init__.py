@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import Counter
 
 import click
-from elasticsearch.helpers import bulk
+from elasticsearch.helpers import parallel_bulk
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
