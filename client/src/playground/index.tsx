@@ -21,10 +21,10 @@ import {
 import "./index.scss";
 import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
-import { ReactPlayConsole } from "./console";
+import { ReactPlayConsole } from "../lit/play/console";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
-import type { VConsole } from "./types";
+import type { VConsole } from "../lit/play/types";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";

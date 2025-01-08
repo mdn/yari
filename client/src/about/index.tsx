@@ -7,7 +7,7 @@ import { WRITER_MODE } from "../env";
 import { Prose } from "../document/ingredients/prose";
 
 import "./index.scss";
-import "./custom-elements";
+import "../lit/about";
 import { useGleanClick } from "../telemetry/glean-context";
 import { ABOUT } from "../telemetry/constants";
 

@@ -2,6 +2,13 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -11,15 +18,13 @@
     "lib": ["dom", "dom.iterable", "es2021"],
     "module": "ESNext",
     "moduleResolution": "Node",
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false,
-    "preserveWatchOutput": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2020"
+    "target": "ES2020",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      }
+    ]
   },
-  "include": ["src"]
+  "include": ["**/*"]
 }
