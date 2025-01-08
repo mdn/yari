@@ -7,13 +7,12 @@ import { decompressFromBase64, EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
 import { FlagForm, ShareForm } from "./forms";
-import { ReactPlayEditor, PlayEditor } from "../lit/play/editor";
+import { PlayController, ReactPlayController } from "../lit/play/controller";
+import { ReactPlayEditor } from "../lit/play/editor";
 import { ReactPlayConsole } from "../lit/play/console";
 import { ReactPlayRunner } from "../lit/play/runner";
-import type { VConsole } from "../lit/play/types";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
-import { useUIStatus } from "../ui-context";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -60,7 +59,6 @@ function load(session: string) {
 }
 
 export default function Playground() {
-  const { colorScheme } = useUIStatus();
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
   const gistId = searchParams.get("id");
@@ -68,10 +66,7 @@ export default function Playground() {
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
-  let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
-  const [code, setCode] = useState<EditorContent>();
-  let [codeSrc, setCodeSrc] = useState<string | undefined>();
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
@@ -104,14 +99,8 @@ export default function Playground() {
         undefined,
     }
   );
-  const htmlRef = useRef<PlayEditor | null>(null);
-  const cssRef = useRef<PlayEditor | null>(null);
-  const jsRef = useRef<PlayEditor | null>(null);
+  const controller = useRef<PlayController | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
-
-  useEffect(() => {
-    setVConsole([]);
-  }, [code, setVConsole]);
 
   useEffect(() => {
     if (initialCode) {
@@ -123,34 +112,21 @@ export default function Playground() {
   }, [initialCode, setInitialContent]);
 
   const getEditorContent = useCallback(() => {
-    const code = {
-      html: htmlRef.current?.value || HTML_DEFAULT,
-      css: cssRef.current?.value || CSS_DEFAULT,
-      js: jsRef.current?.value || JS_DEFAULT,
+    return {
+      html: controller.current?.code.html || HTML_DEFAULT,
+      css: controller.current?.code.css || CSS_DEFAULT,
+      js: controller.current?.code.js || JS_DEFAULT,
       src: initialCode?.src || initialContent?.src,
     };
-    store(SESSION_KEY, code);
-    return code;
   }, [initialContent?.src, initialCode?.src]);
 
-  const onConsole = ({ detail }: CustomEvent<VConsole>) => {
-    setVConsole((vConsole) => [...vConsole, detail]);
-  };
-
-  const setEditorContent = ({ html, css, js, src }: EditorContent) => {
-    if (htmlRef.current) {
-      htmlRef.current.value = html;
+  const setEditorContent = (content: EditorContent) => {
+    if (controller.current) {
+      controller.current.code = { ...content };
+      if (content.src) {
+        controller.current.srcPrefix = content.src;
+      }
     }
-    if (cssRef.current) {
-      cssRef.current.value = css;
-    }
-    if (jsRef.current) {
-      jsRef.current.value = js;
-    }
-    if (src) {
-      setCodeSrc(src);
-    }
-    setIsEmpty(!html && !css && !js);
   };
 
   useEffect(() => {
@@ -160,7 +136,7 @@ export default function Playground() {
           setEditorContent(initialCode);
           if (!gistId) {
             // don't auto run shared code
-            setCode(initialCode);
+            controller.current?.run();
           }
         } else if (stateParam) {
           try {
@@ -180,15 +156,20 @@ export default function Playground() {
         setState(State.ready);
       }
     })();
-  }, [initialCode, state, gistId, stateParam, setCode]);
+  }, [initialCode, state, gistId, stateParam]);
 
   const clear = async () => {
     setSearchParams([], { replace: true });
-    setCodeSrc(undefined);
     setInitialContent(null);
-    setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
+    setIsEmpty(true);
+    setEditorContent({
+      html: HTML_DEFAULT,
+      css: CSS_DEFAULT,
+      js: JS_DEFAULT,
+      src: undefined,
+    });
 
-    updateWithEditorContent();
+    run();
   };
 
   const reset = async () => {
@@ -198,7 +179,7 @@ export default function Playground() {
       js: initialContent?.js || JS_DEFAULT,
     });
 
-    updateWithEditorContent();
+    run();
   };
 
   const clearConfirm = async () => {
@@ -215,10 +196,7 @@ export default function Playground() {
     }
   };
 
-  const updateWithEditorContent = () => {
-    const { html, css, js, src } = getEditorContent();
-    setIsEmpty(!html && !css && !js);
-
+  const run = () => {
     const loading = [
       {},
       {
@@ -226,25 +204,16 @@ export default function Playground() {
       },
       {},
     ];
-
     const timing = {
       duration: 1000,
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
-    setCode({ html, css, js, src });
+    controller.current?.run();
   };
 
   const format = async () => {
-    try {
-      await Promise.all([
-        htmlRef.current?.format(),
-        cssRef.current?.format(),
-        jsRef.current?.format(),
-      ]);
-    } catch (e) {
-      console.error(e);
-    }
+    await controller.current?.format();
   };
 
   const share = useCallback(async () => {
@@ -260,8 +229,15 @@ export default function Playground() {
     }
   };
 
+  const onEditorUpdate = () => {
+    const code = getEditorContent();
+    const { html, css, js } = code;
+    setIsEmpty(!html && !css && !js);
+    store(SESSION_KEY, code);
+  };
+
   return (
-    <>
+    <ReactPlayController ref={controller} runOnChange={true}>
       <main className="play container">
         <dialog id="playDialog" ref={diaRef} onClose={cleanDialog}>
           {dialogState === DialogState.flag && <FlagForm gistId={gistId} />}
@@ -276,11 +252,7 @@ export default function Playground() {
               <Button type="secondary" id="format" onClickHandler={format}>
                 format
               </Button>
-              <Button
-                type="secondary"
-                id="run"
-                onClickHandler={updateWithEditorContent}
-              >
+              <Button type="secondary" id="run" onClickHandler={run}>
                 run
               </Button>
               <Button
@@ -316,24 +288,27 @@ export default function Playground() {
               )}
             </menu>
           </aside>
-          <ReactPlayEditor
-            ref={htmlRef}
-            language="html"
-            colorScheme={colorScheme}
-            onUpdate={updateWithEditorContent}
-          ></ReactPlayEditor>
-          <ReactPlayEditor
-            ref={cssRef}
-            language="css"
-            colorScheme={colorScheme}
-            onUpdate={updateWithEditorContent}
-          ></ReactPlayEditor>
-          <ReactPlayEditor
-            ref={jsRef}
-            language="javascript"
-            colorScheme={colorScheme}
-            onUpdate={updateWithEditorContent}
-          ></ReactPlayEditor>
+          <details className="editor-container" open={true}>
+            <summary>HTML</summary>
+            <ReactPlayEditor
+              language="html"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
+          <details className="editor-container" open={true}>
+            <summary>CSS</summary>
+            <ReactPlayEditor
+              language="css"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
+          <details className="editor-container" open={true}>
+            <summary>JAVASCRIPT</summary>
+            <ReactPlayEditor
+              language="javascript"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
         </section>
         <section className="preview">
           {gistId && (
@@ -349,15 +324,14 @@ export default function Playground() {
               Seeing something inappropriate?
             </button>
           )}
-          <ReactPlayRunner
-            code={code}
-            srcPrefix={codeSrc}
-            onConsole={onConsole}
-          />
-          <ReactPlayConsole vConsole={vConsole} />
+          <ReactPlayRunner />
+          <div id="play-console">
+            <span>Console</span>
+            <ReactPlayConsole />
+          </div>
           <SidePlacement extraClasses={["horizontal"]} />
         </section>
       </main>
-    </>
+    </ReactPlayController>
   );
 }

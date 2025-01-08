@@ -236,13 +236,12 @@ export function renderHtml(state = null) {
     <script>
       const consoleProxy = new Proxy(console, {
         get(target, prop) {
-          if (prop === "log" || prop === "error" || prop === "warn") {
+          if (typeof target[prop] === "function") {
             return (...args) => {
-              const message = args.join(" ");
-              window.parent.postMessage({ typ: "console", prop, message }, "*");
+              window.parent.postMessage({ typ: "console", prop, args }, "*");
               target[prop](...args);
             };
-          }
+          };
           return target[prop];
         },
       });

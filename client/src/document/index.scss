@@ -570,6 +570,10 @@ math[display="block"] {
   margin-bottom: 2rem;
   position: relative;
 
+  interactive-example ~ & {
+    display: none;
+  }
+
   .example-header {
     align-items: baseline;
     background-color: var(--background-secondary);

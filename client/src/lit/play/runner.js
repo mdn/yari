@@ -7,11 +7,8 @@ import React from "react";
 
 import styles from "./runner.scss?css" with { type: "css" };
 
-/**
- * @import { EditorContent } from "../../playground/utils"
- * @import { VConsole } from "./types"
- * @import { EventName } from "@lit/react"
- * */
+/** @import { VConsole } from "./types" */
+/** @import { EventName } from "@lit/react" */
 
 export class PlayRunner extends LitElement {
   static properties = {
@@ -24,7 +21,7 @@ export class PlayRunner extends LitElement {
 
   constructor() {
     super();
-    /** @type {EditorContent | undefined} */
+    /** @type {Record<string, string> | undefined} */
     this.code = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
@@ -35,29 +32,13 @@ export class PlayRunner extends LitElement {
   }
 
   /** @param {MessageEvent} e  */
-  _onMessage({ data: { typ, prop, message } }) {
+  _onMessage({ data: { typ, prop, args } }) {
     if (typ === "console") {
-      if (
-        (prop === "log" || prop === "error" || prop === "warn") &&
-        typeof message === "string"
-      ) {
-        /** @type {VConsole} */
-        const detail = { prop, message };
-        this.dispatchEvent(
-          new CustomEvent("console", { bubbles: true, composed: true, detail })
-        );
-      } else {
-        const warning = "[Playground] Unsupported console message";
-        /** @type {VConsole} */
-        const detail = {
-          prop: "warn",
-          message: `${warning} (see browser console)`,
-        };
-        this.dispatchEvent(
-          new CustomEvent("console", { bubbles: true, composed: true, detail })
-        );
-        console.warn(warning, { prop, message });
-      }
+      /** @type {VConsole} */
+      const detail = { prop, args };
+      this.dispatchEvent(
+        new CustomEvent("console", { bubbles: true, composed: true, detail })
+      );
     }
   }
 
@@ -65,7 +46,13 @@ export class PlayRunner extends LitElement {
     args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
     task: async ([code, srcPrefix], { signal }) => {
       if (code) {
-        const { state } = await compressAndBase64Encode(JSON.stringify(code));
+        const { state } = await compressAndBase64Encode(
+          JSON.stringify({
+            html: code.html || "",
+            css: code.css || "",
+            js: code.js || "",
+          })
+        );
         signal.throwIfAborted();
         // We're using a random subdomain for origin isolation.
         const url = new URL(
@@ -80,7 +67,7 @@ export class PlayRunner extends LitElement {
         url.searchParams.set("state", state);
         // ensure iframe reloads even if code doesn't change
         url.searchParams.set("f", this._flipFlop.toString());
-        url.pathname = `${srcPrefix || code.src || ""}/runner.html`;
+        url.pathname = `${srcPrefix || ""}/runner.html`;
         this._src = url.href;
         this._flipFlop = (this._flipFlop + 1) % 2;
       } else {

@@ -18,6 +18,7 @@ import { oneDark } from "@codemirror/theme-one-dark";
 import { createComponent } from "@lit/react";
 import { html, LitElement } from "lit";
 import React from "react";
+import { ThemeController } from "../theme-controller.js";
 
 import styles from "./editor.scss?css" with { type: "css" };
 
@@ -26,7 +27,6 @@ import styles from "./editor.scss?css" with { type: "css" };
 export class PlayEditor extends LitElement {
   static properties = {
     language: { type: String },
-    colorScheme: { attribute: false },
     value: { attribute: false },
   };
 
@@ -40,8 +40,8 @@ export class PlayEditor extends LitElement {
 
   constructor() {
     super();
+    this.theme = new ThemeController(this);
     this.language = "";
-    this.colorScheme = "os-default";
     this._value = "";
   }
 
@@ -90,7 +90,7 @@ export class PlayEditor extends LitElement {
         indentWithTab,
       ]),
       EditorView.lineWrapping,
-      ...(this.colorScheme === "dark" ? [oneDark] : []),
+      ...(this.theme.value === "dark" ? [oneDark] : []),
       ...language,
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
@@ -100,7 +100,7 @@ export class PlayEditor extends LitElement {
           this._updateTimer = window?.setTimeout(() => {
             this._updateTimer = -1;
             this.dispatchEvent(
-              new Event("update", { bubbles: false, composed: true })
+              new Event("update", { bubbles: true, composed: true })
             );
           }, 1000);
         }
@@ -117,8 +117,7 @@ export class PlayEditor extends LitElement {
             parser: "babel",
             plugins: [
               import("prettier/plugins/babel"),
-              // XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
-              import("prettier/plugins/estree.mjs"),
+              import("prettier/plugins/estree"),
             ],
           };
         case "html":
@@ -128,8 +127,7 @@ export class PlayEditor extends LitElement {
               import("prettier/plugins/html"),
               import("prettier/plugins/postcss"),
               import("prettier/plugins/babel"),
-              // XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
-              import("prettier/plugins/estree.mjs"),
+              import("prettier/plugins/estree"),
             ],
           };
         case "css":
@@ -145,7 +143,7 @@ export class PlayEditor extends LitElement {
       const plugins = await Promise.all(config.plugins);
       this.value = await prettier.format(this.value, {
         parser: config.parser,
-        plugins,
+        plugins: /** @type {import("prettier").Plugin[]} */ (plugins),
       });
     }
   }
@@ -153,8 +151,8 @@ export class PlayEditor extends LitElement {
   /** @param {PropertyValues} changedProperties */
   willUpdate(changedProperties) {
     if (
-      changedProperties.has("colorScheme") ||
-      changedProperties.has("language")
+      changedProperties.has("language") ||
+      changedProperties.has("ThemeController.value")
     ) {
       this._editor?.dispatch({
         effects: StateEffect.reconfigure.of(this._extensions()),
@@ -163,10 +161,7 @@ export class PlayEditor extends LitElement {
   }
 
   render() {
-    return html`<details class="container" open>
-      <summary>${this.language.toUpperCase()}</summary>
-      <div class="editor"></div>
-    </details>`;
+    return html`<div class="editor"></div>`;
   }
 
   firstUpdated() {
