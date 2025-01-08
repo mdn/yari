@@ -90,9 +90,10 @@ def index(
     errors_counter = Counter()
     t0 = time.time()
     with get_progressbar() as bar:
-        for success, info in bulk(
+        for success, info in parallel_bulk(
             connection,
             generator(),
+            thread_count=1,
             # If the bulk indexing failed, it will by default raise a BulkIndexError.
             # Setting this to 'False' will suppress that.
             raise_on_exception=False,
