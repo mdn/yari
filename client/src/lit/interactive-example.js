@@ -28,8 +28,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   _initialCode() {
-    const examples =
-      this.closest("section")?.querySelectorAll(".code-example pre");
+    const examples = this.closest("section")?.querySelectorAll(
+      ".code-example pre[class*=interactive-example]"
+    );
     return Array.from(examples || []).reduce((acc, pre) => {
       const language = pre.classList[1];
       return language && pre.textContent
@@ -58,11 +59,12 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener("focus", this._telemetryHandler);
-    this.addEventListener("copy", this._telemetryHandler);
-    this.addEventListener("cut", this._telemetryHandler);
-    this.addEventListener("paste", this._telemetryHandler);
-    this.addEventListener("click", this._telemetryHandler);
+    this._telemetryHandler = this._telemetryHandler.bind(this);
+    this.renderRoot.addEventListener("focus", this._telemetryHandler);
+    this.renderRoot.addEventListener("copy", this._telemetryHandler);
+    this.renderRoot.addEventListener("cut", this._telemetryHandler);
+    this.renderRoot.addEventListener("paste", this._telemetryHandler);
+    this.renderRoot.addEventListener("click", this._telemetryHandler);
   }
 
   render() {
@@ -70,12 +72,12 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       <play-controller ${ref(this._controller)}>
         <div class="template-javascript">
           <h4>JavaScript Demo:</h4>
-          <play-editor language="javascript"></play-editor>
+          <play-editor id="editor" language="javascript"></play-editor>
           <div class="buttons">
-            <button @click=${this._run}>Run</button>
-            <button @click=${this._reset}>Reset</button>
+            <button id="execute" @click=${this._run}>Run</button>
+            <button id="reset" @click=${this._reset}>Reset</button>
           </div>
-          <play-console></play-console>
+          <play-console id="console"></play-console>
           <play-runner></play-runner>
         </div>
       </play-controller>
@@ -91,11 +93,11 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener("focus", this._telemetryHandler);
-    this.removeEventListener("copy", this._telemetryHandler);
-    this.removeEventListener("cut", this._telemetryHandler);
-    this.removeEventListener("paste", this._telemetryHandler);
-    this.removeEventListener("click", this._telemetryHandler);
+    this.renderRoot.removeEventListener("focus", this._telemetryHandler);
+    this.renderRoot.removeEventListener("copy", this._telemetryHandler);
+    this.renderRoot.removeEventListener("cut", this._telemetryHandler);
+    this.renderRoot.removeEventListener("paste", this._telemetryHandler);
+    this.renderRoot.removeEventListener("click", this._telemetryHandler);
   }
 }
 

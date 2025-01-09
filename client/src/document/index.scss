@@ -570,7 +570,7 @@ math[display="block"] {
   margin-bottom: 2rem;
   position: relative;
 
-  interactive-example ~ & {
+  [class*="interactive-example"] {
     display: none;
   }
 
