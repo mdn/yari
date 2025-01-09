@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/mdn/yari/compare/v4.1.0...v4.1.1) (2025-01-09)
+
+
+### Bug Fixes
+
+* **npm-package:** use build:legacy:prepare ([#12422](https://github.com/mdn/yari/issues/12422)) ([b1f8d1c](https://github.com/mdn/yari/commit/b1f8d1c410863ebf26cdfdad480aab69d2971928))
+
 ## [4.1.0](https://github.com/mdn/yari/compare/v4.0.1...v4.1.0) (2025-01-09)
 
 
