@@ -9,7 +9,9 @@ import "./baseline-indicator.scss";
 
 // web-features doesn't export these types directly so we need to do a little typescript magic:
 import type { features } from "web-features";
-type SupportStatus = (typeof features)[keyof typeof features]["status"];
+type SupportStatus = (typeof features)[keyof typeof features]["status"] & {
+  asterisk?: boolean;
+};
 type BrowserIdentifier =
   keyof (typeof features)[keyof typeof features]["status"]["support"];
 
@@ -55,11 +57,7 @@ const LOCALIZED_BCD_IDS = {
 const SURVEY_URL =
   "https://survey.alchemer.com/s3/7634825/MDN-baseline-feedback";
 
-export function BaselineIndicator({
-  status,
-}: {
-  status: SupportStatus & { asterisk?: boolean };
-}) {
+export function BaselineIndicator({ status }: { status: SupportStatus }) {
   const gleanClick = useGleanClick();
   const locale = useLocale();
   const { pathname } = useLocation();
@@ -182,7 +180,9 @@ export function BaselineIndicator({
           </p>
         )}
         {status.asterisk && (
-          <p>* Some parts of this feature may have varying levels of support</p>
+          <p>
+            * Some parts of this feature may have varying levels of support.
+          </p>
         )}
         <ul>
           <li>
