@@ -331,7 +331,7 @@ function Flaws({
               />
             );
           default:
-            throw new Error(`Unknown flaw check '${flaw.name}'`);
+            return <Unknown key="unknown" flaws={doc.flaws.unknown || []} />;
         }
       })}
     </div>
@@ -531,6 +531,20 @@ function BrokenLinks({
   );
 }
 
+function Unknown({ flaws }: { flaws: GenericFlaw[] }) {
+  return (
+    <div className="flaw flaw__unkown">
+      <h3>{humanizeFlawName("unknown")}</h3>
+      <ul>
+        {flaws.map((flaw) => (
+          <li key={flaw.id}>
+            <code>{flaw.explanation}</code>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 function BadBCDQueries({ flaws }: { flaws: BadBCDQueryFlaw[] }) {
   return (
     <div className="flaw flaw__bad_bcd_queries">
@@ -692,7 +706,9 @@ function Macros({
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {flaws.map((flaw) => {
-        const inPrerequisiteMacro = !flaw.filepath.includes(sourceFilePath);
+        const inPrerequisiteMacro = flaw.filepath
+          ? !flaw.filepath.includes(sourceFilePath)
+          : false;
         return (
           <details
             key={flaw.id}

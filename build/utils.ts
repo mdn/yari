@@ -5,7 +5,6 @@ import path from "node:path";
 import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
-import { Element } from "domhandler";
 import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
@@ -149,38 +148,6 @@ export function getImageminPlugin(fileName: string) {
   throw new Error(`No imagemin plugin for ${extension}`);
 }
 
-export function splitSections(rawHTML) {
-  const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
-  const blocks = [];
-  const toc = [];
-
-  const section = cheerio.load("<div></div>")("div").eq(0);
-
-  const iterable = [...($("#_body")[0] as Element).childNodes];
-  let c = 0;
-  iterable.forEach((child) => {
-    if ("tagName" in child && child.tagName === "h2") {
-      if (c) {
-        blocks.push(section.clone());
-        section.empty();
-        c = 0;
-      }
-      const text = $(child).text();
-      const id = text.replace(/[ .,!?]+/g, "-").toLowerCase();
-      toc.push({ id, text });
-      child.attribs = { ...(child.attribs || {}), id };
-    }
-    c++;
-    section.append(child);
-  });
-  if (c) {
-    blocks.push(section.clone());
-  }
-
-  const sections = blocks.map((block) => block.html().trim());
-  return { sections, toc };
-}
-
 /**
  * Return an array of all images that are inside the documents source folder.
  *
@@ -229,6 +196,10 @@ export function postProcessExternalLinks($) {
       // But we haven't applied all fixable flaws yet and we still have to
       // support translated content which is quite a long time away from
       // being entirely treated with the fixable flaws cleanup.
+      $a.attr(
+        "href",
+        $a.attr("href").replace("https://developer.mozilla.org", "") || "/"
+      );
       return;
     }
     $a.addClass("external");

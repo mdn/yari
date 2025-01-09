@@ -1,4 +1,4 @@
-import * as cheerio from "cheerio";
+import cheerio from "cheerio";
 import ejs from "ejs";
 import path from "node:path";
 

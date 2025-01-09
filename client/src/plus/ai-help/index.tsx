@@ -1,4 +1,3 @@
-import Prism from "prismjs";
 import {
   Children,
   MutableRefObject,
@@ -59,6 +58,7 @@ import {
 } from "./constants";
 import InternalLink from "../../ui/atoms/internal-link";
 import { isPlusSubscriber } from "../../utils";
+import { CodeWithSyntaxHighlight } from "../../document/code/syntax-highlight";
 
 type Category = "apis" | "css" | "html" | "http" | "js" | "learn";
 
@@ -482,19 +482,15 @@ function AIHelpAssistantResponse({
               },
               code: ({ className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || "");
-                const lang = Prism.languages[match?.[1]];
-                return lang ? (
-                  <code
-                    {...props}
+                const lang = match?.[1];
+                return (
+                  <CodeWithSyntaxHighlight
+                    language={lang}
                     className={className}
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(String(children), lang),
-                    }}
-                  />
-                ) : (
-                  <code {...props} className={className}>
+                    {...props}
+                  >
                     {children}
-                  </code>
+                  </CodeWithSyntaxHighlight>
                 );
               },
             }}
@@ -983,7 +979,9 @@ export function AIHelpInner() {
                 ))}
               </section>
             )}
-            {hash === "#debug" && <pre>{JSON.stringify(datas, null, 2)}</pre>}
+            {hash === "#debug" && (
+              <pre>{JSON.stringify({ datas, messages, quota }, null, 2)}</pre>
+            )}
           </section>
         )}
       </Container>

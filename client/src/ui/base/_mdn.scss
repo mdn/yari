@@ -9,8 +9,8 @@
 }
 
 @mixin mify {
-  @include uify;
   margin-left: 0.5rem;
+  @include uify;
 
   &::before {
     background-color: var(--text-link);

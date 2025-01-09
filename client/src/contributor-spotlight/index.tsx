@@ -11,6 +11,7 @@ import "./index.scss";
 import { useLocale } from "../hooks";
 import { PageNotFound } from "../page-not-found";
 import { Loading } from "../ui/atoms/loading";
+import { Prose } from "../document/ingredients/prose";
 
 type ContributorDetails = {
   sections: [string];
@@ -83,12 +84,14 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
           </a>
         </section>
         <section
-          dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
+          dangerouslySetInnerHTML={{ __html: hyData.sections[0].value.content }}
         ></section>
         <Quote name={hyData.contributorName}>{hyData.quote}</Quote>
 
-        {hyData.sections.slice(1).map((section) => {
-          return <section dangerouslySetInnerHTML={{ __html: section }} />;
+        {hyData.sections.slice(1).map((section, index) => {
+          return (
+            <Prose key={section.value.id || index} section={section.value} />
+          );
         })}
       </main>
       <GetInvolved />

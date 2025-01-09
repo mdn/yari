@@ -224,6 +224,7 @@
         "CSSKeyframesRule",
         "CSSMediaRule",
         "CSSNamespaceRule",
+        "CSSNestedDeclarations",
         "CSSPageRule",
         "CSSRule",
         "CSSRuleList",

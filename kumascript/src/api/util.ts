@@ -4,16 +4,11 @@
  */
 import sanitizeFilename from "sanitize-filename";
 import * as cheerio from "cheerio";
-import { Element } from "domhandler";
+import chalk from "chalk";
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
-const INJECT_SECTION_ID_TAGS = new Set([
-  ...HEADING_TAGS,
-  "section",
-  "div",
-  "dt",
-]);
+const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section", "dt"]);
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
@@ -131,7 +126,6 @@ function collectClosestCode($start) {
       ];
     });
     if (pairs.some(([, code]) => !!code)) {
-      $start.prop("title", $level.first(":header").text());
       return Object.fromEntries(pairs);
     }
   }
@@ -143,7 +137,10 @@ export class HTMLTool {
   private $: cheerio.CheerioAPI;
 
   constructor(html, pathDescription?: any) {
-    this.$ = typeof html == "string" ? cheerio.load(html) : html;
+    this.$ =
+      typeof html == "string"
+        ? cheerio.load(html, { decodeEntities: true })
+        : html;
     this.pathDescription = pathDescription;
   }
 
@@ -175,7 +172,7 @@ export class HTMLTool {
     // And we ensure all IDs that get added are completely lowercase.
     $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
       const $element = $(element);
-      const $first = $element[0] as Element;
+      const $first = $element[0] as cheerio.Element;
       const isDt = $first.name === "dt";
       // Default is the existing one. Let's see if we need to change it.
       let id = $element.attr("id");
@@ -225,7 +222,7 @@ export class HTMLTool {
         // Link the first element child to the ID.
         const firstContent = $element.contents().first();
         if (!firstContent.is("a") && firstContent.find("a").length === 0) {
-          $(firstContent).wrap(`<a href="#${encodeURIComponent(id)}"></a>`);
+          $(firstContent).wrap(`<a href="#${id}"></a>`);
         }
       }
     });
@@ -314,6 +311,11 @@ export class HTMLTool {
       // We're here because we can't find the sectionID, so instead we're going
       // to find the live-sample iframe by its id (iframeID, NOT sectionID), and
       // then collect the closest blocks of code for the live sample.
+      console.warn(
+        chalk.yellow(
+          `invalid header id in live sample ${sectionID} within ${this.pathDescription}`
+        )
+      );
       result = collectClosestCode(findSectionStart(this.$, iframeID));
       if (!result) {
         throw new KumascriptError(

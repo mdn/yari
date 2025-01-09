@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useGleanClick } from "../../../../telemetry/glean-context";
@@ -9,10 +9,19 @@ import { Submenu } from "../../../molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { useLocale } from "../../../../hooks";
-import { LANGUAGE } from "../../../../telemetry/constants";
+import { LANGUAGE, LANGUAGE_REMEMBER } from "../../../../telemetry/constants";
+import {
+  deleteCookie,
+  getCookieValue,
+  setCookieValue,
+} from "../../../../utils";
+import { GleanThumbs } from "../../../atoms/thumbs";
+import { Switch } from "../../../atoms/switch";
+import { Icon } from "../../../atoms/icon";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+const PREFERRED_LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 3; // 3 years.
 
 export function LanguageMenu({
   onClose,
@@ -29,51 +38,44 @@ export function LanguageMenu({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const changeLocale: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
-    const preferredLocale = event.currentTarget.dataset.locale;
+    const newLocale = event.currentTarget.dataset.locale;
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
-    if (preferredLocale !== locale) {
-      let cookieValueBefore = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
-      if (cookieValueBefore && cookieValueBefore.includes("=")) {
-        cookieValueBefore = cookieValueBefore.split("=")[1];
-      }
+    if (newLocale !== locale) {
+      const oldLocale = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
 
-      for (const translation of translations) {
-        if (translation.locale === preferredLocale) {
-          let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
-            translation.locale
-          };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-          if (
-            !(
-              document.location.hostname === "localhost" ||
-              document.location.hostname === "localhost.org"
-            )
-          ) {
-            cookieValue += ";secure";
+      if (oldLocale === locale) {
+        for (const translation of translations) {
+          if (translation.locale === newLocale) {
+            setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, newLocale, {
+              maxAge: PREFERRED_LOCALE_COOKIE_MAX_AGE,
+            });
+            gleanClick(`${LANGUAGE_REMEMBER}: ${oldLocale} -> ${newLocale}`);
           }
-          document.cookie = cookieValue;
         }
       }
 
-      const oldValue = cookieValueBefore || "none";
-      gleanClick(`${LANGUAGE}: ${oldValue} -> ${preferredLocale}`);
+      gleanClick(`${LANGUAGE}: ${locale} -> ${newLocale}`);
     }
   };
 
   const menuEntry = {
     label: "Languages",
     id: menuId,
-    items: translations.map((translation) => ({
-      component: () => (
-        <LanguageMenuItem
-          native={native}
-          translation={translation}
-          changeLocale={changeLocale}
-        />
-      ),
-    })),
+    items: [
+      {
+        component: () => <LocaleRedirectSetting />,
+      },
+      ...translations.map((translation) => ({
+        component: () => (
+          <LanguageMenuItem
+            native={native}
+            translation={translation}
+            changeLocale={changeLocale}
+          />
+        ),
+      })),
+    ],
   };
 
   return (
@@ -93,6 +95,7 @@ export function LanguageMenu({
         onClickHandler={() => setIsOpen(!isOpen)}
       >
         {native}
+        <LocaleStatusIcon locale={locale} />
       </Button>
 
       <DropdownMenu alwaysRenderChildren>
@@ -124,6 +127,70 @@ function LanguageMenuItem({
       className="button submenu-item"
     >
       <span>{translation.native}</span>
+      <LocaleStatusIcon locale={translation.locale} />
     </a>
   );
+}
+
+function LocaleRedirectSetting() {
+  const gleanClick = useGleanClick();
+  const locale = useLocale();
+  const [preferredLocale, setPreferredLocale] = useState<string | undefined>();
+
+  useEffect(() => {
+    setPreferredLocale(getCookieValue(PREFERRED_LOCALE_COOKIE_NAME));
+  }, []);
+
+  function toggle(event) {
+    const oldValue = getCookieValue(PREFERRED_LOCALE_COOKIE_NAME);
+    const newValue = event.target.checked;
+    if (newValue) {
+      setCookieValue(PREFERRED_LOCALE_COOKIE_NAME, locale, {
+        maxAge: 60 * 60 * 24 * 365 * 3,
+      });
+      setPreferredLocale(locale);
+      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue ?? 0} -> ${locale}`);
+    } else {
+      deleteCookie(PREFERRED_LOCALE_COOKIE_NAME);
+      setPreferredLocale(undefined);
+      gleanClick(`${LANGUAGE_REMEMBER}: ${oldValue} -> 0`);
+    }
+  }
+
+  return (
+    <form className="submenu-item locale-redirect-setting">
+      <div className="group">
+        <Switch
+          name="locale-redirect"
+          checked={locale === preferredLocale}
+          toggle={toggle}
+        >
+          Remember language
+        </Switch>
+        <a
+          href="https://github.com/orgs/mdn/discussions/739"
+          rel="external noopener noreferrer"
+          target="_blank"
+          title="Enable this setting to automatically switch to this language when it's available. (Click to learn more.)"
+        >
+          <Icon name="question-mark" />
+        </a>
+      </div>
+      <GleanThumbs feature="locale-redirect" question="Is this useful?" />
+    </form>
+  );
+}
+
+function LocaleStatusIcon({ locale }: { locale: string }) {
+  switch (locale) {
+    case "de":
+      return (
+        <span title="Diese Übersetzung ist Teil eines Experiments.">
+          <Icon name="experimental" />
+        </span>
+      );
+
+    default:
+      return null;
+  }
 }

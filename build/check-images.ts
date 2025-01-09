@@ -10,7 +10,6 @@ import { Document, FileAttachment } from "../content/index.js";
 import { FLAW_LEVELS } from "../libs/constants/index.js";
 import { findMatchesInText, findMatchesInMarkdown } from "./matches.js";
 import * as cheerio from "cheerio";
-import { Element } from "domhandler";
 import { Doc } from "../libs/types/document.js";
 
 const { default: sizeOf } = imagesize;
@@ -34,7 +33,7 @@ export function checkImageReferences(
   const checked = new Map<string, number>();
 
   function addImageFlaw(
-    $img: cheerio.Cheerio<Element>,
+    $img: cheerio.Cheerio<cheerio.Element>,
     src: string,
     {
       explanation,
@@ -134,7 +133,10 @@ export function checkImageReferences(
           // might be something like `screenshot.png` for the sake of rendering
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
-        } else {
+        } else if (
+          absoluteURL.hostname !== "mdn.github.io" ||
+          !absoluteURL.pathname.startsWith("/shared-assets/")
+        ) {
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
@@ -236,7 +238,7 @@ export function checkImageWidths(
   const checked = new Map();
 
   function addStyleFlaw(
-    $img: cheerio.Cheerio<Element>,
+    $img: cheerio.Cheerio<cheerio.Element>,
     style: string,
     suggestion: string
   ) {

@@ -191,8 +191,10 @@ export function buildLocalizedHandlers(locale: Locale): Handlers {
         children:
           "children" in item
             ? item.children.flatMap((child) =>
-                "tagName" in child && child.tagName == "p"
-                  ? child.children
+                "tagName" in child &&
+                child.tagName == "p" &&
+                child.children?.length === 0
+                  ? []
                   : [child]
               )
             : [],

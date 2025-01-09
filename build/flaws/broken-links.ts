@@ -9,10 +9,11 @@ import {
 } from "../../libs/constants/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
 import * as cheerio from "cheerio";
-import { Element } from "domhandler";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
 import { ONLY_AVAILABLE_IN_ENGLISH } from "../../libs/l10n/l10n.js";
+import web from "../../kumascript/src/api/web.js";
+import mdn from "../../kumascript/src/api/mdn.js";
 
 const _safeToHttpsDomains = new Map();
 
@@ -44,7 +45,7 @@ function isHomepageURL(url) {
 }
 
 function mutateLink(
-  $element: cheerio.Cheerio<Element>,
+  $element: cheerio.Cheerio<cheerio.Element>,
   suggestion: string = null,
   enUSFallback: string = null,
   isSelfLink = false
@@ -63,7 +64,16 @@ function mutateLink(
     $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
-    $element.attr("title", "This is a link to an unwritten page");
+    const locale = $element.attr("href")?.match(/^\/([^/]+)\//)?.[1] || "en-US";
+    const titleWhenMissing = (mdn as any).getLocalString.call(
+      { env: { locale } },
+      web.getJSONData("L10n-Common"),
+      "summary"
+    );
+    $element.attr("title", titleWhenMissing);
+    const href = $element.attr("href");
+    $element.attr("href", null);
+    $element.attr("data-href", href);
   }
 }
 
@@ -94,7 +104,7 @@ export function getBrokenLinksFlaws(
 
   // A closure function to help making it easier to append flaws
   function addBrokenLink(
-    $element: cheerio.Cheerio<Element>,
+    $element: cheerio.Cheerio<cheerio.Element>,
     index: number,
     href: string,
     suggestion: string = null,
@@ -138,7 +148,11 @@ export function getBrokenLinksFlaws(
     });
   }
 
-  function checkHash(hash: string, a: cheerio.Cheerio<Element>, href: string) {
+  function checkHash(
+    hash: string,
+    a: cheerio.Cheerio<cheerio.Element>,
+    href: string
+  ) {
     if (hash.startsWith(":~:")) {
       // Ignore fragment directives.
       return;

@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
 import got from "got";
 
 import { m2h } from "../markdown/index.js";
+import * as kumascript from "../kumascript/index.js";
 
 import {
   VALID_LOCALES,
@@ -21,29 +21,37 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
   DEV_MODE,
+  GENERIC_CONTENT_ROOT,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import { DocFrontmatter, DocParent, NewsItem } from "../libs/types/document.js";
-import { getSlugByBlogPostUrl, splitSections } from "./utils.js";
+import {
+  getSlugByBlogPostUrl,
+  injectLoadingLazyAttributes,
+  makeTOC,
+  postProcessExternalLinks,
+} from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { findPostBySlug } from "./blog.js";
 import { buildSitemap } from "./sitemaps.js";
 import { type Locale } from "../libs/types/core.js";
 import { HydrationData } from "../libs/types/hydration.js";
+import { extractSections } from "./extract-sections.js";
+import { wrapTables } from "./wrap-tables.js";
 
 const FEATURED_ARTICLES = [
+  "blog/mdn-scrimba-partnership/",
   "blog/learn-javascript-console-methods/",
   "blog/introduction-to-web-sustainability/",
   "docs/Web/API/CSS_Custom_Highlight_API",
-  "docs/Web/CSS/color_value",
 ];
 
 const LATEST_NEWS: (NewsItem | string)[] = [
+  "blog/mdn-scrimba-partnership/",
   "blog/mdn-http-observatory-launch/",
   "blog/mdn-curriculum-launch/",
   "blog/baseline-evolution-on-mdn/",
-  "blog/introducing-the-mdn-playground/",
 ];
 
 const PAGE_DESCRIPTIONS = Object.freeze({
@@ -59,17 +67,31 @@ async function buildContributorSpotlight(
 ) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
+  let featuredContributorFrontmatter: DocFrontmatter;
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
-    const markdown = fs.readFileSync(
-      `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf-8"
-    );
+    const file = `${contributorSpotlightRoot}/${contributor}/index.md`;
+    const markdown = fs.readFileSync(file, "utf-8");
+    const url = `/${locale}/${prefix}/${contributor}`;
 
     const frontMatter = frontmatter<DocFrontmatter>(markdown);
     const contributorHTML = await m2h(frontMatter.body, { locale });
+    const d = {
+      url,
+      rawBody: contributorHTML,
+      metadata: {
+        locale: DEFAULT_LOCALE,
+        slug: `${prefix}/${contributor}`,
+        url,
+      },
 
-    const { sections } = splitSections(contributorHTML);
+      isMarkdown: true,
+      fileInfo: {
+        path: file,
+      },
+    };
+    const [$] = await kumascript.render(url, {}, d);
+    const [sections] = await extractSections($);
 
     const hyData = {
       sections: sections,
@@ -102,14 +124,19 @@ async function buildContributorSpotlight(
     if (options.verbose) {
       console.log("Wrote", jsonFilePath);
     }
+
     if (frontMatter.attributes.is_featured) {
-      return {
-        contributorName: frontMatter.attributes.contributor_name,
-        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
-        quote: frontMatter.attributes.quote,
-      };
+      featuredContributorFrontmatter = frontMatter.attributes;
     }
   }
+
+  return featuredContributorFrontmatter
+    ? {
+        contributorName: featuredContributorFrontmatter.contributor_name,
+        url: `/${locale}/${prefix}/${featuredContributorFrontmatter.folder_name}`,
+        quote: featuredContributorFrontmatter.quote,
+      }
+    : undefined;
 }
 
 export async function buildSPAs(options: {
@@ -123,9 +150,9 @@ export async function buildSPAs(options: {
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
   const locale = DEFAULT_LOCALE;
-  const url = `/${locale}/404.html`;
+  const url = `/${locale}/404/index.html`;
   const context: HydrationData = { url, pageNotFound: true };
-  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "_spas");
+  const outPath = path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "404");
   fs.mkdirSync(outPath, { recursive: true });
   const jsonFilePath = path.join(
     outPath,
@@ -200,7 +227,6 @@ export async function buildSPAs(options: {
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
-        { prefix: "community", pageTitle: "Contribute to MDN" },
         {
           prefix: "advertising",
           pageTitle: "Advertise with us",
@@ -247,17 +273,10 @@ export async function buildSPAs(options: {
   }
 
   // Building the MDN Plus pages.
-
-  /**
-   *
-   * @param {string} dirpath
-   * @param {string} slug
-   * @param {string} title
-   */
   async function buildStaticPages(
     dirpath: string,
-    slug: string,
-    title = "MDN"
+    slugPrefix?: string,
+    title?: string
   ) {
     const crawler = new fdir()
       .withFullPaths()
@@ -268,7 +287,7 @@ export async function buildSPAs(options: {
 
     for (const filepath of filepaths) {
       const file = filepath.replace(dirpath, "");
-      const page = file.split(".")[0];
+      const page = file.split(".")[0].slice(1);
 
       const locale = DEFAULT_LOCALE;
       const pathLocale = locale.toLowerCase();
@@ -277,9 +296,29 @@ export async function buildSPAs(options: {
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
       const rawHTML = await m2h(frontMatter.body, { locale });
 
-      const { sections, toc } = splitSections(rawHTML);
+      const slug = slugPrefix ? `${slugPrefix}/${page}` : `${page}`;
+      const url = `/${locale}/${slug}`;
+      const d = {
+        url,
+        rawBody: rawHTML,
+        metadata: {
+          locale: DEFAULT_LOCALE,
+          slug,
+          url,
+        },
 
-      const url = `/${locale}/${slug}/${page}`;
+        isMarkdown: true,
+        fileInfo: {
+          path: file,
+        },
+      };
+      const [$] = await kumascript.render(url, {}, d);
+      wrapTables($);
+      postProcessExternalLinks($);
+      injectLoadingLazyAttributes($);
+      const [sections] = await extractSections($);
+      const toc = makeTOC({ body: sections });
+
       const hyData = {
         id: page,
         ...frontMatter.attributes,
@@ -288,16 +327,13 @@ export async function buildSPAs(options: {
       };
       const context: HydrationData = {
         hyData,
-        pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+        pageTitle: title
+          ? `${frontMatter.attributes.title} | ${title}`
+          : frontMatter.attributes.title,
         url,
       };
 
-      const outPath = path.join(
-        BUILD_OUT_ROOT,
-        pathLocale,
-        ...slug.split("/"),
-        page
-      );
+      const outPath = path.join(BUILD_OUT_ROOT, pathLocale, ...slug.split("/"));
       fs.mkdirSync(outPath, { recursive: true });
       const jsonFilePath = path.join(outPath, "index.json");
       fs.writeFileSync(jsonFilePath, JSON.stringify(context));
@@ -314,16 +350,20 @@ export async function buildSPAs(options: {
     }
   }
 
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/plus/", import.meta.url)),
-    "plus/docs",
-    "MDN Plus"
-  );
-  await buildStaticPages(
-    fileURLToPath(new URL("../copy/observatory/", import.meta.url)),
-    "observatory/docs",
-    OBSERVATORY_TITLE
-  );
+  if (GENERIC_CONTENT_ROOT) {
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "plus"),
+      "plus/docs",
+      "MDN Plus"
+    );
+    await buildStaticPages(
+      path.join(GENERIC_CONTENT_ROOT, "observatory"),
+      "observatory/docs",
+      OBSERVATORY_TITLE
+    );
+    await buildStaticPages(path.join(GENERIC_CONTENT_ROOT, "community"));
+    await buildStaticPages(path.join(GENERIC_CONTENT_ROOT, "about"));
+  }
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.

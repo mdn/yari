@@ -157,7 +157,6 @@ main {
   min-height: 80vh;
 }
 
-.about-container,
 .main-page-content {
   a {
     &:link,
@@ -355,7 +354,8 @@ sup.new {
 
 .sticky-header-container {
   position: sticky;
-  top: 0;
+  // Avoid gap on certain zoom levels.
+  top: -1px;
   z-index: var(--z-index-main-header);
 }
 

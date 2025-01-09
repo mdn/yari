@@ -2,7 +2,7 @@ import { ChangeEventHandler } from "react";
 import { charLength } from "../../../utils";
 
 interface Props {
-  children: (props: ChildProps) => void;
+  children: (props: ChildProps) => React.ReactNode;
   value: string;
   limit: number;
 }

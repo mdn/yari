@@ -51,6 +51,7 @@ export function useCollectSample(doc: any) {
 export function useRunSample(doc: Doc | undefined) {
   const isServer = useIsServer();
   const locale = useLocale();
+  const { hash } = useLocation();
 
   useEffect(() => {
     if (isServer) {
@@ -61,18 +62,15 @@ export function useRunSample(doc: Doc | undefined) {
       return;
     }
     document.querySelectorAll("iframe").forEach((iframe) => {
-      const src = new URL(iframe.src || "", "https://example.com");
-      if (!(src && src.pathname.toLowerCase().endsWith(`/runner.html`))) {
-        return null;
-      }
-      const id = src.searchParams.get("id");
+      const id = iframe.getAttribute("data-live-id") || null;
+      const path = iframe.getAttribute("data-live-path") || "/";
       if (!id) {
         return null;
       }
 
       const r =
-        getCodeAndNodesForIframeBySampleClass(id, src.pathname) ||
-        getCodeAndNodesForIframe(id, iframe, src.pathname);
+        getCodeAndNodesForIframeBySampleClass(id, path) ||
+        getCodeAndNodesForIframe(id, iframe, path);
       if (r === null) {
         return null;
       }
@@ -91,19 +89,16 @@ export function useRunSample(doc: Doc | undefined) {
         code,
         locale
       );
-      initPlayIframe(iframe, code);
+      const fullscreen = hash === `#livesample_fullscreen=${id}`;
+      initPlayIframe(iframe, code, fullscreen);
     });
-  }, [doc, isServer, locale]);
+  }, [doc, isServer, locale, hash]);
 }
-export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
+
+export function useDecorateCodeExamples(doc: Doc | undefined) {
   const location = useLocation();
-  const isServer = useIsServer();
 
   useEffect(() => {
-    if (isServer) {
-      return;
-    }
-
     if (!doc) {
       return;
     }
@@ -122,8 +117,14 @@ export function useCopyExamplesToClipboardAndAIExplain(doc: Doc | undefined) {
         } else {
           addCopyToClipboardButton(element, header);
         }
+        import("./code/syntax-highlight").then(({ highlightElement }) => {
+          highlightElement(
+            element,
+            header?.querySelector(".language-name")?.textContent || "plain"
+          );
+        });
       });
-  }, [doc, location, isServer]);
+  }, [doc, location]);
 }
 
 /**

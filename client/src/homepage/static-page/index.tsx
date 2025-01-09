@@ -3,15 +3,16 @@ import useSWR from "swr";
 import { DEV_MODE, PLACEMENT_ENABLED } from "../../env";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
-import { Toc } from "../../../../libs/types/document";
+import { Section, Toc } from "../../../../libs/types/document";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
 import { SidePlacement } from "../../ui/organisms/placement";
+import { Prose } from "../../document/ingredients/prose";
 
 interface StaticPageDoc {
   id: string;
   title: string;
-  sections: string[];
+  sections: Section[];
   toc: Toc[];
 }
 
@@ -86,10 +87,7 @@ function StaticPage({
         <main id="content" className="main-content" role="main">
           <article className={`main-page-content ${extraClasses || ""}`}>
             {hyData.sections.map((section, index) => (
-              <section
-                key={index}
-                dangerouslySetInnerHTML={{ __html: section }}
-              ></section>
+              <Prose key={section.value.id || index} section={section.value} />
             ))}
             {children}
           </article>

@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import Counter
 
 import click
-from elasticsearch.helpers import parallel_bulk
+from elasticsearch.helpers import streaming_bulk
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
@@ -90,7 +90,7 @@ def index(
     errors_counter = Counter()
     t0 = time.time()
     with get_progressbar() as bar:
-        for success, info in parallel_bulk(
+        for success, info in streaming_bulk(
             connection,
             generator(),
             # If the bulk indexing failed, it will by default raise a BulkIndexError.
@@ -217,8 +217,8 @@ def to_search(file, _index=None):
         return
     doc = data["doc"]
 
-    if doc["mdn_url"].startswith("/en-US/curriculum/"):
-        # Skip curriculum content for now.
+    if "/docs/" not in doc["mdn_url"]:
+        # Skip non docs content for now.
         return
 
     locale, slug = doc["mdn_url"].split("/docs/", 1)
@@ -248,7 +248,7 @@ def to_search(file, _index=None):
             )
         ),
         popularity=doc["popularity"],
-        summary=doc["summary"],
+        summary=doc.get("summary", ""),
         # Note! We're always lowercasing the 'slug'. This way we can search on it,
         # still as a `keyword` index, but filtering by prefix.
         # E.g. in kuma; ?slug_prefix=weB/Css

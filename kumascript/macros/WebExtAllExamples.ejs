@@ -12,20 +12,29 @@ is generated using this macro.
 
 */
 
-const examplesBaseUrl = "https://github.com/mdn/webextensions-examples/tree/master/";
+const examplesBaseUrl = "https://github.com/mdn/webextensions-examples/tree/main/";
 const allExamples = await MDN.fetchWebExtExamples();
 const lang = env.locale;
 
 const s_name = mdn.localString({
-    "en-US": "Name"
+    "de": "Name",
+    "en-US": "Name",
+    "zh-CN": "名称",
+    "zh-TW": "名稱",
 });
 
 const s_desc = mdn.localString({
-    "en-US": "Description"
+    "de": "Beschreibung",
+    "en-US": "Description",
+    "zh-CN": "描述",
+    "zh-TW": "描述",
 });
 
 const s_javascript_apis = mdn.localString({
-    "en-US": "JavaScript APIs"
+    "de": "JavaScript APIs",
+    "en-US": "JavaScript APIs",
+    "zh-CN": "JavaScript API",
+    "zh-TW": "JavaScript API",
 });
 
 const s_webextension_api_path = mdn.localString({
