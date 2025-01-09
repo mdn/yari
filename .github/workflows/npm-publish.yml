@@ -64,7 +64,9 @@ jobs:
           # so you have to set it to something. So let's (ab)use the content
           # we use for the end-to-end testing.
           CONTENT_ROOT: testing/content/files
-        run: yarn build:prepare
+        # We use the legacy version for now to include spas and popularities in
+        # the package.
+        run: yarn build:legacy:prepare
 
       - name: Publish
         if: steps.release.outputs.release_created
