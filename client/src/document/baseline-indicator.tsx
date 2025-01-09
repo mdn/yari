@@ -9,7 +9,9 @@ import "./baseline-indicator.scss";
 
 // web-features doesn't export these types directly so we need to do a little typescript magic:
 import type { features } from "web-features";
-type SupportStatus = (typeof features)[keyof typeof features]["status"];
+type SupportStatus = (typeof features)[keyof typeof features]["status"] & {
+  asterisk?: boolean;
+};
 type BrowserIdentifier =
   keyof (typeof features)[keyof typeof features]["status"]["support"];
 
@@ -123,6 +125,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
                   ? "Widely available"
                   : low_date?.getFullYear()}
               </span>
+              {status.asterisk && " *"}
             </>
           ) : (
             <span className="not-bold">Limited availability</span>
@@ -174,6 +177,11 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           <p>
             This feature is not Baseline because it does not work in some of the
             most widely-used browsers.
+          </p>
+        )}
+        {status.asterisk && (
+          <p>
+            * Some parts of this feature may have varying levels of support.
           </p>
         )}
         <ul>
