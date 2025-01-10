@@ -6,6 +6,16 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      rari-branch:
+        description: "rari branch to build (leave blank for npm release)"
+        type: string
+        default: ""
+
+      content-branch:
+        description: "content branch to build"
+        type: string
+        default: "main"
+
       notes:
         description: "Notes"
         required: false
@@ -49,6 +59,7 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
+          ref: ${{ github.event.inputs.content-branch }}
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -120,18 +131,31 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v4
-        if: ${{ ! vars.SKIP_BUILD }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
         with:
           repository: mdn/rari
           path: mdn/rari
+          ref: ${{ github.event.inputs.rari-branch }}
 
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
+      - name: Cache Cargo registry
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        uses: actions/cache@v4
         with:
-          toolchain: 1.81.0
-          override: true
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+
+      - name: sccache-cache
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        uses: mozilla-actions/sccache-action@v0.0.7
 
       - name: Build rari
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
         run: |
           cd mdn/rari
           cargo build --release
