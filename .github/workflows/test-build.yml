@@ -52,7 +52,7 @@ jobs:
           echo "rari-branch: ${{ github.event.inputs.rari-branch }}"
           echo "content-branch: ${{ github.event.inputs.content-branch }}"
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
-          echo "invalidate: ${{ github.event.inputs.content-branch }}"
+          echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
       - uses: actions/checkout@v4
 
