@@ -173,8 +173,10 @@ def post_about_dangerous_content(
                 count = external_urls[url]
                 # Avoid GitHub mentions.
                 original_url = url
-                url = url.replace('https://github.com/', 'https://redirect.github.com/')
-                link = f"<{url}>" if url == original_url else f"[{original_url}](<{url}>)"
+                url = url.replace("https://github.com/", "https://redirect.github.com/")
+                link = (
+                    f"<{url}>" if url == original_url else f"[{original_url}](<{url}>)"
+                )
                 line = (
                     f"  - {'🚨 ' if url.startswith('http://') else ''}"
                     f"{link} ({count} time{'' if count == 1 else 's'})"
