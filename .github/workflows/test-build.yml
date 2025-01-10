@@ -6,13 +6,13 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      rari-branch:
-        description: "rari branch to build (leave blank for npm release)"
+      rari-ref:
+        description: "rari ref to build (leave blank for npm release)"
         type: string
         default: ""
 
-      content-branch:
-        description: "content branch to build"
+      content-ref:
+        description: "content ref to build"
         type: string
         default: "main"
 
@@ -49,8 +49,8 @@ jobs:
     steps:
       - name: Print information about build
         run: |
-          echo "rari-branch: ${{ github.event.inputs.rari-branch }}"
-          echo "content-branch: ${{ github.event.inputs.content-branch }}"
+          echo "rari-ref: ${{ github.event.inputs.rari-ref }}"
+          echo "content-ref: ${{ github.event.inputs.content-ref }}"
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
@@ -66,7 +66,7 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
-          ref: ${{ github.event.inputs.content-branch }}
+          ref: ${{ github.event.inputs.content-ref }}
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -127,7 +127,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: ${{ github.event.inputs.rari-branch == '' && 'yarn' || '' }}
+          cache: ${{ github.event.inputs.rari-ref == '' && 'yarn' || '' }}
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
@@ -138,14 +138,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v4
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-ref != '' }}
         with:
           repository: mdn/rari
           path: mdn/rari
-          ref: ${{ github.event.inputs.rari-branch }}
+          ref: ${{ github.event.inputs.rari-ref }}
 
       - name: Cache Cargo registry
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-ref != '' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -155,14 +155,14 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-ref != '' }}
 
       - name: sccache-cache
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-ref != '' }}
         uses: mozilla-actions/sccache-action@v0.0.7
 
       - name: Build rari
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-ref != '' }}
         run: |
           cd mdn/rari
           cargo build --release
