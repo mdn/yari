@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.1.2](https://github.com/mdn/yari/compare/v4.1.1...v4.1.2) (2025-01-10)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.10.6 to 1.10.7 ([#12425](https://github.com/mdn/yari/issues/12425)) ([bdaba43](https://github.com/mdn/yari/commit/bdaba431f45f6f7cebd129689aacae161f3d813b))
+* **deps-dev:** bump typescript from 5.7.2 to 5.7.3 ([#12417](https://github.com/mdn/yari/issues/12417)) ([6d1e257](https://github.com/mdn/yari/commit/6d1e257a0e3bdaa5cda387ad2127c50d6f9b110b))
+* **deps:** bump @codemirror/state from 6.5.0 to 6.5.1 ([#12428](https://github.com/mdn/yari/issues/12428)) ([7d20681](https://github.com/mdn/yari/commit/7d206813de22c9572c98320eccafa3cbcbdeb1bb))
+* **deps:** bump @mdn/rari from 0.1.15 to 0.1.16 ([#12427](https://github.com/mdn/yari/issues/12427)) ([ec381d0](https://github.com/mdn/yari/commit/ec381d0afc9d77e8c2408c96aff6193349dad684))
+* **deps:** bump openai from 4.77.4 to 4.78.0 ([#12426](https://github.com/mdn/yari/issues/12426)) ([4786e6d](https://github.com/mdn/yari/commit/4786e6d66d95d21807275f3df4db7497fe5adf24))
+
 ## [4.1.1](https://github.com/mdn/yari/compare/v4.1.0...v4.1.1) (2025-01-09)
 
 
