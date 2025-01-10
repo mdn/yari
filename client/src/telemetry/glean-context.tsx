@@ -166,10 +166,17 @@ export function useGlobalGleanClickHandlers() {
       handleButtonClick(ev, gleanClick);
       handleSidebarClick(ev, gleanClick);
     };
+    const gleanClickHandler = (ev: CustomEvent<string>) => {
+      gleanClick(ev.detail);
+    };
 
     window.addEventListener("click", handler);
+    window.addEventListener("glean-click", gleanClickHandler);
 
-    return () => window.removeEventListener("click", handler);
+    return () => {
+      window.removeEventListener("click", handler);
+      window.removeEventListener("glean-click", gleanClickHandler);
+    };
   });
 }
 
