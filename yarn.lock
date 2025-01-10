@@ -1212,10 +1212,10 @@
     "@codemirror/view" "^6.0.0"
     crelt "^1.0.5"
 
-"@codemirror/state@^6.0.0", "@codemirror/state@^6.4.0", "@codemirror/state@^6.5.0":
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.5.0.tgz#e98dde85620618651543152fe1c2483300a0ccc9"
-  integrity sha512-MwBHVK60IiIHDcoMet78lxt6iw5gJOGSbNbOIVBHWVXIH4/Nq1+GQgLLGgI1KlnN86WDXsPudVaqYHKBIx7Eyw==
+"@codemirror/state@^6.0.0", "@codemirror/state@^6.4.0", "@codemirror/state@^6.5.1":
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.5.1.tgz#e5c0599f7b43cf03f19e05861317df5425c07904"
+  integrity sha512-3rA9lcwciEB47ZevqvD8qgbzhM9qMb8vCcQCNmDfVRPQG4JT9mSb0Jg8H7YjKGGQcFnLN323fj9jdnG59Kx6bg==
   dependencies:
     "@marijn/find-cluster-break" "^1.0.0"
 
