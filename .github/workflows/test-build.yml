@@ -131,14 +131,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v4
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
         with:
           repository: mdn/rari
           path: mdn/rari
           ref: ${{ github.event.inputs.rari-branch }}
 
       - name: Cache Cargo registry
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -148,14 +148,14 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
 
       - name: sccache-cache
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
         uses: mozilla-actions/sccache-action@v0.0.7
 
       - name: Build rari
-        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != "" }}
+        if: ${{ ! vars.SKIP_BUILD && github.event.inputs.rari-branch != '' }}
         run: |
           cd mdn/rari
           cargo build --release
