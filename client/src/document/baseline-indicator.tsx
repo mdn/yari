@@ -116,7 +116,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           role="img"
           aria-label={level !== "not" ? "Baseline Check" : "Baseline Cross"}
         />
-        <h2>
+        <div className="status-title">
           {level !== "not" ? (
             <>
               Baseline{" "}
@@ -130,7 +130,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           ) : (
             <span className="not-bold">Limited availability</span>
           )}
-        </h2>
+        </div>
         {level === "low" && <div className="pill">Newly available</div>}
         <div className="browsers">
           {ENGINES.map(({ name, browsers }) => (
