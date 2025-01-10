@@ -67,7 +67,8 @@ export default function Playground() {
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
   let [state, setState] = useState(State.initial);
-  const [isEmpty, setIsEmpty] = useState<boolean>(true);
+  const [isShareable, setIsShareable] = useState<boolean>(true);
+  const [isClearable, setIsClearable] = useState<boolean>(true);
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
   );
@@ -120,14 +121,24 @@ export default function Playground() {
     };
   }, [initialContent?.src, initialCode?.src]);
 
-  const setEditorContent = (content: EditorContent) => {
-    if (controller.current) {
-      controller.current.code = { ...content };
-      if (content.src) {
-        controller.current.srcPrefix = content.src;
+  const setIsEmpty = useCallback((content: EditorContent) => {
+    const { html, css, js } = content;
+    setIsShareable(!html.trim() && !css.trim() && !js.trim());
+    setIsClearable(!html && !css && !js);
+  }, []);
+
+  const setEditorContent = useCallback(
+    (content: EditorContent) => {
+      if (controller.current) {
+        controller.current.code = { ...content };
+        if (content.src) {
+          controller.current.srcPrefix = content.src;
+        }
+        setIsEmpty(content);
       }
-    }
-  };
+    },
+    [setIsEmpty]
+  );
 
   useEffect(() => {
     (async () => {
@@ -156,12 +167,11 @@ export default function Playground() {
         setState(State.ready);
       }
     })();
-  }, [initialCode, state, gistId, stateParam]);
+  }, [initialCode, state, gistId, stateParam, setEditorContent]);
 
   const clear = async () => {
     setSearchParams([], { replace: true });
     setInitialContent(null);
-    setIsEmpty(true);
     setEditorContent({
       html: HTML_DEFAULT,
       css: CSS_DEFAULT,
@@ -231,8 +241,7 @@ export default function Playground() {
 
   const onEditorUpdate = () => {
     const code = getEditorContent();
-    const { html, css, js } = code;
-    setIsEmpty(!html && !css && !js);
+    setIsEmpty(code);
     store(SESSION_KEY, code);
   };
 
@@ -258,7 +267,7 @@ export default function Playground() {
               <Button
                 type="secondary"
                 id="share"
-                isDisabled={isEmpty}
+                isDisabled={isShareable}
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
                   setDialogState(DialogState.share);
@@ -269,7 +278,7 @@ export default function Playground() {
               </Button>
               <Button
                 type="secondary"
-                isDisabled={isEmpty}
+                isDisabled={isClearable}
                 id="clear"
                 extraClasses="red"
                 onClickHandler={clearConfirm}

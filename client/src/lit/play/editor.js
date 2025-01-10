@@ -61,6 +61,10 @@ export class PlayEditor extends LitElement {
     return this._editor ? this._editor.state.doc.toString() : this._value;
   }
 
+  _dispatchUpdate() {
+    this.dispatchEvent(new Event("update", { bubbles: true, composed: true }));
+  }
+
   _extensions() {
     const language = (() => {
       switch (this.language) {
@@ -99,9 +103,7 @@ export class PlayEditor extends LitElement {
           }
           this._updateTimer = window?.setTimeout(() => {
             this._updateTimer = -1;
-            this.dispatchEvent(
-              new Event("update", { bubbles: true, composed: true })
-            );
+            this._dispatchUpdate();
           }, 1000);
         }
       }),
@@ -141,10 +143,17 @@ export class PlayEditor extends LitElement {
     })();
     if (config) {
       const plugins = await Promise.all(config.plugins);
-      this.value = await prettier.format(this.value, {
+      const unformatted = this.value;
+      const formatted = await prettier.format(unformatted, {
         parser: config.parser,
         plugins: /** @type {import("prettier").Plugin[]} */ (plugins),
       });
+      if (this.value === unformatted) {
+        if (unformatted !== formatted) {
+          this.value = formatted;
+          this._dispatchUpdate();
+        }
+      }
     }
   }
 
