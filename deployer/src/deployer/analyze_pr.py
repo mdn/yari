@@ -171,6 +171,8 @@ def post_about_dangerous_content(
             external_urls_list = []
             for url in sorted(external_urls):
                 count = external_urls[url]
+                # Avoid GitHub mentions.
+                url = url.replace('https://github.com/', 'https://redirect.github.com/')
                 line = (
                     f"  - {'🚨 ' if url.startswith('http://') else ''}"
                     f"<{url}> ({count} time{'' if count==1 else 's'})"
