@@ -1,0 +1,15 @@
+@use "../../ui/vars" as *;
+
+:host {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.editor {
+  height: 100%;
+
+  .cm-editor {
+    height: 100%;
+    width: 100%;
+  }
+}
