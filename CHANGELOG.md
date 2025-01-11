@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.1.3](https://github.com/mdn/yari/compare/v4.1.2...v4.1.3) (2025-01-11)
+
+
+### Bug Fixes
+
+* add padding between specifications table and footer box ([bfec6a0](https://github.com/mdn/yari/commit/bfec6a02c23031066c1286b98f34d94a872a56ba))
+* **layout:** add space between specifications table and footer box ([#12434](https://github.com/mdn/yari/issues/12434)) ([bfec6a0](https://github.com/mdn/yari/commit/bfec6a02c23031066c1286b98f34d94a872a56ba))
+
+
+### Miscellaneous
+
+* **baseline:** change h2 in summary to div ([#12433](https://github.com/mdn/yari/issues/12433)) ([2a7aa70](https://github.com/mdn/yari/commit/2a7aa701aa063ec4537073385750e03197bc5ba6))
+* **deps-dev:** bump jsdom from 25.0.1 to 26.0.0 ([#12421](https://github.com/mdn/yari/issues/12421)) ([9cb81c3](https://github.com/mdn/yari/commit/9cb81c3f8627c79ce43f0ef275633abe6bf4af69))
+* **deps-dev:** bump typescript from 5.7.2 to 5.7.3 in /client/pwa ([#12430](https://github.com/mdn/yari/issues/12430)) ([9b1bfa8](https://github.com/mdn/yari/commit/9b1bfa8f16a8b24d7eeaf09209a98bc9fd05cba4))
+
 ## [4.1.2](https://github.com/mdn/yari/compare/v4.1.1...v4.1.2) (2025-01-10)
 
 
