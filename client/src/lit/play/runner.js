@@ -25,10 +25,7 @@ export class PlayRunner extends LitElement {
     this.code = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
-    this._src = "about:blank";
-
     this._subdomain = crypto.randomUUID();
-    this._flipFlop = 0;
   }
 
   /** @param {MessageEvent} e  */
@@ -45,6 +42,7 @@ export class PlayRunner extends LitElement {
   _updateSrc = new Task(this, {
     args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
     task: async ([code, srcPrefix], { signal }) => {
+      let src = "about:blank";
       if (code) {
         const { state } = await compressAndBase64Encode(
           JSON.stringify({
@@ -65,14 +63,13 @@ export class PlayRunner extends LitElement {
               }${PLAYGROUND_BASE_HOST}`
         );
         url.searchParams.set("state", state);
-        // ensure iframe reloads even if code doesn't change
-        url.searchParams.set("f", this._flipFlop.toString());
         url.pathname = `${srcPrefix || ""}/runner.html`;
-        this._src = url.href;
-        this._flipFlop = (this._flipFlop + 1) % 2;
-      } else {
-        this._src = "about:blank";
+        src = url.href;
       }
+      // update iframe src without adding to browser history
+      this.shadowRoot
+        ?.querySelector("iframe")
+        ?.contentWindow?.location.replace(src);
     },
   });
 
@@ -86,7 +83,6 @@ export class PlayRunner extends LitElement {
     return html`
       <iframe
         title="runner"
-        src=${this._src}
         sandbox="allow-scripts allow-same-origin allow-forms"
       ></iframe>
     `;
