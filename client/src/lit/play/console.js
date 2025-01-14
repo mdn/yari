@@ -37,10 +37,48 @@ class VirtualConsole {
 
   /** @param {...any} args */
   log(...args) {
-    // TODO: support string substitutions:
-    // https://developer.mozilla.org/en-US/docs/Web/API/console#using_string_substitutions
-    const formatted = args.map((x) => formatOutput(x));
-    this.#host._messages = [...this.#host._messages, formatted.join(" ")];
+    if (args.length > 1 && typeof args[0] === "string") {
+      // https://developer.mozilla.org/en-US/docs/Web/API/console#using_string_substitutions
+      // TODO: add unit testing of this
+      args[0] = args[0].replace(
+        /%(?:\.([0-9]+))?(.)/g,
+        (match, formatArg, format) => {
+          switch (format) {
+            case "o":
+            case "O":
+              const O = args.splice(1, 1)[0];
+              return formatOutput(O);
+            case "d":
+            case "i":
+              const i = args.splice(1, 1)[0];
+              return Math.trunc(i).toFixed(0).padStart(formatArg, "0");
+            case "s":
+              const s = args.splice(1, 1)[0];
+              return s.toString();
+            case "f":
+              const f = args.splice(1, 1)[0];
+              return (typeof f === "number" ? f : parseFloat(f)).toFixed(
+                formatArg ?? 6
+              );
+            case "c":
+              // TODO: Not implemented yet, so just remove the argument
+              args.splice(1, 1);
+              return "";
+            case "%":
+              return "%";
+            default:
+              return match;
+          }
+        }
+      );
+    }
+    this.#host._messages = [
+      ...this.#host._messages,
+      (args.every((x) => typeof x === "string")
+        ? args
+        : args.map((x) => formatOutput(x))
+      ).join(" "),
+    ];
   }
 
   /** @param {...any} args */

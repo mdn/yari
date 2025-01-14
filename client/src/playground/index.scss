@@ -208,6 +208,7 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
+      overflow: auto;
 
       button.flag-example {
         align-self: flex-end;

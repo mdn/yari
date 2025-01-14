@@ -1,19 +1,6 @@
 @use "../ui/vars" as *;
 @use "../ui/atoms/button/mixins" as button;
 
-:host {
-  display: block;
-  margin: 1rem 0;
-}
-
-:host([height="shorter"]) {
-  height: 433px;
-}
-
-:host([height="taller"]) {
-  height: 725px;
-}
-
 h4 {
   border: 1px solid var(--border-secondary);
   border-top-left-radius: var(--elem-radius);

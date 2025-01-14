@@ -238,7 +238,42 @@ export function renderHtml(state = null) {
         get(target, prop) {
           if (typeof target[prop] === "function") {
             return (...args) => {
-              window.parent.postMessage({ typ: "console", prop, args }, "*");
+              try {
+                window.parent.postMessage({ typ: "console", prop, args }, "*");
+              } catch {
+                try {
+                  window.parent.postMessage(
+                    {
+                      typ: "console",
+                      prop,
+                      args: args.map((x) => JSON.parse(JSON.stringify(x))),
+                    },
+                    "*"
+                  );
+                } catch {
+                  try {
+                    window.parent.postMessage(
+                      {
+                        typ: "console",
+                        prop,
+                        args: args.map((x) => x.toString()),
+                      },
+                      "*"
+                    );
+                  } catch {
+                    window.parent.postMessage(
+                      {
+                        typ: "console",
+                        prop: "warn",
+                        args: [
+                          "[Playground] Unsupported console message (see browser console)",
+                        ],
+                      },
+                      "*"
+                    );
+                  }
+                }
+              }
               target[prop](...args);
             };
           };
