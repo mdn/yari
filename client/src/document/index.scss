@@ -248,6 +248,10 @@
     }
   }
 
+  #specifications + table {
+    margin-bottom: 2rem;
+  }
+
   @media (min-width: $screen-sm) {
     padding: 3rem;
     // Reduce space to article footer.
