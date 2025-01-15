@@ -286,6 +286,25 @@ for content editing as authentication is then not required.
 
 Enables features or setup which only make sense in local development.
 
+### `REACT_APP_SENTRY_DSN`
+
+**Default: `""`**
+
+Enables client-side error tracking with Sentry.
+
+### `REACT_APP_SENTRY_ENVIRONMENT`
+
+**Default: `"dev"`**
+
+Specifies the name of the current environment.
+
+### `REACT_APP_SENTRY_RELEASE`
+
+**Default: `"dev"`**
+
+Specifies the version of the current build. This is set to the commit hash in
+deployments.
+
 ### `REACT_APP_WRITER_MODE`
 
 **Default: `false`**
