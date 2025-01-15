@@ -48,3 +48,40 @@ export const proxyContentAssets = createProxyMiddleware({
     ),
   },
 });
+
+export const proxyContentAssetsPagefind = createProxyMiddleware({
+  target,
+  changeOrigin: true,
+  autoRewrite: true,
+  proxyTimeout: PROXY_TIMEOUT,
+  xfwd: true,
+  selfHandleResponse: true,
+  on: {
+    proxyReq: fixRequestBody,
+    proxyRes: responseInterceptor(
+      async (responseBuffer, proxyRes, req, res) => {
+        // withContentResponseHeaders(proxyRes, req, res);
+        const [, locale] = req.url?.split("/") || [];
+        if (
+          proxyRes.statusCode === 404 &&
+          locale &&
+          locale != "en-US" &&
+          ACTIVE_LOCALES.has(locale.toLowerCase())
+        ) {
+          const enUsAsset = await fetch(
+            `${target}${req.url?.slice(1).replace(locale, "en-us")}`
+          );
+          if (enUsAsset?.ok) {
+            res.statusCode = enUsAsset.status;
+            enUsAsset.headers.forEach((value, key) =>
+              res.setHeader(key, value)
+            );
+            return Buffer.from(await enUsAsset.arrayBuffer());
+          }
+        }
+
+        return responseBuffer;
+      }
+    ),
+  },
+});
