@@ -2731,6 +2731,47 @@
   resolved "https://registry.yarnpkg.com/@sec-ant/readable-stream/-/readable-stream-0.4.1.tgz#60de891bb126abfdc5410fdc6166aca065f10a0c"
   integrity sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==
 
+"@sentry-internal/browser-utils@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/browser-utils/-/browser-utils-8.49.0.tgz#ce448e1b60ff75e009db70d76de9b1186ad98c60"
+  integrity sha512-XkPHHdFqsN7EPaB+QGUOEmpFqXiqP67t2rRZ1HG1UwJoe0PhJEKNy7b4+WRwmT7ODSt+PvFk1gNBlJBpThwH7Q==
+  dependencies:
+    "@sentry/core" "8.49.0"
+
+"@sentry-internal/feedback@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/feedback/-/feedback-8.49.0.tgz#577d713ae80ba0698e67616d46050e884d143e72"
+  integrity sha512-v/wf7WvPxEvZUB7xrCnecI3fhevVo84hw8WlxgZIz6mLUHXEIX8xYWc9H8Yet/KKJ2uEB8GQ8aDsY6S1hVEIUA==
+  dependencies:
+    "@sentry/core" "8.49.0"
+
+"@sentry-internal/replay-canvas@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/replay-canvas/-/replay-canvas-8.49.0.tgz#7dede7d04260f38af5e33dbc57d5412afa9f6676"
+  integrity sha512-/yXxI7f+Wu24FIYoRE7A0AidNxORuhAyPzb5ey1wFqMXP72nG8dXhOpcl0w+bi554FkqkLjdeUDhSOBWYZXH9g==
+  dependencies:
+    "@sentry-internal/replay" "8.49.0"
+    "@sentry/core" "8.49.0"
+
+"@sentry-internal/replay@8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/replay/-/replay-8.49.0.tgz#a04ca50a402407f48ca8524a44f185ad7f003754"
+  integrity sha512-BDiiCBxskkktTd6FNplBc9V8l14R4T/AwRIZj2itX4xnuHewTTDjVbeyvGol4roA4r+V0Mzoi31hLEGI6yFQ5Q==
+  dependencies:
+    "@sentry-internal/browser-utils" "8.49.0"
+    "@sentry/core" "8.49.0"
+
+"@sentry/browser@^8.49.0":
+  version "8.49.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-8.49.0.tgz#4dc1b5501bc398dc801651aa8e5bba452ab551a4"
+  integrity sha512-dS4Sw2h8EixHeXOIR++XEVMTen6xCGcIQ/XhJbsjqvddXeIijW0WkxSeTfPkfs0dsqFHSisWmlmo0xhHbXvEsQ==
+  dependencies:
+    "@sentry-internal/browser-utils" "8.49.0"
+    "@sentry-internal/feedback" "8.49.0"
+    "@sentry-internal/replay" "8.49.0"
+    "@sentry-internal/replay-canvas" "8.49.0"
+    "@sentry/core" "8.49.0"
+
 "@sentry/core@8.49.0":
   version "8.49.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.49.0.tgz#b7a29989e49541b15dd537cb43940a9415f7e128"
