@@ -31,14 +31,14 @@ export function initSentry() {
     return;
   }
 
-  let onNextError: (() => void) | null = null;
+  let onSentryLoad: (() => void) | null = null;
   const capturedMessages = new Set<string>();
 
   const handleError = (event: ErrorEvent) => {
     loadSentry().then((Sentry) => {
-      if (onNextError) {
-        onNextError();
-        onNextError = null;
+      if (onSentryLoad) {
+        onSentryLoad();
+        onSentryLoad = null;
       }
       if (!capturedMessages.has(event.message)) {
         // Capture every error only once.
@@ -48,8 +48,8 @@ export function initSentry() {
     });
   };
 
-  // To avoid capturing too many events, we stop listening after the first error.
-  onNextError = () => window.removeEventListener("error", handleError);
+  // Avoid capturing too many events by stop listening when Sentry is loaded.
+  onSentryLoad = () => window.removeEventListener("error", handleError);
 
   window.addEventListener("error", handleError);
 }
