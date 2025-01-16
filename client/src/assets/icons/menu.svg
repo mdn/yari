@@ -1,4 +1,5 @@
-<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 16 16" fill="none" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Menu icon</title>
 <rect y="2" width="16" height="1.5" fill="#FBFBFE"/>
 <rect y="7.25" width="16" height="1.5" fill="#FBFBFE"/>
 <rect y="12.5" width="16" height="1.5" fill="#FBFBFE"/>
