@@ -699,8 +699,7 @@ math[display="block"] {
     margin: 0;
     text-transform: capitalize;
 
-    &:hover,
-    &:focus {
+    &:hover {
       opacity: 0.6;
     }
 
@@ -720,8 +719,7 @@ math[display="block"] {
       padding: 1px;
       text-transform: capitalize;
 
-      &:hover,
-      &:focus {
+      &:hover {
         opacity: 0.6;
       }
     }
