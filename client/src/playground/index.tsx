@@ -135,6 +135,7 @@ export default function Playground() {
           controller.current.srcPrefix = content.src;
         }
         setIsEmpty(content);
+        store(SESSION_KEY, content);
       }
     },
     [setIsEmpty]
