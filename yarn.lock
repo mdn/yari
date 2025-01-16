@@ -2731,15 +2731,15 @@
   resolved "https://registry.yarnpkg.com/@sec-ant/readable-stream/-/readable-stream-0.4.1.tgz#60de891bb126abfdc5410fdc6166aca065f10a0c"
   integrity sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==
 
-"@sentry/core@8.49.0":
-  version "8.49.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.49.0.tgz#b7a29989e49541b15dd537cb43940a9415f7e128"
-  integrity sha512-/OAm6LdHhh8TvfDAucWfSJV7M03IOHrJm5LVjrrKr4gwQ1HKd4CDbARsBbPwHIzSRAle0IgG3sbJxEvv52JUIw==
+"@sentry/core@8.50.0":
+  version "8.50.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.50.0.tgz#cfc9983bb7ea3ad8c6f3332addd2816a791f5aeb"
+  integrity sha512-q71m8Ha9YGwqn4Gd7sWvcFTRgbHXxEfU4QeIFtwMBpwHfq2Q+9koiF8DOoOHqIEOsnlvZWRQgGggIOdHzajnVw==
 
-"@sentry/node@^8.49.0":
-  version "8.49.0"
-  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.49.0.tgz#9671c3295dba8c85fe8a2e4848d880d983b92d8a"
-  integrity sha512-ui/X6AsHEc+TzgegW8Lq2dZvLHm2npaPMzeICdTotoR8S7LUgTXWfxpzKNra7K13QWY2A2AmabxKOSZJSnPHyQ==
+"@sentry/node@^8.50.0":
+  version "8.50.0"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-8.50.0.tgz#738740c1711a0f2d6467a5f55612c17ef8f84620"
+  integrity sha512-I9eGIdcoWKVy4O8a1f2t0jGVTdN1z9McxbGW8aWwDE5Vd9gpuNjFh9qGapmBEPzysWBX8rjsemDdSa3TcijJMw==
   dependencies:
     "@opentelemetry/api" "^1.9.0"
     "@opentelemetry/context-async-hooks" "^1.29.0"
@@ -2773,16 +2773,16 @@
     "@opentelemetry/sdk-trace-base" "^1.29.0"
     "@opentelemetry/semantic-conventions" "^1.28.0"
     "@prisma/instrumentation" "5.22.0"
-    "@sentry/core" "8.49.0"
-    "@sentry/opentelemetry" "8.49.0"
+    "@sentry/core" "8.50.0"
+    "@sentry/opentelemetry" "8.50.0"
     import-in-the-middle "^1.11.2"
 
-"@sentry/opentelemetry@8.49.0":
-  version "8.49.0"
-  resolved "https://registry.yarnpkg.com/@sentry/opentelemetry/-/opentelemetry-8.49.0.tgz#c174ec33d34494aa4207b034b29ebee018f14a77"
-  integrity sha512-Ffasnpat8WhqvRB/DFbcGp+J+xh76NCztTDi6f3a1jBCONTJypHt2p5l9lJuu1O/UPN1vIJjOpUMOvdd0FHGVA==
+"@sentry/opentelemetry@8.50.0":
+  version "8.50.0"
+  resolved "https://registry.yarnpkg.com/@sentry/opentelemetry/-/opentelemetry-8.50.0.tgz#10c78f9be65949ef5a3ad865cc296ee422bf6ee1"
+  integrity sha512-uAZjAMPAulFHL88ThK2k+XPx2QzvZ/I7e7sP1In28Tb/yLH0mi+51AUH+zcnLELIPC86m1aDYl8uwYcP6tV4dA==
   dependencies:
-    "@sentry/core" "8.49.0"
+    "@sentry/core" "8.50.0"
 
 "@sidvind/better-ajv-errors@3.0.1":
   version "3.0.1"
