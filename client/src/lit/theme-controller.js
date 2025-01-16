@@ -17,15 +17,20 @@ export class ThemeController {
     this.#host.addController(this);
     /** @type {Theme} */
     this.value = "os-default";
-    this._observer = new MutationObserver(() => this.#updateTheme());
+    this._observer = new MutationObserver(() => this._updateTheme());
+    this._matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
   }
 
-  #updateTheme() {
+  _updateTheme() {
     /** @type {Theme[]} */
     const themes = ["os-default", "dark", "light"];
     const { classList } = document.documentElement;
+    let value = themes.find((x) => classList.contains(x)) || "os-default";
+    if (value === "os-default") {
+      value = this._matchMedia.matches ? "dark" : "light";
+    }
     const oldValue = this.value;
-    this.value = themes.find((x) => classList.contains(x)) || "os-default";
+    this.value = value;
     this.#host.requestUpdate("ThemeController.value", oldValue);
   }
 
@@ -34,10 +39,13 @@ export class ThemeController {
       attributes: true,
       attributeFilter: ["class"],
     });
-    this.#updateTheme();
+    this._updateTheme = this._updateTheme.bind(this);
+    this._matchMedia.addEventListener("change", this._updateTheme);
+    this._updateTheme();
   }
 
   hostDisconnected() {
     this._observer.disconnect();
+    this._matchMedia.removeEventListener("change", this._updateTheme);
   }
 }
