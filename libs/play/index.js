@@ -230,6 +230,8 @@ export function renderHtml(state = null) {
         width: 90%;
         padding: 5px 10px 5px 26px;
       }
+    </style>
+    <style>
       ${css}
     </style>
 

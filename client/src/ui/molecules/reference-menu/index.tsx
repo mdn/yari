@@ -68,7 +68,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
       },
       {
-        description: "Learn to make the web accessible to all",
+        description: "Build web projects usable for all",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Accessibility",

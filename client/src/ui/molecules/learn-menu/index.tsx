@@ -51,6 +51,13 @@ export const LearnMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "JavaScript",
         url: `/${locale}/docs/Learn_web_development/Core/Scripting`,
       },
+      {
+        description: "Learn to make the web accessible to all",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Accessibility",
+        url: `/${locale}/docs/Learn_web_development/Core/Accessibility`,
+      },
     ],
   };
   const isOpen = visibleSubMenuId === menu.id;
