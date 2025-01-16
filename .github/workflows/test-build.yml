@@ -6,6 +6,16 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      rari-ref:
+        description: "rari ref to build (leave blank for npm release)"
+        type: string
+        default: ""
+
+      content-ref:
+        description: "content ref to build"
+        type: string
+        default: "main"
+
       notes:
         description: "Notes"
         required: false
@@ -37,6 +47,13 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
+      - name: Print information about build
+        run: |
+          echo "rari-ref: ${{ github.event.inputs.rari-ref }}"
+          echo "content-ref: ${{ github.event.inputs.content-ref }}"
+          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+          echo "invalidate: ${{ github.event.inputs.invalidate }}"
+
       - uses: actions/checkout@v4
 
       - uses: actions/checkout@v4
@@ -49,6 +66,7 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
+          ref: ${{ github.event.inputs.content-ref }}
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -109,7 +127,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: ${{ github.event.inputs.rari-ref == '' && 'yarn' || '' }}
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
@@ -119,9 +137,36 @@ jobs:
           # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print information about build
+      - uses: actions/checkout@v4
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+        with:
+          repository: mdn/rari
+          path: mdn/rari
+          ref: ${{ github.event.inputs.rari-ref }}
+
+      - name: Cache Cargo registry
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+
+      - name: sccache-cache
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+        uses: mozilla-actions/sccache-action@v0.0.7
+
+      - name: Build rari
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
         run: |
-          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+          cd mdn/rari
+          cargo build --release
+          cp target/release/rari ../../node_modules/@mdn/rari/bin/
 
       - name: Print information about CPU
         run: cat /proc/cpuinfo
@@ -215,9 +260,9 @@ jobs:
           yarn render:html
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
           # Sort DE search index by en-US popularity.
           node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json

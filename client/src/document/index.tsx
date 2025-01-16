@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
-import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
 import { useDocumentURL, useDecorateCodeExamples, useRunSample } from "./hooks";
@@ -62,7 +61,6 @@ export class HTTPError extends Error {
 }
 
 export function Document(props /* TODO: define a TS interface for this */) {
-  const { gtag } = useGA();
   const gleanClick = useGleanClick();
   const isServer = useIsServer();
 
@@ -137,14 +135,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     if (doc && !error) {
       if (mountCounter.current > 0) {
         const location = window.location.toString();
-        // 'dimension19' means it's a client-side navigation.
-        // I.e. not the initial load but the location has now changed.
-        // Note that in local development, where you use `localhost:3000`
-        // this will always be true because it's always client-side navigation.
-        gtag("event", "pageview", {
-          dimension19: "Yes",
-          page_location: location,
-        });
         gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
       }
 
@@ -152,7 +142,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [gtag, gleanClick, doc, error]);
+  }, [gleanClick, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;

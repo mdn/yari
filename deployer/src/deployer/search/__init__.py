@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import Counter
 
 import click
-from elasticsearch.helpers import parallel_bulk
+from elasticsearch.helpers import streaming_bulk
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
@@ -90,7 +90,7 @@ def index(
     errors_counter = Counter()
     t0 = time.time()
     with get_progressbar() as bar:
-        for success, info in parallel_bulk(
+        for success, info in streaming_bulk(
             connection,
             generator(),
             # If the bulk indexing failed, it will by default raise a BulkIndexError.
