@@ -113,7 +113,7 @@
     "feed": "^4.2.2",
     "file-type": "^19.6.0",
     "front-matter": "^4.0.2",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "got": "^13.0.0",
     "http-proxy-middleware": "^2.0.7",
     "image-size": "^1.2.0",
