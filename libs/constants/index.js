@@ -119,6 +119,7 @@ export const CSP_DIRECTIVES = {
     "https://api.github.com/search/issues",
 
     "stats.g.doubleclick.net",
+    "*.sentry.io",
     "https://api.stripe.com",
   ],
   "font-src": ["'self'"],
