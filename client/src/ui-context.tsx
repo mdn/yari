@@ -88,6 +88,12 @@ export function UIProvider(props: any) {
     if (dark.matches) {
       setColorScheme("dark");
     }
+
+    if (!("addEventListener" in dark)) {
+      // MediaQueryList doesn't inherit EventTarget in Safari < 14.
+      return;
+    }
+
     dark.addEventListener("change", setDark);
     const light = window.matchMedia("(prefers-color-scheme: light)");
     light.addEventListener("change", setLight);
