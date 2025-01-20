@@ -177,7 +177,7 @@
     "@testing-library/react": "^15.0.7",
     "@types/async": "^3.2.24",
     "@types/cli-progress": "^3.11.6",
-    "@types/imagemin": "^9.0.0",
+    "@types/imagemin": "^9.0.1",
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
