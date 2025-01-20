@@ -574,6 +574,10 @@ math[display="block"] {
   margin-bottom: 2rem;
   position: relative;
 
+  [class*="interactive-example"] {
+    display: none;
+  }
+
   .example-header {
     align-items: baseline;
     background-color: var(--background-secondary);
@@ -695,8 +699,7 @@ math[display="block"] {
     margin: 0;
     text-transform: capitalize;
 
-    &:hover,
-    &:focus {
+    &:hover {
       opacity: 0.6;
     }
 
@@ -716,8 +719,7 @@ math[display="block"] {
       padding: 1px;
       text-transform: capitalize;
 
-      &:hover,
-      &:focus {
+      &:hover {
         opacity: 0.6;
       }
     }
