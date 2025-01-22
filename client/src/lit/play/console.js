@@ -128,8 +128,7 @@ export class PlayConsole extends LitElement {
   }
 
   updated() {
-    const output = this.renderRoot.querySelector("ul");
-    output?.scrollTo({ top: output.scrollHeight });
+    this.scrollTo({ top: this.scrollHeight });
   }
 }
 
