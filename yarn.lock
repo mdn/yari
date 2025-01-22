@@ -2201,10 +2201,10 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.2.0"
 
-"@lit/task@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@lit/task/-/task-1.0.1.tgz#7462aeaa973766822567f5ca90fe157404e8eb81"
-  integrity sha512-fVLDtmwCau8NywnFIXaJxsCZjzaIxnVq+cFRKYC1Y4tA4/0rMTvF6DLZZ2JE51BwzOluaKtgJX8x1QDsQtAaIw==
+"@lit/task@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@lit/task/-/task-1.0.2.tgz#2d1da95c3cdbb371479944eead3f1d9bf2c60bbb"
+  integrity sha512-ofj/fahKhhS1SpbPSC57OMo2BXMxHG/y4sxH/ahWzXT5dh1kxjex7WqbL8ammb6zIlqbFCj6z2aGFYOh/qCQ+g==
   dependencies:
     "@lit/reactive-element" "^1.0.0 || ^2.0.0"
 
