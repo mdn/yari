@@ -28,14 +28,28 @@ export default function Newsletter() {
       <ul>
         <li>
           <section aria-labelledby="mdn-plus-newsletter">
-            <h3 id="mdn-plus-newsletter">MDN Plus Newsletter</h3>
+            <h3 id="mdn-plus-newsletter">
+              <s>MDN Plus Newsletter</s> (Deprecated)
+            </h3>
             <div className="setting-row">
               <span>
-                Allow us to email you product updates, news, and more.
+                We're decommissioning our MDN Plus newsletter.
+                {enabled ? (
+                  <>
+                    {" "}
+                    If you unsubscribe you cannot subscribe again. <br />
+                    <strong>
+                      We will automatically unsubscribe you and purge all
+                      related data in the near future.
+                    </strong>
+                  </>
+                ) : (
+                  <></>
+                )}
               </span>
               {loading ? (
                 <Spinner extraClasses="loading" />
-              ) : (
+              ) : enabled ? (
                 <Switch
                   name="mdn_plus_newsletter"
                   checked={Boolean(enabled)}
@@ -49,6 +63,8 @@ export default function Newsletter() {
                     setLoading(false);
                   }}
                 ></Switch>
+              ) : (
+                <></>
               )}
             </div>
           </section>
