@@ -14,7 +14,6 @@ export class PlayRunner extends LitElement {
   static properties = {
     code: { type: Object },
     srcPrefix: { type: String, attribute: "src-prefix" },
-    _src: { state: true },
   };
 
   static styles = styles;
