@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.2.1](https://github.com/mdn/yari/compare/v4.2.0...v4.2.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* **blog:** avoid overflow + double padding ([#12508](https://github.com/mdn/yari/issues/12508)) ([e484c48](https://github.com/mdn/yari/commit/e484c4859acb6625a37ac53f7eb853d495de3b1c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @playwright/test from 1.49.1 to 1.50.0 ([#12512](https://github.com/mdn/yari/issues/12512)) ([9797452](https://github.com/mdn/yari/commit/97974522154dcbc12b136dba12deddc127795c98))
+* **deps-dev:** bump @types/node from 18.19.71 to 18.19.74 in the types group ([#12506](https://github.com/mdn/yari/issues/12506)) ([075216e](https://github.com/mdn/yari/commit/075216e7ac55dad6dc08d00d727e5fce853fcd16))
+* **deps-dev:** bump webpack-cli from 5.1.4 to 6.0.1 ([#12349](https://github.com/mdn/yari/issues/12349)) ([a13ae4d](https://github.com/mdn/yari/commit/a13ae4dd6a397ad7de7afc55f6c07696e159a518))
+* **deps-dev:** bump webpack-cli from 5.1.4 to 6.0.1 in /client/pwa ([#12362](https://github.com/mdn/yari/issues/12362)) ([21ba850](https://github.com/mdn/yari/commit/21ba850529980bc5cf4946f8a8b7bf44b90bf860))
+* **deps-dev:** remove react-is ([#12510](https://github.com/mdn/yari/issues/12510)) ([480da2d](https://github.com/mdn/yari/commit/480da2d6e07b2fca3d1e47087f02be2b62a7292d))
+* **deps:** bump @mdn/rari from 0.1.19 to 0.1.20 ([#12511](https://github.com/mdn/yari/issues/12511)) ([0e84431](https://github.com/mdn/yari/commit/0e8443183224cdd02d1e7468f97ce877fe048d62))
+* **icons:** update Deno logo ([#12505](https://github.com/mdn/yari/issues/12505)) ([0a9f2aa](https://github.com/mdn/yari/commit/0a9f2aaac01c6e50e61bd23da909ca68f88fffac))
+
 ## [4.2.0](https://github.com/mdn/yari/compare/v4.1.2...v4.2.0) (2025-01-22)
 
 
