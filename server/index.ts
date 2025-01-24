@@ -61,11 +61,12 @@ import { handleRunner } from "../libs/play/index.js";
 async function fetch_from_rari(path: string) {
   const external_url = `${EXTERNAL_DEV_SERVER}${path}`;
   console.log(`using ${external_url}`);
-  const response = await fetchRetryIfRefused(external_url, 5);
+  const response = await fetchWithRetryIfConnRefused(external_url, 5);
   return await response.json();
 }
 
-async function fetchRetryIfRefused(
+// Simulates `curl --retry-connrefused`.
+async function fetchWithRetryIfConnRefused(
   url: string,
   maxRetries: number,
   baseDelay = 1000
