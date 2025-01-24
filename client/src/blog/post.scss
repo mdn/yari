@@ -6,6 +6,7 @@
   grid-template-areas:
     "post"
     "newsletter";
+  padding: 0;
   width: 100%;
 
   @media (min-width: $screen-lg) {
