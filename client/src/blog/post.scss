@@ -81,7 +81,10 @@
 
   > .blog-post {
     grid-area: post;
-    max-width: 52rem;
+
+    @media (min-width: $screen-lg) {
+      max-width: 52rem;
+    }
 
     + .section-newsletter h2 {
       font: var(--type-heading-h3);
