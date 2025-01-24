@@ -61,8 +61,45 @@ import { handleRunner } from "../libs/play/index.js";
 async function fetch_from_rari(path: string) {
   const external_url = `${EXTERNAL_DEV_SERVER}${path}`;
   console.log(`using ${external_url}`);
-  // eslint-disable-next-line n/no-unsupported-features/node-builtins
-  return await (await fetch(external_url)).json();
+  const response = await fetchRetryIfRefused(external_url, 5);
+  return await response.json();
+}
+
+async function fetchRetryIfRefused(
+  url: string,
+  maxRetries: number,
+  baseDelay = 1000
+) {
+  let attempt = 0;
+
+  while (attempt < maxRetries) {
+    try {
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`failed with HTTP ${response.status}`);
+      }
+      return response;
+    } catch (error: any) {
+      attempt++;
+      if (
+        error.code !== "ECONNREFUSED" &&
+        error.cause?.code !== "ECONNREFUSED"
+      ) {
+        throw error;
+      }
+
+      console.log(`retrying ${attempt}/${maxRetries}`);
+      if (attempt < maxRetries) {
+        const delay = baseDelay * Math.pow(2, attempt - 1); // Exponential backoff
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        throw new Error(
+          `failed after ${maxRetries} attempts: ${error.message}`
+        );
+      }
+    }
+  }
 }
 
 async function buildDocumentFromURL(url: string) {
