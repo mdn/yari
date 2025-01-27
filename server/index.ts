@@ -570,6 +570,8 @@ app.use(staticMiddlewares);
 
 app.get("/*", async (_, res) => await send404(res));
 
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
+
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
 }
