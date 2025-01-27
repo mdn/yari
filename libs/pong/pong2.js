@@ -47,7 +47,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
         ads: [
           {
             statlink = null,
-            statimp,
+            statview,
             Description,
             Image,
             LargeImage,
@@ -74,7 +74,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
             ? null
             : {
                 click: coder.encodeAndSign(statlink),
-                view: coder.encodeAndSign(statimp),
+                view: coder.encodeAndSign(statview),
                 image: coder.encodeAndSign(LargeImage || Image),
                 alt: ImageTitle && he.decode(ImageTitle),
                 copy: Description && he.decode(Description),
