@@ -1,5 +1,29 @@
 # Changelog
 
+## [4.2.2](https://github.com/mdn/yari/compare/v4.2.1...v4.2.2) (2025-01-27)
+
+
+### Bug Fixes
+
+* **csp:** allow images from prod (developer.mozilla.org) ([#12514](https://github.com/mdn/yari/issues/12514)) ([09ded00](https://github.com/mdn/yari/commit/09ded006a49cce576ca0e675b1547c1bbf52fab3))
+
+
+### Enhancements
+
+* **server:** retry rari fetch if ECONNREFUSED ([#12513](https://github.com/mdn/yari/issues/12513)) ([8cd0bd2](https://github.com/mdn/yari/commit/8cd0bd2ea7d9c87d809fa3d8cb85d25ad63a6ad3))
+
+
+### Miscellaneous
+
+* **bin:** deprecate yari bins + test rari bins ([#12517](https://github.com/mdn/yari/issues/12517)) ([82a690b](https://github.com/mdn/yari/commit/82a690b223330f102757b166342f183b1b5ad79f))
+* **deps-dev:** bump @babel/core from 7.26.0 to 7.26.7 ([#12522](https://github.com/mdn/yari/issues/12522)) ([4d38665](https://github.com/mdn/yari/commit/4d386651e8fbe4442d9ddfee92ef283e56b210b9))
+* **deps-dev:** bump @babel/preset-env from 7.26.0 to 7.26.7 ([#12521](https://github.com/mdn/yari/issues/12521)) ([818ce4a](https://github.com/mdn/yari/commit/818ce4a8b95dd33547356f68163a8132952db2a8))
+* **deps-dev:** bump @swc/core from 1.10.9 to 1.10.11 ([#12518](https://github.com/mdn/yari/issues/12518)) ([a74997c](https://github.com/mdn/yari/commit/a74997cead287c509e63dd74f2591fd535bbad4c))
+* **deps:** bump @mdn/browser-compat-data from 5.6.32 to 5.6.33 ([#12520](https://github.com/mdn/yari/issues/12520)) ([9d0dc90](https://github.com/mdn/yari/commit/9d0dc907aeba4ec7b8345db4cb745b2e23651e8b))
+* **deps:** bump boto3 from 1.36.2 to 1.36.6 in /deployer in the dependencies group ([#12524](https://github.com/mdn/yari/issues/12524)) ([f43a823](https://github.com/mdn/yari/commit/f43a823ca1292fc985a72242e68292e9ea200173))
+* **deps:** bump openai from 4.80.0 to 4.80.1 ([#12523](https://github.com/mdn/yari/issues/12523)) ([8e89246](https://github.com/mdn/yari/commit/8e89246b0edf53f67c1a84773c171fcc66d890b8))
+* **deps:** bump web-specs from 3.35.0 to 3.36.0 ([#12519](https://github.com/mdn/yari/issues/12519)) ([2bb0244](https://github.com/mdn/yari/commit/2bb0244bc4cf24761108b9e4666f436f6e1995a2))
+
 ## [4.2.1](https://github.com/mdn/yari/compare/v4.2.0...v4.2.1) (2025-01-24)
 
 
