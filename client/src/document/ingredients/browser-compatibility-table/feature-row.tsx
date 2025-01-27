@@ -198,15 +198,17 @@ const CellText = React.memo(
         break;
 
       case "preview":
-        title = "Preview browser support";
+        title = "Preview support";
         label = status.label || browser.preview_name;
         break;
 
       case "unknown":
-        title = "Compatibility unknown; please update this.";
+        title = "Support unknown";
         label = "?";
         break;
     }
+
+    title = `${browser.name} – ${title}`;
 
     return (
       <div
@@ -221,7 +223,7 @@ const CellText = React.memo(
               bc-level-${supportClassName}
               icon
               icon-${supportClassName}`}
-              title={`${title}\n${browser.name} ${added ? added : ""}`}
+              title={title}
             >
               <span className="bc-support-level">{title}</span>
             </abbr>
