@@ -70,6 +70,14 @@ jobs:
           yarn add file:$TARBALL
           yarn install
 
+      - name: (mdn/content) yarn rari-build --help
+        working-directory: mdn/content
+        run: yarn rari-build --help
+
+      - name: (mdn/content) yarn rari-tool --help
+        working-directory: mdn/content
+        run: yarn rari-tool --help
+
       - name: (mdn/content) yarn yari-build --help
         working-directory: mdn/content
         run: yarn yari-build --help

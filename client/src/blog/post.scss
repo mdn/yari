@@ -6,6 +6,7 @@
   grid-template-areas:
     "post"
     "newsletter";
+  padding: 0;
   width: 100%;
 
   @media (min-width: $screen-lg) {
@@ -81,7 +82,10 @@
 
   > .blog-post {
     grid-area: post;
-    max-width: 52rem;
+
+    @media (min-width: $screen-lg) {
+      max-width: 52rem;
+    }
 
     + .section-newsletter h2 {
       font: var(--type-heading-h3);

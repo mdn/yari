@@ -158,6 +158,9 @@ function glean(): GleanAnalytics {
     handleButtonClick(ev, gleanClick);
     handleSidebarClick(ev, gleanClick);
   });
+  window?.addEventListener("glean-click", (ev: CustomEvent<string>) => {
+    gleanClick(ev.detail);
+  });
 
   return gleanContext;
 }
