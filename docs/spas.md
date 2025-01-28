@@ -26,7 +26,7 @@ To debug the 404 page, in local development you have two choices:
 
 - <http://localhost:5042/en-US/docs/Does/not/exist>
 
-- <http://localhost:3000/en-US/_404/Does/not/exist>
+- <http://localhost:3000/en-US/404/Does/not/exist>
 
 The latter is used so you get hot-reloading as you're working on it. This will
 only work when you do local development on Yari.

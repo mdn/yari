@@ -14,7 +14,13 @@ export enum Status {
   empty = "empty",
 }
 
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
+type PlacementType =
+  | "side"
+  | "top"
+  | "hpTop"
+  | "hpMain"
+  | "hpFooter"
+  | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
   plusAvailable?: boolean;
@@ -25,23 +31,27 @@ const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
   side: {
     typ: "side",
     pattern:
-      /\/[^/]+\/(play|docs\/|blog\/|observatory\/?|curriculum\/[^$]|search$)/i,
+      /^\/[^/]+\/(play|docs\/|blog\/|observatory\/?|curriculum\/[^$]|search$)/i,
   },
   top: {
     typ: "top-banner",
-    pattern: /\/[^/]+\/(?!$|_homepage$).*/i,
+    pattern: /^\/[^/]+\/(?!$|_homepage$).*/i,
+  },
+  hpTop: {
+    typ: "top-banner",
+    pattern: /^\/[^/]+\/($|_homepage$)/i,
   },
   hpMain: {
     typ: "hp-main",
-    pattern: /\/[^/]+\/($|_homepage$)/i,
+    pattern: /^\/[^/]+\/($|_homepage$)/i,
   },
   hpFooter: {
     typ: "hp-footer",
-    pattern: /\/[^/]+\/($|_homepage$)/i,
+    pattern: /^\/[^/]+\/($|_homepage$)/i,
   },
   bottom: {
     typ: "bottom-banner",
-    pattern: /\/[^/]+\/docs\//i,
+    pattern: /^\/[^/]+\/docs\//i,
   },
 };
 

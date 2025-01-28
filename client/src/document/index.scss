@@ -14,6 +14,8 @@
   h4,
   h5,
   h6 {
+    font-variant-ligatures: no-contextual;
+
     a:link,
     a:visited {
       color: var(--text-primary);
@@ -244,6 +246,10 @@
     blockquote > :last-child {
       margin-bottom: 0;
     }
+  }
+
+  #specifications + table {
+    margin-bottom: 2rem;
   }
 
   @media (min-width: $screen-sm) {
@@ -568,6 +574,10 @@ math[display="block"] {
   margin-bottom: 2rem;
   position: relative;
 
+  [class*="interactive-example"] {
+    display: none;
+  }
+
   .example-header {
     align-items: baseline;
     background-color: var(--background-secondary);
@@ -689,8 +699,7 @@ math[display="block"] {
     margin: 0;
     text-transform: capitalize;
 
-    &:hover,
-    &:focus {
+    &:hover {
       opacity: 0.6;
     }
 
@@ -710,8 +719,7 @@ math[display="block"] {
       padding: 1px;
       text-transform: capitalize;
 
-      &:hover,
-      &:focus {
+      &:hover {
         opacity: 0.6;
       }
     }
@@ -813,12 +821,6 @@ math[display="block"] {
   .example-good,
   .example-bad {
     padding: 1rem;
-  }
-}
-
-.only-in-en-us {
-  span {
-    font-size: 0.8125rem;
   }
 }
 
@@ -951,6 +953,7 @@ html a.only-in-en-us:after {
   content: "(en-US)";
   display: inline-block;
   font-size: var(--type-tiny-font-size);
+  margin-left: 0.5ch;
   vertical-align: super;
 }
 
@@ -984,10 +987,12 @@ html[lang="pt-BR"] a.only-in-en-us:after {
 
 html[lang="zh-CN"] a.only-in-en-us:after {
   content: "（英语）";
+  margin-left: unset;
   vertical-align: baseline;
 }
 
 html[lang="zh-TW"] a.only-in-en-us:after {
   content: "（英語）";
+  margin-left: unset;
   vertical-align: baseline;
 }

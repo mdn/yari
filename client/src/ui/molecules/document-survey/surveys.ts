@@ -4,7 +4,7 @@ import { survey_duration, survey_rates } from "../../../env";
 export interface Survey {
   key: SurveyKey;
   bucket: SurveyBucket;
-  show: (doc: Doc) => boolean;
+  show: (doc: Pick<Doc, "mdn_url">) => boolean;
   // Start in milliseconds since 1970.
   start: number;
   // End in milliseconds since 1970.
@@ -12,7 +12,7 @@ export interface Survey {
   // Proportion slice of users to target.
   rateFrom: number;
   rateTill: number;
-  src: string | ((doc: Doc) => string);
+  src: string | ((doc: Pick<Doc, "mdn_url">) => string);
   teaser: string;
   question: string;
   footnote?: string;
@@ -32,6 +32,9 @@ enum SurveyBucket {
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
   DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
   WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
+  HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
+  WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
+  HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
 }
 
 enum SurveyKey {
@@ -50,6 +53,9 @@ enum SurveyKey {
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
   DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
   WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
+  HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
+  WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
+  HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
 }
 
 // When adding a survey, make sure it has this JavaScript action (in Alchemer)
@@ -58,21 +64,9 @@ enum SurveyKey {
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.WEB_APP_AUGUST_2024,
-    bucket: SurveyBucket.WEB_APP_AUGUST_2024,
-    show: (doc: Doc) => /en-US\/docs\/Web(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7942186/MDN-Web-App-Survey",
-    teaser:
-      "We're working with our partners to learn how developers are building web apps. Share your thoughts and experience in this short survey:",
-    question:
-      "In the past year, have you built an installable web application?",
-    ...survey_duration(SurveyBucket.WEB_APP_AUGUST_2024),
-    ...survey_rates(SurveyKey.WEB_APP_AUGUST_2024),
-  },
-  {
     key: SurveyKey.DE_LOCALE_2024_EVAL,
     bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
-    show: (doc: Doc) => {
+    show: (doc: Pick<Doc, "mdn_url">) => {
       if (!doc.mdn_url.startsWith("/de/docs/")) {
         // Exclude other languages.
         return false;
@@ -86,7 +80,7 @@ export const SURVEYS: Survey[] = [
         return false;
       }
     },
-    src: (doc: Doc) => {
+    src: (doc: Pick<Doc, "mdn_url">) => {
       const url = new URL(
         "https://survey.alchemer.com/s3/8073795/Feedback-zur-deutschen-Version-von-MDN"
       );
@@ -99,5 +93,31 @@ export const SURVEYS: Survey[] = [
     rateTill: 1,
     start: 0,
     end: Infinity,
+  },
+  {
+    key: SurveyKey.HOUSE_SURVEY_2025,
+    bucket: SurveyBucket.HOUSE_SURVEY_2025,
+    show: (doc: Pick<Doc, "mdn_url">) =>
+      /^\/[^/]+\/docs\/(Web|Learn_web_development)($|\/.*$)|/i.test(
+        doc.mdn_url
+      ),
+    src: "https://survey.alchemer.com/s3/8145183/MDN-short-survey",
+    teaser:
+      "We'd love to hear more about your role and the company you work for",
+    question: "Please help us by answering a few questions.",
+    ...survey_duration(SurveyBucket.HOUSE_SURVEY_2025),
+    ...survey_rates(SurveyKey.HOUSE_SURVEY_2025),
+  },
+  {
+    key: SurveyKey.WEBDX_EDITING_2024,
+    bucket: SurveyBucket.WEBDX_EDITING_2024,
+    show: (doc: Pick<Doc, "mdn_url">) =>
+      /^\/[^/]+\/docs\/Web\/API($|\/.*$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/8045877/MDN-text-edit-survey",
+    teaser:
+      "Let us know your thoughts about the following text editing, formatting, selection, and clipboard APIs",
+    question: "Please share your feedback about the following features.",
+    ...survey_duration(SurveyBucket.WEBDX_EDITING_2024),
+    ...survey_rates(SurveyKey.WEBDX_EDITING_2024),
   },
 ];

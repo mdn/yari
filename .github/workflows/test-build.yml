@@ -6,6 +6,16 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      rari-ref:
+        description: "rari ref to build (leave blank for npm release)"
+        type: string
+        default: ""
+
+      content-ref:
+        description: "content ref to build"
+        type: string
+        default: "main"
+
       notes:
         description: "Notes"
         required: false
@@ -37,6 +47,13 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
+      - name: Print information about build
+        run: |
+          echo "rari-ref: ${{ github.event.inputs.rari-ref }}"
+          echo "content-ref: ${{ github.event.inputs.content-ref }}"
+          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+          echo "invalidate: ${{ github.event.inputs.invalidate }}"
+
       - uses: actions/checkout@v4
 
       - uses: actions/checkout@v4
@@ -49,6 +66,7 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
+          ref: ${{ github.event.inputs.content-ref }}
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -57,6 +75,12 @@ jobs:
           path: mdn/mdn-studio
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/generic-content
+          path: mdn/generic-content
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -72,6 +96,26 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content-de
+          path: mdn/translated-content-de
+
+      - name: Move de into translated-content
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
+
+      - name: Clean and commit de
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/translated-content
+        run: |
+          git add files/de
+          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
+
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
@@ -83,18 +127,46 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
+          cache: ${{ github.event.inputs.rari-ref == '' && 'yarn' || '' }}
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
+          # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print information about build
+      - uses: actions/checkout@v4
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+        with:
+          repository: mdn/rari
+          path: mdn/rari
+          ref: ${{ github.event.inputs.rari-ref }}
+
+      - name: Cache Cargo registry
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+
+      - name: sccache-cache
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
+        uses: mozilla-actions/sccache-action@v0.0.7
+
+      - name: Build rari
+        if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
         run: |
-          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
+          cd mdn/rari
+          cargo build --release
+          cp target/release/rari ../../node_modules/@mdn/rari/bin/
 
       - name: Print information about CPU
         run: cat /proc/cpuinfo
@@ -109,7 +181,14 @@ jobs:
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
+          GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
           BASE_URL: "https://test.developer.allizom.org"
+
+          # rari
+          BUILD_OUT_ROOT: "client/build"
+          LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
+          INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
+          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -155,7 +234,7 @@ jobs:
           REACT_APP_PLACEMENT_ENABLED: true
 
           # Playground
-          REACT_APP_PLAYGROUND_BASE_HOST: play.test.mdn.allizom.net
+          REACT_APP_PLAYGROUND_BASE_HOST: test.mdnyalp.dev
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
@@ -168,39 +247,25 @@ jobs:
           echo "BLOG_ROOT=$BLOG_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn build:prepare
+          yarn build:client
+          yarn build:ssr
+          yarn tool:legacy build-robots-txt
 
-          #yarn tool sync-translated-content
+          yarn rari content sync-translated-content
+          yarn rari git-history
 
-          # Build using one process per locale.
-          # Note: We have 4 cores, but 9 processes is a reasonable number.
-          for locale in en-us fr; do
-            yarn build:docs --locale $locale 2>&1 | sed "s/^/[$locale] /"   &
-            pids+=($!)
-          done
-
-          for pid in "${pids[@]}"; do
-            wait $pid
-          done
-
-          du -sh client/build
-
-          # Build the blog
-          yarn build:blog
-
-          # Build the curriculum
-          yarn build:curriculum
-
-          # Generate sitemap index file
-          yarn build --sitemap-index
+          yarn rari build --all --issues client/build/issues.json --templ-stats
 
           # SSR all pages
           yarn render:html
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+
+          # Sort DE search index by en-US popularity.
+          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
@@ -241,6 +306,7 @@ jobs:
         run: |
           npm ci
           npm run build-redirects
+          npm run build-canonicals
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
