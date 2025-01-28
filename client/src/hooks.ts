@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
@@ -269,3 +275,49 @@ export const useScrollToAnchor = () => {
     }
   });
 };
+
+interface ViewedTimer {
+  timeout: number | null;
+}
+
+export function useViewed(
+  callback: Function,
+  intersectionObserverOptions: IntersectionObserverInit = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.5,
+  }
+) {
+  const timer = useRef<ViewedTimer>({ timeout: null });
+  const isVisible = usePageVisibility();
+  const [node, setNode] = useState<HTMLElement>();
+  const isIntersecting = useIsIntersecting(node, intersectionObserverOptions);
+
+  useEffect(() => {
+    if (timer.current.timeout !== -1) {
+      // timeout !== -1 means the viewed has not been sent
+      if (isVisible && isIntersecting) {
+        if (timer.current.timeout === null) {
+          timer.current = {
+            timeout: window.setTimeout(() => {
+              timer.current = { timeout: -1 };
+              callback();
+            }, 1000),
+          };
+        }
+      }
+    }
+    return () => {
+      if (timer.current.timeout !== null && timer.current.timeout !== -1) {
+        clearTimeout(timer.current.timeout);
+        timer.current = { timeout: null };
+      }
+    };
+  }, [isVisible, isIntersecting, callback]);
+
+  return useCallback((node: HTMLElement | null) => {
+    if (node) {
+      setNode(node);
+    }
+  }, []);
+}

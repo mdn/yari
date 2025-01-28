@@ -9,7 +9,9 @@ import "./baseline-indicator.scss";
 
 // web-features doesn't export these types directly so we need to do a little typescript magic:
 import type { features } from "web-features";
-type SupportStatus = (typeof features)[keyof typeof features]["status"];
+type SupportStatus = (typeof features)[keyof typeof features]["status"] & {
+  asterisk?: boolean;
+};
 type BrowserIdentifier =
   keyof (typeof features)[keyof typeof features]["status"]["support"];
 
@@ -40,6 +42,7 @@ const ENGINES: {
 ];
 
 const LOCALIZED_BCD_IDS = {
+  de: "browser-kompatibilität",
   "en-US": "browser_compatibility",
   es: "compatibilidad_con_navegadores",
   fr: "compatibilité_des_navigateurs",
@@ -113,7 +116,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           role="img"
           aria-label={level !== "not" ? "Baseline Check" : "Baseline Cross"}
         />
-        <h2>
+        <div className="status-title">
           {level !== "not" ? (
             <>
               Baseline{" "}
@@ -122,11 +125,12 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
                   ? "Widely available"
                   : low_date?.getFullYear()}
               </span>
+              {status.asterisk && " *"}
             </>
           ) : (
             <span className="not-bold">Limited availability</span>
           )}
-        </h2>
+        </div>
         {level === "low" && <div className="pill">Newly available</div>}
         <div className="browsers">
           {ENGINES.map(({ name, browsers }) => (
@@ -173,6 +177,11 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           <p>
             This feature is not Baseline because it does not work in some of the
             most widely-used browsers.
+          </p>
+        )}
+        {status.asterisk && (
+          <p>
+            * Some parts of this feature may have varying levels of support.
           </p>
         )}
         <ul>

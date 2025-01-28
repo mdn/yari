@@ -29,8 +29,8 @@ const anchor = $2 || '';
 const wrap = !$3;
 
 let slug = apiName.replace('()', '').replace('.prototype.', '.');
-if (apiName.includes(".") && !apiName.includes("..")) {
-    // E.g. "Array.filter", but not "try...catch".
+if (apiName.includes(".") && !apiName.includes("/")) {
+    // E.g. "Array.filter", but not "Statements/try...catch".
     slug = slug.replace('.', '/');
 }
 

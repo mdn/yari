@@ -5,5 +5,5 @@ import * as cheerio from "cheerio";
 
 export function wrapTables($: cheerio.CheerioAPI) {
   const figure = $('<figure class="table-container"></figure>');
-  $("table").wrap(figure);
+  $("table, math[display=block]").wrap(figure);
 }

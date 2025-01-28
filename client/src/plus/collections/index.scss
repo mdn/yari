@@ -75,14 +75,14 @@
     }
 
     p {
+      margin: 0;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
       @include line-clamp(
         4,
         var(--font-content-line-height),
         var(--background-primary)
       );
-      margin: 0;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
     }
 
     footer {

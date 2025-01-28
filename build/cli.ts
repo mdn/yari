@@ -6,7 +6,7 @@ import path from "node:path";
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import caporal from "@caporal/core";
-import inquirer from "inquirer";
+import { select } from "@inquirer/prompts";
 
 import { Document, slugToFolder, translationsOf } from "../content/index.js";
 import {
@@ -34,7 +34,6 @@ import { ssrDocument } from "./ssr.js";
 import { HydrationData } from "../libs/types/hydration.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
@@ -100,19 +99,15 @@ async function buildDocumentInteractive(
       throw e;
     }
     console.error(e);
-    const { action } = await prompt<{ action: string }>([
-      {
-        type: "list",
-        message: "What to do?",
-        name: "action",
-        choices: [
-          { name: "re-run", value: "r" },
-          { name: "skip", value: "s" },
-          { name: "quit", value: "q" },
-        ],
-        default: "r",
-      },
-    ]);
+    const action = await select({
+      message: "What to do?",
+      choices: [
+        { name: "re-run", value: "r" },
+        { name: "skip", value: "s" },
+        { name: "quit", value: "q" },
+      ],
+      default: "r",
+    });
     if (action === "r") {
       return await buildDocumentInteractive(documentPath, interactive, true);
     }
@@ -469,7 +464,7 @@ if (SENTRY_DSN_BUILD) {
 }
 
 program
-  .name("build")
+  .name("[DEPRECATED] build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
@@ -492,7 +487,7 @@ program
     try {
       if (!options.nohtml) {
         console.warn(
-          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari v3. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
+          "WARNING: Rendering index.html files as part of the build command is now DEPRECATED, and will no longer be supported in Yari in the near future. To resolve this warning, add the `-n` (`--nohtml`) option. For details, see: https://github.com/mdn/yari/pull/10953"
         );
       }
 
@@ -604,6 +599,8 @@ program
       throw error;
     }
   });
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 program.run();
 function compareBigInt(a: bigint, b: bigint): number {

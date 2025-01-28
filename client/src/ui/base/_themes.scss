@@ -40,7 +40,10 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
-  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-del: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.5
+    )};
   --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-light-border-primary};
@@ -306,14 +309,14 @@
   --curriculum-scrim-bg: url("../../assets/curriculum-scrim-bg.svg#light");
   --curriculum-landing-arrow: url("../../assets/curriculum-landing-arrow.svg#light");
 
+  color-scheme: light;
+
   @media (min-width: $screen-md) {
     --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#light");
     --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#light");
     --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#light");
     --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#light");
   }
-
-  color-scheme: light;
 }
 
 @mixin dark-theme {
@@ -354,7 +357,10 @@
       $mdn-theme-light-icon-success,
       $alpha: -0.9
     )};
-  --background-del: #{color.adjust($mdn-theme-light-icon-critical, $alpha: -0.5)};
+  --background-del: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.5
+    )};
   --background-ins: #{color.adjust($mdn-theme-light-icon-success, $alpha: -0.5)};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
@@ -621,14 +627,14 @@
   --curriculum-scrim-bg: url("../../assets/curriculum-scrim-bg.svg#dark");
   --curriculum-landing-arrow: url("../../assets/curriculum-landing-arrow.svg#dark");
 
+  color-scheme: dark;
+
   @media (min-width: $screen-md) {
     --curriculum-landing-started-beginner: url("../../assets/icons/curriculum-landing-started-beginner.svg#dark");
     --curriculum-landing-started-advanced: url("../../assets/icons/curriculum-landing-started-advanced.svg#dark");
     --curriculum-landing-started-employment: url("../../assets/icons/curriculum-landing-started-employment.svg#dark");
     --curriculum-landing-started-educator: url("../../assets/icons/curriculum-landing-started-educator.svg#dark");
   }
-
-  color-scheme: dark;
 }
 
 body,

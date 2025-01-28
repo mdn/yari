@@ -121,6 +121,8 @@ export async function toPrettyJSON(value: unknown) {
 }
 
 export function urlToFolderPath(url: string) {
+  // Split off any # part of the URL (ex: passed in from redirect targets).
+  [url] = url.split("#");
   const [, locale, , ...slugParts] = url.split("/");
   return path.join(locale.toLowerCase(), _slugToFolder(slugParts.join("/")));
 }

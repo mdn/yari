@@ -110,6 +110,7 @@ export type Flaws = Partial<{
   heading_links: HeadingLinksFlaw[];
   translation_differences: TranslationDifferenceFlaw[];
   unsafe_html: UnsafeHTMLFlaw[];
+  unknown: GenericFlaw[];
 }>;
 
 export type Translation = {
@@ -228,7 +229,7 @@ export interface BuildData {
   url: string;
   rawBody: string;
   metadata: { locale: Locale };
-  isMarkdown: true;
+  isMarkdown: boolean;
   fileInfo: {
     path: string;
   };

@@ -7,7 +7,7 @@
     height: 0;
     margin: 0;
     opacity: 0;
-    width: 3rem;
+    width: 3em;
 
     &:checked + .slider {
       background-color: var(--text-link);
@@ -29,10 +29,10 @@
     background-color: var(--text-secondary);
     border-radius: 1.5em;
     cursor: pointer;
-    height: 1.5rem;
+    height: 1.5em;
     position: absolute;
     transition: 0.4s;
-    width: 3rem;
+    width: 3em;
 
     &:before {
       background-color: var(--background-primary);
@@ -48,6 +48,6 @@
   }
 
   .label {
-    margin-left: 0.5rem;
+    margin-left: 0.5em;
   }
 }

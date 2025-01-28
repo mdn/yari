@@ -171,10 +171,14 @@ main.play {
 
         background-color: var(--background-secondary);
         border: var(--editor-header-border-width) solid var(--border-primary);
-        display: flex;
-        flex-direction: column;
+        height: 0;
         min-height: var(--editor-header-height);
         width: 100%;
+
+        /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+        &::details-content {
+          display: contents;
+        }
 
         &[open] {
           height: 100%;
@@ -189,22 +193,13 @@ main.play {
           padding: var(--editor-header-padding);
         }
 
-        .editor {
+        play-editor {
           height: calc(
             100% - var(--editor-header-height) - 2 *
               var(--editor-header-padding) - var(--editor-header-border-width)
           );
           margin: 0.5rem 0 0;
           overflow-y: scroll;
-
-          .cm-editor {
-            min-height: 100%;
-            width: 100%;
-
-            @media (max-width: $screen-sm) {
-              font-size: 1rem;
-            }
-          }
         }
       }
     }
@@ -213,63 +208,7 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
-      @media (min-width: 25rem) {
-        .place {
-          align-self: flex-end;
-          max-width: 20rem;
-          min-height: 10rem;
-
-          .pong-box2,
-          .pong-box {
-            width: 100%;
-
-            .pong {
-              flex-direction: row;
-            }
-
-            .pong-note {
-              margin-top: 0;
-            }
-          }
-
-          &.new-side {
-            height: 12rem;
-            max-width: 30rem;
-            min-height: 12rem;
-
-            .pong-box2 {
-              height: 21rem;
-              min-height: 0;
-              width: 25rem;
-
-              .pong-cta {
-                margin: 0.5rem auto 1rem 1rem;
-              }
-
-              .pong-note {
-                margin: 0.5rem 0.5rem auto auto;
-              }
-
-              .pong {
-                > img {
-                  height: 100%;
-                  width: auto;
-                }
-
-                > div.content {
-                  align-items: end;
-                  background: linear-gradient(to left, #111 16rem, transparent);
-                  flex-direction: column;
-                  height: 100%;
-                  justify-content: end;
-                  padding-left: 8rem;
-                  width: 100%;
-                }
-              }
-            }
-          }
-        }
-      }
+      overflow: auto;
 
       button.flag-example {
         align-self: flex-end;
@@ -284,7 +223,8 @@ main.play {
         }
       }
 
-      iframe {
+      play-runner {
+        border: 1px solid var(--border-primary);
         height: 100%;
         width: 100%;
       }
@@ -303,20 +243,12 @@ main.play {
           width: 100%;
         }
 
-        ul {
+        play-console {
           background-color: var(--code-background-inline);
           height: 6rem;
           max-height: 6rem;
           overflow: auto;
           width: 100%;
-
-          li {
-            padding: 0 1rem;
-
-            &::before {
-              content: ">";
-            }
-          }
         }
       }
     }
