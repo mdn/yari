@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.3.0](https://github.com/mdn/yari/compare/v4.2.2...v4.3.0) (2025-01-29)
+
+
+### Features
+
+* **newletter:** deprecate newsletter ([#12499](https://github.com/mdn/yari/issues/12499)) ([3d7e4da](https://github.com/mdn/yari/commit/3d7e4da3e1a0718c5f3ba75942386a7a9fd5ba5a))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump typescript-eslint from 8.21.0 to 8.22.0 ([#12530](https://github.com/mdn/yari/issues/12530)) ([13af06a](https://github.com/mdn/yari/commit/13af06ae3a2315b89474c30646c9904cb0368d0f))
+* **deps:** bump @inquirer/prompts from 7.2.3 to 7.2.4 ([#12534](https://github.com/mdn/yari/issues/12534)) ([14c57b7](https://github.com/mdn/yari/commit/14c57b77cd5780dbe619f96158811232370582f5))
+* **deps:** bump @mdn/rari from 0.1.20 to 0.1.21 ([#12539](https://github.com/mdn/yari/issues/12539)) ([ae48fe7](https://github.com/mdn/yari/commit/ae48fe7bfd40c54ab8c7748eed5d67d659b54cfc))
+* **deps:** bump @sentry/node from 8.51.0 to 8.52.0 in the sentry group ([#12532](https://github.com/mdn/yari/issues/12532)) ([5c9f068](https://github.com/mdn/yari/commit/5c9f068b60588ef67b4f6f8934c35f9f8385e54a))
+* **deps:** bump @stripe/stripe-js from 5.5.0 to 5.6.0 ([#12533](https://github.com/mdn/yari/issues/12533)) ([05fb7d8](https://github.com/mdn/yari/commit/05fb7d81eaeabfba2d5d4216a69ddd6aa0c4789b))
+* **deps:** bump aws-actions/configure-aws-credentials from 4.0.2 to 4.0.3 ([#12531](https://github.com/mdn/yari/issues/12531)) ([03290c3](https://github.com/mdn/yari/commit/03290c3222252732ed5a0339519436599310de1f))
+* **deps:** bump path-to-regex from 0.1.10 to 0.1.12 in /cloud-function ([#12525](https://github.com/mdn/yari/issues/12525)) ([0eafcf7](https://github.com/mdn/yari/commit/0eafcf73c248a36293b8c2dbe28321d099d381aa))
+* **deps:** bump web-features from 2.19.0 to 2.20.0 ([#12529](https://github.com/mdn/yari/issues/12529)) ([5383c21](https://github.com/mdn/yari/commit/5383c21becb65eef77d7d78af9302bc307572966))
+* **ui:** Update firefox.svg and simple-firefox.svg to use browser logo ([#12107](https://github.com/mdn/yari/issues/12107)) ([4d281b1](https://github.com/mdn/yari/commit/4d281b1c203885c4b342b2c5cddbc6309e458f22))
+
 ## [4.2.2](https://github.com/mdn/yari/compare/v4.2.1...v4.2.2) (2025-01-27)
 
 
