@@ -24,6 +24,16 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
+                href="https://bsky.app/profile/mozdevnet.bsky.social"
+                target="_blank"
+                rel="me noopener noreferrer"
+              >
+                <span className="icon icon-bluesky"></span>
+                <span className="visually-hidden">MDN on Bluesky</span>
+              </a>
+            </li>
+            <li>
+              <a
                 href="https://mastodon.social/@mdn"
                 target="_blank"
                 rel="me noopener noreferrer"
