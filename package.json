@@ -80,7 +80,7 @@
     "@codemirror/state": "^6.5.1",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@fast-csv/parse": "^5.0.2",
-    "@inquirer/prompts": "^7.2.3",
+    "@inquirer/prompts": "^7.2.4",
     "@lit/react": "^1.0.7",
     "@lit/task": "^1.0.2",
     "@mdn/bcd-utils-api": "^0.0.7",
