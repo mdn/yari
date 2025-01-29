@@ -37,10 +37,10 @@ export default function Newsletter() {
                 {enabled ? (
                   <>
                     {" "}
-                    If you unsubscribe you cannot subscribe again. <br />
+                    If you unsubscribe, you cannot subscribe again. <br />
                     <strong>
                       We will automatically unsubscribe you and purge all
-                      related data in the near future.
+                      related data soon.
                     </strong>
                   </>
                 ) : (

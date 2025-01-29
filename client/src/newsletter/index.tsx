@@ -25,13 +25,12 @@ function SignUpForm({ sendUsersToSettings = false, section = false }) {
       <p>We're decommissioning our MDN Plus newsletter.</p>
       <p>
         <strong>
-          We will automatically unsubscribe you and purge all related data in
-          the near future.
+          We will automatically unsubscribe you and purge all related data soon.
         </strong>
       </p>
       {sendUsersToSettings && user?.isAuthenticated && !isServer ? (
         <p>
-          Unsubscribe now up via the{" "}
+          Unsubscribe now via the{" "}
           <a href={`/${locale}/plus/settings#newsletter`} rel="_blank">
             Settings Page.
           </a>
