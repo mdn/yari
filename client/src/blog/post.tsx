@@ -16,7 +16,6 @@ import {
 } from "../../../libs/types/blog";
 import { useDecorateCodeExamples, useRunSample } from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
-import { SignUpSection as NewsletterSignUp } from "../newsletter";
 import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
 import { PlayQueue } from "../playground/queue";
@@ -211,7 +210,6 @@ export function BlogPost(props: HydrationData) {
             <RenderDocumentBody doc={doc} />
             {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
-          <NewsletterSignUp />
           <PlayQueue standalone={true} />
         </main>
       )}
