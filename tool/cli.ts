@@ -40,6 +40,7 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
 import { whatsdeployed } from "./whatsdeployed.js";
+import { compareInteractiveExamples } from "./compare.js";
 
 const { program } = caporal;
 
@@ -208,6 +209,13 @@ interface WhatsdeployedActionParameters extends ActionParameters {
   options: {
     output: string;
     dryRun: boolean;
+  };
+}
+
+interface CompareInteractiveExamplesActionParameters extends ActionParameters {
+  args: {
+    oldUrl: string;
+    newUrl: string;
   };
 }
 
@@ -1101,6 +1109,19 @@ program
       const { directory } = args;
       const { output, dryRun } = options;
       return whatsdeployed(directory, output, dryRun);
+    })
+  )
+
+  .command(
+    "compare-interactive-examples",
+    "compare old and new interactive examples console output"
+  )
+  .argument("<oldUrl>", "old content URL")
+  .argument("<newUrl>", "new content URL")
+  .action(
+    tryOrExit(async ({ args }: CompareInteractiveExamplesActionParameters) => {
+      const { oldUrl, newUrl } = args;
+      return compareInteractiveExamples(oldUrl, newUrl);
     })
   );
 
