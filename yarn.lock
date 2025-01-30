@@ -11616,10 +11616,10 @@ open@^10.0.3, open@^10.1.0:
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openai@^4.80.1:
-  version "4.80.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.80.1.tgz#0869ae7d4efbe1794dbec9b648aa329d369cea36"
-  integrity sha512-+6+bbXFwbIE88foZsBEt36bPkgZPdyFN82clAXG61gnHb2gXdZApDyRrcAHqEtpYICywpqaNo57kOm9dtnb7Cw==
+openai@^4.81.0:
+  version "4.81.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.81.0.tgz#3d92de8ca9bc769ed0d8a999706522f8833786ff"
+  integrity sha512-lXkFkV+He3O6RGnldHncRGef4uWHssDsAVwN5I3bWcgIdDPy/w8vgtIAwvZxAj49m4WiwWVD0+eGTJ9xOv/ISA==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
