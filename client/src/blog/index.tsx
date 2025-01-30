@@ -10,7 +10,6 @@ import { BlogImage, BlogPostMetadata } from "../../../libs/types/blog.js";
 
 import "./index.scss";
 import { Button } from "../ui/atoms/button";
-import { SignUpSection as NewsletterSignUp } from "../newsletter";
 
 interface BlogIndexData {
   posts: BlogPostMetadata[];
@@ -105,7 +104,6 @@ function BlogIndex(props: HydrationData) {
           })}
         </section>
       </main>
-      <NewsletterSignUp />
     </>
   );
 }
