@@ -6,9 +6,12 @@ import frontmatter from "front-matter";
 import puppeteer from "puppeteer";
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
+import pLimit from "p-limit";
+
+const concurrency = 8;
+const limit = pLimit(concurrency);
 
 const execAsync = promisify(exec);
-
 async function grepSystem(searchTerm: string, directory: string) {
   try {
     const { stdout } = await execAsync(
@@ -43,28 +46,75 @@ export async function compareInteractiveExamples(
       })
   );
 
+  console.log(`${slugs.length} files to check.`);
+
   const browser = await puppeteer.launch({
     browser: "firefox",
-    headless: true,
+    headless: false,
   });
 
-  const page = await browser.newPage();
+  const availablePages = await Promise.all(
+    new Array(concurrency).fill(null).map(async () => {
+      const page = await browser.newPage();
+      await page.setViewport({
+        width: 1200,
+        height: 1200,
+        deviceScaleFactor: 1,
+        isMobile: false,
+      });
+      return page;
+    })
+  );
 
-  for (const slug of slugs) {
-    const o = `${oldUrl}/en-US/${slug}`;
-    const n = `${newUrl}/en-US/${slug}`;
-
-    const oldConsoleResult = await getConsoleOutputFromJSExample(
-      page,
-      o,
-      false
-    );
-    const newConsoleResult = await getConsoleOutputFromJSExample(page, n, true);
-
-    console.log(
-      `\n######\n${slug}:\nold result:\n${oldConsoleResult}\nnew result:\n${newConsoleResult}`
-    );
+  async function withPage<T>(
+    fn: (p: puppeteer.Page) => Promise<T>
+  ): Promise<T> {
+    while (!availablePages.length) {
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    const page = availablePages.pop();
+    try {
+      return await fn(page);
+    } finally {
+      availablePages.push(page);
+    }
   }
+
+  const results = await Promise.all(
+    slugs.map((slug) =>
+      limit(() =>
+        withPage(async (page) => {
+          const o = `${oldUrl}/en-US/${slug}`;
+          const n = `${newUrl}/en-US/${slug}`;
+
+          const oldConsoleResult = await getConsoleOutputFromJSExample(
+            page,
+            o,
+            false
+          );
+          const newConsoleResult = await getConsoleOutputFromJSExample(
+            page,
+            n,
+            true
+          );
+          const ret = {
+            slug,
+            oldConsoleResult,
+            newConsoleResult,
+            different: oldConsoleResult !== newConsoleResult,
+          };
+          console.log(ret);
+          return ret;
+        })
+      )
+    )
+  );
+
+  console.log(results);
+  fs.writeFileSync("compare-results.json", JSON.stringify(results, null, 2));
+
+  // good bye browser
+  await browser.close();
 }
 
 async function getConsoleOutputFromJSExample(
@@ -72,22 +122,18 @@ async function getConsoleOutputFromJSExample(
   url: string,
   queryCustomElement = false
 ): Promise<string> {
-  await page.setViewport({
-    width: 1200,
-    height: 1200,
-    deviceScaleFactor: 1,
-    isMobile: false,
-  });
-  await page.goto(url);
-  await new Promise((res) => setTimeout(res, 500));
   let ret = "";
   try {
+    await page.goto(url);
+    // wait for a bit for the page to settle
+    await new Promise((res) => setTimeout(res, 500));
     if (queryCustomElement) {
       const interactiveExample = await page.waitForSelector(
         "interactive-example"
       );
       const btn = await interactiveExample.waitForSelector(">>> #execute");
       await btn.click();
+      // wait for the console to populate
       await new Promise((res) => setTimeout(res, 800));
       const cons = await interactiveExample.waitForSelector(">>> #console");
       const consUl = await cons.waitForSelector(">>> ul");
@@ -96,31 +142,22 @@ async function getConsoleOutputFromJSExample(
           lis.map((li) => "> " + li.textContent?.trim() || "")
         )
       ).join("\n");
-      // const content = await consUl.evaluate((el) => el.textContent);
-      // console.log(output);
       ret = output;
-      // await page.waitForSelector("interactive-example >>> #console >>> ul")
-      //     .evaluate((el) => el.textContent);
     } else {
       const iframe = await (
         await page.waitForSelector("iframe.interactive")
       ).contentFrame();
-      const btn = await iframe.waitForSelector("#execute", { timeout: 500 });
+      const btn = await iframe.waitForSelector("#execute", { timeout: 10000 });
       await btn.click();
       const consoleElement = await iframe.waitForSelector("#console", {
         timeout: 500,
       });
       const consoleText = await consoleElement.evaluate((el) => el.textContent);
-      // console.log(`url: ${url}: ${consoleText}`);
-      ret = consoleText;
+      ret = consoleText.trim();
     }
   } catch (error) {
-    console.error(error);
+    console.log(`error when processing ${url}: ${error}`);
+    return "--- ERROR ---";
   }
-
-  // if (queryCustomElement) {
-  //   await new Promise((res) => setTimeout(res, 600));
-  // }
-  // await page.close();
   return ret;
 }
