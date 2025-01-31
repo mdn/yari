@@ -254,10 +254,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.7.54":
-  version "2.7.54"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.54.tgz#ef0f46644b1a084155473b0d7710c80a892c2687"
-  integrity sha512-qMrJVg2hoEsZJjMJez9yI2+nZlBUxgYzGV3mqcb2B/6T1ihXp0fWBDYlVHlHquuorgNUQP5a8qSmX6HF5rFJNg==
+"@zip.js/zip.js@2.7.57":
+  version "2.7.57"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.57.tgz#66a7ddc071f3e3aa789af50647c04a525685e1a4"
+  integrity sha512-BtonQ1/jDnGiMed6OkV6rZYW78gLmLswkHOzyMrMb+CAR7CZO8phOHO6c2qw6qb1g1betN7kwEHhhZk30dv+NA==
 
 acorn@^8.14.0, acorn@^8.8.2:
   version "8.14.0"
