@@ -3,25 +3,16 @@ import fs from "node:fs";
 import { CONTENT_ROOT } from "../libs/env/index.js";
 import { DocFrontmatter } from "../libs/types/document.js";
 import frontmatter from "front-matter";
-import puppeteer from "puppeteer";
+import puppeteer, { Page } from "puppeteer";
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
-import pLimit from "p-limit";
+import { retry } from "ts-retry-promise";
+// import { createPool, Pool } from "lightning-pool";
 
-const concurrency = 8;
-const limit = pLimit(concurrency);
-
-const execAsync = promisify(exec);
-async function grepSystem(searchTerm: string, directory: string) {
-  try {
-    const { stdout } = await execAsync(
-      `grep -irl "${searchTerm}" "${directory}"`
-    );
-    return stdout;
-  } catch (error) {
-    throw new Error(`Error executing grep: ${error}`);
-  }
-}
+const CONCURRENCY = 1;
+const MAX_RETRIES = 5;
+const HEADLESS = true;
+const BROWSER = "firefox";
 
 export async function compareInteractiveExamples(
   oldUrl: string,
@@ -29,6 +20,19 @@ export async function compareInteractiveExamples(
 ): Promise<void> {
   console.log(`Comparing ${oldUrl} and ${newUrl}`);
 
+  // Gather slugs to check.
+  const slugs = await findSlugs();
+  console.log(`Found ${slugs.length} slugs to check.`);
+  fs.writeFileSync("compare-slugs.json", JSON.stringify(slugs, null, 2));
+
+  // Collect old and new output results from all slugs.
+  const results = await collectResults(oldUrl, newUrl, slugs);
+  // console.log(results);
+  fs.writeFileSync("compare-results.json", JSON.stringify(results, null, 2));
+}
+
+// Find eligible slugs to check.
+async function findSlugs(): Promise<string[]> {
   const filesLookingInteresting = (
     await grepSystem(
       "EmbedInteractiveExample",
@@ -46,87 +50,104 @@ export async function compareInteractiveExamples(
       })
   );
 
-  console.log(`${slugs.length} files to check.`);
-
-  const browser = await puppeteer.launch({
-    browser: "firefox",
-    headless: false,
-  });
-
-  const availablePages = await Promise.all(
-    new Array(concurrency).fill(null).map(async () => {
-      const page = await browser.newPage();
-      await page.setViewport({
-        width: 1200,
-        height: 1200,
-        deviceScaleFactor: 1,
-        isMobile: false,
-      });
-      return page;
-    })
-  );
-
-  async function withPage<T>(
-    fn: (p: puppeteer.Page) => Promise<T>
-  ): Promise<T> {
-    while (!availablePages.length) {
-      await new Promise((r) => setTimeout(r, 50));
-    }
-    const page = availablePages.pop();
-    try {
-      return await fn(page);
-    } finally {
-      availablePages.push(page);
-    }
-  }
-
-  const results = await Promise.all(
-    slugs.map((slug) =>
-      limit(() =>
-        withPage(async (page) => {
-          const o = `${oldUrl}/en-US/${slug}`;
-          const n = `${newUrl}/en-US/${slug}`;
-
-          const oldConsoleResult = await getConsoleOutputFromJSExample(
-            page,
-            o,
-            false
-          );
-          const newConsoleResult = await getConsoleOutputFromJSExample(
-            page,
-            n,
-            true
-          );
-          const ret = {
-            slug,
-            oldConsoleResult,
-            newConsoleResult,
-            different: oldConsoleResult !== newConsoleResult,
-          };
-          console.log(ret);
-          return ret;
-        })
-      )
-    )
-  );
-
-  console.log(results);
-  fs.writeFileSync("compare-results.json", JSON.stringify(results, null, 2));
-
-  // good bye browser
-  await browser.close();
+  return slugs;
 }
 
+// This function collects the interactive javascript example console output from the
+// old and the new version of the examples found at URLs generated from the passed-in
+// slugs
+async function collectResults(
+  oldUrl: string,
+  newUrl: string,
+  slugs: string[],
+  locale = "en-US"
+) {
+  const browser = await puppeteer.launch({
+    browser: BROWSER,
+    headless: HEADLESS,
+    defaultViewport: {
+      width: 1250,
+      height: 1300,
+      isMobile: false,
+      deviceScaleFactor: 1,
+    },
+  });
+
+  const pages: Page[] = [];
+  for (let i = 0; i < CONCURRENCY; i++) {
+    const context = await browser.createBrowserContext();
+    pages.push(await context.newPage());
+  }
+
+  const results = [];
+  let currentIndex = 0;
+
+  async function processNext(pageIndex: number): Promise<void> {
+    if (currentIndex >= slugs.length) {
+      return;
+    }
+
+    const slug = slugs[currentIndex];
+    currentIndex++;
+
+    const page = pages[pageIndex];
+    const o = `${oldUrl}/${locale}/docs/${slug}`;
+    const n = `${newUrl}/${locale}/docs/${slug}`;
+    let ret = {};
+
+    try {
+      const oldConsoleResult = await getConsoleOutputFromJSExample(
+        page,
+        o,
+        false
+      );
+      const newConsoleResult = await getConsoleOutputFromJSExample(
+        page,
+        n,
+        true
+      );
+      ret = {
+        slug,
+        oldConsoleResult,
+        newConsoleResult,
+      };
+      console.log(ret);
+    } catch (error) {
+      console.log(`error ${o} ${n} ${error}`);
+    }
+    results.push(ret);
+
+    // Once done, pick up the next URL
+    await processNext(pageIndex);
+  }
+
+  await Promise.all(
+    pages.map(async (_, i) => {
+      // temporally space out the concurrent requests a bit
+      await new Promise((res) => setTimeout(res, 500));
+      return processNext(i);
+    })
+  );
+  console.log("closing browser");
+  await browser.close();
+  return results;
+}
+
+// This function is used to get the console output from the JS example
+// the `queryCustomElement` parameter is used to determine if the JS example is
+// inside a custom element (new version) or not.
 async function getConsoleOutputFromJSExample(
   page: puppeteer.Page,
   url: string,
   queryCustomElement = false
 ): Promise<string> {
   let ret = "";
+  await retry(async () => await page.goto(url, { timeout: 5000 }), {
+    retries: MAX_RETRIES,
+  });
+  // wait for a bit for the page to settle
+  // await new Promise((res) => setTimeout(res, 500));
   try {
-    await page.goto(url);
-    // wait for a bit for the page to settle
-    await new Promise((res) => setTimeout(res, 500));
     if (queryCustomElement) {
       const interactiveExample = await page.waitForSelector(
         "interactive-example"
@@ -134,12 +155,13 @@ async function getConsoleOutputFromJSExample(
       const btn = await interactiveExample.waitForSelector(">>> #execute");
       await btn.click();
       // wait for the console to populate
-      await new Promise((res) => setTimeout(res, 800));
       const cons = await interactiveExample.waitForSelector(">>> #console");
       const consUl = await cons.waitForSelector(">>> ul");
+      // wait for at least one li element to show up
+      await consUl.waitForSelector("li");
       const output = (
         await consUl.$$eval("li", (lis) =>
-          lis.map((li) => "> " + li.textContent?.trim() || "")
+          lis.map((li) => li.textContent?.trim() || "")
         )
       ).join("\n");
       ret = output;
@@ -150,14 +172,26 @@ async function getConsoleOutputFromJSExample(
       const btn = await iframe.waitForSelector("#execute", { timeout: 10000 });
       await btn.click();
       const consoleElement = await iframe.waitForSelector("#console", {
-        timeout: 500,
+        timeout: 5000,
       });
       const consoleText = await consoleElement.evaluate((el) => el.textContent);
       ret = consoleText.trim();
     }
   } catch (error) {
     console.log(`error when processing ${url}: ${error}`);
-    return "--- ERROR ---";
+    return `--- ERROR --- ${error}`;
   }
   return ret;
+}
+
+const execAsync = promisify(exec);
+async function grepSystem(searchTerm: string, directory: string) {
+  try {
+    const { stdout } = await execAsync(
+      `grep -irl "${searchTerm}" "${directory}"`
+    );
+    return stdout;
+  } catch (error) {
+    throw new Error(`Error executing grep: ${error}`);
+  }
 }
