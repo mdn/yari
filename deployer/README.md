@@ -268,7 +268,7 @@ You need to have
 
 ```sh
 cd deployer
-poetry install
+poetry install --with dev
 ```
 
 That should have installed the CLI:

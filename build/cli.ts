@@ -464,7 +464,7 @@ if (SENTRY_DSN_BUILD) {
 }
 
 program
-  .name("build")
+  .name("[DEPRECATED] build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
@@ -599,6 +599,8 @@ program
       throw error;
     }
   });
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 program.run();
 function compareBigInt(a: bigint, b: bigint): number {
