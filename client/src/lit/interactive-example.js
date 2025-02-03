@@ -14,7 +14,16 @@ import styles from "./interactive-example.scss?css" with { type: "css" };
  */
 
 export class InteractiveExample extends GleanMixin(LitElement) {
+  static properties = {
+    name: { type: String },
+  };
+
   static styles = styles;
+
+  constructor() {
+    super();
+    this.name = "";
+  }
 
   /** @type {Ref<PlayController>} */
   _controller = createRef();
@@ -71,7 +80,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     return html`
       <play-controller ${ref(this._controller)}>
         <div class="template-javascript">
-          <h4>JavaScript Demo:</h4>
+          <h4>${this.name}</h4>
           <play-editor id="editor" language="javascript"></play-editor>
           <div class="buttons">
             <button id="execute" @click=${this._run}>Run</button>
