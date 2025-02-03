@@ -9,10 +9,10 @@ import { promisify } from "node:util";
 import { retry } from "ts-retry-promise";
 // import { createPool, Pool } from "lightning-pool";
 
-const CONCURRENCY = 4;
+const CONCURRENCY = 6;
 const MAX_RETRIES = 5;
-const HEADLESS = false;
-const BROWSER = "firefox";
+const HEADLESS = true;
+const BROWSER = "chrome";
 
 export async function compareInteractiveExamples(
   oldUrl: string,
@@ -27,7 +27,6 @@ export async function compareInteractiveExamples(
 
   // Collect old and new output results from all slugs.
   const results = await collectResults(oldUrl, newUrl, slugs);
-  // console.log(results);
   fs.writeFileSync("compare-results.json", JSON.stringify(results, null, 2));
 }
 
@@ -73,70 +72,115 @@ async function collectResults(
     },
   });
 
-  const pages: Page[] = [];
-  for (let i = 0; i < CONCURRENCY; i++) {
-    const context = await browser.createBrowserContext();
-    pages.push(await context.newPage());
+  const results: any[] = [];
+
+  // Process slugs in batches of size CONCURRENCY.
+  for (let i = 0; i < slugs.length; i += CONCURRENCY) {
+    const batch = slugs.slice(i, i + CONCURRENCY);
+    const batchResults = await Promise.all(
+      batch.map(async (slug) => {
+        // Create a new browser context and page for this slug
+        const context = await browser.createBrowserContext();
+        const page = await context.newPage();
+        const oldUrlForSlug = `${oldUrl}/${locale}/docs/${slug}`;
+        const newUrlForSlug = `${newUrl}/${locale}/docs/${slug}`;
+        let ret = {};
+
+        try {
+          const oldConsoleResult = await getConsoleOutputFromJSExample(
+            page,
+            oldUrlForSlug,
+            false
+          );
+          const newConsoleResult = await getConsoleOutputFromJSExample(
+            page,
+            newUrlForSlug,
+            true
+          );
+          ret = { slug, oldConsoleResult, newConsoleResult };
+          console.log(ret);
+        } catch (error) {
+          console.error(
+            `Error processing ${oldUrlForSlug} and ${newUrlForSlug}:`,
+            error
+          );
+        }
+
+        // Close the context after the test completes
+        await context.close();
+        return ret;
+      })
+    );
+    results.push(...batchResults);
   }
 
-  const results = [];
-  let currentIndex = 0;
-
-  async function processNext(pageIndex: number): Promise<void> {
-    if (currentIndex >= slugs.length) {
-      return;
-    }
-
-    const slug = slugs[currentIndex];
-    currentIndex++;
-
-    const page = pages[pageIndex];
-    const o = `${oldUrl}/${locale}/docs/${slug}`;
-    const n = `${newUrl}/${locale}/docs/${slug}`;
-    let ret = {};
-
-    try {
-      const oldConsoleResult = await getConsoleOutputFromJSExample(
-        page,
-        o,
-        false
-      );
-      const newConsoleResult = await getConsoleOutputFromJSExample(
-        page,
-        n,
-        true
-      );
-      ret = {
-        slug,
-        oldConsoleResult,
-        newConsoleResult,
-      };
-      console.log(ret);
-    } catch (error) {
-      console.log(`error ${o} ${n} ${error}`);
-    }
-    results.push(ret);
-
-    // await page.browserContext().close();
-    // const ctx = await browser.createBrowserContext();
-    // const npage = await ctx.newPage();
-
-    // pages[pageIndex] = npage;
-
-    // Once done, pick up the next URL
-    await processNext(pageIndex);
-  }
-
-  await Promise.all(
-    pages.map(async (_, i) => {
-      // temporally space out the concurrent requests a bit
-      await new Promise((res) => setTimeout(res, 500));
-      return processNext(i);
-    })
-  );
-  console.log("closing browser");
   await browser.close();
   return results;
+
+  // const pages: Page[] = [];
+  // for (let i = 0; i < CONCURRENCY; i++) {
+  //   const context = await browser.createBrowserContext();
+  //   pages.push(await context.newPage());
+  // }
+
+  // const results = [];
+  // let currentIndex = 0;
+
+  // async function processNext(pageIndex: number): Promise<void> {
+  //   if (currentIndex >= slugs.length) {
+  //     return;
+  //   }
+
+  //   const slug = slugs[currentIndex];
+  //   currentIndex++;
+
+  //   const page = pages[pageIndex];
+  //   const o = `${oldUrl}/${locale}/docs/${slug}`;
+  //   const n = `${newUrl}/${locale}/docs/${slug}`;
+  //   let ret = {};
+
+  //   try {
+  //     const oldConsoleResult = await getConsoleOutputFromJSExample(
+  //       page,
+  //       o,
+  //       false
+  //     );
+  //     const newConsoleResult = await getConsoleOutputFromJSExample(
+  //       page,
+  //       n,
+  //       true
+  //     );
+  //     ret = {
+  //       slug,
+  //       oldConsoleResult,
+  //       newConsoleResult,
+  //     };
+  //     console.log(ret);
+  //   } catch (error) {
+  //     console.log(`error ${o} ${n} ${error}`);
+  //   }
+  //   results.push(ret);
+
+  // await page.browserContext().close();
+  // const ctx = await browser.createBrowserContext();
+  // const npage = await ctx.newPage();
+
+  // pages[pageIndex] = npage;
+
+  // Once done, pick up the next URL
+  // await processNext(pageIndex);
+  // }
+
+  // await Promise.all(
+  //   pages.map(async (_, i) => {
+  //     // temporally space out the concurrent requests a bit
+  //     await new Promise((res) => setTimeout(res, 500));
+  //     return processNext(i);
+  //   })
+  // );
+  // console.log("closing browser");
+  // await browser.close();
+  // return results;
 }
 
 // This function is used to get the console output from the JS example
@@ -158,7 +202,8 @@ async function getConsoleOutputFromJSExample(
       const interactiveExample = await page.waitForSelector(
         "interactive-example"
       );
-      const btn = await interactiveExample.waitForSelector(">>> #execute");
+      const playController = await page.waitForSelector(">>> play-controller");
+      const btn = await playController.waitForSelector("#execute");
       await btn.click();
       // wait for the console to populate
       const cons = await interactiveExample.waitForSelector(">>> #console");
