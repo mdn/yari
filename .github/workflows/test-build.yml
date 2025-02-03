@@ -16,6 +16,11 @@ on:
         type: string
         default: "main"
 
+      translated-content-ref:
+        description: "translated-content ref to build"
+        type: string
+        default: "main"
+
       notes:
         description: "Notes"
         required: false
@@ -51,6 +56,7 @@ jobs:
         run: |
           echo "rari-ref: ${{ github.event.inputs.rari-ref }}"
           echo "content-ref: ${{ github.event.inputs.content-ref }}"
+          echo "translated-content-ref: ${{ github.event.inputs.translated-content-ref }}"
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
@@ -95,6 +101,7 @@ jobs:
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
+          ref: ${{ github.event.inputs.translated-content-ref }}
 
       - name: Checkout (translated-content-de)
         uses: actions/checkout@v4
