@@ -11,10 +11,10 @@ section.place {
   }
 
   a.pong-note {
-    background-color: var(--text-secondary);
-    border: 1px solid var(--background-secondary);
+    background-color: #f9f9fbd0;
+    border: 1px solid #313131;
     border-radius: 0.25rem;
-    color: var(--background-secondary);
+    color: #313131;
     font-size: 0.625rem;
     opacity: 0.85;
     padding: 0 0.25rem;
@@ -55,7 +55,7 @@ section.place {
     }
 
     .pong-note {
-      margin: 0.5rem;
+      margin: 0.25rem;
       position: absolute;
       right: 0;
       top: 0;
