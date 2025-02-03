@@ -162,7 +162,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "web-features": "^2.21.0",
-    "web-specs": "^3.36.0"
+    "web-specs": "^3.37.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.7",
