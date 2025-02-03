@@ -135,7 +135,7 @@
     "mdn-data": "^2.15.0",
     "open": "^10.1.0",
     "open-editor": "^5.1.0",
-    "openai": "^4.80.1",
+    "openai": "^4.82.0",
     "pg": "^8.13.1",
     "pgvector": "^0.2.0",
     "prism-svelte": "^0.5.0",
