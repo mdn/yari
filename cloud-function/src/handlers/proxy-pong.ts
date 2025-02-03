@@ -4,7 +4,7 @@ import { proxyKevel } from "./proxy-kevel.js";
 
 import type { Request, Response } from "express";
 
-export async function proxyPong(req: Request, res: Response) {
+export async function proxyPong(req: Request, res: Response): Promise<void> {
   if (BSA_ENABLED) {
     return proxyBSA(req, res);
   }
