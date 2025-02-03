@@ -1,0 +1,12 @@
+@use "../../ui/vars" as *;
+
+@media (min-width: $screen-xl) {
+  .table-container {
+    margin: 0;
+    width: 100%;
+  }
+
+  .table-container-inner {
+    padding: 0;
+  }
+}
