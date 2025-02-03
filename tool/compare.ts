@@ -9,9 +9,9 @@ import { promisify } from "node:util";
 import { retry } from "ts-retry-promise";
 // import { createPool, Pool } from "lightning-pool";
 
-const CONCURRENCY = 1;
+const CONCURRENCY = 4;
 const MAX_RETRIES = 5;
-const HEADLESS = true;
+const HEADLESS = false;
 const BROWSER = "firefox";
 
 export async function compareInteractiveExamples(
@@ -116,6 +116,12 @@ async function collectResults(
       console.log(`error ${o} ${n} ${error}`);
     }
     results.push(ret);
+
+    // await page.browserContext().close();
+    // const ctx = await browser.createBrowserContext();
+    // const npage = await ctx.newPage();
+
+    // pages[pageIndex] = npage;
 
     // Once done, pick up the next URL
     await processNext(pageIndex);
