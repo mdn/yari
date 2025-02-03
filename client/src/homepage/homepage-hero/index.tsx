@@ -6,7 +6,6 @@ import { HOMEPAGE_HERO } from "../../telemetry/constants";
 
 export function HomepageHero() {
   const locale = useLocale();
-
   return (
     <div className="homepage-hero dark">
       <section>

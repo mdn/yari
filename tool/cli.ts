@@ -233,7 +233,7 @@ function tryOrExit<T extends ActionParameters>(
 
 program
   .bin("yarn tool")
-  .name("tool")
+  .name("[DEPRECATED] tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
   .cast(false)
@@ -630,7 +630,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         const locale = relPath.split(path.sep)[0];
-        if (!isValidLocale(locale)) {
+        if (!isValidLocale(locale) && locale !== "de") {
           continue;
         }
         allHistory[relPath] = value;
@@ -652,7 +652,12 @@ program
           return 0;
         });
         const root = getRoot(locale);
-        const outputFile = path.join(root, locale, "_githistory.json");
+        const outputDir = path.join(root, locale);
+        if (!fs.existsSync(outputDir)) {
+          console.log(chalk.yellow(`Skipping ${locale}`));
+          continue;
+        }
+        const outputFile = path.join(outputDir, "_githistory.json");
         fs.writeFileSync(
           outputFile,
           JSON.stringify(Object.fromEntries(sorted), null, 2),
@@ -1098,5 +1103,7 @@ program
       return whatsdeployed(directory, output, dryRun);
     })
   );
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 program.run();

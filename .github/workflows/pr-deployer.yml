@@ -41,7 +41,7 @@ jobs:
       - name: Install deployer
         run: |
           cd deployer
-          poetry install
+          poetry install --with dev
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
       - name: Lint Python code

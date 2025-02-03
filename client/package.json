@@ -24,14 +24,20 @@
     ]
   },
   "eslintConfig": {
-    "extends": "react-app",
+    "extends": [
+      "react-app",
+      "plugin:wc/best-practice",
+      "plugin:lit/all"
+    ],
     "rules": {
+      "lit/no-template-map": "off",
       "react/jsx-no-target-blank": [
         "error",
         {
           "allowReferrer": true
         }
-      ]
+      ],
+      "wc/guard-super-call": "off"
     }
   },
   "jest": {
@@ -48,7 +54,7 @@
       "node"
     ],
     "moduleNameMapper": {
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "\\.s?css(\\?css)?$": "<rootDir>/config/jest/cssTransform.js"
     },
     "modulePaths": [],
     "resetMocks": true,
@@ -58,7 +64,9 @@
     "setupFiles": [
       "react-app-polyfill/jsdom"
     ],
-    "setupFilesAfterEnv": [],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest-setup.ts"
+    ],
     "testEnvironment": "jsdom",
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -70,8 +78,7 @@
       "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!@mozilla/glean/.*)/",
-      "^.+\\.module\\.(css|sass|scss)$"
+      "/node_modules/(?!@mozilla/glean/.*)/"
     ],
     "watchPlugins": [
       "jest-watch-typeahead/filename",

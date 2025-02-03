@@ -14,7 +14,7 @@ export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props as CurriculumData);
 
   useEffect(() => {
-    import("./scrim-inline");
+    import("../lit/curriculum/scrim-inline");
   }, []);
 
   return (

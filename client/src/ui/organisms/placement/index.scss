@@ -80,6 +80,7 @@ section.place {
         background: linear-gradient(
           to top,
           var(--place-new-side-background) 9rem,
+          transparent 12rem,
           transparent
         );
         border-radius: var(--border-radius);
@@ -358,4 +359,130 @@ div.empty-place {
   --place-top-color: var(--place-top-color-dark);
   --place-top-cta-background: var(--place-top-cta-background-dark);
   --place-top-cta-color: var(--place-top-cta-color-dark);
+}
+
+.bottom-banner-container {
+  background-color: var(
+    --place-bottom-banner-background,
+    var(--background-primary)
+  );
+  color: var(--place-bottom-banner-color, var(--text-primary));
+  margin: 0;
+  width: 100%;
+
+  > section.place.bottom-banner {
+    column-gap: 3rem;
+    display: grid;
+    grid-template-areas:
+      "nope pong note"
+      "nope pong no";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    margin: 0 auto;
+    max-width: var(--max-width);
+    padding: 0 1rem;
+
+    .pong {
+      grid-area: pong;
+      justify-self: center;
+
+      img {
+        height: auto;
+      }
+    }
+
+    .pong-note {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: note;
+      margin-top: 0.5rem;
+    }
+
+    .no-pong {
+      color: var(--place-bottom-banner-color, var(--text-primary));
+      font-size: 0.625rem;
+      grid-area: no;
+      margin-top: auto;
+    }
+
+    @media (max-width: $screen-xl) {
+      grid-template-areas:
+        "pong note"
+        "pong no";
+      grid-template-columns: auto max-content;
+      grid-template-rows: auto 2rem;
+    }
+
+    @media (max-width: $screen-lg) {
+      grid-template-areas:
+        "pong pong"
+        "note no";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 2rem;
+
+      .no-pong {
+        justify-self: end;
+        width: fit-content;
+      }
+    }
+  }
+}
+
+@media (min-width: 25rem) {
+  .place.horizontal {
+    align-self: flex-end;
+    max-width: 20rem;
+    min-height: 10rem;
+
+    .pong-box2,
+    .pong-box {
+      width: 100%;
+
+      .pong {
+        flex-direction: row;
+      }
+
+      .pong-note {
+        margin-top: 0;
+      }
+    }
+
+    &.new-side {
+      height: 12rem;
+      max-width: 30rem;
+      min-height: 12rem;
+
+      .pong-box2 {
+        height: 21rem;
+        min-height: 0;
+        width: 25rem;
+
+        .pong-cta {
+          margin: 0.5rem auto 1rem 1rem;
+        }
+
+        .pong-note {
+          margin: 0.5rem 0.5rem auto auto;
+        }
+
+        .pong {
+          > img {
+            height: 100%;
+            position: absolute;
+            width: auto;
+            z-index: 1;
+          }
+
+          > div.content {
+            align-items: end;
+            background: var(--place-new-side-background);
+            flex-direction: column;
+            height: 100%;
+            justify-content: end;
+            padding-left: 10rem;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
 }

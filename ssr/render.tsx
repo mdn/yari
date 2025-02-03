@@ -145,10 +145,6 @@ export default function render(
   // Open Graph protocol expects `language_TERRITORY` format.
   const ogLocale = locale.replace("-", "_");
 
-  if (locale === "de") {
-    // Prevent experimental German locale from being indexed.
-    onlyFollow = true;
-  }
   const robotsContent =
     !ALWAYS_ALLOW_ROBOTS || (doc && doc.noIndexing) || noIndexing
       ? "noindex, nofollow"
