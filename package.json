@@ -77,7 +77,7 @@
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.2",
-    "@codemirror/state": "^6.5.1",
+    "@codemirror/state": "^6.5.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@fast-csv/parse": "^5.0.2",
     "@inquirer/prompts": "^7.3.1",
