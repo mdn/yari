@@ -264,6 +264,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
 }
 
 export function RenderDocumentBody({ doc }) {
+  const locale = useLocale();
+
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       return <Prose key={section.value.id} section={section.value} />;
@@ -276,6 +278,7 @@ export function RenderDocumentBody({ doc }) {
             _title={title}
             ish3={isH3}
             query={query}
+            locale={locale}
           />
         </Suspense>
       );

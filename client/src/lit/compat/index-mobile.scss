@@ -1,0 +1,33 @@
+@use "../../ui/vars" as *;
+
+// Style for mobile.
+
+@media (max-width: $screen-sm - 1px) {
+  .bc-table {
+    thead {
+      display: none;
+    }
+
+    td.bc-support {
+      border-left-width: 0;
+      display: block;
+    }
+
+    .bc-feature,
+    .bc-support > button,
+    .bc-history > td {
+      align-content: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .bc-history-desktop {
+      display: none;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+}
