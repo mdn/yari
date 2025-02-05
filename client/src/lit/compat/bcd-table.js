@@ -86,9 +86,10 @@ export const LEGEND_LABELS = {
 class BcdTable extends LitElement {
   static properties = {
     query: {},
-    compat: { type: Object },
-    pathname: {},
     locale: {},
+    data: {},
+    browserInfo: { attribute: "browserinfo" },
+    pathname: { state: true },
     platforms: { state: true },
     browsers: { state: true },
   };
@@ -98,7 +99,10 @@ class BcdTable extends LitElement {
   constructor() {
     super();
     this.query = "";
-    this.compat = {};
+    this.data = {};
+    /** @type {Browsers} */
+    // @ts-ignore
+    this.browserInfo = {};
     this.locale = ""; // TODO
     this.pathname = "";
     /** @type {string[]} */
@@ -109,16 +113,6 @@ class BcdTable extends LitElement {
 
   get breadcrumbs() {
     return this.query.split(".");
-  }
-
-  get data() {
-    // @ts-ignore
-    return this.compat.data;
-  }
-
-  get browserInfo() {
-    // @ts-ignore
-    return this.compat.browsers;
   }
 
   get category() {
