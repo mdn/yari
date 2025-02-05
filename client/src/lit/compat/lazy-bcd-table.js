@@ -2,6 +2,7 @@ import { LitElement, html } from "lit";
 import { createComponent } from "@lit/react";
 import React from "react";
 import { BCD_BASE_URL } from "../../env.ts";
+import "./bcd-table.js";
 
 class LazyBcdTable extends LitElement {
   static properties = {
@@ -9,6 +10,7 @@ class LazyBcdTable extends LitElement {
     _title: {},
     ish3: {},
     query: {},
+    locale: {},
     data: { state: true },
     error: { state: true },
     loading: { state: true },
@@ -20,9 +22,15 @@ class LazyBcdTable extends LitElement {
     this._title = "";
     this.ish3 = "";
     this.query = "";
+    this.locale = "";
     this.data = null;
     this.error = null;
     this.loading = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.loading = true;
   }
 
   /**
@@ -32,14 +40,18 @@ class LazyBcdTable extends LitElement {
   async update(changedProperties) {
     super.update(changedProperties);
     if (changedProperties.has("query")) {
-      await this.fetchData();
+      await this.fetchData(this.query);
     }
   }
 
-  async fetchData() {
+  /**
+   * @param {string} query
+   * @returns {Promise<void>}
+   */
+  async fetchData(query) {
     try {
       const res = await fetch(
-        `${BCD_BASE_URL}/bcd/api/v0/current/${this.query}.json`
+        `${BCD_BASE_URL}/bcd/api/v0/current/${query}.json`
       );
       this.data = await res.json();
     } catch (error) {
@@ -71,7 +83,11 @@ class LazyBcdTable extends LitElement {
     if (!this.data) {
       return html`<p>No compatibility data found</p>`;
     }
-    return html` <pre>${JSON.stringify(this.data, null, 2)}</pre>`;
+    return html`<bcd-table
+      .compat=${this.data}
+      query=${this.query}
+      locale=${this.locale}
+    ></bcd-table>`;
   }
 
   render() {
