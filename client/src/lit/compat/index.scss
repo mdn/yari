@@ -1,6 +1,42 @@
 @use "sass:meta";
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../ui/vars" as *;
+@use "../../ui/atoms/button";
+@use "../../ui/atoms/icon";
+
+// Global.
+
+* {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+.visually-hidden {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+}
 
 // Style for mobile *and* desktop.
 
@@ -222,6 +258,12 @@
 
   td {
     border-width: 0 0 1px;
+  }
+}
+
+.bc-support:not(:focus-within) {
+  .bc-notes-list {
+    display: none;
   }
 }
 

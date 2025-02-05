@@ -1,6 +1,4 @@
 import { html, LitElement } from "lit";
-import { createComponent } from "@lit/react";
-import React from "react";
 import { getActiveLegendItems } from "./legend.ts";
 import {
   asList,
@@ -26,6 +24,7 @@ import {
   labelFromString,
   versionLabelFromSupport,
 } from "./feature-row.ts";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @typedef {import("lit").TemplateResult} TemplateResult
@@ -35,7 +34,6 @@ import {
  * @typedef {import("@mdn/browser-compat-data/types").Browsers} Browsers
  * @typedef {import("@mdn/browser-compat-data/types").Identifier} Identifier
  * @typedef {import("@mdn/browser-compat-data/types").StatusBlock} StatusBlock
- *
  */
 
 const ISSUE_METADATA_TEMPLATE = `
@@ -65,7 +63,10 @@ function browserToIconName(browser) {
   }
 }
 
-// Also specifies the order in which the legend appears
+// Also specifies the order in which the legend
+/**
+ * @type {Record<string, string>}
+ */
 export const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
@@ -100,9 +101,9 @@ class BcdTable extends LitElement {
     this.compat = {};
     this.locale = ""; // TODO
     this.pathname = "";
-    /** @type string[] */
+    /** @type {string[]} */
     this.platforms = [];
-    /** @type BrowserName[] */
+    /** @type {BrowserName[]} */
     this.browsers = [];
   }
 
@@ -151,6 +152,7 @@ class BcdTable extends LitElement {
     sp.set("metadata", metadata);
     sp.set("title", `${this.query} - <SUMMARIZE THE PROBLEM>`);
     sp.set("template", "data-problem.yml");
+
     return `${url}?${sp.toString()}`;
   }
 
@@ -242,7 +244,7 @@ class BcdTable extends LitElement {
 
         let titleNode;
         const titleContent = html` ${title}
-        ${this.renderStatusIcons(compat.status)}`;
+        ${compat.status && this.renderStatusIcons(compat.status)}`;
         if (compat.mdn_url && depth > 0) {
           const href = compat.mdn_url.replace(
             `/${DEFAULT_LOCALE}/docs`,
@@ -269,124 +271,19 @@ class BcdTable extends LitElement {
             // <CompatCell>
             const browser = browserInfo[browserName];
             const support = compat.support[browserName];
+
             const supportClassName = getSupportClassName(support, browser);
             const notes = support && this.renderNotes(browser, support);
 
-            const currentSupport = getCurrentSupport(support);
-
-            const added = currentSupport?.version_added ?? null;
-            const lastVersion = currentSupport?.version_last ?? null;
-
-            const browserReleaseDate = getSupportBrowserReleaseDate(support);
-            const timeline = false; // TODO
-            const showNotes = timeline; // TODO
-
-            let status;
-            switch (added) {
-              case null:
-                status = { isSupported: "unknown" };
-                break;
-              case true:
-                status = { isSupported: lastVersion ? "no" : "yes" };
-                break;
-              case false:
-                status = { isSupported: "no" };
-                break;
-              case "preview":
-                status = { isSupported: "preview" };
-                break;
-              default:
-                status = {
-                  isSupported: supportClassName,
-                  label: versionLabelFromSupport(added, lastVersion, browser),
-                };
-                break;
-            }
-
-            let label;
-            let title = "";
-            switch (status.isSupported) {
-              case "yes":
-                title = "Full support";
-                label = status.label || "Yes";
-                break;
-
-              case "partial":
-                title = "Partial support";
-                label = status.label || "Partial";
-                break;
-
-              case "removed-partial":
-                if (timeline) {
-                  title = "Partial support";
-                  label = status.label || "Partial";
-                } else {
-                  title = "No support";
-                  label = status.label || "No";
-                }
-                break;
-
-              case "no":
-                title = "No support";
-                label = status.label || "No";
-                break;
-
-              case "preview":
-                title = "Preview browser support";
-                label = status.label || browser.preview_name;
-                break;
-
-              case "unknown":
-                title = "Compatibility unknown; please update this.";
-                label = "?";
-                break;
-            }
-
-            const content = html`<div
-              class=${timeline
-                ? "bcd-timeline-cell-text-wrapper"
-                : "bcd-cell-text-wrapper"}
-            >
-              <div class="bcd-cell-icons">
-                <span class="icon-wrap">
-                  <abbr
-                    class=${`
-                bc-level-${supportClassName}
-                icon
-                icon-${supportClassName}`}
-                    title=${title}
-                  >
-                    <span class="bc-support-level">${title}</span>
-                  </abbr>
-                </span>
-              </div>
-              <div class="bcd-cell-text-copy">
-                <span class="bc-browser-name">${browser.name}</span>
-                <span
-                  class="bc-version-label"
-                  title=${browserReleaseDate && !timeline
-                    ? `Released ${browserReleaseDate}`
-                    : ""}
-                >
-                  ${label}
-                  ${browserReleaseDate && timeline
-                    ? ` (Released ${browserReleaseDate})`
-                    : ""}
-                </span>
-              </div>
-              ${support && this.renderCellIcons(support)}
-            </div>`;
-
             return html`<td
-              className=${`bc-support bc-browser-${browserName} bc-supports-${supportClassName} ${
+              class=${`bc-support bc-browser-${browserName} bc-supports-${supportClassName} ${
                 notes ? "bc-has-history" : ""
               }`}
-              aria-expanded=${showNotes ? "true" : "false"}
             >
-              <button type="button" ?disabled=${!notes} title="Toggle history">
-                ${content}
-                <span className="offscreen">Toggle history</span>
+              <button type="button">
+                ${this.renderCellText(support, browser)}
               </button>
+              <dl class="bc-notes-list">${notes}</dl>
             </td>`;
           })}
         </tr>`;
@@ -411,29 +308,58 @@ class BcdTable extends LitElement {
       hasMore(support) && this.renderIcon("more"),
     ].filter(Boolean);
 
-    return icons.length ? html`<div className="bc-icons">${icons}</div>` : null;
+    return icons.length ? html`<div class="bc-icons">${icons}</div>` : null;
   }
 
   /**
-   * @param {keyof LEGEND_LABELS} name
+   * @param {string} name
    * @returns {TemplateResult}
    */
   renderIcon(name) {
-    const title = LEGEND_LABELS[name] ?? name;
+    const title = name in LEGEND_LABELS ? LEGEND_LABELS[name] : name;
 
-    return html`<abbr className="only-icon" title=${title}>
+    return html`<abbr class="only-icon" title=${ifDefined(title)}>
       <span>${name}</span>
-      <i className=${`icon icon-${name}`}></i>
+      <i class=${`icon icon-${name}`}></i>
     </abbr>`;
   }
 
   /**
-   * @param {StatusBlock | undefined} icons
+   * @param {StatusBlock} status
    */
-  renderStatusIcons(icons) {
-    if (icons) {
-      return;
-    }
+  renderStatusIcons(status) {
+    // <StatusIcons>
+    const icons = [
+      status.experimental && {
+        title: "Experimental. Expect behavior to change in the future.",
+        text: "Experimental",
+        iconClassName: "icon-experimental",
+      },
+      status.deprecated && {
+        title: "Deprecated. Not for use in new websites.",
+        text: "Deprecated",
+        iconClassName: "icon-deprecated",
+      },
+      !status.standard_track && {
+        title: "Non-standard. Expect poor cross-browser support.",
+        text: "Non-standard",
+        iconClassName: "icon-nonstandard",
+      },
+    ].filter(isTruthy);
+
+    return icons.length === 0
+      ? null
+      : html`<div class="bc-icons" data-test="{icons.length}">
+          ${icons.map(
+            (icon) =>
+              html`<abbr
+                class=${`only-icon icon ${icon.iconClassName}`}
+                title=${icon.title}
+              >
+                <span>${icon.text}</span>
+              </abbr>`
+          )}
+        </div>`;
   }
 
   /**
@@ -446,9 +372,6 @@ class BcdTable extends LitElement {
       .slice()
       .reverse()
       .flatMap((item, i) => {
-        /**
-         * @type {Array<{ iconName: any, label: string | TemplateResult<1>}>}
-         */
         const supportNotes = [
           item.version_removed &&
           !asList(support).some(
@@ -495,7 +418,7 @@ class BcdTable extends LitElement {
                       </>
                     )}
                     ${hasAddedVersion || hasRemovedVersion ? ": this" : "This"}
-                    feature is behind the{" "}
+                    feature is behind the
                     ${flags.map((flag, i) => {
                       const valueToSet =
                         flag.value_to_set &&
@@ -565,21 +488,133 @@ class BcdTable extends LitElement {
                 browser
               )} bc-supports`}
             >
-              <!-- <CellText support={item} browser={browser} timeline={true} />} -->
+              ${this.renderCellText(item, browser, true)}
             </dt>
-            ${supportNotes.map(({ iconName, label }, i) => {
-              return html`<dd class="bc-supports-dd" key="{i}">
-                ${this.renderIcon(iconName)}{" "}
+            ${supportNotes.map(({ iconName, label }) => {
+              return html`<dd class="bc-supports-dd">
+                ${this.renderIcon(iconName)}
                 ${typeof label === "string"
                   ? html`<span>${unsafeHTML(label)}</span>`
                   : label}
               </dd>`;
             })}
-            ${!hasNotes && <dd />}
+            ${!hasNotes ? html`<dd></dd>` : null}
           </div>`
         );
       })
       .filter(isTruthy);
+  }
+
+  /**
+   *
+   * @param {SupportStatement | undefined} support
+   * @param {BrowserStatement} browser
+   * @param {boolean} [timeline]
+   */
+  renderCellText(support, browser, timeline = false) {
+    const currentSupport = getCurrentSupport(support);
+
+    const added = currentSupport?.version_added ?? null;
+    const lastVersion = currentSupport?.version_last ?? null;
+
+    const browserReleaseDate = getSupportBrowserReleaseDate(support);
+    const supportClassName = getSupportClassName(support, browser);
+
+    let status;
+    switch (added) {
+      case null:
+        status = { isSupported: "unknown" };
+        break;
+      case true:
+        status = { isSupported: lastVersion ? "no" : "yes" };
+        break;
+      case false:
+        status = { isSupported: "no" };
+        break;
+      case "preview":
+        status = { isSupported: "preview" };
+        break;
+      default:
+        status = {
+          isSupported: supportClassName,
+          label: versionLabelFromSupport(added, lastVersion, browser),
+        };
+        break;
+    }
+
+    let label;
+    let title = "";
+    switch (status.isSupported) {
+      case "yes":
+        title = "Full support";
+        label = status.label || "Yes";
+        break;
+
+      case "partial":
+        title = "Partial support";
+        label = status.label || "Partial";
+        break;
+
+      case "removed-partial":
+        if (timeline) {
+          title = "Partial support";
+          label = status.label || "Partial";
+        } else {
+          title = "No support";
+          label = status.label || "No";
+        }
+        break;
+
+      case "no":
+        title = "No support";
+        label = status.label || "No";
+        break;
+
+      case "preview":
+        title = "Preview browser support";
+        label = status.label || browser.preview_name;
+        break;
+
+      case "unknown":
+        title = "Compatibility unknown; please update this.";
+        label = "?";
+        break;
+    }
+
+    return html`<div
+      class=${timeline
+        ? "bcd-timeline-cell-text-wrapper"
+        : "bcd-cell-text-wrapper"}
+    >
+      <div class="bcd-cell-icons">
+        <span class="icon-wrap">
+          <abbr
+            class=${`
+                bc-level-${supportClassName}
+                icon
+                icon-${supportClassName}`}
+            title=${title}
+          >
+            <span class="bc-support-level">${title}</span>
+          </abbr>
+        </span>
+      </div>
+      <div class="bcd-cell-text-copy">
+        <span class="bc-browser-name">${browser.name}</span>
+        <span
+          class="bc-version-label"
+          title=${browserReleaseDate && !timeline
+            ? `Released ${browserReleaseDate}`
+            : ""}
+        >
+          ${label}
+          ${browserReleaseDate && timeline
+            ? ` (Released ${browserReleaseDate})`
+            : ""}
+        </span>
+      </div>
+      ${support && this.renderCellIcons(support)}
+    </div>`;
   }
 
   renderTableLegend() {
@@ -635,12 +670,6 @@ class BcdTable extends LitElement {
 
 customElements.define("bcd-table", BcdTable);
 
-export default createComponent({
-  tagName: "bcd-table",
-  elementClass: BcdTable,
-  react: React,
-});
-
 /**
  * Return a list of platforms and browsers that are relevant for this category &
  * data.
@@ -677,7 +706,8 @@ export function gatherPlatformsAndBrowsers(category, data, browserInfo) {
     const platformBrowsers = Object.keys(browserInfo);
     browsers.push(
       ...platformBrowsers.filter(
-        (browser) => browserInfo[browser].type === platform
+        (browser) =>
+          browser in browserInfo && browserInfo[browser].type === platform
       )
     );
   }
@@ -689,7 +719,7 @@ export function gatherPlatformsAndBrowsers(category, data, browserInfo) {
     );
   }
 
-  // If there is no Node.js data for a category outside of "javascript", don't
+  // If there is no Node.js data for a category outside "javascript", don't
   // show it. It ended up in the browser list because there is data for Deno.
   if (category !== "javascript" && !hasNodeJSData) {
     browsers = browsers.filter((browser) => browser !== "nodejs");
