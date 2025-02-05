@@ -261,12 +261,6 @@ dd {
   }
 }
 
-.bc-support:not(:focus-within) {
-  .bc-notes-list {
-    display: none;
-  }
-}
-
 .bc-notes-list {
   margin: 0.5rem 0;
   position: relative;

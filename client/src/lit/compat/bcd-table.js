@@ -228,7 +228,7 @@ class BcdTable extends LitElement {
     const features = listFeatures(data, "", this.name);
 
     return html`<tbody>
-      ${features.map((feature) => {
+      ${features.map((feature, featureIndex) => {
         // <FeatureRow>
         const { name, compat, depth } = feature;
 
@@ -269,15 +269,19 @@ class BcdTable extends LitElement {
             const supportClassName = getSupportClassName(support, browser);
             const notes = support && this.renderNotes(browser, support);
 
+            const id = `${featureIndex}-${browserName}`;
+
             return html`<td
               class=${`bc-support bc-browser-${browserName} bc-supports-${supportClassName} ${
                 notes ? "bc-has-history" : ""
               }`}
             >
-              <button type="button">
+              <button popovertarget=${`history-${id}`}>
                 ${this.renderCellText(support, browser)}
               </button>
-              <dl class="bc-notes-list">${notes}</dl>
+              <div id=${`history-${id}`} popover>
+                <dl class="bc-notes-list">${notes}</dl>
+              </div>
             </td>`;
           })}
         </tr>`;
