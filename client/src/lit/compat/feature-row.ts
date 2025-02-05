@@ -63,8 +63,10 @@ export function versionLabelFromSupport(
   if (typeof removed !== "string") {
     return html`${labelFromString(added, browser)}`;
   }
-  return html`${labelFromString(added, browser)}&#8202;&ndash;&#8202;
-  ${labelFromString(removed, browser)}`;
+  return html`${labelFromString(
+    added,
+    browser
+  )}&#8202;&ndash;&#8202;${labelFromString(removed, browser)}`;
 }
 
 export function getSupportBrowserReleaseDate(

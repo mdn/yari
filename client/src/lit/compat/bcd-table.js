@@ -605,7 +605,8 @@ class BcdTable extends LitElement {
             ? `Released ${browserReleaseDate}`
             : ""}
         >
-          ${label}
+          ${timeline ? browser.name : null}
+          ${!timeline || browserReleaseDate ? label : null}
           ${browserReleaseDate && timeline
             ? ` (Released ${browserReleaseDate})`
             : ""}
