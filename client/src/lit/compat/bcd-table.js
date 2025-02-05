@@ -146,6 +146,7 @@ class BcdTable extends LitElement {
     sp.set("metadata", metadata);
     sp.set("title", `${this.query} - <SUMMARIZE THE PROBLEM>`);
     sp.set("template", "data-problem.yml");
+
     return `${url}?${sp.toString()}`;
   }
 
@@ -491,7 +492,7 @@ class BcdTable extends LitElement {
                   : label}
               </dd>`;
             })}
-            ${!hasNotes && <dd />}
+            ${!hasNotes ? html`<dd></dd>` : null}
           </div>`
         );
       })

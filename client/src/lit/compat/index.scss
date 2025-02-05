@@ -6,6 +6,10 @@
 
 // Global.
 
+* {
+  box-sizing: border-box;
+}
+
 .visually-hidden {
   border: 0 !important;
   clip: rect(1px, 1px, 1px, 1px) !important;
