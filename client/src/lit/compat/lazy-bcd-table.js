@@ -11,7 +11,7 @@ class LazyBcdTable extends LitElement {
     ish3: {},
     query: {},
     locale: {},
-    data: { state: true },
+    compat: { state: true },
     error: { state: true },
     loading: { state: true },
   };
@@ -23,7 +23,7 @@ class LazyBcdTable extends LitElement {
     this.ish3 = "";
     this.query = "";
     this.locale = "";
-    this.data = null;
+    this.compat = null;
     this.error = null;
     this.loading = false;
   }
@@ -53,7 +53,7 @@ class LazyBcdTable extends LitElement {
       const res = await fetch(
         `${BCD_BASE_URL}/bcd/api/v0/current/${query}.json`
       );
-      this.data = await res.json();
+      this.compat = await res.json();
     } catch (error) {
       this.error = error;
     } finally {
@@ -80,13 +80,14 @@ class LazyBcdTable extends LitElement {
     if (this.error) {
       return html`<p>Error loading data</p>`;
     }
-    if (!this.data) {
+    if (!this.compat) {
       return html`<p>No compatibility data found</p>`;
     }
     return html`<bcd-table
-      .compat=${this.data}
       query=${this.query}
       locale=${this.locale}
+      .data=${this.compat.data}
+      .browserInfo=${this.compat.browsers}
     ></bcd-table>`;
   }
 
