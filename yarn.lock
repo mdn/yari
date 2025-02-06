@@ -2204,10 +2204,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.7.tgz#555e80c33df520df068943e6b18ebc07f0e24d19"
   integrity sha512-IHkkypEjlIkBkx4mJ2//Xbzog9M/Lzne1Sl8db2cIHJ/5pe3NCqSLwSchmqzcUN+/WJr/U+V3tNAbWunk2xZcA==
 
-"@mdn/browser-compat-data@^5.6.35":
-  version "5.6.35"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.6.35.tgz#10f83d2a0ed475b3fc7c9050acc2456c248b7503"
-  integrity sha512-ag7tX/vba+g1OVelqrcdUPnao+Fio0YgcIUYs07qoV3escMAqF7sNKSHH8JxXQ0psY3u8l8jqmmGx0vFPtIrtw==
+"@mdn/browser-compat-data@^5.6.36":
+  version "5.6.36"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.6.36.tgz#209c3a37aa1b2cbd503cfa7bb0755084a50cc1ff"
+  integrity sha512-UhTBGnR9L8x1hpCA/VlVxwY8CXfyWPoTDAlWz5n1iwJxDaiqA0XkTfi5p6FuHMHE/EuUUtfiSIu14nzQUtJPDg==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
@@ -2219,10 +2219,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mdn/rari@^0.1.22":
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.22.tgz#0cac3f587112d82a66c53f2904ddd4aed89df187"
-  integrity sha512-GOBrd6QGGuCt1ym4Dp+epqbsQwkbUapBmm+8Q915WrzkD3iErq5FQd0R9BQkoctoQQEIaFkOr1jJFw1YStpaMw==
+"@mdn/rari@^0.1.23":
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.23.tgz#68e797d5c1b60b244828189141b892d8177fe71c"
+  integrity sha512-WLb5e/jpym6cKg4MrO5fcUNHHNPZC1BC4v4Uwp78CeorqPDiPdaBAPjojdhBEEngw+ooXSi81gQtqxHBIbLPPg==
   dependencies:
     extract-zip "^2.0.1"
     https-proxy-agent "^7.0.2"
@@ -11616,10 +11616,10 @@ open@^10.0.3, open@^10.1.0:
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openai@^4.82.0:
-  version "4.82.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.82.0.tgz#9a28ba6552f94639c2de4278255ad669940b6267"
-  integrity sha512-1bTxOVGZuVGsKKUWbh3BEwX1QxIXUftJv+9COhhGGVDTFwiaOd4gWsMynF2ewj1mg6by3/O+U8+EEHpWRdPaJg==
+openai@^4.83.0:
+  version "4.83.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.83.0.tgz#87edfebecf8a4dc2317269dd704cf0ebd9f11979"
+  integrity sha512-fmTsqud0uTtRKsPC7L8Lu55dkaTwYucqncDHzVvO64DKOpNTuiYwjbR/nVgpapXuYy8xSnhQQPUm+3jQaxICgw==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
@@ -13680,10 +13680,10 @@ sass-loader@^16.0.4:
   dependencies:
     neo-async "^2.6.2"
 
-sass@^1.83.4:
-  version "1.83.4"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.83.4.tgz#5ccf60f43eb61eeec300b780b8dcb85f16eec6d1"
-  integrity sha512-B1bozCeNQiOgDcLd33e2Cs2U60wZwjUUXzh900ZyQF5qUasvMdDZYbQ566LJu7cqR+sAHlAfO6RMkaID5s6qpA==
+sass@^1.84.0:
+  version "1.84.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.84.0.tgz#da9154cbccb2d2eac7a9486091b6d9ba93ef5bad"
+  integrity sha512-XDAbhEPJRxi7H0SxrnOpiXFQoUJHwkR2u3Zc4el+fK/Tt5Hpzw5kkQ59qVDfvdaUq6gCrEZIbySFBM2T9DNKHg==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
@@ -14766,10 +14766,10 @@ svgo@^3.0.2, svgo@^3.3.2:
     csso "^5.0.5"
     picocolors "^1.0.0"
 
-swr@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-2.3.0.tgz#66fa45023efd4199f4e7ce608c255709a135943d"
-  integrity sha512-NyZ76wA4yElZWBHzSgEJc28a0u6QZvhb6w0azeL2k7+Q1gAzVK+IqQYXhVOC/mzi+HZIozrZvBVeSeOZNR2bqA==
+swr@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.3.2.tgz#e7c4eb7115e7ff734e445ad0036e97812dd95191"
+  integrity sha512-RosxFpiabojs75IwQ316DGoDRmOqtiAj0tg8wCcbEu4CiLZBs/a9QNtHV7TUfDXmmlgqij/NqzKq/eLelyv9xA==
   dependencies:
     dequal "^2.0.3"
     use-sync-external-store "^1.4.0"
@@ -15838,10 +15838,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^3.37.0:
-  version "3.37.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-3.37.0.tgz#0190a7535112aa6492fac77b00980e7aef26a663"
-  integrity sha512-e23ddpIW5iw8umy4/hQYw74fFJAldzITa4YKYBEIpqDynG29Abjm92afVtFnTZxrP3Cnj4Z1NWaxqH4AQQwZPQ==
+web-specs@^3.38.0:
+  version "3.38.0"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-3.38.0.tgz#689fdba9b1681ee1d70773f29292499b0061bde9"
+  integrity sha512-Y6cZC2QOWm0AzH2QIHhxZ3gv7n9PXGH1KkpheMl+tc1C48YYOJnLxuOeoMdFkdOhQZxmllMWBvz+6BYeaBl3Bw==
 
 web-streams-polyfill@4.0.0-beta.3:
   version "4.0.0-beta.3"
