@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as pageMetric from "./generated/page";
 import * as navigatorMetric from "./generated/navigator";
 import * as elementMetric from "./generated/element";
@@ -11,7 +10,13 @@ import {
   GLEAN_LOG_CLICK,
   GLEAN_ENABLED,
 } from "../env";
-import { useEffect, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { useLocation } from "react-router";
 import { UserData, useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
@@ -78,8 +83,8 @@ function glean(): GleanAnalytics {
   if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
     return {
-      page: (page: PageProps) => () => {},
-      click: (page: PageProps, element: ElementClickedProps) => {},
+      page: () => () => {},
+      click: () => {},
     };
   }
   const userIsOptedOut = document.cookie
@@ -155,13 +160,13 @@ function glean(): GleanAnalytics {
 }
 
 const gleanAnalytics = glean();
-const GleanContext = React.createContext(gleanAnalytics);
+const GleanContext = createContext(gleanAnalytics);
 
 export function useGlobalGleanClickHandlers() {
   const gleanClick = useGleanClick();
 
   useEffect(() => {
-    const handler = (ev) => {
+    const handler = (ev: MouseEvent) => {
       handleLinkClick(ev, gleanClick);
       handleButtonClick(ev, gleanClick);
       handleSidebarClick(ev, gleanClick);
@@ -210,7 +215,7 @@ export function GleanProvider(props: { children: React.ReactNode }) {
 }
 
 export function useGlean() {
-  return React.useContext(GleanContext);
+  return useContext(GleanContext);
 }
 
 function getPageProps(
@@ -263,7 +268,7 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
 export function useGleanClick() {
   const userData = useUserData();
   const glean = useGlean();
-  return React.useCallback(
+  return useCallback(
     (source: string) => {
       if (GLEAN_LOG_CLICK && !source.includes("pong")) {
         console.log({ gleanClick: source });
