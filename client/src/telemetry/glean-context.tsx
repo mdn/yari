@@ -113,8 +113,11 @@ function glean(): GleanAnalytics {
     if (page.isBaseline) {
       pageMetric.isBaseline.set(page.isBaseline);
     }
-    for (const param in page.utm) {
-      pageMetric.utm[param].set(page.utm[param]);
+    for (const param of Object.keys(page.utm) as Array<keyof typeof page.utm>) {
+      const value = page.utm[param];
+      if (value) {
+        pageMetric.utm[param]?.set(value);
+      }
     }
     pageMetric.httpStatus.set(page.httpStatus);
     if (page.geo) {
@@ -163,6 +166,9 @@ export function useGlobalGleanClickHandlers() {
       handleButtonClick(ev, gleanClick);
       handleSidebarClick(ev, gleanClick);
     };
+    window?.addEventListener("glean-click", (ev: CustomEvent<string>) => {
+      gleanClick(ev.detail);
+    });
 
     window.addEventListener("click", handler);
 

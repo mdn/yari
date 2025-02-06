@@ -35,6 +35,7 @@ import {
   CURRICULUM_ROOT,
   EXTERNAL_DEV_SERVER,
   RARI,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
 } from "../libs/env/index.js";
 import { PLAYGROUND_UNSAFE_CSP_VALUE } from "../libs/play/index.js";
 
@@ -60,8 +61,46 @@ import { handleRunner } from "../libs/play/index.js";
 async function fetch_from_rari(path: string) {
   const external_url = `${EXTERNAL_DEV_SERVER}${path}`;
   console.log(`using ${external_url}`);
-  // eslint-disable-next-line n/no-unsupported-features/node-builtins
-  return await (await fetch(external_url)).json();
+  const response = await fetchWithRetryIfConnRefused(external_url, 5);
+  return await response.json();
+}
+
+// Simulates `curl --retry-connrefused`.
+async function fetchWithRetryIfConnRefused(
+  url: string,
+  maxRetries: number,
+  baseDelay = 1000
+) {
+  let attempt = 0;
+
+  while (attempt < maxRetries) {
+    try {
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`failed with HTTP ${response.status}`);
+      }
+      return response;
+    } catch (error: any) {
+      attempt++;
+      if (
+        error.code !== "ECONNREFUSED" &&
+        error.cause?.code !== "ECONNREFUSED"
+      ) {
+        throw error;
+      }
+
+      console.log(`retrying ${attempt}/${maxRetries}`);
+      if (attempt < maxRetries) {
+        const delay = baseDelay * Math.pow(2, attempt - 1); // Exponential backoff
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        throw new Error(
+          `failed after ${maxRetries} attempts: ${error.message}`
+        );
+      }
+    }
+  }
 }
 
 async function buildDocumentFromURL(url: string) {
@@ -506,14 +545,47 @@ if (contentProxy) {
 
 if (RARI) {
   app.get(
+    "/:locale/community/spotlight/:name/:asset(.+(jpg|png))",
+    async (req, res) => {
+      const { name, asset } = req.params;
+      return send(
+        req,
+        path.resolve(
+          CONTRIBUTOR_SPOTLIGHT_ROOT,
+          sanitizeFilename(name),
+          sanitizeFilename(asset)
+        )
+      ).pipe(res);
+    }
+  );
+  app.get(
     [
       "/en-US/about",
       "/en-US/about/index.json",
       "/en-US/community",
-      "/en-US/community/index.json",
+      "/en-US/community/*",
       "/en-US/plus/docs/*",
       "/en-US/observatory/docs/*",
+    ],
+    async (req, res) => {
+      try {
+        const index = await fetch_from_rari(
+          req.path.replace(/\/index\.json$/, "")
+        );
+        if (req.path.endsWith(".json")) {
+          return res.json(index);
+        }
+        res.header("Content-Security-Policy", CSP_VALUE);
+        return res.send(renderHTML(index));
+      } catch (error) {
+        return res.status(500).json(JSON.stringify(error.toString()));
+      }
+    }
+  );
+  app.get(
+    [
       "/:locale([a-z]{2}(?:(?:-[A-Z]{2})?))/",
+      "/:locale([a-z]{2}(?:(?:-[A-Z]{2})?))/index.json",
     ],
     async (req, res) => {
       try {
@@ -535,6 +607,8 @@ if (RARI) {
 app.use(staticMiddlewares);
 
 app.get("/*", async (_, res) => await send404(res));
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
   throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);

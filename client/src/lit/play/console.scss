@@ -1,0 +1,31 @@
+:host {
+  background-color: var(--code-background-inline);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  height: 6rem;
+  margin: 0;
+  max-height: 6rem;
+  overflow: auto;
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  padding: 0 0.5em;
+
+  &::before {
+    content: ">";
+  }
+}
+
+code {
+  font-family: var(--font-code);
+  tab-size: 4;
+}

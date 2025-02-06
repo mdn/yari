@@ -14,15 +14,16 @@ export function useFocusViaKeyboard(
   useEffect(() => {
     function focusOnSearchMaybe(event: KeyboardEvent) {
       const input = inputRef.current;
-      const target = event.target as HTMLElement;
+      const target = event.composedPath()?.[0] || event.target;
       const keyPressed = event.key;
       const ctrlOrMetaPressed = event.ctrlKey || event.metaKey;
       const isSlash = keyPressed === "/" && !ctrlOrMetaPressed;
       const isCtrlK =
         keyPressed === "k" && ctrlOrMetaPressed && !event.shiftKey;
       const isTextField =
-        ["TEXTAREA", "INPUT"].includes(target.tagName) ||
-        target.isContentEditable;
+        target instanceof HTMLElement &&
+        (["TEXTAREA", "INPUT"].includes(target.tagName) ||
+          target.isContentEditable);
       if ((isSlash || isCtrlK) && !isTextField) {
         if (input && document.activeElement !== input) {
           event.preventDefault();

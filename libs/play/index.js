@@ -230,19 +230,55 @@ export function renderHtml(state = null) {
         width: 90%;
         padding: 5px 10px 5px 26px;
       }
+    </style>
+    <style>
       ${css}
     </style>
 
     <script>
       const consoleProxy = new Proxy(console, {
         get(target, prop) {
-          if (prop === "log" || prop === "error" || prop === "warn") {
+          if (typeof target[prop] === "function") {
             return (...args) => {
-              const message = args.join(" ");
-              window.parent.postMessage({ typ: "console", prop, message }, "*");
+              try {
+                window.parent.postMessage({ typ: "console", prop, args }, "*");
+              } catch {
+                try {
+                  window.parent.postMessage(
+                    {
+                      typ: "console",
+                      prop,
+                      args: args.map((x) => JSON.parse(JSON.stringify(x))),
+                    },
+                    "*"
+                  );
+                } catch {
+                  try {
+                    window.parent.postMessage(
+                      {
+                        typ: "console",
+                        prop,
+                        args: args.map((x) => x.toString()),
+                      },
+                      "*"
+                    );
+                  } catch {
+                    window.parent.postMessage(
+                      {
+                        typ: "console",
+                        prop: "warn",
+                        args: [
+                          "[Playground] Unsupported console message (see browser console)",
+                        ],
+                      },
+                      "*"
+                    );
+                  }
+                }
+              }
               target[prop](...args);
             };
-          }
+          };
           return target[prop];
         },
       });
