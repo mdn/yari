@@ -12,7 +12,7 @@ import { SURVEY } from "../../../telemetry/constants";
 
 const FORCE_SURVEY_PREFIX = "#FORCE_SURVEY=";
 
-export function DocumentSurvey({ doc }: { doc: Doc }) {
+export function DocumentSurvey({ doc }: { doc: Pick<Doc, "mdn_url"> }) {
   const isServer = useIsServer();
   const location = useLocation();
 
@@ -21,12 +21,12 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
   const survey = React.useMemo(
     () =>
       SURVEYS.find((survey) => {
-        if (isServer || (WRITER_MODE && !DEV_MODE)) {
-          return false;
-        }
-
         if (force) {
           return survey.key === location.hash.slice(FORCE_SURVEY_PREFIX.length);
+        }
+
+        if (isServer || (WRITER_MODE && !DEV_MODE)) {
+          return false;
         }
 
         if (!survey.show(doc)) {
@@ -59,7 +59,7 @@ function SurveyDisplay({
   survey,
   force,
 }: {
-  doc: Doc;
+  doc: Pick<Doc, "mdn_url">;
   survey: Survey;
   force: boolean;
 }) {
@@ -157,7 +157,7 @@ function SurveyDisplay({
   });
 
   if (!force && (state.dismissed_at || originalState.submitted_at)) {
-    return <></>;
+    return null;
   }
 
   return (

@@ -233,7 +233,7 @@ function tryOrExit<T extends ActionParameters>(
 
 program
   .bin("yarn tool")
-  .name("tool")
+  .name("[DEPRECATED] tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
   .cast(false)
@@ -1103,5 +1103,7 @@ program
       return whatsdeployed(directory, output, dryRun);
     })
   );
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 program.run();
