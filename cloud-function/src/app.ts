@@ -76,7 +76,7 @@ router.get(
 // Attachments.
 router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
-  requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
+  requireOrigin(Origin.main, Origin.liveSamples, Origin.play, Origin.review),
   resolveIndexHTML,
   proxyContentAssets
 );
@@ -84,7 +84,7 @@ router.get(
 router.use(redirectNonCanonicals);
 router.get(
   "/[^/]+/docs/*",
-  requireOrigin(Origin.main),
+  requireOrigin(Origin.main, Origin.review),
   redirectFundamental,
   redirectLocale,
   redirectPreferredLocale,
@@ -104,7 +104,7 @@ router.get(
 // MDN Plus, static pages, etc.
 router.get(
   "*",
-  requireOrigin(Origin.main),
+  requireOrigin(Origin.main, Origin.review),
   redirectFundamental,
   redirectLocale,
   redirectTrailingSlash,

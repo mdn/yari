@@ -14,7 +14,7 @@ const NOT_FOUND_PATH = "en-us/404/index.html";
 
 let notFoundBuffer: ArrayBuffer;
 
-const target = sourceUri(Source.content);
+const target = sourceUri(Source.review);
 
 export const proxyContent = createProxyMiddleware({
   target,
@@ -29,9 +29,9 @@ export const proxyContent = createProxyMiddleware({
       async (responseBuffer, proxyRes, req, res) => {
         withContentResponseHeaders(proxyRes, req, res);
         if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
-          const tryHtml = await fetch(
-            `${target}${req.url?.slice(1)}/index.html`
-          );
+          const url = `${target}${req.url?.slice(1)}`;
+          const tryHtml = await fetch(url);
+          console.log(url);
           if (tryHtml.ok) {
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
