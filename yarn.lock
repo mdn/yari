@@ -2267,10 +2267,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mdn/rari@^0.1.23":
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.23.tgz#68e797d5c1b60b244828189141b892d8177fe71c"
-  integrity sha512-WLb5e/jpym6cKg4MrO5fcUNHHNPZC1BC4v4Uwp78CeorqPDiPdaBAPjojdhBEEngw+ooXSi81gQtqxHBIbLPPg==
+"@mdn/rari@^0.1.24":
+  version "0.1.24"
+  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.24.tgz#6daa8d4a41d2fef1bdd17cdff2625557985f9657"
+  integrity sha512-IujIGfFn+gogol55wXr/72R4env2+9AoCKCHBciUQRpGAkOW9Fx87gy3JAhp/dR7GJMp9hEhTr3ajmtij4r7WA==
   dependencies:
     extract-zip "^2.0.1"
     https-proxy-agent "^7.0.2"
