@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.4.0](https://github.com/mdn/yari/compare/v4.3.1...v4.4.0) (2025-02-11)
+
+
+### Features
+
+* **interactive-examples:** get ready for JS migration ([#12570](https://github.com/mdn/yari/issues/12570)) ([33de34d](https://github.com/mdn/yari/commit/33de34d9df9f57f3afe9577403bcf6007507be63))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump postcss from 8.5.1 to 8.5.2 ([#12596](https://github.com/mdn/yari/issues/12596)) ([a5c825c](https://github.com/mdn/yari/commit/a5c825c27eb36c18a63a0df14a17b1ac9aa9b68c))
+* **deps-dev:** bump typescript-eslint from 8.23.0 to 8.24.0 ([#12598](https://github.com/mdn/yari/issues/12598)) ([79f6f72](https://github.com/mdn/yari/commit/79f6f72447a8fd6df38b830a083b61f335c64634))
+* **deps:** bump aws-actions/configure-aws-credentials from 4.0.3 to 4.1.0 ([#12593](https://github.com/mdn/yari/issues/12593)) ([66bdb39](https://github.com/mdn/yari/commit/66bdb39d9588656f4841835accee16b7fae24a33))
+* **deps:** bump compression from 1.7.5 to 1.8.0 ([#12595](https://github.com/mdn/yari/issues/12595)) ([171907e](https://github.com/mdn/yari/commit/171907ee7005bb01d597d21c57d675ec577e339a))
+* **deps:** bump remark-gfm from 4.0.0 to 4.0.1 ([#12597](https://github.com/mdn/yari/issues/12597)) ([39933db](https://github.com/mdn/yari/commit/39933db5291caf7fcde40ccc2e2746f7a8f19b8f))
+* **deps:** bump serialize-javascript from 6.0.1 to 6.0.2 in /client/pwa ([#12591](https://github.com/mdn/yari/issues/12591)) ([4b19573](https://github.com/mdn/yari/commit/4b195730cd06d2396cd1a6a19a50a2f30b1d54fa))
+* **deps:** bump web-features from 2.22.0 to 2.23.0 ([#12594](https://github.com/mdn/yari/issues/12594)) ([535e1eb](https://github.com/mdn/yari/commit/535e1eb5a619ecd3ccbe540417fae36727905313))
+
 ## [4.3.1](https://github.com/mdn/yari/compare/v4.3.0...v4.3.1) (2025-02-10)
 
 
