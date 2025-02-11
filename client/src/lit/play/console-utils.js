@@ -74,6 +74,9 @@ export function formatObject(input) {
   }
 
   if (objectName === "Object") {
+    if (input?._MDNPlaySerializedObject) {
+      return input._MDNPlaySerializedObject;
+    }
     let formattedChild = "";
     let start = true;
     for (const key in input) {

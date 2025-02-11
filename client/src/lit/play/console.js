@@ -74,10 +74,7 @@ class VirtualConsole {
     }
     this.#host._messages = [
       ...this.#host._messages,
-      (args.every((x) => typeof x === "string")
-        ? args
-        : args.map((x) => formatOutput(x))
-      ).join(" "),
+      args.map((x) => formatOutput(x)).join(" "),
     ];
   }
 

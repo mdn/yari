@@ -1,13 +1,13 @@
 interactive-example {
   display: block;
-  height: 513px;
+  height: 444px;
   margin: 1rem 0;
 
   &[height="shorter"] {
-    height: 433px;
+    height: 364px;
   }
 
   &[height="taller"] {
-    height: 725px;
+    height: 654px;
   }
 }

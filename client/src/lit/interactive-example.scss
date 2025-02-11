@@ -49,7 +49,7 @@ play-console {
     "editor  editor"
     "buttons console";
   grid-template-columns: max-content 1fr;
-  grid-template-rows: max-content 1fr;
+  grid-template-rows: max-content 1fr 8rem;
   height: 100%;
 
   play-runner {
@@ -63,6 +63,7 @@ play-console {
       "buttons"
       "console";
     grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr max-content 8rem;
 
     .buttons {
       flex-direction: row;
