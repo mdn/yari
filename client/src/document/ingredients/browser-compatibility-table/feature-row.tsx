@@ -48,15 +48,6 @@ function getSupportClassName(
   return className;
 }
 
-function getSupportBrowserReleaseDate(
-  support: SupportStatementExtended | undefined
-): string | undefined {
-  if (!support) {
-    return undefined;
-  }
-  return getCurrentSupport(support)!.release_date;
-}
-
 function StatusIcons({ status }: { status: BCD.StatusBlock }) {
   const icons = [
     status.experimental && {
@@ -139,7 +130,7 @@ const CellText = React.memo(
     const added = currentSupport?.version_added ?? null;
     const lastVersion = currentSupport?.version_last ?? null;
 
-    const browserReleaseDate = getSupportBrowserReleaseDate(support);
+    const browserReleaseDate = currentSupport?.release_date;
     const supportClassName = getSupportClassName(support, browser);
 
     let status:
@@ -198,15 +189,17 @@ const CellText = React.memo(
         break;
 
       case "preview":
-        title = "Preview browser support";
+        title = "Preview support";
         label = status.label || browser.preview_name;
         break;
 
       case "unknown":
-        title = "Compatibility unknown; please update this.";
+        title = "Support unknown";
         label = "?";
         break;
     }
+
+    title = `${browser.name} – ${title}`;
 
     return (
       <div
@@ -233,7 +226,7 @@ const CellText = React.memo(
             className="bc-version-label"
             title={
               browserReleaseDate && !timeline
-                ? `Released ${browserReleaseDate}`
+                ? `${browser.name} ${added} – Released ${browserReleaseDate}`
                 : undefined
             }
           >
