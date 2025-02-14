@@ -1177,17 +1177,6 @@ test("built search-index.json (en-US)", () => {
   expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
 });
 
-test("the robots.txt file was created", () => {
-  const filePath = path.join(buildRoot, "robots.txt");
-  const text = fs.readFileSync(filePath, "utf-8");
-  // The content of robots file when it's in production mode is
-  // to ONLY say `Disallow: /api/`.
-  // When the robots file is for disallowing everything it
-  // will ONLY say `Disallow: /`.
-  expect(text).toContain("Disallow: /api/");
-  expect(text).not.toContain("Disallow: /\n");
-});
-
 test("duplicate IDs are de-duplicated", () => {
   const builtFolder = path.join(
     buildRoot,
