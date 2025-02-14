@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.4.1](https://github.com/mdn/yari/compare/v4.4.0...v4.4.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* **play:** use correct code font across locales ([#12605](https://github.com/mdn/yari/issues/12605)) ([da775ab](https://github.com/mdn/yari/commit/da775ab491b88131ec8758a1818e43585c3b904c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/core from 7.26.7 to 7.26.9 ([#12618](https://github.com/mdn/yari/issues/12618)) ([002839d](https://github.com/mdn/yari/commit/002839d7ecff1f1eeeffa651e537690cc0ebb3c9))
+* **deps-dev:** bump @babel/preset-env from 7.26.8 to 7.26.9 ([#12615](https://github.com/mdn/yari/issues/12615)) ([e94b1a5](https://github.com/mdn/yari/commit/e94b1a51c3aad603bb3d4aaad7be56f7b121818e))
+* **deps-dev:** bump @types/node from 18.19.75 to 18.19.76 in the types group ([#12612](https://github.com/mdn/yari/issues/12612)) ([7d001e8](https://github.com/mdn/yari/commit/7d001e823a8be95fed00cf3a6feba51a5b8b5ac6))
+* **deps-dev:** bump postcss-preset-env from 10.1.3 to 10.1.4 ([#12609](https://github.com/mdn/yari/issues/12609)) ([21166ca](https://github.com/mdn/yari/commit/21166ca37b4368d8d59260c4dc42d4593bc8f22b))
+* **deps-dev:** bump sass from 1.84.0 to 1.85.0 ([#12616](https://github.com/mdn/yari/issues/12616)) ([29b1258](https://github.com/mdn/yari/commit/29b1258555c7baa57ce4ec404c101b7367eef4a5))
+* **deps-dev:** bump webpack from 5.97.1 to 5.98.0 in /client/pwa ([#12610](https://github.com/mdn/yari/issues/12610)) ([737a4e3](https://github.com/mdn/yari/commit/737a4e36c43985a12b98cddbb7aa7d137a4de1fc))
+* **deps:** bump @codemirror/lang-javascript from 6.2.2 to 6.2.3 ([#12602](https://github.com/mdn/yari/issues/12602)) ([2290d5f](https://github.com/mdn/yari/commit/2290d5fd3e688fbb83853f0a1fc35a7a45b4a46c))
+* **deps:** bump @mdn/browser-compat-data from 5.6.37 to 5.6.38 ([#12601](https://github.com/mdn/yari/issues/12601)) ([c429b79](https://github.com/mdn/yari/commit/c429b794fb53b06a489d50b5ea5487f99e3f646d))
+* **deps:** bump openai from 4.83.0 to 4.84.0 ([#12608](https://github.com/mdn/yari/issues/12608)) ([8c306f9](https://github.com/mdn/yari/commit/8c306f91ee199dde2e8991aa7a5d2a62aaae4293))
+* **deps:** bump openai from 4.84.0 to 4.85.0 ([#12620](https://github.com/mdn/yari/issues/12620)) ([22939a0](https://github.com/mdn/yari/commit/22939a0d2d5a37650cf191e1ceda2979dacbe74e))
+* **deps:** bump pg from 8.13.1 to 8.13.2 ([#12600](https://github.com/mdn/yari/issues/12600)) ([501de9d](https://github.com/mdn/yari/commit/501de9d40156d22720ccc1fcb492e1a04b74312b))
+* **deps:** bump pg from 8.13.2 to 8.13.3 ([#12607](https://github.com/mdn/yari/issues/12607)) ([fad57ef](https://github.com/mdn/yari/commit/fad57ef5d93dbc2c105b3cf43e72e74d5b78b61e))
+* **deps:** bump sse.js from 2.5.0 to 2.6.0 ([#12617](https://github.com/mdn/yari/issues/12617)) ([cd2df63](https://github.com/mdn/yari/commit/cd2df63fc28c6d161254851f6e6131fa75757a91))
+* **deps:** bump web-specs from 3.38.0 to 3.39.0 ([#12619](https://github.com/mdn/yari/issues/12619)) ([c602606](https://github.com/mdn/yari/commit/c602606245e2345ed63093d7411ef76742712f53))
+
 ## [4.4.0](https://github.com/mdn/yari/compare/v4.3.1...v4.4.0) (2025-02-11)
 
 
