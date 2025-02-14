@@ -12,6 +12,7 @@ const LIVE_SAMPLE_HTML = `
     <head>
         <meta charset="utf-8">
         <meta name="robots" content="noindex, nofollow">
+        <title><%= sampleTitle %></title>
         <style>
             body {
               padding: 0;
@@ -49,7 +50,6 @@ const LIVE_SAMPLE_HTML = `
             <%- css %>
         </style>
         <% } %>
-        <title><%= sampleTitle %></title>
         <% if (hasMathML) { %>
           <link rel="stylesheet" href="https://fred-wang.github.io/MathFonts/STIX/mathfonts.css" />
           <script src="https://fred-wang.github.io/mathml.css/mspace.js"></script>
