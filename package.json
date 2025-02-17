@@ -255,7 +255,7 @@
     "resolve-url-loader": "^5.0.0",
     "rough-notation": "^0.5.1",
     "sass": "^1.85.0",
-    "sass-loader": "^16.0.4",
+    "sass-loader": "^16.0.5",
     "source-map-loader": "^5.0.0",
     "style-loader": "^3.3.4",
     "stylelint": "^15.11.0",
