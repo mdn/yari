@@ -10,7 +10,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 click = "^8.1.8"
-boto3 = "^1.36.16"
+boto3 = "^1.36.21"
 python-decouple = "^3.8"
 requests = {extras = ["security"], version = "^2.32.3"}
 elasticsearch-dsl = "^7.4.1"
@@ -23,7 +23,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1"
-flake8 = "^7.1.1"
+flake8 = "^7.1.2"
 pytest = "^8.3.4"
 
 [tool.poetry.scripts]
