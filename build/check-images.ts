@@ -89,11 +89,10 @@ export function checkImageReferences(
 
     // These two lines is to simulate what a browser would do.
     const baseURL = `http://yari.placeholder${url}/`;
-    // Make a special exception for the legacy images that start with `/@api/deki...`
+    // Make a special exception for the legacy images that start with `/files/...`
     // If you just pretend their existing URL is static external domain, it
     // will be recognized as an external image (which is fixable).
-    // Also any `<img src="/files/1234/foo.png">` should match.
-    const absoluteURL = /^\/(@api\/deki\/|files\/\d+)/.test(src)
+    const absoluteURL = /^\/files\/\d+/.test(src)
       ? new URL(`https://mdn.mozillademos.org${src}`)
       : new URL(src, baseURL);
 
@@ -134,7 +133,10 @@ export function checkImageReferences(
           // might be something like `screenshot.png` for the sake of rendering
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
-        } else {
+        } else if (
+          absoluteURL.hostname !== "mdn.github.io" ||
+          !absoluteURL.pathname.startsWith("/shared-assets/")
+        ) {
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,

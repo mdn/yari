@@ -74,7 +74,7 @@ export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
 export const FXA_MANAGE_SUBSCRIPTIONS_URL =
   process.env.REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL ||
-  "https://accounts.stage.mozaws.net/subscriptions/?brand=mozilla";
+  "https://accounts.stage.mozaws.net/subscriptions/";
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
@@ -131,3 +131,7 @@ export function survey_rates(surveyKey: string): {
   );
   return { rateFrom, rateTill };
 }
+
+export const OBSERVATORY_API_URL =
+  process.env.REACT_APP_OBSERVATORY_API_URL ||
+  "https://observatory-api.mdn.allizom.net";

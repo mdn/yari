@@ -41,7 +41,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     &-verbose-text {
       display: inline;
     }

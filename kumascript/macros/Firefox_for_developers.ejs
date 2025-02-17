@@ -43,7 +43,7 @@ if (minVersion < 4) {
 const releaseLinks = [];
 
 function generateReleaseLink(version) {
-  return `<li><a href="/${locale}/docs/Mozilla/Firefox/Releases/${version}">${str[0]}${version}${str[1]}</a></li>`;
+  return `<li>${web.smartLink(`/${locale}/docs/Mozilla/Firefox/Releases/${version}`, null, `${str[0]}${version}${str[1]}`)}</li>`;
 }
 
 // for newer version

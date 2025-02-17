@@ -15,6 +15,7 @@ import {
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 import { DEFAULT_LOCALE } from "../../../../../libs/constants";
+import { BCD_TABLE } from "../../../telemetry/constants";
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
@@ -45,15 +46,6 @@ function getSupportClassName(
   }
 
   return className;
-}
-
-function getSupportBrowserReleaseDate(
-  support: SupportStatementExtended | undefined
-): string | undefined {
-  if (!support) {
-    return undefined;
-  }
-  return getFirst(support)!.release_date;
 }
 
 function StatusIcons({ status }: { status: BCD.StatusBlock }) {
@@ -138,7 +130,7 @@ const CellText = React.memo(
     const added = currentSupport?.version_added ?? null;
     const lastVersion = currentSupport?.version_last ?? null;
 
-    const browserReleaseDate = getSupportBrowserReleaseDate(support);
+    const browserReleaseDate = currentSupport?.release_date;
     const supportClassName = getSupportClassName(support, browser);
 
     let status:
@@ -197,15 +189,17 @@ const CellText = React.memo(
         break;
 
       case "preview":
-        title = "Preview browser support";
+        title = "Preview support";
         label = status.label || browser.preview_name;
         break;
 
       case "unknown":
-        title = "Compatibility unknown; please update this.";
+        title = "Support unknown";
         label = "?";
         break;
     }
+
+    title = `${browser.name} – ${title}`;
 
     return (
       <div
@@ -232,7 +226,7 @@ const CellText = React.memo(
             className="bc-version-label"
             title={
               browserReleaseDate && !timeline
-                ? `Released ${browserReleaseDate}`
+                ? `${browser.name} ${added} – Released ${browserReleaseDate}`
                 : undefined
             }
           >
@@ -545,7 +539,11 @@ export const FeatureRow = React.memo(
         `/${locale}/docs`
       );
       titleNode = (
-        <a href={href} className="bc-table-row-header">
+        <a
+          href={href}
+          className="bc-table-row-header"
+          data-glean={`${BCD_TABLE}: link -> ${href}`}
+        >
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>

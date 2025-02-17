@@ -9,7 +9,7 @@ import frontmatter from "front-matter";
 import caporal from "@caporal/core";
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-import inquirer from "inquirer";
+import { confirm } from "@inquirer/prompts";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
@@ -29,10 +29,8 @@ import {
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  GOOGLE_ANALYTICS_MEASUREMENT_ID,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
@@ -44,7 +42,6 @@ import {
 import { whatsdeployed } from "./whatsdeployed.js";
 
 const { program } = caporal;
-const { prompt } = inquirer;
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -179,14 +176,6 @@ interface PopularitiesActionParameters extends ActionParameters {
   logger: Logger;
 }
 
-interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
-  options: {
-    measurementId: string;
-    debug: boolean;
-    outfile: string;
-  };
-}
-
 interface BuildRobotsTxtActionParameters extends ActionParameters {
   options: {
     outfile: string;
@@ -201,12 +190,6 @@ interface MacrosActionParameters extends ActionParameters {
     cmd: string;
     foldersearch: string;
     macros: string[];
-  };
-}
-
-interface OptimizeClientBuildActionParameters extends ActionParameters {
-  args: {
-    buildroot: string;
   };
 }
 
@@ -250,7 +233,7 @@ function tryOrExit<T extends ActionParameters>(
 
 program
   .bin("yarn tool")
-  .name("tool")
+  .name("[DEPRECATED] tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
   .cast(false)
@@ -339,10 +322,10 @@ program
     default: DEFAULT_LOCALE,
     validator: [...VALID_LOCALES.values()],
   })
-  .option("-r, --recursive", "Delete content recursively", { default: false })
+  .option("-r, --recursive", "Delete children", { default: false })
   .option(
     "--redirect <redirect>",
-    "Redirect document (and its children, if --recursive is true) to the URL <redirect>"
+    "Redirect document, and its children (if --recursive is true), to the URL <redirect>"
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
@@ -371,14 +354,12 @@ program
           )
         );
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
         const deletedDocs = await Document.remove(slug, locale, {
           recursive,
@@ -450,14 +431,12 @@ program
           .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
           .join("\n")
       );
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: "Proceed?",
+          default: true,
+        }));
       if (run) {
         const moved = await Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
@@ -651,7 +630,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         const locale = relPath.split(path.sep)[0];
-        if (!isValidLocale(locale)) {
+        if (!isValidLocale(locale) && locale !== "de") {
           continue;
         }
         allHistory[relPath] = value;
@@ -662,15 +641,34 @@ program
       }
       let filesWritten = 0;
       for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const sorted = [...Object.entries(history)];
+        sorted.sort(([a], [b]) => {
+          if (a > b) {
+            return 1;
+          }
+          if (a < b) {
+            return -1;
+          }
+          return 0;
+        });
         const root = getRoot(locale);
-        const outputFile = path.join(root, locale, "_githistory.json");
-        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        const outputDir = path.join(root, locale);
+        if (!fs.existsSync(outputDir)) {
+          console.log(chalk.yellow(`Skipping ${locale}`));
+          continue;
+        }
+        const outputFile = path.join(outputDir, "_githistory.json");
+        fs.writeFileSync(
+          outputFile,
+          JSON.stringify(Object.fromEntries(sorted), null, 2),
+          "utf-8"
+        );
         filesWritten += 1;
         if (verbose) {
           console.log(
             chalk.green(
               `Wrote '${locale}' ${Object.keys(
-                history
+                sorted
               ).length.toLocaleString()} paths into ${outputFile}`
             )
           );
@@ -805,14 +803,12 @@ program
         console.log(chalk.green("Found no fixable flaws!"));
         return;
       }
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: `Proceed fixing ${flaws} flaws?`,
-            name: "run",
-            default: true,
-          });
+      const run =
+        yes ||
+        (await confirm({
+          message: `Proceed fixing ${flaws} flaws?`,
+          default: true,
+        }));
       if (run) {
         buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
       }
@@ -871,66 +867,6 @@ program
         )
       );
     })
-  )
-
-  .command(
-    "google-analytics-code",
-    "Generate a .js file that can be used in SSR rendering"
-  )
-  .option("--outfile <path>", "name of the generated script file", {
-    default: path.join(BUILD_OUT_ROOT, "static", "js", "gtag.js"),
-  })
-  .option(
-    "--measurement-id <id>[,<id>]",
-    "Google Analytics measurement IDs (defaults to value of $GOOGLE_ANALYTICS_MEASUREMENT_ID)",
-    {
-      default: GOOGLE_ANALYTICS_MEASUREMENT_ID,
-    }
-  )
-  .action(
-    tryOrExit(
-      async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
-        const { outfile, measurementId } = options;
-        const measurementIds = measurementId.split(",").filter(Boolean);
-        if (measurementIds.length) {
-          const dntHelperCode = fs
-            .readFileSync(
-              new URL("mozilla.dnthelper.min.js", import.meta.url),
-              "utf-8"
-            )
-            .trim();
-
-          const firstMeasurementId = measurementIds.at(0);
-          const gaScriptURL = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(firstMeasurementId)}`;
-
-          const code = `
-// Mozilla DNT Helper
-${dntHelperCode}
-// Load GA unless DNT is enabled.
-if (Mozilla && !Mozilla.dntEnabled()) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  ${measurementIds
-    .map((id) => `gtag('config', '${id}', { 'anonymize_ip': true });`)
-    .join("\n  ")}
-
-  var gaScript = document.createElement('script');
-  gaScript.async = true;
-  gaScript.src = '${gaScriptURL}';
-  document.head.appendChild(gaScript);
-}`.trim();
-          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
-          logger.info(
-            chalk.green(
-              `Generated ${outfile} for SSR rendering using ${measurementId}.`
-            )
-          );
-        } else {
-          logger.info(chalk.yellow("No Google Analytics code file generated"));
-        }
-      }
-    )
   )
 
   .command(
@@ -1133,40 +1069,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   )
 
   .command(
-    "optimize-client-build",
-    "After the client code has been built there are things to do that react-scripts can't."
-  )
-  .argument("<buildroot>", "directory where react-scripts built", {
-    default: path.join("client", "build"),
-  })
-  .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-        logger,
-      }: OptimizeClientBuildActionParameters) => {
-        const { buildroot } = args;
-        const { results } = await runOptimizeClientBuild(buildroot);
-        if (options.verbose) {
-          for (const result of results) {
-            logger.info(`${result.filePath} -> ${result.hashedHref}`);
-          }
-        } else {
-          logger.info(
-            chalk.green(
-              `Hashed ${results.length} files in ${path.join(
-                buildroot,
-                "index.html"
-              )}`
-            )
-          );
-        }
-      }
-    )
-  )
-
-  .command(
     "macro-usage-report",
     "Counts occurrences of each macro and prints it as a table."
   )
@@ -1201,5 +1103,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       return whatsdeployed(directory, output, dryRun);
     })
   );
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 program.run();

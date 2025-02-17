@@ -10,7 +10,7 @@
     display: block;
     margin: 0 1rem;
     top: 2rem;
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       padding-top: 1rem;
       position: absolute;
     }
@@ -23,7 +23,7 @@
       padding: 1rem;
     }
   }
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     &:not(:focus-within):not(:hover) {
       .maintenance-info-container {
         border: 0 !important;

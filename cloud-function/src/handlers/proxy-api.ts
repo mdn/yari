@@ -9,5 +9,7 @@ export const proxyApi = createProxyMiddleware({
   autoRewrite: true,
   proxyTimeout: PROXY_TIMEOUT,
   xfwd: true,
-  onProxyReq: fixRequestBody,
+  on: {
+    proxyReq: fixRequestBody,
+  },
 });

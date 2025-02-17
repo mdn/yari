@@ -6,6 +6,15 @@ const baseURL = `/${locale}/docs/Mozilla/`;
 const addonsURL = `/${locale}/Add-ons/`;
 
 const text = mdn.localStringMap({
+  "de": {
+    "Firefox_releases": "Firefox-Veröffentlichungen",
+      "Firefox_release_notes_developer": "Firefox-Hinweise für Entwickler",
+      "Experimental_features_firefox": "Experimentelle Funktionen in Firefox",
+    "Add-ons": "Add-ons",
+      "Browser_extensions": "Browser-Erweiterungen",
+      "Themes": "Themen",
+    "Firefox_documentation": "Firefox-Dokumentation",
+  },
   "en-US": {
     "Firefox_releases": "Firefox releases",
       "Firefox_release_notes_developer": "Firefox release notes for developers",
@@ -97,8 +106,8 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Firefox_releases"]%></summary>
             <ol>
-              <li><a href="<%=baseURL%>Firefox/Releases"><%=text["Firefox_release_notes_developer"]%></a></li>
-              <li><a href="<%=baseURL%>Firefox/Experimental_features"><%=text["Experimental_features_firefox"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Firefox/Releases`, null, text["Firefox_release_notes_developer"])%></li>
+              <li><%-web.smartLink(`${baseURL}Firefox/Experimental_features`, null, text["Experimental_features_firefox"])%></li>
             </ol>
         </details>
     </li>
@@ -106,8 +115,8 @@ const text = mdn.localStringMap({
         <details>
             <summary><%=text["Add-ons"]%></summary>
             <ol>
-              <li><a href="<%=addonsURL%>WebExtensions"><%=text["Browser_extensions"]%></a></li>
-              <li><a href="<%=addonsURL%>Themes"><%=text["Themes"]%></a></li>
+              <li><%-web.smartLink(`${baseURL}Add-ons/WebExtensions`, null, text["Browser_extensions"])%></li>
+              <li><a href="https://extensionworkshop.com/documentation/themes/"><%=text["Themes"]%></a></li>
             </ol>
         </details>
     </li>

@@ -24,13 +24,13 @@
     flex-direction: column;
     gap: 2rem;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       flex-direction: row;
       gap: 6rem;
       justify-content: space-evenly;
     }
 
-    @media screen and (min-width: $screen-lg) {
+    @media (min-width: $screen-lg) {
       gap: 12rem;
     }
 
@@ -42,6 +42,7 @@
       em {
         color: var(--category-color);
         font-style: unset;
+        font-variation-settings: unset;
       }
     }
 
@@ -62,7 +63,7 @@
       gap: 2rem;
       margin: 2rem 0;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         flex-direction: row;
         gap: 3rem;
         justify-content: space-between;
@@ -87,7 +88,7 @@
           }
         }
 
-        @media screen and (min-width: $screen-md) {
+        @media (min-width: $screen-md) {
           // Desktop.
           display: block;
 
@@ -102,7 +103,7 @@
           }
         }
 
-        @media screen and (max-width: #{$screen-md - 1}) {
+        @media (max-width: #{$screen-md - 1}) {
           // Mobile.
 
           figcaption {
@@ -140,6 +141,7 @@
 
         em {
           font-style: unset;
+          font-variation-settings: unset;
           font-weight: 600;
         }
       }

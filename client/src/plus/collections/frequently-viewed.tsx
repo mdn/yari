@@ -78,8 +78,13 @@ const sortByVisitsThenTimestampsDesc = (
   //'Each timestamp represents one visit. The first is the most recent visit.
   if (first.timestamps.length > second.timestamps.length) return -1;
   if (first.timestamps.length < second.timestamps.length) return 1;
-  if (first.timestamps[0] < second.timestamps[0]) return 1;
-  if (first.timestamps[0] > second.timestamps[0]) return -1;
+  if (
+    typeof first.timestamps[0] !== "undefined" &&
+    typeof second.timestamps[0] !== "undefined"
+  ) {
+    if (first.timestamps[0] < second.timestamps[0]) return 1;
+    if (first.timestamps[0] > second.timestamps[0]) return -1;
+  }
   return 0;
 };
 
@@ -98,7 +103,7 @@ function getNextFrequentlyViewedSerial(
 export function useFrequentlyViewed(
   limit: number = 0,
   offset: number = 10,
-  setEnd?: (bool) => void
+  setEnd?: (bool: boolean) => void
 ): FrequentlyViewedCollection {
   const [collection, setCollection] = useState<FrequentlyViewedCollection>({
     article_count: 0,
@@ -130,7 +135,7 @@ export function useFrequentlyViewed(
         ...c,
         article_count: freqViewed.length,
         items: paged,
-        updated_at: freqViewed[0]
+        updated_at: freqViewed[0]?.timestamps[0]
           ? new Date(freqViewed[0].timestamps[0]).toISOString()
           : new Date().toISOString(),
       };
@@ -208,12 +213,12 @@ export function useIncrementFrequentlyViewed(doc: Doc | undefined) {
 
     let frequentlyViewed = getFrequentlyViewed();
 
-    const index = frequentlyViewed.findIndex(
+    const foundEntry = frequentlyViewed.find(
       (entry) => entry.url === doc.mdn_url
     );
 
-    if (index !== -1) {
-      frequentlyViewed[index].timestamps.unshift(Date.now());
+    if (foundEntry) {
+      foundEntry.timestamps.unshift(Date.now());
     } else {
       const newEntry: FrequentlyViewedEntry = {
         serial: getNextFrequentlyViewedSerial(frequentlyViewed),
@@ -236,7 +241,7 @@ export function useIncrementFrequentlyViewed(doc: Doc | undefined) {
   }, [user?.isAuthenticated, doc]);
 }
 
-const filterFrequentlyViewed = (frequentlyViewed) => {
+const filterFrequentlyViewed = (frequentlyViewed: FrequentlyViewedEntry[]) => {
   //1. Remove timestamps older than 30 days.
   //2. Filter all values with no remaining timestamps
   return frequentlyViewed

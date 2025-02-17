@@ -6,15 +6,16 @@
 
 This is how we ship the site, as static files served through a CDN with sensible
 caching. It allows for viewing and searching through documents.\
-This mode needs to optimize for quick response times and small page sizes and can
-do so at the expense of longer build times.
+This mode needs to optimize for quick response times and small page sizes and
+can do so at the expense of longer build times.
 
 ### Local
 
 This is how writers interact with our content. It runs locally on a writer's
 machine and behaves similarly to production URL structure and appearance.\
-In this mode we optimize for being able to quickly see documents after starting the
-server or making changes. We can have larger page sizes as they are served locally.
+In this mode we optimize for being able to quickly see documents after starting
+the server or making changes. We can have larger page sizes as they are served
+locally.
 
 ## Modules
 

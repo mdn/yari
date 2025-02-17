@@ -24,7 +24,7 @@
     gap: 1rem;
     padding: 1rem;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     }
   }
@@ -75,14 +75,14 @@
     }
 
     p {
+      margin: 0;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
       @include line-clamp(
         4,
         var(--font-content-line-height),
         var(--background-primary)
       );
-      margin: 0;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
     }
 
     footer {
@@ -104,7 +104,7 @@
       font-size: 0.875rem;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media (max-width: $screen-md) {
       .count {
         display: none;
       }

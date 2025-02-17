@@ -1,7 +1,83 @@
-export function makeSitemapXML(
-  locale: string,
-  docs: { slug: string; modified: string }[]
+import { join } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { gzipSync } from "node:zlib";
+
+import { fdir } from "fdir";
+
+import { BASE_URL, BUILD_OUT_ROOT } from "../libs/env/index.js";
+
+const SITEMAP_BASE_URL = BASE_URL.replace(/\/$/, "");
+
+interface SitemapEntry {
+  slug: string;
+  modified?: string;
+}
+
+export async function buildSitemap(
+  entries: SitemapEntry[],
+  {
+    slugPrefix = "",
+    pathSuffix = [],
+  }: { slugPrefix?: string; pathSuffix?: string[] }
 ) {
+  const txt = entries.map(({ slug }) => `${slugPrefix}${slug}`).join("\n");
+  const xml = makeSitemapXML(slugPrefix, entries);
+
+  const dirPath = join(
+    BUILD_OUT_ROOT,
+    "sitemaps",
+    ...pathSuffix.map((p) => p.toLowerCase())
+  );
+  await mkdir(dirPath, { recursive: true });
+
+  const txtPath = join(dirPath, "sitemap.txt");
+  const xmlPath = join(dirPath, "sitemap.xml.gz");
+
+  await Promise.all([
+    writeFile(txtPath, txt, "utf-8"),
+    writeFile(xmlPath, gzipSync(xml)),
+  ]);
+
+  return xmlPath;
+}
+
+export async function buildSitemapIndex() {
+  return Promise.all([buildSitemapIndexTXT(), buildSitemapIndexXML()]);
+}
+
+export async function buildSitemapIndexTXT() {
+  const sitemaps = new fdir()
+    .filter((p) => p.endsWith("/sitemap.txt"))
+    .withFullPaths()
+    .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
+    .sync();
+
+  const file = join(BUILD_OUT_ROOT, "sitemap.txt");
+
+  const content = await makeSitemapIndexTXT(sitemaps);
+
+  await writeFile(file, content, "utf-8");
+
+  return sitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+}
+
+export async function buildSitemapIndexXML() {
+  const sitemaps = new fdir()
+    .filter((p) => p.endsWith("/sitemap.xml.gz"))
+    .withFullPaths()
+    .crawl(join(BUILD_OUT_ROOT, "sitemaps"))
+    .sync()
+    .sort()
+    .map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+
+  const file = join(BUILD_OUT_ROOT, "sitemap.xml");
+
+  await writeFile(file, makeSitemapIndexXML(sitemaps));
+
+  return sitemaps.sort().map((fp) => fp.replace(BUILD_OUT_ROOT, ""));
+}
+
+function makeSitemapXML(prefix: string, docs: SitemapEntry[]) {
   const sortedDocs = docs.slice().sort((a, b) => a.slug.localeCompare(b.slug));
 
   // Based on https://support.google.com/webmasters/answer/183668?hl=en
@@ -9,7 +85,7 @@ export function makeSitemapXML(
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...sortedDocs.map((doc) => {
-      const loc = `<loc>https://developer.mozilla.org/${locale}/docs/${doc.slug}</loc>`;
+      const loc = `<loc>${SITEMAP_BASE_URL}${prefix}${doc.slug}</loc>`;
       const modified = doc.modified
         ? `<lastmod>${doc.modified.toString().split("T")[0]}</lastmod>`
         : "";
@@ -30,11 +106,22 @@ export function makeSitemapIndexXML(paths: string[]) {
     ...sortedPaths.map((path) => {
       return (
         "<sitemap>" +
-        `<loc>https://developer.mozilla.org${path}</loc>` +
+        `<loc>${SITEMAP_BASE_URL}${path}</loc>` +
         `<lastmod>${new Date().toISOString().split("T")[0]}</lastmod>` +
         "</sitemap>"
       );
     }),
     "</sitemapindex>",
   ].join("\n");
+}
+
+/**
+ * Creates a global text sitemap by merging all text sitemaps.
+ */
+export async function makeSitemapIndexTXT(paths: string[]) {
+  const maps = await Promise.all(paths.map((p) => readFile(p, "utf-8")));
+
+  const urls = maps.join("\n").split("\n").filter(Boolean);
+
+  return urls.sort().join("\n");
 }

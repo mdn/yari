@@ -1,5 +1,5 @@
 export const VALID_LOCALES = new Map(
-  ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+  ["de", "en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
     (x) => [x.toLowerCase(), x]
   )
 );
@@ -10,7 +10,6 @@ export const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
-    "de",
     "el",
     "fa",
     "fi",
@@ -49,6 +48,7 @@ export const LOCALE_ALIASES = new Map([
 // gets set in the client!
 export const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 export const ACTIVE_LOCALES = new Set([
+  "de",
   "en-us",
   "es",
   "fr",
@@ -74,7 +74,7 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "https://js.stripe.com",
 
   /*
-   * Inline scripts (defined in `client/public/index.html`).
+   * Inline scripts (imported in `ssr/render.tsx`).
    *
    * If we modify them, we must always update their CSP hash here.
    *
@@ -84,9 +84,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
 
   // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
-  // - Current hash:
   "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
+  // - Current hash:
+  "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -111,6 +111,13 @@ export const CSP_DIRECTIVES = {
     "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
+    // Observatory
+    "https://observatory-api.mdn.allizom.net",
+    "https://observatory-api.mdn.mozilla.net",
+
+    // Community
+    "https://api.github.com/search/issues",
+
     "stats.g.doubleclick.net",
     "https://api.stripe.com",
   ],
@@ -123,10 +130,12 @@ export const CSP_DIRECTIVES = {
     "mdn.github.io",
     "live-samples.mdn.mozilla.net",
     "live-samples.mdn.allizom.net",
-    "live-samples.developer.allizom.xyz",
     "*.mdnplay.dev",
     "*.mdnyalp.dev",
+    "*.play.test.mdn.allizom.net",
 
+    "https://v2.scrimba.com",
+    "https://scrimba.com",
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
@@ -135,6 +144,7 @@ export const CSP_DIRECTIVES = {
   ],
   "img-src": [
     "'self'",
+    "data:",
 
     // Avatars
     "*.githubusercontent.com",
@@ -145,12 +155,17 @@ export const CSP_DIRECTIVES = {
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
+    "developer.mozilla.org",
     "mdn.dev",
     "interactive-examples.mdn.mozilla.net",
     "interactive-examples.mdn.allizom.net",
 
     "wikipedia.org",
     "upload.wikimedia.org",
+
+    // Shared assets.
+    "https://mdn.github.io/shared-assets/",
+    "https://mdn.dev/",
 
     // GA4.
     "https://*.google-analytics.com",
@@ -159,7 +174,14 @@ export const CSP_DIRECTIVES = {
     "www.gstatic.com",
   ],
   "manifest-src": ["'self'"],
-  "media-src": ["'self'", "archive.org", "videos.cdn.mozilla.net"],
+  "media-src": [
+    "'self'",
+    "archive.org",
+    "videos.cdn.mozilla.net",
+
+    // Shared assets.
+    "https://mdn.github.io/shared-assets/",
+  ],
   "child-src": ["'self'"],
   "worker-src": ["'self'"],
 };
@@ -170,31 +192,6 @@ export const cspToString = (csp) =>
     .join(" ");
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
-
-const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
-  "'self'",
-  "https:",
-  "'unsafe-eval'",
-  "'unsafe-inline'",
-  "'wasm-unsafe-eval'",
-];
-
-export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
-  "default-src": ["'self'", "https:"],
-  "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
-  "style-src": [
-    "'report-sample'",
-    "'self'",
-    "https:",
-    "'unsafe-inline'",
-    "'unsafe-eval'",
-  ],
-  "img-src": ["'self'", "blob:", "https:", "data:"],
-  "base-uri": ["'self'"],
-  "worker-src": ["'self'"],
-  "manifest-src": ["'self'"],
-});
 
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
@@ -265,6 +262,8 @@ export const VALID_FLAW_CHECKS = new Set([
 
 export const MDN_PLUS_TITLE = "MDN Plus";
 export const CURRICULUM_TITLE = "MDN Curriculum";
+export const OBSERVATORY_TITLE = "HTTP Observatory";
+export const OBSERVATORY_TITLE_FULL = "HTTP Observatory | MDN";
 
 // -------
 // content

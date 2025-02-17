@@ -23,7 +23,8 @@ echo "----------------------"
 export ENV_FILE=".env.testing"
 
 yarn build:prepare
-yarn build
+yarn build:legacy
+yarn render:html
 
 nohup yarn start:static-server > testing.log 2>&1 &
 PID=$!

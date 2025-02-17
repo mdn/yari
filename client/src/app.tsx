@@ -22,7 +22,7 @@ import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
 import { getCategoryByPathname } from "./utils";
-import { Contribute } from "./community";
+import { Community } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer, usePing } from "./hooks";
 
@@ -35,12 +35,14 @@ import { TopPlacement } from "./ui/organisms/placement";
 import { Blog } from "./blog";
 import { Newsletter } from "./newsletter";
 import { Curriculum } from "./curriculum";
+import { useGA } from "./ga-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 const Playground = React.lazy(() => import("./playground"));
+const Observatory = React.lazy(() => import("./observatory"));
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
@@ -61,7 +63,7 @@ function Layout({ pageType, children }) {
         } ${pageType}`}
       >
         <TopPlacement />
-        {pageType !== "document-page" && pageType !== "curriculum" && (
+        {!["document-page", "curriculum", "observatory"].includes(pageType) && (
           <div className="sticky-header-container without-actions">
             <TopNavigation />
           </div>
@@ -86,6 +88,7 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 function LazyStandardLayout(props: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
@@ -100,14 +103,18 @@ function LazyStandardLayout(props: {
 }
 
 function StandardLayout({
+  pageType,
   extraClasses,
   children,
 }: {
+  pageType?: string;
   extraClasses?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
+    <Layout pageType={pageType || `standard-page ${extraClasses || ""}`}>
+      {children}
+    </Layout>
   );
 }
 function DocumentLayout({ children }) {
@@ -135,6 +142,7 @@ export function App(appProps: HydrationData) {
 
   usePing();
   useGleanPage(pageNotFound, appProps.doc);
+  useScrollDepthMeasurement();
 
   const localeMatch = useMatch("/:locale/*");
 
@@ -221,7 +229,7 @@ export function App(appProps: HydrationData) {
                 to simulate it.
                  */}
                 <Route
-                  path="/_404/*"
+                  path="/404/*"
                   element={
                     <StandardLayout>
                       <PageNotFound />
@@ -261,6 +269,14 @@ export function App(appProps: HydrationData) {
               element={
                 <LazyStandardLayout>
                   <Playground />
+                </LazyStandardLayout>
+              }
+            />
+            <Route
+              path="observatory/*"
+              element={
+                <LazyStandardLayout pageType="observatory">
+                  <Observatory {...appProps} />
                 </LazyStandardLayout>
               }
             />
@@ -306,7 +322,7 @@ export function App(appProps: HydrationData) {
               path="/about/*"
               element={
                 <StandardLayout>
-                  <About />
+                  <About {...appProps} />
                 </StandardLayout>
               }
             />
@@ -314,7 +330,7 @@ export function App(appProps: HydrationData) {
               path="/community/*"
               element={
                 <StandardLayout>
-                  <Contribute />
+                  <Community {...appProps} />
                 </StandardLayout>
               }
             />
@@ -348,4 +364,47 @@ export function App(appProps: HydrationData) {
     </Routes>
   );
   return routes;
+}
+
+function useScrollDepthMeasurement(thresholds = [25, 50, 75]) {
+  const timeoutID = React.useRef<number | null>();
+  const [currentDepth, setScrollDepth] = React.useState(0);
+  const { gtag } = useGA();
+
+  useEffect(() => {
+    const listener = () => {
+      if (timeoutID.current) {
+        window.clearTimeout(timeoutID.current);
+      }
+      timeoutID.current = window.setTimeout(() => {
+        const { scrollHeight } = document.documentElement;
+        const { innerHeight, scrollY } = window;
+        const scrollPosition = innerHeight + scrollY;
+        const depth = (100 * scrollPosition) / scrollHeight;
+
+        const matchingThresholds = thresholds.filter(
+          (threshold) => currentDepth < threshold && threshold <= depth
+        );
+
+        matchingThresholds.forEach((threshold) => {
+          gtag("event", "scroll", {
+            percent_scrolled: String(threshold),
+          });
+        });
+
+        const lastThreshold = matchingThresholds.at(-1);
+        if (lastThreshold) {
+          setScrollDepth(lastThreshold);
+        }
+
+        timeoutID.current = null;
+      }, 100);
+    };
+
+    window.addEventListener("scroll", listener);
+
+    return () => window.removeEventListener("scroll", listener);
+  });
+
+  return currentDepth;
 }

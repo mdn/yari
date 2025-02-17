@@ -14,32 +14,44 @@ export enum Status {
   empty = "empty",
 }
 
-type PlacementType = "side" | "top" | "hpMain" | "hpFooter" | "bottom";
+type PlacementType =
+  | "side"
+  | "top"
+  | "hpTop"
+  | "hpMain"
+  | "hpFooter"
+  | "bottom";
 export interface PlacementContextData
   extends Partial<Record<PlacementType, PlacementData>> {
+  plusAvailable?: boolean;
   status: Status;
 }
 
 const PLACEMENT_MAP: Record<PlacementType, { typ: string; pattern: RegExp }> = {
   side: {
     typ: "side",
-    pattern: /\/[^/]+\/(play|docs\/|blog\/|curriculum\/[^$]|search$)/i,
+    pattern:
+      /^\/[^/]+\/(play|docs\/|blog\/|observatory\/?|curriculum\/[^$]|search$)/i,
   },
   top: {
     typ: "top-banner",
-    pattern: /\/[^/]+\/(?!$|_homepage$).*/i,
+    pattern: /^\/[^/]+\/(?!$|_homepage$).*/i,
+  },
+  hpTop: {
+    typ: "top-banner",
+    pattern: /^\/[^/]+\/($|_homepage$)/i,
   },
   hpMain: {
     typ: "hp-main",
-    pattern: /\/[^/]+\/($|_homepage$)/i,
+    pattern: /^\/[^/]+\/($|_homepage$)/i,
   },
   hpFooter: {
     typ: "hp-footer",
-    pattern: /\/[^/]+\/($|_homepage$)/i,
+    pattern: /^\/[^/]+\/($|_homepage$)/i,
   },
   bottom: {
     typ: "bottom-banner",
-    pattern: /\/[^/]+\/docs\//i,
+    pattern: /^\/[^/]+\/docs\//i,
   },
 };
 
@@ -88,14 +100,17 @@ export function PlacementProvider(props: { children: React.ReactNode }) {
       }
 
       try {
-        const placementResponse: PlacementContextData = await response.json();
+        const {
+          plusAvailable = true, // Fall back to true for seamless migration.
+          ...placementResponse
+        }: PlacementContextData = await response.json();
         const typs = Object.entries(PLACEMENT_MAP)
           .filter(([key]) => key in placementResponse)
           .map(([, { typ }]) => typ);
         if (typs.length) {
           gleanClick(`pong: pong->served ${typs.join()}`);
         }
-        return placementResponse;
+        return { plusAvailable, ...placementResponse };
       } catch (e) {
         throw Error(response.statusText);
       }

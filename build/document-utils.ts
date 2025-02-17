@@ -3,7 +3,7 @@ import { Document } from "../content/index.js";
 const TRANSFORM_STRINGS = new Map(
   Object.entries({
     "Web technology for developers": "References",
-    "Learn web development": "Guides",
+    "Learn web development": "Learn",
     "HTML: HyperText Markup Language": "HTML",
     "CSS: Cascading Style Sheets": "CSS",
     "Graphics on the Web": "Graphics",
@@ -56,7 +56,9 @@ export function addBreadcrumbData(url, document) {
     if (parentDoc) {
       parents.unshift({
         uri: parentURL,
-        title: transformTitle(parentDoc.metadata.title),
+        title:
+          parentDoc.metadata["short-title"] ||
+          transformTitle(parentDoc.metadata.title),
       });
     }
   }

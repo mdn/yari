@@ -2,7 +2,13 @@ import fs from "node:fs";
 import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
+import {
+  beforeEachMacro,
+  describeMacro,
+  itMacro,
+  lintHTML,
+  parsePagesFixture,
+} from "./utils.js";
 
 /**
  * Load all the fixtures.
@@ -12,7 +18,7 @@ const pagesFixturePath = new URL(
   "./fixtures/defaultapisidebar/pages.json",
   import.meta.url
 );
-const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf-8"));
+const pagesJSON = parsePagesFixture(pagesFixturePath);
 const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"],
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
@@ -256,7 +262,7 @@ async function checkResult(html, config) {
 
   if (config.expected.overview) {
     // Test overview link
-    const overviewLink = dom.querySelector("ol>li>strong");
+    const overviewLink = dom.querySelector("ol>li.section");
     checkItem(config.expected.overview, overviewLink, config.locale);
   }
 

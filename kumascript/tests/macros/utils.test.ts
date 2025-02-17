@@ -9,8 +9,7 @@ const ERROR_TEST_CASES = [
   {
     title: "with an HTML element missing its closing tag",
     html: "<div>closing tag has gone missing",
-    error:
-      "Missing close-tag, expected '</div>' but document ended before it was found.",
+    error: "Unclosed element '<div>'",
   },
   {
     title: "with an illegal value for a link attribute",

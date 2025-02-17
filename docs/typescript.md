@@ -3,19 +3,19 @@
 We're using TypeScript in parts of the codebase. The intention for it is to be a
 net developer productivity win, but there is bound to be a price to it in the
 beginning, in learning how to solve type errors.\
-In many cases they are useful pointers to errors that could happen at runtime. In
-other cases they are circumstantial to the tools we are using. In both cases you
-should not feel blocked by it from writing code you trust. Fortunately TypeScript
-offers escape-hatches through which you can tell it to back off.
+In many cases they are useful pointers to errors that could happen at runtime.
+In other cases they are circumstantial to the tools we are using. In both cases
+you should not feel blocked by it from writing code you trust. Fortunately
+TypeScript offers escape-hatches through which you can tell it to back off.
 
 ## Escape Hatches
 
 These allow you to tell TypeScript to be more accepting. They are generally
 considered code smells and should ultimately not be needed. But pragmatically
 they are better than being told by a robot that it will not run your code.\
-Also a 50% type-checked codebase is better than a 0% type-checked codebase, which
-is basically what most dynamically typed codebases look like. So do feel free to
-rely on these to be productive!\
+Also a 50% type-checked codebase is better than a 0% type-checked codebase,
+which is basically what most dynamically typed codebases look like. So do feel
+free to rely on these to be productive!\
 Also tag Gregor (and whoever wants to take on the type-fight) in those PRs so
 that they can slowly work on reducing untyped code.
 

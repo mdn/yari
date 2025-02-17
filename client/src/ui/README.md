@@ -24,24 +24,6 @@ This is a not in sync copy of
 [mdn-minimalist](https://github.com/mdn/mdn-minimalist). See the note on the
 status of this under the `theme` folder docs below.
 
-## Style Dictionary
-
-We use [Style Dictionary](https://amzn.github.io/style-dictionary/#/) to build
-out our first level variables into SASS. Down the road we may want to also
-generate these same into variables in JS, or for specific mobile platforms. We
-therefore started down this road now, so that we have the infrastructure in
-place.
-
-The variables defined here are hardly ever directly used but, are instead mapped
-to more second level semantic named that are then used to in components. The
-source from which Style Dictionary builds are located in
-`client/src/ui/style-dictionary/`. The config for Style Dictionary is in
-`sd-config.json` at the root of the project.
-
-Tokens directly exported from Figma are located in
-`client/src/ui/style-dictionary/tokens.json`. This was an initial export which
-is now manually kept in sync. In future we hope to automate this process.
-
 ## The `theme` folder
 
 When we embarked on the redesign, the idea was to use

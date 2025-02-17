@@ -1,0 +1,138 @@
+@use "../ui/vars" as *;
+
+.observatory {
+  --border-radius: 0.3rem;
+  --code-background-block: var(--observatory-bg-code);
+  --spacing: 2rem;
+  background-color: var(--observatory-bg);
+
+  h1,
+  h2 {
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: var(--heading-letter-spacing);
+  }
+
+  .obs-none {
+    color: var(--observatory-color-secondary);
+  }
+
+  .obs-score-value {
+    margin-right: 0.5rem;
+  }
+
+  .obs-pass-icon {
+    svg.pass {
+      path {
+        fill: var(--observatory-pass-icon-bg);
+      }
+
+      circle {
+        fill: var(--observatory-pass-icon-color);
+      }
+    }
+
+    svg.fail {
+      path {
+        fill: var(--observatory-fail-icon-bg);
+      }
+
+      circle {
+        fill: var(--observatory-fail-icon-color);
+      }
+    }
+  }
+
+  .accent {
+    color: var(--observatory-accent);
+  }
+
+  .observatory-wrapper {
+    display: grid;
+    grid-template-areas: "header header header" "main main main" ". sidebar .";
+    grid-template-columns: 1rem 1fr 1rem;
+    max-width: var(--max-width);
+    padding: 1.5rem 1rem;
+
+    section.header {
+      grid-area: header;
+    }
+
+    section.main {
+      grid-area: main;
+    }
+
+    a {
+      color: var(--observatory-color);
+      text-decoration: underline;
+      text-decoration-color: var(--observatory-color-secondary);
+
+      &:hover,
+      &:active {
+        text-decoration: none;
+      }
+    }
+
+    .feedback-link {
+      --feedback-link-icon: var(--observatory-color-secondary);
+      --text-link: var(--observatory-color-secondary);
+      color: var(--observatory-color-secondary);
+      display: block;
+      font-size: var(--type-tiny-font-size);
+      margin-top: 1.5rem;
+    }
+
+    .feedback-link.faq-link::before {
+      mask-image: url("../assets/icons/message-question.svg");
+    }
+
+    .error {
+      color: var(--form-invalid-color);
+      margin-top: 0.5rem;
+
+      &::before {
+        background-color: var(--form-invalid-color);
+        content: "";
+        display: inline-block;
+        height: 1.15rem;
+        margin-bottom: 0.25rem;
+        margin-right: 0.5rem;
+        mask-image: url("../assets/icons/alert-circle.svg");
+        mask-position: center;
+        mask-repeat: no-repeat;
+        vertical-align: middle;
+        width: 1.5em;
+      }
+
+      + form input {
+        outline-color: var(--observatory-border-accent);
+      }
+    }
+
+    @media (min-width: $screen-md) {
+      column-gap: 1rem;
+      grid-template-areas: "header sidebar" "main sidebar";
+      grid-template-columns: minmax(0, 1fr) 12rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+
+      section.header,
+      section.main {
+        padding: 0;
+      }
+    }
+
+    @media (min-width: $screen-xl) {
+      column-gap: 3rem;
+      grid-template-areas: "header sidebar" "main sidebar";
+      grid-template-columns: 2fr minmax(0, 200px);
+    }
+  }
+
+  .scroll-container {
+    margin-bottom: 1.5rem;
+    margin-top: 0.8rem;
+    overflow-x: auto;
+    overscroll-behavior-x: none;
+  }
+}

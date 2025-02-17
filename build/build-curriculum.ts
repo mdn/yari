@@ -1,4 +1,5 @@
 #!/usr/bin/env node
-import { buildCurriculum } from "./curriculum.js";
+import { buildCurriculum, buildCurriculumSitemap } from "./curriculum.js";
 
-buildCurriculum({ verbose: true });
+await buildCurriculum({ verbose: true });
+await buildCurriculumSitemap({ verbose: true });

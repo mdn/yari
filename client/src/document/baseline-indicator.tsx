@@ -7,15 +7,42 @@ import { useLocation } from "react-router";
 
 import "./baseline-indicator.scss";
 
-import type { SupportStatus } from "../../../libs/types/web-features";
+// web-features doesn't export these types directly so we need to do a little typescript magic:
+import type { features } from "web-features";
+type SupportStatus = (typeof features)[keyof typeof features]["status"] & {
+  asterisk?: boolean;
+};
+type BrowserIdentifier =
+  keyof (typeof features)[keyof typeof features]["status"]["support"];
 
-const ENGINES = [
-  { name: "Blink", browsers: ["Chrome", "Edge"] },
-  { name: "Gecko", browsers: ["Firefox"] },
-  { name: "WebKit", browsers: ["Safari"] },
+interface BrowserGroup {
+  name: string;
+  ids: BrowserIdentifier[];
+}
+
+const ENGINES: {
+  name: string;
+  browsers: BrowserGroup[];
+}[] = [
+  {
+    name: "Blink",
+    browsers: [
+      { name: "Chrome", ids: ["chrome", "chrome_android"] },
+      { name: "Edge", ids: ["edge"] },
+    ],
+  },
+  {
+    name: "Gecko",
+    browsers: [{ name: "Firefox", ids: ["firefox", "firefox_android"] }],
+  },
+  {
+    name: "WebKit",
+    browsers: [{ name: "Safari", ids: ["safari", "safari_ios"] }],
+  },
 ];
 
 const LOCALIZED_BCD_IDS = {
+  de: "browser-kompatibilität",
   "en-US": "browser_compatibility",
   es: "compatibilidad_con_navegadores",
   fr: "compatibilité_des_navigateurs",
@@ -39,9 +66,11 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     LOCALIZED_BCD_IDS[locale] || LOCALIZED_BCD_IDS[DEFAULT_LOCALE]
   }`;
 
+  const low_date_range = status.baseline_low_date?.match(/^([^0-9])/)?.[0];
   const low_date = status.baseline_low_date
-    ? new Date(status.baseline_low_date)
+    ? new Date(status.baseline_low_date.slice(low_date_range ? 1 : 0))
     : undefined;
+
   const level = status.baseline
     ? status.baseline
     : status.baseline === false
@@ -52,25 +81,27 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
     pathname
   )}&level=${level}`;
 
-  const supported = (browser: string) => {
-    const version: string | undefined = status.support?.[browser.toLowerCase()];
-    return Boolean(status.baseline || version);
+  const supported = (browser: BrowserGroup) => {
+    return browser.ids
+      .map((id) => status.support?.[id])
+      .every((version) => Boolean(version));
   };
 
-  const engineTitle = (browsers: string[]) =>
+  const engineTitle = (browsers: BrowserGroup[]) =>
     browsers
       .map((browser, index, array) => {
         const previous = index > 0 ? supported(array[index - 1]) : undefined;
         const current = supported(browser);
+        const name = browser.name;
         return typeof previous === "undefined"
           ? current
-            ? `Supported in ${browser}`
-            : `Not widely supported in ${browser}`
+            ? `Supported in ${name}`
+            : `Not widely supported in ${name}`
           : current === previous
-            ? ` and ${browser}`
+            ? ` and ${name}`
             : current
-              ? `, and supported in ${browser}`
-              : `, and not widely supported in ${browser}`;
+              ? `, and supported in ${name}`
+              : `, and not widely supported in ${name}`;
       })
       .join("");
 
@@ -85,7 +116,7 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
           role="img"
           aria-label={level !== "not" ? "Baseline Check" : "Baseline Cross"}
         />
-        <h2>
+        <div className="status-title">
           {level !== "not" ? (
             <>
               Baseline{" "}
@@ -94,23 +125,24 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
                   ? "Widely available"
                   : low_date?.getFullYear()}
               </span>
+              {status.asterisk && " *"}
             </>
           ) : (
             <span className="not-bold">Limited availability</span>
           )}
-        </h2>
+        </div>
         {level === "low" && <div className="pill">Newly available</div>}
         <div className="browsers">
           {ENGINES.map(({ name, browsers }) => (
             <span key={name} className="engine" title={engineTitle(browsers)}>
               {browsers.map((browser) => (
                 <span
-                  key={browser}
-                  className={`browser ${browser.toLowerCase()} ${
+                  key={browser.ids[0]}
+                  className={`browser ${browser.ids[0]} ${
                     supported(browser) ? "supported" : ""
                   }`}
                   role="img"
-                  aria-label={`${browser} ${
+                  aria-label={`${browser.name} ${
                     supported(browser) ? "check" : "cross"
                   }`}
                 />
@@ -147,10 +179,16 @@ export function BaselineIndicator({ status }: { status: SupportStatus }) {
             most widely-used browsers.
           </p>
         )}
+        {status.asterisk && (
+          <p>
+            * Some parts of this feature may have varying levels of support.
+          </p>
+        )}
         <ul>
           <li>
+            {/* eslint-disable-next-line react/jsx-no-target-blank */}
             <a
-              href="/en-US/blog/baseline-evolution-on-mdn/"
+              href={`/${locale}/docs/Glossary/Baseline/Compatibility`}
               data-glean={BASELINE.LINK_LEARN_MORE}
               target="_blank"
               className="learn-more"

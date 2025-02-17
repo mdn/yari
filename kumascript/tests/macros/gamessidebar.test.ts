@@ -15,8 +15,17 @@ function checkSidebarDom(dom, locale) {
   assert.equal(summaries[0].textContent, locales[locale].Introduction);
 }
 
+function mock(macro) {
+  macro.ctx.env.recordNonFatalError = () => {
+    return {
+      macroSource: "foo",
+    };
+  };
+}
+
 describeMacro("GamesSidebar", function () {
   itMacro("Creates a sidebar object for en-US", function (macro) {
+    mock(macro);
     macro.ctx.env.locale = "en-US";
     return macro.call().then(function (result) {
       const dom = JSDOM.fragment(result);
@@ -25,6 +34,7 @@ describeMacro("GamesSidebar", function () {
   });
 
   itMacro("Creates a sidebar object for ja", function (macro) {
+    mock(macro);
     macro.ctx.env.locale = "ja";
     return macro.call().then(function (result) {
       const dom = JSDOM.fragment(result);

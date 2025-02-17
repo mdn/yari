@@ -28,13 +28,13 @@ export function Sidebar({
                   entry.url === current
                 }
               >
-                <summary>{entry.title} module</summary>
+                <summary>{entry.title}</summary>
                 <ol>
                   <li>
                     <SidebarLink
                       current={current}
                       url={entry.url}
-                      title={`${entry.title} overview`}
+                      title={`${entry.title.replace(/ modules$/, "")} overview`}
                     />
                   </li>
                   {entry.children.map((subEntry, j) => {

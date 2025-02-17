@@ -7,13 +7,39 @@ const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
 const CATEGORIES = ["html", "javascript", "css", "api", "http"];
 
+function learnCategory(category: string, sub: string) {
+  switch (`${category}/${sub || ""}`) {
+    case "core/structuring_content":
+    case "getting_started/web_standards":
+      return "html";
+    case "core/css_layout":
+    case "core/design_for_developers":
+    case "core/styling_basics":
+    case "extensions/TRansform_animate":
+      return "css";
+    case "core/scripting":
+    case "core/frameworks_libraries":
+    case "extensions/advanced_javascript_objects":
+    case "extensions/async_js":
+      return "javascript";
+    case "extensions/client-side_apis":
+    case "extensions/forms":
+      return "api";
+    default:
+      return "learn";
+  }
+}
+
 export function getCategoryByPathname(pathname = ""): string | null {
-  const [, , , webOrLearn, category] = pathname.toLowerCase().split("/");
-  if (webOrLearn === "learn" || webOrLearn === "web") {
+  const [, , , webOrLearn, category, sub] = pathname.toLowerCase().split("/");
+  if (webOrLearn === "web") {
     if (CATEGORIES.includes(category)) {
       return category;
     }
     return webOrLearn;
+  }
+  if (webOrLearn === "learn_web_development") {
+    return learnCategory(category, sub);
   }
   if (isHomePage(pathname)) {
     return "home";
@@ -134,5 +160,87 @@ export function splitQuery(term: string): string[] {
   } else {
     // Dot is probably just a word separator.
     return term.split(/[ ,.]+/);
+  }
+}
+
+export function getCookieValue(name: string) {
+  let value = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`));
+
+  if (value && value.includes("=")) {
+    value = value.split("=")[1];
+  }
+
+  return value;
+}
+
+export function setCookieValue(
+  name: string,
+  value: string,
+  {
+    expires,
+    maxAge,
+    path = "/",
+  }: { expires?: Date; maxAge?: number; path?: string }
+) {
+  const cookieValue = [
+    `${name}=${value}`,
+    expires && `expires=${expires.toUTCString()}`,
+    maxAge && `max-age=${maxAge}`,
+    `path=${path}`,
+    document.location.hostname !== "localhost" && "secure",
+  ]
+    .filter(Boolean)
+    .join(";");
+
+  document.cookie = cookieValue;
+}
+
+export function deleteCookie(name: string) {
+  setCookieValue(name, "", { expires: new Date(0) });
+}
+
+export class SWRLocalStorageCache<Data> {
+  #key: string;
+  #data: Map<string, Data>;
+
+  #writeToLocalStorage() {
+    const serialized = JSON.stringify([...this.#data]);
+    localStorage.setItem(this.#key, serialized);
+  }
+
+  constructor(key: string) {
+    this.#key = `cache.${key}`;
+    try {
+      const serialized = localStorage.getItem(this.#key);
+      this.#data = new Map(JSON.parse(serialized || "[]"));
+    } catch {
+      this.#data = new Map();
+      if (typeof localStorage === "undefined") {
+        // we're on the server
+        return;
+      }
+      console.warn(`Can't read data from ${this.#key}, resetting the cache`);
+      this.#writeToLocalStorage();
+    }
+  }
+
+  get(key: string): Data | undefined {
+    return this.#data.get(key);
+  }
+
+  set(key: string, value: Data): void {
+    this.#data.set(key, value);
+    this.#writeToLocalStorage();
+  }
+
+  delete(key: string): void {
+    this.#data.delete(key);
+    this.#writeToLocalStorage();
+  }
+
+  keys(): IterableIterator<string> {
+    return this.#data.keys();
   }
 }

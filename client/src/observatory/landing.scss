@@ -1,0 +1,233 @@
+@use "../ui/vars" as *;
+
+.observatory {
+  .observatory-landing.observatory-landing-top {
+    background: var(--observatory-bg-secondary);
+
+    .observatory-wrapper {
+      grid-template-areas: "header .";
+
+      @media (max-width: #{$screen-xl - 1}) {
+        grid-template-areas: "header";
+        grid-template-columns: auto;
+      }
+    }
+  }
+
+  .observatory-landing {
+    background: var(--observatory-bg);
+
+    .observatory-wrapper {
+      .feedback-link,
+      .faq-link {
+        display: inline-block;
+        margin-right: 1rem;
+        margin-top: 2rem;
+      }
+    }
+
+    .place {
+      grid-area: sidebar;
+    }
+
+    .header {
+      display: grid;
+      gap: 0 6.25rem;
+      grid-template-areas: "form svg";
+      grid-template-columns: 2fr 1fr;
+
+      .scan-form {
+        grid-area: form;
+      }
+
+      .landing-illustration {
+        grid-area: svg;
+
+        svg {
+          height: auto;
+          max-width: 50vw;
+          width: 100%;
+        }
+      }
+
+      @media (max-width: #{$screen-md - 1}) {
+        grid-template:
+          "form" auto
+          "svg" auto;
+
+        .landing-illustration {
+          text-align: center;
+        }
+      }
+    }
+
+    h1 {
+      margin-bottom: unset;
+    }
+
+    p {
+      color: var(--observatory-color-secondary);
+    }
+
+    form {
+      .input-group {
+        display: flex;
+        height: 3rem;
+
+        :focus-visible {
+          outline: 1px solid var(--observatory-accent);
+          outline-offset: -1px;
+          outline-width: 1px;
+        }
+
+        ::placeholder {
+          color: var(--observatory-color-secondary);
+          opacity: 0.8;
+        }
+
+        input {
+          background-color: var(--observatory-bg);
+          border: 1px solid var(--observatory-border);
+          border-bottom-left-radius: var(--border-radius);
+          border-top-left-radius: var(--border-radius);
+          flex-grow: 1;
+          padding: 0 0.75rem;
+          width: 100%;
+
+          &::placeholder {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        button {
+          background: var(--button-primary-default);
+          border-bottom-right-radius: var(--border-radius);
+          border-top-right-radius: var(--border-radius);
+          color: var(--background-primary);
+          cursor: pointer;
+          font: var(--type-emphasis-m);
+          font-size: 1rem;
+          padding: 0 2rem;
+
+          &:hover {
+            background: var(--button-primary-hover);
+          }
+
+          &:active {
+            background: var(--button-primary-active);
+          }
+        }
+      }
+
+      label {
+        align-items: center;
+        display: flex;
+        margin: 1.75rem 0;
+      }
+
+      input[type="checkbox"] {
+        height: 1.25rem;
+        margin: 0;
+        margin-right: 0.5rem;
+        width: 1.25rem;
+      }
+    }
+
+    .main {
+      background: var(--observatory-bg);
+      border-radius: var(--border-radius);
+      margin: 1rem 0;
+
+      h2 {
+        margin-top: unset;
+      }
+
+      .about {
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+          margin-bottom: 2rem;
+        }
+
+        // Make a gradient from the accent color to the background color,
+        // replacing the light-mode-only colors in the original SVG data.
+        svg.lines defs#defs3 #gradient {
+          stop#stop1 {
+            stop-color: var(--observatory-accent);
+          }
+
+          stop#stop2 {
+            stop-color: color-mix(
+              in srgb,
+              var(--observatory-accent),
+              var(--observatory-bg)
+            );
+          }
+
+          stop#stop3 {
+            stop-color: var(--observatory-bg);
+          }
+        }
+
+        figure {
+          &.assessment,
+          &.scanning,
+          &.security,
+          &.mdn {
+            svg path {
+              fill: var(--observatory-accent);
+            }
+          }
+        }
+      }
+
+      @media (min-width: $screen-md) {
+        .assessment {
+          margin-left: 0;
+        }
+
+        .scanning {
+          margin-left: 3.125rem;
+        }
+
+        .security {
+          margin-left: 6.25rem;
+        }
+
+        .mdn {
+          margin-left: 9.75rem;
+        }
+      }
+      @media (max-width: #{$screen-md - 1}) {
+        figure ~ figure {
+          margin-top: 1.75rem;
+        }
+
+        .lines {
+          display: none;
+        }
+      }
+      @media (min-width: $screen-md) and (max-width: #{$screen-lg - 1}) {
+        .about-copy {
+          width: 80%;
+        }
+      }
+
+      figure {
+        align-items: start;
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 2rem 1fr;
+
+        figcaption {
+          p {
+            color: var(--observatory-color);
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}

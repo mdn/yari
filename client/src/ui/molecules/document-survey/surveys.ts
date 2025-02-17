@@ -4,7 +4,7 @@ import { survey_duration, survey_rates } from "../../../env";
 export interface Survey {
   key: SurveyKey;
   bucket: SurveyBucket;
-  show: (doc: Doc) => boolean;
+  show: (doc: Pick<Doc, "mdn_url">) => boolean;
   // Start in milliseconds since 1970.
   start: number;
   // End in milliseconds since 1970.
@@ -12,9 +12,10 @@ export interface Survey {
   // Proportion slice of users to target.
   rateFrom: number;
   rateTill: number;
-  src: string;
+  src: string | ((doc: Pick<Doc, "mdn_url">) => string);
   teaser: string;
   question: string;
+  footnote?: string;
 }
 
 enum SurveyBucket {
@@ -22,12 +23,18 @@ enum SurveyBucket {
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
+  DE_LOCALE_2024 = "DE_LOCALE_2024",
+  DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
   DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
+  WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
+  HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
+  WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
+  HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
 }
 
 enum SurveyKey {
@@ -36,6 +43,8 @@ enum SurveyKey {
   CONTENT_DISCOVERY_2023 = "CONTENT_DISCOVERY_2023",
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
   CSS_CASCADE_2022_B = "CSS_CASCADE_2022_B",
+  DE_LOCALE_2024 = "DE_LOCALE_2024",
+  DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
@@ -43,18 +52,72 @@ enum SurveyKey {
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
   DISCOVERABILITY_AUG_2023 = "DISCOVERABILITY_AUG_2023",
+  WEB_APP_AUGUST_2024 = "WEB_APP_AUGUST_2024",
+  HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
+  WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
+  HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
 }
+
+// When adding a survey, make sure it has this JavaScript action (in Alchemer)
+// so the banner is hidden for users who have already submitted it:
+// window.parent && window.parent.postMessage("submit", "*");
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.DISCOVERABILITY_AUG_2023,
-    bucket: SurveyBucket.DISCOVERABILITY_AUG_2023,
-    show: (doc: Doc) => /en-US\/docs\/(Web|Learn)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7457498/MDN-Discoverability-User-Satisfaction",
+    key: SurveyKey.DE_LOCALE_2024_EVAL,
+    bucket: SurveyBucket.DE_LOCALE_2024_EVAL,
+    show: (doc: Pick<Doc, "mdn_url">) => {
+      if (!doc.mdn_url.startsWith("/de/docs/")) {
+        // Exclude other languages.
+        return false;
+      }
+
+      try {
+        // Exclude initial page view.
+        const referrer = new URL(document.referrer);
+        return referrer.pathname.startsWith("/de/docs/");
+      } catch (e) {
+        return false;
+      }
+    },
+    src: (doc: Pick<Doc, "mdn_url">) => {
+      const url = new URL(
+        "https://survey.alchemer.com/s3/8073795/Feedback-zur-deutschen-Version-von-MDN"
+      );
+      url.searchParams.set("referrer", doc.mdn_url);
+      return url.toString();
+    },
+    teaser: "Diese deutsche Übersetzung von MDN ist Teil eines Experiments.",
+    question: "Hätten Sie 2 Minuten, um uns ein paar Fragen zu beantworten?",
+    rateFrom: 0,
+    rateTill: 1,
+    start: 0,
+    end: Infinity,
+  },
+  {
+    key: SurveyKey.HOUSE_SURVEY_2025,
+    bucket: SurveyBucket.HOUSE_SURVEY_2025,
+    show: (doc: Pick<Doc, "mdn_url">) =>
+      /^\/[^/]+\/docs\/(Web|Learn_web_development)($|\/.*$)|/i.test(
+        doc.mdn_url
+      ),
+    src: "https://survey.alchemer.com/s3/8145183/MDN-short-survey",
     teaser:
-      "At MDN, we are committed to improving the user experience on our website. To ensure that we are meeting this goal, we would like to hear your thoughts and feedback regarding your experience on MDN.",
-    question: "What’s your experience on MDN Web Docs?",
-    ...survey_duration(SurveyBucket.DISCOVERABILITY_AUG_2023),
-    ...survey_rates(SurveyKey.DISCOVERABILITY_AUG_2023),
+      "We'd love to hear more about your role and the company you work for",
+    question: "Please help us by answering a few questions.",
+    ...survey_duration(SurveyBucket.HOUSE_SURVEY_2025),
+    ...survey_rates(SurveyKey.HOUSE_SURVEY_2025),
+  },
+  {
+    key: SurveyKey.WEBDX_EDITING_2024,
+    bucket: SurveyBucket.WEBDX_EDITING_2024,
+    show: (doc: Pick<Doc, "mdn_url">) =>
+      /^\/[^/]+\/docs\/Web\/API($|\/.*$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/8045877/MDN-text-edit-survey",
+    teaser:
+      "Let us know your thoughts about the following text editing, formatting, selection, and clipboard APIs",
+    question: "Please share your feedback about the following features.",
+    ...survey_duration(SurveyBucket.WEBDX_EDITING_2024),
+    ...survey_rates(SurveyKey.WEBDX_EDITING_2024),
   },
 ];

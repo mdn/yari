@@ -1,3 +1,4 @@
+@use "sass:meta";
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
@@ -18,7 +19,7 @@
     font-weight: 500;
     padding: 0;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       font-size: var(--type-smaller-font-size);
       padding: 0.4rem;
 
@@ -41,7 +42,7 @@
     tr {
       height: 3rem;
 
-      @media screen and (min-width: $screen-md) {
+      @media (min-width: $screen-md) {
         &:last-child {
           th,
           td {
@@ -145,6 +146,7 @@
   line-height: 1;
   padding-top: 0.5rem;
   position: relative;
+  text-orientation: sideways;
   transform: rotate(180deg);
   white-space: nowrap;
   -ms-writing-mode: tb-rl;
@@ -180,6 +182,7 @@
 .bc-legend-tip {
   font-size: var(--type-smaller-font-size);
   font-style: italic;
+  font-variation-settings: "slnt" -10;
   margin-bottom: 1rem;
   margin-top: 0;
 }
@@ -382,17 +385,17 @@ dl.bc-notes-list {
   }
 }
 
-@import "./index-mobile";
-@import "./index-desktop";
-@import "./index-desktop-md";
-@import "./index-desktop-xl";
+@include meta.load-css("index-mobile");
+@include meta.load-css("index-desktop");
+@include meta.load-css("index-desktop-md");
+@include meta.load-css("index-desktop-xl");
 
 .bcd-cell-text-wrapper {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     align-items: center;
     flex-direction: column;
   }
@@ -432,12 +435,12 @@ dl.bc-notes-list {
   display: flex;
   gap: 0.5rem;
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: block;
   }
 }
 
-@media screen and (min-width: $screen-md) {
+@media (min-width: $screen-md) {
   .bc-table {
     td {
       height: 2rem;

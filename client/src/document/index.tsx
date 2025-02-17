@@ -1,16 +1,11 @@
 import React from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { WRITER_MODE, PLACEMENT_ENABLED } from "../env";
-import { useGA } from "../ga-context";
 import { useIsServer, useLocale } from "../hooks";
 
-import {
-  useDocumentURL,
-  useCopyExamplesToClipboardAndAIExplain,
-  useRunSample,
-} from "./hooks";
+import { useDocumentURL, useDecorateCodeExamples, useRunSample } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -25,7 +20,6 @@ import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
-import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { ArticleFooter } from "./organisms/article-footer";
@@ -40,6 +34,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+import "../lit/interactive-example.global.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
@@ -67,14 +62,16 @@ export class HTTPError extends Error {
 }
 
 export function Document(props /* TODO: define a TS interface for this */) {
-  const { gtag } = useGA();
+  React.useEffect(() => {
+    import("../lit/interactive-example.js");
+  }, []);
+
   const gleanClick = useGleanClick();
   const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const locale = useLocale();
-  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
@@ -126,7 +123,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   useIncrementFrequentlyViewed(doc);
   useRunSample(doc);
   //useCollectSample(doc);
-  useCopyExamplesToClipboardAndAIExplain(doc);
+  useDecorateCodeExamples(doc);
   useInteractiveExamplesTelemetry();
 
   React.useEffect(() => {
@@ -143,14 +140,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     if (doc && !error) {
       if (mountCounter.current > 0) {
         const location = window.location.toString();
-        // 'dimension19' means it's a client-side navigation.
-        // I.e. not the initial load but the location has now changed.
-        // Note that in local development, where you use `localhost:3000`
-        // this will always be true because it's always client-side navigation.
-        gtag("event", "pageview", {
-          dimension19: "Yes",
-          page_location: location,
-        });
         gleanClick(`${CLIENT_SIDE_NAVIGATION}: ${location}`);
       }
 
@@ -158,7 +147,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [gtag, gleanClick, doc, error]);
+  }, [gleanClick, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
@@ -213,8 +202,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const retiredLocale = searchParams.get("retiredLocale");
-
   return (
     <>
       <div className="sticky-header-container">
@@ -223,16 +210,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
       </div>
       {/* only include this if we are not server-side rendering */}
       {!isServer && <OfflineStatusBar />}
-      {doc.isTranslated ? (
+      {doc.isTranslated && (
         <div className="container">
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
         </div>
-      ) : (
-        retiredLocale && (
-          <div className="container">
-            <RetiredLocaleNote locale={retiredLocale} />
-          </div>
-        )
       )}
       <div className="main-wrapper">
         <div className="sidebar-container">

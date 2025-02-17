@@ -29,7 +29,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     margin: 0 0 2rem;
   }
 }

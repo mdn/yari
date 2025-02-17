@@ -102,7 +102,7 @@ $text-stroke-width: 2px;
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);
-      @media screen and (min-width: $screen-sm) {
+      @media (min-width: $screen-sm) {
         transform: translate(12rem, -8rem);
       }
     }

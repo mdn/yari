@@ -1,3 +1,4 @@
+import { type Locale } from "./core.js";
 import { BuildData, Doc, DocParent } from "./document.js";
 
 export enum Topic {
@@ -14,6 +15,7 @@ export enum Template {
   Overview = "overview",
   Landing = "landing",
   About = "about",
+  Default = "default",
 }
 
 export interface CurriculumCoreMetaData {
@@ -48,6 +50,7 @@ export interface CurriculumMetaData
   modules: CurriculumIndexEntry[];
   parents: DocParent[];
   prevNext?: PrevNext;
+  group?: string;
 }
 
 export interface CurriculumDoc extends Doc {
@@ -55,6 +58,8 @@ export interface CurriculumDoc extends Doc {
   modules?: CurriculumIndexEntry[];
   prevNext?: PrevNext;
   topic?: Topic;
+  group?: string;
+  template: Template;
 }
 
 export interface CurriculumData {
@@ -67,5 +72,5 @@ export interface ReadCurriculum {
 }
 
 export interface CurriculumBuildData extends BuildData {
-  metadata: { locale: string } & CurriculumMetaData;
+  metadata: { locale: Locale } & CurriculumMetaData;
 }

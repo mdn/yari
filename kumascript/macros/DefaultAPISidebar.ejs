@@ -49,13 +49,12 @@ function buildSublist(pages, title) {
     var url = aPage.url.replace('en-US', locale);
     var title = htmlEscape(aPage.title);
 
-    if (locale != 'en-US' && aPage.translations) {
-        aPage.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                url = translation.url;
-                title = htmlEscape(translation.title);
-            }
-        });
+    if (locale !== 'en-US') {
+      for (const translation of aPage.translations()) {
+        if (translation.locale === locale) {
+          title = htmlEscape(translation.title);
+        }
+      }
     }
 
     result += '<li>';
@@ -102,7 +101,7 @@ function convertEvent(eventName) {
 output = '<section id="Quick_links" data-macro="DefaultAPISidebar"><ol>';
 
 if (webAPIGroups[0][group].overview) {
-  output += '<li><strong><a href="' +  APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_') + '">' + webAPIGroups[0][group].overview[0] + '</a></strong></li>';
+  output += '<li class="section"><a href="' +  APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_') + '">' + webAPIGroups[0][group].overview[0] + '</a></li>';
 }
 
 if (guides.length > 0) {

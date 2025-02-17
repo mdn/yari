@@ -35,7 +35,7 @@ export function useLoginUrl() {
   const sp = new URLSearchParams();
 
   let next = pathname ? pathname + search : `/${locale}/`;
-  sp.set("next", encodeURI(next));
+  sp.set("next", next);
 
   let prefix = "";
   // When doing local development with Yari, the link to authenticate in Kuma

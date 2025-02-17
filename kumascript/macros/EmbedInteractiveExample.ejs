@@ -27,6 +27,9 @@ if ($1) {
 }
 
 const text = mdn.localStringMap({
+  "de": {
+    "title": "Probieren Sie es aus",
+  },
   "en-US": {
     "title": "Try it",
   },
@@ -58,4 +61,4 @@ const text = mdn.localStringMap({
 
 %>
 <h2><%=text["title"]%></h2>
-<iframe class="interactive <%= heightClass %>" height="200" src="<%= url %>" title="MDN Web Docs Interactive Example"></iframe>
+<iframe class="interactive <%= heightClass %>" height="200" src="<%= url %>" title="MDN Web Docs Interactive Example" allow="clipboard-write"></iframe>

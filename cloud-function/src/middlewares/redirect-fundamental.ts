@@ -22,7 +22,7 @@ export async function redirectFundamental(
         (fundamentalRedirect.url.includes("?") ? "&" : "?") +
         url.search.substring(1);
     }
-    redirect(res, fundamentalRedirect.url, {
+    return redirect(res, fundamentalRedirect.url, {
       status: fundamentalRedirect.status,
       cacheControlSeconds: THIRTY_DAYS,
     });

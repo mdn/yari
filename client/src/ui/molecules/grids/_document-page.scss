@@ -27,7 +27,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media (min-width: $screen-md) {
     display: grid;
     gap: 3rem;
     grid-template-areas: "sidebar main";
@@ -53,7 +53,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-xl) {
+  @media (min-width: $screen-xl) {
     display: grid;
     gap: 3rem;
     grid-template-areas: "sidebar main toc";

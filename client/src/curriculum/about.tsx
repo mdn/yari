@@ -9,6 +9,7 @@ import "./about.scss";
 
 export function CurriculumAbout(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props);
+  // [["About"], ["the", "MDN", "Curriculum"]]
   const [coloredTitle, ...restTitle] = doc?.title?.split(" ") || [];
   return (
     <CurriculumLayout

@@ -7,16 +7,6 @@ function testURL(pathname = "/") {
   return `http://localhost:${PORT}${pathname}`;
 }
 
-function liveSampleURL(uri: string, id: string, legacy = false) {
-  const params = new URLSearchParams([
-    ["id", id],
-    ...(legacy ? [["url", uri]] : []),
-  ]);
-  return `${uri}/${
-    legacy ? `_sample_.${id}` : "runner"
-  }.html?${params.toString()}`;
-}
-
 test.describe("Basic viewing of functional pages", () => {
   test("open the /en-US/docs/Web/Foo page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
@@ -41,109 +31,6 @@ test.describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/en-US/docs/Web/InteractiveExample"));
     expect(
       await page.isVisible("text=I Have an Interactive Example")
-    ).toBeTruthy();
-  });
-
-  test("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async ({
-    page,
-  }) => {
-    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const flexSample1Uri = liveSampleURL(`${uri}/Flex`, "flex_1", true);
-    const flexSample2Uri = liveSampleURL(`${uri}/Flex`, "flex_2", true);
-    const gridSample1Uri = liveSampleURL(`${uri}/Grid`, "grid_1", true);
-    const gridSample2Uri = liveSampleURL(uri, "grid_2");
-    await page.goto(testURL(uri));
-    expect(await page.title()).toContain("A Test Introduction to CSS layout");
-    expect(await page.innerText("h1")).toBe(
-      "A Test Introduction to CSS layout"
-    );
-    expect(await page.innerText("#flexbox")).toBe("Flexbox");
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${flexSample1Uri}"]`)
-    ).toBeTruthy();
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${flexSample2Uri}"]`)
-    ).toBeTruthy();
-    expect(await page.innerText("#grid_layout")).toBe("Grid Layout");
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
-    ).toBeTruthy();
-    expect(
-      await page.innerText("#grid_2 pre.css.notranslate:not(.hidden)")
-    ).toMatch(/\.wrapper\s*\{\s*display:\s*grid;/);
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
-    ).toBeTruthy();
-
-    // Ensure that the legacy live-sample pages were built.
-    for (const sampleUri of [flexSample1Uri, flexSample2Uri, gridSample1Uri]) {
-      await page.goto(testURL(sampleUri));
-      expect(await page.innerText("body > div.wrapper > div.box1")).toBe("One");
-      expect(await page.innerText("body > div.wrapper > div.box2")).toBe("Two");
-      expect(await page.innerText("body > div.wrapper > div.box3")).toBe(
-        "Three"
-      );
-    }
-  });
-
-  test("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex page", async ({
-    page,
-  }) => {
-    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
-    const flexSample1Uri = liveSampleURL(uri, "flex_1");
-    const flexSample2Uri = liveSampleURL(uri, "flex_2");
-    await page.goto(testURL(uri));
-    expect(await page.title()).toContain(
-      "A Test Introduction to CSS Flexbox Layout"
-    );
-    expect(await page.innerText("h1")).toBe(
-      "A Test Introduction to CSS Flexbox Layout"
-    );
-    expect(await page.innerText("#flexbox")).toBe("Flexbox");
-
-    expect(
-      await page.innerText("#flex_1 pre.css.notranslate:not(.hidden)")
-    ).toMatch(/\.wrapper\s*\{\s*display:\s*flex;\s*\}/);
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${flexSample1Uri}"]`)
-    ).toBeTruthy();
-
-    expect(
-      await page.innerText("#flex_2 pre.css.notranslate:not(.hidden)")
-    ).toMatch(
-      /\.wrapper {\s*display: flex;\s*\}\s*\.wrapper > div \{\s*flex: 1;\s*\}/
-    );
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${flexSample2Uri}"]`)
-    ).toBeTruthy();
-  });
-
-  test("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid page", async ({
-    page,
-  }) => {
-    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
-    const gridSample1Uri = liveSampleURL(uri, "grid_1");
-    const gridSample2Uri = liveSampleURL(uri, "grid_2");
-    await page.goto(testURL(uri));
-    expect(await page.title()).toContain(
-      "A Test Introduction to CSS Grid Layout"
-    );
-    expect(await page.innerText("h1")).toBe(
-      "A Test Introduction to CSS Grid Layout"
-    );
-    expect(await page.innerText("#grid_layout")).toBe("Grid Layout");
-    expect(
-      await page.innerText("#grid_1 pre.css.notranslate:not(.hidden)")
-    ).toMatch(/\.wrapper\s*\{\s*display:\s*grid;/);
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
-    ).toBeTruthy();
-
-    expect(
-      await page.innerText("#grid_2 pre.css.notranslate:not(.hidden)")
-    ).toMatch(/grid-template-columns: 1fr 1fr 1fr;/);
-    expect(
-      await page.isVisible(`iframe.sample-code-frame[src$="${gridSample2Uri}"]`)
     ).toBeTruthy();
   });
 
@@ -229,15 +116,13 @@ test.describe("changing language", () => {
 test.describe("viewing retired locales", () => {
   test("redirect retired locale to English (document)", async ({ page }) => {
     await page.goto(testURL("/ar/docs/Web/Foo"));
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
   });
 
   test("redirect retired locale to English (index.json)", async ({ page }) => {
     await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
-    expect(page.url()).toBe(
-      testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
-    );
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/index.json"));
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
   });
 
@@ -245,28 +130,7 @@ test.describe("viewing retired locales", () => {
     page,
   }) => {
     await page.goto(testURL("/ar/search?q=video"));
-    expect(page.url()).toBe(testURL("/en-US/search/?q=video&retiredLocale=ar"));
+    expect(page.url()).toBe(testURL("/en-US/search/?q=video"));
     expect(await page.isVisible("text=Search results for: video")).toBeTruthy();
-  });
-
-  test("say the locale was retired", async ({ page }) => {
-    await page.goto(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
-    expect(
-      await page.isVisible("text=The page you requested has been retired")
-    ).toBeTruthy();
-    // sanity check that it goes away
-    await page.goto(testURL("/en-US/docs/Web/Foo/"));
-    expect(
-      await page.isVisible("text=The page you requested has been retired")
-    ).toBeFalsy();
-  });
-
-  test("not say the locale was retired if viewing a translated page", async ({
-    page,
-  }) => {
-    await page.goto(testURL("/fr/docs/Web/Foo/?retiredLocale=sv-SE"));
-    expect(
-      await page.isVisible("text=The page you requested has been retired")
-    ).toBeFalsy();
   });
 });

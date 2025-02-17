@@ -44,7 +44,7 @@
   }
 }
 
-@media screen and (min-width: $screen-md) {
+@media (min-width: $screen-md) {
   .search-filter {
     flex-wrap: nowrap;
   }

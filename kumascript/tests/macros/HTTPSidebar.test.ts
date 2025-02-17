@@ -59,10 +59,10 @@ const fixtureData = JSON.parse(
 
 const locales = {
   "en-US": {
-    ResourcesURI: "Resources and URIs",
+    ResourcesURI: "Security and privacy",
   },
   es: {
-    ResourcesURI: "Recursos y URIs",
+    ResourcesURI: "Seguridad en HTTP",
   },
 };
 
@@ -74,6 +74,12 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
+    // Mock calls to env.recordNonFatalError, called from web.smartLink().
+    macro.ctx.env.recordNonFatalError = () => {
+      return {
+        macroSource: "foo",
+      };
+    };
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {

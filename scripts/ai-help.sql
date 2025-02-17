@@ -34,7 +34,8 @@ create table
     html text null,
     markdown text null,
     token_count integer null,
-    embedding extensions.vector null,
+    embedding extensions.vector(1536) null,
+    embedding_next extensions.vector(1536) null,
     text_hash text null,
     constraint mdn_doc_macro_pkey primary key (id),
     constraint mdn_doc_macro_url_key unique (mdn_url)

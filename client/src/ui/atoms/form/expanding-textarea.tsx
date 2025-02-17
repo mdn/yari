@@ -19,17 +19,13 @@ const ExpandingTextarea = forwardRef(function ExpandingTextarea(
   const { value } = props as AreaProps;
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        focus() {
-          textAreaRef.current?.focus();
-        },
-      };
-    },
-    []
-  );
+  useImperativeHandle(ref, () => {
+    return {
+      focus() {
+        textAreaRef.current?.focus();
+      },
+    };
+  }, []);
   useEffect(() => {
     const node = textAreaRef.current;
 

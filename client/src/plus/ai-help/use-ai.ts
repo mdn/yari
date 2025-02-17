@@ -240,6 +240,7 @@ function messageReducer(state: MessageTreeState, messageAction: MessageAction) {
             ...newState.currentNode.request,
             messageId,
             parentId,
+            chatId,
           },
         });
         newState.nodes[messageId] = newState.currentNode;
@@ -407,8 +408,20 @@ export function useAiChat({
     });
   }, [setSearchParams, chatId]);
 
+  const removeChatIdFromUrl = useCallback(() => {
+    setSearchParams(
+      (prev) => {
+        prev.delete("c");
+        return prev;
+      },
+      { replace: true }
+    );
+  }, [setSearchParams]);
+
   useEffect(() => {
     if (!isHistoryEnabled) {
+      // If we got a chat id passed in without history enabled, clear parameters from URL
+      removeChatIdFromUrl();
       return;
     }
     let timeoutID;
@@ -451,12 +464,19 @@ export function useAiChat({
           }
         } catch (e) {
           setPreviousChatId(undefined);
-          setChatId(convId);
           setPath([]);
           dispatchState({
             type: "reset",
           });
-          handleError(e);
+          // If we got a 404 from the API, reset and remove the parameter from the URL,
+          // do not show an error.
+          if (e instanceof Error && e.message.startsWith("404")) {
+            setChatId(undefined);
+            removeChatIdFromUrl();
+          } else {
+            setChatId(convId);
+            handleError(e);
+          }
         }
         setIsHistoryLoading(false);
       };
@@ -466,7 +486,14 @@ export function useAiChat({
     if (r) {
       reset();
     }
-  }, [isHistoryEnabled, searchParams, chatId, reset, handleError]);
+  }, [
+    isHistoryEnabled,
+    removeChatIdFromUrl,
+    searchParams,
+    chatId,
+    reset,
+    handleError,
+  ]);
 
   useEffect(() => {
     if (remoteQuota !== undefined) {

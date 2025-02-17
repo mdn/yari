@@ -1,22 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/standalone";
-import prettierPluginBabel from "prettier/plugins/babel";
-import prettierPluginCSS from "prettier/plugins/postcss";
-// XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
-import prettierPluginESTree from "prettier/plugins/estree.mjs";
-import prettierPluginHTML from "prettier/plugins/html";
-
 import { Button } from "../ui/atoms/button";
-import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import { EditorContent, SESSION_KEY, updatePlayIframe } from "./utils";
+import { decompressFromBase64, EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
-import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
-import { Console, VConsole } from "./console";
+import { PlayController, ReactPlayController } from "../lit/play/controller";
+import { ReactPlayEditor } from "../lit/play/editor";
+import { ReactPlayConsole } from "../lit/play/console";
+import { ReactPlayRunner } from "../lit/play/runner";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
 
@@ -68,15 +62,20 @@ export default function Playground() {
   const gleanClick = useGleanClick();
   let [searchParams, setSearchParams] = useSearchParams();
   const gistId = searchParams.get("id");
+  const stateParam = searchParams.get("state");
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
-  let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
-  let [codeSrc, setCodeSrc] = useState<string | undefined>();
-  const subdomain = useRef<string>(crypto.randomUUID());
+  const [isShareable, setIsShareable] = useState<boolean>(true);
+  const [isClearable, setIsClearable] = useState<boolean>(true);
+  const [initialContent, setInitialContent] = useState<EditorContent | null>(
+    null
+  );
   let { data: initialCode } = useSWRImmutable<EditorContent>(
-    !shared && gistId ? `/api/v1/play/${encodeURIComponent(gistId)}` : null,
+    !stateParam && !shared && gistId
+      ? `/api/v1/play/${encodeURIComponent(gistId)}`
+      : null,
     async (url) => {
       const response = await fetch(url);
 
@@ -94,87 +93,121 @@ export default function Playground() {
     },
     {
       fallbackData:
-        (!gistId && state === State.initial && load(SESSION_KEY)) || undefined,
+        (!stateParam &&
+          !gistId &&
+          state === State.initial &&
+          load(SESSION_KEY)) ||
+        undefined,
     }
   );
-  const htmlRef = useRef<EditorHandle | null>(null);
-  const cssRef = useRef<EditorHandle | null>(null);
-  const jsRef = useRef<EditorHandle | null>(null);
-  const iframe = useRef<HTMLIFrameElement | null>(null);
+  const controller = useRef<PlayController | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
-    initialCode && store(SESSION_KEY, initialCode);
-  }, [initialCode]);
+    if (initialCode) {
+      store(SESSION_KEY, initialCode);
+      if (Object.values(initialCode).some(Boolean)) {
+        setInitialContent(structuredClone(initialCode));
+      }
+    }
+  }, [initialCode, setInitialContent]);
 
   const getEditorContent = useCallback(() => {
-    const code = {
-      html: htmlRef.current?.getContent() || HTML_DEFAULT,
-      css: cssRef.current?.getContent() || CSS_DEFAULT,
-      js: jsRef.current?.getContent() || JS_DEFAULT,
-      src: initialCode?.src,
+    return {
+      html: controller.current?.code.html || HTML_DEFAULT,
+      css: controller.current?.code.css || CSS_DEFAULT,
+      js: controller.current?.code.js || JS_DEFAULT,
+      src: initialCode?.src || initialContent?.src,
     };
-    store(SESSION_KEY, code);
-    return code;
-  }, [initialCode?.src]);
+  }, [initialContent?.src, initialCode?.src]);
 
-  let messageListener = useCallback(
-    ({ data: { typ, prop, message } }) => {
-      if (typ === "console") {
-        if (prop === "clear") {
-          setVConsole([]);
-        } else {
-          setVConsole((vConsole) => [...vConsole, { prop, message }]);
+  const setIsEmpty = useCallback((content: EditorContent) => {
+    const { html, css, js } = content;
+    setIsShareable(!html.trim() && !css.trim() && !js.trim());
+    setIsClearable(!html && !css && !js);
+  }, []);
+
+  const setEditorContent = useCallback(
+    (content: EditorContent) => {
+      if (controller.current) {
+        controller.current.code = { ...content };
+        if (content.src) {
+          controller.current.srcPrefix = content.src;
         }
-      } else if (typ === "ready") {
-        updatePlayIframe(iframe.current, getEditorContent());
+        setIsEmpty(content);
+        store(SESSION_KEY, content);
       }
     },
-    [getEditorContent]
+    [setIsEmpty]
   );
-  useEffect(() => {
-    if (state === State.initial || state === State.remote) {
-      if (initialCode && Object.values(initialCode).some(Boolean)) {
-        htmlRef.current?.setContent(initialCode?.html);
-        cssRef.current?.setContent(initialCode?.css);
-        jsRef.current?.setContent(initialCode?.js);
-        if (initialCode.src) {
-          setCodeSrc(
-            initialCode?.src &&
-              `${initialCode.src.split("/").slice(0, -1).join("/")}`
-          );
-        }
-      } else {
-        htmlRef.current?.setContent(HTML_DEFAULT);
-        cssRef.current?.setContent(CSS_DEFAULT);
-        jsRef.current?.setContent(JS_DEFAULT);
-      }
-      setState(State.ready);
-    }
-  }, [initialCode, state]);
-  useEffect(() => {
-    window.addEventListener("message", messageListener);
-    return () => {
-      window.removeEventListener("message", messageListener);
-    };
-  }, [messageListener]);
-  const reset = async () => {
-    setSearchParams([], { replace: true });
-    setCodeSrc(undefined);
-    htmlRef.current?.setContent(HTML_DEFAULT);
-    cssRef.current?.setContent(CSS_DEFAULT);
-    jsRef.current?.setContent(JS_DEFAULT);
 
-    updateWithEditorContent();
+  useEffect(() => {
+    (async () => {
+      if (state === State.initial || state === State.remote) {
+        if (initialCode && Object.values(initialCode).some(Boolean)) {
+          setEditorContent(initialCode);
+          if (!gistId) {
+            // don't auto run shared code
+            controller.current?.run();
+          }
+        } else if (stateParam) {
+          try {
+            let { state } = await decompressFromBase64(stateParam);
+            let code = JSON.parse(state || "{}") as EditorContent;
+            setEditorContent(code);
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          setEditorContent({
+            html: HTML_DEFAULT,
+            css: CSS_DEFAULT,
+            js: JS_DEFAULT,
+          });
+        }
+        setState(State.ready);
+      }
+    })();
+  }, [initialCode, state, gistId, stateParam, setEditorContent]);
+
+  const clear = async () => {
+    setSearchParams([], { replace: true });
+    setInitialContent(null);
+    setEditorContent({
+      html: HTML_DEFAULT,
+      css: CSS_DEFAULT,
+      js: JS_DEFAULT,
+      src: undefined,
+    });
+
+    run();
   };
-  const resetConfirm = async () => {
-    if (window.confirm("Do you really want to reset everything?")) {
+
+  const reset = async () => {
+    setEditorContent({
+      html: initialContent?.html || HTML_DEFAULT,
+      css: initialContent?.css || CSS_DEFAULT,
+      js: initialContent?.js || JS_DEFAULT,
+    });
+
+    run();
+  };
+
+  const clearConfirm = async () => {
+    if (window.confirm("Do you really want to clear everything?")) {
       gleanClick(`${PLAYGROUND}: reset-click`);
+      await clear();
+    }
+  };
+
+  const resetConfirm = async () => {
+    if (window.confirm("Do you really want to revert your changes?")) {
+      gleanClick(`${PLAYGROUND}: revert-click`);
       await reset();
     }
   };
 
-  const updateWithEditorContent = () => {
+  const run = () => {
     const loading = [
       {},
       {
@@ -182,52 +215,18 @@ export default function Playground() {
       },
       {},
     ];
-
     const timing = {
       duration: 1000,
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
-    iframe.current?.contentWindow?.postMessage(
-      {
-        typ: "reload",
-      },
-      {
-        targetOrigin: "*",
-      }
-    );
+    controller.current?.run();
   };
 
   const format = async () => {
-    const { html, css, js } = getEditorContent();
-
-    try {
-      const formatted = {
-        html: await prettier.format(html, {
-          parser: "html",
-          plugins: [
-            prettierPluginHTML,
-            prettierPluginCSS,
-            prettierPluginBabel,
-            prettierPluginESTree,
-          ],
-        }),
-        css: await prettier.format(css, {
-          parser: "css",
-          plugins: [prettierPluginCSS],
-        }),
-        js: await prettier.format(js, {
-          parser: "babel",
-          plugins: [prettierPluginBabel, prettierPluginESTree],
-        }),
-      };
-      htmlRef.current?.setContent(formatted.html);
-      cssRef.current?.setContent(formatted.css);
-      jsRef.current?.setContent(formatted.js);
-    } catch (e) {
-      console.error(e);
-    }
+    await controller.current?.format();
   };
+
   const share = useCallback(async () => {
     const { url, id } = await save(getEditorContent());
     setSearchParams([["id", id]], { replace: true });
@@ -235,24 +234,20 @@ export default function Playground() {
     setShareUrl(url);
   }, [setSearchParams, setShareUrl, setShared, getEditorContent]);
 
-  // We're using a random subdomain for origin isolation.
-  const src = new URL(
-    `${window.location.protocol}//${
-      PLAYGROUND_BASE_HOST.startsWith("localhost")
-        ? ""
-        : `${subdomain.current}.`
-    }${PLAYGROUND_BASE_HOST}`
-  );
-  src.pathname = `${codeSrc || ""}/runner.html`;
-
   const cleanDialog = () => {
     if (dialogState === DialogState.share) {
       setShareUrl(null);
     }
   };
 
+  const onEditorUpdate = () => {
+    const code = getEditorContent();
+    setIsEmpty(code);
+    store(SESSION_KEY, code);
+  };
+
   return (
-    <>
+    <ReactPlayController ref={controller} runOnChange={true}>
       <main className="play container">
         <dialog id="playDialog" ref={diaRef} onClose={cleanDialog}>
           {dialogState === DialogState.flag && <FlagForm gistId={gistId} />}
@@ -267,16 +262,13 @@ export default function Playground() {
               <Button type="secondary" id="format" onClickHandler={format}>
                 format
               </Button>
-              <Button
-                type="secondary"
-                id="run"
-                onClickHandler={updateWithEditorContent}
-              >
+              <Button type="secondary" id="run" onClickHandler={run}>
                 run
               </Button>
               <Button
                 type="secondary"
                 id="share"
+                isDisabled={isShareable}
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
                   setDialogState(DialogState.share);
@@ -287,29 +279,46 @@ export default function Playground() {
               </Button>
               <Button
                 type="secondary"
-                id="reset"
+                isDisabled={isClearable}
+                id="clear"
                 extraClasses="red"
-                onClickHandler={resetConfirm}
+                onClickHandler={clearConfirm}
               >
-                reset
+                clear
               </Button>
+              {initialContent && (
+                <Button
+                  type="secondary"
+                  id="reset"
+                  extraClasses="red"
+                  onClickHandler={resetConfirm}
+                >
+                  reset
+                </Button>
+              )}
             </menu>
           </aside>
-          <Editor
-            ref={htmlRef}
-            language="html"
-            callback={updateWithEditorContent}
-          ></Editor>
-          <Editor
-            ref={cssRef}
-            language="css"
-            callback={updateWithEditorContent}
-          ></Editor>
-          <Editor
-            ref={jsRef}
-            language="javascript"
-            callback={updateWithEditorContent}
-          ></Editor>
+          <details className="editor-container" open={true}>
+            <summary>HTML</summary>
+            <ReactPlayEditor
+              language="html"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
+          <details className="editor-container" open={true}>
+            <summary>CSS</summary>
+            <ReactPlayEditor
+              language="css"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
+          <details className="editor-container" open={true}>
+            <summary>JAVASCRIPT</summary>
+            <ReactPlayEditor
+              language="javascript"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
         </section>
         <section className="preview">
           {gistId && (
@@ -325,16 +334,14 @@ export default function Playground() {
               Seeing something inappropriate?
             </button>
           )}
-          <iframe
-            title="runner"
-            ref={iframe}
-            src={src.toString()}
-            sandbox="allow-scripts allow-same-origin"
-          ></iframe>
-          <Console vConsole={vConsole} />
-          <SidePlacement />
+          <ReactPlayRunner />
+          <div id="play-console">
+            <span>Console</span>
+            <ReactPlayConsole />
+          </div>
+          <SidePlacement extraClasses={["horizontal"]} />
         </section>
       </main>
-    </>
+    </ReactPlayController>
   );
 }

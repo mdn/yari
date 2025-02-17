@@ -8,7 +8,7 @@
   max-width: 95%;
   padding: 0.5rem;
 
-  @media screen and (max-width: $screen-sm) {
+  @media (max-width: $screen-sm) {
     max-width: 340px;
   }
 
@@ -26,7 +26,7 @@
     line-height: 1.2;
     margin: 0.5rem 0;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       font-size: 1rem;
       margin-top: 0;
     }
@@ -37,7 +37,7 @@
     font-weight: var(--font-body-strong-weight);
     margin-bottom: 1rem;
 
-    @media screen and (min-width: $screen-md) {
+    @media (min-width: $screen-md) {
       font-size: 1rem;
     }
   }

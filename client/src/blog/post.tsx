@@ -14,12 +14,8 @@ import {
   BlogPostLimitedMetadata,
   AuthorMetadata,
 } from "../../../libs/types/blog";
-import {
-  useCopyExamplesToClipboardAndAIExplain,
-  useRunSample,
-} from "../document/hooks";
+import { useDecorateCodeExamples, useRunSample } from "../document/hooks";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
-import { SignUpSection as NewsletterSignUp } from "../newsletter";
 import { TOC } from "../document/organisms/toc";
 import { SidePlacement } from "../ui/organisms/placement";
 import { PlayQueue } from "../playground/queue";
@@ -190,7 +186,7 @@ export function BlogPost(props: HydrationData) {
   );
   const { doc, blogMeta } = data || props || {};
   useRunSample(doc);
-  useCopyExamplesToClipboardAndAIExplain(doc);
+  useDecorateCodeExamples(doc);
   return (
     <>
       {doc && blogMeta && (
@@ -214,7 +210,6 @@ export function BlogPost(props: HydrationData) {
             <RenderDocumentBody doc={doc} />
             {blogMeta.links && <PreviousNext links={blogMeta.links} />}
           </article>
-          <NewsletterSignUp />
           <PlayQueue standalone={true} />
         </main>
       )}

@@ -21,13 +21,13 @@
     }
   }
 
-  @media screen and (max-width: $screen-lg) {
+  @media (max-width: $screen-lg) {
     .user-menu-toggle:hover {
       --button-bg: transparent;
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media (min-width: $screen-lg) {
     /*
       The user menu button is shaped like an avatar and thus has some
       very specific focus and hover states.

@@ -11,6 +11,9 @@ import { isValidLocale } from "../../libs/locale-utils/index.js";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types/document.js";
 import { Flaw } from "./index.js";
+import { ONLY_AVAILABLE_IN_ENGLISH } from "../../libs/l10n/l10n.js";
+import web from "../../kumascript/src/api/web.js";
+import mdn from "../../kumascript/src/api/mdn.js";
 
 const _safeToHttpsDomains = new Map();
 
@@ -50,18 +53,27 @@ function mutateLink(
   if (isSelfLink) {
     $element.attr("aria-current", "page");
   } else if (enUSFallback) {
+    const locale = $element.attr("href").match(/^\/([^/]+)\//)[1];
     // If we have an English (US) fallback, then we use this first.
     // As we still suggest the translated version even if we only
     // have an English (US) version.
     $element.attr("href", enUSFallback);
-    $element.append(` <small>(${DEFAULT_LOCALE})<small>`);
     $element.addClass("only-in-en-us");
-    $element.attr("title", "Currently only available in English (US)");
+    $element.attr("title", ONLY_AVAILABLE_IN_ENGLISH(locale));
   } else if (suggestion) {
     $element.attr("href", suggestion);
   } else {
     $element.addClass("page-not-created");
-    $element.attr("title", "This is a link to an unwritten page");
+    const locale = $element.attr("href")?.match(/^\/([^/]+)\//)?.[1] || "en-US";
+    const titleWhenMissing = (mdn as any).getLocalString.call(
+      { env: { locale } },
+      web.getJSONData("L10n-Common"),
+      "summary"
+    );
+    $element.attr("title", titleWhenMissing);
+    const href = $element.attr("href");
+    $element.attr("href", null);
+    $element.attr("data-href", href);
   }
 }
 
@@ -233,6 +245,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("https://developer.mozilla.org/") &&
       !href.startsWith("https://developer.mozilla.org/en-US/curriculum/") &&
+      !href.startsWith("https://developer.mozilla.org/en-US/observatory") &&
       !href.startsWith("https://developer.mozilla.org/en-US/blog/")
     ) {
       // It might be a working 200 OK link but the link just shouldn't
@@ -284,7 +297,7 @@ export function getBrokenLinksFlaws(
     } else if (
       href.startsWith("/") &&
       !href.startsWith("//") &&
-      !/^\/(discord|en-US\/(blog|curriculum))(\/|$)/.test(href)
+      !/^\/(discord|en-US\/(blog|curriculum|observatory))(\/|$)/.test(href)
     ) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");

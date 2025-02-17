@@ -121,8 +121,8 @@ function getSessionStorageData() {
     }
   } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
-    return undefined;
   }
+  return undefined;
 }
 
 export function cleanupUserData() {
@@ -167,10 +167,24 @@ function setSessionStorageData(data: User) {
   }
 }
 
+function setNoPlacementFlag(noAds: boolean) {
+  try {
+    if (noAds) {
+      localStorage.setItem("nop", "yes");
+      document.documentElement.dataset["nop"] = "yes";
+    } else {
+      localStorage.removeItem("nop");
+      delete document.documentElement.dataset["nop"];
+    }
+  } catch (e) {
+    console.warn("Unable to write nop to localStorage", e);
+  }
+}
+
 export function UserDataProvider(props: { children: React.ReactNode }) {
   const { data, error, isLoading, mutate } = useSWR<User | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
-    async (url) => {
+    async (url: string) => {
       const response = await fetch(url);
       if (!response.ok) {
         removeSessionStorageData();
@@ -204,7 +218,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         subscriptionType:
           data.subscription_type === "core"
             ? SubscriptionType.MDN_CORE
-            : data.subscription_type ?? null,
+            : (data.subscription_type ?? null),
         subscriberNumber: data.subscriber_number || null,
         email: data.email || null,
         geo: {
@@ -230,6 +244,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       // The user is definitely signed in or not signed in.
       data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
+      setNoPlacementFlag(data?.settings?.noAds ?? false);
 
       // Let's initialize the MDN Worker if applicable.
       if (!window.mdnWorker && data?.offlineSettings?.offline) {

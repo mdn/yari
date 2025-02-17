@@ -43,6 +43,7 @@
     display: flex;
     font-size: 0.75rem;
     font-style: italic;
+    font-variation-settings: "slnt" -10;
     height: 3rem;
     justify-content: center;
     padding: 0.5rem;
@@ -111,7 +112,7 @@
     flex: 1 1 80%;
     overflow: hidden;
 
-    @media screen and (max-width: $screen-sm) {
+    @media (max-width: $screen-sm) {
       flex-basis: 95%;
     }
 

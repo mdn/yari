@@ -2,16 +2,37 @@
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
+function fixupColor(hash) {
+  if (typeof hash !== "string" && typeof hash !== "number") {
+    return undefined;
+  } else if (hash?.startsWith?.("rgb") || hash?.startsWith?.("#")) {
+    return hash;
+  } else {
+    return `#${hash}`;
+  }
+}
+
 export function createPong2GetHandler(zoneKeys, coder) {
   return async (body, countryCode, userAgent) => {
-    const { pongs = null } = body;
+    let { pongs = null } = body;
+
+    // Validate.
+    if (!Array.isArray(pongs)) {
+      return { statusCode: 400, payload: { status: "invalid" } };
+    }
+
+    // Sanitize.
+    pongs = pongs.filter((p) => p in zoneKeys);
+
+    if (pongs.length == 0) {
+      return { statusCode: 400, payload: { status: "empty" } };
+    }
+
     const anonymousIp = anonymousIpByCC(countryCode);
 
-    const placements = pongs
-      .filter((p) => p in zoneKeys)
-      .map((p) => {
-        return { name: p, zoneKey: [zoneKeys[p]] };
-      });
+    const placements = pongs.map((p) => {
+      return { name: p, zoneKey: [zoneKeys[p]] };
+    });
 
     const requests = placements.map(async ({ name, zoneKey }) => {
       const res = await (
@@ -21,13 +42,15 @@ export function createPong2GetHandler(zoneKeys, coder) {
           )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
         )
       ).json();
+
       const {
         ads: [
           {
             statlink = null,
-            statimp,
+            statview,
             Description,
             Image,
+            LargeImage,
             ImageTitle,
             BackgroundColor,
             BackgroundColorLight,
@@ -40,6 +63,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
             TextColor,
             TextColorLight,
             TextColorDark,
+            Heading,
           },
         ] = [],
       } = res;
@@ -50,20 +74,23 @@ export function createPong2GetHandler(zoneKeys, coder) {
             ? null
             : {
                 click: coder.encodeAndSign(statlink),
-                view: coder.encodeAndSign(statimp),
-                image: coder.encodeAndSign(Image),
+                view: coder.encodeAndSign(statview),
+                image: coder.encodeAndSign(LargeImage || Image),
                 alt: ImageTitle && he.decode(ImageTitle),
                 copy: Description && he.decode(Description),
                 cta: CallToAction && he.decode(CallToAction),
+                heading: Heading && he.decode(Heading),
                 colors: {
-                  textColor: TextColor || TextColorLight,
-                  backgroundColor: BackgroundColor || BackgroundColorLight,
-                  ctaTextColor: CtaTextColorLight,
-                  ctaBackgroundColor: CtaBackgroundColorLight,
-                  textColorDark: TextColorDark,
-                  backgroundColorDark: BackgroundColorDark,
-                  ctaTextColorDark: CtaTextColorDark,
-                  ctaBackgroundColorDark: CtaBackgroundColorDark,
+                  textColor: fixupColor(TextColor || TextColorLight),
+                  backgroundColor: fixupColor(
+                    BackgroundColor || BackgroundColorLight
+                  ),
+                  ctaTextColor: fixupColor(CtaTextColorLight),
+                  ctaBackgroundColor: fixupColor(CtaBackgroundColorLight),
+                  textColorDark: fixupColor(TextColorDark),
+                  backgroundColorDark: fixupColor(BackgroundColorDark),
+                  ctaTextColorDark: fixupColor(CtaTextColorDark),
+                  ctaBackgroundColorDark: fixupColor(CtaBackgroundColorDark),
                 },
               },
       };
@@ -91,7 +118,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const { copy, image, alt, click, view, cta, colors = {} } = v;
+          const { copy, image, alt, click, view, cta, colors, heading } = v;
           return [
             p,
             {
@@ -103,6 +130,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
               colors,
               click,
               view,
+              heading,
               version: 2,
             },
           ];
@@ -122,7 +150,7 @@ export function createPong2ClickHandler(coder) {
     }
 
     const anonymousIp = anonymousIpByCC(countryCode);
-    const clickURL = new URL(`https:${click}`);
+    const clickURL = createURL(click);
     clickURL.searchParams.set("forwardedip", anonymousIp);
     clickURL.searchParams.set("useragent", userAgent);
 
@@ -140,7 +168,7 @@ export function createPong2ViewedHandler(coder) {
     const view = coder.decodeAndVerify(params.get("code"));
     if (view) {
       const anonymousIp = anonymousIpByCC(countryCode);
-      const viewURL = new URL(`https:${view}`);
+      const viewURL = createURL(view);
       viewURL.searchParams.set("forwardedip", anonymousIp);
       viewURL.searchParams.set("useragent", userAgent);
 
@@ -149,4 +177,17 @@ export function createPong2ViewedHandler(coder) {
       });
     }
   };
+}
+
+function createURL(payload) {
+  if (payload.startsWith("//")) {
+    // BSA omitted 'https:' until May 2024.
+    return new URL(`https:${payload}`);
+  }
+
+  if (!payload.startsWith("https://")) {
+    console.error(`Invalid URL payload: ${payload}`);
+  }
+
+  return new URL(payload);
 }
