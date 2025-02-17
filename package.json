@@ -85,7 +85,7 @@
     "@lit/task": "^1.0.2",
     "@mdn/bcd-utils-api": "^0.0.7",
     "@mdn/browser-compat-data": "^5.6.38",
-    "@mdn/rari": "^0.1.24",
+    "@mdn/rari": "^0.1.25",
     "@mozilla/glean": "5.0.3",
     "@sentry/node": "^8.54.0",
     "@stripe/stripe-js": "^5.6.0",
