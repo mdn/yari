@@ -1,0 +1,15 @@
+:host {
+  border: 1px solid var(--border-secondary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#tablist {
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--border-secondary);
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.5rem;
+  overflow-x: auto;
+}

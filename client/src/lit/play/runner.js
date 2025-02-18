@@ -14,6 +14,7 @@ export class PlayRunner extends LitElement {
   static properties = {
     code: { type: Object },
     srcPrefix: { type: String, attribute: "src-prefix" },
+    sandbox: { type: String },
   };
 
   static styles = styles;
@@ -24,6 +25,7 @@ export class PlayRunner extends LitElement {
     this.code = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
+    this.sandbox = "";
     this._subdomain = crypto.randomUUID();
   }
 
@@ -81,7 +83,7 @@ export class PlayRunner extends LitElement {
         src="${window.location
           .protocol}//${PLAYGROUND_BASE_HOST}/runner.html?blank"
         title="runner"
-        sandbox="allow-scripts allow-same-origin allow-forms"
+        sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
       ></iframe>
     `;
   }

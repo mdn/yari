@@ -15,6 +15,7 @@
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};
+  --background-quaternary: #fff;
   --background-toc-active: #{$mdn-theme-light-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-light-theme-yellow-30,
@@ -332,6 +333,7 @@
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
   --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+  --background-quaternary: #4e4e4e;
   --background-toc-active: #{$mdn-theme-dark-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-dark-theme-yellow-30,

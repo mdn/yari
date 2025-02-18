@@ -1,0 +1,77 @@
+@font-face {
+  font-family: "Inter";
+  src:
+    url("/shared-assets/fonts/Inter.var.woff2")
+      format("woff2 supports variations"),
+    url("/shared-assets/fonts/Inter.var.woff2") format("woff2-variations");
+  font-weight: 1 999;
+  font-stretch: 75% 100%;
+  font-style: oblique 0deg 20deg;
+  font-display: swap;
+}
+
+/* fonts used by the examples rendered inside the shadow dom. Because
+   @font-face does not work in shadow dom:
+   http://robdodson.me/at-font-face-doesnt-work-in-shadow-dom/ */
+@font-face {
+  font-family: "Fira Sans";
+  src:
+    local("FiraSans-Regular"),
+    url("/shared-assets/fonts/FiraSans-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-weight: normal;
+  font-style: oblique;
+  src:
+    local("FiraSans-SemiBoldItalic"),
+    url("/shared-assets/fonts/FiraSans-SemiBoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Dancing Script";
+  src: url("/shared-assets/fonts/dancing-script/dancing-script-regular.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: molot;
+  src: url("/shared-assets/fonts/molot.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: rapscallion;
+  src: url("/shared-assets/fonts/rapscall.woff2") format("woff2");
+}
+
+body {
+  background-color: #fff;
+  font:
+    400 1rem/1.1876 Inter,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-sans;
+  color: #15141aff;
+  font-size: 0.9rem;
+  overflow: auto;
+  line-height: 1.5;
+  padding: 2rem 1rem 1rem;
+  height: min-content; /* This value ensures correct calculation of clientHeight in /pages/tabbed/img */
+  width: fit-content; /* This value moves horizontal scroll bar to the bottom of iframe */
+}
+
+body math {
+  font-size: 1.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
