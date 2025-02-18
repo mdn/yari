@@ -41,30 +41,27 @@ export class PlayRunner extends LitElement {
   _updateSrc = new Task(this, {
     args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
     task: async ([code, srcPrefix], { signal }) => {
-      let src = "about:blank";
-      if (code) {
-        const { state } = await compressAndBase64Encode(
-          JSON.stringify({
-            html: code.html || "",
-            css: code.css || "",
-            js: code.js || "",
-          })
-        );
-        signal.throwIfAborted();
-        // We're using a random subdomain for origin isolation.
-        const url = new URL(
-          window.location.hostname.endsWith("localhost")
-            ? window.location.origin
-            : `${window.location.protocol}//${
-                PLAYGROUND_BASE_HOST.startsWith("localhost")
-                  ? ""
-                  : `${this._subdomain}.`
-              }${PLAYGROUND_BASE_HOST}`
-        );
-        url.searchParams.set("state", state);
-        url.pathname = `${srcPrefix || ""}/runner.html`;
-        src = url.href;
-      }
+      const { state } = await compressAndBase64Encode(
+        JSON.stringify({
+          html: code?.html || "",
+          css: code?.css || "",
+          js: code?.js || "",
+        })
+      );
+      signal.throwIfAborted();
+      // We're using a random subdomain for origin isolation.
+      const url = new URL(
+        window.location.hostname.endsWith("localhost")
+          ? window.location.origin
+          : `${window.location.protocol}//${
+              PLAYGROUND_BASE_HOST.startsWith("localhost")
+                ? ""
+                : `${this._subdomain}.`
+            }${PLAYGROUND_BASE_HOST}`
+      );
+      url.searchParams.set("state", state);
+      url.pathname = `${srcPrefix || ""}/runner.html`;
+      const src = url.href;
       // update iframe src without adding to browser history
       this.shadowRoot
         ?.querySelector("iframe")
@@ -81,6 +78,8 @@ export class PlayRunner extends LitElement {
   render() {
     return html`
       <iframe
+        src="${window.location
+          .protocol}//${PLAYGROUND_BASE_HOST}/runner.html?blank"
         title="runner"
         sandbox="allow-scripts allow-same-origin allow-forms"
       ></iframe>

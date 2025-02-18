@@ -338,6 +338,9 @@ function playSubdomain(hostname) {
  */
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
+  if (url.searchParams.has("blank")) {
+    return res.setHeader("Content-Type", "text/html").status(200).end();
+  }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
     "https://example.com"
