@@ -61,17 +61,11 @@ body {
     sans-sans;
   color: #15141aff;
   font-size: 0.9rem;
-  overflow: auto;
   line-height: 1.5;
   padding: 2rem 1rem 1rem;
-  height: min-content; /* This value ensures correct calculation of clientHeight in /pages/tabbed/img */
-  width: fit-content; /* This value moves horizontal scroll bar to the bottom of iframe */
+  min-width: min-content;
 }
 
 body math {
   font-size: 1.5rem;
-}
-
-* {
-  box-sizing: border-box;
 }

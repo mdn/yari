@@ -1,4 +1,5 @@
 window.addEventListener("click", (event) => {
+  // open links in parent frame if they have no `_target` set
   const target = event.target;
   if (target instanceof HTMLAnchorElement) {
     const hrefAttr = target.getAttribute("href");

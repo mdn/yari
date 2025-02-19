@@ -3,8 +3,7 @@
 
 header {
   align-items: center;
-  border: 1px solid var(--border-secondary);
-  border-bottom: 0;
+  border-bottom: 1px solid var(--border-secondary);
   border-top-left-radius: var(--elem-radius);
   border-top-right-radius: var(--elem-radius);
   display: flex;
@@ -47,6 +46,10 @@ tab-wrapper {
   grid-area: tabs;
 }
 
+// -------------------
+// JavaScript examples
+// -------------------
+
 .template-javascript {
   align-content: start;
   display: grid;
@@ -59,8 +62,11 @@ tab-wrapper {
   grid-template-rows: max-content 1fr 8rem;
   height: 100%;
 
-  play-runner {
+  header {
     border: 1px solid var(--border-secondary);
+  }
+
+  play-runner {
     display: none;
     grid-area: runner;
   }
@@ -69,6 +75,7 @@ tab-wrapper {
     border: 1px solid var(--border-secondary);
     border-bottom-left-radius: var(--elem-radius);
     border-bottom-right-radius: var(--elem-radius);
+    border-top: 0;
     margin-top: -0.5rem;
   }
 
@@ -88,8 +95,14 @@ tab-wrapper {
   }
 }
 
+// ---------------
+// Tabbed examples
+// ---------------
+
 .template-tabbed {
   --tabbed-font-heading: 600 0.625rem/1.2 var(--font-heading);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--elem-radius);
   display: grid;
   grid-template-areas:
     "header header"
@@ -97,6 +110,7 @@ tab-wrapper {
   grid-template-columns: 6fr 4fr;
   grid-template-rows: max-content 1fr;
   height: 100%;
+  overflow: hidden;
 
   #reset {
     background-color: transparent;
@@ -117,21 +131,15 @@ tab-wrapper {
     }
   }
 
-  tab-wrapper {
-    border-bottom-left-radius: var(--elem-radius);
-  }
-
   .output-wrapper {
-    border: 1px solid var(--border-secondary);
-    border-bottom-right-radius: var(--elem-radius);
-    border-left: 0;
+    border-left: 1px solid var(--border-secondary);
     grid-area: runner;
     overflow: hidden;
     position: relative;
 
     h4 {
       background-color: var(--background-secondary);
-      border-radius: 0 0 0 var(--elem-radius);
+      border-bottom-left-radius: var(--elem-radius);
       color: var(--text-secondary);
       font: var(--tabbed-font-heading);
       margin: 0;
@@ -152,14 +160,9 @@ tab-wrapper {
     grid-template-columns: 1fr;
     grid-template-rows: max-content 1fr 1fr;
 
-    tab-wrapper {
-      border-bottom-left-radius: 0;
-    }
-
     .output-wrapper {
-      border-bottom-left-radius: var(--elem-radius);
-      border-left: 1px solid var(--border-secondary);
-      border-top: 0;
+      border-left: 0;
+      border-top: 1px solid var(--border-secondary);
     }
   }
 }

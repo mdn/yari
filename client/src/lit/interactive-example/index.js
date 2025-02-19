@@ -1,12 +1,13 @@
 import { html, LitElement } from "lit";
 import { ref, createRef } from "lit/directives/ref.js";
+import { decode } from "he";
+
 import "../play/editor.js";
 import "../play/controller.js";
 import "../play/console.js";
 import "../play/runner.js";
 import { GleanMixin } from "../glean-mixin.js";
 import "./tabs.js";
-import { decode } from "he";
 
 import styles from "./index.scss?css" with { type: "css" };
 
@@ -18,6 +19,9 @@ import exampleStyle from "./example.css?raw";
  * @import { PlayController } from "../play/controller.js";
  * @import { PlayRunner } from "../play/runner.js";
  */
+
+const LANGUAGE_CLASSES = ["html", "js", "css"];
+const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 
 export class InteractiveExample extends GleanMixin(LitElement) {
   static properties = {
@@ -32,7 +36,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this.name = "";
     /** @type {string[]} */
     this._languages = [];
-    /** @type {Object<string, string>} */
+    /** @type {Record<string, string>} */
     this._code = {};
   }
 
@@ -54,7 +58,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       ".code-example pre[class*=interactive-example]"
     );
     const code = Array.from(exampleNodes || []).reduce((acc, pre) => {
-      const language = pre.classList[1];
+      const language = Array.from(pre.classList).find((c) =>
+        LANGUAGE_CLASSES.includes(c)
+      );
       return language && pre.textContent
         ? {
             ...acc,
@@ -106,59 +112,65 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this._telemetryHandler = this._telemetryHandler.bind(this);
-    this.renderRoot.addEventListener("focus", this._telemetryHandler);
-    this.renderRoot.addEventListener("copy", this._telemetryHandler);
-    this.renderRoot.addEventListener("cut", this._telemetryHandler);
-    this.renderRoot.addEventListener("paste", this._telemetryHandler);
-    this.renderRoot.addEventListener("click", this._telemetryHandler);
+    GLEAN_EVENT_TYPES.forEach((type) => {
+      this.renderRoot.addEventListener(type, this._telemetryHandler);
+    });
     this._code = this._initialCode();
+  }
+
+  _renderJavascript() {
+    return html`
+      <play-controller ${ref(this._controller)}>
+        <div class="template-javascript">
+          <header>
+            <h4>${decode(this.name)}</h4>
+          </header>
+          <play-editor id="editor" language="js"></play-editor>
+          <div class="buttons">
+            <button id="execute" @click=${this._run}>Run</button>
+            <button id="reset" @click=${this._reset}>Reset</button>
+          </div>
+          <play-console id="console"></play-console>
+          <play-runner></play-runner>
+        </div>
+      </play-controller>
+    `;
+  }
+
+  _renderTabbed() {
+    return html`
+      <play-controller ${ref(this._controller)} run-on-start run-on-change>
+        <div class="template-tabbed">
+          <header>
+            <h4>${decode(this.name)}</h4>
+            <button id="reset" @click=${this._reset}>Reset</button>
+          </header>
+          <ix-tab-wrapper>
+            ${this._languages.map(
+              (lang) => html`
+                <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
+                <ix-tab-panel id=${`${lang}-panel`}>
+                  <play-editor language=${lang}></play-editor>
+                </ix-tab-panel>
+              `
+            )}
+          </ix-tab-wrapper>
+          <div class="output-wrapper">
+            <h4>Output</h4>
+            <play-runner
+              ${ref(this._runner)}
+              sandbox="allow-top-navigation-by-user-activation"
+            ></play-runner>
+          </div>
+        </div>
+      </play-controller>
+    `;
   }
 
   render() {
     return this._template === "javascript"
-      ? html`
-          <play-controller ${ref(this._controller)}>
-            <div class="template-javascript">
-              <header>
-                <h4>${decode(this.name)}</h4>
-              </header>
-              <play-editor id="editor" language="js"></play-editor>
-              <div class="buttons">
-                <button id="execute" @click=${this._run}>Run</button>
-                <button id="reset" @click=${this._reset}>Reset</button>
-              </div>
-              <play-console id="console"></play-console>
-              <play-runner></play-runner>
-            </div>
-          </play-controller>
-        `
-      : html`
-          <play-controller ${ref(this._controller)} run-on-start run-on-change>
-            <div class="template-tabbed">
-              <header>
-                <h4>${decode(this.name)}</h4>
-                <button id="reset" @click=${this._reset}>Reset</button>
-              </header>
-              <ix-tab-wrapper>
-                ${this._languages.map(
-                  (lang) => html`
-                    <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
-                    <ix-tab-panel id=${`${lang}-panel`}>
-                      <play-editor language=${lang}></play-editor>
-                    </ix-tab-panel>
-                  `
-                )}
-              </ix-tab-wrapper>
-              <div class="output-wrapper">
-                <h4>Output</h4>
-                <play-runner
-                  ${ref(this._runner)}
-                  sandbox="allow-top-navigation-by-user-activation"
-                ></play-runner>
-              </div>
-            </div>
-          </play-controller>
-        `;
+      ? this._renderJavascript()
+      : this._renderTabbed();
   }
 
   firstUpdated() {
@@ -169,11 +181,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.renderRoot.removeEventListener("focus", this._telemetryHandler);
-    this.renderRoot.removeEventListener("copy", this._telemetryHandler);
-    this.renderRoot.removeEventListener("cut", this._telemetryHandler);
-    this.renderRoot.removeEventListener("paste", this._telemetryHandler);
-    this.renderRoot.removeEventListener("click", this._telemetryHandler);
+    GLEAN_EVENT_TYPES.forEach((type) => {
+      this.renderRoot.removeEventListener(type, this._telemetryHandler);
+    });
   }
 }
 

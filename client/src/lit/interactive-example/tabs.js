@@ -4,10 +4,14 @@ import wrapperStyles from "./tabs.wrapper.scss?css" with { type: "css" };
 import tabStyles from "./tabs.tab.scss?css" with { type: "css" };
 import panelStyles from "./tabs.panel.scss?css" with { type: "css" };
 
+/**
+ * @typedef {"first" | "prev" | "active" | "next" | "last"} Position
+ */
+
 export class TabWrapper extends LitElement {
   static styles = wrapperStyles;
 
-  /** @param {"first" | "prev" | "active" | "next" | "last"} position */
+  /** @param {Position} position */
   _getTab(position) {
     const tabs = Array.from(this.querySelectorAll("ix-tab"));
     if (position === "first") {
@@ -51,25 +55,28 @@ export class TabWrapper extends LitElement {
 
   /** @param {KeyboardEvent} event */
   _tablistKeyDown(event) {
+    /** @type {Position | undefined} */
+    let position;
     switch (event.key) {
       case "ArrowRight":
       case "ArrowDown":
-        this._setTabActive(this._getTab("next"), true);
+        position = "next";
         break;
       case "ArrowLeft":
       case "ArrowUp":
-        this._setTabActive(this._getTab("prev"), true);
+        position = "prev";
         break;
       case "Home":
-        this._setTabActive(this._getTab("first"), true);
+        position = "first";
         break;
       case "End":
-        this._setTabActive(this._getTab("last"), true);
+        position = "last";
         break;
       default:
         return;
     }
     event.preventDefault();
+    this._setTabActive(this._getTab(position), true);
   }
 
   render() {
