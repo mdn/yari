@@ -26,7 +26,6 @@ const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 export class InteractiveExample extends GleanMixin(LitElement) {
   static properties = {
     name: { type: String },
-    _languages: { state: true },
   };
 
   static styles = styles;
