@@ -15,7 +15,6 @@
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};
-  --background-quaternary: #fff;
   --background-toc-active: #{$mdn-theme-light-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-light-theme-yellow-30,
@@ -96,6 +95,8 @@
   --code-token-selector: #{$mdn-theme-light-code-token-selector};
   --code-background-inline: #{$mdn-theme-light-code-background-inline};
   --code-background-block: #{$mdn-theme-light-code-background-block};
+
+  --ix-tab-background-active: #fff;
 
   --notecard-link-color: #{$mdn-color-neutral-80};
 
@@ -333,7 +334,6 @@
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
   --background-tertiary: #{$mdn-theme-dark-background-tertiary};
-  --background-quaternary: #4e4e4e;
   --background-toc-active: #{$mdn-theme-dark-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-dark-theme-yellow-30,
@@ -413,6 +413,8 @@
   --code-token-selector: #{$mdn-theme-dark-code-token-selector};
   --code-background-inline: #{$mdn-theme-dark-code-background-inline};
   --code-background-block: #{$mdn-theme-dark-code-background-block};
+
+  --ix-tab-background-active: #4e4e4e;
 
   --notecard-link-color: #{$mdn-color-neutral-10};
 

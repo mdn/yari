@@ -33,7 +33,7 @@ export class TabWrapper extends LitElement {
     return undefined;
   }
 
-  /**@param {Tab | null | undefined} tab */
+  /**@param {Tab | undefined} tab */
   _setTabActive(tab, focus = false) {
     if (!tab) {
       return;
@@ -48,7 +48,7 @@ export class TabWrapper extends LitElement {
   /** @param {MouseEvent} event */
   _tablistClick({ target }) {
     if (target instanceof HTMLElement) {
-      const tab = target.closest("ix-tab");
+      const tab = target.closest("ix-tab") || undefined;
       this._setTabActive(tab);
     }
   }

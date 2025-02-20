@@ -14,12 +14,12 @@
 
 :host(:hover),
 :host(:focus) {
-  background-color: var(--background-quaternary);
+  background-color: var(--ix-tab-background-active);
   color: var(--text-primary);
 }
 
 :host([aria-selected="true"]) {
-  background-color: var(--background-quaternary);
+  background-color: var(--ix-tab-background-active);
   border-bottom-color: var(--accent-primary);
   color: var(--accent-primary);
 }
