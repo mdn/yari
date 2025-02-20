@@ -27,6 +27,7 @@ import styles from "./editor.scss?css" with { type: "css" };
 export class PlayEditor extends LitElement {
   static properties = {
     language: { type: String },
+    minimal: { type: Boolean },
     value: { attribute: false },
   };
 
@@ -42,6 +43,7 @@ export class PlayEditor extends LitElement {
     super();
     this.theme = new ThemeController(this);
     this.language = "";
+    this.minimal = false;
     this._value = "";
   }
 
@@ -64,27 +66,6 @@ export class PlayEditor extends LitElement {
   _dispatchUpdate() {
     this.dispatchEvent(new Event("update", { bubbles: true, composed: true }));
   }
-
-  _defaultExtensions() {
-    return [
-      minimalSetup,
-      lineNumbers(),
-      indentOnInput(),
-      bracketMatching(),
-      closeBrackets(),
-      autocompletion(),
-      highlightActiveLine(),
-      keymap.of([
-        ...closeBracketsKeymap,
-        ...defaultKeymap,
-        ...completionKeymap,
-        ...lintKeymap,
-        indentWithTab,
-      ]),
-      EditorView.lineWrapping,
-    ];
-  }
-
   _extensions() {
     const language = (() => {
       switch (this.language) {
@@ -100,7 +81,25 @@ export class PlayEditor extends LitElement {
     })();
 
     return [
-      ...this._defaultExtensions(),
+      minimalSetup,
+      bracketMatching(),
+      closeBrackets(),
+      ...(!this.minimal
+        ? [
+            lineNumbers(),
+            indentOnInput(),
+            autocompletion(),
+            highlightActiveLine(),
+            keymap.of([
+              ...closeBracketsKeymap,
+              ...defaultKeymap,
+              ...completionKeymap,
+              ...lintKeymap,
+              indentWithTab,
+            ]),
+          ]
+        : []),
+      EditorView.lineWrapping,
       ...(this.theme.value === "dark" ? [oneDark] : []),
       ...language,
       EditorView.updateListener.of((update) => {
