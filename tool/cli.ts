@@ -174,15 +174,6 @@ interface PopularitiesActionParameters extends ActionParameters {
   logger: Logger;
 }
 
-interface BuildRobotsTxtActionParameters extends ActionParameters {
-  options: {
-    outfile: string;
-    maxUris: number;
-    refresh: boolean;
-  };
-  logger: Logger;
-}
-
 interface MacrosActionParameters extends ActionParameters {
   args: {
     cmd: string;
