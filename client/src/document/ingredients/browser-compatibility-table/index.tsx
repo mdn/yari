@@ -46,7 +46,7 @@ export const HIDDEN_BROWSERS = ["ie"];
  * shown. In all other categories, if compat data has info about Deno / Node.js
  * those are also shown. Deno is always shown if Node.js is shown.
  */
-function gatherPlatformsAndBrowsers(
+export function gatherPlatformsAndBrowsers(
   category: string,
   data: BCD.Identifier,
   browserInfo: BCD.Browsers
