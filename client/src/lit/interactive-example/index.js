@@ -167,8 +167,8 @@ export class InteractiveExample extends GleanMixin(LitElement) {
               <button id="reset" @click=${this._reset}>Reset</button>
             </div>
             <play-console id="console"></play-console>
+            <play-runner></play-runner>
           </div>
-          <play-runner></play-runner>
         </div>
       </play-controller>
     `;

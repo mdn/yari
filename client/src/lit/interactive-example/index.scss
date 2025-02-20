@@ -129,11 +129,6 @@ ix-tab-wrapper {
     ix-tab-wrapper {
       border-bottom: 0;
     }
-
-    play-runner {
-      display: none;
-      grid-area: runner;
-    }
   }
 
   .inner-bottom {
@@ -150,6 +145,11 @@ ix-tab-wrapper {
 
     #console {
       height: 8rem;
+    }
+
+    play-runner {
+      display: none;
+      grid-area: runner;
     }
 
     @media (max-width: $screen-lg) {
