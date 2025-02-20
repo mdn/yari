@@ -15,7 +15,10 @@ interface Result {
   plans: PlanResult;
 }
 
-export async function handleStripePlans(req: Request, res: Response) {
+export async function handleStripePlans(
+  req: Request,
+  res: Response
+): Promise<void> {
   const lookupData =
     ORIGIN_MAIN === "developer.mozilla.org" ? prodLookup : stageLookup;
 
@@ -24,7 +27,8 @@ export async function handleStripePlans(req: Request, res: Response) {
   const supportedCurrency = lookupData.countryToCurrency[countryCode];
 
   if (!supportedCurrency) {
-    return res.sendStatus(404).end();
+    res.sendStatus(404).end();
+    return;
   }
 
   const localeHeader = req.headers["accept-language"];
@@ -47,7 +51,8 @@ export async function handleStripePlans(req: Request, res: Response) {
 
   const plans = lookupData.langCurrencyToPlans[key];
   if (!plans) {
-    return res.sendStatus(500).end();
+    res.sendStatus(500).end();
+    return;
   }
 
   const planResult: PlanResult = {};
@@ -67,12 +72,10 @@ export async function handleStripePlans(req: Request, res: Response) {
     plans: planResult,
   } satisfies Result;
 
-  return (
-    res
-      .status(200)
-      // Google CDN cannot partition by country, so we can only cache in browser.
-      .setHeader("Cache-Control", "private, max-age=86400")
-      .setHeader("Content-Type", "application/json")
-      .end(JSON.stringify(result))
-  );
+  res
+    .status(200)
+    // Google CDN cannot partition by country, so we can only cache in browser.
+    .setHeader("Cache-Control", "private, max-age=86400")
+    .setHeader("Content-Type", "application/json")
+    .end(JSON.stringify(result));
 }
