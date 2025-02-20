@@ -1,4 +1,6 @@
 @use "../ui/vars" as *;
+@use "mixins" as curriculum;
+@use "../ui/atoms/button/mixins" as button;
 
 .curriculum-content-container.curriculum-about {
   .curriculum-content {
@@ -44,51 +46,15 @@
     }
 
     h3#educators + .section-content blockquote:not(.curriculum-notes) {
-      align-items: center;
       // PDF download banner
 
-      background-color: var(--curriculum-bg-color-note);
-      border: 0;
-      border-radius: var(--elem-radius);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin: 1rem;
-      padding: 1rem;
+      @include curriculum.note;
 
-      > p:last-child a:only-child {
-        --button-bg: var(--button-secondary-default);
-        --button-border-color: var(--border-primary);
-        --button-color: var(--text-secondary);
-        --button-bg-hover: var(--button-secondary-hover);
-        --button-bg-active: var(--button-secondary-active);
-
-        --button-font: var(--type-emphasis-m);
-        --button-padding: 0.43rem 1rem;
-        --button-radius: 0.25rem;
-
-        background-color: var(--button-bg);
-        border: 1px solid var(--button-border-color);
-        border-radius: var(--button-radius);
-        color: var(--button-color);
-        display: inline-block;
-        font: var(--button-font);
-        letter-spacing: normal;
-        padding: var(--button-padding);
+      > p:last-child {
         text-align: center;
-        text-decoration: none;
 
-        &.external:after {
-          display: none;
-        }
-
-        &:hover {
-          --button-border-color: var(--button-bg-hover);
-          --button-bg: var(--button-bg-hover);
-        }
-
-        &:active {
-          --button-bg: var(--button-bg-active);
+        a:only-child {
+          @include button.secondary;
         }
       }
     }
