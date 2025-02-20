@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.5.0](https://github.com/mdn/yari/compare/v4.4.1...v4.5.0) (2025-02-20)
+
+
+### Features
+
+* **interactive-examples:** support HTML examples ([#12633](https://github.com/mdn/yari/issues/12633)) ([7cd08a7](https://github.com/mdn/yari/commit/7cd08a73a4c964cc8dfd5ffb33ea93e80b22ae16))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.10.17 to 1.10.18 ([#12637](https://github.com/mdn/yari/issues/12637)) ([6b6349d](https://github.com/mdn/yari/commit/6b6349d1c1d363f6b6e509871ab28b50c44e2b14))
+* **deps-dev:** bump postcss from 8.5.2 to 8.5.3 ([#12641](https://github.com/mdn/yari/issues/12641)) ([b87fa89](https://github.com/mdn/yari/commit/b87fa89dfc8b7443b9ac609f4d0e6e44b30c7701))
+* **deps-dev:** bump react-router-dom from 7.1.5 to 7.2.0 ([#12638](https://github.com/mdn/yari/issues/12638)) ([c83c18b](https://github.com/mdn/yari/commit/c83c18b796ab7967999f7f2cce64550b575662b1))
+* **deps:** bump @mdn/browser-compat-data from 5.6.39 to 5.6.40 ([#12635](https://github.com/mdn/yari/issues/12635)) ([d5c54fa](https://github.com/mdn/yari/commit/d5c54fa14633d26a63c5e28a6fa1ef1fdbbcb4f2))
+* **deps:** bump openai from 4.85.1 to 4.85.2 ([#12636](https://github.com/mdn/yari/issues/12636)) ([cb83ac8](https://github.com/mdn/yari/commit/cb83ac89c40463a78b1038a90dd0359c36d0d84f))
+* **deps:** bump react-markdown from 9.0.3 to 9.1.0 ([#12642](https://github.com/mdn/yari/issues/12642)) ([6c7fbec](https://github.com/mdn/yari/commit/6c7fbeca27e1c0cc9f5f0be9b5058e87453188bb))
+* **deps:** bump web-specs from 3.39.0 to 3.40.0 ([#12634](https://github.com/mdn/yari/issues/12634)) ([f0ef278](https://github.com/mdn/yari/commit/f0ef2786ca5299a93174815522c5eb96f6131084))
+* **placements:** consolidate placement's ad overlay design ([#12104](https://github.com/mdn/yari/issues/12104)) ([31765c8](https://github.com/mdn/yari/commit/31765c82006b132bfc325f9c9c9739567744fa9a))
+* **workflows/build:** use static robots.txt ([#12495](https://github.com/mdn/yari/issues/12495)) ([02cb25b](https://github.com/mdn/yari/commit/02cb25bf2c6cc61c2ff17c2e0785cd356ccb4443))
+
 ## [4.4.1](https://github.com/mdn/yari/compare/v4.4.0...v4.4.1) (2025-02-18)
 
 
