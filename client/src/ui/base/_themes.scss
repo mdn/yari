@@ -97,6 +97,8 @@
   --code-background-inline: #{$mdn-theme-light-code-background-inline};
   --code-background-block: #{$mdn-theme-light-code-background-block};
 
+  --ix-tab-background-active: #fff;
+
   --notecard-link-color: #{$mdn-color-neutral-80};
 
   --scrollbar-bg: transparent;
@@ -413,6 +415,8 @@
   --code-token-selector: #{$mdn-theme-dark-code-token-selector};
   --code-background-inline: #{$mdn-theme-dark-code-background-inline};
   --code-background-block: #{$mdn-theme-dark-code-background-block};
+
+  --ix-tab-background-active: #4e4e4e;
 
   --notecard-link-color: #{$mdn-color-neutral-10};
 

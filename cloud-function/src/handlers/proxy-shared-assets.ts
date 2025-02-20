@@ -26,7 +26,7 @@ export const proxySharedAssets = createProxyMiddleware({
         if (!res.headersSent) {
           let cacheControl = "no-store, must-revalidate";
           if (200 <= res.statusCode && res.statusCode < 300) {
-            cacheControl = `public, max-age=${60 * 60 * 24 * 365}`;
+            cacheControl = `public, max-age=${60 * 60 * 24 * 30}`;
           }
           res.setHeader("Cache-Control", cacheControl);
         }
