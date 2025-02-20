@@ -68,7 +68,7 @@
   .top-level-entry {
     background: none;
     border-top: 1px solid var(--border-secondary);
-    color: var(--text-secondary);
+    color: var(--text-primary);
     cursor: pointer;
     display: flex;
     padding: 1rem 0.5rem;
@@ -77,7 +77,7 @@
 
     &:link,
     &:visited {
-      color: var(--text-secondary);
+      color: var(--text-primary);
     }
 
     &.menu-toggle {
