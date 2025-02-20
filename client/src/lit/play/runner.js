@@ -81,7 +81,7 @@ export class PlayRunner extends LitElement {
     return html`
       <iframe
         src="${window.location
-          .protocol}//${PLAYGROUND_BASE_HOST}/runner.html?blank"
+          .protocol}//blank.${PLAYGROUND_BASE_HOST}/runner.html?blank"
         title="runner"
         sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
       ></iframe>
