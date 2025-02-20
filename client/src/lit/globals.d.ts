@@ -6,6 +6,7 @@ import { ScrimInline } from "./curriculum/scrim-inline";
 import { PlayConsole } from "./play/console";
 import { PlayController } from "./play/controller";
 import { PlayEditor } from "./play/editor";
+import { PlayEditorLine } from "./play/editor-line";
 import { PlayRunner } from "./play/runner";
 
 declare global {
@@ -21,6 +22,7 @@ declare global {
     "play-console": PlayConsole;
     "play-controller": PlayController;
     "play-editor": PlayEditor;
+    "play-editor-line": PlayEditorLine;
     "play-runner": PlayRunner;
   }
 
