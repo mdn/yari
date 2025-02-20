@@ -227,6 +227,7 @@ export function BottomBanner() {
   const { backgroundColor, textColor } = placementData?.colors || {};
   const css = Object.fromEntries(
     [
+      ["--place-hp-main-background", backgroundColor],
       ["--place-bottom-banner-background", backgroundColor],
       ["--place-bottom-banner-color", textColor],
     ].filter(([_, v]) => Boolean(v))
@@ -360,7 +361,7 @@ function RenderSideOrTopBanner({
           target="_blank"
           rel="noreferrer"
         >
-          Mozilla ads
+          Ad
         </a>
       </p>
 
@@ -400,7 +401,12 @@ function RenderHpPlacement({
     <section
       ref={place}
       className={["place", ...extraClassNames].join(" ")}
-      style={style}
+      style={
+        {
+          "--place-banner-width": `${imageWidth}px`,
+          ...style,
+        } as React.CSSProperties
+      }
     >
       <a
         className="pong"
@@ -418,6 +424,15 @@ function RenderHpPlacement({
           height={imageHeight}
         ></img>
       </a>
+      <a
+        href="/en-US/advertising"
+        className="pong-note"
+        data-glean="pong: pong->about"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Ad
+      </a>{" "}
     </section>
   );
 }
@@ -438,7 +453,15 @@ function RenderBottomBanner({
   showNoAds,
 }: PlacementRenderArgs) {
   return (
-    <div className="bottom-banner-container" style={style}>
+    <div
+      className="bottom-banner-container"
+      style={
+        {
+          "--place-banner-width": `${imageWidth}px`,
+          ...style,
+        } as React.CSSProperties
+      }
+    >
       <section
         ref={place}
         className={["place", "bottom-banner", ...extraClassNames].join(" ")}
@@ -466,23 +489,8 @@ function RenderBottomBanner({
           target="_blank"
           rel="noreferrer"
         >
-          Mozilla ads
+          Ad
         </a>
-        {showNoAds && (
-          <a
-            className="no-pong"
-            data-glean={
-              "pong: " + (user?.isSubscriber ? "pong->settings" : "pong->plus")
-            }
-            href={
-              user?.isSubscriber
-                ? "/en-US/plus/settings?ref=nope"
-                : "/en-US/plus?ref=nope"
-            }
-          >
-            Don't want to see ads?
-          </a>
-        )}
       </section>
     </div>
   );
