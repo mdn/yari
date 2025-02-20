@@ -1,4 +1,4 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, nothing } from "lit";
 import { ref, createRef } from "lit/directives/ref.js";
 import { decode } from "he";
 
@@ -13,6 +13,8 @@ import styles from "./index.scss?css" with { type: "css" };
 
 import exampleJs from "./example.js?raw";
 import exampleStyle from "./example.css?raw";
+import choiceJs from "./choice.js?raw";
+import { PlayEditor } from "../play/editor.js";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -54,7 +56,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   _initialCode() {
     const exampleNodes = this.closest("section")?.querySelectorAll(
-      ".code-example pre[class*=interactive-example]"
+      ".code-example pre.interactive-example"
     );
     const code = Array.from(exampleNodes || []).reduce((acc, pre) => {
       const language = Array.from(pre.classList).find((c) =>
@@ -69,14 +71,22 @@ export class InteractiveExample extends GleanMixin(LitElement) {
           }
         : acc;
     }, /** @type {Object<string, string>} */ ({}));
+    const choiceNodes = this.closest("section")?.querySelectorAll(
+      ".code-example pre.interactive-example-choice"
+    );
+    this._choices = Array.from(choiceNodes || []).map((pre) => pre.textContent);
     this._languages = Object.keys(code);
-    this._template =
-      this._languages.length === 1 && this._languages[0] === "js"
+    this._template = this._choices.length
+      ? "choices"
+      : this._languages.length === 1 && this._languages[0] === "js"
         ? "javascript"
         : "tabbed";
     if (this._template === "tabbed") {
       code["js-hidden"] = exampleJs;
       code["css-hidden"] = exampleStyle;
+    }
+    if (this._template === "choices") {
+      code["js-hidden"] = choiceJs;
     }
     return code;
   }
@@ -92,6 +102,22 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         return "JavaScript";
       default:
         return lang;
+    }
+  }
+
+  /** @param {MouseEvent} event  */
+  _choiceClick({ target }) {
+    // TODO: set first choice as default
+    // TODO: check if tabbing through choices works like before
+    // TODO: use a different event handler for editor update event
+    // TODO: deal with update race conditions (editor updates after user clicks on different editor)
+    if (target instanceof PlayEditor) {
+      // TODO: nicer interface for posting messages than this:
+      const iframe = this._runner.value?.shadowRoot?.querySelector("iframe");
+      iframe?.contentWindow?.postMessage(
+        { typ: "choice", code: target.value },
+        "*"
+      );
     }
   }
 
@@ -166,10 +192,48 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     `;
   }
 
+  _renderChoices() {
+    return html`
+      <div class="template-choices">
+        <header>
+          <h4>${decode(this.name)}</h4>
+          <button id="reset" @click=${this._reset}>Reset</button>
+        </header>
+        <div
+          class="choice-wrapper"
+          @click=${this._choiceClick}
+          @update=${this._choiceClick}
+        >
+          ${this._choices?.map(
+            (code) => html`
+              <play-editor
+                language="css"
+                minimal="true"
+                .value=${code?.trim()}
+              ></play-editor>
+            `
+          )}
+        </div>
+        <div class="output-wrapper">
+          <play-controller ${ref(this._controller)} run-on-start>
+            <play-runner ${ref(this._runner)}></play-runner>
+          </play-controller>
+        </div>
+      </div>
+    `;
+  }
+
   render() {
-    return this._template === "javascript"
-      ? this._renderJavascript()
-      : this._renderTabbed();
+    switch (this._template) {
+      case "javascript":
+        return this._renderJavascript();
+      case "tabbed":
+        return this._renderTabbed();
+      case "choices":
+        return this._renderChoices();
+      default:
+        return nothing;
+    }
   }
 
   firstUpdated() {
