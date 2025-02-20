@@ -65,19 +65,7 @@ export class PlayEditor extends LitElement {
     this.dispatchEvent(new Event("update", { bubbles: true, composed: true }));
   }
 
-  _extensions() {
-    const language = (() => {
-      switch (this.language) {
-        case "js":
-          return [langJS()];
-        case "html":
-          return [langHTML()];
-        case "css":
-          return [langCSS()];
-        default:
-          return [];
-      }
-    })();
+  _defaultExtensions() {
     return [
       minimalSetup,
       lineNumbers(),
@@ -94,6 +82,25 @@ export class PlayEditor extends LitElement {
         indentWithTab,
       ]),
       EditorView.lineWrapping,
+    ];
+  }
+
+  _extensions() {
+    const language = (() => {
+      switch (this.language) {
+        case "js":
+          return [langJS()];
+        case "html":
+          return [langHTML()];
+        case "css":
+          return [langCSS()];
+        default:
+          return [];
+      }
+    })();
+
+    return [
+      ...this._defaultExtensions(),
       ...(this.theme.value === "dark" ? [oneDark] : []),
       ...language,
       EditorView.updateListener.of((update) => {
