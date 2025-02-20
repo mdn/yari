@@ -238,10 +238,42 @@ export function renderHtml(state = null) {
     <script>
       const consoleProxy = new Proxy(console, {
         get(target, prop) {
-          if (prop === "log" || prop === "error" || prop === "warn") {
+          if (typeof target[prop] === "function") {
             return (...args) => {
-              const message = args.join(" ");
-              window.parent.postMessage({ typ: "console", prop, message }, "*");
+              try {
+                window.parent.postMessage({ typ: "console", prop, args }, "*");
+              } catch {
+                try {
+                  window.parent.postMessage(
+                    {
+                      typ: "console",
+                      prop,
+                      args: args.map((x) => {
+                        try {
+                          window.structuredClone(x);
+                          return x;
+                        } catch {
+                          return {
+                            _MDNPlaySerializedObject: x.toString(),
+                          };
+                        }
+                      }),
+                    },
+                    "*"
+                  );
+                } catch {
+                  window.parent.postMessage(
+                    {
+                      typ: "console",
+                      prop: "warn",
+                      args: [
+                        "[Playground] Unsupported console message (see browser console)",
+                      ],
+                    },
+                    "*"
+                  );
+                }
+              }
               target[prop](...args);
             };
           }
@@ -306,6 +338,9 @@ function playSubdomain(hostname) {
  */
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
+  if (url.searchParams.has("blank")) {
+    return res.setHeader("Content-Type", "text/html").status(200).end();
+  }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
     "https://example.com"

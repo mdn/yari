@@ -1,0 +1,21 @@
+@use "../../ui/vars" as *;
+
+:host {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.editor {
+  height: 100%;
+
+  .cm-editor {
+    height: 100%;
+    width: 100%;
+
+    * {
+      // codemirror uses `font-family: monospace;` in multiple places
+      // which causes weird fonts to be used in various locales
+      font-family: var(--font-code) !important;
+    }
+  }
+}

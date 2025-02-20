@@ -1,31 +1,22 @@
 :host {
+  background-color: var(--code-background-inline);
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  font-size: var(--type-smaller-font-size);
+  font-size: 0.875rem;
   margin: 0;
-  width: 100%;
-}
-
-.header {
-  background-color: var(--code-background-inline);
-  font-weight: 600;
-  text-align: center;
+  overflow: auto;
   width: 100%;
 }
 
 ul {
-  background-color: var(--code-background-inline);
-  height: 6rem;
   list-style: none;
   margin: 0;
-  max-height: 6rem;
-  overflow: auto;
   padding: 0;
-  width: 100%;
 }
 
 li {
-  padding: 0 1rem;
+  padding: 0 0.5em;
 
   &::before {
     content: ">";
