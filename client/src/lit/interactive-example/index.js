@@ -13,6 +13,7 @@ import styles from "./index.scss?css" with { type: "css" };
 
 import exampleJs from "./example.js?raw";
 import exampleStyle from "./example.css?raw";
+import watify from "./../../../../libs/watify/pkg";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
