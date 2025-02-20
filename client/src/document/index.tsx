@@ -34,7 +34,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
-import "../lit/interactive-example.global.scss";
+import "../lit/interactive-example/global.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 import { useInteractiveExamplesActionHandler as useInteractiveExamplesTelemetry } from "../telemetry/interactive-examples";
@@ -63,7 +63,7 @@ export class HTTPError extends Error {
 
 export function Document(props /* TODO: define a TS interface for this */) {
   React.useEffect(() => {
-    import("../lit/interactive-example.js");
+    import("../lit/interactive-example/index.js");
   }, []);
 
   const gleanClick = useGleanClick();

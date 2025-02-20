@@ -68,7 +68,7 @@ export class PlayEditor extends LitElement {
   _extensions() {
     const language = (() => {
       switch (this.language) {
-        case "javascript":
+        case "js":
           return [langJS()];
         case "html":
           return [langHTML()];
@@ -114,7 +114,7 @@ export class PlayEditor extends LitElement {
     const prettier = await import("prettier/standalone");
     const config = (() => {
       switch (this.language) {
-        case "javascript":
+        case "js":
           return {
             parser: "babel",
             plugins: [

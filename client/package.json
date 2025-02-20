@@ -54,6 +54,7 @@
       "node"
     ],
     "moduleNameMapper": {
+      "\\?raw$": "<rootDir>/config/jest/rawTransform.js",
       "\\.s?css(\\?css)?$": "<rootDir>/config/jest/cssTransform.js"
     },
     "modulePaths": [],

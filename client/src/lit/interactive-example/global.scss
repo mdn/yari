@@ -1,0 +1,52 @@
+@use "../../ui/vars" as *;
+
+interactive-example {
+  display: block;
+  height: 444px;
+  margin: 1rem 0;
+
+  &[height="shorter"] {
+    height: 364px;
+  }
+
+  &[height="taller"] {
+    height: 654px;
+  }
+
+  &[height="tabbed-shorter"] {
+    height: 351px;
+    margin-top: 1.5rem;
+  }
+
+  &[height="tabbed-standard"] {
+    height: 421px;
+  }
+
+  &[height="tabbed-taller"] {
+    height: 631px;
+  }
+
+  @media (max-width: $screen-lg) {
+    height: 513px;
+
+    &[height="shorter"] {
+      height: 433px;
+    }
+
+    &[height="taller"] {
+      height: 725px;
+    }
+
+    &[height="tabbed-shorter"] {
+      height: 487px;
+    }
+
+    &[height="tabbed-standard"] {
+      height: 548px;
+    }
+
+    &[height="tabbed-taller"] {
+      height: 774px;
+    }
+  }
+}

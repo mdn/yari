@@ -315,7 +315,7 @@ export default function Playground() {
           <details className="editor-container" open={true}>
             <summary>JAVASCRIPT</summary>
             <ReactPlayEditor
-              language="javascript"
+              language="js"
               onUpdate={onEditorUpdate}
             ></ReactPlayEditor>
           </details>
