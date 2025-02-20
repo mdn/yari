@@ -42,7 +42,7 @@ play-console {
   grid-area: console;
 }
 
-tab-wrapper {
+ix-tab-wrapper {
   grid-area: tabs;
 }
 
@@ -91,6 +91,78 @@ tab-wrapper {
     .buttons {
       flex-direction: row;
       justify-content: space-between;
+    }
+  }
+}
+
+// ------------
+// WAT examples
+// ------------
+
+.template-wat {
+  --tabbed-font-heading: 600 0.625rem/1.2 var(--font-heading);
+  display: grid;
+  gap: 0.5rem;
+  grid-template-areas:
+    "top"
+    "controls";
+  grid-template-rows: 1fr 8rem;
+  height: 100%;
+
+  .inner-top {
+    align-content: start;
+
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--elem-radius);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    display: grid;
+    gap: 0;
+    grid-template-areas:
+      "header"
+      "tabs";
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
+    height: 100%;
+    overflow: hidden;
+
+    ix-tab-wrapper {
+      border-bottom: 0;
+    }
+
+    play-runner {
+      display: none;
+      grid-area: runner;
+    }
+  }
+
+  .inner-bottom {
+    align-content: start;
+    display: grid;
+    gap: 0 0.5rem;
+    grid-template-areas:
+      "buttons  console"
+      "runner   console";
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: max-content 1fr;
+    height: 100%;
+    overflow: hidden;
+
+    #console {
+      height: 8rem;
+    }
+
+    @media (max-width: $screen-lg) {
+      grid-template-areas:
+        "buttons"
+        "console";
+      grid-template-columns: 1fr;
+      grid-template-rows: max-content 1fr;
+
+      .output-wrapper {
+        border-left: 0;
+        border-top: 1px solid var(--border-secondary);
+      }
     }
   }
 }
