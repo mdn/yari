@@ -353,7 +353,9 @@ function isMDNReferer(referer) {
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   if (url.searchParams.has("blank")) {
-    res.setHeader("Content-Type", "text/html").status(204).end();
+    // Avoid HTTP 204, because it might break things in Safari:
+    // "(...) the client **doesn't need to navigate away from its current page**."
+    res.setHeader("Content-Type", "text/html").status(200).end();
     return;
   }
   const referer = new URL(
