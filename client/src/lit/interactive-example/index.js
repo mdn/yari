@@ -28,6 +28,7 @@ const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 export class InteractiveExample extends GleanMixin(LitElement) {
   static properties = {
     name: { type: String },
+    choiceSelected: { type: Number, state: true },
   };
 
   static styles = styles;
@@ -39,6 +40,8 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._languages = [];
     /** @type {Record<string, string>} */
     this._code = {};
+    /** @type {number} */
+    this.choiceSelected = 0;
   }
 
   /** @type {Ref<PlayController>} */
@@ -51,6 +54,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   _reset() {
+    this.choiceSelected = 0;
     this._controller.value?.reset();
   }
 
@@ -112,8 +116,14 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     // TODO: use a different event handler for editor update event
     // TODO: deal with update race conditions (editor updates after user clicks on different editor)
     if (target instanceof PlayEditor) {
+      this.choiceSelected = Array.prototype.indexOf.call(
+        target.parentNode?.children,
+        target
+      );
+
       // TODO: nicer interface for posting messages than this:
       const iframe = this._runner.value?.shadowRoot?.querySelector("iframe");
+
       iframe?.contentWindow?.postMessage(
         { typ: "choice", code: target.value },
         "*"
@@ -205,11 +215,12 @@ export class InteractiveExample extends GleanMixin(LitElement) {
           @update=${this._choiceClick}
         >
           ${this._choices?.map(
-            (code) => html`
+            (code, index) => html`
               <play-editor
                 language="css"
                 minimal="true"
                 .value=${code?.trim()}
+                class=${index === this.choiceSelected ? "selected" : ""}
               ></play-editor>
             `
           )}
