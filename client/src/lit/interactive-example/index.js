@@ -13,7 +13,6 @@ import styles from "./index.scss?css" with { type: "css" };
 
 import exampleJs from "./example.js?raw";
 import exampleStyle from "./example.css?raw";
-import watify from "./../../../../libs/watify/pkg/watify.js";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -81,7 +80,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       code["js-hidden"] = exampleJs;
       code["css-hidden"] = exampleStyle;
     }
-    console.log("templ", this._template, this._languages);
     return code;
   }
 
