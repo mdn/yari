@@ -203,6 +203,7 @@ tab-wrapper {
   }
 
   .choice-wrapper {
+    border-right: 1px solid var(--border-primary);
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
