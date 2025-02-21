@@ -384,12 +384,9 @@ export async function handleRunner(req, res) {
     const subdomain = playSubdomain(req.hostname);
 
     if (subdomain !== hash) {
-      const { hostname } = referer;
-      const isOnMDN = isMDNHost(hostname);
       const secFetchDest = req.headers["sec-fetch-dest"];
-      const isIframe = secFetchDest === "iframe";
 
-      if (!isIframe) {
+      if (secFetchDest !== "iframe") {
         console.warn(
           `[runner] Disallowed Sec-Fetch-Dest (expected "iframe", was ${JSON.stringify(secFetchDest)})`
         );
@@ -397,7 +394,9 @@ export async function handleRunner(req, res) {
         return;
       }
 
-      if (!isOnMDN) {
+      const { hostname } = referer;
+
+      if (!isMDNHost(hostname)) {
         console.warn(
           `[runner] Disallowed Referer (expected MDN host, was ${JSON.stringify(hostname)})`
         );
