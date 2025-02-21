@@ -269,6 +269,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
                 <play-editor
                   language="css"
                   minimal="true"
+                  .delay=${100}
                   .value=${code?.trim()}
                 ></play-editor>
               </div>

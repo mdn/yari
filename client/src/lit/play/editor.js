@@ -29,6 +29,7 @@ export class PlayEditor extends LitElement {
     language: { type: String },
     minimal: { type: Boolean },
     value: { attribute: false },
+    delay: { type: Number },
   };
 
   static styles = styles;
@@ -45,6 +46,7 @@ export class PlayEditor extends LitElement {
     this.language = "";
     this.minimal = false;
     this._value = "";
+    this.delay = 1000;
   }
 
   /** @param {string} value */
@@ -110,7 +112,7 @@ export class PlayEditor extends LitElement {
           this._updateTimer = window?.setTimeout(() => {
             this._updateTimer = -1;
             this._dispatchUpdate();
-          }, 1000);
+          }, this.delay);
         }
       }),
     ];
