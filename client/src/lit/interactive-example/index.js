@@ -14,6 +14,7 @@ import styles from "./index.scss?css" with { type: "css" };
 import exampleJs from "./example.js?raw";
 import exampleStyle from "./example.css?raw";
 import choiceJs from "./choice.js?raw";
+import choiceStyle from "./choice.css?raw";
 import { PlayEditor } from "../play/editor.js";
 
 /**
@@ -91,6 +92,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     }
     if (this._template === "choices") {
       code["js-hidden"] = choiceJs;
+      code["css-hidden"] = choiceStyle;
     }
     return code;
   }

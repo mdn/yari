@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "Inter";
+  src:
+    url("/shared-assets/fonts/Inter.var.woff2")
+      format("woff2 supports variations"),
+    url("/shared-assets/fonts/Inter.var.woff2") format("woff2-variations");
+  font-weight: 1 999;
+  font-stretch: 75% 100%;
+  font-style: oblique 0deg 20deg;
+  font-display: swap;
+}
+
+body {
+  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
+  --font-body: Inter, var(--font-fallback);
+  --type-body-l: 400 1rem/1.1876 var(--font-body);
+
+  font-size: 24px !important;
+  align-items: center;
+  color: var(--text-primary);
+  background-color: var(--background-primary);
+  display: flex;
+  justify-content: center;
+  height: 300px;
+  font: var(--type-body-l);
+  padding: 1em;
+  overflow: hidden;
+}
