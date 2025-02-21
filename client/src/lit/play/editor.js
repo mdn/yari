@@ -176,7 +176,9 @@ export class PlayEditor extends LitElement {
   }
 
   render() {
-    return html`<div class="editor"></div>`;
+    return html`<div
+      class=${this.minimal ? "editor minimal" : "editor"}
+    ></div>`;
   }
 
   firstUpdated() {
