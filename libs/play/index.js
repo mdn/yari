@@ -354,8 +354,7 @@ export async function handleRunner(req, res) {
   if (url.searchParams.has("blank")) {
     // Avoid HTTP 204, because it might break things in Safari:
     // "(...) the client **doesn't need to navigate away from its current page**."
-    res.setHeader("Content-Type", "text/html").status(200).end();
-    return;
+    return res.setHeader("Content-Type", "text/html").status(200).end();
   }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
@@ -365,8 +364,7 @@ export async function handleRunner(req, res) {
 
   if (!stateParam) {
     console.warn("[runner] Missing state parameter");
-    res.status(400).end();
-    return;
+    return res.status(400).end();
   }
 
   const { state, hash } = await decompressFromBase64(stateParam);
@@ -390,8 +388,7 @@ export async function handleRunner(req, res) {
         console.warn(
           `[runner] Disallowed Sec-Fetch-Dest (expected "iframe", was ${JSON.stringify(secFetchDest)})`
         );
-        res.status(403).end();
-        return;
+        return res.status(403).end();
       }
 
       const { hostname } = referer;
@@ -400,8 +397,7 @@ export async function handleRunner(req, res) {
         console.warn(
           `[runner] Disallowed Referer (expected MDN host, was ${JSON.stringify(hostname)})`
         );
-        res.status(403).end();
-        return;
+        return res.status(403).end();
       }
     }
   }
