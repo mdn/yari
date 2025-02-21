@@ -184,6 +184,11 @@ tab-wrapper {
   grid-template-rows: max-content 1fr;
   height: 100%;
 
+  @media (max-width: $screen-lg) {
+    grid-template-areas: "header" "choice" "runner";
+    grid-template-columns: 1fr;
+  }
+
   #reset {
     background-color: transparent;
     border: none;
@@ -229,6 +234,10 @@ tab-wrapper {
         padding-left: 0.25rem;
         padding-right: 1.25rem;
         width: 1rem;
+
+        @media (max-width: $screen-lg) {
+          content: "▾";
+        }
       }
 
       &.selected {
