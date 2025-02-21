@@ -36,6 +36,8 @@ The function uses the following environment variables:
   requests to the main site.
 - `ORIGIN_LIVE_SAMPLES` (default: `"localhost"`) - The expected `Host` header
   value for requests to live samples.
+- `ORIGIN_REVIEW` (default: `"content.dev.mdn.mozit.cloud"`) - The host of the
+  content preview pages.
 - `SOURCE_CONTENT` (default: `"http://localhost:8100"`) - The URL at which the
   client build is served.
 - `SOURCE_API` (default: `"https://developer.allizom.org/"`) - The URL at which
