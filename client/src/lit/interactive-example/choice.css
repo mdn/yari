@@ -22,8 +22,11 @@ body {
   background-color: var(--background-primary);
   display: flex;
   justify-content: center;
-  height: 300px;
   font: var(--type-body-l);
   padding: 1em;
-  overflow: hidden;
+
+  > :first-child {
+    height: 300px;
+    overflow: hidden;
+  }
 }
