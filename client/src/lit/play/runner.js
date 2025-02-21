@@ -26,7 +26,6 @@ export class PlayRunner extends LitElement {
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
     this.sandbox = "";
-    this._subdomain = crypto.randomUUID();
   }
 
   /** @param {MessageEvent} e  */
@@ -43,7 +42,7 @@ export class PlayRunner extends LitElement {
   _updateSrc = new Task(this, {
     args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
     task: async ([code, srcPrefix], { signal }) => {
-      const { state } = await compressAndBase64Encode(
+      const { state, hash } = await compressAndBase64Encode(
         JSON.stringify({
           html: code?.html || "",
           css: code?.css || "",
@@ -56,9 +55,7 @@ export class PlayRunner extends LitElement {
         window.location.hostname.endsWith("localhost")
           ? window.location.origin
           : `${window.location.protocol}//${
-              PLAYGROUND_BASE_HOST.startsWith("localhost")
-                ? ""
-                : `${this._subdomain}.`
+              PLAYGROUND_BASE_HOST.startsWith("localhost") ? "" : `${hash}.`
             }${PLAYGROUND_BASE_HOST}`
       );
       url.searchParams.set("state", state);
