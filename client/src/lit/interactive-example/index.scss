@@ -180,7 +180,27 @@ tab-wrapper {
   grid-template-areas:
     "header header"
     "choice runner";
+  grid-template-rows: max-content 1fr;
   height: 100%;
+
+  #reset {
+    background-color: transparent;
+    border: none;
+    border-radius: 0.25rem; // var(--button-radius);
+    color: var(--text-primary);
+    cursor: pointer;
+    font: 600 0.625rem/1.2 var(--font-heading); // var(--type-label-s);
+    height: 2rem; // var(--button-height);
+    letter-spacing: 1.5px;
+    margin: 0;
+    max-width: 100px;
+    padding: 0.7em 0.9em;
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: var(--button-secondary-hover);
+    }
+  }
 
   .choice-wrapper {
     display: flex;
@@ -197,7 +217,7 @@ tab-wrapper {
 
       &.selected {
         border-color: #0085f2; // var(--field-focus-border);
-        box-shadow: 0px 0px 0px 3px rgba(0, 144, 237, 0.4); // var(--focus-01);
+        box-shadow: 0 0 0 3px rgba(0, 144, 237, 0.4); // var(--focus-01);
         cursor: text;
       }
     }
