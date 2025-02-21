@@ -333,6 +333,13 @@ function playSubdomain(hostname) {
 }
 
 /**
+ * @param {URL} referer
+ */
+function isMDNReferer(referer) {
+  return referer.hostname === ORIGIN_MAIN;
+}
+
+/**
  * @param {express.Request} req
  * @param {express.Response} res
  */
@@ -351,8 +358,7 @@ export async function handleRunner(req, res) {
   const isLocalhost = req.hostname === "localhost";
   const hasMatchingHash = playSubdomain(req.hostname) === hash;
   const isIframeOnMDN =
-    referer.hostname === ORIGIN_MAIN &&
-    req.headers["sec-fetch-dest"] === "iframe";
+    isMDNReferer(referer) && req.headers["sec-fetch-dest"] === "iframe";
 
   if (
     !stateParam ||
