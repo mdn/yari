@@ -4,6 +4,8 @@ import he from "he";
 
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
+export const ORIGIN_REVIEW =
+  process.env["ORIGIN_REVIEW"] || "content.dev.mdn.mozit.cloud";
 
 /** @import { IncomingMessage, ServerResponse } from "http" */
 /** @import * as express from "express" */
@@ -333,6 +335,18 @@ function playSubdomain(hostname) {
 }
 
 /**
+ * @param {URL} referer
+ */
+function isMDNReferer(referer) {
+  const { hostname } = referer;
+  return (
+    hostname === ORIGIN_MAIN ||
+    hostname === ORIGIN_REVIEW ||
+    hostname.endsWith(`.${ORIGIN_REVIEW}`)
+  );
+}
+
+/**
  * @param {express.Request} req
  * @param {express.Response} res
  * @returns {Promise<void>}
@@ -369,7 +383,7 @@ export async function handleRunner(req, res) {
         `[runner] Hash mismatch: ${JSON.stringify({ expectedHash, hash })}`
       );
 
-      const isOnMDN = referer.hostname === ORIGIN_MAIN;
+      const isOnMDN = isMDNReferer(referer);
       const isIframe = req.headers["sec-fetch-dest"] === "iframe";
 
       if (!isOnMDN || !isIframe) {
