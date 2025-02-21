@@ -335,10 +335,9 @@ function playSubdomain(hostname) {
 }
 
 /**
- * @param {URL} referer
+ * @param {string} hostname
  */
-function isMDNReferer(referer) {
-  const { hostname } = referer;
+function isMDNHost(hostname) {
   return (
     hostname === ORIGIN_MAIN ||
     hostname === ORIGIN_REVIEW ||
@@ -354,7 +353,9 @@ function isMDNReferer(referer) {
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   if (url.searchParams.has("blank")) {
-    return res.setHeader("Content-Type", "text/html").status(204).end();
+    // Avoid HTTP 204, because it might break things in Safari:
+    // "(...) the client **doesn't need to navigate away from its current page**."
+    return res.setHeader("Content-Type", "text/html").status(200).end();
   }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
@@ -370,25 +371,32 @@ export async function handleRunner(req, res) {
   const { state, hash } = await decompressFromBase64(stateParam);
 
   if (!state) {
-    console.warn("[runner] Invalid state parameter");
-    res.status(404).end();
-    return;
+    console.warn("[runner] Invalid state value");
+    return res.status(404).end();
   }
 
   if (req.hostname !== "localhost") {
-    const expectedHash = playSubdomain(req.hostname);
+    // For security reasons, we only allow the runner:
+    // 1. on localhost (without any restrictions),
+    // 2. if the subdomain matches the hash (for embedded direct links), or
+    // 3. in iframes on MDN.
+    const subdomain = playSubdomain(req.hostname);
 
-    if (expectedHash !== hash) {
-      console.warn(
-        `[runner] Hash mismatch: ${JSON.stringify({ expectedHash, hash })}`
-      );
+    if (subdomain !== hash) {
+      const secFetchDest = req.headers["sec-fetch-dest"];
 
-      const isOnMDN = isMDNReferer(referer);
-      const isIframe = req.headers["sec-fetch-dest"] === "iframe";
-
-      if (!isOnMDN || !isIframe) {
+      if (secFetchDest !== "iframe") {
         console.warn(
-          `[runner] No iframe on MDN: ${JSON.stringify({ isOnMDN, isIframe })}`
+          `[runner] Disallowed Sec-Fetch-Dest (expected "iframe", was ${JSON.stringify(secFetchDest)})`
+        );
+        return res.status(403).end();
+      }
+
+      const { hostname } = referer;
+
+      if (!isMDNHost(hostname)) {
+        console.warn(
+          `[runner] Disallowed Referer (expected MDN host, was ${JSON.stringify(hostname)})`
         );
         return res.status(403).end();
       }
