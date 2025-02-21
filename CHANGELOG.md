@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.5.1](https://github.com/mdn/yari/compare/v4.5.0...v4.5.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **interactive-examples:** open targetless `&lt;area&gt;`s in parent window ([#12652](https://github.com/mdn/yari/issues/12652)) ([29c55f2](https://github.com/mdn/yari/commit/29c55f2fbea3437447ad306c8220346511aa4847))
+* **play:** access blank runner on subdomain ([#12643](https://github.com/mdn/yari/issues/12643)) ([7fa3147](https://github.com/mdn/yari/commit/7fa3147fe550af88980900412d8aab0d703debd6))
+
+
+### Enhancements
+
+* **libs/play:** allow runner embedded on review pages ([#12647](https://github.com/mdn/yari/issues/12647)) ([59beb9e](https://github.com/mdn/yari/commit/59beb9eb6b1e32fab1db51d0a7e51516ef799b0f))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump eslint-plugin-wc from 2.2.0 to 2.2.1 ([#12650](https://github.com/mdn/yari/issues/12650)) ([6d2ee39](https://github.com/mdn/yari/commit/6d2ee392c0a289e4776c2c983c0fac0b62611e20))
+* **deps:** bump openai from 4.85.2 to 4.85.3 ([#12649](https://github.com/mdn/yari/issues/12649)) ([7301f54](https://github.com/mdn/yari/commit/7301f54b1e120ba7374745000fc12c7b9c95df2b))
+* **deps:** bump react-markdown from 9.1.0 to 10.0.0 ([#12648](https://github.com/mdn/yari/issues/12648)) ([17e73c6](https://github.com/mdn/yari/commit/17e73c601cfabee5454abacedaad1b025643b68f))
+* **deps:** bump web-specs from 3.40.0 to 3.41.0 ([#12651](https://github.com/mdn/yari/issues/12651)) ([2cc9e2d](https://github.com/mdn/yari/commit/2cc9e2d69d4e689506c25ee794b6752a83ef7148))
+
 ## [4.5.0](https://github.com/mdn/yari/compare/v4.4.1...v4.5.0) (2025-02-20)
 
 
