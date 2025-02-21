@@ -339,7 +339,8 @@ function playSubdomain(hostname) {
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   if (url.searchParams.has("blank")) {
-    return res.setHeader("Content-Type", "text/html").status(204).end();
+    res.setHeader("Content-Type", "text/html").status(204).end();
+    return;
   }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
@@ -349,7 +350,8 @@ export async function handleRunner(req, res) {
 
   if (!stateParam) {
     console.warn("[runner] Missing state parameter");
-    return res.status(400).end();
+    res.status(400).end();
+    return;
   }
 
   const { state, hash } = await decompressFromBase64(stateParam);
@@ -374,7 +376,8 @@ export async function handleRunner(req, res) {
         console.warn(
           `[runner] No iframe on MDN: ${JSON.stringify({ isOnMDN, isIframe })}`
         );
-        return res.status(403).end();
+        res.status(403).end();
+        return;
       }
     }
   }
