@@ -174,8 +174,6 @@ tab-wrapper {
 .template-choices {
   border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
-  // TODO: prototype, needs styling properly
-  // TODO: will share a lot of styles with tabbed interface, perhaps we make those generic?
   display: grid;
   grid-template-areas:
     "header header"

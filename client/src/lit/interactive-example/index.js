@@ -118,8 +118,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   /** @param {MouseEvent} event  */
   _choiceClick({ target }) {
-    // TODO: set first choice as default
-    // TODO: check if tabbing through choices works like before
     // TODO: use a different event handler for editor update event
     // TODO: deal with update race conditions (editor updates after user clicks on different editor)
     if (target instanceof PlayEditor) {

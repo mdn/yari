@@ -6,7 +6,5 @@ window.addEventListener("message", ({ data }) => {
     if (element) {
       element.style.cssText = code;
     }
-    // TODO: nice transitions
-    // TODO: whatever prefixing and validation is going on in bob/editor/js/editor-libs/css-editor-utils.ts
   }
 });
