@@ -379,8 +379,8 @@ export async function handleRunner(req, res) {
   if (req.hostname !== "localhost") {
     // For security reasons, we only allow the runner:
     // 1. on localhost (without any restrictions),
-    // 2. on MDN pages (only in an iframe), or
-    // 3. if the subdomain matches the hash (for direct links).
+    // 2. if the subdomain matches the hash (for embedded direct links), or
+    // 3. in iframes on MDN.
     const subdomain = playSubdomain(req.hostname);
 
     if (subdomain !== hash) {
