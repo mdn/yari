@@ -1,5 +1,6 @@
 import { MDNImageHistory, TeamMember } from "./about";
 import { InteractiveExample } from "./interactive-example";
+import { TabPanel, Tab, TabWrapper } from "./interactive-example/tabs";
 import { ContributorList } from "./community/contributor-list";
 import { ScrimInline } from "./curriculum/scrim-inline";
 import { PlayConsole } from "./play/console";
@@ -12,6 +13,9 @@ declare global {
     "mdn-image-history": MDNImageHistory;
     "team-member": TeamMember;
     "interactive-example": InteractiveExample;
+    "ix-tab": Tab;
+    "ix-tab-panel": TabPanel;
+    "ix-tab-wrapper": TabWrapper;
     "contributor-list": ContributorList;
     "scrim-inline": ScrimInline;
     "play-console": PlayConsole;

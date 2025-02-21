@@ -372,6 +372,19 @@ app.get(["/*/runner.html", "/runner.html"], (req, res) => {
   handleRunner(req, res);
 });
 
+app.get(
+  "/shared-assets/*",
+  createProxyMiddleware({
+    target: "https://mdn.github.io/shared-assets/",
+    pathRewrite: {
+      "^/shared-assets/": "/",
+    },
+    changeOrigin: true,
+    autoRewrite: true,
+    xfwd: true,
+  })
+);
+
 if (CURRICULUM_ROOT) {
   app.get(
     [
