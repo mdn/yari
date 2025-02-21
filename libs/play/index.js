@@ -340,28 +340,45 @@ function playSubdomain(hostname) {
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   if (url.searchParams.has("blank")) {
-    return res.setHeader("Content-Type", "text/html").status(200).end();
+    return res.setHeader("Content-Type", "text/html").status(204).end();
   }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
     "https://example.com"
   );
   const stateParam = url.searchParams.get("state");
+
+  if (!stateParam) {
+    console.warn("[runner] Missing state parameter");
+    return res.status(400).end();
+  }
+
   const { state, hash } = await decompressFromBase64(stateParam);
 
-  const isLocalhost = req.hostname === "localhost";
-  const hasMatchingHash = playSubdomain(req.hostname) === hash;
-  const isIframeOnMDN =
-    referer.hostname === ORIGIN_MAIN &&
-    req.headers["sec-fetch-dest"] === "iframe";
-
-  if (
-    !stateParam ||
-    !state ||
-    (!isLocalhost && !hasMatchingHash && !isIframeOnMDN)
-  ) {
+  if (!state) {
+    console.warn("[runner] Invalid state parameter");
     res.status(404).end();
     return;
+  }
+
+  if (req.hostname !== "localhost") {
+    const expectedHash = playSubdomain(req.hostname);
+
+    if (expectedHash !== hash) {
+      console.warn(
+        `[runner] Hash mismatch: ${JSON.stringify({ expectedHash, hash })}`
+      );
+
+      const isOnMDN = referer.hostname === ORIGIN_MAIN;
+      const isIframe = req.headers["sec-fetch-dest"] === "iframe";
+
+      if (!isOnMDN || !isIframe) {
+        console.warn(
+          `[runner] No iframe on MDN: ${JSON.stringify({ isOnMDN, isIframe })}`
+        );
+        return res.status(403).end();
+      }
+    }
   }
 
   const json = JSON.parse(state);
