@@ -335,10 +335,9 @@ function playSubdomain(hostname) {
 }
 
 /**
- * @param {URL} referer
+ * @param {string} hostname
  */
-function isMDNReferer(referer) {
-  const { hostname } = referer;
+function isMDNHost(hostname) {
   return (
     hostname === ORIGIN_MAIN ||
     hostname === ORIGIN_REVIEW ||
@@ -373,24 +372,34 @@ export async function handleRunner(req, res) {
   const { state, hash } = await decompressFromBase64(stateParam);
 
   if (!state) {
-    console.warn("[runner] Invalid state parameter");
+    console.warn("[runner] Invalid state value");
     return res.status(404).end();
   }
 
   if (req.hostname !== "localhost") {
-    const expectedHash = playSubdomain(req.hostname);
+    // For security reasons, we only allow the runner:
+    // 1. on localhost (without any restrictions),
+    // 2. on MDN pages (only in an iframe), or
+    // 3. if the subdomain matches the hash (for direct links).
+    const subdomain = playSubdomain(req.hostname);
 
-    if (expectedHash !== hash) {
-      console.warn(
-        `[runner] Hash mismatch: ${JSON.stringify({ expectedHash, hash })}`
-      );
+    if (subdomain !== hash) {
+      const { hostname } = referer;
+      const isOnMDN = isMDNHost(hostname);
+      const secFetchDest = req.headers["sec-fetch-dest"];
+      const isIframe = secFetchDest === "iframe";
 
-      const isOnMDN = isMDNReferer(referer);
-      const isIframe = req.headers["sec-fetch-dest"] === "iframe";
-
-      if (!isOnMDN || !isIframe) {
+      if (!isIframe) {
         console.warn(
-          `[runner] No iframe on MDN: ${JSON.stringify({ isOnMDN, isIframe })}`
+          `[runner] Disallowed Sec-Fetch-Dest (expected "iframe", was ${JSON.stringify(secFetchDest)})`
+        );
+        res.status(403).end();
+        return;
+      }
+
+      if (!isOnMDN) {
+        console.warn(
+          `[runner] Disallowed Referer (expected MDN host, was ${JSON.stringify(hostname)})`
         );
         res.status(403).end();
         return;
