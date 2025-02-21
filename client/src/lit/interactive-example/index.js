@@ -44,7 +44,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     /** @type {Record<string, string>} */
     this._code = {};
     /** @type {number} */
-    this.choiceSelected = 0;
+    this.choiceSelected = -1;
     /** @type {number} */
     this.choiceUnsupportedMask = 0;
   }
@@ -59,9 +59,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   _reset() {
-    this.choiceSelected = 0;
-    this.choiceUnsupportedMask = 0;
     this._controller.value?.reset();
+    if (this._template === "choices") {
+      this._resetChoices();
+    }
   }
 
   _initialCode() {
@@ -84,7 +85,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     const choiceNodes = this.closest("section")?.querySelectorAll(
       ".code-example pre.interactive-example-choice"
     );
-    this._choices = Array.from(choiceNodes || []).map((pre) => pre.textContent);
+    this._choices = Array.from(choiceNodes || []).map((pre) =>
+      pre.textContent?.trim()
+    );
     this._languages = Object.keys(code);
     this._template = this._choices.length
       ? "choices"
@@ -126,18 +129,43 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         choice?.parentNode?.children,
         choice
       );
-      this.choiceSelected = choiceIndex;
-
-      const code = target.value;
-      const unsupported = !isCSSSupported(code);
-      this.choiceUnsupportedMask &= ~(1 << choiceIndex);
-      this.choiceUnsupportedMask |= Number(unsupported) << choiceIndex;
-
-      // TODO: nicer interface for posting messages than this:
-      const iframe = this._runner.value?.shadowRoot?.querySelector("iframe");
-
-      iframe?.contentWindow?.postMessage({ typ: "choice", code }, "*");
+      this._selectChoice(choiceIndex, target.value);
     }
+  }
+
+  _resetChoices() {
+    this.choiceSelected = -1;
+    this.choiceUnsupportedMask = 0;
+    const editorNodes = Array.from(
+      this.shadowRoot?.querySelectorAll("play-editor") || []
+    );
+    Array.from(editorNodes).forEach((editorNode, index) => {
+      editorNode.value = this._choices?.at(index) ?? "";
+    });
+    this._selectChoice(0);
+  }
+
+  /**
+   * @param {Number} index
+   * @param {string|undefined} code
+   */
+  _selectChoice(index, code = undefined) {
+    code = typeof code === "string" ? code : this._choices?.at(index) || "";
+
+    if (!code) {
+      return;
+    }
+
+    this.choiceSelected = index;
+
+    const unsupported = !isCSSSupported(code);
+    this.choiceUnsupportedMask &= ~(1 << index);
+    this.choiceUnsupportedMask |= Number(unsupported) << index;
+
+    // TODO: nicer interface for posting messages than this:
+    const iframe = this._runner.value?.shadowRoot?.querySelector("iframe");
+
+    iframe?.contentWindow?.postMessage({ typ: "choice", code }, "*");
   }
 
   /** @param {Event} ev  */
@@ -160,6 +188,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       this.renderRoot.addEventListener(type, this._telemetryHandler);
     });
     this._code = this._initialCode();
+
+    if (this._template === "choices") {
+      this._selectChoice(0);
+    }
   }
 
   _renderJavascript() {
