@@ -209,17 +209,47 @@ tab-wrapper {
     gap: 0.4rem;
     grid-area: choice;
     padding: 1rem;
+    padding-right: 0rem;
 
-    play-editor {
-      background: var(--background-secondary);
-      border: 1px solid var(--border-secondary);
-      border-radius: var(--elem-radius);
-      cursor: pointer;
+    .choice {
+      --field-focus-border: #0085f2;
+      --focus-01: 0 0 0 3px rgba(0, 144, 237, 0.4);
+
+      align-items: center;
+      display: flex;
+      flex-grow: 1;
+
+      &::after {
+        color: var(--field-focus-border);
+        content: "▸";
+        font-size: 0.6875rem;
+        padding: 0;
+        padding-left: 0.25rem;
+        padding-right: 1.25rem;
+        opacity: 0;
+      }
 
       &.selected {
-        border-color: #0085f2; // var(--field-focus-border);
-        box-shadow: 0 0 0 3px rgba(0, 144, 237, 0.4); // var(--focus-01);
-        cursor: text;
+        play-editor {
+          border-color: var(--field-focus-border);
+          box-shadow: var(--focus-01);
+          cursor: text;
+        }
+
+        &::after {
+          opacity: 1;
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+          transition: all 0.2s ease-out;
+        }
+      }
+
+      play-editor {
+        background: var(--background-secondary);
+        border: 1px solid var(--border-secondary);
+        border-radius: var(--elem-radius);
+        cursor: pointer;
+        width: 100%;
       }
     }
   }

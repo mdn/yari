@@ -118,9 +118,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     // TODO: use a different event handler for editor update event
     // TODO: deal with update race conditions (editor updates after user clicks on different editor)
     if (target instanceof PlayEditor) {
+      const choice = target.closest(".choice");
       this.choiceSelected = Array.prototype.indexOf.call(
-        target.parentNode?.children,
-        target
+        choice?.parentNode?.children,
+        choice
       );
 
       // TODO: nicer interface for posting messages than this:
@@ -218,12 +219,17 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         >
           ${this._choices?.map(
             (code, index) => html`
-              <play-editor
-                language="css"
-                minimal="true"
-                .value=${code?.trim()}
-                class=${index === this.choiceSelected ? "selected" : ""}
-              ></play-editor>
+              <div
+                class=${index === this.choiceSelected
+                  ? "choice selected"
+                  : "choice"}
+              >
+                <play-editor
+                  language="css"
+                  minimal="true"
+                  .value=${code?.trim()}
+                ></play-editor>
+              </div>
             `
           )}
         </div>
