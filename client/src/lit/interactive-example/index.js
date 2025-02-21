@@ -16,6 +16,7 @@ import exampleStyle from "./example.css?raw";
 import choiceJs from "./choice.js?raw";
 import choiceStyle from "./choice.css?raw";
 import { PlayEditor } from "../play/editor.js";
+import { isCSSSupported } from "./utils.js";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -30,6 +31,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   static properties = {
     name: { type: String },
     choiceSelected: { type: Number, state: true },
+    choiceUnsupportedMask: { type: Number, state: true },
   };
 
   static styles = styles;
@@ -43,6 +45,8 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._code = {};
     /** @type {number} */
     this.choiceSelected = 0;
+    /** @type {number} */
+    this.choiceUnsupportedMask = 0;
   }
 
   /** @type {Ref<PlayController>} */
@@ -56,6 +60,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   _reset() {
     this.choiceSelected = 0;
+    this.choiceUnsupportedMask = 0;
     this._controller.value?.reset();
   }
 
@@ -119,18 +124,21 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     // TODO: deal with update race conditions (editor updates after user clicks on different editor)
     if (target instanceof PlayEditor) {
       const choice = target.closest(".choice");
-      this.choiceSelected = Array.prototype.indexOf.call(
+      const choiceIndex = Array.prototype.indexOf.call(
         choice?.parentNode?.children,
         choice
       );
+      this.choiceSelected = choiceIndex;
+
+      const code = target.value;
+      const unsupported = !isCSSSupported(code);
+      this.choiceUnsupportedMask &= ~(1 << choiceIndex);
+      this.choiceUnsupportedMask |= Number(unsupported) << choiceIndex;
 
       // TODO: nicer interface for posting messages than this:
       const iframe = this._runner.value?.shadowRoot?.querySelector("iframe");
 
-      iframe?.contentWindow?.postMessage(
-        { typ: "choice", code: target.value },
-        "*"
-      );
+      iframe?.contentWindow?.postMessage({ typ: "choice", code }, "*");
     }
   }
 
@@ -220,9 +228,13 @@ export class InteractiveExample extends GleanMixin(LitElement) {
           ${this._choices?.map(
             (code, index) => html`
               <div
-                class=${index === this.choiceSelected
-                  ? "choice selected"
-                  : "choice"}
+                class=${[
+                  "choice",
+                  ...(index === this.choiceSelected ? ["selected"] : []),
+                  ...((1 << index) & this.choiceUnsupportedMask
+                    ? ["unsupported"]
+                    : []),
+                ].join(" ")}
               >
                 <play-editor
                   language="css"
