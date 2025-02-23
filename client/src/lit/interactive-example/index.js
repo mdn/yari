@@ -146,7 +146,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         <div class="template-wat">
           <div class="inner-top">
             <header>
-              <h4>Wat demo: ${decode(this.name)}</h4>
+              <h4>${decode(this.name)}</h4>
             </header>
             <ix-tab-wrapper>
               ${this._languages.map(
