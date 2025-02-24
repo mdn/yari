@@ -349,6 +349,7 @@ function isMDNReferer(referer) {
 /**
  * @param {express.Request} req
  * @param {express.Response} res
+ * @returns {Promise<void>}
  */
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
@@ -372,7 +373,8 @@ export async function handleRunner(req, res) {
     !state ||
     (!isLocalhost && !hasMatchingHash && !isIframeOnMDN)
   ) {
-    return res.status(404).end();
+    res.status(404).end();
+    return;
   }
 
   const json = JSON.parse(state);
@@ -381,7 +383,7 @@ export async function handleRunner(req, res) {
   if (req.headers["sec-fetch-dest"] === "iframe" || codeParam === codeCookie) {
     const html = renderHtml(json);
     withRunnerResponseHeaders(res);
-    return res.status(200).send(html);
+    res.status(200).send(html);
   } else {
     const rand = crypto.randomUUID();
     res.cookie("code", rand, {
@@ -394,7 +396,7 @@ export async function handleRunner(req, res) {
     urlWithCode.search = "";
     urlWithCode.searchParams.set("state", stateParam);
     urlWithCode.searchParams.set("code", rand);
-    return res
+    res
       .status(200)
       .send(
         renderWarning(

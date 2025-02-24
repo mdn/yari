@@ -28,7 +28,7 @@ const handleViewed = createPongViewedHandler(coder);
 const plusLookup =
   ORIGIN_MAIN === "developer.mozilla.org" ? prodPlusLookup : stagePlusLookup;
 
-export async function proxyKevel(req: Request, res: Response) {
+export async function proxyKevel(req: Request, res: Response): Promise<void> {
   const countryCode = getRequestCountry(req);
 
   const plusAvailable = countryCode in plusLookup.countryToCurrency;
@@ -41,7 +41,8 @@ export async function proxyKevel(req: Request, res: Response) {
 
   if (pathname === "/pong/get") {
     if (req.method !== "POST") {
-      return res.sendStatus(405).end();
+      res.sendStatus(405).end();
+      return;
     }
 
     const { body } = req;
@@ -53,34 +54,40 @@ export async function proxyKevel(req: Request, res: Response) {
 
     payload.plusAvailable = plusAvailable;
 
-    return res
+    res
       .status(status)
       .setHeader("cache-control", "no-store")
       .setHeader("content-type", "application/json")
       .end(JSON.stringify(payload));
+    return;
   } else if (req.path === "/pong/click") {
     if (req.method !== "GET") {
-      return res.sendStatus(405).end();
+      res.sendStatus(405).end();
+      return;
     }
     const params = new URLSearchParams(search);
     try {
       const { status, location } = await handleClick(params);
       if (location && (status === 301 || status === 302)) {
-        return res.redirect(location);
+        res.redirect(location);
+        return;
       } else {
-        return res.sendStatus(502).end();
+        res.sendStatus(502).end();
+        return;
       }
     } catch (e) {
       console.error(e);
     }
   } else if (pathname === "/pong/viewed") {
     if (req.method !== "POST") {
-      return res.sendStatus(405).end();
+      res.sendStatus(405).end();
+      return;
     }
     const params = new URLSearchParams(search);
     try {
       await handleViewed(params);
-      return res.sendStatus(201).end();
+      res.sendStatus(201).end();
+      return;
     } catch (e) {
       console.error(e);
     }
@@ -89,17 +96,19 @@ export async function proxyKevel(req: Request, res: Response) {
       decodeURIComponent(pathname.substring("/pimg/".length))
     );
     if (!src) {
-      return res.sendStatus(400).end();
+      res.sendStatus(400).end();
+      return;
     }
     const { buf, contentType } = await fetchImage(src);
-    return res
+    res
       .status(200)
       .set({
         "cache-control": "max-age=86400",
         "content-type": contentType,
       })
       .end(Buffer.from(buf));
+    return;
   }
 
-  return res.status(204).end();
+  res.status(204).end();
 }
