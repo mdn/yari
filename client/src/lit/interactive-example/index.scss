@@ -217,8 +217,9 @@ tab-wrapper {
     row-gap: 0.4rem;
 
     @media (max-width: $screen-lg) {
-      border-right: none;
       border-bottom: var(--border);
+      border-right: none;
+      padding-right: 0.2em; // Avoid box-shadow overflow.
     }
 
     .choice {
@@ -240,7 +241,7 @@ tab-wrapper {
         width: 1rem;
 
         @media (max-width: $screen-lg) {
-          content: "▾";
+          display: none;
         }
       }
 
