@@ -23,7 +23,6 @@ body {
   display: flex;
   justify-content: center;
   font: var(--type-body-l);
-  padding: 1em;
 
   > :first-child {
     height: 300px;
