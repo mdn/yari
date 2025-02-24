@@ -20,7 +20,7 @@ import exampleStyle from "./example.css?raw";
  * @import { PlayRunner } from "../play/runner.js";
  */
 
-const LANGUAGE_CLASSES = ["html", "js", "css"];
+const LANGUAGE_CLASSES = ["html", "js", "css", "wat"];
 const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 
 export class InteractiveExample extends GleanMixin(LitElement) {
@@ -73,7 +73,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._template =
       this._languages.length === 1 && this._languages[0] === "js"
         ? "javascript"
-        : "tabbed";
+        : this._languages.includes("js") && this._languages.includes("wat")
+          ? "wat"
+          : "tabbed";
     if (this._template === "tabbed") {
       code["js-hidden"] = exampleJs;
       code["css-hidden"] = exampleStyle;
@@ -89,7 +91,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       case "css":
         return "CSS";
       case "js":
-        return "JavaScript";
+        return "Javascript";
+      case "wat":
+        return "WAT";
       default:
         return lang;
     }
@@ -136,6 +140,38 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     `;
   }
 
+  _renderWat() {
+    return html`
+      <play-controller ${ref(this._controller)}>
+        <div class="template-wat">
+          <div class="inner-top">
+            <header>
+              <h4>${decode(this.name)}</h4>
+            </header>
+            <ix-tab-wrapper>
+              ${this._languages.map(
+                (lang) => html`
+                  <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
+                  <ix-tab-panel id=${`${lang}-panel`}>
+                    <play-editor language=${lang}></play-editor>
+                  </ix-tab-panel>
+                `
+              )}
+            </ix-tab-wrapper>
+          </div>
+          <div class="inner-bottom">
+            <div class="buttons">
+              <button id="execute" @click=${this._run}>Run</button>
+              <button id="reset" @click=${this._reset}>Reset</button>
+            </div>
+            <play-console id="console"></play-console>
+            <play-runner></play-runner>
+          </div>
+        </div>
+      </play-controller>
+    `;
+  }
+
   _renderTabbed() {
     return html`
       <play-controller ${ref(this._controller)} run-on-start run-on-change>
@@ -167,9 +203,16 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   render() {
-    return this._template === "javascript"
-      ? this._renderJavascript()
-      : this._renderTabbed();
+    switch (this._template) {
+      case "javascript":
+        return this._renderJavascript();
+      case "wat":
+        return this._renderWat();
+      case "tabbed":
+        return this._renderTabbed();
+      default:
+        return "";
+    }
   }
 
   firstUpdated() {

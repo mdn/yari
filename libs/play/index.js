@@ -289,7 +289,9 @@ export function renderHtml(state = null) {
   </head>
   <body>
     ${html}
-    <script>${js}</script>
+    <script type="module">
+        ${js}
+    </script>
   </body>
 </html>
 `;
