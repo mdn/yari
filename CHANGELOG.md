@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.5.2](https://github.com/mdn/yari/compare/v4.5.1...v4.5.2) (2025-02-24)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump postcss-preset-env from 10.1.4 to 10.1.5 ([#12661](https://github.com/mdn/yari/issues/12661)) ([31bc124](https://github.com/mdn/yari/commit/31bc124786c71626fe2cf996c52ddb50f34f1b74))
+* **deps-dev:** bump ts-jest from 29.2.5 to 29.2.6 ([#12658](https://github.com/mdn/yari/issues/12658)) ([1c7e810](https://github.com/mdn/yari/commit/1c7e8109e9b40904b9ee59f3dc8f9724a6a2d209))
+* **deps:** bump @mdn/browser-compat-data from 5.6.40 to 5.6.41 ([#12659](https://github.com/mdn/yari/issues/12659)) ([1db4172](https://github.com/mdn/yari/commit/1db41723a46e681087b34714e958ffe214411be0))
+* **deps:** bump openai from 4.85.3 to 4.85.4 ([#12657](https://github.com/mdn/yari/issues/12657)) ([72cf655](https://github.com/mdn/yari/commit/72cf655dc91a1d7085d79861faab672ff42ab065))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#12662](https://github.com/mdn/yari/issues/12662)) ([ecb1459](https://github.com/mdn/yari/commit/ecb1459131aeb7fe5c4aba9ba4dfecd9a0798af4))
+
 ## [4.5.1](https://github.com/mdn/yari/compare/v4.5.0...v4.5.1) (2025-02-21)
 
 
