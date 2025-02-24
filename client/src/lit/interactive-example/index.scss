@@ -210,10 +210,10 @@ tab-wrapper {
     border-right: 1px solid var(--border-primary);
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
     grid-area: choice;
     padding: 1rem;
     padding-right: 0;
+    row-gap: 0.4rem;
 
     .choice {
       --field-focus-border: #0085f2;
@@ -230,7 +230,7 @@ tab-wrapper {
         opacity: 0;
         padding: 0;
         padding-left: 0.25rem;
-        padding-right: 1.25rem;
+        padding-right: 1rem;
         width: 1rem;
 
         @media (max-width: $screen-lg) {
@@ -248,7 +248,7 @@ tab-wrapper {
         &::after {
           opacity: 1;
           padding-left: 0.75rem;
-          padding-right: 0.75rem;
+          padding-right: 0.5rem;
           transition: all 0.2s ease-out;
         }
       }
