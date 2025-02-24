@@ -10,11 +10,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 click = "^8.1.8"
-boto3 = "^1.36.21"
+boto3 = "^1.36.26"
 python-decouple = "^3.8"
 requests = {extras = ["security"], version = "^2.32.3"}
 elasticsearch-dsl = "^7.4.1"
-selectolax = "^0.3.27"
+selectolax = "^0.3.28"
 PyGithub = "^1.59"
 unidiff = "^0.7.5"
 
