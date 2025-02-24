@@ -104,7 +104,7 @@
     "cookie": "^0.7.2",
     "cookie-parser": "^1.4.7",
     "cross-spawn": "^7.0.6",
-    "css-tree": "^2.3.1",
+    "css-tree": "^3.1.0",
     "dayjs": "^1.11.13",
     "dexie": "^4.0.11",
     "dotenv": "^16.4.7",
