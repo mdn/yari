@@ -4,8 +4,6 @@ import { PLAYGROUND_BASE_HOST } from "../../env.ts";
 import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
-import init, { watify } from "watify";
-
 import styles from "./runner.scss?css" with { type: "css" };
 
 /** @import { VConsole } from "./types" */
@@ -117,7 +115,7 @@ function uInt8ArrayToBase64(bytes) {
  * @returns {Promise<string>} a data-url with the compiled wasm, base64 encoded
  */
 async function compileAndEncodeWatToDataUrl(wat) {
-  await init();
+  const { watify } = await import("watify");
   const binary = watify(wat);
   const b64 = `data:application/wasm;base64,${uInt8ArrayToBase64(binary)}`;
   return b64;
