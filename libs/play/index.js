@@ -342,7 +342,7 @@ export function renderHtml(state = null) {
               }
             </style>`
           : ""}
-        <style>
+        <style id="css-output">
           ${css}
         </style>
 
