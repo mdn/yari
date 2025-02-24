@@ -99,9 +99,9 @@ export class PlayEditor extends LitElement {
               ...lintKeymap,
               indentWithTab,
             ]),
+            EditorView.lineWrapping,
           ]
         : []),
-      EditorView.lineWrapping,
       ...(this.theme.value === "dark" ? [oneDark] : []),
       ...language,
       EditorView.updateListener.of((update) => {
