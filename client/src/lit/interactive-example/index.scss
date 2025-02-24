@@ -261,6 +261,10 @@ tab-wrapper {
       }
 
       &.unsupported {
+        play-editor {
+          border-color: #ffb800;
+        }
+
         &::after {
           background-image: url("../../assets/icons/warning.svg");
           background-position: center center;
