@@ -271,7 +271,7 @@
     "swr": "^2.3.2",
     "terser-loader": "^2.0.3",
     "terser-webpack-plugin": "^5.3.11",
-    "ts-jest": "^29.2.5",
+    "ts-jest": "^29.2.6",
     "ts-lit-plugin": "^2.0.2",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
