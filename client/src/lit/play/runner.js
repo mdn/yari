@@ -4,7 +4,7 @@ import { PLAYGROUND_BASE_HOST } from "../../env.ts";
 import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
-import init, { watify } from "./../../../../libs/watify/pkg/watify.js";
+import init, { watify } from "watify";
 
 import styles from "./runner.scss?css" with { type: "css" };
 
