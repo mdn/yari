@@ -206,7 +206,8 @@ tab-wrapper {
   }
 
   .choice-wrapper {
-    border-right: 1px solid var(--border-primary);
+    --border: 1px solid var(--border-primary);
+    border-right: var(--border);
     display: flex;
     flex-direction: column;
     grid-area: choice;
@@ -214,6 +215,11 @@ tab-wrapper {
     padding: 1rem;
     padding-right: 0;
     row-gap: 0.4rem;
+
+    @media (max-width: $screen-lg) {
+      border-right: none;
+      border-bottom: var(--border);
+    }
 
     .choice {
       --field-focus-border: #0085f2;
