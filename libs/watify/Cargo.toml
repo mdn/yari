@@ -1,0 +1,17 @@
+[package]
+name = "watify"
+version = "0.0.1"
+edition = "2021"
+resolver = "2"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+opt-level = 's'
+
+[dependencies]
+wat = "1"
+wasm-bindgen = "0.2"
