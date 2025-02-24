@@ -115,7 +115,8 @@ function uInt8ArrayToBase64(bytes) {
  * @returns {Promise<string>} a data-url with the compiled wasm, base64 encoded
  */
 async function compileAndEncodeWatToDataUrl(wat) {
-  const { watify } = await import("watify");
+  const { default: init, watify } = await import("watify");
+  await init();
   const binary = watify(wat);
   const b64 = `data:application/wasm;base64,${uInt8ArrayToBase64(binary)}`;
   return b64;
