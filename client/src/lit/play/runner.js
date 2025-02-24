@@ -50,6 +50,7 @@ export class PlayRunner extends LitElement {
           js: code?.js || "",
         })
       );
+      const prefix = (srcPrefix || "").replace(/\/$/, "");
       signal.throwIfAborted();
       // We're using a random subdomain for origin isolation.
       const url = new URL(
@@ -62,7 +63,7 @@ export class PlayRunner extends LitElement {
             }${PLAYGROUND_BASE_HOST}`
       );
       url.searchParams.set("state", state);
-      url.pathname = `${srcPrefix || ""}/runner.html`;
+      url.pathname = `${prefix}/runner.html`;
       const src = url.href;
       // update iframe src without adding to browser history
       this.shadowRoot
