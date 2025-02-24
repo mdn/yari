@@ -211,6 +211,7 @@ tab-wrapper {
     display: flex;
     flex-direction: column;
     grid-area: choice;
+    overflow: scroll;
     padding: 1rem;
     padding-right: 0;
     row-gap: 0.4rem;
