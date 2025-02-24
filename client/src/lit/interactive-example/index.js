@@ -149,23 +149,60 @@ export class InteractiveExample extends GleanMixin(LitElement) {
    * @param {Number} index
    * @param {string|undefined} code
    */
-  _selectChoice(index, code = undefined) {
+  async _selectChoice(index, code = undefined) {
     code = typeof code === "string" ? code : this._choices?.at(index) || "";
 
     if (!code) {
+      console.debug("No code selected");
       return;
     }
 
-    this.choiceSelected = index;
-
-    const unsupported = !isCSSSupported(code);
-    this.choiceUnsupportedMask &= ~(1 << index);
-    this.choiceUnsupportedMask |= Number(unsupported) << index;
-
     // TODO: nicer interface for posting messages than this:
-    const iframe = this._runner.value?.shadowRoot?.querySelector("iframe");
+    const runner = this._runner.value;
 
-    iframe?.contentWindow?.postMessage({ typ: "choice", code }, "*");
+    if (!runner) {
+      console.error("No runner");
+      return;
+    }
+
+    // Ensures it has an iframe.
+    await runner.updateComplete;
+
+    const shadowRoot = runner.shadowRoot;
+
+    if (!shadowRoot) {
+      console.error("No shadowRoot");
+      return;
+    }
+
+    const iframe = shadowRoot.querySelector("iframe");
+
+    if (!iframe) {
+      console.error("No iframe");
+      return;
+    }
+
+    const contentWindow = iframe.contentWindow;
+
+    if (!contentWindow) {
+      console.error("No contentWindow");
+      return;
+    }
+
+    const applyCode = () => {
+      this.choiceSelected = index;
+
+      const unsupported = !isCSSSupported(code);
+      this.choiceUnsupportedMask &= ~(1 << index);
+      this.choiceUnsupportedMask |= Number(unsupported) << index;
+      contentWindow.postMessage({ typ: "choice", code }, "*");
+    };
+
+    if (contentWindow.document.readyState === "complete") {
+      applyCode();
+    } else {
+      iframe.addEventListener("load", applyCode);
+    }
   }
 
   /** @param {Event} ev  */
@@ -188,10 +225,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       this.renderRoot.addEventListener(type, this._telemetryHandler);
     });
     this._code = this._initialCode();
-
-    if (this._template === "choices") {
-      this._selectChoice(0);
-    }
   }
 
   _renderJavascript() {
@@ -301,6 +334,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   firstUpdated() {
     if (this._controller.value) {
       this._controller.value.code = this._code;
+    }
+    if (this._template === "choices") {
+      this._selectChoice(0);
     }
   }
 
