@@ -16,6 +16,7 @@ export const ORIGIN_REVIEW =
  * @property {string} css
  * @property {string} js
  * @property {string} [src]
+ * @property {"ix-tabbed"} [defaults]
  */
 
 /**
@@ -218,6 +219,7 @@ export function renderHtml(state = null) {
     css,
     html: htmlCode,
     js,
+    defaults,
   } = state || {
     css: "",
     html: "",
@@ -262,6 +264,84 @@ export function renderHtml(state = null) {
             padding: 5px 10px 5px 26px;
           }
         </style>
+        ${defaults === "ix-tabbed"
+          ? html`<style>
+              @font-face {
+                font-family: "Inter";
+                src:
+                  url("/shared-assets/fonts/Inter.var.woff2")
+                    format("woff2 supports variations"),
+                  url("/shared-assets/fonts/Inter.var.woff2")
+                    format("woff2-variations");
+                font-weight: 1 999;
+                font-stretch: 75% 100%;
+                font-style: oblique 0deg 20deg;
+                font-display: swap;
+              }
+
+              /* fonts used by the examples rendered inside the shadow dom. Because
+                 @font-face does not work in shadow dom:
+                 http://robdodson.me/at-font-face-doesnt-work-in-shadow-dom/ */
+              @font-face {
+                font-family: "Fira Sans";
+                src:
+                  local("FiraSans-Regular"),
+                  url("/shared-assets/fonts/FiraSans-Regular.woff2")
+                    format("woff2");
+              }
+
+              @font-face {
+                font-family: "Fira Sans";
+                font-weight: normal;
+                font-style: oblique;
+                src:
+                  local("FiraSans-SemiBoldItalic"),
+                  url("/shared-assets/fonts/FiraSans-SemiBoldItalic.woff2")
+                    format("woff2");
+              }
+
+              @font-face {
+                font-family: "Dancing Script";
+                src: url("/shared-assets/fonts/dancing-script/dancing-script-regular.woff2")
+                  format("woff2");
+              }
+
+              @font-face {
+                font-family: molot;
+                src: url("/shared-assets/fonts/molot.woff2") format("woff2");
+              }
+
+              @font-face {
+                font-family: rapscallion;
+                src: url("/shared-assets/fonts/rapscall.woff2") format("woff2");
+              }
+
+              body {
+                background-color: #fff;
+                font:
+                  400 1rem/1.1876 Inter,
+                  BlinkMacSystemFont,
+                  "Segoe UI",
+                  "Roboto",
+                  "Oxygen",
+                  "Ubuntu",
+                  "Cantarell",
+                  "Fira Sans",
+                  "Droid Sans",
+                  "Helvetica Neue",
+                  sans-sans;
+                color: #15141aff;
+                font-size: 0.9rem;
+                line-height: 1.5;
+                padding: 2rem 1rem 1rem;
+                min-width: min-content;
+              }
+
+              body math {
+                font-size: 1.5rem;
+              }
+            </style>`
+          : ""}
         <style>
           ${css}
         </style>
@@ -318,6 +398,24 @@ export function renderHtml(state = null) {
           window.console = consoleProxy;
           window.addEventListener("error", (e) => console.log(e.error));
         </script>
+        ${defaults === "ix-tabbed"
+          ? html`<script>
+              window.addEventListener("click", (event) => {
+                // open links in parent frame if they have no "_target" set
+                const target = event.target;
+                if (
+                  target instanceof HTMLAnchorElement ||
+                  target instanceof HTMLAreaElement
+                ) {
+                  const hrefAttr = target.getAttribute("href");
+                  const targetAttr = target.getAttribute("target");
+                  if (hrefAttr && !hrefAttr.startsWith("#") && !targetAttr) {
+                    target.target = "_parent";
+                  }
+                }
+              });
+            </script>`
+          : ""}
       </head>
       <body>
         ${htmlCode}
