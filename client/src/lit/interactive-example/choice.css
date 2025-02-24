@@ -24,7 +24,7 @@ body {
   font: var(--type-body-l);
 
   > :first-child {
-    height: 300px;
+    height: 200px;
     overflow: hidden;
   }
 }
