@@ -16,7 +16,6 @@ body {
   --font-body: Inter, var(--font-fallback);
   --type-body-l: 400 1rem/1.1876 var(--font-body);
 
-  font-size: 24px !important;
   align-items: center;
   color: var(--text-primary);
   background-color: var(--background-primary);
