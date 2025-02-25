@@ -11,9 +11,6 @@ import "./tabs.js";
 
 import styles from "./index.scss?css" with { type: "css" };
 
-import exampleJs from "./example.js?raw";
-import exampleStyle from "./example.css?raw";
-
 /**
  * @import { Ref } from 'lit/directives/ref.js';
  * @import { PlayController } from "../play/controller.js";
@@ -74,10 +71,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       this._languages.length === 1 && this._languages[0] === "js"
         ? "javascript"
         : "tabbed";
-    if (this._template === "tabbed") {
-      code["js-hidden"] = exampleJs;
-      code["css-hidden"] = exampleStyle;
-    }
     return code;
   }
 
@@ -159,6 +152,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
             <play-runner
               ${ref(this._runner)}
               sandbox="allow-top-navigation-by-user-activation"
+              defaults="ix-tabbed"
             ></play-runner>
           </div>
         </div>
