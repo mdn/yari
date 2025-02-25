@@ -42,15 +42,15 @@ play-console {
   grid-area: console;
 }
 
-tab-wrapper {
+ix-tab-wrapper {
   grid-area: tabs;
 }
 
 // -------------------
-// JavaScript examples
+// JavaScript/WAT examples
 // -------------------
 
-.template-javascript {
+.template-console {
   align-content: start;
   display: grid;
   gap: 0.5rem;
@@ -68,14 +68,15 @@ tab-wrapper {
 
   play-runner {
     display: none;
-    grid-area: runner;
   }
 
-  play-editor {
+  > play-editor,
+  ix-tab-wrapper {
     border: 1px solid var(--border-secondary);
     border-bottom-left-radius: var(--elem-radius);
     border-bottom-right-radius: var(--elem-radius);
     border-top: 0;
+    grid-area: editor;
     margin-top: -0.5rem;
   }
 

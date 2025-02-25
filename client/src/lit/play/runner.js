@@ -4,7 +4,6 @@ import { PLAYGROUND_BASE_HOST } from "../../env.ts";
 import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
-
 import styles from "./runner.scss?css" with { type: "css" };
 
 /** @import { VConsole } from "./types" */
@@ -47,6 +46,10 @@ export class PlayRunner extends LitElement {
     args: () =>
       /** @type {const} */ ([this.code, this.defaults, this.srcPrefix]),
     task: async ([code, defaults, srcPrefix], { signal }) => {
+      if (code && code.js && code.wat) {
+        const watUrl = await compileAndEncodeWatToDataUrl(code.wat);
+        code.js = code.js.replace("{%wasm-url%}", watUrl);
+      }
       const { state } = await compressAndBase64Encode(
         JSON.stringify({
           html: code?.html || "",
@@ -97,6 +100,31 @@ export class PlayRunner extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener("message", this._onMessage);
   }
+}
+
+/**
+ * Converts a Uint8Array to a base64 encoded string
+ * @param {Uint8Array} bytes - The array of bytes to convert
+ * @returns {string} The base64 encoded string representation of the input bytes
+ */
+function uInt8ArrayToBase64(bytes) {
+  const binString = Array.from(bytes, (byte) =>
+    String.fromCodePoint(byte)
+  ).join("");
+  return btoa(binString);
+}
+
+/**
+ * compiles the wat code to wasm
+ * @param {string} wat
+ * @returns {Promise<string>} a data-url with the compiled wasm, base64 encoded
+ */
+async function compileAndEncodeWatToDataUrl(wat) {
+  const { default: init, watify } = await import("watify");
+  await init();
+  const binary = watify(wat);
+  const b64 = `data:application/wasm;base64,${uInt8ArrayToBase64(binary)}`;
+  return b64;
 }
 
 customElements.define("play-runner", PlayRunner);

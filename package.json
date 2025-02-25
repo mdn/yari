@@ -77,6 +77,7 @@
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.3",
+    "@codemirror/lang-wast": "^6.0.2",
     "@codemirror/state": "^6.5.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@fast-csv/parse": "^5.0.2",
@@ -162,6 +163,7 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
+    "watify": "file:./libs/watify/pkg",
     "web-features": "^2.23.0",
     "web-specs": "^3.41.0"
   },

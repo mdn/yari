@@ -10,6 +10,7 @@ import { GleanMixin } from "../glean-mixin.js";
 import "./tabs.js";
 
 import styles from "./index.scss?css" with { type: "css" };
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -17,7 +18,7 @@ import styles from "./index.scss?css" with { type: "css" };
  * @import { PlayRunner } from "../play/runner.js";
  */
 
-const LANGUAGE_CLASSES = ["html", "js", "css"];
+const LANGUAGE_CLASSES = ["html", "js", "css", "wat"];
 const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 
 export class InteractiveExample extends GleanMixin(LitElement) {
@@ -68,8 +69,9 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     }, /** @type {Object<string, string>} */ ({}));
     this._languages = Object.keys(code);
     this._template =
-      this._languages.length === 1 && this._languages[0] === "js"
-        ? "javascript"
+      (this._languages.length === 1 && this._languages[0] === "js") ||
+      (this._languages.includes("js") && this._languages.includes("wat"))
+        ? "console"
         : "tabbed";
     return code;
   }
@@ -77,14 +79,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   /** @param {string} lang */
   _langName(lang) {
     switch (lang) {
-      case "html":
-        return "HTML";
-      case "css":
-        return "CSS";
       case "js":
         return "JavaScript";
       default:
-        return lang;
+        return lang.toUpperCase();
     }
   }
 
@@ -110,14 +108,28 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._code = this._initialCode();
   }
 
-  _renderJavascript() {
+  _renderConsole() {
     return html`
       <play-controller ${ref(this._controller)}>
-        <div class="template-javascript">
+        <div class="template-console">
           <header>
             <h4>${decode(this.name)}</h4>
           </header>
-          <play-editor id="editor" language="js"></play-editor>
+          ${this._languages.length === 1
+            ? html`<play-editor
+                id="editor"
+                language=${ifDefined(this._languages[0])}
+              ></play-editor>`
+            : html`<ix-tab-wrapper>
+                ${this._languages.map(
+                  (lang) => html`
+                    <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
+                    <ix-tab-panel id=${`${lang}-panel`}>
+                      <play-editor language=${lang}></play-editor>
+                    </ix-tab-panel>
+                  `
+                )}
+              </ix-tab-wrapper>`}
           <div class="buttons">
             <button id="execute" @click=${this._run}>Run</button>
             <button id="reset" @click=${this._reset}>Reset</button>
@@ -161,9 +173,14 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   render() {
-    return this._template === "javascript"
-      ? this._renderJavascript()
-      : this._renderTabbed();
+    switch (this._template) {
+      case "console":
+        return this._renderConsole();
+      case "tabbed":
+        return this._renderTabbed();
+      default:
+        return "";
+    }
   }
 
   firstUpdated() {

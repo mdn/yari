@@ -50,6 +50,7 @@ const PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES = [
 
 export const PLAYGROUND_UNSAFE_CSP_VALUE = cspToString({
   "default-src": ["'self'", "https:"],
+  "connect-src": ["data:"],
   "script-src": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
   "script-src-elem": PLAYGROUND_UNSAFE_CSP_SCRIPT_SRC_VALUES,
   "style-src": [
@@ -419,7 +420,7 @@ export function renderHtml(state = null) {
       </head>
       <body>
         ${htmlCode}
-        <script>
+        <script type="module">
           ${js};
         </script>
       </body>
