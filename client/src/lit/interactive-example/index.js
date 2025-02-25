@@ -13,6 +13,7 @@ import styles from "./index.scss?css" with { type: "css" };
 
 import exampleJs from "./example.js?raw";
 import exampleStyle from "./example.css?raw";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -71,11 +72,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     }, /** @type {Object<string, string>} */ ({}));
     this._languages = Object.keys(code);
     this._template =
-      this._languages.length === 1 && this._languages[0] === "js"
-        ? "javascript"
-        : this._languages.includes("js") && this._languages.includes("wat")
-          ? "wat"
-          : "tabbed";
+      (this._languages.length === 1 && this._languages[0] === "js") ||
+      (this._languages.includes("js") && this._languages.includes("wat"))
+        ? "console"
+        : "tabbed";
     if (this._template === "tabbed") {
       code["js-hidden"] = exampleJs;
       code["css-hidden"] = exampleStyle;
@@ -121,52 +121,34 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._code = this._initialCode();
   }
 
-  _renderJavascript() {
+  _renderConsole() {
     return html`
       <play-controller ${ref(this._controller)}>
-        <div class="template-javascript">
+        <div class="template-console">
           <header>
             <h4>${decode(this.name)}</h4>
           </header>
-          <play-editor id="editor" language="js"></play-editor>
+          ${this._languages.length === 1
+            ? html`<play-editor
+                id="editor"
+                language=${ifDefined(this._languages[0])}
+              ></play-editor>`
+            : html`<ix-tab-wrapper>
+                ${this._languages.map(
+                  (lang) => html`
+                    <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
+                    <ix-tab-panel id=${`${lang}-panel`}>
+                      <play-editor language=${lang}></play-editor>
+                    </ix-tab-panel>
+                  `
+                )}
+              </ix-tab-wrapper>`}
           <div class="buttons">
             <button id="execute" @click=${this._run}>Run</button>
             <button id="reset" @click=${this._reset}>Reset</button>
           </div>
           <play-console id="console"></play-console>
           <play-runner></play-runner>
-        </div>
-      </play-controller>
-    `;
-  }
-
-  _renderWat() {
-    return html`
-      <play-controller ${ref(this._controller)}>
-        <div class="template-wat">
-          <div class="inner-top">
-            <header>
-              <h4>${decode(this.name)}</h4>
-            </header>
-            <ix-tab-wrapper>
-              ${this._languages.map(
-                (lang) => html`
-                  <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
-                  <ix-tab-panel id=${`${lang}-panel`}>
-                    <play-editor language=${lang}></play-editor>
-                  </ix-tab-panel>
-                `
-              )}
-            </ix-tab-wrapper>
-          </div>
-          <div class="inner-bottom">
-            <div class="buttons">
-              <button id="execute" @click=${this._run}>Run</button>
-              <button id="reset" @click=${this._reset}>Reset</button>
-            </div>
-            <play-console id="console"></play-console>
-            <play-runner></play-runner>
-          </div>
         </div>
       </play-controller>
     `;
@@ -204,10 +186,8 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   render() {
     switch (this._template) {
-      case "javascript":
-        return this._renderJavascript();
-      case "wat":
-        return this._renderWat();
+      case "console":
+        return this._renderConsole();
       case "tabbed":
         return this._renderTabbed();
       default:
