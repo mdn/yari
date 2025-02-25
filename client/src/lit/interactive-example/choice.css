@@ -56,6 +56,10 @@ section.hidden {
   display: none;
 }
 
+.transition-all {
+  transition: all 0.3s ease-in;
+}
+
 * {
   box-sizing: border-box;
 }
