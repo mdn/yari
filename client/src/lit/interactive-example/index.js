@@ -86,16 +86,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   /** @param {string} lang */
   _langName(lang) {
     switch (lang) {
-      case "html":
-        return "HTML";
-      case "css":
-        return "CSS";
       case "js":
-        return "Javascript";
-      case "wat":
-        return "WAT";
+        return "JavaScript";
       default:
-        return lang;
+        return lang.toUpperCase();
     }
   }
 
