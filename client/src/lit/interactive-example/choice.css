@@ -16,15 +16,42 @@ body {
   --font-body: Inter, var(--font-fallback);
   --type-body-l: 400 1rem/1.1876 var(--font-body);
 
-  align-items: center;
   color: var(--text-primary);
   background-color: var(--background-primary);
-  display: flex;
-  justify-content: center;
   font: var(--type-body-l);
 
-  > :first-child {
-    height: 200px;
-    overflow: hidden;
-  }
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--background-primary);
+  overflow: hidden;
+  padding: 1rem;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body section {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body section.flex-column {
+  flex-direction: column;
+  align-items: initial;
+}
+
+/* some examples does not work with a flex display on the container */
+body section.display-block {
+  display: block;
+}
+
+body section img {
+  flex-grow: 0;
+}
+
+body section.hidden {
+  display: none;
 }
