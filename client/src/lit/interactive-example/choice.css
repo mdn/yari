@@ -11,15 +11,27 @@
 }
 
 body {
-  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
-  --font-body: Inter, var(--font-fallback);
-  --type-body-l: 400 1rem/1.1876 var(--font-body);
+  --text-primary: #1b1b1b;
+  --background-primary: #fff;
+
+  /* dark theme:
+  --text-primary: #fff;
+  --background-primary: #1b1b1b; */
 
   color: var(--text-primary);
   background-color: var(--background-primary);
-  font: var(--type-body-l);
-
+  font:
+    400 1rem/1.1876 Inter,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-sans;
   height: 300px;
   overflow: hidden;
   position: relative;
