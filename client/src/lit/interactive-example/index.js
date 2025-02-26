@@ -1,5 +1,6 @@
 import { html, LitElement } from "lit";
 import { ref, createRef } from "lit/directives/ref.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { decode } from "he";
 
 import "../play/editor.js";
@@ -10,7 +11,6 @@ import { GleanMixin } from "../glean-mixin.js";
 import "./tabs.js";
 
 import styles from "./index.scss?css" with { type: "css" };
-import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -135,7 +135,11 @@ export class InteractiveExample extends GleanMixin(LitElement) {
             <button id="reset" @click=${this._reset}>Reset</button>
           </div>
           <play-console id="console"></play-console>
-          <play-runner></play-runner>
+          <play-runner
+            defaults=${ifDefined(
+              this._languages.includes("wat") ? "ix-wat" : undefined
+            )}
+          ></play-runner>
         </div>
       </play-controller>
     `;

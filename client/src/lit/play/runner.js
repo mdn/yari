@@ -23,7 +23,7 @@ export class PlayRunner extends LitElement {
     super();
     /** @type {Record<string, string> | undefined} */
     this.code = undefined;
-    /** @type {"ix-tabbed" | undefined} */
+    /** @type {"ix-tabbed" | "ix-wat" | undefined} */
     this.defaults = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;

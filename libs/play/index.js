@@ -16,7 +16,7 @@ export const ORIGIN_REVIEW =
  * @property {string} css
  * @property {string} js
  * @property {string} [src]
- * @property {"ix-tabbed"} [defaults]
+ * @property {"ix-tabbed" | "ix-wat"} [defaults]
  */
 
 /**
@@ -420,7 +420,7 @@ export function renderHtml(state = null) {
       </head>
       <body>
         ${htmlCode}
-        <script type="module">
+        <script type="${defaults === "ix-wat" ? "module" : ""}">
           ${js};
         </script>
       </body>
