@@ -97,24 +97,11 @@ export class PlayRunner extends LitElement {
   async postMessage(message) {
     await this.ready;
 
-    const { shadowRoot } = this;
-
-    if (!shadowRoot) {
-      console.error("No shadowRoot");
-      return;
-    }
-
-    const iframe = shadowRoot.querySelector("iframe");
-
-    if (!iframe) {
-      console.error("No iframe");
-      return;
-    }
-
-    const contentWindow = iframe.contentWindow;
+    const contentWindow =
+      this.shadowRoot?.querySelector("iframe")?.contentWindow;
 
     if (!contentWindow) {
-      console.error("No contentWindow");
+      console.error("[PlayRunner] Couldn't get contentWindow");
       return;
     }
 
