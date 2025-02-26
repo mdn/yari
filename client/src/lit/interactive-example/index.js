@@ -1,5 +1,6 @@
 import { html, LitElement, nothing } from "lit";
 import { ref, createRef } from "lit/directives/ref.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { decode } from "he";
 
 import "../play/editor.js";
@@ -10,9 +11,6 @@ import { GleanMixin } from "../glean-mixin.js";
 import "./tabs.js";
 
 import styles from "./index.scss?css" with { type: "css" };
-
-import exampleJs from "./example.js?raw";
-import exampleStyle from "./example.css?raw";
 import choiceJs from "./choice.js?raw";
 import choiceStyle from "./choice.css?raw";
 import { PlayEditor } from "../play/editor.js";
@@ -24,7 +22,7 @@ import { isCSSSupported } from "./utils.js";
  * @import { PlayRunner } from "../play/runner.js";
  */
 
-const LANGUAGE_CLASSES = ["html", "js", "css"];
+const LANGUAGE_CLASSES = ["html", "js", "css", "wat"];
 const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 
 export class InteractiveExample extends GleanMixin(LitElement) {
@@ -91,13 +89,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._languages = Object.keys(code);
     this._template = this._choices.length
       ? "choices"
-      : this._languages.length === 1 && this._languages[0] === "js"
-        ? "javascript"
+      : (this._languages.length === 1 && this._languages[0] === "js") ||
+          (this._languages.includes("js") && this._languages.includes("wat"))
+        ? "console"
         : "tabbed";
-    if (this._template === "tabbed") {
-      code["js-hidden"] = exampleJs;
-      code["css-hidden"] = exampleStyle;
-    }
     if (this._template === "choices") {
       code["js-hidden"] = choiceJs;
       code["css-hidden"] = choiceStyle;
@@ -108,14 +103,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   /** @param {string} lang */
   _langName(lang) {
     switch (lang) {
-      case "html":
-        return "HTML";
-      case "css":
-        return "CSS";
       case "js":
         return "JavaScript";
       default:
-        return lang;
+        return lang.toUpperCase();
     }
   }
 
@@ -227,20 +218,38 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._code = this._initialCode();
   }
 
-  _renderJavascript() {
+  _renderConsole() {
     return html`
       <play-controller ${ref(this._controller)}>
-        <div class="template-javascript">
+        <div class="template-console">
           <header>
             <h4>${decode(this.name)}</h4>
           </header>
-          <play-editor id="editor" language="js"></play-editor>
+          ${this._languages.length === 1
+            ? html`<play-editor
+                id="editor"
+                language=${ifDefined(this._languages[0])}
+              ></play-editor>`
+            : html`<ix-tab-wrapper>
+                ${this._languages.map(
+                  (lang) => html`
+                    <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
+                    <ix-tab-panel id=${`${lang}-panel`}>
+                      <play-editor language=${lang}></play-editor>
+                    </ix-tab-panel>
+                  `
+                )}
+              </ix-tab-wrapper>`}
           <div class="buttons">
             <button id="execute" @click=${this._run}>Run</button>
             <button id="reset" @click=${this._reset}>Reset</button>
           </div>
           <play-console id="console"></play-console>
-          <play-runner></play-runner>
+          <play-runner
+            defaults=${ifDefined(
+              this._languages.includes("wat") ? "ix-wat" : undefined
+            )}
+          ></play-runner>
         </div>
       </play-controller>
     `;
@@ -269,6 +278,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
             <play-runner
               ${ref(this._runner)}
               sandbox="allow-top-navigation-by-user-activation"
+              defaults="ix-tabbed"
             ></play-runner>
           </div>
         </div>
@@ -320,8 +330,8 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   render() {
     switch (this._template) {
-      case "javascript":
-        return this._renderJavascript();
+      case "console":
+        return this._renderConsole();
       case "tabbed":
         return this._renderTabbed();
       case "choices":

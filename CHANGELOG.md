@@ -1,5 +1,54 @@
 # Changelog
 
+## [4.6.0](https://github.com/mdn/yari/compare/v4.5.1...v4.6.0) (2025-02-26)
+
+
+### Features
+
+* **interactive-examples:** add support for tabbed css examples ([#12665](https://github.com/mdn/yari/issues/12665)) ([d0e71f5](https://github.com/mdn/yari/commit/d0e71f57f43b8439f9975d03c2fd0ab6f34e8340))
+* **interactive-examples:** add support for WAT examples ([#12654](https://github.com/mdn/yari/issues/12654)) ([4ecd702](https://github.com/mdn/yari/commit/4ecd702cc333dc14a6846d54f928e41ad9442bb8))
+
+
+### Bug Fixes
+
+* **playground:** remove duplicate editor scrollbar ([#12653](https://github.com/mdn/yari/issues/12653)) ([f366927](https://github.com/mdn/yari/commit/f366927ecd86c9bfb05af724c914c144eba9409f))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.10.18 to 1.11.1 ([#12668](https://github.com/mdn/yari/issues/12668)) ([384413e](https://github.com/mdn/yari/commit/384413e504d336d9605930cf965f4dcc47e52fd7))
+* **deps-dev:** bump postcss-preset-env from 10.1.4 to 10.1.5 ([#12661](https://github.com/mdn/yari/issues/12661)) ([31bc124](https://github.com/mdn/yari/commit/31bc124786c71626fe2cf996c52ddb50f34f1b74))
+* **deps-dev:** bump sass from 1.85.0 to 1.85.1 ([#12672](https://github.com/mdn/yari/issues/12672)) ([a600ba1](https://github.com/mdn/yari/commit/a600ba1a65356dd7d422d71b5817f1d7000018a2))
+* **deps-dev:** bump ts-jest from 29.2.5 to 29.2.6 ([#12658](https://github.com/mdn/yari/issues/12658)) ([1c7e810](https://github.com/mdn/yari/commit/1c7e8109e9b40904b9ee59f3dc8f9724a6a2d209))
+* **deps-dev:** bump typescript-eslint from 8.24.1 to 8.25.0 ([#12669](https://github.com/mdn/yari/issues/12669)) ([d768223](https://github.com/mdn/yari/commit/d768223823ebde9cb1f9f8a35bc49e4c1c7347f2))
+* **deps:** bump @mdn/browser-compat-data from 5.6.40 to 5.6.41 ([#12659](https://github.com/mdn/yari/issues/12659)) ([1db4172](https://github.com/mdn/yari/commit/1db41723a46e681087b34714e958ffe214411be0))
+* **deps:** bump @mdn/browser-compat-data from 5.6.41 to 5.6.42 ([#12673](https://github.com/mdn/yari/issues/12673)) ([7872c6f](https://github.com/mdn/yari/commit/7872c6f0cfbab22d45aea2d57638b9cb92e51d26))
+* **deps:** bump @stripe/stripe-js from 5.6.0 to 5.7.0 ([#12670](https://github.com/mdn/yari/issues/12670)) ([87ca405](https://github.com/mdn/yari/commit/87ca40572364cafba6e82d1f11a985883d0b024e))
+* **deps:** bump dependencies in /cloud-function ([#12563](https://github.com/mdn/yari/issues/12563)) ([85030a9](https://github.com/mdn/yari/commit/85030a9ec09e2b73947dd08d116b3eba5f767fb1))
+* **deps:** bump openai from 4.85.3 to 4.85.4 ([#12657](https://github.com/mdn/yari/issues/12657)) ([72cf655](https://github.com/mdn/yari/commit/72cf655dc91a1d7085d79861faab672ff42ab065))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#12662](https://github.com/mdn/yari/issues/12662)) ([ecb1459](https://github.com/mdn/yari/commit/ecb1459131aeb7fe5c4aba9ba4dfecd9a0798af4))
+
+## [4.5.1](https://github.com/mdn/yari/compare/v4.5.0...v4.5.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **interactive-examples:** open targetless `&lt;area&gt;`s in parent window ([#12652](https://github.com/mdn/yari/issues/12652)) ([29c55f2](https://github.com/mdn/yari/commit/29c55f2fbea3437447ad306c8220346511aa4847))
+* **play:** access blank runner on subdomain ([#12643](https://github.com/mdn/yari/issues/12643)) ([7fa3147](https://github.com/mdn/yari/commit/7fa3147fe550af88980900412d8aab0d703debd6))
+
+
+### Enhancements
+
+* **libs/play:** allow runner embedded on review pages ([#12647](https://github.com/mdn/yari/issues/12647)) ([59beb9e](https://github.com/mdn/yari/commit/59beb9eb6b1e32fab1db51d0a7e51516ef799b0f))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump eslint-plugin-wc from 2.2.0 to 2.2.1 ([#12650](https://github.com/mdn/yari/issues/12650)) ([6d2ee39](https://github.com/mdn/yari/commit/6d2ee392c0a289e4776c2c983c0fac0b62611e20))
+* **deps:** bump openai from 4.85.2 to 4.85.3 ([#12649](https://github.com/mdn/yari/issues/12649)) ([7301f54](https://github.com/mdn/yari/commit/7301f54b1e120ba7374745000fc12c7b9c95df2b))
+* **deps:** bump react-markdown from 9.1.0 to 10.0.0 ([#12648](https://github.com/mdn/yari/issues/12648)) ([17e73c6](https://github.com/mdn/yari/commit/17e73c601cfabee5454abacedaad1b025643b68f))
+* **deps:** bump web-specs from 3.40.0 to 3.41.0 ([#12651](https://github.com/mdn/yari/issues/12651)) ([2cc9e2d](https://github.com/mdn/yari/commit/2cc9e2d69d4e689506c25ee794b6752a83ef7148))
+
 ## [4.5.0](https://github.com/mdn/yari/compare/v4.4.1...v4.5.0) (2025-02-20)
 
 

@@ -4,7 +4,6 @@ import { PLAYGROUND_BASE_HOST } from "../../env.ts";
 import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
-
 import styles from "./runner.scss?css" with { type: "css" };
 
 /** @import { VConsole } from "./types" */
@@ -13,6 +12,7 @@ import styles from "./runner.scss?css" with { type: "css" };
 export class PlayRunner extends LitElement {
   static properties = {
     code: { type: Object },
+    defaults: { type: String },
     srcPrefix: { type: String, attribute: "src-prefix" },
     sandbox: { type: String },
   };
@@ -23,6 +23,8 @@ export class PlayRunner extends LitElement {
     super();
     /** @type {Record<string, string> | undefined} */
     this.code = undefined;
+    /** @type {"ix-tabbed" | "ix-wat" | undefined} */
+    this.defaults = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
     this.sandbox = "";
@@ -41,13 +43,19 @@ export class PlayRunner extends LitElement {
   }
 
   _updateSrc = new Task(this, {
-    args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
-    task: async ([code, srcPrefix], { signal }) => {
+    args: () =>
+      /** @type {const} */ ([this.code, this.defaults, this.srcPrefix]),
+    task: async ([code, defaults, srcPrefix], { signal }) => {
+      if (code && code.js && code.wat) {
+        const watUrl = await compileAndEncodeWatToDataUrl(code.wat);
+        code.js = code.js.replace("{%wasm-url%}", watUrl);
+      }
       const { state } = await compressAndBase64Encode(
         JSON.stringify({
           html: code?.html || "",
           css: code?.css || "",
           js: code?.js || "",
+          defaults: defaults,
         })
       );
       signal.throwIfAborted();
@@ -81,7 +89,7 @@ export class PlayRunner extends LitElement {
     return html`
       <iframe
         src="${window.location
-          .protocol}//${PLAYGROUND_BASE_HOST}/runner.html?blank"
+          .protocol}//blank.${PLAYGROUND_BASE_HOST}/runner.html?blank"
         title="runner"
         sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
       ></iframe>
@@ -92,6 +100,31 @@ export class PlayRunner extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener("message", this._onMessage);
   }
+}
+
+/**
+ * Converts a Uint8Array to a base64 encoded string
+ * @param {Uint8Array} bytes - The array of bytes to convert
+ * @returns {string} The base64 encoded string representation of the input bytes
+ */
+function uInt8ArrayToBase64(bytes) {
+  const binString = Array.from(bytes, (byte) =>
+    String.fromCodePoint(byte)
+  ).join("");
+  return btoa(binString);
+}
+
+/**
+ * compiles the wat code to wasm
+ * @param {string} wat
+ * @returns {Promise<string>} a data-url with the compiled wasm, base64 encoded
+ */
+async function compileAndEncodeWatToDataUrl(wat) {
+  const { default: init, watify } = await import("watify");
+  await init();
+  const binary = watify(wat);
+  const b64 = `data:application/wasm;base64,${uInt8ArrayToBase64(binary)}`;
+  return b64;
 }
 
 customElements.define("play-runner", PlayRunner);
