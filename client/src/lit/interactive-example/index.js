@@ -293,7 +293,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         </div>
         <div class="output-wrapper">
           <play-controller ${ref(this._controller)} run-on-start>
-            <play-runner ${ref(this._runner)}></play-runner>
+            <play-runner
+              ${ref(this._runner)}
+              defaults="ix-choice"
+            ></play-runner>
           </play-controller>
         </div>
       </div>

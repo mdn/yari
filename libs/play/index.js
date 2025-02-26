@@ -16,7 +16,7 @@ export const ORIGIN_REVIEW =
  * @property {string} css
  * @property {string} js
  * @property {string} [src]
- * @property {"ix-tabbed" | "ix-wat"} [defaults]
+ * @property {"ix-tabbed" | "ix-wat" | "ix-choice"} [defaults]
  */
 
 /**
@@ -232,39 +232,41 @@ export function renderHtml(state = null) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>
-          /* Legacy css to support existing live samples */
-          body {
-            padding: 0;
-            margin: 0;
-          }
+        ${defaults === undefined
+          ? html`<style>
+              /* Legacy css to support existing live samples */
+              body {
+                padding: 0;
+                margin: 0;
+              }
 
-          svg:not(:root) {
-            display: block;
-          }
+              svg:not(:root) {
+                display: block;
+              }
 
-          .playable-code {
-            background-color: #f4f7f8;
-            border: none;
-            border-left: 6px solid #558abb;
-            border-width: medium medium medium 6px;
-            color: #4d4e53;
-            height: 100px;
-            width: 90%;
-            padding: 10px 10px 0;
-          }
+              .playable-code {
+                background-color: #f4f7f8;
+                border: none;
+                border-left: 6px solid #558abb;
+                border-width: medium medium medium 6px;
+                color: #4d4e53;
+                height: 100px;
+                width: 90%;
+                padding: 10px 10px 0;
+              }
 
-          .playable-canvas {
-            border: 1px solid #4d4e53;
-            border-radius: 2px;
-          }
+              .playable-canvas {
+                border: 1px solid #4d4e53;
+                border-radius: 2px;
+              }
 
-          .playable-buttons {
-            text-align: right;
-            width: 90%;
-            padding: 5px 10px 5px 26px;
-          }
-        </style>
+              .playable-buttons {
+                text-align: right;
+                width: 90%;
+                padding: 5px 10px 5px 26px;
+              }
+            </style>`
+          : ""}
         ${defaults === "ix-tabbed"
           ? html`<style>
               @font-face {
@@ -335,6 +337,7 @@ export function renderHtml(state = null) {
                 font-size: 0.9rem;
                 line-height: 1.5;
                 padding: 2rem 1rem 1rem;
+                margin: 0;
                 min-width: min-content;
               }
 
@@ -343,6 +346,7 @@ export function renderHtml(state = null) {
               }
             </style>`
           : ""}
+        ${defaults === "ix-choice" ? html`<style></style>` : ""}
         <style id="css-output">
           ${css}
         </style>
