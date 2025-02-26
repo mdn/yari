@@ -28,7 +28,13 @@ export class PlayRunner extends LitElement {
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
     this.sandbox = "";
+    /** @type {() => void} */
+    this._resolveReady = () => {};
     this._subdomain = crypto.randomUUID();
+    /** @type {Promise<true>} */
+    this.ready = new Promise((resolve) => {
+      this._resolveReady = () => resolve(true);
+    });
   }
 
   /** @param {MessageEvent} e  */
@@ -39,6 +45,8 @@ export class PlayRunner extends LitElement {
       this.dispatchEvent(
         new CustomEvent("console", { bubbles: true, composed: true, detail })
       );
+    } else if (typ === "ready") {
+      this._resolveReady();
     }
   }
 
@@ -83,6 +91,34 @@ export class PlayRunner extends LitElement {
     super.connectedCallback();
     this._onMessage = this._onMessage.bind(this);
     window.addEventListener("message", this._onMessage);
+  }
+
+  /** @param {any} message */
+  async postMessage(message) {
+    await this.ready;
+
+    const { shadowRoot } = this;
+
+    if (!shadowRoot) {
+      console.error("No shadowRoot");
+      return;
+    }
+
+    const iframe = shadowRoot.querySelector("iframe");
+
+    if (!iframe) {
+      console.error("No iframe");
+      return;
+    }
+
+    const contentWindow = iframe.contentWindow;
+
+    if (!contentWindow) {
+      console.error("No contentWindow");
+      return;
+    }
+
+    contentWindow.postMessage(message, "*");
   }
 
   render() {

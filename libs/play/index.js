@@ -398,6 +398,11 @@ export function renderHtml(state = null) {
 
           window.console = consoleProxy;
           window.addEventListener("error", (e) => console.log(e.error));
+          try {
+            window.parent.postMessage({ typ: "ready" }, "*");
+          } catch (e) {
+            console.error("[Playground] Failed to post ready message", e);
+          }
         </script>
         ${defaults === "ix-tabbed"
           ? html`<script>

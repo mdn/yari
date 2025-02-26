@@ -148,7 +148,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       return;
     }
 
-    // TODO: nicer interface for posting messages than this:
     const runner = this._runner.value;
 
     if (!runner) {
@@ -156,44 +155,17 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       return;
     }
 
-    // Ensures it has an iframe.
-    await runner.updateComplete;
+    await Promise.all([
+      runner.postMessage({ typ: "choice", code }),
+      new Promise((resolve) => {
+        const unsupported = !isCSSSupported(code);
+        this.choiceUnsupportedMask &= ~(1 << index);
+        this.choiceUnsupportedMask |= Number(unsupported) << index;
+        resolve(true);
+      }),
+    ]);
 
-    const shadowRoot = runner.shadowRoot;
-
-    if (!shadowRoot) {
-      console.error("No shadowRoot");
-      return;
-    }
-
-    const iframe = shadowRoot.querySelector("iframe");
-
-    if (!iframe) {
-      console.error("No iframe");
-      return;
-    }
-
-    const contentWindow = iframe.contentWindow;
-
-    if (!contentWindow) {
-      console.error("No contentWindow");
-      return;
-    }
-
-    const applyCode = () => {
-      this.choiceSelected = index;
-
-      const unsupported = !isCSSSupported(code);
-      this.choiceUnsupportedMask &= ~(1 << index);
-      this.choiceUnsupportedMask |= Number(unsupported) << index;
-      contentWindow.postMessage({ typ: "choice", code }, "*");
-    };
-
-    if (contentWindow.document.readyState === "complete") {
-      applyCode();
-    } else {
-      iframe.addEventListener("load", applyCode);
-    }
+    this.choiceSelected = index;
   }
 
   /** @param {Event} ev  */
