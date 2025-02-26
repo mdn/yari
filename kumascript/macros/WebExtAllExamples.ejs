@@ -45,7 +45,14 @@ function writeJavaScriptAPIs(apisJSON) {
   let output = "";
   for (let jsAPI of apisJSON) {
     var link = `/${lang}/${s_webextension_api_path}/${jsAPI.replace(".", "/")}`;
-    output += `<a href="${link}"><code>${jsAPI}</code></a><br/>`;
+    var label = `<code>${jsAPI}</code>`;
+    if (jsAPI === "userScripts_legacy.register") {
+      // The API is userScripts.register, but the URL is at userScripts_legacy
+      // because there is another API with the same name.
+      // See https://github.com/mdn/webextensions-examples/pull/579
+      label = "<code>userScripts.register</code> (Legacy)";
+    }
+    output += `<a href="${link}">${label}</a><br/>`;
   }
   return output;
 }
