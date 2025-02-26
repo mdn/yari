@@ -10,9 +10,6 @@ import { GleanMixin } from "../glean-mixin.js";
 import "./tabs.js";
 
 import styles from "./index.scss?css" with { type: "css" };
-
-import exampleJs from "./example.js?raw";
-import exampleStyle from "./example.css?raw";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
@@ -76,10 +73,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       (this._languages.includes("js") && this._languages.includes("wat"))
         ? "console"
         : "tabbed";
-    if (this._template === "tabbed") {
-      code["js-hidden"] = exampleJs;
-      code["css-hidden"] = exampleStyle;
-    }
     return code;
   }
 
@@ -171,6 +164,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
             <play-runner
               ${ref(this._runner)}
               sandbox="allow-top-navigation-by-user-activation"
+              defaults="ix-tabbed"
             ></play-runner>
           </div>
         </div>

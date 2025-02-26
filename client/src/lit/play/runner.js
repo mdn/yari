@@ -12,6 +12,7 @@ import styles from "./runner.scss?css" with { type: "css" };
 export class PlayRunner extends LitElement {
   static properties = {
     code: { type: Object },
+    defaults: { type: String },
     srcPrefix: { type: String, attribute: "src-prefix" },
     sandbox: { type: String },
   };
@@ -22,6 +23,8 @@ export class PlayRunner extends LitElement {
     super();
     /** @type {Record<string, string> | undefined} */
     this.code = undefined;
+    /** @type {"ix-tabbed" | undefined} */
+    this.defaults = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
     this.sandbox = "";
@@ -40,8 +43,9 @@ export class PlayRunner extends LitElement {
   }
 
   _updateSrc = new Task(this, {
-    args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
-    task: async ([code, srcPrefix], { signal }) => {
+    args: () =>
+      /** @type {const} */ ([this.code, this.defaults, this.srcPrefix]),
+    task: async ([code, defaults, srcPrefix], { signal }) => {
       if (code && code.js && code.wat) {
         const watUrl = await compileAndEncodeWatToDataUrl(code.wat);
         code.js = code.js.replace("{%wasm-url%}", watUrl);
@@ -51,6 +55,7 @@ export class PlayRunner extends LitElement {
           html: code?.html || "",
           css: code?.css || "",
           js: code?.js || "",
+          defaults: defaults,
         })
       );
       signal.throwIfAborted();
