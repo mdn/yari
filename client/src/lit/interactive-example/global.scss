@@ -5,10 +5,6 @@ interactive-example {
   height: 375px;
   margin: 1rem 0;
 
-  &[height="js"] {
-    height: 444px;
-  }
-
   &[height="shorter"] {
     height: 364px;
   }
@@ -32,10 +28,6 @@ interactive-example {
 
   @media (max-width: $screen-lg) {
     height: 675px;
-
-    &[height="js"] {
-      height: 513px;
-    }
 
     &[height="shorter"] {
       height: 433px;
