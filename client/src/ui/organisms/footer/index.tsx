@@ -24,7 +24,7 @@ export function Footer() {
           <ul className="social-icons">
             <li>
               <a
-                href="https://bsky.app/profile/mozdevnet.bsky.social"
+                href="https://bsky.app/profile/developer.mozilla.org"
                 target="_blank"
                 rel="me noopener noreferrer"
               >
