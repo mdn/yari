@@ -63,6 +63,7 @@ export const ACTIVE_LOCALES = new Set([
 export const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
+  "'wasm-unsafe-eval'",
 
   // GA4.
   "https://www.google-analytics.com/analytics.js",
