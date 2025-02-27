@@ -87,6 +87,7 @@
     "@mdn/bcd-utils-api": "^0.0.7",
     "@mdn/browser-compat-data": "^5.6.42",
     "@mdn/rari": "^0.1.26",
+    "@mdn/watify": "^1.0.1",
     "@mozilla/glean": "5.0.3",
     "@sentry/node": "^8.54.0",
     "@stripe/stripe-js": "^5.7.0",
@@ -163,7 +164,6 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
-    "watify": "^1.0.1",
     "web-features": "^2.25.0",
     "web-specs": "^3.41.0"
   },
