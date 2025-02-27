@@ -57,9 +57,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   _reset() {
-    this._controller.value?.reset();
     if (this._template === "choices") {
       this._resetChoices();
+    } else {
+      this._controller.value?.reset();
     }
   }
 
