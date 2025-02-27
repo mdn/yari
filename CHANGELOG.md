@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.6.1](https://github.com/mdn/yari/compare/v4.6.0...v4.6.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* **deps:** use the published watify package ([#12678](https://github.com/mdn/yari/issues/12678)) ([cbc21d9](https://github.com/mdn/yari/commit/cbc21d95942a7f3d12cbe1887deb0c51343325aa))
+* **interactive-examples:** allow wasm in csp ([#12676](https://github.com/mdn/yari/issues/12676)) ([084814b](https://github.com/mdn/yari/commit/084814bb4128a8648affe12690892f7f3f97edf2))
+
+
+### Miscellaneous
+
+* **deps:** bump @inquirer/prompts from 7.3.1 to 7.3.2 ([#12626](https://github.com/mdn/yari/issues/12626)) ([7aae272](https://github.com/mdn/yari/commit/7aae272de1da1790fe65d77b97ccba0253d2b544))
+* **deps:** bump web-features from 2.23.0 to 2.24.0 ([#12656](https://github.com/mdn/yari/issues/12656)) ([79c4a5e](https://github.com/mdn/yari/commit/79c4a5ef6b2807e52b851ec4b54f0def71b0f319))
+* **footer:** add Bluesky link ([#12538](https://github.com/mdn/yari/issues/12538)) ([c698ef5](https://github.com/mdn/yari/commit/c698ef514a147830443fdb7b4d5d6db304645323))
+
 ## [4.6.0](https://github.com/mdn/yari/compare/v4.5.1...v4.6.0) (2025-02-26)
 
 
