@@ -33,6 +33,7 @@ export class PlayRunner extends LitElement {
 
   /** @param {MessageEvent} e  */
   _onMessage({ data: { typ, prop, args }, origin, source }) {
+    /** @type {string | undefined} */
     let uuid = new URL(origin, "https://example.com").hostname.split(".")[0];
     if (uuid !== this._subdomain && source && "location" in source) {
       // we could be on localhost, check `source` for the uuid param we set
