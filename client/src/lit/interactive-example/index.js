@@ -57,9 +57,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   }
 
   _reset() {
-    this._controller.value?.reset();
     if (this._template === "choices") {
       this._resetChoices();
+    } else {
+      this._controller.value?.reset();
     }
   }
 
@@ -94,7 +95,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         ? "console"
         : "tabbed";
     if (this._template === "choices") {
-      code["js-hidden"] = choiceJs;
+      code["js-hidden"] = [
+        choiceJs,
+        `setChoice(${JSON.stringify(this._choices[0])})`,
+      ].join("\n");
       code["css-hidden"] = choiceStyle;
     }
     return code;
@@ -127,12 +131,20 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   _resetChoices() {
     this.choiceSelected = -1;
     this.choiceUnsupportedMask = 0;
+
     const editorNodes = Array.from(
       this.shadowRoot?.querySelectorAll("play-editor") || []
     );
+
     Array.from(editorNodes).forEach((editorNode, index) => {
-      editorNode.value = this._choices?.at(index) ?? "";
+      const code = this._choices?.at(index) ?? "";
+      editorNode.value = code;
+
+      const unsupported = !isCSSSupported(code);
+      this.choiceUnsupportedMask &= ~(1 << index);
+      this.choiceUnsupportedMask |= Number(unsupported) << index;
     });
+
     this._selectChoice(0);
   }
 
@@ -321,7 +333,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       this._controller.value.code = this._code;
     }
     if (this._template === "choices") {
-      this._selectChoice(0);
+      this._resetChoices();
     }
   }
 
