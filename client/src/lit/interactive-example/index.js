@@ -95,7 +95,10 @@ export class InteractiveExample extends GleanMixin(LitElement) {
         ? "console"
         : "tabbed";
     if (this._template === "choices") {
-      code["js-hidden"] = choiceJs;
+      code["js-hidden"] = [
+        choiceJs,
+        `setChoice(${JSON.stringify(this._choices[0])})`,
+      ].join("\n");
       code["css-hidden"] = choiceStyle;
     }
     return code;
