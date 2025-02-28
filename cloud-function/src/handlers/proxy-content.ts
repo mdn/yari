@@ -25,7 +25,7 @@ export const proxyContent = createProxyMiddleware({
     let actualTarget;
     if (typeof host === "string" && WILDCARD_ENABLED) {
       const subdomain = host.split(".")[0];
-      actualTarget = `${actualTarget}${subdomain}/`;
+      actualTarget = `${target}${subdomain}/`;
     } else {
       actualTarget = target;
     }
