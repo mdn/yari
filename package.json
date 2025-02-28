@@ -164,7 +164,7 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "watify": "^1.0.1",
-    "web-features": "^2.25.0",
+    "web-features": "^2.26.0",
     "web-specs": "^3.41.0"
   },
   "devDependencies": {
