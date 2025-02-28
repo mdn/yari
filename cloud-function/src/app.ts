@@ -58,7 +58,7 @@ router.get("/shared-assets/*", requireOrigin(Origin.play), proxySharedAssets);
 // Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
-  requireOrigin(Origin.main, Origin.review),
+  requireOrigin(Origin.main),
   proxyContent
 );
 router.get(
@@ -79,7 +79,7 @@ router.get(
 // Attachments.
 router.get(
   `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
-  requireOrigin(Origin.main, Origin.liveSamples, Origin.play, Origin.review),
+  requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
   proxyContentAssets
 );
@@ -87,7 +87,7 @@ router.get(
 router.use(redirectNonCanonicals);
 router.get(
   "/[^/]+/docs/*",
-  requireOrigin(Origin.main, Origin.review),
+  requireOrigin(Origin.main),
   redirectFundamental,
   redirectLocale,
   redirectPreferredLocale,
@@ -107,7 +107,7 @@ router.get(
 // MDN Plus, static pages, etc.
 router.get(
   "*",
-  requireOrigin(Origin.main, Origin.review),
+  requireOrigin(Origin.main),
   redirectFundamental,
   redirectLocale,
   redirectTrailingSlash,

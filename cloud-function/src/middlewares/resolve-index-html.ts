@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from "express";
 
 import { slugToFolder } from "../internal/slug-utils/index.js";
 import { isAsset } from "../utils.js";
-import { INDEX_SUFFIX } from "../constants.js";
 
 export async function resolveIndexHTML(
   req: Request,
@@ -15,7 +14,7 @@ export async function resolveIndexHTML(
   if (urlParsed.pathname) {
     let pathname = slugToFolder(urlParsed.pathname);
     if (!isAsset(pathname)) {
-      pathname = path.join(pathname, INDEX_SUFFIX);
+      pathname = path.join(pathname, "index.html");
     }
     req.url = pathname; // e.g. "/en-us/docs/mozilla/add-ons/webextensions/browser_compatibility_for_manifest.json"
     // Workaround for http-proxy-middleware v2 using `req.originalUrl`.

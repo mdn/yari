@@ -6,11 +6,11 @@ import {
 } from "http-proxy-middleware";
 
 import { withContentResponseHeaders } from "../headers.js";
-import { determineInfix, Source, sourceUri } from "../env.js";
+import { Source, sourceUri } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { ACTIVE_LOCALES } from "../internal/constants/index.js";
 
-const target = sourceUri(Source.review);
+const target = sourceUri(Source.content);
 
 export const proxyContentAssets = createProxyMiddleware({
   target,
@@ -23,10 +23,7 @@ export const proxyContentAssets = createProxyMiddleware({
     proxyReq: fixRequestBody,
     proxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
-        const infix = determineInfix(req.headers.host);
-
         withContentResponseHeaders(proxyRes, req, res);
-
         const [, locale] = req.url?.split("/") || [];
         if (
           proxyRes.statusCode === 404 &&
@@ -34,10 +31,8 @@ export const proxyContentAssets = createProxyMiddleware({
           locale != "en-US" &&
           ACTIVE_LOCALES.has(locale.toLowerCase())
         ) {
-          const url = `${target}${infix}/${req.url?.slice(1).replace(locale, "en-us")}`;
-          const enUsAsset = await fetch(url);
-          console.log(
-            `[proxyContentAssets] ok = ${JSON.stringify(enUsAsset.ok)}, url = ${JSON.stringify(url)}, `
+          const enUsAsset = await fetch(
+            `${target}${req.url?.slice(1).replace(locale, "en-us")}`
           );
           if (enUsAsset?.ok) {
             res.statusCode = enUsAsset.status;
