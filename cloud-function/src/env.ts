@@ -24,6 +24,7 @@ export enum Source {
   liveSamples = "liveSamples",
   review = "review",
   api = "rumba",
+  sharedAssets = "sharedAssets",
 }
 
 export const ORIGIN_MAIN: string = process.env["ORIGIN_MAIN"] || "localhost";
@@ -56,6 +57,8 @@ export const SOURCE_API: string =
   process.env["SOURCE_API"] || "https://developer.allizom.org/";
 export const SOURCE_REVIEW: string =
   process.env["SOURCE_REVIEW"] || LOCAL_CONTENT;
+export const SOURCE_SHARED_ASSETS: string =
+  process.env["SOURCE_SHARED_ASSETS"] || "https://mdn.github.io/shared-assets/";
 
 export function getOriginFromRequest(req: Request): Origin {
   if (
@@ -86,6 +89,8 @@ export function sourceUri(source: Source): string {
       return SOURCE_REVIEW;
     case Source.api:
       return SOURCE_API;
+    case Source.sharedAssets:
+      return SOURCE_SHARED_ASSETS;
     default:
       return "";
   }

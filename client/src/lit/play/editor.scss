@@ -11,5 +11,11 @@
   .cm-editor {
     height: 100%;
     width: 100%;
+
+    * {
+      // codemirror uses `font-family: monospace;` in multiple places
+      // which causes weird fonts to be used in various locales
+      font-family: var(--font-code) !important;
+    }
   }
 }

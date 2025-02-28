@@ -4,6 +4,8 @@ import he from "he";
 
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
+export const ORIGIN_REVIEW =
+  process.env["ORIGIN_REVIEW"] || "content.dev.mdn.mozit.cloud";
 
 /** @import { IncomingMessage, ServerResponse } from "http" */
 /** @import * as express from "express" */
@@ -248,37 +250,35 @@ export function renderHtml(state = null) {
                     {
                       typ: "console",
                       prop,
-                      args: args.map((x) => JSON.parse(JSON.stringify(x))),
+                      args: args.map((x) => {
+                        try {
+                          window.structuredClone(x);
+                          return x;
+                        } catch {
+                          return {
+                            _MDNPlaySerializedObject: x.toString(),
+                          };
+                        }
+                      }),
                     },
                     "*"
                   );
                 } catch {
-                  try {
-                    window.parent.postMessage(
-                      {
-                        typ: "console",
-                        prop,
-                        args: args.map((x) => x.toString()),
-                      },
-                      "*"
-                    );
-                  } catch {
-                    window.parent.postMessage(
-                      {
-                        typ: "console",
-                        prop: "warn",
-                        args: [
-                          "[Playground] Unsupported console message (see browser console)",
-                        ],
-                      },
-                      "*"
-                    );
-                  }
+                  window.parent.postMessage(
+                    {
+                      typ: "console",
+                      prop: "warn",
+                      args: [
+                        "[Playground] Unsupported console message (see browser console)",
+                      ],
+                    },
+                    "*"
+                  );
                 }
               }
               target[prop](...args);
             };
-          };
+          }
           return target[prop];
         },
       });
@@ -335,11 +335,26 @@ function playSubdomain(hostname) {
 }
 
 /**
+ * @param {URL} referer
+ */
+function isMDNReferer(referer) {
+  const { hostname } = referer;
+  return (
+    hostname === ORIGIN_MAIN ||
+    hostname === ORIGIN_REVIEW ||
+    hostname.endsWith(`.${ORIGIN_REVIEW}`)
+  );
+}
+
+/**
  * @param {express.Request} req
  * @param {express.Response} res
  */
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
+  if (url.searchParams.has("blank")) {
+    return res.setHeader("Content-Type", "text/html").status(200).end();
+  }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",
     "https://example.com"
@@ -350,8 +365,7 @@ export async function handleRunner(req, res) {
   const isLocalhost = req.hostname === "localhost";
   const hasMatchingHash = playSubdomain(req.hostname) === hash;
   const isIframeOnMDN =
-    referer.hostname === ORIGIN_MAIN &&
-    req.headers["sec-fetch-dest"] === "iframe";
+    isMDNReferer(referer) && req.headers["sec-fetch-dest"] === "iframe";
 
   if (
     !stateParam ||

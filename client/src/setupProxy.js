@@ -30,6 +30,8 @@ function config(app) {
   });
   // Proxy play runner
   app.use("**/runner.html", runnerProxy);
+  // Proxy shared assets
+  app.use("/shared-assets", proxy);
 }
 
 export default config;
