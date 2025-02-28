@@ -1,0 +1,134 @@
+name: Review Deployment
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 */24 * * *"
+
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ${DEFAULT_NOTES}
+
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "next"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
+  build:
+    environment: stage
+    runs-on: ubuntu-latest
+
+    if: ${{ github.repository == 'mdn/yari' }}
+
+    steps:
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: yarn
+
+      - name: Prepare Cloud Function
+        working-directory: cloud-function
+        run: |
+          npm ci
+          echo "{}" > redirects.json
+          echo "{}" > canonicals.json
+
+      - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          service_account: deploy-mdn-review-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: "beta"
+
+      - name: Deploy Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        run: |-
+          set -eo pipefail
+
+          for region in europe-west3; do
+            gcloud beta functions deploy mdn-review-$region \
+            --gen2 \
+            --runtime=nodejs20 \
+            --region=$region \
+            --source=cloud-function \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point=mdnHandler \
+            --concurrency=100 \
+            --min-instances=0 \
+            --max-instances=10 \
+            --memory=2GB \
+            --timeout=120s \
+            --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
+            --set-env-vars="ORIGIN_REVIEW=mdnyalp.dev" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/" \
+            --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
+            --set-env-vars="BSA_ENABLED=true" \
+            --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
+            --set-env-vars="SENTRY_ENVIRONMENT=review" \
+            --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
+            --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="BSA_ZONE_KEYS=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-bsa-zone-keys/versions/latest" \
+            2>&1 | sed "s/^/[$region] /" &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+      - name: Slack Notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: mdn-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
+          SLACK_TITLE: "Stage"
+          SLACK_MESSAGE: "Build failed :collision:"
+          SLACK_FOOTER: "Powered by stage-build.yml"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
