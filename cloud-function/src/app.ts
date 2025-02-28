@@ -55,7 +55,7 @@ router.get(
 // Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
-  requireOrigin(Origin.main),
+  requireOrigin(Origin.main, Origin.review),
   proxyContent
 );
 router.get(

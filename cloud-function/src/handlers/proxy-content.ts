@@ -6,11 +6,11 @@ import {
 } from "http-proxy-middleware";
 
 import { withContentResponseHeaders } from "../headers.js";
-import { Source, sourceUri } from "../env.js";
-import { PROXY_TIMEOUT } from "../constants.js";
+import { determineInfix, Source, sourceUri } from "../env.js";
+import { INDEX_SUFFIX, PROXY_TIMEOUT } from "../constants.js";
 import { isLiveSampleURL } from "../utils.js";
 
-const NOT_FOUND_PATH = "en-us/404/index.html";
+const NOT_FOUND_PATH = `en-us/404${INDEX_SUFFIX}`;
 
 let notFoundBuffer: ArrayBuffer;
 
@@ -27,19 +27,26 @@ export const proxyContent = createProxyMiddleware({
     proxyReq: fixRequestBody,
     proxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
+        const infix = determineInfix(req.headers.host);
+
         withContentResponseHeaders(proxyRes, req, res);
+
         if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
-          const url = `${target}${req.url?.slice(1)}`;
+          const url = `${target}${infix}/${req.url?.slice(1).toLowerCase()}`;
           const tryHtml = await fetch(url);
           console.log(
-            `[proxyContent] url = ${JSON.stringify(url)}, tryHtml.ok = ${JSON.stringify(tryHtml.ok)}`
+            `[proxyContent] ok = ${JSON.stringify(tryHtml.ok)}, url = ${JSON.stringify(url)}, `
           );
           if (tryHtml.ok) {
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
             return Buffer.from(await tryHtml.arrayBuffer());
           } else if (!notFoundBuffer) {
-            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
+            const url = `${target}${infix}/${NOT_FOUND_PATH}`;
+            const response = await fetch(url);
+            console.log(
+              `[proxyContent] ok = ${JSON.stringify(response.ok)}, url = ${JSON.stringify(url)}, `
+            );
             notFoundBuffer = await response.arrayBuffer();
           }
           res.setHeader("Content-Type", "text/html");

@@ -110,3 +110,13 @@ export const BSA_ENABLED = Boolean(
 // (Use https://github.com/FiloSottile/mkcert to generate a locally-trusted certificate.)
 export const HTTPS_KEY_FILE = process.env["HTTPS_KEY_FILE"] ?? "";
 export const HTTPS_CERT_FILE = process.env["HTTPS_CERT_FILE"] ?? "";
+
+export function determineInfix(host: any): string {
+  if (typeof host === "string") {
+    const reviewPrefix = ORIGIN_REVIEW_MATCHER(host);
+    if (reviewPrefix) {
+      return `${reviewPrefix}`;
+    }
+  }
+  return "";
+}
