@@ -14,7 +14,12 @@ export async function resolveIndexHTML(
   const urlParsed = new URL(req.url, `${req.protocol}://${req.headers.host}`);
 
   const reviewPrefix = ORIGIN_REVIEW_MATCHER(urlParsed.hostname);
-  console.log(urlParsed.hostname);
+  console.log(
+    `[resolveIndexHTML] urlParsed.hostname = ${JSON.stringify(urlParsed.hostname)}`
+  );
+  console.log(
+    `[resolveIndexHTML] reviewPrefix = ${JSON.stringify(reviewPrefix)}`
+  );
   console.log(reviewPrefix);
   if (reviewPrefix) {
     let pathname = slugToFolder(urlParsed.pathname);
@@ -22,7 +27,7 @@ export async function resolveIndexHTML(
       pathname = pathname.slice(0, -1);
     }
     req.url = "/" + reviewPrefix + pathname; // e.g. "/en-us/docs/mozilla/add-ons/webextensions/browser_compatibility_for_manifest.json"
-    console.log(req.url);
+    console.log(`[resolveIndexHTML] req.url = ${JSON.stringify(req.url)}`);
     // Workaround for http-proxy-middleware v2 using `req.originalUrl`.
     // See: https://github.com/chimurai/http-proxy-middleware/pull/731
     req.originalUrl = req.url;

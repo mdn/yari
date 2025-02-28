@@ -31,7 +31,9 @@ export const proxyContent = createProxyMiddleware({
         if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
           const url = `${target}${req.url?.slice(1)}`;
           const tryHtml = await fetch(url);
-          console.log(url);
+          console.log(
+            `[proxyContent] url = ${JSON.stringify(url)}, tryHtml.ok = ${JSON.stringify(tryHtml.ok)}`
+          );
           if (tryHtml.ok) {
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
