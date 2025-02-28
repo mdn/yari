@@ -33,18 +33,8 @@ permissions:
   id-token: write
 
 jobs:
-  trigger:
-    runs-on: ubuntu-latest
-
-    # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
-    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
-    steps:
-      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "next"
-        env:
-          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
-
-  build:
-    environment: stage
+  deploy:
+    environment: review
     runs-on: ubuntu-latest
 
     if: ${{ github.repository == 'mdn/yari' }}
