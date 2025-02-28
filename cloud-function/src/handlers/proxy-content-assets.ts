@@ -10,7 +10,7 @@ import { Source, sourceUri } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { ACTIVE_LOCALES } from "../internal/constants/index.js";
 
-const target = sourceUri(Source.content);
+const target = sourceUri(Source.review);
 
 export const proxyContentAssets = createProxyMiddleware({
   target,
