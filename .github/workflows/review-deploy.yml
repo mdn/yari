@@ -91,8 +91,8 @@ jobs:
             --max-instances=10 \
             --memory=2GB \
             --timeout=120s \
-            --set-env-vars="ORIGIN_REVIEW=*.review.mdn.allizom.net" \
-            --set-env-vars="SOURCE_REVIEW=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/" \
+            --set-env-vars="ORIGIN_MAIN=*.review.mdn.allizom.net" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="BSA_ENABLED=true" \
             --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
