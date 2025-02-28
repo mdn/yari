@@ -128,12 +128,20 @@ export class InteractiveExample extends GleanMixin(LitElement) {
   _resetChoices() {
     this.choiceSelected = -1;
     this.choiceUnsupportedMask = 0;
+
     const editorNodes = Array.from(
       this.shadowRoot?.querySelectorAll("play-editor") || []
     );
+
     Array.from(editorNodes).forEach((editorNode, index) => {
-      editorNode.value = this._choices?.at(index) ?? "";
+      const code = this._choices?.at(index) ?? "";
+      editorNode.value = code;
+
+      const unsupported = !isCSSSupported(code);
+      this.choiceUnsupportedMask &= ~(1 << index);
+      this.choiceUnsupportedMask |= Number(unsupported) << index;
     });
+
     this._selectChoice(0);
   }
 
@@ -322,7 +330,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
       this._controller.value.code = this._code;
     }
     if (this._template === "choices") {
-      this._selectChoice(0);
+      this._resetChoices();
     }
   }
 
