@@ -83,6 +83,9 @@ export const BSA_ZONE_KEYS = Object.fromEntries(
 export const BSA_ENABLED = Boolean(
   JSON.parse(process.env["BSA_ENABLED"] || "false")
 );
+export const WILDCARD_ENABLED = Boolean(
+  JSON.parse(process.env["WILDCARD_ENABLED"] || "false")
+);
 
 // HTTPS.
 // (Use https://github.com/FiloSottile/mkcert to generate a locally-trusted certificate.)
