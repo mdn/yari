@@ -20,14 +20,15 @@ export const proxyContent = createProxyMiddleware({
   changeOrigin: true,
   autoRewrite: true,
   router: (req) => {
-    const { host } = req.headers;
+    let actualTarget = target;
 
-    let actualTarget;
-    if (typeof host === "string" && WILDCARD_ENABLED) {
-      const subdomain = host.split(".")[0];
-      actualTarget = `${target}${subdomain}/`;
-    } else {
-      actualTarget = target;
+    if (WILDCARD_ENABLED) {
+      const { host } = req.headers;
+
+      if (typeof host === "string") {
+        const subdomain = host.split(".")[0];
+        actualTarget = `${target}${subdomain}/`;
+      }
     }
 
     (req as any).target = actualTarget;
