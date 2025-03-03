@@ -2258,6 +2258,11 @@
     proxy-from-env "^1.1.0"
     tar "^7.4.3"
 
+"@mdn/watify@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mdn/watify/-/watify-1.0.1.tgz#40e3385028e53756f8e7636bd721a5e9bb470313"
+  integrity sha512-W+4qjnv/0nz0lGJrid8ssadE/3bjVrbXqpvAP9GpRuuqT5aC5VSdZkPDJW6vACYrbdFLLWmx+64YR9UouyDCWw==
+
 "@mozilla/glean@5.0.3":
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-5.0.3.tgz#eda7169f3e8f38a7d3019a1512b45778c4f05735"
@@ -15874,11 +15879,6 @@ watchpack@^2.4.1:
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
-
-watify@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/watify/-/watify-1.0.1.tgz#9aa3280805e50792461c9ef2a60c2ec78c9277af"
-  integrity sha512-/Qoa4XMrs5q2Ifk7y1HTuKR6upCLNKm4He5cx+Ps2+qNJSu3KsKmuCg86xLCHVafBEsgJmarDmIXuCNJXKLS8g==
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"
