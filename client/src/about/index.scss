@@ -24,14 +24,16 @@ main.about-container {
       --header-text-secondary: #343434;
       --header-bg: #fff;
       --stats-bg: #fff;
-      --stats-box-shadow: 4px -2px 15px 0 rgba(179, 179, 179, 0.2),
+      --stats-box-shadow:
+        4px -2px 15px 0 rgba(179, 179, 179, 0.2),
         4px -4px 15px 0 rgba(179, 179, 179, 0.15);
       --stats-text-primary: #000;
       --stats-stat-bg: #d7f5dc;
       --stats-stat-text: #007936;
       --boxes-bg: #fff;
       --boxes-border: none;
-      --boxes-shadow: -4px 4px 8px 0 rgba(179, 179, 179, 0.15),
+      --boxes-shadow:
+        -4px 4px 8px 0 rgba(179, 179, 179, 0.15),
         4px 4px 8px 0 rgba(179, 179, 179, 0.18);
       --boxes-header-bg-1: #d5e8fb;
       --boxes-header-color-1: inherit;
@@ -68,7 +70,8 @@ main.about-container {
       --about-team-color: #000;
       --about-journey-line-color: #007936;
       --about-journey-image-border: #fff;
-      --about-journey-shadow: 4px -4px 15px 0 rgba(179, 179, 179, 0.25),
+      --about-journey-shadow:
+        4px -4px 15px 0 rgba(179, 179, 179, 0.25),
         4px 4px 15px 0 rgba(179, 179, 179, 0.25);
       --about-journey-dot: url("../assets/about/dot.svg");
       --about-global-impact-image: url("../assets/about/global-impact.svg");
@@ -80,7 +83,8 @@ main.about-container {
       --header-text-secondary: #b3b3b3;
       --header-bg: #101010;
       --stats-bg: #000;
-      --stats-box-shadow: 4px -2px 15px 0 rgba(38, 38, 38, 0.2),
+      --stats-box-shadow:
+        4px -2px 15px 0 rgba(38, 38, 38, 0.2),
         4px -4px 15px 0 rgba(38, 38, 38, 0.15);
       --stats-text-primary: #b3b3b3;
       --stats-stat-bg: #394035;
@@ -123,7 +127,8 @@ main.about-container {
       --about-team-color: #fff;
       --about-journey-line-color: #8ff295;
       --about-journey-image-border: #000;
-      --about-journey-shadow: 4px -4px 15px 0 rgba(179, 179, 179, 0.25),
+      --about-journey-shadow:
+        4px -4px 15px 0 rgba(179, 179, 179, 0.25),
         4px 4px 15px 0 rgba(179, 179, 179, 0.25);
       --about-journey-dot: url("../assets/about/dot-dark.svg");
       --about-global-impact-image: url("../assets/about/global-impact-dark.svg");
