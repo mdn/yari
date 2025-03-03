@@ -11,6 +11,10 @@ name: Dev Build
 
 # NOTE! Unlike prod and stage, this work only works on manual dispatch
 on:
+  push:
+    branches:
+      - "MP-1889-review-cloud-function"
+
   workflow_dispatch:
     inputs:
       notes:
