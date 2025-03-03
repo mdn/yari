@@ -11,6 +11,7 @@ import {
 import { lintKeymap } from "@codemirror/lint";
 import { EditorView, minimalSetup } from "codemirror";
 import { javascript as langJS } from "@codemirror/lang-javascript";
+import { wast as langWat } from "@codemirror/lang-wast";
 import { css as langCSS } from "@codemirror/lang-css";
 import { html as langHTML } from "@codemirror/lang-html";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -74,6 +75,8 @@ export class PlayEditor extends LitElement {
           return [langHTML()];
         case "css":
           return [langCSS()];
+        case "wat":
+          return [langWat()];
         default:
           return [];
       }
