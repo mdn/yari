@@ -164,14 +164,14 @@ For example, it will list all external URLs found in the content.
 
 The `prefix` refers to a prefix in the Deployer upload. I.e. what you set when
 you run `poetry run deployer upload --prefix=THIS`. The `prefix` is used to
-specify the proper Dev subdomain (`{prefix}.content.dev.mdn.mozit.cloud`) for
-the URLs of the built documents. For example, if `--prefix experiment1` is
+specify the proper Dev subdomain (`{prefix}.review.mdn.allizom.net`) for the
+URLs of the built documents. For example, if `--prefix experiment1` is
 specified, it will list:
 
 ```md
 ## Preview URLs
 
-- <https://experiment1.content.dev.mdn.mozit.cloud/en-US/docs/MDN/Kitchensink>
+- <https://experiment1.review.mdn.allizom.net/en-US/docs/MDN/Kitchensink>
 ```
 
 ...assuming the only page that was built was `build/en-us/docs/mdn/kitchensink`.
