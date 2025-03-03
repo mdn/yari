@@ -32,7 +32,23 @@ export class PlayRunner extends LitElement {
   }
 
   /** @param {MessageEvent} e  */
-  _onMessage({ data: { typ, prop, args } }) {
+  _onMessage({ data: { typ, prop, args }, origin, source }) {
+    /** @type {string | undefined} */
+    let uuid = new URL(origin, "https://example.com").hostname.split(".")[0];
+    if (uuid !== this._subdomain && source && "location" in source) {
+      // `origin` doesn't contain the uuid on localhost
+      // so check `source` for the uuid param we set
+      // this only works on localhost (it errors cross-origin)
+      try {
+        uuid =
+          new URLSearchParams(source.location.search).get("uuid") || undefined;
+      } catch {
+        uuid = undefined;
+      }
+    }
+    if (uuid !== this._subdomain) {
+      return;
+    }
     if (typ === "console") {
       /** @type {VConsole} */
       const detail = { prop, args };
@@ -69,6 +85,10 @@ export class PlayRunner extends LitElement {
                 : `${this._subdomain}.`
             }${PLAYGROUND_BASE_HOST}`
       );
+      if (!url.host.startsWith(this._subdomain)) {
+        // pass the uuid for postMessage isolation on localhost
+        url.searchParams.set("uuid", this._subdomain);
+      }
       url.searchParams.set("state", state);
       url.pathname = `${srcPrefix || ""}/runner.html`;
       const src = url.href;
