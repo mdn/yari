@@ -31,7 +31,7 @@ export const proxyContent = createProxyMiddleware({
       }
     }
 
-    (req as any).target = actualTarget;
+    req.headers["target"] = actualTarget;
 
     return actualTarget;
   },
@@ -42,7 +42,7 @@ export const proxyContent = createProxyMiddleware({
     proxyReq: fixRequestBody,
     proxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
-        const { target } = req as any;
+        const { target } = req.headers;
 
         withContentResponseHeaders(proxyRes, req, res);
         if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
