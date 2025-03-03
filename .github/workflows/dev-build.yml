@@ -225,9 +225,10 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build with GCS
-        run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static "gs://${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}/"
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build "gs://${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}"
+        uses: "google-github-actions/upload-cloud-storage@v2"
+        with:
+          path: "client/build"
+          destination: "${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}"
 
       - name: Notify PRs about deployment
         run: |
