@@ -36,8 +36,9 @@ export class PlayRunner extends LitElement {
     /** @type {string | undefined} */
     let uuid = new URL(origin, "https://example.com").hostname.split(".")[0];
     if (uuid !== this._subdomain && source && "location" in source) {
-      // we could be on localhost, check `source` for the uuid param we set
-      // NB: this doesn't work cross origin
+      // `origin` doesn't contain the uuid on localhost
+      // so check `source` for the uuid param we set
+      // this only works on localhost (it errors cross-origin)
       try {
         uuid =
           new URLSearchParams(source.location.search).get("uuid") || undefined;
