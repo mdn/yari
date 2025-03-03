@@ -121,6 +121,9 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
+          # rari
+          BUILD_OUT_ROOT: "client/build"
+
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the
           # context is that this is Dev and it's not connected to a real backend.
