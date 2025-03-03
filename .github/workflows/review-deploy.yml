@@ -118,7 +118,7 @@ jobs:
           SLACK_CHANNEL: mdn-notifications
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
-          SLACK_TITLE: "Stage"
+          SLACK_TITLE: "Review"
           SLACK_MESSAGE: "Build failed :collision:"
-          SLACK_FOOTER: "Powered by stage-build.yml"
+          SLACK_FOOTER: "Powered by review-deploy.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
