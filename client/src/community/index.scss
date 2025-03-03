@@ -12,7 +12,8 @@
   --community-header-text: #696969;
   --community-header-bg: url("../assets/community/people.svg");
   --community-header-stats-bg: #e1f5e5;
-  --community-box-shadow: 4px -2px 1rem 0 rgba(179, 179, 179, 0.2),
+  --community-box-shadow:
+    4px -2px 1rem 0 rgba(179, 179, 179, 0.2),
     4px -4px 1rem 0 rgba(179, 179, 179, 0.15);
   --community-circle-img-border: #fff;
   --community-quote-start: url("../assets/community/quote-start.svg");
@@ -38,7 +39,8 @@
   --community-header-text: #b3b3b3;
   --community-header-bg: url("../assets/community/people-dark.svg");
   --community-header-stats-bg: #394035;
-  --community-box-shadow: 4px -2px 15px 0 rgba(38, 38, 38, 0.2),
+  --community-box-shadow:
+    4px -2px 15px 0 rgba(38, 38, 38, 0.2),
     4px -4px 15px 0 rgba(38, 38, 38, 0.15);
   --community-circle-img-border: #4e4e4e;
   --community-quote-start: url("../assets/community/quote-start-dark.svg");
@@ -343,7 +345,8 @@ main.community-container {
 
         a {
           aspect-ratio: 1;
-          background-image: url("../assets/community/youtube-play.svg"),
+          background-image:
+            url("../assets/community/youtube-play.svg"),
             url("../assets/community/video-thumbnail.png");
           background-position:
             43% 50%,
