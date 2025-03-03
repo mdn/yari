@@ -229,6 +229,9 @@ jobs:
         with:
           path: "client/build"
           destination: "${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}"
+          resumable: false
+          concurrency: 500
+          process_gcloudignore: true
 
       - name: Notify PRs about deployment
         run: |
