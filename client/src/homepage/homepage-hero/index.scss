@@ -8,7 +8,8 @@
 
   section {
     --contrast-boost-bg: #191919;
-    --contrast-boost-shadow: 2px 2px 3px var(--contrast-boost-bg),
+    --contrast-boost-shadow:
+      2px 2px 3px var(--contrast-boost-bg),
       2px -2px 3px var(--contrast-boost-bg),
       -2px -2px 3px var(--contrast-boost-bg),
       -2px 2px 3px var(--contrast-boost-bg);

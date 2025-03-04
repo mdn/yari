@@ -16,13 +16,14 @@
 */
 :root {
   /* Typography */
-  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-fallback:
+    BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
   --font-body: Inter, var(--font-fallback);
   --font-heading: Inter, var(--font-fallback);
-  --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-    monospace;
+  --font-code:
+    Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
 
   --base-font-size: 100%;
   --base-line-height: 1.2;
