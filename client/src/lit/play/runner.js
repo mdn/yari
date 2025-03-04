@@ -5,6 +5,7 @@ import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
 import styles from "./runner.scss?css" with { type: "css" };
+import { ThemeController } from "../theme-controller.js";
 
 /** @import { VConsole } from "./types" */
 /** @import { EventName } from "@lit/react" */
@@ -21,6 +22,8 @@ export class PlayRunner extends LitElement {
 
   constructor() {
     super();
+    /** @type {ThemeController} */
+    this.theme = new ThemeController(this);
     /** @type {Record<string, string> | undefined} */
     this.code = undefined;
     /** @type {"ix-tabbed" | "ix-wat" | "ix-choice" | undefined} */
@@ -68,8 +71,13 @@ export class PlayRunner extends LitElement {
 
   _updateSrc = new Task(this, {
     args: () =>
-      /** @type {const} */ ([this.code, this.defaults, this.srcPrefix]),
-    task: async ([code, defaults, srcPrefix], { signal }) => {
+      /** @type {const} */ ([
+        this.code,
+        this.defaults,
+        this.theme.value,
+        this.srcPrefix,
+      ]),
+    task: async ([code, defaults, theme, srcPrefix], { signal }) => {
       if (code && code.js && code.wat) {
         const watUrl = await compileAndEncodeWatToDataUrl(code.wat);
         code.js = code.js.replace("{%wasm-url%}", watUrl);
@@ -80,6 +88,7 @@ export class PlayRunner extends LitElement {
           css: code?.css || "",
           js: code?.js || "",
           defaults: defaults,
+          theme: theme,
         })
       );
       signal.throwIfAborted();
@@ -132,7 +141,9 @@ export class PlayRunner extends LitElement {
     return html`
       <iframe
         src="${window.location
-          .protocol}//blank.${PLAYGROUND_BASE_HOST}/runner.html?blank"
+          .protocol}//blank.${PLAYGROUND_BASE_HOST}/runner.html?${new URLSearchParams(
+          { blank: "", theme: this.theme.initialValue }
+        ).toString()}"
         title="runner"
         sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
       ></iframe>

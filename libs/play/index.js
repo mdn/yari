@@ -5,8 +5,10 @@ import he from "he";
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
 
-/** @import { IncomingMessage, ServerResponse } from "http" */
-/** @import * as express from "express" */
+/**
+ * @import { IncomingMessage, ServerResponse } from "http"
+ * @import * as express from "express"
+ * @import { Theme } from "../../client/src/types/theme" */
 
 /**
  * @typedef State
@@ -15,6 +17,7 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
  * @property {string} js
  * @property {string} [src]
  * @property {"ix-tabbed" | "ix-wat" | "ix-choice"} [defaults]
+ * @property {Theme} [theme]
  */
 
 /**
@@ -80,15 +83,7 @@ function html(strings, ...args) {
  * @param {string} searchWithState
  */
 export function renderWarning(state, hrefWithCode, searchWithState) {
-  const {
-    css,
-    html: htmlCode,
-    js,
-  } = state || {
-    css: "",
-    html: "",
-    js: "",
-  };
+  const { css, html: htmlCode, js } = state || { css: "", html: "", js: "" };
   return html` <!doctype html>
     <html lang="en">
       <head>
@@ -219,17 +214,15 @@ export function renderHtml(state = null) {
     html: htmlCode,
     js,
     defaults,
-  } = state || {
-    css: "",
-    html: "",
-    js: "",
-  };
+    theme,
+  } = state || { css: "", html: "", js: "" };
   return html`
     <!doctype html>
     <html lang="en">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        ${renderThemeStyles(theme)}
         ${defaults === undefined
           ? html`<style>
               /* Legacy css to support existing live samples */
@@ -370,9 +363,7 @@ export function renderHtml(state = null) {
                               window.structuredClone(x);
                               return x;
                             } catch {
-                              return {
-                                _MDNPlaySerializedObject: x.toString(),
-                              };
+                              return { _MDNPlaySerializedObject: x.toString() };
                             }
                           }),
                         },
@@ -436,6 +427,63 @@ export function renderHtml(state = null) {
 }
 
 /**
+ * @param {Theme | undefined} [theme]
+ */
+function renderBlank(theme) {
+  return html`
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        ${renderThemeStyles(theme)}
+        <style>
+          body {
+            background: var(--background-primary);
+          }
+        </style>
+      </head>
+      <body></body>
+    </html>
+  `;
+}
+
+/**
+ * @param {Theme} [theme]
+ * @returns {string}
+ */
+function renderThemeStyles(theme) {
+  return theme === "os-default"
+    ? html`<style>
+        :root {
+          --text-primary: #1b1b1b;
+          --background-primary: #fff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --text-primary: #fff;
+            --background-primary: #1b1b1b;
+          }
+        }
+      </style>`
+    : theme === "light"
+      ? html`<style>
+          :root {
+            --text-primary: #1b1b1b;
+            --background-primary: #fff;
+          }
+        </style>`
+      : theme === "dark"
+        ? html`<style>
+            :root {
+              --text-primary: #fff;
+              --background-primary: #1b1b1b;
+            }
+          </style>`
+        : "";
+}
+
+/**
  * @param {string | null} base64String
  *
  * This is the Node.js version of `client/src/playground/utils.ts`. Keep in sync!
@@ -494,7 +542,13 @@ function isMDNReferer(referer) {
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   if (url.searchParams.has("blank")) {
-    return res.setHeader("Content-Type", "text/html").status(200).end();
+    const theme = /** @type {Theme | undefined} */ (
+      url.searchParams.get("theme") || undefined
+    );
+    return res
+      .setHeader("Content-Type", "text/html")
+      .status(200)
+      .send(renderBlank(theme));
   }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",

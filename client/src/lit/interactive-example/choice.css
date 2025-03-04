@@ -11,13 +11,6 @@
 }
 
 body {
-  --text-primary: #1b1b1b;
-  --background-primary: #fff;
-
-  /* dark theme:
-  --text-primary: #fff;
-  --background-primary: #1b1b1b; */
-
   color: var(--text-primary);
   background-color: var(--background-primary);
   font:
