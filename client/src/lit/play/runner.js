@@ -7,7 +7,7 @@ import React from "react";
 import styles from "./runner.scss?css" with { type: "css" };
 import { ThemeController } from "../theme-controller.js";
 
-/** @import { VConsole } from "./types" */
+/** @import { RunnerDefaults, VConsole } from "./types" */
 /** @import { EventName } from "@lit/react" */
 
 export class PlayRunner extends LitElement {
@@ -26,7 +26,7 @@ export class PlayRunner extends LitElement {
     this.theme = new ThemeController(this);
     /** @type {Record<string, string> | undefined} */
     this.code = undefined;
-    /** @type {"ix-tabbed" | "ix-wat" | "ix-choice" | undefined} */
+    /** @type {RunnerDefaults | undefined} */
     this.defaults = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;

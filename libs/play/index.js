@@ -8,7 +8,8 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
 /**
  * @import { IncomingMessage, ServerResponse } from "http"
  * @import * as express from "express"
- * @import { Theme } from "../../client/src/types/theme" */
+ * @import { Theme } from "../../client/src/types/theme"
+ * @import { RunnerDefaults } from "../../client/src/lit/play/types" */
 
 /**
  * @typedef State
@@ -16,7 +17,7 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
  * @property {string} css
  * @property {string} js
  * @property {string} [src]
- * @property {"ix-tabbed" | "ix-wat" | "ix-choice"} [defaults]
+ * @property {RunnerDefaults} [defaults]
  * @property {Theme} [theme]
  */
 
