@@ -25,13 +25,11 @@ import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import type { Doc } from "../libs/types/document.js";
 import {
-  ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
 import * as kumascript from "../kumascript/index.js";
@@ -168,15 +166,6 @@ interface FlawsActionParameters extends ActionParameters {
 }
 
 interface PopularitiesActionParameters extends ActionParameters {
-  options: {
-    outfile: string;
-    maxUris: number;
-    refresh: boolean;
-  };
-  logger: Logger;
-}
-
-interface BuildRobotsTxtActionParameters extends ActionParameters {
   options: {
     outfile: string;
     maxUris: number;
@@ -864,28 +853,6 @@ program
       logger.info(
         chalk.green(
           `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
-        )
-      );
-    })
-  )
-
-  .command(
-    "build-robots-txt",
-    "Generate a robots.txt in the build root depending ALWAYS_ALLOW_ROBOTS"
-  )
-  .option("--outfile <path>", "name of the generated file", {
-    default: path.join(BUILD_OUT_ROOT, "robots.txt"),
-  })
-  .action(
-    tryOrExit(async ({ options, logger }: BuildRobotsTxtActionParameters) => {
-      const { outfile } = options;
-      await runBuildRobotsTxt(outfile);
-      logger.info(
-        chalk.yellow(
-          `Generated ${path.relative(
-            ".",
-            outfile
-          )} based on ALWAYS_ALLOW_ROBOTS=${ALWAYS_ALLOW_ROBOTS}`
         )
       );
     })

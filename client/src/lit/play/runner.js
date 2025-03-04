@@ -4,7 +4,6 @@ import { PLAYGROUND_BASE_HOST } from "../../env.ts";
 import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
-
 import styles from "./runner.scss?css" with { type: "css" };
 
 /** @import { VConsole } from "./types" */
@@ -13,7 +12,9 @@ import styles from "./runner.scss?css" with { type: "css" };
 export class PlayRunner extends LitElement {
   static properties = {
     code: { type: Object },
+    defaults: { type: String },
     srcPrefix: { type: String, attribute: "src-prefix" },
+    sandbox: { type: String },
   };
 
   static styles = styles;
@@ -22,13 +23,32 @@ export class PlayRunner extends LitElement {
     super();
     /** @type {Record<string, string> | undefined} */
     this.code = undefined;
+    /** @type {"ix-tabbed" | "ix-wat" | undefined} */
+    this.defaults = undefined;
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
+    this.sandbox = "";
     this._subdomain = crypto.randomUUID();
   }
 
   /** @param {MessageEvent} e  */
-  _onMessage({ data: { typ, prop, args } }) {
+  _onMessage({ data: { typ, prop, args }, origin, source }) {
+    /** @type {string | undefined} */
+    let uuid = new URL(origin, "https://example.com").hostname.split(".")[0];
+    if (uuid !== this._subdomain && source && "location" in source) {
+      // `origin` doesn't contain the uuid on localhost
+      // so check `source` for the uuid param we set
+      // this only works on localhost (it errors cross-origin)
+      try {
+        uuid =
+          new URLSearchParams(source.location.search).get("uuid") || undefined;
+      } catch {
+        uuid = undefined;
+      }
+    }
+    if (uuid !== this._subdomain) {
+      return;
+    }
     if (typ === "console") {
       /** @type {VConsole} */
       const detail = { prop, args };
@@ -39,32 +59,39 @@ export class PlayRunner extends LitElement {
   }
 
   _updateSrc = new Task(this, {
-    args: () => /** @type {const} */ ([this.code, this.srcPrefix]),
-    task: async ([code, srcPrefix], { signal }) => {
-      let src = "about:blank";
-      if (code) {
-        const { state } = await compressAndBase64Encode(
-          JSON.stringify({
-            html: code.html || "",
-            css: code.css || "",
-            js: code.js || "",
-          })
-        );
-        signal.throwIfAborted();
-        // We're using a random subdomain for origin isolation.
-        const url = new URL(
-          window.location.hostname.endsWith("localhost")
-            ? window.location.origin
-            : `${window.location.protocol}//${
-                PLAYGROUND_BASE_HOST.startsWith("localhost")
-                  ? ""
-                  : `${this._subdomain}.`
-              }${PLAYGROUND_BASE_HOST}`
-        );
-        url.searchParams.set("state", state);
-        url.pathname = `${srcPrefix || ""}/runner.html`;
-        src = url.href;
+    args: () =>
+      /** @type {const} */ ([this.code, this.defaults, this.srcPrefix]),
+    task: async ([code, defaults, srcPrefix], { signal }) => {
+      if (code && code.js && code.wat) {
+        const watUrl = await compileAndEncodeWatToDataUrl(code.wat);
+        code.js = code.js.replace("{%wasm-url%}", watUrl);
       }
+      const { state } = await compressAndBase64Encode(
+        JSON.stringify({
+          html: code?.html || "",
+          css: code?.css || "",
+          js: code?.js || "",
+          defaults: defaults,
+        })
+      );
+      signal.throwIfAborted();
+      // We're using a random subdomain for origin isolation.
+      const url = new URL(
+        window.location.hostname.endsWith("localhost")
+          ? window.location.origin
+          : `${window.location.protocol}//${
+              PLAYGROUND_BASE_HOST.startsWith("localhost")
+                ? ""
+                : `${this._subdomain}.`
+            }${PLAYGROUND_BASE_HOST}`
+      );
+      if (!url.host.startsWith(this._subdomain)) {
+        // pass the uuid for postMessage isolation on localhost
+        url.searchParams.set("uuid", this._subdomain);
+      }
+      url.searchParams.set("state", state);
+      url.pathname = `${srcPrefix || ""}/runner.html`;
+      const src = url.href;
       // update iframe src without adding to browser history
       this.shadowRoot
         ?.querySelector("iframe")
@@ -81,8 +108,10 @@ export class PlayRunner extends LitElement {
   render() {
     return html`
       <iframe
+        src="${window.location
+          .protocol}//blank.${PLAYGROUND_BASE_HOST}/runner.html?blank"
         title="runner"
-        sandbox="allow-scripts allow-same-origin allow-forms"
+        sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
       ></iframe>
     `;
   }
@@ -91,6 +120,31 @@ export class PlayRunner extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener("message", this._onMessage);
   }
+}
+
+/**
+ * Converts a Uint8Array to a base64 encoded string
+ * @param {Uint8Array} bytes - The array of bytes to convert
+ * @returns {string} The base64 encoded string representation of the input bytes
+ */
+function uInt8ArrayToBase64(bytes) {
+  const binString = Array.from(bytes, (byte) =>
+    String.fromCodePoint(byte)
+  ).join("");
+  return btoa(binString);
+}
+
+/**
+ * compiles the wat code to wasm
+ * @param {string} wat
+ * @returns {Promise<string>} a data-url with the compiled wasm, base64 encoded
+ */
+async function compileAndEncodeWatToDataUrl(wat) {
+  const { default: init, watify } = await import("@mdn/watify");
+  await init();
+  const binary = watify(wat);
+  const b64 = `data:application/wasm;base64,${uInt8ArrayToBase64(binary)}`;
+  return b64;
 }
 
 customElements.define("play-runner", PlayRunner);

@@ -22,16 +22,28 @@ export class PlayController extends LitElement {
     this.runOnStart = false;
     this.runOnChange = false;
     this.srcPrefix = "";
+    /** @type {Record<string, string>} */
+    this._code = {};
+    /** @type {Record<string, string>} */
+    this._hiddenCode = {};
   }
 
   /** @param {Record<string, string>} code */
   set code(code) {
+    this._code = Object.fromEntries(
+      Object.entries(code).filter(([language]) => !language.endsWith("-hidden"))
+    );
+    this._hiddenCode = Object.fromEntries(
+      Object.entries(code)
+        .filter(([language]) => language.endsWith("-hidden"))
+        .map(([language, value]) => [language.replace(/-hidden$/, ""), value])
+    );
     if (!this.initialCode) {
       this.initialCode = code;
     }
     const editors = this.querySelectorAll("play-editor");
     editors.forEach((editor) => {
-      const language = this._langAlias(editor.language);
+      const language = editor.language;
       if (language) {
         const value = code[language];
         if (value !== undefined) {
@@ -45,15 +57,17 @@ export class PlayController extends LitElement {
   }
 
   get code() {
-    /** @type {Record<string, string>} */
-    const code = { ...this.initialCode };
+    const code = { ...this._code };
     const editors = this.querySelectorAll("play-editor");
     editors.forEach((editor) => {
-      const language = this._langAlias(editor.language);
+      const language = editor.language;
       if (language) {
         code[language] = editor.value;
       }
     });
+    for (const [language, value] of Object.entries(this._hiddenCode)) {
+      code[language] = code[language] ? `${value}\n${code[language]}` : value;
+    }
     return code;
   }
 
@@ -88,18 +102,6 @@ export class PlayController extends LitElement {
       if (runner) {
         runner.code = undefined;
       }
-    }
-  }
-
-  /**
-   * @param {string} lang
-   */
-  _langAlias(lang) {
-    switch (lang) {
-      case "javascript":
-        return "js";
-      default:
-        return lang;
     }
   }
 

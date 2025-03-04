@@ -11,6 +11,7 @@ import {
 import { lintKeymap } from "@codemirror/lint";
 import { EditorView, minimalSetup } from "codemirror";
 import { javascript as langJS } from "@codemirror/lang-javascript";
+import { wast as langWat } from "@codemirror/lang-wast";
 import { css as langCSS } from "@codemirror/lang-css";
 import { html as langHTML } from "@codemirror/lang-html";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -68,12 +69,14 @@ export class PlayEditor extends LitElement {
   _extensions() {
     const language = (() => {
       switch (this.language) {
-        case "javascript":
+        case "js":
           return [langJS()];
         case "html":
           return [langHTML()];
         case "css":
           return [langCSS()];
+        case "wat":
+          return [langWat()];
         default:
           return [];
       }
@@ -114,7 +117,7 @@ export class PlayEditor extends LitElement {
     const prettier = await import("prettier/standalone");
     const config = (() => {
       switch (this.language) {
-        case "javascript":
+        case "js":
           return {
             parser: "babel",
             plugins: [

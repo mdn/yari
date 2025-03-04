@@ -1,0 +1,25 @@
+:host {
+  background-color: transparent;
+  border: 0 none;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font: var(--type-emphasis-m);
+  padding: 0.5em 30px;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+:host(:hover),
+:host(:focus) {
+  background-color: var(--ix-tab-background-active);
+  color: var(--text-primary);
+}
+
+:host([aria-selected="true"]) {
+  background-color: var(--ix-tab-background-active);
+  border-bottom-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
