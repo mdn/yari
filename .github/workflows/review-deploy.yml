@@ -85,6 +85,8 @@ jobs:
             --region=$region \
             --source=cloud-function \
             --trigger-http \
+            --allow-unauthenticated \
+            --ingress-settings=internal-and-gclb \
             --entry-point=mdnHandler \
             --concurrency=100 \
             --min-instances=0 \
