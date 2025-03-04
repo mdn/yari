@@ -69,6 +69,20 @@ export class PlayRunner extends LitElement {
     }
   }
 
+  _constructUrl() {
+    const url = new URL(
+      window.location.hostname.endsWith("localhost")
+        ? window.location.origin
+        : `${window.location.protocol}//${
+            PLAYGROUND_BASE_HOST.startsWith("localhost")
+              ? ""
+              : `${this._subdomain}.`
+          }${PLAYGROUND_BASE_HOST}`
+    );
+    url.pathname = "runner.html";
+    return url;
+  }
+
   _updateSrc = new Task(this, {
     args: () =>
       /** @type {const} */ ([
@@ -93,15 +107,7 @@ export class PlayRunner extends LitElement {
       );
       signal.throwIfAborted();
       // We're using a random subdomain for origin isolation.
-      const url = new URL(
-        window.location.hostname.endsWith("localhost")
-          ? window.location.origin
-          : `${window.location.protocol}//${
-              PLAYGROUND_BASE_HOST.startsWith("localhost")
-                ? ""
-                : `${this._subdomain}.`
-            }${PLAYGROUND_BASE_HOST}`
-      );
+      const url = this._constructUrl();
       if (!url.host.startsWith(this._subdomain)) {
         // pass the uuid for postMessage isolation on localhost
         url.searchParams.set("uuid", this._subdomain);
@@ -138,12 +144,12 @@ export class PlayRunner extends LitElement {
   }
 
   render() {
+    const url = this._constructUrl();
+    url.searchParams.set("blank", "");
+    url.searchParams.set("theme", this.theme.initialValue);
     return html`
       <iframe
-        src="${window.location
-          .protocol}//blank.${PLAYGROUND_BASE_HOST}/runner.html?${new URLSearchParams(
-          { blank: "", theme: this.theme.initialValue }
-        ).toString()}"
+        src=${url.href}
         title="runner"
         sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
       ></iframe>
