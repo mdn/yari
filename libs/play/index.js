@@ -4,8 +4,6 @@ import he from "he";
 
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
-export const ORIGIN_REVIEW =
-  process.env["ORIGIN_REVIEW"] || "content.dev.mdn.mozit.cloud";
 
 /** @import { IncomingMessage, ServerResponse } from "http" */
 /** @import * as express from "express" */
@@ -474,8 +472,9 @@ function isMDNReferer(referer) {
   const { hostname } = referer;
   return (
     hostname === ORIGIN_MAIN ||
-    hostname === ORIGIN_REVIEW ||
-    hostname.endsWith(`.${ORIGIN_REVIEW}`)
+    // Review Companion (old/new).
+    hostname.endsWith(`.content.dev.mdn.mozit.cloud`) ||
+    hostname.endsWith(`.review.mdn.allizom.net`)
   );
 }
 
