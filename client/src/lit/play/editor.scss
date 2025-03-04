@@ -13,8 +13,9 @@
     flex-direction: column;
     justify-content: center;
 
-    .cm-editor {
-      height: auto;
+    .cm-content {
+      align-self: center;
+      min-height: auto;
     }
 
     .cm-focused {
