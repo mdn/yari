@@ -342,7 +342,6 @@ export function renderHtml(state = null) {
         <style id="css-output">
           ${css}
         </style>
-
         <script>
           const consoleProxy = new Proxy(console, {
             get(target, prop) {
@@ -392,11 +391,6 @@ export function renderHtml(state = null) {
 
           window.console = consoleProxy;
           window.addEventListener("error", (e) => console.log(e.error));
-          try {
-            window.parent.postMessage({ typ: "ready" }, "*");
-          } catch (e) {
-            console.error("[Playground] Failed to post ready message", e);
-          }
         </script>
         ${defaults === "ix-tabbed"
           ? html`<script>
@@ -421,6 +415,13 @@ export function renderHtml(state = null) {
         ${htmlCode}
         <script type="${defaults === "ix-wat" ? "module" : ""}">
           ${js};
+        </script>
+        <script>
+          try {
+            window.parent.postMessage({ typ: "ready" }, "*");
+          } catch (e) {
+            console.error("[Playground] Failed to post ready message", e);
+          }
         </script>
       </body>
     </html>
