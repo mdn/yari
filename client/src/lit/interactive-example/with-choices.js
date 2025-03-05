@@ -7,9 +7,6 @@ import { isCSSSupported } from "./utils.js";
 import "../play/controller.js";
 import "../play/runner.js";
 
-import choiceJs from "./choice.js?raw";
-import choiceStyle from "./choice.css?raw";
-
 /**
  * @import { InteractiveExampleBase } from "./index.js";
  */
@@ -148,11 +145,7 @@ export const InteractiveExampleWithChoices = (Base) =>
     _initialCode() {
       const code = super._initialCode();
       if (this._template === "choices") {
-        code["js-hidden"] = [
-          choiceJs,
-          `setChoice(${JSON.stringify(this._choices?.[0])})`,
-        ].join("\n");
-        code["css-hidden"] = choiceStyle;
+        code["js-hidden"] = `setChoice(${JSON.stringify(this._choices?.[0])})`;
       }
       return code;
     }
