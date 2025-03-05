@@ -2232,10 +2232,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.7.tgz#555e80c33df520df068943e6b18ebc07f0e24d19"
   integrity sha512-IHkkypEjlIkBkx4mJ2//Xbzog9M/Lzne1Sl8db2cIHJ/5pe3NCqSLwSchmqzcUN+/WJr/U+V3tNAbWunk2xZcA==
 
-"@mdn/browser-compat-data@^5.6.43":
-  version "5.6.43"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.6.43.tgz#a33fc8373aac35980f644473a743b66e3b671410"
-  integrity sha512-qLuxKpjwFhjvFkdqNb37AJpJo9J22Qdcml+92/yWdlREte3JFdayz7SqmjXLlCuizSjz9uVH+aW7dQ7KJEKg1g==
+"@mdn/browser-compat-data@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.7.0.tgz#3f08f76234cb075e8377bbb822d93ebc2003bee5"
+  integrity sha512-Z96UeDGT80sBRJAY67xKnbDEdt5F/8wduy6aU5NeEzLwFqWcyx1oNcj9XapZNMp/i0Nz9iTWZqht+1zcq48j5Q==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
