@@ -21,8 +21,8 @@ import choiceStyle from "./choice.css?raw";
 export const InteractiveExampleWithChoices = (Base) =>
   class extends Base {
     static properties = {
-      __choiceSelected: { type: Number, state: true },
-      __choiceUnsupportedMask: { type: Number, state: true },
+      __choiceSelected: { state: true },
+      __choiceUnsupported: { state: true },
     };
 
     /** @param {any[]} _args  */
@@ -30,8 +30,8 @@ export const InteractiveExampleWithChoices = (Base) =>
       super();
       /** @type {number} */
       this.__choiceSelected = -1;
-      /** @type {number} */
-      this.__choiceUnsupportedMask = 0;
+      /** @type {boolean[]} */
+      this.__choiceUnsupported = [];
     }
 
     /** @param {MouseEvent} event  */
@@ -50,7 +50,6 @@ export const InteractiveExampleWithChoices = (Base) =>
 
     #resetChoices() {
       this.__choiceSelected = -1;
-      this.__choiceUnsupportedMask = 0;
 
       const editorNodes = Array.from(
         this.shadowRoot?.querySelectorAll("play-editor") || []
@@ -59,11 +58,10 @@ export const InteractiveExampleWithChoices = (Base) =>
       Array.from(editorNodes).forEach((editorNode, index) => {
         const code = this._choices?.at(index) ?? "";
         editorNode.value = code;
-
-        const unsupported = !isCSSSupported(code);
-        this.__choiceUnsupportedMask &= ~(1 << index);
-        this.__choiceUnsupportedMask |= Number(unsupported) << index;
       });
+
+      this.__choiceUnsupported =
+        this._choices?.map((code) => !isCSSSupported(code || "")) || [];
 
       this.#selectChoice(0);
     }
@@ -87,15 +85,11 @@ export const InteractiveExampleWithChoices = (Base) =>
         return;
       }
 
-      await Promise.all([
-        runner.postMessage({ typ: "choice", code }),
-        new Promise((resolve) => {
-          const unsupported = !isCSSSupported(code);
-          this.__choiceUnsupportedMask &= ~(1 << index);
-          this.__choiceUnsupportedMask |= Number(unsupported) << index;
-          resolve(true);
-        }),
-      ]);
+      this.__choiceUnsupported = this.__choiceUnsupported.map((value, i) =>
+        index === i ? !isCSSSupported(code) : value
+      );
+
+      await runner.postMessage({ typ: "choice", code });
 
       this.__choiceSelected = index;
     }
@@ -118,9 +112,7 @@ export const InteractiveExampleWithChoices = (Base) =>
                   class=${[
                     "choice",
                     ...(index === this.__choiceSelected ? ["selected"] : []),
-                    ...((1 << index) & this.__choiceUnsupportedMask
-                      ? ["unsupported"]
-                      : []),
+                    ...(this.__choiceUnsupported[index] ? ["unsupported"] : []),
                   ].join(" ")}
                 >
                   <play-editor
