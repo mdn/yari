@@ -1,14 +1,19 @@
 import { html, LitElement } from "lit";
-import { compressAndBase64Encode } from "../../playground/utils.ts";
-import { PLAYGROUND_BASE_HOST } from "../../env.ts";
+import { createRef, ref } from "lit/directives/ref.js";
 import { createComponent } from "@lit/react";
 import { Task } from "@lit/task";
 import React from "react";
-import styles from "./runner.scss?css" with { type: "css" };
+
+import { compressAndBase64Encode } from "../../playground/utils.ts";
+import { PLAYGROUND_BASE_HOST } from "../../env.ts";
 import { ThemeController } from "../theme-controller.js";
 
-/** @import { RunnerDefaults, VConsole } from "./types" */
-/** @import { EventName } from "@lit/react" */
+import styles from "./runner.scss?css" with { type: "css" };
+
+/**
+ * @import { RunnerDefaults, VConsole } from "./types"
+ * @import { EventName } from "@lit/react"
+ * @import { Ref } from "lit/directives/ref.js"; */
 
 export class PlayRunner extends LitElement {
   static properties = {
@@ -31,14 +36,15 @@ export class PlayRunner extends LitElement {
     /** @type {string | undefined} */
     this.srcPrefix = undefined;
     this.sandbox = "";
-    /** @type {() => void} */
-    this._resolveReady = () => {};
     this._subdomain = crypto.randomUUID();
     /** @type {Promise<true>} */
     this.ready = new Promise((resolve) => {
       this._resolveReady = () => resolve(true);
     });
   }
+
+  /** @type {Ref<HTMLIFrameElement>} */
+  _iframe = createRef();
 
   /** @param {MessageEvent} e  */
   _onMessage({ data: { typ, prop, args }, origin, source }) {
@@ -116,9 +122,7 @@ export class PlayRunner extends LitElement {
       url.pathname = `${srcPrefix || ""}/runner.html`;
       const src = url.href;
       // update iframe src without adding to browser history
-      this.shadowRoot
-        ?.querySelector("iframe")
-        ?.contentWindow?.location.replace(src);
+      this._iframe.value?.contentWindow?.location.replace(src);
     },
   });
 
@@ -131,16 +135,7 @@ export class PlayRunner extends LitElement {
   /** @param {any} message */
   async postMessage(message) {
     await this.ready;
-
-    const contentWindow =
-      this.shadowRoot?.querySelector("iframe")?.contentWindow;
-
-    if (!contentWindow) {
-      console.error("[PlayRunner] Couldn't get contentWindow");
-      return;
-    }
-
-    contentWindow.postMessage(message, "*");
+    this._iframe.value?.contentWindow?.postMessage(message, "*");
   }
 
   render() {
@@ -149,6 +144,7 @@ export class PlayRunner extends LitElement {
     url.searchParams.set("theme", this.theme.initialValue);
     return html`
       <iframe
+        ${ref(this._iframe)}
         src=${url.href}
         title="runner"
         sandbox="allow-scripts allow-same-origin allow-forms ${this.sandbox}"
