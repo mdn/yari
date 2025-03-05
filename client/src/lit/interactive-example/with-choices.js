@@ -33,15 +33,19 @@ export const InteractiveExampleWithChoices = (Base) =>
 
     /** @param {MouseEvent} event  */
     #choiceClick({ target }) {
-      // TODO: use a different event handler for editor update event
-      // TODO: deal with update race conditions (editor updates after user clicks on different editor)
       if (target instanceof PlayEditor) {
-        const choice = target.closest(".choice");
-        const choiceIndex = Array.prototype.indexOf.call(
-          choice?.parentNode?.children,
-          choice
-        );
-        this.#selectChoice(choiceIndex, target.value);
+        this.#updateUnsupported(target);
+        this.#selectChoice(target);
+      }
+    }
+
+    /** @param {Event} event  */
+    #choiceUpdate({ target }) {
+      if (target instanceof PlayEditor) {
+        this.#updateUnsupported(target);
+        if (this.__choiceSelected === this.#getIndex(target)) {
+          this.#selectChoice(target);
+        }
       }
     }
 
@@ -60,35 +64,33 @@ export const InteractiveExampleWithChoices = (Base) =>
       this.__choiceUnsupported =
         this._choices?.map((code) => !isCSSSupported(code || "")) || [];
 
-      this.#selectChoice(0);
+      const first = editorNodes[0];
+      if (first) {
+        this.#selectChoice(first);
+      }
     }
 
-    /**
-     * @param {Number} index
-     * @param {string|undefined} code
-     */
-    async #selectChoice(index, code = undefined) {
-      code = typeof code === "string" ? code : this._choices?.at(index) || "";
-
-      if (!code) {
-        console.debug("No code selected");
-        return;
-      }
-
-      const runner = this._runner.value;
-
-      if (!runner) {
-        console.error("No runner");
-        return;
-      }
-
-      this.__choiceUnsupported = this.__choiceUnsupported.map((value, i) =>
-        index === i ? !isCSSSupported(code) : value
-      );
-
-      await runner.postMessage({ typ: "choice", code });
-
+    /** @param {PlayEditor} editor */
+    async #selectChoice(editor) {
+      const index = this.#getIndex(editor);
+      await this._runner.value?.postMessage({
+        typ: "choice",
+        code: editor.value,
+      });
       this.__choiceSelected = index;
+    }
+
+    /** @param {PlayEditor} editor */
+    #updateUnsupported(editor) {
+      const index = this.#getIndex(editor);
+      this.__choiceUnsupported = this.__choiceUnsupported.map((value, i) =>
+        index === i ? !isCSSSupported(editor.value) : value
+      );
+    }
+
+    /** @param {PlayEditor} editor */
+    #getIndex(editor) {
+      return parseInt(editor.dataset.index ?? "-1", 10);
     }
 
     #render() {
@@ -101,7 +103,7 @@ export const InteractiveExampleWithChoices = (Base) =>
           <div
             class="choice-wrapper"
             @click=${this.#choiceClick}
-            @update=${this.#choiceClick}
+            @update=${this.#choiceUpdate}
           >
             ${this._choices?.map(
               (code, index) => html`
@@ -113,6 +115,7 @@ export const InteractiveExampleWithChoices = (Base) =>
                   ].join(" ")}
                 >
                   <play-editor
+                    data-index=${index}
                     language="css"
                     minimal="true"
                     .delay=${100}
