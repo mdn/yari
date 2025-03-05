@@ -1,22 +1,46 @@
 @use "../../ui/vars" as *;
 @use "../../ui/atoms/button/mixins" as button;
 
+:host {
+  --border: 1px solid var(--border-secondary);
+  --tabbed-font-heading: 600 0.625rem/1.2 var(--font-heading);
+}
+
 header {
   align-items: center;
-  border-bottom: 1px solid var(--border-secondary);
+  border-bottom: var(--border);
   border-top-left-radius: var(--elem-radius);
   border-top-right-radius: var(--elem-radius);
   display: flex;
   grid-area: header;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-}
 
-h4 {
-  font-size: 1rem;
-  font-weight: normal;
-  line-height: 1.1876;
-  margin: 0;
+  h4 {
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.1876;
+    margin: 0;
+  }
+
+  #reset {
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--elem-radius);
+    color: var(--text-primary);
+    cursor: pointer;
+    font: var(--tabbed-font-heading);
+    height: 2rem;
+    letter-spacing: 1.5px;
+    margin: 0;
+    max-width: 100px;
+    padding: 0.7em 0.9em;
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: var(--button-secondary-hover);
+    }
+  }
 }
 
 play-editor {
@@ -37,7 +61,7 @@ play-editor {
 }
 
 play-console {
-  border: 1px solid var(--border-secondary);
+  border: var(--border);
   border-radius: var(--elem-radius);
   grid-area: console;
 }
@@ -63,7 +87,7 @@ ix-tab-wrapper {
   height: 100%;
 
   header {
-    border: 1px solid var(--border-secondary);
+    border: var(--border);
   }
 
   play-runner {
@@ -72,7 +96,7 @@ ix-tab-wrapper {
 
   > play-editor,
   ix-tab-wrapper {
-    border: 1px solid var(--border-secondary);
+    border: var(--border);
     border-bottom-left-radius: var(--elem-radius);
     border-bottom-right-radius: var(--elem-radius);
     border-top: 0;
@@ -101,8 +125,7 @@ ix-tab-wrapper {
 // ---------------
 
 .template-tabbed {
-  --tabbed-font-heading: 600 0.625rem/1.2 var(--font-heading);
-  border: 1px solid var(--border-secondary);
+  border: var(--border);
   border-radius: var(--elem-radius);
   display: grid;
   grid-template-areas:
@@ -113,27 +136,8 @@ ix-tab-wrapper {
   height: 100%;
   overflow: hidden;
 
-  #reset {
-    background-color: transparent;
-    border: 0;
-    border-radius: var(--elem-radius);
-    color: var(--text-primary);
-    cursor: pointer;
-    font: var(--tabbed-font-heading);
-    height: 2rem;
-    letter-spacing: 1.5px;
-    margin: 0;
-    max-width: 100px;
-    padding: 0.7em 0.9em;
-    text-transform: uppercase;
-
-    &:hover {
-      background-color: var(--button-secondary-hover);
-    }
-  }
-
   .output-wrapper {
-    border-left: 1px solid var(--border-secondary);
+    border-left: var(--border);
     grid-area: runner;
     overflow: hidden;
     position: relative;
@@ -163,7 +167,7 @@ ix-tab-wrapper {
 
     .output-wrapper {
       border-left: 0;
-      border-top: 1px solid var(--border-secondary);
+      border-top: var(--border);
     }
   }
 }
@@ -173,7 +177,7 @@ ix-tab-wrapper {
 // ---------------
 
 .template-choices {
-  border: 1px solid var(--border-secondary);
+  border: var(--border);
   border-radius: var(--elem-radius);
   display: grid;
   grid-template-areas:
@@ -188,27 +192,7 @@ ix-tab-wrapper {
     grid-template-columns: 1fr;
   }
 
-  #reset {
-    background-color: transparent;
-    border: none;
-    border-radius: 0.25rem; // var(--button-radius);
-    color: var(--text-primary);
-    cursor: pointer;
-    font: 600 0.625rem/1.2 var(--font-heading); // var(--type-label-s);
-    height: 2rem; // var(--button-height);
-    letter-spacing: 1.5px;
-    margin: 0;
-    max-width: 100px;
-    padding: 0.7em 0.9em;
-    text-transform: uppercase;
-
-    &:hover {
-      background-color: var(--button-secondary-hover);
-    }
-  }
-
   .choice-wrapper {
-    --border: 1px solid var(--border-primary);
     border-right: var(--border);
     display: flex;
     flex-direction: column;
@@ -221,7 +205,7 @@ ix-tab-wrapper {
     @media (max-width: $screen-lg) {
       border-bottom: var(--border);
       border-right: none;
-      padding-right: 0.2em; // Avoid box-shadow overflow.
+      padding-right: 1em;
     }
 
     .choice {
@@ -234,8 +218,8 @@ ix-tab-wrapper {
 
       &::after {
         color: var(--field-focus-border);
-        content: "▸";
-        font-size: 0.6875rem;
+        content: "▶";
+        font-size: 0.5rem;
         opacity: 0;
         padding: 0;
         padding-left: 0.25rem;
@@ -281,7 +265,7 @@ ix-tab-wrapper {
       }
 
       play-editor {
-        border: 1px solid var(--border-secondary);
+        border: var(--border);
         border-radius: var(--elem-radius);
         cursor: pointer;
         width: 100%;
