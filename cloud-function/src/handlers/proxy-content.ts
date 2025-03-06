@@ -6,7 +6,7 @@ import {
 } from "http-proxy-middleware";
 
 import { withContentResponseHeaders } from "../headers.js";
-import { Source, sourceUri } from "../env.js";
+import { Source, sourceUri, WILDCARD_ENABLED } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { isLiveSampleURL } from "../utils.js";
 
@@ -17,9 +17,24 @@ let notFoundBuffer: ArrayBuffer;
 const target = sourceUri(Source.content);
 
 export const proxyContent = createProxyMiddleware({
-  target,
   changeOrigin: true,
   autoRewrite: true,
+  router: (req) => {
+    let actualTarget = target;
+
+    if (WILDCARD_ENABLED) {
+      const { host } = req.headers;
+
+      if (typeof host === "string") {
+        const subdomain = host.split(".")[0];
+        actualTarget = `${target}${subdomain}/`;
+      }
+    }
+
+    req.headers["target"] = actualTarget;
+
+    return actualTarget;
+  },
   proxyTimeout: PROXY_TIMEOUT,
   xfwd: true,
   selfHandleResponse: true,
@@ -27,6 +42,8 @@ export const proxyContent = createProxyMiddleware({
     proxyReq: fixRequestBody,
     proxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
+        const { target } = req.headers;
+
         withContentResponseHeaders(proxyRes, req, res);
         if (proxyRes.statusCode === 404 && !isLiveSampleURL(req.url ?? "")) {
           const tryHtml = await fetch(

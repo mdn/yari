@@ -113,7 +113,7 @@ def post_about_deployment(build_directory: Path, **config):
 
 
 def mdn_url_to_dev_url(prefix, mdn_url):
-    template = "https://{prefix}.content.dev.mdn.mozit.cloud{mdn_url}"
+    template = "https://{prefix}.review.mdn.allizom.net{mdn_url}"
     return template.format(prefix=prefix, mdn_url=mdn_url)
 
 

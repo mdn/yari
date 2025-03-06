@@ -2861,10 +2861,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@stripe/stripe-js@^5.8.0":
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-5.8.0.tgz#4149b4b0235bcfd68933660de21e0156320e1774"
-  integrity sha512-o41SYzMDu/aE7iXSW6dNH9XGLfMJyj5sfazbkMz6LdNI1vDPs1h1aldtXJNLKH22RGxjvFUd5AlEw2G2OA7bug==
+"@stripe/stripe-js@^5.9.2":
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-5.9.2.tgz#c13187c41d1f19ee803340a630f8a46aaec56384"
+  integrity sha512-g8qabMEu8zoXujyebWHkeQrM6k9Dm8h22FUaMNIFFTv4GtrWBhLYphhsra/PBEcM3p+mRr/srEIj9g9RV5d0xg==
 
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
   version "8.0.0"
@@ -11663,10 +11663,10 @@ open@^10.0.3, open@^10.1.0:
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openai@^4.86.1:
-  version "4.86.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.86.1.tgz#4147252d5e6255e2ae716ea59b1d4e54a1c1472a"
-  integrity sha512-x3iCLyaC3yegFVZaxOmrYJjitKxZ9hpVbLi+ZlT5UHuHTMlEQEbKXkGOM78z9qm2T5GF+XRUZCP2/aV4UPFPJQ==
+openai@^4.86.2:
+  version "4.86.2"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.86.2.tgz#d3ba44c6b81471b9e2d38515e0ab86ad73a02c85"
+  integrity sha512-nvYeFjmjdSu6/msld+22JoUlCICNk/lUFpSMmc6KNhpeNLpqL70TqbD/8Vura/tFmYqHKW0trcjgPwUpKSPwaA==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
@@ -14940,10 +14940,10 @@ terser-loader@^2.0.3:
     schema-utils "^3"
     terser "^5"
 
-terser-webpack-plugin@^5.3.11, terser-webpack-plugin@^5.3.12:
-  version "5.3.12"
-  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.3.12.tgz#d9518c80493081bace668aa8613b22e4a838810c"
-  integrity sha512-jDLYqo7oF8tJIttjXO6jBY5Hk8p3A8W4ttih7cCEq64fQFWmgJ4VqAQjKr7WwIDlmXKEc6QeoRb5ecjZ+2afcg==
+terser-webpack-plugin@^5.3.11, terser-webpack-plugin@^5.3.13:
+  version "5.3.13"
+  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.3.13.tgz#ff84f9dcdfe82a3de99a6bf448f8aa1501a24a05"
+  integrity sha512-JG3pBixF6kx2o0Yfz2K6pqh72DpwTI08nooHd06tcj5WyIt5SsSiUYqRT+kemrGUNSuSzVhwfZ28aO8gogajNQ==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.25"
     jest-worker "^27.4.5"
@@ -15891,10 +15891,10 @@ web-namespaces@^2.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-2.0.1.tgz#1010ff7c650eccb2592cebeeaf9a1b253fd40692"
   integrity sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==
 
-web-specs@^3.41.0:
-  version "3.41.0"
-  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-3.41.0.tgz#e6da229a27c3eec9ba38a53af5325fa4c24456a7"
-  integrity sha512-NH+tJ4K7RfWbOy8jik05IYjmuPXSjICv8YXTpWzJzXb1Eyyuut6wrW2OUMztjE1eQ8zfCxFKue+qh5babwTbyQ==
+web-specs@^3.42.0:
+  version "3.42.0"
+  resolved "https://registry.yarnpkg.com/web-specs/-/web-specs-3.42.0.tgz#53db94bf38975f9b2a62120eb984f0d827c373aa"
+  integrity sha512-qAEALt3bDrKpzOOKqI7RBOwUYrYLHrSAtQjkfWcqYmpqY6k0qZm2qvEPyyl1udWFhj0zq7IjIMEfyCWDFnJK/A==
 
 web-streams-polyfill@4.0.0-beta.3:
   version "4.0.0-beta.3"
