@@ -16,12 +16,6 @@ on:
         required: false
         default: ${DEFAULT_NOTES}
 
-      invalidate:
-        description: "Invalidate CDN (use only in exceptional circumstances)"
-        type: boolean
-        required: false
-        default: false
-
   workflow_call:
     secrets:
       GCP_PROJECT_NAME:
