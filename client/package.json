@@ -54,7 +54,8 @@
       "node"
     ],
     "moduleNameMapper": {
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "\\?raw$": "<rootDir>/config/jest/rawTransform.js",
+      "\\.s?css(\\?css)?$": "<rootDir>/config/jest/cssTransform.js"
     },
     "modulePaths": [],
     "resetMocks": true,
@@ -78,8 +79,7 @@
       "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!@mozilla/glean/.*)/",
-      "^.+\\.module\\.(css|sass|scss)$"
+      "/node_modules/(?!@mozilla/glean/.*)/"
     ],
     "watchPlugins": [
       "jest-watch-typeahead/filename",

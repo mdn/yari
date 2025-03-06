@@ -259,14 +259,14 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
           # Surveys.
-          REACT_APP_SURVEY_START_HOMEPAGE_FEEDBACK_2024: 1731369600000 # new Date("2024-11-12Z").getTime()
-          REACT_APP_SURVEY_END_HOMEPAGE_FEEDBACK_2024: 1733616000000 # new Date("2024-12-08Z").getTime()
-          REACT_APP_SURVEY_RATE_FROM_HOMEPAGE_FEEDBACK_2024: 0.0
-          REACT_APP_SURVEY_RATE_TILL_HOMEPAGE_FEEDBACK_2024: 1 # 100%
           REACT_APP_SURVEY_START_WEBDX_EDITING_2024: 1731628800000 # new Date("2024-11-15Z").getTime()
           REACT_APP_SURVEY_END_WEBDX_EDITING_2024: 1732320000000 # new Date("2024-11-23Z").getTime()
           REACT_APP_SURVEY_RATE_FROM_WEBDX_EDITING_2024: 0.0
           REACT_APP_SURVEY_RATE_TILL_WEBDX_EDITING_2024: 0.1 # 10%
+          REACT_APP_SURVEY_START_HOUSE_SURVEY_2025: 1736208000000 # new Date("2025-01-07Z").getTime()
+          REACT_APP_SURVEY_END_HOUSE_SURVEY_2025: 1737072000000 # new Date("2025-01-17Z").getTime()
+          REACT_APP_SURVEY_RATE_FROM_HOUSE_SURVEY_2025: 0.0
+          REACT_APP_SURVEY_RATE_TILL_HOUSE_SURVEY_2025: 0.05 # 5%
 
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
@@ -301,7 +301,8 @@ jobs:
           yarn build:sw
           yarn build:client
           yarn build:ssr
-          yarn tool:legacy build-robots-txt
+
+          cp assets/prod/robots.txt client/build/robots.txt
 
           yarn rari content sync-translated-content
           yarn rari git-history
@@ -391,6 +392,7 @@ jobs:
             --max-instances=1000 \
             --memory=2GB \
             --timeout=120s \
+            --run-service-account=run-prod-prod-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \

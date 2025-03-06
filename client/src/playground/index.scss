@@ -193,22 +193,12 @@ main.play {
           padding: var(--editor-header-padding);
         }
 
-        .editor {
+        play-editor {
           height: calc(
             100% - var(--editor-header-height) - 2 *
               var(--editor-header-padding) - var(--editor-header-border-width)
           );
           margin: 0.5rem 0 0;
-          overflow-y: scroll;
-
-          .cm-editor {
-            min-height: 100%;
-            width: 100%;
-
-            @media (max-width: $screen-sm) {
-              font-size: 1rem;
-            }
-          }
         }
       }
     }
@@ -217,6 +207,7 @@ main.play {
       align-items: center;
       display: flex;
       flex-direction: column;
+      overflow: auto;
 
       button.flag-example {
         align-self: flex-end;
@@ -231,9 +222,33 @@ main.play {
         }
       }
 
-      iframe {
+      play-runner {
+        border: 1px solid var(--border-primary);
         height: 100%;
         width: 100%;
+      }
+
+      #play-console {
+        display: flex;
+        flex-direction: column;
+        font-size: smaller;
+        margin: 0;
+        width: 100%;
+
+        > span {
+          background-color: var(--code-background-inline);
+          font-weight: 600;
+          text-align: center;
+          width: 100%;
+        }
+
+        play-console {
+          background-color: var(--code-background-inline);
+          height: 6rem;
+          max-height: 6rem;
+          overflow: auto;
+          width: 100%;
+        }
       }
     }
   }

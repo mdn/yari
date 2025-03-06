@@ -20,7 +20,7 @@ import scrimBg from "../assets/curriculum/landing-scrim.png";
 import { useGleanClick } from "../telemetry/glean-context";
 import { CURRICULUM } from "../telemetry/constants";
 
-const ScrimInline = lazy(() => import("./scrim-inline"));
+const ScrimInline = lazy(() => import("../lit/curriculum/scrim-inline"));
 
 export function CurriculumLanding(appProps: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(appProps as CurriculumData);

@@ -25,13 +25,11 @@ import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
 import type { Doc } from "../libs/types/document.js";
 import {
-  ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
 } from "../libs/env/index.js";
 import { runMakePopularitiesFile } from "./popularities.js";
-import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import { macroUsageReport } from "./macro-usage-report.js";
 import * as kumascript from "../kumascript/index.js";
@@ -176,15 +174,6 @@ interface PopularitiesActionParameters extends ActionParameters {
   logger: Logger;
 }
 
-interface BuildRobotsTxtActionParameters extends ActionParameters {
-  options: {
-    outfile: string;
-    maxUris: number;
-    refresh: boolean;
-  };
-  logger: Logger;
-}
-
 interface MacrosActionParameters extends ActionParameters {
   args: {
     cmd: string;
@@ -233,7 +222,7 @@ function tryOrExit<T extends ActionParameters>(
 
 program
   .bin("yarn tool")
-  .name("tool")
+  .name("[DEPRECATED] tool")
   .version("0.0.0")
   .disableGlobalOption("--silent")
   .cast(false)
@@ -869,28 +858,6 @@ program
     })
   )
 
-  .command(
-    "build-robots-txt",
-    "Generate a robots.txt in the build root depending ALWAYS_ALLOW_ROBOTS"
-  )
-  .option("--outfile <path>", "name of the generated file", {
-    default: path.join(BUILD_OUT_ROOT, "robots.txt"),
-  })
-  .action(
-    tryOrExit(async ({ options, logger }: BuildRobotsTxtActionParameters) => {
-      const { outfile } = options;
-      await runBuildRobotsTxt(outfile);
-      logger.info(
-        chalk.yellow(
-          `Generated ${path.relative(
-            ".",
-            outfile
-          )} based on ALWAYS_ALLOW_ROBOTS=${ALWAYS_ALLOW_ROBOTS}`
-        )
-      );
-    })
-  )
-
   .command("spas", "Build (SSR) all the skeleton apps for single page apps")
   .action(
     tryOrExit(async ({ options }) => {
@@ -1103,5 +1070,7 @@ program
       return whatsdeployed(directory, output, dryRun);
     })
   );
+
+console.warn("\n🗑️  This command is deprecated, and will be removed soon.\n");
 
 program.run();

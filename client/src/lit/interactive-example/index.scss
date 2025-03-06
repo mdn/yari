@@ -1,0 +1,169 @@
+@use "../../ui/vars" as *;
+@use "../../ui/atoms/button/mixins" as button;
+
+header {
+  align-items: center;
+  border-bottom: 1px solid var(--border-secondary);
+  border-top-left-radius: var(--elem-radius);
+  border-top-right-radius: var(--elem-radius);
+  display: flex;
+  grid-area: header;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.1876;
+  margin: 0;
+}
+
+play-editor {
+  grid-area: editor;
+  height: 100%;
+  overflow: auto;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  grid-area: buttons;
+
+  button {
+    @include button.secondary;
+  }
+}
+
+play-console {
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--elem-radius);
+  grid-area: console;
+}
+
+ix-tab-wrapper {
+  grid-area: tabs;
+}
+
+// -------------------
+// JavaScript/WAT examples
+// -------------------
+
+.template-console {
+  align-content: start;
+  display: grid;
+  gap: 0.5rem;
+  grid-template-areas:
+    "header  header"
+    "editor  editor"
+    "buttons console";
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: max-content 1fr 8rem;
+  height: 100%;
+
+  header {
+    border: 1px solid var(--border-secondary);
+  }
+
+  play-runner {
+    display: none;
+  }
+
+  > play-editor,
+  ix-tab-wrapper {
+    border: 1px solid var(--border-secondary);
+    border-bottom-left-radius: var(--elem-radius);
+    border-bottom-right-radius: var(--elem-radius);
+    border-top: 0;
+    grid-area: editor;
+    margin-top: -0.5rem;
+  }
+
+  @media (max-width: $screen-sm) {
+    grid-template-areas:
+      "header"
+      "editor"
+      "buttons"
+      "console";
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr max-content 8rem;
+
+    .buttons {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+}
+
+// ---------------
+// Tabbed examples
+// ---------------
+
+.template-tabbed {
+  --tabbed-font-heading: 600 0.625rem/1.2 var(--font-heading);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--elem-radius);
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "tabs   runner";
+  grid-template-columns: 6fr 4fr;
+  grid-template-rows: max-content 1fr;
+  height: 100%;
+  overflow: hidden;
+
+  #reset {
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--elem-radius);
+    color: var(--text-primary);
+    cursor: pointer;
+    font: var(--tabbed-font-heading);
+    height: 2rem;
+    letter-spacing: 1.5px;
+    margin: 0;
+    max-width: 100px;
+    padding: 0.7em 0.9em;
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: var(--button-secondary-hover);
+    }
+  }
+
+  .output-wrapper {
+    border-left: 1px solid var(--border-secondary);
+    grid-area: runner;
+    overflow: hidden;
+    position: relative;
+
+    h4 {
+      background-color: var(--background-secondary);
+      border-bottom-left-radius: var(--elem-radius);
+      color: var(--text-secondary);
+      font: var(--tabbed-font-heading);
+      margin: 0;
+      padding: 0.5rem 1.6rem;
+      position: absolute;
+      right: 0;
+      text-transform: uppercase;
+      top: 0;
+      z-index: 2;
+    }
+  }
+
+  @media (max-width: $screen-lg) {
+    grid-template-areas:
+      "header"
+      "tabs"
+      "runner";
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr 1fr;
+
+    .output-wrapper {
+      border-left: 0;
+      border-top: 1px solid var(--border-secondary);
+    }
+  }
+}

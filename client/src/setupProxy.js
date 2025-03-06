@@ -20,8 +20,18 @@ function config(app) {
   app.use(`**/*.(gif|jpeg|jpg|mp3|mp4|ogg|png|svg|webm|webp|woff2)`, proxy);
   // All those root-level images like /favicon-48x48.png
   app.use("/*.(png|webp|gif|jpe?g|svg)", proxy);
+
+  const runnerProxy = createProxyMiddleware(["!**/*.hot-update.json"], {
+    target: `http://localhost:${SERVER_PORT}`,
+    changeOrigin: true,
+    onProxyRes: (proxyRes) => {
+      delete proxyRes.headers["clear-site-data"];
+    },
+  });
   // Proxy play runner
-  app.use("**/runner.html", proxy);
+  app.use("**/runner.html", runnerProxy);
+  // Proxy shared assets
+  app.use("/shared-assets", proxy);
 }
 
 export default config;

@@ -1,30 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
-import prettier from "prettier/standalone";
-import prettierPluginBabel from "prettier/plugins/babel";
-import prettierPluginCSS from "prettier/plugins/postcss";
-// XXX Using .mjs until https://github.com/prettier/prettier/pull/15018 is deployed
-import prettierPluginESTree from "prettier/plugins/estree.mjs";
-import prettierPluginHTML from "prettier/plugins/html";
-
 import { Button } from "../ui/atoms/button";
-import Editor, { EditorHandle } from "./editor";
 import { SidePlacement } from "../ui/organisms/placement";
-import {
-  compressAndBase64Encode,
-  decompressFromBase64,
-  EditorContent,
-  SESSION_KEY,
-} from "./utils";
+import { decompressFromBase64, EditorContent, SESSION_KEY } from "./utils";
 
 import "./index.scss";
-import { PLAYGROUND_BASE_HOST } from "../env";
 import { FlagForm, ShareForm } from "./forms";
-import { ReactPlayConsole } from "./console";
+import { PlayController, ReactPlayController } from "../lit/play/controller";
+import { ReactPlayEditor } from "../lit/play/editor";
+import { ReactPlayConsole } from "../lit/play/console";
+import { ReactPlayRunner } from "../lit/play/runner";
 import { useGleanClick } from "../telemetry/glean-context";
 import { PLAYGROUND } from "../telemetry/constants";
-import type { VConsole } from "./types";
 
 const HTML_DEFAULT = "";
 const CSS_DEFAULT = "";
@@ -78,16 +66,12 @@ export default function Playground() {
   let [dialogState, setDialogState] = useState(DialogState.none);
   let [shared, setShared] = useState(false);
   let [shareUrl, setShareUrl] = useState<URL | null>(null);
-  let [vConsole, setVConsole] = useState<VConsole[]>([]);
   let [state, setState] = useState(State.initial);
-  let [codeSrc, setCodeSrc] = useState<string | undefined>();
-  let [iframeSrc, setIframeSrc] = useState("about:blank");
-  const [isEmpty, setIsEmpty] = useState<boolean>(true);
-  const subdomain = useRef<string>(crypto.randomUUID());
+  const [isShareable, setIsShareable] = useState<boolean>(true);
+  const [isClearable, setIsClearable] = useState<boolean>(true);
   const [initialContent, setInitialContent] = useState<EditorContent | null>(
     null
   );
-  const [flipFlop, setFlipFlop] = useState(0);
   let { data: initialCode } = useSWRImmutable<EditorContent>(
     !stateParam && !shared && gistId
       ? `/api/v1/play/${encodeURIComponent(gistId)}`
@@ -116,37 +100,8 @@ export default function Playground() {
         undefined,
     }
   );
-  const htmlRef = useRef<EditorHandle | null>(null);
-  const cssRef = useRef<EditorHandle | null>(null);
-  const jsRef = useRef<EditorHandle | null>(null);
-  const iframe = useRef<HTMLIFrameElement | null>(null);
+  const controller = useRef<PlayController | null>(null);
   const diaRef = useRef<HTMLDialogElement | null>(null);
-
-  const updateWithCode = useCallback(
-    async (code: EditorContent) => {
-      const { state } = await compressAndBase64Encode(JSON.stringify(code));
-
-      // We're using a random subdomain for origin isolation.
-      const url = new URL(
-        window.location.hostname.endsWith("localhost")
-          ? window.location.origin
-          : `${window.location.protocol}//${
-              PLAYGROUND_BASE_HOST.startsWith("localhost")
-                ? ""
-                : `${subdomain.current}.`
-            }${PLAYGROUND_BASE_HOST}`
-      );
-      setVConsole([]);
-      url.searchParams.set("state", state);
-      // ensure iframe reloads even if code doesn't change
-      url.searchParams.set("f", flipFlop.toString());
-      url.pathname = `${codeSrc || code.src || ""}/runner.html`;
-      setIframeSrc(url.href);
-      // using an updater function causes the second "run" to not reload properly:
-      setFlipFlop((flipFlop + 1) % 2);
-    },
-    [codeSrc, setVConsole, setIframeSrc, flipFlop, setFlipFlop]
-  );
 
   useEffect(() => {
     if (initialCode) {
@@ -158,46 +113,33 @@ export default function Playground() {
   }, [initialCode, setInitialContent]);
 
   const getEditorContent = useCallback(() => {
-    const code = {
-      html: htmlRef.current?.getContent() || HTML_DEFAULT,
-      css: cssRef.current?.getContent() || CSS_DEFAULT,
-      js: jsRef.current?.getContent() || JS_DEFAULT,
+    return {
+      html: controller.current?.code.html || HTML_DEFAULT,
+      css: controller.current?.code.css || CSS_DEFAULT,
+      js: controller.current?.code.js || JS_DEFAULT,
       src: initialCode?.src || initialContent?.src,
     };
-    store(SESSION_KEY, code);
-    return code;
   }, [initialContent?.src, initialCode?.src]);
 
-  let messageListener = useCallback(({ data: { typ, prop, message } }) => {
-    if (typ === "console") {
-      if (
-        (prop === "log" || prop === "error" || prop === "warn") &&
-        typeof message === "string"
-      ) {
-        setVConsole((vConsole) => [...vConsole, { prop, message }]);
-      } else {
-        const warning = "[Playground] Unsupported console message";
-        setVConsole((vConsole) => [
-          ...vConsole,
-          {
-            prop: "warn",
-            message: `${warning} (see browser console)`,
-          },
-        ]);
-        console.warn(warning, { prop, message });
-      }
-    }
+  const setIsEmpty = useCallback((content: EditorContent) => {
+    const { html, css, js } = content;
+    setIsShareable(!html.trim() && !css.trim() && !js.trim());
+    setIsClearable(!html && !css && !js);
   }, []);
 
-  const setEditorContent = ({ html, css, js, src }: EditorContent) => {
-    htmlRef.current?.setContent(html);
-    cssRef.current?.setContent(css);
-    jsRef.current?.setContent(js);
-    if (src) {
-      setCodeSrc(src);
-    }
-    setIsEmpty(!html && !css && !js);
-  };
+  const setEditorContent = useCallback(
+    (content: EditorContent) => {
+      if (controller.current) {
+        controller.current.code = { ...content };
+        if (content.src) {
+          controller.current.srcPrefix = content.src;
+        }
+        setIsEmpty(content);
+        store(SESSION_KEY, content);
+      }
+    },
+    [setIsEmpty]
+  );
 
   useEffect(() => {
     (async () => {
@@ -206,7 +148,7 @@ export default function Playground() {
           setEditorContent(initialCode);
           if (!gistId) {
             // don't auto run shared code
-            updateWithCode(initialCode);
+            controller.current?.run();
           }
         } else if (stateParam) {
           try {
@@ -226,22 +168,19 @@ export default function Playground() {
         setState(State.ready);
       }
     })();
-  }, [initialCode, state, gistId, stateParam, updateWithCode]);
-
-  useEffect(() => {
-    window.addEventListener("message", messageListener);
-    return () => {
-      window.removeEventListener("message", messageListener);
-    };
-  }, [messageListener]);
+  }, [initialCode, state, gistId, stateParam, setEditorContent]);
 
   const clear = async () => {
     setSearchParams([], { replace: true });
-    setCodeSrc(undefined);
     setInitialContent(null);
-    setEditorContent({ html: HTML_DEFAULT, css: CSS_DEFAULT, js: JS_DEFAULT });
+    setEditorContent({
+      html: HTML_DEFAULT,
+      css: CSS_DEFAULT,
+      js: JS_DEFAULT,
+      src: undefined,
+    });
 
-    updateWithEditorContent();
+    run();
   };
 
   const reset = async () => {
@@ -251,7 +190,7 @@ export default function Playground() {
       js: initialContent?.js || JS_DEFAULT,
     });
 
-    updateWithEditorContent();
+    run();
   };
 
   const clearConfirm = async () => {
@@ -268,10 +207,7 @@ export default function Playground() {
     }
   };
 
-  const updateWithEditorContent = () => {
-    const { html, css, js, src } = getEditorContent();
-    setIsEmpty(!html && !css && !js);
-
+  const run = () => {
     const loading = [
       {},
       {
@@ -279,43 +215,18 @@ export default function Playground() {
       },
       {},
     ];
-
     const timing = {
       duration: 1000,
       iterations: 1,
     };
     document.getElementById("run")?.firstElementChild?.animate(loading, timing);
-    updateWithCode({ html, css, js, src });
+    controller.current?.run();
   };
 
   const format = async () => {
-    const { html, css, js } = getEditorContent();
-
-    try {
-      const formatted = {
-        html: await prettier.format(html, {
-          parser: "html",
-          plugins: [
-            prettierPluginHTML,
-            prettierPluginCSS,
-            prettierPluginBabel,
-            prettierPluginESTree,
-          ],
-        }),
-        css: await prettier.format(css, {
-          parser: "css",
-          plugins: [prettierPluginCSS],
-        }),
-        js: await prettier.format(js, {
-          parser: "babel",
-          plugins: [prettierPluginBabel, prettierPluginESTree],
-        }),
-      };
-      setEditorContent(formatted);
-    } catch (e) {
-      console.error(e);
-    }
+    await controller.current?.format();
   };
+
   const share = useCallback(async () => {
     const { url, id } = await save(getEditorContent());
     setSearchParams([["id", id]], { replace: true });
@@ -329,8 +240,14 @@ export default function Playground() {
     }
   };
 
+  const onEditorUpdate = () => {
+    const code = getEditorContent();
+    setIsEmpty(code);
+    store(SESSION_KEY, code);
+  };
+
   return (
-    <>
+    <ReactPlayController ref={controller} runOnChange={true}>
       <main className="play container">
         <dialog id="playDialog" ref={diaRef} onClose={cleanDialog}>
           {dialogState === DialogState.flag && <FlagForm gistId={gistId} />}
@@ -345,17 +262,13 @@ export default function Playground() {
               <Button type="secondary" id="format" onClickHandler={format}>
                 format
               </Button>
-              <Button
-                type="secondary"
-                id="run"
-                onClickHandler={updateWithEditorContent}
-              >
+              <Button type="secondary" id="run" onClickHandler={run}>
                 run
               </Button>
               <Button
                 type="secondary"
                 id="share"
-                isDisabled={isEmpty}
+                isDisabled={isShareable}
                 onClickHandler={() => {
                   gleanClick(`${PLAYGROUND}: share-click`);
                   setDialogState(DialogState.share);
@@ -366,7 +279,7 @@ export default function Playground() {
               </Button>
               <Button
                 type="secondary"
-                isDisabled={isEmpty}
+                isDisabled={isClearable}
                 id="clear"
                 extraClasses="red"
                 onClickHandler={clearConfirm}
@@ -385,21 +298,27 @@ export default function Playground() {
               )}
             </menu>
           </aside>
-          <Editor
-            ref={htmlRef}
-            language="html"
-            callback={updateWithEditorContent}
-          ></Editor>
-          <Editor
-            ref={cssRef}
-            language="css"
-            callback={updateWithEditorContent}
-          ></Editor>
-          <Editor
-            ref={jsRef}
-            language="javascript"
-            callback={updateWithEditorContent}
-          ></Editor>
+          <details className="editor-container" open={true}>
+            <summary>HTML</summary>
+            <ReactPlayEditor
+              language="html"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
+          <details className="editor-container" open={true}>
+            <summary>CSS</summary>
+            <ReactPlayEditor
+              language="css"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
+          <details className="editor-container" open={true}>
+            <summary>JAVASCRIPT</summary>
+            <ReactPlayEditor
+              language="js"
+              onUpdate={onEditorUpdate}
+            ></ReactPlayEditor>
+          </details>
         </section>
         <section className="preview">
           {gistId && (
@@ -415,16 +334,14 @@ export default function Playground() {
               Seeing something inappropriate?
             </button>
           )}
-          <iframe
-            title="runner"
-            ref={iframe}
-            src={iframeSrc}
-            sandbox="allow-scripts allow-same-origin allow-forms"
-          ></iframe>
-          <ReactPlayConsole vConsole={vConsole} />
+          <ReactPlayRunner />
+          <div id="play-console">
+            <span>Console</span>
+            <ReactPlayConsole />
+          </div>
           <SidePlacement extraClasses={["horizontal"]} />
         </section>
       </main>
-    </>
+    </ReactPlayController>
   );
 }

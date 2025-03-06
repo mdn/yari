@@ -96,6 +96,8 @@
   --code-background-inline: #{$mdn-theme-light-code-background-inline};
   --code-background-block: #{$mdn-theme-light-code-background-block};
 
+  --ix-tab-background-active: #fff;
+
   --notecard-link-color: #{$mdn-color-neutral-80};
 
   --scrollbar-bg: transparent;
@@ -285,10 +287,11 @@
   --curriculum-bg-color-list-item-topic-tooling: #{$mdn-color-light-theme-green-50}30;
   --curriculum-bg-color-list-item-topic-practices: #{$mdn-color-light-theme-violet-50}30;
   --curriculum-bg-color-partner: #fff;
-  --curriculum-shadow: 4px 4px 8px 0 rgba(179, 179, 179, 0.18),
+  --curriculum-shadow:
+    4px 4px 8px 0 rgba(179, 179, 179, 0.18),
     -4px 4px 8px 0 rgba(179, 179, 179, 0.15);
-  --curriculum-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
-    0 -2px 4px 0 rgba(178, 92, 53, 0.06);
+  --curriculum-shadow-landing-about-ul:
+    0 4px 10px 0 rgba(227, 100, 42, 0.06), 0 -2px 4px 0 rgba(178, 92, 53, 0.06);
 
   --curriculum-landing-about-beginner: url("../../assets/icons/curriculum-landing-about-beginner.svg#light");
   --curriculum-landing-about-pace: url("../../assets/icons/curriculum-landing-about-pace.svg#light");
@@ -411,6 +414,8 @@
   --code-token-selector: #{$mdn-theme-dark-code-token-selector};
   --code-background-inline: #{$mdn-theme-dark-code-background-inline};
   --code-background-block: #{$mdn-theme-dark-code-background-block};
+
+  --ix-tab-background-active: #4e4e4e;
 
   --notecard-link-color: #{$mdn-color-neutral-10};
 
@@ -603,10 +608,10 @@
   --curriculum-bg-color-list-item-icon-topic-tooling: #428050;
   --curriculum-bg-color-list-item-icon-topic-practices: #584280;
   --curriculum-bg-color-partner: #1f1c1a;
-  --curriculum-shadow: 2px 2px 5px 0 rgba(36, 36, 36, 0.15),
-    -2px 2px 8px 0 rgba(87, 87, 87, 0.15);
-  --curriculum-shadow-landing-about-ul: 0 4px 10px 0 rgba(227, 100, 42, 0.06),
-    0 -2px 4px 0 rgba(178, 92, 53, 0.06);
+  --curriculum-shadow:
+    2px 2px 5px 0 rgba(36, 36, 36, 0.15), -2px 2px 8px 0 rgba(87, 87, 87, 0.15);
+  --curriculum-shadow-landing-about-ul:
+    0 4px 10px 0 rgba(227, 100, 42, 0.06), 0 -2px 4px 0 rgba(178, 92, 53, 0.06);
 
   --curriculum-landing-about-beginner: url("../../assets/icons/curriculum-landing-about-beginner.svg#dark");
   --curriculum-landing-about-pace: url("../../assets/icons/curriculum-landing-about-pace.svg#dark");
