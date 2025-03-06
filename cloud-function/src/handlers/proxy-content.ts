@@ -53,7 +53,7 @@ export const proxyContent = createProxyMiddleware({
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
             return Buffer.from(await tryHtml.arrayBuffer());
-          } else if (!notFoundBuffer) {
+          } else if (!notFoundBuffer || WILDCARD_ENABLED) {
             const response = await fetch(`${target}${NOT_FOUND_PATH}`);
             notFoundBuffer = await response.arrayBuffer();
           }
