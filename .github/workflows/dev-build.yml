@@ -18,27 +18,35 @@ on:
         required: false
         default: ""
 
-      # This is very useful when combined with the "Use workflow from"
-      # feature that is built into the "Run workflow" button on
-      # https://github.com/mdn/yari/actions?query=workflow%3A%22Production+Build%22
-      # If you override the deployment prefix to something like the name
-      # of the branch, you can deploy that entire branch to its own prefix
-      # in S3 which means that it can be fully hosted as its own site.
       deployment_prefix:
         description: "Deployment prefix"
         required: false
         default: "main"
 
-      log_each_successful_upload:
-        description: "Deployer logs each success"
-        required: false
-        default: "false"
+  workflow_call:
+    secrets:
+      GCP_PROJECT_NAME:
+        required: true
+      WIP_PROJECT_ID:
+        required: true
+
+env:
+  DEFAULT_DEPLOYMENT_PREFIX: "main"
+
+permissions:
+  # Authenticate with GCP.
+  id-token: write
 
 jobs:
   build:
+    environment: review
     runs-on: ubuntu-latest
 
     steps:
+      - name: Merge dispatch inputs with default env vars
+        run: |
+          echo "PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
 
       - uses: actions/checkout@v4
@@ -53,10 +61,44 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          repository: mdn/mdn-studio
+          path: mdn/mdn-studio
+          lfs: true
+          token: ${{ secrets.MDN_STUDIO_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: mdn/generic-content
+          path: mdn/generic-content
+
+      - uses: actions/checkout@v4
+        with:
+          repository: mdn/curriculum
+          path: mdn/curriculum
+
+      - uses: actions/checkout@v4
+        with:
           repository: mdn/translated-content
           path: mdn/translated-content
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
+
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
+        with:
+          repository: mdn/translated-content-de
+          path: mdn/translated-content-de
+
+      - name: Move de into translated-content
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
+
+      - name: Clean and commit de
+        working-directory: mdn/translated-content
+        run: |
+          git add files/de
+          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
       - uses: actions/checkout@v4
         with:
@@ -96,8 +138,7 @@ jobs:
       - name: Print information about build
         run: |
           echo "notes: ${{ github.event.inputs.notes }}"
-          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
-          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
+          echo "PREFIX: ${{ env.PREFIX }}"
 
       - name: Print information about CPU
         run: cat /proc/cpuinfo
@@ -109,6 +150,12 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
+          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
+          GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
+
+          # rari
+          BUILD_OUT_ROOT: "client/build"
 
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the
@@ -136,95 +183,58 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn build:prepare
+          # Build the ServiceWorker first
+          yarn build:sw
+          yarn build:client
+          yarn build:ssr
 
-          yarn tool sync-translated-content
+          cp assets/nonprod/robots.txt client/build/robots.txt
 
-          # Spread the work across 2 processes. Why 2? Because that's what you
-          # get in the default GitHub hosting Linux runners.
-          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build:docs --locale     en-us --locale     ja --locale     fr &
-          build1=$!
-          yarn build:docs --not-locale en-us --not-locale ja --not-locale fr &
-          build2=$!
+          yarn rari content sync-translated-content
+          yarn rari git-history
 
-          # You must explicitly specify the job you're waiting-on to ensure
-          # that the exit status of the wait command reflects the exit status
-          # of the job it's waiting-on.
-          wait $build1
-          wait $build2
-
-          # TODO: When the deployer is available this is where we
-          # would upload the whole content of client/build
-          du -sh client/build
-
-          # Generate sitemap index file
-          yarn build --sitemap-index
+          yarn rari build --all --issues client/build/issues.json --templ-stats
 
           # SSR all pages
           yarn render:html
 
           # Generate whatsdeployed files.
-          yarn tool whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
-          # Sort DE search index by en-US popularity.
-          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
-
-      - name: Deploy with deployer
+      - name: Update search index
         env:
-          # Set the CONTENT_ROOT first
-          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
-          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-
-          DEPLOYER_BUCKET_NAME: mdn-content-dev
-          DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix }}
-          DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD: ${{ github.event.inputs.log_each_successful_upload }}
-
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_DEV_ELASTICSEARCH_URL }}
-
         run: |
-          if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
-            echo "Will build mdn/translated-content too"
-            export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
-          else
-            echo "Will NOT build mdn/translated-content too"
-          fi
-
-          # Info about which CONTENT_* environment variables were set and to what.
-          echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-
           cd deployer
-
-          # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
-          echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
-
-          poetry run deployer upload --prune ../client/build
           poetry run deployer search-index ../client/build
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.1.0
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
         with:
-          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          token_format: access_token
+          service_account: deploy-mdn-review-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
-      - name: Invalidate CDN
-        env:
-          DISTRIBUTION: E9813D0RN1QZI
-          PATHS: /*
-        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Sync build with GCS
+        uses: "google-github-actions/upload-cloud-storage@v2"
+        with:
+          path: "client/build"
+          destination: "${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}"
+          resumable: false
+          concurrency: 500
+          parent: false
+          process_gcloudignore: false
 
       - name: Notify PRs about deployment
         run: |
           gh pr list -S "$GITHUB_SHA -is:merged" --json number --jq '.[].number' | xargs -i gh pr comment {} --body "Dev build for $GITHUB_SHA was deployed to: $DEPLOYMENT_URL" || true
         env:
-          DEPLOYMENT_URL: https://${{ github.event.inputs.deployment_prefix }}.content.dev.mdn.mozit.cloud/
+          DEPLOYMENT_URL: https://${{ env.PREFIX }}.review.mdn.allizom.net/
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Slack Notification

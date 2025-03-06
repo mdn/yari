@@ -22,6 +22,7 @@ node_modules/
 /client/.env
 __pycache__/
 .idea/
+tsconfig.tsbuildinfo
 
 *.log
 npm-debug.log*

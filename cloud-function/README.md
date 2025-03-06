@@ -40,6 +40,9 @@ The function uses the following environment variables:
   client build is served.
 - `SOURCE_API` (default: `"https://developer.allizom.org/"`) - The URL at which
   the API is served.
+- `WILDCARD_ENABLED` (default: `false`) - If enabled, accepts any `Host` header
+  value, and uses the leftmost subdomain to route into a subdirectory of
+  `SOURCE_CONTENT`.
 
 The placement handler uses the following environment variables:
 

@@ -6,7 +6,7 @@ import {
 } from "http-proxy-middleware";
 
 import { withContentResponseHeaders } from "../headers.js";
-import { Source, sourceUri } from "../env.js";
+import { Source, sourceUri, WILDCARD_ENABLED } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { ACTIVE_LOCALES } from "../internal/constants/index.js";
 
@@ -40,6 +40,15 @@ export const proxyContentAssets = createProxyMiddleware({
               res.setHeader(key, value)
             );
             return Buffer.from(await enUsAsset.arrayBuffer());
+          } else if (WILDCARD_ENABLED) {
+            // Fallback to prod.
+            const target = new URL(
+              req.url ?? "",
+              "https://developer.mozilla.org/"
+            );
+            res.statusCode = 303;
+            res.setHeader("location", target.toString());
+            return "";
           }
         }
 
