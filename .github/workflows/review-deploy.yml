@@ -1,10 +1,6 @@
 name: Review Deployment
 
 on:
-  push:
-    branches:
-      - "MP-1889-review-cloud-function"
-
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron: "0 0 * * *"
