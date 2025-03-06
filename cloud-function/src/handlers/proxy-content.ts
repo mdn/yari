@@ -12,7 +12,7 @@ import { isLiveSampleURL } from "../utils.js";
 
 const NOT_FOUND_PATH = "en-us/404/index.html";
 
-let notFoundBuffer: ArrayBuffer;
+let notFoundBufferCache: Promise<ArrayBuffer>;
 
 const target = sourceUri(Source.content);
 
@@ -49,16 +49,26 @@ export const proxyContent = createProxyMiddleware({
           const tryHtml = await fetch(
             `${target}${req.url?.slice(1)}/index.html`
           );
+
           if (tryHtml.ok) {
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
             return Buffer.from(await tryHtml.arrayBuffer());
-          } else if (!notFoundBuffer || WILDCARD_ENABLED) {
-            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
-            notFoundBuffer = await response.arrayBuffer();
           }
+
+          let notFoundBuffer: Promise<ArrayBuffer>;
+          if (notFoundBufferCache) {
+            notFoundBuffer = notFoundBufferCache;
+          } else {
+            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
+            notFoundBuffer = response.arrayBuffer();
+            if (response.ok && !WILDCARD_ENABLED) {
+              notFoundBufferCache = notFoundBuffer;
+            }
+          }
+
           res.setHeader("Content-Type", "text/html");
-          return Buffer.from(notFoundBuffer);
+          return Buffer.from(await notFoundBuffer);
         }
 
         return responseBuffer;
