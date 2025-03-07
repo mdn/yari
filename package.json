@@ -202,7 +202,7 @@
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
-    "css-minimizer-webpack-plugin": "^7.0.0",
+    "css-minimizer-webpack-plugin": "^7.0.2",
     "cssnano": "^7.0.6",
     "diff": "^7.0.0",
     "downshift": "^7.6.1",
