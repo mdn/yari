@@ -272,7 +272,7 @@
     "stylelint-scss": "^5.3.2",
     "swr": "^2.3.3",
     "terser-loader": "^2.0.3",
-    "terser-webpack-plugin": "^5.3.13",
+    "terser-webpack-plugin": "^5.3.14",
     "ts-jest": "^29.2.6",
     "ts-lit-plugin": "^2.0.2",
     "ts-loader": "^9.5.2",
