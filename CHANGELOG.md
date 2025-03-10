@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.7.1](https://github.com/mdn/yari/compare/v4.7.0...v4.7.1) (2025-03-10)
+
+
+### Bug Fixes
+
+* **play:** avoid double-slash in runner URL ([#12655](https://github.com/mdn/yari/issues/12655)) ([7992d2d](https://github.com/mdn/yari/commit/7992d2dd42105ae4ddc6dc5ab95fe6acb5a7457e))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.11.7 to 1.11.8 ([#12748](https://github.com/mdn/yari/issues/12748)) ([bdac646](https://github.com/mdn/yari/commit/bdac646213979afd14e65348d05d8e2ff1bc4597))
+* **deps:** bump @inquirer/prompts from 7.3.2 to 7.3.3 ([#12747](https://github.com/mdn/yari/issues/12747)) ([5a01b53](https://github.com/mdn/yari/commit/5a01b532a666bdebe75066bdc37961068d461c4d))
+* **deps:** bump @vscode/ripgrep from 1.15.10 to 1.15.11 ([#12746](https://github.com/mdn/yari/issues/12746)) ([3c3c663](https://github.com/mdn/yari/commit/3c3c66383d6aeff82996dd94cfece28b335f0c39))
+* **deps:** bump boto3 from 1.37.4 to 1.37.9 in /deployer in the dependencies group ([#12749](https://github.com/mdn/yari/issues/12749)) ([2d294a5](https://github.com/mdn/yari/commit/2d294a5d029d953430f72f7382066a7bc44b5db7))
+* **deps:** bump mozilla-actions/sccache-action from 0.0.7 to 0.0.8 ([#12743](https://github.com/mdn/yari/issues/12743)) ([c2e7c52](https://github.com/mdn/yari/commit/c2e7c5292b6fe3bef23a3daee3f58f26b7e39af8))
+* **deps:** bump web-features from 2.27.0 to 2.28.0 ([#12750](https://github.com/mdn/yari/issues/12750)) ([ae1f3fb](https://github.com/mdn/yari/commit/ae1f3fbcf8bda5bdaf247208c8c07ca14f565414))
+
 ## [4.7.0](https://github.com/mdn/yari/compare/v4.6.2...v4.7.0) (2025-03-10)
 
 
