@@ -1,0 +1,22 @@
+// Sticky BCD table headers, on sufficiently tall screens
+@use "../../../ui/vars" as *;
+
+@media (min-height: $screen-height-place-limit) {
+  .bc-table {
+    background-color: var(--background-primary);
+    position: relative;
+
+    thead {
+      --offset: var(--sticky-header-with-actions-height);
+      --thead-z-index: calc(var(--z-index-main-header) - 100);
+
+      position: sticky;
+      top: var(--offset);
+      z-index: var(--thead-z-index);
+    }
+  }
+
+  .table-container {
+    overflow: visible;
+  }
+}
