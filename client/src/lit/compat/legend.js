@@ -1,4 +1,3 @@
-import type BCD from "@mdn/browser-compat-data/types";
 import {
   HIDDEN_BROWSERS,
   asList,
@@ -7,9 +6,19 @@ import {
   hasNoteworthyNotes,
   listFeatures,
   versionIsPreview,
-} from "./utils";
+} from "./utils.js";
 
-// Also specifies the order in which the legend appears
+/**
+ * @typedef {import("@mdn/browser-compat-data").Identifier} Identifier
+ * @typedef {import("@mdn/browser-compat-data").Browsers} Browsers
+ * @typedef {import("@mdn/browser-compat-data").BrowserName} BrowserName
+ * @typedef {"yes" | "partial" | "preview" | "no" | "unknown" | "experimental" | "nonstandard" | "deprecated" | "footnote" | "disabled" | "altname" | "prefix" | "more"} LegendKey
+ */
+
+/**
+ * Legend labels which also specifies the order in which the legend appears.
+ * @type {Record<LegendKey, string>}
+ */
 export const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
@@ -25,14 +34,18 @@ export const LEGEND_LABELS = {
   prefix: "Requires a vendor prefix or different name for use.",
   more: "Has more compatibility info.",
 };
-type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
-export function getActiveLegendItems(
-  compat: BCD.Identifier,
-  name: string,
-  browserInfo: BCD.Browsers
-): Array<[LEGEND_KEY, string]> {
-  const legendItems = new Set<LEGEND_KEY>();
+/**
+ * Gets the active legend items based on browser compatibility data.
+ *
+ * @param {Identifier} compat - The compatibility data identifier.
+ * @param {string} name - The name of the feature.
+ * @param {Browsers} browserInfo - Information about browsers.
+ * @returns {Array<[LegendKey, string]>} An array of legend item entries, where each entry is a tuple of the legend key and its label.
+ */
+export function getActiveLegendItems(compat, name, browserInfo) {
+  /** @type {Set<LegendKey>} */
+  const legendItems = new Set();
 
   for (const feature of listFeatures(compat, "", name)) {
     const { status } = feature.compat;
@@ -51,7 +64,7 @@ export function getActiveLegendItems(
 
     for (const [browser, browserSupport] of Object.entries(
       feature.compat.support
-    ) as Array<[BCD.BrowserName, any]>) {
+    )) {
       if (HIDDEN_BROWSERS.includes(browser)) {
         continue;
       }
@@ -100,7 +113,18 @@ export function getActiveLegendItems(
       }
     }
   }
-  return (Object.keys(LEGEND_LABELS) as LEGEND_KEY[])
+
+  /**
+   * @type {any[]}
+   */
+  const keys = Object.keys(LEGEND_LABELS);
+
+  return keys
     .filter((key) => legendItems.has(key))
-    .map((key) => [key, LEGEND_LABELS[key]]);
+    .map(
+      /**
+       * @param {LegendKey} key
+       */
+      (key) => [key, LEGEND_LABELS[key]]
+    );
 }
