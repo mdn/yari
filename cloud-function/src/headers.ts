@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 import { CSP_VALUE } from "./internal/constants/index.js";
 import { isLiveSampleURL } from "./utils.js";
-import { ORIGIN_TRIAL_TOKEN } from "./env.js";
+import { ORIGIN_TRIAL_TOKEN, WILDCARD_ENABLED } from "./env.js";
 
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
 const DEFAULT_MAX_AGE = 60 * 60;
@@ -63,6 +63,10 @@ function getCacheControl(statusCode: number, url: string) {
   }
 
   if (200 <= statusCode && statusCode < 300) {
+    if (WILDCARD_ENABLED) {
+      return "max-age=0, no-cache, no-store, must-revalidate";
+    }
+
     const maxAge = getCacheMaxAgeForUrl(url);
     return `public, max-age=${maxAge}`;
   }
