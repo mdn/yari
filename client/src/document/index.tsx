@@ -43,6 +43,7 @@ import { PlayQueue } from "../playground/queue";
 import { useGleanClick } from "../telemetry/glean-context";
 import { CLIENT_SIDE_NAVIGATION } from "../telemetry/constants";
 import { Spinner } from "../ui/atoms/spinner";
+import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -273,10 +274,10 @@ export function RenderDocumentBody({ doc }) {
       const { id, title, isH3, query } = section.value;
       return (
         <Suspense fallback={<Spinner />} key={`browser_compatibility${i}`}>
+          {title && !isH3 && <DisplayH2 id={id} title={title} />}
+          {title && isH3 && <DisplayH3 id={id} title={title} />}
           <LazyBrowserCompatibilityTable
             _id={id}
-            _title={title}
-            ish3={isH3}
             query={query}
             locale={locale}
           />
