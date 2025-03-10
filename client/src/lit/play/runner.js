@@ -111,6 +111,7 @@ export class PlayRunner extends LitElement {
           theme: theme,
         })
       );
+      const prefix = (srcPrefix || "").replace(/\/$/, "");
       signal.throwIfAborted();
       // We're using a random subdomain for origin isolation.
       const url = this._constructUrl();
@@ -119,7 +120,7 @@ export class PlayRunner extends LitElement {
         url.searchParams.set("uuid", this._subdomain);
       }
       url.searchParams.set("state", state);
-      url.pathname = `${srcPrefix || ""}/runner.html`;
+      url.pathname = `${prefix}/runner.html`;
       const src = url.href;
       // update iframe src without adding to browser history
       this._iframe.value?.contentWindow?.location.replace(src);
