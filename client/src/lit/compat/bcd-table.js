@@ -1,5 +1,5 @@
 import { html, LitElement } from "lit";
-import { getActiveLegendItems } from "./legend.ts";
+import { getActiveLegendItems } from "./legend.js";
 import {
   asList,
   bugURLToString,
@@ -9,10 +9,9 @@ import {
   HIDDEN_BROWSERS,
   isFullySupportedWithoutLimitation,
   isNotSupportedAtAll,
-  isTruthy,
   listFeatures,
   versionIsPreview,
-} from "./utils.ts";
+} from "./utils.js";
 
 import styles from "./index.scss?css" with { type: "css" };
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -23,7 +22,7 @@ import {
   getSupportClassName,
   labelFromString,
   versionLabelFromSupport,
-} from "./feature-row.ts";
+} from "./feature-row.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
@@ -34,6 +33,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @typedef {import("@mdn/browser-compat-data/types").Browsers} Browsers
  * @typedef {import("@mdn/browser-compat-data/types").Identifier} Identifier
  * @typedef {import("@mdn/browser-compat-data/types").StatusBlock} StatusBlock
+ * @typedef {{ title: string, text: string, iconClassName: string }} StatusIcon
  */
 
 const ISSUE_METADATA_TEMPLATE = `
@@ -327,23 +327,33 @@ class BcdTable extends LitElement {
    */
   renderStatusIcons(status) {
     // <StatusIcons>
-    const icons = [
-      status.experimental && {
+    /**
+     * @type {StatusIcon[]}
+     */
+    const icons = [];
+    if (status.experimental) {
+      icons.push({
         title: "Experimental. Expect behavior to change in the future.",
         text: "Experimental",
         iconClassName: "icon-experimental",
-      },
-      status.deprecated && {
+      });
+    }
+
+    if (status.deprecated) {
+      icons.push({
         title: "Deprecated. Not for use in new websites.",
         text: "Deprecated",
         iconClassName: "icon-deprecated",
-      },
-      !status.standard_track && {
+      });
+    }
+
+    if (!status.standard_track) {
+      icons.push({
         title: "Non-standard. Expect poor cross-browser support.",
         text: "Non-standard",
         iconClassName: "icon-nonstandard",
-      },
-    ].filter(isTruthy);
+      });
+    }
 
     return icons.length === 0
       ? null
@@ -370,6 +380,9 @@ class BcdTable extends LitElement {
       .slice()
       .reverse()
       .flatMap((item, i) => {
+        /**
+         * @type {Array<{iconName: string; label: string | TemplateResult } | null>}
+         */
         const supportNotes = [
           item.version_removed &&
           !asList(support).some(
@@ -467,9 +480,12 @@ class BcdTable extends LitElement {
                   label: "No support",
                 }
               : null,
-        ]
-          .flat()
-          .filter(isTruthy);
+        ].flat();
+
+        /**
+         * @type {Array<{iconName: string; label: string | TemplateResult }>}
+         */
+        const filteredSupportNotes = supportNotes.filter((v) => v !== null);
 
         const hasNotes = supportNotes.length > 0;
         return (
@@ -483,7 +499,7 @@ class BcdTable extends LitElement {
             >
               ${this.renderCellText(item, browser, true)}
             </dt>
-            ${supportNotes.map(({ iconName, label }) => {
+            ${filteredSupportNotes.map(({ iconName, label }) => {
               return html`<dd class="bc-supports-dd">
                 ${this.renderIcon(iconName)}
                 ${typeof label === "string"
@@ -495,7 +511,7 @@ class BcdTable extends LitElement {
           </div>`
         );
       })
-      .filter(isTruthy);
+      .filter(Boolean);
   }
 
   /**
