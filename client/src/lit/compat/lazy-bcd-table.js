@@ -7,8 +7,6 @@ import "./bcd-table.js";
 class LazyBcdTable extends LitElement {
   static properties = {
     _id: {},
-    _title: {},
-    ish3: {},
     query: {},
     locale: {},
     compat: { state: true },
@@ -19,8 +17,6 @@ class LazyBcdTable extends LitElement {
   constructor() {
     super();
     this._id = "";
-    this._title = "";
-    this.ish3 = "";
     this.query = "";
     this.locale = "";
     this.compat = null;
@@ -61,19 +57,7 @@ class LazyBcdTable extends LitElement {
     }
   }
 
-  renderTitle() {
-    const { _id, _title, ish3 } = this;
-
-    if (!_title) {
-      return "";
-    } else if (ish3) {
-      return html`<h3 id=${_id}>${_title}</h3>`;
-    } else {
-      return html`<h2 id=${_id}>${_title}</h2>`;
-    }
-  }
-
-  renderContent() {
+  render() {
     if (this.loading) {
       return html`<p>Loading...</p>`;
     }
@@ -89,10 +73,6 @@ class LazyBcdTable extends LitElement {
       .data=${this.compat.data}
       .browserInfo=${this.compat.browsers}
     ></bcd-table>`;
-  }
-
-  render() {
-    return html`${this.renderTitle()} ${this.renderContent()} `;
   }
 }
 
