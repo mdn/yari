@@ -5,8 +5,11 @@ import he from "he";
 export const ORIGIN_PLAY = process.env["ORIGIN_PLAY"] || "localhost";
 export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
 
-/** @import { IncomingMessage, ServerResponse } from "http" */
-/** @import * as express from "express" */
+/**
+ * @import { IncomingMessage, ServerResponse } from "http"
+ * @import * as express from "express"
+ * @import { Theme } from "../../client/src/types/theme"
+ * @import { RunnerDefaults } from "../../client/src/lit/play/types" */
 
 /**
  * @typedef State
@@ -14,7 +17,8 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
  * @property {string} css
  * @property {string} js
  * @property {string} [src]
- * @property {"ix-tabbed" | "ix-wat"} [defaults]
+ * @property {RunnerDefaults} [defaults]
+ * @property {Theme} [theme]
  */
 
 /**
@@ -80,15 +84,7 @@ function html(strings, ...args) {
  * @param {string} searchWithState
  */
 export function renderWarning(state, hrefWithCode, searchWithState) {
-  const {
-    css,
-    html: htmlCode,
-    js,
-  } = state || {
-    css: "",
-    html: "",
-    js: "",
-  };
+  const { css, html: htmlCode, js } = state || { css: "", html: "", js: "" };
   return html` <!doctype html>
     <html lang="en">
       <head>
@@ -219,50 +215,50 @@ export function renderHtml(state = null) {
     html: htmlCode,
     js,
     defaults,
-  } = state || {
-    css: "",
-    html: "",
-    js: "",
-  };
+    theme,
+  } = state || { css: "", html: "", js: "" };
   return html`
     <!doctype html>
     <html lang="en">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>
-          /* Legacy css to support existing live samples */
-          body {
-            padding: 0;
-            margin: 0;
-          }
+        ${renderThemeStyles(theme)}
+        ${defaults === undefined
+          ? html`<style>
+              /* Legacy css to support existing live samples */
+              body {
+                padding: 0;
+                margin: 0;
+              }
 
-          svg:not(:root) {
-            display: block;
-          }
+              svg:not(:root) {
+                display: block;
+              }
 
-          .playable-code {
-            background-color: #f4f7f8;
-            border: none;
-            border-left: 6px solid #558abb;
-            border-width: medium medium medium 6px;
-            color: #4d4e53;
-            height: 100px;
-            width: 90%;
-            padding: 10px 10px 0;
-          }
+              .playable-code {
+                background-color: #f4f7f8;
+                border: none;
+                border-left: 6px solid #558abb;
+                border-width: medium medium medium 6px;
+                color: #4d4e53;
+                height: 100px;
+                width: 90%;
+                padding: 10px 10px 0;
+              }
 
-          .playable-canvas {
-            border: 1px solid #4d4e53;
-            border-radius: 2px;
-          }
+              .playable-canvas {
+                border: 1px solid #4d4e53;
+                border-radius: 2px;
+              }
 
-          .playable-buttons {
-            text-align: right;
-            width: 90%;
-            padding: 5px 10px 5px 26px;
-          }
-        </style>
+              .playable-buttons {
+                text-align: right;
+                width: 90%;
+                padding: 5px 10px 5px 26px;
+              }
+            </style>`
+          : ""}
         ${defaults === "ix-tabbed"
           ? html`<style>
               @font-face {
@@ -333,6 +329,7 @@ export function renderHtml(state = null) {
                 font-size: 0.9rem;
                 line-height: 1.5;
                 padding: 2rem 1rem 1rem;
+                margin: 0;
                 min-width: min-content;
               }
 
@@ -341,10 +338,84 @@ export function renderHtml(state = null) {
               }
             </style>`
           : ""}
+        ${defaults === "ix-choice"
+          ? html`<style>
+              @font-face {
+                font-family: "Inter";
+                src:
+                  url("/shared-assets/fonts/Inter.var.woff2")
+                    format("woff2 supports variations"),
+                  url("/shared-assets/fonts/Inter.var.woff2")
+                    format("woff2-variations");
+                font-weight: 1 999;
+                font-stretch: 75% 100%;
+                font-style: oblique 0deg 20deg;
+                font-display: swap;
+              }
+
+              body {
+                color: var(--text-primary);
+                background-color: var(--background-primary);
+                font:
+                  400 1rem/1.1876 Inter,
+                  BlinkMacSystemFont,
+                  "Segoe UI",
+                  "Roboto",
+                  "Oxygen",
+                  "Ubuntu",
+                  "Cantarell",
+                  "Fira Sans",
+                  "Droid Sans",
+                  "Helvetica Neue",
+                  sans-sans;
+                height: 300px;
+                overflow: hidden;
+                position: relative;
+                background-color: var(--background-primary);
+                overflow: hidden;
+                padding: 1rem;
+                margin: 0;
+                box-sizing: border-box;
+              }
+
+              section {
+                height: 100%;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              section.flex-column {
+                flex-direction: column;
+                align-items: initial;
+              }
+
+              /* some examples does not work with a flex display on the container */
+              section.display-block {
+                display: block;
+              }
+
+              section img {
+                flex-grow: 0;
+              }
+
+              section.hidden {
+                display: none;
+              }
+
+              .transition-all {
+                transition: all 0.3s ease-in;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+            </style>`
+          : ""}
         <style id="css-output">
           ${css}
         </style>
-
         <script>
           const consoleProxy = new Proxy(console, {
             get(target, prop) {
@@ -366,9 +437,7 @@ export function renderHtml(state = null) {
                               window.structuredClone(x);
                               return x;
                             } catch {
-                              return {
-                                _MDNPlaySerializedObject: x.toString(),
-                              };
+                              return { _MDNPlaySerializedObject: x.toString() };
                             }
                           }),
                         },
@@ -415,15 +484,96 @@ export function renderHtml(state = null) {
               });
             </script>`
           : ""}
+        ${defaults === "ix-choice"
+          ? html`<script>
+              /** @param {string} code */
+              function setChoice(code) {
+                const element = document.getElementById("example-element");
+                if (element) {
+                  element.style.cssText = code;
+                }
+              }
+
+              window.addEventListener("message", ({ data }) => {
+                if (data.typ === "choice") {
+                  setChoice(data.code);
+                }
+              });
+            </script>`
+          : ""}
       </head>
       <body>
         ${htmlCode}
         <script type="${defaults === "ix-wat" ? "module" : ""}">
           ${js};
         </script>
+        <script>
+          try {
+            window.parent.postMessage({ typ: "ready" }, "*");
+          } catch (e) {
+            console.error("[Playground] Failed to post ready message", e);
+          }
+        </script>
       </body>
     </html>
   `;
+}
+
+/**
+ * @param {Theme | undefined} [theme]
+ */
+function renderBlank(theme) {
+  return html`
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        ${renderThemeStyles(theme)}
+        <style>
+          body {
+            background: var(--background-primary);
+          }
+        </style>
+      </head>
+      <body></body>
+    </html>
+  `;
+}
+
+/**
+ * @param {Theme} [theme]
+ * @returns {string}
+ */
+function renderThemeStyles(theme) {
+  return theme === "os-default"
+    ? html`<style>
+        :root {
+          --text-primary: #1b1b1b;
+          --background-primary: #fff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --text-primary: #fff;
+            --background-primary: #1b1b1b;
+          }
+        }
+      </style>`
+    : theme === "light"
+      ? html`<style>
+          :root {
+            --text-primary: #1b1b1b;
+            --background-primary: #fff;
+          }
+        </style>`
+      : theme === "dark"
+        ? html`<style>
+            :root {
+              --text-primary: #fff;
+              --background-primary: #1b1b1b;
+            }
+          </style>`
+        : "";
 }
 
 /**
@@ -485,7 +635,13 @@ function isMDNReferer(referer) {
 export async function handleRunner(req, res) {
   const url = new URL(req.url, "https://example.com");
   if (url.searchParams.has("blank")) {
-    return res.setHeader("Content-Type", "text/html").status(200).end();
+    const theme = /** @type {Theme | undefined} */ (
+      url.searchParams.get("theme") || undefined
+    );
+    return res
+      .setHeader("Content-Type", "text/html")
+      .status(200)
+      .send(renderBlank(theme));
   }
   const referer = new URL(
     req.headers["referer"] || "https://example.com",

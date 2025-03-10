@@ -8,6 +8,25 @@
 .editor {
   height: 100%;
 
+  &.minimal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .cm-content {
+      align-self: center;
+      min-height: auto;
+    }
+
+    .cm-focused {
+      outline: none;
+    }
+
+    .cm-line {
+      padding: 0 12px;
+    }
+  }
+
   .cm-editor {
     height: 100%;
     width: 100%;

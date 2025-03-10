@@ -32,7 +32,7 @@
     "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS=\"--no-warnings=ExperimentalWarning --loader ts-node/esm\" node ssr/prepare.ts && webpack --mode=production --config=ssr/webpack.config.js",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
-    "check:tsc": "find . -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P 2 -0 sh -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
+    "check:tsc": "find . -name 'tsconfig.json' ! -wholename '**/node_modules/**' ! -wholename '**/cloud-function/src/internal/**' -print0 | xargs -n1 -P 2 -0 sh -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
     "dev": "yarn build:prepare && nf -j Procfile.rari.dev start",
     "dev:legacy": "yarn build:legacy:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",

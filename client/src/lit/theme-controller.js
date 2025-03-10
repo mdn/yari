@@ -17,6 +17,7 @@ export class ThemeController {
     this.#host.addController(this);
     /** @type {Theme} */
     this.value = "os-default";
+    this.initialValue = "os-default";
     this._observer = new MutationObserver(() => this._updateTheme());
     this._matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
   }
@@ -42,6 +43,7 @@ export class ThemeController {
     this._updateTheme = this._updateTheme.bind(this);
     this._matchMedia.addEventListener("change", this._updateTheme);
     this._updateTheme();
+    this.initialValue = this.value;
   }
 
   hostDisconnected() {
