@@ -11,6 +11,7 @@ import {
 import { lintKeymap } from "@codemirror/lint";
 import { EditorView, minimalSetup } from "codemirror";
 import { javascript as langJS } from "@codemirror/lang-javascript";
+import { wast as langWat } from "@codemirror/lang-wast";
 import { css as langCSS } from "@codemirror/lang-css";
 import { html as langHTML } from "@codemirror/lang-html";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -27,7 +28,9 @@ import styles from "./editor.scss?css" with { type: "css" };
 export class PlayEditor extends LitElement {
   static properties = {
     language: { type: String },
+    minimal: { type: Boolean },
     value: { attribute: false },
+    delay: { type: Number },
   };
 
   static styles = styles;
@@ -42,7 +45,9 @@ export class PlayEditor extends LitElement {
     super();
     this.theme = new ThemeController(this);
     this.language = "";
+    this.minimal = false;
     this._value = "";
+    this.delay = 1000;
   }
 
   /** @param {string} value */
@@ -64,7 +69,6 @@ export class PlayEditor extends LitElement {
   _dispatchUpdate() {
     this.dispatchEvent(new Event("update", { bubbles: true, composed: true }));
   }
-
   _extensions() {
     const language = (() => {
       switch (this.language) {
@@ -74,26 +78,33 @@ export class PlayEditor extends LitElement {
           return [langHTML()];
         case "css":
           return [langCSS()];
+        case "wat":
+          return [langWat()];
         default:
           return [];
       }
     })();
+
     return [
       minimalSetup,
-      lineNumbers(),
-      indentOnInput(),
       bracketMatching(),
       closeBrackets(),
-      autocompletion(),
-      highlightActiveLine(),
-      keymap.of([
-        ...closeBracketsKeymap,
-        ...defaultKeymap,
-        ...completionKeymap,
-        ...lintKeymap,
-        indentWithTab,
-      ]),
-      EditorView.lineWrapping,
+      ...(!this.minimal
+        ? [
+            lineNumbers(),
+            indentOnInput(),
+            autocompletion(),
+            highlightActiveLine(),
+            keymap.of([
+              ...closeBracketsKeymap,
+              ...defaultKeymap,
+              ...completionKeymap,
+              ...lintKeymap,
+              indentWithTab,
+            ]),
+            EditorView.lineWrapping,
+          ]
+        : []),
       ...(this.theme.value === "dark" ? [oneDark] : []),
       ...language,
       EditorView.updateListener.of((update) => {
@@ -104,7 +115,7 @@ export class PlayEditor extends LitElement {
           this._updateTimer = window?.setTimeout(() => {
             this._updateTimer = -1;
             this._dispatchUpdate();
-          }, 1000);
+          }, this.delay);
         }
       }),
     ];
@@ -170,7 +181,9 @@ export class PlayEditor extends LitElement {
   }
 
   render() {
-    return html`<div class="editor"></div>`;
+    return html`<div
+      class=${this.minimal ? "editor minimal" : "editor"}
+    ></div>`;
   }
 
   firstUpdated() {

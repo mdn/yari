@@ -1,18 +1,12 @@
-import { html, LitElement } from "lit";
-import { ref, createRef } from "lit/directives/ref.js";
-import { decode } from "he";
+import { LitElement } from "lit";
+import { createRef } from "lit/directives/ref.js";
 
-import "../play/editor.js";
-import "../play/controller.js";
-import "../play/console.js";
-import "../play/runner.js";
 import { GleanMixin } from "../glean-mixin.js";
-import "./tabs.js";
+import { InteractiveExampleWithChoices } from "./with-choices.js";
+import { InteractiveExampleWithConsole } from "./with-console.js";
+import { InteractiveExampleWithTabs } from "./with-tabs.js";
 
 import styles from "./index.scss?css" with { type: "css" };
-
-import exampleJs from "./example.js?raw";
-import exampleStyle from "./example.css?raw";
 
 /**
  * @import { Ref } from 'lit/directives/ref.js';
@@ -20,13 +14,11 @@ import exampleStyle from "./example.css?raw";
  * @import { PlayRunner } from "../play/runner.js";
  */
 
-const LANGUAGE_CLASSES = ["html", "js", "css"];
+const LANGUAGE_CLASSES = ["html", "js", "css", "wat"];
 const GLEAN_EVENT_TYPES = ["focus", "copy", "cut", "paste", "click"];
 
-export class InteractiveExample extends GleanMixin(LitElement) {
-  static properties = {
-    name: { type: String },
-  };
+export class InteractiveExampleBase extends GleanMixin(LitElement) {
+  static properties = { name: { type: String } };
 
   static styles = styles;
 
@@ -54,7 +46,7 @@ export class InteractiveExample extends GleanMixin(LitElement) {
 
   _initialCode() {
     const exampleNodes = this.closest("section")?.querySelectorAll(
-      ".code-example pre[class*=interactive-example]"
+      ".code-example pre.interactive-example"
     );
     const code = Array.from(exampleNodes || []).reduce((acc, pre) => {
       const language = Array.from(pre.classList).find((c) =>
@@ -69,29 +61,29 @@ export class InteractiveExample extends GleanMixin(LitElement) {
           }
         : acc;
     }, /** @type {Object<string, string>} */ ({}));
+    const choiceNodes = this.closest("section")?.querySelectorAll(
+      ".code-example pre.interactive-example-choice"
+    );
+    this._choices = Array.from(choiceNodes || []).map((pre) =>
+      pre.textContent?.trim()
+    );
     this._languages = Object.keys(code);
-    this._template =
-      this._languages.length === 1 && this._languages[0] === "js"
-        ? "javascript"
+    this._template = this._choices.length
+      ? "choices"
+      : (this._languages.length === 1 && this._languages[0] === "js") ||
+          (this._languages.includes("js") && this._languages.includes("wat"))
+        ? "console"
         : "tabbed";
-    if (this._template === "tabbed") {
-      code["js-hidden"] = exampleJs;
-      code["css-hidden"] = exampleStyle;
-    }
     return code;
   }
 
   /** @param {string} lang */
   _langName(lang) {
     switch (lang) {
-      case "html":
-        return "HTML";
-      case "css":
-        return "CSS";
       case "js":
         return "JavaScript";
       default:
-        return lang;
+        return lang.toUpperCase();
     }
   }
 
@@ -117,61 +109,6 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     this._code = this._initialCode();
   }
 
-  _renderJavascript() {
-    return html`
-      <play-controller ${ref(this._controller)}>
-        <div class="template-javascript">
-          <header>
-            <h4>${decode(this.name)}</h4>
-          </header>
-          <play-editor id="editor" language="js"></play-editor>
-          <div class="buttons">
-            <button id="execute" @click=${this._run}>Run</button>
-            <button id="reset" @click=${this._reset}>Reset</button>
-          </div>
-          <play-console id="console"></play-console>
-          <play-runner></play-runner>
-        </div>
-      </play-controller>
-    `;
-  }
-
-  _renderTabbed() {
-    return html`
-      <play-controller ${ref(this._controller)} run-on-start run-on-change>
-        <div class="template-tabbed">
-          <header>
-            <h4>${decode(this.name)}</h4>
-            <button id="reset" @click=${this._reset}>Reset</button>
-          </header>
-          <ix-tab-wrapper>
-            ${this._languages.map(
-              (lang) => html`
-                <ix-tab id=${lang}>${this._langName(lang)}</ix-tab>
-                <ix-tab-panel id=${`${lang}-panel`}>
-                  <play-editor language=${lang}></play-editor>
-                </ix-tab-panel>
-              `
-            )}
-          </ix-tab-wrapper>
-          <div class="output-wrapper">
-            <h4>Output</h4>
-            <play-runner
-              ${ref(this._runner)}
-              sandbox="allow-top-navigation-by-user-activation"
-            ></play-runner>
-          </div>
-        </div>
-      </play-controller>
-    `;
-  }
-
-  render() {
-    return this._template === "javascript"
-      ? this._renderJavascript()
-      : this._renderTabbed();
-  }
-
   firstUpdated() {
     if (this._controller.value) {
       this._controller.value.code = this._code;
@@ -185,5 +122,11 @@ export class InteractiveExample extends GleanMixin(LitElement) {
     });
   }
 }
+
+export class InteractiveExample extends InteractiveExampleWithChoices(
+  InteractiveExampleWithTabs(
+    InteractiveExampleWithConsole(InteractiveExampleBase)
+  )
+) {}
 
 customElements.define("interactive-example", InteractiveExample);

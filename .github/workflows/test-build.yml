@@ -166,7 +166,7 @@ jobs:
 
       - name: sccache-cache
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
-        uses: mozilla-actions/sccache-action@v0.0.7
+        uses: mozilla-actions/sccache-action@v0.0.8
 
       - name: Build rari
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
@@ -335,6 +335,7 @@ jobs:
             --max-instances=100 \
             --memory=2GB \
             --timeout=120s \
+            --run-service-account=run-nonprod-test-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
             --set-env-vars="ORIGIN_MAIN=test.developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.test.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=test.mdnyalp.dev" \

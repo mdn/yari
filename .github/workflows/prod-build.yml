@@ -16,8 +16,7 @@ env:
 
 on:
   schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron: "0 */24 * * *"
+    - cron: "0 0 * * *"
 
   workflow_dispatch:
     inputs:
@@ -392,6 +391,7 @@ jobs:
             --max-instances=1000 \
             --memory=2GB \
             --timeout=120s \
+            --run-service-account=run-prod-prod-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
