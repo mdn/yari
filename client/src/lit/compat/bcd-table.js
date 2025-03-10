@@ -409,12 +409,8 @@ class BcdTable extends LitElement {
                   const flags = item.flags || [];
                   return html`
                     ${hasAddedVersion && `From version ${item.version_added}`}
-                    ${hasRemovedVersion && (
-                      <>
-                        ${hasAddedVersion ? " until" : "Until"} version $
-                        {item.version_removed} (exclusive)
-                      </>
-                    )}
+                    ${hasRemovedVersion &&
+                    `${hasAddedVersion ? " until" : "Until"} version ${item.version_removed} (exclusive)`}
                     ${hasAddedVersion || hasRemovedVersion ? ": this" : "This"}
                     feature is behind the
                     ${flags.map((flag, i) => {
@@ -423,10 +419,9 @@ class BcdTable extends LitElement {
                         html` (needs to be set to
                           <code>${flag.value_to_set}</code>`;
                       return html`<code>${flag.name}</code> ${flag.type ===
-                          "preference" && <> preference${valueToSet}</>}
-                        ${flag.type === "runtime_flag" && (
-                          <> runtime flag${valueToSet}</>
-                        )}
+                          "preference" && ` preference${valueToSet}`}
+                        ${flag.type === "runtime_flag" &&
+                        ` runtime flag${valueToSet}`}
                         ${i < flags.length - 1 && " and the "}`;
                     })}
                     ${browser.pref_url &&
