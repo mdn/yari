@@ -513,8 +513,7 @@ class BcdTable extends LitElement {
             </dt>
             ${filteredSupportNotes.map(({ iconName, label }) => {
               return html`<dd class="bc-supports-dd">
-                ${this.renderIcon(iconName)}
-                ${typeof label === "string"
+                ${this.renderIcon(iconName)}${typeof label === "string"
                   ? html`<span>${unsafeHTML(label)}</span>`
                   : label}
               </dd>`;
