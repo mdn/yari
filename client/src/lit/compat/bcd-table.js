@@ -291,7 +291,7 @@ class BcdTable extends LitElement {
                 ${this.renderCellText(support, browser)}
               </button>
               ${notes &&
-              html`<div class="more" tabindex="0">
+              html`<div class="timeline" tabindex="0">
                 <dl class="bc-notes-list">${notes}</dl>
               </div>`}
             </td>`;
