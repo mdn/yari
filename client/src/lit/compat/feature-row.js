@@ -58,14 +58,17 @@ export function labelFromString(version, browser) {
   if (typeof version !== "string") {
     return "?";
   }
-  // Treat BCD ranges as exact versions to avoid confusion for the reader
-  // See https://github.com/mdn/yari/issues/3238
-  if (version.startsWith("≤")) {
-    return version.slice(1);
-  }
   if (version === "preview") {
     return browser.preview_name ?? "Preview";
   }
+  // Treat BCD ranges as exact versions to avoid confusion for the reader
+  // See https://github.com/mdn/yari/issues/3238
+  if (version.startsWith("≤")) {
+    version = version.slice(1);
+  }
+  // New: Omit trailing ".0".
+  version = version.replace(/(\.0)+$/g, "");
+
   return version;
 }
 
