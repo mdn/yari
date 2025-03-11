@@ -47,12 +47,17 @@ table {
   }
 }
 
+.bc-on-github {
+  font-size: var(--type-smaller-font-size);
+  text-align: right;
+}
+
 .bc-table {
   border: 1px solid var(--border-primary);
   border-collapse: separate;
   border-radius: var(--elem-radius);
   border-spacing: 0;
-  margin: 1rem 0;
+  margin: 0;
   width: 100%;
 
   td,

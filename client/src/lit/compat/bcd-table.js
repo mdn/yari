@@ -99,6 +99,7 @@ class BcdTable extends LitElement {
   constructor() {
     super();
     this.query = "";
+    /** @type {Identifier} */
     this.data = {};
     /** @type {Browsers} */
     // @ts-ignore
@@ -155,16 +156,30 @@ class BcdTable extends LitElement {
       event.preventDefault();
       window.open(this.issueUrl, "_blank", "noopener,noreferrer");
     };
-    return html`<a
-      class="bc-github-link external external-icon"
-      href="#"
-      @click=${onClick}
-      target="_blank"
-      rel="noopener noreferrer"
-      title="Report an issue with this compatibility data"
-    >
-      Report problems with this compatibility data on GitHub
-    </a>`;
+    const source_file = this.data.__compat?.source_file;
+    return html`<div class="bc-on-github">
+      <a
+        class="bc-github-link external external-icon"
+        href="#"
+        @click=${onClick}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Report an issue with this compatibility data"
+      >
+        Report problems with this compatibility data</a
+      >${source_file
+        ? html` •
+            <a
+              className="bc-github-link external external-icon"
+              href=${`https://github.com/mdn/browser-compat-data/tree/main/${source_file}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title=${`File: ${source_file}`}
+            >
+              View data on GitHub
+            </a>`
+        : null}
+    </div>`;
   }
 
   renderTable() {
