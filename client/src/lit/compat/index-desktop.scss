@@ -94,9 +94,11 @@
     }
   }
 
-  .bc-support-level,
-  .bc-browser-name {
-    display: none;
+  .bcd-cell-text-wrapper {
+    .bc-support-level,
+    .bc-browser-name {
+      display: none;
+    }
   }
 
   .bc-notes-list {
