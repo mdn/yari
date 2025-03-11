@@ -39,7 +39,7 @@ table {
           grid-template-columns: subgrid;
         }
 
-        .more {
+        .timeline {
           grid-column: 1 / -1;
         }
       }
@@ -201,7 +201,7 @@ table {
     border-left: 15px solid var(--border-primary);
   }
 
-  .bc-has-history:not(:focus-within) .more {
+  .bc-has-history:not(:focus-within) .timeline {
     display: none;
   }
 }
