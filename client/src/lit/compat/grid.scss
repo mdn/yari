@@ -37,7 +37,7 @@ table {
         }
 
         .more {
-          grid-column: 1 / calc(var(--browser-count) + 2);
+          grid-column: 1 / -1;
         }
       }
     }
