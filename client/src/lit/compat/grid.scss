@@ -1,31 +1,9 @@
-.more {
-  display: none;
-}
-
-.bc-has-history:focus-within {
-  > button {
-    --padding-bottom-offset: -2px;
-    border-bottom: 2px solid var(--text-primary);
-
-    ~ .more {
-      border-left: none;
-      border-top: var(--border);
-      display: initial;
-    }
-  }
-}
-
 table {
   display: grid;
   grid-auto-flow: row dense;
-  grid-template-columns: minmax(25%, max-content) repeat(
-      var(--browser-count),
-      calc(75% / var(--browser-count))
-    );
   width: 100%;
 
   thead {
-    display: contents;
     line-height: 1;
     text-orientation: sideways;
     white-space: nowrap;
@@ -60,27 +38,6 @@ table {
 
         .more {
           grid-column: 1 / calc(var(--browser-count) + 2);
-        }
-      }
-
-      // Border.
-      &:not(:first-child) {
-        th,
-        td {
-          > * {
-            border-top: var(--border);
-          }
-        }
-
-        .bc-feature {
-          border-top: var(--border);
-        }
-      }
-
-      th:not(:first-child),
-      td:not(:first-child) {
-        > * {
-          border-left: var(--border);
         }
       }
     }

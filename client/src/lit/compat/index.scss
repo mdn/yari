@@ -20,16 +20,14 @@
   th {
     border: 1px solid var(--border-secondary);
     border-width: 0 0 1px 1px;
+
+    font-size: var(--type-smaller-font-size);
     font-weight: 500;
     padding: 0;
+    padding: 0.4rem;
 
-    @media (min-width: $screen-md) {
+    code {
       font-size: var(--type-smaller-font-size);
-      padding: 0.4rem;
-
-      code {
-        font-size: var(--type-smaller-font-size);
-      }
     }
   }
 
@@ -46,7 +44,7 @@
     tr {
       height: 3rem;
 
-      @media (min-width: $screen-md) {
+      @media (min-width: $screen-sm) {
         &:last-child {
           th,
           td {
@@ -143,6 +141,10 @@
   .bc-feature-depth-3 {
     border-left-width: 16px;
   }
+
+  .bc-has-history:not(:focus-within) .more {
+    display: none;
+  }
 }
 
 .bc-head-txt-label {
@@ -198,8 +200,6 @@
 
 // Row with desktop / mobile icons.
 .bc-platforms {
-  height: 2rem;
-
   th {
     align-content: center;
   }
@@ -396,7 +396,7 @@ dl.bc-notes-list {
   flex-direction: row;
   gap: 0.5rem;
 
-  @media (min-width: $screen-md) {
+  @media (min-width: $screen-sm) {
     align-items: center;
     flex-direction: column;
   }
@@ -405,13 +405,13 @@ dl.bc-notes-list {
 .bcd-timeline-cell-text-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .bcd-cell-text-copy {
   color: var(--text-primary);
   display: flex;
-  gap: 0.5rem;
+  gap: 0.5ch;
 }
 
 .bc-supports-yes {
@@ -436,17 +436,13 @@ dl.bc-notes-list {
   display: flex;
   gap: 0.5rem;
 
-  @media (min-width: $screen-md) {
+  @media (min-width: $screen-sm) {
     display: block;
   }
 }
 
-@media (min-width: $screen-md) {
+@media (min-width: $screen-sm) {
   .bc-table {
-    td {
-      height: 2rem;
-    }
-
     td.bc-support > button {
       padding-bottom: calc(0.5rem + var(--padding-bottom-offset, 0px));
       padding-left: 0.25rem;
