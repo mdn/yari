@@ -5,9 +5,15 @@
     width: calc(100% + 6rem);
   }
 
+  .table-container-inner {
+    min-width: initial;
+  }
+
   .bc-table {
-    tbody th {
-      width: 20%;
-    }
+    // 25% for feature, 75% for browser columns.
+    grid-template-columns: minmax(25%, max-content) repeat(
+        var(--browser-count),
+        calc(75% / var(--browser-count))
+      );
   }
 }

@@ -4,12 +4,43 @@
 
 @media (min-width: $screen-sm) {
   .bc-table {
+    // Expand all columns.
+    grid-template-columns: minmax(20vw, min-content) repeat(
+        var(--browser-count),
+        auto
+      );
+
     thead {
-      //display: table-header-group;
+      display: contents;
 
       .bc-platforms {
         th {
           vertical-align: revert;
+        }
+      }
+    }
+
+    tbody {
+      // Border.
+      tr {
+        &:not(:first-child) {
+          th,
+          td {
+            > * {
+              border-top: var(--border);
+            }
+          }
+
+          .bc-feature {
+            border-top: var(--border);
+          }
+        }
+
+        th:not(:first-child),
+        td:not(:first-child) {
+          > * {
+            border-left: var(--border);
+          }
         }
       }
     }
@@ -28,8 +59,15 @@
       }
     }
 
-    tr.bc-history-desktop {
-      //display: table-row;
+    .more {
+      border-left: none;
+      border-top: var(--border);
+    }
+
+    .bc-has-history:focus-within > button {
+      // Highlight expanded item.
+      --padding-bottom-offset: -2px;
+      border-bottom: 2px solid var(--text-primary);
     }
   }
 
@@ -40,7 +78,7 @@
   }
 
   .table-container-inner {
-    //min-width: max-content;
+    min-width: max-content;
     padding: 0 3rem;
     position: relative;
 

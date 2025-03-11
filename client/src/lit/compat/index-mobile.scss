@@ -4,13 +4,27 @@
 
 @media (max-width: $screen-sm - 1px) {
   .bc-table {
+    grid-template-columns: auto;
+
     thead {
       display: none;
     }
 
-    td.bc-support {
-      border-left-width: 0;
-      display: block;
+    tr {
+      td.bc-support {
+        border: none;
+        border-top: 1px solid var(--border-primary);
+        display: block;
+
+        &:last-child {
+          border-bottom: 1px solid var(--border-primary);
+        }
+      }
+    }
+
+    .more {
+      // Align timeline icons with summary icon.
+      margin-left: 0.25rem;
     }
 
     .bc-feature,
