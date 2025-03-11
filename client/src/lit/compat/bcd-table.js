@@ -165,7 +165,10 @@ class BcdTable extends LitElement {
   renderTable() {
     return html`<figure class="table-container">
       <figure class="table-container-inner">
-        <table class="bc-table bc-table-web">
+        <table
+          class="bc-table bc-table-web"
+          style="--browser-count: ${Object.keys(this.browsers).length}"
+        >
           ${this.renderTableHeader()} ${this.renderTableBody()}
         </table>
       </figure>
@@ -179,21 +182,31 @@ class BcdTable extends LitElement {
   }
 
   renderPlatformHeaders() {
+    const platformsWithBrowsers = this.platforms.map((platform) => ({
+      platform,
+      browsers: this.browsers.filter(
+        (browser) => this.browserInfo[browser].type === platform
+      ),
+    }));
+
+    const grid = platformsWithBrowsers.map(({ browsers }) => browsers.length);
     return html`<tr class="bc-platforms">
       <td></td>
-      ${this.platforms.map((platform) => {
+      ${platformsWithBrowsers.map(({ platform, browsers }, index) => {
         // Get the intersection of browsers in the `browsers` array and the
         // `PLATFORM_BROWSERS[platform]`.
-        const browsersInPlatform = this.browsers.filter(
-          (browser) => this.browserInfo[browser].type === platform
-        );
-        const browserCount = browsersInPlatform.length;
+        const browserCount = browsers.length;
         const cellClass = `bc-platform bc-platform-${platform}`;
         const iconClass = `icon icon-${platform}`;
+
+        const columnStart =
+          2 + grid.slice(0, index).reduce((acc, x) => acc + x, 0);
+        const columnEnd = columnStart + browserCount;
         return html`<th
           class=${cellClass}
           colspan=${browserCount}
           title=${platform}
+          style="grid-column: ${columnStart} / ${columnEnd}"
         >
           <span class=${iconClass}></span>
           <span class="visually-hidden">${platform}</span>
@@ -228,7 +241,7 @@ class BcdTable extends LitElement {
     const features = listFeatures(data, "", this.name);
 
     return html`<tbody>
-      ${features.map((feature, featureIndex) => {
+      ${features.map((feature) => {
         // <FeatureRow>
         const { name, compat, depth } = feature;
 
@@ -269,19 +282,18 @@ class BcdTable extends LitElement {
             const supportClassName = getSupportClassName(support, browser);
             const notes = support && this.renderNotes(browser, support);
 
-            const id = `${featureIndex}-${browserName}`;
-
             return html`<td
               class=${`bc-support bc-browser-${browserName} bc-supports-${supportClassName} ${
                 notes ? "bc-has-history" : ""
               }`}
             >
-              <button popovertarget=${`history-${id}`}>
+              <button type="button" title=${notes ? "Show history" : undefined}>
                 ${this.renderCellText(support, browser)}
               </button>
-              <div id=${`history-${id}`} popover>
+              ${notes &&
+              html`<div class="more">
                 <dl class="bc-notes-list">${notes}</dl>
-              </div>
+              </div>`}
             </td>`;
           })}
         </tr>`;
