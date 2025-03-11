@@ -18,7 +18,10 @@
 table {
   display: grid;
   grid-auto-flow: row dense;
-  grid-template-columns: minmax(1fr, 2rem) repeat(auto-fit, minmax(1fr, 2rem));
+  grid-template-columns: minmax(25%, max-content) repeat(
+      var(--browser-count),
+      calc(75% / var(--browser-count))
+    );
   width: 100%;
 
   thead {
