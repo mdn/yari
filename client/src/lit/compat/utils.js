@@ -313,5 +313,6 @@ export function getCurrentSupport(support) {
   if (noSupportItem) return noSupportItem;
 
   // Default (likely never reached).
+  // @ts-ignore
   return getFirst(support);
 }

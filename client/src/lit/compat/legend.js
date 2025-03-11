@@ -72,6 +72,7 @@ export function getActiveLegendItems(compat, name, browserInfo) {
         legendItems.add("no");
         continue;
       }
+      // @ts-ignore
       const firstSupportItem = getFirst(browserSupport);
       if (hasNoteworthyNotes(firstSupportItem)) {
         legendItems.add("footnote");
@@ -82,6 +83,7 @@ export function getActiveLegendItems(compat, name, browserInfo) {
           if (versionSupport.flags && versionSupport.flags.length) {
             legendItems.add("no");
           } else if (
+            // @ts-ignore
             versionIsPreview(versionSupport.version_added, browserInfo[browser])
           ) {
             legendItems.add("preview");
