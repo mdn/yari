@@ -120,7 +120,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version-file: "deployer/.python-version"
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1

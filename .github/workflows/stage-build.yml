@@ -188,7 +188,7 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version-file: "deployer/.python-version"
 
       - name: Install Python poetry
         if: ${{ ! vars.SKIP_BUILD }}
