@@ -21,6 +21,8 @@
     }
 
     tbody {
+      --border: 1px solid var(--border-secondary);
+
       // Border.
       tr {
         &:not(:first-child) {
