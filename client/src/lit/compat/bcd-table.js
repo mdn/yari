@@ -569,6 +569,7 @@ class BcdTable extends LitElement {
 
     let label;
     let title = "";
+    // eslint-disable-next-line default-case
     switch (status.isSupported) {
       case "yes":
         title = "Full support";
