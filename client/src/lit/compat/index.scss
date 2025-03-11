@@ -194,11 +194,11 @@ table {
   }
 
   .bc-feature-depth-2 {
-    border-left-width: 8px;
+    border-left: 7px solid var(--border-primary);
   }
 
   .bc-feature-depth-3 {
-    border-left-width: 16px;
+    border-left: 15px solid var(--border-primary);
   }
 
   .bc-has-history:not(:focus-within) .more {
