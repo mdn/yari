@@ -8,6 +8,45 @@
 
 // Style for mobile *and* desktop.
 
+table {
+  display: grid;
+  grid-auto-flow: row dense;
+
+  thead {
+    tr {
+      display: contents;
+
+      th,
+      td {
+        display: grid;
+        grid-template-columns: subgrid;
+      }
+    }
+  }
+
+  tbody {
+    display: contents;
+
+    tr {
+      display: contents;
+
+      th,
+      td {
+        display: contents;
+
+        button {
+          display: grid;
+          grid-template-columns: subgrid;
+        }
+
+        .more {
+          grid-column: 1 / -1;
+        }
+      }
+    }
+  }
+}
+
 .bc-table {
   border: 1px solid var(--border-primary);
   border-collapse: separate;
@@ -35,6 +74,13 @@
     background: var(--background-primary);
     padding: 0.4rem;
     vertical-align: bottom;
+  }
+
+  thead {
+    line-height: 1;
+    text-orientation: sideways;
+    white-space: nowrap;
+    writing-mode: sideways-lr;
   }
 
   // these props allow us to add border-radius to the table.
@@ -131,6 +177,19 @@
   .bc-support.bc-supports-removed-partial {
     .bcd-cell-text-copy {
       color: var(--text-primary-red);
+    }
+  }
+
+  .bc-feature {
+    align-items: center;
+    border: none;
+    display: flex;
+    text-align: left;
+    width: 100%;
+
+    > * {
+      border: none !important;
+      flex-basis: max-content;
     }
   }
 
@@ -451,5 +510,3 @@ dl.bc-notes-list {
     }
   }
 }
-
-@include meta.load-css("grid");
