@@ -151,9 +151,14 @@ class BcdTable extends LitElement {
   }
 
   renderIssueLink() {
+    const onClick = (/** @type {MouseEvent} */ event) => {
+      event.preventDefault();
+      window.open(this.issueUrl, "_blank", "noopener,noreferrer");
+    };
     return html`<a
       class="bc-github-link external external-icon"
-      href=${this.issueUrl}
+      href="#"
+      @click=${onClick}
       target="_blank"
       rel="noopener noreferrer"
       title="Report an issue with this compatibility data"
