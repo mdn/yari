@@ -592,15 +592,17 @@ class BcdTable extends LitElement {
         break;
 
       case "preview":
-        title = "Preview browser support";
+        title = "Preview support";
         label = status.label || browser.preview_name;
         break;
 
       case "unknown":
-        title = "Compatibility unknown; please update this.";
+        title = "Support unknown";
         label = "?";
         break;
     }
+
+    title = `${browser.name} – ${title}`;
 
     return html`<div
       class=${timeline
@@ -625,7 +627,7 @@ class BcdTable extends LitElement {
         <span
           class="bc-version-label"
           title=${browserReleaseDate && !timeline
-            ? `Released ${browserReleaseDate}`
+            ? `${browser.name} ${added} – Released ${browserReleaseDate}`
             : ""}
         >
           ${timeline && false ? browser.name : null}
