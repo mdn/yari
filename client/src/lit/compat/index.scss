@@ -4,39 +4,7 @@
 @use "../../ui/atoms/button";
 @use "../../ui/atoms/icon";
 
-// Global.
-
-* {
-  box-sizing: border-box;
-}
-
-/* Remove default margin */
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-figure,
-blockquote,
-dl,
-dd {
-  margin: 0;
-}
-
-.visually-hidden {
-  border: 0 !important;
-  clip: rect(1px, 1px, 1px, 1px) !important;
-  -webkit-clip-path: inset(50%) !important;
-  clip-path: inset(50%) !important;
-  height: 1px !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  position: absolute !important;
-  white-space: nowrap !important;
-  width: 1px !important;
-}
+@include meta.load-css("global");
 
 // Style for mobile *and* desktop.
 
@@ -178,20 +146,11 @@ dd {
 }
 
 .bc-head-txt-label {
-  left: calc(50% - 0.5rem);
   line-height: 1;
-  padding-top: 0.5rem;
-  position: relative;
   text-orientation: sideways;
   transform: rotate(180deg);
   white-space: nowrap;
-  -ms-writing-mode: tb-rl;
-  -webkit-writing-mode: vertical-rl;
   writing-mode: vertical-rl;
-}
-
-.bc-head-icon-symbol {
-  margin-bottom: 0.3rem;
 }
 
 .bc-support {
@@ -242,7 +201,7 @@ dd {
   height: 2rem;
 
   th {
-    text-align: center;
+    align-content: center;
   }
 
   td {
@@ -253,7 +212,12 @@ dd {
 // Row with browser names.
 .bc-browsers {
   th {
-    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.25rem;
+    justify-content: start;
+    vertical-align: bottom;
   }
 
   td {
@@ -315,6 +279,7 @@ dd {
 
   abbr {
     margin-right: 4px;
+    text-decoration: none;
   }
 
   dd {
@@ -361,8 +326,8 @@ dl.bc-notes-list {
 }
 
 .bc-table-row-header {
-  align-items: baseline;
-  display: inline-flex;
+  padding: 0.25em;
+  text-align: left;
   width: 100%;
 
   code {
@@ -388,7 +353,7 @@ dl.bc-notes-list {
   }
 
   .bc-icons {
-    display: flex;
+    display: inline-flex;
     gap: 0.5rem;
     margin-top: 0.25rem;
 
@@ -483,7 +448,12 @@ dl.bc-notes-list {
     }
 
     td.bc-support > button {
-      padding: 0.5rem 0.25rem;
+      padding-bottom: calc(0.5rem + var(--padding-bottom-offset, 0px));
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      padding-top: 0.5rem;
     }
   }
 }
+
+@include meta.load-css("grid");

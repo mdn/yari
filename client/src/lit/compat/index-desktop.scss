@@ -5,7 +5,7 @@
 @media (min-width: $screen-sm) {
   .bc-table {
     thead {
-      display: table-header-group;
+      //display: table-header-group;
 
       .bc-platforms {
         th {
@@ -18,7 +18,6 @@
     th {
       background: inherit;
       padding: 0.25rem;
-      width: 2rem;
     }
 
     td.bc-support {
@@ -30,7 +29,7 @@
     }
 
     tr.bc-history-desktop {
-      display: table-row;
+      //display: table-row;
     }
   }
 
@@ -41,7 +40,7 @@
   }
 
   .table-container-inner {
-    min-width: max-content;
+    //min-width: max-content;
     padding: 0 3rem;
     position: relative;
 
@@ -61,7 +60,7 @@
   }
 
   .bc-notes-list {
-    //margin-left: 20%;
+    margin-left: 20%;
     width: auto;
   }
 
@@ -92,7 +91,7 @@
   .bc-has-history {
     cursor: pointer;
 
-    &:hover {
+    > button:hover {
       background: var(--background-secondary);
     }
   }
