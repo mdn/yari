@@ -101,5 +101,6 @@ export function getSupportBrowserReleaseDate(support) {
     return undefined;
   }
 
+  // @ts-ignore
   return getCurrentSupport(support)?.release_date;
 }
