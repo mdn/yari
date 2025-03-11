@@ -290,6 +290,27 @@ class BcdTable extends LitElement {
           </div>`;
         }
 
+        const handleMousedown = (/** @type {MouseEvent} */ event) => {
+          // Blur active element if already focused.
+          const activeElement = this.shadowRoot?.activeElement;
+          const { currentTarget } = event;
+
+          if (
+            !(activeElement instanceof HTMLElement) ||
+            !(currentTarget instanceof HTMLElement)
+          ) {
+            return;
+          }
+
+          const activeCell = activeElement.closest("td");
+          const currentCell = currentTarget.closest("td");
+
+          if (activeCell === currentCell) {
+            activeElement.blur();
+            event.preventDefault();
+          }
+        };
+
         return html`<tr>
           <th class=${`bc-feature bc-feature-depth-${depth}`} scope="row">
             ${titleNode}
@@ -307,7 +328,11 @@ class BcdTable extends LitElement {
                 notes ? "bc-has-history" : ""
               }`}
             >
-              <button type="button" title=${notes ? "Show history" : undefined}>
+              <button
+                type="button"
+                title=${notes ? "Toggle history" : undefined}
+                @mousedown=${handleMousedown}
+              >
                 ${this.renderCellText(support, browser)}
               </button>
               ${notes &&
