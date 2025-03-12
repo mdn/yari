@@ -5338,7 +5338,7 @@ common-path-prefix@^3.0.0:
   resolved "https://registry.yarnpkg.com/common-path-prefix/-/common-path-prefix-3.0.0.tgz#7d007a7e07c58c4b4d5f433131a19141b29f11e0"
   integrity sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==
 
-compare-versions@^6.1.0:
+compare-versions@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-6.1.1.tgz#7af3cc1099ba37d244b3145a9af5201b629148a9"
   integrity sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==
@@ -5363,13 +5363,13 @@ compression@^1.7.4, compression@^1.8.0:
     safe-buffer "5.2.1"
     vary "~1.1.2"
 
-compute-baseline@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/compute-baseline/-/compute-baseline-0.1.1.tgz#26139c562a6609825dfde30ad9f5707619975216"
-  integrity sha512-1JWSHeDUwlWBnhnCUDEgKSgXb3UWtCkV8FPTV6YwNGHxLqA/SNfOcTsY74IXv19EqbuMsKBClhh+OPNjMnOZDQ==
+compute-baseline@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/compute-baseline/-/compute-baseline-0.3.0.tgz#cf15b23e475e0fefc7ab8f88f62e9a5ca3bbac37"
+  integrity sha512-XZPW1xboBRG2W/DhzSBYwKfxUGxBDuXeGBJiZzFwzBNVtMUm7FKyxHoyKdwG/LCzFtbTgEX5AR/7ispnHUrMRw==
   dependencies:
     "@js-temporal/polyfill" "^0.4.4"
-    compare-versions "^6.1.0"
+    compare-versions "^6.1.1"
 
 compute-scroll-into-view@^2.0.4:
   version "2.0.4"
