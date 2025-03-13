@@ -1,6 +1,8 @@
 import { LitElement, html } from "lit";
 import { createComponent } from "@lit/react";
+import { Task } from "@lit/task";
 import React from "react";
+
 import { BCD_BASE_URL } from "../../env.ts";
 import "./compat-table.js";
 
@@ -9,9 +11,6 @@ class LazyCompatTable extends LitElement {
     _id: {},
     query: {},
     locale: {},
-    compat: { state: true },
-    error: { state: true },
-    loading: { state: true },
   };
 
   constructor() {
@@ -19,60 +18,41 @@ class LazyCompatTable extends LitElement {
     this._id = "";
     this.query = "";
     this.locale = "";
-    this.compat = null;
-    this.error = null;
-    this.loading = false;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.loading = true;
   }
 
-  /**
-   * @param {Map<string, any>} changedProperties
-   * @returns {Promise<void>}
-   */
-  async update(changedProperties) {
-    super.update(changedProperties);
-    if (changedProperties.has("query")) {
-      await this.fetchData(this.query);
-    }
-  }
-
-  /**
-   * @param {string} query
-   * @returns {Promise<void>}
-   */
-  async fetchData(query) {
-    try {
-      const res = await fetch(
-        `${BCD_BASE_URL}/bcd/api/v0/current/${query}.json`
+  _dataTask = new Task(this, {
+    args: () => [this.query],
+    task: async ([query], { signal }) => {
+      const response = await fetch(
+        `${BCD_BASE_URL}/bcd/api/v0/current/${query}.json`,
+        { signal }
       );
-      this.compat = await res.json();
-    } catch (error) {
-      this.error = error;
-    } finally {
-      this.loading = false;
-    }
-  }
+      if (!response.ok) {
+        console.error("Failed to fetch BCD data:", response);
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    },
+  });
 
   render() {
-    if (this.loading) {
-      return html`<p>Loading...</p>`;
-    }
-    if (this.error) {
-      return html`<p>Error loading data</p>`;
-    }
-    if (!this.compat) {
-      return html`<p>No compatibility data found</p>`;
-    }
-    return html`<compat-table
-      query=${this.query}
-      locale=${this.locale}
-      .data=${this.compat.data}
-      .browserInfo=${this.compat.browsers}
-    ></compat-table>`;
+    return this._dataTask.render({
+      pending: () => html`<p>Loading...</p>`,
+      complete: (compat) =>
+        compat
+          ? html`<compat-table
+              query=${this.query}
+              locale=${this.locale}
+              .data=${compat.data}
+              .browserInfo=${compat.browsers}
+            ></compat-table>`
+          : html`<p>No compatibility data found</p>`,
+      error: (error) => html`<p>Error loading data: <code>${error}</code></p>`,
+    });
   }
 }
 
