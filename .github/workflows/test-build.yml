@@ -299,8 +299,15 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
-        run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r mdn/fred/out gs://${{ vars.GCP_BUCKET_NAME }}/fred
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: mdn/fred/out
+          destination: ${{ vars.GCP_BUCKET_NAME }}/fred
+          parent: false
+          gzip: true
+          resumable: false
+          concurrency: 500
+          process_gcloudignore: true
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -323,6 +330,7 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
         run: |
+          cp ../mdn/fred/out/sitemap.txt ../client/build/
           npm ci
           npm run build-redirects
           npm run build-canonicals
