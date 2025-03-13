@@ -47,8 +47,8 @@ import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
-const LazyBrowserCompatibilityTable = React.lazy(
-  () => import("../lit/compat/lazy-bcd-table")
+const LazyCompatTable = React.lazy(
+  () => import("../lit/compat/lazy-compat-table.js")
 );
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
@@ -276,11 +276,7 @@ export function RenderDocumentBody({ doc }) {
         <Suspense fallback={<Spinner />} key={`browser_compatibility${i}`}>
           {title && !isH3 && <DisplayH2 id={id} title={title} />}
           {title && isH3 && <DisplayH3 id={id} title={title} />}
-          <LazyBrowserCompatibilityTable
-            _id={id}
-            query={query}
-            locale={locale}
-          />
+          <LazyCompatTable _id={id} query={query} locale={locale} />
         </Suspense>
       );
     } else if (section.type === "specifications") {

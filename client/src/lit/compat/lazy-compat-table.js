@@ -2,9 +2,9 @@ import { LitElement, html } from "lit";
 import { createComponent } from "@lit/react";
 import React from "react";
 import { BCD_BASE_URL } from "../../env.ts";
-import "./bcd-table.js";
+import "./compat-table.js";
 
-class LazyBcdTable extends LitElement {
+class LazyCompatTable extends LitElement {
   static properties = {
     _id: {},
     query: {},
@@ -67,19 +67,19 @@ class LazyBcdTable extends LitElement {
     if (!this.compat) {
       return html`<p>No compatibility data found</p>`;
     }
-    return html`<bcd-table
+    return html`<compat-table
       query=${this.query}
       locale=${this.locale}
       .data=${this.compat.data}
       .browserInfo=${this.compat.browsers}
-    ></bcd-table>`;
+    ></compat-table>`;
   }
 }
 
-customElements.define("lazy-bcd-table", LazyBcdTable);
+customElements.define("lazy-compat-table", LazyCompatTable);
 
 export default createComponent({
-  tagName: "lazy-bcd-table",
-  elementClass: LazyBcdTable,
+  tagName: "lazy-compat-table",
+  elementClass: LazyCompatTable,
   react: React,
 });
