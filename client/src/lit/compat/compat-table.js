@@ -84,9 +84,9 @@ class CompatTable extends LitElement {
     locale: {},
     data: {},
     browserInfo: { attribute: "browserinfo" },
-    pathname: { state: true },
-    platforms: { state: true },
-    browsers: { state: true },
+    _pathname: { state: true },
+    _platforms: { state: true },
+    _browsers: { state: true },
   };
 
   static styles = styles;
@@ -100,11 +100,11 @@ class CompatTable extends LitElement {
     // @ts-ignore
     this.browserInfo = {};
     this.locale = ""; // TODO
-    this.pathname = "";
+    this._pathname = "";
     /** @type {string[]} */
-    this.platforms = [];
+    this._platforms = [];
     /** @type {BrowserName[]} */
-    this.browsers = [];
+    this._browsers = [];
   }
 
   get breadcrumbs() {
@@ -121,8 +121,8 @@ class CompatTable extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.pathname = window.location.pathname;
-    [this.platforms, this.browsers] = gatherPlatformsAndBrowsers(
+    this._pathname = window.location.pathname;
+    [this._platforms, this._browsers] = gatherPlatformsAndBrowsers(
       this.category,
       this.data,
       this.browserInfo
@@ -138,7 +138,7 @@ class CompatTable extends LitElement {
     )
       .replace(/\$QUERY_ID/g, this.query)
       .trim();
-    sp.set("mdn-url", `https://developer.mozilla.org${this.pathname}`);
+    sp.set("mdn-url", `https://developer.mozilla.org${this._pathname}`);
     sp.set("metadata", metadata);
     sp.set("title", `${this.query} - <SUMMARIZE THE PROBLEM>`);
     sp.set("template", "data-problem.yml");
@@ -182,7 +182,7 @@ class CompatTable extends LitElement {
       <figure class="table-container-inner">
         <table
           class="bc-table bc-table-web"
-          style="--browser-count: ${Object.keys(this.browsers).length}"
+          style="--browser-count: ${Object.keys(this._browsers).length}"
         >
           ${this.renderTableHeader()} ${this.renderTableBody()}
         </table>
@@ -197,9 +197,9 @@ class CompatTable extends LitElement {
   }
 
   renderPlatformHeaders() {
-    const platformsWithBrowsers = this.platforms.map((platform) => ({
+    const platformsWithBrowsers = this._platforms.map((platform) => ({
       platform,
-      browsers: this.browsers.filter(
+      browsers: this._browsers.filter(
         (browser) => this.browserInfo[browser].type === platform
       ),
     }));
@@ -234,7 +234,7 @@ class CompatTable extends LitElement {
     // <BrowserHeaders>
     return html`<tr class="bc-browsers">
       <td></td>
-      ${this.browsers.map(
+      ${this._browsers.map(
         (browser) =>
           html`<th class=${`bc-browser bc-browser-${browser}`}>
             <div class=${`bc-head-txt-label bc-head-icon-${browser}`}>
@@ -252,7 +252,7 @@ class CompatTable extends LitElement {
 
   renderTableBody() {
     // <FeatureListAccordion>
-    const { data, browsers, browserInfo, locale } = this;
+    const { data, _browsers: browsers, browserInfo, locale } = this;
     const features = listFeatures(data, "", this.name);
 
     return html`<tbody>
