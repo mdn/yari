@@ -270,7 +270,7 @@ jobs:
           npm run rari content sync-translated-content
           npm run rari git-history
 
-          npm run rari build --all --issues client/build/issues.json --templ-stats
+          npm run rari build -- --all --templ-stats
 
           # SSR all pages
           npm run build
