@@ -1,9 +1,8 @@
 # Deployer
 
-The Yari Deployer does two things. First, it's used to upload pre-built document
-pages, static files (e.g. JS, CSS, and image files), and sitemap files into an
-existing AWS S3 bucket. Since we serve MDN document pages from an S3 bucket via
-a CloudFront CDN, this is the way we upload a new version of the site.
+The Yari Deployer historically powered file upload to AWS, the PR Review
+Companion. Nowadays, its only remaining purpose is to update the ElasticSearch
+index.
 
 ## Getting started
 
@@ -14,50 +13,6 @@ prefer.
 cd deployer
 poetry install
 poetry run deployer --help
-```
-
-Please refer to the
-[`boto3` documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration)
-with regards to configuring AWS access credentials.
-
-## Uploads
-
-The `poetry run deployer upload DIRECTORY` command uploads files into an
-existing S3 bucket. Currently, we have three S3 buckets that we upload into:
-`mdn-content-dev` (for variations or experimental versions of the site),
-`mdn-content-stage`, and `mdn-content-prod`.
-
-As input, the `upload` command takes a directory which contains the files that
-should be uploaded. The files are uploaded into a sub-folder (a.k.a. `prefix`)
-of the S3 bucket's root. The prefix (`--prefix` option) defaults to `main`,
-which is most likely what you'll want for uploads to the `mdn-content-stage` and
-`mdn-content-prod` S3 buckets. However, for uploads to the `mdn-content-dev`
-bucket, the prefix is often used to specify a different folder for each
-variation of the site that is being reviewed/considered.
-
-When uploading files, the Deployer is intelligent about what it uploads. If only
-uploads files whose content has changed, skipping the rest. However, since the
-`cache-control` attribute of a file is not considered part of its content, if
-you'd like to change the `cache-control` from what's in S3, it's important to
-use the `--force-refresh` option to ensure that all files are uploaded with
-fresh `cache-control` attributes.
-
-### Examples
-
-```sh
-export CONTENT_ROOT=/path/to/content/files
-export CONTENT_TRANSLATED_ROOT=/path/to/translated-content/files
-cd deployer
-poetry run deployer upload --bucket mdn-content-dev --prefix pr1234 ../client/build
-```
-
-```sh
-export CONTENT_ROOT=/path/to/content/files
-export CONTENT_TRANSLATED_ROOT=/path/to/translated-content/files
-export DEPLOYER_BUCKET_NAME=mdn-content-dev
-export DEPLOYER_BUCKET_PREFIX=pr1234
-cd deployer
-poetry run deployer upload ../client/build
 ```
 
 ## Elasticsearch indexing
@@ -139,127 +94,11 @@ time to time omit it for a fresh new start.
 But note, if you omit the `--update` (i.e. recreating the index), search will
 work. It just may find less that it finds when it's fully indexed.
 
-## Analyze PR builds
-
-When you've built files you can analyze those built files to produce a Markdown
-comment that you can post as a PR issue comment. To do that, run:
-
-```sh
-poetry run deployer analyze-pr-build ../client/build
-```
-
-But the actions are controlled by various options. You can mix and match these:
-
-### `--analyze-flaws`
-
-This will open each built `index.json` and look through the `.flaws` and try to
-convert each flaw into a list.
-
-### `--analyze-dangerous-content`
-
-It will analyze all the content and look for content that could be "dangerous".
-For example, it will list all external URLs found in the content.
-
-### `--prefix`
-
-The `prefix` refers to a prefix in the Deployer upload. I.e. what you set when
-you run `poetry run deployer upload --prefix=THIS`. The `prefix` is used to
-specify the proper Dev subdomain (`{prefix}.review.mdn.allizom.net`) for the
-URLs of the built documents. For example, if `--prefix experiment1` is
-specified, it will list:
-
-```md
-## Preview URLs
-
-- <https://experiment1.review.mdn.allizom.net/en-US/docs/MDN/Kitchensink>
-```
-
-...assuming the only page that was built was `build/en-us/docs/mdn/kitchensink`.
-Note that this assumes the PR build has been deployed to the Dev server.
-
-### `--repo`
-
-This is useful for debugging when the PR you made wasn't on `mdn/content`. For
-example:
-
-```sh
-poetry run deployer analyze-pr-build ../client/build --repo peterbe/content ...
-```
-
-### `--github-token`
-
-By default it will pick up the `$GITHUB_TOKEN` environment variable but with
-this option you can override it.
-
-### `--pr-number`
-
-This is needed to be able to find the PR (on
-<https://github.com/mdn/content/pulls>) to post the comment to.
-
-### `--verbose`
-
-This is mostly useful for local development or when debugging. It determines
-whether to print to `stdout` what it would post as a PR issue comment.
-
-This option, just like the `--dry-run` is technically part of the `deployer`
-command and not the `analyze-pr-build` sub-command. So put it before the
-`analyze-pr-build`.
-
-### A complete example
-
-This example demonstrates all options.
-
-```sh
-poetry run deployer --verbose --dry-run analyze-pr-build ../client/build \
-  --analyze-flaws --analyze-dangerous-content --github-token="xxx" \
-  --repo=peterbe/content --pr-number=3
-```
-
-## Debugging Analyze PR builds
-
-An important part of the `analyze-pr-builds` command is that it must be easy to
-debug and develop further without having to rely on landing code in `main` and
-seeing how it worked.
-
-The first thing you need to do is to download a `build` artifact or to simply
-run `yarn build` and use the `../client/build` directory. To download the
-artifact go to a finished "PR Test" workflow, like
-<https://github.com/mdn/content/pull/3381/checks?check_run_id=2169672013> for
-example. Near the upper right-hand corner of the content (near the "Re-run jobs"
-button) it says "Artifacts (1)". Download that `build.zip` file somewhere and
-unpack it. Now you can run:
-
-```sh
-poetry run deployer --verbose analyze-pr-build ~/Downloads/build ...
-```
-
-You can even go and get a personal access token and set `$GITHUB_TOKEN`
-(assuming it has the right scopes) and have it actually post the comment.
-
 ## Environment variables
 
 The following environment variables are supported.
 
-- `DEPLOYER_BUCKET_NAME` is equivalent to using `--bucket` (the default is
-  `mdn-content-dev`)
-- `DEPLOYER_BUCKET_PREFIX` is equivalent to using `--prefix` (the default is
-  `main`)
-- `DEPLOYER_NO_PROGRESSBAR` is equivalent to using `--no-progressbar` (the
-  default is `true` if not run from a terminal or the `CI` environment variable
-  is `true` like it is for GitHub Actions, otherwise the default is `false`)
-- `DEPLOYER_CACHE_CONTROL` can be used to specify the `cache-control` header for
-  all non-hashed files that are uploaded (the default is `3600` or one hour)
-- `DEPLOYER_HASHED_CACHE_CONTROL` can be used to specify the `cache-control`
-  header for all hashed files (e.g., `main.3c12da89.chunk.js`) that are uploaded
-  (the default is `31536000` or one year)
-- `DEPLOYER_MAX_WORKERS_PARALLEL_UPLOADS` controls the number of worker threads
-  used when uploading (the default is `50`)
-- `DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD` will print successful upload tasks to
-  `stdout`. The default is that this is `False`.
 - `DEPLOYER_ELASTICSEARCH_URL` used by the `search-index` command.
-- `CONTENT_ROOT` is equivalent to using `--content-root` (there is no default)
-- `CONTENT_TRANSLATED_ROOT` is equivalent to using `--content-translated-root`
-  (there is no default)
 
 ## Contributing
 
