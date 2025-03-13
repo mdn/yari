@@ -330,6 +330,7 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
         run: |
+          mkdir -p ../client/build/
           cp ../mdn/fred/out/sitemap.txt ../client/build/
           npm ci
           npm run build-redirects
