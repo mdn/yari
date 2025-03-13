@@ -1,5 +1,40 @@
 # Changelog
 
+## [4.7.1](https://github.com/mdn/yari/compare/v4.7.0...v4.7.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* **play:** avoid double-slash in runner URL ([#12655](https://github.com/mdn/yari/issues/12655)) ([7992d2d](https://github.com/mdn/yari/commit/7992d2dd42105ae4ddc6dc5ab95fe6acb5a7457e))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/core from 7.26.9 to 7.26.10 ([#12762](https://github.com/mdn/yari/issues/12762)) ([0a34a7f](https://github.com/mdn/yari/commit/0a34a7f6ca334c598474e4b9a2ebfc14171f76c9))
+* **deps-dev:** bump @babel/eslint-parser from 7.26.8 to 7.26.10 ([#12761](https://github.com/mdn/yari/issues/12761)) ([dc66375](https://github.com/mdn/yari/commit/dc663750e5ba866ae51bc34044f9da7daf40e317))
+* **deps-dev:** bump @swc/core from 1.11.7 to 1.11.8 ([#12748](https://github.com/mdn/yari/issues/12748)) ([bdac646](https://github.com/mdn/yari/commit/bdac646213979afd14e65348d05d8e2ff1bc4597))
+* **deps-dev:** bump @swc/core from 1.11.8 to 1.11.9 ([#12771](https://github.com/mdn/yari/issues/12771)) ([04585cb](https://github.com/mdn/yari/commit/04585cbf48376544bd4ee5fb2978969098f8133a))
+* **deps-dev:** bump @types/node from 18.19.79 to 18.19.80 in the types group ([#12745](https://github.com/mdn/yari/issues/12745)) ([2e12db8](https://github.com/mdn/yari/commit/2e12db8388d00f09d528f07a01b8205ca18814bc))
+* **deps-dev:** bump typescript-eslint from 8.26.0 to 8.26.1 ([#12755](https://github.com/mdn/yari/issues/12755)) ([3f66153](https://github.com/mdn/yari/commit/3f6615330859fe4efbfedfbbf25c5b1324a98396))
+* **deps-dev:** bump webpack-manifest-plugin from 5.0.0 to 5.0.1 ([#12758](https://github.com/mdn/yari/issues/12758)) ([5074275](https://github.com/mdn/yari/commit/5074275acaac6edff7c1fca9e6bb25b902a46692))
+* **deps:** bump @inquirer/prompts from 7.3.2 to 7.3.3 ([#12747](https://github.com/mdn/yari/issues/12747)) ([5a01b53](https://github.com/mdn/yari/commit/5a01b532a666bdebe75066bdc37961068d461c4d))
+* **deps:** bump @mdn/browser-compat-data from 5.7.1 to 5.7.2 ([#12760](https://github.com/mdn/yari/issues/12760)) ([b7bb8b7](https://github.com/mdn/yari/commit/b7bb8b7ab3f0de5dbf8372b7a7c50e91bf54d5ed))
+* **deps:** bump @mdn/rari from 0.1.26 to 0.1.27 ([#12756](https://github.com/mdn/yari/issues/12756)) ([c3efeb0](https://github.com/mdn/yari/commit/c3efeb03e91b85f210715a8b238ee5e9666e9125))
+* **deps:** bump @mdn/rari from 0.1.27 to 0.1.28 ([#12770](https://github.com/mdn/yari/issues/12770)) ([6827684](https://github.com/mdn/yari/commit/68276848dd212ac81e9adb9f78da028461f05267))
+* **deps:** bump @mdn/rari from 0.1.28 to 0.1.29 ([#12774](https://github.com/mdn/yari/issues/12774)) ([5dbe51f](https://github.com/mdn/yari/commit/5dbe51f46fe5dceae4b7261509e3af9aa491abb5))
+* **deps:** bump @vscode/ripgrep from 1.15.10 to 1.15.11 ([#12746](https://github.com/mdn/yari/issues/12746)) ([3c3c663](https://github.com/mdn/yari/commit/3c3c66383d6aeff82996dd94cfece28b335f0c39))
+* **deps:** bump boto3 from 1.37.4 to 1.37.9 in /deployer in the dependencies group ([#12749](https://github.com/mdn/yari/issues/12749)) ([2d294a5](https://github.com/mdn/yari/commit/2d294a5d029d953430f72f7382066a7bc44b5db7))
+* **deps:** bump compute-baseline from 0.1.1 to 0.3.0 ([#12765](https://github.com/mdn/yari/issues/12765)) ([9c1231f](https://github.com/mdn/yari/commit/9c1231f1e900b774e1767262dfc2acd047ec093d))
+* **deps:** bump mdn-data from 2.17.0 to 2.18.0 ([#12764](https://github.com/mdn/yari/issues/12764)) ([6a1f313](https://github.com/mdn/yari/commit/6a1f313e18a6774b45312a55eefc2a8e9eb47fbe))
+* **deps:** bump mozilla-actions/sccache-action from 0.0.7 to 0.0.8 ([#12743](https://github.com/mdn/yari/issues/12743)) ([c2e7c52](https://github.com/mdn/yari/commit/c2e7c5292b6fe3bef23a3daee3f58f26b7e39af8))
+* **deps:** bump openai from 4.86.2 to 4.87.3 ([#12759](https://github.com/mdn/yari/issues/12759)) ([2a07701](https://github.com/mdn/yari/commit/2a0770130b631afdca632bcdbc05e6e4d12813c6))
+* **deps:** bump pg from 8.13.3 to 8.14.0 ([#12763](https://github.com/mdn/yari/issues/12763)) ([959493c](https://github.com/mdn/yari/commit/959493cb0d7461bd11cdb9a1f258896cb59d6b55))
+* **deps:** bump prismjs from 1.29.0 to 1.30.0 ([#12751](https://github.com/mdn/yari/issues/12751)) ([e6190ce](https://github.com/mdn/yari/commit/e6190ce6d60afc1d8ecdc019fa7d893018663109))
+* **deps:** bump web-features from 2.27.0 to 2.28.0 ([#12750](https://github.com/mdn/yari/issues/12750)) ([ae1f3fb](https://github.com/mdn/yari/commit/ae1f3fbcf8bda5bdaf247208c8c07ca14f565414))
+* **deps:** bump web-specs from 3.42.0 to 3.42.1 ([#12753](https://github.com/mdn/yari/issues/12753)) ([de02f1a](https://github.com/mdn/yari/commit/de02f1aa2bc1f83134cc73cbe38ba96f1d1b8290))
+* **deps:** bump web-specs from 3.42.1 to 3.43.0 ([#12769](https://github.com/mdn/yari/issues/12769)) ([900d73f](https://github.com/mdn/yari/commit/900d73fb5ec1595c43f09ee3b4db1160943644f7))
+* **pong:** update cc2ip ([#12766](https://github.com/mdn/yari/issues/12766)) ([d4d1332](https://github.com/mdn/yari/commit/d4d1332857501d3ba24ab15b5d5232faa4dba288))
+
 ## [4.7.0](https://github.com/mdn/yari/compare/v4.6.2...v4.7.0) (2025-03-10)
 
 
