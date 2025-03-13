@@ -745,8 +745,8 @@ customElements.define("bcd-table", BcdTable);
  * those are also shown. Deno is always shown if Node.js is shown.
  *
  * @param {string} category
- * @param {import("@mdn/browser-compat-data/types").Identifier} data
- * @param {import("@mdn/browser-compat-data/types").Browsers} browserInfo
+ * @param {Identifier} data
+ * @param {Browsers} browserInfo
  * @returns {[string[], BrowserName[]]}
  */
 export function gatherPlatformsAndBrowsers(category, data, browserInfo) {
