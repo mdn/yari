@@ -78,7 +78,7 @@ export const LEGEND_LABELS = {
   more: "Has more compatibility info.",
 };
 
-class BcdTable extends LitElement {
+class CompatTable extends LitElement {
   static properties = {
     query: {},
     locale: {},
@@ -732,7 +732,7 @@ class BcdTable extends LitElement {
   }
 }
 
-customElements.define("bcd-table", BcdTable);
+customElements.define("compat-table", CompatTable);
 
 /**
  * Return a list of platforms and browsers that are relevant for this category &
