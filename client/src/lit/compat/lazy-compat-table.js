@@ -22,7 +22,6 @@ class LazyCompatTable extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.loading = true;
   }
 
   _dataTask = new Task(this, {
