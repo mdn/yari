@@ -2232,10 +2232,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.7.tgz#555e80c33df520df068943e6b18ebc07f0e24d19"
   integrity sha512-IHkkypEjlIkBkx4mJ2//Xbzog9M/Lzne1Sl8db2cIHJ/5pe3NCqSLwSchmqzcUN+/WJr/U+V3tNAbWunk2xZcA==
 
-"@mdn/browser-compat-data@^5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.7.1.tgz#084a907eee9b7a0ea7ccc8a70f743bc7adda831e"
-  integrity sha512-GvRSM02AVVdB0rBeu/Xb1Zd3Q3fGPtpgQoaoOwNwcpMSQ4s08O0WHeGs1OywiFYKUFKo3i3kMYn4QzjRjZqw/w==
+"@mdn/browser-compat-data@^5.7.2":
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.7.2.tgz#96afbfff072eb118d7f4b6cc337862cedc23fde9"
+  integrity sha512-ZmBrBR3PH+N7z5yLi4xz4wFzgsXyK0yghIH0t/zdo6taPYLk44OlycvVD5ZZlcz1py9J8yW/4D70CLz72KoLUg==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
@@ -2247,10 +2247,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mdn/rari@^0.1.27":
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.27.tgz#3db9f811fea1f8713d4b3184895ef186871aacae"
-  integrity sha512-WQRnXYTQn/9Wa8DApoMnpQBM3c8NFKF02LgeNbj5LEQNoUeUAdEZfp5iu9oPaPIHBN6SvOUe1dDJBIqShIsyKQ==
+"@mdn/rari@^0.1.28":
+  version "0.1.28"
+  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.28.tgz#d525f8c36e3326b1d893f90e49e54c24b492d701"
+  integrity sha512-3O88jG31fz0g/KjN8MbQFU8WsqOR3MGatdBn/mcE/EOZV7xtRmgMJIcHd99+2Xn9OKqfWPBG6PSPe0N+0Zis7A==
   dependencies:
     extract-zip "^2.0.1"
     https-proxy-agent "^7.0.2"
