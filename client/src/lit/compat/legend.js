@@ -9,9 +9,7 @@ import {
 } from "./utils.js";
 
 /**
- * @typedef {import("@mdn/browser-compat-data").Identifier} Identifier
- * @typedef {import("@mdn/browser-compat-data").Browsers} Browsers
- * @typedef {import("@mdn/browser-compat-data").BrowserName} BrowserName
+ * @import { Browsers, Identifier } from "@mdn/browser-compat-data/types"
  * @typedef {"yes" | "partial" | "preview" | "no" | "unknown" | "experimental" | "nonstandard" | "deprecated" | "footnote" | "disabled" | "altname" | "prefix" | "more"} LegendKey
  */
 

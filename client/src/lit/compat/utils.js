@@ -1,10 +1,5 @@
 /**
- * @typedef {import("@mdn/browser-compat-data/types").SimpleSupportStatement} SimpleSupportStatement
- * @typedef {import("@mdn/browser-compat-data/types").VersionValue} VersionValue
- * @typedef {import("@mdn/browser-compat-data/types").CompatStatement} CompatStatement
- * @typedef {import("@mdn/browser-compat-data/types").Identifier} Identifier
- * @typedef {import("@mdn/browser-compat-data/types").SupportStatement} SupportStatement
- * @typedef {import("@mdn/browser-compat-data/types").BrowserStatement} BrowserStatement
+ * @import { SimpleSupportStatement, VersionValue, CompatStatement, Identifier, SupportStatement, BrowserStatement } from "@mdn/browser-compat-data/types"
  * @typedef {SimpleSupportStatementExtended | SimpleSupportStatementExtended[]} SupportStatementExtended
  */
 

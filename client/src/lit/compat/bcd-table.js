@@ -26,13 +26,8 @@ import {
 import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
- * @typedef {import("lit").TemplateResult} TemplateResult
- * @typedef {import("@mdn/browser-compat-data/types").BrowserName} BrowserName
- * @typedef {import("@mdn/browser-compat-data/types").BrowserStatement} BrowserStatement
- * @typedef {import("@mdn/browser-compat-data/types").SupportStatement} SupportStatement
- * @typedef {import("@mdn/browser-compat-data/types").Browsers} Browsers
- * @typedef {import("@mdn/browser-compat-data/types").Identifier} Identifier
- * @typedef {import("@mdn/browser-compat-data/types").StatusBlock} StatusBlock
+ * @import { TemplateResult } from "lit"
+ * @import { BrowserName, BrowserStatement, SupportStatement, Browsers, Identifier, StatusBlock } from "@mdn/browser-compat-data/types"
  * @typedef {{ title: string, text: string, iconClassName: string }} StatusIcon
  */
 

@@ -2,8 +2,8 @@ import { getCurrentSupport, versionIsPreview } from "./utils.js";
 import { html } from "lit";
 
 /**
- * @typedef {import("@mdn/browser-compat-data/types").BrowserStatement} BrowserStatement
- * @typedef {import("./utils.js").SupportStatementExtended} SupportStatementExtended
+ * @import { BrowserStatement } from "@mdn/browser-compat-data/types"
+ * @import { SupportStatementExtended } from "./utils.js"
  * @typedef {"no"|"yes"|"partial"|"preview"|"removed-partial"|"unknown"} SupportClassName
  */
 
