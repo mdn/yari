@@ -33,7 +33,6 @@ def validate_file(ctz, param, value):
     return path
 
 
-
 @click.group()
 @click.option(
     "--dry-run",
