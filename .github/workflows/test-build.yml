@@ -132,7 +132,7 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
-          repository: LeoMcA/fer
+          repository: mdn/fred
           path: mdn/fred
 
       - name: Setup Node.js environment
