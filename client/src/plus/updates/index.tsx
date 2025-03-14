@@ -3,7 +3,6 @@ import Container from "../../ui/atoms/container";
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
-import BrowserCompatibilityTable from "../../document/ingredients/browser-compatibility-table";
 import { browserToIconName } from "../../document/ingredients/browser-compatibility-table/headers";
 import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
@@ -14,7 +13,7 @@ import { Paginator } from "../../ui/molecules/paginator";
 import BookmarkMenu from "../../ui/organisms/article-actions/bookmark-menu";
 import { useUserData } from "../../user-context";
 import { camelWrap, range } from "../../utils";
-import { Event, Group, useBCD, useUpdates } from "./api";
+import { Event, Group, useUpdates } from "./api";
 import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
@@ -24,6 +23,11 @@ import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
 import { PlusLoginBanner } from "../common/login-banner";
+import React from "react";
+
+const LazyCompatTable = React.lazy(
+  () => import("../../lit/compat/lazy-compat-table.js")
+);
 
 type EventWithStatus = Event & { status: Status };
 type Status = "added" | "removed";
@@ -351,18 +355,10 @@ function EventInnerComponent({
   event: Event;
 }) {
   const locale = useLocale();
-  const { data } = useBCD(path);
   return (
     <div>
       <ArticleActions path={path} mdn_url={mdn_url} />
-      {data && (
-        <BrowserCompatibilityTable
-          query={path}
-          data={data.data}
-          browsers={data.browsers}
-          locale={locale}
-        />
-      )}
+      <LazyCompatTable query={path} locale={locale} />
     </div>
   );
 }
