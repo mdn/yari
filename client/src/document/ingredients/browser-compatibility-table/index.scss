@@ -389,6 +389,7 @@ dl.bc-notes-list {
 @include meta.load-css("index-desktop");
 @include meta.load-css("index-desktop-md");
 @include meta.load-css("index-desktop-xl");
+@include meta.load-css("index-desktop-sticky");
 
 .bcd-cell-text-wrapper {
   display: flex;
