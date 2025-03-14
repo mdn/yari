@@ -1,17 +1,22 @@
-import { useContext } from "react";
-import type BCD from "@mdn/browser-compat-data/types";
-import { BrowserInfoContext } from "./browser-info";
-import { HIDDEN_BROWSERS } from "./index";
 import {
+  HIDDEN_BROWSERS,
   asList,
   getFirst,
   hasMore,
   hasNoteworthyNotes,
   listFeatures,
   versionIsPreview,
-} from "./utils";
+} from "./utils.js";
 
-// Also specifies the order in which the legend appears
+/**
+ * @import { Browsers, Identifier } from "@mdn/browser-compat-data/types"
+ * @typedef {"yes" | "partial" | "preview" | "no" | "unknown" | "experimental" | "nonstandard" | "deprecated" | "footnote" | "disabled" | "altname" | "prefix" | "more"} LegendKey
+ */
+
+/**
+ * Legend labels which also specifies the order in which the legend appears.
+ * @type {Record<LegendKey, string>}
+ */
 export const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
@@ -27,14 +32,18 @@ export const LEGEND_LABELS = {
   prefix: "Requires a vendor prefix or different name for use.",
   more: "Has more compatibility info.",
 };
-type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
-function getActiveLegendItems(
-  compat: BCD.Identifier,
-  name: string,
-  browserInfo: BCD.Browsers
-) {
-  const legendItems = new Set<LEGEND_KEY>();
+/**
+ * Gets the active legend items based on browser compatibility data.
+ *
+ * @param {Identifier} compat - The compatibility data identifier.
+ * @param {string} name - The name of the feature.
+ * @param {Browsers} browserInfo - Information about browsers.
+ * @returns {Array<[LegendKey, string]>} An array of legend item entries, where each entry is a tuple of the legend key and its label.
+ */
+export function getActiveLegendItems(compat, name, browserInfo) {
+  /** @type {Set<LegendKey>} */
+  const legendItems = new Set();
 
   for (const feature of listFeatures(compat, "", name)) {
     const { status } = feature.compat;
@@ -61,6 +70,7 @@ function getActiveLegendItems(
         legendItems.add("no");
         continue;
       }
+      // @ts-ignore
       const firstSupportItem = getFirst(browserSupport);
       if (hasNoteworthyNotes(firstSupportItem)) {
         legendItems.add("footnote");
@@ -71,6 +81,7 @@ function getActiveLegendItems(
           if (versionSupport.flags && versionSupport.flags.length) {
             legendItems.add("no");
           } else if (
+            // @ts-ignore
             versionIsPreview(versionSupport.version_added, browserInfo[browser])
           ) {
             legendItems.add("preview");
@@ -102,61 +113,18 @@ function getActiveLegendItems(
       }
     }
   }
-  return Object.keys(LEGEND_LABELS)
-    .filter((key) => legendItems.has(key as LEGEND_KEY))
-    .map((key) => [key, LEGEND_LABELS[key]]);
-}
 
-export function Legend({
-  compat,
-  name,
-}: {
-  compat: BCD.Identifier;
-  name: string;
-}) {
-  const browserInfo = useContext(BrowserInfoContext);
+  /**
+   * @type {any[]}
+   */
+  const keys = Object.keys(LEGEND_LABELS);
 
-  if (!browserInfo) {
-    throw new Error("Missing browser info");
-  }
-
-  return (
-    <section className="bc-legend">
-      <h3 className="visually-hidden" id="Legend">
-        Legend
-      </h3>
-      <p className="bc-legend-tip">
-        Tip: you can click/tap on a cell for more information.
-      </p>
-      <dl className="bc-legend-items-container">
-        {getActiveLegendItems(compat, name, browserInfo).map(([key, label]) =>
-          ["yes", "partial", "no", "unknown", "preview"].includes(key) ? (
-            <div className="bc-legend-item" key={key}>
-              <dt className="bc-legend-item-dt" key={key}>
-                <span className={`bc-supports-${key} bc-supports`}>
-                  <abbr
-                    className={`bc-level bc-level-${key} icon icon-${key}`}
-                    title={label}
-                  >
-                    <span className="visually-hidden">{label}</span>
-                  </abbr>
-                </span>
-              </dt>
-              <dd className="bc-legend-item-dd">{label}</dd>
-            </div>
-          ) : (
-            <div className="bc-legend-item" key={key}>
-              <dt className="bc-legend-item-dt">
-                <abbr
-                  className={`legend-icons icon icon-${key}`}
-                  title={label}
-                ></abbr>
-              </dt>
-              <dd className="bc-legend-item-dd">{label}</dd>
-            </div>
-          )
-        )}
-      </dl>
-    </section>
-  );
+  return keys
+    .filter((key) => legendItems.has(key))
+    .map(
+      /**
+       * @param {LegendKey} key
+       */
+      (key) => [key, LEGEND_LABELS[key]]
+    );
 }

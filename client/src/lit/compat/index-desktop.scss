@@ -1,11 +1,17 @@
-@use "../../../ui/vars" as *;
+@use "../../ui/vars" as *;
 
 // Style for desktop.
 
 @media (min-width: $screen-sm) {
   .bc-table {
+    // Expand all columns.
+    grid-template-columns: minmax(20vw, min-content) repeat(
+        var(--browser-count),
+        auto
+      );
+
     thead {
-      display: table-header-group;
+      display: contents;
 
       .bc-platforms {
         th {
@@ -14,11 +20,37 @@
       }
     }
 
+    tbody {
+      --border: 1px solid var(--border-secondary);
+
+      // Border.
+      tr {
+        &:not(:first-child) {
+          th,
+          td {
+            > * {
+              border-top: var(--border);
+            }
+          }
+
+          .bc-feature {
+            border-top: var(--border);
+          }
+        }
+
+        th:not(:first-child),
+        td:not(:first-child) {
+          > * {
+            border-left: var(--border);
+          }
+        }
+      }
+    }
+
     td,
     th {
       background: inherit;
       padding: 0.25rem;
-      width: 2rem;
     }
 
     td.bc-support {
@@ -29,8 +61,15 @@
       }
     }
 
-    tr.bc-history-desktop {
-      display: table-row;
+    .timeline {
+      border-left: none;
+      border-top: var(--border);
+    }
+
+    .bc-has-history:focus-within > button {
+      // Highlight expanded item.
+      --padding-bottom-offset: -2px;
+      border-bottom: 2px solid var(--text-primary);
     }
   }
 
@@ -55,9 +94,11 @@
     }
   }
 
-  .bc-support-level,
-  .bc-browser-name {
-    display: none;
+  .bcd-cell-text-wrapper {
+    .bc-support-level,
+    .bc-browser-name {
+      display: none;
+    }
   }
 
   .bc-notes-list {
@@ -92,7 +133,7 @@
   .bc-has-history {
     cursor: pointer;
 
-    &:hover {
+    > button:hover {
       background: var(--background-secondary);
     }
   }
