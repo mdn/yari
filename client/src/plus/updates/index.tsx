@@ -3,7 +3,6 @@ import Container from "../../ui/atoms/container";
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
 import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
-import { browserToIconName } from "../../document/ingredients/browser-compatibility-table/headers";
 import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { Icon } from "../../ui/atoms/icon";
@@ -407,4 +406,17 @@ function ArticleActions({ path, mdn_url }: { path: string; mdn_url?: string }) {
       )}
     </nav>
   );
+}
+
+function browserToIconName(browser: string) {
+  if (browser.startsWith("firefox")) {
+    return "simple-firefox";
+  } else if (browser === "webview_android") {
+    return "webview";
+  } else if (browser === "webview_ios") {
+    return "safari";
+  } else {
+    const browserStart = browser.split("_")[0];
+    return browserStart;
+  }
 }
