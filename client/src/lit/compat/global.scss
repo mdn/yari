@@ -35,3 +35,7 @@ code {
   padding: 0.125rem 0.25rem;
   width: fit-content;
 }
+
+a:not(.button) {
+  color: var(--text-link);
+}
