@@ -66,8 +66,11 @@ export class PlayEditor extends LitElement {
     return this._editor ? this._editor.state.doc.toString() : this._value;
   }
 
-  _dispatchUpdate() {
-    this.dispatchEvent(new Event("update", { bubbles: true, composed: true }));
+  /**
+   * @param {string} type
+   */
+  _dispatch(type) {
+    this.dispatchEvent(new Event(type, { bubbles: true, composed: true }));
   }
   _extensions() {
     const language = (() => {
@@ -107,6 +110,10 @@ export class PlayEditor extends LitElement {
         : []),
       ...(this.theme.value === "dark" ? [oneDark] : []),
       ...language,
+      EditorView.focusChangeEffect.of((_, focusing) => {
+        this._dispatch(focusing ? "focus" : "blur");
+        return null;
+      }),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           if (this._updateTimer !== -1) {
@@ -114,7 +121,7 @@ export class PlayEditor extends LitElement {
           }
           this._updateTimer = window?.setTimeout(() => {
             this._updateTimer = -1;
-            this._dispatchUpdate();
+            this._dispatch("update");
           }, this.delay);
         }
       }),
@@ -162,7 +169,7 @@ export class PlayEditor extends LitElement {
       if (this.value === unformatted) {
         if (unformatted !== formatted) {
           this.value = formatted;
-          this._dispatchUpdate();
+          this._dispatch("update");
         }
       }
     }
