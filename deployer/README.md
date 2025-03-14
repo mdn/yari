@@ -1,8 +1,9 @@
 # Deployer
 
-The Yari Deployer historically powered file upload to AWS, the PR Review
-Companion. Nowadays, its only remaining purpose is to update the ElasticSearch
-index.
+Yari Deployer's only remaining purpose is to update the Elasticsearch index.
+
+Previously, it also uploaded files to AWS S3 buckets, deployed AWS Lambdas, and
+powered the PR Review Companion, but these features have been removed.
 
 ## Getting started
 
