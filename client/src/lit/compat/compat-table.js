@@ -670,7 +670,6 @@ class CompatTable extends LitElement {
             ? `${browser.name} ${added} – Released ${browserReleaseDate}`
             : ""}
         >
-          ${timeline && false ? browser.name : null}
           ${!timeline || browserReleaseDate ? label : null}
           ${browserReleaseDate && timeline
             ? ` (Released ${browserReleaseDate})`
