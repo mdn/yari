@@ -357,7 +357,6 @@ dl.bc-notes-list {
   }
 }
 
-.offscreen,
 .only-icon span {
   @include visually-hidden();
 }
@@ -369,24 +368,6 @@ dl.bc-notes-list {
 
   code {
     overflow: hidden;
-  }
-
-  .left-side,
-  .right-side {
-    overflow: hidden;
-    white-space: pre;
-  }
-
-  /* Can only flex-shrink and not flex-grow
-  ie the "slider" in a sliding glass door */
-  .left-side {
-    flex: 0 1 auto;
-    text-overflow: ellipsis;
-  }
-  /* Can flex-grow and not flex-shrink as
-  its the stationary portion */
-  .right-side {
-    flex: 1 0 auto;
   }
 
   .bc-icons {
