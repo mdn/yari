@@ -418,8 +418,9 @@ dl.bc-notes-list {
 
   .bc-icons {
     display: inline-flex;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
+    gap: 0.5ch;
+    margin-left: 0.5ch;
+    vertical-align: text-top;
 
     .icon {
       background-color: var(--icon-secondary);

@@ -265,8 +265,8 @@ class CompatTable extends LitElement {
           : html`<code>${name}</code>`;
 
         let titleNode;
-        const titleContent = html` ${title}
-        ${compat.status && this.renderStatusIcons(compat.status)}`;
+        const titleContent = html`${title}${compat.status &&
+        this.renderStatusIcons(compat.status)}`;
         if (compat.mdn_url && depth > 0) {
           const href = compat.mdn_url.replace(
             `/${DEFAULT_LOCALE}/docs`,
