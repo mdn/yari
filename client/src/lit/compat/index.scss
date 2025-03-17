@@ -177,6 +177,11 @@ table {
       // override icon
       mask-image: url("../../assets/icons/no.svg");
     }
+
+    .timeline .icon.icon-removed-partial {
+      background-color: var(--icon-primary);
+      mask-image: url("../../assets/icons/partial.svg");
+    }
   }
 
   .bc-support.bc-supports-removed-partial {
