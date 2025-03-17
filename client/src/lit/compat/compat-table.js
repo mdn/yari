@@ -409,7 +409,7 @@ class CompatTable extends LitElement {
 
     return icons.length === 0
       ? null
-      : html`<div class="bc-icons" data-test="{icons.length}">
+      : html`<div class="bc-icons">
           ${icons.map(
             (icon) =>
               html`<abbr
