@@ -683,7 +683,7 @@ class CompatTable extends LitElement {
   }
 
   renderTableLegend() {
-    const { browserInfo } = this;
+    const { _browsers: browsers, browserInfo } = this;
 
     if (!browserInfo) {
       throw new Error("Missing browser info");
@@ -695,7 +695,7 @@ class CompatTable extends LitElement {
         Tip: you can click/tap on a cell for more information.
       </p>
       <dl class="bc-legend-items-container">
-        ${getActiveLegendItems(this.data, this.name, browserInfo).map(
+        ${getActiveLegendItems(this.data, this.name, browserInfo, browsers).map(
           ([key, label]) =>
             ["yes", "partial", "no", "unknown", "preview"].includes(key)
               ? html`<div class="bc-legend-item">

@@ -9,7 +9,7 @@ import {
 } from "./utils.js";
 
 /**
- * @import { Browsers, Identifier } from "@mdn/browser-compat-data/types"
+ * @import { BrowserName, Browsers, Identifier } from "@mdn/browser-compat-data/types"
  * @typedef {"yes" | "partial" | "preview" | "no" | "unknown" | "experimental" | "nonstandard" | "deprecated" | "footnote" | "disabled" | "altname" | "prefix" | "more"} LegendKey
  */
 
@@ -39,9 +39,10 @@ export const LEGEND_LABELS = {
  * @param {Identifier} compat - The compatibility data identifier.
  * @param {string} name - The name of the feature.
  * @param {Browsers} browserInfo - Information about browsers.
+ * @param {BrowserName[]} browsers - The list of displayed browsers.
  * @returns {Array<[LegendKey, string]>} An array of legend item entries, where each entry is a tuple of the legend key and its label.
  */
-export function getActiveLegendItems(compat, name, browserInfo) {
+export function getActiveLegendItems(compat, name, browserInfo, browsers) {
   /** @type {Set<LegendKey>} */
   const legendItems = new Set();
 
@@ -60,16 +61,16 @@ export function getActiveLegendItems(compat, name, browserInfo) {
       }
     }
 
-    for (const [browser, browserSupport] of Object.entries(
-      feature.compat.support
-    )) {
+    for (const browser of browsers) {
+      // @ts-ignore
+      const browserSupport = feature.compat.support[browser] ?? {
+        version_added: null,
+      };
+
       if (HIDDEN_BROWSERS.includes(browser)) {
         continue;
       }
-      if (!browserSupport) {
-        legendItems.add("no");
-        continue;
-      }
+
       // @ts-ignore
       const firstSupportItem = getFirst(browserSupport);
       if (hasNoteworthyNotes(firstSupportItem)) {
