@@ -133,17 +133,6 @@ table {
         color: var(--text-primary-green);
       }
     }
-
-    .bc-history {
-      td {
-        border-left-width: 0;
-      }
-
-      .icon.icon-removed-partial {
-        // override icon
-        mask-image: url("../../assets/icons/partial.svg");
-      }
-    }
   }
 
   .bc-supports {

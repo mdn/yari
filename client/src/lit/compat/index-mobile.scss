@@ -28,16 +28,11 @@
     }
 
     .bc-feature,
-    .bc-support > button,
-    .bc-history > td {
+    .bc-support > button {
       align-content: center;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-    }
-
-    .bc-history-desktop {
-      display: none;
     }
   }
 
