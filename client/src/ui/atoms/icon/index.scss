@@ -15,8 +15,9 @@ $icons:
   "twitter-x", "unknown", "warning", "webview", "yes", "yes-circle";
 
 .icon {
+  --color: var(--icon-color, var(--icon-primary));
   --size: var(--icon-size, 1rem);
-  background-color: var(--icon-primary);
+  background-color: var(--color);
   display: inline-block;
   flex-shrink: 0;
   height: var(--size);
@@ -36,7 +37,7 @@ $icons:
 // override un-breaks those.
 svg.icon {
   background: transparent;
-  color: var(--icon-primary);
+  color: var(--color);
 }
 
 .icons-highlighted {
