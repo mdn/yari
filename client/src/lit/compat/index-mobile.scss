@@ -27,6 +27,11 @@
       margin-left: 0.25rem;
     }
 
+    tr:not(:first-of-type) .bc-feature {
+      // Feature separator.
+      border-top: 2px solid var(--border-primary);
+    }
+
     .bc-feature,
     .bc-support > button {
       align-content: center;
