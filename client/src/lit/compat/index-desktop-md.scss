@@ -20,4 +20,9 @@
         calc(75% / var(--browser-count))
       );
   }
+
+  .icon {
+    // Workaround for Icons being cut by 1px at the top.
+    --size: calc(1rem + 1px);
+  }
 }
