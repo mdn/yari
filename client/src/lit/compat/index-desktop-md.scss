@@ -9,6 +9,10 @@
     min-width: initial;
   }
 
+  .bc-on-github {
+    text-align: right;
+  }
+
   .bc-table {
     // 25% for feature, 75% for browser columns.
     grid-template-columns: minmax(25%, max-content) repeat(

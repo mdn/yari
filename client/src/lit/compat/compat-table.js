@@ -180,6 +180,7 @@ class CompatTable extends LitElement {
   renderTable() {
     return html`<figure class="table-container">
       <figure class="table-container-inner">
+        ${this.renderIssueLink()}
         <table
           class="bc-table bc-table-web"
           style="--browser-count: ${Object.keys(this._browsers).length}"
@@ -726,10 +727,7 @@ class CompatTable extends LitElement {
   }
 
   render() {
-    return html`
-      ${this.renderIssueLink()} ${this.renderTable()}
-      ${this.renderTableLegend()}
-    `;
+    return html` ${this.renderTable()} ${this.renderTableLegend()} `;
   }
 }
 
