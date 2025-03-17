@@ -243,7 +243,7 @@ export function isFullySupportedWithoutLimitation(support) {
  * @returns {boolean}
  */
 export function isNotSupportedAtAll(support) {
-  return !support.version_added && !hasLimitation(support);
+  return support.version_added === false && !hasLimitation(support);
 }
 
 /**
