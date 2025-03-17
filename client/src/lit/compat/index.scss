@@ -459,15 +459,15 @@ dl.bc-notes-list {
   }
 }
 
-.bc-supports-no {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-red);
-  }
-}
-
 .bc-supports-partial {
   .bcd-cell-text-copy {
     color: var(--text-primary-yellow);
+  }
+}
+
+.bc-supports-no {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-red);
   }
 }
 
