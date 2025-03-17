@@ -2,7 +2,7 @@
 
 // Style for mobile.
 
-@media (max-width: $screen-sm - 1px) {
+@media (max-width: #{$screen-sm - 0.02}) {
   .bc-table {
     grid-template-columns: auto;
 
