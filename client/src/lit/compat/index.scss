@@ -135,20 +135,6 @@ table {
     }
   }
 
-  .bc-supports {
-    margin-bottom: 1rem;
-
-    .icon-wrap {
-      background: var(--background-primary);
-    }
-  }
-
-  .bc-supports.bc-supports-removed-partial {
-    .bcd-cell-text-copy {
-      color: var(--text-primary-yellow);
-    }
-  }
-
   .icon-wrap {
     .bc-support-level {
       @include visually-hidden;
@@ -169,12 +155,6 @@ table {
     .timeline .icon.icon-removed-partial {
       background-color: var(--icon-primary);
       mask-image: url("../../assets/icons/partial.svg");
-    }
-  }
-
-  .bc-support.bc-supports-removed-partial {
-    .bcd-cell-text-copy {
-      color: var(--text-primary-red);
     }
   }
 
@@ -466,27 +446,41 @@ dl.bc-notes-list {
   gap: 0.25rem;
 }
 
-.bcd-cell-text-copy {
-  color: var(--text-primary);
-  display: flex;
-  gap: 0.5ch;
-}
+.bc-supports {
+  margin-bottom: 1rem;
 
-.bc-supports-yes {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-green);
+  .icon-wrap {
+    background: var(--background-primary);
   }
-}
 
-.bc-supports-no {
   .bcd-cell-text-copy {
-    color: var(--text-primary-red);
+    color: var(--text-primary);
+    display: flex;
+    gap: 0.5ch;
   }
-}
 
-.bc-supports-partial {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-yellow);
+  &.bc-supports-removed-partial {
+    .bcd-cell-text-copy {
+      color: var(--text-primary-red);
+    }
+  }
+
+  &.bc-supports-yes {
+    .bcd-cell-text-copy {
+      color: var(--text-primary-green);
+    }
+  }
+
+  &.bc-supports-no {
+    .bcd-cell-text-copy {
+      color: var(--text-primary-red);
+    }
+  }
+
+  &.bc-supports-partial {
+    .bcd-cell-text-copy {
+      color: var(--text-primary-yellow);
+    }
   }
 }
 
