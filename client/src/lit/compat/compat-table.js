@@ -313,10 +313,12 @@ class CompatTable extends LitElement {
           ${browsers.map((browserName) => {
             // <CompatCell>
             const browser = browserInfo[browserName];
-            const support = compat.support[browserName];
+            const support = compat.support[browserName] ?? {
+              version_added: null,
+            };
 
             const supportClassName = getSupportClassName(support, browser);
-            const notes = support && this.renderNotes(browser, support);
+            const notes = this.renderNotes(browser, support);
 
             return html`<td
               class=${`bc-support bc-browser-${browserName} bc-supports-${supportClassName} ${
