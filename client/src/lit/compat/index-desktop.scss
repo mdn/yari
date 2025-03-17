@@ -110,20 +110,6 @@
     .bc-support-level {
       display: none;
     }
-
-    &[aria-expanded="true"] {
-      position: relative;
-
-      &:after {
-        background: var(--text-primary);
-        bottom: -1px;
-        content: "";
-        height: 2px;
-        left: 0;
-        position: absolute;
-        width: 100%;
-      }
-    }
   }
 
   .bc-has-history {
