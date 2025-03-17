@@ -476,25 +476,34 @@ class CompatTable extends LitElement {
                     typeof item.version_removed === "string";
                   const flags = item.flags || [];
                   return html`
-                    ${hasAddedVersion && `From version ${item.version_added}`}
-                    ${hasRemovedVersion &&
-                    `${hasAddedVersion ? " until" : "Until"} version ${item.version_removed} (exclusive)`}
-                    ${hasAddedVersion || hasRemovedVersion ? ": this" : "This"}
-                    feature is behind the
-                    ${flags.map((flag, i) => {
-                      const valueToSet =
-                        flag.value_to_set &&
-                        html` (needs to be set to
-                          <code>${flag.value_to_set}</code>`;
-                      return html`<code>${flag.name}</code> ${flag.type ===
-                          "preference" && ` preference${valueToSet}`}
-                        ${flag.type === "runtime_flag" &&
-                        ` runtime flag${valueToSet}`}
-                        ${i < flags.length - 1 && " and the "}`;
-                    })}
-                    ${browser.pref_url &&
-                    flags.some((flag) => flag.type === "preference") &&
-                    ` To change preferences in ${browser.name}, visit ${browser.pref_url}.`}
+                    ${[
+                      hasAddedVersion && `From version ${item.version_added}`,
+                      hasRemovedVersion &&
+                        `${hasAddedVersion ? " until" : "Until"} ${item.version_removed} (exclusive)`,
+                      hasAddedVersion || hasRemovedVersion ? ": this" : "This",
+                      " feature is behind the",
+                      ...flags.map((flag, i) => {
+                        const valueToSet = flag.value_to_set
+                          ? html` (needs to be set to
+                              <code>${flag.value_to_set}</code>)`
+                          : "";
+
+                        return [
+                          html`<code>${flag.name}</code>`,
+                          flag.type === "preference" &&
+                            html` preference${valueToSet}`,
+                          flag.type === "runtime_flag" &&
+                            html` runtime flag${valueToSet}`,
+                          i < flags.length - 1 && " and the ",
+                        ].filter(Boolean);
+                      }),
+                      ".",
+                      browser.pref_url &&
+                        flags.some((flag) => flag.type === "preference") &&
+                        ` To change preferences in ${browser.name}, visit ${browser.pref_url}.`,
+                    ]
+                      .filter(Boolean)
+                      .map((value) => html`${value}`)}
                   `;
                 })(),
               }
