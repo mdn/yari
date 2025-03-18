@@ -292,18 +292,26 @@ class CompatTable extends LitElement {
           const { currentTarget } = event;
 
           if (
-            !(activeElement instanceof HTMLElement) ||
-            !(currentTarget instanceof HTMLElement)
+            activeElement instanceof HTMLElement &&
+            currentTarget instanceof HTMLElement
           ) {
-            return;
+            const activeCell = activeElement.closest("td");
+            const currentCell = currentTarget.closest("td");
+
+            if (activeCell === currentCell) {
+              activeElement.blur();
+              event.preventDefault();
+              return;
+            }
           }
 
-          const activeCell = activeElement.closest("td");
-          const currentCell = currentTarget.closest("td");
-
-          if (activeCell === currentCell) {
-            activeElement.blur();
-            event.preventDefault();
+          if (currentTarget instanceof HTMLElement) {
+            // Workaround for Safari, which doesn't focus implicitly.
+            currentTarget.addEventListener(
+              "click",
+              () => currentTarget.focus(),
+              { once: true }
+            );
           }
         };
 
