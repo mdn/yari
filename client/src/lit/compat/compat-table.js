@@ -307,11 +307,7 @@ class CompatTable extends LitElement {
 
           if (currentTarget instanceof HTMLElement) {
             // Workaround for Safari, which doesn't focus implicitly.
-            currentTarget.addEventListener(
-              "click",
-              () => currentTarget.focus(),
-              { once: true }
-            );
+            setTimeout(() => currentTarget.focus(), 0);
           }
         };
 
