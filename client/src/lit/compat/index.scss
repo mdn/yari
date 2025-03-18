@@ -82,9 +82,7 @@ table {
 
   thead {
     line-height: 1;
-    text-orientation: sideways;
     white-space: nowrap;
-    writing-mode: sideways-lr;
   }
 
   // these props allow us to add border-radius to the table.
@@ -258,7 +256,9 @@ table {
 // Row with desktop / mobile icons.
 .bc-platforms {
   th {
-    align-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
   }
 
   td {
@@ -271,9 +271,9 @@ table {
   th {
     align-items: center;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
     gap: 0.25rem;
-    justify-content: start;
+    justify-content: end;
     vertical-align: bottom;
   }
 
