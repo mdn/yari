@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.7.2](https://github.com/mdn/yari/compare/v4.7.1...v4.7.2) (2025-03-18)
+
+
+### Miscellaneous
+
+* **deployer:** remove unused parts ([#12773](https://github.com/mdn/yari/issues/12773)) ([382bd02](https://github.com/mdn/yari/commit/382bd02fa9772f60c5efd02320f5109ede16207f))
+* **deps-dev:** bump @playwright/test from 1.51.0 to 1.51.1 ([#12792](https://github.com/mdn/yari/issues/12792)) ([a4c52bf](https://github.com/mdn/yari/commit/a4c52bf3a260dd1c694cbff9bc5eca4dc4042f34))
+* **deps-dev:** bump @swc/core from 1.11.10 to 1.11.11 ([#12790](https://github.com/mdn/yari/issues/12790)) ([ab80054](https://github.com/mdn/yari/commit/ab80054c2d7c2d20442a8e07ee8ebe5923dc984a))
+* **deps-dev:** bump @swc/core from 1.11.9 to 1.11.10 ([#12785](https://github.com/mdn/yari/issues/12785)) ([f1ef314](https://github.com/mdn/yari/commit/f1ef3145b59af39d1392cff493f4bba9e249c965))
+* **deps-dev:** bump sass from 1.85.1 to 1.86.0 ([#12789](https://github.com/mdn/yari/issues/12789)) ([0c8c288](https://github.com/mdn/yari/commit/0c8c28877ae91362829dd9288c0e76749961771d))
+* **deps:** bump @inquirer/prompts from 7.3.3 to 7.4.0 ([#12781](https://github.com/mdn/yari/issues/12781)) ([5da9424](https://github.com/mdn/yari/commit/5da9424f37db4b06c419fb052d7ec751d81ba40a))
+* **deps:** bump @mdn/browser-compat-data from 5.7.2 to 5.7.3 ([#12783](https://github.com/mdn/yari/issues/12783)) ([1828682](https://github.com/mdn/yari/commit/1828682ed6edccb53fddabfb606eaee45da91791))
+* **deps:** bump @mdn/rari from 0.1.29 to 0.1.30 ([#12784](https://github.com/mdn/yari/issues/12784)) ([c4ecda4](https://github.com/mdn/yari/commit/c4ecda48fcf2ba91eca71435820c44cad8b73f88))
+* **deps:** bump boto3 from 1.37.9 to 1.37.13 in /deployer in the dependencies group ([#12779](https://github.com/mdn/yari/issues/12779)) ([f41f5e1](https://github.com/mdn/yari/commit/f41f5e1171112b1cfbad45c1cbbe98896caa8e59))
+* **deps:** bump pg from 8.14.0 to 8.14.1 ([#12791](https://github.com/mdn/yari/issues/12791)) ([667dbb9](https://github.com/mdn/yari/commit/667dbb98cc36428e72c83987673753edf613b5a5))
+* **deps:** bump web-features from 2.28.0 to 2.29.1 ([#12782](https://github.com/mdn/yari/issues/12782)) ([d5c1ad2](https://github.com/mdn/yari/commit/d5c1ad2d80824af27790548a7c712091e04bee3e))
+
 ## [4.7.1](https://github.com/mdn/yari/compare/v4.7.0...v4.7.1) (2025-03-13)
 
 
