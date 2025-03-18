@@ -861,6 +861,14 @@ kbd {
   white-space: pre;
 }
 
+.css-formal-syntax {
+  margin-bottom: 0;
+
+  ~ footer {
+    font-size: 0.875rem;
+  }
+}
+
 .sidebar-container {
   --offset: var(--sticky-header-with-actions-height);
   --max-height: calc(100vh - var(--offset));
