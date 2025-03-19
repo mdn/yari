@@ -107,29 +107,29 @@ class CompatTable extends LitElement {
     this._browsers = [];
   }
 
-  get breadcrumbs() {
+  get _breadcrumbs() {
     return this.query.split(".");
   }
 
-  get category() {
-    return this.breadcrumbs[0] ?? "";
+  get _category() {
+    return this._breadcrumbs[0] ?? "";
   }
 
-  get name() {
-    return this.breadcrumbs.at(-1) ?? "";
+  get _name() {
+    return this._breadcrumbs.at(-1) ?? "";
   }
 
   connectedCallback() {
     super.connectedCallback();
     this._pathname = window.location.pathname;
     [this._platforms, this._browsers] = gatherPlatformsAndBrowsers(
-      this.category,
+      this._category,
       this.data,
       this.browserInfo
     );
   }
 
-  get issueUrl() {
+  get _issueUrl() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
     const sp = new URLSearchParams();
     const metadata = ISSUE_METADATA_TEMPLATE.replace(
@@ -146,10 +146,10 @@ class CompatTable extends LitElement {
     return `${url}?${sp.toString()}`;
   }
 
-  renderIssueLink() {
+  _renderIssueLink() {
     const onClick = (/** @type {MouseEvent} */ event) => {
       event.preventDefault();
-      window.open(this.issueUrl, "_blank", "noopener,noreferrer");
+      window.open(this._issueUrl, "_blank", "noopener,noreferrer");
     };
     const source_file = this.data.__compat?.source_file;
     return html`<div class="bc-on-github">
@@ -177,27 +177,27 @@ class CompatTable extends LitElement {
     </div>`;
   }
 
-  renderTable() {
+  _renderTable() {
     return html`<figure class="table-container">
       <figure class="table-container-inner">
-        ${this.renderIssueLink()}
+        ${this._renderIssueLink()}
         <table
           class="bc-table bc-table-web"
           style="--browser-count: ${Object.keys(this._browsers).length}"
         >
-          ${this.renderTableHeader()} ${this.renderTableBody()}
+          ${this._renderTableHeader()} ${this._renderTableBody()}
         </table>
       </figure>
     </figure>`;
   }
 
-  renderTableHeader() {
+  _renderTableHeader() {
     return html`<thead>
-      ${this.renderPlatformHeaders()} ${this.renderBrowserHeaders()}
+      ${this._renderPlatformHeaders()} ${this._renderBrowserHeaders()}
     </thead>`;
   }
 
-  renderPlatformHeaders() {
+  _renderPlatformHeaders() {
     const platformsWithBrowsers = this._platforms.map((platform) => ({
       platform,
       browsers: this._browsers.filter(
@@ -231,7 +231,7 @@ class CompatTable extends LitElement {
     </tr>`;
   }
 
-  renderBrowserHeaders() {
+  _renderBrowserHeaders() {
     // <BrowserHeaders>
     return html`<tr class="bc-browsers">
       <td></td>
@@ -251,10 +251,10 @@ class CompatTable extends LitElement {
     </tr>`;
   }
 
-  renderTableBody() {
+  _renderTableBody() {
     // <FeatureListAccordion>
     const { data, _browsers: browsers, browserInfo, locale } = this;
-    const features = listFeatures(data, "", this.name);
+    const features = listFeatures(data, "", this._name);
 
     return html`<tbody>
       ${features.map((feature) => {
@@ -267,7 +267,7 @@ class CompatTable extends LitElement {
 
         let titleNode;
         const titleContent = html`${title}${compat.status &&
-        this.renderStatusIcons(compat.status)}`;
+        this._renderStatusIcons(compat.status)}`;
         if (compat.mdn_url && depth > 0) {
           const href = compat.mdn_url.replace(
             `/${DEFAULT_LOCALE}/docs`,
@@ -323,7 +323,7 @@ class CompatTable extends LitElement {
             };
 
             const supportClassName = getSupportClassName(support, browser);
-            const notes = this.renderNotes(browser, support);
+            const notes = this._renderNotes(browser, support);
 
             return html`<td
               class=${`bc-support bc-browser-${browserName} bc-supports-${supportClassName} ${
@@ -335,7 +335,7 @@ class CompatTable extends LitElement {
                 title=${notes ? "Toggle history" : undefined}
                 @mousedown=${handleMousedown}
               >
-                ${this.renderCellText(support, browser)}
+                ${this._renderCellText(support, browser)}
               </button>
               ${notes &&
               html`<div class="timeline" tabindex="0">
@@ -351,18 +351,18 @@ class CompatTable extends LitElement {
   /**
    * @param {SupportStatement} support
    */
-  renderCellIcons(support) {
+  _renderCellIcons(support) {
     const supportItem = getCurrentSupport(support);
     if (!supportItem) {
       return null;
     }
 
     const icons = [
-      supportItem.prefix && this.renderIcon("prefix"),
-      hasNoteworthyNotes(supportItem) && this.renderIcon("footnote"),
-      supportItem.alternative_name && this.renderIcon("altname"),
-      supportItem.flags && this.renderIcon("disabled"),
-      hasMore(support) && this.renderIcon("more"),
+      supportItem.prefix && this._renderIcon("prefix"),
+      hasNoteworthyNotes(supportItem) && this._renderIcon("footnote"),
+      supportItem.alternative_name && this._renderIcon("altname"),
+      supportItem.flags && this._renderIcon("disabled"),
+      hasMore(support) && this._renderIcon("more"),
     ].filter(Boolean);
 
     return icons.length ? html`<div class="bc-icons">${icons}</div>` : null;
@@ -372,7 +372,7 @@ class CompatTable extends LitElement {
    * @param {string} name
    * @returns {TemplateResult}
    */
-  renderIcon(name) {
+  _renderIcon(name) {
     const title = name in LEGEND_LABELS ? LEGEND_LABELS[name] : name;
 
     return html`<abbr class="only-icon" title=${ifDefined(title)}>
@@ -384,7 +384,7 @@ class CompatTable extends LitElement {
   /**
    * @param {StatusBlock} status
    */
-  renderStatusIcons(status) {
+  _renderStatusIcons(status) {
     // <StatusIcons>
     /**
      * @type {StatusIcon[]}
@@ -434,7 +434,7 @@ class CompatTable extends LitElement {
    * @param {BrowserStatement} browser
    * @param {SupportStatement} support
    */
-  renderNotes(browser, support) {
+  _renderNotes(browser, support) {
     return asList(support)
       .slice()
       .reverse()
@@ -568,11 +568,11 @@ class CompatTable extends LitElement {
                 browser
               )} bc-supports`}
             >
-              ${this.renderCellText(item, browser, true)}
+              ${this._renderCellText(item, browser, true)}
             </dt>
             ${filteredSupportNotes.map(({ iconName, label }) => {
               return html`<dd class="bc-supports-dd">
-                ${this.renderIcon(iconName)}${typeof label === "string"
+                ${this._renderIcon(iconName)}${typeof label === "string"
                   ? html`<span>${unsafeHTML(label)}</span>`
                   : label}
               </dd>`;
@@ -590,7 +590,7 @@ class CompatTable extends LitElement {
    * @param {BrowserStatement} browser
    * @param {boolean} [timeline]
    */
-  renderCellText(support, browser, timeline = false) {
+  _renderCellText(support, browser, timeline = false) {
     const currentSupport = getCurrentSupport(support);
 
     const added = currentSupport?.version_added ?? null;
@@ -695,11 +695,11 @@ class CompatTable extends LitElement {
             : ""}
         </span>
       </div>
-      ${support && this.renderCellIcons(support)}
+      ${support && this._renderCellIcons(support)}
     </div>`;
   }
 
-  renderTableLegend() {
+  _renderTableLegend() {
     const { _browsers: browsers, browserInfo } = this;
 
     if (!browserInfo) {
@@ -712,38 +712,42 @@ class CompatTable extends LitElement {
         Tip: you can click/tap on a cell for more information.
       </p>
       <dl class="bc-legend-items-container">
-        ${getActiveLegendItems(this.data, this.name, browserInfo, browsers).map(
-          ([key, label]) =>
-            ["yes", "partial", "no", "unknown", "preview"].includes(key)
-              ? html`<div class="bc-legend-item">
-                  <dt class="bc-legend-item-dt">
-                    <span class=${`bc-supports-${key} bc-supports`}>
-                      <abbr
-                        class=${`bc-level bc-level-${key} icon icon-${key}`}
-                        title=${label}
-                      >
-                        <span class="visually-hidden">${label}</span>
-                      </abbr>
-                    </span>
-                  </dt>
-                  <dd class="bc-legend-item-dd">${label}</dd>
-                </div>`
-              : html`<div class="bc-legend-item">
-                  <dt class="bc-legend-item-dt">
+        ${getActiveLegendItems(
+          this.data,
+          this._name,
+          browserInfo,
+          browsers
+        ).map(([key, label]) =>
+          ["yes", "partial", "no", "unknown", "preview"].includes(key)
+            ? html`<div class="bc-legend-item">
+                <dt class="bc-legend-item-dt">
+                  <span class=${`bc-supports-${key} bc-supports`}>
                     <abbr
-                      class="legend-icons icon icon-${key}"
+                      class=${`bc-level bc-level-${key} icon icon-${key}`}
                       title=${label}
-                    ></abbr>
-                  </dt>
-                  <dd class="bc-legend-item-dd">${label}</dd>
-                </div>`
+                    >
+                      <span class="visually-hidden">${label}</span>
+                    </abbr>
+                  </span>
+                </dt>
+                <dd class="bc-legend-item-dd">${label}</dd>
+              </div>`
+            : html`<div class="bc-legend-item">
+                <dt class="bc-legend-item-dt">
+                  <abbr
+                    class="legend-icons icon icon-${key}"
+                    title=${label}
+                  ></abbr>
+                </dt>
+                <dd class="bc-legend-item-dd">${label}</dd>
+              </div>`
         )}
       </dl>
     </section>`;
   }
 
   render() {
-    return html` ${this.renderTable()} ${this.renderTableLegend()} `;
+    return html` ${this._renderTable()} ${this._renderTableLegend()} `;
   }
 }
 
