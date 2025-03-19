@@ -1,16 +1,6 @@
 /**
  * @import { SimpleSupportStatement, VersionValue, CompatStatement, Identifier, SupportStatement, BrowserStatement } from "@mdn/browser-compat-data/types"
- * @typedef {SimpleSupportStatementExtended | SimpleSupportStatementExtended[]} SupportStatementExtended
- */
-
-/**
- * Extended for the fields, beyond the bcd types, that are extra-added exclusively in Yari.
- *
- * Inherits all properties from SimpleSupportStatement.
- *
- * @typedef {SimpleSupportStatement} SimpleSupportStatementExtended
- * @property {string} [release_date] - Known for some support statements where the browser version is known.
- * @property {VersionValue} [version_last] - The version before the version_removed if the version removed is known.
+ * @import { SupportStatementExtended, SimpleSupportStatementExtended } from "./types"
  */
 
 /**
@@ -33,8 +23,8 @@ export const HIDDEN_BROWSERS = ["ie"];
  * Gets the first element of an array or returns the value itself.
  *
  * @template T
- * @param {T | [T, ...any[]]} a
- * @returns {T}
+ * @param {T | [T?, ...any[]]} a
+ * @returns {T | undefined}
  */
 export function getFirst(a) {
   return Array.isArray(a) ? a[0] : a;
@@ -308,6 +298,5 @@ export function getCurrentSupport(support) {
   if (noSupportItem) return noSupportItem;
 
   // Default (likely never reached).
-  // @ts-ignore
   return getFirst(support);
 }

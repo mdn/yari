@@ -62,7 +62,6 @@ export function getActiveLegendItems(compat, name, browserInfo, browsers) {
     }
 
     for (const browser of browsers) {
-      // @ts-ignore
       const browserSupport = feature.compat.support[browser] ?? {
         version_added: null,
       };
@@ -71,9 +70,8 @@ export function getActiveLegendItems(compat, name, browserInfo, browsers) {
         continue;
       }
 
-      // @ts-ignore
       const firstSupportItem = getFirst(browserSupport);
-      if (hasNoteworthyNotes(firstSupportItem)) {
+      if (firstSupportItem && hasNoteworthyNotes(firstSupportItem)) {
         legendItems.add("footnote");
       }
 
@@ -82,7 +80,6 @@ export function getActiveLegendItems(compat, name, browserInfo, browsers) {
           if (versionSupport.flags && versionSupport.flags.length) {
             legendItems.add("no");
           } else if (
-            // @ts-ignore
             versionIsPreview(versionSupport.version_added, browserInfo[browser])
           ) {
             legendItems.add("preview");
@@ -115,10 +112,7 @@ export function getActiveLegendItems(compat, name, browserInfo, browsers) {
     }
   }
 
-  /**
-   * @type {any[]}
-   */
-  const keys = Object.keys(LEGEND_LABELS);
+  const keys = /** @type {LegendKey[]} */ (Object.keys(LEGEND_LABELS));
 
   return keys
     .filter((key) => legendItems.has(key))

@@ -3,7 +3,7 @@ import { html } from "lit";
 
 /**
  * @import { BrowserStatement } from "@mdn/browser-compat-data/types"
- * @import { SupportStatementExtended } from "./utils.js"
+ * @import { SupportStatementExtended } from "./types"
  * @typedef {"no"|"yes"|"partial"|"preview"|"removed-partial"|"unknown"} SupportClassName
  */
 
@@ -101,6 +101,5 @@ export function getSupportBrowserReleaseDate(support) {
     return undefined;
   }
 
-  // @ts-ignore
   return getCurrentSupport(support)?.release_date;
 }
