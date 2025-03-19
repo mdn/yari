@@ -99,7 +99,7 @@ class CompatTable extends LitElement {
     /** @type {Browsers} */
     // @ts-ignore
     this.browserInfo = {};
-    this.locale = ""; // TODO
+    this.locale = "";
     this._pathname = "";
     /** @type {string[]} */
     this._platforms = [];
