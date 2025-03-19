@@ -165,7 +165,7 @@ class CompatTable extends LitElement {
       >${source_file
         ? html` •
             <a
-              className="bc-github-link external external-icon"
+              class="bc-github-link external external-icon"
               href=${`https://github.com/mdn/browser-compat-data/tree/main/${source_file}`}
               target="_blank"
               rel="noopener noreferrer"
