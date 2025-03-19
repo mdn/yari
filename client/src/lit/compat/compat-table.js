@@ -1,4 +1,7 @@
 import { html, LitElement } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
+
 import { getActiveLegendItems } from "./legend.js";
 import {
   asList,
@@ -14,7 +17,6 @@ import {
 } from "./utils.js";
 
 import styles from "./index.scss?css" with { type: "css" };
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { DEFAULT_LOCALE } from "../../../../libs/constants/index.js";
 import { BCD_TABLE } from "../../telemetry/constants.ts";
 import {
@@ -23,7 +25,6 @@ import {
   labelFromString,
   versionLabelFromSupport,
 } from "./feature-row.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @import { TemplateResult } from "lit"
@@ -332,7 +333,7 @@ class CompatTable extends LitElement {
             >
               <button
                 type="button"
-                title=${notes ? "Toggle history" : undefined}
+                title=${ifDefined(notes && "Toggle history")}
                 @mousedown=${handleMousedown}
               >
                 ${this._renderCellText(support, browser)}
