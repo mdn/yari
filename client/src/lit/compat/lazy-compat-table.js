@@ -8,14 +8,12 @@ import "./compat-table.js";
 
 class LazyCompatTable extends LitElement {
   static properties = {
-    _id: {},
     query: {},
     locale: {},
   };
 
   constructor() {
     super();
-    this._id = "";
     this.query = "";
     this.locale = "";
   }

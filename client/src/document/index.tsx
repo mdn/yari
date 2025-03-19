@@ -276,7 +276,7 @@ export function RenderDocumentBody({ doc }) {
         <Suspense fallback={<Spinner />} key={`browser_compatibility${i}`}>
           {title && !isH3 && <DisplayH2 id={id} title={title} />}
           {title && isH3 && <DisplayH3 id={id} title={title} />}
-          <LazyCompatTable _id={id} query={query} locale={locale} />
+          <LazyCompatTable query={query} locale={locale} />
         </Suspense>
       );
     } else if (section.type === "specifications") {
