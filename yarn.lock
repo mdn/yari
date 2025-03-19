@@ -6909,13 +6909,13 @@ eslint-plugin-unicorn@^56.0.1:
     semver "^7.6.3"
     strip-indent "^3.0.0"
 
-eslint-plugin-wc@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-wc/-/eslint-plugin-wc-2.2.1.tgz#b10feec2fde1ed4f28b47b4d722a73483d00effb"
-  integrity sha512-KstLqGmyQz088DvFlDYHg0sHih+w2QeulreCi1D1ftr357klO2zqHdG/bbnNMmuQdVFDuNkopNIyNhmG0XCT/g==
+eslint-plugin-wc@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-wc/-/eslint-plugin-wc-3.0.0.tgz#81ab3f137ea41099a0f1460826db5b1cd4055c1a"
+  integrity sha512-TVbwa4ytaKoUGCCAG14+FPDF3v4nGoPcEOd4kjN2MLZ2NTo1lHUs7HsVaiwC0ReKQVivJ7+v6d7u0GYu1c6GJQ==
   dependencies:
     is-valid-element-name "^1.0.0"
-    js-levenshtein-esm "^1.2.0"
+    js-levenshtein-esm "^2.0.0"
 
 eslint-scope@5.1.1, eslint-scope@^5.1.1:
   version "5.1.1"
@@ -9943,10 +9943,10 @@ jiti@^1.20.0:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.21.6.tgz#6c7f7398dd4b3142767f9a168af2f317a428d268"
   integrity sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==
 
-js-levenshtein-esm@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/js-levenshtein-esm/-/js-levenshtein-esm-1.2.0.tgz#96532c34e0c90df198c9419963c64ca3cf43ae92"
-  integrity sha512-fzreKVq1eD7eGcQr7MtRpQH94f8gIfhdrc7yeih38xh684TNMK9v5aAu2wxfIRMk/GpAJRrzcirMAPIaSDaByQ==
+js-levenshtein-esm@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/js-levenshtein-esm/-/js-levenshtein-esm-2.0.0.tgz#a878b18af18815177b77cc6af14ed415fa59de87"
+  integrity sha512-1n4LEPOL4wRXY8rOQcuA7Iuaphe5xCMayvufCzlLAi+hRsnBRDbSS6XPuV58CBVJxj5D9ApFLyjQ7KzFToyHBw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
