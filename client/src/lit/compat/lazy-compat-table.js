@@ -6,6 +6,11 @@ import React from "react";
 import { BCD_BASE_URL } from "../../env.ts";
 import "./compat-table.js";
 
+/**
+ * @import { Browsers, Identifier } from "@mdn/browser-compat-data/types"
+ * @typedef {{data: Identifier, browsers: Browsers}} Compat
+ */
+
 class LazyCompatTable extends LitElement {
   static properties = {
     query: {},
@@ -33,22 +38,27 @@ class LazyCompatTable extends LitElement {
         console.error("Failed to fetch BCD data:", response);
         throw new Error(response.statusText);
       }
-      return response.json();
+      return /** @type {Promise<Compat>} */ response.json();
     },
   });
 
   render() {
     return this._dataTask.render({
       pending: () => html`<p>Loading...</p>`,
-      complete: (compat) =>
-        compat
-          ? html`<compat-table
-              query=${this.query}
-              locale=${this.locale}
-              .data=${compat.data}
-              .browserInfo=${compat.browsers}
-            ></compat-table>`
-          : html`<p>No compatibility data found</p>`,
+
+      complete:
+        /**
+         * @param {Compat} compat
+         */
+        (compat) =>
+          compat
+            ? html`<compat-table
+                query=${this.query}
+                locale=${this.locale}
+                .data=${compat.data}
+                .browserInfo=${compat.browsers}
+              ></compat-table>`
+            : html`<p>No compatibility data found</p>`,
       error: (error) => html`<p>Error loading data: <code>${error}</code></p>`,
     });
   }
