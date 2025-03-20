@@ -197,8 +197,12 @@ table {
     border-left: 15px solid var(--border-primary);
   }
 
-  .bc-has-history:not(:focus-within) .timeline {
+  .timeline {
     display: none;
+  }
+
+  .bc-has-history:focus-within .timeline {
+    display: initial;
   }
 }
 
