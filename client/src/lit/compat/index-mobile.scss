@@ -1,0 +1,51 @@
+@use "../../ui/vars" as *;
+
+// Style for mobile.
+
+@media (max-width: #{$screen-sm - 0.02}) {
+  .bc-table {
+    grid-template-columns: auto;
+
+    thead {
+      display: none;
+    }
+
+    tr {
+      td.bc-support {
+        border: none;
+        border-top: 1px solid var(--border-primary);
+        display: block;
+
+        &:last-child {
+          border-bottom: 1px solid var(--border-primary);
+        }
+      }
+    }
+
+    .timeline {
+      // Align timeline icons with summary icon.
+      margin-left: 0.25rem;
+    }
+
+    tr:not(:first-of-type) .bc-feature {
+      // Feature separator.
+      border-top: 2px solid var(--border-primary);
+    }
+
+    .bc-feature,
+    .bc-support > button {
+      align-content: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+
+  .bc-on-github a {
+    white-space: nowrap;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+}
