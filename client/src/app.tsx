@@ -40,7 +40,9 @@ import { useGA } from "./ga-context";
 if (!("adoptedStyleSheets" in Document.prototype)) {
   // Polyfill for CSSStyleSheet() constructor.
   // Required for webpack css-loader exportType "css-style-sheet".
-  import("construct-style-sheets-polyfill");
+  import(
+    /* webpackChunkName: "construct-style-sheets-polyfill" */ "construct-style-sheets-polyfill"
+  );
 }
 
 const AllFlaws = React.lazy(() => import("./flaws"));
