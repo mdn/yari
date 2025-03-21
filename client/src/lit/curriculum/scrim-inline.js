@@ -52,6 +52,7 @@ export class ScrimInline extends LitElement {
       if (this.url) {
         const url = new URL(this.url);
         url.searchParams.set("via", "mdn");
+        url.searchParams.set("embed", "");
         this._fullUrl = url.toString();
 
         this._scrimId = url.pathname.slice(1);
