@@ -369,7 +369,6 @@ function config(webpackEnv) {
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
-                  exportType: "css-style-sheet",
                 },
                 "sass-loader",
                 false
