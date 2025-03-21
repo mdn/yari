@@ -28,16 +28,14 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
 export function withRunnerResponseHeaders(req, res) {
   const headers = new Headers({
     "x-content-type-options": "nosniff",
-    "clear-site-data": '"cache", "cookies", "storage"',
+    // Clear-Site-Data: cache` is slow in Chrome (https://crbug.com/40233601).
+    // See: https://github.com/mdn/yari/issues/12775
+    "clear-site-data": req.headers["user-agent"]?.includes("Chrome/")
+      ? '"cookies", "storage"'
+      : '"cache", "cookies", "storage"',
     "strict-transport-security": "max-age=63072000",
     "content-security-policy": PLAYGROUND_UNSAFE_CSP_VALUE,
   });
-
-  // Workaround for https://crbug.com/40233601.
-  // See: https://github.com/mdn/yari/issues/12775
-  if (req.headers["user-agent"]?.includes("Chrome/")) {
-    headers.delete("clear-site-data");
-  }
 
   res.setHeaders(headers);
 }
