@@ -37,7 +37,11 @@ import { Newsletter } from "./newsletter";
 import { Curriculum } from "./curriculum";
 import { useGA } from "./ga-context";
 
-import "construct-style-sheets-polyfill";
+if (!("adoptedStyleSheets" in Document.prototype)) {
+  // Polyfill for CSSStyleSheet() constructor.
+  // Required for webpack css-loader exportType "css-style-sheet".
+  import("construct-style-sheets-polyfill");
+}
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
