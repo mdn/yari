@@ -13,8 +13,7 @@
   },
   "browserslist": {
     "production": [
-      "defaults",
-      "IE 8"
+      ">0.2%",
     ],
     "development": [
       "last 1 chrome version",
