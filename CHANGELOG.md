@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.8.0](https://github.com/mdn/yari/compare/v4.7.2...v4.8.0) (2025-03-22)
+
+
+### Features
+
+* **compat:** migrate BCD table to Web Component ([#12580](https://github.com/mdn/yari/issues/12580)) ([1944a86](https://github.com/mdn/yari/commit/1944a867adac86286b7ec7f6f42fb65b372a301d))
+
+
+### Bug Fixes
+
+* **compat:** refine BCD table style ([#12808](https://github.com/mdn/yari/issues/12808)) ([ae1c174](https://github.com/mdn/yari/commit/ae1c174bfd305d55ff605a17ed940d0cbab0e833))
+* **interactive-example:** select choice on focus ([#12777](https://github.com/mdn/yari/issues/12777)) ([2d55e51](https://github.com/mdn/yari/commit/2d55e51a895df0a4ae980d2fdb4075ccab695078))
+* **libs/play:** avoid `clear-site-data: cache` in Chrome browsers ([#12803](https://github.com/mdn/yari/issues/12803)) ([c3d57d9](https://github.com/mdn/yari/commit/c3d57d90132017efb3ddd800fb52b3bcd8b4bfe9))
+* **lit:** polyfill Constructable Stylesheet Objects ([#12811](https://github.com/mdn/yari/issues/12811)) ([399970d](https://github.com/mdn/yari/commit/399970d54d7d3c9f7c1125a3fe57e1443dee27b7))
+* **tables:** backport table-container css ([#12816](https://github.com/mdn/yari/issues/12816)) ([b5b37a8](https://github.com/mdn/yari/commit/b5b37a8c15b1526fd895fb1d92728fa93e0c7a65))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 18.19.80 to 18.19.81 in the types group ([#12812](https://github.com/mdn/yari/issues/12812)) ([d88f702](https://github.com/mdn/yari/commit/d88f7022b93a72214399f28da11b39dfd06e5f9b))
+* **deps-dev:** bump react-router-dom from 7.3.0 to 7.4.0 ([#12807](https://github.com/mdn/yari/issues/12807)) ([c43db7d](https://github.com/mdn/yari/commit/c43db7d6e6883f4b85790aaafe4e40f317f0eb43))
+* **deps-dev:** bump typescript-eslint from 8.26.1 to 8.27.0 ([#12805](https://github.com/mdn/yari/issues/12805)) ([2d34c05](https://github.com/mdn/yari/commit/2d34c059e8bf4a82f12ffabf06a9ccfc47b17be4))
+* **deps:** bump @mdn/browser-compat-data from 5.7.3 to 5.7.4 ([#12801](https://github.com/mdn/yari/issues/12801)) ([a3ba371](https://github.com/mdn/yari/commit/a3ba3713f73d05fc59895924c54b14ec775ada89))
+* **deps:** bump openai from 4.87.3 to 4.87.4 ([#12799](https://github.com/mdn/yari/issues/12799)) ([13bc013](https://github.com/mdn/yari/commit/13bc013e404c9018f603b617c0cb2bfe74401fdb))
+* **deps:** bump openai from 4.87.4 to 4.88.0 ([#12806](https://github.com/mdn/yari/issues/12806)) ([fe62c00](https://github.com/mdn/yari/commit/fe62c004803169e49a944abc5dfd105ba5bd9590))
+* **deps:** bump openai from 4.88.0 to 4.89.0 ([#12813](https://github.com/mdn/yari/issues/12813)) ([858c2d1](https://github.com/mdn/yari/commit/858c2d1f88e1d6a4367a1b0b55c9aaae82000dde))
+* **scrim:** add embed parameter ([#12815](https://github.com/mdn/yari/issues/12815)) ([3507171](https://github.com/mdn/yari/commit/35071719089b32a1ddda229d5799b2ae35a8a24e))
+
 ## [4.7.2](https://github.com/mdn/yari/compare/v4.7.1...v4.7.2) (2025-03-18)
 
 
