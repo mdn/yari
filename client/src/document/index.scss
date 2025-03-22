@@ -1030,12 +1030,6 @@ html[lang="zh-TW"] a.only-in-en-us:after {
   .table-container {
     width: calc(100% + 6rem);
   }
-
-  .bc-table {
-    tbody th {
-      width: 20%;
-    }
-  }
 }
 
 @media (min-width: $screen-xl) {
