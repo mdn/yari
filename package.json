@@ -104,7 +104,7 @@
     "compute-baseline": "^0.3.0",
     "concurrently": "^9.1.2",
     "construct-style-sheets-polyfill": "^3.1.0",
-    "cookie": "^0.7.2",
+    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "cross-spawn": "^7.0.6",
     "css-tree": "^2.3.1",
