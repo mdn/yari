@@ -548,11 +548,17 @@ class CompatTable extends LitElement {
                   iconName: "footnote",
                   label: "No support",
                 }
-              : {
-                  iconName: "unknown",
-                  label: "Support unknown",
-                },
-        ].flat();
+              : null,
+        ]
+          .flat()
+          .filter(Boolean);
+
+        if (supportNotes.length === 0) {
+          supportNotes.push({
+            iconName: "unknown",
+            label: "Support unknown",
+          });
+        }
 
         /**
          * @type {Array<{iconName: string; label: string | TemplateResult }>}
