@@ -139,7 +139,7 @@
     "mdn-data": "^2.18.0",
     "open": "^10.1.0",
     "open-editor": "^5.1.0",
-    "openai": "^4.89.0",
+    "openai": "^4.89.1",
     "pg": "^8.14.1",
     "pgvector": "^0.2.0",
     "prism-svelte": "^0.5.0",
