@@ -2,10 +2,15 @@ import "./index.scss";
 import {
   FXA_SIGNIN_URL,
   MDN_PLUS_SUBSCRIBE_10M_URL,
+  MDN_PLUS_SUBSCRIBE_10M_URL_SP3,
   MDN_PLUS_SUBSCRIBE_10Y_URL,
+  MDN_PLUS_SUBSCRIBE_10Y_URL_SP3,
   MDN_PLUS_SUBSCRIBE_5M_URL,
+  MDN_PLUS_SUBSCRIBE_5M_URL_SP3,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
+  MDN_PLUS_SUBSCRIBE_5Y_URL_SP3,
   MDN_PLUS_SUBSCRIBE_BASE,
+  MDN_PLUS_USE_SP3,
 } from "../../../env";
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
@@ -112,12 +117,16 @@ const PLUS_5: OfferDetailsProps = {
   upgradeCta: "Upgrade to Plus 5",
   regular: {
     subscriptionType: SubscriptionType.MDN_PLUS_5M,
-    ctaLink: MDN_PLUS_SUBSCRIBE_5M_URL,
+    ctaLink: MDN_PLUS_USE_SP3
+      ? MDN_PLUS_SUBSCRIBE_5M_URL_SP3
+      : MDN_PLUS_SUBSCRIBE_5M_URL,
     monthlyPrice: 500,
   },
   discounted: {
     subscriptionType: SubscriptionType.MDN_PLUS_5Y,
-    ctaLink: MDN_PLUS_SUBSCRIBE_5Y_URL,
+    ctaLink: MDN_PLUS_USE_SP3
+      ? MDN_PLUS_SUBSCRIBE_5Y_URL_SP3
+      : MDN_PLUS_SUBSCRIBE_5Y_URL,
     monthlyPrice: 417,
   },
 };
@@ -136,12 +145,16 @@ const PLUS_10: OfferDetailsProps = {
   upgradeCta: "Upgrade to Supporter 10",
   regular: {
     subscriptionType: SubscriptionType.MDN_PLUS_10M,
-    ctaLink: MDN_PLUS_SUBSCRIBE_10M_URL,
+    ctaLink: MDN_PLUS_USE_SP3
+      ? MDN_PLUS_SUBSCRIBE_10M_URL_SP3
+      : MDN_PLUS_SUBSCRIBE_10M_URL,
     monthlyPrice: 1000,
   },
   discounted: {
     subscriptionType: SubscriptionType.MDN_PLUS_10Y,
-    ctaLink: MDN_PLUS_SUBSCRIBE_10Y_URL,
+    ctaLink: MDN_PLUS_USE_SP3
+      ? MDN_PLUS_SUBSCRIBE_10Y_URL_SP3
+      : MDN_PLUS_SUBSCRIBE_10Y_URL,
     monthlyPrice: 833,
   },
 };
@@ -277,12 +290,16 @@ function getLocalizedPlans(countrySpecific: StripePlans): {
       currency: countrySpecific.currency,
       regular: {
         ...PLUS_5.regular,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"].id}`,
+        ctaLink: MDN_PLUS_USE_SP3
+          ? MDN_PLUS_SUBSCRIBE_5M_URL_SP3
+          : `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_5m"].monthlyPriceInCents,
       },
       discounted: {
         ...PLUS_5.discounted,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"].id}`,
+        ctaLink: MDN_PLUS_USE_SP3
+          ? MDN_PLUS_SUBSCRIBE_5Y_URL_SP3
+          : `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_5y"].monthlyPriceInCents,
       },
     },
@@ -291,12 +308,16 @@ function getLocalizedPlans(countrySpecific: StripePlans): {
       currency: countrySpecific.currency,
       regular: {
         ...PLUS_10.regular,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"].id}`,
+        ctaLink: MDN_PLUS_USE_SP3
+          ? MDN_PLUS_SUBSCRIBE_10M_URL_SP3
+          : `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_10m"].monthlyPriceInCents,
       },
       discounted: {
         ...PLUS_10.discounted,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"].id}`,
+        ctaLink: MDN_PLUS_USE_SP3
+          ? MDN_PLUS_SUBSCRIBE_10Y_URL_SP3
+          : `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_10y"].monthlyPriceInCents,
       },
     },
