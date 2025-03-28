@@ -160,10 +160,13 @@ function SurveyDisplay({
     return null;
   }
 
+  const teaser = { __html: survey.teaser };
+  const question = { __html: survey.question };
+
   return (
     <div className="document-survey">
       <div className="survey-header">
-        <div className="survey-teaser">{survey.teaser}</div>
+        <div className="survey-teaser" dangerouslySetInnerHTML={teaser}></div>
 
         <div className="survey-dismiss">
           <button
@@ -177,7 +180,7 @@ function SurveyDisplay({
         </div>
       </div>
       <details className="survey-container" ref={details}>
-        <summary>{survey.question}</summary>
+        <summary dangerouslySetInnerHTML={question}></summary>
 
         {state.opened_at && (
           <iframe
