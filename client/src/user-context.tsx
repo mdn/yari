@@ -83,16 +83,12 @@ export type User = {
     country: string;
     country_iso: string;
   };
-  maintenance?: string;
   settings: null | UserPlusSettings;
   offlineSettings: null | OfflineSettingsData;
   mutate: () => void;
 };
 
-export type UserData =
-  | User
-  | (Partial<User> & { maintenance: string })
-  | undefined;
+export type UserData = User | undefined;
 
 export const UserDataContext = React.createContext<UserData>(undefined);
 
@@ -105,7 +101,7 @@ export const UserDataContext = React.createContext<UserData>(undefined);
 // "forever".
 const SESSION_STORAGE_KEY = "whoami";
 
-function getSessionStorageData() {
+function getSessionStorageData(): UserData {
   try {
     const data = sessionStorage.getItem(SESSION_STORAGE_KEY);
     if (data) {
@@ -226,7 +222,6 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
           country_iso:
             (data.geo && data.geo.country_iso) || DEFAULT_GEO_COUNTRY_ISO,
         },
-        maintenance: data.maintenance,
         settings,
         offlineSettings: null,
         mutate,
@@ -271,11 +266,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   const userData = isLoading
     ? getSessionStorageData()
     : error || !data
-      ? {
+      ? ({
           ...getSessionStorageData(),
           ...data,
-          maintenance: `The API is down for maintenance. You can continue to browse the MDN Web Docs, but MDN Plus and Search might not be available. Thank you for your patience!`,
-        }
+        } as UserData)
       : data;
 
   return (
