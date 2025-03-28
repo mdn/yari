@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.8.1](https://github.com/mdn/yari/compare/v4.8.0...v4.8.1) (2025-03-28)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/eslint-parser from 7.26.10 to 7.27.0 ([#12824](https://github.com/mdn/yari/issues/12824)) ([712deeb](https://github.com/mdn/yari/commit/712deebf183e03c0e7ce0fbb92f4867e03920324))
+* **deps-dev:** bump @types/node from 18.19.83 to 18.19.84 in the types group ([#12834](https://github.com/mdn/yari/issues/12834)) ([a5bceff](https://github.com/mdn/yari/commit/a5bceff3976acf1b8c36245e89d4839ae4b430c7))
+* **deps-dev:** bump typescript-eslint from 8.27.0 to 8.28.0 ([#12826](https://github.com/mdn/yari/issues/12826)) ([50b0ccc](https://github.com/mdn/yari/commit/50b0ccc882f834141e41f61bf1fc0cfc08c799a2))
+* **deps-dev:** bump webpack-dev-server from 5.2.0 to 5.2.1 ([#12837](https://github.com/mdn/yari/issues/12837)) ([93e2d69](https://github.com/mdn/yari/commit/93e2d6989b2e6150ff9312ea72c2c18194d997bd))
+* **deps:** bump @mdn/bcd-utils-api from 0.0.7 to 0.0.8 ([#12832](https://github.com/mdn/yari/issues/12832)) ([683d894](https://github.com/mdn/yari/commit/683d89491a88d1ad2b7da35997015c37c3b96e4b))
+* **deps:** bump @mdn/browser-compat-data from 5.7.5 to 5.7.6 ([#12828](https://github.com/mdn/yari/issues/12828)) ([b21bfb7](https://github.com/mdn/yari/commit/b21bfb7487d3cac1c62d39bc7535a480e7b4021a))
+* **deps:** bump @mdn/browser-compat-data from 5.7.6 to 6.0.0 ([#12831](https://github.com/mdn/yari/issues/12831)) ([29c6369](https://github.com/mdn/yari/commit/29c636921f4e42a0c6c52eb90b13947319322607))
+* **deps:** bump @mdn/rari from 0.1.30 to 0.1.31 ([#12829](https://github.com/mdn/yari/issues/12829)) ([e696f9a](https://github.com/mdn/yari/commit/e696f9a428ef7766ad47683c965fd0293e55d8d8))
+* **deps:** bump mozilla-actions/sccache-action from 0.0.8 to 0.0.9 ([#12838](https://github.com/mdn/yari/issues/12838)) ([5bdaa65](https://github.com/mdn/yari/commit/5bdaa65dd57152ec81a69c1c031111b16b400364))
+* **deps:** bump openai from 4.89.0 to 4.89.1 ([#12835](https://github.com/mdn/yari/issues/12835)) ([591ee24](https://github.com/mdn/yari/commit/591ee24c9cb5c21c12bc8d77a5cce96240c98744))
+* **deps:** bump openai from 4.89.1 to 4.90.0 ([#12840](https://github.com/mdn/yari/issues/12840)) ([cc37844](https://github.com/mdn/yari/commit/cc37844afff661040f86d8dc38d020e3c010eaaf))
+* **deps:** bump send from 1.1.0 to 1.2.0 ([#12836](https://github.com/mdn/yari/issues/12836)) ([a6a2953](https://github.com/mdn/yari/commit/a6a2953742b58d0b6527db7e9aeb1358c73a001b))
+* **deps:** bump web-features from 2.29.1 to 2.30.0 ([#12830](https://github.com/mdn/yari/issues/12830)) ([d8dd256](https://github.com/mdn/yari/commit/d8dd256d3a11676a823e2d6e902f360702935541))
+* **deps:** bump web-specs from 3.43.0 to 3.44.0 ([#12825](https://github.com/mdn/yari/issues/12825)) ([1231c3c](https://github.com/mdn/yari/commit/1231c3c700480171555240c230e7a024eb285009))
+
 ## [4.8.0](https://github.com/mdn/yari/compare/v4.7.2...v4.8.0) (2025-03-24)
 
 
