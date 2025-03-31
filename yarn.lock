@@ -13082,10 +13082,10 @@ react-modal@^3.16.3:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
-react-refresh@^0.16:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.16.0.tgz#e7d45625f05c9709466d09348a25d22f79b2ad23"
-  integrity sha512-FPvF2XxTSikpJxcr+bHut2H4gJ17+18Uy20D5/F+SKzFap62R3cM5wH6b8WN3LyGSYeQilLEcJcR1fjBSI2S1A==
+react-refresh@^0.17:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.17.0.tgz#b7e579c3657f23d04eccbe4ad2e58a8ed51e7e53"
+  integrity sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==
 
 react-router-dom@^7.4.1:
   version "7.4.1"
