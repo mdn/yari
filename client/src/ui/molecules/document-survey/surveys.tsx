@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Doc } from "../../../../../libs/types/document";
 import { survey_duration, survey_rates } from "../../../env";
 
@@ -13,7 +14,7 @@ export interface Survey {
   rateFrom: number;
   rateTill: number;
   src: string | ((doc: Pick<Doc, "mdn_url">) => string);
-  teaser: string;
+  teaser: ReactNode;
   question: string;
   footnote?: string;
 }
@@ -102,8 +103,20 @@ export const SURVEYS: Survey[] = [
     show: (doc: Pick<Doc, "mdn_url">) =>
       /^\/[^/]+\/docs\/Web($|\/.*$)/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/8234511/MDN-javascript-proposals-2025",
-    teaser:
-      'We’d love to hear your thoughts on the next set of proposals for the JavaScript language. You can find a <a href="https://docs.google.com/document/d/1DMPXS4Po5Nd-l0mIEYj78H1S_R5FrB7CkHbluhqQPVo/" target="_blank">description of the proposals here</a>.',
+    teaser: (
+      <>
+        We’d love to hear your thoughts on the next set of proposals for the
+        JavaScript language. You can find a{" "}
+        <a
+          href="https://docs.google.com/document/d/1DMPXS4Po5Nd-l0mIEYj78H1S_R5FrB7CkHbluhqQPVo/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          description of the proposals here
+        </a>
+        .
+      </>
+    ),
     question: "Please take two minutes to fill out our short survey.",
     ...survey_duration(SurveyBucket.JS_SURVEY_1_2025),
     ...survey_rates(SurveyKey.JS_SURVEY_1_2025),
