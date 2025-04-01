@@ -181,8 +181,8 @@ jobs:
           cargo build --release
           cp target/release/rari ../../node_modules/@mdn/rari/bin/
 
-      - name: Print information about CPU
-        run: cat /proc/cpuinfo
+      # - name: Print information about CPU
+      #   run: cat /proc/cpuinfo
 
       - name: Build everything
         working-directory: mdn/fred
