@@ -5357,10 +5357,10 @@ compression@^1.7.4, compression@^1.8.0:
     safe-buffer "5.2.1"
     vary "~1.1.2"
 
-compute-baseline@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/compute-baseline/-/compute-baseline-0.3.0.tgz#cf15b23e475e0fefc7ab8f88f62e9a5ca3bbac37"
-  integrity sha512-XZPW1xboBRG2W/DhzSBYwKfxUGxBDuXeGBJiZzFwzBNVtMUm7FKyxHoyKdwG/LCzFtbTgEX5AR/7ispnHUrMRw==
+compute-baseline@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/compute-baseline/-/compute-baseline-0.3.1.tgz#744eb6a870e90a06483eebc16b4e4bd259000a0d"
+  integrity sha512-fehgbBh5UG4H5AemyVXWaviTwUbcPduhaD9iHWfkIy5fv2xFou/Zfs5z0VISXJyUEDzThe84MMofNOZ/qd0K6g==
   dependencies:
     "@js-temporal/polyfill" "^0.4.4"
     compare-versions "^6.1.1"
