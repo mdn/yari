@@ -60,7 +60,7 @@ permissions:
 
 jobs:
   trigger:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
     if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
@@ -211,9 +211,6 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
-
-      - name: Print information about CPU
-        run: cat /proc/cpuinfo
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
