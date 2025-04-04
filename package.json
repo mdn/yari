@@ -215,7 +215,7 @@
     "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-lit": "^1.15.0",
-    "eslint-plugin-n": "^17.16.2",
+    "eslint-plugin-n": "^17.17.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unicorn": "^56.0.1",
