@@ -10777,10 +10777,10 @@ mdn-data@2.0.30:
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.30.tgz#ce4df6f80af6cfbe218ecd5c552ba13c4dfa08cc"
   integrity sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==
 
-mdn-data@^2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.19.0.tgz#e7195c44715be0485e4cb4997082133db8d2fd16"
-  integrity sha512-vXxcNOxiaUhwoBShl2gd8xOQFeKWLosotfwPeRQsDwtruBSDFAzPPLfg2KMgdK8iz4RUVdswyWMuZwOVojrVZQ==
+mdn-data@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.20.0.tgz#b2274bafb8d1ce544bd040b9d427b8534010575d"
+  integrity sha512-/d3otgvmquUkAN2RVxSg6lIbQrYX7isR4aC5Hvw8JuHvzctR3eUG50WmsAZjb9MkbJ5LbijPSy7uIxEtQDGI0w==
 
 media-typer@0.3.0:
   version "0.3.0"
