@@ -15,7 +15,7 @@
     "gcp-build": "npm run build",
     "prepare": "([ ! -e ../libs ] || npm run copy-internal)",
     "proxy": "cross-env NODE_OPTIONS='--no-warnings=ExperimentalWarning --loader ts-node/esm' node src/proxy.ts",
-    "server": "npm run build && functions-framework --target=mdnHandler",
+    "server": "npm run build && functions-framework --target=mdnHandler --ignored-routes \"\"",
     "server:watch": "nodemon --exec npm run server",
     "start": "nf start"
   },
