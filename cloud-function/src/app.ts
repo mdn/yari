@@ -26,7 +26,6 @@ import { proxyPong } from "./handlers/proxy-pong.js";
 import { handleRunner } from "./internal/play/index.js";
 import { proxyContentAssets } from "./handlers/proxy-content-assets.js";
 import { proxySharedAssets } from "./handlers/proxy-shared-assets.js";
-import { resolveFaviconRobots } from "./middlewares/resolve-favicon-robots.js";
 
 const router = Router();
 router.use(cookieParser());
@@ -60,7 +59,6 @@ router.get("/shared-assets/*", requireOrigin(Origin.play), proxySharedAssets);
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
   requireOrigin(Origin.main),
-  resolveFaviconRobots,
   proxyContent
 );
 router.get(
