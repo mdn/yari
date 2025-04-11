@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.9.1](https://github.com/mdn/yari/compare/v4.9.0...v4.9.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* **survey:** show JavaScript proposals survey only to 5% ([#12904](https://github.com/mdn/yari/issues/12904)) ([4d6a046](https://github.com/mdn/yari/commit/4d6a0467e1030377d0bfac8d86d575737346c2c6))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.11.18 to 1.11.20 ([#12909](https://github.com/mdn/yari/issues/12909)) ([bf585a8](https://github.com/mdn/yari/commit/bf585a825d30e599d261906a7246990343286c9b))
+* **deps-dev:** bump webpack from 5.98.0 to 5.99.5 ([#12899](https://github.com/mdn/yari/issues/12899)) ([2ecbde7](https://github.com/mdn/yari/commit/2ecbde75d1a6bca5351debc7f880562b5bef07ff))
+* **deps:** bump http-proxy-middleware from 2.0.7 to 2.0.8 ([#12906](https://github.com/mdn/yari/issues/12906)) ([5b550f4](https://github.com/mdn/yari/commit/5b550f4bd1b59f46e0570b953d131829ed7e26ad))
+* **deps:** bump http-proxy-middleware from 2.0.8 to 2.0.9 ([#12910](https://github.com/mdn/yari/issues/12910)) ([c525f3f](https://github.com/mdn/yari/commit/c525f3faeb6ed0f6e3563b31e0a5c2271c7691c4))
+* **deps:** bump web-features from 2.32.0 to 2.33.0 ([#12911](https://github.com/mdn/yari/issues/12911)) ([f55e600](https://github.com/mdn/yari/commit/f55e6002dbad1382dda5dbb216efefd8dd6ce4bf))
+* **survey:** fix js proposals survey rate ([4d6a046](https://github.com/mdn/yari/commit/4d6a0467e1030377d0bfac8d86d575737346c2c6))
+
 ## [4.9.0](https://github.com/mdn/yari/compare/v4.8.0...v4.9.0) (2025-04-09)
 
 
