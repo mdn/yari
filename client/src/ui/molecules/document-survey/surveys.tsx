@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Doc } from "../../../../../libs/types/document";
 import { survey_duration, survey_rates } from "../../../env";
 
@@ -13,7 +14,7 @@ export interface Survey {
   rateFrom: number;
   rateTill: number;
   src: string | ((doc: Pick<Doc, "mdn_url">) => string);
-  teaser: string;
+  teaser: ReactNode;
   question: string;
   footnote?: string;
 }
@@ -35,7 +36,7 @@ enum SurveyBucket {
   HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
   WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
   HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
-  JS_SURVEY_1_2025 = "JS_SURVEY_1_2025",
+  JS_PROPOSALS_2025 = "JS_PROPOSALS_2025",
 }
 
 enum SurveyKey {
@@ -57,7 +58,7 @@ enum SurveyKey {
   HOMEPAGE_FEEDBACK_2024 = "HOMEPAGE_FEEDBACK_2024",
   WEBDX_EDITING_2024 = "WEBDX_EDITING_2024",
   HOUSE_SURVEY_2025 = "HOUSE_SURVEY_2025",
-  JS_SURVEY_1_2025 = "JS_SURVEY_1_2025",
+  JS_PROPOSALS_2025 = "JS_PROPOSALS_2025",
 }
 
 // When adding a survey, make sure it has this JavaScript action (in Alchemer)
@@ -97,15 +98,27 @@ export const SURVEYS: Survey[] = [
     end: Infinity,
   },
   {
-    key: SurveyKey.JS_SURVEY_1_2025,
-    bucket: SurveyBucket.JS_SURVEY_1_2025,
+    key: SurveyKey.JS_PROPOSALS_2025,
+    bucket: SurveyBucket.JS_PROPOSALS_2025,
     show: (doc: Pick<Doc, "mdn_url">) =>
       /^\/[^/]+\/docs\/Web($|\/.*$)/i.test(doc.mdn_url),
     src: "https://survey.alchemer.com/s3/8234511/MDN-javascript-proposals-2025",
-    teaser:
-      'We’d love to hear your thoughts on the next set of proposals for the JavaScript language. You can find a <a href="https://docs.google.com/document/d/1DMPXS4Po5Nd-l0mIEYj78H1S_R5FrB7CkHbluhqQPVo/" target="_blank">description of the proposals here</a>.',
+    teaser: (
+      <>
+        We’d love to hear your thoughts on the next set of proposals for the
+        JavaScript language. You can find a{" "}
+        <a
+          href="https://docs.google.com/document/d/1DMPXS4Po5Nd-l0mIEYj78H1S_R5FrB7CkHbluhqQPVo/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          description of the proposals here
+        </a>
+        .
+      </>
+    ),
     question: "Please take two minutes to fill out our short survey.",
-    ...survey_duration(SurveyBucket.JS_SURVEY_1_2025),
-    ...survey_rates(SurveyKey.JS_SURVEY_1_2025),
+    ...survey_duration(SurveyBucket.JS_PROPOSALS_2025),
+    ...survey_rates(SurveyKey.JS_PROPOSALS_2025),
   },
 ];
