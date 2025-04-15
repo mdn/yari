@@ -2247,10 +2247,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mdn/rari@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.33.tgz#e8e87e141584cb0ae27287538c1ce0f4364f8af8"
-  integrity sha512-WPio9SjchhsXaV1DevTUkNTL6zaiyzZ9hmSOb7mQZNcZ5yhNBHnhXpC9vqhgH2NnrCSxu6x5fe4aGD/9/Z6Rqw==
+"@mdn/rari@^0.1.35":
+  version "0.1.35"
+  resolved "https://registry.yarnpkg.com/@mdn/rari/-/rari-0.1.35.tgz#3725d7c58cf681655c777c4bb57f5c86661e9190"
+  integrity sha512-0UXgqiI7hzvoPo7DTeh1b6kJZO57ebvRSDtbFFo3WDe0reDdyxUKOTRWrZSxQf1zAjjdD1w0qyck2DjpIpOhCQ==
   dependencies:
     extract-zip "^2.0.1"
     https-proxy-agent "^7.0.2"
@@ -11699,20 +11699,20 @@ open-editor@^5.1.0:
     line-column-path "^3.0.0"
     open "^10.1.0"
 
-open@^10.0.3, open@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/open/-/open-10.1.0.tgz#a7795e6e5d519abe4286d9937bb24b51122598e1"
-  integrity sha512-mnkeQ1qP5Ue2wd+aivTD3NHd/lZ96Lu0jgf0pwktLPtx6cTZiH7tyeGRRHs0zX0rbrahXPnXlUnbeXyaBBuIaw==
+open@^10.0.3, open@^10.1.0, open@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/open/-/open-10.1.1.tgz#5fd814699e47ae3e1a09962d39f4f4441cae6c22"
+  integrity sha512-zy1wx4+P3PfhXSEPJNtZmJXfhkkIaxU1VauWIrDZw1O7uJRDRJtKr9n3Ic4NgbA16KyOxOXO2ng9gYwCdXuSXA==
   dependencies:
     default-browser "^5.2.1"
     define-lazy-prop "^3.0.0"
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openai@^4.93.0:
-  version "4.93.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.93.0.tgz#12e74a5bff0b15fdb12e523232af1a8d5ee11e3f"
-  integrity sha512-2kONcISbThKLfm7T9paVzg+QCE1FOZtNMMUfXyXckUAoXRRS/mTP89JSDHPMp8uM5s0bz28RISbvQjArD6mgUQ==
+openai@^4.94.0:
+  version "4.94.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.94.0.tgz#d5fb3f39ec0e2090687dc9f97db4ca05200e27ca"
+  integrity sha512-WVmr9HWcwfouLJ7R3UHd2A93ClezTPuJljQxkCYQAL15Sjyt+FBNoqEz5MHSdH/ebQrVyvRhFyn/bvdqtSPyIA==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
