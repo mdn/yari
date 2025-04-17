@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+.visually-hidden {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+}
+
+code {
+  background: var(--code-background-inline);
+  padding: 0.125rem 0.25rem;
+  width: fit-content;
+}
+
+a {
+  color: var(--text-link);
+}
+
+.external:after {
+  background-color: var(--icon-primary);
+  content: "";
+  display: inline-flex;
+  height: 10px;
+  margin-left: 4px;
+  mask-image: url("../../assets/icons/external.svg");
+  mask-size: cover;
+  width: 10px;
+}

@@ -21,6 +21,7 @@ const PRISM_LANGUAGES = components.languages as Record<
 // because Prism is an implementation detail.
 const ALIASES = new Map([
   ["vue", "markup"], // See https://github.com/PrismJS/prism/issues/1665#issuecomment-536529608
+  ["wat", "wasm"],
   ...Object.entries(PRISM_LANGUAGES).flatMap(([lang, config]) => {
     if (config.alias) {
       const aliases =

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -9,7 +9,6 @@ import { useDocumentURL, useDecorateCodeExamples, useRunSample } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
-import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
@@ -43,9 +42,14 @@ import { BaselineIndicator } from "./baseline-indicator";
 import { PlayQueue } from "../playground/queue";
 import { useGleanClick } from "../telemetry/glean-context";
 import { CLIENT_SIDE_NAVIGATION } from "../telemetry/constants";
+import { Spinner } from "../ui/atoms/spinner";
+import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
+const LazyCompatTable = React.lazy(
+  () => import("../lit/compat/lazy-compat-table.js")
+);
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
@@ -261,15 +265,19 @@ export function Document(props /* TODO: define a TS interface for this */) {
 }
 
 export function RenderDocumentBody({ doc }) {
+  const locale = useLocale();
+
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       return <Prose key={section.value.id} section={section.value} />;
     } else if (section.type === "browser_compatibility") {
+      const { id, title, isH3, query } = section.value;
       return (
-        <LazyBrowserCompatibilityTable
-          key={`browser_compatibility${i}`}
-          {...section.value}
-        />
+        <Suspense fallback={<Spinner />} key={`browser_compatibility${i}`}>
+          {title && !isH3 && <DisplayH2 id={id} title={title} />}
+          {title && isH3 && <DisplayH3 id={id} title={title} />}
+          <LazyCompatTable query={query} locale={locale} />
+        </Suspense>
       );
     } else if (section.type === "specifications") {
       return (

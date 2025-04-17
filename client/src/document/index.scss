@@ -252,6 +252,23 @@
     margin-bottom: 2rem;
   }
 
+  .css-formal-syntax {
+    margin-bottom: 0;
+
+    ~ footer {
+      background-color: var(--code-background-block);
+      border: 1px solid transparent;
+      border-top: 1px solid var(--border-secondary);
+      font-size: var(--type-smaller-font-size);
+      margin-bottom: 2rem;
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
+
+      > a {
+        display: inline-block;
+      }
+    }
+  }
+
   @media (min-width: $screen-sm) {
     padding: 3rem;
     // Reduce space to article footer.
@@ -995,4 +1012,50 @@ html[lang="zh-TW"] a.only-in-en-us:after {
   content: "（英語）";
   margin-left: unset;
   vertical-align: baseline;
+}
+
+@media (max-width: $screen-sm - 1px) {
+  .table-container {
+    overflow-x: auto;
+  }
+}
+
+@media (min-width: $screen-sm) {
+  .table-container {
+    margin: 0 -3rem;
+    overflow: auto;
+    width: 100vw;
+  }
+
+  .table-container-inner {
+    min-width: max-content;
+    padding: 0 3rem;
+    position: relative;
+
+    &:after {
+      bottom: 0;
+      content: "";
+      height: 10px;
+      position: absolute;
+      right: 0;
+      width: 10px;
+    }
+  }
+}
+
+@media (min-width: $screen-md) {
+  .table-container {
+    width: calc(100% + 6rem);
+  }
+}
+
+@media (min-width: $screen-xl) {
+  .table-container {
+    margin: 0;
+    width: 100%;
+  }
+
+  .table-container-inner {
+    padding: 0;
+  }
 }
