@@ -157,26 +157,21 @@ export default function render(
     renderToString(
       <html lang={DEFAULT_LOCALE} prefix="og: https://ogp.me/ns#">
         <head>
-          <meta charSet="utf-8" />
+          <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-          <link rel="icon" href={favicon} />
-
-          <link rel="apple-touch-icon" href={appleIcon} />
-
-          <meta name="theme-color" content="#ffffff" />
-
-          <link rel="manifest" href={manifest} />
-
-          <link
-            rel="search"
-            type="application/opensearchdescription+xml"
-            href="/opensearch.xml"
-            title="MDN Web Docs"
-          />
-
           <title>{realPageTitle || "MDN Web Docs"}</title>
-          {translations}
+
+          <style
+            media="print"
+            dangerouslySetInnerHTML={{
+              __html: printCSS,
+            }}
+          />
+          {ASSET_MANIFEST.entrypoints.map((url) =>
+            url.endsWith(".css") ? (
+              <link href={`/${url}`} rel="stylesheet" />
+            ) : null
+          )}
           {WEBFONT_URLS.map((url) => (
             <link
               rel="preload"
@@ -186,6 +181,24 @@ export default function render(
               crossOrigin=""
             />
           ))}
+          {GTAG_PATH && <script src={GTAG_PATH} defer />}
+          {ASSET_MANIFEST.entrypoints.map((url) =>
+            url.endsWith(".js") ? <script defer src={`/${url}`} /> : null
+          )}
+
+          <link rel="icon" href={favicon} />
+          <link rel="apple-touch-icon" href={appleIcon} />
+          <meta name="theme-color" content="#ffffff" />
+          <link rel="manifest" href={manifest} />
+
+          <link
+            rel="search"
+            type="application/opensearchdescription+xml"
+            href="/opensearch.xml"
+            title="MDN Web Docs"
+          />
+
+          {translations}
           <link
             rel="alternate"
             type="application/rss+xml"
@@ -229,21 +242,6 @@ export default function render(
           <meta name="twitter:creator" content="MozDevNet" />
 
           {!pageNotFound && <link rel="canonical" href={canonicalURL} />}
-          <style
-            media="print"
-            dangerouslySetInnerHTML={{
-              __html: printCSS,
-            }}
-          />
-          {GTAG_PATH && <script src={GTAG_PATH} defer />}
-          {ASSET_MANIFEST.entrypoints.map((url) =>
-            url.endsWith(".js") ? <script defer src={`/${url}`} /> : null
-          )}
-          {ASSET_MANIFEST.entrypoints.map((url) =>
-            url.endsWith(".css") ? (
-              <link href={`/${url}`} rel="stylesheet" />
-            ) : null
-          )}
         </head>
 
         <body>
