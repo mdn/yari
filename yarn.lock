@@ -2861,10 +2861,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@stripe/stripe-js@^6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-6.1.0.tgz#de6468e8d290da474d296f09baa1b02fda5f4f08"
-  integrity sha512-/5zxRol+MU4I7fjZXPxP2M6E1nuHOxAzoc0tOEC/TLnC31Gzc+5EE93mIjoAnu28O1Sqpl7/BkceDHwnGmn75A==
+"@stripe/stripe-js@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-7.1.0.tgz#a0e7b928a3f46d515e8df7a3a66cf4f923b0a580"
+  integrity sha512-dORq+9fb+STvq9Woi7eupUJV2UcW3tP33yQvREI0NIPDKv6KOCg/tV6h/DH1zQn2clIH/WR7HHBpbNQzWAo+Kg==
 
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
   version "8.0.0"
