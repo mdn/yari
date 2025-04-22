@@ -25,7 +25,7 @@ export function formatArray(input) {
         i++;
       }
       if (emptyCount === 1) {
-        output += "<empty>";
+        output += "<1 empty slot>";
       } else {
         output += `<${emptyCount} empty slots>`;
       }
