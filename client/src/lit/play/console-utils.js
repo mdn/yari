@@ -4,6 +4,7 @@
  * - quotes around strings in arrays
  * - square brackets around arrays
  * - adds commas appropriately (with spacing)
+ * - identifies empty slots
  * designed to be used recursively
  * @param {any} input - The output to log.
  * @returns Formatted output as a string.
@@ -17,6 +18,8 @@ export function formatArray(input) {
       output += "Array [";
       output += formatArray(input[i]);
       output += "]";
+    } else if (!input.hasOwnProperty(i)) {
+      output += "<empty>";
     } else {
       output += formatOutput(input[i]);
     }
