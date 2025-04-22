@@ -19,7 +19,16 @@ export function formatArray(input) {
       output += formatArray(input[i]);
       output += "]";
     } else if (!input.hasOwnProperty(i)) {
-      output += "<empty>";
+      let emptyCount = 1;
+      while (i + 1 < l && !input.hasOwnProperty(i + 1)) {
+        emptyCount++;
+        i++;
+      }
+      if (emptyCount === 1) {
+        output += "<empty>";
+      } else {
+        output += `<${emptyCount} empty slots>`;
+      }
     } else {
       output += formatOutput(input[i]);
     }
