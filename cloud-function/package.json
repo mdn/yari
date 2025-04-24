@@ -40,7 +40,7 @@
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "http-proxy-middleware": "^3.0.3",
+    "http-proxy-middleware": "^3.0.5",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
