@@ -144,6 +144,10 @@ jobs:
 
       - name: NPM install fred
         working-directory: mdn/fred
+        env:
+          # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
+          # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ ! vars.SKIP_BUILD }}
         run: |
           npm ci
