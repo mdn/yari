@@ -63,7 +63,7 @@ function getCacheControl(statusCode: number, url: string) {
   }
 
   if (200 <= statusCode && statusCode < 300) {
-    if (WILDCARD_ENABLED) {
+    if (WILDCARD_ENABLED && !HASHED_REGEX.test(url)) {
       return NO_CACHE_VALUE;
     }
 
