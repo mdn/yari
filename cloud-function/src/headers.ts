@@ -64,7 +64,7 @@ function getCacheControl(statusCode: number, url: string) {
 
   if (200 <= statusCode && statusCode < 300) {
     if (WILDCARD_ENABLED) {
-      return "max-age=0, no-cache, no-store, must-revalidate";
+      return NO_CACHE_VALUE;
     }
 
     const maxAge = getCacheMaxAgeForUrl(url);
