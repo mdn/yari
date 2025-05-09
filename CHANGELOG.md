@@ -1,5 +1,39 @@
 # Changelog
 
+## [4.9.2](https://github.com/mdn/yari/compare/v4.9.1...v4.9.2) (2025-05-09)
+
+
+### Bug Fixes
+
+* **cloud-function:** proxy blog assets for live samples incl. avif ([#12994](https://github.com/mdn/yari/issues/12994)) ([a43979b](https://github.com/mdn/yari/commit/a43979bfedeceb5a65c3314cc700dcce2c73cc83))
+
+
+### Enhancements
+
+* **cloud-function:** refine `cache-control` header ([#12987](https://github.com/mdn/yari/issues/12987)) ([95bd4c2](https://github.com/mdn/yari/commit/95bd4c29c9b9ac23b7578b2be86e8b3f034b9e8e))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/preset-env from 7.27.1 to 7.27.2 ([#12999](https://github.com/mdn/yari/issues/12999)) ([277f3f8](https://github.com/mdn/yari/commit/277f3f82e29ca0460dc90e97cf2dc1ae57ac1cb4))
+* **deps-dev:** bump @types/node from 18.19.87 to 18.19.96 in the types group ([#12995](https://github.com/mdn/yari/issues/12995)) ([defc209](https://github.com/mdn/yari/commit/defc2096b53f454e46568a1231349591f661bbdc))
+* **deps-dev:** bump @types/node from 18.19.99 to 18.19.100 in the types group ([#13007](https://github.com/mdn/yari/issues/13007)) ([548ca88](https://github.com/mdn/yari/commit/548ca88acb1dd9dc14167753173031406792187b))
+* **deps-dev:** bump browserslist from 4.24.4 to 4.24.5 ([#12990](https://github.com/mdn/yari/issues/12990)) ([ccb0629](https://github.com/mdn/yari/commit/ccb06296bab986a54605f89d99652abfb8dd214b))
+* **deps-dev:** bump cssnano from 7.0.6 to 7.0.7 ([#12998](https://github.com/mdn/yari/issues/12998)) ([603009f](https://github.com/mdn/yari/commit/603009fb41c776824e0f1e2b70e46b0f443e61ab))
+* **deps-dev:** bump eslint-plugin-n from 17.17.0 to 17.18.0 ([#13009](https://github.com/mdn/yari/issues/13009)) ([e627690](https://github.com/mdn/yari/commit/e6276908cd636fe126aea0afe890f90a4a5f2784))
+* **deps-dev:** bump prettier-plugin-packagejson from 2.5.10 to 2.5.11 ([#12997](https://github.com/mdn/yari/issues/12997)) ([43893d2](https://github.com/mdn/yari/commit/43893d291fbeac298023232d6242c8f8d075f0b8))
+* **deps-dev:** bump the react-router group with 2 updates ([#13006](https://github.com/mdn/yari/issues/13006)) ([0408917](https://github.com/mdn/yari/commit/04089172f180984950607d07105b0a2e7c26e4cb))
+* **deps-dev:** bump typescript-eslint from 8.31.0 to 8.32.0 ([#12996](https://github.com/mdn/yari/issues/12996)) ([a4dcdfb](https://github.com/mdn/yari/commit/a4dcdfbc49f271df842cb35156004447018b84a5))
+* **deps-dev:** bump webpack from 5.99.7 to 5.99.8 ([#13002](https://github.com/mdn/yari/issues/13002)) ([3cf42f5](https://github.com/mdn/yari/commit/3cf42f5086b221a191d0bb6edbfd69a7c4d636fb))
+* **deps-dev:** bump webpack from 5.99.7 to 5.99.8 in /client/pwa ([#13003](https://github.com/mdn/yari/issues/13003)) ([fcb6927](https://github.com/mdn/yari/commit/fcb69278438e9ddf55f5b82b1c1939b9152c9d3d))
+* **deps:** bump @mdn/browser-compat-data from 6.0.10 to 6.0.11 ([#12989](https://github.com/mdn/yari/issues/12989)) ([a0df31f](https://github.com/mdn/yari/commit/a0df31fac3a73a384ad46949b7a91534ea96b74f))
+* **deps:** bump @mdn/browser-compat-data from 6.0.11 to 6.0.12 ([#13000](https://github.com/mdn/yari/issues/13000)) ([de04c00](https://github.com/mdn/yari/commit/de04c00513282107412bdf4299d14e6e15ea520b))
+* **deps:** bump open from 10.1.1 to 10.1.2 ([#12984](https://github.com/mdn/yari/issues/12984)) ([bcbc1fa](https://github.com/mdn/yari/commit/bcbc1fa95bb4440b53d4ee5bb9a20f2868372c2f))
+* **deps:** bump openai from 4.96.0 to 4.96.2 ([#12977](https://github.com/mdn/yari/issues/12977)) ([2b660d1](https://github.com/mdn/yari/commit/2b660d1a984706bae15c9041f3ce63c73285a183))
+* **deps:** bump openai from 4.96.2 to 4.97.0 ([#12991](https://github.com/mdn/yari/issues/12991)) ([867e406](https://github.com/mdn/yari/commit/867e4062ffc65691504cb7562e6cd197287447ac))
+* **deps:** bump openai from 4.97.0 to 4.98.0 ([#13008](https://github.com/mdn/yari/issues/13008)) ([ee89987](https://github.com/mdn/yari/commit/ee8998712a34ad77069e0174b6d526cf138ff55e))
+* **deps:** bump selectolax from 0.3.28 to 0.3.29 in /deployer in the dependencies group ([#12993](https://github.com/mdn/yari/issues/12993)) ([69507fe](https://github.com/mdn/yari/commit/69507fe5499313dfd1e210fda53d060a0f5c6591))
+
 ## [4.9.1](https://github.com/mdn/yari/compare/v4.9.0...v4.9.1) (2025-04-30)
 
 
