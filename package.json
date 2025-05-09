@@ -128,7 +128,7 @@
     "imagemin-mozjpeg": "^10.0.0",
     "imagemin-pngquant": "^10.0.0",
     "imagemin-svgo": "^11.0.1",
-    "is-svg": "^5.1.0",
+    "is-svg": "^6.0.0",
     "js-yaml": "^4.1.0",
     "lit": "^3.3.0",
     "loglevel": "^1.9.2",
