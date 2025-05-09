@@ -240,7 +240,7 @@
     "mdast-util-to-hast": "^13.2.0",
     "mini-css-extract-plugin": "^2.9.2",
     "node-dev": "^8.0.0",
-    "peggy": "^4.2.0",
+    "peggy": "^5.0.2",
     "postcss": "^8.5.3",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.1.1",
