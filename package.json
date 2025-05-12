@@ -205,7 +205,7 @@
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "cssnano": "^7.0.7",
-    "diff": "^7.0.0",
+    "diff": "^8.0.0",
     "downshift": "^7.6.1",
     "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
