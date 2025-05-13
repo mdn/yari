@@ -28,6 +28,7 @@ enum SurveyBucket {
   DE_LOCALE_2024_EVAL = "DE_LOCALE_2024_EVAL",
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023 = "INTEROP_2023",
+  IT_LOCALE_2025 = "IT_LOCALE_2025",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
@@ -50,6 +51,7 @@ enum SurveyKey {
   FIREFOX_WEB_COMPAT_2023 = "FIREFOX_WEB_COMPAT_2023",
   INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
   INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
+  IT_LOCALE_2025 = "IT_LOCALE_2025",
   WEB_COMPONENTS_2023 = "WEB_COMPONENTS_2023",
   DISCOVERABILITY_2023 = "DISCOVERABILITY_2023",
   WEB_SECURITY_2023 = "WEB_SECURITY_2023",
@@ -98,27 +100,21 @@ export const SURVEYS: Survey[] = [
     end: Infinity,
   },
   {
-    key: SurveyKey.JS_PROPOSALS_2025,
-    bucket: SurveyBucket.JS_PROPOSALS_2025,
-    show: (doc: Pick<Doc, "mdn_url">) =>
-      /^\/[^/]+\/docs\/Web($|\/.*$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/8234511/MDN-javascript-proposals-2025",
-    teaser: (
-      <>
-        We’d love to hear your thoughts on the next set of proposals for the
-        JavaScript language. You can find a{" "}
-        <a
-          href="https://docs.google.com/document/d/1DMPXS4Po5Nd-l0mIEYj78H1S_R5FrB7CkHbluhqQPVo/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          description of the proposals here
-        </a>
-        .
-      </>
-    ),
-    question: "Please take two minutes to fill out our short survey.",
-    ...survey_duration(SurveyBucket.JS_PROPOSALS_2025),
-    ...survey_rates(SurveyKey.JS_PROPOSALS_2025),
+    key: SurveyKey.IT_LOCALE_2025,
+    bucket: SurveyBucket.IT_LOCALE_2025,
+    show: () => (navigator?.language || "").startsWith("it"),
+    src: (doc: Pick<Doc, "mdn_url">) => {
+      const url = new URL(
+        "https://survey.alchemer.com/s3/8319535/MDN-Italian-Locale-Interest-Survey"
+      );
+      url.searchParams.set("referrer", doc.mdn_url);
+      return url.toString();
+    },
+    teaser: "What if MDN was available in Italian?",
+    question: "Which language would you then use?",
+    footnote:
+      "You're seeing this survey, because your browser indicates Italian as your preferred language.",
+    ...survey_duration(SurveyBucket.IT_LOCALE_2025),
+    ...survey_rates(SurveyKey.IT_LOCALE_2025),
   },
 ];
