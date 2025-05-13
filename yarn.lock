@@ -15964,10 +15964,10 @@ web-component-analyzer@^2.0.0:
     typescript "~5.2.0"
     yargs "^17.7.2"
 
-web-features@^2.34.2:
-  version "2.34.2"
-  resolved "https://registry.yarnpkg.com/web-features/-/web-features-2.34.2.tgz#4b594f148d1ad7cf6f3812b8116b652a9c648130"
-  integrity sha512-OhPNkoNZYxfykP82LwJmpAXZHiO6eojkj9ZgDKB/u16i1rtoSZSzdgXjjTZI/gtTpZo5nuZNyDAZcNESJNylDg==
+web-features@^2.35.0:
+  version "2.35.0"
+  resolved "https://registry.yarnpkg.com/web-features/-/web-features-2.35.0.tgz#36261057b5c92ca1762cb92ac5a32c4b6f5c4632"
+  integrity sha512-FZaOGdbjnODpn1xhecV8qEqxsLbanzshJDH88Jwex9VbhLKzbLTI8ADnR4OzJzoGf1owDQNX4BomTZJ/3EDeZw==
 
 web-namespaces@^2.0.0:
   version "2.0.1"
