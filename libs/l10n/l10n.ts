@@ -11,6 +11,7 @@ export const ONLY_AVAILABLE_IN_ENGLISH = localeString({
   "en-US": "This page is currently only available in English",
   es: "Esta página está disponible solo en inglés",
   fr: "Cette page est actuellement disponible uniquement en anglais",
+  it: "Questa pagina è attualmente disponibile solo in inglese",
   ja: "このページは現在、英語のみで利用可能です。",
   ko: "이 페이지는 현재 영어로만 제공됩니다",
   "pt-BR": "Esta página está disponível apenas em inglês no momento",

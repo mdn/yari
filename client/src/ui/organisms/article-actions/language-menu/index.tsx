@@ -190,6 +190,13 @@ function LocaleStatusIcon({ locale }: { locale: string }) {
         </span>
       );
 
+    case "it":
+      return (
+        <span title="This translation is part of an experiment.">
+          <Icon name="experimental" />
+        </span>
+      );
+
     default:
       return null;
   }

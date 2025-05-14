@@ -619,7 +619,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         const locale = relPath.split(path.sep)[0];
-        if (!isValidLocale(locale) && locale !== "de") {
+        if (!isValidLocale(locale) && locale !== "de" && locale !== "it") {
           continue;
         }
         allHistory[relPath] = value;

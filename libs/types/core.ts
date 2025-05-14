@@ -3,6 +3,7 @@ export type Locale =
   | "en-US"
   | "es"
   | "fr"
+  | "it"
   | "ja"
   | "ko"
   | "pt-BR"
