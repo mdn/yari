@@ -7,7 +7,7 @@ import { ORIGIN_TRIAL_TOKEN, WILDCARD_ENABLED } from "./env.js";
 const HASHED_MAX_AGE = 60 * 60 * 24 * 365;
 const DEFAULT_MAX_AGE = 60 * 60;
 
-const NO_CACHE_VALUE = "no-store, must-revalidate";
+const NO_CACHE_VALUE = "no-store";
 
 const HASHED_REGEX = /\.[a-f0-9]{8,32}\./;
 
@@ -63,8 +63,8 @@ function getCacheControl(statusCode: number, url: string) {
   }
 
   if (200 <= statusCode && statusCode < 300) {
-    if (WILDCARD_ENABLED) {
-      return "max-age=0, no-cache, no-store, must-revalidate";
+    if (WILDCARD_ENABLED && !HASHED_REGEX.test(url)) {
+      return NO_CACHE_VALUE;
     }
 
     const maxAge = getCacheMaxAgeForUrl(url);
