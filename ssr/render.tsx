@@ -11,7 +11,8 @@ import {
 } from "./include";
 import { getMetaDescription } from "./meta-description";
 
-import favicon from "../client/public/favicon-48x48.png?public";
+import faviconPng from "../client/public/favicon-48x48.png?public";
+import faviconSvg from "../client/public/favicon.svg?public";
 import appleIcon from "../client/public/apple-touch-icon.png?public";
 import manifest from "../client/public/manifest.json?public";
 import ogImage from "../client/public/mdn-social-share.png?public";
@@ -160,7 +161,8 @@ export default function render(
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-          <link rel="icon" href={favicon} />
+          <link rel="alternate icon" type="image/png" href={faviconPng} />
+          <link rel="icon" type="image/svg+xml" href={faviconSvg} />
 
           <link rel="apple-touch-icon" href={appleIcon} />
 
