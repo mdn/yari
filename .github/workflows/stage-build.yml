@@ -150,18 +150,27 @@ jobs:
           repository: mdn/translated-content-de
           path: mdn/translated-content-de
 
-      - name: Move de into translated-content
+      - name: Checkout (translated-content-it)
+        uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
+        with:
+          repository: mdn/translated-content-it
+          path: mdn/translated-content-it
+
+      - name: Merge separate locales into translated-content
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         run: |
           mv mdn/translated-content-de/files/de mdn/translated-content/files/
           rm -rf mdn/translated-content-de
+          mv mdn/translated-content-it/files/it mdn/translated-content/files/
+          rm -rf mdn/translated-content-it
 
-      - name: Clean and commit de
+      - name: Clean and commit de/it
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         working-directory: mdn/translated-content
         run: |
-          git add files/de
-          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
+          git add files/de files/it
+          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de/it'
 
       - uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
@@ -183,6 +192,37 @@ jobs:
           # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
           # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/rari
+          path: mdn/rari
+          ref: italian
+
+      - name: Cache Cargo registry
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: ${{ ! vars.SKIP_BUILD }}
+
+      - name: sccache-cache
+        if: ${{ ! vars.SKIP_BUILD }}
+        uses: mozilla-actions/sccache-action@v0.0.9
+
+      - name: Build rari
+        if: ${{ ! vars.SKIP_BUILD }}
+        run: |
+          cd mdn/rari
+          cargo build --release
+          cp target/release/rari ../../node_modules/@mdn/rari/bin/
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
@@ -229,7 +269,7 @@ jobs:
           BUILD_OUT_ROOT: "client/build"
           LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
-          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
+          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de,it
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -332,8 +372,9 @@ jobs:
           yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
-          # Sort DE search index by en-US popularity.
+          # Sort DE/IT search indices by en-US popularity.
           node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
+          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/it/search-index.json
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
