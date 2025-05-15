@@ -68,6 +68,15 @@ const FEEDBACK_REASONS_DE: Partial<Record<FeedbackReason, string>> = {
   other: "Sonstige",
 };
 
+const FEEDBACK_REASONS_IT: Partial<Record<FeedbackReason, string>> = {
+  technical: "Translation contains technical errors",
+  consistency: "Terms are translated inconsistently",
+  incomprehensible: "Translation is not comprehensible",
+  linguistic: "Translation contains linguistic errors",
+  code_examples: "Code examples do not work",
+  other: "Other",
+};
+
 export function ArticleFooter({ doc }) {
   const [view, setView] = useState<ArticleFooterView>(ArticleFooterView.Vote);
   const [reason, setReason] = useState<string>();
@@ -126,7 +135,11 @@ export function ArticleFooter({ doc }) {
                   : "Warum war diese Übersetzung nicht hilfreich?"}
               </label>
               {Object.entries(
-                doc.locale !== "de" ? FEEDBACK_REASONS : FEEDBACK_REASONS_DE
+                doc.locale === "de"
+                  ? FEEDBACK_REASONS_DE
+                  : doc.locale === "it"
+                    ? FEEDBACK_REASONS_IT
+                    : FEEDBACK_REASONS
               ).map(([key, label]) => (
                 <div className="radio-container" key={key}>
                   <input
