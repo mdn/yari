@@ -160,11 +160,14 @@ export default function render(
           <meta name="viewport" content="width=device-width,initial-scale=1" />
 
           <link
-            rel="alternate icon"
-            type="image/png"
-            href="/favicon-48x48.png"
+            rel="shortcut icon"
+            href="https://developer.mozilla.org/favicon.ico"
           />
-          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <link
+            rel="alternate icon"
+            type="image/svg+xml"
+            href="https://developer.mozilla.org/favicon.svg"
+          />
 
           <link rel="apple-touch-icon" href={appleIcon} />
 
