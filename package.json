@@ -86,7 +86,7 @@
     "@lit/task": "^1.0.2",
     "@mdn/bcd-utils-api": "^0.0.8",
     "@mdn/browser-compat-data": "^6.0.14",
-    "@mdn/rari": "^0.1.36",
+    "@mdn/rari": "^0.1.37",
     "@mdn/watify": "^1.1.3",
     "@mozilla/glean": "5.0.4",
     "@sentry/node": "^8.54.0",
@@ -165,7 +165,7 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
-    "web-features": "^2.35.0",
+    "web-features": "^2.35.1",
     "web-specs": "^3.50.0"
   },
   "devDependencies": {
@@ -247,7 +247,7 @@
     "postcss-normalize": "^13.0.1",
     "postcss-preset-env": "^10.1.6",
     "prettier": "^3.5.3",
-    "prettier-plugin-packagejson": "^2.5.12",
+    "prettier-plugin-packagejson": "^2.5.13",
     "prompts": "^2.4.2",
     "react": "^18.3.1",
     "react-app-polyfill": "^3.0.0",
