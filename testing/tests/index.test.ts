@@ -21,7 +21,8 @@ test("all favicons on the home page", () => {
   const htmlFile = path.join(buildRoot, "en-us", "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="icon"]')).toHaveLength(1);
+  expect($('link[rel="shortcut icon"]')).toHaveLength(1);
+  expect($('link[rel="alternate icon"]')).toHaveLength(1);
   expect($('link[rel="apple-touch-icon"]')).toHaveLength(1);
   expect($('meta[property="og:image"]')).toHaveLength(1);
 
