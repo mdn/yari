@@ -117,7 +117,7 @@ test("content built foo page", () => {
 
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]')).toHaveLength(5);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -169,7 +169,7 @@ test("content built French foo page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('link[rel="alternate"]')).toHaveLength(5);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -223,7 +223,7 @@ test("content built zh-CN page for hreflang tag and copying image testing", () =
   // The built page should not have duplicate hreflang tags,
   // when zh-TW translation is also available.
   expect($('link[rel="alternate"]')).toHaveLength(5);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
@@ -255,7 +255,7 @@ test("content built zh-TW page with en-US fallback image", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($('link[rel="alternate"]')).toHaveLength(5);
-  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(2);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh-Hant"]')).toHaveLength(1);
