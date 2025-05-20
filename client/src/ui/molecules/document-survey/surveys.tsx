@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Doc } from "../../../../../libs/types/document";
-import { survey_duration, survey_rates } from "../../../env";
 
 export interface Survey {
   key: SurveyKey;
@@ -98,23 +97,5 @@ export const SURVEYS: Survey[] = [
     rateTill: 1,
     start: 0,
     end: Infinity,
-  },
-  {
-    key: SurveyKey.IT_LOCALE_2025,
-    bucket: SurveyBucket.IT_LOCALE_2025,
-    show: () => (navigator?.language || "").startsWith("it"),
-    src: (doc: Pick<Doc, "mdn_url">) => {
-      const url = new URL(
-        "https://survey.alchemer.com/s3/8319535/MDN-Italian-Locale-Interest-Survey"
-      );
-      url.searchParams.set("referrer", doc.mdn_url);
-      return url.toString();
-    },
-    teaser: "What if MDN was available in Italian?",
-    question: "Which language would you then use?",
-    footnote:
-      "You're seeing this survey, because your browser indicates Italian as your preferred language.",
-    ...survey_duration(SurveyBucket.IT_LOCALE_2025),
-    ...survey_rates(SurveyKey.IT_LOCALE_2025),
   },
 ];
