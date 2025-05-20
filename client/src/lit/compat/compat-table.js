@@ -1,5 +1,6 @@
 import { html, LitElement } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { createRef, ref } from "lit/directives/ref.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 import { getActiveLegendItems } from "./legend.js";
@@ -25,6 +26,9 @@ import {
   labelFromString,
   versionLabelFromSupport,
 } from "./feature-row.js";
+import { GleanMixin } from "../glean-mixin.js";
+import "../viewed-controller.js";
+import { ViewedController } from "../viewed-controller.js";
 
 /**
  * @import { TemplateResult } from "lit"
@@ -79,7 +83,7 @@ export const LEGEND_LABELS = {
   more: "Has more compatibility info.",
 };
 
-class CompatTable extends LitElement {
+class CompatTable extends GleanMixin(LitElement) {
   static properties = {
     query: {},
     locale: {},
@@ -92,8 +96,14 @@ class CompatTable extends LitElement {
 
   static styles = styles;
 
+  _tableRef = createRef();
+
   constructor() {
     super();
+    /** @type {ViewedController} */
+    this.viewed = new ViewedController(this, this._tableRef, () =>
+      this._gleanClick(`${BCD_TABLE}: view -> ${this.query}`)
+    );
     this.query = "";
     /** @type {Identifier} */
     this.data = {};
@@ -183,6 +193,7 @@ class CompatTable extends LitElement {
       <figure class="table-container-inner">
         ${this._renderIssueLink()}
         <table
+          ${ref(this._tableRef)}
           class="bc-table bc-table-web"
           style="--browser-count: ${Object.keys(this._browsers).length}"
         >

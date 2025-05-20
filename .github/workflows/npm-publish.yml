@@ -28,7 +28,6 @@ jobs:
         if: steps.release.outputs.release_created
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
           registry-url: "https://registry.npmjs.org"
 
       - name: Cache @vscode/ripgrep bin

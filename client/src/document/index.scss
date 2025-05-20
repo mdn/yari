@@ -252,6 +252,23 @@
     margin-bottom: 2rem;
   }
 
+  .css-formal-syntax {
+    margin-bottom: 0;
+
+    ~ footer {
+      background-color: var(--code-background-block);
+      border: 1px solid transparent;
+      border-top: 1px solid var(--border-secondary);
+      font-size: var(--type-smaller-font-size);
+      margin-bottom: 2rem;
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
+
+      > a {
+        display: inline-block;
+      }
+    }
+  }
+
   @media (min-width: $screen-sm) {
     padding: 3rem;
     // Reduce space to article footer.

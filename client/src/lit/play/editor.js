@@ -66,6 +66,10 @@ export class PlayEditor extends LitElement {
     return this._editor ? this._editor.state.doc.toString() : this._value;
   }
 
+  focus() {
+    this._editor?.focus();
+  }
+
   /**
    * @param {string} type
    */

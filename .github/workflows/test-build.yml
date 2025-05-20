@@ -134,7 +134,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: ${{ github.event.inputs.rari-ref == '' && 'yarn' || '' }}
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
@@ -336,6 +335,7 @@ jobs:
             --memory=2GB \
             --timeout=120s \
             --run-service-account=run-nonprod-test-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
+            --set-env-vars="IGNORED_ROUTES=" \
             --set-env-vars="ORIGIN_MAIN=test.developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.test.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=test.mdnyalp.dev" \
