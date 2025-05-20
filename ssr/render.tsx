@@ -198,7 +198,6 @@ export default function render(
             type="application/rss+xml"
             title="MDN Blog RSS Feed"
             href={`${BASE_URL}/${DEFAULT_LOCALE}/blog/rss.xml`}
-            hrefLang="en"
           />
           {robotsContent && <meta name="robots" content={robotsContent} />}
           <meta
