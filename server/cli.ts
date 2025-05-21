@@ -21,7 +21,7 @@ const { commands, result } = concurrently(
       prefixColor: "red",
     },
     {
-      command: `${rariBin} serve -vv`,
+      command: `"${rariBin}" serve -vv`,
       name: "rari",
       prefixColor: "blue",
       env: {
