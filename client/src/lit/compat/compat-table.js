@@ -704,12 +704,12 @@ class CompatTable extends GleanMixin(LitElement) {
         <span
           class="bc-version-label"
           title=${browserReleaseDate && !timeline
-            ? `${browser.name} ${added} – Released ${browserReleaseDate}`
+            ? `${browser.name} ${added} – Release date: ${browserReleaseDate}`
             : ""}
         >
           ${!timeline || added ? label : null}
           ${browserReleaseDate && timeline
-            ? ` (Released ${browserReleaseDate})`
+            ? ` (Release date: ${browserReleaseDate})`
             : ""}
         </span>
       </div>
