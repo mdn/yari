@@ -85,6 +85,9 @@ function NewIssueOnGitHubLink({
       : "page-report.yml"
   );
   sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
+  if (doc.locale === "it") {
+    sp.set("mdn-url", `https://developer.allizom.org${doc.mdn_url}`);
+  }
   sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
 
   url.search = sp.toString();
