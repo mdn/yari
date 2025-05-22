@@ -268,12 +268,37 @@ class CompatTable extends GleanMixin(LitElement) {
     const { data, _browsers: browsers, browserInfo, locale } = this;
     let features = listFeatures(data, "", this._name);
 
-    // enormous BCD tables are unusable and have terrible performance: crashing in some browsers
-    if (features.length > 100) {
+    const MAX_FEATURES = 100;
+
+    // If there are too many features, hide nested features.
+    if (features.length > MAX_FEATURES) {
       features = features.filter(({ depth }) => depth < 2);
-      if (features.length > 100) {
-        features = features.filter(({ depth }) => depth < 1);
-      }
+    }
+
+    // If there are still too many features, hide non-standard features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(
+        ({ compat: { status } }) => status?.standard_track
+      );
+    }
+
+    // If there are still too many features, hide deprecated features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(
+        ({ compat: { status } }) => !status?.deprecated
+      );
+    }
+
+    // If there are still too many features, hide experimental features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(
+        ({ compat: { status } }) => !status?.experimental
+      );
+    }
+
+    // At this point, we did all we can to reduce the number of features shown.
+    if (features.length > MAX_FEATURES) {
+      features = features.slice(0, MAX_FEATURES);
     }
 
     return html`<tbody>
