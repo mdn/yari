@@ -11777,10 +11777,10 @@ open@^10.0.3, open@^10.1.0, open@^10.1.2:
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openai@^4.100.0:
-  version "4.100.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.100.0.tgz#eb630a97f3531b7c91906b3a42920f9873efa392"
-  integrity sha512-9soq/wukv3utxcuD7TWFqKdKp0INWdeyhUCvxwrne5KwnxaCp4eHL4GdT/tMFhYolxgNhxFzg5GFwM331Z5CZg==
+openai@^4.102.0:
+  version "4.102.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.102.0.tgz#fcf09d2ad2b33eb399fe79bb43df1872bf2a15c8"
+  integrity sha512-CWk15CMhPSHNZnjz+6rwVYV551xaC8CwOd7/zxImrC1btEo37dX/Ii5tBKWfqqxqyzpJ6p3Y4bICzzKhW03WhQ==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
