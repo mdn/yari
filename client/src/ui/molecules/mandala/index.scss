@@ -40,4 +40,122 @@
   textPath[href="#circle5"] {
     font-size: 1rem;
   }
+
+  &.pride:not(.animate-colors) {
+    textPath {
+      opacity: 0.9;
+    }
+
+    textPath[href="#circle1"] {
+      fill: var(--pride-0);
+    }
+
+    textPath[href="#circle2"] {
+      fill: var(--pride-1);
+    }
+
+    textPath[href="#circle3"] {
+      fill: var(--pride-2);
+    }
+
+    textPath[href="#circle4"] {
+      fill: var(--pride-3);
+    }
+
+    textPath[href="#circle5"] {
+      fill: var(--pride-4);
+    }
+
+    textPath[href="#circle6"] {
+      fill: var(--pride-5);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  &.pride.animate-colors {
+    svg > text > textPath > tspan {
+      animation: mandala-color-change 50s infinite;
+      animation-timing-function: ease-in-out;
+      fill: var(--mandala-primary);
+    }
+
+    textPath[href="#circle1"] > tspan {
+      animation-delay: -15s;
+      fill: var(--mandala-accent-1);
+    }
+
+    textPath[href="#circle2"] > tspan {
+      animation-delay: -20s;
+      fill: var(--mandala-accent-2);
+    }
+
+    textPath[href="#circle3"] > tspan {
+      animation-delay: -30s;
+      fill: var(--mandala-accent-3);
+    }
+
+    textPath[href="#circle5"] > tspan {
+      animation-delay: -40s;
+      fill: var(--mandala-accent-4);
+    }
+  }
+
+  @keyframes mandala-color-change {
+    0% {
+      fill: var(--mandala-primary);
+    }
+
+    10% {
+      fill: var(--mandala-primary);
+    }
+
+    15% {
+      fill: var(--mandala-accent-1);
+    }
+
+    20% {
+      fill: var(--mandala-primary);
+    }
+
+    25% {
+      fill: var(--mandala-primary);
+    }
+
+    30% {
+      fill: var(--mandala-accent-2);
+    }
+
+    35% {
+      fill: var(--mandala-primary);
+    }
+
+    40% {
+      fill: var(--mandala-primary);
+    }
+
+    50% {
+      fill: var(--mandala-accent-3);
+    }
+
+    55% {
+      fill: var(--mandala-primary);
+    }
+
+    60% {
+      fill: var(--mandala-primary);
+    }
+
+    65% {
+      fill: var(--mandala-accent-4);
+    }
+
+    70% {
+      fill: var(--mandala-primary);
+    }
+
+    100% {
+      fill: var(--mandala-primary);
+    }
+  }
 }
