@@ -39,7 +39,7 @@ export function LocalizedContentNote({
           automaticamente dall'inglese e potrebbe contenere errori.
         </>
       ),
-      url: "https://github.com/mdn/translated-content-it",
+      url: "https://github.com/mdn/translated-content-it?tab=readme-ov-file#readme",
     },
     ja: {
       linkText:
