@@ -1,5 +1,24 @@
 # Changelog
 
+## [4.10.1](https://github.com/mdn/yari/compare/v4.10.0...v4.10.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* **bcd:** limit length of long bcd tables ([#13061](https://github.com/mdn/yari/issues/13061)) ([c5bf81d](https://github.com/mdn/yari/commit/c5bf81d30516a4ebc63e768b12648af74801b5a3))
+* **compat-table:** reduce features progressively ([#13066](https://github.com/mdn/yari/issues/13066)) ([2072d08](https://github.com/mdn/yari/commit/2072d085b409726f8468487770b7cea1bfad9657))
+
+
+### Miscellaneous
+
+* **cloud-function:** support Glean for Fred ([#13054](https://github.com/mdn/yari/issues/13054)) ([4fac06d](https://github.com/mdn/yari/commit/4fac06d3d145820c2186a9f1281cb99e7eabc78d))
+* **csp:** allow incoming.telemetry.m.o ([4fac06d](https://github.com/mdn/yari/commit/4fac06d3d145820c2186a9f1281cb99e7eabc78d))
+* **deps-dev:** bump @swc/core from 1.11.24 to 1.11.29 ([#13063](https://github.com/mdn/yari/issues/13063)) ([0df3f98](https://github.com/mdn/yari/commit/0df3f98f73d465e8f4e4df4404d1e94b347a3cbb))
+* **deps:** bump openai from 4.100.0 to 4.102.0 ([#13062](https://github.com/mdn/yari/issues/13062)) ([0ea908d](https://github.com/mdn/yari/commit/0ea908dea1b9f30e5050993ef4086b31ec83df92))
+* **deps:** bump openai from 4.102.0 to 4.103.0 ([#13069](https://github.com/mdn/yari/issues/13069)) ([6b733ea](https://github.com/mdn/yari/commit/6b733ea02789f9936144d82fec76a28cce087bce))
+* **deps:** bump pgvector from 0.2.0 to 0.2.1 ([#13056](https://github.com/mdn/yari/issues/13056)) ([0c31ee5](https://github.com/mdn/yari/commit/0c31ee5367757441d4e160c619ff983514df3fc4))
+* **deps:** bump web-features from 2.35.2 to 2.35.3 ([#13064](https://github.com/mdn/yari/issues/13064)) ([b842ffc](https://github.com/mdn/yari/commit/b842ffcc1e27fa10d5a3e742120036edf3e8a1ea))
+
 ## [4.10.0](https://github.com/mdn/yari/compare/v4.9.1...v4.10.0) (2025-05-21)
 
 
