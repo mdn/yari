@@ -13,10 +13,6 @@ import "./module.scss";
 export function CurriculumModule(props: HydrationData<any, CurriculumDoc>) {
   const doc = useCurriculumDoc(props as CurriculumData);
 
-  useEffect(() => {
-    import("../lit/curriculum/scrim-inline");
-  }, []);
-
   return (
     <CurriculumLayout
       doc={doc}
