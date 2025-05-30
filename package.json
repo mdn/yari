@@ -1,6 +1,6 @@
 {
   "name": "@mdn/yari",
-  "version": "4.10.1",
+  "version": "4.11.0",
   "repository": "https://github.com/mdn/yari",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
@@ -241,7 +241,7 @@
     "mini-css-extract-plugin": "^2.9.2",
     "node-dev": "^8.0.0",
     "peggy": "^4.2.0",
-    "postcss": "^8.5.4",
+    "postcss": "^8.5.3",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.1.1",
     "postcss-normalize": "^13.0.1",
