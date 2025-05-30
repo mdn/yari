@@ -14,7 +14,28 @@ export function HomepageHero() {
           <br /> by Developers
         </h1>
         <p>
-          <span>United in love</span>
+          <span>United in love.</span> Documenting{" "}
+          <a
+            href={`/${locale}/docs/Web/CSS`}
+            data-glean={`${HOMEPAGE_HERO}: css`}
+          >
+            CSS
+          </a>
+          ,{" "}
+          <a
+            href={`/${locale}/docs/Web/HTML`}
+            data-glean={`${HOMEPAGE_HERO}: html`}
+          >
+            HTML
+          </a>
+          , and{" "}
+          <a
+            href={`/${locale}/docs/Web/JavaScript`}
+            data-glean={`${HOMEPAGE_HERO}: js`}
+          >
+            JavaScript
+          </a>
+          , since 2005.
         </p>
         <Search id="hp-search" isHomepageSearch={true} />
       </section>
