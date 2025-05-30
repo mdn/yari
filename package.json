@@ -236,7 +236,7 @@
     "jest-resolve": "^29.7.0",
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^26.1.0",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^16.1.0",
     "mdast-util-to-hast": "^13.2.0",
     "mini-css-extract-plugin": "^2.9.2",
     "node-dev": "^8.0.0",
