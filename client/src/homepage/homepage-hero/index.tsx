@@ -14,7 +14,7 @@ export function HomepageHero() {
           <br /> by Developers
         </h1>
         <p>
-          Documenting web technologies, including{" "}
+          <span>United in love.</span> Documenting{" "}
           <a
             href={`/${locale}/docs/Web/CSS`}
             data-glean={`${HOMEPAGE_HERO}: css`}
@@ -39,7 +39,7 @@ export function HomepageHero() {
         </p>
         <Search id="hp-search" isHomepageSearch={true} />
       </section>
-      <Mandala extraClasses="homepage-hero-bg" />
+      <Mandala pride={true} extraClasses="homepage-hero-bg animate-colors" />
     </div>
   );
 }
