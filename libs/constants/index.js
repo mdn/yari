@@ -122,6 +122,9 @@ export const CSP_DIRECTIVES = {
     "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
+    // Glean
+    "https://incoming.telemetry.mozilla.org",
+
     // Observatory
     "https://observatory-api.mdn.allizom.net",
     "https://observatory-api.mdn.mozilla.net",
