@@ -16029,10 +16029,10 @@ web-component-analyzer@^2.0.0:
     typescript "~5.2.0"
     yargs "^17.7.2"
 
-web-features@^2.36.0:
-  version "2.36.0"
-  resolved "https://registry.yarnpkg.com/web-features/-/web-features-2.36.0.tgz#c2f58769e150b5efe20cf64706492b12a809deb1"
-  integrity sha512-7wu8Vch2SNEjuuItRyZvL4qttSaevcq/oMlZmgZ7zTcyXMVdNXBTir+p8MdXSLsRrgo+N/NsVs+Pz6ZsXeNnxA==
+web-features@^2.36.1:
+  version "2.36.1"
+  resolved "https://registry.yarnpkg.com/web-features/-/web-features-2.36.1.tgz#0f2f25e74e05dbe945edecabe3535d2493abe193"
+  integrity sha512-eAMg2v4XOJIZZgGx1tEK+9SUJvNMWq8UPLQNHK7bR8L5vMQuOq6jJ4a4L/FLJqOEUaOAJj/yjegPxhUwLklywA==
 
 web-namespaces@^2.0.0:
   version "2.0.1"
