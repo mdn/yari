@@ -246,6 +246,14 @@
     blockquote > :last-child {
       margin-bottom: 0;
     }
+
+    scrim-inline {
+      aspect-ratio: 1.5;
+      display: block;
+      margin: 0.5rem auto;
+      max-width: 36rem;
+      width: 100%;
+    }
   }
 
   #specifications + table {
