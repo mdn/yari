@@ -1,5 +1,31 @@
 # Changelog
 
+## [4.11.0](https://github.com/mdn/yari/compare/v4.10.1...v4.11.0) (2025-06-03)
+
+
+### Features
+
+* **pride:** pride 2025 ([#13065](https://github.com/mdn/yari/issues/13065)) ([18c67b3](https://github.com/mdn/yari/commit/18c67b3f6854b728fe72e9ca41b64cba4659de85))
+
+
+### Miscellaneous
+
+* **compat-table:** replace "Released" with "Release date" to account for upcoming releases ([#13060](https://github.com/mdn/yari/issues/13060)) ([a734077](https://github.com/mdn/yari/commit/a73407786efa5c1e149d8aee481abdc25c758ff8))
+* **deps-dev:** bump @babel/core from 7.27.3 to 7.27.4 ([#13096](https://github.com/mdn/yari/issues/13096)) ([764d2d9](https://github.com/mdn/yari/commit/764d2d988003c4fc7ec21489c7ff1257dcd59996))
+* **deps-dev:** bump @babel/eslint-parser from 7.27.1 to 7.27.5 ([#13102](https://github.com/mdn/yari/issues/13102)) ([58bb276](https://github.com/mdn/yari/commit/58bb276c1842f0b58238aaa971c5d01a6cbff994))
+* **deps-dev:** bump @types/node from 18.19.104 to 18.19.105 in the types group ([#13087](https://github.com/mdn/yari/issues/13087)) ([8cb07de](https://github.com/mdn/yari/commit/8cb07ded7d812109ed8ec3e08eeed3af7c7cd771))
+* **deps-dev:** bump @types/node from 18.19.108 to 18.19.110 in the types group ([#13093](https://github.com/mdn/yari/issues/13093)) ([00e4ca4](https://github.com/mdn/yari/commit/00e4ca488bd58835ad8ca15db32abf2c6b9bc4e8))
+* **deps-dev:** bump browserslist from 4.24.5 to 4.25.0 ([#13089](https://github.com/mdn/yari/issues/13089)) ([3c642be](https://github.com/mdn/yari/commit/3c642be51cc7ec4121c0606f294caebfb415ee11))
+* **deps-dev:** bump eslint-plugin-jest from 28.11.1 to 28.12.0 ([#13092](https://github.com/mdn/yari/issues/13092)) ([9497559](https://github.com/mdn/yari/commit/94975595f1397783bc5dcbc71583ef9755341bea))
+* **deps-dev:** bump eslint-plugin-n from 17.18.0 to 17.19.0 ([#13099](https://github.com/mdn/yari/issues/13099)) ([fd705f9](https://github.com/mdn/yari/commit/fd705f96722ee821ab5f4c7eeab8ace65b230997))
+* **deps-dev:** bump postcss from 8.5.3 to 8.5.4 ([#13088](https://github.com/mdn/yari/issues/13088)) ([12100b5](https://github.com/mdn/yari/commit/12100b55cb1768d5ab7bf2661dd1caf1348a0880))
+* **deps-dev:** bump sass from 1.89.0 to 1.89.1 ([#13098](https://github.com/mdn/yari/issues/13098)) ([2ca899b](https://github.com/mdn/yari/commit/2ca899b85498df29367b756a1c7360fa64505f8f))
+* **deps-dev:** bump typescript-eslint from 8.33.0 to 8.33.1 ([#13100](https://github.com/mdn/yari/issues/13100)) ([589ac5a](https://github.com/mdn/yari/commit/589ac5a86ee4d1bc145fa92cfcf65a9827557cfc))
+* **deps:** bump @mdn/browser-compat-data from 6.0.18 to 6.0.19 ([#13095](https://github.com/mdn/yari/issues/13095)) ([6dea8a8](https://github.com/mdn/yari/commit/6dea8a84e6c3fe934b67cf9eb03c0686468289a7))
+* **deps:** bump is-svg from 5.1.0 to 6.0.0 ([#12975](https://github.com/mdn/yari/issues/12975)) ([17beed3](https://github.com/mdn/yari/commit/17beed3fa56657e0cc1e999237b1e5aafb87f86a))
+* **deps:** bump web-features from 2.36.0 to 2.36.1 ([#13097](https://github.com/mdn/yari/issues/13097)) ([6c8d6aa](https://github.com/mdn/yari/commit/6c8d6aac50e4535c4b0676ec6d55c3404f6ca01d))
+* **deps:** bump web-specs from 3.52.0 to 3.53.0 ([#13103](https://github.com/mdn/yari/issues/13103)) ([8272048](https://github.com/mdn/yari/commit/8272048accf41d862faae7370a13669debaaed62))
+
 ## [4.10.1](https://github.com/mdn/yari/compare/v4.10.0...v4.10.1) (2025-05-28)
 
 
