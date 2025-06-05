@@ -266,7 +266,40 @@ class CompatTable extends GleanMixin(LitElement) {
   _renderTableBody() {
     // <FeatureListAccordion>
     const { data, _browsers: browsers, browserInfo, locale } = this;
-    const features = listFeatures(data, "", this._name);
+    let features = listFeatures(data, "", this._name);
+
+    const MAX_FEATURES = 100;
+
+    // If there are too many features, hide nested features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(({ depth }) => depth < 2);
+    }
+
+    // If there are still too many features, hide non-standard features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(
+        ({ compat: { status } }) => status?.standard_track
+      );
+    }
+
+    // If there are still too many features, hide deprecated features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(
+        ({ compat: { status } }) => !status?.deprecated
+      );
+    }
+
+    // If there are still too many features, hide experimental features.
+    if (features.length > MAX_FEATURES) {
+      features = features.filter(
+        ({ compat: { status } }) => !status?.experimental
+      );
+    }
+
+    // At this point, we did all we can to reduce the number of features shown.
+    if (features.length > MAX_FEATURES) {
+      features = features.slice(0, MAX_FEATURES);
+    }
 
     return html`<tbody>
       ${features.map((feature) => {
@@ -704,12 +737,12 @@ class CompatTable extends GleanMixin(LitElement) {
         <span
           class="bc-version-label"
           title=${browserReleaseDate && !timeline
-            ? `${browser.name} ${added} – Released ${browserReleaseDate}`
+            ? `${browser.name} ${added} – Release date: ${browserReleaseDate}`
             : ""}
         >
           ${!timeline || added ? label : null}
           ${browserReleaseDate && timeline
-            ? ` (Released ${browserReleaseDate})`
+            ? ` (Release date: ${browserReleaseDate})`
             : ""}
         </span>
       </div>
