@@ -247,7 +247,7 @@
     "postcss-normalize": "^13.0.1",
     "postcss-preset-env": "^10.2.0",
     "prettier": "^3.5.3",
-    "prettier-plugin-packagejson": "^2.5.14",
+    "prettier-plugin-packagejson": "^2.5.15",
     "prompts": "^2.4.2",
     "react": "^18.3.1",
     "react-app-polyfill": "^3.0.0",
