@@ -12426,10 +12426,10 @@ postcss-custom-media@^11.0.6:
     "@csstools/css-tokenizer" "^3.0.4"
     "@csstools/media-query-list-parser" "^4.0.3"
 
-postcss-custom-properties@^14.0.5:
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/postcss-custom-properties/-/postcss-custom-properties-14.0.5.tgz#a180444de695f6e11ee2390be93ff6537663e86c"
-  integrity sha512-UWf/vhMapZatv+zOuqlfLmYXeOhhHLh8U8HAKGI2VJ00xLRYoAJh4xv8iX6FB6+TLXeDnm0DBLMi00E0hodbQw==
+postcss-custom-properties@^14.0.6:
+  version "14.0.6"
+  resolved "https://registry.yarnpkg.com/postcss-custom-properties/-/postcss-custom-properties-14.0.6.tgz#1af73a650bf115ba052cf915287c9982825fc90e"
+  integrity sha512-fTYSp3xuk4BUeVhxCSJdIPhDLpJfNakZKoiTDx7yRGCdlZrSJR7mWKVOBS4sBF+5poPQFMj2YdXx1VHItBGihQ==
   dependencies:
     "@csstools/cascade-layer-name-parser" "^2.0.5"
     "@csstools/css-parser-algorithms" "^3.0.5"
@@ -12745,10 +12745,10 @@ postcss-place@^10.0.0:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-preset-env@^10.2.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-10.2.0.tgz#ea95a6fc70efb1a26f81e5cf0ccdb321a3439b6e"
-  integrity sha512-cl13sPBbSqo1Q7Ryb19oT5NZO5IHFolRbIMdgDq4f9w1MHYiL6uZS7uSsjXJ1KzRIcX5BMjEeyxmAevVXENa3Q==
+postcss-preset-env@^10.2.1:
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/postcss-preset-env/-/postcss-preset-env-10.2.1.tgz#e4f60ea0366ce2632524a36cf5e50bec60ba2611"
+  integrity sha512-mDInnlm4mYhmR0S79hNLzseW9nx4Ihd8s15K99iu6u6QhoSQgqWX9Oj6nTd/8Dz3b0T7v2JSrfnXsDfv9TFvDg==
   dependencies:
     "@csstools/postcss-cascade-layers" "^5.0.1"
     "@csstools/postcss-color-function" "^4.0.10"
@@ -12784,7 +12784,7 @@ postcss-preset-env@^10.2.0:
     "@csstools/postcss-trigonometric-functions" "^4.0.9"
     "@csstools/postcss-unset-value" "^4.0.0"
     autoprefixer "^10.4.21"
-    browserslist "^4.24.5"
+    browserslist "^4.25.0"
     css-blank-pseudo "^7.0.1"
     css-has-pseudo "^7.0.2"
     css-prefers-color-scheme "^10.0.0"
@@ -12795,7 +12795,7 @@ postcss-preset-env@^10.2.0:
     postcss-color-hex-alpha "^10.0.0"
     postcss-color-rebeccapurple "^10.0.0"
     postcss-custom-media "^11.0.6"
-    postcss-custom-properties "^14.0.5"
+    postcss-custom-properties "^14.0.6"
     postcss-custom-selectors "^8.0.5"
     postcss-dir-pseudo-class "^9.0.1"
     postcss-double-position-gradients "^6.0.2"
