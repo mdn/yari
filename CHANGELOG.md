@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.11.1](https://github.com/mdn/yari/compare/v4.11.0...v4.11.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* **scrims:** show outline on focus-visible ([#13110](https://github.com/mdn/yari/issues/13110)) ([731306d](https://github.com/mdn/yari/commit/731306d8af446e37edb4e3a3c78bcb1ebc72327c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.11.29 to 1.11.31 ([#13109](https://github.com/mdn/yari/issues/13109)) ([b107fa1](https://github.com/mdn/yari/commit/b107fa198c8a70564eca8b7035ffff232bde2940))
+* **deps-dev:** bump diff from 7.0.0 to 8.0.2 ([#13068](https://github.com/mdn/yari/issues/13068)) ([0249fd7](https://github.com/mdn/yari/commit/0249fd78a421cbdc5bc3062bf36b52f10f8448e6))
+* **deps-dev:** bump postcss-preset-env from 10.2.0 to 10.2.1 ([#13114](https://github.com/mdn/yari/issues/13114)) ([4f5dc0d](https://github.com/mdn/yari/commit/4f5dc0da2de4008d62e56a768c5152b6a2ce0193))
+* **deps-dev:** bump prettier-plugin-packagejson from 2.5.14 to 2.5.15 ([#13094](https://github.com/mdn/yari/issues/13094)) ([805472c](https://github.com/mdn/yari/commit/805472c37db552d52cf32b3e6c8bddbb627dd98c))
+* **deps-dev:** bump the react-router group with 2 updates ([#13104](https://github.com/mdn/yari/issues/13104)) ([a6e5235](https://github.com/mdn/yari/commit/a6e5235224102c39a06ba8d43eb51bd390a7d3ce))
+* **deps-dev:** bump webpack-dev-server from 5.2.1 to 5.2.2 ([#13105](https://github.com/mdn/yari/issues/13105)) ([254a298](https://github.com/mdn/yari/commit/254a298e3ca3e0ac101030a71a21c86238dba738))
+* **deps:** bump @mdn/browser-compat-data from 6.0.19 to 6.0.20 ([#13107](https://github.com/mdn/yari/issues/13107)) ([937b2b0](https://github.com/mdn/yari/commit/937b2b0bdc2fa0335bbcc3b9690ff0087691d306))
+* **deps:** bump @mdn/rari from 0.1.38 to 0.1.39 ([#13116](https://github.com/mdn/yari/issues/13116)) ([d5d0b76](https://github.com/mdn/yari/commit/d5d0b76e932ce745c94d5a59461e2bb3d79ec78a))
+* **deps:** bump web-features from 2.36.1 to 2.37.0 ([#13115](https://github.com/mdn/yari/issues/13115)) ([3d96610](https://github.com/mdn/yari/commit/3d966100f0f982a3de212187d0a98ee6bd255c9c))
+* **main:** release 4.11.1 ([#13108](https://github.com/mdn/yari/issues/13108)) ([10df1a1](https://github.com/mdn/yari/commit/10df1a14b1a14ed6df7ff6d2fe93d9310427c894))
+
 ## [4.11.0](https://github.com/mdn/yari/compare/v4.10.1...v4.11.0) (2025-06-03)
 
 
