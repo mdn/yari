@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.11.2](https://github.com/mdn/yari/compare/v4.11.1...v4.11.2) (2025-06-06)
+
+
+### Miscellaneous
+
+* **main:** release 4.11.1 ([#13117](https://github.com/mdn/yari/issues/13117)) ([17f3d02](https://github.com/mdn/yari/commit/17f3d025298e162758f63818f170a8073b481e6e))
+
 ## [4.11.1](https://github.com/mdn/yari/compare/v4.11.0...v4.11.1) (2025-06-06)
 
 
