@@ -168,6 +168,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
     id,
     inputValue,
+    placeholder,
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
@@ -504,7 +505,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
-          placeholder: "   ",
+          placeholder: placeholder ?? "   ",
           required: true,
         })}
       />
