@@ -193,7 +193,7 @@
     "@types/react-dom": "^18.3.1",
     "@types/react-modal": "^3.16.3",
     "@types/webpack-bundle-analyzer": "^4.7.0",
-    "babel-jest": "^29.7.0",
+    "babel-jest": "^30.0.0",
     "babel-loader": "^10.0.0",
     "babel-plugin-named-asset-import": "^0.3.8",
     "babel-preset-react-app": "^10.1.0",
