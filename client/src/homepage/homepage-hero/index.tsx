@@ -37,7 +37,11 @@ export function HomepageHero() {
           </a>
           , since 2005.
         </p>
-        <Search id="hp-search" isHomepageSearch={true} />
+        <Search
+          id="hp-search"
+          isHomepageSearch={true}
+          placeholder="What are you looking for?"
+        />
       </section>
       <Mandala pride={true} extraClasses="homepage-hero-bg animate-colors" />
     </div>
