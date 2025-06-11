@@ -1,5 +1,35 @@
 # Changelog
 
+## [4.12.0](https://github.com/mdn/yari/compare/v4.11.1...v4.12.0) (2025-06-11)
+
+
+### Features
+
+* **npm:** modify package for use in fred ([#13133](https://github.com/mdn/yari/issues/13133)) ([a4fc897](https://github.com/mdn/yari/commit/a4fc897569cd302ab50b60f4620b62ccca305eb6))
+
+
+### Enhancements
+
+* **homepage:** add search placeholder ([#13111](https://github.com/mdn/yari/issues/13111)) ([37f772b](https://github.com/mdn/yari/commit/37f772b7c169777bad4b67e0c96e207d58eb0c5d))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.11.31 to 1.12.0 ([#13136](https://github.com/mdn/yari/issues/13136)) ([0ec887a](https://github.com/mdn/yari/commit/0ec887ab989784a80c57b29838b304eb136a612a))
+* **deps-dev:** bump @types/node from 18.19.110 to 18.19.111 in the types group ([#13112](https://github.com/mdn/yari/issues/13112)) ([05e287a](https://github.com/mdn/yari/commit/05e287a260ccc27b3533a6a540cec7ea97a77bb1))
+* **deps-dev:** bump eslint-plugin-jest from 28.12.0 to 28.13.0 ([#13122](https://github.com/mdn/yari/issues/13122)) ([8659c40](https://github.com/mdn/yari/commit/8659c409b697642895e35bee28ba2049e9a86e26))
+* **deps-dev:** bump eslint-plugin-jest from 28.13.0 to 28.13.3 ([#13140](https://github.com/mdn/yari/issues/13140)) ([fdcd31b](https://github.com/mdn/yari/commit/fdcd31bffc3ba7bb4e3b68ae42cb761848cefe1e))
+* **deps-dev:** bump postcss-preset-env from 10.2.1 to 10.2.2 ([#13128](https://github.com/mdn/yari/issues/13128)) ([db0e6bc](https://github.com/mdn/yari/commit/db0e6bc40fbcf1afa5f3d804dd1705e5243ca1d1))
+* **deps-dev:** bump postcss-preset-env from 10.2.2 to 10.2.3 ([#13134](https://github.com/mdn/yari/issues/13134)) ([c232c61](https://github.com/mdn/yari/commit/c232c610eb9632bcb7601db5b7310b2f40704159))
+* **deps-dev:** bump pytest from 8.3.5 to 8.4.0 in /deployer in the dependencies group ([#13119](https://github.com/mdn/yari/issues/13119)) ([864fbf4](https://github.com/mdn/yari/commit/864fbf4f4d2d69503c446e06fdc30f3091eadb98))
+* **deps-dev:** bump typescript-eslint from 8.33.1 to 8.34.0 ([#13129](https://github.com/mdn/yari/issues/13129)) ([74a27a5](https://github.com/mdn/yari/commit/74a27a5f77882aebf8af1a98b0d5bd0a2957eb8f))
+* **deps:** bump @mdn/browser-compat-data from 6.0.20 to 6.0.22 ([#13138](https://github.com/mdn/yari/issues/13138)) ([84ddfe0](https://github.com/mdn/yari/commit/84ddfe04a713c198f1f3b11efb0ca9f0f85eefc5))
+* **deps:** bump fdir from 6.4.5 to 6.4.6 ([#13124](https://github.com/mdn/yari/issues/13124)) ([b1f3feb](https://github.com/mdn/yari/commit/b1f3febd3154f3bf28062b5d3f3311301a4a7d5a))
+* **deps:** bump pytest from 8.3.5 to 8.4.0 in /testing/integration in the dependencies group ([#13120](https://github.com/mdn/yari/issues/13120)) ([98ba59e](https://github.com/mdn/yari/commit/98ba59ed5504702cfb0191c13b1a49443d4c1a99))
+* **deps:** bump requests from 2.32.3 to 2.32.4 in /testing/integration ([#13123](https://github.com/mdn/yari/issues/13123)) ([2251e82](https://github.com/mdn/yari/commit/2251e822441ac7bffabeef89f9e8588dc6c051c2))
+* **deps:** bump web-features from 2.37.0 to 2.38.0 ([#13141](https://github.com/mdn/yari/issues/13141)) ([f69aab9](https://github.com/mdn/yari/commit/f69aab92437128484394bfeaa03dadc88752edb3))
+* **main:** release 4.11.1 ([#13117](https://github.com/mdn/yari/issues/13117)) ([17f3d02](https://github.com/mdn/yari/commit/17f3d025298e162758f63818f170a8073b481e6e))
+
 ## [4.11.1](https://github.com/mdn/yari/compare/v4.11.0...v4.11.1) (2025-06-06)
 
 
