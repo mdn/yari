@@ -21,7 +21,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
-import { PlusLoginBanner } from "../common/login-banner";
 import React from "react";
 
 const LazyCompatTable = React.lazy(
@@ -191,23 +190,19 @@ function UpdatesLayout() {
         </Container>
       </header>
       <Container>
-        <SearchFilter
-          filters={filters}
-          sorts={SORTS}
-          isDisabled={!canFilter}
-          onChange={(key, newValue, oldValue) =>
-            gleanClick(
-              `${PLUS_UPDATES.FILTER_CHANGE}_${key}: ${
-                oldValue ?? "(default)"
-              } -> ${newValue ?? "(default)"}`
-            )
-          }
-        />
-
-        {user && !user.isAuthenticated && (
-          <PlusLoginBanner gleanPrefix={PLUS_UPDATES.MDN_PLUS}>
-            Want to use filters?
-          </PlusLoginBanner>
+        {user && user.isAuthenticated && (
+          <SearchFilter
+            filters={filters}
+            sorts={SORTS}
+            isDisabled={!canFilter}
+            onChange={(key, newValue, oldValue) =>
+              gleanClick(
+                `${PLUS_UPDATES.FILTER_CHANGE}_${key}: ${
+                  oldValue ?? "(default)"
+                } -> ${newValue ?? "(default)"}`
+              )
+            }
+          />
         )}
 
         {user && user.isAuthenticated && hasFilters && (
