@@ -135,3 +135,5 @@ export function survey_rates(surveyKey: string): {
 export const OBSERVATORY_API_URL =
   process.env.REACT_APP_OBSERVATORY_API_URL ||
   "https://observatory-api.mdn.allizom.net";
+
+export const FRED_FLAG = JSON.parse(process.env.REACT_APP_FRED_FLAG || "false");

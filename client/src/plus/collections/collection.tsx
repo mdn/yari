@@ -238,7 +238,7 @@ function ItemComponent({
     >
       <header>
         <h2>
-          <Link to={item.url}>{camelWrap(item.title)}</Link>
+          <a href={item.url}>{camelWrap(item.title)}</a>
         </h2>
         <ArticleActions
           doc={doc}
