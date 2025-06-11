@@ -1,5 +1,5 @@
 import React from "react";
-import { FRED_FLAG, NEWSLETTER_ENABLED } from "../env";
+import { FRED, NEWSLETTER_ENABLED } from "../env";
 
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 
@@ -22,7 +22,7 @@ export function Settings() {
         <Manage />
         <ManageAIHelp />
         {NEWSLETTER_ENABLED && <Newsletter />}
-        {!FRED_FLAG && <OfflineSettings />}
+        {!FRED && <OfflineSettings />}
       </article>
     </>
   );
