@@ -190,7 +190,7 @@ function UpdatesLayout() {
         </Container>
       </header>
       <Container>
-        {user && user.isAuthenticated && (
+        {canFilter && (
           <SearchFilter
             filters={filters}
             sorts={SORTS}
@@ -205,7 +205,7 @@ function UpdatesLayout() {
           />
         )}
 
-        {user && user.isAuthenticated && hasFilters && (
+        {canFilter && hasFilters && (
           <Button
             type="action"
             extraClasses="reset-filters"
