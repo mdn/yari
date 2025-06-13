@@ -7498,10 +7498,10 @@ fecha@^4.2.0:
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-4.2.3.tgz#4d9ccdbc61e8629b259fdca67e65891448d569fd"
   integrity sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==
 
-feed@^4.2.2:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/feed/-/feed-4.2.2.tgz#865783ef6ed12579e2c44bbef3c9113bc4956a7e"
-  integrity sha512-u5/sxGfiMfZNtJ3OvQpXcvotFpYkL0n9u9mM2vkui2nGo8b4wvDkJ8gAkYqbA8QpGyFCv3RK0Z+Iv+9veCS9bQ==
+feed@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/feed/-/feed-5.1.0.tgz#a64a7c4e127fbe01f10072e42f4964d8889fc6c0"
+  integrity sha512-qGNhgYygnefSkAHHrNHqC7p3R8J0/xQDS/cYUud8er/qD9EFGWyCdUDfULHTJQN1d3H3WprzVwMc9MfB4J50Wg==
   dependencies:
     xml-js "^1.6.11"
 
