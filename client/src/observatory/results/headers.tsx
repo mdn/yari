@@ -43,11 +43,11 @@ function HeaderLink({ header }: { header: string }) {
 function useHeaderLink(header: string) {
   const prettyHeaderName = upperCaseHeaderName(header);
   return useSWRImmutable(`headerLink-${header}`, async (key) => {
-    const url = `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(prettyHeaderName)}/metadata.json`;
+    const url = `/en-US/docs/Web/HTTP/Reference/Headers/${encodeURIComponent(prettyHeaderName)}/metadata.json`;
     try {
       const res = await fetch(url, { method: "HEAD" });
       return res.ok
-        ? `/en-US/docs/Web/HTTP/Headers/${encodeURIComponent(prettyHeaderName)}`
+        ? `/en-US/docs/Web/HTTP/Reference/Headers/${encodeURIComponent(prettyHeaderName)}`
         : null;
     } catch (e) {
       return null;
