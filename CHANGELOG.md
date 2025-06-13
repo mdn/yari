@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.12.1](https://github.com/mdn/yari/compare/v4.12.0...v4.12.1) (2025-06-13)
+
+
+### Bug Fixes
+
+* various fixes when using yari in fred ([#13142](https://github.com/mdn/yari/issues/13142)) ([7b30036](https://github.com/mdn/yari/commit/7b30036398cd6dad03851e340a3feeeca92c368a))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.12.0 to 1.12.1 ([#13149](https://github.com/mdn/yari/issues/13149)) ([cbe9533](https://github.com/mdn/yari/commit/cbe9533d3f41ee2418d3e51dd6655fc679776e70))
+* **deps-dev:** bump eslint-plugin-jest from 28.13.3 to 28.13.5 ([#13150](https://github.com/mdn/yari/issues/13150)) ([1f898cb](https://github.com/mdn/yari/commit/1f898cb4d02accd8cca138338aa224c1e3219057))
+* **deps-dev:** bump eslint-plugin-n from 17.19.0 to 17.20.0 ([#13152](https://github.com/mdn/yari/issues/13152)) ([25f3e66](https://github.com/mdn/yari/commit/25f3e66506c5bc457ba7ac19fe197f39741d364e))
+* **deps-dev:** bump postcss from 8.5.4 to 8.5.5 ([#13145](https://github.com/mdn/yari/issues/13145)) ([ecbd83c](https://github.com/mdn/yari/commit/ecbd83c438e22c728720c9baf4961a0be737e4da))
+* **deps:** bump @mdn/rari from 0.1.39 to 0.1.40 ([#13151](https://github.com/mdn/yari/issues/13151)) ([80d3aee](https://github.com/mdn/yari/commit/80d3aeea36cc615ece16ef0ba839793dd496fb62))
+* **deps:** bump @vscode/ripgrep from 1.15.11 to 1.15.13 ([#13139](https://github.com/mdn/yari/issues/13139)) ([c2cd257](https://github.com/mdn/yari/commit/c2cd25798f1a081b8b4c47f5588a4d0ec9707fc0))
+* **plus/updates:** hide filters if not authenticated ([#13143](https://github.com/mdn/yari/issues/13143)) ([c7d2b32](https://github.com/mdn/yari/commit/c7d2b32bba9978cbc34adb9525f4102737493dcc))
+
 ## [4.12.0](https://github.com/mdn/yari/compare/v4.11.1...v4.12.0) (2025-06-11)
 
 
