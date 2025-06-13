@@ -177,7 +177,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.27.2",
     "@mdn/dinocons": "^0.5.5",
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.53.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.12.1",
