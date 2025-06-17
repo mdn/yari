@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.12.2](https://github.com/mdn/yari/compare/v4.12.1...v4.12.2) (2025-06-17)
+
+
+### Enhancements
+
+* **deps:** require exact rari version ([#13168](https://github.com/mdn/yari/issues/13168)) ([0c613c3](https://github.com/mdn/yari/commit/0c613c33bc47ed6ee959c93a36cf5585569f7c92))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump eslint-plugin-jest from 28.13.5 to 28.14.0 ([#13158](https://github.com/mdn/yari/issues/13158)) ([3af3df0](https://github.com/mdn/yari/commit/3af3df0b200600481d61e7c10e8b13faf8f508f6))
+* **deps:** bump @mdn/browser-compat-data from 6.0.22 to 6.0.23 ([#13159](https://github.com/mdn/yari/issues/13159)) ([989f0da](https://github.com/mdn/yari/commit/989f0da30007de7ea7ff8879d83f09e0fca25049))
+* **deps:** bump @mdn/rari from 0.1.40 to 0.1.42 ([#13166](https://github.com/mdn/yari/issues/13166)) ([283701b](https://github.com/mdn/yari/commit/283701bc9a664beb19351a4a47942765f47c5afb))
+* **deps:** bump selectolax from 0.3.29 to 0.3.30 in /deployer in the dependencies group ([#13154](https://github.com/mdn/yari/issues/13154)) ([1310cc6](https://github.com/mdn/yari/commit/1310cc6a21491d6f7ad8320ccc0b1b10ee6b8e18))
+
 ## [4.12.1](https://github.com/mdn/yari/compare/v4.12.0...v4.12.1) (2025-06-13)
 
 
