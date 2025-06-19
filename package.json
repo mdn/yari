@@ -235,7 +235,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-junit-reporter": "^1.1.0",
-    "jest-resolve": "^29.7.0",
+    "jest-resolve": "^30.0.2",
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^26.1.0",
     "lint-staged": "^15.2.10",
