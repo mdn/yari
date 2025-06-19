@@ -179,6 +179,16 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const locale = useLocale();
   const gleanClick = useGleanClick();
 
+  const calculateSearchResultsMaxHeight = () => {
+    const bottom = inputRef?.current?.getBoundingClientRect()?.bottom || 0;
+    const resultsWrapperHeight =
+      typeof window !== "undefined"
+        ? // 14px is the bottom distance between results and the bottom of the window
+          `${window?.innerHeight - bottom - 14}px`
+        : "auto";
+    return { maxHeight: resultsWrapperHeight };
+  };
+
   const [searchIndex, searchIndexError, initializeSearchIndex] =
     useSearchIndex();
 
@@ -187,6 +197,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const isSelectionInitialized = useRef(false);
 
   const showIndexing = useHasNotChangedFor(inputValue, SHOW_INDEXING_AFTER_MS);
+
+  const [searchResultsMaxHeight, setSearchResultsMaxHeight] = useState(
+    calculateSearchResultsMaxHeight
+  );
 
   useEffect(() => {
     if (!inputRef.current || isSelectionInitialized.current) {
@@ -206,11 +220,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       return [];
     }
 
-    // The iPhone X series is 812px high.
-    // If the window isn't very high, show fewer matches so that the
-    // overlaying search results don't trigger a scroll.
-    const limit = window.innerHeight < 850 ? 5 : 10;
-
     const inputValueLC = inputValue.toLowerCase().trim();
     const q = splitQuery(inputValue);
     const indexResults = searchIndex.flex
@@ -221,7 +230,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       })
       .sort(([aExact], [bExact]) => bExact - aExact) // Boost exact matches.
       .map(([_, i]) => i)
-      .slice(0, limit);
+      .slice(0, 10);
 
     return indexResults.map(
       (index: number) => (searchIndex.items || [])[index] as ResultItem
@@ -299,6 +308,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const [resultsWithHighlighting, setResultsWithHighlighting] = useState<any>(
     []
   );
+
+  useEffect(() => {
+    if (isOpen && resultItems.length) {
+      setSearchResultsMaxHeight(calculateSearchResultsMaxHeight);
+    }
+  }, [resultItems, isOpen]);
 
   useEffect(() => {
     const item = resultItems[highlightedIndex];
@@ -529,7 +544,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       </Button>
 
       <div {...getMenuProps()}>
-        {searchResults && <div className="search-results">{searchResults}</div>}
+        {searchResults && (
+          <div className="search-results" style={searchResultsMaxHeight}>
+            {searchResults}
+          </div>
+        )}
       </div>
     </form>
   );
