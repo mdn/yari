@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.12.4](https://github.com/mdn/yari/compare/v4.12.3...v4.12.4) (2025-06-20)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.12.3 to 1.12.4 ([#13188](https://github.com/mdn/yari/issues/13188)) ([5d6954b](https://github.com/mdn/yari/commit/5d6954b8c3cfea66e2b11ed5be1beee012cd2b83))
+* **deps-dev:** bump @types/node from 18.19.111 to 18.19.112 in the types group ([#13185](https://github.com/mdn/yari/issues/13185)) ([c63a3fb](https://github.com/mdn/yari/commit/c63a3fb451353f1ad288358859f26a55d00f104a))
+* **deps:** bump pg from 8.16.1 to 8.16.2 ([#13187](https://github.com/mdn/yari/issues/13187)) ([a246f74](https://github.com/mdn/yari/commit/a246f7414670fb0bb484345a4aed8ddc086126d0))
+
 ## [4.12.3](https://github.com/mdn/yari/compare/v4.12.2...v4.12.3) (2025-06-19)
 
 
