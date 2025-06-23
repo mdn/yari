@@ -1,6 +1,10 @@
 import { Button } from "../../../ui/atoms/button";
 import "./index.scss";
 import screenshotAiHelp from "../../../../public/assets/ai-help/ai-help_light.png";
+import screenshotAdFree from "../../../../public/assets/afree.png";
+import screenshotUpdates from "../../../../public/assets/updates.png";
+import screenshotCollections from "../../../../public/assets/collections.png";
+import screenshotPlayground from "../../../../public/assets/playground.png";
 
 function OfferOverviewFeature({ id, img, imgAlt, children }) {
   return (
@@ -24,7 +28,7 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
-      <OfferOverviewFeature id="afree" img="/assets/afree.png" imgAlt="">
+      <OfferOverviewFeature id="afree" img={screenshotAdFree} imgAlt="">
         <section aria-labelledby="afree-section-title">
           <h2 id="afree-section-title">Go ads free</h2>
           <h3>Enjoy MDN ads-free with an MDN Plus subscription.</h3>
@@ -55,7 +59,7 @@ export default function OfferOverviewFeatures() {
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="playground"
-        img="/assets/playground.png"
+        img={screenshotPlayground}
         imgAlt=""
       >
         <section aria-labelledby="playground-section-title">
@@ -71,7 +75,7 @@ export default function OfferOverviewFeatures() {
           </Button>
         </section>
       </OfferOverviewFeature>
-      <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
+      <OfferOverviewFeature id="updates" img={screenshotUpdates} imgAlt="">
         <section aria-labelledby="updates-section-title">
           <h2 id="updates-section-title">Updates</h2>
           <h3>
@@ -92,7 +96,7 @@ export default function OfferOverviewFeatures() {
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="collections"
-        img="/assets/collections.png"
+        img={screenshotCollections}
         imgAlt=""
       >
         <section aria-labelledby="collections-section-title">
