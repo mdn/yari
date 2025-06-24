@@ -65,7 +65,7 @@ export const PLACEMENT_ENABLED = Boolean(
 export const MDN_PLUS_SUBSCRIBE_URL_SP3_BASE =
   process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE;
 export const MDN_PLUS_USE_SP3 = Boolean(
-  JSON.parse(process.env.REACT_APP_MDN_PLUS_USE_SP3 || "false")
+  JSON.parse(MDN_PLUS_SUBSCRIBE_URL_SP3_BASE || "false")
 );
 export const MDN_PLUS_SUBSCRIBE_5M_URL_SP3 = `${MDN_PLUS_SUBSCRIBE_URL_SP3_BASE}/${process.env.REACT_APP_MDN_PLUS_5M_SP3_ID}/monthly/landing`;
 export const MDN_PLUS_SUBSCRIBE_5Y_URL_SP3 = `${MDN_PLUS_SUBSCRIBE_URL_SP3_BASE}/${process.env.REACT_APP_MDN_PLUS_5Y_SP3_ID}/yearly/landing`;
