@@ -85,7 +85,7 @@
     "@lit/react": "^1.0.7",
     "@lit/task": "^1.0.2",
     "@mdn/bcd-utils-api": "^0.0.8",
-    "@mdn/browser-compat-data": "^6.0.25",
+    "@mdn/browser-compat-data": "^6.0.26",
     "@mdn/minimalist": "^2.0.4",
     "@mdn/rari": "0.1.44",
     "@mdn/watify": "^1.1.3",
