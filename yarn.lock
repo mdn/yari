@@ -2938,10 +2938,10 @@
   dependencies:
     playwright "1.52.0"
 
-"@pmmmwh/react-refresh-webpack-plugin@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.6.0.tgz#fe0119733e86df7c9770c5ac19f0ada7301f26d8"
-  integrity sha512-AAc+QWfZ1KQ/e1C6OHWVlxU+ks6zFGOA44IJUlvju7RlDS8nsX6poPFOIlsg/rTofO9vKov12+WCjMhKkRKD5g==
+"@pmmmwh/react-refresh-webpack-plugin@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.6.1.tgz#7bb69e155a66f2fa526a7fac1913dc0e5597919f"
+  integrity sha512-95DXXJxNkpYu+sqmpDp7vbw9JCyiNpHuCsvuMuOgVFrKQlwEIn9Y1+NNIQJq+zFL+eWyxw6htthB5CtdwJupNA==
   dependencies:
     anser "^2.1.1"
     core-js-pure "^3.23.3"
