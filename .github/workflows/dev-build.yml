@@ -36,6 +36,8 @@ env:
 permissions:
   # Authenticate with GCP.
   id-token: write
+  # Post comment in pull request.
+  pull-requests: write
 
 jobs:
   build:
@@ -109,7 +111,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
 
       - name: Install all yarn packages
         run: yarn --frozen-lockfile

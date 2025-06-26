@@ -1,0 +1,20 @@
+@use "../../ui/vars" as *;
+
+@media (min-width: $screen-xl) {
+  .table-container {
+    margin: 0;
+    width: 100%;
+  }
+
+  .table-container-inner {
+    padding: 0;
+  }
+
+  .bc-table {
+    // 33% for feature, 67% for browser columns.
+    grid-template-columns: minmax(33%, max-content) repeat(
+        var(--browser-count),
+        calc(67% / var(--browser-count))
+      );
+  }
+}

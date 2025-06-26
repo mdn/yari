@@ -1,31 +1,76 @@
 @use "sass:meta";
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
-@use "../../../ui/vars" as *;
+@use "../../ui/vars" as *;
+@use "../../ui/atoms/button";
+@use "../../ui/atoms/icon";
+
+@include meta.load-css("global");
 
 // Style for mobile *and* desktop.
+
+table {
+  display: grid;
+  grid-auto-flow: row dense;
+
+  thead {
+    tr {
+      display: contents;
+
+      th,
+      td {
+        display: grid;
+        grid-template-columns: subgrid;
+      }
+    }
+  }
+
+  tbody {
+    display: contents;
+
+    tr {
+      display: contents;
+
+      th,
+      td {
+        display: contents;
+
+        button {
+          display: grid;
+          grid-template-columns: subgrid;
+        }
+
+        .timeline {
+          grid-column: 1 / -1;
+        }
+      }
+    }
+  }
+}
+
+.bc-on-github {
+  font-size: var(--type-smaller-font-size);
+}
 
 .bc-table {
   border: 1px solid var(--border-primary);
   border-collapse: separate;
   border-radius: var(--elem-radius);
   border-spacing: 0;
-  margin: 1rem 0;
+  margin: 0;
   width: 100%;
 
   td,
   th {
     border: 1px solid var(--border-secondary);
     border-width: 0 0 1px 1px;
+
+    font-size: var(--type-smaller-font-size);
     font-weight: 500;
     padding: 0;
+    padding: 0.4rem;
 
-    @media (min-width: $screen-md) {
+    code {
       font-size: var(--type-smaller-font-size);
-      padding: 0.4rem;
-
-      code {
-        font-size: var(--type-smaller-font-size);
-      }
     }
   }
 
@@ -35,6 +80,11 @@
     vertical-align: bottom;
   }
 
+  thead {
+    line-height: 1;
+    white-space: nowrap;
+  }
+
   // these props allow us to add border-radius to the table.
   // border-collapse: separate gets in the way of this
   // being easy.
@@ -42,7 +92,7 @@
     tr {
       height: 3rem;
 
-      @media (min-width: $screen-md) {
+      @media (min-width: $screen-sm) {
         &:last-child {
           th,
           td {
@@ -81,17 +131,6 @@
         color: var(--text-primary-green);
       }
     }
-
-    .bc-history {
-      td {
-        border-left-width: 0;
-      }
-
-      .icon.icon-removed-partial {
-        // override icon
-        mask-image: url("../../../assets/icons/partial.svg");
-      }
-    }
   }
 
   .bc-supports {
@@ -122,7 +161,12 @@
     .icon.icon-removed-partial {
       background-color: var(--icon-critical);
       // override icon
-      mask-image: url("../../../assets/icons/no.svg");
+      mask-image: url("../../assets/icons/no.svg");
+    }
+
+    .timeline .icon.icon-removed-partial {
+      background-color: var(--icon-primary);
+      mask-image: url("../../assets/icons/partial.svg");
     }
   }
 
@@ -132,30 +176,42 @@
     }
   }
 
+  .bc-feature {
+    align-items: center;
+    border: none;
+    display: flex;
+    text-align: left;
+    width: 100%;
+
+    > * {
+      border: none !important;
+      flex-basis: max-content;
+    }
+  }
+
   .bc-feature-depth-2 {
-    border-left-width: 8px;
+    border-left: 7px solid var(--border-primary);
   }
 
   .bc-feature-depth-3 {
-    border-left-width: 16px;
+    border-left: 15px solid var(--border-primary);
+  }
+
+  .timeline {
+    display: none;
+  }
+
+  .bc-has-history:focus-within .timeline {
+    display: initial;
   }
 }
 
 .bc-head-txt-label {
-  left: calc(50% - 0.5rem);
   line-height: 1;
-  padding-top: 0.5rem;
-  position: relative;
   text-orientation: sideways;
   transform: rotate(180deg);
   white-space: nowrap;
-  -ms-writing-mode: tb-rl;
-  -webkit-writing-mode: vertical-rl;
   writing-mode: vertical-rl;
-}
-
-.bc-head-icon-symbol {
-  margin-bottom: 0.3rem;
 }
 
 .bc-support {
@@ -203,10 +259,10 @@
 
 // Row with desktop / mobile icons.
 .bc-platforms {
-  height: 2rem;
-
   th {
-    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
   }
 
   td {
@@ -217,7 +273,12 @@
 // Row with browser names.
 .bc-browsers {
   th {
-    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    justify-content: end;
+    vertical-align: bottom;
   }
 
   td {
@@ -261,7 +322,7 @@
   .bc-level-yes.icon.icon-yes {
     // override icon
     background-color: var(--icon-success);
-    mask-image: url("../../../assets/icons/yes-circle.svg");
+    mask-image: url("../../assets/icons/yes-circle.svg");
   }
 
   .bc-supports-dd {
@@ -279,6 +340,7 @@
 
   abbr {
     margin-right: 4px;
+    text-decoration: none;
   }
 
   dd {
@@ -319,42 +381,24 @@ dl.bc-notes-list {
   }
 }
 
-.offscreen,
 .only-icon span {
   @include visually-hidden();
 }
 
 .bc-table-row-header {
-  align-items: baseline;
-  display: inline-flex;
+  padding: 0.25em;
+  text-align: left;
   width: 100%;
 
   code {
     overflow: hidden;
   }
 
-  .left-side,
-  .right-side {
-    overflow: hidden;
-    white-space: pre;
-  }
-
-  /* Can only flex-shrink and not flex-grow
-  ie the "slider" in a sliding glass door */
-  .left-side {
-    flex: 0 1 auto;
-    text-overflow: ellipsis;
-  }
-  /* Can flex-grow and not flex-shrink as
-  its the stationary portion */
-  .right-side {
-    flex: 1 0 auto;
-  }
-
   .bc-icons {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
+    display: inline-flex;
+    gap: 0.5ch;
+    margin-left: 0.5ch;
+    vertical-align: text-top;
 
     .icon {
       background-color: var(--icon-secondary);
@@ -395,7 +439,7 @@ dl.bc-notes-list {
   flex-direction: row;
   gap: 0.5rem;
 
-  @media (min-width: $screen-md) {
+  @media (min-width: $screen-sm) {
     align-items: center;
     flex-direction: column;
   }
@@ -404,24 +448,16 @@ dl.bc-notes-list {
 .bcd-timeline-cell-text-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .bcd-cell-text-copy {
   color: var(--text-primary);
-  display: flex;
-  gap: 0.5rem;
 }
 
 .bc-supports-yes {
   .bcd-cell-text-copy {
     color: var(--text-primary-green);
-  }
-}
-
-.bc-supports-no {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-red);
   }
 }
 
@@ -431,23 +467,28 @@ dl.bc-notes-list {
   }
 }
 
+.bc-supports-no {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-red);
+  }
+}
+
 .bcd-cell-icons {
   display: flex;
   gap: 0.5rem;
 
-  @media (min-width: $screen-md) {
+  @media (min-width: $screen-sm) {
     display: block;
   }
 }
 
-@media (min-width: $screen-md) {
+@media (min-width: $screen-sm) {
   .bc-table {
-    td {
-      height: 2rem;
-    }
-
     td.bc-support > button {
-      padding: 0.5rem 0.25rem;
+      padding-bottom: calc(0.5rem + var(--padding-bottom-offset, 0px));
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      padding-top: 0.5rem;
     }
   }
 }

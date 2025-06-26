@@ -63,12 +63,36 @@
     }
 
     p {
+      font-size: 1.2rem;
       font-weight: 300;
     }
 
     h1,
     p {
       text-shadow: var(--contrast-boost-shadow);
+    }
+
+    p > span {
+      position: relative;
+
+      &:after {
+        background: linear-gradient(
+          90deg,
+          var(--pride-0) 0%,
+          var(--pride-1) 20%,
+          var(--pride-2) 40%,
+          var(--pride-3) 60%,
+          var(--pride-4) 80%,
+          var(--pride-5) 100%
+        );
+        bottom: -0.1rem;
+        box-shadow: var(--contrast-boost-shadow);
+        content: "";
+        height: 0.15rem;
+        left: 0;
+        position: absolute;
+        right: 0;
+      }
     }
   }
 
@@ -112,6 +136,7 @@
 
       &::placeholder {
         font-size: 1.5rem;
+        text-shadow: var(--contrast-boost-shadow);
       }
     }
 

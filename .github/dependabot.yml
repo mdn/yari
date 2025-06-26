@@ -10,6 +10,10 @@ updates:
       sentry:
         patterns:
           - "@sentry/*"
+      react-router:
+        patterns:
+          - "react-router"
+          - "react-router-dom"
       types:
         patterns:
           - "@types/*"

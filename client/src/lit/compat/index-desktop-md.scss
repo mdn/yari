@@ -1,0 +1,28 @@
+@use "../../ui/vars" as *;
+
+@media (min-width: $screen-md) {
+  .table-container {
+    width: calc(100% + 6rem);
+  }
+
+  .table-container-inner {
+    min-width: initial;
+  }
+
+  .bc-on-github {
+    text-align: right;
+  }
+
+  .bc-table {
+    // 25% for feature, 75% for browser columns.
+    grid-template-columns: minmax(25%, max-content) repeat(
+        var(--browser-count),
+        calc(75% / var(--browser-count))
+      );
+  }
+
+  .icon {
+    // Workaround for Icons being cut by 1px at the top.
+    --size: calc(1rem + 1px);
+  }
+}
