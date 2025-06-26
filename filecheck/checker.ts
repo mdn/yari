@@ -294,7 +294,7 @@ function canCheckFile(filePath: string) {
   return (
     filePathParts.includes("files") &&
     !filePathParts.includes("node_modules") &&
-    !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
+    !/\.(DS_Store|gitignore|html|json|jsonc|md|txt|yaml|yml)$/i.test(filePath)
   );
 }
 
