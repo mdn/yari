@@ -4229,15 +4229,6 @@
   resolved "https://registry.yarnpkg.com/@use-it/interval/-/interval-1.0.0.tgz#c42c68f22ca29a0dc929041746373d94496d2b3a"
   integrity sha512-WQFcnSt/xM/mS8ZtJ0ut5lhPrl+V0HDPPcI/J0eUClsfiD+/r8A7IeW/pVcfpSVGWRmN3+WnjNteWuKyWs2WZg==
 
-"@vscode/ripgrep@^1.15.13":
-  version "1.15.13"
-  resolved "https://registry.yarnpkg.com/@vscode/ripgrep/-/ripgrep-1.15.13.tgz#e8f7c8782b2fafa32069826cb970f86b0f31b92e"
-  integrity sha512-c62On5sLEIMv9yfetIZ8c0Mg0s6lvq54G0YLW2zY/XiPsJPyBBgrP54MR1s0hK3gsPy423cY+e2BDU6mOB2Yaw==
-  dependencies:
-    https-proxy-agent "^7.0.2"
-    proxy-from-env "^1.1.0"
-    yauzl "^2.9.2"
-
 "@vscode/web-custom-data@^0.4.2":
   version "0.4.12"
   resolved "https://registry.yarnpkg.com/@vscode/web-custom-data/-/web-custom-data-0.4.12.tgz#11026146d58d82f6dcf543e1e155a288c2b5c9e9"
@@ -16857,7 +16848,7 @@ yargs@^17.3.1, yargs@^17.7.2:
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
 
-yauzl@^2.10.0, yauzl@^2.4.2, yauzl@^2.9.2:
+yauzl@^2.10.0, yauzl@^2.4.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/yauzl/-/yauzl-2.10.0.tgz#c7eb17c93e112cb1086fa6d8e51fb0667b79a5f9"
   integrity sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==
