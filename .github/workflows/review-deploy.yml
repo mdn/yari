@@ -70,7 +70,7 @@ jobs:
           for region in europe-west3; do
             gcloud beta functions deploy mdn-review-$region \
             --gen2 \
-            --runtime=nodejs20 \
+            --runtime=nodejs22 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \
