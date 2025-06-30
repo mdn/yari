@@ -5,7 +5,6 @@ import path from "node:path";
 import { cwd } from "node:process";
 
 import * as cheerio from "cheerio";
-import got from "got";
 import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
 import imageminPngquant from "imagemin-pngquant";
@@ -61,19 +60,15 @@ export async function downloadAndResizeImage(
   out: string,
   basePath: string
 ) {
-  const imageResponse = await got(forceExternalURL(src), {
-    responseType: "buffer",
-    timeout: { request: 10000 },
-    retry: { limit: 3 },
-  });
-  const imageBuffer = imageResponse.body;
+  // eslint-disable-next-line n/no-unsupported-features/node-builtins
+  const response = await fetch(forceExternalURL(src));
+  const arrayBuffer = await response.arrayBuffer();
+  const imageBuffer = Buffer.from(arrayBuffer);
   let fileType = await fileTypeFromBuffer(imageBuffer);
   if (
     !fileType &&
     src.toLowerCase().endsWith(".svg") &&
-    imageResponse.headers["content-type"]
-      .toLowerCase()
-      .startsWith("image/svg+xml")
+    response.headers["content-type"].toLowerCase().startsWith("image/svg+xml")
   ) {
     // If the SVG doesn't have the `<?xml version="1.0" encoding="UTF-8"?>`
     // and/or the `<!DOCTYPE svg PUBLIC ...` in the first couple of bytes
