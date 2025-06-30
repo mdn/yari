@@ -12,7 +12,6 @@ import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
-import { rgPath } from "@vscode/ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
 import {
@@ -319,7 +318,7 @@ export function findPostFileBySlug(slug: string): string | null {
     return null;
   }
   try {
-    const { stdout, stderr, status } = spawnSync(rgPath, [
+    const { stdout, stderr, status } = spawnSync("rg", [
       "-il",
       `slug: ${slug}`,
       BLOG_ROOT,
