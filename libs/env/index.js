@@ -22,6 +22,7 @@ function parse(value) {
 
 dotenv.config({
   path: path.join(cwd(), process.env.ENV_FILE || ".env"),
+  quiet: true,
 });
 
 // -----

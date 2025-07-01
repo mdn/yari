@@ -11,6 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..", "..");
 dotenv.config({
   path: join(root, process.env["ENV_FILE"] || ".env"),
+  quiet: true,
 });
 
 async function buildCanonicals() {

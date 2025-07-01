@@ -18,6 +18,7 @@ const dotenvFile = ENV_FILE
 
 dotenv.config({
   path: dotenvFile,
+  quiet: true,
 });
 
 // We support resolving modules according to `NODE_PATH`.

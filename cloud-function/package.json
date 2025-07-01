@@ -38,7 +38,7 @@
     "@yari-internal/slug-utils": "file:src/internal/slug-utils",
     "accept-language-parser": "^1.5.0",
     "cookie-parser": "^1.4.7",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.0",
     "express": "^4.21.1",
     "http-proxy-middleware": "^3.0.5",
     "sanitize-filename": "^1.6.3"
