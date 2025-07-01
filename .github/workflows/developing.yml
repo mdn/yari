@@ -8,12 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/checkout@v4
-        with:
-          repository: mdn/content
-          path: mdn/content
+      - name: Checkout (yari)
+        uses: actions/checkout@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -34,6 +30,12 @@ jobs:
           # This, resolves that.
           # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Checkout (content)
+        uses: actions/checkout@v4
+        with:
+          repository: mdn/content
+          path: mdn/content
 
       - name: Start the dev server
         env:
