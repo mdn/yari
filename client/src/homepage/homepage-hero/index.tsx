@@ -14,7 +14,7 @@ export function HomepageHero() {
           <br /> by Developers
         </h1>
         <p>
-          <span>United in love.</span> Documenting{" "}
+          Documenting web technologies, including{" "}
           <a
             href={`/${locale}/docs/Web/CSS`}
             data-glean={`${HOMEPAGE_HERO}: css`}
@@ -43,7 +43,7 @@ export function HomepageHero() {
           placeholder="What are you looking for?"
         />
       </section>
-      <Mandala pride={true} extraClasses="homepage-hero-bg animate-colors" />
+      <Mandala extraClasses="homepage-hero-bg" />
     </div>
   );
 }

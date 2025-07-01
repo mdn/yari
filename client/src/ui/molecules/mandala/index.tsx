@@ -1,15 +1,9 @@
 import "./index.scss";
 
-function Mandala({
-  extraClasses = null,
-  pride = false,
-}: {
-  extraClasses?: string | null;
-  pride?: boolean;
-}) {
+function Mandala({ extraClasses = null }: { extraClasses?: string | null }) {
   return (
     <div
-      className={`mandala-container ${extraClasses || ""} ${pride ? "pride" : ""}`}
+      className={`mandala-container ${extraClasses || ""}`}
       aria-hidden="true"
     >
       <div className="mandala-translate">
@@ -131,15 +125,6 @@ function Mandala({
                 <tspan>&lt;&gt;</tspan>&lt;/&gt;
               </textPath>
             </text>
-            {pride && (
-              <text dy="70" textLength="754">
-                <textPath textLength="754" href="#circle6">
-                  <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
-                  <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
-                  <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
-                </textPath>
-              </text>
-            )}
           </svg>
         </div>
       </div>
