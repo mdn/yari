@@ -32,7 +32,6 @@ jobs:
         working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup kernel for react native, increase watchers
