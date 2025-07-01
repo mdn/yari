@@ -6,6 +6,7 @@ import { Request } from "express";
 
 dotenv.config({
   path: path.join(cwd(), process.env["ENV_FILE"] || ".env"),
+  quiet: true,
 });
 
 export const LOCAL_CONTENT = "http://localhost:8100/";
