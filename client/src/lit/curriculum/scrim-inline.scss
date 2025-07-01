@@ -108,6 +108,82 @@ dialog {
   position: relative;
 }
 
+.survey {
+  --button-padding: 0.5rem;
+  --button-color: var(--text-primary);
+
+  background-color: var(--background-secondary);
+  font: 400 0.8rem /1.8 var(--font-body);
+  height: 9rem;
+  padding: var(--button-padding);
+
+  fieldset label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  button {
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--button-radius);
+    border-radius: 0.25rem;
+    color: var(--button-color);
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 600;
+    padding: var(--button-padding);
+    text-decoration: none;
+
+    &.yes {
+      --button-bg-hover: var(--text-primary-green);
+    }
+
+    &.yes:hover {
+      --button-color: var(--background-primary);
+      background-color: var(--button-bg-hover);
+    }
+
+    &.same {
+      --button-bg-hover: var(--text-primary-yellow);
+    }
+
+    &.same:hover {
+      --button-color: var(--background-primary);
+      background-color: var(--button-bg-hover);
+    }
+
+    &.no {
+      --button-bg-hover: var(--text-primary-red);
+    }
+
+    &.no:hover {
+      --button-color: var(--background-primary);
+      background-color: var(--button-bg-hover);
+    }
+  }
+}
+
+.voted {
+  font-size: 1rem;
+  margin: 3rem auto;
+}
+
+dialog[open] .survey {
+  height: 7rem;
+
+  .voted {
+    margin: 2rem auto;
+  }
+}
+
+.feedback {
+  border: none;
+  margin: 0;
+  margin-bottom: 0;
+  margin-bottom: 0.25rem;
+  padding: 0;
+}
+
 .background {
   background-color: #453c78;
   background-image:
