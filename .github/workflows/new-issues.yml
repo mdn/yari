@@ -5,6 +5,10 @@ on:
       - reopened
       - opened
 
+permissions:
+  # Label issues.
+  issues: write
+
 jobs:
   label-new-issues:
     uses: mdn/workflows/.github/workflows/new-issues.yml@main
