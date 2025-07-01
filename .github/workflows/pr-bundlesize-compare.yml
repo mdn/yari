@@ -3,6 +3,9 @@ name: Compare bundle size
 on:
   pull_request:
 
+# No GITHUB_TOKEN permissions, as we only use it to increase API limit.
+permissions: {}
+
 jobs:
   # Build current and upload stats.json
   build-head:

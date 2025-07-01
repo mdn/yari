@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+# No GITHUB_TOKEN permissions, as we don't use it.
+permissions: {}
+
 jobs:
   glean-probe-scraper:
     if: github.repository == 'mdn/yari'

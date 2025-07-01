@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+# No GITHUB_TOKEN permissions, as we use AUTOMERGE_TOKEN instead.
+permissions: {}
+
 jobs:
   auto-merge:
     runs-on: ubuntu-latest

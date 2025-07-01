@@ -18,6 +18,9 @@ on:
       - package.json
       - yarn.lock
 
+# No GITHUB_TOKEN permissions, as we only use it to increase API limit.
+permissions: {}
+
 jobs:
   test:
     runs-on: ubuntu-latest
