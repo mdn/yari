@@ -8,28 +8,30 @@ on:
     branches:
       - main
 
+# No GITHUB_TOKEN permissions, as we only use it to increase API limit.
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/checkout@v4
+      - name: (mdn/yari) Checkout
+        uses: actions/checkout@v4
         with:
-          repository: mdn/content
-          path: mdn/content
+          path: mdn/yari
 
-      - name: Setup Node.js environment
+      - name: (mdn/yari) Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
-          cache: "yarn"
+          node-version-file: mdn/yari/.nvmrc
+          cache: yarn
+          cache-dependency-path: mdn/yari/yarn.lock
 
-      - name: Install all yarn packages
+      - name: (mdn/yari) Install all yarn packages
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup kernel for react native, increase watchers
@@ -40,7 +42,8 @@ jobs:
           # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-      - name: Prepare to build
+      - name: (mdn/yari) Prepare to build
+        working-directory: mdn/yari
         env:
           # The following env vars is what we do in npm-publish.yml
           # Each variable set is documented there.
@@ -51,15 +54,34 @@ jobs:
         run: |
           yarn build:legacy:prepare
 
-      - name: Build and install tarball
+      - name: (mdn/content) Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: mdn/content
+          path: mdn/content
+
+      - name: (mdn/yari) Build tarball
+        id: build
+        working-directory: mdn/yari
         run: |
-          echo mdn/content/ >> .npmignore
           npm pack
           TARBALL=`ls mdn-yari-*.tgz`
           echo $TARBALL
           ls -lh $TARBALL
-          mv $TARBALL mdn/content/
-          cd mdn/content
+          echo "tarball=$(realpath $TARBALL)" >> "$GITHUB_OUTPUT"
+
+      - name: (mdn/content) Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: mdn/content/.nvmrc
+          cache: yarn
+          cache-dependency-path: mdn/content/yarn.lock
+
+      - name: (mdn/content) Install tarball
+        working-directory: mdn/content
+        env:
+          TARBALL: ${{ steps.build.outputs.tarball }}
+        run: |
           yarn cache clean --all
           yarn add file:$TARBALL
           yarn install
@@ -96,7 +118,8 @@ jobs:
           curl --fail http://localhost:5042/en-US/ > /dev/null
           curl --fail http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
 
-      - name: Test viewing the dev server
+      - name: (mdn/yari) Test viewing the dev server
+        working-directory: mdn/yari
         env:
           # When running Yari from within mdn/content it only starts 1 server;
           # the one on localhost:5042. No React dev server; the one

@@ -34,7 +34,6 @@ jobs:
         if: steps.release.outputs.release_created
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build

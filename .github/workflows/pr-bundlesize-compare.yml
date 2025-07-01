@@ -3,6 +3,9 @@ name: Compare bundle size
 on:
   pull_request:
 
+# No GITHUB_TOKEN permissions, as we only use it to increase API limit.
+permissions: {}
+
 jobs:
   # Build current and upload stats.json
   build-head:
@@ -25,7 +28,6 @@ jobs:
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
@@ -60,7 +62,6 @@ jobs:
       - name: Install all yarn packages
         run: yarn --frozen-lockfile
         env:
-          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
