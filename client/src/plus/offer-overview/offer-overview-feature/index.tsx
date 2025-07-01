@@ -64,7 +64,7 @@ export default function OfferOverviewFeatures() {
       >
         <section aria-labelledby="playground-section-title">
           <h2 id="playground-section-title">Playground</h2>
-          <h3>Write,Test and Share your code.</h3>
+          <h3>Write, Test, and Share your code.</h3>
           <p>
             Your playground to learn and share your amazing work with the world.
             By simply logging in, you can now spread your creativity far and
