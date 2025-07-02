@@ -2,7 +2,7 @@ import { readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 import { normalizePath } from "./utils.js";
 
