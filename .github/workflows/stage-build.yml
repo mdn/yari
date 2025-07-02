@@ -93,8 +93,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          path: mdn/yari
 
       - name: Merge main
+        working-directory: mdn/yari
         run: |
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
@@ -180,10 +182,11 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: mdn/yari/.nvmrc
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
@@ -201,12 +204,12 @@ jobs:
 
       - name: Install deployer
         if: ${{ ! vars.SKIP_BUILD }}
-        run: |
-          cd deployer
-          poetry install
+        working-directory: mdn/yari/deployer
+        run: poetry install
 
       - name: Display Python & Poetry version
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari/deployer
         run: |
           python --version
           poetry --version
@@ -222,6 +225,7 @@ jobs:
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -345,11 +349,10 @@ jobs:
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
-        run: |
-          cd deployer
-          poetry run deployer search-index ../client/build
+        run: poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
@@ -365,6 +368,7 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: |-
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
@@ -385,7 +389,7 @@ jobs:
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
-        working-directory: cloud-function
+        working-directory: mdn/yari/cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
@@ -396,6 +400,7 @@ jobs:
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/yari
         run: |-
           set -eo pipefail
 
@@ -439,6 +444,7 @@ jobs:
           done
 
       - name: Update AI Help index with macros
+        working-directory: mdn/yari
         run: yarn ai-help-macros update-index
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}

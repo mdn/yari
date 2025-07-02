@@ -51,6 +51,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: mdn/yari
 
       - name: Checkout (content)
         uses: actions/checkout@v4
@@ -117,9 +119,10 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: mdn/yari/.nvmrc
 
       - name: Install all yarn packages
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -133,11 +136,11 @@ jobs:
         uses: snok/install-poetry@v1
 
       - name: Install deployer
-        run: |
-          cd deployer
-          poetry install
+        working-directory: mdn/yari/deployer
+        run: poetry install
 
       - name: Display Python & Poetry version
+        working-directory: mdn/yari/deployer
         run: |
           python --version
           poetry --version
@@ -151,6 +154,7 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
+        working-directory: mdn/yari
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -211,11 +215,10 @@ jobs:
           yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Update search index
+        working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_DEV_ELASTICSEARCH_URL }}
-        run: |
-          cd deployer
-          poetry run deployer search-index ../client/build
+        run: poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
@@ -228,9 +231,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build with GCS
-        uses: "google-github-actions/upload-cloud-storage@v2"
+        uses: google-github-actions/upload-cloud-storage@v2
         with:
-          path: "client/build"
+          path: mdn/yari/client/build
           destination: "${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}"
           resumable: false
           concurrency: 500
