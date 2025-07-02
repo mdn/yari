@@ -60,9 +60,11 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
+      - name: Checkout (content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -74,7 +76,8 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.content-ref }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-studio)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -82,19 +85,22 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (generic-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
-      - uses: actions/checkout@v4
+      - name: Checkout (curriculum)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
-      - uses: actions/checkout@v4
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -123,7 +129,8 @@ jobs:
           git add files/de
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-contributor-spotlight)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
@@ -142,7 +149,8 @@ jobs:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (rari)
+        uses: actions/checkout@v4
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
         with:
           repository: mdn/rari
