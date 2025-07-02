@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.12.5](https://github.com/mdn/yari/compare/v4.12.4...v4.12.5) (2025-07-02)
+
+
+### Bug Fixes
+
+* **dotenv:** set `quiet: true` everywhere ([#13255](https://github.com/mdn/yari/issues/13255)) ([5ee510c](https://github.com/mdn/yari/commit/5ee510cc108af998e6856a5b9b28cbf0fd78b7ac))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/core from 7.27.7 to 7.28.0 ([#13251](https://github.com/mdn/yari/issues/13251)) ([6196c1a](https://github.com/mdn/yari/commit/6196c1afa92adba12ae1387626b19a96e876e115))
+* **deps-dev:** bump @babel/eslint-parser from 7.27.5 to 7.28.0 ([#13249](https://github.com/mdn/yari/issues/13249)) ([0536f5e](https://github.com/mdn/yari/commit/0536f5e8ed7655b168694ba79e617b0e69b67b03))
+* **deps-dev:** bump @babel/preset-env from 7.27.2 to 7.28.0 ([#13252](https://github.com/mdn/yari/issues/13252)) ([4ca0704](https://github.com/mdn/yari/commit/4ca0704dd1a0292745b39814048e2d007d29207c))
+* **deps-dev:** bump @types/node from 18.19.113 to 18.19.115 in the types group ([#13246](https://github.com/mdn/yari/issues/13246)) ([dd88a99](https://github.com/mdn/yari/commit/dd88a99ed8fa767b52fea1ca5ecf618654da1937))
+* **deps:** bump @mdn/browser-compat-data from 6.0.27 to 6.0.28 ([#13248](https://github.com/mdn/yari/issues/13248)) ([60c1467](https://github.com/mdn/yari/commit/60c1467d1d5d5fe7e1593ea21ea05cdff03c4bb5))
+* **deps:** bump dotenv from 17.0.0 to 17.0.1 ([#13250](https://github.com/mdn/yari/issues/13250)) ([b699446](https://github.com/mdn/yari/commit/b6994466b107c5f2c13b073c2b71b50c5fcf22ee))
+
 ## [4.12.4](https://github.com/mdn/yari/compare/v4.12.3...v4.12.4) (2025-07-01)
 
 
