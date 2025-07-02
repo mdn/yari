@@ -62,6 +62,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: mdn/yari
 
       - name: Checkout (content)
         uses: actions/checkout@v4
@@ -140,10 +142,11 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: mdn/yari/.nvmrc
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
@@ -186,6 +189,7 @@ jobs:
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -293,6 +297,7 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: |-
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
@@ -313,7 +318,7 @@ jobs:
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
-        working-directory: cloud-function
+        working-directory: mdn/yari/cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
@@ -324,6 +329,7 @@ jobs:
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/yari
         run: |-
           set -eo pipefail
 
