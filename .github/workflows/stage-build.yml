@@ -101,7 +101,7 @@ jobs:
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
           git status
-          git pull
+          git pull --no-rebase
           git checkout main
           git status
           git checkout -
@@ -125,7 +125,7 @@ jobs:
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
           git status
-          git pull
+          git pull --no-rebase
           git checkout italian
           git status
           git checkout -
