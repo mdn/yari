@@ -156,8 +156,7 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         run: yarn --frozen-lockfile
         env:
-          # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
-          # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Python
@@ -255,6 +254,13 @@ jobs:
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
           REACT_APP_MDN_PLUS_10M_PLAN: price_1KeG02JNcmPzuWtRuAnIgNHh
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
+
+          # Support for SP3
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE: https://payments.firefox.com
+          REACT_APP_MDN_PLUS_5M_SP3_ID: mdnplus5m
+          REACT_APP_MDN_PLUS_5Y_SP3_ID: mdnplus5y
+          REACT_APP_MDN_PLUS_10M_SP3_ID: mdnplus10m
+          REACT_APP_MDN_PLUS_10Y_SP3_ID: mdnplus10y
 
           # Surveys.
           REACT_APP_SURVEY_START_JS_PROPOSALS_2025: 1743120000000 # new Date("2025-03-28Z").getTime()

@@ -6,6 +6,7 @@ export type SearchProps = {
   onChangeInputValue: (value: string) => void;
   isFocused: boolean;
   onChangeIsFocused: (isFocused: boolean) => void;
+  placeholder?: string;
 };
 
 export function useFocusViaKeyboard(

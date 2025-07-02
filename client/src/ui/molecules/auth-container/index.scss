@@ -1,6 +1,7 @@
 @use "../../vars" as *;
 
 .auth-container {
+  align-items: center;
   display: flex;
   flex-shrink: 0;
   flex-wrap: nowrap;

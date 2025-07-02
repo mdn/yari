@@ -370,3 +370,24 @@ included this value for `geo.country_iso`.
 **Default: `https://observatory-api.mdn.allizom.net`**
 
 - Base url for the Observatory API server.
+
+## Subscription Platform
+
+### REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE
+
+**Example: `https://payments.firefox.com`**
+
+- Base URL for the subscription platform.
+
+### REACT_APP_MDN_PLUS_5M_SP3_ID
+
+### REACT_APP_MDN_PLUS_5Y_SP3_ID
+
+### REACT_APP_MDN_PLUS_10M_SP3_ID
+
+### REACT_APP_MDN_PLUS_10Y_SP3_ID
+
+**Example: mdnplus5m**
+
+- Subscription ID for the 4 different plans (5 and 10 USD monthly or yearly
+  payment)

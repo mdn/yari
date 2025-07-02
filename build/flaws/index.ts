@@ -1,6 +1,5 @@
 import path from "node:path";
 import chalk from "chalk";
-import { RequestError } from "got";
 
 import { Document } from "../../content/index.js";
 import {
@@ -238,19 +237,6 @@ export async function fixFixableFlaws(doc: Partial<Doc>, options, document) {
           console.log(`Downloaded ${flaw.src} to ${destination}`);
           newSrc = path.basename(destination);
         } catch (error) {
-          if (error instanceof RequestError) {
-            if (error.response.statusCode === 404) {
-              console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
-              continue;
-            } else if (
-              error.code === "ETIMEDOUT" ||
-              error.code === "ENOTFOUND"
-            ) {
-              console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
-              continue;
-            }
-          }
-
           console.error(error);
           throw error;
         }

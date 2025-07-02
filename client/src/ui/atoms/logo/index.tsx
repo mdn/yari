@@ -19,36 +19,6 @@ export function Logo() {
   return (
     <a href={`/${locale}/`} className="logo" aria-label="MDN homepage">
       {(plus && <MDNPlusLogo />) || (docs && <MDNDocsLogo />) || <MDNLogo />}
-      <svg width="0" height="0">
-        <defs>
-          <linearGradient id="pride-gradient">
-            <stop offset="0" />
-            <stop offset=".2" />
-            <stop offset=".4" />
-            <stop offset=".6" />
-            <stop offset=".8" />
-            <stop offset="1" />
-          </linearGradient>
-          <linearGradient
-            href="#pride-gradient"
-            id="pride-gradient-v"
-            x1="0"
-            x2="0"
-            y1="0"
-            y2="1"
-            gradientUnits="objectBoundingBox"
-          />
-          <linearGradient
-            href="#pride-gradient"
-            id="pride-gradient-h"
-            x1="0"
-            x2="1"
-            y1="0"
-            y2="0"
-            gradientUnits="objectBoundingBox"
-          />
-        </defs>
-      </svg>
     </a>
   );
 }
