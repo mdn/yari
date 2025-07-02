@@ -60,7 +60,7 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
-      - name: Checkout (yari)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           path: mdn/yari

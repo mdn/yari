@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> "$GITHUB_ENV"
 
-      - name: Checkout (yari)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           path: mdn/yari

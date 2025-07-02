@@ -67,7 +67,7 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - name: Checkout (yari)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           path: mdn/yari
