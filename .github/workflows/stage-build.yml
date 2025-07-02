@@ -119,17 +119,17 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - name: Merge content italian
+      - name: Merge content next
+        working-directory: mdn/content
         run: |
-          cd mdn/content
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
           git status
           git pull --no-rebase
-          git checkout italian
+          git checkout next
           git status
           git checkout -
-          git merge italian --no-edit || git merge --abort
+          git merge next --no-edit || git merge --abort
 
       - name: Checkout (mdn-studio)
         uses: actions/checkout@v4
