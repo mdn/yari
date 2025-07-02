@@ -5,6 +5,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { createComponent } from "@lit/react";
 import React from "react";
 import { CURRICULUM } from "../../telemetry/constants.ts";
+import GleanMetrics from "@mozilla/glean/metrics";
 
 import "./scrim-inline.global.css";
 import styles from "./scrim-inline.scss?css" with { type: "css" };
@@ -15,8 +16,10 @@ export class ScrimInline extends LitElement {
     url: { type: String },
     img: { type: String },
     scrimTitle: { type: String, attribute: "scrimtitle" },
+    survey: { type: Boolean },
     _fullscreen: { state: true },
     _scrimLoaded: { state: true },
+    _voted: { state: true },
   };
 
   static styles = styles;
@@ -42,6 +45,11 @@ export class ScrimInline extends LitElement {
     this._fullscreen = false;
     /** @type {boolean} */
     this._scrimLoaded = false;
+
+    /** @type {boolean} */
+    this.survey = false;
+    /** @type {boolean} */
+    this._voted = false;
   }
 
   /**
@@ -68,6 +76,22 @@ export class ScrimInline extends LitElement {
             "--scrim-img": `url(${this.img})`,
           }
         : {};
+    }
+  }
+
+  /**
+   * @param {MouseEvent} event
+   */
+  _handleVote({ target }) {
+    if (target instanceof HTMLElement) {
+      const vote = target.dataset.vote;
+      const label = vote === "better" ? "1" : vote === "worse" ? "-1" : "0";
+      this._voted = true;
+
+      gleanClick("thumbs", {
+        type: "scrim-challenges",
+        label: label,
+      });
     }
   }
 
@@ -135,6 +159,53 @@ export class ScrimInline extends LitElement {
                   </button>
                 `}
           </div>
+          ${this.survey
+            ? html`<div class="survey">
+                ${this._voted
+                  ? html`<div class="voted">
+                      Thank you for your feedback! ❤️
+                    </div>`
+                  : html`
+                      We’re testing a new type of challenge and would love your
+                      feedback.
+                      <fieldset class="feedback">
+                        <label>
+                          How effective do you think the Scrim challenges are,
+                          compared to other tasks on this page?
+                        </label>
+                        <div class="button-container">
+                          <button
+                            type="button"
+                            class="button primary yes"
+                            @click=${this._handleVote}
+                          >
+                            <span class="button-wrap" data-vote="better"
+                              >Better</span
+                            >
+                          </button>
+                          <button
+                            type="button"
+                            class="button primary same"
+                            @click=${this._handleVote}
+                          >
+                            <span class="button-wrap" data-vote="same"
+                              >About the same</span
+                            >
+                          </button>
+                          <button
+                            type="button"
+                            class="button primary no"
+                            @click=${this._handleVote}
+                          >
+                            <span class="button-wrap" data-vote="worse"
+                              >Worse</span
+                            >
+                          </button>
+                        </div>
+                      </fieldset>
+                    `}
+              </div>`
+            : nothing}
         </div>
       </dialog>
     `;
@@ -180,3 +251,22 @@ export default createComponent({
   elementClass: ScrimInline,
   react: React,
 });
+
+/**
+ * Records a click event.
+ *
+ * Use only if automatic click events are not an option.
+ * See: https://mozilla.github.io/glean.js/automatic_instrumentation/click_events/
+ *
+ * @param {string} id
+ * @param {object} options
+ * @param {string=} options.type
+ * @param {string=} options.label
+ */
+function gleanClick(id, { type, label }) {
+  GleanMetrics.recordElementClick({
+    id,
+    type,
+    label,
+  });
+}
