@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (yari)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           # Needed because of

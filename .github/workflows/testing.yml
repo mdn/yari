@@ -9,12 +9,16 @@ on:
       - main
   pull_request:
 
+# No GITHUB_TOKEN permissions, as we only use it to increase API limit.
+permissions: {}
+
 jobs:
   lint:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -51,7 +55,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4

@@ -60,9 +60,13 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: mdn/yari
 
-      - uses: actions/checkout@v4
+      - name: Checkout (content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -74,7 +78,8 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.content-ref }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-studio)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -82,19 +87,22 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (generic-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
-      - uses: actions/checkout@v4
+      - name: Checkout (curriculum)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
-      - uses: actions/checkout@v4
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -123,7 +131,8 @@ jobs:
           git add files/de
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-contributor-spotlight)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
@@ -133,16 +142,18 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: mdn/yari/.nvmrc
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (rari)
+        uses: actions/checkout@v4
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
         with:
           repository: mdn/rari
@@ -178,6 +189,7 @@ jobs:
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -285,6 +297,7 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: |-
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
@@ -305,7 +318,7 @@ jobs:
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
-        working-directory: cloud-function
+        working-directory: mdn/yari/cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
@@ -316,6 +329,7 @@ jobs:
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/yari
         run: |-
           set -eo pipefail
 

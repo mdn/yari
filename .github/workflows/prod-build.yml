@@ -67,9 +67,13 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: mdn/yari
 
-      - uses: actions/checkout@v4
+      - name: Checkout (content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -80,7 +84,8 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-studio)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -88,13 +93,15 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (generic-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
-      - uses: actions/checkout@v4
+      - name: Checkout (curriculum)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
@@ -112,7 +119,8 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v4
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -140,7 +148,8 @@ jobs:
           git add files/de
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-contributor-spotlight)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
@@ -150,10 +159,11 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: mdn/yari/.nvmrc
 
       - name: Install all yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
@@ -171,12 +181,12 @@ jobs:
 
       - name: Install deployer
         if: ${{ ! vars.SKIP_BUILD }}
-        run: |
-          cd deployer
-          poetry install
+        working-directory: mdn/yari/deployer
+        run: poetry install
 
       - name: Display Python & Poetry version
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari/deployer
         run: |
           python --version
           poetry --version
@@ -192,6 +202,7 @@ jobs:
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -324,11 +335,10 @@ jobs:
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
-        run: |
-          cd deployer
-          poetry run deployer search-index ../client/build
+        run: poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
@@ -344,6 +354,7 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
         run: |-
           gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
@@ -364,7 +375,7 @@ jobs:
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
-        working-directory: cloud-function
+        working-directory: mdn/yari/cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
@@ -375,6 +386,7 @@ jobs:
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/yari
         run: |-
           set -eo pipefail
 
@@ -418,6 +430,7 @@ jobs:
           done
 
       - name: Update AI Help index with macros
+        working-directory: mdn/yari
         run: yarn ai-help-macros update-index
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}

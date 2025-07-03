@@ -49,9 +49,13 @@ jobs:
         run: |
           echo "PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> "$GITHUB_ENV"
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: mdn/yari
 
-      - uses: actions/checkout@v4
+      - name: Checkout (content)
+        uses: actions/checkout@v4
         with:
           repository: mdn/content
           path: mdn/content
@@ -61,24 +65,28 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-studio)
+        uses: actions/checkout@v4
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (generic-content)
+        uses: actions/checkout@v4
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
-      - uses: actions/checkout@v4
+      - name: Checkout (curriculum)
+        uses: actions/checkout@v4
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
-      - uses: actions/checkout@v4
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -102,7 +110,8 @@ jobs:
           git add files/de
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-contributor-spotlight)
+        uses: actions/checkout@v4
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
@@ -110,9 +119,10 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: mdn/yari/.nvmrc
 
       - name: Install all yarn packages
+        working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,11 +136,11 @@ jobs:
         uses: snok/install-poetry@v1
 
       - name: Install deployer
-        run: |
-          cd deployer
-          poetry install
+        working-directory: mdn/yari/deployer
+        run: poetry install
 
       - name: Display Python & Poetry version
+        working-directory: mdn/yari/deployer
         run: |
           python --version
           poetry --version
@@ -144,6 +154,7 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
+        working-directory: mdn/yari
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -204,11 +215,10 @@ jobs:
           yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
       - name: Update search index
+        working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_DEV_ELASTICSEARCH_URL }}
-        run: |
-          cd deployer
-          poetry run deployer search-index ../client/build
+        run: poetry run deployer search-index ../client/build
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
@@ -221,9 +231,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build with GCS
-        uses: "google-github-actions/upload-cloud-storage@v2"
+        uses: google-github-actions/upload-cloud-storage@v2
         with:
-          path: "client/build"
+          path: mdn/yari/client/build
           destination: "${{ vars.GCP_BUCKET_NAME }}/${{ env.PREFIX }}"
           resumable: false
           concurrency: 500
