@@ -1,5 +1,25 @@
 # Changelog
 
+## [5.0.0](https://github.com/mdn/yari/compare/v4.12.6...v5.0.0) (2025-07-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** bump NodeJS from v20 to v22 ([#13223](https://github.com/mdn/yari/issues/13223))
+
+### Miscellaneous
+
+* **deps:** bump NodeJS from v20 to v22 ([#13223](https://github.com/mdn/yari/issues/13223)) ([c28dc84](https://github.com/mdn/yari/commit/c28dc84390d87ec8c534217b06acdb66d8c52620))
+
+## [4.12.6](https://github.com/mdn/yari/compare/v4.12.5...v4.12.6) (2025-07-03)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 18.19.115 to 20.19.4 ([#13257](https://github.com/mdn/yari/issues/13257)) ([5e20816](https://github.com/mdn/yari/commit/5e208163a3db35f10bf06b998f4d5efc1aaabd34))
+* **deps:** bump @inquirer/prompts from 7.5.3 to 7.6.0 ([#13247](https://github.com/mdn/yari/issues/13247)) ([16afb67](https://github.com/mdn/yari/commit/16afb67c660e15704ae5006911e8937f99b090b3))
+* **lint:** migrate to lefthook from lint-staged + husky ([#13259](https://github.com/mdn/yari/issues/13259)) ([6ac1b5f](https://github.com/mdn/yari/commit/6ac1b5f69858738b97e58a283e6c3339f3e15338))
+
 ## [4.12.5](https://github.com/mdn/yari/compare/v4.12.4...v4.12.5) (2025-07-02)
 
 

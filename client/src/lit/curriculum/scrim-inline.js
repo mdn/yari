@@ -91,19 +91,29 @@ export class ScrimInline extends GleanMixin(LitElement) {
     }
   }
 
+  _hideSurvey() {
+    this.removeAttribute("survey");
+  }
+
   _renderSurvey() {
     if (!this.survey) {
       return nothing;
     }
     return html`<div class="survey">
+      <button type="button" class="hide-survey" @click=${this._hideSurvey}>
+        <span class="icon icon-close"> </span>
+      </button>
       ${this._voted
         ? html`<div class="voted">Thank you for your feedback! ❤️</div>`
         : html`
-            We’re testing a new type of challenge and would love your feedback.
+            <div class="context-text">
+              We’re testing a new type of challenge and would love your
+              feedback.
+            </div>
             <fieldset class="feedback">
               <label>
-                How effective do you think the Scrim challenges are, compared to
-                other tasks on this page?
+                How does this Scrim challenge compare to other tasks on this
+                page?
               </label>
               <div class="button-container">
                 <button
