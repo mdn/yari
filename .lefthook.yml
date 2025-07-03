@@ -1,0 +1,59 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: prettier
+      run: npx prettier --write --cache --ignore-unknown {staged_files}
+      stage_fixed: true
+
+    - name: eslint
+      run: npx eslint --fix --cache {staged_files}
+      glob:
+        - "*.js"
+        - "*.jsx"
+        - "*.ts"
+        - "*.tsx"
+      stage_fixed: true
+
+    - name: eslint (global)
+      run: npx eslint --fix --cache .
+      glob: .eslintrc.cjs
+      stage_fixed: true
+
+    - name: stylelint
+      run: npx stylelint --fix --cache {staged_files}
+      glob: "*.scss"
+      stage_fixed: true
+
+    - name: stylelint (global)
+      run: npx stylelint --fix '**/*.scss' --cache --ignore-path .gitignore
+      glob: .stylelintrc.json
+      stage_fixed: true
+
+pre-push:
+  piped: true
+  jobs:
+    - run: yarn install
+
+    - name: lint
+      group:
+        parrallel: true
+        jobs:
+          - name: eslint
+            run: npx eslint --cache
+          - name: stylelint
+            run: npx stylelint '**/*.scss' --cache --ignore-path .gitignore
+          - name: tsc
+            run: yarn check:tsc
+
+post-merge:
+  only:
+    - ref: main
+  commands:
+    yarn-install:
+      run: yarn install --ignore-scripts
+    rari-postinstall:
+      run: npm run postinstall --prefix node_modules/@mdn/rari
+
+output:
+  - summary
+  - failure
