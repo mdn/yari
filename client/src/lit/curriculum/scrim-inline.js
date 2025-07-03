@@ -5,13 +5,13 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { createComponent } from "@lit/react";
 import React from "react";
 import { CURRICULUM } from "../../telemetry/constants.ts";
-import GleanMetrics from "@mozilla/glean/metrics";
+import { GleanMixin } from "../glean-mixin.js";
 
 import "./scrim-inline.global.css";
 import styles from "./scrim-inline.scss?css" with { type: "css" };
 import playSvg from "../../assets/curriculum/scrim-play.svg?raw";
 
-export class ScrimInline extends LitElement {
+export class ScrimInline extends GleanMixin(LitElement) {
   static properties = {
     url: { type: String },
     img: { type: String },
@@ -87,12 +87,52 @@ export class ScrimInline extends LitElement {
       const vote = target.dataset.vote;
       const label = vote === "better" ? "1" : vote === "worse" ? "-1" : "0";
       this._voted = true;
-
-      gleanClick("thumbs", {
-        type: "scrim-challenges",
-        label: label,
-      });
+      this._gleanClick(`scrimba-challenges-survey: ${label}`);
     }
+  }
+
+  _renderSurvey() {
+    if (!this.survey) {
+      return nothing;
+    }
+    return html`<div class="survey">
+      ${this._voted
+        ? html`<div class="voted">Thank you for your feedback! ❤️</div>`
+        : html`
+            We’re testing a new type of challenge and would love your feedback.
+            <fieldset class="feedback">
+              <label>
+                How effective do you think the Scrim challenges are, compared to
+                other tasks on this page?
+              </label>
+              <div class="button-container">
+                <button
+                  type="button"
+                  class="button primary yes"
+                  @click=${this._handleVote}
+                >
+                  <span class="button-wrap" data-vote="better">Better</span>
+                </button>
+                <button
+                  type="button"
+                  class="button primary same"
+                  @click=${this._handleVote}
+                >
+                  <span class="button-wrap" data-vote="same"
+                    >About the same</span
+                  >
+                </button>
+                <button
+                  type="button"
+                  class="button primary no"
+                  @click=${this._handleVote}
+                >
+                  <span class="button-wrap" data-vote="worse">Worse</span>
+                </button>
+              </div>
+            </fieldset>
+          `}
+    </div>`;
   }
 
   render() {
@@ -159,53 +199,7 @@ export class ScrimInline extends LitElement {
                   </button>
                 `}
           </div>
-          ${this.survey
-            ? html`<div class="survey">
-                ${this._voted
-                  ? html`<div class="voted">
-                      Thank you for your feedback! ❤️
-                    </div>`
-                  : html`
-                      We’re testing a new type of challenge and would love your
-                      feedback.
-                      <fieldset class="feedback">
-                        <label>
-                          How effective do you think the Scrim challenges are,
-                          compared to other tasks on this page?
-                        </label>
-                        <div class="button-container">
-                          <button
-                            type="button"
-                            class="button primary yes"
-                            @click=${this._handleVote}
-                          >
-                            <span class="button-wrap" data-vote="better"
-                              >Better</span
-                            >
-                          </button>
-                          <button
-                            type="button"
-                            class="button primary same"
-                            @click=${this._handleVote}
-                          >
-                            <span class="button-wrap" data-vote="same"
-                              >About the same</span
-                            >
-                          </button>
-                          <button
-                            type="button"
-                            class="button primary no"
-                            @click=${this._handleVote}
-                          >
-                            <span class="button-wrap" data-vote="worse"
-                              >Worse</span
-                            >
-                          </button>
-                        </div>
-                      </fieldset>
-                    `}
-              </div>`
-            : nothing}
+          ${this._renderSurvey()}
         </div>
       </dialog>
     `;
@@ -251,22 +245,3 @@ export default createComponent({
   elementClass: ScrimInline,
   react: React,
 });
-
-/**
- * Records a click event.
- *
- * Use only if automatic click events are not an option.
- * See: https://mozilla.github.io/glean.js/automatic_instrumentation/click_events/
- *
- * @param {string} id
- * @param {object} options
- * @param {string=} options.type
- * @param {string=} options.label
- */
-function gleanClick(id, { type, label }) {
-  GleanMetrics.recordElementClick({
-    id,
-    type,
-    label,
-  });
-}

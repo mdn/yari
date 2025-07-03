@@ -182,6 +182,11 @@ dialog[open] .survey {
   margin-bottom: 0;
   margin-bottom: 0.25rem;
   padding: 0;
+
+  .button-container {
+    display: flex;
+    gap: 2rem;
+  }
 }
 
 .background {
