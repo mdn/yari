@@ -166,7 +166,7 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
-    "web-features": "^2.40.2",
+    "web-features": "^2.41.0",
     "web-specs": "^3.54.0"
   },
   "devDependencies": {
