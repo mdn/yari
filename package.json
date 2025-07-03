@@ -1,6 +1,6 @@
 {
   "name": "@mdn/yari",
-  "version": "4.12.5",
+  "version": "5.0.0",
   "repository": "https://github.com/mdn/yari",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
@@ -42,7 +42,7 @@
     "jest": "node --experimental-vm-modules --expose-gc ./node_modules/.bin/jest --logHeapUsage",
     "m2h": "cross-env NODE_OPTIONS=\"--no-warnings=ExperimentalWarning --loader ts-node/esm\" node markdown/m2h/cli.ts",
     "prepack": "yarn render:html && yarn build:dist",
-    "prepare": "(husky || true) && yarn install:all && yarn install:all:npm",
+    "prepare": "yarn install:all && yarn install:all:npm",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
     "render:html": "cross-env NODE_ENV=production NODE_OPTIONS=\"--no-warnings=ExperimentalWarning --loader ts-node/esm\" node build/ssr-cli.ts",
@@ -187,7 +187,7 @@
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
-    "@types/node": "^20.19.4",
+    "@types/node": "^22.16.0",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.1",
@@ -228,7 +228,6 @@
     "history": "^5.2.0",
     "html-validate": "^8.28.0",
     "html-webpack-plugin": "^5.6.3",
-    "husky": "^9.1.7",
     "ignore-loader": "^0.1.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.0.2",
@@ -236,7 +235,7 @@
     "jest-resolve": "^30.0.2",
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^26.1.0",
-    "lint-staged": "^16.1.2",
+    "lefthook": "^1.11.15",
     "mdast-util-to-hast": "^13.2.0",
     "mini-css-extract-plugin": "^2.9.2",
     "node-dev": "^8.0.0",
@@ -286,6 +285,6 @@
     "webpack-node-externals": "^3.0.0"
   },
   "engines": {
-    "node": ">=20.6.0"
+    "node": ">=22"
   }
 }

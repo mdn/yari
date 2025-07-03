@@ -255,6 +255,9 @@ jobs:
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
+
+          # Increase GitHub API rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eo pipefail
 
@@ -336,7 +339,7 @@ jobs:
           for region in europe-west3; do
             gcloud beta functions deploy mdn-nonprod-test-$region \
             --gen2 \
-            --runtime=nodejs20 \
+            --runtime=nodejs22 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \

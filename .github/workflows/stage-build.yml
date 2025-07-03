@@ -317,6 +317,8 @@ jobs:
           SENTRY_ENVIRONMENT: stage
           SENTRY_RELEASE: ${{ github.sha }}
 
+          # Increase GitHub API rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eo pipefail
 
@@ -407,7 +409,7 @@ jobs:
           for region in europe-west1 us-west1 asia-east1; do
             gcloud beta functions deploy mdn-nonprod-stage-$region \
             --gen2 \
-            --runtime=nodejs20 \
+            --runtime=nodejs22 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \
