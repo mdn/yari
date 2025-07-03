@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/mdn/yari/compare/v4.12.6...v5.0.0) (2025-07-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** bump NodeJS from v20 to v22 ([#13223](https://github.com/mdn/yari/issues/13223))
+
+### Miscellaneous
+
+* **deps:** bump NodeJS from v20 to v22 ([#13223](https://github.com/mdn/yari/issues/13223)) ([c28dc84](https://github.com/mdn/yari/commit/c28dc84390d87ec8c534217b06acdb66d8c52620))
+
 ## [4.12.6](https://github.com/mdn/yari/compare/v4.12.5...v4.12.6) (2025-07-03)
 
 
