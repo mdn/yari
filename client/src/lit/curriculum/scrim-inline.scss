@@ -40,7 +40,7 @@ dialog {
 
 .inner {
   background-color: #000;
-  border: 1px solid #000;
+  border: 1px solid var(--border-secondary);
   container-type: size;
   display: flex;
   flex-direction: column;
@@ -112,15 +112,28 @@ dialog {
   --button-padding: 0.5rem;
   --button-color: var(--text-primary);
 
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+
   background-color: var(--background-secondary);
   font: 400 0.8rem /1.8 var(--font-body);
-  height: 9rem;
+  min-height: 7rem;
   padding: var(--button-padding);
 
-  fieldset label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
+  .context-text {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  fieldset {
+    grid-column: 1 / -1; /* span both columns */
+    grid-row: 2;
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
   }
 
   button {
@@ -159,6 +172,36 @@ dialog {
     &.no:hover {
       --button-color: var(--background-primary);
       background-color: var(--button-bg-hover);
+    }
+
+    &.hide-survey {
+      border: none;
+      padding: 0;
+      grid-column: 2;
+      grid-row: 1;
+      &:hover,
+      &:active {
+        background-color: var(--button-secondary-hover);
+      }
+      .icon {
+        --size: var(--icon-size, 1rem);
+        background-color: var(--text-secondary);
+        display: inline-block;
+        height: var(--size);
+        mask-position: center;
+        mask-repeat: no-repeat;
+        vertical-align: middle;
+        width: var(--size);
+
+        &:hover,
+        &:active {
+          background-color: var(--text-primary);
+        }
+
+        &.icon-close {
+          mask-image: url("../../assets/icons/cancel.svg");
+        }
+      }
     }
   }
 }
