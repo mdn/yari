@@ -2,12 +2,13 @@
 import { concurrently } from "concurrently";
 import { rariBin } from "@mdn/rari";
 import { filename } from "./filename.js";
-import { config } from "dotenv";
+import dotenv from "dotenv";
 import path from "node:path";
 import { cwd } from "node:process";
 
-config({
+dotenv.config({
   path: path.join(cwd(), process.env.ENV_FILE || ".env"),
+  quiet: true,
 });
 
 const { commands, result } = concurrently(

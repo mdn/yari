@@ -188,6 +188,8 @@ jobs:
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true
 
+          # Increase GitHub API rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eo pipefail
 
