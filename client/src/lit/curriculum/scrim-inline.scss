@@ -207,6 +207,8 @@ dialog {
 }
 
 .voted {
+  grid-column: 1 / -1; /* span both columns */
+  grid-row: 2;
   font-size: 1rem;
   margin: 3rem auto;
 }
