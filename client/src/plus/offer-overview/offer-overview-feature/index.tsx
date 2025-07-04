@@ -38,9 +38,7 @@ export default function OfferOverviewFeatures() {
             offline access, and more. Subscribers to paid tiers of MDN Plus have
             the option to browse MDN without ads.
           </p>
-          <Button href="/en-US/advertising" target="_self">
-            Learn more →
-          </Button>
+          <Button href="#subscribe">Get started →</Button>
         </section>
       </OfferOverviewFeature>
       <OfferOverviewFeature id="ai-help" img={screenshotAiHelp} imgAlt="">
